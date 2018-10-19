@@ -1,46 +1,22 @@
 ---
-title: Network configuration in Azure Kubernetes Service (AKS)
-description: Learn about basic and advanced network configuration in Azure Kubernetes Service (AKS).
+title: Configured advanced networking in Azure Kubernetes Service (AKS)
+description: Learn how to configure advanced network in Azure Kubernetes Service (AKS), including deploying an AKS cluster into an existing virtual network and subnet.
 services: container-service
 author: iainfoulds
 
 ms.service: container-service
 ms.topic: article
-ms.date: 08/31/2018
+ms.date: 10/11/2018
 ms.author: iainfou
 ---
 
-# Network configuration in Azure Kubernetes Service (AKS)
+# Configure advanced networking in Azure Kubernetes Service (AKS)
 
-When you create an Azure Kubernetes Service (AKS) cluster, you can select from two networking options: **Basic** or **Advanced**.
+By default, AKS clusters use *basic* networking, which creates and configures a virtual network and subnet for use with the cluster. For additional control of these networking options, such as the IP ranges, you can instead use *advanced* networking. With advanced networking, you can also create an AKS cluster in an existing virtual network and subnet. This existing virtual network often provides connectivity to an on-premises network using Azure ExpressRoute or Site-to-Site VPN.
 
-## Basic networking
+This article shows you how to use advanced networking to create and use a virtual network with an AKS cluster. For more general information on networking, see [Network concepts for Kubernetes and AKS][aks-network-concepts].
 
-The **Basic** networking option is the default configuration for AKS cluster creation. The network configuration of the cluster and its pods is managed completely by Azure, and is appropriate for deployments that do not require custom VNet configuration. You do not have control over network configuration such as subnets or the IP address ranges assigned to the cluster when you select Basic networking.
-
-Nodes in an AKS cluster configured for Basic networking use the [kubenet][kubenet] Kubernetes plugin.
-
-## Advanced networking
-
-**Advanced** networking places your pods in an Azure Virtual Network (VNet) that you configure, providing them automatic connectivity to VNet resources and integration with the rich set of capabilities that VNets offer. Advanced networking is available when deploying AKS clusters with the [Azure portal][portal], Azure CLI, or with a Resource Manager template.
-
-Nodes in an AKS cluster configured for Advanced networking use the [Azure Container Networking Interface (CNI)][cni-networking] Kubernetes plugin.
-
-![Diagram showing two nodes with bridges connecting each to a single Azure VNet][advanced-networking-diagram-01]
-
-## Advanced networking features
-
-Advanced networking provides the following benefits:
-
-* Deploy your AKS cluster into an existing VNet, or create a new VNet and subnet for your cluster.
-* Every pod in the cluster is assigned an IP address in the VNet, and can directly communicate with other pods in the cluster, and other nodes in the VNet.
-* A pod can connect to other services in a peered VNet, and to on-premises networks over ExpressRoute and site-to-site (S2S) VPN connections. Pods are also reachable from on-premises.
-* Expose a Kubernetes service externally or internally through the Azure Load Balancer. Also a feature of Basic networking.
-* Pods in a subnet that have service endpoints enabled can securely connect to Azure services, for example Azure Storage and SQL DB.
-* Use user-defined routes (UDR) to route traffic from pods to a Network Virtual Appliance.
-* Pods can access resources on the public Internet. Also a feature of Basic networking.
-
-## Advanced networking prerequisites
+## Prerequisites
 
 * The virtual network for the AKS cluster must allow outbound internet connectivity.
 * Do not create more than one AKS cluster in the same subnet.
@@ -69,23 +45,19 @@ The IP address plan for an AKS cluster consists of a virtual network, at least o
 
 The default maximum number of pods per node in an AKS cluster varies between Basic and Advanced networking, and the method of cluster deployment.
 
-### Default maximum
-
-These are the *default* maximums when you deploy an AKS cluster without specifying the maximum number of pods at deployment time:
-
 | Deployment method | Basic | Advanced | Configurable at deployment |
 | -- | :--: | :--: | -- |
-| Azure CLI | 110 | 30 | Yes |
-| Resource Manager template | 110 | 30 | Yes |
+| Azure CLI | 110 | 30 | Yes (up to 110) |
+| Resource Manager template | 110 | 30 | Yes (up to 110) |
 | Portal | 110 | 30 | No |
 
 ### Configure maximum - new clusters
 
-To specify a different maximum number of pods per node when you deploy an AKS cluster:
+You're able to configure the maximum number of pods per node *only at cluster deployment time*. If you deploy with the Azure CLI or with a Resource Manager template, you can set the maximum pods per node value as high as 110.
 
-* **Azure CLI**: Specify the `--max-pods` argument when you deploy a cluster with the [az aks create][az-aks-create] command.
-* **Resource Manager template**: Specify the `maxPods` property in the [ManagedClusterAgentPoolProfile] object when you deploy a cluster with a Resource Manager template.
-* **Azure portal**: You cannot modify the maximum number of pods per node when you deploy a cluster with the Azure portal. Advanced networking clusters are limited to 30 pods per node when deployed in the Azure portal.
+* **Azure CLI**: Specify the `--max-pods` argument when you deploy a cluster with the [az aks create][az-aks-create] command. The maximum value is 110.
+* **Resource Manager template**: Specify the `maxPods` property in the [ManagedClusterAgentPoolProfile] object when you deploy a cluster with a Resource Manager template. The maximum value is 110.
+* **Azure portal**: You can't change the maximum number of pods per node when you deploy a cluster with the Azure portal. Advanced networking clusters are limited to 30 pods per node when you deploy using the Azure portal.
 
 ### Configure maximum - existing clusters
 
@@ -189,15 +161,16 @@ Kubernetes clusters created with ACS Engine support both the [kubenet][kubenet] 
 
 <!-- LINKS - External -->
 [acs-engine]: https://github.com/Azure/acs-engine
-[cni-networking]: https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
-[kubenet]: https://kubernetes.io/docs/concepts/cluster-administration/network-plugins/#kubenet
 [services]: https://kubernetes.io/docs/concepts/services-networking/service/
 [portal]: https://portal.azure.com
+[cni-networking]: https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
+[kubenet]: https://kubernetes.io/docs/concepts/cluster-administration/network-plugins/#kubenet
 
 <!-- LINKS - Internal -->
 [az-aks-create]: /cli/azure/aks?view=azure-cli-latest#az-aks-create
 [aks-ssh]: ssh.md
 [ManagedClusterAgentPoolProfile]: /azure/templates/microsoft.containerservice/managedclusters#managedclusteragentpoolprofile-object
+[aks-network-concepts]: concepts-network.md
 [aks-ingress-basic]: ingress-basic.md
 [aks-ingress-tls]: ingress-tls.md
 [aks-ingress-static-tls]: ingress-static-ip.md
