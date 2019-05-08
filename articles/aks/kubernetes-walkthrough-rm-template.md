@@ -1,21 +1,21 @@
 ---
 title: Quickstart - Create an Azure Kubernetes Service (AKS) cluster
-description: Learn how to quickly create a Kubernetes cluster, deploy an application, and monitor performance in Azure Kubernetes Service (AKS) using the Azure CLI.
+description: Learn how to quickly create a Kubernetes cluster using an Azure Resource Manager template and deploy an application in Azure Kubernetes Service (AKS)
 services: container-service
 author: iainfoulds
 
 ms.service: container-service
 ms.topic: quickstart
-ms.date: 12/18/2018
+ms.date: 04/19/2019
 ms.author: iainfou
-ms.custom: H1Hack27Feb2017, mvc, devcenter
+ms.custom: mvc
 
-#Customer intent: As a developer or cluster operator, I want to quickly create an AKS cluster and deploy an application so that I can see how to run and monitor applications using the managed Kubernetes service in Azure.
+#Customer intent: As a developer or cluster operator, I want to quickly create an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
 ---
 
-# Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using the Azure CLI
+# Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using an Azure Resource Manager template
 
-Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you quickly deploy and manage clusters. In this quickstart, you deploy an AKS cluster using the Azure CLI. A multi-container application that includes a web front end and a Redis instance is run in the cluster. You then see how to monitor the health of the cluster and pods that run your application.
+Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you quickly deploy and manage clusters. In this quickstart, you deploy an AKS cluster using an Azure Resource Manager template. A multi-container application that includes a web front end and a Redis instance is run in the cluster.
 
 ![Image of browsing to Azure Vote](media/container-service-kubernetes-walkthrough/azure-vote.png)
 
@@ -25,47 +25,74 @@ If you don't have an Azure subscription, create a [free account](https://azure.m
 
 [!INCLUDE [cloud-shell-try-it.md](../../includes/cloud-shell-try-it.md)]
 
-If you choose to install and use the CLI locally, this quickstart requires that you are running the Azure CLI version 2.0.52 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
+If you choose to install and use the CLI locally, this quickstart requires that you are running the Azure CLI version 2.0.61 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 
-## Create a resource group
+## Prerequisites
 
-An Azure resource group is a logical group in which Azure resources are deployed and managed. When you create a resource group, you are asked to specify a location. This location is where resource group metadata is stored, it is also where your resources run in Azure if you don't specify another region during resource creation. Create a resource group using the [az group create][az-group-create] command.
+To create an AKS cluster using a Resource Manager template, you provide an SSH public key and Azure Active Directory service principal. If you need either of these resources, see the following section; otherwise skip to the [Create an AKS cluster](#create-an-aks-cluster) section.
 
-The following example creates a resource group named *myResourceGroup* in the *eastus* location.
+### Create an SSH key pair
+
+To access AKS nodes, you connect using an SSH key pair. Use the `ssh-keygen` command to generate SSH public and private key files. By default, these files are created in the *~/.ssh* directory. If an SSH key pair with the same name exists in the given location, those files are overwritten.
+
+The following command creates an SSH key pair using RSA encryption and a bit length of 2048:
 
 ```azurecli-interactive
-az group create --name myResourceGroup --location eastus
+ssh-keygen -t rsa -b 2048
 ```
 
-The following example output shows the resource group created successfully:
+For more information about creating SSH keys, see [Create and manage SSH keys for authentication in Azure][ssh-keys].
+
+### Create a service principal
+
+To allow an AKS cluster to interact with other Azure resources, an Azure Active Directory service principal is used. Create a service principal using the [az ad sp create-for-rbac][az-ad-sp-create-for-rbac] command. The `--skip-assignment` parameter limits any additional permissions from being assigned. By default, this service principal is valid for one year.
+
+```azurecli-interactive
+az ad sp create-for-rbac --skip-assignment
+```
+
+The output is similar to the following example:
 
 ```json
 {
-  "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
-  "location": "eastus",
-  "managedBy": null,
-  "name": "myResourceGroup",
-  "properties": {
-    "provisioningState": "Succeeded"
-  },
-  "tags": null
+  "appId": "8b1ede42-d407-46c2-a1bc-6b213b04295f",
+  "displayName": "azure-cli-2019-04-19-21-42-11",
+  "name": "http://azure-cli-2019-04-19-21-42-11",
+  "password": "27e5ac58-81b0-46c1-bd87-85b4ef622682",
+  "tenant": "73f978cf-87f2-41bf-92ab-2e7ce012db57"
 }
 ```
 
-## Create AKS cluster
+Make a note of the *appId* and *password*. These values are used in the following steps.
 
-Use the [az aks create][az-aks-create] command to create an AKS cluster. The following example creates a cluster named *myAKSCluster* with one node. Azure Monitor for containers is also enabled using the *--enable-addons monitoring* parameter.
+## Create an AKS cluster
 
-```azurecli-interactive
-az aks create \
-    --resource-group myResourceGroup \
-    --name myAKSCluster \
-    --node-count 1 \
-    --enable-addons monitoring \
-    --generate-ssh-keys
-```
+The template used in this quickstart is to [deploy an Azure Kubernetes Service cluster](https://azure.microsoft.com/resources/templates/101-aks/). For more AKS samples, see the [AKS quickstart templates][aks-quickstart-templates] site.
 
-After a few minutes, the command completes and returns JSON-formatted information about the cluster.
+1. Select the following image to sign in to Azure and open a template.
+
+    [![Deploy to Azure](./media/kubernetes-walkthrough-rm-template/deploy-to-azure.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2F101-aks%2Fazuredeploy.json)
+
+2. Select or enter the following values.  
+
+    For this quickstart, leave the default values for the *OS Disk Size GB*, *Agent Count*, *Agent VM Size*, *OS Type*, and *Kubernetes Version*. Provide your own values for the following template parameters:
+
+    * **Subscription**: Select an Azure subscription.
+    * **Resource group**: Select **Create new**. Enter a unique name for the resource group, such as *myResourceGroup*, then choose **OK**.
+    * **Location**: Select a location, such as **East US**.
+    * **Cluster name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
+    * **DNS prefix**: Enter a unique DNS prefix for your cluster, such as *myakscluster*.
+    * **Linux Admin Username**: Enter a username to connect using SSH, such as *azureuser*.
+    * **SSH RSA Public Key**: Copy and paste the *public* part of your SSH key pair (by default, the contents of *~/.ssh/id_rsa.pub*).
+    * **Service Principal Client Id**: Copy and paste the *appId* of your service principal from the `az ad sp create-for-rbac` command.
+    * **Service Principal Client Secret**: Copy and paste the *password* of your service principal from the `az ad sp create-for-rbac` command.
+    * **I agree to the terms and conditions state above**: Check this box to agree.
+
+    ![Resource Manager template to create an Azure Kubernetes Service cluster in the portal](./media/kubernetes-walkthrough-rm-template/create-aks-cluster-using-template-portal.png)
+
+3. Select **Purchase**.
+
+It takes a few minutes to create the AKS cluster. Wait for the cluster to be successfully deployed before you move on to the next step.
 
 ## Connect to the cluster
 
@@ -87,11 +114,13 @@ To verify the connection to your cluster, use the [kubectl get][kubectl-get] com
 kubectl get nodes
 ```
 
-The following example output shows the single node created in the previous steps. Make sure that the status of the node is *Ready*:
+The following example output shows the nodes created in the previous steps. Make sure that the status for all the nodes is *Ready*:
 
 ```
 NAME                       STATUS   ROLES   AGE     VERSION
-aks-nodepool1-31718369-0   Ready    agent   6m44s   v1.9.11
+aks-agentpool-41324942-0   Ready    agent   6m44s   v1.12.6
+aks-agentpool-41324942-1   Ready    agent   6m46s   v1.12.6
+aks-agentpool-41324942-2   Ready    agent   6m45s   v1.12.6
 ```
 
 ## Run the application
@@ -230,27 +259,6 @@ To see the Azure Vote app in action, open a web browser to the external IP addre
 
 ![Image of browsing to Azure Vote](media/container-service-kubernetes-walkthrough/azure-vote.png)
 
-## Monitor health and logs
-
-When the AKS cluster was created, Azure Monitor for containers was enabled to capture health metrics for both the cluster nodes and pods. These health metrics are available in the Azure portal.
-
-To see current status, uptime, and resource usage for the Azure Vote pods, complete the following steps:
-
-1. Open a web browser to the Azure portal [https://portal.azure.com][azure-portal].
-1. Select your resource group, such as *myResourceGroup*, then select your AKS cluster, such as *myAKSCluster*.
-1. Under **Monitoring** on the left-hand side, choose **Insights**
-1. Across the top, choose to **+ Add Filter**
-1. Select *Namespace* as the property, then choose *\<All but kube-system\>*
-1. Choose to view the **Containers**.
-
-The *azure-vote-back* and *azure-vote-front* containers are displayed, as shown in the following example:
-
-![View the health of running containers in AKS](media/kubernetes-walkthrough/monitor-containers.png)
-
-To see logs for the `azure-vote-front` pod, select the **View container logs** link on the right-hand side of the containers list. These logs include the *stdout* and *stderr* streams from the container.
-
-![View the containers logs in AKS](media/kubernetes-walkthrough/monitor-container-logs.png)
-
 ## Delete cluster
 
 When the cluster is no longer needed, use the [az group delete][az-group-delete] command to remove the resource group, container service, and all related resources.
@@ -270,7 +278,7 @@ In this quickstart, pre-created container images were used to create a Kubernete
 
 ## Next steps
 
-In this quickstart, you deployed a Kubernetes cluster and deployed a multi-container application to it.  [Access the Kubernetes web dashboard][kubernetes-dashboard] for the cluster you just created.
+In this quickstart, you deployed a Kubernetes cluster and deployed a multi-container application to it. [Access the Kubernetes web dashboard][kubernetes-dashboard] for the cluster you created.
 
 To learn more about AKS, and walk through a complete code to deployment example, continue to the Kubernetes cluster tutorial.
 
@@ -283,6 +291,7 @@ To learn more about AKS, and walk through a complete code to deployment example,
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 [azure-dev-spaces]: https://docs.microsoft.com/azure/dev-spaces/
+[aks-quickstart-templates]: https://azure.microsoft.com/resources/templates/?term=Azure+Kubernetes+Service
 
 <!-- LINKS - internal -->
 [kubernetes-concepts]: concepts-clusters-workloads.md
@@ -300,3 +309,5 @@ To learn more about AKS, and walk through a complete code to deployment example,
 [kubernetes-deployment]: concepts-clusters-workloads.md#deployments-and-yaml-manifests
 [kubernetes-service]: concepts-network.md#services
 [kubernetes-dashboard]: kubernetes-dashboard.md
+[ssh-keys]: ../virtual-machines/linux/create-ssh-keys-detailed.md
+[az-ad-sp-create-for-rbac]: /cli/azure/ad/sp#az-ad-sp-create-for-rbac
