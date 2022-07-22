@@ -1,36 +1,26 @@
 ---
-title: KEDA add-on on Azure Kubernetes Service (AKS) (Preview)
-description: Use the KEDA add-on to deploy a managed KEDA instance on Azure Kubernetes Service (AKS).
+title: Install the Kubernetes Event-driven Autoscaling (KEDA) add-on by using an ARM template
+description: Use an ARM template to deploy the Kubernetes Event-driven Autoscaling (KEDA) add-on to Azure Kubernetes Service (AKS).
 services: container-service
 author: jahabibi
 ms.topic: article
-ms.custom: event-tier1-build-2022
-ms.date: 05/24/2021
+ms.date: 05/24/2022
 ms.author: jahabibi
 ---
 
-# Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on (Preview)
+# Install the Kubernetes Event-driven Autoscaling (KEDA) add-on by using ARM template
 
-Kubernetes Event-driven Autoscaling (KEDA) is a single-purpose and lightweight component that strives to make application autoscaling simple and is a CNCF Incubation project.
+This article shows you how to deploy the Kubernetes Event-driven Autoscaling (KEDA) add-on to Azure Kubernetes Service (AKS) by using an [ARM](../azure-resource-manager/templates/index.yml) template.
 
-The KEDA add-on makes it even easier by deploying a managed KEDA installation, providing you with [a rich catalog of 40+ KEDA scalers](https://keda.sh/docs/latest/scalers/) that you can scale your applications with on your Azure Kubernetes Services (AKS) cluster.
+[!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]
 
 [!INCLUDE [preview features callout](./includes/preview/preview-callout.md)]
 
-## KEDA add-on overview
-
-[KEDA][keda] provides two main components:
-
-- **KEDA operator** allows end-users to scale workloads in/out from 0 to N instances with support for Kubernetes Deployments, Jobs, StatefulSets or any custom resource that defines `/scale` subresource.
-- **Metrics server** exposes external metrics to HPA in Kubernetes for autoscaling purposes such as messages in a Kafka topic, or number of events in an Azure event hub. Due to upstream limitations, this must be the only installed metric adapter.
-
 ## Prerequisites
-
-> [!NOTE]
-> KEDA is currently only available in the `westcentralus` region.
 
 - An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
 - [Azure CLI installed](/cli/azure/install-azure-cli).
+- Firewall rules are configured to allow access to the Kubernetes API server. ([learn more][aks-firewall-requirements])
 
 ### Register the `AKS-KedaPreview` feature flag
 
@@ -52,7 +42,7 @@ When ready, refresh the registration of the *Microsoft.ContainerService* resourc
 az provider register --namespace Microsoft.ContainerService
 ```
 
-## Deploy the KEDA add-on with Azure Resource Manager (ARM) templates
+## Install the KEDA add-on with Azure Resource Manager (ARM) templates
 
 The KEDA add-on can be enabled by deploying an AKS cluster with an Azure Resource Manager template and specifying the `workloadAutoScalerProfile` field:
 
@@ -68,13 +58,13 @@ The KEDA add-on can be enabled by deploying an AKS cluster with an Azure Resourc
 
 To connect to the Kubernetes cluster from your local computer, you use [kubectl][kubectl], the Kubernetes command-line client.
 
-If you use the Azure Cloud Shell, `kubectl` is already installed. You can also install it locally using the [az aks install-cli][az aks install-cli] command:
+If you use the Azure Cloud Shell, `kubectl` is already installed. You can also install it locally using the [az aks install-cli][] command:
 
 ```azurecli
 az aks install-cli
 ```
 
-To configure `kubectl` to connect to your Kubernetes cluster, use the [az aks get-credentials][az aks get-credentials] command. The following example gets credentials for the AKS cluster named *MyAKSCluster* in the *MyResourceGroup*:
+To configure `kubectl` to connect to your Kubernetes cluster, use the [az aks get-credentials][] command. The following example gets credentials for the AKS cluster named *MyAKSCluster* in the *MyResourceGroup*:
 
 ```azurecli
 az aks get-credentials --resource-group MyResourceGroup --name MyAKSCluster
@@ -134,17 +124,25 @@ The following snippet is a sample deployment that creates a cluster with KEDA en
 }
 ```
 
-## Use KEDA
+## Start scaling apps with KEDA
 
-KEDA scaling will only work once a custom resource definition has been defined (CRD). To learn more about KEDA CRDs, follow the official [KEDA documentation][keda-scalers] to define your scaler.
+Now that KEDA is installed, you can start autoscaling your apps with KEDA by using its custom resource definition has been defined (CRD).
+
+To learn more about KEDA CRDs, follow the official [KEDA documentation][keda-scalers] to define your scaler.
 
 ## Clean Up
 
-To remove the resource group, and all related resources, use the [az group delete][az-group-delete] command:
+To remove the resource group, and all related resources, use the [Az PowerShell module group delete][az-group-delete] command:
 
 ```azurecli
 az group delete --name MyResourceGroup
 ```
+
+## Next steps
+
+This article showed you how to install the KEDA add-on on an AKS cluster, and then verify that it's installed and running. With the KEDA add-on installed on your cluster, you can [deploy a sample application][keda-sample] to start scaling apps.
+
+You can troubleshoot troubleshoot KEDA add-on problems in [this article][keda-troubleshoot].
 
 <!-- LINKS - internal -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
@@ -152,8 +150,11 @@ az group delete --name MyResourceGroup
 [az aks get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az aks update]: /cli/azure/aks#az-aks-update
 [az-group-delete]: /cli/azure/group#az-group-delete
+[keda-troubleshoot]: keda-troubleshoot.md
+[aks-firewall-requirements]: limit-egress-traffic.md#azure-global-required-network-rules
 
 <!-- LINKS - external -->
 [kubectl]: https://kubernetes.io/docs/user-guide/kubectl
 [keda]: https://keda.sh/
 [keda-scalers]: https://keda.sh/docs/scalers/
+[keda-sample]: https://github.com/kedacore/sample-dotnet-worker-servicebus-queue
