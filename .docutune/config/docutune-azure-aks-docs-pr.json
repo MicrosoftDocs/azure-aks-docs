@@ -1,5 +1,10 @@
 {
-  "Docsets": [],
+  "Docsets": [
+    {
+      "DocsetName": "azure-aks",
+      "BuildSourceFolder": "."
+    }
+  ],
   "MetadataDelimiter": "\"",
   "Exclude": [],
   "PreloadTOCFiles": [],
