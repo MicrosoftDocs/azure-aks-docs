@@ -7,44 +7,200 @@
           "**/*.yml"
         ],
         "exclude": [
-          "**/obj/**",
+          "iot-edge/**",
+          "ai-services/document-intelligence/**",
+          "**/_themes/**",
           "**/includes/**",
-          "_themes/**",
-          "_themes.pdf/**",
-          "**/docfx.json",
-          "_repo.en-us/**",
-          "README.md",
-          "LICENSE",
-          "LICENSE-CODE",
-          "ThirdPartyNotices.md",
-          "SECURITY.md"
-        ]
+          "**/obj/**",
+          "**/*.graffle",
+          "machine-learning/**",
+          "machine-learning/v1/**"
+        ],
+        "src": "articles",
+        "dest": "."
+      },
+      {
+        "files": [
+          "toc.yml"
+        ],
+        "src": "breadcrumb/azure-aks",
+        "dest": "breadcrumb/azure-aks"
       }
     ],
     "resource": [
       {
         "files": [
+          "**/*.gif",
+          "**/*.jpeg",
+          "**/*.jpg",
           "**/*.png",
-          "**/*.jpg"
+          "**/*.svg"
         ],
         "exclude": [
+          "iot-edge/**",
+          "ai-services/document-intelligence/**",
+          "**/_themes/**",
           "**/obj/**",
-          "**/includes/**",
-          "_themes/**",
-          "_themes.pdf/**",
-          "**/docfx.json",
-          "_repo.en-us/**"
-        ]
+          "machine-learning/**",
+          "machine-learning/v1/**"
+        ],
+        "src": "articles",
+        "dest": "."
       }
     ],
+    "globalMetadata": {
+      "contributors_to_exclude": [
+        "alexbuckgit",
+        "American-Dipper",
+        "AnnaMHuff",
+        "cdpark",
+        "Court72",
+        "damabe",
+        "denrea",
+        "dksimpson",
+        "garycentric",
+        "GitHubber17",
+        "Jak-MS",
+        "JamesJBarnett",
+        "JasonWHowell",
+        "JillGrant615",
+        "JKirsch1",
+        "Jmart1428",
+        "JustPies",
+        "ktoliver",
+        "LizCasey1",
+        "MeeraDi",
+        "meganbradley",
+        "mohitp930",
+        "mSarts",
+        "ms-robkni",
+        "openpublishingbuild",
+        "paulth1",
+        "PMEds28",
+        "PRmerger",
+        "PRMerger17",
+        "PRMerger-2",
+        "PRMerger3",
+        "PRMerger4",
+        "PRMerger5",
+        "PRMerger9",
+        "rjagiewich",
+        "rmca14",
+        "Saisang",
+        "sdwheeler",
+        "ShannonLeavitt",
+        "ShawnJackson",
+        "ShawnKupfer",
+        "tfosmark",
+        "TimShererWithAquent",
+        "ttorble",
+        "tysonn",
+        "v-albemi",
+        "v-ccolin",
+        "v-dirichards",
+        "v-emilypr",
+        "v-lmcdonald",
+        "v-regandowner",
+        "v-savila",
+        "v-shils",
+        "v-stsavell",
+        "v-thepet",
+        "v-thpra"
+      ],
+      "breadcrumb_path": "~/breadcrumb/azure-aks/toc.yml",
+      "_op_documentIdPathDepotMapping": {
+        "articles/iot-central/": {}
+      },
+      "brand": "azure",
+      "feedback_github_repo": "MicrosoftDocs/azure-docs",
+      "feedback_help_link_url": "https://learn.microsoft.com/answers/tags/133/azure",
+      "feedback_help_link_type": "get-help-at-qna",
+      "feedback_product_url": "https://feedback.azure.com/d365community/forum/79b1327d-d925-ec11-b6e6-000d3a4f06a4",
+      "feedback_system": "Standard",
+      "searchScope": [
+        "Azure"
+      ],
+      "permissioned-type": "public",
+      "recommendations": true,
+      "recommendation_types": [
+        "Training",
+        "Certification"
+      ],
+      "uhfHeaderId": "azure",
+      "ms.suite": "office"
+    },
+    "fileMetadata": {
+      "adobe-target": {
+        "articles/aks/*": true
+      },
+      "author": {
+        "articles/aks/**/*.md": "schaffererin"
+      },
+      "featureFlags": {
+        "articles/**/*.md": [
+          "show_learn_banner"
+        ]
+      },
+      "feedback_product_url": {
+        "articles/aks/**/*.md": "https://feedback.azure.com/d365community/forum/aabe212a-f724-ec11-b6e6-000d3a4f0da0"
+      },
+      "feedback_system": {
+        "articles/aks/**/*": "OpenSource"
+      },
+      "feedback_help_link_url": {
+        "articles/aks/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/"
+      },
+      "feedback_help_link_type": {
+        "**/*": "get-help-at-qna"
+      },
+      "open_source_feedback_contributorGuideUrl": {
+        "articles/aks/**/*": "https://learn.microsoft.com/contribute/content/"
+      },
+      "open_source_feedback_issueTitle": {
+        "articles/aks/**/*": "AKS Learn feedback:"
+      },
+      "open_source_feedback_issueLabels": {
+        "articles/aks/**/*": "azure-kubernetes-service/svc"
+      },
+      "open_source_feedback_issueUrl": {
+        "articles/aks/**/*": "https://github.com/MicrosoftDocs/azure-docs/issues/new?template=aks-customer-feedback.yml"
+      },
+      "open_source_feedback_productLogoLightUrl": {
+        "articles/aks/**/*": "https://learn.microsoft.com/azure/media/index/kubernetes-services.svg"
+      },
+      "open_source_feedback_productLogoDarkUrl": {
+        "articles/aks/**/*": "https://learn.microsoft.com/azure/media/index/kubernetes-services.svg"
+      },
+      "open_source_feedback_productName": {
+        "articles/aks/**/*": "Azure Kubernetes Service"
+      },
+      "learn_banner_products": {
+        "articles/**/*.md": [
+          "azure"
+        ]
+      },
+      "ms.author": {
+        "articles/aks/**/*.md": "magoedte"
+      },
+      "ms.service": {
+        "articles/aks/**/*.md": "azure-kubernetes-service"
+      },
+      "searchScope": {
+        "articles/aks/**/*.md": [
+          "Azure",
+          "Azure Kubernetes Service"
+        ],
+        "articles/aks/**/*.yml": [
+          "Azure",
+          "Azure Kubernetes Service"
+        ]
+      },
+      "titleSuffix": {
+        "articles/aks/**/*.md": "Azure Kubernetes Service"
+      }
+    },
     "overwrite": [],
     "externalReference": [],
-    "globalMetadata": {
-      "breadcrumb_path": "~/breadcrumb/azure-aks/toc.yml",
-      "feedback_system": "Standard",
-      "permissioned-type": "public"
-    },
-    "fileMetadata": {},
     "template": []
   }
 }
