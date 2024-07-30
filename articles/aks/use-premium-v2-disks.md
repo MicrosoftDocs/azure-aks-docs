@@ -189,7 +189,7 @@ az disk update --subscription subscriptionName --resource-group myResourceGroup 
 
 ## Next steps
 
-- For more about Premium SSD v2 disks, see [Using Azure Premium SSD v2 disks](../virtual-machines/disks-deploy-premium-v2.md).
+- For more about Premium SSD v2 disks, see [Using Azure Premium SSD v2 disks](/azure/virtual-machines/disks-deploy-premium-v2).
 - For more about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service (AKS)][operator-best-practices-storage].
 
 <!-- LINKS - external -->
@@ -197,12 +197,12 @@ az disk update --subscription subscriptionName --resource-group myResourceGroup 
 [kubernetes-storage-classes]: https://kubernetes.io/docs/concepts/storage/storage-classes/
 
 <!-- LINKS - internal -->
-[azure-premium-v2-disk-overview]: ../virtual-machines/disks-types.md#premium-ssd-v2
-[premium-v2-regions]: ../virtual-machines/disks-types.md#regional-availability
-[premium-v2-limitations]: ../virtual-machines/disks-types.md#premium-ssd-v2-limitations
+[azure-premium-v2-disk-overview]: /azure/virtual-machines/disks-types#premium-ssd-v2
+[premium-v2-regions]: /azure/virtual-machines/disks-types#regional-availability
+[premium-v2-limitations]: /azure/virtual-machines/disks-types#premium-ssd-v2-limitations
 [azure-disk-volume]: azure-disk-csi.md
 [use-tags]: use-tags.md
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [az-disk-update]: /cli/azure/disk#az-disk-update
-[manage-resources-azure-portal]: ../azure-resource-manager/management/manage-resources-portal.md#open-resources
+[manage-resources-azure-portal]: /azure/azure-resource-manager/management/manage-resources-portal#open-resources
 [aks-two-resource-groups]: faq.md#why-are-two-resource-groups-created-with-aks

@@ -207,7 +207,7 @@ Requirements for using your own public IP or prefix include:
 
 * Users must create and own custom public IP addresses. Managed public IP addresses created by AKS can't be reused as a "bring your own custom IP" as it can cause management conflicts.
 * You must ensure the AKS cluster identity (Service Principal or Managed Identity) has permissions to access the outbound IP, as per the [required public IP permissions list](kubernetes-service-principal.md#networking).
-* Make sure you meet the [prerequisites and constraints](../virtual-network/ip-services/public-ip-address-prefix.md#limitations) necessary to configure outbound IPs or outbound IP prefixes.
+* Make sure you meet the [prerequisites and constraints](/azure/virtual-network/ip-services/public-ip-address-prefix#limitations) necessary to configure outbound IPs or outbound IP prefixes.
 
 #### Update the cluster with your own outbound public IP
 
@@ -278,7 +278,7 @@ az aks create \
 >
 > If you have applications on your cluster that can establish a large number of connections to small set of destinations, like many instances of a frontend application connecting to a database, you might have a scenario susceptible to encounter SNAT port exhaustion. SNAT port exhaustion happens when an application runs out of outbound ports to use to establish a connection to another application or host. If you have a scenario susceptible to encounter SNAT port exhaustion, we highly recommended you increase the allocated outbound ports and outbound frontend IPs on the load balancer.
 >
-> For more information on SNAT, see [Use SNAT for outbound connections](../load-balancer/load-balancer-outbound-connections.md).
+> For more information on SNAT, see [Use SNAT for outbound connections](/azure/load-balancer/load-balancer-outbound-connections).
 
 By default, AKS sets *AllocatedOutboundPorts* on its load balancer to `0`, which enables [automatic outbound port assignment based on backend pool size][azure-lb-outbound-preallocatedports] when creating a cluster. For example, if a cluster has 50 or fewer nodes, 1024 ports are allocated to each node. As the number of nodes in the cluster increases, fewer ports are available per node. 
 
@@ -356,7 +356,7 @@ If you expect to have numerous short-lived connections and no long-lived connect
 >
 > AKS enables *TCP Reset* on idle by default. We recommend you keep this configuration and leverage it for more predictable application behavior on your scenarios.
 >
-> TCP RST is only sent during TCP connection in ESTABLISHED state. Read more about it [here](../load-balancer/load-balancer-tcp-reset.md).
+> TCP RST is only sent during TCP connection in ESTABLISHED state. Read more about it [here](/azure/load-balancer/load-balancer-tcp-reset).
 
 When setting *IdleTimeoutInMinutes* to a different value than the default of 30 minutes, consider how long your workloads need an outbound connection. Also consider that the default timeout value for a *Standard* SKU load balancer used outside of AKS is 4 minutes. An *IdleTimeoutInMinutes* value that more accurately reflects your specific AKS workload can help decrease SNAT exhaustion caused by tying up connections no longer being used.
 
@@ -437,7 +437,7 @@ The following annotations are supported for Kubernetes services with type `LoadB
 | `service.beta.kubernetes.io/port_{port}_health-probe_num-of-probe`         | The minimum number of unhealthy responses of health probe | {port} is service port number.                                                                                                                                                                                        |
 | `service.beta.kubernetes.io/port_{port}_health-probe_request-path`         | Request path of the health probe                          | {port} is service port number.                                                                                                                                                                                        |
 
-As documented [here](../load-balancer/load-balancer-custom-probe-overview.md), Tcp, Http and Https are three protocols supported by load balancer service.
+As documented [here](/azure/load-balancer/load-balancer-custom-probe-overview), Tcp, Http and Https are three protocols supported by load balancer service.
 
 Currently, the default protocol of the health probe varies among services with different transport protocols, app protocols, annotations and external traffic policies.
 
@@ -582,7 +582,7 @@ spec:
 
 ## Troubleshooting SNAT
 
-If you know that you're starting many outbound TCP or UDP connections to the same destination IP address and port, and you observe failing outbound connections or support notifies you that you're exhausting SNAT ports (preallocated ephemeral ports used by PAT), you have several general mitigation options. Review these options and decide what's best for your scenario. It's possible that one or more can help manage your scenario. For detailed information, review the [outbound connections troubleshooting guide](../load-balancer/troubleshoot-outbound-connection.md).
+If you know that you're starting many outbound TCP or UDP connections to the same destination IP address and port, and you observe failing outbound connections or support notifies you that you're exhausting SNAT ports (preallocated ephemeral ports used by PAT), you have several general mitigation options. Review these options and decide what's best for your scenario. It's possible that one or more can help manage your scenario. For detailed information, review the [outbound connections troubleshooting guide](/azure/load-balancer/troubleshoot-outbound-connection).
 
 The root cause of SNAT exhaustion is frequently an anti-pattern for how outbound connectivity is established, managed, or configurable timers changed from their default values. Review this section carefully.
 
@@ -590,7 +590,7 @@ The root cause of SNAT exhaustion is frequently an anti-pattern for how outbound
 
 1. Check if your connections remain idle for a long time and rely on the default idle timeout for releasing that port. If so, the default timeout of 30 minutes might need to be reduced for your scenario.
 2. Investigate how your application creates outbound connectivity (for example, code review or packet capture).
-3. Determine if this activity is expected behavior or whether the application is misbehaving. Use [metrics](../load-balancer/load-balancer-standard-diagnostics.md) and [logs](../load-balancer/monitor-load-balancer.md) in Azure Monitor to substantiate your findings. For example, use the "Failed" category for SNAT connections metric.
+3. Determine if this activity is expected behavior or whether the application is misbehaving. Use [metrics](/azure/load-balancer/load-balancer-standard-diagnostics) and [logs](/azure/load-balancer/monitor-load-balancer) in Azure Monitor to substantiate your findings. For example, use the "Failed" category for SNAT connections metric.
 4. Evaluate if appropriate [patterns](#design-patterns) are followed.
 5. Evaluate if SNAT port exhaustion should be mitigated with [more outbound IP addresses + more allocated outbound ports](#configure-the-allocated-outbound-ports).
 
@@ -648,7 +648,7 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
 [aks-sp]: kubernetes-service-principal.md#delegate-access-to-other-azure-resources
-[augmented-security-rules]: ../virtual-network/network-security-groups-overview.md#augmented-security-rules
+[augmented-security-rules]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
 [az-aks-show]: /cli/azure/aks#az_aks_show
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
@@ -662,12 +662,12 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [az-network-public-ip-show]: /cli/azure/network/public-ip#az_network_public_ip_show
 [az-network-public-ip-prefix-show]: /cli/azure/network/public-ip/prefix#az_network_public_ip_prefix_show
 [az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[azure-lb]: ../load-balancer/load-balancer-overview.md#securebydefault
-[azure-lb-comparison]: ../load-balancer/skus.md
-[azure-lb-outbound-rules]: ../load-balancer/load-balancer-outbound-connections.md#outboundrules
-[azure-lb-outbound-connections]: ../load-balancer/load-balancer-outbound-connections.md
-[azure-lb-outbound-preallocatedports]: ../load-balancer/load-balancer-outbound-connections.md#preallocatedports
-[azure-lb-outbound-rules-overview]: ../load-balancer/load-balancer-outbound-connections.md#outboundrules
+[azure-lb]: /azure/load-balancer/load-balancer-overview#securebydefault
+[azure-lb-comparison]: /azure/load-balancer/skus
+[azure-lb-outbound-rules]: /azure/load-balancer/load-balancer-outbound-connections#outboundrules
+[azure-lb-outbound-connections]: /azure/load-balancer/load-balancer-outbound-connections
+[azure-lb-outbound-preallocatedports]: /azure/load-balancer/load-balancer-outbound-connections#preallocatedports
+[azure-lb-outbound-rules-overview]: /azure/load-balancer/load-balancer-outbound-connections#outboundrules
 [install-azure-cli]: /cli/azure/install-azure-cli
 [internal-lb-yaml]: internal-lb.md#create-an-internal-load-balancer
 [kubernetes-concepts]: concepts-clusters-workloads.md
@@ -676,8 +676,8 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [az-extension-update]: /cli/azure/extension#az_extension_update
 [use-multiple-node-pools]: use-multiple-node-pools.md
 [troubleshoot-snat]: #troubleshooting-snat
-[service-tags]: ../virtual-network/network-security-groups-overview.md#service-tags
+[service-tags]: /azure/virtual-network/network-security-groups-overview#service-tags
 [maxsurge]: ./upgrade-aks-cluster.md#customize-node-surge-upgrade
-[az-lb]: ../load-balancer/load-balancer-overview.md
-[alb-outbound-rules]: ../load-balancer/outbound-rules.md
+[az-lb]: /azure/load-balancer/load-balancer-overview
+[alb-outbound-rules]: /azure/load-balancer/outbound-rules
 

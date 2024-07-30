@@ -230,11 +230,11 @@ To mount the moved disk volume, create a static persistent volume with the resou
 <!-- LINKS - internal -->
 [disk-based-solutions]: /azure/cloud-adoption-framework/scenarios/app-platform/aks/storage#disk-based-solutions
 [install-azure-cli]: /cli/azure/install-azure-cli
-[move-resources-new-subscription-resource-group]: ../azure-resource-manager/management/move-resource-group-and-subscription.md
+[move-resources-new-subscription-resource-group]: /azure/azure-resource-manager/management/move-resource-group-and-subscription
 [az-aks-show]: /cli/azure/disk#az-disk-show
 [az-disk-list]: /cli/azure/disk#az-disk-list
-[move-resources-checklist]: ../azure-resource-manager/management/move-resource-group-and-subscription.md#checklist-before-moving-resources
-[move-resources-using-porta]: ../azure-resource-manager/management/move-resource-group-and-subscription.md#use-the-portal
-[move-resources-using-azure-powershell]: ../azure-resource-manager/management/move-resource-group-and-subscription.md#use-azure-powershell
-[move-resources-using-azure-cli]: ../azure-resource-manager/management/move-resource-group-and-subscription.md#use-azure-cli
+[move-resources-checklist]: /azure/azure-resource-manager/management/move-resource-group-and-subscription#checklist-before-moving-resources
+[move-resources-using-porta]: /azure/azure-resource-manager/management/move-resource-group-and-subscription#use-the-portal
+[move-resources-using-azure-powershell]: /azure/azure-resource-manager/management/move-resource-group-and-subscription#use-azure-powershell
+[move-resources-using-azure-cli]: /azure/azure-resource-manager/management/move-resource-group-and-subscription#use-azure-cli
 [operator-best-practices-storage]: operator-best-practices-storage.md

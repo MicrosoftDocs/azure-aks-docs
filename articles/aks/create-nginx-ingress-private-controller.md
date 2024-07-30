@@ -307,8 +307,8 @@ For other configuration information related to SSL encryption other advanced NGI
 
 <!-- LINKS - internal -->
 [summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
-[rbac-owner]: ../role-based-access-control/built-in-roles.md#owner
-[rbac-classic]: ../role-based-access-control/rbac-and-directory-admin-roles.md#classic-subscription-administrator-roles
+[rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
+[rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [app-routing-add-on-basic-configuration]: app-routing.md
 [dns-ssl-configuration]: app-routing-dns-ssl.md
 [custom-ingress-configurations]: app-routing-nginx-configuration.md
@@ -316,8 +316,8 @@ For other configuration information related to SSL encryption other advanced NGI
 [az-network-dns-zone-show]: /cli/azure/network/dns/zone#az-network-dns-zone-show
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[virtual-network-links]: ../dns/private-dns-virtual-network-links.md
-[azure-dns-zone-role]: ../dns/dns-protect-private-zones-recordsets.md
+[virtual-network-links]: /azure/dns/private-dns-virtual-network-links
+[azure-dns-zone-role]: /azure/dns/dns-protect-private-zones-recordsets
 [az-network-private-dns-zone-create]: /cli/azure/network/private-dns/zone?#az-network-private-dns-zone-create
 [az-network-private-dns-link-vnet-create]: /cli/azure/network/private-dns/link/vnet#az-network-private-dns-link-vnet-create
 [az-network-private-dns-record-set-a-list]: /cli/azure/network/private-dns/record-set/a#az-network-private-dns-record-set-a-list

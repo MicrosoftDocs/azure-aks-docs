@@ -436,7 +436,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 <!-- LINKS - internal -->
 [kubernetes-concepts]: ../concepts-clusters-workloads.md
 [aks-tutorial]: ../tutorial-kubernetes-prepare-app.md
-[azure-resource-group]: ../../azure-resource-manager/management/overview.md
+[azure-resource-group]: /azure/azure-resource-manager/management/overview
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

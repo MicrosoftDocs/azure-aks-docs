@@ -208,7 +208,7 @@ To learn more about AKS, and walk through a complete code to deployment example,
 
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[aks-events]: ../event-grid/event-schema-aks.md
+[aks-events]: /azure/event-grid/event-schema-aks
 [aks-tutorial]: ./tutorial-kubernetes-prepare-app.md
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [new-azakscluster]: /powershell/module/az.aks/new-azakscluster

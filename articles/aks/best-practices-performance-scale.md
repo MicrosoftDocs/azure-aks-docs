@@ -136,7 +136,7 @@ Using the latest node image version provides the best performance experience. AK
 
 #### Azure Linux
 
-The [Azure Linux Container Host on AKS](../azure-linux/intro-azure-linux.md) uses a native AKS image and provides a single place for Linux development. Every package is built from source and validated, ensuring your services run on proven components.
+The [Azure Linux Container Host on AKS](/azure/azure-linux/intro-azure-linux) uses a native AKS image and provides a single place for Linux development. Every package is built from source and validated, ensuring your services run on proven components.
 
 Azure Linux is lightweight, only including the necessary set of packages to run container workloads. It provides a reduced attack surface and eliminates patching and maintenance of unnecessary packages. At its base layer, it has a Microsoft-hardened kernel tuned for Azure. This image is ideal for performance-sensitive workloads and platform engineers or operators that manage fleets of AKS clusters.
 
@@ -162,7 +162,7 @@ For scaling performance and reliability, we recommend using a dedicated system n
 
 Review the extensions and add-ons you have enabled during create provisioning. Extensions and add-ons can add latency to overall duration of create operations. If you don't need an extension or add-on, we recommend removing it to improve create latency.
 
-You can also use availability zones to provide a higher level of availability to protect against potential hardware failures or planned maintenance events. AKS clusters distribute resources across logical sections of underlying Azure infrastructure. Availability zones physically separate nodes from other nodes to help ensure that a single failure doesn't impact the availability of your application. Availability zones are only available in certain regions. For more information, see [Availability zones in Azure](../reliability/availability-zones-overview.md).
+You can also use availability zones to provide a higher level of availability to protect against potential hardware failures or planned maintenance events. AKS clusters distribute resources across logical sections of underlying Azure infrastructure. Availability zones physically separate nodes from other nodes to help ensure that a single failure doesn't impact the availability of your application. Availability zones are only available in certain regions. For more information, see [Availability zones in Azure](/azure/reliability/availability-zones-overview).
 
 ## Kubernetes API server
 
@@ -247,9 +247,9 @@ You can use the following steps to monitor IOPS and bandwidth meters on OS disks
 2. Search for **Virtual machine scale sets** and select your virtual machine scale set.
 3. Under **Monitoring**, select **Metrics**.
 
-Ephemeral OS disks can provide dynamic IOPS and throughput for your application, whereas managed disks have capped IOPS and throughput. For more information, see [Ephemeral OS disks for Azure VMs](../virtual-machines/ephemeral-os-disks.md).
+Ephemeral OS disks can provide dynamic IOPS and throughput for your application, whereas managed disks have capped IOPS and throughput. For more information, see [Ephemeral OS disks for Azure VMs](/azure/virtual-machines/ephemeral-os-disks).
 
-[Azure Premium SSD v2](../virtual-machines/disks-types.md#premium-ssd-v2) is designed for IO-intense enterprise workloads that require sub-millisecond disk latencies and high IOPS and throughput at a low cost. It's suited for a broad range of workloads, such as SQL server, Oracle, MariaDB, SAP, Cassandra, MongoDB, big data/analytics, gaming, and more. This disk type is the highest performing option currently available for persistent volumes.
+[Azure Premium SSD v2](/azure/virtual-machines/disks-types#premium-ssd-v2) is designed for IO-intense enterprise workloads that require sub-millisecond disk latencies and high IOPS and throughput at a low cost. It's suited for a broad range of workloads, such as SQL server, Oracle, MariaDB, SAP, Cassandra, MongoDB, big data/analytics, gaming, and more. This disk type is the highest performing option currently available for persistent volumes.
 
 ### Pod scheduling
 

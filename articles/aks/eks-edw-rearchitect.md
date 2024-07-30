@@ -69,9 +69,9 @@ In AWS, you can choose between on-demand compute (more expensive but no eviction
 [keda]: https://keda.sh/
 [karpenter]: https://karpenter.sh/
 [service-account-volume-projection]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection
-[advanced-features-service-bus-event-hub]: ../service-bus-messaging/service-bus-azure-and-service-bus-queues-compared-contrasted.md
-[azure-queue-storage]: ../storage/queues/storage-queues-introduction.md
-[azure-table-storage]: ../storage/tables/table-storage-overview.md
+[advanced-features-service-bus-event-hub]: /azure/service-bus-messaging/service-bus-azure-and-service-bus-queues-compared-contrasted
+[azure-queue-storage]: /azure/storage/queues/storage-queues-introduction
+[azure-table-storage]: /azure/storage/tables/table-storage-overview
 [aks]: ./what-is-aks.md
 [microsoft-entra]: /entra/fundamentals/whatis
 [on-demand-node-pool]: ./create-node-pools.md

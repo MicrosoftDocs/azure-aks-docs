@@ -30,16 +30,16 @@ The following table lists the tags for AKS and related services:
 | Area | Tag |
 |-------|----------------------|
 | [Azure Kubernetes Service](intro-kubernetes.md) | [azure-kubernetes-service](/answers/topics/azure-kubernetes-service.html)|
-| [Azure Container Registry](../container-registry/container-registry-intro.md) | [azure-container-registry](/answers/topics/azure-container-registry.html)|
-| [Azure storage accounts](../storage/common/storage-account-overview.md) | [azure-storage-accounts](/answers/topics/azure-storage-accounts.html)|
-| [Azure Managed Identities](../active-directory/managed-identities-azure-resources/overview.md) | [azure-managed-identity](/answers/topics/azure-managed-identity.html) |
-| [Azure RBAC](../role-based-access-control/overview.md) | [azure-rbac](/answers/topics/azure-rbac.html)|
-| [Microsoft Entra ID](../active-directory/fundamentals/active-directory-whatis.md) | [Microsoft Entra ID](/answers/topics/azure-active-directory.html)|
-| [Azure Policy](../governance/policy/overview.md) | [azure-policy](/answers/topics/azure-policy.html)|
-| [Azure Virtual Machine Scale Sets](../virtual-machine-scale-sets/overview.md) | [virtual-machine-scale-sets](/answers/topics/123/azure-virtual-machines-scale-set.html)|
-| [Azure Virtual Network](../virtual-network/network-overview.md) | [azure-virtual-network](/answers/topics/azure-virtual-network.html)|
-| [Azure Application Gateway](../application-gateway/overview.md) | [azure-application-gateway](/answers/topics/azure-application-gateway.html)|
-| [Azure Virtual Machines](../virtual-machines/linux/overview.md) | [azure-virtual-machines](/answers/topics/azure-virtual-machines.html) |
+| [Azure Container Registry](/azure/container-registry/container-registry-intro) | [azure-container-registry](/answers/topics/azure-container-registry.html)|
+| [Azure storage accounts](/azure/storage/common/storage-account-overview) | [azure-storage-accounts](/answers/topics/azure-storage-accounts.html)|
+| [Azure Managed Identities](/azure/active-directory/managed-identities-azure-resources/overview) | [azure-managed-identity](/answers/topics/azure-managed-identity.html) |
+| [Azure RBAC](/azure/role-based-access-control/overview) | [azure-rbac](/answers/topics/azure-rbac.html)|
+| [Microsoft Entra ID](/azure/active-directory/fundamentals/active-directory-whatis) | [Microsoft Entra ID](/answers/topics/azure-active-directory.html)|
+| [Azure Policy](/azure/governance/policy/overview) | [azure-policy](/answers/topics/azure-policy.html)|
+| [Azure Virtual Machine Scale Sets](/azure/virtual-machine-scale-sets/overview) | [virtual-machine-scale-sets](/answers/topics/123/azure-virtual-machines-scale-set.html)|
+| [Azure Virtual Network](/azure/virtual-network/network-overview) | [azure-virtual-network](/answers/topics/azure-virtual-network.html)|
+| [Azure Application Gateway](/azure/application-gateway/overview) | [azure-application-gateway](/answers/topics/azure-application-gateway.html)|
+| [Azure Virtual Machines](/azure/virtual-machines/linux/overview) | [azure-virtual-machines](/answers/topics/azure-virtual-machines.html) |
 
 ## Create an Azure support request
 

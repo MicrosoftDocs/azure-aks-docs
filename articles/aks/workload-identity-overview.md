@@ -306,18 +306,18 @@ The following table summarizes our migration or deployment recommendations for w
 [virtual-kubelet]: https://virtual-kubelet.io/docs/
 
 <!-- INTERNAL LINKS -->
-[service-connector-overview]: ../service-connector/overview.md
+[service-connector-overview]: /azure/service-connector/overview
 [use-azure-ad-pod-identity]: use-azure-ad-pod-identity.md
-[azure-ad-workload-identity]: ../active-directory/develop/workload-identities-overview.md
-[microsoft-authentication-library]: ../active-directory/develop/msal-overview.md
-[azure-ad-application-registration]: ../active-directory/develop/application-model.md#register-an-application
+[azure-ad-workload-identity]: /azure/active-directory/develop/workload-identities-overview
+[microsoft-authentication-library]: /azure/active-directory/develop/msal-overview
+[azure-ad-application-registration]: /azure/active-directory/develop/application-model#register-an-application
 [install-azure-cli]: /cli/azure/install-azure-cli
-[azure-identity-libraries]: ../active-directory/develop/reference-v2-libraries.md
-[openid-connect-overview]: ../active-directory/develop/v2-protocols-oidc.md
+[azure-identity-libraries]: /azure/active-directory/develop/reference-v2-libraries
+[openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [deploy-configure-workload-identity-cluster]: workload-identity-deploy-cluster.md
 [workload-identity-migration-sidecar]: workload-identity-migrate-from-pod-identity.md
 [auto-rotation]: certificate-rotation.md#certificate-auto-rotation
 [aks-virtual-nodes]: virtual-nodes.md
-[unsupported-regions-user-assigned-managed-identities]: ../active-directory/workload-identities/workload-identity-federation-considerations.md#unsupported-regions-user-assigned-managed-identities
-[general-federated-identity-credential-considerations]: ../active-directory/workload-identities/workload-identity-federation-considerations.md#general-federated-identity-credential-considerations
+[unsupported-regions-user-assigned-managed-identities]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#unsupported-regions-user-assigned-managed-identities
+[general-federated-identity-credential-considerations]: /azure/active-directory/workload-identities/workload-identity-federation-considerations#general-federated-identity-credential-considerations
 

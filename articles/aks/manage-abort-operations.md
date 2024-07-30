@@ -128,7 +128,7 @@ When you terminate an operation, it doesn't roll back to the previous state and 
 
 ## Next steps
 
-Learn more about [Container insights](../azure-monitor/containers/container-insights-overview.md) to understand how it helps you monitor the performance and health of your Kubernetes cluster and container workloads.
+Learn more about [Container insights](/azure/azure-monitor/containers/container-insights-overview) to understand how it helps you monitor the performance and health of your Kubernetes cluster and container workloads.
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli

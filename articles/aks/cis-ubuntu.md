@@ -300,5 +300,5 @@ For more information about AKS security, see the following articles:
 
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark
-[linux-security-baseline]: ../governance/policy/samples/guest-configuration-baseline-linux.md
+[linux-security-baseline]: /azure/governance/policy/samples/guest-configuration-baseline-linux
 [security-concepts-aks-apps-clusters]: concepts-security.md

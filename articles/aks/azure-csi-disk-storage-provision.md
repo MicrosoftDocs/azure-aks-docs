@@ -411,14 +411,14 @@ kubectl delete -f azure-pvc.yaml
 [concepts-storage]: concepts-storage.md
 [storage-class-concepts]: concepts-storage.md#storage-classes
 [use-tags]: use-tags.md
-[share-azure-managed-disk]: ../virtual-machines/disks-shared.md
-[disk-host-cache-setting]: ../virtual-machines/windows/premium-storage-performance.md#disk-caching
+[share-azure-managed-disk]: /azure/virtual-machines/disks-shared
+[disk-host-cache-setting]: /azure/virtual-machines/windows/premium-storage-performance#disk-caching
 [use-ultra-disks]: use-ultra-disks.md
-[ultra-ssd-disks]: ../virtual-machines/linux/disks-ultra-ssd.md
-[premiumv2_lrs_disks]: ../virtual-machines/disks-types.md#premium-ssd-v2
-[azure-tags]: ../azure-resource-manager/management/tag-resources.md
-[disk-encryption]: ../virtual-machines/windows/disk-encryption.md
-[azure-disk-write-accelerator]: ../virtual-machines/windows/how-to-enable-write-accelerator.md
-[on-demand-bursting]: ../virtual-machines/disk-bursting.md
-[customer-usage-attribution]: ../marketplace/azure-partner-customer-usage-attribution.md
+[ultra-ssd-disks]: /azure/virtual-machines/linux/disks-ultra-ssd
+[premiumv2_lrs_disks]: /azure/virtual-machines/disks-types#premium-ssd-v2
+[azure-tags]: /azure/azure-resource-manager/management/tag-resources
+[disk-encryption]: /azure/virtual-machines/windows/disk-encryption
+[azure-disk-write-accelerator]: /azure/virtual-machines/windows/how-to-enable-write-accelerator
+[on-demand-bursting]: /azure/virtual-machines/disk-bursting
+[customer-usage-attribution]: /azure/marketplace/azure-partner-customer-usage-attribution
 

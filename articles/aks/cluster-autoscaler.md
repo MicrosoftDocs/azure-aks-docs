@@ -275,7 +275,7 @@ You can retrieve logs and status updates from the cluster autoscaler to help dia
 
 For more information, see the [Kubernetes/autoscaler GitHub project FAQ][kubernetes-faq].
 ## Cluster Autoscaler Metrics
-You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from the [cluster autoscaler](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](../azure-monitor/essentials/prometheus-metrics-overview.md)
+You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from the [cluster autoscaler](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
 
 ## Next steps
 

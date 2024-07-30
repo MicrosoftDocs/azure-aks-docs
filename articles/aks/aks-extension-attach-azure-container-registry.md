@@ -67,7 +67,7 @@ If you have a question or want to offer product feedback, please open an issue o
 To learn more about other AKS add-ons and extensions, see [Add-ons, extensions, and other integrations for AKS][aks-addons].
 
 <!---LINKS--->
-[create-acr-cli]: ../container-registry/container-registry-get-started-azure-cli.md
+[create-acr-cli]: /azure/container-registry/container-registry-get-started-azure-cli
 [deploy-aks-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [install-aks-vscode]: ./aks-extension-vs-code.md#installation
 [aks-vscode-features]: https://code.visualstudio.com/docs/azure/aksextensions#_features

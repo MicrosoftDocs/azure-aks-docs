@@ -112,4 +112,4 @@ Azure CNI Overlay has the following limitations:
 <!-- LINKS - Internal -->
 [aks-egress]: limit-egress-traffic.md
 [aks-network-policies]: use-network-policies.md
-[nsg]: ../virtual-network/network-security-groups-overview.md
+[nsg]: /azure/virtual-network/network-security-groups-overview

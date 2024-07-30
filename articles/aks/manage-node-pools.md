@@ -591,7 +591,7 @@ When you use an Azure Resource Manager template to create and manage resources, 
 [operator-best-practices-advanced-scheduler]: operator-best-practices-advanced-scheduler.md
 [quotas-skus-regions]: quotas-skus-regions.md
 [taints-tolerations]: operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations
-[vm-sizes]: ../virtual-machines/sizes.md
+[vm-sizes]: /azure/virtual-machines/sizes
 [use-system-pool]: use-system-pools.md
 [reduce-latency-ppg]: reduce-latency-ppg.md
 [use-tags]: use-tags.md

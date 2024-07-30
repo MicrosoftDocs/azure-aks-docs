@@ -61,7 +61,7 @@ az keyvault create --resource-group <ResourceGroupName> --location <Location> --
 For testing, you can use a self-signed public certificate instead of a Certificate Authority (CA)-signed certificate. If you already have a certificate, you can skip this step.
 
 > [!CAUTION]
-> Self-signed certificates are digital certificates that are not signed by a trusted third-party CA. Self-signed certificates are created, issued, and signed by the company or developer who is responsible for the website or software being signed. This is why self-signed certificates are considered unsafe for public-facing websites and applications. Azure Key Vault has a [trusted partnership with the some Certificate Authorities](../key-vault/certificates/how-to-integrate-certificate-authority.md).
+> Self-signed certificates are digital certificates that are not signed by a trusted third-party CA. Self-signed certificates are created, issued, and signed by the company or developer who is responsible for the website or software being signed. This is why self-signed certificates are considered unsafe for public-facing websites and applications. Azure Key Vault has a [trusted partnership with the some Certificate Authorities](/azure/key-vault/certificates/how-to-integrate-certificate-authority).
 
 1. Create a self-signed SSL certificate to use with the Ingress using the `openssl req` command. Make sure you replace *`<Hostname>`* with the DNS name you're using.
 
@@ -228,22 +228,22 @@ Learn about monitoring the Ingress-nginx controller metrics included with the ap
 
 <!-- LINKS - internal -->
 [summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
-[rbac-owner]: ../role-based-access-control/built-in-roles.md#owner
-[rbac-classic]: ../role-based-access-control/rbac-and-directory-admin-roles.md#classic-subscription-administrator-roles
+[rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
+[rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [app-routing-add-on-basic-configuration]: app-routing.md
 [csi-secrets-store-autorotation]: csi-secrets-store-configuration-options.md#enable-and-disable-auto-rotation
-[azure-key-vault-overview]: ../key-vault/general/overview.md
+[azure-key-vault-overview]: /azure/key-vault/general/overview
 [az-aks-approuting-update]: /cli/azure/aks/approuting#az-aks-approuting-update
 [az-aks-approuting-zone]: /cli/azure/aks/approuting/zone
 [az-network-dns-zone-show]: /cli/azure/network/dns/zone#az-network-dns-zone-show
 [az-network-dns-zone-create]: /cli/azure/network/dns/zone#az-network-dns-zone-create
 [az-keyvault-certificate-import]: /cli/azure/keyvault/certificate#az-keyvault-certificate-import
 [az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create
-[authorization-systems]: ../key-vault/general/rbac-access-policy.md
+[authorization-systems]: /azure/key-vault/general/rbac-access-policy
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [create-and-export-a-self-signed-ssl-certificate]: #create-and-export-a-self-signed-ssl-certificate
 [create-an-azure-dns-zone]: #create-a-public-azure-dns-zone
-[azure-dns-overview]: ../dns/dns-overview.md
+[azure-dns-overview]: /azure/dns/dns-overview
 [az-keyvault-certificate-show]: /cli/azure/keyvault/certificate#az-keyvault-certificate-show
 [prometheus-in-grafana]: app-routing-nginx-prometheus.md

@@ -296,15 +296,15 @@ For information on how to update the credentials, see [Update or rotate the cred
 [service-principal]: /entra/identity-platform/app-objects-and-service-principals
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
-[rbac-network-contributor]: ../role-based-access-control/built-in-roles.md#network-contributor
-[rbac-custom-role]: ../role-based-access-control/custom-roles.md
-[rbac-disk-contributor]: ../role-based-access-control/built-in-roles.md#virtual-machine-contributor
+[rbac-network-contributor]: /azure/role-based-access-control/built-in-roles#network-contributor
+[rbac-custom-role]: /azure/role-based-access-control/custom-roles
+[rbac-disk-contributor]: /azure/role-based-access-control/built-in-roles#virtual-machine-contributor
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [aks-to-acr]: cluster-container-registry-integration.md
 [update-credentials]: ./update-credentials.md
 [reset-credentials]: ./update-credentials.md#reset-the-existing-service-principal-credentials
 [new-service-principal]: ./update-credentials.md#create-a-new-service-principal
-[azure-ad-permissions]: ../active-directory/fundamentals/users-default-permissions.md
+[azure-ad-permissions]: /azure/active-directory/fundamentals/users-default-permissions
 [aks-permissions]: concepts-identity.md#aks-service-permissions
 [install-the-azure-az-powershell-module]: /powershell/azure/install-az-ps
 [new-azakscluster]: /powershell/module/az.aks/new-azakscluster
@@ -314,5 +314,5 @@ For information on how to update the credentials, see [Update or rotate the cred
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
 [remove-azadserviceprincipal]: /powershell/module/az.resources/remove-azadserviceprincipal
 [use-managed-identity]: use-managed-identity.md
-[managed-identity-resources-overview]: ..//active-directory/managed-identities-azure-resources/overview.md
+[managed-identity-resources-overview]: /azure/active-directory/managed-identities-azure-resources/overview
 

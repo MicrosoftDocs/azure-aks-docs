@@ -25,7 +25,7 @@ In these application environments, using signed container images helps verify th
 * An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
 * [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install].
 * `aks-preview` CLI extension version 0.5.96 or later.
-* Ensure that the Azure Policy add-on for AKS is enabled on your cluster. If you don't have this add-on installed, see [Install Azure Policy add-on for AKS](../governance/policy/concepts/policy-for-kubernetes.md#install-azure-policy-add-on-for-aks).
+* Ensure that the Azure Policy add-on for AKS is enabled on your cluster. If you don't have this add-on installed, see [Install Azure Policy add-on for AKS](/azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks).
 * An AKS cluster enabled with OIDC Issuer. To create a new cluster or update an existing cluster, see [Configure an AKS cluster with OIDC Issuer](./use-oidc-issuer.md).
 * The `EnableImageIntegrityPreview` and `AKS-AzurePolicyExternalData` feature flags registered on your Azure subscription. Register the feature flags using the following commands:
   
@@ -72,14 +72,14 @@ In these application environments, using signed container images helps verify th
 Image Integrity uses Ratify, Azure Policy, and Gatekeeper to validate signed images before deploying them to your AKS clusters. Enabling Image Integrity on your cluster deploys a `Ratify` pod. This `Ratify` pod performs the following tasks:
 
 1. Reconciles certificates from Azure Key Vault per the configuration you set up through `Ratify` CRDs.
-2. Accesses images stored in ACR when validation requests come from [Azure Policy](../governance/policy/concepts/policy-for-kubernetes.md). To enable this experience, Azure Policy extends Gatekeeper, an admission controller webhook for [Open Policy Agent (OPA)](https://www.openpolicyagent.org/).
+2. Accesses images stored in ACR when validation requests come from [Azure Policy](/azure/governance/policy/concepts/policy-for-kubernetes). To enable this experience, Azure Policy extends Gatekeeper, an admission controller webhook for [Open Policy Agent (OPA)](https://www.openpolicyagent.org/).
 3. Determines whether the target image is signed with a trusted cert and therefore considered as *trusted*.
 4. `AzurePolicy` and `Gatekeeper` consume the validation results as the compliance state to decide whether to allow the deployment request.
 
 ## Enable Image Integrity on your AKS cluster
 
 > [!NOTE]
-> Image signature verification is a governance-oriented scenario and leverages [Azure Policy](../governance/policy/concepts/policy-for-kubernetes.md) to verify image signatures on AKS clusters at-scale. We recommend using AKS's Image Integrity built-in Azure Policy initiative, which is available in [Azure Policy's built-in definition library](../governance/policy/samples/built-in-policies.md#kubernetes).
+> Image signature verification is a governance-oriented scenario and leverages [Azure Policy](/azure/governance/policy/concepts/policy-for-kubernetes) to verify image signatures on AKS clusters at-scale. We recommend using AKS's Image Integrity built-in Azure Policy initiative, which is available in [Azure Policy's built-in definition library](/azure/governance/policy/samples/built-in-policies#kubernetes).
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -211,7 +211,7 @@ In this article, we use a self-signed CA cert from the official Ratify documenta
     pod/demo-signed created
     ```
 
-If you want to use your own images, see the [guidance for image signing](../container-registry/container-registry-tutorial-sign-build-push.md).
+If you want to use your own images, see the [guidance for image signing](/azure/container-registry/container-registry-tutorial-sign-build-push).
 
 ## Disable Image Integrity
 
@@ -231,7 +231,7 @@ If you want to use your own images, see the [guidance for image signing](../cont
 
 ## Next steps
 
-In this article, you learned how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters. If you want to learn how to sign your own containers, see [Build, sign, and verify container images using Notary and Azure Key Vault (Preview)](../container-registry/container-registry-tutorial-sign-build-push.md).
+In this article, you learned how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters. If you want to learn how to sign your own containers, see [Build, sign, and verify container images using Notary and Azure Key Vault (Preview)](/azure/container-registry/container-registry-tutorial-sign-build-push).
 
 <!--- Internal links ---->
 [az-feature-register]: /cli/azure/feature#az_feature_register

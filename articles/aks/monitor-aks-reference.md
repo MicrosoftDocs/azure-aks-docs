@@ -20,19 +20,19 @@ The following table lists the platform metrics collected for AKS.  Follow each l
 
 |Metric Type | Resource Provider / Type Namespace<br/> and link to individual metrics |
 |-------|-----|
-| Managed clusters | [Microsoft.ContainerService/managedClusters](../azure-monitor/essentials/metrics-supported.md#microsoftcontainerservicemanagedclusters)
-| Connected clusters | [microsoft.kubernetes/connectedClusters](../azure-monitor/essentials/metrics-supported.md)
-| Virtual machines| [Microsoft.Compute/virtualMachines](../azure-monitor/essentials/metrics-supported.md#microsoftcomputevirtualmachines) |
-| Virtual machine scale sets | [Microsoft.Compute/virtualMachineScaleSets](../azure-monitor/essentials/metrics-supported.md#microsoftcomputevirtualmachinescalesets)|
-| Virtual machine scale sets virtual machines | [Microsoft.Compute/virtualMachineScaleSets/virtualMachines](../azure-monitor/essentials/metrics-supported.md#microsoftcomputevirtualmachinescalesetsvirtualmachines)|
+| Managed clusters | [Microsoft.ContainerService/managedClusters](/azure/azure-monitor/essentials/metrics-supported#microsoftcontainerservicemanagedclusters)
+| Connected clusters | [microsoft.kubernetes/connectedClusters](/azure/azure-monitor/essentials/metrics-supported)
+| Virtual machines| [Microsoft.Compute/virtualMachines](/azure/azure-monitor/essentials/metrics-supported#microsoftcomputevirtualmachines) |
+| Virtual machine scale sets | [Microsoft.Compute/virtualMachineScaleSets](/azure/azure-monitor/essentials/metrics-supported#microsoftcomputevirtualmachinescalesets)|
+| Virtual machine scale sets virtual machines | [Microsoft.Compute/virtualMachineScaleSets/virtualMachines](/azure/azure-monitor/essentials/metrics-supported#microsoftcomputevirtualmachinescalesetsvirtualmachines)|
 
-For more information, see a list of [all platform metrics supported in Azure Monitor](../azure-monitor/essentials/metrics-supported.md).
+For more information, see a list of [all platform metrics supported in Azure Monitor](/azure/azure-monitor/essentials/metrics-supported).
 
-In addition to the above platform metrics, Azure Monitor Container insights collects [these custom metrics](../azure-monitor/containers/container-insights-custom-metrics.md) for nodes, pods, containers, and persistent volumes.
+In addition to the above platform metrics, Azure Monitor Container insights collects [these custom metrics](/azure/azure-monitor/containers/container-insights-custom-metrics) for nodes, pods, containers, and persistent volumes.
 
 ## Metric dimensions
 
-The following table lists [dimensions](../azure-monitor/essentials/data-platform-metrics.md#multi-dimensional-metrics) for AKS metrics. 
+The following table lists [dimensions](/azure/azure-monitor/essentials/data-platform-metrics#multi-dimensional-metrics) for AKS metrics. 
 
 <!-- listed here /azure/azure-monitor/essentials/metrics-supported#microsoftcontainerservicemanagedclusters-->
 
@@ -51,9 +51,9 @@ The following table lists [dimensions](../azure-monitor/essentials/data-platform
 
 ## Resource logs
 
-AKS implements control plane logs for the cluster as [resource logs in Azure Monitor](../azure-monitor/essentials/resource-logs.md). See [Resource logs](monitor-aks.md#aks-control-planeresource-logs) for details on creating a diagnostic setting to collect these logs and [Sample queries](monitor-aks.md#sample-log-queries) for query examples.
+AKS implements control plane logs for the cluster as [resource logs in Azure Monitor](/azure/azure-monitor/essentials/resource-logs). See [Resource logs](monitor-aks.md#aks-control-planeresource-logs) for details on creating a diagnostic setting to collect these logs and [Sample queries](monitor-aks.md#sample-log-queries) for query examples.
 
-The following table lists the resource log categories you can collect for AKS. It also includes the table the logs for each category are sent to when you send the logs to a Log Analytics workspace using [resource-specific mode](../azure-monitor/essentials/resource-logs.md#resource-specific). In [Azure diagnostics mode](../azure-monitor/essentials/resource-logs.md#azure-diagnostics-mode), all logs are written to the [AzureDiagnostics](/azure/azure-monitor/reference/tables/azurediagnostics) table.
+The following table lists the resource log categories you can collect for AKS. It also includes the table the logs for each category are sent to when you send the logs to a Log Analytics workspace using [resource-specific mode](/azure/azure-monitor/essentials/resource-logs#resource-specific). In [Azure diagnostics mode](/azure/azure-monitor/essentials/resource-logs#azure-diagnostics-mode), all logs are written to the [AzureDiagnostics](/azure/azure-monitor/reference/tables/azurediagnostics) table.
 
 
 | Category | Description | Table<br>(resource-specific mode) |
@@ -71,7 +71,7 @@ The following table lists the resource log categories you can collect for AKS. I
 | csi-snapshot-controller | Logs from the Azure CSI driver snapshot controller. | AKSControlPlane |
 | AllMetrics              | Includes all platform metrics. Sends these values to Log Analytics workspace where it can be evaluated with other data using log queries. | AzureMetrics |
 
-For reference, see a list of [all resource logs category types supported in Azure Monitor](../azure-monitor/essentials/resource-logs-schema.md). 
+For reference, see a list of [all resource logs category types supported in Azure Monitor](/azure/azure-monitor/essentials/resource-logs-schema). 
 
 ## Azure Monitor Logs tables
 
@@ -85,7 +85,7 @@ For a reference of all Azure Monitor Logs / Log Analytics tables, see the [Azure
 
 ## Activity log
 
-The following table lists a few example operations related to AKS that may be created in the [Activity log](../azure-monitor/essentials/activity-log-insights.md). Use the Activity log to track information such as when a cluster is created or had its configuration change. You can view this information in the portal or by using [other methods](../azure-monitor/essentials/activity-log.md#other-methods-to-retrieve-activity-log-events). You can also use it to create an [Activity log alert]() to be proactively notified when an event occurs.
+The following table lists a few example operations related to AKS that may be created in the [Activity log](/azure/azure-monitor/essentials/activity-log-insights). Use the Activity log to track information such as when a cluster is created or had its configuration change. You can view this information in the portal or by using [other methods](/azure/azure-monitor/essentials/activity-log#other-methods-to-retrieve-activity-log-events). You can also use it to create an [Activity log alert]() to be proactively notified when an event occurs.
 
 | Operation | Description |
 |:---|:---|
@@ -95,12 +95,12 @@ The following table lists a few example operations related to AKS that may be cr
 | Microsoft.ContainerService/managedClusters/listClusterAdminCredential/action | List clusterAdmin credential |
 | Microsoft.ContainerService/managedClusters/agentpools/write | Create or Update Agent Pool |
 
-For a complete list of possible log entries, see [Microsoft.ContainerService Resource Provider options](../role-based-access-control/resource-provider-operations.md#microsoftcontainerservice).
+For a complete list of possible log entries, see [Microsoft.ContainerService Resource Provider options](/azure/role-based-access-control/resource-provider-operations#microsoftcontainerservice).
 
-For more information on the schema of Activity Log entries, see [Activity  Log schema](../azure-monitor/essentials/activity-log-schema.md). 
+For more information on the schema of Activity Log entries, see [Activity  Log schema](/azure/azure-monitor/essentials/activity-log-schema). 
 
 ## See also
 
 - See [Monitoring Azure AKS](monitor-aks.md) for a description of monitoring Azure AKS.
-- See [Monitoring Azure resources with Azure Monitor](../azure-monitor/essentials/monitor-azure-resource.md) for details on monitoring Azure resources.
+- See [Monitoring Azure resources with Azure Monitor](/azure/azure-monitor/essentials/monitor-azure-resource) for details on monitoring Azure resources.
 

@@ -343,7 +343,7 @@ The AKS Microsoft Entra client application ID that kubelogin uses to perform pub
 <!-- LINKS - internal -->
 [authentication-methods]: #authentication-methods
 [aks-managed-microsoft-entra-id]: managed-azure-ad.md
-[oauth-on-behalf-of]: ../active-directory/develop/v2-oauth2-on-behalf-of-flow.md
+[oauth-on-behalf-of]: /azure/active-directory/develop/v2-oauth2-on-behalf-of-flow
 [web-browser-interactive-method]: #web-browser-interactive
 [microsoft-entra-group-membership]: /entra/identity/hybrid/connect/how-to-connect-fed-group-claims
 [managed-identity-overview]: /entra/identity/managed-identities-azure-resources/overview

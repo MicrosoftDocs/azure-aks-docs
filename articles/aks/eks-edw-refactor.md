@@ -237,13 +237,13 @@ To build the container images and push them to ACR, make sure the environment va
 
 <!-- LINKS -->
 [map-aws-to-azure]: ./eks-edw-rearchitect.md#map-aws-services-to-azure-services
-[storage-queue-data-contributor]: ../role-based-access-control/built-in-roles.md#storage
-[storage-table-data-contributor]: ../role-based-access-control/built-in-roles.md#storage
+[storage-queue-data-contributor]: /azure/role-based-access-control/built-in-roles#storage
+[storage-table-data-contributor]: /azure/role-based-access-control/built-in-roles#storage
 [az-identity-create]: /cli/azure/identity#az_identity_create
 [az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
 [github-repo]: https://github.com/Azure-Samples/aks-event-driven-replicate-from-aws
 [azure-sdk-python]: https://github.com/Azure/azure-sdk-for-python
-[default-azure-credential]: ../storage/queues/storage-quickstart-queues-python.md#authorize-access-and-create-a-client-object
-[acr-intro]: ../container-registry/container-registry-intro.md
-[push-pull-acr]: ../container-registry/container-registry-get-started-docker-cli.md
+[default-azure-credential]: /azure/storage/queues/storage-quickstart-queues-python#authorize-access-and-create-a-client-object
+[acr-intro]: /azure/container-registry/container-registry-intro
+[push-pull-acr]: /azure/container-registry/container-registry-get-started-docker-cli
 [eks-edw-prepare]: ./eks-edw-prepare.md

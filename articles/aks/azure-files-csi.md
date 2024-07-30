@@ -307,13 +307,13 @@ kubectl apply -f private-pvc.yaml
 
 ## NFS file shares
 
-[Azure Files supports the NFS v4.1 protocol](../storage/files/storage-files-how-to-create-nfs-shares.md). NFS version 4.1 support for Azure Files provides you with a fully managed NFS file system as a service built on a highly available and highly durable distributed resilient storage platform.
+[Azure Files supports the NFS v4.1 protocol](/azure/storage/files/storage-files-how-to-create-nfs-shares). NFS version 4.1 support for Azure Files provides you with a fully managed NFS file system as a service built on a highly available and highly durable distributed resilient storage platform.
 
 This option is optimized for random access workloads with in-place data updates and provides full POSIX file system support. This section shows you how to use NFS shares with the Azure File CSI driver on an AKS cluster.
 
 ### Prerequisites
 
-- Your AKS cluster *Control plane* identity (that is, your AKS cluster name) is added to the [Contributor](../role-based-access-control/built-in-roles.md#contributor) role on the VNet and NetworkSecurityGroup.
+- Your AKS cluster *Control plane* identity (that is, your AKS cluster name) is added to the [Contributor](/azure/role-based-access-control/built-in-roles#contributor) role on the VNet and NetworkSecurityGroup.
 - Your AKS cluster's service principal or managed service identity (MSI) must be added to the Contributor role to the storage account.
 
 > [!NOTE]
@@ -510,11 +510,11 @@ The output of the commands resembles the following example:
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [concepts-storage]: concepts-storage.md
 [node-resource-group]: faq.md#why-are-two-resource-groups-created-with-aks
-[storage-skus]: ../storage/common/storage-redundancy.md
-[private-endpoint-overview]: ../private-link/private-endpoint-overview.md
+[storage-skus]: /azure/storage/common/storage-redundancy
+[private-endpoint-overview]: /azure/private-link/private-endpoint-overview
 [persistent-volume]: concepts-storage.md#persistent-volumes
-[share-snapshots-overview]: ../storage/files/storage-snapshots-files.md
+[share-snapshots-overview]: /azure/storage/files/storage-snapshots-files
 [statically-provision-a-volume]: azure-csi-files-storage-provision.md#statically-provision-a-volume
-[azure-private-endpoint-dns]: ../private-link/private-endpoint-dns.md#azure-services-dns-zone-configuration
-[azure-netapp-files-mount-options-best-practices]: ../azure-netapp-files/performance-linux-mount-options.md#rsize-and-wsize
-[nfs-file-share-mount-options]: ../storage/files/storage-files-how-to-mount-nfs-shares.md#mount-options
+[azure-private-endpoint-dns]: /azure/private-link/private-endpoint-dns#azure-services-dns-zone-configuration
+[azure-netapp-files-mount-options-best-practices]: /azure/azure-netapp-files/performance-linux-mount-options#rsize-and-wsize
+[nfs-file-share-mount-options]: /azure/storage/files/storage-files-how-to-mount-nfs-shares#mount-options

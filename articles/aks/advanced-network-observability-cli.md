@@ -212,7 +212,7 @@ az aks update \
 
 > [!NOTE]
 > The `hubble_flows_processed_total` metric isn't scraped by default due to high metric cardinality in large scale clusters. 
-> Because of this, the *Pods Flows* dashboards have panels with missing data. To change this, you can modify the ama metrics settings to include `hubble_flows_processed_total` in the metric keep list. To learn how to do this, see the [Minimal Ingestion Doumentation](../../articles/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal.md).
+> Because of this, the *Pods Flows* dashboards have panels with missing data. To change this, you can modify the ama metrics settings to include `hubble_flows_processed_total` in the metric keep list. To learn how to do this, see the [Minimal Ingestion Doumentation](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
 > 
 
 1. Make sure the Azure Monitor pods are running using the `kubectl get pods` command.

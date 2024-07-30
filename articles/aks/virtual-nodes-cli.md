@@ -314,5 +314,5 @@ Virtual nodes are often one component of a scaling solution in AKS. For more inf
 [az-provider-list]: /cli/azure/provider#az_provider_list
 [az-provider-register]: /cli/azure/provider#az_provider_register
 [virtual-nodes-aks]: virtual-nodes.md
-[virtual-nodes-networking-aci]: ../container-instances/container-instances-virtual-network-concepts.md
+[virtual-nodes-networking-aci]: /azure/container-instances/container-instances-virtual-network-concepts
 

@@ -227,7 +227,7 @@ EOF
 
 The instructions in this step show how to access secrets, keys, or certificates in an Azure key vault from the pod. The examples in this section  configure access to secrets in the key vault for the workload identity, but you can perform similar steps to configure access to keys or certificates.
 
-The following example shows how to use the Azure role-based access control (Azure RBAC) permission model to grant the pod access to the key vault. For more information about the Azure RBAC permission model for Azure Key Vault, see [Grant permission to applications to access an Azure key vault using Azure RBAC](../key-vault/general/rbac-guide.md).
+The following example shows how to use the Azure role-based access control (Azure RBAC) permission model to grant the pod access to the key vault. For more information about the Azure RBAC permission model for Azure Key Vault, see [Grant permission to applications to access an Azure key vault using Azure RBAC](/azure/key-vault/general/rbac-guide).
 
 1. Create a key vault with purge protection and RBAC authorization enabled. You can also use an existing key vault if it is configured for both purge protection and RBAC authorization:
 
@@ -243,7 +243,7 @@ The following example shows how to use the Azure role-based access control (Azur
         --enable-rbac-authorization
     ```
 
-1. Assign yourself the RBAC [Key Vault Secrets Officer](../role-based-access-control/built-in-roles/security.md#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
+1. Assign yourself the RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
 
     ```azurecli-interactive
     export KEYVAULT_RESOURCE_ID=$(az keyvault show --resource-group "${KEYVAULT_RESOURCE_GROUP}" \
@@ -267,7 +267,7 @@ The following example shows how to use the Azure role-based access control (Azur
         --value "Hello\!"
     ```
 
-1. Assign the [Key Vault Secrets User](../role-based-access-control/built-in-roles/security.md#key-vault-secrets-user) role to the user-assigned managed identity that you created previously. This step gives the managed identity permission to read secrets from the key vault:
+1. Assign the [Key Vault Secrets User](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-user) role to the user-assigned managed identity that you created previously. This step gives the managed identity permission to read secrets from the key vault:
 
     ```azurecli-interactive
     export IDENTITY_PRINCIPAL_ID=$(az identity show \
@@ -344,7 +344,7 @@ I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hell
 ```
 
 > [!IMPORTANT]
-> Azure RBAC role assignments can take up to ten minutes to propagate. If the pod is unable to access the secret, you may need to wait for the role assignment to propagate. For more information, see [Troubleshoot Azure RBAC](../role-based-access-control/troubleshooting.md#).
+> Azure RBAC role assignments can take up to ten minutes to propagate. If the pod is unable to access the secret, you may need to wait for the role assignment to propagate. For more information, see [Troubleshoot Azure RBAC](/azure/role-based-access-control/troubleshooting#).
 
 ## Disable workload identity
 
@@ -361,7 +361,7 @@ az aks update \
 
 In this article, you deployed a Kubernetes cluster and configured it to use a workload identity in preparation for application workloads to authenticate with that credential. Now you're ready to deploy your application and configure it to use the workload identity with the latest version of the [Azure Identity][azure-identity-libraries] client library. If you can't rewrite your application to use the latest client library version, you can [set up your application pod][workload-identity-migration] to authenticate using managed identity with workload identity as a short-term migration solution.
 
-The [Service Connector](../service-connector/overview.md) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Connect to Azure OpenAI Service in AKS using Workload Identity](../service-connector/tutorial-python-aks-openai-workload-identity.md) and the [Service Connector introduction](https://azure.github.io/AKS/2024/05/23/service-connector-intro).
+The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Connect to Azure OpenAI Service in AKS using Workload Identity](/azure/service-connector/tutorial-python-aks-openai-workload-identity) and the [Service Connector introduction](https://azure.github.io/AKS/2024/05/23/service-connector-intro).
 
 <!-- EXTERNAL LINKS -->
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
@@ -369,11 +369,11 @@ The [Service Connector](../service-connector/overview.md) integration helps simp
 <!-- INTERNAL LINKS -->
 [kubernetes-concepts]: concepts-clusters-workloads.md
 [workload-identity-overview]: workload-identity-overview.md
-[azure-resource-group]: ../azure-resource-manager/management/overview.md
+[azure-resource-group]: /azure/azure-resource-manager/management/overview
 [az-group-create]: /cli/azure/group#az-group-create
 [aks-identity-concepts]: concepts-identity.md
 [federated-identity-credential]: /graph/api/resources/federatedidentitycredentials-overview
-[tutorial-python-aks-storage-workload-identity]: ../service-connector/tutorial-python-aks-storage-workload-identity.md
+[tutorial-python-aks-storage-workload-identity]: /azure/service-connector/tutorial-python-aks-storage-workload-identity
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az aks update]: /cli/azure/aks#az-aks-update
 [aks-two-resource-groups]: faq.md#why-are-two-resource-groups-created-with-aks
@@ -382,4 +382,4 @@ The [Service Connector](../service-connector/overview.md) integration helps simp
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [workload-identity-migration]: workload-identity-migrate-from-pod-identity.md
-[azure-identity-libraries]: ../active-directory/develop/reference-v2-libraries.md
+[azure-identity-libraries]: /azure/active-directory/develop/reference-v2-libraries

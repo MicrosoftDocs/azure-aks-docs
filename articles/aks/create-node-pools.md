@@ -162,8 +162,8 @@ The Azure Linux container host for AKS is an open-source Linux distribution avai
 
 You can migrate your existing Ubuntu nodes to Azure Linux using one of the following methods:
 
-* [Remove existing node pools and add new Azure Linux node pools](../azure-linux/tutorial-azure-linux-migration.md#add-azure-linux-node-pools-and-remove-existing-node-pools).
-* [In-place OS SKU migration (preview)](../azure-linux/tutorial-azure-linux-migration.md#in-place-os-sku-migration).
+* [Remove existing node pools and add new Azure Linux node pools](/azure/azure-linux/tutorial-azure-linux-migration#add-azure-linux-node-pools-and-remove-existing-node-pools).
+* [In-place OS SKU migration (preview)](/azure/azure-linux/tutorial-azure-linux-migration#in-place-os-sku-migration).
 
 ## Node pools with unique subnets
 
@@ -291,9 +291,9 @@ In this article, you learned how to create multiple node pools in an AKS cluster
 
 <!-- LINKS -->
 [aks-storage-concepts]: concepts-storage.md
-[arm-sku-vm1]: ../virtual-machines/dpsv5-dpdsv5-series.md
-[arm-sku-vm2]: ../virtual-machines/dplsv5-dpldsv5-series.md
-[arm-sku-vm3]: ../virtual-machines/epsv5-epdsv5-series.md
+[arm-sku-vm1]: /azure/virtual-machines/dpsv5-dpdsv5-series
+[arm-sku-vm2]: /azure/virtual-machines/dplsv5-dpldsv5-series
+[arm-sku-vm3]: /azure/virtual-machines/epsv5-epdsv5-series
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
@@ -306,6 +306,6 @@ In this article, you learned how to create multiple node pools in an AKS cluster
 [enable-fips-nodes]: enable-fips-nodes.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [use-system-pool]: use-system-pools.md
-[restricted-vm-sizes]: ../virtual-machines/sizes.md
+[restricted-vm-sizes]: /azure/virtual-machines/sizes
 [aks-taints]: manage-node-pools.md#set-node-pool-taints
 

@@ -229,7 +229,7 @@ readinessProbe:
   periodSeconds: 5
 ```
 
-For more information, see [Configure readiness probes](../container-instances/container-instances-readiness-probe.md).
+For more information, see [Configure readiness probes](/azure/container-instances/container-instances-readiness-probe).
 
 #### Liveness probes
 
@@ -271,7 +271,7 @@ spec:
       periodSeconds: 3
 ```
 
-For more information, see [Configure liveness probes](../container-instances/container-instances-liveness-probe.md) and [Define a liveness HTTP request](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request).
+For more information, see [Configure liveness probes](/azure/container-instances/container-instances-liveness-probe) and [Define a liveness HTTP request](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-http-request).
 
 #### Startup probes
 
@@ -335,7 +335,7 @@ The following cluster and node pool level best practices help ensure high availa
 >
 > Use multiple availability zones when creating an AKS cluster to ensure high availability in zone-down scenarios. Keep in mind that you can't change the availability zone configuration after creating the cluster.
 
-[Availability zones](../reliability/availability-zones-overview.md) are separated groups of datacenters within a region. These zones are close enough to have low-latency connections to each other, but far enough apart to reduce the likelihood that more than one zone is affected by local outages or weather. Using availability zones helps your data stay synchronized and accessible in zone-down scenarios. For more information, see [Running in multiple zones](https://kubernetes.io/docs/setup/best-practices/multiple-zones/).
+[Availability zones](/azure/reliability/availability-zones-overview) are separated groups of datacenters within a region. These zones are close enough to have low-latency connections to each other, but far enough apart to reduce the likelihood that more than one zone is affected by local outages or weather. Using availability zones helps your data stay synchronized and accessible in zone-down scenarios. For more information, see [Running in multiple zones](https://kubernetes.io/docs/setup/best-practices/multiple-zones/).
 
 ### Cluster autoscaling
 
@@ -370,10 +370,10 @@ For more information, see [Use the cluster autoscaler in AKS](./cluster-autoscal
 >
 > Use the Standard Load Balancer to provide greater reliability and resources, support for multiple availability zones, HTTP probes, and functionality across multiple data centers.
 
-In Azure, the [Standard Load Balancer](../load-balancer/skus.md) SKU is designed to be equipped for load balancing network layer traffic when high performance and low latency are needed. The Standard Load Balancer routes traffic within and across regions and to availability zones for high resiliency. The Standard SKU is the recommended and default SKU to use when creating an AKS cluster.
+In Azure, the [Standard Load Balancer](/azure/load-balancer/skus) SKU is designed to be equipped for load balancing network layer traffic when high performance and low latency are needed. The Standard Load Balancer routes traffic within and across regions and to availability zones for high resiliency. The Standard SKU is the recommended and default SKU to use when creating an AKS cluster.
 
 > [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). We recommend that you use the Standard Load Balancer for new deployments and upgrade existing deployments to the Standard Load Balancer. For more information, see [Upgrading from Basic Load Balancer](../load-balancer/load-balancer-basic-upgrade-guidance.md).
+> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). We recommend that you use the Standard Load Balancer for new deployments and upgrade existing deployments to the Standard Load Balancer. For more information, see [Upgrading from Basic Load Balancer](/azure/load-balancer/load-balancer-basic-upgrade-guidance).
 
 The following example shows a `LoadBalancer` service manifest that uses the Standard Load Balancer:
 
@@ -431,13 +431,13 @@ System node pools are used to run system pods, such as the kube-proxy, coredns, 
 >
 > Use Accelerated Networking to provide lower latency, reduced jitter, and decreased CPU utilization on your VMs.
 
-Accelerated Networking enables [single root I/O virtualization (SR-IOV)](/windows-hardware/drivers/network/overview-of-single-root-i-o-virtualization--sr-iov-) on [supported VM types](../virtual-network/accelerated-networking-overview.md#supported-vm-instances), greatly improving networking performance.
+Accelerated Networking enables [single root I/O virtualization (SR-IOV)](/windows-hardware/drivers/network/overview-of-single-root-i-o-virtualization--sr-iov-) on [supported VM types](/azure/virtual-network/accelerated-networking-overview#supported-vm-instances), greatly improving networking performance.
 
 The following diagram illustrates how two VMs communicate with and without Accelerated Networking:
 
 :::image type="content" source="~/reusable-content/ce-skilling/azure/media/virtual-network/accelerated-networking.png" alt-text="Screenshot that shows communication between Azure VMs with and without Accelerated Networking.":::
 
-For more information, see [Accelerated Networking overview](../virtual-network/accelerated-networking-overview.md).
+For more information, see [Accelerated Networking overview](/azure/virtual-network/accelerated-networking-overview).
 
 ### Image versions
 
@@ -499,7 +499,7 @@ B series VMs are low performance and don't work well with AKS. Instead, we recom
 >
 > Use Premium Disks to achieve 99.9% availability in one virtual machine (VM).
 
-[Azure Premium Disks](../virtual-machines/disks-types.md#premium-ssd-v2) offer a consistent submillisecond disk latency and high IOPS and throughout. Premium Disks are designed to provide low-latency, high-performance, and consistent disk performance for VMs.
+[Azure Premium Disks](/azure/virtual-machines/disks-types#premium-ssd-v2) offer a consistent submillisecond disk latency and high IOPS and throughout. Premium Disks are designed to provide low-latency, high-performance, and consistent disk performance for VMs.
 
 The following example YAML manifest shows a [storage class definition](https://kubernetes.io/docs/concepts/storage/storage-classes/) for a premium disk:
 
@@ -527,7 +527,7 @@ For more information, see [Use Azure Premium SSD v2 disks on AKS](./use-premium-
 >
 > Enable Container Insights to monitor and diagnose the performance of your containerized applications.
 
-[Container Insights](../azure-monitor/containers/container-insights-overview.md) is a feature of Azure Monitor that collects and analyzes container logs from AKS. You can analyze the collected data with a collection of [views](../azure-monitor/containers/container-insights-analyze.md) and prebuilt [workbooks](../azure-monitor/containers/container-insights-reports.md).
+[Container Insights](/azure/azure-monitor/containers/container-insights-overview) is a feature of Azure Monitor that collects and analyzes container logs from AKS. You can analyze the collected data with a collection of [views](/azure/azure-monitor/containers/container-insights-analyze) and prebuilt [workbooks](/azure/azure-monitor/containers/container-insights-reports).
 
 You can enable Container Insights monitoring on your AKS cluster using various methods. The following example shows how to enable Container Insights monitoring on an existing cluster using the Azure CLI:
 
@@ -535,7 +535,7 @@ You can enable Container Insights monitoring on your AKS cluster using various m
 az aks enable-addons -a monitoring --name myAKSCluster --resource-group myResourceGroup
 ```
 
-For more information, see [Enable monitoring for Kubernetes clusters](../azure-monitor/containers/kubernetes-monitoring-enable.md).
+For more information, see [Enable monitoring for Kubernetes clusters](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
 
 ### Azure Policy
 
@@ -543,7 +543,7 @@ For more information, see [Enable monitoring for Kubernetes clusters](../azure-m
 >
 > Apply and enforce security and compliance requirements for your AKS clusters using Azure Policy.
 
-You can apply and enforce built-in security policies on your AKS clusters using [Azure Policy](../governance/policy/overview.md). Azure Policy helps enforce organizational standards and assess compliance at-scale. After you install the [Azure Policy add-on for AKS](/azure/governance/policy/concepts/policy-for-kubernetes), you can apply individual policy definitions or groups of policy definitions called initiatives to your clusters.
+You can apply and enforce built-in security policies on your AKS clusters using [Azure Policy](/azure/governance/policy/overview). Azure Policy helps enforce organizational standards and assess compliance at-scale. After you install the [Azure Policy add-on for AKS](/azure/governance/policy/concepts/policy-for-kubernetes), you can apply individual policy definitions or groups of policy definitions called initiatives to your clusters.
 
 For more information, see [Secure your AKS clusters with Azure Policy](./use-azure-policy.md).
 

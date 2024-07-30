@@ -34,13 +34,13 @@ The passive-cold disaster recovery solution uses many Azure services. This examp
 
 **Multiple clusters and regions**: You deploy multiple AKS clusters, each in a separate Azure region. When the app is needed, the passive cluster is activated to receive network traffic.
 
-**Key Vault**: You provision an [Azure Key Vault](../key-vault/general/overview.md) in each region to store secrets and keys.
+**Key Vault**: You provision an [Azure Key Vault](/azure/key-vault/general/overview) in each region to store secrets and keys.
 
-**Log Analytics**: Regional [Log Analytics](../azure-monitor/logs/log-analytics-overview.md) instances store regional networking metrics and diagnostic logs. A shared instance stores metrics and diagnostic logs for all AKS instances.
+**Log Analytics**: Regional [Log Analytics](/azure/azure-monitor/logs/log-analytics-overview) instances store regional networking metrics and diagnostic logs. A shared instance stores metrics and diagnostic logs for all AKS instances.
 
-**Hub-spoke pair**: A hub-spoke pair is deployed for each regional AKS instance. [Azure Firewall Manager](../firewall-manager/overview.md) policies manage the firewall rules across each region.
+**Hub-spoke pair**: A hub-spoke pair is deployed for each regional AKS instance. [Azure Firewall Manager](/azure/firewall-manager/overview) policies manage the firewall rules across each region.
 
-**Container Registry**: The container images for the workload are stored in a managed container registry. With this solution, a single [Azure Container Registry](../container-registry/container-registry-intro.md) instance is used for all Kubernetes instances in the cluster. Geo-replication for Azure Container Registry enables you to replicate images to the selected Azure regions and provides continued access to images even if a region experiences an outage.
+**Container Registry**: The container images for the workload are stored in a managed container registry. With this solution, a single [Azure Container Registry](/azure/container-registry/container-registry-intro) instance is used for all Kubernetes instances in the cluster. Geo-replication for Azure Container Registry enables you to replicate images to the selected Azure regions and provides continued access to images even if a region experiences an outage.
 
 ## Failover process
 
@@ -48,7 +48,7 @@ If the passive cluster isn't functioning properly because of an issue in its spe
 
 ### Application Pods (Regional)
 
-A Kubernetes deployment object creates multiple replicas of a pod (*ReplicaSet*). If one is unavailable, traffic is routed between the remaining replicas. The Kubernetes *ReplicaSet* attempts to keep the specified number of replicas up and running. If one instance goes down, a new instance should be recreated. [Liveness probes](../container-instances/container-instances-liveness-probe.md) can check the state of the application or process running in the pod. If the pod is unresponsive, the liveness probe removes the pod, which forces the *ReplicaSet* to create a new instance.
+A Kubernetes deployment object creates multiple replicas of a pod (*ReplicaSet*). If one is unavailable, traffic is routed between the remaining replicas. The Kubernetes *ReplicaSet* attempts to keep the specified number of replicas up and running. If one instance goes down, a new instance should be recreated. [Liveness probes](/azure/container-instances/container-instances-liveness-probe) can check the state of the application or process running in the pod. If the pod is unresponsive, the liveness probe removes the pod, which forces the *ReplicaSet* to create a new instance.
 
 For more information, see [Kubernetes ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
 
@@ -70,7 +70,7 @@ In a complete regional failure, Azure Front Door routes traffic to the remaining
 
 ## Failover testing strategy
 
-While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](../chaos-studio/chaos-studio-overview.md) offers the ability to create a chaos experiment on your cluster.
+While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](/azure/chaos-studio/chaos-studio-overview) offers the ability to create a chaos experiment on your cluster.
 
 ## Next steps
 

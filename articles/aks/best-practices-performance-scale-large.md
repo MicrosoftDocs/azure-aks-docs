@@ -68,7 +68,7 @@ LIST requests can be expensive. When working with lists that might have more tha
 
 The load on a cloud application can vary over time based on factors such as the number of active users or the types of actions that users perform. If the processing requirements of the system exceed the capacity of the available resources, the system can become overloaded and suffer from poor performance and failures.
 
-To handle varying load sizes in a cloud application, you can allow the application to use resources up to a specified limit and then throttle them when the limit is reached. On Azure, throttling happens at two levels. Azure Resource Manager (ARM) throttles requests for the subscription and tenant. If the request is under the throttling limits for the subscription and tenant, ARM routes the request to the resource provider. The resource provider then applies throttling limits tailored to its operations. For more information, see [ARM throttling requests](../azure-resource-manager/management/request-limits-and-throttling.md).
+To handle varying load sizes in a cloud application, you can allow the application to use resources up to a specified limit and then throttle them when the limit is reached. On Azure, throttling happens at two levels. Azure Resource Manager (ARM) throttles requests for the subscription and tenant. If the request is under the throttling limits for the subscription and tenant, ARM routes the request to the resource provider. The resource provider then applies throttling limits tailored to its operations. For more information, see [ARM throttling requests](/azure/azure-resource-manager/management/request-limits-and-throttling).
 
 ### Manage throttling in AKS
 
@@ -87,7 +87,7 @@ Always upgrade your Kubernetes clusters to the latest version. Newer versions co
 
 As you scale your AKS clusters to larger scale points, keep the following feature limitations in mind:
 
-* AKS supports scaling up to 5,000 nodes by default for all Standard Tier / LTS clusters. AKS scales your cluster's control plane at runtime based on cluster size and API server resource utilization. If you can't scale up to the supported limit, enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) with the [Azure Monitor managed service for Prometheus](../azure-monitor/essentials/prometheus-metrics-overview.md) to monitor the control plane. To help troubleshoot scaling performance or reliability issues, see the following resources:
+* AKS supports scaling up to 5,000 nodes by default for all Standard Tier / LTS clusters. AKS scales your cluster's control plane at runtime based on cluster size and API server resource utilization. If you can't scale up to the supported limit, enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) with the [Azure Monitor managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) to monitor the control plane. To help troubleshoot scaling performance or reliability issues, see the following resources:
   * [AKS at scale troubleshooting guide](/troubleshoot/azure/azure-kubernetes/aks-at-scale-troubleshoot-guide) 
   * [Troubleshoot the Kubernetes control plane](/troubleshoot/azure/azure-kubernetes/troubleshoot-apiserver-etcd)
 
@@ -133,7 +133,7 @@ As you scale your AKS clusters to larger scale points, keep the following node p
 [azure-cni-overlay]: ./azure-cni-overlay.md
 [pricing-tiers]: ./free-standard-pricing-tiers.md
 [cluster-autoscaler]: cluster-autoscaler.md
-[azure-npm]: ../virtual-network/kubernetes-network-policies.md
+[azure-npm]: /azure/virtual-network/kubernetes-network-policies
 [cluster upgrades]: upgrade-cluster.md
 [max surge]: upgrade-aks-cluster.md#customize-node-surge-upgrade
 

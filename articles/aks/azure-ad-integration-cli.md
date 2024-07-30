@@ -319,7 +319,7 @@ For best practices on identity and resource control, see [Best practices for aut
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [az-aks-install-cli]: /cli/azure/aks#az_aks_install_cli
 [az-group-create]: /cli/azure/group#az_group_create
-[open-id-connect]: ../active-directory/develop/v2-protocols-oidc.md
+[open-id-connect]: /azure/active-directory/develop/v2-protocols-oidc
 [az-ad-user-show]: /cli/azure/ad/user#az_ad_user_show
 [az-ad-app-create]: /cli/azure/ad/app#az_ad_app_create
 [az-ad-app-update]: /cli/azure/ad/app#az_ad_app_update

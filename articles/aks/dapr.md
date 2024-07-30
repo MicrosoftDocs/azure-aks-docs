@@ -41,7 +41,7 @@ Once Dapr is installed on your cluster, you can begin to develop using the Dapr 
 - An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/free/?WT.mc_id=A261C142F)
 - The latest version of the [Azure CLI][install-cli].
 - An existing [AKS cluster][deploy-cluster] or connected [Arc-enabled Kubernetes cluster][arc-k8s-cluster].
-- [An Azure Kubernetes Service Role-Based Access Control Admin role](../role-based-access-control/built-in-roles.md#azure-kubernetes-service-rbac-admin) 
+- [An Azure Kubernetes Service Role-Based Access Control Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) 
 
 Select how you'd like to install, deploy, and configure the Dapr extension.
 
@@ -381,7 +381,7 @@ Or you can remove the Bicep template.
 [az-provider-list]: /cli/azure/provider#az-provider-list
 [sample-application]: ./quickstart-dapr.md
 [k8s-version-support-policy]: ./supported-kubernetes-versions.md?tabs=azure-cli#kubernetes-version-support-policy
-[arc-k8s-cluster]: ../azure-arc/kubernetes/quickstart-connect-cluster.md
+[arc-k8s-cluster]: /azure/azure-arc/kubernetes/quickstart-connect-cluster
 [install-cli]: /cli/azure/install-azure-cli
 [dapr-migration]: ./dapr-migration.md
 [dapr-settings]: ./dapr-settings.md

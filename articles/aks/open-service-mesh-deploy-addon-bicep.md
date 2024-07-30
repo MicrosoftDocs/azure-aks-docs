@@ -10,7 +10,7 @@ ms.editor: schaffererin
 
 # Deploy the Open Service Mesh add-on using Bicep in Azure Kubernetes Service (AKS)
 
-This article shows you how to deploy the Open Service Mesh (OSM) add-on to Azure Kubernetes Service (AKS) using a [Bicep](../azure-resource-manager/bicep/index.yml) template.
+This article shows you how to deploy the Open Service Mesh (OSM) add-on to Azure Kubernetes Service (AKS) using a [Bicep](/azure/azure-resource-manager/bicep/) template.
 
 > [!NOTE]
 > With the retirement of [Open Service Mesh (OSM)](https://docs.openservicemesh.io/) by the Cloud Native Computing Foundation (CNCF), we recommend identifying your OSM configurations and migrating them to an equivalent Istio configuration. For information about migrating from OSM to Istio, see [Migration guidance for Open Service Mesh (OSM) configurations to Istio](open-service-mesh-istio-migration-guidance.md).
@@ -26,20 +26,20 @@ This article shows you how to deploy the Open Service Mesh (OSM) add-on to Azure
 >
 > Older versions of OSM may not be available for install or be actively supported if the corresponding AKS version has reached end of life. You can check the [AKS Kubernetes release calendar](./supported-kubernetes-versions.md#aks-kubernetes-release-calendar) for information on AKS version support windows.
 
-[Bicep](../azure-resource-manager/bicep/overview.md) is a domain-specific language that uses declarative syntax to deploy Azure resources. You can use Bicep in place of creating [Azure Resource Manager templates](../azure-resource-manager/templates/overview.md) to deploy your infrastructure-as-code Azure resources.
+[Bicep](/azure/azure-resource-manager/bicep/overview) is a domain-specific language that uses declarative syntax to deploy Azure resources. You can use Bicep in place of creating [Azure Resource Manager templates](/azure/azure-resource-manager/templates/overview) to deploy your infrastructure-as-code Azure resources.
 
 ## Before you begin
 
 Before you begin, make sure you have the following prerequisites in place:
 
 * The Azure CLI version 2.20.0 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-* An SSH public key used for deploying AKS. For more information, see [Create SSH keys using the Azure CLI](../virtual-machines/ssh-keys-azure-cli.md).
+* An SSH public key used for deploying AKS. For more information, see [Create SSH keys using the Azure CLI](/azure/virtual-machines/ssh-keys-azure-cli).
 * [Visual Studio Code](https://code.visualstudio.com/) with a Bash terminal.
-* The Visual Studio Code [Bicep extension](../azure-resource-manager/bicep/install.md).
+* The Visual Studio Code [Bicep extension](/azure/azure-resource-manager/bicep/install).
 
 ## Install the OSM add-on for a new AKS cluster by using Bicep
 
-For deployment of a new AKS cluster, you enable the OSM add-on at cluster creation. The following instructions use a generic Bicep template that deploys an AKS cluster by using ephemeral disks and the [`kubenet`](./configure-kubenet.md) container network interface, and then enables the OSM add-on. For more advanced deployment scenarios, see [What is Bicep?](../azure-resource-manager/bicep/overview.md)
+For deployment of a new AKS cluster, you enable the OSM add-on at cluster creation. The following instructions use a generic Bicep template that deploys an AKS cluster by using ephemeral disks and the [`kubenet`](./configure-kubenet.md) container network interface, and then enables the OSM add-on. For more advanced deployment scenarios, see [What is Bicep?](/azure/azure-resource-manager/bicep/overview)
 
 ### Create a resource group
 

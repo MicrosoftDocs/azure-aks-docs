@@ -12,7 +12,7 @@ ms.author: schaffererin
 
 Many Azure services that integrate with Azure Kubernetes Service (AKS) need access to the Kubernetes API server. To avoid granting these services admin access or making your AKS clusters public for network access, you can use the AKS Trusted Access feature.
 
-This feature gives services secure access to AKS API server by using the Azure back end without requiring a private endpoint. Instead of relying on identities that have [Microsoft Entra](../active-directory/fundamentals/active-directory-whatis.md) permissions, this feature can use your system-assigned managed identity to authenticate with the managed services and applications that you want to use with your AKS clusters.
+This feature gives services secure access to AKS API server by using the Azure back end without requiring a private endpoint. Instead of relying on identities that have [Microsoft Entra](/azure/active-directory/fundamentals/active-directory-whatis) permissions, this feature can use your system-assigned managed identity to authenticate with the managed services and applications that you want to use with your AKS clusters.
 
 This article shows you how to get secure access for your Azure services to your Kubernetes API server in AKS by using Trusted Access.
 
@@ -32,12 +32,12 @@ You can use Trusted Access to give explicit consent to your system-assigned mana
 ## Prerequisites
 
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-* Resource types that support [system-assigned managed identity](../active-directory/managed-identities-azure-resources/overview.md).
+* Resource types that support [system-assigned managed identity](/azure/active-directory/managed-identities-azure-resources/overview).
 * Azure CLI version 2.53.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 * To learn what roles to use in different scenarios, see these articles:
   * [Azure Machine Learning access to AKS clusters with special configurations](https://github.com/Azure/AML-Kubernetes/blob/master/docs/azureml-aks-ta-support.md)
   * [What is Azure Kubernetes Service backup?][aks-azure-backup]
-  * [Turn on an agentless container posture](../defender-for-cloud/concept-agentless-containers.md)
+  * [Turn on an agentless container posture](/azure/defender-for-cloud/concept-agentless-containers)
 
 ## Create an AKS cluster
 
@@ -114,15 +114,15 @@ az aks trustedaccess rolebinding delete --name $ROLE_BINDING_NAME --resource-gro
 ## Related content
 
 * [Deploy and manage cluster extensions for AKS](cluster-extensions.md)
-* [Deploy the Azure Machine Learning extension on an AKS or Azure Arc&#8211;enabled Kubernetes cluster](../machine-learning/how-to-deploy-kubernetes-extension.md)
-* [Deploy Azure Backup on an AKS cluster](../backup/azure-kubernetes-service-backup-overview.md)
-* [Set agentless container posture in Microsoft Defender for Cloud for an AKS cluster](../defender-for-cloud/concept-agentless-containers.md)
+* [Deploy the Azure Machine Learning extension on an AKS or Azure Arc&#8211;enabled Kubernetes cluster](/azure/machine-learning/how-to-deploy-kubernetes-extension)
+* [Deploy Azure Backup on an AKS cluster](/azure/backup/azure-kubernetes-service-backup-overview)
+* [Set agentless container posture in Microsoft Defender for Cloud for an AKS cluster](/azure/defender-for-cloud/concept-agentless-containers)
 
 <!-- LINKS -->
 
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-provider-register]: /cli/azure/provider#az-provider-register
-[aks-azure-backup]: ../backup/azure-kubernetes-service-backup-overview.md
+[aks-azure-backup]: /azure/backup/azure-kubernetes-service-backup-overview
 [azure-cli-install]: /cli/azure/install-azure-cli
 

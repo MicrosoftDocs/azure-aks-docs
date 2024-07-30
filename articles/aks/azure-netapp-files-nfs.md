@@ -40,7 +40,7 @@ This section describes how to create an NFS volume on Azure NetApp Files and exp
     SUBNET_ID="anfSubnetId"
     ```
 
-1. Create a volume using the [`az netappfiles volume create`](/cli/azure/netappfiles/volume#az-netappfiles-volume-create) command. For more information, see [Create an NFS volume for Azure NetApp Files](../azure-netapp-files/azure-netapp-files-create-volumes.md). 
+1. Create a volume using the [`az netappfiles volume create`](/cli/azure/netappfiles/volume#az-netappfiles-volume-create) command. For more information, see [Create an NFS volume for Azure NetApp Files](/azure/azure-netapp-files/azure-netapp-files-create-volumes). 
 
     ```azurecli-interactive
     az netappfiles volume create \
@@ -333,7 +333,7 @@ To instruct Astra Trident about the Azure NetApp Files subscription and where it
       clientSecret: rR0rUmWXfNioN1KhtHisiSAnoTherboGuskey6pU
     ```
 
-2. Create a file named `backend-anf.yaml` and copy in the following YAML. Change the `subscriptionID`, `tenantID`, `location`, and `serviceLevel` to the correct values for your environment. Use the `subscriptionID` for the Azure subscription where Azure NetApp Files is enabled. Obtain the `tenantID`, `clientID`, and `clientSecret` from an [application registration](../active-directory/develop/howto-create-service-principal-portal.md) in Microsoft Entra ID with sufficient permissions for the Azure NetApp Files service. The application registration includes the Owner or Contributor role predefined by Azure. The location must be an Azure location that contains at least one delegated subnet created in a previous step. The `serviceLevel` must match the `serviceLevel` configured for the capacity pool in [Configure Azure NetApp Files for AKS workloads](azure-netapp-files.md#configure-azure-netapp-files-for-aks-workloads).
+2. Create a file named `backend-anf.yaml` and copy in the following YAML. Change the `subscriptionID`, `tenantID`, `location`, and `serviceLevel` to the correct values for your environment. Use the `subscriptionID` for the Azure subscription where Azure NetApp Files is enabled. Obtain the `tenantID`, `clientID`, and `clientSecret` from an [application registration](/azure/active-directory/develop/howto-create-service-principal-portal) in Microsoft Entra ID with sufficient permissions for the Azure NetApp Files service. The application registration includes the Owner or Contributor role predefined by Azure. The location must be an Azure location that contains at least one delegated subnet created in a previous step. The `serviceLevel` must match the `serviceLevel` configured for the capacity pool in [Configure Azure NetApp Files for AKS workloads](azure-netapp-files.md#configure-azure-netapp-files-for-aks-workloads).
 
     ```yaml
     apiVersion: trident.netapp.io/v1
@@ -588,5 +588,5 @@ Astra Trident supports many features with Azure NetApp Files. For more informati
 [az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az_network_vnet_subnet_create
 [install-azure-cli]: /cli/azure/install-azure-cli
 [use-tags]: use-tags.md
-[azure-ad-app-registration]: ../active-directory/develop/howto-create-service-principal-portal.md
+[azure-ad-app-registration]: /azure/active-directory/develop/howto-create-service-principal-portal
 

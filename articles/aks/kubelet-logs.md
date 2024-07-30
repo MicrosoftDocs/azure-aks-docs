@@ -86,5 +86,5 @@ If you need more troubleshooting information for the Kubernetes main, see [view 
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-[azure-container-logs]: ../azure-monitor/containers/container-insights-overview.md
+[azure-container-logs]: /azure/azure-monitor/containers/container-insights-overview
 

@@ -62,18 +62,18 @@ AKS clusters are resilient to zonal failures. If a zone fails, the cluster conti
 
 Global load balancing services distribute traffic across regional backends, clouds, or hybrid on-premises services. These services route end-user traffic to the closest available backend. They also react to changes in service reliability or performance to maximize availability and performance. The following Azure services provide global load balancing:
 
-- [Azure Front Door](../frontdoor/front-door-overview.md)
-- [Azure Traffic Manager](../traffic-manager/traffic-manager-overview.md)
-- [Cross-region Azure Load Balancer](../load-balancer/cross-region-overview.md)
-- [Azure Kubernetes Fleet Manager](../kubernetes-fleet/overview.md)
+- [Azure Front Door](/azure/frontdoor/front-door-overview)
+- [Azure Traffic Manager](/azure/traffic-manager/traffic-manager-overview)
+- [Cross-region Azure Load Balancer](/azure/load-balancer/cross-region-overview)
+- [Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/overview)
 
 #### Regional load balancing
 
 Regional load balancing services distribute traffic within virtual networks across VMs or zonal and zone-redundant service endpoints within a region. The following Azure services provide regional load balancing:
 
-- [Azure Load Balancer](../load-balancer/load-balancer-overview.md)
-- [Azure Application Gateway](../application-gateway/overview.md)
-- [Azure Application Gateway for Containers](../application-gateway/for-containers/overview.md)
+- [Azure Load Balancer](/azure/load-balancer/load-balancer-overview)
+- [Azure Application Gateway](/azure/application-gateway/overview)
+- [Azure Application Gateway for Containers](/azure/application-gateway/for-containers/overview)
 
 ### Observability
 
@@ -81,7 +81,7 @@ You need to collect data from applications and infrastructure to allow for effec
 
 ## Scope definition
 
-Application uptime becomes important as you manage AKS clusters. By default, AKS provides high availability by using multiple nodes in a [Virtual Machine Scale Set](../virtual-machine-scale-sets/overview.md), but these nodes don’t protect your system from a region failure. To maximize your uptime, plan ahead to maintain business continuity and prepare for disaster recovery using the following best practices:
+Application uptime becomes important as you manage AKS clusters. By default, AKS provides high availability by using multiple nodes in a [Virtual Machine Scale Set](/azure/virtual-machine-scale-sets/overview), but these nodes don’t protect your system from a region failure. To maximize your uptime, plan ahead to maintain business continuity and prepare for disaster recovery using the following best practices:
 
 - Plan for AKS clusters in multiple regions.
 - Route traffic across multiple clusters using Azure Traffic Manager.
@@ -200,6 +200,6 @@ Azure Backup supports backing up AKS cluster resources and persistent volumes at
 
 For more information, see the following articles:
 
-- [About AKS backup using Azure Backup (preview)](../backup/azure-kubernetes-service-backup-overview.md)
-- [Back up AKS using Azure Backup (preview)](../backup/azure-kubernetes-service-cluster-backup.md)
+- [About AKS backup using Azure Backup (preview)](/azure/backup/azure-kubernetes-service-backup-overview)
+- [Back up AKS using Azure Backup (preview)](/azure/backup/azure-kubernetes-service-cluster-backup)
 

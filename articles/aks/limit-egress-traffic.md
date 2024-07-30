@@ -26,7 +26,7 @@ The following information provides an example architecture of the deployment:
 
 * **Public ingress is forced to flow through firewall filters**
   * AKS agent nodes are isolated in a dedicated subnet
-  * [Azure Firewall](../firewall/overview.md) is deployed in its own subnet
+  * [Azure Firewall](/azure/firewall/overview) is deployed in its own subnet
   * A DNAT rule translates the firewall public IP into the load balancer frontend IP
 * **Outbound requests start from agent nodes to the Azure Firewall internal IP using a [user-defined route (UDR)](egress-outboundtype.md)**
   * Requests from AKS agent nodes follow a UDR that has been placed on the subnet the AKS cluster was deployed into
@@ -98,7 +98,7 @@ You need to configure Azure Firewall inbound and outbound rules. The main purpos
 >
 > If your cluster or application creates a large number of outbound connections directed to the same or a small subset of destinations, you might require more firewall frontend IPs to avoid maxing out the ports per frontend IP.
 >
-> For more information on how to create an Azure Firewall with multiple IPs, see [Create an Azure Firewall with multiple public IP addresses using Bicep](../firewall/quick-create-multiple-ip-bicep.md).
+> For more information on how to create an Azure Firewall with multiple IPs, see [Create an Azure Firewall with multiple public IP addresses using Bicep](/azure/firewall/quick-create-multiple-ip-bicep).
 
 ![Firewall and UDR](~/reusable-content/ce-skilling/azure/media/aks/firewall-udr.png)
 
@@ -151,7 +151,7 @@ Azure automatically routes traffic between Azure subnets, virtual networks, and 
 > Outbound type of UDR (`userDefinedRouting`) requires a route for 0.0.0.0/0 and a next hop destination of NVA in the route table.
 > The route table already has a default 0.0.0.0/0 to the Internet. Without a public IP address for Azure to use for Source Network Address Translation (SNAT), simply adding this route won't provide you outbound Internet connectivity. AKS validates that you don't create a 0.0.0.0/0 route pointing to the Internet but instead to a gateway, NVA, etc.
 > When using an outbound type of UDR, a load balancer public IP address for **inbound requests** isn't created unless you configure a service of type *loadbalancer*. AKS never creates a public IP address for **outbound requests** if you set an outbound type of UDR.
-> For more information, see [Outbound rules for Azure Load Balancer](../load-balancer/outbound-rules.md#scenario6out).
+> For more information, see [Outbound rules for Azure Load Balancer](/azure/load-balancer/outbound-rules#scenario6out).
 
 1. Create an empty route table to be associated with a given subnet using the [`az network route-table create`][az-network-route-table-create] command. The route table will define the next hop as the Azure Firewall created above. Each subnet can have zero or one route table associated to it.
 
@@ -167,7 +167,7 @@ Azure automatically routes traffic between Azure subnets, virtual networks, and 
     az network route-table route create --resource-group $RG --name $FWROUTE_NAME_INTERNET --route-table-name $FWROUTE_TABLE_NAME --address-prefix $FWPUBLIC_IP/32 --next-hop-type Internet
     ```
 
-For information on how to override Azure's default system routes or add additional routes to a subnet's route table, see the [virtual network route table documentation](../virtual-network/virtual-networks-udr-overview.md#user-defined).
+For information on how to override Azure's default system routes or add additional routes to a subnet's route table, see the [virtual network route table documentation](/azure/virtual-network/virtual-networks-udr-overview#user-defined).
 
 ### Add firewall rules
 
@@ -202,7 +202,7 @@ This section covers three network rules and an application rule you can use to c
     az network firewall application-rule create --resource-group $RG --firewall-name $FWNAME --collection-name 'aksfwar' --name 'fqdn' --source-addresses '*' --protocols 'http=80' 'https=443' --fqdn-tags "AzureKubernetesService" --action allow --priority 100
     ```
 
-To learn more about Azure Firewall, see the [Azure Firewall documentation](../firewall/overview.md).
+To learn more about Azure Firewall, see the [Azure Firewall documentation](/azure/firewall/overview).
 
 ### Associate the route table to AKS
 
@@ -368,7 +368,7 @@ You can now start exposing services and deploying applications to this cluster. 
 
 > [!IMPORTANT]
 >
-> When you use Azure Firewall to restrict egress traffic and create a UDR to force all egress traffic, make sure you create an appropriate DNAT rule in Azure Firewall to correctly allow ingress traffic. Using Azure Firewall with a UDR breaks the ingress setup due to asymmetric routing. The issue occurs if the AKS subnet has a default route that goes to the firewall's private IP address, but you're using a public load balancer - ingress or Kubernetes service of type `loadBalancer`. In this case, the incoming load balancer traffic is received via its public IP address, but the return path goes through the firewall's private IP address. Because the firewall is stateful, it drops the returning packet because the firewall isn't aware of an established session. To learn how to integrate Azure Firewall with your ingress or service load balancer, see [Integrate Azure Firewall with Azure Standard Load Balancer](../firewall/integrate-lb.md).
+> When you use Azure Firewall to restrict egress traffic and create a UDR to force all egress traffic, make sure you create an appropriate DNAT rule in Azure Firewall to correctly allow ingress traffic. Using Azure Firewall with a UDR breaks the ingress setup due to asymmetric routing. The issue occurs if the AKS subnet has a default route that goes to the firewall's private IP address, but you're using a public load balancer - ingress or Kubernetes service of type `loadBalancer`. In this case, the incoming load balancer traffic is received via its public IP address, but the return path goes through the firewall's private IP address. Because the firewall is stateful, it drops the returning packet because the firewall isn't aware of an established session. To learn how to integrate Azure Firewall with your ingress or service load balancer, see [Integrate Azure Firewall with Azure Standard Load Balancer](/azure/firewall/integrate-lb).
 
 To configure inbound connectivity, you need to write a DNAT rule to the Azure Firewall. To test connectivity to your cluster, a rule is defined for the firewall frontend public IP address to route to the internal IP exposed by the internal service. The destination address can be customized. The translated address must be the IP address of the internal load balancer. The translated port must be the exposed port for your Kubernetes service. You also need to specify the internal IP address assigned to the load balancer created by the Kubernetes service.
 

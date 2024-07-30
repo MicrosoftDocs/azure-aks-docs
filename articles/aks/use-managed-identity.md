@@ -16,7 +16,7 @@ ms.author: tamram
 
 Azure Kubernetes Service (AKS) clusters require a Microsoft Entra identity to access Azure resources like load balancers and managed disks. Managed identities for Azure resources are the recommended way to authorize access from an AKS cluster to other Azure services.
 
-You can use a managed identity to authorize access from an AKS cluster to any service that supports Microsoft Entra authorization, without needing to manage credentials or include them in your code. You assign to the managed identity an Azure role-based access control (Azure RBAC) role to grant it permissions to a particular resource in Azure. For example, you can grant permissions to a managed identity to access secrets in an Azure key vault for use by the cluster. For more information about Azure RBAC, see [What is Azure role\-based access control \(Azure RBAC\)?](../role-based-access-control/overview.md).
+You can use a managed identity to authorize access from an AKS cluster to any service that supports Microsoft Entra authorization, without needing to manage credentials or include them in your code. You assign to the managed identity an Azure role-based access control (Azure RBAC) role to grant it permissions to a particular resource in Azure. For example, you can grant permissions to a managed identity to access secrets in an Azure key vault for use by the cluster. For more information about Azure RBAC, see [What is Azure role\-based access control \(Azure RBAC\)?](/azure/role-based-access-control/overview).
 
 This article shows how to enable the following types of managed identity on a new or existing AKS cluster:
 
@@ -104,15 +104,15 @@ After you update the cluster to use a system-assigned managed identity instead o
 >
 > * An update only works if there's a VHD update to consume. If you're running the latest VHD, you need to wait until the next VHD is available in order to perform the update.
 >
-> * The Azure CLI ensures your addon's permission is correctly set after migrating. If you're not using the Azure CLI to perform the migrating operation, you need to handle the addon identity's permission by yourself. For an example using an Azure Resource Manager (ARM) template, see [Assign Azure roles using ARM templates](../role-based-access-control/role-assignments-template.md).
+> * The Azure CLI ensures your addon's permission is correctly set after migrating. If you're not using the Azure CLI to perform the migrating operation, you need to handle the addon identity's permission by yourself. For an example using an Azure Resource Manager (ARM) template, see [Assign Azure roles using ARM templates](/azure/role-based-access-control/role-assignments-template).
 >
 > * If your cluster was using `--attach-acr` to pull from images from Azure Container Registry (ACR), you need to run the `az aks update --resource-group myResourceGroup --name myAKSCluster --attach-acr <ACR resource ID>` command after updating your cluster to let the newly-created kubelet used for managed identity get the permission to pull from ACR. Otherwise, you won't be able to pull from ACR after the update.
 
 ### Add a role assignment for a system-assigned managed identity
 
-You can assign an Azure RBAC role to the system-assigned managed identity to grant the cluster permissions on another Azure resource. Azure RBAC supports both built-in and custom role definitions that specify levels of permissions. For more information about assigning Azure RBAC roles, see [Steps to assign an Azure role](../role-based-access-control/role-assignments-steps.md).
+You can assign an Azure RBAC role to the system-assigned managed identity to grant the cluster permissions on another Azure resource. Azure RBAC supports both built-in and custom role definitions that specify levels of permissions. For more information about assigning Azure RBAC roles, see [Steps to assign an Azure role](/azure/role-based-access-control/role-assignments-steps).
 
-When you assign an Azure RBAC role to a managed identity, you must define the scope for the role. In general, it's a best practice to limit the scope of a role to the minimum privileges required by the managed identity. For more information on scoping Azure RBAC roles, see [Understand scope for Azure RBAC](../role-based-access-control/scope-overview.md).
+When you assign an Azure RBAC role to a managed identity, you must define the scope for the role. In general, it's a best practice to limit the scope of a role to the minimum privileges required by the managed identity. For more information on scoping Azure RBAC roles, see [Understand scope for Azure RBAC](/azure/role-based-access-control/scope-overview).
 
 When you create and use your own VNet, attached Azure disks, static IP address, route table, or user-assigned kubelet identity where the resources are outside of the worker node resource group, the Azure CLI adds the role assignment automatically. If you're using an ARM template or another method, use the principal ID of the managed identity to perform a role assignment.
 
@@ -529,7 +529,7 @@ AKS uses several managed identities for built-in services and add-ons.
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-identity-create]: /cli/azure/identity#az_identity_create
 [az-identity-show]: /cli/azure/identity#az_identity_show
-[managed-identity-resources-overview]: ../active-directory/managed-identities-azure-resources/overview.md#managed-identity-types
+[managed-identity-resources-overview]: /azure/active-directory/managed-identities-azure-resources/overview#managed-identity-types
 [bring-your-own-control-plane-managed-identity]: use-managed-identity.md#enable-a-user-assigned-managed-identity
 [use-a-pre-created-kubelet-managed-identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
 [update-system-assigned-managed-identity-on-an-existing-cluster]: use-managed-identity.md#update-an-existing-aks-cluster-to-use-a-system-assigned-managed-identity
@@ -541,5 +541,5 @@ AKS uses several managed identities for built-in services and add-ons.
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [az-aks-show]: /cli/azure/aks#az_aks_show
 [az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[managed-identity-operator]: ../role-based-access-control/built-in-roles.md#managed-identity-operator
+[managed-identity-operator]: /azure/role-based-access-control/built-in-roles#managed-identity-operator
 [kubelogin-authentication]: kubelogin-authentication.md

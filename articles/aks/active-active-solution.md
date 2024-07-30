@@ -19,9 +19,9 @@ While there are multiple patterns that can provide recoverability for an AKS sol
 
 ## Active-active high availability solution overview
 
-This solution relies on two identical AKS clusters configured to actively serve traffic. You place a global traffic manager, such as [Azure Front Door](../frontdoor/front-door-overview.md), in front of the two clusters to distribute traffic across them. You must consistently configure the clusters to host an instance of all applications required for the solution to function.
+This solution relies on two identical AKS clusters configured to actively serve traffic. You place a global traffic manager, such as [Azure Front Door](/azure/frontdoor/front-door-overview), in front of the two clusters to distribute traffic across them. You must consistently configure the clusters to host an instance of all applications required for the solution to function.
 
-Availability zones are another way to ensure high availability and fault tolerance for your AKS cluster within the same region. Availability zones allow you to distribute your cluster nodes across multiple isolated locations within an Azure region. This way, if one zone goes down due to a power outage, hardware failure, or network issue, your cluster can continue to run and serve your applications. Availability zones also improve the performance and scalability of your cluster by reducing the latency and contention among nodes. To set up availability zones for your AKS cluster, you need to specify the zone numbers when creating or updating your node pools. For more information, see [What are Azure availability zones?](../reliability/availability-zones-overview.md)
+Availability zones are another way to ensure high availability and fault tolerance for your AKS cluster within the same region. Availability zones allow you to distribute your cluster nodes across multiple isolated locations within an Azure region. This way, if one zone goes down due to a power outage, hardware failure, or network issue, your cluster can continue to run and serve your applications. Availability zones also improve the performance and scalability of your cluster by reducing the latency and contention among nodes. To set up availability zones for your AKS cluster, you need to specify the zone numbers when creating or updating your node pools. For more information, see [What are Azure availability zones?](/azure/reliability/availability-zones-overview)
 
 > [!NOTE]
 > Many regions support availability zones. Consider using regions with availability zones to provide more resiliency and availability for your workloads. For more information, see [Recover from a region-wide service disruption](/azure/architecture/resiliency/recovery-loss-azure-region).
@@ -36,15 +36,15 @@ The active-active high availability solution uses many Azure services. This sect
 
 **Multiple clusters and regions**: You deploy multiple AKS clusters, each in a separate Azure region. During normal operations, your Azure Front Door configuration routes network traffic between all regions. If one region becomes unavailable, traffic routes to a region with the fastest load time for the user.
 
-**Hub-spoke network per region**: A regional hub-spoke network pair is deployed for each regional AKS instance. [Azure Firewall Manager](../firewall-manager/overview.md) policies manage the firewall policies across all regions.
+**Hub-spoke network per region**: A regional hub-spoke network pair is deployed for each regional AKS instance. [Azure Firewall Manager](/azure/firewall-manager/overview) policies manage the firewall policies across all regions.
 
-**Regional key store**: You provision [Azure Key Vault](../key-vault/general/overview.md) in each region to store sensitive values and keys specific to the AKS instance and to support services found in that region.
+**Regional key store**: You provision [Azure Key Vault](/azure/key-vault/general/overview) in each region to store sensitive values and keys specific to the AKS instance and to support services found in that region.
 
-**Azure Front Door**: [Azure Front Door](../frontdoor/front-door-overview.md) load balances and routes traffic to a regional [Azure Application Gateway](../application-gateway/overview.md) instance, which sits in front of each AKS cluster. Azure Front Door allows for *layer seven* global routing.
+**Azure Front Door**: [Azure Front Door](/azure/frontdoor/front-door-overview) load balances and routes traffic to a regional [Azure Application Gateway](/azure/application-gateway/overview) instance, which sits in front of each AKS cluster. Azure Front Door allows for *layer seven* global routing.
 
-**Log Analytics**: Regional [Log Analytics](../azure-monitor/logs/log-analytics-overview.md) instances store regional networking metrics and diagnostic logs. A shared instance stores metrics and diagnostic logs for all AKS instances.
+**Log Analytics**: Regional [Log Analytics](/azure/azure-monitor/logs/log-analytics-overview) instances store regional networking metrics and diagnostic logs. A shared instance stores metrics and diagnostic logs for all AKS instances.
 
-**Container Registry**: The container images for the workload are stored in a managed container registry. With this solution, a single [Azure Container Registry](../container-registry/container-registry-intro.md) instance is used for all Kubernetes instances in the cluster. Geo-replication for Azure Container Registry enables you to replicate images to the selected Azure regions and provides continued access to images even if a region experiences an outage.
+**Container Registry**: The container images for the workload are stored in a managed container registry. With this solution, a single [Azure Container Registry](/azure/container-registry/container-registry-intro) instance is used for all Kubernetes instances in the cluster. Geo-replication for Azure Container Registry enables you to replicate images to the selected Azure regions and provides continued access to images even if a region experiences an outage.
 
 ## Failover process
 
@@ -52,7 +52,7 @@ If a service or service component becomes unavailable in one region, traffic sho
 
 ### Application Pods (Regional)
 
-A Kubernetes deployment object creates multiple replicas of a pod (*ReplicaSet*). If one is unavailable, traffic is routed between the remaining replicas. The Kubernetes *ReplicaSet* attempts to keep the specified number of replicas up and running. If one instance goes down, a new instance should be recreated. [Liveness probes](../container-instances/container-instances-liveness-probe.md) can check the state of the application or process running in the pod. If the pod is unresponsive, the liveness probe removes the pod, which forces the *ReplicaSet* to create a new instance.
+A Kubernetes deployment object creates multiple replicas of a pod (*ReplicaSet*). If one is unavailable, traffic is routed between the remaining replicas. The Kubernetes *ReplicaSet* attempts to keep the specified number of replicas up and running. If one instance goes down, a new instance should be recreated. [Liveness probes](/azure/container-instances/container-instances-liveness-probe) can check the state of the application or process running in the pod. If the pod is unresponsive, the liveness probe removes the pod, which forces the *ReplicaSet* to create a new instance.
 
 For more information, see [Kubernetes ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
 
@@ -74,7 +74,7 @@ In a complete regional failure, Azure Front Door routes traffic to the remaining
 
 ## Failover testing strategy
 
-While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](../chaos-studio/chaos-studio-overview.md) offers the ability to create a chaos experiment on your cluster.
+While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](/azure/chaos-studio/chaos-studio-overview) offers the ability to create a chaos experiment on your cluster.
 
 ## Next steps
 

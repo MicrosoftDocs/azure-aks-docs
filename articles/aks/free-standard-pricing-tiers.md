@@ -135,7 +135,7 @@ This process takes several minutes to complete. You shouldn't experience any dow
 * Use [Availability Zones][availability-zones] to increase high availability with your AKS cluster workloads.
 * Configure your cluster to [limit egress traffic](limit-egress-traffic.md).
 
-[manage-resource-group-cli]: ../azure-resource-manager/management/manage-resource-groups-cli.md
+[manage-resource-group-cli]: /azure/azure-resource-manager/management/manage-resource-groups-cli
 [availability-zones]: ./availability-zones.md
 [az-aks-create]: /cli/azure/aks?#az_aks_create
 [private-clusters]: private-clusters.md

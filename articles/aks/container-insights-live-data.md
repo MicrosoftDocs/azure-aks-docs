@@ -91,9 +91,9 @@ For more information about monitoring on AKS, see the following articles:
 <!-- LINKS -->
 [kubernetes-cluster-architecture]: https://kubernetes.io/docs/concepts/cluster-administration/logging/#cluster-level-logging-architectures
 [node-access]: ./node-access.md
-[configure-live-data]: ../azure-monitor/containers/container-insights-livedata-setup.md
+[configure-live-data]: /azure/azure-monitor/containers/container-insights-livedata-setup
 [kubernetes-api]: https://kubernetes.io/docs/concepts/overview/kubernetes-api/
 [azure-portal]: https://portal.azure.com/
-[log-query]: ../azure-monitor/containers/container-insights-log-query.md
+[log-query]: /azure/azure-monitor/containers/container-insights-log-query
 [aks-diagnose-solve-problems]: ./aks-diagnostics.md
 [aks-monitor-events]: ./events.md

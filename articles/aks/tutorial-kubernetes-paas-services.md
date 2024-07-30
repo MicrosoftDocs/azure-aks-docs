@@ -64,7 +64,7 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
 
 ## Create Azure Service Bus namespace and queue
 
-In previous tutorials, you used a RabbitMQ container to store orders submitted by the `order-service`. In this tutorial, you use an Azure Service Bus namespace to provide a scoping container for the Service Bus resources within the application. You also use an Azure Service bus queue to send and receive messages between the application components. For more information on Azure Service Bus, see [Create an Azure Service Bus namespace and queue](../service-bus-messaging/service-bus-quickstart-cli.md).
+In previous tutorials, you used a RabbitMQ container to store orders submitted by the `order-service`. In this tutorial, you use an Azure Service Bus namespace to provide a scoping container for the Service Bus resources within the application. You also use an Azure Service bus queue to send and receive messages between the application components. For more information on Azure Service Bus, see [Create an Azure Service Bus namespace and queue](/azure/service-bus-messaging/service-bus-quickstart-cli).
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -322,7 +322,7 @@ In the next tutorial, you learn how to scale an application in AKS.
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
 [aks-tutorial-scale]: ./tutorial-kubernetes-scale.md
-[azure-service-bus]: ../service-bus-messaging/service-bus-messaging-overview.md
+[azure-service-bus]: /azure/service-bus-messaging/service-bus-messaging-overview
 [az-servicebus-namespace-create]: /cli/azure/servicebus/namespace#az_servicebus_namespace_create
 [az-servicebus-queue-create]: /cli/azure/servicebus/queue#az_servicebus_queue_create
 [az-servicebus-queue-authorization-rule-create]: /cli/azure/servicebus/queue/authorization-rule#az_servicebus_queue_authorization_rule_create

@@ -112,7 +112,7 @@ To allow an AKS cluster to interact with other Azure resources, the Azure platfo
     > [!NOTE]
     > If you already generated SSH keys, you may encounter an error similar to `linuxProfile.ssh.publicKeys.keyData is invalid`. To proceed, retry the command without the `--generate-ssh-keys` parameter.
 
-To avoid needing an **Owner** or **Azure account administrator** role, you can also manually configure a service principal to pull images from ACR. For more information, see [ACR authentication with service principals](../container-registry/container-registry-auth-service-principal.md) or [Authenticate from Kubernetes with a pull secret](../container-registry/container-registry-auth-kubernetes.md). Alternatively, you can use a [managed identity](use-managed-identity.md) instead of a service principal for easier management.
+To avoid needing an **Owner** or **Azure account administrator** role, you can also manually configure a service principal to pull images from ACR. For more information, see [ACR authentication with service principals](/azure/container-registry/container-registry-auth-service-principal) or [Authenticate from Kubernetes with a pull secret](/azure/container-registry/container-registry-auth-kubernetes). Alternatively, you can use a [managed identity](use-managed-identity.md) instead of a service principal for easier management.
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
@@ -127,7 +127,7 @@ To allow an AKS cluster to interact with other Azure resources, the Azure platfo
     > [!NOTE]
     > If you already generated SSH keys, you may encounter an error similar to `linuxProfile.ssh.publicKeys.keyData is invalid`. To proceed, retry the command without the `-GenerateSshKey` parameter.
 
-To avoid needing an **Owner** or **Azure account administrator** role, you can also manually configure a service principal to pull images from ACR. For more information, see [ACR authentication with service principals](../container-registry/container-registry-auth-service-principal.md) or [Authenticate from Kubernetes with a pull secret](../container-registry/container-registry-auth-kubernetes.md). Alternatively, you can use a [managed identity](use-managed-identity.md) instead of a service principal for easier management.
+To avoid needing an **Owner** or **Azure account administrator** role, you can also manually configure a service principal to pull images from ACR. For more information, see [ACR authentication with service principals](/azure/container-registry/container-registry-auth-service-principal) or [Authenticate from Kubernetes with a pull secret](/azure/container-registry/container-registry-auth-kubernetes). Alternatively, you can use a [managed identity](use-managed-identity.md) instead of a service principal for easier management.
 
 ### [Azure Developer CLI](#tab/azure-azd)
 

@@ -10,9 +10,9 @@ author: schaffererin
 
 # Use generation 2 virtual machines in Azure Kubernetes Service (AKS)
 
-Azure supports [Generation 2 (Gen 2) virtual machines (VMs)](../virtual-machines/generation-2.md). Generation 2 VMs support key features not supported in Generation 1 (Gen 1) VMs, including increased memory, Intel Software Guard Extensions (Intel SGX), and virtualized persistent memory (vPMEM).
+Azure supports [Generation 2 (Gen 2) virtual machines (VMs)](/azure/virtual-machines/generation-2). Generation 2 VMs support key features not supported in Generation 1 (Gen 1) VMs, including increased memory, Intel Software Guard Extensions (Intel SGX), and virtualized persistent memory (vPMEM).
 
-Generation 2 VMs use the new UEFI-based boot architecture rather than the BIOS-based architecture used by Generation 1 VMs. Only specific SKUs and sizes support Generation 2 VMs. Check the [list of supported sizes](../virtual-machines/generation-2.md#generation-2-vm-sizes) to see if your SKU supports or requires Generation 2.
+Generation 2 VMs use the new UEFI-based boot architecture rather than the BIOS-based architecture used by Generation 1 VMs. Only specific SKUs and sizes support Generation 2 VMs. Check the [list of supported sizes](/azure/virtual-machines/generation-2#generation-2-vm-sizes) to see if your SKU supports or requires Generation 2.
 
 Additionally, not all VM images support Generation 2 VMs. On AKS, Generation 2 VMs use the AKS Ubuntu 22.04 or 18.04 image or the AKS Windows Server 2022 image. These images support all Generation 2 SKUs and sizes.
 
@@ -81,7 +81,7 @@ az aks nodepool show --resource-group <resource-group-name> --cluster-name <clus
 
 ## Next steps
 
-To learn more about Generation 2 VMs, see [Support for Generation 2 VMs on Azure](../virtual-machines/generation-2.md).
+To learn more about Generation 2 VMs, see [Support for Generation 2 VMs on Azure](/azure/virtual-machines/generation-2).
 
 <!-- LINKS -->
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add

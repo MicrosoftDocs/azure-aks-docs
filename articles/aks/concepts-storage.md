@@ -53,17 +53,17 @@ By contrast, ephemeral OS disks are stored only on the host machine, just like a
 
 Size requirements and recommendations for ephemeral OS disks are available in the [Azure VM documentation][azure-vm-ephemeral-os-disks]. The following are some general sizing considerations:
 
-* If you chose to use the AKS default VM size [Standard_DS2_v2](../virtual-machines/dv2-dsv2-series.md#dsv2-series) SKU with the default OS disk size of 100 GiB, the default VM size supports ephemeral OS, but only has 86 GiB of cache size. This configuration would default to managed disks if you don't explicitly specify it. If you do request an ephemeral OS, you receive a validation error.
+* If you chose to use the AKS default VM size [Standard_DS2_v2](/azure/virtual-machines/dv2-dsv2-series#dsv2-series) SKU with the default OS disk size of 100 GiB, the default VM size supports ephemeral OS, but only has 86 GiB of cache size. This configuration would default to managed disks if you don't explicitly specify it. If you do request an ephemeral OS, you receive a validation error.
 
-* If you request the same [Standard_DS2_v2](../virtual-machines/dv2-dsv2-series.md#dsv2-series) SKU with a 60-GiB OS disk, this configuration would default to ephemeral OS. The requested size of 60 GiB is smaller than the maximum cache size of 86 GiB.
+* If you request the same [Standard_DS2_v2](/azure/virtual-machines/dv2-dsv2-series#dsv2-series) SKU with a 60-GiB OS disk, this configuration would default to ephemeral OS. The requested size of 60 GiB is smaller than the maximum cache size of 86 GiB.
 
-* If you select the [Standard_D8s_v3](../virtual-machines/dv3-dsv3-series.md#dsv3-series) SKU with 100-GB OS disk, this VM size supports ephemeral OS and has 200 GiB of cache space. If you don't specify the OS disk type, the node pool would receive ephemeral OS by default.
+* If you select the [Standard_D8s_v3](/azure/virtual-machines/dv3-dsv3-series#dsv3-series) SKU with 100-GB OS disk, this VM size supports ephemeral OS and has 200 GiB of cache space. If you don't specify the OS disk type, the node pool would receive ephemeral OS by default.
 
-The latest generation of VM series doesn't have a dedicated cache, but only temporary storage. For example, if you selected the [Standard_E2bds_v5](../virtual-machines/ebdsv5-ebsv5-series.md#ebdsv5-series) VM size with the default OS disk size of 100 GiB, it supports ephemeral OS disks, but only has 75 GB of temporary storage. This configuration would default to managed OS disks if you don't explicitly specify it. If you do request an ephemeral OS disk, you receive a validation error.
+The latest generation of VM series doesn't have a dedicated cache, but only temporary storage. For example, if you selected the [Standard_E2bds_v5](/azure/virtual-machines/ebdsv5-ebsv5-series#ebdsv5-series) VM size with the default OS disk size of 100 GiB, it supports ephemeral OS disks, but only has 75 GB of temporary storage. This configuration would default to managed OS disks if you don't explicitly specify it. If you do request an ephemeral OS disk, you receive a validation error.
 
-* If you request the same [Standard_E2bds_v5](../virtual-machines/ebdsv5-ebsv5-series.md#ebdsv5-series) VM size with a 60-GiB OS disk, this configuration defaults to ephemeral OS disks. The requested size of 60 GiB is smaller than the maximum temporary storage of 75 GiB.
+* If you request the same [Standard_E2bds_v5](/azure/virtual-machines/ebdsv5-ebsv5-series#ebdsv5-series) VM size with a 60-GiB OS disk, this configuration defaults to ephemeral OS disks. The requested size of 60 GiB is smaller than the maximum temporary storage of 75 GiB.
 
-* If you select [Standard_E4bds_v5](../virtual-machines/ebdsv5-ebsv5-series.md#ebdsv5-series) SKU with 100-GiB OS disk, this VM size supports ephemeral OS
+* If you select [Standard_E4bds_v5](/azure/virtual-machines/ebdsv5-ebsv5-series#ebdsv5-series) SKU with 100-GiB OS disk, this VM size supports ephemeral OS
 and has 150 GiB of temporary storage. If you don't specify the OS disk type, by default Azure provisions an ephemeral OS disk to the node pool.
 
 ### Customer-managed keys
@@ -298,12 +298,12 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 <!-- EXTERNAL LINKS -->
 
 <!-- INTERNAL LINKS -->
-[disks-types]: ../virtual-machines/disks-types.md
-[azure-managed-disks]: ../virtual-machines/managed-disks-overview.md
-[azure-vm-ephemeral-os-disks]: ../virtual-machines/ephemeral-os-disks.md
-[storage-files-planning]: ../storage/files/storage-files-planning.md
-[azure-netapp-files-service-levels]: ../azure-netapp-files/azure-netapp-files-service-levels.md
-[storage-account-overview]: ../storage/common/storage-account-overview.md
+[disks-types]: /azure/virtual-machines/disks-types
+[azure-managed-disks]: /azure/virtual-machines/managed-disks-overview
+[azure-vm-ephemeral-os-disks]: /azure/virtual-machines/ephemeral-os-disks
+[storage-files-planning]: /azure/storage/files/storage-files-planning
+[azure-netapp-files-service-levels]: /azure/azure-netapp-files/azure-netapp-files-service-levels
+[storage-account-overview]: /azure/storage/common/storage-account-overview
 [csi-storage-drivers]: csi-storage-drivers.md
 [azure-disk-csi]: azure-disk-csi.md
 [azure-netapp-files]: azure-netapp-files.md
@@ -315,8 +315,8 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 [aks-concepts-network]: concepts-network.md
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [azure-blob-csi]: azure-blob-csi.md
-[general-purpose-machine-sizes]: ../virtual-machines/sizes-general.md
-[azure-files-azure-netapp-comparison]: ../storage/files/storage-files-netapp-comparison.md
+[general-purpose-machine-sizes]: /azure/virtual-machines/sizes-general
+[azure-files-azure-netapp-comparison]: /azure/storage/files/storage-files-netapp-comparison
 [azure-disk-customer-managed-key]: azure-disk-customer-managed-keys.md
 [azure-aks-storage-considerations]: /azure/cloud-adoption-framework/scenarios/app-platform/aks/storage
-[azure-container-storage]: ../storage/container-storage/container-storage-introduction.md
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction

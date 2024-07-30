@@ -308,11 +308,11 @@ After creating your cluster, confirm that GPUs are schedulable in Kubernetes.
 [aks-quickstart-portal]: ./learn/quick-windows-container-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-windows-container-deploy-powershell.md
 [aks-spark]: spark-job.md
-[gpu-skus]: ../virtual-machines/sizes-gpu.md
+[gpu-skus]: /azure/virtual-machines/sizes-gpu
 [install-azure-cli]: /cli/azure/install-azure-cli
-[azureml-aks]: ../machine-learning/how-to-attach-kubernetes-anywhere.md
-[azureml-deploy]: ../machine-learning/how-to-deploy-managed-online-endpoints.md
-[azureml-triton]: ../machine-learning/how-to-deploy-with-triton.md
+[azureml-aks]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[azureml-deploy]: /azure/machine-learning/how-to-deploy-managed-online-endpoints
+[azureml-triton]: /azure/machine-learning/how-to-deploy-with-triton
 [aks-container-insights]: monitor-aks.md#integrations
 [advanced-scheduler-aks]: operator-best-practices-advanced-scheduler.md
 [az-provider-register]: /cli/azure/provider#az-provider-register

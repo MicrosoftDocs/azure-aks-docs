@@ -68,7 +68,7 @@ This article focused on how to secure your containers. To implement some of thes
 <!-- INTERNAL LINKS -->
 [best-practices-cluster-security]: operator-best-practices-cluster-security.md
 [best-practices-pod-security]: developer-best-practices-pod-security.md
-[acr-base-image-update]: ../container-registry/container-registry-tutorial-base-image-update.md
-[security-center-containers]: ../security-center/container-security.md
-[security-center-acr]: ../security-center/defender-for-container-registries-introduction.md
+[acr-base-image-update]: /azure/container-registry/container-registry-tutorial-base-image-update
+[security-center-containers]: /azure/security-center/container-security
+[security-center-acr]: /azure/security-center/defender-for-container-registries-introduction
 

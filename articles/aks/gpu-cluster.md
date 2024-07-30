@@ -27,7 +27,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 ## Limitations
 
 * If you're using an Azure Linux GPU-enabled node pool, automatic security patches aren't applied, and the default behavior for the cluster is *Unmanaged*. For more information, see [auto-upgrade](./auto-upgrade-node-image.md).
-* [NVadsA10](../virtual-machines/nva10v5-series.md) v5-series are *not* a recommended SKU for GPU VHD.
+* [NVadsA10](/azure/virtual-machines/nva10v5-series) v5-series are *not* a recommended SKU for GPU VHD.
 * Updating an existing node pool to add GPU isn't supported.
 
 ## Before you begin
@@ -506,11 +506,11 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
 [aks-spark]: spark-job.md
-[gpu-skus]: ../virtual-machines/sizes-gpu.md
+[gpu-skus]: /azure/virtual-machines/sizes-gpu
 [install-azure-cli]: /cli/azure/install-azure-cli
-[azureml-aks]: ../machine-learning/how-to-attach-kubernetes-anywhere.md
-[azureml-deploy]: ../machine-learning/how-to-deploy-managed-online-endpoints.md
-[azureml-triton]: ../machine-learning/how-to-deploy-with-triton.md
+[azureml-aks]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[azureml-deploy]: /azure/machine-learning/how-to-deploy-managed-online-endpoints
+[azureml-triton]: /azure/machine-learning/how-to-deploy-with-triton
 [aks-container-insights]: monitor-aks.md#integrations
 [advanced-scheduler-aks]: operator-best-practices-advanced-scheduler.md
 [az-provider-register]: /cli/azure/provider#az-provider-register

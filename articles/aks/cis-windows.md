@@ -283,4 +283,4 @@ For more information about AKS security, see the following articles:
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark
 [security-concepts-aks-apps-clusters]: concepts-security.md
-[windows-security-baseline]: ../governance/policy/samples/guest-configuration-baseline-windows.md
+[windows-security-baseline]: /azure/governance/policy/samples/guest-configuration-baseline-windows

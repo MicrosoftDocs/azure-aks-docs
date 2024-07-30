@@ -23,7 +23,7 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 ## Before you begin
 
 * You need the [**Owner**][rbac-owner], [**Azure account administrator**][rbac-classic], or [**Azure co-administrator**][rbac-classic] role on your Azure subscription.
-  * To avoid needing one of these roles, you can instead use an existing managed identity to authenticate ACR from AKS. For more information, see [Use an Azure managed identity to authenticate to an ACR](../container-registry/container-registry-authentication-managed-identity.md).
+  * To avoid needing one of these roles, you can instead use an existing managed identity to authenticate ACR from AKS. For more information, see [Use an Azure managed identity to authenticate to an ACR](/azure/container-registry/container-registry-authentication-managed-identity).
 * If you're using Azure CLI, this article requires that you're running Azure CLI version 2.7.0 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 * If you're using Azure PowerShell, this article requires that you're running Azure PowerShell version 5.9.0 or later. Run `Get-InstalledModule -Name Az` to find the version. If you need to install or upgrade, see [Install Azure PowerShell][azure-powershell-install].
 * Examples and syntax to use Terraform for configuring ACR can be found in the [Terraform reference][terraform-reference].
@@ -280,20 +280,20 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
 ### Troubleshooting
 
 * Validate the registry is accessible from the AKS cluster using the [`az aks check-acr`](/cli/azure/aks#az-aks-check-acr) command.
-* Learn more about [ACR monitoring](../container-registry/monitor-service.md).
-* Learn more about [ACR health](../container-registry/container-registry-check-health.md).
+* Learn more about [ACR monitoring](/azure/container-registry/monitor-service).
+* Learn more about [ACR health](/azure/container-registry/container-registry-check-health).
 
 <!-- LINKS - external -->
 [byo-kubelet-identity]: use-managed-identity.md#use-a-pre-created-kubelet-managed-identity
 [image-pull-secret]: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 [summary-msi]: use-managed-identity.md#summary-of-managed-identities-used-by-aks
-[acr-pull]: ../role-based-access-control/built-in-roles.md#acrpull
+[acr-pull]: /azure/role-based-access-control/built-in-roles#acrpull
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[acr-intro]: ../container-registry/container-registry-intro.md
-[aad-identity]: ../active-directory/managed-identities-azure-resources/overview.md
-[rbac-owner]: ../role-based-access-control/built-in-roles.md#owner
-[rbac-classic]: ../role-based-access-control/rbac-and-directory-admin-roles.md#classic-subscription-administrator-roles
+[acr-intro]: /azure/container-registry/container-registry-intro
+[aad-identity]: /azure/active-directory/managed-identities-azure-resources/overview
+[rbac-owner]: /azure/role-based-access-control/built-in-roles#owner
+[rbac-classic]: /azure/role-based-access-control/rbac-and-directory-admin-roles#classic-subscription-administrator-roles
 [kubelet]: https://kubernetes.io/docs/reference/command-line-tools-reference/kubelet/
 [ps-detach]: /powershell/module/az.aks/set-azakscluster#-acrnametodetach
 [cli-param]: /cli/azure/aks#az-aks-update-optional-parameters

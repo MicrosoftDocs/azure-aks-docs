@@ -245,7 +245,7 @@ You can configure your FQDN using one of the following methods:
 * Set the DNS label using Azure CLI or Azure PowerShell.
 * Set the DNS label using Helm chart settings.
 
-For more information, see [Public IP address DNS name labels](../virtual-network/ip-services/public-ip-addresses.md#domain-name-label).
+For more information, see [Public IP address DNS name labels](/azure/virtual-network/ip-services/public-ip-addresses#domain-name-label).
 
 #### Set the DNS label using Azure CLI or Azure PowerShell
 
@@ -659,7 +659,7 @@ You can also:
 [aks-supported versions]: supported-kubernetes-versions.md
 [aks-integrated-acr]: cluster-container-registry-integration.md#create-a-new-acr
 [azure-powershell-install]: /powershell/azure/install-az-ps
-[acr-helm]: ../container-registry/container-registry-helm-repos.md
+[acr-helm]: /azure/container-registry/container-registry-helm-repos
 [get-az-aks-cluster]: /powershell/module/az.aks/get-azakscluster
 [new-az-public-ip-address]: /powershell/module/az.network/new-azpublicipaddress
 [aks-app-add-on]: app-routing.md

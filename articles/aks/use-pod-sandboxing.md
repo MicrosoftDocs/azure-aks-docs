@@ -305,14 +305,14 @@ Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with y
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-deployment-group-create]: /cli/azure/deployment/group#az-deployment-group-create
 [connect-to-aks-cluster-nodes]: node-access.md
-[dv3-series]: ../virtual-machines/dv3-dsv3-series.md#dsv3-series
+[dv3-series]: /azure/virtual-machines/dv3-dsv3-series#dsv3-series
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [create-ssh-public-key-linux]: ../virtual-machines/linux/mac-create-ssh-keys.md
 [az-aks-delete]: /cli/azure/aks#az-aks-delete
 [cvm-on-aks]: use-cvm.md
 [azure-dedicated-hosts]: use-azure-dedicated-hosts.md
 [container-insights]: ../azure-monitor/containers/container-insights-overview.md
-[defender-for-containers]: ../defender-for-cloud/defender-for-containers-introduction.md
+[defender-for-containers]: /azure/defender-for-cloud/defender-for-containers-introduction
 [az-aks-install-cmd]: /cli/azure/aks#az-aks-install-cli
 [azurelinux-overview]: use-azure-linux.md
 [csi-storage-driver]: csi-storage-drivers.md

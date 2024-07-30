@@ -181,9 +181,9 @@ In this article, you learned how to use mixed SKU node pools in Azure Kubernetes
 [az aks nodepool manual-scale delete]: /cli/azure/aks/nodepool/manual-scale#az-aks-nodepool-manual-scale-delete
 [node pool snapshot]: node-pool-snapshot.md
 [cluster autoscaler]: cluster-autoscaler-overview.md
-[InifiniBand]: ../virtual-machines/extensions/enable-infiniband.md
-[vm-SKU]: ../virtual-machines/sizes/overview.md
-[VMSS]: ../virtual-machine-scale-sets/overview.md
+[InifiniBand]: /azure/virtual-machines/extensions/enable-infiniband
+[vm-SKU]: /azure/virtual-machines/sizes/overview
+[VMSS]: /azure/virtual-machine-scale-sets/overview
 [azure cli]: /cli/azure/get-started-with-azure-cli
 [az extension update]: /cli/azure/extension#az-extension-update
 [az account set]: /cli/azure/account#az-account-set

@@ -36,7 +36,7 @@ The following considerations apply when you use Azure NetApp Files:
 * The Azure CLI version 2.0.59 or higher installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * After the initial deployment of an AKS cluster, you can choose to provision Azure NetApp Files volumes statically or dynamically.
 * To use dynamic provisioning with Azure NetApp Files with Network File System (NFS), install and configure [Astra Trident][astra-trident] version 19.07 or higher. To use dynamic provisioning with Azure NetApp Files with Secure Message Block (SMB), install and configure Astra Trident version 22.10 or higher. Dynamic provisioning for SMB shares is only supported on windows worker nodes.
-* Before you deploy Azure NetApp Files SMB volumes, you must identify the AD DS integration requirements for Azure NetApp Files to ensure that Azure NetApp Files is well connected to AD DS. For more information, see [Understand guidelines for Active Directory Domain Services site design and planning](../azure-netapp-files/understand-guidelines-active-directory-domain-service-site.md). Both the AKS cluster and Azure NetApp Files must have connectivity to the same AD.
+* Before you deploy Azure NetApp Files SMB volumes, you must identify the AD DS integration requirements for Azure NetApp Files to ensure that Azure NetApp Files is well connected to AD DS. For more information, see [Understand guidelines for Active Directory Domain Services site design and planning](/azure/azure-netapp-files/understand-guidelines-active-directory-domain-service-site). Both the AKS cluster and Azure NetApp Files must have connectivity to the same AD.
 
 ## Configure Azure NetApp Files for AKS workloads
 
@@ -137,8 +137,8 @@ Astra Trident supports many features with Azure NetApp Files. For more informati
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-[anf]: ../azure-netapp-files/azure-netapp-files-introduction.md
-[anf-delegate-subnet]: ../azure-netapp-files/azure-netapp-files-delegate-subnet.md
+[anf]: /azure/azure-netapp-files/azure-netapp-files-introduction
+[anf-delegate-subnet]: /azure/azure-netapp-files/azure-netapp-files-delegate-subnet
 [anf-regions]: https://azure.microsoft.com/global-infrastructure/services/?products=netapp&regions=all
 [az-aks-show]: /cli/azure/aks#az_aks_show
 [az-netappfiles-account-create]: /cli/azure/netappfiles/account#az_netappfiles_account_create

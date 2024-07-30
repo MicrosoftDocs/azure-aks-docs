@@ -226,9 +226,9 @@ OSM has several types of certificates it uses to operate on your AKS cluster. OS
 This article covered the Open Service Mesh (OSM) add-on integrations with features provided by Azure and some open source projects. To learn more about OSM, see [About OSM in AKS][about-osm-in-aks].
 
 <!-- LINKS -->
-[agic]: ../application-gateway/ingress-controller-overview.md
+[agic]: /azure/application-gateway/ingress-controller-overview
 [aks-support-policy]: support-policies.md
-[azure-monitor]: ../azure-monitor/overview.md
+[azure-monitor]: /azure/azure-monitor/overview
 [osm-nginx]: https://release-v1-0.docs.openservicemesh.io/docs/demos/ingress_k8s_nginx/
 [osm-contour]: https://release-v1-0.docs.openservicemesh.io/docs/guides/traffic_management/ingress/#1-using-contour-ingress-controller-and-gateway
 [osm-metrics]: https://release-v1-0.docs.openservicemesh.io/docs/guides/observability/metrics/

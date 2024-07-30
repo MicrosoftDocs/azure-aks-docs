@@ -358,10 +358,10 @@ az feature show --namespace "Microsoft.StorageCache"
 
 <!-- INTERNAL LINKS -->
 [aks-nfs]: azure-nfs-volume.md
-[hpc-cache]: ../hpc-cache/hpc-cache-overview.md
-[hpc-cache-access-policies]: ../hpc-cache/access-policies.md
-[hpc-cache-cli-prerequisites]: ../hpc-cache/az-cli-prerequisites.md
-[hpc-cache-prereqs]: ../hpc-cache/hpc-cache-prerequisites.md
+[hpc-cache]: /azure/hpc-cache/hpc-cache-overview
+[hpc-cache-access-policies]: /azure/hpc-cache/access-policies
+[hpc-cache-cli-prerequisites]: /azure/hpc-cache/az-cli-prerequisites
+[hpc-cache-prereqs]: /azure/hpc-cache/hpc-cache-prerequisites
 [az-hpc-cache-create]: /cli/azure/hpc-cache#az_hpc_cache_create
 [az-aks-show]: /cli/azure/aks#az_aks_show
 [az-feature-show]: /cli/azure/feature#az-feature-show

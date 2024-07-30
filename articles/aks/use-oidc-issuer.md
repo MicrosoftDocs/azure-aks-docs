@@ -146,14 +146,14 @@ During key rotation, there's one other key present in the discovery document.
 
 ## Next steps
 
-* See [configure creating a trust relationship between an app and an external identity provider](../active-directory/develop/workload-identity-federation-create-trust.md) to understand how a federated identity credential creates a trust relationship between an application on your cluster and an external identity provider.
+* See [configure creating a trust relationship between an app and an external identity provider](/azure/active-directory/develop/workload-identity-federation-create-trust) to understand how a federated identity credential creates a trust relationship between an application on your cluster and an external identity provider.
 * Review [Microsoft Entra Workload ID][azure-ad-workload-identity-overview] (preview). This authentication method integrates with the Kubernetes native capabilities to federate with any external identity providers on behalf of the application.
 * See [Secure pod network traffic][secure-pod-network-traffic] to understand how to use the Network Policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS.
 
 <!-- LINKS - external -->
 
 <!-- LINKS - internal -->
-[open-id-connect-overview]: ../active-directory/fundamentals/auth-oidc.md
+[open-id-connect-overview]: /azure/active-directory/fundamentals/auth-oidc
 [sdk]: workload-identity-overview.md#azure-identity-client-libraries
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create

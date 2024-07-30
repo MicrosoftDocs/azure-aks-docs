@@ -40,23 +40,23 @@ An important practice that you should include as part of your migration process 
 
 Azure Migrate offers a unified platform to assess and migrate to Azure on-premises servers, infrastructure, applications, and data. For AKS, you can use Azure Migrate for the following tasks:
 
-* [Containerizing ASP.NET applications and migrating to AKS](../migrate/tutorial-app-containerization-aspnet-kubernetes.md).
-* [Containerizing Java web applications and migrating to AKS](../migrate/tutorial-app-containerization-java-kubernetes.md).
+* [Containerizing ASP.NET applications and migrating to AKS](/azure/migrate/tutorial-app-containerization-aspnet-kubernetes).
+* [Containerizing Java web applications and migrating to AKS](/azure/migrate/tutorial-app-containerization-java-kubernetes).
 
 ## AKS with standard load balancer and Virtual Machine Scale Sets
 
 AKS is a managed service offering unique capabilities with lower management overhead. Since AKS is a managed service, you must select from a set of AKS-supported [regions](./quotas-skus-regions.md). You may need to modify your existing applications to keep them healthy on the AKS-managed control plane during the transition from your existing cluster to AKS.
 
-We recommend using AKS clusters backed by [Virtual Machine Scale Sets](../virtual-machine-scale-sets/index.yml) and the [Azure Standard Load Balancer](./load-balancer-standard.md) to ensure you get the following features:
+We recommend using AKS clusters backed by [Virtual Machine Scale Sets](/azure/virtual-machine-scale-sets/) and the [Azure Standard Load Balancer](./load-balancer-standard.md) to ensure you get the following features:
 
 * [Multiple node pools](./create-node-pools.md),
-* [Availability zones](../reliability/availability-zones-overview.md),
+* [Availability zones](/azure/reliability/availability-zones-overview),
 * [Authorized IP ranges](./api-server-authorized-ip-ranges.md),
 * [Cluster autoscaler](./cluster-autoscaler.md),
-* [Azure Policy for AKS](../governance/policy/concepts/policy-for-kubernetes.md), and
+* [Azure Policy for AKS](/azure/governance/policy/concepts/policy-for-kubernetes), and
 * Other new features as they're released.
 
-AKS clusters backed by [virtual machine availability sets](../virtual-machines/availability.md#availability-sets) lack support for many of these features.
+AKS clusters backed by [virtual machine availability sets](/azure/virtual-machines/availability#availability-sets) lack support for many of these features.
 
 ### Create an AKS cluster with Standard Load Balancer and Virtual Machine Scale Sets
 
@@ -96,11 +96,11 @@ When migrating clusters, you may have attached external Azure services. While th
 
 ## Ensure valid quotas
 
-Since other VMs are deployed into your subscription during migration, you should verify your quotas and limits are sufficient for these resources. If necessary, request an increase in [vCPU quota](../azure-portal/supportability/per-vm-quota-requests.md).
+Since other VMs are deployed into your subscription during migration, you should verify your quotas and limits are sufficient for these resources. If necessary, request an increase in [vCPU quota](/azure/azure-portal/supportability/per-vm-quota-requests).
 
-You may need to request an increase for [network quotas](../azure-portal/supportability/networking-quota-requests.md) to ensure you don't exhaust IPs. For more information, see [networking and IP ranges for AKS](./configure-kubenet.md).
+You may need to request an increase for [network quotas](/azure/azure-portal/supportability/networking-quota-requests) to ensure you don't exhaust IPs. For more information, see [networking and IP ranges for AKS](./configure-kubenet.md).
 
-For more information, see [Azure subscription and service limits](../azure-resource-manager/management/azure-subscription-service-limits.md). To check your current quotas, in the Azure portal, go to the [subscriptions blade](https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade), select your subscription, and then select **Usage + quotas**.
+For more information, see [Azure subscription and service limits](/azure/azure-resource-manager/management/azure-subscription-service-limits). To check your current quotas, in the Azure portal, go to the [subscriptions blade](https://portal.azure.com/#blade/Microsoft_Azure_Billing/SubscriptionsBlade), select your subscription, and then select **Usage + quotas**.
 
 ## High availability and business continuity
 
@@ -110,13 +110,13 @@ For complex applications, you typically migrate over time rather than all at onc
 
 To complete the migration, you want to point clients to the new services that run on AKS. We recommend you redirect traffic by updating DNS to point to the load balancer sitting in front of your AKS cluster.
 
-[Azure Traffic Manager](../traffic-manager/index.yml) can direct customers to the desired Kubernetes cluster and application instance. Traffic Manager is a DNS-based traffic load balancer that can distribute network traffic across regions. For the best performance and redundancy, direct all application traffic through Traffic Manager before it goes to your AKS cluster.
+[Azure Traffic Manager](/azure/traffic-manager/) can direct customers to the desired Kubernetes cluster and application instance. Traffic Manager is a DNS-based traffic load balancer that can distribute network traffic across regions. For the best performance and redundancy, direct all application traffic through Traffic Manager before it goes to your AKS cluster.
 
 In a multi-cluster deployment, customers should connect to a Traffic Manager DNS name that points to the services on each AKS cluster. Define these services by using Traffic Manager endpoints. Each endpoint is the *service load balancer IP*. Use this configuration to direct network traffic from the Traffic Manager endpoint in one region to the endpoint in a different region.
 
 ![AKS with Traffic Manager](media/operator-best-practices-bc-dr/aks-azure-traffic-manager.png)
 
-[Azure Front Door Service](../frontdoor/front-door-overview.md) is another option for routing traffic for AKS clusters. With Azure Front Door Service, you can define, manage, and monitor the global routing for your web traffic by optimizing for best performance and instant global failover for high availability.
+[Azure Front Door Service](/azure/frontdoor/front-door-overview) is another option for routing traffic for AKS clusters. With Azure Front Door Service, you can define, manage, and monitor the global routing for your web traffic by optimizing for best performance and instant global failover for high availability.
 
 ### Considerations for stateless applications
 

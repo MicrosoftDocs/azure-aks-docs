@@ -58,13 +58,13 @@ Before you begin, review the following prerequisites and limitations.
 ## Next steps
 
 - Review [best practices for AKS cluster security][best-practices-security].
-- Read more about [host-based encryption](../virtual-machines/disk-encryption.md#encryption-at-host---end-to-end-encryption-for-your-vm-data).
+- Read more about [host-based encryption](/azure/virtual-machines/disk-encryption#encryption-at-host---end-to-end-encryption-for-your-vm-data).
 <!-- LINKS - external -->
 
 <!-- LINKS - internal -->
 [best-practices-security]: ./operator-best-practices-cluster-security.md
-[supported-regions]: ../virtual-machines/disk-encryption.md#supported-regions
-[supported-sizes]: ../virtual-machines/disk-encryption.md#supported-vm-sizes
+[supported-regions]: /azure/virtual-machines/disk-encryption#supported-regions
+[supported-sizes]: /azure/virtual-machines/disk-encryption#supported-vm-sizes
 [control-keys]: ../key-vault/general/best-practices.md#control-access-to-your-vault
 [akv-built-in-roles]: ../key-vault/general/rbac-guide.md#azure-built-in-roles-for-key-vault-data-plane-operations
 [az-aks-create]: /cli/azure/aks#az-aks-create

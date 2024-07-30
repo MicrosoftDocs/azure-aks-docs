@@ -42,8 +42,8 @@ For supported Kubernetes versions, refer to the corresponding documentation for 
 | [Azure App Configuration][app-config-overview] | Use Azure App Configuration to centrally manage application settings and feature flags. |
 | [Azure Machine Learning][azure-ml-overview] | Use Azure Kubernetes Service clusters to train, inference, and manage machine learning models in Azure Machine Learning. |
 | [Flux (GitOps)][gitops-overview] | Use GitOps with Flux to manage cluster configuration and application deployment. See also [supported versions of Flux (GitOps)][gitops-support] and [Tutorial: Deploy applications using GitOps with Flux v2][gitops-tutorial].|
-| [Azure Container Storage](../storage/container-storage/container-storage-introduction.md) | Use Azure Container Storage to manage block storage on AKS clusters to store data in persistent volumes. |
-| [Azure Backup for AKS](../backup/azure-kubernetes-service-backup-overview.md) | Use Azure Backup for AKS to protect your containerized applications and data stored in Persistent Volumes deployed in the AKS clusters. |
+| [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Use Azure Container Storage to manage block storage on AKS clusters to store data in persistent volumes. |
+| [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Use Azure Backup for AKS to protect your containerized applications and data stored in Persistent Volumes deployed in the AKS clusters. |
 
 You can also [select and deploy Kubernetes applications available through Marketplace](deploy-marketplace.md).
 
@@ -57,13 +57,13 @@ You can also [select and deploy Kubernetes applications available through Market
 
 <!-- LINKS -->
 <!-- INTERNAL -->
-[arc-k8s-extensions]: ../azure-arc/kubernetes/conceptual-extensions.md
+[arc-k8s-extensions]: /azure/azure-arc/kubernetes/conceptual-extensions
 [app-config-overview]: ./azure-app-configuration.md
-[azure-ml-overview]: ../machine-learning/how-to-attach-kubernetes-anywhere.md
+[azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
 [dapr-overview]: ./dapr.md
-[gitops-overview]: ../azure-arc/kubernetes/conceptual-gitops-flux2.md
-[gitops-support]: ../azure-arc/kubernetes/extensions-release.md#flux-gitops
-[gitops-tutorial]: ../azure-arc/kubernetes/tutorial-use-gitops-flux2.md
+[gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
+[gitops-support]: /azure/azure-arc/kubernetes/extensions-release#flux-gitops
+[gitops-tutorial]: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2
 [k8s-extension-reference]: /cli/azure/k8s-extension
 [use-managed-identity]: ./use-managed-identity.md
 [workload-identity-overview]: workload-identity-overview.md

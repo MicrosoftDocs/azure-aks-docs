@@ -19,13 +19,13 @@ The following prerequisites are required for Azure CNI Node Subnet and kubenet:
 
 * The virtual network for the AKS cluster must allow outbound internet connectivity.
 * AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range.
-* The cluster identity used by the AKS cluster must have at least [Network Contributor](../role-based-access-control/built-in-roles.md#network-contributor) permissions on the subnet within the virtual network. If you want to define a [custom role](../role-based-access-control/custom-roles.md) instead of using the built-in Network Contributor role, the following permissions are required:
+* The cluster identity used by the AKS cluster must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within the virtual network. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
 
   - `Microsoft.Network/virtualNetworks/subnets/join/action`
   - `Microsoft.Network/virtualNetworks/subnets/read`
   - `Microsoft.Authorization/roleAssignments/write`
 
-* The subnet assigned to the AKS node pool can't be a [delegated subnet](../virtual-network/subnet-delegation-overview.md).
+* The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
 - AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, make sure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
 
 > [!NOTE]
@@ -41,7 +41,7 @@ With Azure CNI Node Subnet, each pod receives an IP address in the IP subnet and
 
 When you create an AKS cluster, the following parameters are configurable for Azure CNI networking:
 
-**Virtual network**: The virtual network into which you want to deploy the Kubernetes cluster.  You can create a new virtual network or use an existing one. If you want to use an existing virtual network, make sure it's in the same location and Azure subscription as your Kubernetes cluster. For information about the limits and quotas for an Azure virtual network, see [Azure subscription and service limits, quotas, and constraints](../azure-resource-manager/management/azure-subscription-service-limits.md#azure-resource-manager-virtual-networking-limits).
+**Virtual network**: The virtual network into which you want to deploy the Kubernetes cluster.  You can create a new virtual network or use an existing one. If you want to use an existing virtual network, make sure it's in the same location and Azure subscription as your Kubernetes cluster. For information about the limits and quotas for an Azure virtual network, see [Azure subscription and service limits, quotas, and constraints](/azure/azure-resource-manager/management/azure-subscription-service-limits#azure-resource-manager-virtual-networking-limits).
 
 **Subnet**: The subnet within the virtual network where you want to deploy the cluster. You can add new subnets into the virtual network during the cluster creation process. For hybrid connectivity, the address range shouldn't overlap with any other virtual networks in your environment.
 
@@ -164,8 +164,8 @@ For more information, see [Compare network models and their support scopes][netw
 [azure-cni-overlay]: concepts-network-azure-cni-overlay.md
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
 [virtual-nodes]: virtual-nodes-cli.md
-[vnet-peering]: ../virtual-network/virtual-network-peering-overview.md
-[express-route]: ../expressroute/expressroute-introduction.md
+[vnet-peering]: /azure/virtual-network/virtual-network-peering-overview
+[express-route]: /azure/expressroute/expressroute-introduction
 [network-comparisons]: concepts-network-cni-overview.md
 [network-policy]: use-network-policies.md
 [services]: concepts-network-services.md

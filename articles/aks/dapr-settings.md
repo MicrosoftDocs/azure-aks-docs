@@ -370,7 +370,7 @@ properties: {
 
 The Dapr extension requires the following outbound URLs on `https://:443` to function on AKS and Arc for Kubernetes:
 1. `https://mcr.microsoft.com/daprio` URL for pulling Dapr artifacts.
-1. The [outbound URLs required for AKS or Arc for Kubernetes](../azure-arc/kubernetes/network-requirements.md). 
+1. The [outbound URLs required for AKS or Arc for Kubernetes](/azure/azure-arc/kubernetes/network-requirements). 
 
 ## Next Steps
 

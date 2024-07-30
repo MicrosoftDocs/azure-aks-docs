@@ -151,7 +151,7 @@ Explore this section to set up your environment for measuring and continuously i
 
 You should identify and delete any unused resources, such as unreferenced images and storage resources, as they have a direct impact on hardware and energy efficiency. To ensure continuous energy optimization, you must treat identifying and deleting unused resources as a process rather than a point-in-time activity.
 
-* Use [Azure Advisor](../advisor/advisor-cost-recommendations.md) to identify unused resources.
+* Use [Azure Advisor](/azure/advisor/advisor-cost-recommendations) to identify unused resources.
 * Use [ImageCleaner](./image-cleaner.md?tabs=azure-cli) to clean up stale images and remove an area of risk in your cluster.
 
 ### Tag your resources
@@ -185,7 +185,7 @@ The distance from a data center to users has a significant impact on energy cons
 
 Placing nodes in a single region or a single availability zone reduces the physical distance between the instances. However, for business critical workloads, you need to ensure your cluster is spread across multiple availability zones, which may result in more network traversal and increase in your carbon footprint.
 
-* Consider deploying your nodes within a [proximity placement group](../virtual-machines/co-location.md) to reduce the network traversal by ensuring your compute resources are physically located close to each other.
+* Consider deploying your nodes within a [proximity placement group](/azure/virtual-machines/co-location) to reduce the network traversal by ensuring your compute resources are physically located close to each other.
 * For critical workloads, configure [proximity placement groups with availability zones](./reduce-latency-ppg.md#configure-proximity-placement-groups-with-availability-zones).
 
 ### Evaluate using a service mesh
@@ -198,14 +198,14 @@ A service mesh deploys extra containers for communication, typically in a [sidec
 
 Sending and storing all logs from all possible sources (workloads, services, diagnostics, and platform activity) can increase storage and network traffic, which impacts costs and carbon emissions.
 
-* Make sure you're collecting and retaining only the necessary log data to support your requirements. [Configure data collection rules for your AKS workloads](../azure-monitor/containers/container-insights-data-collection-configmap.md#data-collection-settings) and implement design considerations for [optimizing your Log Analytics costs](../azure-monitor/best-practices-cost.md).
+* Make sure you're collecting and retaining only the necessary log data to support your requirements. [Configure data collection rules for your AKS workloads](/azure/azure-monitor/containers/container-insights-data-collection-configmap#data-collection-settings) and implement design considerations for [optimizing your Log Analytics costs](/azure/azure-monitor/best-practices-cost).
 
 ### Cache static data
 
 Using Content Delivery Network (CDN) is a sustainable approach to optimizing network traffic because it reduces the data movement across a network. It minimizes latency through storing frequently read static data closer to users, and helps reduce network traffic and server load.
 
 * Ensure you [follow best practices](/azure/architecture/best-practices/cdn) for CDN.
-* Consider using [Azure CDN](../cdn/cdn-how-caching-works.md?toc=%2fazure%2ffrontdoor%2fTOC.json) to lower the consumed bandwidth and keep costs down.
+* Consider using [Azure CDN](/azure/cdn/cdn-how-caching-works?toc=%2fazure%2ffrontdoor%2fTOC.json) to lower the consumed bandwidth and keep costs down.
 
 ## Security
 
@@ -215,7 +215,7 @@ Explore this section to learn more about the recommendations leading to a sustai
 
 Transport Layer Security (TLS) ensures that all data passed between the web server and web browsers remain private and encrypted. However, terminating and re-establishing TLS increases CPU utilization and might be unnecessary in certain architectures. A balanced level of security can offer a more sustainable and energy efficient workload, while a higher level of security may increase the compute resource requirements.
 
-* Review the information on TLS termination when using [Application Gateway](../application-gateway/ssl-overview.md) or [Azure Front Door](../application-gateway/ssl-overview.md). Determine whether you can terminate TLS at your border gateway, and continue with non-TLS to your workload load balancer and workload.
+* Review the information on TLS termination when using [Application Gateway](/azure/application-gateway/ssl-overview) or [Azure Front Door](/azure/application-gateway/ssl-overview). Determine whether you can terminate TLS at your border gateway, and continue with non-TLS to your workload load balancer and workload.
 
 ### Use cloud native network security tools and controls
 
@@ -228,7 +228,7 @@ Azure Front Door and Application Gateway help manage traffic from web applicatio
 Many attacks on cloud infrastructure seek to misuse deployed resources for the attacker's direct gain leading to an unnecessary spike in usage and cost. Vulnerability scanning tools help minimize the window of opportunity for attackers and mitigate any potential malicious usage of resources.
 
 * Follow recommendations from [Microsoft Defender for Cloud](/security/benchmark/azure/security-control-vulnerability-management).
-* Run automated vulnerability scanning tools, such as [Defender for Containers](../defender-for-cloud/defender-for-containers-vulnerability-assessment-azure.md), to avoid unnecessary resource usage. These tools help identify vulnerabilities in your images and minimize the window of opportunity for attackers.
+* Run automated vulnerability scanning tools, such as [Defender for Containers](/azure/defender-for-cloud/defender-for-containers-vulnerability-assessment-azure), to avoid unnecessary resource usage. These tools help identify vulnerabilities in your images and minimize the window of opportunity for attackers.
 
 ## Next steps
 

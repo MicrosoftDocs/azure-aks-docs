@@ -120,5 +120,5 @@ The following are metrics that are allow-listed with `minimalingestionprofile=tr
 [kubernetes-metrics-autoscaler-reference]: https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/proposals/metrics.md
 
 <!-- INTERNAL LINKS -->
-[azure-monitor-prometheus-metrics-scrape-config-minimal]: ../azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal.md
+[azure-monitor-prometheus-metrics-scrape-config-minimal]: /azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal
 

@@ -148,7 +148,7 @@ az aks nodepool delete --cluster-name MyManagedCluster --name agentpool3 --resou
 
 ## Next steps
 
-In this article, you learned how to create an AKS cluster with a Dedicated host, and to add a dedicated host to an existing cluster. For more information about Dedicated Hosts, see [dedicated-hosts](../virtual-machines/dedicated-hosts.md).
+In this article, you learned how to create an AKS cluster with a Dedicated host, and to add a dedicated host to an existing cluster. For more information about Dedicated Hosts, see [dedicated-hosts](/azure/virtual-machines/dedicated-hosts).
 
 <!-- LINKS - External -->
 [kubernetes-services]: https://kubernetes.io/docs/concepts/services-networking/service/
@@ -158,8 +158,8 @@ In this article, you learned how to create an AKS cluster with a Dedicated host,
 [aks-support-policies]: support-policies.md
 [aks-faq]: faq.md
 [azure-cli-install]: /cli/azure/install-azure-cli
-[dedicated-hosts]: ../virtual-machines/dedicated-hosts.md
+[dedicated-hosts]: /azure/virtual-machines/dedicated-hosts
 [az-vm-host-group-create]: /cli/azure/vm/host/group#az_vm_host_group_create
-[determine-host-based-on-vm-utilization]: ../virtual-machines/dedicated-host-general-purpose-skus.md
-[host-utilization-evaluate]: ../virtual-machines/dedicated-hosts-how-to.md#check-the-status-of-the-host
+[determine-host-based-on-vm-utilization]: /azure/virtual-machines/dedicated-host-general-purpose-skus
+[host-utilization-evaluate]: /azure/virtual-machines/dedicated-hosts-how-to#check-the-status-of-the-host
 

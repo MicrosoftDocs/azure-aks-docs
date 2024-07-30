@@ -86,7 +86,7 @@ View scaling failures and scale-up not triggered events via [CLI or Portal](./cl
 | Common causes | Mitigation recommendations |
 |--------------|--------------|
 | IP address exhaustion in the subnet | Add another subnet in the same virtual network and add another node pool into the new subnet. |
-| Core quota exhaustion | Approved core quota has been exhausted. [Request a quota increase](../quotas/quickstart-increase-quota-portal.md). The cluster autoscaler enters an [exponential backoff state](#node-pool-in-backoff) within the specific node group when it experiences multiple failed scale up attempts. |
+| Core quota exhaustion | Approved core quota has been exhausted. [Request a quota increase](/azure/quotas/quickstart-increase-quota-portal). The cluster autoscaler enters an [exponential backoff state](#node-pool-in-backoff) within the specific node group when it experiences multiple failed scale up attempts. |
 | Max size of node pool | Increase the max nodes on the node pool or create a new node pool. |
 | Requests/Calls exceeding the rate limit | See [429 Too Many Requests errors](/troubleshoot/azure/azure-kubernetes/429-too-many-requests-errors). |
 
@@ -97,7 +97,7 @@ View scaling failures and scale-up not triggered events via [CLI or Portal](./cl
 | Pod preventing node drain/Unable to evict pod |• View [what types of pods can prevent scale down](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-types-of-pods-can-prevent-ca-from-removing-a-node). <br> • For pods using local storage, such as hostPath and emptyDir, set the cluster autoscaler profile flag `skip-nodes-with-local-storage` to `false`. <br> • In the pod specification, set the `cluster-autoscaler.kubernetes.io/safe-to-evict` annotation to `true`. <br> • Check your [PDB](https://kubernetes.io/docs/tasks/run-application/configure-pdb/), as it might be restrictive. |
 | Min size of node pool | Reduce the minimum size of the node pool. |
 | Requests/Calls exceeding the rate limit | See [429 Too Many Requests errors](/troubleshoot/azure/azure-kubernetes/429-too-many-requests-errors). |
-| Write operations locked | Don't make any changes to the [fully managed AKS resource group](./cluster-configuration.md#fully-managed-resource-group-preview) (see [AKS support policies](./support-policies.md)). Remove or reset any [resource locks](../azure-resource-manager/management/lock-resources.md) you previously applied to the resource group. |
+| Write operations locked | Don't make any changes to the [fully managed AKS resource group](./cluster-configuration.md#fully-managed-resource-group-preview) (see [AKS support policies](./support-policies.md)). Remove or reset any [resource locks](/azure/azure-resource-manager/management/lock-resources) you previously applied to the resource group. |
 
 ### Other issues
 

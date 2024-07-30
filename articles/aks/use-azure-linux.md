@@ -28,7 +28,7 @@ To get started using the Azure Linux container host for AKS, see:
 * [Creating a cluster with Azure Linux][azurelinux-cluster-config]
 * [Add an Azure Linux node pool to your existing cluster][azurelinux-node-pool]
 * [Ubuntu to Azure Linux migration][ubuntu-to-azurelinux]
-* [Azure Linux supported GPU SKUs](../azure-linux/intro-azure-linux.md#azure-linux-container-host-supported-gpu-skus)
+* [Azure Linux supported GPU SKUs](/azure/azure-linux/intro-azure-linux#azure-linux-container-host-supported-gpu-skus)
 
 ## How to upgrade Azure Linux nodes
 
@@ -56,12 +56,12 @@ The Azure Linux container host is available for use in the same regions as AKS.
 To learn more about Azure Linux, see the [Azure Linux documentation][azurelinuxdocumentation].
 
 <!-- LINKS - Internal -->
-[azurelinux-doc]: ../azure-linux/intro-azure-linux.md
-[azurelinux-capabilities]: ../azure-linux/intro-azure-linux.md#azure-linux-container-host-key-benefits
-[azurelinux-cluster-config]: ../azure-linux/quickstart-azure-cli.md
+[azurelinux-doc]: /azure/azure-linux/intro-azure-linux
+[azurelinux-capabilities]: /azure/azure-linux/intro-azure-linux#azure-linux-container-host-key-benefits
+[azurelinux-cluster-config]: /azure/azure-linux/quickstart-azure-cli
 [azurelinux-node-pool]: create-node-pools.md#add-an-azure-linux-node-pool
 [ubuntu-to-azurelinux]: create-node-pools.md#migrate-ubuntu-nodes-to-azure-linux-nodes
 [auto-upgrade-aks]: auto-upgrade-cluster.md
 [kured]: node-updates-kured.md
-[azurelinuxdocumentation]: ../azure-linux/intro-azure-linux.md
+[azurelinuxdocumentation]: /azure/azure-linux/intro-azure-linux
 

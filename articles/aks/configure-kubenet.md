@@ -23,7 +23,7 @@ This article shows you how to use kubenet networking to create and use a virtual
 * The virtual network for the AKS cluster must allow outbound internet connectivity.
 * Don't create more than one AKS cluster in the same subnet.
 * AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range. The range can't be updated after you create your cluster.
-* The cluster identity used by the AKS cluster must at least have the [Network Contributor](../role-based-access-control/built-in-roles.md#network-contributor) role on the subnet within your virtual network. CLI helps set the role assignment automatically. If you're using an ARM template or other clients, you need to manually set the role assignment. You must also have the appropriate permissions, such as the subscription owner, to create a cluster identity and assign it permissions. If you want to define a [custom role](../role-based-access-control/custom-roles.md) instead of using the built-in Network Contributor role, you need the following permissions:
+* The cluster identity used by the AKS cluster must at least have the [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) role on the subnet within your virtual network. CLI helps set the role assignment automatically. If you're using an ARM template or other clients, you need to manually set the role assignment. You must also have the appropriate permissions, such as the subscription owner, to create a cluster identity and assign it permissions. If you want to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, you need the following permissions:
   * `Microsoft.Network/virtualNetworks/subnets/join/action`
   * `Microsoft.Network/virtualNetworks/subnets/read`
 
@@ -290,9 +290,9 @@ This article showed you how to deploy your AKS cluster into your existing virtua
 [develop-helm]: quickstart-helm.md
 [use-helm]: kubernetes-helm.md
 [virtual-nodes]: virtual-nodes-cli.md
-[vnet-peering]: ../virtual-network/virtual-network-peering-overview.md
-[express-route]: ../expressroute/expressroute-introduction.md
-[custom-route-table]: ../virtual-network/manage-route-table.yml
+[vnet-peering]: /azure/virtual-network/virtual-network-peering-overview
+[express-route]: /azure/expressroute/expressroute-introduction
+[custom-route-table]: /azure/virtual-network/manage-route-table
 [network-comparisons]: concepts-network-cni-overview.md
 [Create an AKS cluster with user-assigned managed identity]: configure-kubenet.md#create-an-aks-cluster-with-user-assigned-managed-identity
 [bring-your-own-control-plane-managed-identity]: ../aks/use-managed-identity.md#enable-a-user-assigned-managed-identity

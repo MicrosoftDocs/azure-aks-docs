@@ -166,9 +166,9 @@ ls -l
 <!-- LINKS - internal -->
 [plan-aks-design]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-virtual-network]: ./configure-kubenet.md#create-an-aks-cluster-in-the-virtual-network
-[peer-virtual-networks]: ../virtual-network/tutorial-connect-virtual-networks-portal.md
+[peer-virtual-networks]: /azure/virtual-network/tutorial-connect-virtual-networks-portal
 [operator-best-practices-storage]: operator-best-practices-storage.md
-[azure-linux-vm]: ../virtual-machines/linux/endorsed-distros.md
-[linux-create]: ../virtual-machines/linux/tutorial-manage-vm.md
-[azure-files-overview]: ../storage/files/storage-files-introduction.md
+[azure-linux-vm]: /azure/virtual-machines/linux/endorsed-distros
+[linux-create]: /azure/virtual-machines/linux/tutorial-manage-vm
+[azure-files-overview]: /azure/storage/files/storage-files-introduction
 

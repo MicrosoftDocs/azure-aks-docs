@@ -256,14 +256,14 @@ internal-app   LoadBalancer   10.1.15.188   10.0.0.35     80:31669/TCP   1m
 
 > [!NOTE]
 >
-> The cluster identity used by the AKS cluster must at least have the [Network Contributor](../role-based-access-control/built-in-roles.md#network-contributor) role on the virtual network resource. You can view the cluster identity using the [`az aks show`][az-aks-show] command, such as `az aks show --resource-group <resource-group-name> --name <cluster-name> --query "identity"`. You can assign the Network Contributor role using the [`az role assignment create`][az-role-assignment-create] command, such as `az role assignment create --assignee <identity-resource-id> --scope <virtual-network-resource-id> --role "Network Contributor"`.
+> The cluster identity used by the AKS cluster must at least have the [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) role on the virtual network resource. You can view the cluster identity using the [`az aks show`][az-aks-show] command, such as `az aks show --resource-group <resource-group-name> --name <cluster-name> --query "identity"`. You can assign the Network Contributor role using the [`az role assignment create`][az-role-assignment-create] command, such as `az role assignment create --assignee <identity-resource-id> --scope <virtual-network-resource-id> --role "Network Contributor"`.
 >
-> If you want to define a [custom role](../role-based-access-control/custom-roles-cli.md) instead, you need the following permissions:
+> If you want to define a [custom role](/azure/role-based-access-control/custom-roles-cli) instead, you need the following permissions:
 >
 > * `Microsoft.Network/virtualNetworks/subnets/join/action`
 > * `Microsoft.Network/virtualNetworks/subnets/read`
 >
-> For more information, see [Add, change, or delete a virtual network subnet](../virtual-network/virtual-network-manage-subnet.md).
+> For more information, see [Add, change, or delete a virtual network subnet](/azure/virtual-network/virtual-network-manage-subnet).
 
 ### Specify a different subnet
 
@@ -303,7 +303,7 @@ To learn more about Kubernetes services, see the [Kubernetes services documentat
 [advanced-networking]: configure-azure-cni.md
 [az-aks-show]: /cli/azure/aks#az_aks_show
 [az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[azure-lb-comparison]: ../load-balancer/skus.md
+[azure-lb-comparison]: /azure/load-balancer/skus
 [use-kubenet]: configure-kubenet.md
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md

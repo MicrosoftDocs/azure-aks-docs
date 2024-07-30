@@ -24,7 +24,7 @@ AKS clusters deployed using availability zones can distribute nodes across multi
 
 If a single zone becomes unavailable, your applications continue to run on clusters configured to spread across multiple zones.
 
-For more information, see [Using Azure availability zones](../reliability/availability-zones-overview.md).
+For more information, see [Using Azure availability zones](/azure/reliability/availability-zones-overview).
 
 > [!NOTE]
 > When implementing **availability zones with the [cluster autoscaler](./cluster-autoscaler-overview.md)**, we recommend using a single node pool for each zone. You can set the `--balance-similar-node-groups` parameter to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations. When this approach isn't implemented, scale down operations can disrupt the balance of nodes across zones. This configuration doesn't guarantee that similar node groups will have the same number of nodes:
@@ -33,7 +33,7 @@ For more information, see [Using Azure availability zones](../reliability/availa
 > * The cluster autoscaler only adds as many nodes as required to run all existing pods. Some groups might have more nodes than others if they have more pods scheduled.
 > * The cluster autoscaler only balances between node groups that can support the same set of pending pods.
 >
-> You can also use Azure zone-redundant storage (ZRS) disks to replicate your storage across three availability zones in the region you select. A ZRS disk lets you recover from availability zone failure without data loss. For more information, see [ZRS for managed disks](../virtual-machines/disks-redundancy.md#zone-redundant-storage-for-managed-disks).
+> You can also use Azure zone-redundant storage (ZRS) disks to replicate your storage across three availability zones in the region you select. A ZRS disk lets you recover from availability zone failure without data loss. For more information, see [ZRS for managed disks](/azure/virtual-machines/disks-redundancy#zone-redundant-storage-for-managed-disks).
 
 ## Limitations
 

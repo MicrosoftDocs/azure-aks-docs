@@ -60,7 +60,7 @@ The following resources can help you learn more about the differences between AW
 - Erin Schaffer | Content Developer 2
 
 <!-- LINKS -->
-[azure-rbac]: ../role-based-access-control/overview.md
+[azure-rbac]: /azure/role-based-access-control/overview
 [entra-workload-id]: /azure/architecture/aws-professional/eks-to-aks/workload-identity#microsoft-entra-workload-id-for-kubernetes
 [service-account-volume-projection]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection
 [entra-managed-id]: /entra/identity/managed-identities-azure-resources/overview

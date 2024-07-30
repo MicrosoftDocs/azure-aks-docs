@@ -326,7 +326,7 @@ Alternatively, Once you have deployed the Postgres cluster and pod monitors, you
 
 :::image source="./media/deploy-postgresql-ha/grafana-metrics-1.png" alt-text="Screenshot showing an Azure Managed Grafana instance." lightbox="./media/deploy-postgresql-ha/grafana-metrics-1.png":::
 
-Clicking on the Endpoint link will cause a new browser window to open where you can create dashboards on the Managed Grafana instance. Following the instructions to [configure an Azure Monitor data source](../azure-monitor/visualize/grafana-plugin.md#configure-an-azure-monitor-data-source-plug-in), you can then add visualizations to create a dashboard of metrics from the Postgres cluster. After setting up the data source connection, from the main menu, click the Data sources option and you should see a set of data source options for the data source connection as shown here:
+Clicking on the Endpoint link will cause a new browser window to open where you can create dashboards on the Managed Grafana instance. Following the instructions to [configure an Azure Monitor data source](/azure/azure-monitor/visualize/grafana-plugin#configure-an-azure-monitor-data-source-plug-in), you can then add visualizations to create a dashboard of metrics from the Postgres cluster. After setting up the data source connection, from the main menu, click the Data sources option and you should see a set of data source options for the data source connection as shown here:
 
 :::image source="./media/deploy-postgresql-ha/grafana-metrics-2.png" alt-text="Screenshot showing data source options." lightbox="./media/deploy-postgresql-ha/grafana-metrics-2.png":::
 

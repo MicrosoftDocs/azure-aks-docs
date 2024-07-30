@@ -417,14 +417,14 @@ To learn more about generative AI use cases, see the following resources:
 [miyagi]: https://github.com/Azure-Samples/miyagi
 
 <!-- Links internal -->
-[azure-resource-group]: ../azure-resource-manager/management/overview.md 
+[azure-resource-group]: /azure/azure-resource-manager/management/overview 
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[aoai-get-started]: ../ai-services/openai/quickstart.md
+[aoai-get-started]: /azure/ai-services/openai/quickstart
 [managed-identity]: /azure/ai-services/openai/how-to/managed-identity#authorize-access-to-managed-identities
 [key-vault]: csi-secrets-store-driver.md
-[aoai]: ../ai-services/openai/index.yml
+[aoai]: /azure/ai-services/openai/
 [learn-aoai]: /training/modules/explore-azure-openai
 [create-private-cluster]: private-clusters.md

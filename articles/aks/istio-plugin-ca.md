@@ -252,9 +252,9 @@ You may need to periodically rotate the certificate authorities for security or 
     kubectl rollout restart deployment <deployment name> -n <deployment namespace>
     ```
 
-[akv-quickstart]: ../key-vault/general/quick-create-cli.md
+[akv-quickstart]: /azure/key-vault/general/quick-create-cli
 [akv-addon]: ./csi-secrets-store-driver.md
-[akv-rbac-guide]: ../key-vault/general/rbac-guide.md
+[akv-rbac-guide]: /azure/key-vault/general/rbac-guide
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show

@@ -29,10 +29,10 @@ Support is still provided for non-CNI-related issues.
 * For Azure CLI, use at least version 2.39.0.
 * The virtual network for the AKS cluster must allow outbound internet connectivity.
 * AKS clusters may not use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range.
-* The cluster identity used by the AKS cluster must have at least [Network Contributor](../role-based-access-control/built-in-roles.md#network-contributor) permissions on the subnet within your virtual network. If you wish to define a [custom role](../role-based-access-control/custom-roles.md) instead of using the built-in Network Contributor role, the following permissions are required:
+* The cluster identity used by the AKS cluster must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you wish to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
   * `Microsoft.Network/virtualNetworks/subnets/join/action`
   * `Microsoft.Network/virtualNetworks/subnets/read`
-* The subnet assigned to the AKS node pool can't be a [delegated subnet](../virtual-network/subnet-delegation-overview.md).
+* The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
 * AKS doesn't apply Network Security Groups (NSGs) to its subnet or modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
 
 ## Create an AKS cluster with no CNI plugin preinstalled
@@ -184,7 +184,7 @@ Learn more about networking in AKS in the following articles:
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [aks-network-concepts]: concepts-network.md
 [aks-network-nsg]: concepts-network.md#network-security-groups
-[deploy-bicep-template]: ../azure-resource-manager/bicep/deploy-cli.md
+[deploy-bicep-template]: /azure/azure-resource-manager/bicep/deploy-cli
 [az-group-create]: /cli/azure/group#az_group_create
-[deploy-arm-template]: ../azure-resource-manager/templates/deploy-cli.md
+[deploy-arm-template]: /azure/azure-resource-manager/templates/deploy-cli
 

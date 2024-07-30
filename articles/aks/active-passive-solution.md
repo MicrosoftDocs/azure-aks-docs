@@ -33,17 +33,17 @@ The active-passive disaster recovery solution uses many Azure services. This exa
 
 **Configured cluster prioritization**: You set a prioritization level between 1-5 for each cluster (with 1 being the highest priority and 5 being the lowest priority). You can set multiple clusters to the same priority level and specify the weight for each cluster. If the primary cluster becomes unavailable, traffic automatically routes to the next region selected in Azure Front Door. All traffic must go through Azure Front Door for this system to work.
 
-**Azure Front Door**: [Azure Front Door](../frontdoor/front-door-overview.md) load balances and routes traffic to the [Azure Application Gateway](../application-gateway/overview.md) instance in the primary region (cluster must be marked with priority 1). In the event of a region failure, the service redirects traffic to the next cluster in the priority list.
+**Azure Front Door**: [Azure Front Door](/azure/frontdoor/front-door-overview) load balances and routes traffic to the [Azure Application Gateway](/azure/application-gateway/overview) instance in the primary region (cluster must be marked with priority 1). In the event of a region failure, the service redirects traffic to the next cluster in the priority list.
 
-For more information, see [Priority-based traffic-routing](../frontdoor/routing-methods.md#priority-based-traffic-routing).
+For more information, see [Priority-based traffic-routing](/azure/frontdoor/routing-methods#priority-based-traffic-routing).
 
-**Hub-spoke pair**: A hub-spoke pair is deployed for each regional AKS instance. [Azure Firewall Manager](../firewall-manager/overview.md) policies manage the firewall rules across each region.
+**Hub-spoke pair**: A hub-spoke pair is deployed for each regional AKS instance. [Azure Firewall Manager](/azure/firewall-manager/overview) policies manage the firewall rules across each region.
 
-**Key Vault**: You provision an [Azure Key Vault](../key-vault/general/overview.md) in each region to store secrets and keys.
+**Key Vault**: You provision an [Azure Key Vault](/azure/key-vault/general/overview) in each region to store secrets and keys.
 
-**Log Analytics**: Regional [Log Analytics](../azure-monitor/logs/log-analytics-overview.md) instances store regional networking metrics and diagnostic logs. A shared instance stores metrics and diagnostic logs for all AKS instances.
+**Log Analytics**: Regional [Log Analytics](/azure/azure-monitor/logs/log-analytics-overview) instances store regional networking metrics and diagnostic logs. A shared instance stores metrics and diagnostic logs for all AKS instances.
 
-**Container Registry**: The container images for the workload are stored in a managed container registry. With this solution, a single [Azure Container Registry](../container-registry/container-registry-intro.md) instance is used for all Kubernetes instances in the cluster. Geo-replication for Azure Container Registry enables you to replicate images to the selected Azure regions and provides continued access to images even if a region experiences an outage.
+**Container Registry**: The container images for the workload are stored in a managed container registry. With this solution, a single [Azure Container Registry](/azure/container-registry/container-registry-intro) instance is used for all Kubernetes instances in the cluster. Geo-replication for Azure Container Registry enables you to replicate images to the selected Azure regions and provides continued access to images even if a region experiences an outage.
 
 ## Failover process
 
@@ -51,7 +51,7 @@ If a service or service component becomes unavailable in one region, traffic sho
 
 ### Application Pods (Regional)
 
-A Kubernetes deployment object creates multiple replicas of a pod (*ReplicaSet*). If one is unavailable, traffic is routed between the remaining replicas. The Kubernetes *ReplicaSet* attempts to keep the specified number of replicas up and running. If one instance goes down, a new instance should be recreated. [Liveness probes](../container-instances/container-instances-liveness-probe.md) can check the state of the application or process running in the pod. If the pod is unresponsive, the liveness probe removes the pod, which forces the *ReplicaSet* to create a new instance.
+A Kubernetes deployment object creates multiple replicas of a pod (*ReplicaSet*). If one is unavailable, traffic is routed between the remaining replicas. The Kubernetes *ReplicaSet* attempts to keep the specified number of replicas up and running. If one instance goes down, a new instance should be recreated. [Liveness probes](/azure/container-instances/container-instances-liveness-probe) can check the state of the application or process running in the pod. If the pod is unresponsive, the liveness probe removes the pod, which forces the *ReplicaSet* to create a new instance.
 
 For more information, see [Kubernetes ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
 
@@ -73,7 +73,7 @@ In a complete regional failure, Azure Front Door routes traffic to the remaining
 
 ## Failover testing strategy
 
-While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](../chaos-studio/chaos-studio-overview.md) offers the ability to create a chaos experiment on your cluster.
+While there are no mechanisms currently available within AKS to take down an entire region of deployment for testing purposes, [Azure Chaos Studio](/azure/chaos-studio/chaos-studio-overview) offers the ability to create a chaos experiment on your cluster.
 
 ## Next steps
 

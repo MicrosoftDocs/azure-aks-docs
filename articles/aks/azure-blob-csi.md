@@ -118,7 +118,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
 
 ### Prerequisites
 
-- Your AKS cluster *Control plane* identity (that is, your AKS cluster name) is added to the [Contributor](../role-based-access-control/built-in-roles.md#contributor) role on the VNet and network security group.
+- Your AKS cluster *Control plane* identity (that is, your AKS cluster name) is added to the [Contributor](/azure/role-based-access-control/built-in-roles#contributor) role on the VNet and network security group.
 
 1. Create a file named `azure-blob-nfs-ss.yaml` and copy in the following YAML.
 
@@ -232,7 +232,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 
 <!-- LINKS - internal -->
-[compare-access-with-nfs]: ../storage/common/nfs-comparison.md
+[compare-access-with-nfs]: /azure/storage/common/nfs-comparison
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [concepts-storage]: concepts-storage.md
 [persistent-volume]: concepts-storage.md#persistent-volumes

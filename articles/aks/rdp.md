@@ -409,9 +409,9 @@ If you need more troubleshooting data, you can [view the Kubernetes primary node
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
 [az-vm-delete]: /cli/azure/vm#az_vm_delete
 [remove-azvm]: /powershell/module/az.compute/remove-azvm
-[azure-monitor-containers]: ../azure-monitor/containers/container-insights-overview.md
+[azure-monitor-containers]: /azure/azure-monitor/containers/container-insights-overview
 [install-azure-cli]: /cli/azure/install-azure-cli
 [install-azure-powershell]: /powershell/azure/install-az-ps
 [ssh-steps]: ssh.md
 [view-primary-logs]: monitor-aks.md#aks-control-planeresource-logs
-[azure-bastion]: ../bastion/bastion-overview.md
+[azure-bastion]: /azure/bastion/bastion-overview

@@ -74,7 +74,7 @@ For more information on the identity options in Kubernetes, see [Kubernetes auth
 
 ## Azure role-based access control
 
-Azure role-based access control (RBAC) is an authorization system built on [Azure Resource Manager](../azure-resource-manager/management/overview.md) that provides fine-grained access management of Azure resources.
+Azure role-based access control (RBAC) is an authorization system built on [Azure Resource Manager](/azure/azure-resource-manager/management/overview) that provides fine-grained access management of Azure resources.
 
 | RBAC system | Description |
 |---|---|
@@ -96,7 +96,7 @@ There are two levels of access needed to fully operate an AKS cluster:
 
 ### Azure RBAC to authorize access to the AKS resource
 
-With Azure RBAC, you can provide your users (or identities) with granular access to AKS resources across one or more subscriptions. For example, you could use the [Azure Kubernetes Service Contributor role](../role-based-access-control/built-in-roles.md#azure-kubernetes-service-contributor-role) to scale and upgrade your cluster. Meanwhile, another user with the [Azure Kubernetes Service Cluster Admin role](../role-based-access-control/built-in-roles.md#azure-kubernetes-service-cluster-admin-role) only has permission to pull the Admin `kubeconfig`.
+With Azure RBAC, you can provide your users (or identities) with granular access to AKS resources across one or more subscriptions. For example, you could use the [Azure Kubernetes Service Contributor role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-contributor-role) to scale and upgrade your cluster. Meanwhile, another user with the [Azure Kubernetes Service Cluster Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-cluster-admin-role) only has permission to pull the Admin `kubeconfig`.
 
 [Use Azure RBAC to define access to the Kubernetes configuration file in AKS](control-kubeconfig-access.md).
 
@@ -119,7 +119,7 @@ With this feature, you not only give users permissions to the AKS resource acros
 
 #### Built-in roles
 
-AKS provides the following four built-in roles. They are similar to the [Kubernetes built-in roles](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles) with a few differences, like supporting CRDs. See the full list of actions allowed by each [Azure built-in role](../role-based-access-control/built-in-roles.md).
+AKS provides the following four built-in roles. They are similar to the [Kubernetes built-in roles](https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles) with a few differences, like supporting CRDs. See the full list of actions allowed by each [Azure built-in role](/azure/role-based-access-control/built-in-roles).
 
 | Role                                | Description  |
 |-------------------------------------|--------------|
@@ -151,7 +151,7 @@ Microsoft Entra authentication is provided to AKS clusters with OpenID Connect. 
 
 As shown in the graphic above, the API server calls the AKS webhook server and performs the following steps:
 
-1. `kubectl` uses the Microsoft Entra client application to sign in users with [OAuth 2.0 device authorization grant flow](../active-directory/develop/v2-oauth2-device-code.md).
+1. `kubectl` uses the Microsoft Entra client application to sign in users with [OAuth 2.0 device authorization grant flow](/azure/active-directory/develop/v2-oauth2-device-code).
 2. Microsoft Entra ID provides an access_token, id_token, and a refresh_token.
 3. The user makes a request to `kubectl` with an access_token from `kubeconfig`.
 4. `kubectl` sends the access_token to API Server.
@@ -281,9 +281,9 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 [kubernetes-rbac]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
 
 <!-- LINKS - Internal -->
-[openid-connect]: ../active-directory/develop/v2-protocols-oidc.md
+[openid-connect]: /azure/active-directory/develop/v2-protocols-oidc
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[azure-rbac]: ../role-based-access-control/overview.md
+[azure-rbac]: /azure/role-based-access-control/overview
 [aks-aad]: managed-azure-ad.md
 [aks-concepts-clusters-workloads]: concepts-clusters-workloads.md
 [aks-concepts-security]: concepts-security.md

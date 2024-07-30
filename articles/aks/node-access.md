@@ -284,10 +284,10 @@ To learn about managing your SSH keys, see [Manage SSH configuration][manage-ssh
 [view-control-plane-logs]: monitor-aks-reference.md#resource-logs
 [install-azure-cli]: /cli/azure/install-azure-cli
 [aks-windows-rdp]: rdp.md
-[azure-bastion]: ../bastion/bastion-overview.md
+[azure-bastion]: /azure/bastion/bastion-overview
 [azure-bastion]: rdp.md#connect-with-azure-bastion
-[ssh-nix]: ../virtual-machines/linux/mac-create-ssh-keys.md
-[ssh-windows]: ../virtual-machines/linux/ssh-from-windows.md
+[ssh-nix]: /azure/virtual-machines/linux/mac-create-ssh-keys
+[ssh-windows]: /azure/virtual-machines/linux/ssh-from-windows
 [agent-pool-rest-api]: /rest/api/aks/agent-pools/get#agentpool
 [manage-ssh-node-access]: manage-ssh-node-access.md
 [azure-bastion-linux]: /azure/bastion/bastion-connect-vm-ssh-linux

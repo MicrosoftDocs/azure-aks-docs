@@ -195,7 +195,7 @@ Once the persistent volume claim has been created and the disk successfully prov
 
 ## Next steps
 
-- For more about ultra disks, see [Using Azure ultra disks](../virtual-machines/disks-enable-ultra-ssd.md).
+- For more about ultra disks, see [Using Azure ultra disks](/azure/virtual-machines/disks-enable-ultra-ssd).
 - For more about storage best practices, see [Best practices for storage and backups in AKS][operator-best-practices-storage].
 
 <!-- LINKS - external -->
@@ -203,8 +203,8 @@ Once the persistent volume claim has been created and the disk successfully prov
 [kubernetes-storage-classes]: https://kubernetes.io/docs/concepts/storage/storage-classes/
 
 <!-- LINKS - internal -->
-[ultra-disk-overview]: ../virtual-machines/disks-types.md#ultra-disks
-[ultra-disk-limitations]: ../virtual-machines/disks-types.md#ultra-disk-limitations
+[ultra-disk-overview]: /azure/virtual-machines/disks-types#ultra-disks
+[ultra-disk-limitations]: /azure/virtual-machines/disks-types#ultra-disk-limitations
 [azure-disk-volume]: azure-disk-csi.md
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add

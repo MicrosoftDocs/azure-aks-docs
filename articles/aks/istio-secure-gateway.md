@@ -452,6 +452,6 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [deploy-sample-application]: istio-deploy-addon.md#deploy-sample-application
 [enable-external-ingress-gateway]: istio-deploy-ingress.md#enable-external-ingress-gateway
 [akv-addon]: ./csi-secrets-store-driver.md
-[akv-quickstart]: ../key-vault/general/quick-create-cli.md
-[akv-rbac-guide]: ../key-vault/general/rbac-guide.md#using-azure-rbac-secret-key-and-certificate-permissions-with-key-vault
-[akv-basic-concepts]: ../key-vault/general/basic-concepts.md
+[akv-quickstart]: /azure/key-vault/general/quick-create-cli
+[akv-rbac-guide]: /azure/key-vault/general/rbac-guide#using-azure-rbac-secret-key-and-certificate-permissions-with-key-vault
+[akv-basic-concepts]: /azure/key-vault/general/basic-concepts

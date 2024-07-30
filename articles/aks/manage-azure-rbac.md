@@ -139,7 +139,7 @@ AKS provides the following built-in roles:
 
 ## Create custom roles definitions
 
-The following example custom role definition allows a user to only read deployments and nothing else. For the full list of possible actions, see [Microsoft.ContainerService operations](../role-based-access-control/resource-provider-operations.md#microsoftcontainerservice).
+The following example custom role definition allows a user to only read deployments and nothing else. For the full list of possible actions, see [Microsoft.ContainerService operations](/azure/role-based-access-control/resource-provider-operations#microsoftcontainerservice).
 
 1. To create your own custom role definitions, copy the following file, replacing `<YOUR SUBSCRIPTION ID>` with your own subscription ID, and then save it as `deploy-view.json`.
 
@@ -173,7 +173,7 @@ The following example custom role definition allows a user to only read deployme
 
 ## Use Azure RBAC for Kubernetes Authorization with `kubectl`
 
-1. Make sure you have the [Azure Kubernetes Service Cluster User](../role-based-access-control/built-in-roles.md#azure-kubernetes-service-cluster-user-role) built-in role, and then get the kubeconfig of your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+1. Make sure you have the [Azure Kubernetes Service Cluster User](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-cluster-user-role) built-in role, and then get the kubeconfig of your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
@@ -275,8 +275,8 @@ AKS created the [`kubelogin`](https://github.com/Azure/kubelogin) plugin to help
 To learn more about AKS authentication, authorization, Kubernetes RBAC, and Azure RBAC, see:
 
 * [Access and identity options for AKS](/azure/aks/concepts-identity)
-* [What is Azure RBAC?](../role-based-access-control/overview.md)
-* [Microsoft.ContainerService operations](../role-based-access-control/resource-provider-operations.md#microsoftcontainerservice)
+* [What is Azure RBAC?](/azure/role-based-access-control/overview)
+* [Microsoft.ContainerService operations](/azure/role-based-access-control/resource-provider-operations#microsoftcontainerservice)
 
 <!-- LINKS - Internal -->
 [aks-support-policies]: support-policies.md
@@ -288,8 +288,8 @@ To learn more about AKS authentication, authorization, Kubernetes RBAC, and Azur
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-show]: /cli/azure/aks#az-aks-show
-[list-role-assignments-at-a-scope-at-portal]: ../role-based-access-control/role-assignments-list-portal.yml#list-role-assignments-at-a-scope
-[list-role-assignments-for-a-user-or-group-at-portal]: ../role-based-access-control/role-assignments-list-portal.yml#list-role-assignments-for-a-user-or-group
+[list-role-assignments-at-a-scope-at-portal]: /azure/role-based-access-control/role-assignments-list-portal#list-role-assignments-at-a-scope
+[list-role-assignments-for-a-user-or-group-at-portal]: /azure/role-based-access-control/role-assignments-list-portal#list-role-assignments-for-a-user-or-group
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-role-assignment-list]: /cli/azure/role/assignment#az-role-assignment-list
 [az-provider-register]: /cli/azure/provider#az-provider-register

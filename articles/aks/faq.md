@@ -185,7 +185,7 @@ AKS patches CVEs that have a "vendor fix" every week. CVEs without a fix are wai
 
 ### Are there security threats targeting AKS that I should be aware of?
 
-Microsoft provides guidance for other actions you can take to secure your workloads through services like [Microsoft Defender for Containers](../defender-for-cloud/defender-for-containers-introduction.md?tabs=defender-for-container-arch-aks). The following security threat is related to AKS and Kubernetes that you should be aware of:
+Microsoft provides guidance for other actions you can take to secure your workloads through services like [Microsoft Defender for Containers](/azure/defender-for-cloud/defender-for-containers-introduction?tabs=defender-for-container-arch-aks). The following security threat is related to AKS and Kubernetes that you should be aware of:
 
 - [New large-scale campaign targets Kubeflow](https://techcommunity.microsoft.com/t5/azure-security-center/new-large-scale-campaign-targets-kubeflow/ba-p/2425750) (June 8, 2021).
 
@@ -399,7 +399,7 @@ Confirm your service principal hasn't expired. See: [AKS service principal](./ku
 [private-clusters]: ./private-clusters.md
 [supported-kubernetes-versions]: ./supported-kubernetes-versions.md
 [bcdr-bestpractices]: ./operator-best-practices-multi-region.md#plan-for-multiregion-deployment
-[az-regions]: ../availability-zones/az-region.md
+[az-regions]: /azure/availability-zones/az-region
 [pricing-tiers]: ./free-standard-pricing-tiers.md
 [aks-keyvault-provider]: ./csi-secrets-store-driver.md
 [node-resource-group-lockdown]: cluster-configuration.md#create-an-aks-cluster-with-node-resource-group-lockdown

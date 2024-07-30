@@ -359,7 +359,7 @@ In this article, you learned how to create and manage system node pools in an AK
 [vm-sizes]: ../virtual-machines/sizes.md
 [use-multiple-node-pools]: use-multiple-node-pools.md
 [maximum-pods]: concepts-network-ip-address-planning.md#maximum-pods-per-node
-[b-series-vm]: ../virtual-machines/sizes-b-series-burstable.md
+[b-series-vm]: /azure/virtual-machines/sizes-b-series-burstable
 [update-node-pool-mode]: use-system-pools.md#update-existing-cluster-system-and-user-node-pools
 [start-stop-nodepools]: ./start-stop-nodepools.md
 [node-affinity]: operator-best-practices-advanced-scheduler.md#node-affinity

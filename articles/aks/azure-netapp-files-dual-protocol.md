@@ -474,5 +474,5 @@ Astra Trident supports many features with Azure NetApp Files. For more informati
 [azure-netapp-nfs]: azure-netapp-files-nfs.md
 [azure-netapp-smb]: azure-netapp-files-smb.md
 [azure-netapp-files]: azure-netapp-files.md
-[azure-netapp-files-volume-dual-protocol]: ../azure-netapp-files/create-volumes-dual-protocol.md
+[azure-netapp-files-volume-dual-protocol]: /azure/azure-netapp-files/create-volumes-dual-protocol
 

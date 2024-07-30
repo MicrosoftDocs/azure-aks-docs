@@ -156,7 +156,7 @@ Windows enables OutboundNAT by default. You can now manually disable OutboundNAT
 > * SNAT by Azure Firewall (disable OutboundNAT) has 2496 ports per public IP.
 > * SNAT by NAT Gateway (disable OutboundNAT) has 64512 ports per public IP.
 > * If the Azure Firewall port range isn't enough for your application, you need to use NAT Gateway.
-> * Azure Firewall doesn't SNAT with Network rules when the destination IP address is in a private IP address range per [IANA RFC 1918 or shared address space per IANA RFC 6598](../firewall/snat-private-range.md).
+> * Azure Firewall doesn't SNAT with Network rules when the destination IP address is in a private IP address range per [IANA RFC 1918 or shared address space per IANA RFC 6598](/azure/firewall/snat-private-range).
 
 ### Manually disable OutboundNAT for Windows
 
@@ -182,7 +182,7 @@ For more information on Azure NAT Gateway, see [Azure NAT Gateway][nat-docs].
 <!-- LINKS - internal -->
 
 <!-- LINKS - external-->
-[nat-docs]: ../virtual-network/nat-gateway/nat-overview.md
+[nat-docs]: /azure/virtual-network/nat-gateway/nat-overview
 [az-feature-list]: /cli/azure/feature#az_feature_list
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [byo-vnet-azure-cni]: configure-azure-cni.md

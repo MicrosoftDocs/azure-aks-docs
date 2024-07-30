@@ -21,7 +21,7 @@ Learn more about customer-managed keys on [Linux][customer-managed-keys-linux] a
 * You must enable soft delete and purge protection for *Azure Key Vault* when using Key Vault to encrypt managed disks.
 * You need the Azure CLI version 2.11.1 or later.
 * Data disk encryption and customer-managed keys are supported on Kubernetes versions 1.24 and higher.
-* If you choose to rotate (change) your keys periodically, see [Customer-managed keys and encryption of Azure managed disk](../virtual-machines/disk-encryption.md) for more information.
+* If you choose to rotate (change) your keys periodically, see [Customer-managed keys and encryption of Azure managed disk](/azure/virtual-machines/disk-encryption) for more information.
 
 ## Limitations
 
@@ -162,7 +162,7 @@ Review [best practices for AKS cluster security][best-practices-security]
 
 <!-- LINKS - internal -->
 [best-practices-security]: ./operator-best-practices-cluster-security.md
-[byok-azure-portal]: ../storage/common/customer-managed-keys-configure-key-vault.md
-[customer-managed-keys-windows]: ../virtual-machines/disk-encryption.md#customer-managed-keys
-[customer-managed-keys-linux]: ../virtual-machines/disk-encryption.md#customer-managed-keys
-[key-vault-generate]: ../key-vault/general/manage-with-cli2.md
+[byok-azure-portal]: /azure/storage/common/customer-managed-keys-configure-key-vault
+[customer-managed-keys-windows]: /azure/virtual-machines/disk-encryption#customer-managed-keys
+[customer-managed-keys-linux]: /azure/virtual-machines/disk-encryption#customer-managed-keys
+[key-vault-generate]: /azure/key-vault/general/manage-with-cli2

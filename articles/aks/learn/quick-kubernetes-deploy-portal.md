@@ -25,7 +25,7 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
 
 - [!INCLUDE [quickstarts-free-trial-note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-- If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](../../cloud-shell/overview.md).
+- If you're unfamiliar with the Azure Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 - Make sure that the identity you use to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
 
 > [!NOTE]
@@ -81,7 +81,7 @@ It takes a few minutes to create the AKS cluster. When your deployment is comple
 
 ## Connect to the cluster
 
-To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. If you're unfamiliar with the Cloud Shell, review [Overview of Azure Cloud Shell](../../cloud-shell/overview.md).
+To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. If you're unfamiliar with the Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 
 If you're using Cloud Shell, open it with the `>_` button on the top of the Azure portal. If you're using PowerShell locally, connect to Azure via the `Connect-AzAccount` command. If you're using Azure CLI locally, connect to Azure via the `az login` command.
 
@@ -465,7 +465,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [import-azakscredential]: /powershell/module/az.aks/import-azakscredential
 [aks-tutorial]: ../tutorial-kubernetes-prepare-app.md
 [preset-config]: ../quotas-skus-regions.md#cluster-configuration-presets-in-the-azure-portal
-[intro-azure-linux]: ../../azure-linux/intro-azure-linux.md
+[intro-azure-linux]: /azure/azure-linux/intro-azure-linux
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-[azure-monitor-features-containers]: ../../azure-monitor/containers/container-insights-overview.md
+[azure-monitor-features-containers]: /azure/azure-monitor/containers/container-insights-overview

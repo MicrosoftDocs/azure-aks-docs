@@ -137,15 +137,15 @@ In this article, you learned how to add a Spot node pool to an AKS cluster. For 
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
 [cluster-autoscaler]: cluster-autoscaler.md
-[eviction-policy]: ../virtual-machine-scale-sets/use-spot.md#eviction-policy
+[eviction-policy]: /azure/virtual-machine-scale-sets/use-spot#eviction-policy
 [kubernetes-concepts]: concepts-clusters-workloads.md
 [operator-best-practices-advanced-scheduler]: operator-best-practices-advanced-scheduler.md
 [pricing-linux]: https://azure.microsoft.com/pricing/details/virtual-machine-scale-sets/linux/
-[pricing-spot]: ../virtual-machine-scale-sets/use-spot.md#pricing
+[pricing-spot]: /azure/virtual-machine-scale-sets/use-spot#pricing
 [pricing-windows]: https://azure.microsoft.com/pricing/details/virtual-machine-scale-sets/windows/
 [spot-toleration]: #verify-the-spot-node-pool
 [taints-tolerations]: operator-best-practices-advanced-scheduler.md#provide-dedicated-nodes-using-taints-and-tolerations
 [use-multiple-node-pools]: create-node-pools.md
-[vmss-spot]: ../virtual-machine-scale-sets/use-spot.md
+[vmss-spot]: /azure/virtual-machine-scale-sets/use-spot
 [upgrade-cluster]: upgrade-cluster.md
 

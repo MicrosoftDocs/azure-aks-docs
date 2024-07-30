@@ -23,7 +23,7 @@ Azure Disks and Azure Files are the supported volume types, and are accessed as 
 
 ## Do Linux and Windows support generation 2 virtual machines (VMs)?
 
-Generation 2 VMs are supported on Linux and Windows for WS2022 only. For more information, see [Support for generation 2 VMs on Azure](../virtual-machines/generation-2.md).
+Generation 2 VMs are supported on Linux and Windows for WS2022 only. For more information, see [Support for generation 2 VMs on Azure](/azure/virtual-machines/generation-2).
 
 ## How do I patch my Windows nodes?
 
@@ -48,7 +48,7 @@ The default TCP timeout in Windows OS is 4 minutes. This value isn't configurabl
 
 If you created your cluster before February 2020 and have never done any cluster upgrade operations, the cluster still uses an old Windows image. You may have seen an error that resembles:
 
-"The following list of images referenced from the deployment template is not found: Publisher: MicrosoftWindowsServer, Offer: WindowsServer, Sku: 2019-datacenter-core-smalldisk-2004, Version: latest. Please refer to [Find and use Azure Marketplace VM images with Azure PowerShell](../virtual-machines/windows/cli-ps-findimage.md) for instructions on finding available images."
+"The following list of images referenced from the deployment template is not found: Publisher: MicrosoftWindowsServer, Offer: WindowsServer, Sku: 2019-datacenter-core-smalldisk-2004, Version: latest. Please refer to [Find and use Azure Marketplace VM images with Azure PowerShell](/azure/virtual-machines/windows/cli-ps-findimage) for instructions on finding available images."
 
 To fix this error:
 
@@ -253,7 +253,7 @@ To get started with Windows Server containers in AKS, see [Create a node pool th
 [client-source-ip]: concepts-network-ingress.md#ingress-controllers
 [upgrade-node-image]: node-image-upgrade.md
 [managed-identity]: use-managed-identity.md
-[hybrid-vms]: ../virtual-machines/windows/hybrid-use-benefit-licensing.md
+[hybrid-vms]: /azure/virtual-machines/windows/hybrid-use-benefit-licensing
 [resource-groups]: faq.md#why-are-two-resource-groups-created-with-aks
 [dsr]: ../load-balancer/load-balancer-multivip-overview.md#rule-type-2-backend-port-reuse-by-using-floating-ip
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference

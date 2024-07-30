@@ -46,7 +46,7 @@ For more information, see [using a standard load balancer in AKS](load-balancer-
 
 ### Outbound type of `managedNatGateway` or `userAssignedNatGateway`
 
-If `managedNatGateway` or `userAssignedNatGateway` are selected for `outboundType`, AKS relies on [Azure Networking NAT gateway](../virtual-network/nat-gateway/manage-nat-gateway.md) for cluster egress.
+If `managedNatGateway` or `userAssignedNatGateway` are selected for `outboundType`, AKS relies on [Azure Networking NAT gateway](/azure/virtual-network/nat-gateway/manage-nat-gateway) for cluster egress.
 
 - Select `managedNatGateway` when using managed virtual networks. AKS provisions a NAT gateway and attach it to the cluster subnet.
 - Select `userAssignedNatGateway` when using bring-your-own virtual networking. This option requires that you have provisioned a NAT gateway before cluster creation.
@@ -143,8 +143,8 @@ az aks update --resource-group <resourceGroup> --name <clusterName> --outbound-t
 - [Configure NAT gateway in an AKS cluster](nat-gateway.md)
 - [Configure user-defined routing in an AKS cluster](egress-udr.md)
 - [NAT gateway documentation](./nat-gateway.md)
-- [Azure networking UDR overview](../virtual-network/virtual-networks-udr-overview.md)
-- [Manage route tables](../virtual-network/manage-route-table.yml)
+- [Azure networking UDR overview](/azure/virtual-network/virtual-networks-udr-overview)
+- [Manage route tables](/azure/virtual-network/manage-route-table)
 
 <!-- LINKS - internal -->
 [az-aks-update]: /cli/azure/aks#az_aks_update

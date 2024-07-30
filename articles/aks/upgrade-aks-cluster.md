@@ -28,7 +28,7 @@ When you perform an upgrade from an *unsupported version* that skips two or more
 * Starting with 1.30 kubernetes version and 1.27 LTS versions the beta apis will be disabled by default when you upgrade to them.
 
 > [!WARNING]
-> An AKS cluster upgrade triggers a cordon and drain of your nodes. If you have a low compute quota available, the upgrade might fail. For more information, see [increase quotas](../azure-portal/supportability/regional-quota-requests.md).
+> An AKS cluster upgrade triggers a cordon and drain of your nodes. If you have a low compute quota available, the upgrade might fail. For more information, see [increase quotas](/azure/azure-portal/supportability/regional-quota-requests).
 
 ## Check for available AKS cluster upgrades
 
@@ -303,7 +303,7 @@ For a detailed discussion of upgrade best practices and other considerations, se
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
 [aks-auto-upgrade]: auto-upgrade-cluster.md
 [k8s-deprecation]: https://kubernetes.io/blog/2022/11/18/upcoming-changes-in-kubernetes-1-26/#:~:text=A%20deprecated%20API%20is%20one%20that%20has%20been,point%20you%20must%20migrate%20to%20using%20the%20replacement
-[azure-rp-operations]: ../role-based-access-control/built-in-roles.md#containers
+[azure-rp-operations]: /azure/role-based-access-control/built-in-roles#containers
 [get-azaksversion]: /powershell/module/az.aks/get-azaksversion
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update

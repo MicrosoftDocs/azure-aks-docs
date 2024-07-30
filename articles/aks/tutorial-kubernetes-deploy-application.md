@@ -279,6 +279,6 @@ In the next tutorial, you learn how to use PaaS services for stateful workloads 
 [azure-cli-install]: /cli/azure/install-azure-cli
 [azure-powershell-install]: /powershell/azure/install-az-ps
 [get-azcontainerregistry]: /powershell/module/az.containerregistry/get-azcontainerregistry
-[gitops-flux-tutorial]: ../azure-arc/kubernetes/tutorial-use-gitops-flux2.md?toc=/azure/aks/toc.json
-[gitops-flux-tutorial-aks]: ../azure-arc/kubernetes/tutorial-use-gitops-flux2.md?toc=/azure/aks/toc.json#for-azure-kubernetes-service-clusters
+[gitops-flux-tutorial]: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2?toc=/azure/aks/toc.json
+[gitops-flux-tutorial-aks]: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2?toc=/azure/aks/toc.json#for-azure-kubernetes-service-clusters
 [aks-tutorial-paas]: ./tutorial-kubernetes-paas-services.md

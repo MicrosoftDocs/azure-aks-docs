@@ -33,7 +33,7 @@ In addition to in-tree driver features, Azure Disk CSI driver supports the follo
 - Premium SSD v1 and v2 are supported.
   -  `PremiumV2_LRS` only supports `None` caching mode
 - Zone-redundant storage (ZRS) disk support
-  - `Premium_ZRS`, `StandardSSD_ZRS` disk types are supported. ZRS disk could be scheduled on the zone or non-zone node, without the restriction that disk volume should be co-located in the same zone as a given node. For more information, including which regions are supported, see [Zone-redundant storage for managed disks](../virtual-machines/disks-redundancy.md).
+  - `Premium_ZRS`, `StandardSSD_ZRS` disk types are supported. ZRS disk could be scheduled on the zone or non-zone node, without the restriction that disk volume should be co-located in the same zone as a given node. For more information, including which regions are supported, see [Zone-redundant storage for managed disks](/azure/virtual-machines/disks-redundancy).
 - [Snapshot](#volume-snapshots)
 - [Volume clone](#clone-volumes)
 - [Resize disk PV without downtime](#resize-a-persistent-volume-without-downtime)
@@ -127,16 +127,16 @@ storageclass.storage.k8s.io/azuredisk-csi-waitforfirstconsumer created
 
 ## Volume snapshots
 
-The Azure Disk CSI driver supports creating [snapshots of persistent volumes](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html). As part of this capability, the driver can perform either *full* or [*incremental* snapshots](../virtual-machines/disks-incremental-snapshots.md) depending on the value set in the `incremental` parameter (by default, it's true).
+The Azure Disk CSI driver supports creating [snapshots of persistent volumes](https://kubernetes-csi.github.io/docs/snapshot-restore-feature.html). As part of this capability, the driver can perform either *full* or [*incremental* snapshots](/azure/virtual-machines/disks-incremental-snapshots) depending on the value set in the `incremental` parameter (by default, it's true).
 
 The following table provides details for all of the parameters.
 
 |Name | Meaning | Available Value | Mandatory | Default value
 |--- | --- | --- | --- | ---
 |resourceGroup | Resource group for storing snapshot shots | EXISTING RESOURCE GROUP | No | If not specified, snapshot will be stored in the same resource group as source Azure Disks
-|incremental | Take [full or incremental snapshot](../virtual-machines/windows/incremental-snapshots.md) | `true`, `false` | No | `true`
-|tags | Azure Disks [tags](../azure-resource-manager/management/tag-resources.md) | Tag format: 'key1=val1,key2=val2' | No | ""
-|userAgent | User agent used for [customer usage attribution](../marketplace/azure-partner-customer-usage-attribution.md) | | No  | Generated Useragent formatted `driverName/driverVersion compiler/version (OS-ARCH)`
+|incremental | Take [full or incremental snapshot](/azure/virtual-machines/windows/incremental-snapshots) | `true`, `false` | No | `true`
+|tags | Azure Disks [tags](/azure/azure-resource-manager/management/tag-resources) | Tag format: 'key1=val1,key2=val2' | No | ""
+|userAgent | User agent used for [customer usage attribution](/azure/marketplace/azure-partner-customer-usage-attribution) | | No  | Generated Useragent formatted `driverName/driverVersion compiler/version (OS-ARCH)`
 |subscriptionID | Specify Azure subscription ID where Azure Disks will be created  | Azure subscription ID | No | If not empty, `resourceGroup` must be provided, `incremental` must set as `false`
 
 ### Create a volume snapshot
@@ -421,7 +421,7 @@ The output of the command resembles the following example:
 [azure-files-pvc]: azure-files-dynamic-pv.md
 [azure-files-csi]: azure-files-csi.md
 [azure-blob-csi]: azure-blob-csi.md
-[premium-storage]: ../virtual-machines/disks-types.md
+[premium-storage]: /azure/virtual-machines/disks-types
 [expand-an-azure-managed-disk]: ../virtual-machines/linux/expand-disks.md#expand-an-azure-managed-disk
 [az-disk-list]: /cli/azure/disk#az_disk_list
 [az-snapshot-create]: /cli/azure/snapshot#az_snapshot_create
@@ -438,9 +438,9 @@ The output of the command resembles the following example:
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-feature-list]: /cli/azure/feature#az_feature_list
 [az-provider-register]: /cli/azure/provider#az_provider_register
-[az-on-demand-bursting]: ../virtual-machines/disk-bursting.md#on-demand-bursting
+[az-on-demand-bursting]: /azure/virtual-machines/disk-bursting#on-demand-bursting
 [enable-on-demand-bursting]: ../virtual-machines/disks-enable-bursting.md?tabs=azure-cli
-[az-premium-ssd]: ../virtual-machines/disks-types.md#premium-ssds
-[general-purpose-machine-sizes]: ../virtual-machines/sizes-general.md
+[az-premium-ssd]: /azure/virtual-machines/disks-types#premium-ssds
+[general-purpose-machine-sizes]: /azure/virtual-machines/sizes-general
 [disk-based-solutions]: /azure/cloud-adoption-framework/scenarios/app-platform/aks/storage#disk-based-solutions
 

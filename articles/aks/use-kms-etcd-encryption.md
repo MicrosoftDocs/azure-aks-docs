@@ -55,7 +55,7 @@ The following sections describe how to turn on KMS for a public key vault.
 > [!WARNING]
 > Deleting the key or the key vault is not supported and causes the secrets in the cluster to be unrecoverable.
 >
-> If you need to recover your key vault or your key, see [Azure Key Vault recovery management with soft delete and purge protection](../key-vault/general/key-vault-recovery.md?tabs=azure-cli).
+> If you need to recover your key vault or your key, see [Azure Key Vault recovery management with soft delete and purge protection](/azure/key-vault/general/key-vault-recovery?tabs=azure-cli).
 
 #### Create a key vault and key for a non-RBAC public key vault
 
@@ -215,7 +215,7 @@ If you turn on KMS for a private key vault, AKS automatically creates a private 
 > [!WARNING]
 > Deleting the key or the key vault is not supported and causes the secrets in the cluster to be unrecoverable.
 >
-> If you need to recover your key vault or your key, see [Azure Key Vault recovery management with soft delete and purge protection](../key-vault/general/key-vault-recovery.md?tabs=azure-cli).
+> If you need to recover your key vault or your key, see [Azure Key Vault recovery management with soft delete and purge protection](/azure/key-vault/general/key-vault-recovery?tabs=azure-cli).
 
 Use `az keyvault create` to create a private key vault:
 
@@ -223,7 +223,7 @@ Use `az keyvault create` to create a private key vault:
 az keyvault create --name MyKeyVault --resource-group MyResourceGroup --public-network-access Disabled
 ```
 
-Creating or updating keys in a private key vault that doesn't have a private endpoint isn't supported. To learn how to manage private key vaults, see [Integrate a key vault by using Azure Private Link](../key-vault/general/private-link-service.md).
+Creating or updating keys in a private key vault that doesn't have a private endpoint isn't supported. To learn how to manage private key vaults, see [Integrate a key vault by using Azure Private Link](/azure/key-vault/general/private-link-service).
 
 ### Create a user-assigned managed identity for a private key vault
 
@@ -370,7 +370,7 @@ Turn on KMS by using the updated private key vault:
 az aks update --name myAKSCluster --resource-group MyResourceGroup  --enable-azure-keyvault-kms --azure-keyvault-kms-key-id $NewKEY_ID --azure-keyvault-kms-key-vault-network-access "Private" --azure-keyvault-kms-key-vault-resource-id $KEYVAULT_RESOURCE_ID
 ```
 
-After you set up KMS, you can turn on [diagnostic settings for the key vault to check the encryption logs](../key-vault/general/howto-logging.md).
+After you set up KMS, you can turn on [diagnostic settings for the key vault to check the encryption logs](/azure/key-vault/general/howto-logging).
 
 ## Turn off KMS
 

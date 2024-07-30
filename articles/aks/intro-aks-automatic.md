@@ -115,9 +115,9 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [istio-mesh]: istio-about.md
 [automated-deployments]: automated-deployments.md
 [kubernetes-action]: kubernetes-action.md
-[managed-prometheus]: ../azure-monitor/essentials/prometheus-metrics-overview.md
-[managed-grafana]: ../managed-grafana/overview.md
-[container-insights]: ../azure-monitor/containers/container-insights-overview.md
+[managed-prometheus]: /azure/azure-monitor/essentials/prometheus-metrics-overview
+[managed-grafana]: /azure/managed-grafana/overview
+[container-insights]: /azure/azure-monitor/containers/container-insights-overview
 [uptime-sla]: free-standard-pricing-tiers.md#uptime-sla-terms-and-conditions
 [long-term-support]: long-term-support.md
 [quickstart-aks-automatic]: ./learn/quick-kubernetes-automatic-deploy.md

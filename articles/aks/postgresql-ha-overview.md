@@ -79,7 +79,7 @@ Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing ano
 [what-is-aks]: ./what-is-aks.md
 [postgresql]: https://www.postgresql.org/
 [core-kubernetes-concepts]: ./concepts-clusters-workloads.md
-[azure-roles]: ../role-based-access-control/built-in-roles.md
+[azure-roles]: /azure/role-based-access-control/built-in-roles
 [aks-preview]: ./draft.md#install-the-aks-preview-azure-cli-extension
 [jq]: https://jqlang.github.io/jq/
 [install-kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/

@@ -51,7 +51,7 @@ When you create or update an AKS cluster with the `--tags` parameter, the follow
 * The node resource group
 
 > [!NOTE]
-> Azure Private DNS only supports 15 tags. For more information, see the [tag resources](../azure-resource-manager/management/tag-resources.md).
+> Azure Private DNS only supports 15 tags. For more information, see the [tag resources](/azure/azure-resource-manager/management/tag-resources).
 
 ## Create or update tags on an AKS cluster
 

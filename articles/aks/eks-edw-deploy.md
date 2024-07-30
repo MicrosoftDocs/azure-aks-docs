@@ -300,7 +300,7 @@ For more information on developing and running applications in AKS, see the foll
 [az-account-set]: /cli/azure/account#az_account_set
 [github-repo]: https://github.com/Azure-Samples/aks-event-driven-replicate-from-aws
 [prerequisites]: ./eks-edw-overview.md#prerequisites
-[azure-resource-group]: ../azure-resource-manager/management/overview.md
+[azure-resource-group]: /azure/azure-resource-manager/management/overview
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [k9s]: https://k9scli.io/

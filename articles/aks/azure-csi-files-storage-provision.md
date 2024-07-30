@@ -507,20 +507,20 @@ For associated best practices, see [Best practices for storage and backups in AK
 [access-modes]: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
 
 <!-- LINKS - internal -->
-[azure-storage-account]: ../storage/common/storage-introduction.md
+[azure-storage-account]: /azure/storage/common/storage-introduction
 [install-azure-cli]: /cli/azure/install-azure-cli
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [concepts-storage]: concepts-storage.md
 [persistent-volume]: #mount-file-share-as-a-persistent-volume
 [use-tags]: use-tags.md
 [node-resource-group]: faq.md#why-are-two-resource-groups-created-with-aks
-[storage-skus]: ../storage/common/storage-redundancy.md
+[storage-skus]: /azure/storage/common/storage-redundancy
 [mount-options]: #mount-options
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [az-storage-share-create]: /cli/azure/storage/share#az-storage-share-create
-[storage-tiers]: ../storage/files/storage-files-planning.md#storage-tiers
-[access-tiers-overview]: ../storage/blobs/access-tiers-overview.md
-[tag-resources]: ../azure-resource-manager/management/tag-resources.md
-[azure-files-usage]: ../storage/files/understand-performance.md#choosing-a-performance-tier-based-on-usage-patterns
+[storage-tiers]: /azure/storage/files/storage-files-planning#storage-tiers
+[access-tiers-overview]: /azure/storage/blobs/access-tiers-overview
+[tag-resources]: /azure/azure-resource-manager/management/tag-resources
+[azure-files-usage]: /azure/storage/files/understand-performance#choosing-a-performance-tier-based-on-usage-patterns
 [az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
 

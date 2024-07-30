@@ -21,7 +21,7 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 ## Provisioned infrastructure
 
-All other network, compute, and storage limitations apply to the provisioned infrastructure. For the relevant limits, see [Azure subscription and service limits](../azure-resource-manager/management/azure-subscription-service-limits.md).
+All other network, compute, and storage limitations apply to the provisioned infrastructure. For the relevant limits, see [Azure subscription and service limits](/azure/azure-resource-manager/management/azure-subscription-service-limits).
 
 > [!IMPORTANT]
 > When you upgrade an AKS cluster, extra resources are temporarily consumed. These resources include available IP addresses in a virtual network subnet or virtual machine vCPU quota.
@@ -91,8 +91,8 @@ You can increase certain default limits and quotas. If your resource supports an
 [region-availability]: https://azure.microsoft.com/global-infrastructure/services/?products=kubernetes-service
 
 <!-- LINKS - Internal -->
-[vm-skus]: ../virtual-machines/sizes.md
+[vm-skus]: /azure/virtual-machines/sizes
 [nodepool-upgrade]: use-multiple-node-pools.md#upgrade-a-node-pool
-[b-series-vm]: ../virtual-machines/sizes-b-series-burstable.md
+[b-series-vm]: /azure/virtual-machines/sizes-b-series-burstable
 
 

@@ -54,7 +54,7 @@ Azure public MEC Edge Zone sites are associated with a parent Azure region that 
 | AT&T | ATT Dallas A | attdallas1 | South Central US |
 | AT&T | ATT Detroit A | attdetroit1 | Central US |
 
-For the latest available Public MEC Edge Zones, please refer to [Azure public MEC Locations](../public-multi-access-edge-compute-mec/overview.md)
+For the latest available Public MEC Edge Zones, please refer to [Azure public MEC Locations](/azure/public-multi-access-edge-compute-mec/overview)
 
 ## Deploy a cluster in an Edge Zone location
 
@@ -308,10 +308,10 @@ In this section you'll learn how to deploy a Kubernetes cluster in the Edge Zone
 
 7. On the **Access** page, configure the following options:
 
-    - The default value for **Resource identity** is **System-assigned managed identity**. Managed identities provide an identity for applications to use when connecting to resources that support Microsoft Entra authentication. For more information about managed identities, see [What are managed identities for Azure resources?](../active-directory/managed-identities-azure-resources/overview.md)
+    - The default value for **Resource identity** is **System-assigned managed identity**. Managed identities provide an identity for applications to use when connecting to resources that support Microsoft Entra authentication. For more information about managed identities, see [What are managed identities for Azure resources?](/azure/active-directory/managed-identities-azure-resources/overview)
     - The Kubernetes role-based access control (RBAC) option is the default value to provide more fine-grained control over access to the Kubernetes resources deployed in your AKS cluster.
 
-    By default, *Basic* networking is used, and [Container insights](../azure-monitor/containers/container-insights-overview.md) is enabled.
+    By default, *Basic* networking is used, and [Container insights](/azure/azure-monitor/containers/container-insights-overview) is enabled.
 
 8. Click **Review + create**. When you navigate to the **Review + create** tab, Azure runs validation on the settings that you have chosen. If validation passes, you can proceed to create the AKS cluster by selecting **Create**. If validation fails, then it indicates which settings need to be modified.
 
@@ -340,12 +340,12 @@ For increased availability in the Azure public MEC Edge Zone, it's recommended t
 After deploying your AKS cluster in an Edge Zone, learn about how you can [configure an AKS cluster][configure-cluster].
 
 <!-- LINKS -->
-[public-mec-overview]: ../public-multi-access-edge-compute-mec/overview.md
-[public-mec-constraints]: ../public-multi-access-edge-compute-mec/key-concepts.md#azure-services
+[public-mec-overview]: /azure/public-multi-access-edge-compute-mec/overview
+[public-mec-constraints]: /azure/public-multi-access-edge-compute-mec/key-concepts#azure-services
 [configure-cluster]: ./cluster-configuration.md
-[arm-template-deploy]: ../azure-resource-manager/templates/deployment-tutorial-local-template.md
+[arm-template-deploy]: /azure/azure-resource-manager/templates/deployment-tutorial-local-template
 
-[traffic-manager]: ../traffic-manager/traffic-manager-routing-methods.md
+[traffic-manager]: /azure/traffic-manager/traffic-manager-routing-methods
 [public-mec-architecture]: /azure/architecture/example-scenario/hybrid/public-multi-access-edge-compute-deployment
 [public-mec-sign-up]: https://forms.office.com/pages/responsepage.aspx?id=v4j5cvGGr0GRqy180BHbRx4AG8rZKBBDoHEYyD9u_bxUMUVaSlhYMFA2RjUzSklKR0YyREZZNURTRi4u
 

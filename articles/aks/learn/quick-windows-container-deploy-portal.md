@@ -71,7 +71,7 @@ It takes a few minutes to create the AKS cluster. When your deployment is comple
 
 ## Connect to the cluster
 
-You use [kubectl][kubectl], the Kubernetes command-line client, to manage your Kubernetes clusters. `kubectl` is already installed if you use Azure Cloud Shell. If you're unfamiliar with the Cloud Shell, review [Overview of Azure Cloud Shell](../../cloud-shell/overview.md).
+You use [kubectl][kubectl], the Kubernetes command-line client, to manage your Kubernetes clusters. `kubectl` is already installed if you use Azure Cloud Shell. If you're unfamiliar with the Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 
 ### [Azure CLI](#tab/azure-cli)
 

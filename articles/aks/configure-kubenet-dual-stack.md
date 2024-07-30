@@ -535,11 +535,11 @@ Once the cluster has been created, you can deploy your workloads. This article w
 
 <!-- LINKS - Internal -->
 [outbound-type]: ./egress-outboundtype.md
-[deploy-arm-template]: ../azure-resource-manager/templates/quickstart-create-templates-use-the-portal.md
-[deploy-bicep-template]: ../azure-resource-manager/bicep/deploy-cli.md
+[deploy-arm-template]: /azure/azure-resource-manager/templates/quickstart-create-templates-use-the-portal
+[deploy-bicep-template]: /azure/azure-resource-manager/bicep/deploy-cli
 [kubenet]: ./configure-kubenet.md
 [aks-out-of-tree]: ./out-of-tree.md
-[nat-gateway]: ../virtual-network/nat-gateway/nat-overview.md
+[nat-gateway]: /azure/virtual-network/nat-gateway/nat-overview
 [aks-network-concepts]: concepts-network.md
 [az-group-create]: /cli/azure/group#az_group_create
 [az-aks-create]: /cli/azure/aks#az_aks_create

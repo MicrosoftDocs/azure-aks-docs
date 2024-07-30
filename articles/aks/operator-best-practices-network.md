@@ -44,9 +44,9 @@ Azure CNI is a vendor-neutral protocol that lets the container runtime make requ
 
 Notably, Azure CNI networking for production allows for separation of control and management of resources. From a security perspective, you often want different teams to manage and secure those resources. With Azure CNI networking, you connect to existing Azure resources, on-premises resources, or other services directly via IP addresses assigned to each pod.
 
-When you use Azure CNI networking, the virtual network resource is in a separate resource group to the AKS cluster. Delegate permissions for the AKS cluster identity to access and manage these resources. The cluster identity used by the AKS cluster must have at least [Network Contributor](../role-based-access-control/built-in-roles.md#network-contributor) permissions on the subnet within your virtual network.
+When you use Azure CNI networking, the virtual network resource is in a separate resource group to the AKS cluster. Delegate permissions for the AKS cluster identity to access and manage these resources. The cluster identity used by the AKS cluster must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network.
 
-If you wish to define a [custom role](../role-based-access-control/custom-roles.md) instead of using the built-in Network Contributor role, the following permissions are required:
+If you wish to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
 
 * `Microsoft.Network/virtualNetworks/subnets/join/action`
 * `Microsoft.Network/virtualNetworks/subnets/read`
@@ -243,9 +243,9 @@ This article focused on network connectivity and security. For more information 
 <!-- INTERNAL LINKS -->
 [aks-concepts-network]: concepts-network.md
 [sp-delegation]: kubernetes-service-principal.md#delegate-access-to-other-azure-resources
-[expressroute]: ../expressroute/expressroute-introduction.md
-[vpn-gateway]: ../vpn-gateway/vpn-gateway-about-vpngateways.md
-[app-gateway]: ../application-gateway/overview.md
+[expressroute]: /azure/expressroute/expressroute-introduction
+[vpn-gateway]: /azure/vpn-gateway/vpn-gateway-about-vpngateways
+[app-gateway]: /azure/application-gateway/overview
 [use-network-policies]: use-network-policies.md
 [advanced-networking]: configure-azure-cni.md
 [aks-configure-kubenet-networking]: configure-kubenet.md

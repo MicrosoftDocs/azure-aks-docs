@@ -84,7 +84,7 @@ az vmss list-instance-public-ips --resource-group MC_MyResourceGroup2_MyManagedC
 
 ## Use public IP tags on node public IPs
 
-Public IP tags can be utilized on node public IPs to utilize the [Azure Routing Preference](../virtual-network/ip-services/routing-preference-overview.md) feature.
+Public IP tags can be utilized on node public IPs to utilize the [Azure Routing Preference](/azure/virtual-network/ip-services/routing-preference-overview) feature.
 
 ### Requirements
 
@@ -114,7 +114,7 @@ az aks nodepool add --cluster-name <clusterName> --name <nodepoolName> --locatio
 
 AKS nodes utilizing node public IPs that host services on their host address need to have an NSG rule added to allow the traffic. Adding the desired ports in the node pool configuration will create the appropriate allow rules in the cluster network security group.
 
-If a network security group is in place on the subnet with a cluster using bring-your-own virtual network, an allow rule must be added to that network security group. This can be limited to the nodes in a given node pool by adding the node pool to an [application security group (ASG)](../virtual-network/network-security-groups-overview.md#application-security-groups). A managed ASG will be created by default in the managed resource group if allowed host ports are specified. Nodes can also be added to one or more custom ASGs by specifying the resource ID of the NSG(s) in the node pool parameters.
+If a network security group is in place on the subnet with a cluster using bring-your-own virtual network, an allow rule must be added to that network security group. This can be limited to the nodes in a given node pool by adding the node pool to an [application security group (ASG)](/azure/virtual-network/network-security-groups-overview#application-security-groups). A managed ASG will be created by default in the managed resource group if allowed host ports are specified. Nodes can also be added to one or more custom ASGs by specifying the resource ID of the NSG(s) in the node pool parameters.
 
 ### Host port specification format
 
@@ -309,10 +309,10 @@ Containers:
 [vm-sizes]: ../virtual-machines/sizes.md
 [use-system-pool]: use-system-pools.md
 [node-resource-group]: faq.md#why-are-two-resource-groups-created-with-aks
-[vmss-commands]: ../virtual-machine-scale-sets/virtual-machine-scale-sets-networking.md#public-ipv4-per-virtual-machine
+[vmss-commands]: /azure/virtual-machine-scale-sets/virtual-machine-scale-sets-networking#public-ipv4-per-virtual-machine
 [az-list-ips]: /cli/azure/vmss#az_vmss_list_instance_public_ips
 [reduce-latency-ppg]: reduce-latency-ppg.md
-[public-ip-prefix-benefits]: ../virtual-network/ip-services/public-ip-address-prefix.md
+[public-ip-prefix-benefits]: /azure/virtual-network/ip-services/public-ip-address-prefix
 [az-public-ip-prefix-create]: /cli/azure/network/public-ip/prefix#az_network_public_ip_prefix_create
 [node-image-upgrade]: node-image-upgrade.md
 [use-tags]: use-tags.md

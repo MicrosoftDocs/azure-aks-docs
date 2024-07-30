@@ -235,7 +235,7 @@ For more control over the network traffic to your applications, use the applicat
 [aks-ingress-basic]: ingress-basic.md
 [aks-static-ingress]: ingress-static-ip.md
 [install-azure-cli]: /cli/azure/install-azure-cli
-[ip-sku]: ../virtual-network/ip-services/public-ip-addresses.md#sku
+[ip-sku]: /azure/virtual-network/ip-services/public-ip-addresses#sku
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [az-aks-create]: /cli/azure/aks#az-aks-create

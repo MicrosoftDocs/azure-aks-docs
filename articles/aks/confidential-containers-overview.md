@@ -82,7 +82,7 @@ With the local container filesystem backed by VM memory, writing to the containe
 
 <!-- INTERNAL LINKS -->
 [pod-sandboxing-overview]: use-pod-sandboxing.md
-[azure-dedicated-hosts]: ../virtual-machines/dedicated-hosts.md
+[azure-dedicated-hosts]: /azure/virtual-machines/dedicated-hosts
 [deploy-confidential-containers-default-aks]: deploy-confidential-containers-default-policy.md
-[confidential-containers-security-policy]: ../confidential-computing/confidential-containers-aks-security-policy.md
+[confidential-containers-security-policy]: /azure/confidential-computing/confidential-containers-aks-security-policy
 

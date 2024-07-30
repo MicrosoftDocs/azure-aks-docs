@@ -46,7 +46,7 @@ If you're interested in providing feedback or working closely on your migration 
 * Install [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
 * Install [Docker](https://docs.docker.com/get-docker/) for your OS.
 * Ensure [Git](https://git-scm.com) is installed.
-* Make sure you're assigned either the `Owner` role or the `Contributor` and `User Access Administrator` roles in the subscription. You can verify it by following steps in [List role assignments for a user or group](../role-based-access-control/role-assignments-list-portal.yml).
+* Make sure you're assigned either the `Owner` role or the `Contributor` and `User Access Administrator` roles in the subscription. You can verify it by following steps in [List role assignments for a user or group](/azure/role-based-access-control/role-assignments-list-portal).
 
 
 > [!NOTE]
@@ -59,7 +59,7 @@ If you're interested in providing feedback or working closely on your migration 
   * Install a Java SE implementation, version 17 or later. (for example, [Eclipse Open J9](https://www.eclipse.org/openj9/)).
   * Install [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
   * Install [Docker](https://docs.docker.com/get-docker/) for your OS.
-* Make sure you're assigned either the `Owner` role or the `Contributor` and `User Access Administrator` roles in the subscription. You can verify it by following steps in [List role assignments for a user or group](../role-based-access-control/role-assignments-list-portal.yml#list-role-assignments-for-a-user-or-group).
+* Make sure you're assigned either the `Owner` role or the `Contributor` and `User Access Administrator` roles in the subscription. You can verify it by following steps in [List role assignments for a user or group](/azure/role-based-access-control/role-assignments-list-portal#list-role-assignments-for-a-user-or-group).
 
 ## Create a Liberty on AKS deployment using the portal
 
@@ -101,7 +101,7 @@ The following steps guide you to create a Liberty runtime on AKS. After you comp
    * For **Virtual network** and **Subnet**, you can optionally customize the virtual network and subnet into which the deployment places the resources. You don't need to change the remaining values from their defaults.
    * For **TLS/SSL certificate**, you can provide the TLS/SSL certificate from Azure Application Gateway. Leave the values at their defaults to cause the offer to generate a self-signed certificate.
 
-     Don't go to production with a self-signed certificate. For more information about self-signed certificates, see [Create a self-signed public certificate to authenticate your application](../active-directory/develop/howto-create-self-signed-certificate.md).
+     Don't go to production with a self-signed certificate. For more information about self-signed certificates, see [Create a self-signed public certificate to authenticate your application](/azure/active-directory/develop/howto-create-self-signed-certificate).
    * You can select **Enable cookie based affinity**, also known as sticky sessions. This article uses sticky sessions, so be sure to select this option.
 
 1. Select **Next**. On the **Operator and application** pane, this article uses all the defaults. However, you can customize the following deployment options:

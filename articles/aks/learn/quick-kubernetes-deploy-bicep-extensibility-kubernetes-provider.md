@@ -19,7 +19,7 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
 > [!IMPORTANT]
-> The Bicep Kubernetes provider is currently in preview. You can enable the feature from the [Bicep configuration file](../../azure-resource-manager/bicep/bicep-config.md#enable-experimental-features) by adding:
+> The Bicep Kubernetes provider is currently in preview. You can enable the feature from the [Bicep configuration file](/azure/azure-resource-manager/bicep/bicep-config#enable-experimental-features) by adding:
 >
 > ```json
 > {
@@ -41,9 +41,9 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 [!INCLUDE [About Bicep](~/reusable-content/ce-skilling/azure/includes/resource-manager-quickstart-bicep-introduction.md)]
 
-- To set up your environment for Bicep development, see [Install Bicep tools](../../azure-resource-manager/bicep/install.md). After completing the steps, you have [Visual Studio Code](https://code.visualstudio.com/) and the [Bicep extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep). You also have either the latest [Azure CLI](/cli/azure/) version or the latest [Azure PowerShell module](/powershell/azure/new-azureps-module-az).
+- To set up your environment for Bicep development, see [Install Bicep tools](/azure/azure-resource-manager/bicep/install). After completing the steps, you have [Visual Studio Code](https://code.visualstudio.com/) and the [Bicep extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep). You also have either the latest [Azure CLI](/cli/azure/) version or the latest [Azure PowerShell module](/powershell/azure/new-azureps-module-az).
 - To create an AKS cluster using a Bicep file, you provide an SSH public key. If you need this resource, see the following section. Otherwise, skip to [Review the Bicep file](#review-the-bicep-file).
-- To deploy a Bicep file, you need write access on the resources you deploy and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to deploy a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](../../role-based-access-control/built-in-roles.md).
+- To deploy a Bicep file, you need write access on the resources you deploy and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to deploy a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 
 ### Create an SSH key pair
 
@@ -434,7 +434,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [az-group-delete]: /cli/azure/group#az_group_delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
-[ssh-keys]: ../../virtual-machines/linux/create-ssh-keys-detailed.md
+[ssh-keys]: /azure/virtual-machines/linux/create-ssh-keys-detailed
 [az-deployment-group-create]: /cli/azure/group/deployment#az_deployment_group_create
 [new-azresourcegroup]: /powershell/module/az.resources/new-azresourcegroup
 [new-azresourcegroupdeployment]: /powershell/module/az.resources/new-azresourcegroupdeployment

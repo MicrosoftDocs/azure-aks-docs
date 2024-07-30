@@ -116,5 +116,5 @@ az k8s-extension create --cluster-type managedClusters \
 
 ## Next Steps
 
-Once you successfully install Azure App Configuration extension in your AKS cluster, try [quickstart](../azure-app-configuration/quickstart-azure-kubernetes-service.md) to learn how to use it.
+Once you successfully install Azure App Configuration extension in your AKS cluster, try [quickstart](/azure/azure-app-configuration/quickstart-azure-kubernetes-service) to learn how to use it.
 

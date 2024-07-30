@@ -167,8 +167,8 @@ This article described how to create an AKS cluster using availability zones. Fo
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [best-practices-bc-dr]: operator-best-practices-multi-region.md
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[vmss-zone-balancing]: ../virtual-machine-scale-sets/virtual-machine-scale-sets-use-availability-zones.md#zone-balancing
-[arm-template-null]: ../azure-resource-manager/templates/template-expressions.md#null-values
+[vmss-zone-balancing]: /azure/virtual-machine-scale-sets/virtual-machine-scale-sets-use-availability-zones#zone-balancing
+[arm-template-null]: /azure/azure-resource-manager/templates/template-expressions#null-values
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-scale]: /cli/azure/aks#az-aks-scale
 

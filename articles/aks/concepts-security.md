@@ -137,14 +137,14 @@ For more information on core Kubernetes and AKS concepts, see:
 
 <!-- LINKS - External -->
 [secret-risks]: https://kubernetes.io/docs/concepts/configuration/secret/#risks
-[encryption-atrest]: ../security/fundamentals/encryption-atrest.md
+[encryption-atrest]: /azure/security/fundamentals/encryption-atrest
 
 <!-- LINKS - Internal -->
-[microsoft-defender-for-containers]: ../defender-for-cloud/defender-for-containers-introduction.md
-[azure-confidential-containers]: ../confidential-computing/confidential-containers.md
+[microsoft-defender-for-containers]: /azure/defender-for-cloud/defender-for-containers-introduction
+[azure-confidential-containers]: /azure/confidential-computing/confidential-containers
 [confidential-containers]: confidential-containers-overview.md
 [pod-sandboxing]: use-pod-sandboxing.md
-[isolated-vm-size]: ../virtual-machines/isolation.md
+[isolated-vm-size]: /azure/virtual-machines/isolation
 [aks-upgrade-cluster]: upgrade-cluster.md
 [aks-aad]: ./managed-azure-ad.md
 [aks-add-np-containerd]: create-node-pools.md

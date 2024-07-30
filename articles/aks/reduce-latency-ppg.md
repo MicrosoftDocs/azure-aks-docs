@@ -13,7 +13,7 @@ ms.author: nickoman
 > [!NOTE]
 > When using proximity placement groups on AKS, colocation only applies to the agent nodes. Node to node and the corresponding hosted pod to pod latency is improved. The colocation doesn't affect the placement of a cluster's control plane.
 
-When deploying your application in Azure, you can create network latency by spreading virtual machine (VM) instances across regions or availability zones, which may impact the overall performance of your application. A proximity placement group is a logical grouping used to make sure Azure compute resources are physically located close to one another. Some applications, such as gaming, engineering simulations, and high-frequency trading (HFT) require low latency and tasks that can complete quickly. For similar high-performance computing (HPC) scenarios, consider using [proximity placement groups (PPG)](../virtual-machines/co-location.md#proximity-placement-groups) for your cluster's node pools.
+When deploying your application in Azure, you can create network latency by spreading virtual machine (VM) instances across regions or availability zones, which may impact the overall performance of your application. A proximity placement group is a logical grouping used to make sure Azure compute resources are physically located close to one another. Some applications, such as gaming, engineering simulations, and high-frequency trading (HFT) require low latency and tasks that can complete quickly. For similar high-performance computing (HPC) scenarios, consider using [proximity placement groups (PPG)](/azure/virtual-machines/co-location#proximity-placement-groups) for your cluster's node pools.
 
 ## Before you begin
 
@@ -44,7 +44,7 @@ Proximity placement groups are a node pool concept and associated with each indi
 
 ## Create a new AKS cluster with a proximity placement group
 
-Accelerated networking greatly improves networking performance of virtual machines. Ideally, use proximity placement groups with accelerated networking. By default, AKS uses accelerated networking on [supported virtual machine instances](../virtual-network/accelerated-networking-overview.md?toc=/azure/virtual-machines/linux/toc.json#limitations-and-constraints), which include most Azure virtual machine with two or more vCPUs.
+Accelerated networking greatly improves networking performance of virtual machines. Ideally, use proximity placement groups with accelerated networking. By default, AKS uses accelerated networking on [supported virtual machine instances](/azure/virtual-network/accelerated-networking-overview?toc=/azure/virtual-machines/linux/toc.json#limitations-and-constraints), which include most Azure virtual machine with two or more vCPUs.
 
 1. Create an Azure resource group using the [`az group create`][az-group-create] command.
 
@@ -117,7 +117,7 @@ Learn more about [proximity placement groups][proximity-placement-groups].
 
 <!-- LINKS - Internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
-[proximity-placement-groups]: ../virtual-machines/co-location.md#proximity-placement-groups
+[proximity-placement-groups]: /azure/virtual-machines/co-location#proximity-placement-groups
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
 [az-group-create]: /cli/azure/group#az_group_create

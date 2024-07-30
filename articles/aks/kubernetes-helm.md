@@ -225,7 +225,7 @@ For more information about managing Kubernetes application deployments with Helm
 [k8s-node-selector]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodeselector
 
 <!-- LINKS - internal -->
-[acr-helm]: ../container-registry/container-registry-helm-repos.md
+[acr-helm]: /azure/container-registry/container-registry-helm-repos
 [aks-integrated-acr]: cluster-container-registry-integration.md#create-a-new-acr
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md

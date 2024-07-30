@@ -677,7 +677,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 <!-- LINKS - internal -->
 [kubernetes-concepts]: ../concepts-clusters-workloads.md
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
-[intro-azure-linux]: ../../azure-linux/intro-azure-linux.md
+[intro-azure-linux]: /azure/azure-linux/intro-azure-linux
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [azd-install]: /azure/developer/azure-developer-cli/install-azd

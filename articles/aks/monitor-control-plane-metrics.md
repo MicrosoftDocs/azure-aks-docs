@@ -18,8 +18,8 @@ This article shows you how to use the control plane metrics (preview) feature in
 ## Prerequisites and limitations
 
 - Control plane metrics (preview) only supports [Azure Monitor managed service for Prometheus][managed-prometheus-overview].
-- [Private link](../azure-monitor/logs/private-link-security.md) isn't supported.
-- You can only customize the default [ama-metrics-settings-config-map](../azure-monitor/containers/prometheus-metrics-scrape-configuration.md#configmaps). All other customizations aren't supported.
+- [Private link](/azure/azure-monitor/logs/private-link-security) isn't supported.
+- You can only customize the default [ama-metrics-settings-config-map](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration#configmaps). All other customizations aren't supported.
 - The AKS cluster must use [managed identity authentication](use-managed-identity.md).
 
 ### Install or update the `aks-preview` Azure CLI extension
@@ -222,7 +222,7 @@ No, you currently can't scrape control plane metrics with self hosted Prometheus
 
 ### Why is the user agent not available through the control plane metrics?
 
-[Control plane metrics in Kubernetes](https://kubernetes.io/docs/reference/instrumentation/metrics/) don't have the user agent. The user agent is only available through the control plane logs available in the [diagnostic settings](../azure-monitor/essentials/diagnostic-settings.md).
+[Control plane metrics in Kubernetes](https://kubernetes.io/docs/reference/instrumentation/metrics/) don't have the user agent. The user agent is only available through the control plane logs available in the [diagnostic settings](/azure/azure-monitor/essentials/diagnostic-settings).
 
 ## Next steps
 
@@ -238,15 +238,15 @@ To learn more about AKS control plane metrics, see the [list of default metrics 
 [grafana-dashboard-template-etcd]: https://grafana.com/grafana/dashboards/20330-kubernetes-etcd/
 
 <!-- INTERNAL LINKS -->
-[managed-prometheus-overview]: ../azure-monitor/essentials/prometheus-metrics-overview.md
+[managed-prometheus-overview]: /azure/azure-monitor/essentials/prometheus-metrics-overview
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[enable-monitoring-kubernetes-cluster]: ../azure-monitor/containers/kubernetes-monitoring-enable.md#enable-prometheus-and-grafana
-[prometheus-troubleshooting]: ../azure-monitor/containers/prometheus-metrics-troubleshoot.md
-[node-metrics]: ../azure-monitor/containers/prometheus-metrics-scrape-default.md
+[enable-monitoring-kubernetes-cluster]: /azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana
+[prometheus-troubleshooting]: /azure/azure-monitor/containers/prometheus-metrics-troubleshoot
+[node-metrics]: /azure/azure-monitor/containers/prometheus-metrics-scrape-default
 [list-of-default-metrics-aks-control-plane]: control-plane-metrics-default-list.md
 [az-feature-unregister]: /cli/azure/feature#az-feature-unregister
 [azure-portal]: https://portal.azure.com

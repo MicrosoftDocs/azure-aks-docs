@@ -87,12 +87,12 @@ For more information, see [Windows AKS partner solutions][windows-aks-partner-so
 <!-- LINKS -->
 [aks-repo]: https://github.com/Azure/AKS
 [app-routing-repo]: https://github.com/Azure/aks-app-routing-operator
-[container-insights]: ../azure-monitor/containers/container-insights-overview.md
+[container-insights]: /azure/azure-monitor/containers/container-insights-overview
 [virtual-nodes]: virtual-nodes.md
 [virtual-nodes-oss-repo]: https://github.com/virtual-kubelet/virtual-kubelet
-[azure-policy-aks]: ../governance/policy/concepts/policy-for-kubernetes.md#install-azure-policy-add-on-for-aks
+[azure-policy-aks]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
 [azure-policy-repo]: https://github.com/Azure/azure-policy
-[agic]: ../application-gateway/ingress-controller-overview.md
+[agic]: /azure/application-gateway/ingress-controller-overview
 [agic-repo]: https://github.com/Azure/application-gateway-kubernetes-ingress
 [osm]: open-service-mesh-about.md
 [osm-repo]: https://github.com/Azure/osm-azure
@@ -120,7 +120,7 @@ For more information, see [Windows AKS partner solutions][windows-aks-partner-so
 [open-faas-aks]: openfaas.md
 [apache-spark]: https://spark.apache.org/
 [spark-kubernetes]: https://spark.apache.org/docs/latest/running-on-kubernetes.html
-[managed-grafana]: ../managed-grafana/overview.md
+[managed-grafana]: /azure/managed-grafana/overview
 [keda]: keda-about.md
 [keda-repo]: https://github.com/Azure-Samples/aks-keda-addon-workload-identity
 [app-routing]: app-routing.md
@@ -130,6 +130,6 @@ For more information, see [Windows AKS partner solutions][windows-aks-partner-so
 [github-actions-aks]: kubernetes-action.md
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
 [windows-aks-partner-solutions]: windows-aks-partner-solutions.md
-[managed-prometheus]: ../azure-monitor/containers/container-insights-overview.md
+[managed-prometheus]: /azure/azure-monitor/containers/container-insights-overview
 [managed-prometheus-repo]: https://github.com/Azure/prometheus-collector
 

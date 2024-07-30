@@ -17,7 +17,7 @@ The CSI storage driver support on AKS allows you to natively use:
 
 - [**Azure Disks**](azure-disk-csi.md) can be used to create a Kubernetes *DataDisk* resource. Disks can use Azure Premium Storage, backed by high-performance SSDs, or Azure Standard Storage, backed by regular HDDs or Standard SSDs. For most production and development workloads, use Premium Storage. Azure Disks are mounted as *ReadWriteOnce* and are only available to one node in AKS. For storage volumes that can be accessed by multiple nodes simultaneously, use Azure Files.
 - [**Azure Files**](azure-files-csi.md) can be used to mount an SMB 3.0/3.1 share backed by an Azure storage account to pods. With Azure Files, you can share data across multiple nodes and pods. Azure Files can use Azure Standard storage backed by regular HDDs or Azure Premium storage backed by high-performance SSDs.
-- [**Azure Blob storage**](azure-blob-csi.md) can be used to mount Blob storage (or object storage) as a file system into a container or pod. Using Blob storage enables your cluster to support  applications that work with large unstructured datasets like log file data, images or documents, HPC, and others. Additionally, if you ingest data into [Azure Data Lake storage](../storage/blobs/data-lake-storage-introduction.md), you can directly mount and use it in AKS without configuring another interim filesystem.
+- [**Azure Blob storage**](azure-blob-csi.md) can be used to mount Blob storage (or object storage) as a file system into a container or pod. Using Blob storage enables your cluster to support  applications that work with large unstructured datasets like log file data, images or documents, HPC, and others. Additionally, if you ingest data into [Azure Data Lake storage](/azure/storage/blobs/data-lake-storage-introduction), you can directly mount and use it in AKS without configuring another interim filesystem.
 
 > [!IMPORTANT]
 > Starting with Kubernetes version 1.26, in-tree persistent volume types *kubernetes.io/azure-disk* and *kubernetes.io/azure-file* are deprecated and will no longer be supported. Removing these drivers following their deprecation is not planned, however you should migrate to the corresponding CSI drivers *disk.csi.azure.com* and *file.csi.azure.com*. To review the migration options for your storage classes and upgrade your cluster to use Azure Disks and Azure Files CSI drivers, see [Migrate from in-tree to CSI drivers][migrate-from-in-tree-csi-drivers].
@@ -121,8 +121,8 @@ To review the migration options for your storage classes and upgrade your cluste
 [azure-disk-csi]: azure-disk-csi.md
 [azure-files-csi]: azure-files-csi.md
 [migrate-from-in-tree-csi-drivers]: csi-migrate-in-tree-volumes.md
-[learn-azure-policy-kubernetes]: ../governance/policy/concepts/policy-for-kubernetes.md
-[azure-policy-aks-definition]: ../governance/policy/samples/built-in-policies.md#kubernetes
-[encrypt-managed-disks-customer-managed-keys]: ../virtual-machines/disks-cross-tenant-customer-managed-keys.md
+[learn-azure-policy-kubernetes]: /azure/governance/policy/concepts/policy-for-kubernetes
+[azure-policy-aks-definition]: /azure/governance/policy/samples/built-in-policies#kubernetes
+[encrypt-managed-disks-customer-managed-keys]: /azure/virtual-machines/disks-cross-tenant-customer-managed-keys
 [azure-disk-customer-managed-keys]: azure-disk-customer-managed-keys.md
 

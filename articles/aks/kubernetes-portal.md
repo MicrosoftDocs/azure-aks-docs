@@ -368,6 +368,6 @@ This article showed you how to access Kubernetes resources from the Azure portal
 [core-concepts]: core-aks-concepts.md
 [aks-managed-aad]: managed-azure-ad.md
 [cli-aad-upgrade]: managed-azure-ad.md#migrate-a-legacy-azure-ad-cluster-to-integration
-[enable-monitor]: ../azure-monitor/containers/container-insights-enable-existing-clusters.md
+[enable-monitor]: /azure/azure-monitor/containers/container-insights-enable-existing-clusters
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [set-az-aks-cluster]: /powershell/module/az.aks/set-azakscluster

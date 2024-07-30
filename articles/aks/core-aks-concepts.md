@@ -163,10 +163,10 @@ For information on more core concepts for AKS, see the following resources:
 [storage]: ./concepts-storage.md
 [scaling]: ./concepts-scale.md
 [monitoring]: ./monitor-aks.md
-[backup-recovery]: ../backup/azure-kubernetes-service-backup-overview.md
+[backup-recovery]: /azure/backup/azure-kubernetes-service-backup-overview
 [kubernetes-docs]: https://kubernetes.io/docs/home/
 [resource-reservations]: ./node-resource-reservations.md
-[reservation-discounts]: ../cost-management-billing/reservations/save-compute-costs-reservations.md
+[reservation-discounts]: /azure/cost-management-billing/reservations/save-compute-costs-reservations
 [supported-kubernetes-versions]: ./supported-kubernetes-versions.md
 [default-os-disk]: ./concepts-storage.md#default-os-disk-sizing
 [ephemeral-os-disks]: ./concepts-storage.md#ephemeral-os-disk

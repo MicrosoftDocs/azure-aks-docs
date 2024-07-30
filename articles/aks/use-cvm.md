@@ -80,10 +80,10 @@ The following limitations apply when adding a node pool with CVM to AKS:
 In this article, you learned how to add a node pool with CVM to an AKS cluster. For more information about CVM, see [Confidential VM node pools support on AKS with AMD SEV-SNP confidential VMs][cvm].
 
 <!-- LINKS - Internal -->
-[cvm]: ../confidential-computing/confidential-node-pool-aks.md
+[cvm]: /azure/confidential-computing/confidential-node-pool-aks
 [cvm-announce]: https://techcommunity.microsoft.com/t5/azure-confidential-computing/azure-confidential-vms-using-sev-snp-dcasv5-ecasv5-are-now/ba-p/3573747
-[cvm-subs-dc]: ../virtual-machines/dcasv5-dcadsv5-series.md
-[cvm-subs-ec]: ../virtual-machines/ecasv5-ecadsv5-series.md
+[cvm-subs-dc]: /azure/virtual-machines/dcasv5-dcadsv5-series
+[cvm-subs-ec]: /azure/virtual-machines/ecasv5-ecadsv5-series
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete

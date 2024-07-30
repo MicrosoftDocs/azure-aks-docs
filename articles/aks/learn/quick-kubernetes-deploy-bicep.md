@@ -37,14 +37,14 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 ### [Azure PowerShell](#tab/azure-powershell)
 
 * If you're running PowerShell locally, install the `Az PowerShell` module. If you're using Azure Cloud Shell, the latest version is already installed there.
-* You need the Bicep CLI. For more information, see [Azure PowerShell](../../azure-resource-manager/bicep/install.md#azure-powershell).
+* You need the Bicep CLI. For more information, see [Azure PowerShell](/azure/azure-resource-manager/bicep/install#azure-powershell).
 * This article requires an existing Azure resource group. If you need to create one, you can use the [New-AzAksCluster][new-az-aks-cluster] cmdlet.
 
 ---
 
 * To create an AKS cluster using a Bicep file, you provide an SSH public key. If you need this resource, see the following section. Otherwise, skip to [Review the Bicep file](#review-the-bicep-file).
 * Make sure that the identity you use to create your cluster has the appropriate minimum permissions. For more details on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](../concepts-identity.md).
-* To deploy a Bicep file, you need write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](../../role-based-access-control/built-in-roles.md).
+* To deploy a Bicep file, you need write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 
 ### Create an SSH key pair
 
@@ -526,7 +526,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [az-group-delete]: /cli/azure/group#az_group_delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
-[ssh-keys]: ../../virtual-machines/linux/create-ssh-keys-detailed.md
+[ssh-keys]: /azure/virtual-machines/linux/create-ssh-keys-detailed
 [new-az-aks-cluster]: /powershell/module/az.aks/new-azakscluster
 [az-sshkey-create]: /cli/azure/sshkey#az_sshkey_create
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json

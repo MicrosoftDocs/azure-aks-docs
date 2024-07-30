@@ -329,5 +329,5 @@ For more information about using Helm, see the [Helm documentation][helm-documen
 [helm-existing]: kubernetes-helm.md
 [helm-install]: https://helm.sh/docs/intro/install/
 [sp-delete]: kubernetes-service-principal.md#other-considerations
-[acr-helm]: ../container-registry/container-registry-helm-repos.md
+[acr-helm]: /azure/container-registry/container-registry-helm-repos
 

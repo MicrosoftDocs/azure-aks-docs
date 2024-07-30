@@ -185,14 +185,14 @@ For more information about how Azure Policy works, see the following articles:
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-[azure-policy]: ../governance/policy/overview.md
-[azure-policy-addon]: ../governance/policy/concepts/policy-for-kubernetes.md#install-azure-policy-add-on-for-aks
-[azure-policy-addon-remove]: ../governance/policy/concepts/policy-for-kubernetes.md#remove-the-add-on-from-aks
-[azure-policy-assign-policy]: ../governance/policy/concepts/policy-for-kubernetes.md#assign-a-policy-definition
-[kubernetes-policy-reference]: ../governance/policy/concepts/policy-for-kubernetes.md
-[azure-policy-effects-audit]: ../governance/policy/concepts/effects.md#audit-properties
-[custom-policy-tutorial-create]: ../governance/policy/tutorials/create-custom-policy-definition.md
-[custom-policy-tutorial-assign]: ../governance/policy/concepts/policy-for-kubernetes.md#assign-a-policy-definition
-[azure-policy-samples]: ../governance/policy/samples/index.md
-[azure-policy-definition-structure]: ../governance/policy/concepts/definition-structure.md
+[azure-policy]: /azure/governance/policy/overview
+[azure-policy-addon]: /azure/governance/policy/concepts/policy-for-kubernetes#install-azure-policy-add-on-for-aks
+[azure-policy-addon-remove]: /azure/governance/policy/concepts/policy-for-kubernetes#remove-the-add-on-from-aks
+[azure-policy-assign-policy]: /azure/governance/policy/concepts/policy-for-kubernetes#assign-a-policy-definition
+[kubernetes-policy-reference]: /azure/governance/policy/concepts/policy-for-kubernetes
+[azure-policy-effects-audit]: /azure/governance/policy/concepts/effects#audit-properties
+[custom-policy-tutorial-create]: /azure/governance/policy/tutorials/create-custom-policy-definition
+[custom-policy-tutorial-assign]: /azure/governance/policy/concepts/policy-for-kubernetes#assign-a-policy-definition
+[azure-policy-samples]: /azure/governance/policy/samples/
+[azure-policy-definition-structure]: /azure/governance/policy/concepts/definition-structure
 

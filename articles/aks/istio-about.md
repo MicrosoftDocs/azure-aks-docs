@@ -66,8 +66,8 @@ Feedback and feature asks for the Istio add-on can be provided by creating [issu
 * [Troubleshoot Istio-based service mesh add-on][istio-troubleshooting]
 
 [istio-overview]: https://istio.io/latest/
-[managed-prometheus-overview]: ../azure-monitor/essentials/prometheus-metrics-overview.md
-[managed-grafana-overview]: ../managed-grafana/overview.md
+[managed-prometheus-overview]: /azure/azure-monitor/essentials/prometheus-metrics-overview
+[managed-grafana-overview]: /azure/managed-grafana/overview
 [azure-cni-cilium]: azure-cni-powered-by-cilium.md
 [open-service-mesh-about]: open-service-mesh-about.md
 [istio-meshconfig]: ./istio-meshconfig.md

@@ -304,7 +304,7 @@ In this section, you mount the persistent volume using the NFS protocol or Blobf
 
 #### [Mount volume using NFS protocol](#tab/mount-nfs)
 
-Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS cluster needs to reside in the same or peered virtual network as the agent node. The only way to secure the data in your storage account is by using a virtual network and other network security settings. For more information on how to set up NFS access to your storage account, see [Mount Blob Storage by using the Network File System (NFS) 3.0 protocol](../storage/blobs/network-file-system-protocol-support-how-to.md).
+Mounting Blob storage using the NFS v3 protocol doesn't authenticate using an account key. Your AKS cluster needs to reside in the same or peered virtual network as the agent node. The only way to secure the data in your storage account is by using a virtual network and other network security settings. For more information on how to set up NFS access to your storage account, see [Mount Blob Storage by using the Network File System (NFS) 3.0 protocol](/azure/storage/blobs/network-file-system-protocol-support-how-to).
 
 The following example demonstrates how to mount a Blob storage container as a persistent volume using the NFS protocol.
 
@@ -535,8 +535,8 @@ The following YAML creates a pod that uses the persistent volume or persistent v
 [azure-blob-storage-nfs-support]: ../storage/blobs/network-file-system-protocol-support.md
 [enable-blob-csi-driver]: azure-blob-csi.md#before-you-begin
 [az-aks-show]: /cli/azure/aks#az-aks-show
-[az-tags]: ../azure-resource-manager/management/tag-resources.md
-[sas-tokens]: ../storage/common/storage-sas-overview.md
-[azure-datalake-storage-account]: ../storage/blobs/upgrade-to-data-lake-storage-gen2-how-to.md
-[storage-account-private-endpoint]: ../storage/common/storage-private-endpoints.md
-[manage-blob-storage]: ../storage/blobs/blob-containers-cli.md
+[az-tags]: /azure/azure-resource-manager/management/tag-resources
+[sas-tokens]: /azure/storage/common/storage-sas-overview
+[azure-datalake-storage-account]: /azure/storage/blobs/upgrade-to-data-lake-storage-gen2-how-to
+[storage-account-private-endpoint]: /azure/storage/common/storage-private-endpoints
+[manage-blob-storage]: /azure/storage/blobs/blob-containers-cli
