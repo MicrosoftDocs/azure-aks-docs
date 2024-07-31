@@ -20,13 +20,13 @@ the link in the **Version** column to view the source on the
 
 ## Initiatives
 
-[!INCLUDE [azure-policy-reference-policysets-kubernetes](~/../azure-docs-pr/includes/policy/reference/bycat/policysets-kubernetes.md)]
+[!INCLUDE [azure-policy-reference-policysets-kubernetes](~/azure-docs-pr/includes/policy/reference/bycat/policysets-kubernetes.md)]
 
 ## Policy definitions
 
 ### Microsoft.ContainerService
 
-[!INCLUDE [azure-policy-reference-rp-aks-containerservice](~/../azure-docs-pr/includes/policy/reference/byrp/microsoft.containerservice.md)]
+[!INCLUDE [azure-policy-reference-rp-aks-containerservice](~/azure-docs-pr/includes/policy/reference/byrp/microsoft.containerservice.md)]
 
 ## Next steps
 
