@@ -17,9 +17,9 @@ provides initiative definitions (*built-ins*) created and managed by Microsoft, 
 
 You can assign the built-ins for a **security control** individually to help make your Azure resources compliant with the specific standard.
 
-[!INCLUDE [azure-policy-compliancecontrols-introwarning](../../includes/policy/standards/intro-warning.md)]
+[!INCLUDE [azure-policy-compliancecontrols-introwarning](~/../azure-docs-pr/includes/policy/standards/intro-warning.md)]
 
-[!INCLUDE [azure-policy-compliancecontrols-aks](../../includes/policy/standards/byrp/microsoft.containerservice.md)]
+[!INCLUDE [azure-policy-compliancecontrols-aks](~/../azure-docs-pr/includes/policy/standards/byrp/microsoft.containerservice.md)]
 
 ## Next steps
 
