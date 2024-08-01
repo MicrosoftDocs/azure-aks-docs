@@ -112,7 +112,7 @@
         "articles/iot-central/": {}
       },
       "brand": "azure",
-      "feedback_github_repo": "MicrosoftDocs/azure-aks-docs-pr",
+      "feedback_github_repo": "MicrosoftDocs/azure-aks-docs",
       "feedback_help_link_url": "https://learn.microsoft.com/answers/tags/133/azure",
       "feedback_help_link_type": "get-help-at-qna",
       "feedback_product_url": "https://feedback.azure.com/d365community/forum/79b1327d-d925-ec11-b6e6-000d3a4f06a4",
@@ -163,7 +163,7 @@
         "articles/aks/**/*": "azure-kubernetes-service/svc"
       },
       "open_source_feedback_issueUrl": {
-        "articles/aks/**/*": "https://github.com/MicrosoftDocs/azure-aks-docs-pr/issues/new?template=aks-customer-feedback.yml"
+        "articles/aks/**/*": "https://github.com/MicrosoftDocs/azure-aks-docs/issues/new?template=aks-customer-feedback.yml"
       },
       "open_source_feedback_productLogoLightUrl": {
         "articles/aks/**/*": "https://learn.microsoft.com/azure/media/index/kubernetes-services.svg"
