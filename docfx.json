@@ -163,7 +163,7 @@
         "articles/aks/**/*": "azure-kubernetes-service/svc"
       },
       "open_source_feedback_issueUrl": {
-        "articles/aks/**/*": "https://github.com/MicrosoftDocs/azure-aks-docs/issues/new?template=aks-customer-feedback.yml"
+        "articles/aks/**/*": "https://github.com/MicrosoftDocs/azure-aks-docs-pr/issues/new?template=aks-customer-feedback.yml"
       },
       "open_source_feedback_productLogoLightUrl": {
         "articles/aks/**/*": "https://learn.microsoft.com/azure/media/index/kubernetes-services.svg"
