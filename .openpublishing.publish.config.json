@@ -3,6 +3,10 @@
     {
       "docset_name": "azure-aks",
       "build_source_folder": ".",
+      "xref_query_tags": [
+        "/dotnet",
+        "/python"
+      ],
       "build_output_subfolder": "azure-aks",
       "locale": "en-us",
       "monikers": [],
@@ -25,8 +29,40 @@
       "url": "https://github.com/Microsoft/templates.docs.msft",
       "branch": "main",
       "branch_mapping": {}
+    },
+    {
+      "path_to_root": "azure-docs-pr",
+      "url": "https://github.com/MicrosoftDocs/azure-docs-pr",
+      "branch": "main",
+      "branch_mapping": {}
+    },
+    {
+      "path_to_root": "reusable-content",
+      "url": "https://github.com/MicrosoftDocs/reusable-content",
+      "branch": "main",
+      "branch_mapping": {}
+    },
+    {
+      "path_to_root": "quickstart-templates",
+      "url": "https://github.com/Azure/azure-quickstart-templates",
+      "branch": "master",
+      "branch_mapping": {}
+    },
+    {
+      "path_to_root": "azure-dev-docs-pr",
+      "url": "https://github.com/MicrosoftDocs/azure-dev-docs-pr",
+      "branch": "main",
+      "branch_mapping": {}
+    },
+    {
+      "path_to_root": "terraform_samples",
+      "url": "https://github.com/Azure/terraform",
+      "branch": "master",
+      "branch_mapping": {}
     }
   ],
+  "git_repository_url_open_to_public_contributors": "https://github.com/MicrosoftDocs/azure-aks-docs",
+  "git_repository_branch_open_to_public_contributors": "main",
   "branch_target_mapping": {},
   "targets": {}
 }
