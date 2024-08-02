@@ -62,7 +62,7 @@ GitHub Actions help you automate your software development workflows from within
 
 ## Open-source and third-party integrations
 
-There are many open-source and third-party integrations you can install on your AKS cluster. The [AKS support policy][aks-support-policy] doesn't cover self-managed installations of the following projects. Managed experiences where available for these projects (for example in the case of Prometheus, Grafana, and Istio below) are noted in the 'More Details' column.
+There are many open-source and third-party integrations you can install on your AKS cluster. The [AKS support policy][aks-support-policy] doesn't cover self-managed installations of the following projects. Some of these projects have managed experiences built on top of them (for example in the case of Prometheus, Grafana, and Istio). These managed experiences are noted in the 'More Details' column.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
