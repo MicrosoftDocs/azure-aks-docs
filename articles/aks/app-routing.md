@@ -39,10 +39,12 @@ With the retirement of [Open Service Mesh][open-service-mesh-docs] (OSM) by the 
 ## Limitations
 
 - The application routing add-on supports up to five Azure DNS zones.
+- The application routing add-on can only be enabled on AKS clusters with [managed identity][managed-identity].
 - All global Azure DNS zones integrated with the add-on have to be in the same resource group.
 - All private Azure DNS zones integrated with the add-on have to be in the same resource group.
 - Editing the ingress-nginx `ConfigMap` in the `app-routing-system` namespace isn't supported.
 - The following snippet annotations are blocked and will prevent an Ingress from being configured: `load_module`, `lua_package`, `_by_lua`, `location`, `root`, `proxy_pass`, `serviceaccount`, `{`, `}`, `'`.
+
 
 ## Enable application routing using Azure CLI
 
@@ -512,7 +514,7 @@ When the application routing add-on is disabled, some Kubernetes resources might
 * Learn about monitoring the ingress-nginx controller metrics included with the application routing add-on with [with Prometheus in Grafana][prometheus-in-grafana] (preview) as part of analyzing the performance and usage of your application.
 
 <!-- LINKS - internal -->
-[azure-dns-overview]: /azure/dns/dns-overview
+[azure-dns-overview]: ../dns/dns-overview.md
 [az-aks-approuting-enable]: /cli/azure/aks/approuting#az-aks-approuting-enable
 [az-aks-approuting-disable]: /cli/azure/aks/approuting#az-aks-approuting-disable
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
@@ -524,6 +526,7 @@ When the application routing add-on is disabled, some Kubernetes resources might
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [prometheus-in-grafana]: app-routing-nginx-prometheus.md
 [create-nginx-private-controller]: create-nginx-ingress-private-controller.md
+[managed-identity]: use-managed-identity.md
 
 <!-- LINKS - external -->
 [kubernetes-ingress-object-overview]: https://kubernetes.io/docs/concepts/services-networking/ingress/
@@ -533,4 +536,3 @@ When the application routing add-on is disabled, some Kubernetes resources might
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [ingress-backend]: https://release-v1-2.docs.openservicemesh.io/docs/guides/traffic_management/ingress/#ingressbackend-api
-
