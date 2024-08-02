@@ -67,7 +67,7 @@
   "targets": {},
   "redirection_files": [
     ".openpublishing.redirection.json",
-    "/aks/.openpublishing.redirection.aks.json"
+    "articles/aks/.openpublishing.redirection.aks.json"
   ]
 
 }
