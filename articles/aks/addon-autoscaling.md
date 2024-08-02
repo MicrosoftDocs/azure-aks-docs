@@ -45,7 +45,7 @@ The following AKS managed add-ons support the add-on autoscaling feature:
 * The Azure CLI installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) and [register the add-on autoscaling preview feature](#register-the-add-on-autoscaling-preview-feature).
 
-[!INCLUDE [preview features callout](includes/preview/preview-callout.md)]
+[!INCLUDE [preview features callout]((~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md))]
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -106,7 +106,7 @@ az aks update --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME --disab
 ```
 
 > [!NOTE]
-> Disabling the add-on autoscaling feature doesn't disable the VPA add-on by default. To disable VPA, see [Disable VPA on an AKS cluster](./vertical-pod-autoscaler.md#deploy-upgrade-or-disable-vpa-on-a-cluster).
+> Disabling the add-on autoscaling feature doesn't disable the VPA add-on by default. To disable VPA, see [Disable VPA on an AKS cluster](./use-vertical-pod-autoscaler.md#disable-the-vertical-pod-autoscaler-on-an-existing-cluster).
 
 ## Apply the VPA recommended values
 
