@@ -264,7 +264,7 @@ This block is implemented in the default server block in the Corefile for the cl
 
 For general CoreDNS troubleshooting steps, such as checking the endpoints or resolution, see [Debugging DNS resolution][coredns-troubleshooting].
 
-## Configure CoreDNS pod scaling
+## Configure CoreDNS horizontal pod scaling
 
 Sudden spikes in DNS traffic within AKS clusters are a common occurrence due to the elasticity that AKS provides for workloads. These spikes can lead to an increase in memory consumption by CoreDNS pods. In some cases, this increased memory consumption could cause `Out of memory` issues. To preempt this issue, AKS clusters auto scale CoreDNS pods to reduce memory usage per pod. The default settings for this auto scaling logic are stored in the `coredns-autoscaler` ConfigMap. However, you may observe that the default auto scaling of CoreDNS pods is not always aggressive enough to prevent `Out of memory` issues for your CoreDNS pods. In this case, you can directly modify the `coredns-autoscaler` ConfigMap. Please note that simply increasing the number of CoreDNS pods without addressing the root cause of the `Out of memory` issue may only provide a temporary fix. If there is not enough memory available across the nodes where the CoreDNS pods are running, increasing the number of CoreDNS pods will not help. You may need to investigate further and implement appropriate solutions such as optimizing resource usage, adjusting resource requests and limits, or adding more memory to the nodes.
 
@@ -286,6 +286,23 @@ metadata:
   resourceVersion: "..."
   creationTimestamp: "..."
 ```
+## CoreDNS vertical pod autoscaling behavior
+
+CoreDNS is an essential add-on managed by AKS and enabled by default. In order to maintain the CoreDNS service availability, CoreDNS maintains use of the original provided resource requests/limits when enabling the [add-on autoscaling feature](./addon-autoscaling.md) to prevent the CoreDNS pod restart process and cause the service unavailable issue.
+
+For the AKS managed CoreDNS add-on, the default CPU requests/limits are set at 100m/3, and memory requests/limits at 70Mi/500Mi. Based on these defaults, the request-to-limit ratio for CPU is approximately 1/30, and for memory, it's around 1/7. If the recommended CPU requests are 500m, VPA adjusts the CPU limits to 15 to maintain this ratio. Similarly, if the recommended memory requests are 700Mi, VPA adjusts the memory limit to 5000Mi.
+
+VPA sets CoreDNS CPU and memory limits to large values according to the AKS provided requests and limits value. These adjustments are beneficial for handling multiple requests during peak service times. The drawback is that CoreDNS might consume all the CPU and memory available resource on the node when the peak service time.
+
+It's difficult for AKS to provide a golden CPU and memory requests/limits value to meet the requirement for both large cluster and small cluster at the same time. That is the reason AKS provide very small request and large limits value to accommodate different cluster requirements.
+
+By enabling add-on autoscaling, you have the flexibility to override the CoreDNS CPU and memory requests/limits or use VPA to autoscale CoreDNS to meet specific cluster requirements. The following are some scenarios to consider:
+
+* You're considering whether VPA is suitable for your CoreDNS service. You can disable VPA for CoreDNS by enabling the override VPA update mode to *Off* if you don't need VPA. Only use the [override resource in Deployment feature](./override-resource-configuration.md) to set the CPU/memory requests/limits to the value you prefer.
+* You're considering using VPA but want to restrict the ratio of request-to-limit so VPA won't bump the CPU and memory limit to large values at one time. You can enable the override resource in Deployment feature and update the CPU and memory requests/limits value to keep the ratio of request-to-limit to 1/2 or 1/3.
+* If VPA container policy maxAllowed CPU and memory will control the recommended CPU or memory request value won't exceed the max allowed value, enabling the override VPA max allowed feature to increase or decrease the max allowed CPU or memory request value set by VPA.
+
+For more information, see [Enable add-on autoscaling on your AKS cluster (Preview)](./addon-autoscaling.md).
 
 ### Enable DNS query logging
 
