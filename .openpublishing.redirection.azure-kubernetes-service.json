@@ -454,6 +454,26 @@
       "source_path_from_root": "/articles/aks/operator-best-practices-run-at-scale.md",
       "redirect_url": "/azure/aks/best-practices-performance-scale-large",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/view-control-plane-logs.md",
+      "redirect_url": "/azure/azure-monitor/containers/container-insights-log-query#resource-logs",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/deployment-center-launcher.md",
+      "redirect_url": "/previous-versions/azure/aks/deployment-center-launcher",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/network-observability-byo-cli.md",
+      "redirect_url": "/azure/aks/network-observability-overview",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/security-baseline.md",
+      "redirect_url": "/security/benchmark/azure/baselines/aks-security-baseline",
+      "redirect_document_id": false
     }
   ]
 }

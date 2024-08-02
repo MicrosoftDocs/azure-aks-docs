@@ -64,5 +64,9 @@
   "git_repository_url_open_to_public_contributors": "https://github.com/MicrosoftDocs/azure-aks-docs",
   "git_repository_branch_open_to_public_contributors": "main",
   "branch_target_mapping": {},
-  "targets": {}
+  "targets": {},
+  "redirection_files": [
+    ".openpublishing.redirection.azure-kubernetes-service.json"
+  ]
+
 }
