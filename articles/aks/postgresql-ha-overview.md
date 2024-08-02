@@ -56,7 +56,8 @@ Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing ano
 :::image source="./media/postgresql-ha-overview/architecture-diagram.png" alt-text="Diagram of CNPG architecture." lightbox="./media/postgresql-ha-overview/architecture-diagram.png":::
 
 > [!NOTE]
-> The CNPG operator supports only *one database per cluster*. Plan accordingly for applications that require data separation at the database level.
+> For applications that require data separation at the database level, you can add more databases with postInitSQL commands and similar. It is not currently possible with the CNPG operator to add more databases in a declarative way.
+[Learn more](https://github.com/cloudnative-pg/cloudnative-pg) about the CNPG operator. 
 
 ## Next steps
 
