@@ -62,19 +62,19 @@ GitHub Actions help you automate your software development workflows from within
 
 ## Open-source and third-party integrations
 
-There are many open-source and third-party integrations you can install on your AKS cluster. The [AKS support policy][aks-support-policy] doesn't support the following open-source and third-party integrations.
+There are many open-source and third-party integrations you can install on your AKS cluster. The [AKS support policy][aks-support-policy] doesn't cover self-managed installations of the following projects. Managed experiences where available for these projects (for example in the case of Prometheus, Grafana, and Istio below) are noted in the 'More Details' column.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
 | Name | Description | More details |
 |---|---|---|
 | [Helm][helm] | An open-source packaging tool that helps you install and manage the lifecycle of Kubernetes applications. | [Quickstart: Develop on Azure Kubernetes Service (AKS) with Helm][helm-qs] |
-| [Prometheus][prometheus] | An open-source monitoring and alerting toolkit. | [Container insights with metrics in Prometheus format][prometheus-az-monitor], [Prometheus Helm chart][prometheus-helm-chart] |
-| [Grafana][grafana] | An open-source dashboard for observability.  | [Deploy Grafana on Kubernetes][grafana-install] or use [Managed Grafana][managed-grafana]|
+| [Prometheus][prometheus] | Monitoring and alerting toolkit. | Managed experience - [Azure Monitor managed service for Prometheus][prometheus-az-monitor]; Self-managed experience - [Prometheus operator][prometheus-helm-chart] |
+| [Grafana][grafana] | Dashboards for observability.  | Managed experience - [Azure Managed Grafana][managed-grafana]; Self-managed experience - [Deploy Grafana on Kubernetes][grafana-install].
 | [Couchbase][couchdb] | A distributed NoSQL cloud database. | [Install Couchbase and the Operator on AKS][couchdb-install] |
 | [OpenFaaS][open-faas]| An open-source framework for building serverless functions by using containers. | [Use OpenFaaS with AKS][open-faas-aks] |
 | [Apache Spark][apache-spark] | An open-source, fast engine for large-scale data processing. | Running Apache Spark jobs requires a minimum node size of *Standard_D3_v2*. For more information on running Spark jobs on Kubernetes, see the [running Spark on Kubernetes][spark-kubernetes] guide. |
-| [Istio][istio] | An open-source service mesh. | [Istio Installation Guides][istio-install] |
+| [Istio][istio] | Service mesh | Managed experience - [Istio add-on for AKS](./istio-about.md); Self-managed experience - [Istio open-source installation][istio-install]
 | [Linkerd][linkerd] | An open-source service mesh. | [Linkerd Getting Started][linkerd-install] |
 | [Consul][consul] | An open-source, identity-based networking solution. | [Getting Started with Consul Service Mesh for Kubernetes][consul-install] |
 
@@ -104,8 +104,8 @@ For more information, see [Windows AKS partner solutions][windows-aks-partner-so
 [helm]: https://helm.sh
 [helm-qs]: quickstart-helm.md
 [prometheus]: https://prometheus.io/
-[prometheus-helm-chart]: https://github.com/prometheus-community/helm-charts#usage
-[prometheus-az-monitor]: monitor-aks.md#integrations
+[prometheus-helm-chart]: https://github.com/prometheus-operator/kube-prometheus
+[prometheus-az-monitor]: /azure/azure-monitor/essentials/prometheus-metrics-overview
 [istio]: https://istio.io/
 [istio-install]: https://istio.io/latest/docs/setup/install/
 [linkerd]: https://linkerd.io/
