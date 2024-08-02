@@ -1,9 +1,5 @@
 {
-  "redirections": [
-    {
-      "source_path_from_root": "/articles/aks/network-observability-byo-cli.md",
-      "redirect_url": "/azure/aks/network-observability-overview",
-      "redirect_document_id": false
-    }
-  ]
+    "redirections": [
+        
+    ]
 }
