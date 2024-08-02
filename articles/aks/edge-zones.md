@@ -1,6 +1,6 @@
 ---
-title: Azure Kubernetes Service (AKS) for Edge (preview)
-description: Learn how to deploy an Azure Kubernetes Service (AKS) for Edge cluster
+title: Azure Kubernetes Service (AKS) for Extended Zones (preview)
+description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Extended Zone cluster
 author: moushumig
 ms.author: moghosal
 ms.service: azure-kubernetes-service
@@ -8,59 +8,73 @@ ms.topic: article
 ms.date: 04/04/2023
 ---
 
-# Azure Kubernetes Service for Edge (preview)
+# Azure Kubernetes Service for Extended Zones (preview)
 
-Azure Kubernetes Service (AKS) for Edge provides an extensive and sophisticated set of capabilities that make it simpler to deploy and operate a fully managed Kubernetes cluster in an edge computing scenario.
+Azure Kubernetes Service (AKS) for Extended Zones provides an extensive and sophisticated set of capabilities that make it simpler to deploy and operate a fully managed Kubernetes cluster in an Extended Zone scenario.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-## What are Edge Zones and Azure public multi-access edge compute?
+## What are Azure Extended Zones?
 
-Edge Zones are small, localized footprints of Azure in a metropolitan area designed to provide low latency connectivity for applications that require the highest level of performance.
+Azure Extended Zones are small-footprint extensions of Azure placed in metros, industry centers, or a specific jurisdiction to serve low latency and data residency workloads. Azure Extended Zones supports virtual machines (VMs), containers, storage, and a selected set of Azure services and can run latency-sensitive and throughput-intensive applications close to end users and within approved data residency boundaries.
 
-Azure public multi-access edge compute (MEC) sites are a type of Edge Zone that are placed in or near mobile operators' data centers in metro areas, and are designed to run workloads that require low latency while being attached to the mobile network. Azure public MEC is offered in partnership with the operators. The placement of the infrastructure offers lower latency for applications that are accessed from mobile devices connected to the 5G mobile network.
+Azure Extended Zones are part of the Microsoft global network that provides secure, reliable, high-bandwidth connectivity between applications that run on an Azure Extended Zone close to the user. Extended Zones address low latency and data residency by bringing all the benefits of the Azure ecosystem (access, user experience, automation, security, and more) closer to you or your jurisdiction. You can provision and manage Azure Extended Zones resources, services, and workloads through the Azure portal and other essential Azure tools. Azure Extended Zone sites are associated with a parent Azure region that hosts all the control plane functions associated with the services running in the extended zone.
 
-Some of the industries and use cases where Azure public MEC can provide benefits are:
+The key scenarios Azure Extended Zones enable are:
 
-* Media streaming and content delivery
-* Real-time analytics and inferencing via artificial intelligence and machine learning
-* Rendering for mixed reality
-* Connected automobiles
-* Healthcare
-* Immersive gaming experiences
-* Low latency applications for the retail industry
+- **Latency**: users want to run their resources, for example, media editing software, remotely with low latency.
+- **Data residency**: users want their applications data to stay within a specific geography and might essentially want to host locally for various privacy, regulatory, and compliance reasons.
 
-To learn more, see the [Azure public MEC Overview][public-mec-overview].
+The following list highlights some of the industries and use cases where Azure Extended Zones can provide benefits:
 
-## What is AKS for Edge?
+- **Healthcare**
+  - Remote patient care
+  - Remote clinical education
+  - Pop-up care and services
+- **Public infrastructure**
+  - Visual detection
+  - Critical infrastructure
+  - Emergency services
+  - Surveillance and security
+- **Manufacturing**
+  - Real-time command and control in robotics
+  - Machine vision
+- **Media and Gaming**
+  - Gaming and game streaming
+  - Media editing, streaming, and content delivery
+  - Remote rendering for mixed reality and Virutal Desktop Infrastructure scenarios
+- **Oil and Gas**
+  - Oil and gas exploration
+  - Real-time analytis and inference via artificial intelligence and machine learning
+- **Retail**
+  - Digital in-store experiences
+  - Connected worker
 
-Edge Zones provide a suite of Azure services for managing and deploying applications in edge computing environments. One of the key services offered is Azure Kubernetes Service (AKS) for Edge. AKS for Edge enables organizations to meet the unique needs of edge computing while leveraging the container orchestration and management capabilities of AKS, making the deployment and management of edge applications much simpler.
+To learn more, see the...
+
+<!-- NEED LINK TO OVERVIEW -->
+
+## What is AKS for Extended Zones?
+
+Azure Extended Zones provide a suite of Azure services for managing and deploying applications in extended zone computing environments. One of the key services offered is Azure Kubernetes Service (AKS) for Extended Zones. AKS for Extended Zones enables organizations to meet the unique needs of extended zones while leveraging the container orchestration and management capabilities of AKS, making the deployment and management of applications hosted in extended zones much simpler.
 
 Just like a typical AKS deployment, the Azure platform is responsible for maintaining the AKS control plane and providing the infrastructure, while your organization retains control over the worker nodes that run the applications.
 
-:::image type="content" source="./media/edge-zones/aks-for-edge-architecture-inline.png" alt-text="An architecture diagram of an AKS for edge deployment, showing that the control plane is deployed in an Azure region while agent nodes are deployed in an Azure public MEC Edge Zone." lightbox="./media/edge-zones/aks-for-edge-architecture-full.png":::
+:::image type="content" source="./media/extended-zones/aks-for-extended-zone-architecture-inline.png" alt-text="An architecture diagram of an AKS for Azure Extended Zones deployment, showing that the control plane is deployed in an Azure region while agent nodes are deployed in an Azure Extended Zone." lightbox="./media/extended-zones/aks-for-extended-zone-architecture-full.png":::
 
-Creating an AKS for Edge cluster uses an optimized architecture that is specifically tailored to meet the unique needs and requirements of edge-based applications and workloads. The control plane of the clusters is created, deployed, and configured in the closest Azure region, while the agent nodes and node pools attached to the cluster are located in an Azure Public MEC Edge Zone.
+Creating an AKS for Extended Zones cluster uses an optimized architecture that is specifically tailored to meet the unique needs and requirements of Extended Zones applications and workloads. The control plane of the clusters is created, deployed, and configured in the closest Azure region, while the agent nodes and node pools attached to the cluster are located in an Azure Extended Zone.
 
-The components present in an AKS for Edge cluster are identical to those in a typical cluster deployed in an Azure region, ensuring that the same level of functionality and performance is maintained. For more information on these components, see [Kubernetes core concepts for AKS][concepts-cluster-workloads].
+The components present in an AKS for Extended Zones cluster are identical to those in a typical cluster deployed in an Azure region, ensuring that the same level of functionality and performance is maintained. For more information on these components, see [Kubernetes core concepts for AKS][concepts-cluster-workloads].
 
-## Edge Zone and parent region locations
+<!-- REPLACEMENT FOR REGION AVAILABILITY TABLE? -->
 
-Azure public MEC Edge Zone sites are associated with a parent Azure region that hosts all the control plane functions associated with the services running in the Azure public MEC. The following table lists the Azure public MEC sites, along with their Edge Zone ID and associated parent region for locations that are Generally Available to deploy an AKS cluster to:
-
-| Telco provider | Azure public MEC name | Edge Zone ID | Parent region |
-| -------------- | --------------------- | ------------ | ------------- |
-| AT&T | ATT Atlanta A | attatlanta1 | East US 2 |
-| AT&T | ATT Dallas A | attdallas1 | South Central US |
-| AT&T | ATT Detroit A | attdetroit1 | Central US |
-
-For the latest available Public MEC Edge Zones, please refer to [Azure public MEC Locations](/azure/public-multi-access-edge-compute-mec/overview)
-
-## Deploy a cluster in an Edge Zone location
+## Deploy a cluster in an Azure Extended Zone location
 
 ### Prerequisites
 
-* Before you can deploy an AKS for Edge cluster, your subscription needs to have access to the targeted Edge Zone location. This access is provided through our onboarding process, done by creating a support request via the Azure portal or by filling out the [Azure public MEC sign-up form][public-mec-sign-up]
+* Before you can deploy an AKS for Extended Zones cluster, your subscription needs to have access to the targeted Azure Extended Zone location. This access is provided through our onboarding process, done by following the steps outlined in our [Azure Extended Zones overview](NEED LINK)
+
+<!-- NEED LINK -->
 
 * Your cluster must be running Kubernetes version 1.24 or later
 
@@ -68,30 +82,32 @@ For the latest available Public MEC Edge Zones, please refer to [Azure public ME
 
 ### Limitations
 
-* AKS for Edge allows for autoscaling only up to 100 nodes in a node pool
+* AKS for Extended Zones allows for autoscaling only up to 100 nodes in a node pool
 
 ### Resource constraints
 
-While AKS is fully supported in Azure public MEC Edge Zones, resource constraints may still apply:
+While AKS is fully supported in Azure Extended Zones, resource constraints may still apply:
 
-* In all Edge Zones, the maximum node count is 100
+* In all Azure Extended Zones, the maximum node count is 100
 
-* In Azure public MEC Edge Zones, only selected VM SKUs are offered. See the list of available SKUs, as well as additional constraints and limitations, in [Azure public MEC key concepts][public-mec-constraints]
+* In Azure Extended Zones, only selected VM SKUs are offered.
+ <!--NEED LIST OF WHICH VM SKUS  -->
 
-Deploying an AKS cluster in an Edge Zone is similar to deploying an AKS cluster in any other region. All resource providers provide a field named [`extendedLocation`](/javascript/api/@azure/arm-compute/extendedlocation), which you can use to deploy resources in an Edge Zone. This allows for precise and targeted deployment of your AKS cluster.
+Deploying an AKS cluster in an Azure Extended Zone is similar to deploying an AKS cluster in any other region. All resource providers provide a field named [`extendedLocation`](/javascript/api/@azure/arm-compute/extendedlocation), which you can use to deploy resources in an Azure Extended Zone. This allows for precise and targeted deployment of your AKS cluster.
 
 ### [Resource Manager Template](#tab/azure-resource-manager)
 
-A parameter called `extendedLocation` should be used to specify the desired edge zone:
+A parameter called `extendedLocation` should be used to specify the desired Azure Extended zone:
 
 ```json
 "extendedLocation": {
-    "name": "<edge-zone-id>",
+    "name": "<extended-zone-id>",
     "type": "EdgeZone",
 },
 ```
+<!-- Is this correct? The API value is still "EdgeZone"?  -->
 
-The following example is an Azure Resource Manager template (ARM template) that will deploy a new cluster in an Edge Zone. Provide your own values for the following template parameters:
+The following example is an Azure Resource Manager template (ARM template) that will deploy a new cluster in an Azure Extended Zone. Provide your own values for the following template parameters:
 
 * **Subscription**: Select an Azure subscription.
 
@@ -100,6 +116,7 @@ The following example is an Azure Resource Manager template (ARM template) that 
 * **Location**: Select a location, such as East US.
 
 * **Cluster name**: Enter a unique name for the AKS cluster, such as myAKSCluster.
+ 
 
 * **DNS prefix**: Enter a unique DNS prefix for your cluster, such as myakscluster.
 
@@ -138,7 +155,7 @@ If you're unfamiliar with ARM templates, see the tutorial on [deploying a local 
     "edgeZoneName": {
       "type": "String",
       "metadata": {
-        "description": "The name of the Edge Zone"
+        "description": "The name of the Azure Extended Zone"
       }
     },
     "dnsPrefix": {
@@ -240,11 +257,11 @@ Set the following variables for use in the deployment, filling in your own value
 SUBSCRIPTION="<your-subscription>"
 RG_NAME="myResourceGroup"
 CLUSTER_NAME="myAKSCluster"
-EDGE_ZONE_NAME="<edge-zone-id>"
-LOCATION="<parent-region>" # Ensure this location corresponds to the parent region for your targeted Edge Zone
+EXTENDED_ZONE_NAME="<extended-zone-id>"
+LOCATION="<parent-region>" # Ensure this location corresponds to the parent region for your targeted Azure Extended Zone
 ```
 
-After making sure you're logged in and using the appropriate subscription, use [`az aks create`][az-aks-create] to deploy the cluster, specifying the targeted Edge Zone with the `--edge-zone` property.
+After making sure you're logged in and using the appropriate subscription, use [`az aks create`][az-aks-create] to deploy the cluster, specifying the targeted Azure Extended Zone with the `--edge-zone` property.
 
 ```azurecli-interactive
 # Log in to Azure
@@ -256,20 +273,20 @@ az account set --subscription $SUBSCRIPTION
 # Create the resource group
 az group create --name $RG_NAME --location $LOCATION
 
-# Deploy the cluster in your designated Edge Zone
+# Deploy the cluster in your designated Azure Extended Zone
 az aks create \
     --resource-group $RG_NAME \
     --name $CLUSTER_NAME \
-    --edge-zone $EDGE_ZONE_NAME \
+    --edge-zone $EXTENDED_ZONE_NAME \
     --location $LOCATION \
     --generate-ssh-keys
 ```
 
 ### [Azure portal](#tab/azure-portal)
 
-In this section you'll learn how to deploy a Kubernetes cluster in the Edge Zone.
+In this section you'll learn how to deploy a Kubernetes cluster in the Azure Extended Zone.
 
-[!INCLUDE [quickstarts-free-trial-note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
+If you don't have an Azure subscription, create an Azure free account before you begin.
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 
@@ -283,21 +300,19 @@ In this section you'll learn how to deploy a Kubernetes cluster in the Edge Zone
         * Select an Azure **Subscription**.
         * Select or create an Azure **Resource group**, such as *myResourceGroup*.
     - **Cluster details**:
-        * Ensure the **Preset configuration** is *Standard ($$)*. For more information on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
+        * Ensure the **Preset configuration** is *Production Standard ($$)*. For more information on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
 
             :::image type="content" source="./learn/media/quick-kubernetes-deploy-portal/cluster-preset-options.png" alt-text="Screenshot of Create AKS cluster - portal preset options.":::
 
         * Enter a **Kubernetes cluster name**, such as *myAKSCluster*.
-        * Select **Deploy to an edge zone** under the region locator for the AKS cluster.
-        * Select the Edge Zone targeted for deployment, and leave the default value selected for **Kubernetes version**.
+        * Select **Deploy to an Azure Extended Zone** under the region locator for the AKS cluster.
+        * Select the Azure Extended Zone targeted for deployment, and leave the default value selected for **Kubernetes version**.
             
-            :::image type="content" source="./media/edge-zones/select-edge-zone.png" alt-text="Screenshot of the Edge Zone Context pane for selecting location for AKS cluster in Edge Zone creation.":::
+            :::image type="content" source="./media/extended-zones/select-extended-zone.png" alt-text="Screenshot of the Azure Extended Zone Context pane for selecting location for AKS cluster in Azure Extended Zone creation.":::
 
         * Select **99.5%** for **API server availability**.
     - **Primary node pool**:
         * Leave the default values selected or select the **Node size** with VM size supported.
-    
-        :::image type="content" source="./media/edge-zones/create-edge-zone-aks-cluster.png" alt-text="Screenshot of Create AKS cluster in Edge Zone - provide basic information.":::
 
     > [!NOTE]
     > You can change the preset configuration when creating your cluster by selecting *Learn more and compare presets* and choosing a different option.
@@ -308,47 +323,34 @@ In this section you'll learn how to deploy a Kubernetes cluster in the Edge Zone
 
 7. On the **Access** page, configure the following options:
 
-    - The default value for **Resource identity** is **System-assigned managed identity**. Managed identities provide an identity for applications to use when connecting to resources that support Microsoft Entra authentication. For more information about managed identities, see [What are managed identities for Azure resources?](/azure/active-directory/managed-identities-azure-resources/overview)
+    - The default value for **Resource identity** is **System-assigned managed identity**. Managed identities provide an identity for applications to use when connecting to resources that support Microsoft Entra authentication. For more information about managed identities, see [What are managed identities for Azure resources?](/active-directory/managed-identities-azure-resources/overview.md)
     - The Kubernetes role-based access control (RBAC) option is the default value to provide more fine-grained control over access to the Kubernetes resources deployed in your AKS cluster.
 
-    By default, *Basic* networking is used, and [Container insights](/azure/azure-monitor/containers/container-insights-overview) is enabled.
+    By default, *Basic* networking is used, and [Container insights](/azure-monitor/containers/container-insights-overview.md) is enabled.
 
 8. Click **Review + create**. When you navigate to the **Review + create** tab, Azure runs validation on the settings that you have chosen. If validation passes, you can proceed to create the AKS cluster by selecting **Create**. If validation fails, then it indicates which settings need to be modified.
 
+  :::image type="content" source="./media/extended-zones/review-and-create-inline.png" alt-text="Screenshot of Create AKS cluster in Azure Extended Zone showing the review and create tab." lightbox="./media/extended-zones/review-and-create-full.png":::
+
 9. It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by either:
     * Selecting **Go to resource**
-    * Browsing to the AKS cluster resource group and selecting the AKS resource. In this example you browse for *myResourceGroup* and select the resource *myAKSCluster*. You can see the Edge Zone locations with the home Azure region in the Location.
-
-    :::image type="content" source="./media/edge-zones/edge-zone-portal-dashboard.png" alt-text="Screenshot of AKS dashboard in the Azure portal showing Edge Zone with the home Azure region.":::
+    * Browsing to the AKS cluster resource group and selecting the AKS resource. In this example you browse for *myResourceGroup* and select the resource *myAKSCluster*. You can see the Azure Extended Zone locations with the home Azure region in the Location.
 
 ---
 
 ## Monitoring
 
-After deploying an AKS for Edge cluster, you can check the status and monitor the cluster's metrics. Monitoring capability is similar to what is available in Azure regions.
+After deploying an AKS for Extended Zones cluster, you can check the status and monitor the cluster's metrics. Monitoring capability is similar to what is available in Azure regions.
 
-:::image type="content" source="./media/edge-zones/monitoring-cluster-in-edge-zone.png" alt-text="Screenshot of monitoring metrics for Edge Zone AKS cluster.":::
-
-## Edge Zone availability
-
-High availability is critical at the edge for a variety of reasons. Edge devices are typically deployed in remote or hard-to-reach locations, making maintenance and repair more difficult and time-consuming. Additionally, these devices handle a large volume of latency-sensitive data and transactions, so any downtime can result in significant losses for businesses. By incorporating traffic management with failover capabilities, organizations can ensure that their edge deployment remains up and running even in the event of disruption, helping to minimize the impact of downtime and maintain business continuity.
-
-For increased availability in the Azure public MEC Edge Zone, it's recommended to deploy your workload with an architecture that incorporates traffic management using Azure Traffic Manager routing profiles. This can help ensure failover to the closest Azure region in the event of a disruption. To learn more, see [Azure Traffic Manager][traffic-manager] or view a sample deployment architecture for [High Availability in Azure public MEC][public-mec-architecture].
+:::image type="content" source="./media/extended-zones/monitoring-cluster-in-extended-zone.png" alt-text="Screenshot of monitoring metrics for Azure Extended Zone AKS cluster.":::
 
 ## Next steps
 
-After deploying your AKS cluster in an Edge Zone, learn about how you can [configure an AKS cluster][configure-cluster].
+After deploying your AKS cluster in an Azure Extended Zone, learn about how you can [configure an AKS cluster][configure-cluster].
 
 <!-- LINKS -->
-[public-mec-overview]: /azure/public-multi-access-edge-compute-mec/overview
-[public-mec-constraints]: /azure/public-multi-access-edge-compute-mec/key-concepts#azure-services
 [configure-cluster]: ./cluster-configuration.md
 [arm-template-deploy]: /azure/azure-resource-manager/templates/deployment-tutorial-local-template
 
-[traffic-manager]: /azure/traffic-manager/traffic-manager-routing-methods
-[public-mec-architecture]: /azure/architecture/example-scenario/hybrid/public-multi-access-edge-compute-deployment
-[public-mec-sign-up]: https://forms.office.com/pages/responsepage.aspx?id=v4j5cvGGr0GRqy180BHbRx4AG8rZKBBDoHEYyD9u_bxUMUVaSlhYMFA2RjUzSklKR0YyREZZNURTRi4u
-
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [preset-config]: ./quotas-skus-regions.md#cluster-configuration-presets-in-the-azure-portal
-
