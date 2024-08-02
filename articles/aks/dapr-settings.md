@@ -6,7 +6,7 @@ ms.author: hannahhunter
 ms.topic: article
 ms.custom: build-2023, devx-track-azurecli, linux-related-content
 ms.subservice: aks-developer
-ms.date: 07/09/2024
+ms.date: 08/02/2024
 ---
 
 # Configure the Dapr extension for your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes project
@@ -385,7 +385,7 @@ The Dapr extension requires the following outbound URLs on `https://:443` to fun
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [sample-application]: ./quickstart-dapr.md
 [k8s-version-support-policy]: ./supported-kubernetes-versions.md?tabs=azure-cli#kubernetes-version-support-policy
-[arc-k8s-cluster]: ../azure-arc/kubernetes/quickstart-connect-cluster.md
+[arc-k8s-cluster]: azure/azure-arc/kubernetes/quickstart-connect-cluster
 [update-extension]: ./cluster-extensions.md#update-extension-instance
 [install-cli]: /cli/azure/install-azure-cli
 [dapr-migration]: ./dapr-migration.md

@@ -6,7 +6,7 @@ ms.author: hannahhunter
 ms.reviewer: nuversky
 ms.service: azure-kubernetes-service
 ms.topic: article
-ms.date: 06/06/2024
+ms.date: 08/02/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli
 ---
@@ -196,7 +196,6 @@ Notice that the workflow status is marked as completed.
 [k8s-sp]: ./dapr.md#register-the-kubernetesconfiguration-resource-provider
 [dapr-config]: ./dapr-settings.md
 [dapr-migration]: ./dapr-migration.md
-[az-cloud-shell]: ./learn/quick-kubernetes-deploy-powershell.md#azure-cloud-shell
 [kubectl]: ./tutorial-kubernetes-deploy-cluster.md#connect-to-cluster-using-kubectl
 
 <!-- Links External -->
