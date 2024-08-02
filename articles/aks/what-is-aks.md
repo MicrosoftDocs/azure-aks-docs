@@ -41,7 +41,7 @@ For more information comparing the various solutions, see the following resource
 
 ### When to use AKS
 
-The following list describes some of the common use cases for AKS, but by no means is an exhaustive list:
+The following list describes some common use cases for AKS:
 
 * **[Lift and shift to containers with AKS](/azure/cloud-adoption-framework/migrate/)**: Migrate existing applications to containers and run them in a fully managed Kubernetes environment.
 * **[Microservices with AKS](/azure/architecture/guide/aks/aks-cicd-azure-pipelines)**: Simplify the deployment and management of microservices-based applications with streamlined horizontal scaling, self-healing, load balancing, and secret management.
