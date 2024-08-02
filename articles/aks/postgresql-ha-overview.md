@@ -57,6 +57,7 @@ Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing ano
 
 > [!NOTE]
 > For applications that require data separation at the database level, you can add more databases with postInitSQL commands and similar. It is not currently possible with the CNPG operator to add more databases in a declarative way.
+[Learn more](https://github.com/cloudnative-pg/cloudnative-pg) about the CNPG operator. 
 
 ## Next steps
 
