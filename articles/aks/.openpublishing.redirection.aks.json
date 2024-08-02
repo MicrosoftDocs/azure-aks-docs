@@ -505,10 +505,5 @@
             "redirect_url": "/azure/aks/workload-identity-migrate-from-pod-identity",
             "redirect_document_id": false
         }
-        {
-            "source_path_from_root": "/articles/aks/mixed-sku-node-pools.md",
-            "redirect_url": "/azure/what-is-aks",
-            "redirect_document_id": false
-        }
-    ]
+     ]
 }
