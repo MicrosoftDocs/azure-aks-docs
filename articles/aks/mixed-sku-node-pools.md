@@ -10,15 +10,16 @@ author: wdarko1
 ---
 
 # Use mixed SKU node pools (preview) in Azure Kubernetes Services (AKS)
+A node pool is comprised of a set of virtual machines(VM), wherein the virtual machine sizes are designed to provide a range of options. These VM sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about VM families and their purposes, visit [VM SKUs][vm-SKU].
 
-When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool typically can only contain one virtual machine (VM) type or SKU. Mixed SKU node pools allow you to add multiple [VM SKUs][vm-SKU] to a single node pool without losing performance, quality, or certain feature support. Mixed SKU node pools allow you to specify a family of SKUs without the need to maintain one node pool per SKU type, reducing the node pool footprint.
+When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool typically can only contain one virtual machine (VM) type or SKU. Mixed SKU node pools allow you to add multiple [VM SKUs][vm-SKU] to a single node pool. Mixed SKU node pool allows you to specify family of VMs and SKUs within the same node pool, removing the need to have one node pool per family/SKU. It also enables you to diversify your compute, making it more resilient to capacity and compute quota bottlenecks.
 
 ## Prerequisites
 
-- You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
-- Currently, the feature is in preview and you need to use API version >= 2023-10-02-preview, or install the az cli extension >= 2.61.0 version.
+- An Azure subscription is required to use this feature. To create a free account, click [Free Azure Account](https://azure.microsoft.com/free).
+- The Mixed SKU Node Pool feature is in preview, and only available in API version >= 2023-10-02-preview, or install the az cli extension >= 2.61.0 version.
 - If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
-- The minimum minor Kubernetes version that supports this new node pool type is version 1.26.
+- The minimum minor Kubernetes release version required for this feature is release 1.26.
 
 ### Install the aks-preview Azure CLI extension
 
@@ -67,12 +68,11 @@ When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool 
 ## Limitations
 
 - [Cluster autoscaler][cluster autoscaler] isn't available.
-- [InifiniBand] isn't available.
+- [InifiniBand][InifiniBand] isn't available.
 - Windows node pool isn't supported.
-- This feature isn't available in Azure portal. You can only manipulate or manage the pool using [Azure CLI][azure cli] or REST APIs.
+- This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
 - [Node pool snapshot][node pool snapshot] isn't supported.
-- Certain preview features that work in the [Azure Virtual Machine Scale Sets][VMSS] node might not be supported with this mixed SKU node pool.
-- All VM sizes selected in a node pool need to be from a similar VM family. For example, you can't mix an N-Series VM size with a D-Series VM size in the same node pool.
+- All VM sizes selected in a node pool need to be from a similar VM family. For example, an N-Series VM size cannot be mixed with a D-Series VM size in the same node pool.
 
 ## Create an AKS cluster with mixed SKU node pools
 
@@ -111,6 +111,7 @@ When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool 
     ```
 
 ## Add manual scale profile to a node pool
+A scale profile represents the nodes currently in a node pool, including the VM size and count.  
 
 - Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"`.
 
@@ -149,7 +150,7 @@ When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool 
 - Delete an existing manual scale profile using the [`az aks nodepool manual-scale delete`][az aks nodepool manual-scale delete] command.
 
     > [!NOTE]
-    > Use the `--current-vm-sizes` Azure CLI flag to specify the size of the existing node pool that you want to delete. When using other tools or REST APIs, you need to pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field when updating the node pool scale profile.
+    > The `--current-vm-sizes` Azure CLI flag specifies the size of the existing node pool to be deleted. When using other tools or REST APIs to update the node pool scale profile, pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field.
 
     The following example deletes the manual scale profile using the *Standard_D8s_v3* VM SKU in the *myvmpool1* node pool in the *myAKSCluster* cluster in the *myResourceGroup* resource group.
 
