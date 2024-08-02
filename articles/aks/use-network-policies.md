@@ -67,7 +67,7 @@ With Azure Network Policy Manager for Linux, we don't allow scaling beyond 250 n
 If you attempt to scale beyond these limits, you might encounter "Out of Memory" (OOM) errors.
 
 For better scale and performance, consider using Cilium to manage network policies.
-To upgrade from Azure NPM to Cilium, see [these instructions](./azure-cni-powered-by-cilium#upgrade-an-existing-cluster-to-azure-cni-powered-by-cilium).
+To upgrade from Azure NPM to Cilium, see [these instructions](./azure-cni-powered-by-cilium.md#upgrade-an-existing-cluster-to-azure-cni-powered-by-cilium).
 
 ## Before you begin
 
