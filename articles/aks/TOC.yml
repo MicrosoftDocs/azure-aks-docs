@@ -747,6 +747,8 @@
               href: istio-plugin-ca.md
             - name: Upgrade Istio service mesh add-on
               href: istio-upgrade.md
+            - name: Istio service mesh add-on support policy
+              href: istio-support-policy.md
             - name: Istio service mesh add-on performance
               href: istio-scale.md
         - name: Open Service Mesh AKS add-on
