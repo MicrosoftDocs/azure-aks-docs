@@ -10,11 +10,11 @@ ms.author: schaffererin
 
 # Deploy a Valkey cluster on Azure Kubernetes Service (AKS)
 
-In this article, we review the challenges of properly leveraging Azure availability zones when running a Valkey cluster on AKS, share some scaling considerations, and propose a solution.
+In this article, we review the challenges of properly using Azure availability zones when running a Valkey cluster on AKS, share some scaling considerations, and propose a solution.
 
 ## What is Valkey?
 
-[Valkey][valkey] is a fork of the [Redis project][redis] that preserves its original open-source license. Valkey is a high performance database that supports a key-value datastore, and you can use it for caching, session storage, message queues, and more. A *Valkey cluster* has multiple nodes that are responsible for hosting your Valkey data stores. Valkey shards data into smaller portions and disperses it among the nodes. In a simplified Valkey cluster consisting of *three* primary nodes, each node is supported by a single replica node to enable basic failover capabilities. The data is distributed across the nodes, enabling the cluster to continue functioning even if one of the nodes fails.
+[Valkey][valkey] is a fork of the [Redis project][redis] that preserves its original open-source license. Valkey is a high performance database that supports a key-value datastore, and you can use it for caching, session storage, message queues, and more. A *Valkey cluster* has multiple nodes that are responsible for hosting your Valkey data stores. Valkey shards data into smaller portions and disperses it among the nodes. In a simplified Valkey cluster consisting of *three* primary nodes, a single replica node supports each node to enable basic failover capabilities. The data is distributed across the nodes, enabling the cluster to continue functioning even if one of the nodes fails.
 
 :::image type="content" source="./media/valkey-stateful-workload/valkey-cluster.png" alt-text="Screenshot of a Valkey cluster on AKS.":::
 

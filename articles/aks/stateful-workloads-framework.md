@@ -16,11 +16,11 @@ This article provides an overview of running stateful workloads on Azure using t
 
 A *stateful workload* is an application that uses persistent data storage to preserve state across multiple instances. In a stateful application, the server monitors each client session and maintains data, such as user preferences or session history, between requests. This configuration allows you to return to the application and continue where you left off. Using a stateful approach can provide considerable efficiency, particularly in scenarios that require high performance, near real-time processing, or stream-based systems.
 
-While stateful workloads offer many benefits, they also present certain challenges. For example, stateful workloads might introduce complex processing patterns that can lead to increased overhead and performance costs. Because of this, it's important that you understand and consider the specific needs of your application to help determine the right balance between statefulness and statelessness.
+While stateful workloads offer many benefits, they also present certain challenges. For example, stateful workloads might introduce complex processing patterns that can lead to increased overhead and performance costs. It's important that you understand and consider the specific needs of your application to help determine the right balance between statefulness and statelessness.
 
 ## Kubernetes stateful framework foundation stack
 
-The Kubernetes stateful framework begins with a common foundation stack. In this case, we use the *KATE* stack, a popular, standardized stack used for many infrastructure projects. The *KATE* stack leverages the the following open-source tools:
+The Kubernetes stateful framework begins with a common foundation stack. In this case, we use the *KATE* (Kubernetes, ArgoCD, Terraform, and External Secrets Operator) stack, a popular, standardized stack used for many infrastructure projects. The *KATE* stack uses the following open-source tools:
 
 * [Kubernetes][kubernetes]
 * [ArgoCD][argo-cd]
@@ -35,7 +35,7 @@ With the foundation stack established, we now need to enhance the framework to s
 
 Supporting complex stateful workloads, such as databases or message queues, requires storage capabilities that exceed ephemeral options. Specifically, we need systems that offer increased resilience and availability to address various events, such as application failures or workload reassignments to different hosts. We can achieve this using the [*PersistentVolume subsystem*][persistent-volumes], which comprises three interconnected Kubernetes resources: *PersistentVolumes*, *PersistentVolumeClaims*, and *StorageClasses*. This subsystem provides an API for users and administrators to abstract the details of how storage is provided from how the storage is consumed.
 
-Most stateful workloads need data from secrets, such as connection strings, usernames, passwords, and certificates. [Azure Key Vault][azure-key-vault] provides a secure store for secrets that we will use to hold the necessary stateful frameworks secrets.
+Most stateful workloads need data from secrets, such as connection strings, usernames, passwords, and certificates. [Azure Key Vault][azure-key-vault] provides a secure store for secrets that we use to hold the necessary stateful frameworks secrets.
 
 We also need a Kubernetes Controller or Kubernetes Operator, like the [Secrets Store CSI Driver][secrets-store-csi-driver] and the [External Secrets Operator][external-secrets-operator], to synchronize secret store secrets as Kubernetes Secrets.
 

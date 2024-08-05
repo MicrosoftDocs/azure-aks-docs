@@ -175,7 +175,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
 
 ## Create a node pool for the Valkey workload
 
-In this section, we create a node pool dedicated to running the Valkey workload. This node pool has auto-scaling disabled and is created with six nodes across two availability zones, because we want to have one secondary per primary in a different zone.
+In this section, we create a node pool dedicated to running the Valkey workload. This node pool has autoscaling disabled and is created with six nodes across two availability zones, because we want to have one secondary per primary in a different zone.
 
 * Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
