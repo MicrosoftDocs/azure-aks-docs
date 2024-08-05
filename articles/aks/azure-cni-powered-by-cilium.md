@@ -61,7 +61,6 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * Incompatible with Microsoft Entra pod-managed identities ([aad-pod-identity](https://github.com/Azure/aad-pod-identity)). Use [Microsoft Entra Workload ID](./workload-identity-overview.md) instead.
 
-
 ## Prerequisites
 
 * Azure CLI version 2.48.1 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
