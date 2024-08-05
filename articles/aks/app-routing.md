@@ -514,7 +514,7 @@ When the application routing add-on is disabled, some Kubernetes resources might
 * Learn about monitoring the ingress-nginx controller metrics included with the application routing add-on with [with Prometheus in Grafana][prometheus-in-grafana] (preview) as part of analyzing the performance and usage of your application.
 
 <!-- LINKS - internal -->
-[azure-dns-overview]: ../dns/dns-overview.md
+[azure-dns-overview]: /azure/dns/dns-overview.md
 [az-aks-approuting-enable]: /cli/azure/aks/approuting#az-aks-approuting-enable
 [az-aks-approuting-disable]: /cli/azure/aks/approuting#az-aks-approuting-disable
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
