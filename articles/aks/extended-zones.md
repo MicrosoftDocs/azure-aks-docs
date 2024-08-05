@@ -50,9 +50,7 @@ The following list highlights some of the industries and use cases where Azure E
   - Digital in-store experiences
   - Connected worker
 
-To learn more, see the...
-
-<!-- NEED LINK TO OVERVIEW -->
+To learn more, see the [Azure Extended Zones overview](/azure/extended-zones/overview)
 
 ## What is AKS for Extended Zones?
 
@@ -60,11 +58,11 @@ Azure Extended Zones provide a suite of Azure services for managing and deployin
 
 Just like a typical AKS deployment, the Azure platform is responsible for maintaining the AKS control plane and providing the infrastructure, while your organization retains control over the worker nodes that run the applications.
 
-:::image type="content" source="./media/extended-zones/aks-for-extended-zone-architecture-inline.png" alt-text="An architecture diagram of an AKS for Azure Extended Zones deployment, showing that the control plane is deployed in an Azure region while agent nodes are deployed in an Azure Extended Zone." lightbox="./media/extended-zones/aks-for-extended-zone-architecture-full.png":::
+:::image type="content" source="./media/extended-zones/aez-aks-architecture.png" alt-text="An architecture diagram of an AKS for Azure Extended Zones deployment, showing that the control plane is deployed in an Azure region while agent nodes are deployed in an Azure Extended Zone.":::
 
 Creating an AKS for Extended Zones cluster uses an optimized architecture that is specifically tailored to meet the unique needs and requirements of Extended Zones applications and workloads. The control plane of the clusters is created, deployed, and configured in the closest Azure region, while the agent nodes and node pools attached to the cluster are located in an Azure Extended Zone.
 
-The components present in an AKS for Extended Zones cluster are identical to those in a typical cluster deployed in an Azure region, ensuring that the same level of functionality and performance is maintained. For more information on these components, see [Kubernetes core concepts for AKS][concepts-cluster-workloads].
+The components present in an AKS for Extended Zones cluster are identical to those in a typical cluster deployed in an Azure region, ensuring that the same level of functionality and performance is maintained. For more information on these components, see [Kubernetes core concepts for AKS][concepts-cluster].
 
 <!-- REPLACEMENT FOR REGION AVAILABILITY TABLE? -->
 
@@ -351,6 +349,6 @@ After deploying your AKS cluster in an Azure Extended Zone, learn about how you 
 <!-- LINKS -->
 [configure-cluster]: ./cluster-configuration.md
 [arm-template-deploy]: /azure/azure-resource-manager/templates/deployment-tutorial-local-template
-
+[concepts-cluster]: /azure/aks/core-aks-concepts
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [preset-config]: ./quotas-skus-regions.md#cluster-configuration-presets-in-the-azure-portal
