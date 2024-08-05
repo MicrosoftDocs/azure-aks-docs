@@ -90,7 +90,7 @@ For GA Kubernetes versions, AKS offers full support of the corresponding KEDA mi
 [workload-identity]: ./workload-identity-overview.md
 [workload-identity-deploy]: ./workload-identity-deploy-cluster.md
 [support-policies]: ./support-policies.md
-[keda-workload-identity]: (https://learn.microsoft.com/azure/aks/keda-workload-identity)
+[keda-workload-identity]: ./keda-workload-identity.md
 
 <!-- LINKS - external -->
 [keda]: https://keda.sh/
