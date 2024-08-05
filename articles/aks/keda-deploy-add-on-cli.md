@@ -15,7 +15,9 @@ This article shows you how to install the Kubernetes Event-driven Autoscaling (K
 [!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]
 
 > [!NOTE]
-> KEDA 2.15 brings a breaking change which [removes pod identity support](https://github.com/kedacore/keda/issues/5035). While the KEDA managed addon is not currently running KEDA 2.15, if you use pod identity, we recommend you move over to workload identity for your authentication. The KEDA addon will be bumped to KEDA 2.15 in AKS v1.31 preview. To read more on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
+> KEDA version 2.15 introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15, it will begin running it in the AKS preview version 1.31.
+>
+> For more information on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
 
 ## Before you begin
 
