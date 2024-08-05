@@ -35,9 +35,34 @@ The application routing add-on uses a Kubernetes [custom resource definition (CR
 `NginxIngressController` CRD has a `loadBalancerAnnotations` field to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations). 
 
 
-### The default NGINX ingress controller
+### Control the default NGINX ingress controller configuration
+
+> [!NOTE]
+> Controlling the NGINX ingress controller configuration when enabling the add-on is available in `API 2024-06-02-preview` and Kubernetes version 1.30 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
 
 When you enable the application routing add-on with NGINX, it creates an ingress controller called `default` in the `app-routing-namespace` configured with a public facing Azure load balancer. That ingress controller uses an ingress class name of `webapprouting.kubernetes.azure.com`.
+
+You can also control if the default gets a public or an internal IP, or if it gets created at all when enabling the add-on.
+
+# [Bicep](#tab/bicep)
+
+The `webAppRouting` profile has an optional `nginx` configuration with a `defaultIngressControllerType` property.
+
+```bicep
+    "ingressProfile": {
+      "webAppRouting": {
+        "nginx": {
+            "defaultIngressControllerType": "None|Internal|External|AnnotationControlled"
+        }
+    }
+```
+
+Here are the possible configuration options:
+
+- **`None`**: The default Nginx ingress controller will not be created and it will not be deleted if it exists. Users should delete the default `NginxIngressController` custom resource manually if desired.
+- **`Internal`**: The default Nginx ingress controller will be created with an internal load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it external will be reconciled.
+- **`External`**: The default Nginx ingress controller will be created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be reconciled.
+- **`AnnotationControlled`** (default): The default Nginx ingress controller will be created. Users can edit the default `NginxIngressController` custom resource to configure load balancer annotations.
 
 ### Create another public facing NGINX ingress controller
 
@@ -552,3 +577,4 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [az-keyvault-certificate-show]: /cli/azure/keyvault/certificate#az-keyvault-certificate-show
 [prometheus-in-grafana]: app-routing-nginx-prometheus.md
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[aks-upgrade]: ./upgrade-cluster.md
