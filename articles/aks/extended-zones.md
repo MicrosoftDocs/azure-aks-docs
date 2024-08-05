@@ -50,7 +50,8 @@ The following list highlights some of the industries and use cases where Azure E
   - Digital in-store experiences
   - Connected worker
 
-To learn more, see the [Azure Extended Zones overview](/azure/extended-zones/overview)
+To learn more, see the [Azure Extended Zones overview][aez-overview]
+/azure/extended-zones/overview
 
 ## What is AKS for Extended Zones?
 
@@ -70,9 +71,7 @@ The components present in an AKS for Extended Zones cluster are identical to tho
 
 ### Prerequisites
 
-* Before you can deploy an AKS for Extended Zones cluster, your subscription needs to have access to the targeted Azure Extended Zone location. This access is provided through our onboarding process, done by following the steps outlined in our [Azure Extended Zones overview](NEED LINK)
-
-<!-- NEED LINK -->
+* Before you can deploy an AKS for Extended Zones cluster, your subscription needs to have access to the targeted Azure Extended Zone location. This access is provided through our onboarding process, done by following the steps outlined in the [Azure Extended Zones overview][aez-overview].
 
 * Your cluster must be running Kubernetes version 1.24 or later
 
@@ -103,8 +102,6 @@ A parameter called `extendedLocation` should be used to specify the desired Azur
     "type": "EdgeZone",
 },
 ```
-<!-- Is this correct? The API value is still "EdgeZone"?  -->
-
 The following example is an Azure Resource Manager template (ARM template) that will deploy a new cluster in an Azure Extended Zone. Provide your own values for the following template parameters:
 
 * **Subscription**: Select an Azure subscription.
@@ -114,7 +111,6 @@ The following example is an Azure Resource Manager template (ARM template) that 
 * **Location**: Select a location, such as East US.
 
 * **Cluster name**: Enter a unique name for the AKS cluster, such as myAKSCluster.
- 
 
 * **DNS prefix**: Enter a unique DNS prefix for your cluster, such as myakscluster.
 
@@ -321,10 +317,10 @@ If you don't have an Azure subscription, create an Azure free account before you
 
 7. On the **Access** page, configure the following options:
 
-    - The default value for **Resource identity** is **System-assigned managed identity**. Managed identities provide an identity for applications to use when connecting to resources that support Microsoft Entra authentication. For more information about managed identities, see [What are managed identities for Azure resources?](/active-directory/managed-identities-azure-resources/overview.md)
+    - The default value for **Resource identity** is **System-assigned managed identity**. Managed identities provide an identity for applications to use when connecting to resources that support Microsoft Entra authentication. For more information about managed identities, see [What are managed identities for Azure resources?](/azure/active-directory/managed-identities-azure-resources/overview.md)
     - The Kubernetes role-based access control (RBAC) option is the default value to provide more fine-grained control over access to the Kubernetes resources deployed in your AKS cluster.
 
-    By default, *Basic* networking is used, and [Container insights](/azure-monitor/containers/container-insights-overview.md) is enabled.
+    By default, *Basic* networking is used, and [Container insights](/azure/azure-monitor/containers/container-insights-overview.md) is enabled.
 
 8. Click **Review + create**. When you navigate to the **Review + create** tab, Azure runs validation on the settings that you have chosen. If validation passes, you can proceed to create the AKS cluster by selecting **Create**. If validation fails, then it indicates which settings need to be modified.
 
@@ -347,6 +343,7 @@ After deploying an AKS for Extended Zones cluster, you can check the status and 
 After deploying your AKS cluster in an Azure Extended Zone, learn about how you can [configure an AKS cluster][configure-cluster].
 
 <!-- LINKS -->
+[aez-overview]: /azure/extended-zones/overview
 [configure-cluster]: ./cluster-configuration.md
 [arm-template-deploy]: /azure/azure-resource-manager/templates/deployment-tutorial-local-template
 [concepts-cluster]: /azure/aks/core-aks-concepts
