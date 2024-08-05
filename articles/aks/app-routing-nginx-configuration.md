@@ -64,6 +64,8 @@ Here are the possible configuration options:
 - **`External`**: The default Nginx ingress controller created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be overwritten.
 - **`AnnotationControlled`** (default): The default Nginx ingress controller is created with an external load balancer. Users can edit the default `NginxIngressController` custom resource to configure load balancer annotations.
 
+---
+
 ### Create another public facing NGINX ingress controller
 
 To create another NGINX ingress controller with a public facing Azure Load Balancer:
