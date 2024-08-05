@@ -59,10 +59,10 @@ The `webAppRouting` profile has an optional `nginx` configuration with a `defaul
 
 Here are the possible configuration options:
 
-- **`None`**: The default Nginx ingress controller will not be created and it will not be deleted if it exists. Users should delete the default `NginxIngressController` custom resource manually if desired.
-- **`Internal`**: The default Nginx ingress controller will be created with an internal load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it external will be overwritten.
-- **`External`**: The default Nginx ingress controller will be created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be overwritten.
-- **`AnnotationControlled`** (default): The default Nginx ingress controller will be created. Users can edit the default `NginxIngressController` custom resource to configure load balancer annotations.
+- **`None`**: The default Nginx ingress controller is not created and will not be deleted if it already exists. Users should delete the default `NginxIngressController` custom resource manually if desired.
+- **`Internal`**: The default Nginx ingress controller is created with an internal load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it external will be overwritten.
+- **`External`**: The default Nginx ingress controller created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be overwritten.
+- **`AnnotationControlled`** (default): The default Nginx ingress controller is created with an external load balancer. Users can edit the default `NginxIngressController` custom resource to configure load balancer annotations.
 
 ### Create another public facing NGINX ingress controller
 
@@ -272,7 +272,7 @@ You can verify the managed Ingress was created using the [`kubectl get ingress`]
 kubectl get ingress -n hello-web-app-routing
 ```
 
-The following example output shows the created managed Ingress. The ingress class, host and IP address may be different:
+The following example output shows the created managed Ingress. The ingress class, host, and IP address may be different:
 
 ```output
 NAME             CLASS                                HOSTS               ADDRESS       PORTS     AGE
@@ -500,7 +500,7 @@ spec:
 
 ### URL rewriting
 
-In some scenarios, the exposed URL in the backend service differs from the specified path in the Ingress rule. Without a rewrite any request returns 404. This is particularly useful with [path based routing](https://kubernetes.github.io/ingress-nginx/user-guide/ingress-path-matching/) where you can serve two different web applications under the same domain. You can set path expected by the service using the annotation:
+In some scenarios, the exposed URL in the backend service differs from the specified path in the Ingress rule. Without a rewrite any request returns 404. This configuration is useful with [path based routing](https://kubernetes.github.io/ingress-nginx/user-guide/ingress-path-matching/) where you can serve two different web applications under the same domain. You can set path expected by the service using the annotation:
 
 ```yml
 nginx.ingress.kubernetes.io/rewrite-target": /$2
