@@ -60,8 +60,8 @@ The `webAppRouting` profile has an optional `nginx` configuration with a `defaul
 Here are the possible configuration options:
 
 - **`None`**: The default Nginx ingress controller will not be created and it will not be deleted if it exists. Users should delete the default `NginxIngressController` custom resource manually if desired.
-- **`Internal`**: The default Nginx ingress controller will be created with an internal load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it external will be reconciled.
-- **`External`**: The default Nginx ingress controller will be created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be reconciled.
+- **`Internal`**: The default Nginx ingress controller will be created with an internal load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it external will be overwritten.
+- **`External`**: The default Nginx ingress controller will be created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be overwritten.
 - **`AnnotationControlled`** (default): The default Nginx ingress controller will be created. Users can edit the default `NginxIngressController` custom resource to configure load balancer annotations.
 
 ### Create another public facing NGINX ingress controller
