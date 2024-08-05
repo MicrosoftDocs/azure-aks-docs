@@ -162,7 +162,7 @@ To learn more, view the [upstream KEDA docs][keda].
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-group-create]: /cli/azure/group#az-group-create
-[keda-workload-identity]: (https://learn.microsoft.com/azure/aks/keda-workload-identity)
+[keda-workload-identity]: ./keda-workload-identity.md
 
 <!-- LINKS - external -->
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
