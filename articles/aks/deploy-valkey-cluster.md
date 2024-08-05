@@ -12,6 +12,9 @@ ms.author: schaffererin
 
 In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS).
 
+> [!IMPORTANT]
+> The [Redis](https://redis.io/docs/latest/commands/role/) and [Valkey](https://github.com/valkey-io/valkey-doc/blob/4b96a01dcf494bb839953b18a2900aceccc6a851/commands/role.md?plain=1#L3-L10) software use the following terms for their roles: *master*, *slave*, and *sentinel*. We removed the terms as much as possible, however, the terms are still used in some commands and outputs. Valkey currently has an [open GitHub issue](https://github.com/valkey-io/valkey/issues/36) to replace these terms, however, the issue is not yet resolved.
+
 ## Configure workload identity
 
 1. Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
