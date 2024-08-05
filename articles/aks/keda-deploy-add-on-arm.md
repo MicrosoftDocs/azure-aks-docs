@@ -14,6 +14,9 @@ This article shows you how to deploy the Kubernetes Event-driven Autoscaling (KE
 
 [!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]
 
+> [!NOTE]
+> KEDA 2.15 brings a breaking change which [removes pod identity support](https://github.com/kedacore/keda/issues/5035). While the KEDA managed addon is not currently running KEDA 2.15, if you use pod identity, we recommend you move over to workload identity for your authentication. The KEDA addon will be bumped to KEDA 2.15 in AKS v1.31 preview. To read more on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
+
 ## Before you begin
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
@@ -158,10 +161,11 @@ To learn more, view the [upstream KEDA docs][keda].
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-group-create]: /cli/azure/group#az-group-create
+[keda-workload-identity]: (https://learn.microsoft.com/azure/aks/keda-workload-identity)
 
 <!-- LINKS - external -->
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [keda-scalers]: https://keda.sh/docs/scalers/
 [keda-sample]: https://github.com/kedacore/sample-dotnet-worker-servicebus-queue
 [keda]: https://keda.sh/docs/2.12/
-
+[keda-support-policy]: https://github.com/kedacore/governance/blob/main/DEPRECATIONS.md

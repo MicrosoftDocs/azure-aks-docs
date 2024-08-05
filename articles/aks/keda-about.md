@@ -15,6 +15,9 @@ It applies event-driven autoscaling to scale your application to meet demand in 
 
 The KEDA add-on makes it even easier by deploying a managed KEDA installation, providing you with [a rich catalog of Azure KEDA scalers][keda-scalers] that you can scale your applications with on your Azure Kubernetes Services (AKS) cluster.
 
+> [!NOTE]
+> KEDA 2.15 brings a breaking change which [removes pod identity support](https://github.com/kedacore/keda/issues/5035). While the KEDA managed addon is not currently running KEDA 2.15, if you use pod identity, we recommend you move over to workload identity for your authentication. The KEDA addon will be bumped to KEDA 2.15 in AKS v1.31 preview. To read more on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
+
 ## Architecture
 
 [KEDA][keda] provides two main components:
@@ -85,6 +88,7 @@ For GA Kubernetes versions, AKS offers full support of the corresponding KEDA mi
 [workload-identity]: ./workload-identity-overview.md
 [workload-identity-deploy]: ./workload-identity-deploy-cluster.md
 [support-policies]: ./support-policies.md
+[keda-workload-identity]: (https://learn.microsoft.com/azure/aks/keda-workload-identity)
 
 <!-- LINKS - external -->
 [keda]: https://keda.sh/
@@ -95,3 +99,4 @@ For GA Kubernetes versions, AKS offers full support of the corresponding KEDA mi
 [keda-http-add-on]: https://github.com/kedacore/http-add-on
 [keda-cosmos-db-scaler]: https://github.com/kedacore/external-scaler-azure-cosmos-db
 [azure-support-faq]: https://azure.microsoft.com/support/legal/faq/
+[keda-support-policy]: https://github.com/kedacore/governance/blob/main/DEPRECATIONS.md
