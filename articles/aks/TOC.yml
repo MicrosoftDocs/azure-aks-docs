@@ -43,9 +43,9 @@
           href: learn/quick-kubernetes-deploy-powershell.md
         - name: Use the Azure portal
           href: learn/quick-kubernetes-deploy-portal.md
-        - name: Use Bicep Kubernetes provider
+        - name: Use Bicep Kubernetes extension
           displayName: Resource Manager,arm,template
-          href: learn/quick-kubernetes-deploy-bicep-extensibility-kubernetes-provider.md
+          href: learn/quick-kubernetes-deploy-bicep-kubernetes-extension.md
         - name: Use Bicep
           displayName: Resource Manager,arm,template
           href: learn/quick-kubernetes-deploy-bicep.md
