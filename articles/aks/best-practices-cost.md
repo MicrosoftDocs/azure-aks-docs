@@ -1,5 +1,5 @@
 ---
-title: Optimize Costs in Azure Kubernetes Service (AKS)
+title: Optimize costs in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Recommendations and best practices for optimizing costs in Azure Kubernetes Service (AKS).
 ms.topic: conceptual
@@ -15,10 +15,10 @@ Cost optimization is about maximizing the value of resources while minimizing un
 In this article, you learn about:
 > [!div class="checklist"]
 >
-> * Strategic infrastructure selection
-> * Dynamic rightsizing and autoscaling
-> * Leveraging Azure discounts for substantial savings
-> * Holistic monitoring and FinOps practices
+> * Strategic infrastructure selection.
+> * Dynamic rightsizing and autoscaling.
+> * Leveraging Azure discounts for substantial savings.
+> * Holistic monitoring and FinOps practices.
 
 ## Prepare the application environment  
 
@@ -34,6 +34,13 @@ It's important to evaluate the resource requirements of your application prior t
 
 > [!NOTE]
 > The cost of compute varies across regions. When picking a less expensive region to run workloads, be conscious of the potential impact of latency as well as data transfer costs. To learn more about VM SKUs and their characteristics, see [Sizes for virtual machines in Azure](/azure/virtual-machines/sizes).
+
+### Review storage options
+
+For more information on storage options and related cost considerations, see the following articles:
+
+* [Best practices for storage and backups in Azure Kubernetes Service (AKS)](./operator-best-practices-storage.md)
+* [Storage options for applications in Azure Kubernetes Service (AKS)](./concepts-storage.md)
 
 ### Use cluster preset configurations
 
@@ -52,19 +59,19 @@ AKS offer flexibility in how you run multitenant clusters and isolate resources.
 
 ### Make your container as lean as possible
 
-A lean container refers to optimizing the size and resource footprint of the containerized application. Check that your base image is minimal and only contains the necessary dependencies. Remove any unnecessary libraries and packages. A smaller container image will accelerate deployment times and increase scaling operation efficiency. Going one step further, [Artifact Streaming on AKS](./artifact-streaming.md) allows you to stream container images from Azure Container Registry (ACR). It pulls only the necessary layer for initial pod startup, reducing the pull time for larger images from minutes to seconds.
+A lean container refers to optimizing the size and resource footprint of the containerized application. Check that your base image is minimal and only contains the necessary dependencies. Remove any unnecessary libraries and packages. A smaller container image accelerates deployment times and increases the efficiency of scaling operations. [Artifact Streaming on AKS](./artifact-streaming.md) allows you to stream container images from Azure Container Registry (ACR). It pulls only the necessary layer for initial pod startup, reducing the pull time for larger images from minutes to seconds.
 
 ### Enforce resource quotas
 
-[Resource quotas](./operator-best-practices-scheduler.md#enforce-resource-quotas) provide a way to reserve and limit resources across a development team or project. Quotas are defined on a namespace and can set on compute resources, storage resources, and object counts. When you define resource quotas, individual namespaces are prevented from consuming more resources than allocated. This is particularly important for multi-tenant clusters where teams are sharing infrastructure.
+[Resource quotas](./operator-best-practices-scheduler.md#enforce-resource-quotas) provide a way to reserve and limit resources across a development team or project. Quotas are defined on a namespace and can set on compute resources, storage resources, and object counts. When you define resource quotas, it prevents individual namespaces from consuming more resources than allocated. Resource quotas are particularly useful for multitenant clusters where teams are sharing infrastructure.
 
-### Use cluster start stop
+### Use cluster start/stop
 
-Small development and test clusters, when left unattended, can realize large amounts of unnecessary spending. Turn off clusters that don't need to run at all times using [cluster start and stop](./start-stop-cluster.md?tabs=azure-cli). Doing so shuts down all system and user node pools so you aren’t paying for extra compute. All objects and cluster state will be maintained when you start the cluster again. 
+When left unattended, small development/test clusters can accrue unnecessary costs. You can turn off clusters that don't need to run at all times using [cluster start and stop](./start-stop-cluster.md?tabs=azure-cli), which shuts down all system and user node pools so you aren’t paying for extra compute. The state of your cluster and objects is maintained when you start the cluster again.
 
 ### Use capacity reservations
 
-Capacity reservations allow you to reserve compute capacity in an Azure region or Availability Zone for any duration of time. Reserved capacity will be available for immediate use until the reservation is deleted. [Associating an existing capacity reservation group to a node pool](./manage-node-pools.md#associate-capacity-reservation-groups-to-node-pools) guarantees allocated capacity for your node pool and helps you avoid potential on-demand pricing spikes during periods of high compute demand.
+Capacity reservations allow you to reserve compute capacity in an Azure region or availability zone for any duration of time. Reserved capacity is available for immediate use until the reservation is deleted. [Associating an existing capacity reservation group to a node pool](./manage-node-pools.md#associate-capacity-reservation-groups-to-node-pools) guarantees allocated capacity for your node pool and helps you avoid potential on-demand pricing spikes during periods of high compute demand.
 
 ## Monitor your environment and spend
 
@@ -74,24 +81,32 @@ Capacity reservations allow you to reserve compute capacity in an Azure region o
 
 ### Azure Monitor
 
-If you're ingesting metric data via Container insights, we recommended migrating to managed Prometheus metrics, which offers a significant cost reduction. You can [disable Container insights metrics using the data collection rule (DCR)](/azure/azure-monitor/containers/container-insights-data-collection-dcr?tabs=portal) and deploy the [managed Prometheus add-on](./network-observability-managed-cli.md?tabs=non-cilium#azure-managed-prometheus-and-grafana), which supports configuration via Azure Resource Manager, Azure CLI, Azure portal, and Terraform.
+If you're ingesting metric data via Container insights, we recommended migrating to managed Prometheus metrics, which offers a significant cost reduction. You can [disable Container insights metrics using the data collection rule (DCR)](/azure/azure-monitor/containers/container-insights-data-collection-dcr?tabs=portal) and deploy the [managed Prometheus add-on](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana), which supports configuration via Azure Resource Manager, Azure CLI, Azure portal, and Terraform.
 
-If you rely on log ingestion, we also recommended using the Basic Logs API to reduce Log Analytics costs. To learn more, see [Azure Monitor best practices](/azure/azure-monitor/best-practices-containers#cost-optimization) and [managing costs for Container insights](/azure/azure-monitor/containers/container-insights-cost).
+For more information, see [Azure Monitor best practices](/azure/azure-monitor/best-practices-containers#cost-optimization) and [managing costs for Container insights](/azure/azure-monitor/containers/container-insights-cost).
+
+### Log Analytics
+
+For control plane logs, consider disabling the categories you don't need and/or using the Basic Logs API when applicable to reduce Log Analytics costs. For more information, see [Azure Kubernetes Service (AKS) control plane/resource logs](./monitor-aks.md#aks-control-planeresource-logs). For data plane logs, or *application logs*, consider adjusting the [cost optimization settings](./monitor-aks.md#aks-data-planecontainer-insights-logs).
 
 ## Optimize workloads through autoscaling
+
+### Establish a baseline
+
+Before configuring your autoscaling settings, you can use [Azure Load Testing](/azure/load-testing/overview-what-is-azure-load-testing) to establish a baseline for your application. Load testing helps you understand how your application behaves under different traffic conditions and identify performance bottlenecks. Once you have a baseline, you can configure autoscaling settings to ensure your application can handle the expected load.
 
 ### Enable application autoscaling
 
 #### Vertical pod autoscaling
 
-Requests and limits that are significantly higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to fine-tune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. _Best for applications with fluctuating resource demands._
+Requests and limits that are significantly higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to finetune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. ***Best for applications with fluctuating resource demands***.
 
 #### Horizontal pod autoscaling
 
-The [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) dynamically scales the number of pod replicas based on an observed metric such as CPU or memory utilization. During periods of high demand, HPA scales out, adding more pod replicas to distribute the workload. During periods of low demand, HPA scales in, reducing the number of replicas to conserve resources. _Best for applications with predictable resource demands._
+The [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) dynamically scales the number of pod replicas based on observed metrics, such as CPU or memory utilization. During periods of high demand, HPA scales out, adding more pod replicas to distribute the workload. During periods of low demand, HPA scales in, reducing the number of replicas to conserve resources. ***Best for applications with predictable resource demands***.
 
 > [!WARNING]
-> You shouldn't use the VPA in conjunction with the HPA on the same CPU or memory metrics. This combination can lead to conflicts, as both autoscalers attempt to respond to changes in demand using the same metrics. However, you can use the VPA for CPU or memory in conjunction with the HPA for custom metrics to prevent overlap and ensure that each autoscaler focuses on distinct aspects of workload scaling.
+> You shouldn't use the VPA with the HPA on the same CPU or memory metrics. This combination can lead to conflicts, as both autoscalers attempt to respond to changes in demand using the same metrics. However, you can use the VPA for CPU or memory with the HPA for custom metrics to prevent overlap and ensure that each autoscaler focuses on distinct aspects of workload scaling.
 
 #### Kubernetes event-driven autoscaling
 
@@ -101,24 +116,24 @@ The [Kubernetes Event-driven Autoscaler (KEDA) add-on](./keda-about.md) provides
 
 #### Cluster autoscaling
 
-To keep up with application demand, the [Cluster Autoscaler](./cluster-autoscaler-overview.md) watches for pods that can't be scheduled due to resource constraints and scales the number of nodes in the node pool accordingly. When nodes don't have running pods, Cluster Autoscaler will scale down the number of nodes. Note that Cluster Autoscaler profile settings apply to all autoscaler-enabled nodepools in the cluster. To learn more, see [Cluster Autoscaler best practices and considerations](./cluster-autoscaler-overview.md#best-practices-and-considerations).
+To keep up with application demand, the [Cluster Autoscaler](./cluster-autoscaler-overview.md) watches for pods that can't be scheduled due to resource constraints and scales the number of nodes in the node pool accordingly. When nodes don't have running pods, the Cluster Autoscaler scales down the number of nodes. The Cluster Autoscaler profile settings apply to all autoscaler-enabled node pools in a cluster. For more information, see [Cluster Autoscaler best practices and considerations](./cluster-autoscaler-overview.md#best-practices-and-considerations).
 
 #### Node autoprovisioning
 
-Complicated workloads may require several node pools with different VM size configurations to accommodate CPU and memory requirements. Accurately selecting and managing several node pool configurations adds complexity and operational overhead. [Node Autoprovision (NAP)](./node-autoprovision.md?tabs=azure-cli) simplifies the SKU selection process and decides, based on pending pod resource requirements, the optimal VM configuration to run workloads in the most efficient and cost effective manner.
+Complicated workloads might require several node pools with different VM size configurations to accommodate CPU and memory requirements. Accurately selecting and managing several node pool configurations adds complexity and operational overhead. [Node Autoprovision (NAP)](./node-autoprovision.md?tabs=azure-cli) simplifies the SKU selection process and decides the optimal VM configuration based on pending pod resource requirements to run workloads in the most efficient and cost effective manner.
 
 > [!NOTE]
-> Refer to [Performance and scaling for small to medium workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale.md) and [Performance and scaling best practices for large workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale-large.md) for additional scaling best practices.
+> For more information on scaling best practices, see [Performance and scaling for small to medium workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale.md) and [Performance and scaling best practices for large workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale-large.md) for additional scaling best practices.
 
 ## Save with Azure discounts
 
 ### Azure Reservations
 
-If your workload is predictable and exists for an extended period of time, consider purchasing an [Azure Reservation](/azure/cost-management-billing/reservations/save-compute-costs-reservations) to further reduce your resource costs. Azure Reservations operate on a one-year or three-year term, offering up to 72% discount as compared to pay-as-you-go prices for compute. Reservations automatically apply to matching resources. _Best for workloads that are committed to running in the same SKUs and regions over an extended period of time._
+If your workload is predictable and exists for an extended period of time, consider purchasing an [Azure Reservation](/azure/cost-management-billing/reservations/save-compute-costs-reservations) to further reduce your resource costs. Azure Reservations operate on a one-year or three-year term, offering up to 72% discount as compared to pay-as-you-go prices for compute. Reservations automatically apply to matching resources. ***Best for workloads that are committed to running in the same SKUs and regions over an extended period of time***.
 
 ### Azure Savings Plan
 
-If you have consistent spend but your use of disparate resources across SKUs and regions makes Azure Reservations infeasible, consider purchasing an [Azure Savings Plan](/azure/cost-management-billing/savings-plan/savings-plan-compute-overview). Like Azure Reservations, Azure Savings Plans operate on a one-year or three-year term and automatically apply to any resources within benefit scope. You commit to spend a fixed hourly amount on compute resources irrespective of SKU or region. _Best for workloads that utilize different resources and/or different datacenter regions._
+If you have consistent spend, but your use of disparate resources across SKUs and regions makes Azure Reservations infeasible, consider purchasing an [Azure Savings Plan](/azure/cost-management-billing/savings-plan/savings-plan-compute-overview). Like Azure Reservations, Azure Savings Plans operate on a one-year or three-year term and automatically apply to any resources within benefit scope. You commit to spend a fixed hourly amount on compute resources irrespective of SKU or region. ***Best for workloads that utilize different resources and/or different data center regions***.
 
 ### Azure Hybrid Benefit
 
@@ -128,15 +143,15 @@ If you have consistent spend but your use of disparate resources across SKUs and
 
 [Financial operations (FinOps)](https://www.finops.org/introduction/what-is-finops/) is a discipline that combines financial accountability with cloud management and optimization. It focuses on driving alignment between finance, operations, and engineering teams to understand and control cloud costs. The FinOps foundation has released several notable projects:
 
-* [FinOps Framework](https://finops.org/framework) - an operating model for how to practice and implement FinOps.
-* [FOCUS Specification](https://focus.finops.org/) - a technical specification and open standard for cloud usage, cost, and billing data across all major cloud provider services. 
+* [**FinOps Framework**](https://finops.org/framework): An operating model for how to practice and implement FinOps.
+* [**FOCUS Specification**](https://focus.finops.org/): A technical specification and open standard for cloud usage, cost, and billing data across all major cloud provider services.
 
 ## Next steps
 
 Cost optimization is an ongoing and iterative effort. Learn more by reviewing the following recommendations and architecture guidance:
 
-* [Microsoft Azure Well-Architected Framework for AKS - Cost Optimization Design Principles](/azure/architecture/framework/services/compute/azure-kubernetes-service/azure-kubernetes-service#cost-optimization)
-* [Baseline Architecture Guide for AKS](/azure/architecture/reference-architectures/containers/aks/baseline-aks)
-* [Optimize Compute Costs on AKS](/training/modules/aks-optimize-compute-costs/)
-* [AKS Cost Optimization Techniques](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/azure-kubernetes-service-aks-cost-optimization-techniques/ba-p/3652908)
+* [Microsoft Azure Well-Architected Framework for AKS: Cost optimization design principles](/azure/architecture/framework/services/compute/azure-kubernetes-service/azure-kubernetes-service#cost-optimization)
+* [Baseline architecture guide for AKS](/azure/architecture/reference-architectures/containers/aks/baseline-aks)
+* [Optimize compute costs on AKS](/training/modules/aks-optimize-compute-costs/)
+* [AKS cost optimization techniques](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/azure-kubernetes-service-aks-cost-optimization-techniques/ba-p/3652908)
 * [What is FinOps?](/azure/cost-management-billing/finops/)
