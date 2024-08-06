@@ -24,13 +24,13 @@ In this article, you learn about:
 
 ### Evaluate SKU family
 
-It's important to evaluate the resource requirements of your application prior to deployment. Small development workloads have different infrastructure needs than large production ready workloads. While a combination of CPU, memory, and networking capacity configurations heavily influences the cost effectiveness of a SKU, consider the following VM types:
+It's important to evaluate the resource requirements of your application before deployment. Small development workloads have different infrastructure needs than large production ready workloads. While a combination of CPU, memory, and networking capacity configurations heavily influences the cost effectiveness of a SKU, consider the following virtual machine (VM) types:
 
 | SKU family | Description | Best for |
 |------------|-------------|----------|
-| [**Azure Spot Virtual Machines**](/azure/virtual-machines/spot-vms)| [Spot node pools](./spot-node-pool.md) are backed by Azure Spot Virtual machine scale sets and deployed to a single fault domain with no high availability or SLA guarantees. Spot VMs allow you to take advantage of unutilized Azure capacity with significant discounts (up to 90%, as compared to pay-as-you-go prices). If Azure needs capacity back, the Azure infrastructure evicts the Spot nodes. | Best for dev/test environments, workloads that can handle interruptions such as batch processing jobs, and workloads with flexible execution time. |
-| [**Ampere Altra Arm-based processors (ARM64)**](https://azure.microsoft.com/blog/now-in-preview-azure-virtual-machines-with-ampere-altra-armbased-processors/) | ARM64 VMs are power-efficient and cost effective but don't compromise on performance. With [ARM64 node pool support in AKS](./create-node-pools.md#arm64-node-pools), you can create ARM64 Ubuntu agent nodes and even mix Intel and ARM architecture nodes within a cluster. These ARM VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads. | Best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more. |
-| [**GPU optimized SKUs**](/azure/virtual-machines/sizes) | Depending on the nature of your workload, consider using compute optimized, memory optimized, storage optimized, or even graphical processing unit (GPU) optimized VM SKUs. GPU VM sizes are specialized VMs that are available with single, multiple, and fractional GPUs. | [GPU-enabled Linux node pools on AKS](./gpu-cluster.md) are best for compute-intensive workloads like graphics rendering, large model training and inferencing. |
+| [**Azure Spot Virtual Machines**](/azure/virtual-machines/spot-vms)| Azure Spot Virtual machine scale sets back [Spot node pools](./spot-node-pool.md) and deployed to a single fault domain with no high availability or service-level agreement (SLA) guarantees. Spot VMs allow you to take advantage of unutilized Azure capacity with significant discounts (up to 90%, as compared to pay-as-you-go prices). If Azure needs capacity back, the Azure infrastructure evicts the Spot nodes. | Best for dev/test environments, workloads that can handle interruptions such as batch processing jobs, and workloads with flexible execution time. |
+| [**Ampere Altra Arm-based processors (Arm64)**](https://azure.microsoft.com/blog/now-in-preview-azure-virtual-machines-with-ampere-altra-armbased-processors/) | Arm64 VMs are power-efficient and cost effective but don't compromise on performance. With [Arm64 node pool support in AKS](./create-node-pools.md#arm64-node-pools), you can create Arm64 Ubuntu agent nodes and even mix Intel and ARM architecture nodes within a cluster. These ARM VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads. | Best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more. |
+| [**GPU optimized SKUs**](/azure/virtual-machines/sizes) | Depending on the nature of your workload, consider using compute optimized, memory optimized, storage optimized, or even graphical processing unit (GPU) optimized VM SKUs. GPU VM sizes are specialized VMs that are available with single, multiple, and fractional GPUs. | [GPU-enabled Linux node pools on AKS](./gpu-cluster.md) are best for compute-intensive workloads like graphics rendering, large model training, and inferencing. |
 
 > [!NOTE]
 > The cost of compute varies across regions. When picking a less expensive region to run workloads, be conscious of the potential impact of latency as well as data transfer costs. To learn more about VM SKUs and their characteristics, see [Sizes for virtual machines in Azure](/azure/virtual-machines/sizes).
@@ -51,7 +51,7 @@ It can be difficult to pick the right VM SKU, regions, number of nodes, and othe
 AKS offer flexibility in how you run multitenant clusters and isolate resources. For friendly multitenancy, you can share clusters and infrastructure across teams and business units through [*logical isolation*](./operator-best-practices-cluster-isolation.md#logically-isolated-clusters). Kubernetes [Namespaces](./concepts-clusters-workloads.md#namespaces) form the logical isolation boundary for workloads and resources. Sharing infrastructure reduces cluster management overhead while also improving resource utilization and pod density within the cluster. To learn more about multitenancy on AKS and to determine if it's right for your organizational needs, see [AKS considerations for multitenancy](/azure/architecture/guide/multitenant/service/aks) and [Design clusters for multitenancy](./operator-best-practices-cluster-isolation.md#design-clusters-for-multi-tenancy).
 
 > [!WARNING]
-> Kubernetes environments aren't entirely safe for hostile multitenancy. If any tenant on the shared infrastructure can't be trusted, additional planning is needed to prevent tenants from impacting the security of other services.
+> Kubernetes environments aren't entirely safe for hostile multitenancy. If any tenant on the shared infrastructure can't be trusted, more planning is needed to prevent tenants from impacting the security of other services.
 >
 > Consider [*physical isolation*](./operator-best-practices-cluster-isolation.md#physically-isolated-clusters) boundaries. In this model, teams or workloads are assigned to their own cluster. Added management and financial overhead will be a tradeoff.
 
@@ -63,7 +63,7 @@ A lean container refers to optimizing the size and resource footprint of the con
 
 ### Enforce resource quotas
 
-[Resource quotas](./operator-best-practices-scheduler.md#enforce-resource-quotas) provide a way to reserve and limit resources across a development team or project. Quotas are defined on a namespace and can set on compute resources, storage resources, and object counts. When you define resource quotas, it prevents individual namespaces from consuming more resources than allocated. Resource quotas are particularly useful for multitenant clusters where teams are sharing infrastructure.
+[Resource quotas](./operator-best-practices-scheduler.md#enforce-resource-quotas) provide a way to reserve and limit resources across a development team or project. Quotas are defined on a namespace and can set on compute resources, storage resources, and object counts. When you define resource quotas, it prevents individual namespaces from consuming more resources than allocated. Resource quotas are useful for multitenant clusters where teams are sharing infrastructure.
 
 ### Use cluster start/stop
 
@@ -77,11 +77,11 @@ Capacity reservations allow you to reserve compute capacity in an Azure region o
 
 ### Increase visibility with Microsoft Cost Management
 
-[Microsoft Cost Management](/azure/cost-management-billing/cost-management-billing-overview) offers a broad set of capabilities to help with cloud budgeting, forecasting, and visibility for costs both inside and outside of the cluster. Proper visibility is essential for deciphering spending trends, identifying optimization opportunities, and increasing accountability amongst application developers and platform teams. Enable the [AKS Cost Analysis add-on](./cost-analysis.md) for granular cluster cost breakdown by Kubernetes constructs along with Azure Compute, Network, and Storage categories.
+[Microsoft Cost Management](/azure/cost-management-billing/cost-management-billing-overview) offers a broad set of capabilities to help with cloud budgeting, forecasting, and visibility for costs both inside and outside of the cluster. Proper visibility is essential for deciphering spending trends, identifying optimization opportunities, and increasing accountability among application developers and platform teams. Enable the [AKS Cost Analysis add-on](./cost-analysis.md) for granular cluster cost breakdown by Kubernetes constructs along with Azure Compute, Network, and Storage categories.
 
 ### Azure Monitor
 
-If you're ingesting metric data via Container insights, we recommended migrating to managed Prometheus metrics, which offers a significant cost reduction. You can [disable Container insights metrics using the data collection rule (DCR)](/azure/azure-monitor/containers/container-insights-data-collection-dcr?tabs=portal) and deploy the [managed Prometheus add-on](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana), which supports configuration via Azure Resource Manager, Azure CLI, Azure portal, and Terraform.
+If you're ingesting metric data via Container insights, we recommended migrating to managed Prometheus, which offers a significant cost reduction. You can [disable Container insights metrics using the data collection rule (DCR)](/azure/azure-monitor/containers/container-insights-data-collection-dcr?tabs=portal) and deploy the [managed Prometheus add-on](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana), which supports configuration via Azure Resource Manager, Azure CLI, Azure portal, and Terraform.
 
 For more information, see [Azure Monitor best practices](/azure/azure-monitor/best-practices-containers#cost-optimization) and [managing costs for Container insights](/azure/azure-monitor/containers/container-insights-cost).
 
@@ -99,7 +99,7 @@ Before configuring your autoscaling settings, you can use [Azure Load Testing](/
 
 #### Vertical pod autoscaling
 
-Requests and limits that are significantly higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to finetune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. ***Best for applications with fluctuating resource demands***.
+Requests and limits that are significantly higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to fine-tune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. ***Best for applications with fluctuating resource demands***.
 
 #### Horizontal pod autoscaling
 
@@ -110,7 +110,7 @@ The [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autosca
 
 #### Kubernetes event-driven autoscaling
 
-The [Kubernetes Event-driven Autoscaler (KEDA) add-on](./keda-about.md) provides additional flexibility to scale based on various event-driven metrics that align with your application behavior. For example, for a web application, KEDA can monitor incoming HTTP request traffic and adjust the number of pod replicas to ensure the application remains responsive. For processing jobs, KEDA can scale the application based on message queue length. Managed support is provided for all [Azure Scalers](https://keda.sh/docs/2.13/scalers/).
+The [Kubernetes Event-driven Autoscaler (KEDA) add-on](./keda-about.md) provides extra flexibility to scale based on various event-driven metrics that align with your application behavior. For example, for a web application, KEDA can monitor incoming HTTP request traffic and adjust the number of pod replicas to ensure the application remains responsive. For processing jobs, KEDA can scale the application based on message queue length. Managed support is provided for all [Azure Scalers](https://keda.sh/docs/2.13/scalers/).
 
 ### Enable infrastructure autoscaling
 
@@ -123,7 +123,7 @@ To keep up with application demand, the [Cluster Autoscaler](./cluster-autoscale
 Complicated workloads might require several node pools with different VM size configurations to accommodate CPU and memory requirements. Accurately selecting and managing several node pool configurations adds complexity and operational overhead. [Node Autoprovision (NAP)](./node-autoprovision.md?tabs=azure-cli) simplifies the SKU selection process and decides the optimal VM configuration based on pending pod resource requirements to run workloads in the most efficient and cost effective manner.
 
 > [!NOTE]
-> For more information on scaling best practices, see [Performance and scaling for small to medium workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale.md) and [Performance and scaling best practices for large workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale-large.md) for additional scaling best practices.
+> For more information on scaling best practices, see [Performance and scaling for small to medium workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale.md) and [Performance and scaling best practices for large workloads in Azure Kubernetes Service (AKS)](./best-practices-performance-scale-large.md).
 
 ## Save with Azure discounts
 
@@ -137,11 +137,11 @@ If you have consistent spend, but your use of disparate resources across SKUs an
 
 ### Azure Hybrid Benefit
 
-[Azure Hybrid Benefit for Azure Kubernetes Service (AKS)](./azure-hybrid-benefit.md) allows you to maximize your on-premises licenses at no additional cost. Use any qualifying on-premises licenses that also have an active Software Assurance (SA) or a qualifying subscription to get Windows VMs on Azure at a reduced cost.
+[Azure Hybrid Benefit for Azure Kubernetes Service (AKS)](./azure-hybrid-benefit.md) allows you to maximize your on-premises licenses at no extra cost. Use any qualifying on-premises licenses that also have an active Software Assurance (SA) or a qualifying subscription to get Windows VMs on Azure at a reduced cost.
 
 ## Embrace FinOps to build a cost saving culture
 
-[Financial operations (FinOps)](https://www.finops.org/introduction/what-is-finops/) is a discipline that combines financial accountability with cloud management and optimization. It focuses on driving alignment between finance, operations, and engineering teams to understand and control cloud costs. The FinOps foundation has released several notable projects:
+[Financial operations (FinOps)](https://www.finops.org/introduction/what-is-finops/) is a discipline that combines financial accountability with cloud management and optimization. It focuses on driving alignment between finance, operations, and engineering teams to understand and control cloud costs. The FinOps foundation has several notable projects, such as:
 
 * [**FinOps Framework**](https://finops.org/framework): An operating model for how to practice and implement FinOps.
 * [**FOCUS Specification**](https://focus.finops.org/): A technical specification and open standard for cloud usage, cost, and billing data across all major cloud provider services.
