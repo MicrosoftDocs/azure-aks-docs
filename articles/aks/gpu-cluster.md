@@ -47,6 +47,10 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 
 Using NVIDIA GPUs involves the installation of various NVIDIA software components such as the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), GPU driver installation, and more.
 
+> [!NOTE]
+> By default, Microsoft automatically maintains the version of the NVidia drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVidia drivers are installed by default on GPU capable nodes, you need to install the device plugin.
+
+
 ### Skip GPU driver installation (preview)
 
 AKS has automatic GPU driver installation enabled by default. In some cases, such as installing your own drivers or using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you may want to skip GPU driver installation.
@@ -213,6 +217,12 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 4. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
+### Skip GPU driver installation (preview)
+
+If you want to control the installation of the NVidia drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVidia drivers as part of the node image deployment.
+
+[!INCLUDE [preview features callout](includes/preview/preview-callout.md)]
+
 ### Use NVIDIA GPU Operator with AKS
 
 The NVIDIA GPU Operator automates the management of all NVIDIA software components needed to provision GPU including driver installation, the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), the NVIDIA container runtime, and more. Since the GPU Operator handles these components, it's not necessary to manually install the NVIDIA device plugin. This also means that the automatic GPU driver installation on AKS is no longer required.
@@ -231,6 +241,9 @@ The NVIDIA GPU Operator automates the management of all NVIDIA software componen
 
 
 ### Use the AKS GPU image (preview)
+
+> [!NOTE]
+> We recommend migrating to or using the default GPU configuration rather than the dedicated GPU image, as the dedicated GPU image is based on Ubuntu 18.04 which is no longer supported by Canonical.
 
 AKS provides a fully configured AKS image containing the [NVIDIA device plugin for Kubernetes][nvidia-github]. The AKS GPU image is currently only supported for Ubuntu 18.04.
 
