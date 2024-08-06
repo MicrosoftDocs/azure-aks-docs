@@ -46,7 +46,7 @@ To learn more about support and compatibility for service mesh add-on versions, 
     
     
 ### Default revision
-If a revision isn't explicitly provided by user during installation, the `n-1`' revision is installed by default. For example, if `asm-1-22` is the latest revision, the default is `asm-1-21`.
+If a revision isn't explicitly provided by user during installation, the `n-1` revision is installed by default. For example, if `asm-1-22` is the latest revision, the default is `asm-1-21`.
 
 ### AKS compatibility
 Each revision of the add-on is compatible with a set of AKS minor versions established by the [upstream Istio support and release calendar][istio-support-calendar].
