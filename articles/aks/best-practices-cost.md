@@ -67,7 +67,7 @@ A lean container refers to optimizing the size and resource footprint of the con
 
 ### Use cluster start/stop
 
-When left unattended, small development/test clusters can accrue unnecessary costs. You can turn off clusters that don't need to run at all times using [cluster start and stop](./start-stop-cluster.md?tabs=azure-cli), which shuts down all system and user node pools so you aren’t paying for extra compute. The state of your cluster and objects is maintained when you start the cluster again.
+When left unattended, small development/test clusters can accrue unnecessary costs. You can turn off clusters that don't need to run at all times using the [cluster start and stop](./start-stop-cluster.md?tabs=azure-cli) feature. This feature shuts down all system and user node pools so you don't pay for extra compute. The state of your cluster and objects is maintained when you start the cluster again.
 
 ### Use capacity reservations
 
@@ -81,7 +81,7 @@ Capacity reservations allow you to reserve compute capacity in an Azure region o
 
 ### Azure Monitor
 
-If you're ingesting metric data via Container insights, we recommended migrating to managed Prometheus, which offers a significant cost reduction. You can [disable Container insights metrics using the data collection rule (DCR)](/azure/azure-monitor/containers/container-insights-data-collection-dcr?tabs=portal) and deploy the [managed Prometheus add-on](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana), which supports configuration via Azure Resource Manager, Azure CLI, Azure portal, and Terraform.
+If you're ingesting metric data via Container insights, we recommend migrating to managed Prometheus, which offers a significant cost reduction. You can [disable Container insights metrics using the data collection rule (DCR)](/azure/azure-monitor/containers/container-insights-data-collection-dcr?tabs=portal) and deploy the [managed Prometheus add-on](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana), which supports configuration via Azure Resource Manager, Azure CLI, Azure portal, and Terraform.
 
 For more information, see [Azure Monitor best practices](/azure/azure-monitor/best-practices-containers#cost-optimization) and [managing costs for Container insights](/azure/azure-monitor/containers/container-insights-cost).
 
@@ -99,7 +99,7 @@ Before configuring your autoscaling settings, you can use [Azure Load Testing](/
 
 #### Vertical pod autoscaling
 
-Requests and limits that are significantly higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to fine-tune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. ***Best for applications with fluctuating resource demands***.
+Requests and limits that are higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to fine-tune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. ***Best for applications with fluctuating resource demands***.
 
 #### Horizontal pod autoscaling
 
