@@ -64,5 +64,5 @@ Each revision of the add-on is compatible with a set of AKS minor versions estab
 <!-- LINKS - Internal -->
 [istio-deploy-addon]: ./istio-deploy-addon.md
 [istio-upgrade]: ./istio-upgrade.md
-[istio-minor-upgrade]: ./istio-upgrade#minor-revision-upgrade
-[istio-patch-upgrade]: ./istio-upgrade#patch-version-upgrade
+[istio-minor-upgrade]: ./istio-upgrade.md#minor-revision-upgrade
+[istio-patch-upgrade]: ./istio-upgrade.md#patch-version-upgrade
