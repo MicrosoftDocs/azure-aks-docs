@@ -471,6 +471,8 @@
               href: use-cvm.md
             - name: Use Dedicated Hosts with AKS
               href: use-azure-dedicated-hosts.md
+            - name: Restrict access to IMDS
+              href: imds-restriction.md       
         - name: Authentication and authorization
           items: 
             - name: Use managed identities
