@@ -16,11 +16,11 @@ Announcements about the releases of new minor revisions or patches to the Istio-
 
 ## Service mesh add-on release calendar
 
-The Istio-based service mesh add-on release calendar indicates each revision's AKS compatibility, and estimated dates of upcoming releases and revision deprecation.
+The Istio-based service mesh add-on release calendar indicates each revision's AKS compatibility and estimated release and deprecation dates.
 
-New minor revisions and patches are rolled out as part of AKS releases. To see real-time updates of region release status and AKS release notes containing updates about Istio revision support, visit the [AKS release status webpage][aks-release].
+New minor revisions and patches are rolled out as part of AKS releases. To see real-time updates of regional release status and AKS release notes containing updates about Istio revision support, visit the [AKS release status webpage][aks-release-status].
 
-To learn more about support and compatibility for service mesh add-on versions, read the [versioning and support policy](./istio-support-policy.md#versioning-and-support-policy).
+To learn more about support and compatibility for service mesh add-on revisions, read the [versioning and support policy](./istio-support-policy.md#versioning-and-support-policy).
 
 |  Service mesh revision | Upstream release  | AKS release  | End of life | Compatible AKS versions |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
@@ -42,7 +42,7 @@ To learn more about support and compatibility for service mesh add-on versions, 
     
 - **Patch version**: 
     - Patches to Istio control plane (istiod) and Istio ingresses are rolled out as part of AKS releases. User is expected to follow AKS release notes on availability of newer patch versions and to then [upgrade istio-proxy sidecars by restarting their workloads][istio-patch-upgrade].
-    - AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, please refer to [AKS release notes][aks-release] and visit the [AKS release status webpage][aks-release].
+    - AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, please refer to [AKS release notes][aks-release-notes] and visit the [AKS release status webpage][aks-release-status].
     
     
 ### Default revision
@@ -58,7 +58,7 @@ Each revision of the add-on is compatible with a set of AKS minor versions estab
 
 <!-- LINKS - External -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases
-[aks-release]: https://releases.aks.azure.com/
+[aks-release-status]: https://releases.aks.azure.com/
 [istio-support-calendar]: https://istio.io/latest/docs/releases/supported-releases/#support-status-of-istio-releases
 
 <!-- LINKS - Internal -->
