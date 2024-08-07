@@ -170,7 +170,7 @@ This table outlines support guidelines for Community Support compared to Platfor
 | Kubernetes API support | Supported | Not supported|
 | Cluster or node pool creation| Supported | Not supported|
 | Node pool snapshot| Supported | Not supported|
-| Node image upgrade| Supported | Not supported|
+| Node image upgrade| Supported | Supported|
 
  > [!NOTE]
   > The above table is subject to change and outlines common support scenarios. Any scenarios related to Kubernetes functionality and components aren't supported for N-3. For further support, see [Support and troubleshooting for AKS](./aks-support-help.md).
