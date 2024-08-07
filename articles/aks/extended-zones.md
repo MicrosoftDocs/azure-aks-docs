@@ -51,7 +51,6 @@ The following list highlights some of the industries and use cases where Azure E
   - Connected worker
 
 To learn more, see the [Azure Extended Zones overview][aez-overview]
-/azure/extended-zones/overview
 
 ## What is AKS for Extended Zones?
 
@@ -64,8 +63,6 @@ Just like a typical AKS deployment, the Azure platform is responsible for mainta
 Creating an AKS for Extended Zones cluster uses an optimized architecture that is specifically tailored to meet the unique needs and requirements of Extended Zones applications and workloads. The control plane of the clusters is created, deployed, and configured in the closest Azure region, while the agent nodes and node pools attached to the cluster are located in an Azure Extended Zone.
 
 The components present in an AKS for Extended Zones cluster are identical to those in a typical cluster deployed in an Azure region, ensuring that the same level of functionality and performance is maintained. For more information on these components, see [Kubernetes core concepts for AKS][concepts-cluster].
-
-<!-- REPLACEMENT FOR REGION AVAILABILITY TABLE? -->
 
 ## Deploy a cluster in an Azure Extended Zone location
 
@@ -304,27 +301,12 @@ If you don't have an Azure subscription, create an Azure free account before you
             
             :::image type="content" source="./media/extended-zones/select-extended-zone.png" alt-text="Screenshot of the Azure Extended Zone Context pane for selecting location for AKS cluster in Azure Extended Zone creation.":::
 
-        * Select **99.5%** for **API server availability**.
-    - **Primary node pool**:
-        * Leave the default values selected or select the **Node size** with VM size supported.
-
     > [!NOTE]
     > You can change the preset configuration when creating your cluster by selecting *Learn more and compare presets* and choosing a different option.
 
-5. Select **Next: Node pools** when complete.
-
-6. Keep the default **Node pools** options. At the bottom of the screen, click **Next: Access**.
-
-7. On the **Access** page, configure the following options:
-
-    - The default value for **Resource identity** is **System-assigned managed identity**. Managed identities provide an identity for applications to use when connecting to resources that support Microsoft Entra authentication. For more information about managed identities, see [What are managed identities for Azure resources?](/azure/active-directory/managed-identities-azure-resources/overview)
-    - The Kubernetes role-based access control (RBAC) option is the default value to provide more fine-grained control over access to the Kubernetes resources deployed in your AKS cluster.
-
-    By default, *Basic* networking is used, and [Container insights](/azure/azure-monitor/containers/container-insights-overview) is enabled.
-
 8. Click **Review + create**. When you navigate to the **Review + create** tab, Azure runs validation on the settings that you have chosen. If validation passes, you can proceed to create the AKS cluster by selecting **Create**. If validation fails, then it indicates which settings need to be modified.
 
-  :::image type="content" source="./media/extended-zones/review-and-create-inline.png" alt-text="Screenshot of Create AKS cluster in Azure Extended Zone showing the review and create tab." lightbox="./media/extended-zones/review-and-create-full.png":::
+    :::image type="content" source="./media/extended-zones/review-and-create-inline.png" alt-text="Screenshot of Create AKS cluster in Azure Extended Zone showing the review and create tab." lightbox="./media/extended-zones/review-and-create-full.png":::
 
 9. It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by either:
     * Selecting **Go to resource**
