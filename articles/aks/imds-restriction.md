@@ -11,7 +11,7 @@ ms.author: tamram
 
 # Block traffic from a cluster to the IMDS endpoint (preview)
 
-[Azure Instance Metadata Service (IMDS)](../virtual-machines/instance-metadata-service.md) is a REST API that's available at a well-known, nonroutable IP address (169.254.169.254). IMDS provides information about currently running virtual machine instances. This information includes the SKU, storage, network configurations, and upcoming maintenance events.
+[Azure Instance Metadata Service (IMDS)](/azure/virtual-machines/instance-metadata-service) is a REST API that's available at a well-known, nonroutable IP address (169.254.169.254). IMDS provides information about currently running virtual machine instances. This information includes the SKU, storage, network configurations, and upcoming maintenance events.
 
 By default, all pods running in an Azure Kubernetes Service (AKS) cluster can access the IMDS endpoints. The default behavior introduces certain security risks for an AKS cluster. You can now opt to restrict access to the IMDS endpoint for non host-network pods running in your cluster.
 
@@ -159,7 +159,7 @@ Azure Key Vault provider for Secrets Store CSI driver now supports workload iden
 
 ## See also
 
-[Azure Instance Metadata Service for virtual machines](../virtual-machines/instance-metadata-service.md)
+[Azure Instance Metadata Service for virtual machines](/azure/virtual-machines/instance-metadata-service)
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
