@@ -364,17 +364,14 @@
                   href: create-postgresql-ha.md
                 - name: Deploy and test PostgreSQL
                   href: deploy-postgresql-ha.md
-            - name: Deploy a Valkey workload using the KATE stack
+            - name: Deploy a Valkey cluster
               items:
-                - name: Kubernetes stateful workloads framework
-                  href: stateful-workloads-framework.md
-                  items:
-                    - name: Valkey solution overview
-                      href: valkey-overview.md
-                    - name: Create Valkey infrastructure resources
-                      href: create-valkey-infrastructure.md
-                    - name: Configure and deploy a Valkey cluster
-                      href: deploy-valkey-cluster.md
+                - name: Overview
+                  href: valkey-overview.md
+                - name: Create Valkey infrastructure resources
+                  href: create-valkey-infrastructure.md
+                - name: Configure and deploy a Valkey cluster
+                  href: deploy-valkey-cluster.md
         - name: GPU workloads
           items:
             - name: Use GPUs
