@@ -12,7 +12,7 @@ author: wdarko1
 # Use mixed SKU node pools (preview) in Azure Kubernetes Services (AKS)
 A node pool is comprised of a set of virtual machines(VM), wherein the virtual machine sizes are designed to provide a range of options. These VM sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about VM families and their purposes, visit [VM SKUs][vm-SKU].
 
-When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool typically can only contain one virtual machine (VM) type or SKU. Mixed SKU node pools allow you to add multiple [VM SKUs][vm-SKU] to a single node pool. Mixed SKU node pool allows you to specify family of VMs and SKUs within the same node pool, removing the need to have one node pool per family/SKU. It also enables you to diversify your compute, making it more resilient to capacity and compute quota bottlenecks.
+When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool typically can only contain one virtual machine (VM) type or SKU. Mixed SKU node pools allow you to add multiple [VM SKUs][vm-SKU] to a single node pool. Mixed SKU node pool allows you to specify family of VMs and SKUs within the same node pool, removing the need to have one node pool per SKU. It also enables you to diversify your compute, making it more resilient to capacity and compute quota bottlenecks.
 
 ## Prerequisites
 
