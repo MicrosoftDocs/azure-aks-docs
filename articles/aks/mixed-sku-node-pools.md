@@ -1,5 +1,5 @@
 ---
-title: Used mixed SKU node pools in Azure Kubernetes Services (AKS)
+title: Used VirtualMachines node pools in Azure Kubernetes Services (AKS)
 description: Learn about creating node pools with multiple VM types in an AKS cluster.
 ms.topic: article
 ms.custom: devx-track-azurecli
@@ -9,15 +9,15 @@ author: wdarko1
 #Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple VM types.
 ---
 
-# Use mixed SKU node pools (preview) in Azure Kubernetes Services (AKS)
-A node pool is comprised of a set of virtual machines(VM), wherein the virtual machine sizes are designed to provide a range of options. These VM sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about VM families and their purposes, visit [VM SKUs][vm-SKU].
+# Use VirtualMachines node pools (preview) in Azure Kubernetes Services
+A node pool is composed of a set of virtual machines, where the virtual machine sizes are designed to support different types of workloads. These VM sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about VM families and their purposes, visit [VM SKUs][vm-SKU].
 
-When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool typically can only contain one virtual machine (VM) type or SKU. Mixed SKU node pools allow you to add multiple [VM SKUs][vm-SKU] to a single node pool. Mixed SKU node pool allows you to specify family of VMs and SKUs within the same node pool, removing the need to have one node pool per SKU. It also enables you to diversify your compute, making it more resilient to capacity and compute quota bottlenecks.
+When configuring a cluster on Azure Kubernetes Services, a separate node pool is usually required for each virtual machine type or VM SKU used. VirtualMachines node pools allow you to add multiple [VM SKUs][vm-SKU] of a similar family to a single node pool. With VirtualMachines node pools you can diversify your compute, making it more resilient to capacity and compute quota bottlenecks.
 
 ## Prerequisites
 
 - An Azure subscription is required to use this feature. To create a free account, click [Free Azure Account](https://azure.microsoft.com/free).
-- The Mixed SKU Node Pool feature is in preview, and only available in API version >= 2023-10-02-preview, or install the az cli extension >= 2.61.0 version.
+- The VirtualMachines Node Pool feature is in preview, and only available in API version >= 2023-10-02-preview, or install the az cli extension >= 2.61.0 version.
 - If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
 - The minimum minor Kubernetes release version required for this feature is release 1.26.
 
@@ -67,21 +67,22 @@ When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool 
 
 ## Limitations
 
-- [Cluster autoscaler][cluster autoscaler] isn't available.
+- [Cluster autoscaler][cluster autoscaler] is currently not supported.
 - [InifiniBand][InifiniBand] isn't available.
 - Windows node pool isn't supported.
 - This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar VM family. For example, an N-Series VM size cannot be mixed with a D-Series VM size in the same node pool.
+- VirtualMachines node pools allow up to 5 different VM SKUs per node pool.
 
-## Create an AKS cluster with mixed SKU node pools
+## Create an AKS cluster with VirtualMachines node pools
 
 > [!NOTE]
-> Only *one* VM size is allowed in a scale profile, and the maximum limit is *five* VM scale profiles overall for a mixed SKU node pool.
+> Only *one* VM size is allowed in a scale profile, and the maximum limit is *five* VM scale profiles overall for a VirtualMachines node pool.
 
-- Create an AKS cluster with mixed SKU node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
+- Create an AKS cluster with VirtualMachines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
 
-    The following example creates a cluster named *myAKSCluster* with a mixed SKU node pool containing two nodes in the *myResourceGroup*, generates SSH keys, sets the load balancer SKU to *standard*, and sets the Kubernetes version to *1.28.5*:
+    The following example creates a cluster named *myAKSCluster* with a VirtualMachines node pool containing two nodes in the *myResourceGroup*, generates SSH keys, sets the load balancer SKU to *standard*, and sets the Kubernetes version to *1.28.5*:
 
     ```azurecli-interactive
     az aks create \
@@ -94,11 +95,11 @@ When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool 
         --kubernetes-version 1.28.5
     ```
 
-## Add a mixed SKU node pool to an existing cluster
+## Add a VirtualMachines SKU node pool to an existing cluster
 
-- Add a mixed SKU node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"Virtual Machines"`.
+- Add a VirtualMachines node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"Virtual Machines"`.
 
-    The following example creates a mixed SKU node pool named *myvmpool* to the *myAKSCluster* cluster with three nodes and a maximum VM SKU of *Standard_D4s_v3*:
+    The following example creates a VirtualMachines node pool named *myvmpool* to the *myAKSCluster* cluster with three nodes and a maximum VM SKU of *Standard_D4s_v3*:
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -111,7 +112,7 @@ When you deploy a workload onto Azure Kubernetes Services (AKS), each node pool 
     ```
 
 ## Add manual scale profile to a node pool
-A scale profile represents the nodes currently in a node pool, including the VM size and count.  
+A scale profile of a VirtualMachines node pool represents the nodes currently in a node pool, including the VM size and count.  
 
 - Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"`.
 
@@ -164,7 +165,7 @@ A scale profile represents the nodes currently in a node pool, including the VM 
 
 ## Next steps
 
-In this article, you learned how to use mixed SKU node pools in Azure Kubernetes Services (AKS). To learn more about node pools in AKS, see [Create node pools][create node pools].
+In this article, you learned how to use VirtualMachines node pools in Azure Kubernetes Services (AKS). To learn more about node pools in AKS, see [Create node pools][create node pools].
 
 <!-- EXTERNAL LINKS -->
 
