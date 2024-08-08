@@ -4,7 +4,7 @@ description: Learn how to use the Container Storage Interface (CSI) driver for A
 ms.topic: article
 ms.custom:
 ms.subservice: aks-storage
-ms.date: 01/11/2024
+ms.date: 08/07/2024
 author: tamram
 ms.author: tamram
 
@@ -32,6 +32,9 @@ In addition to the original in-tree driver features, Azure Files CSI driver supp
 ## Use a persistent volume with Azure Files
 
 A [persistent volume (PV)][persistent-volume] represents a piece of storage that's provisioned for use with Kubernetes pods. A PV can be used by one or many pods and can be dynamically or statically provisioned. If multiple pods need concurrent access to the same storage volume, you can use Azure Files to connect by using the [Server Message Block (SMB)][smb-overview] or [NFS protocol][nfs-overview]. This article shows you how to dynamically create an Azure Files share for use by multiple pods in an AKS cluster. For static provisioning, see [Manually create and use a volume with an Azure Files share][statically-provision-a-volume].
+
+> [!NOTE]
+> Please be aware that Azure File CSI driver only permits the mounting of SMB file shares using key-based (NTLM v2) authentication, and therefore does not support the maximum security profile of Azure File share settings. On the other hand, mounting NFS file shares does not require key-based authentication.
 
 With Azure Files shares, there is no limit as to how many can be mounted on a node.
 
