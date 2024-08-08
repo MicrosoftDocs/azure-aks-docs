@@ -278,8 +278,8 @@
           href: /azure/migrate/tutorial-app-containerization-aspnet-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Clusters
       items:
-        - name: Deploy a cluster in an Edge Zone
-          href: edge-zones.md
+        - name: Deploy a cluster in an Azure Extended Zone
+          href: extended-zones.md
         - name: Deploy a cluster with a fully managed resource group
           href: node-resource-group-lockdown.md
         - name: Scale an AKS cluster
