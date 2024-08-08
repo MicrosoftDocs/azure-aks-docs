@@ -221,7 +221,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 If you want to control the installation of the NVidia drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVidia drivers as part of the node image deployment.
 
-[!INCLUDE [preview features callout](includes/preview/preview-callout.md)]
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ### Use NVIDIA GPU Operator with AKS
 
