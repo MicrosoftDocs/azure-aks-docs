@@ -49,7 +49,7 @@ Here is a reference to properties you can set to configure an `NginxIngressContr
 | **defaultSSLCertificate**     |  The secret referred to by this property contains the default certificate to be used when accessing the default backend service. If this property is not provided NGINX will use a self-signed certificate. If the `tls:` section is not set on an Ingress, NGINX will provide the default certificate but will not force HTTPS redirect. | 
 | _defaultSSLCertificate.forceSSLRedirect_       |  Forces a redirect for Ingresses that do not specify a `tls:` section. |
 | _defaultSSLCertificate.keyVaultURI_             | The Azure Key Vault URI where the default SSL certificate can be found. The add-on needs to be [configured to use the key vault](app-routing-dns-ssl.md#enable-azure-key-vault-integration).|
-| _defaultSSLCertificate.secret_                  | Configures the name and namespace where the the default SSL secret are on the cluster.  |
+| _defaultSSLCertificate.secret_                  | Configures the name and namespace where the the default SSL secret is on the cluster.  |
 | _defaultSSLCertificate.secret.name_                   | Name of the secret. |
 | _defaultSSLCertificate.secret.namespace_              | Namespace of the secret.      |
 
