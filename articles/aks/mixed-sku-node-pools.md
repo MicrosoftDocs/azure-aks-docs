@@ -14,6 +14,8 @@ A node pool is composed of a set of virtual machines, where the virtual machine 
 
 When configuring a cluster on Azure Kubernetes Services, a separate node pool is usually required for each virtual machine type or VM SKU used. VirtualMachines node pools allow you to add multiple [VM SKUs][vm-SKU] of a similar family to a single node pool. With VirtualMachines node pools you can diversify your compute, making it more resilient to capacity and compute quota bottlenecks.
 
+A VirtualMachines node pool type uses a 'ScaleProfile', which contains the configurations for how the node pool can scale, specifically the VM size and count. Scale profiles are automatically created by default, but a manual scale profile can be added, which sets a fixed size and count. A separate scale profile is needed for each VM size in the VirtualMachines node pool.
+
 ## Prerequisites
 
 - An Azure subscription is required to use this feature. To create a free account, click [Free Azure Account](https://azure.microsoft.com/free).
@@ -112,7 +114,6 @@ When configuring a cluster on Azure Kubernetes Services, a separate node pool is
     ```
 
 ## Add manual scale profile to a node pool
-A scale profile of a VirtualMachines node pool represents the nodes currently in a node pool, including the VM size and count.  
 
 - Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"`.
 
