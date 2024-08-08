@@ -141,7 +141,10 @@ In this section, you deploy the flyte-binary Helm chart so you can begin buildin
 
 ## Next steps
 
-In this article, you learned how to deploy a Flyte chart on AKS. To start building and deploying data and machine learning pipelines, see the following articles:
+In this article, you learned how to install Flyte on AKS using a Helm chart.
+The Flyte project also maintains a [reference implementation for AKS](https://github.com/unionai-oss/deploy-flyte/tree/main/environments/azure/flyte-core#readme) that automatically configures all the dependencies and deploys a production grade Flyte cluster.
+
+To start building and deploying data and machine learning pipelines, see the following articles:
 
 * [Perform exploratory data analysis (EDA) with Flyte and Jupyter notebooks][flyte-eda]
 * [Orchestrate an ML pipeline with Flyte to predict housing prices across regions][flyte-pipelines]
