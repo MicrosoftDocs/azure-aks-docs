@@ -42,15 +42,15 @@ The following list highlights some of the industries and use cases where Azure E
 - **Media and Gaming**
   - Gaming and game streaming
   - Media editing, streaming, and content delivery
-  - Remote rendering for mixed reality and Virutal Desktop Infrastructure scenarios
+  - Remote rendering for mixed reality and Virtual Desktop Infrastructure scenarios
 - **Oil and Gas**
   - Oil and gas exploration
-  - Real-time analytis and inference via artificial intelligence and machine learning
+  - Real-time analytics and inference via artificial intelligence and machine learning
 - **Retail**
   - Digital in-store experiences
   - Connected worker
 
-To learn more, see the [Azure Extended Zones overview][aez-overview]
+To learn more, see the [Azure Extended Zones overview][aez-overview].
 
 ## What is AKS for Extended Zones?
 
@@ -70,9 +70,9 @@ The components present in an AKS for Extended Zones cluster are identical to tho
 
 * Before you can deploy an AKS for Extended Zones cluster, your subscription needs to have access to the targeted Azure Extended Zone location. This access is provided through our onboarding process, done by following the steps outlined in the [Azure Extended Zones overview][aez-overview].
 
-* Your cluster must be running Kubernetes version 1.24 or later
+* Your cluster must be running Kubernetes version 1.24 or later.
 
-* The identity you're using to create your cluster must have the appropriate minimum permissions. For more information on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](./concepts-identity.md)
+* The identity you're using to create your cluster must have the appropriate minimum permissions. For more information on access and identity for AKS, see [Access and identity options for Azure Kubernetes Service (AKS)](./concepts-identity.md).
 
 ### Limitations
 
@@ -82,7 +82,7 @@ The components present in an AKS for Extended Zones cluster are identical to tho
 
 While AKS is fully supported in Azure Extended Zones, resource constraints may still apply:
 
-* In all Azure Extended Zones, the maximum node count is 100
+* In all Azure Extended Zones, the maximum node count is 100.
 
 * In Azure Extended Zones, only selected VM SKUs are offered.
  <!--NEED LIST OF WHICH VM SKUS  -->
@@ -309,7 +309,7 @@ If you don't have an Azure subscription, create an Azure free account before you
     :::image type="content" source="./media/extended-zones/review-and-create-inline.png" alt-text="Screenshot of Create AKS cluster in Azure Extended Zone showing the review and create tab." lightbox="./media/extended-zones/review-and-create-full.png":::
 
 9. It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by either:
-    * Selecting **Go to resource**
+    * Selecting **Go to resource**.
     * Browsing to the AKS cluster resource group and selecting the AKS resource. In this example you browse for *myResourceGroup* and select the resource *myAKSCluster*. You can see the Azure Extended Zone locations with the home Azure region in the Location.
 
 ---
