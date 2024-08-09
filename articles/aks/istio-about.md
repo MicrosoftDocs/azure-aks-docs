@@ -63,7 +63,7 @@ Istio-based service mesh add-on for AKS has the following limitations:
 
 * Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) are currently not yet supported with Istio addon. Customizations such as ingress static IP address configuration are planned as part of the Gateway API implementation for the add-on in future.
 
-## Feedback and feature asks
+## Feedback and feature ask
 
 Feedback and feature ask for the Istio add-on can be provided by creating [issues with label 'service-mesh' on AKS GitHub repository][aks-github-service-mesh-issues].
 
