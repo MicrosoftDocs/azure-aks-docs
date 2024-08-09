@@ -238,7 +238,9 @@ AKS accepts both integer values and a percentage value for max surge. An integer
 
 #### Set node drain timeout value
 
-At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade.
+At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. Minimum allowed drain timeout value is 5 minutes. 
+
+If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade.
 
 * Set node drain timeout for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command.
 
