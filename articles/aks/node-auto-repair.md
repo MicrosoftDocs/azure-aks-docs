@@ -28,18 +28,43 @@ You can manually check the health state of your nodes with the `kubectl get node
 > [!NOTE]
 > AKS initiates repair operations with the user account **aks-remediator**.
 
-If AKS identifies an unhealthy node that remains unhealthy for *five* minutes, AKS performs the following actions:
+If AKS identifies an unhealthy node that remains unhealthy for at least *five* minutes, AKS performs the following actions:
 
-1. Attempts to restart the node.
-2. If the node restart is unsuccessful, AKS reimages the node.
-3. If the reimage is unsuccessful and it's a Linux node, AKS redeploys the node.
+1. Reboot the node.
+2. If the node remains unhealthy after reboot, AKS reimages the node.
+3. If the node remains unhealthy after reimage and it's a Linux node, AKS redeploys the node.
 
-AKS engineers investigate alternative remediations if auto-repair is unsuccessful.
+AKS retries the restart, reimage, and redeploy sequence up to three times if the node remains unhealthy. The overall auto repair process can take up to an hour to complete. 
 
-> [!NOTE]
-> Auto-repair is not triggered if the following taints are present on the node:` node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
-> 
-> The overall auto repair process can take up to an hour to complete. AKS retries for a max of 3 times for each step. 
+## Limitations
+AKS node auto-repair is a best effort service and we cannot guarantee that the node will be restored back to healthy status. If your node persists in an unhealthy state, it is highly encouraged that you perform manual investigation of the node. See [TSG Link] to learn more.
+
+Additionally, there are cases where AKS will not perform automatic repair. This may occur either by design or if we cannot detect that an issue exists:
+
+* A node status isn't being reported due to error in network configuration.
+* A node failed to initially register as a healthy node.
+* If the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
+
+## How to monitor node auto-repair
+When AKS performs node auto-repair in your cluster, Kubernetes events are emitted for visibility. The events will appear on the node object and be emitted from the "aks-auto-repair" source. Learn more about how to access, store, and configure alerts on Kubernetes events [here][events].
+
+| Reason | Event Message | Description |
+| --- | --- | --- |
+| NodeRebootStart | Node auto-repair is initiating a reboot action due to NotReady status persisting >5 minutes. | This event is emitted to notify you when reboot is about to be performed on your node. This is the first action in the overall node auto-repair sequence. |
+| NodeRebootEnd | Reboot action from node auto-repair has completed. | Emitted once reboot has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the reboot is performed. |
+| NodeReimageStart | Node auto-repair is initiating a reimage action due to NotReady status persisting >5 minutes. | This event is emitted to notify you when reimage is about to be performed on your node. |
+| NodeReimageEnd | Reimage action from node auto-repair has completed. | Emitted once reimage has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the reimage is performed. |
+| NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting >5 minutes. | This event is emitted to notify you when redeploy is about to be performed on your node. This is the last action in the overall node auto-repair sequence. |
+| NodeRedeployEnd | Redeploy action from node auto-repair has completed. | Emitted once redeploy has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the redeploy is performed. |
+
+If any errors occur during the node auto-repair process, the following events will be emitted with the verbatim error message. Learn about how to troubleshooting and resolve common errors here: [TSG Link].
+
+| Reason | Event Message | Description |
+| --- | --- | --- |
+| NodeRebootError | Node auto-repair reboot action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the reboot action. |
+| NodeReimageError | Node auto-repair reimage action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the reimage action. |
+| NodeRedeployError | Node auto-repair redeploy action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the redeploy action. |
+
 
 ## Node auto-drain
 
@@ -69,7 +94,6 @@ Use [availability zones][availability-zones] to increase high availability with 
 
 <!-- LINKS - Internal -->
 [availability-zones]: ./availability-zones.md
-[vm-updates]: /azure/virtual-machines/maintenance-and-updates
-[scheduled-events]: /azure/virtual-machines/linux/scheduled-events
+[vm-updates]: ../virtual-machines/maintenance-and-updates.md
+[scheduled-events]: ../virtual-machines/linux/scheduled-events.md
 [spot-node-pools]: spot-node-pool.md
-
