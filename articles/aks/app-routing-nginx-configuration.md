@@ -32,8 +32,28 @@ az aks get-credentials -resource-group <ResourceGroupName> --name <ClusterName>
 
 The application routing add-on uses a Kubernetes [custom resource definition (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) called [`NginxIngressController`](https://github.com/Azure/aks-app-routing-operator/blob/main/config/crd/bases/approuting.kubernetes.azure.com_nginxingresscontrollers.yaml) to configure NGINX ingress controllers. You can create more ingress controllers or modify existing configuration.
 
-`NginxIngressController` CRD has a `loadBalancerAnnotations` field to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations). 
+Here is a reference to properties you can set to configure an `NginxIngressController`.
 
+| Property                  | Description                                                                 |
+|---------------------------|-----------------------------------------------------------------------------|
+| **ingressClassName**          | The name of the `IngressClass` that will be used for the NGINX Ingress Controller. Defaults to the name of the `NginxIngressController` if not specified. | 
+| **controllerNamePrefix**      | A name used to prefix the managed NGINX ingress controller resources. |
+| **loadBalancerAnnotations**   | A set of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations)  |
+| **scaling**                   | Configuration options for how the NGINX Ingress Controller scales. |
+| _scaling.minReplicas_           | The lower limit for the number of Ingress Controller replicas. It defaults to 2 pods.  |
+| _scaling.maxReplicas_           | The upper limit for the number of Ingress Controller replicas. It defaults to 100 pods.  |
+| _scaling.threshold_             | Defines how quickly the NGINX Ingress Controller pods should scale based on workload. **`Rapid`** means the Ingress Controller will scale quickly and aggressively for handling sudden and significant traffic spikes. **`Steady`** prioritizes cost-effectiveness with fewer replicas handling more work. **`Balanced`** is a good mix between the two that works for most use-cases. If unspecified, this field defaults to **`Balanced`**. |
+| **defaultBackendService**     | The Kubernetes service that the NGINX ingress controller should default to which handles all URL paths and hosts the Ingress-NGINX controller doesn't understand (i.e., all the requests that are not mapped with an Ingress). The controller directs traffic to the first port of the service. If not specified, this will use the [default backend](https://kubernetes.github.io/ingress-nginx/user-guide/default-backend/) that is built-in. |
+| _defaultBackendService.namespace_            | Namespace of the service.                                                   |
+| _defaultBackendService.name_                 | Name of the service.                                                        |
+| **defaultSSLCertificate**     |  The secret referred to by this property contains the default certificate to be used when accessing the default backend service. If this property is not provided NGINX will use a self-signed certificate. If the `tls:` section is not set on an Ingress, NGINX will provide the default certificate but will not force HTTPS redirect. | 
+| _defaultSSLCertificate.forceSSLRedirect_       |  Forces a redirect for Ingresses that do not specify a `tls:` section. |
+| _defaultSSLCertificate.keyVaultURI_             | The Azure Key Vault URI where the default SSL certificate can be found. The add-on needs to be [configured to use the key vault](app-routing-dns-ssl.md#enable-azure-key-vault-integration).|
+| _defaultSSLCertificate.secret_                  | Configures the name and namespace where the the default SSL secret is on the cluster.  |
+| _defaultSSLCertificate.secret.name_                   | Name of the secret. |
+| _defaultSSLCertificate.secret.namespace_              | Namespace of the secret.      |
+
+## Common configurations
 
 ### The default NGINX ingress controller
 

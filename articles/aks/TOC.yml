@@ -391,7 +391,6 @@
         - name: Node autoprovision
           href: node-autoprovision.md
         - name: Availability zones
-          href: availability-zones.md
           items:
             - name: Availability zones overview
               href: availability-zones-overview.md

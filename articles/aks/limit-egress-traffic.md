@@ -323,7 +323,7 @@ az aks create \
     --api-server-authorized-ip-ranges $FWPUBLIC_IP
     --assign-identity <identity-resource-id> \
     --assign-kubelet-identity <kubelet-identity-resource-id> \
-    --generate-ssh-keys    
+    --generate-ssh-keys
 ```
 
 ---
@@ -389,7 +389,7 @@ To configure inbound connectivity, you need to write a DNAT rule to the Azure Fi
    store-front       LoadBalancer   10.0.89.139    20.39.18.6    80:32271/TCP         10s
    ```
 
-2. Get the service IP using the `kubectl get svc voting-app` command.
+2. Get the service IP using the `kubectl get svc store-front` command.
 
    ```azurecli-interactive
    SERVICE_IP=$(kubectl get svc store-front -o jsonpath='{.status.loadBalancer.ingress[*].ip}')
