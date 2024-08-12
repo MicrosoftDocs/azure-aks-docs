@@ -17,7 +17,11 @@ With Advanced Container Networking Services, the focus is on delivering a seamle
 
 ## What is included in Advanced Container Networking Services?
 
-Advanced Network Observability is the inaugural feature of the Advanced Container Networking Services suite bringing the power of Hubble’s control plane to both Cilium and non-Cilium Linux data planes. While Advanced Network Observability is the foundation of the Advanced Container Networking Services suite, the feature set will evolve over time offering even more insights and providing yet more new & powerful ways to manage your AKS networks.
+Advanced Container Networking Services contains features split into two types:
+
+ - Advanced Network Observability - the inaugural feature of the Advanced Container Networking Services suite bringing the power of Hubble’s control plane to both Cilium and non-Cilium Linux data planes. These features aim to provide visibility into networking and performance.
+
+ - Advanced Network Security - the features that enabled additional network policy options to provide a simpler, more granular, and easier ways to improve network security.
 
 ## Advanced Network Observability
 
@@ -25,10 +29,13 @@ Advanced Network Observability equips you with next-level monitoring and diagnos
 
 For more information about Advanced Network Observability, see [What is Advanced Network Observability?](advanced-network-observability-concepts.md).
 
+## Advanced Network Security
+
+Advanced Network Security enables more granular network security policies in order to allow greater ease of use when implementing across clusters. Clusters using a Cilium data plane has access to DNS-based policies. This provides significant improvements to ease of use compared to IP based policies. It allows restricting egress access to external services allowing you to securely run your infrastructure.
+
 ## Pricing
 > [!IMPORTANT]
 > Advanced Container Networking Services will be a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
-
 ## Next steps
 
 * For more information about Azure Kubernetes Service (AKS), see [What is Azure Kubernetes Service (AKS)?](/azure/aks/intro-kubernetes).
