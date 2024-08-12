@@ -174,7 +174,7 @@ The following table lists the available settings for the cluster autoscaler prof
 | `ok-total-unready-count` | Number of allowed unready nodes, irrespective of max-total-unready-percentage. | Three nodes |
 
 > [!NOTE]
-> The ignore-daemonsets-utilization, daemonset-eviction-for-empty-nodes, and daemonset-eviction-for-occupied-nodes flags are GA from API version 2024-05-01. If you are using the CLI to update these flags, please ensure you are using version 2.63 or later.
+> The ignore-daemonsets-utilization, daemonset-eviction-for-empty-nodes, and daemonset-eviction-for-occupied-nodes parameters are GA from API version 2024-05-01. If you are using the CLI to update these flags, please ensure you are using version 2.63 or later.
 
 ### Set the cluster autoscaler profile on a new cluster
 
