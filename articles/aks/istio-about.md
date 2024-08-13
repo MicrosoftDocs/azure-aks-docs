@@ -53,7 +53,7 @@ Istio-based service mesh add-on for AKS has the following limitations:
 * The add-on doesn't yet support multi-cluster deployments.
 * The add-on doesn't yet support Windows Server containers. Windows Server containers aren't yet supported in open source Istio right now. Issue tracking this feature ask can be found [here][istio-oss-windows-issue].
 * Customization of mesh through the following custom resources is blocked for now - `ProxyConfig, WorkloadEntry, WorkloadGroup, Telemetry, IstioOperator, WasmPlugin`. 
-* The addon allows the use of the following `EnvoyFilter` filter types, with other filter types blocked:
+* The add-on allows the use of the following `EnvoyFilter` filter types, with other filter types blocked:
     * Lua (`type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua`).
     * Compressor (`type.googleapis.com/envoy.extensions.filters.http.compressor.v3.Compressor`)
     * Local rate limit (`type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit`)
