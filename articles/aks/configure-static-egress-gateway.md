@@ -162,4 +162,4 @@ By following these steps, you can effectively set up and manage Static Egress Ga
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
-[azure-cni-pod-subnet]: concepts-network-azure-cnii-pod-subnet.md
+[azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
