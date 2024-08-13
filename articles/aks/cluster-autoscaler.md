@@ -158,9 +158,9 @@ The following table lists the available settings for the cluster autoscaler prof
 | `scale-down-delay-after-failure` | How long after scale down failure that scale down evaluation resumes. | Three minutes |
 | `scale-down-unneeded-time` | How long a node should be unneeded before it's eligible for scale down. | 10 minutes |
 | `scale-down-unready-time` | How long an unready node should be unneeded before it's eligible for scale down. | 20 minutes |
-| `ignore-daemonsets-utilization` (Preview) | Whether DaemonSet pods will be ignored when calculating resource utilization for scale down. | `false` |
-| `daemonset-eviction-for-empty-nodes` (Preview) | Whether DaemonSet pods will be gracefully terminated from empty nodes. | `false` |
-| `daemonset-eviction-for-occupied-nodes` (Preview) | Whether DaemonSet pods will be gracefully terminated from non-empty nodes. | `true` |
+| `ignore-daemonsets-utilization` | Whether DaemonSet pods will be ignored when calculating resource utilization for scale down. | `false` |
+| `daemonset-eviction-for-empty-nodes` | Whether DaemonSet pods will be gracefully terminated from empty nodes. | `false` |
+| `daemonset-eviction-for-occupied-nodes` | Whether DaemonSet pods will be gracefully terminated from non-empty nodes. | `true` |
 | `scale-down-utilization-threshold` | Node utilization level, defined as sum of requested resources divided by capacity, in which a node can be considered for scale down. | 0.5 |
 | `max-graceful-termination-sec` | Maximum number of seconds the cluster autoscaler waits for pod termination when trying to scale down a node. | 600 seconds |
 | `balance-similar-node-groups` | Detects similar node pools and balances the number of nodes between them. | `false` |
@@ -172,6 +172,9 @@ The following table lists the available settings for the cluster autoscaler prof
 | `max-total-unready-percentage` | Maximum percentage of unready nodes in the cluster. After this percentage is exceeded, CA halts operations. | 45% |
 | `max-node-provision-time` | Maximum time the autoscaler waits for a node to be provisioned. | 15 minutes |
 | `ok-total-unready-count` | Number of allowed unready nodes, irrespective of max-total-unready-percentage. | Three nodes |
+
+> [!NOTE]
+> The ignore-daemonsets-utilization, daemonset-eviction-for-empty-nodes, and daemonset-eviction-for-occupied-nodes parameters are GA from API version 2024-05-01. If you are using the CLI to update these flags, please ensure you are using version 2.63 or later.
 
 ### Set the cluster autoscaler profile on a new cluster
 
