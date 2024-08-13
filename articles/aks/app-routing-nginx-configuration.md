@@ -37,7 +37,7 @@ Here is a reference to properties you can set to configure an `NginxIngressContr
 | Property                  | Description                                                                 |
 |---------------------------|-----------------------------------------------------------------------------|
 | **ingressClassName**          | The name of the `IngressClass` that will be used for the NGINX Ingress Controller. Defaults to the name of the `NginxIngressController` if not specified. | 
-| **controllerNamePrefix**      | A name used to prefix the managed NGINX ingress controller resources. |
+| **controllerNamePrefix**      | A name used to prefix the managed NGINX ingress controller resources. Defaults to `nginx`. |
 | **loadBalancerAnnotations**   | A set of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations)  |
 | **scaling**                   | Configuration options for how the NGINX Ingress Controller scales. |
 | _scaling.minReplicas_           | The lower limit for the number of Ingress Controller replicas. It defaults to 2 pods.  |
