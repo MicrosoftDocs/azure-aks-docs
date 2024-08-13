@@ -75,7 +75,6 @@ See the following table for a list of add-ons and features that aren't supported
 | Istio |  The Istio support cycle is short (six months), and there will not be maintenance releases for Kubernetes 1.27 |
 | Keda | Unable to guarantee future version compatibility with Kubernetes 1.27 |
 | Calico  |  Requires Calico Enterprise agreement past Community support |
-| Cillium  |  Requires Cillium Enterprise agreement past Community support |
 | Key Management Service (KMS) | KMSv2 replaces KMS during this LTS cycle |
 | Dapr | AKS extensions are not supported |
 | Application Gateway Ingress Controller | Migration to App Gateway for Containers happens during LTS period |
