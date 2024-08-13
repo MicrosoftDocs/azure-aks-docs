@@ -43,9 +43,9 @@
           href: learn/quick-kubernetes-deploy-powershell.md
         - name: Use the Azure portal
           href: learn/quick-kubernetes-deploy-portal.md
-        - name: Use Bicep Kubernetes provider
+        - name: Use Bicep Kubernetes extension
           displayName: Resource Manager,arm,template
-          href: learn/quick-kubernetes-deploy-bicep-extensibility-kubernetes-provider.md
+          href: learn/quick-kubernetes-deploy-bicep-kubernetes-extension.md
         - name: Use Bicep
           displayName: Resource Manager,arm,template
           href: learn/quick-kubernetes-deploy-bicep.md
@@ -278,8 +278,8 @@
           href: /azure/migrate/tutorial-app-containerization-aspnet-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Clusters
       items:
-        - name: Deploy a cluster in an Edge Zone
-          href: edge-zones.md
+        - name: Deploy a cluster in an Azure Extended Zone
+          href: extended-zones.md
         - name: Deploy a cluster with a fully managed resource group
           href: node-resource-group-lockdown.md
         - name: Scale an AKS cluster
@@ -391,7 +391,6 @@
         - name: Node autoprovision
           href: node-autoprovision.md
         - name: Availability zones
-          href: availability-zones.md
           items:
             - name: Availability zones overview
               href: availability-zones-overview.md
@@ -747,6 +746,8 @@
               href: istio-plugin-ca.md
             - name: Upgrade Istio service mesh add-on
               href: istio-upgrade.md
+            - name: Istio service mesh add-on support policy
+              href: istio-support-policy.md
             - name: Istio service mesh add-on performance
               href: istio-scale.md
         - name: Open Service Mesh AKS add-on

@@ -15,12 +15,17 @@ It applies event-driven autoscaling to scale your application to meet demand in 
 
 The KEDA add-on makes it even easier by deploying a managed KEDA installation, providing you with [a rich catalog of Azure KEDA scalers][keda-scalers] that you can scale your applications with on your Azure Kubernetes Services (AKS) cluster.
 
+> [!NOTE]
+> KEDA version 2.15 introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15, it will begin running it in the AKS preview version 1.31.
+>
+> For more information on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
+
 ## Architecture
 
 [KEDA][keda] provides two main components:
 
 - **KEDA operator** allows end-users to scale workloads in/out from 0 to N instances with support for Kubernetes Deployments, Jobs, StatefulSets or any custom resource that defines `/scale` subresource.
-- **Metrics server** exposes external metrics to Horizontal Pod Autoscaler (HPA) in Kubernetes for autoscaling purposes such as messages in a Kafka topic, or number of events in an Azure event hub. Due to upstream limitations, KEDA must be the only installed metric adapter.
+- **Metrics server** exposes external metrics to Horizontal Pod Autoscaler (HPA) in Kubernetes for autoscaling purposes such as messages in a Kafka topic, or number of events in an Azure event hub. Due to upstream limitations, KEDA must be the only installed external metric adapter.
 
 ![Diagram that shows the architecture of K E D A and how it extends Kubernetes instead of re-inventing the wheel.](./media/keda/architecture.png)
 
@@ -53,7 +58,7 @@ The KEDA AKS add-on has the following limitations:
 
 * KEDA's [HTTP add-on (preview)][keda-http-add-on] to scale HTTP workloads isn't installed with the extension, but can be deployed separately.
 * KEDA's [external scaler for Azure Cosmos DB][keda-cosmos-db-scaler] to scale based on Azure Cosmos DB change feed isn't installed with the extension, but can be deployed separately.
-* Only one metric server is allowed in the Kubernetes cluster. Because of that the KEDA add-on should be the only metrics server inside the cluster.
+* Only one external metric server is allowed in the Kubernetes cluster. Because of that the KEDA add-on should be the only external metrics server inside the cluster.
     * Multiple KEDA installations aren't supported
 
 For general KEDA questions, we recommend [visiting the FAQ overview][keda-faq].
@@ -85,13 +90,15 @@ For GA Kubernetes versions, AKS offers full support of the corresponding KEDA mi
 [workload-identity]: ./workload-identity-overview.md
 [workload-identity-deploy]: ./workload-identity-deploy-cluster.md
 [support-policies]: ./support-policies.md
+[keda-workload-identity]: ./keda-workload-identity.md
 
 <!-- LINKS - external -->
 [keda]: https://keda.sh/
 [keda-architecture]: https://keda.sh/docs/latest/concepts/
-[keda-faq]: https://keda.sh/docs/latest/faq/
+[keda-faq]: https://keda.sh/docs/2.14/faq/
 [keda-sample]: https://github.com/kedacore/sample-dotnet-worker-servicebus-queue
 [keda-scalers]: https://keda.sh/docs/scalers/
 [keda-http-add-on]: https://github.com/kedacore/http-add-on
 [keda-cosmos-db-scaler]: https://github.com/kedacore/external-scaler-azure-cosmos-db
 [azure-support-faq]: https://azure.microsoft.com/support/legal/faq/
+[keda-support-policy]: https://github.com/kedacore/governance/blob/main/DEPRECATIONS.md
