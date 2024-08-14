@@ -163,7 +163,7 @@ The Azure Linux container host for AKS is an open-source Linux distribution avai
 You can migrate your existing Ubuntu nodes to Azure Linux using one of the following methods:
 
 * [Remove existing node pools and add new Azure Linux node pools](/azure/azure-linux/tutorial-azure-linux-migration#add-azure-linux-node-pools-and-remove-existing-node-pools).
-* [In-place OS SKU migration (preview)](/azure/azure-linux/tutorial-azure-linux-migration#in-place-os-sku-migration).
+* [In-place OS SKU migration](/azure/azure-linux/tutorial-azure-linux-migration#in-place-os-sku-migration).
 
 ## Node pools with unique subnets
 
