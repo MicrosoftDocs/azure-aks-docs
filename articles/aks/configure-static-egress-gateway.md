@@ -19,10 +19,12 @@ This article provides step-by-step instructions to set up a Static Egress Gatewa
 
 ## Limitations and considerations
 
-- Not supported in clusters with [Azure CNI Pod Subnet][azure-cni-pod-subnet].
+- Static Egress Gateway is not supported in clusters with [Azure CNI Pod Subnet][azure-cni-pod-subnet].
 - Kubernetes network policies will not apply to traffic leaving the cluster through the gateway nodepool.
   - This should not impact cluster traffic control as **only** egress traffic from annotated pods are affected.
 - The gateway nodepool is not intended for general-purpose workloads and should be used for egress traffic only.
+- Windows nodepools cannot be used as gateway nodepools.
+- hostNetwork pods **cannot** be annotated to use the gateway nodepool.
 
 ## Before you begin
 
