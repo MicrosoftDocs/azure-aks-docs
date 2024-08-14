@@ -323,6 +323,9 @@ Service tags are a convenient way to specify a group of IP addresses correspondi
 
 Create a cluster with Service Tag authorized IP ranges using the `--api-server-authorized-ip-ranges` parameter with the service tag `AzureCloud` to allow all Azure services to access the API server and specify an additional IP address.
 
+> [!NOTE]
+> Only one service tag is allowed in the `--api-server-authorized-ip-ranges` parameter. You **cannot** specify multiple service tags.
+
 ```azurecli-interactive
 az aks create --resource-group myResourceGroup \
   --name myAKSCluster \
