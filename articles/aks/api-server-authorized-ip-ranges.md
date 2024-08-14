@@ -272,11 +272,74 @@ Invoke-RestMethod http://ipinfo.io/json | Select -exp ip
 
 You can also find this address by searching on *what is my IP address* in an internet browser.
 
+## Use Service Tags for API Server authorized IP ranges - (Preview)
+
+Service tags are a convenient way to specify a group of IP addresses corresponding to a Kubernetes Service. You can use service tags to specify the IP addresses of Kubernetes services **and** specific IP addresses in the authorized IP ranges for the API server by separating them with a comma.
+
+### Limitations
+
+- This feature is not compatible with [API Server VNet Integration][api-server-vnet-integration].
+- This feature is available **only** in the following regions: 
+  - eastus2euap
+  - centraluseuap
+  - westcentralus
+  - eastasia
+  - uksouth
+  - eastus
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+### Install the Azure CLI preview extension
+
+1. Install the Azure CLI preview extension using the [az extension add][az-extension-add] command.
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+2. Update the extension to make sure you have the latest version using the [az extension update][az-extension-update] command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+### Register the Service Tag Authorized IP feature flag
+
+1. Register the EnableServiceTagAuthorizedIPPreview feature flag using the [az feature register][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "EnableServiceTagAuthorizedIPPreview"
+    ```
+
+    It takes a few minutes for the registration to complete.
+
+2. Verify the registration using the [az feature show][az-feature-show] command.
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "EnableServiceTagAuthorizedIPPreview"
+    ```
+
+### Create an AKS cluster with Service Tag authorized IP ranges
+
+Create a cluster with Service Tag authorized IP ranges using the `--api-server-authorized-ip-ranges` parameter with the service tag `AzureCloud` to allow all Azure services to access the API server and specify an additional IP address.
+
+> [!NOTE]
+> Only one service tag is allowed in the `--api-server-authorized-ip-ranges` parameter. You **cannot** specify multiple service tags.
+
+```azurecli-interactive
+az aks create --resource-group myResourceGroup \
+  --name myAKSCluster \
+  --api-server-authorized-ip-ranges AzureCloud,20.20.20.20
+```
+
+You should be able to curl the API server from an Azure VM or Azure service that is part of the `AzureCloud` service tag.
+
 ## Next steps
 
 In this article, you enabled API server authorized IP ranges. This approach is one part of how you can securely run an AKS cluster. For more information, see [Security concepts for applications and clusters in AKS][concepts-security] and [Best practices for cluster security and upgrades in AKS][operator-best-practices-cluster-security].
 
 <!-- LINKS - internal -->
+[api-server-vnet-integration]: api-server-vnet-integration.md
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-show]: /cli/azure/aks#az_aks_show
