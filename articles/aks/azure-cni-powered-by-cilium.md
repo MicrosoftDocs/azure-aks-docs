@@ -122,7 +122,7 @@ az aks create \
     --generate-ssh-keys
 ```
 
-## Upgrade an existing cluster to Azure CNI Powered by Cilium
+## Update an existing cluster to Azure CNI Powered by Cilium
 
 > [!NOTE]
 > You can update an existing cluster to Azure CNI Powered by Cilium if the cluster meets the following criteria:
@@ -147,6 +147,8 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
   --network-dataplane cilium
 ```
 
+> [!NOTE]
+> After enabling Azure CNI Powered by Cilium on an AKS cluster, you can't disable it. If you want to use a different network data plane, you must create a new AKS cluster.
 
 ## Frequently asked questions
 
