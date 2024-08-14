@@ -40,7 +40,7 @@ To learn more about support and compatibility for service mesh add-on revisions,
     
 - **Patch version**: 
     - Patches to Istio control plane (istiod) and Istio ingresses are rolled out as part of AKS releases. User is expected to follow AKS release notes on availability of newer patch versions and to then [upgrade istio-proxy sidecars by restarting their workloads][istio-patch-upgrade].
-    - AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, refer to [AKS release notes][aks-release-notes] and visit the [AKS release status webpage][aks-release-status].
+    - AKS reserves the right to deprecate patches if a critical Common Vulnerability and Exposure (CVE) or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, refer to [AKS release notes][aks-release-notes] and visit the [AKS release status webpage][aks-release-status].
     
     
 ### Default revision
