@@ -11,7 +11,7 @@ ms.date: 07/02/2024
 
 # Configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS)
 
-The traditional [Azure Container Networking Interface (CNI)](./configure-azure-cni.md) assigns a VNet IP address to every pod. It assigns this IP address from a prereserved set of IPs on every node *or* a separate subnet reserved for pods. This approach requires IP address planning and could lead to address exhaustion, which introduces difficulties scaling your clusters as your application demands grow.
+The traditional [Azure Container Networking Interface (CNI)](./configure-azure-cni.md) assigns a VNet IP address to every pod. It assigns this IP address from a pre-reserved set of IPs on every node *or* a separate subnet reserved for pods. This approach requires IP address planning and could lead to address exhaustion, which introduces difficulties scaling your clusters as your application demands grow.
 
 With Azure CNI Overlay, the cluster nodes are deployed into an Azure Virtual Network (VNet) subnet. Pods are assigned IP addresses from a private CIDR logically different from the VNet hosting the nodes. Pod and node traffic within the cluster use an Overlay network. Network Address Translation (NAT) uses the node's IP address to reach resources outside the cluster. This solution saves a significant amount of VNet IP addresses and enables you to scale your cluster to large sizes. An extra advantage is that you can reuse the private CIDR in different AKS clusters, which extends the IP space available for containerized applications in Azure Kubernetes Service (AKS).
 
@@ -208,7 +208,6 @@ You can deploy your AKS clusters in a dual-stack mode when using Overlay network
 ### Limitations
 
 The following features aren't supported with dual-stack networking:
-  - Windows Nodepools
   - Azure network policies
   - Calico network policies
   - NAT Gateway
@@ -361,6 +360,144 @@ The application routing addon is the recommended way for ingress in an AKS clust
     nginx-ipv6   LoadBalancer   fd12:3456:789a:1::981a   2603:1030:8:5::2d   80:32002/TCP   63s
     ```
 
+## Dual-stack networking with Azure CNI Powered by Cilium - (Preview)
+
+You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+## Install the aks-preview Azure CLI extension
+
+* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli
+    az extension add --name aks-preview
+    ```
+
+* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli
+    az extension update --name aks-preview
+    ```
+
+## Register the 'AzureOverlayDualStackPreview' feature flag
+
+1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command:
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+## Set up Overlay clusters with Azure CNI Powered by Cilium
+
+Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium dataplane.
+
+```azurecli-interactive
+clusterName="myOverlayCluster"
+resourceGroup="myResourceGroup"
+location="westcentralus"
+
+az aks create \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --location $location \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --network-dataplane cilium \
+    --ip-families ipv4,ipv6 \
+    --generate-ssh-keys\
+```
+
+For more information on Azure CNI Powered by Cilium, see [Azure CNI Powered by Cilium][azure-cni-powered-by-cilium].
+
+## Dual-stack networking Windows nodepools - (Preview)
+
+You can deploy your dual-stack AKS clusters with Windows nodepools.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+## Install the aks-preview Azure CLI extension
+
+* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli
+    az extension add --name aks-preview
+    ```
+
+* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli
+    az extension update --name aks-preview
+    ```
+
+## Register the 'AzureOverlayDualStackPreview' feature flag
+
+1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command:
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+## Set up an Overlay cluster
+
+Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command.
+
+```azurecli-interactive
+clusterName="myOverlayCluster"
+resourceGroup="myResourceGroup"
+location="westcentralus"
+
+az aks create \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --location $location \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --ip-families ipv4,ipv6 \
+    --generate-ssh-keys\
+```
+
+## Add a Windows nodepool to the cluster
+
+Add a Windows nodepool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+
+```azurecli-interactive
+az aks nodepool add \
+    --resource-group $resourceGroup \
+    --cluster-name $clusterName \
+    --os-type Windows \
+    --name winpool1 \
+    --node-count 2
+```
+
 ---
 
 ## Next steps
@@ -378,3 +515,4 @@ To learn how to utilize AKS with your own Container Network Interface (CNI) plug
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[azure-cni-powered-by-cilium]: azure-cni-powered-by-cilium
