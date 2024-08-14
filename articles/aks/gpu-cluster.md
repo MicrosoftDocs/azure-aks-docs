@@ -37,11 +37,11 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 
 ## Get the credentials for your cluster
 
-* Get the credentials for your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. The following example command gets the credentials for the *myAKSCluster* in the *myResourceGroup* resource group:
+Get the credentials for your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. The following example command gets the credentials for the *myAKSCluster* in the *myResourceGroup* resource group:
 
-    ```azurecli-interactive
-    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
-    ```
+```azurecli-interactive
+az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+```
 
 ## Options for using NVIDIA GPUs
 
@@ -49,40 +49,6 @@ Using NVIDIA GPUs involves the installation of various NVIDIA software component
 
 > [!NOTE]
 > By default, Microsoft automatically maintains the version of the NVidia drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVidia drivers are installed by default on GPU capable nodes, you need to install the device plugin.
-
-
-### Skip GPU driver installation (preview)
-
-AKS has automatic GPU driver installation enabled by default. In some cases, such as installing your own drivers or using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you may want to skip GPU driver installation.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Register or update the aks-preview extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    # Register the aks-preview extension
-    az extension add --name aks-preview
-
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-2. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--skip-gpu-driver-install` flag to skip automatic GPU driver installation.
-
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name gpunp \
-        --node-count 1 \
-        --skip-gpu-driver-install \
-        --node-vm-size Standard_NC6s_v3 \
-        --enable-cluster-autoscaler \
-        --min-count 1 \
-        --max-count 3
-    ```
-
-    Adding the `--skip-gpu-driver-install` flag during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
 
 ### NVIDIA device plugin installation
 
@@ -217,11 +183,39 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 4. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
+
 ### Skip GPU driver installation (preview)
 
 If you want to control the installation of the NVidia drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVidia drivers as part of the node image deployment.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+1. Register or update the aks-preview extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
+
+    ```azurecli-interactive
+    # Register the aks-preview extension
+    az extension add --name aks-preview
+
+    # Update the aks-preview extension
+    az extension update --name aks-preview
+    ```
+
+2. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--skip-gpu-driver-install` flag to skip automatic GPU driver installation.
+
+    ```azurecli-interactive
+    az aks nodepool add \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name gpunp \
+        --node-count 1 \
+        --skip-gpu-driver-install \
+        --node-vm-size Standard_NC6s_v3 \
+        --enable-cluster-autoscaler \
+        --min-count 1 \
+        --max-count 3
+    ```
+
+    Adding the `--skip-gpu-driver-install` flag during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
 
 ### Use NVIDIA GPU Operator with AKS
 
