@@ -106,7 +106,7 @@ The following Telemetry API configurations are either `allowed` or `supported` f
 | `accessLogging.disabled` | Supported | - |
 | `accessLogging.providers` | Allowed | Integration with [Azure Monitor Container Insights Log Analytics][az-monitor-container-insights] is supported. Third-party or open-source log collection and analytics solutions are `allowed` but unsupported. |
 | `metrics.overrides` | Supported | - |
-| `metrics.providers` | Allowed | Supported for metrics collection with [Azure Monitor Managed Prometheus][az-monitor-metrics]. Third-party or open-source metrics scraping solutions are `allowed` but unsupported. |
+| `metrics.providers` | Allowed | Metrics collection with [Azure Monitor Managed Prometheus][az-monitor-metrics] is supported. Third-party or open-source metrics scraping solutions are `allowed` but unsupported. |
 | `tracing.*` | Allowed | All tracing configurations are `allowed` but unsupported. |
 
 <!-- LINKS - External -->
