@@ -366,7 +366,7 @@ You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. Th
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-## Install the aks-preview Azure CLI extension
+### Install the aks-preview Azure CLI extension
 
 * Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
 
@@ -380,7 +380,7 @@ You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. Th
     az extension update --name aks-preview
     ```
 
-## Register the 'AzureOverlayDualStackPreview' feature flag
+### Register the 'AzureOverlayDualStackPreview' feature flag
 
 1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -402,7 +402,7 @@ You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. Th
     az provider register --namespace Microsoft.ContainerService
     ```
 
-## Set up Overlay clusters with Azure CNI Powered by Cilium
+### Set up Overlay clusters with Azure CNI Powered by Cilium
 
 Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command. Make sure to use the argument `--network-dataplane cilium` to specify the Cilium dataplane.
 
@@ -430,7 +430,7 @@ You can deploy your dual-stack AKS clusters with Windows nodepools.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-## Install the aks-preview Azure CLI extension
+### Install the aks-preview Azure CLI extension
 
 * Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
 
@@ -444,7 +444,7 @@ You can deploy your dual-stack AKS clusters with Windows nodepools.
     az extension update --name aks-preview
     ```
 
-## Register the 'AzureOverlayDualStackPreview' feature flag
+### Register the 'AzureOverlayDualStackPreview' feature flag
 
 1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -466,7 +466,7 @@ You can deploy your dual-stack AKS clusters with Windows nodepools.
     az provider register --namespace Microsoft.ContainerService
     ```
 
-## Set up an Overlay cluster
+### Set up an Overlay cluster
 
 Create a cluster with Azure CNI Overlay using the [`az aks create`][az-aks-create] command.
 
@@ -485,7 +485,7 @@ az aks create \
     --generate-ssh-keys\
 ```
 
-## Add a Windows nodepool to the cluster
+### Add a Windows nodepool to the cluster
 
 Add a Windows nodepool to the cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
