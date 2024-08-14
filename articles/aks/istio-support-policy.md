@@ -35,12 +35,12 @@ To learn more about support and compatibility for service mesh add-on revisions,
 ### Supported revisions
 - **Minor revision**:
     - At any given time, at least two revisions of the Istio-based service mesh add-on are supported.
-    - An older revision `n-2` will continue to be supported until six weeks after the newest revision `n` has started rolling out to all regions. For example, if `asm-1-22` just started rolling out to all regions, `asm-1-20` will be deprecated after six weeks.
-    - Deprecation means no new mesh installations can be done with this revision. While clusters already having this revision will continue to work, for support issues and security patches, it'll be recommended to [upgrade to a newer supported mesh revision][istio-minor-upgrade].
+    - An older revision `n-2` will continue to be supported until six weeks after the newest revision `n` starts rolling out to all regions. For example, if `asm-1-22` just started rolling out to all regions, `asm-1-20` will be deprecated after six weeks.
+    - Deprecation means no new mesh installations can be done with this revision. While clusters already having this revision continue to work, for support issues and security patches, it is recommended to [upgrade to a newer supported mesh revision][istio-minor-upgrade].
     
 - **Patch version**: 
     - Patches to Istio control plane (istiod) and Istio ingresses are rolled out as part of AKS releases. User is expected to follow AKS release notes on availability of newer patch versions and to then [upgrade istio-proxy sidecars by restarting their workloads][istio-patch-upgrade].
-    - AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, please refer to [AKS release notes][aks-release-notes] and visit the [AKS release status webpage][aks-release-status].
+    - AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, refer to [AKS release notes][aks-release-notes] and visit the [AKS release status webpage][aks-release-status].
     
     
 ### Default revision

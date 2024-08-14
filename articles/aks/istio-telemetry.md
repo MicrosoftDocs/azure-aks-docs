@@ -11,14 +11,14 @@ ms.custom: devx-track-azurecli
 
 # Telemetry for Istio-based service mesh add-on for Azure Kubernetes Service
 
-[Istio][istio-telemetry-overview] can generate metrics, distributed traces, and access logs for all workloads in the mesh. The Istio-based service mesh add-on for Azure Kubernetes Service (AKS) provides telemetry customization options through the [shared MeshConfig][istio-meshconfig] as well as the Istio Telemetry API `v1` for Istio minor revisions 1.22 (`asm-1-22`) and above.
+[Istio][istio-telemetry-overview] can generate metrics, distributed traces, and access logs for all workloads in the mesh. The Istio-based service mesh add-on for Azure Kubernetes Service (AKS) provides telemetry customization options through the [shared MeshConfig][istio-meshconfig] and the Istio Telemetry API `v1` for Istio minor revisions 1.22 (`asm-1-22`) and higher.
 
 > [!NOTE]
 > Some Istio MeshConfig Telemetry fields may be deprecating in [upcoming Istio releases][istio-releases]. It is highly recommended to use Telemetry API for Istio MeshConfig customizations that have been deprecated, as these functionalities will be removed in a [future Istio release][istio-feature-status].
 
 ## Telemetry API
 
-Telemetry API `v1` is available for the Istio add-on, for minor revisions `asm-1-22` and above.
+Telemetry API `v1` is available for the Istio add-on, for minor revisions `asm-1-22` and higher.
 
 ### Configure Telemetry Resources
 
