@@ -104,7 +104,7 @@ The following Telemetry API configurations are either `allowed` or `supported` f
 |-------------------------|-----------------------|-----------|
 | `accessLogging.match` | Supported | - |
 | `accessLogging.disabled` | Supported | - |
-| `accessLogging.providers` | Allowed | Integration with [Azure Monitor Container Insights Log Analytics][az-monitor-container-insights] is supported. Third-party or open-source log collection and analytics solutions are `allowed` but unsupported. |
+| `accessLogging.providers` | Allowed | The default `envoy` access log provider is supported. For a managed experience for log collection and querying, see [Azure Monitor Container Insights Log Analytics][az-monitor-container-insights]. Third-party or open-source log collection and analytics solutions are `allowed` but unsupported. |
 | `metrics.overrides` | Supported | - |
 | `metrics.providers` | Allowed | Metrics collection with [Azure Monitor Managed Prometheus][az-monitor-metrics] is supported. Third-party or open-source metrics scraping solutions are `allowed` but unsupported. |
 | `tracing.*` | Allowed | All tracing configurations are `allowed` but unsupported. |
@@ -121,4 +121,3 @@ The following Telemetry API configurations are either `allowed` or `supported` f
 [istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-features-and-configurations
 [az-monitor-container-insights]: /azure/azure-monitor/containers/container-insights-overview
 [az-monitor-metrics]: /azure/azure-monitor/containers/kubernetes-monitoring-enable
-
