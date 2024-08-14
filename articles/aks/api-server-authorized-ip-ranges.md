@@ -274,7 +274,7 @@ You can also find this address by searching on *what is my IP address* in an int
 
 ## Use Service Tags for API Server authorized IP ranges - (Preview)
 
-Service tags are a convenient way to specify a group of IP addresses that correspond to a specific Azure service. You can use service tags to specify the IP addresses of Azure services and specific IP addresses in the authorized IP ranges for the API server.
+Service tags are a convenient way to specify a group of IP addresses corresponding to a Kubernetes Service. You can use service tags to specify the IP addresses of Kubernetes services **and** specific IP addresses in the authorized IP ranges for the API server by separating them with a comma.
 
 ### Limitations
 
@@ -316,10 +316,12 @@ Service tags are a convenient way to specify a group of IP addresses that corres
 
 ### Create an AKS cluster with Service Tag authorized IP ranges
 
-Create a cluster with Service Tag authorized IP ranges using the `--api-server-authorized-ip-ranges` parameter with the service tag `AzureCloud` to allow all Azure services to access the API server.
+Create a cluster with Service Tag authorized IP ranges using the `--api-server-authorized-ip-ranges` parameter with the service tag `AzureCloud` to allow all Azure services to access the API server and specify an additional IP address.
 
 ```azurecli-interactive
-az aks create --resource-group myResourceGroup --name myAKSCluster --api-server-authorized-ip-ranges AzureCloud.
+az aks create --resource-group myResourceGroup \
+  --name myAKSCluster \
+  --api-server-authorized-ip-ranges AzureCloud,20.20.20.20
 ```
 
 You should be able to curl the API server from an Azure VM or Azure service that is part of the `AzureCloud` service tag.
