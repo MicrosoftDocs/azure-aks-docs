@@ -12,13 +12,11 @@ ms.custom: devx-track-azurecli
 
 This article outlines the support policy for the Istio-based service mesh add-on for Azure Kubernetes Service (AKS).
 
-Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes].
-
 ## Service mesh add-on release calendar
 
 The Istio-based service mesh add-on release calendar indicates each revision's AKS compatibility and estimated release and deprecation dates.
 
-New minor revisions and patches are rolled out as part of AKS releases. To see real-time updates of regional release status and AKS release notes containing updates about Istio revision support, visit the [AKS release status webpage][aks-release-status].
+New minor revisions and patches are rolled out as part of AKS releases. Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To see real-time updates of regional release status and AKS release notes containing updates about Istio revision support, visit the [AKS release status webpage][aks-release-status].
 
 To learn more about support and compatibility for service mesh add-on revisions, read the [versioning and support policy](./istio-support-policy.md#versioning-and-support-policy).
 
@@ -51,6 +49,14 @@ If a revision isn't explicitly provided by user during installation, the `n-1` r
 ### AKS compatibility
 Each revision of the add-on is compatible with a set of AKS minor versions established by the [upstream Istio support and release calendar][istio-support-calendar].
 
+## Allowed, supported, and blocked features and configurations
+
+The Istio-based service mesh add-on for AKS designates features and [configuration options][istio-meshconfig] as `allowed`, `supported`, or `blocked`.
+
+- **Blocked**: Disallowed features and configuration options are blocked via add-on managed admission webhooks. The API server immediately publishes the error message to the user that the feature is disallowed.
+- **Supported**: Supported features receive support from Azure support.
+- **Allowed**: Allowed features are open and available to Istio add-on users but aren't covered by Azure support.
+
 ## Next steps
 
 * [Deploy Istio-based service mesh add-on][istio-deploy-addon]
@@ -66,3 +72,4 @@ Each revision of the add-on is compatible with a set of AKS minor versions estab
 [istio-upgrade]: ./istio-upgrade.md
 [istio-minor-upgrade]: ./istio-upgrade.md#minor-revision-upgrade
 [istio-patch-upgrade]: ./istio-upgrade.md#patch-version-upgrade
+[istio-meshconfig]: ./istio-meshconfig.md#allowed-supported-and-blocked-meshconfig-values
