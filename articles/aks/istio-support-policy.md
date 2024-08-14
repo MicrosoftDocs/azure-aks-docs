@@ -55,7 +55,7 @@ The Istio-based service mesh add-on for AKS designates features and [configurati
 
 - **Blocked**: Disallowed features and configuration options are blocked via add-on managed admission webhooks. The API server immediately publishes the error message to the user that the feature is disallowed.
 - **Supported**: Supported features receive support from Azure support.
-- **Allowed**: Allowed features are opened to Istio add-on users but aren't covered by Azure support.
+- **Allowed**: Allowed features are open and available to Istio add-on users but aren't covered by Azure support.
 
 ## Next steps
 

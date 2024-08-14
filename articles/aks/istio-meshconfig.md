@@ -93,12 +93,12 @@ Fields present in [open source MeshConfig reference documentation][istio-meshcon
 | outboundTrafficPolicy | Supported | Also configurable in [Sidecar CR](https://istio.io/latest/docs/reference/config/networking/sidecar/#OutboundTrafficPolicy) |
 | extensionProviders | Allowed | - |
 | defaultProviders | Allowed | - |
-| accessLogFile | Supported | This field addresses the generation of the access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs]. Access logging can also be configured with [Telemetry API][istio-telemetry]. |
-| accessLogFormat | Supported | This field addresses the generation of the access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
-| accessLogEncoding | Supported | This field addresses the generation of the access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
-| enableTracing | Allowed | Tracing can also be configured with [Telemetry API][istio-telemetry]. |
-| enableEnvoyAccessLogService | Supported | This field addresses the generation of the access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
-| disableEnvoyListenerLog | Supported | This field addresses the generation of the access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
+| accessLogFile | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs]. Access logging can also be configured with the [Telemetry API][istio-telemetry]. |
+| accessLogFormat | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
+| accessLogEncoding | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
+| enableTracing | Allowed | Tracing can also be configured with the [Telemetry API][istio-telemetry]. |
+| enableEnvoyAccessLogService | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
+| disableEnvoyListenerLog | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
 | trustDomain | Allowed | - |
 | trustDomainAliases | Allowed | - |
 | caCertificates | Allowed | Configurable in [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#ClientTLSSettings) |

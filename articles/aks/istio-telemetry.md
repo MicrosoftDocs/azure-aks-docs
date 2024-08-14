@@ -3,7 +3,7 @@ title: Istio-based service mesh add-on Telemetry
 description: Configure Telemetry for Istio-based service mesh add-on for Azure Kubernetes Service.
 ms.topic: article
 ms.service: azure-kubernetes-service
-ms.date: 08/12/2024
+ms.date: 08/14/2024
 ms.author: nshankar
 author: niranjanshankar
 ms.custom: devx-track-azurecli
@@ -11,18 +11,18 @@ ms.custom: devx-track-azurecli
 
 # Telemetry for Istio-based service mesh add-on for Azure Kubernetes Service
 
-[Istio][istio-telemetry] generates metrics, distributed traces, and access logs for all workloads in the mesh. The Istio-based service mesh add-on for Azure Kubernetes Service (AKS) provides telemetry customization options through the [shared MeshConfig][istio-meshconfig] as well as the Istio Telemetry API for Istio minor revisions 1.22 (`asm-1-22`) and above.
+[Istio][istio-telemetry-overview] can generate metrics, distributed traces, and access logs for all workloads in the mesh. The Istio-based service mesh add-on for Azure Kubernetes Service (AKS) provides telemetry customization options through the [shared MeshConfig][istio-meshconfig] as well as the Istio Telemetry API `v1` for Istio minor revisions 1.22 (`asm-1-22`) and above.
 
 > [!NOTE]
-> Some Istio MeshConfig Telemetry fields (ex: `meshConfig.defaultConfig.tracing`) may be deprecating in [upcoming Istio releases][istio-releases]. It is highly recommended to use Telemetry API for Istio MeshConfig customizations that have been deprecated, as these functionalities will be removed in a [future Istio release][istio-feature-status].
+> Some Istio MeshConfig Telemetry fields may be deprecating in [upcoming Istio releases][istio-releases]. It is highly recommended to use Telemetry API for Istio MeshConfig customizations that have been deprecated, as these functionalities will be removed in a [future Istio release][istio-feature-status].
 
 ## Telemetry API
 
-Telemetry API `v1` is available for the Istio add-on, for minor revisions `asm-1-22` and above. 
+Telemetry API `v1` is available for the Istio add-on, for minor revisions `asm-1-22` and above.
 
 ### Configure Telemetry Resources
 
-The following example demonstrates how Envoy access logging can be enabled across the mesh for the Istio add-on via the Telemetry API. The steps assume that `asm-1-22` is currently deployed in the cluster. For guidance on other Telemetry API customizations for the add-on, see the [support policy][support-scope-section] section and the [Istio documentation][istio-telemetry-api].
+The following example demonstrates how Envoy access logging can be enabled across the mesh for the Istio add-on via the Telemetry API. The steps assume that `asm-1-22` is currently deployed in the cluster. For guidance on other Telemetry API customizations for the add-on, see the [Telemetry API support scope][support-scope-section] section and the [Istio documentation][istio-telemetry-api].
 
 #### Deploy Sample Applications
 
@@ -110,7 +110,7 @@ The following Telemetry API configurations are either `allowed` or `supported` f
 | `tracing.*` | Allowed | All tracing configurations are `allowed` but unsupported. |
 
 <!-- LINKS - External -->
-[istio-telemetry]: https://istio.io/latest/docs/concepts/observability/
+[istio-telemetry-overview]: https://istio.io/latest/docs/concepts/observability/
 [istio-telemetry-api]: https://istio.io/latest/docs/reference/config/telemetry/
 [istio-feature-status]: https://istio.io/latest/docs/releases/feature-stages/#feature-phase-definition
 [istio-releases]: https://istio.io/latest/news/releases/
