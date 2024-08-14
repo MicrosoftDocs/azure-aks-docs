@@ -72,13 +72,9 @@ When you're performing [canary upgrade for Istio](./istio-upgrade.md), you need 
 
 After the upgrade is completed or rolled back, you can delete the ConfigMap of the revision that was removed from the cluster.
 
-## Allowed, supported, and blocked values
+## Allowed, supported, and blocked meshconfig values
 
-Fields in `MeshConfig` are classified into three categories: 
-
-- **Blocked**: Disallowed fields are blocked via add-on managed admission webhooks. API server immediately publishes the error message to the user that the field is disallowed.
-- **Supported**: Supported fields (for example, fields related to access logging) receive support from Azure support.
-- **Allowed**: These fields (such as proxyListenPort or proxyInboundListenPort) are allowed but they aren't covered by Azure support.
+Fields in `MeshConfig` are classified as `allowed`, `supported`, or `blocked`. To learn more about these categories, see the [support policy][istio-support-policy] for Istio add-on features and configuration options.
 
 Mesh configuration and the list of allowed/supported fields are revision specific to account for fields being added/removed across revisions. The full list of allowed fields and the supported/unsupported ones within the allowed list is provided in the below table. When new mesh revision is made available, any changes to allowed and supported classification of the fields is noted in this table.
 
@@ -163,3 +159,4 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 [istio-sidecar-race-condition]: https://istio.io/latest/docs/ops/common-problems/injection/#pod-or-containers-start-with-network-issues-if-istio-proxy-is-not-ready
 [istio-deploy-add-on]: istio-deploy-addon.md
 [container-insights-docs]: /azure/azure-monitor/containers/container-insights-overview
+[istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-features-and-configurations
