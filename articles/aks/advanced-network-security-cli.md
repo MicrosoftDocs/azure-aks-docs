@@ -1,7 +1,7 @@
 ---
 title: "Set up Advanced Network Security for Azure Kubernetes Service (AKS) - Azure managed Cilium Network Policies"
 description: Get started with Advanced Network Security for your AKS cluster using Azure managed Cilium Network Policies.
-author: sf-sft
+author: sf-msft
 ms.author: samfoo
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
@@ -80,6 +80,7 @@ az aks create \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --pod-cidr 192.168.0.0/16 \
+    --network-dataplane cilium \
     --enable-acns
 ```
 

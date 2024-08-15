@@ -31,7 +31,7 @@ For more information about Advanced Network Observability, see [What is Advanced
 
 ## Advanced Network Security
 
-Advanced Network Security enables more granular network security policies in order to allow greater ease of use when implementing across clusters. Clusters using a Cilium data plane has access to DNS-based policies. This provides significant improvements to ease of use compared to IP based policies. It allows restricting egress access to external services allowing you to securely run your infrastructure.
+Advanced Network Security enables more granular network security policies in order to allow greater ease of use when implementing across clusters. Clusters using a Cilium data plane has access to DNS-based policies. This provides significant improvements to ease of use compared to IP based policies. It allows restricting egress access to external services using domain names and allowing you to securely run your infrastructure.
 
 ## Pricing
 > [!IMPORTANT]
