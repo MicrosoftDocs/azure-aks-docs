@@ -50,6 +50,8 @@ Similarly, while you may add any metadata to the cluster and nodes, such as tags
 
 ## AKS support coverage
 
+### Supported scenarios
+
 Microsoft provides technical support for the following examples:
 
 * Connectivity to all Kubernetes components that the Kubernetes service provides and supports, such as the API server.
@@ -66,6 +68,8 @@ Microsoft provides technical support for the following examples:
 
 > [!NOTE]
 > Any cluster actions taken by Microsoft/AKS are made with your consent under a built-in Kubernetes role `aks-service` and built-in role binding `aks-service-rolebinding`. This role enables AKS to troubleshoot and diagnose cluster issues, but can't modify permissions nor create roles or role bindings, or other high privilege actions. Role access is only enabled under active support tickets with just-in-time (JIT) access.
+
+### Unsupported scenarios
 
 Microsoft doesn't provide technical support for the following scenarios:
 
@@ -93,7 +97,7 @@ Microsoft doesn't provide technical support for the following scenarios:
 * Configuring or troubleshooting DaemonSets (including scripts) used to customize node configurations. Although using DaemonSets is the recommended approach to tune, modify, or install third-party software on cluster agent nodes when [configuration file parameters](custom-node-configuration.md) are insufficient, Microsoft Support cannot troubleshoot issues arising from the custom scripts used in DaemonSets due to their custom nature.
 * Stand-by and proactive scenarios. Microsoft Support provides reactive support to help solve active issues in a timely and professional manner. However, standby or proactive support to help you eliminate operational risks, increase availability, and optimize performance are not covered. [Eligible customers](https://www.microsoft.com/unifiedsupport) can contact their account team to get nominated for [Azure Event Management service](https://devblogs.microsoft.com/premier-developer/proactively-plan-for-your-critical-event-in-azure-with-enhanced-support-and-engineering-services/). It's a paid service delivered by Microsoft support engineers that includes a proactive solution risk assessment and coverage during the event.
 * Vulnerabilities / CVEs with a vendor fix that is less than 30 days old. As long as you're running the updated VHD, you shouldn't be running any container image vulnerabilities / CVEs with a vendor fix that is over 30 days old. It is customer responsibility to update the VHD and provide filtered lists to Microsoft support. Once you updated your VHD, it is customer responsibility to filter the vulnerabilities / CVEs report and provide a list only with vulnerabilities/CVEs with a vendor fix that is over 30 days old.  If that will be the case, Microsoft support will make sure to work internally and address components with a vendor fix released more than 30 days ago. Additionally, Microsoft provide vulnerability / CVE-related support only for Microsoft-managed components (i.e., AKS node images, managed container images for applications that get deploy during cluster creation or via the installation of a managed add-on). For more details about vulnerability management for AKS, please visit [this page](concepts-vulnerability-management.md).
-
+* Custom code samples or scripts. While Microsoft Support *can* provide small code samples and reviews of small code samples within a support case to demonstrate how to use features of a Microsoft product, Microsoft Support *cannot* provide custom code samples that are specific to your environment or application.
 
 ## AKS support coverage for agent nodes
 
