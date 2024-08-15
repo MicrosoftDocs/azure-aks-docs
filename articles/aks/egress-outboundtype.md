@@ -77,7 +77,6 @@ The following tables show the supported migration paths between outbound types f
 | loadBalancer           | N/A           | Supported         | Not Supported          | Not Supported      |
 | managedNATGateway      | Supported     | N/A               | Not Supported          | Not Supported      |
 | userAssignedNATGateway | Not Supported | Not Supported     | N/A                    | Not Supported      |
-| userDefinedRouting     | Supported     | Supported         | Not Supported          | N/A                |
 
 ### Supported Migration Paths for BYO VNet
 
