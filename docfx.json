@@ -201,6 +201,18 @@
     },
     "overwrite": [],
     "externalReference": [],
-    "template": []
+    "template": [],
+    "rules": {
+      "sensitive-language-ma": {
+        "exclude": [
+            "articles/aks/deploy-valkey-cluster.md"
+        ]
+      },
+      "sensitive-language-sl": {
+        "exclude": [
+            "articles/aks/deploy-valkey-cluster.md"
+        ]
+      }
+    }
   }
 }
