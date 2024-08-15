@@ -3,7 +3,7 @@ title: Create the infrastructure for running a Valkey cluster on Azure Kubernete
 description: In this article, you create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
-ms.date: 08/07/2024
+ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
 ---

@@ -3,7 +3,7 @@ title: Solution overview for deploying a Valkey cluster on Azure Kubernetes Serv
 description: In this article, we provide an overview of deploying a Valkey cluster on Azure Kubernetes Service (AKS) using the Kubernetes stateful framework.
 ms.topic: overview
 ms.custom: azure-kubernetes-service
-ms.date: 08/07/2024
+ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
 ---

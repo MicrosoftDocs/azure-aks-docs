@@ -3,7 +3,7 @@ title: Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)
 description: In this article, you learn how to configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS) using the Kubernetes stateful framework.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
-ms.date: 08/07/2024
+ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
 ---
@@ -13,7 +13,7 @@ ms.author: schaffererin
 In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS).
 
 > [!NOTE]
-> This article contains references to the terms *master*, *slave*, and *sentinel*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
+> This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
 ## Configure workload identity
 
