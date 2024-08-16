@@ -25,7 +25,7 @@ Recommendations can have one of the following statuses:
 
 * *Pass* - The recommendation has been applied.
 * *Fail* - The recommendation hasn't been applied.
-* *N/A* - The recommendation relates to manifest file permission requirements that are not relevant to AKS. Kubernetes clusters by default use a manifest model to deploy the control plane pods, which rely on files from the node VM. The CIS Kubernetes benchmark recommends these files must have certain permission requirements. AKS clusters use a Helm chart to deploy control plane pods and don't rely on files in the node VM.
+* *N/A* - The recommendation relates to manifest file permission requirements that aren't relevant to AKS. Kubernetes clusters by default use a manifest model to deploy the control plane pods, which rely on files from the node VM. The CIS Kubernetes benchmark recommends these files must have certain permission requirements. AKS clusters use a Helm chart to deploy control plane pods and don't rely on files in the node VM.
 * *Depends on Environment* - The recommendation is applied in the user's specific environment and isn't controlled by AKS. *Scored* recommendations affect the benchmark score whether the recommendation applies to the user's specific environment or not.
 * *Equivalent Control* - The recommendation has been implemented in a different, equivalent manner.
 
@@ -188,7 +188,7 @@ Recommendations can have one of the following statuses:
 ## Additional notes
 
 * The security hardened OS is built and maintained specifically for AKS and is **not** supported outside of the AKS platform.
-* To further reduce the attack surface area, some unnecessary kernel module drivers have been disabled in the OS.
+* To further reduce the attack surface area, some unnecessary kernel module drivers are disabled in the OS.
 
 ## Next steps  
 
