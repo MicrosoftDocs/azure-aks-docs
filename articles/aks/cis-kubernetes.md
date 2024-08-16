@@ -1,9 +1,9 @@
 ---
 title: Center for Internet Security (CIS) Kubernetes benchmark
-description: Learn how AKS applies the CIS Kubernetes benchmark
+description: Learn how AKS applies the CIS Kubernetes benchmark.
 ms.topic: article
 ms.subservice: aks-security
-ms.date: 01/10/2024
+ms.date: 08/15/2024
 ---
 
 # Center for Internet Security (CIS) Kubernetes benchmark
@@ -12,7 +12,7 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 ## Kubernetes CIS benchmark
 
-The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.8.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.21.x through AKS 1.27.x.
+The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.9.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.27.x through AKS 1.29.x.
 
 *Scored* recommendations affect the benchmark score if they aren't applied, while *Not Scored* recommendations don't.
 
@@ -66,26 +66,24 @@ Recommendations can have one of the following statuses:
 |1.2.9|Ensure that the admission control plugin EventRateLimit is set|Not Scored|L1|Fail|
 |1.2.10|Ensure that the admission control plugin AlwaysAdmit is not set|Scored|L1|Pass|
 |1.2.11|Ensure that the admission control plugin AlwaysPullImages is set|Not Scored|L1|Fail|
-|1.2.12|Ensure that the admission control plugin SecurityContextDeny is set if PodSecurityPolicy is not used|Not Scored|L1|Fail|
-|1.2.13|Ensure that the admission control plugin ServiceAccount is set|Scored|L1|Pass|
-|1.2.14|Ensure that the admission control plugin NamespaceLifecycle is set|Scored|L1|Pass|
-|1.2.15|Ensure that the admission control plugin NodeRestriction is set|Scored|L1|Pass|
-|1.2.16|Ensure that the `--secure-port` argument is not set to 0|Scored|L1|Pass|
-|1.2.17|Ensure that the `--profiling` argument is set to false|Scored|L1|Pass|
-|1.2.18|Ensure that the `--audit-log-path` argument is set|Scored|L1|Equivalent Control|
-|1.2.19|Ensure that the `--audit-log-maxage` argument is set to 30 or as appropriate|Scored|L1|Equivalent Control|
-|1.2.20|Ensure that the `--audit-log-maxbackup` argument is set to 10 or as appropriate|Scored|L1|Pass|
-|1.2.21|Ensure that the `--audit-log-maxsize` argument is set to 100 or as appropriate|Scored|L1|Pass|
-|1.2.22|Ensure that the `--request-timeout` argument is set as appropriate|Scored|L1|Pass|
-|1.2.23|Ensure that the `--service-account-lookup` argument is set to true|Scored|L1|Pass|
-|1.2.24|Ensure that the `--service-account-key-file` argument is set as appropriate|Scored|L1|Pass|
-|1.2.25|Ensure that the `--etcd-certfile` and `--etcd-keyfile` arguments are set as appropriate|Scored|L1|Pass|
-|1.2.26|Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate|Scored|L1|Pass|
-|1.2.27|Ensure that the `--client-ca-file` argument is set as appropriate|Scored|L1|Pass|
-|1.2.28|Ensure that the `--etcd-cafile` argument is set as appropriate|Scored|L1|Depends on Environment|
-|1.2.29|Ensure that the `--encryption-provider-config` argument is set as appropriate|Scored|L1|Depends on Environment|
-|1.2.30|Ensure that encryption providers are appropriately configured|Scored|L1|Depends on Environment|
-|1.2.31|Ensure that the API Server only makes use of Strong Cryptographic Ciphers|Not Scored|L1|Pass|
+|1.2.12|Ensure that the admission control plugin ServiceAccount is set|Scored|L2|Fail|
+|1.2.13|Ensure that the admission control plugin NamespaceLifecycle is set|Scored|L2|Pass|
+|1.2.14|Ensure that the admission control plugin NodeRestriction is set|Scored|L2|Pass|
+|1.2.15|Ensure that the `--profiling` argument is set to false|Scored|L1|Pass|
+|1.2.16|Ensure that the `--audit-log-path` argument is set|Scored|L1|Equivalent Control|
+|1.2.17|Ensure that the `--audit-log-maxage` argument is set to 30 or as appropriate|Scored|L1|Equivalent Control|
+|1.2.18|Ensure that the `--audit-log-maxbackup` argument is set to 10 or as appropriate|Scored|L1|Pass|
+|1.2.19|Ensure that the `--audit-log-maxsize` argument is set to 100 or as appropriate|Scored|L1|Pass|
+|1.2.20|Ensure that the `--request-timeout` argument is set as appropriate|Scored|L1|Pass|
+|1.2.21|Ensure that the `--service-account-lookup` argument is set to true|Scored|L1|Pass|
+|1.2.22|Ensure that the `--service-account-key-file` argument is set as appropriate|Scored|L1|Pass|
+|1.2.23|Ensure that the `--etcd-certfile` and `--etcd-keyfile` arguments are set as appropriate|Scored|L1|Pass|
+|1.2.24|Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate|Scored|L1|Pass|
+|1.2.25|Ensure that the `--client-ca-file` argument is set as appropriate|Scored|L1|Pass|
+|1.2.26|Ensure that the `--etcd-cafile` argument is set as appropriate|Scored|L1|Depends on Environment|
+|1.2.27|Ensure that the `--encryption-provider-config` argument is set as appropriate|Scored|L1|Depends on Environment|
+|1.2.28|Ensure that encryption providers are appropriately configured|Scored|L1|Depends on Environment|
+|1.2.29|Ensure that the API Server only makes use of Strong Cryptographic Ciphers|Not Scored|L1|Pass|
 |1.3|Controller Manager||||
 |1.3.1|Ensure that the `--terminated-pod-gc-threshold` argument is set as appropriate|Scored|L1|Pass|
 |1.3.2|Ensure that the `--profiling` argument is set to false|Scored|L1|Pass|
@@ -131,14 +129,16 @@ Recommendations can have one of the following statuses:
 |4.2.3|Ensure that the `--client-ca-file` argument is set as appropriate|Scored|L1|Pass|
 |4.2.4|Ensure that the `--read-only-port` argument is set to 0|Scored|L1|Pass|
 |4.2.5|Ensure that the `--streaming-connection-idle-timeout` argument is not set to 0|Scored|L1|Pass|
-|4.2.6|Ensure that the `--protect-kernel-defaults` argument is set to true|Scored|L1|Pass|
-|4.2.7|Ensure that the `--make-iptables-util-chains` argument is set to true|Scored|L1|Pass|
-|4.2.8|Ensure that the `--hostname-override` argument is not set|Not Scored|L1|Pass|
-|4.2.9|Ensure that the eventRecordQPS argument is set to a level which ensures appropriate event capture|Not Scored|L2|Pass|
-|4.2.10|Ensure that the `--tls-cert-file`and `--tls-private-key-file` arguments are set as appropriate|Scored|L1|Pass|
-|4.2.11|Ensure that the `--rotate-certificates` argument is not set to false|Scored|L1|Pass|
-|4.2.12|Ensure that the RotateKubeletServerCertificate argument is set to true|Scored|L1|Pass|
-|4.2.13|Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers|Not Scored|L1|Pass|
+|4.2.6|Ensure that the `--make-iptables-util-chains` argument is set to true|Scored|L1|Pass|
+|4.2.7|Ensure that the `--hostname-override` argument is not set|Scored|L1|Pass|
+|4.2.8|Ensure that the `--eventRecordQPS` argument is set to a level which ensures appropriate event capture|Not Scored|L2|Pass|
+|4.2.9|Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate|Not Scored|L1|Pass|
+|4.2.10|Ensure that the `--rotate-certificates` argument is not set to false|Scored|L1|Pass|
+|4.2.11|Verify that the RotateKubeletServerCertificate argument is set to true|Scored|L1|Fail|
+|4.2.12|Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers|Not Scored|L1|Pass|
+|4.2.13|Ensure that a limit is set on pod PIDs|Not Scored|L1|Pass|
+|4.3|kube-proxy||||
+|4.3.1|Ensure that the kube-proxy metrics service is bound to localhost|Scored|L1|Pass|
 |5|Policies||||
 |5.1|RBAC and Service Accounts||||
 |5.1.1|Ensure that the cluster-admin role is only used where required|Not Scored|L1|Depends on Environment|
@@ -154,18 +154,17 @@ Recommendations can have one of the following statuses:
 |5.1.11|Minimize access to the approval sub-resource of certificatesigningrequests objects|Not Scored|L1|Depends on Environment|
 |5.1.12|Minimize access to webhook configuration objects|Not Scored|L1|Depends on Environment|
 |5.1.13|Minimize access to the service account token creation|Not Scored|L1|Depends on Environment|
-|5.2|Pod Security Policies||||
+|5.2|Pod Security Standards||||
 |5.2.1|Ensure that the cluster has at least one active policy control mechanism in place|Not Scored|L1|Depends on Environment|
 |5.2.2|Minimize the admission of privileged containers|Not Scored|L1|Depends on Environment|
 |5.2.3|Minimize the admission of containers wishing to share the host process ID namespace|Scored|L1|Depends on Environment|
 |5.2.4|Minimize the admission of containers wishing to share the host IPC namespace|Scored|L1|Depends on Environment|
 |5.2.5|Minimize the admission of containers wishing to share the host network namespace|Scored|L1|Depends on Environment|
 |5.2.6|Minimize the admission of containers with allowPrivilegeEscalation|Scored|L1|Depends on Environment|
-|5.2.6|Minimize the admission of root containers|Not Scored|L2|Depends on Environment|
-|5.2.7|Minimize the admission of containers with the NET_RAW capability|Not Scored|L1|Depends on Environment|
-|5.2.8|Minimize the admission of containers with added capabilities|Not Scored|L1|Depends on Environment|
-|5.2.9|Minimize the admission of containers with capabilities assigned|Not Scored|L1|Depends on Environment|
-|5.2.10|Minimize the admission of containers with capabilities assigned|Not Scored|L2||
+|5.2.7|Minimize the admission of root containers|Not Scored|L2|Depends on Environment|
+|5.2.8|Minimize the admission of containers with the NET_RAW capability|Not Scored|L1|Depends on Environment|
+|5.2.9|Minimize the admission of containers with added capabilities|Not Scored|L1|Depends on Environment|
+|5.2.10|Minimize the admission of containers with capabilities assigned|Not Scored|L2|Depends on Environment|
 |5.2.11|Minimize the admission of Windows HostProcess Containers|Not Scored|L1|Depends on Environment|
 |5.2.12|Minimize the admission of HostPath volumes|Not Scored|L1|Depends on Environment|
 |5.2.13|Minimize the admission of containers which use HostPorts|Not Scored|L1|Depends on Environment|
@@ -173,15 +172,15 @@ Recommendations can have one of the following statuses:
 |5.3.1|Ensure that the CNI in use supports Network Policies|Not Scored|L1|Pass|
 |5.3.2|Ensure that all Namespaces have Network Policies defined|Scored|L2|Depends on Environment|
 |5.4|Secrets Management||||
-|5.4.1|Prefer using secrets as files over secrets as environment variables|Not Scored|L1|Depends on Environment|
+|5.4.1|Prefer using secrets as files over secrets as environment variables|Not Scored|L2|Depends on Environment|
 |5.4.2|Consider external secret storage|Not Scored|L2|Depends on Environment|
 |5.5|Extensible Admission Control||||
 |5.5.1|Configure Image Provenance using ImagePolicyWebhook admission controller|Not Scored|L2|Fail|
-|5.7|General Policies||||
-|5.7.1|Create administrative boundaries between resources using namespaces|Not Scored|L1|Depends on Environment|
-|5.7.2|Ensure that the seccomp profile is set to docker/default in your pod definitions|Not Scored|L2|Depends on Environment|
-|5.7.3|Apply Security Context to Your Pods and Containers|Not Scored|L2|Depends on Environment|
-|5.7.4|The default namespace should not be used|Scored|L2|Depends on Environment|
+|5.6|General Policies||||
+|5.6.1|Create administrative boundaries between resources using namespaces|Not Scored|L1|Depends on Environment|
+|5.6.2|Ensure that the seccomp profile is set to docker/default in your pod definitions|Not Scored|L2|Depends on Environment|
+|5.6.3|Apply Security Context to Your Pods and Containers|Not Scored|L2|Depends on Environment|
+|5.6.4|The default namespace should not be used|Scored|L2|Depends on Environment|
 
 > [!NOTE]
 > In addition to the Kubernetes CIS benchmark, there is an [AKS CIS benchmark][cis-benchmark-aks] available as well.
