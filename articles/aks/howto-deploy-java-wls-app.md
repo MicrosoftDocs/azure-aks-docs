@@ -52,8 +52,6 @@ If you're interested in providing feedback or working closely on your migration 
   - A Java Development Kit (JDK) compatible with the version of WebLogic Server you intend to run. The article directs you to install a version of WebLogic Server that uses JDK 11. Ensure that your `JAVA_HOME` environment variable is set correctly in the shells in which you run the commands.
   - [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
   - Ensure that you have the zip/unzip utility installed. Use `zip/unzip -v` to test whether `zip/unzip` works.
-  > [!NOTE]
-  > You can perform all the steps of this article in the Azure Cloud Shell, except for those involving Docker. To learn more about Azure Cloud Shell, see [What is Azure Cloud Shell?](/azure/cloud-shell/overview)
 
 ## Deploy WebLogic Server on AKS
 
