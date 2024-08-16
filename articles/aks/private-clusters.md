@@ -123,7 +123,6 @@ You can configure private DNS zones using the following parameters:
   * If the private DNS zone is in a different subscription than the AKS cluster, you need to register the Azure provider **Microsoft.ContainerServices** in both subscriptions.
   * "fqdn-subdomain" can be utilized with "CUSTOM_PRIVATE_DNS_ZONE_RESOURCE_ID" only to provide subdomain capabilities to `privatelink.<region>.azmk8s.io`.
   * If your AKS cluster is configured with an Active Directory service principal, AKS doesn't support using a system-assigned managed identity with custom private DNS zone. The cluster must use [user-assigned managed identity authentication](../aks/use-managed-identity.md).
-    
   * If you are specifying a `<subzone>` there is a 32 character limit for the `<subzone>` name.
 
 >[!NOTE]
@@ -280,7 +279,7 @@ Virtual network peering is one way to access your private cluster. To use virtua
 
 ## Use a private endpoint connection
 
-A private endpoint can be set up so that a VNet doesn't need to be peered to communicate with the private cluster. To use a private endpoint, create a new private endpoint in your virtual network and then create a link between your virtual network and a new private DNS zone.
+A private endpoint can be set up so that a VNet doesn't need to be peered to communicate with the private cluster. Create a new private endpoint in the virtual network containing the consuming resources, and then create a link between your virtual network and a new private DNS zone in the same network.
 
 > [!IMPORTANT]
 > If the virtual network is configured with custom DNS servers, private DNS will need to be set up appropriately for the environment. See the [virtual networks name resolution documentation][virtual-networks-name-resolution] for more details.
@@ -296,7 +295,7 @@ Create a private endpoint resource in your VNet:
 5. On the **Basics** tab, set up the following options:
    * **Project details**:
      * Select an Azure **Subscription**.
-     * Select the Azure **Resource group** where your virtual network is located.
+     * Select the Azure **Resource group** where your virtual network is located with the consuming resources.
    * **Instance details**:
      * Enter a **Name** for the private endpoint, such as *myPrivateEndpoint*.
      * Select a **Region** for the private endpoint.
@@ -321,7 +320,7 @@ Once the resource is created, record the private IP address of the private endpo
 
 ### Create a private DNS zone
 
-Once the private endpoint is created, create a new private DNS zone with the same name as the private DNS zone created by the private cluster:
+Once you create the private endpoint, create a new private DNS zone with the same name as the private DNS zone created by the private cluster. Remember to create this DNS zone in the VNet containing the consuming resources.
 
 1. Go to the node resource group in the Azure portal.  
 2. Select the private DNS zone and record:
@@ -350,7 +349,7 @@ Once the private DNS zone is created, create an `A` record, which associates the
    * **Type**: Select *A - Address record*.
    * **TTL**: Enter the number from the `A` record in the private cluster's DNS zone.
    * **TTL unit**: Change the dropdown value to match the one in the `A` record from the private cluster's DNS zone.
-   * **IP address**: Enter the IP address of the private endpoint you created.
+   * **IP address**: Enter the **IP address of the private endpoint you created**.
 
 > [!IMPORTANT]
 > When creating the `A` record, only use the name and not the fully qualified domain name (FQDN).
@@ -370,7 +369,9 @@ Once the `A` record is created, link the private DNS zone to the virtual network
 It may take a few minutes for the operation to complete. Once the virtual network link is created, you can access it from the **Virtual network links** tab you used in step 2.
 
 > [!WARNING]
-> If the private cluster is stopped and restarted, the private cluster's original private link service is removed and recreated, which breaks the connection between your private endpoint and the private cluster. To resolve this issue, delete and recreate any user-created private endpoints linked to the private cluster. If the recreated private endpoints have new IP addresses, you'll also need to update DNS records.
+>
+> * If the private cluster is stopped and restarted, the private cluster's original private link service is removed and recreated, which breaks the connection between your private endpoint and the private cluster. To resolve this issue, delete and recreate any user-created private endpoints linked to the private cluster. If the recreated private endpoints have new IP addresses, you'll also need to update DNS records.
+> * If you update the DNS records in the private DNS zone, the changes may take up to 15 minutes to propagate. zone, ensure the host that you're trying to connect from is using the updated DNS records. You can verify this using the `nslookup` command. If you notice the updates aren't reflected in the output, you might need to flush the DNS cache on your machine and try again.
 
 ## Next steps
 
