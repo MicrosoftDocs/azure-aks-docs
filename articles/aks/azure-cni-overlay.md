@@ -6,7 +6,7 @@ ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
-ms.date: 07/02/2024
+ms.date: 08/16/2024
 ---
 
 # Configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS)
@@ -360,6 +360,8 @@ The application routing addon is the recommended way for ingress in an AKS clust
     nginx-ipv6   LoadBalancer   fd12:3456:789a:1::981a   2603:1030:8:5::2d   80:32002/TCP   63s
     ```
 
+---
+
 ## Dual-stack networking with Azure CNI Powered by Cilium - (Preview)
 
 You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
@@ -497,8 +499,6 @@ az aks nodepool add \
     --name winpool1 \
     --node-count 2
 ```
-
----
 
 ## Next steps
 
