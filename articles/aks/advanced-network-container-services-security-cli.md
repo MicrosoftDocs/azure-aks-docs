@@ -1,6 +1,6 @@
 ---
-title: "Set up Advanced Network Security for Azure Kubernetes Service (AKS) - Azure managed Cilium Network Policies"
-description: Get started with Advanced Network Security for your AKS cluster using Azure managed Cilium Network Policies.
+title: "Set up Security for Advanced Container Networking Services for Azure Kubernetes Service (AKS) - Azure managed Cilium Network Policies"
+description: Get started with Security for Advanced Container Networking Services for your AKS cluster using Azure managed Cilium Network Policies.
 author: sf-msft
 ms.author: samfoo
 ms.service: azure-kubernetes-service
@@ -10,12 +10,12 @@ ms.date: 07/30/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Advanced Network Security for Azure Kubernetes Service (AKS) - Azure managed Cilium Network Policies (Preview)
+# Set up Security for Advanced Container Networking Services on Azure Kubernetes Service (AKS) - Azure managed Cilium Network Policies (Preview)
 
-This article shows you how to set up Advanced Network Security.
+This article shows you how to set up security features on Advanced Container Networking Services.
 
 > [!IMPORTANT]
-> Advanced Network Observability is currently in PREVIEW.
+> Advanced Container Networking Services is currently in PREVIEW.
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
 ## Prerequisites
 
@@ -64,9 +64,9 @@ export LOCATION="<azure-region>"
 az group create --name $RESOURCE_GROUP --location $LOCATION
 ```
 
-## Create an AKS cluster with Advanced Network Security
+## Create an AKS cluster with Advanced Container Networking Services
 
-Advanced Network Security can be enabled using the Advanced Container Networking Services bundle or toggled individually with a CLI flag.
+Security features can be enabled using the Advanced Container Networking Services bundle or toggled individually with a CLI flag.
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -84,9 +84,9 @@ az aks create \
     --enable-acns
 ```
 
-## Enable Advanced Network Security on an existing cluster
+## Enable Advanced Container Networking Services on an existing cluster
 
-Enable Advanced Network Security through Advanced Container Networking Services on an existing cluster using the [`az aks update`](/cli/azure/aks#az_aks_update) command.
+Enable security features through Advanced Container Networking Services on an existing cluster using the [`az aks update`](/cli/azure/aks#az_aks_update) command.
 
 > [!NOTE]
 > Only clusters with the Cilium data plane support Advanced Security and Advanced Container Networking Services.
@@ -121,6 +121,6 @@ If you don't plan on using this application, delete the other resources you crea
 
 ## Next steps
 
-In this how-to article, you learned how to install and enable Advanced Network Security for your AKS cluster.
+In this how-to article, you learned how to install and enable security features with Advanced Container Networking Services for your AKS cluster.
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).

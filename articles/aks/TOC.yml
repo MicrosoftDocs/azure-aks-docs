@@ -166,8 +166,8 @@
           href: advanced-container-networking-services-overview.md
         - name: Advanced Network Observability overview
           href: advanced-network-observability-concepts.md
-        - name: Advanced Network Security overview
-          href: advanced-network-security-concepts.md
+        - name: Security on Advanced Container Networking Services overview
+          href: advanced-network-container-services-security-concepts.md
     - name: Storage
       href: concepts-storage.md
     - name: Scaling
@@ -620,8 +620,8 @@
               href: troubleshoot-udp-packet-drops.md
             - name: Network Security
               items:
-                - name: Advanced Network Security
-                  href: advanced-network-security-cli.md
+                - name: Security with Advanced Container Networking Services
+                  href: advanced-network-container-services-security-cli.md
     - name: Storage
       items:
         - name: CSI storage drivers
