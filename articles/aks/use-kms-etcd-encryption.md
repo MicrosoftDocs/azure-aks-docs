@@ -223,6 +223,12 @@ Use `az keyvault create` to create a private key vault:
 az keyvault create --name MyKeyVault --resource-group MyResourceGroup --public-network-access Disabled
 ```
 
+Use `az keyvault key create` to create a key:
+
+```azurecli
+az keyvault key create --name MyKeyName --vault-name MyKeyVault
+```
+
 Creating or updating keys in a private key vault that doesn't have a private endpoint isn't supported. To learn how to manage private key vaults, see [Integrate a key vault by using Azure Private Link](/azure/key-vault/general/private-link-service).
 
 ### Create a user-assigned managed identity for a private key vault
