@@ -331,7 +331,7 @@ The application routing add-on uses annotations on Kubernetes Ingress objects to
 
 The application routing add-on creates an Ingress class on the cluster named *webapprouting.kubernetes.azure.com*. When you create an Ingress object with this class, it activates the add-on.  
 
-1. Copy the following YAML manifest into a new file named **ingress.yaml** and save the file to your local computer.
+1. Copy the following YAML manifest into a new file named **ingress.yaml** and save the file to your local computer. For this demo we are going to use the special nip.io domain. Replace the string `x.x.x.x` with the actual IP address of the ingress controller that can be found with the command `kubectl get service -n app-routing-system nginx -o jsonpath="{.status.loadBalancer.ingress[0].ip}"`
 
     ```yaml
     apiVersion: networking.k8s.io/v1
@@ -342,7 +342,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
     spec:
       ingressClassName: webapprouting.kubernetes.azure.com
       rules:
-      - host: myapp.contoso.com
+      - host: x.x.x.x.nip.io
         http:
           paths:
           - backend:
