@@ -23,7 +23,7 @@ Azure Hybrid Benefit for Azure Kubernetes Service can be enabled at cluster crea
 
 To create a new AKS cluster with Azure Hybrid Benefit enabled:
 
-### [Azure CLI](#tab/azure-cli/linux)
+### [Azure CLI](#tab/azure-cli)
 
 ```azurecli-interactive
 PASSWORD='' # replace with your own password value
@@ -55,7 +55,7 @@ New-AzAksCluster -ResourceGroupName $rg_name -Name $cluster -WindowsProfileAdmin
 
 To enable Azure Hybrid Benefit on an existing AKS cluster:
 
-### [Azure CLI](#tab/azure-cli/linux)
+### [Azure CLI](#tab/azure-cli)
 
 ```azurecli
 RG_NAME='myResourceGroup'
@@ -79,7 +79,7 @@ Get-AzAksCluster -ResourceGroupName $rg_name -Name $cluster | Set-AzAksCluster -
 
 To disable Azure Hybrid Benefit for an AKS cluster:
 
-### [Azure CLI](#tab/azure-cli/linux)
+### [Azure CLI](#tab/azure-cli)
 
 ```azurecli
 RG_NAME='myResourceGroup'
