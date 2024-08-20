@@ -48,8 +48,6 @@ With the retirement of [Open Service Mesh][open-service-mesh-docs] (OSM) by the 
 
 ## Enable application routing using Azure CLI
 
-# [Default](#tab/default)
-
 ### Enable on a new cluster
 
 To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying the `--enable-app-routing` flag.
@@ -71,67 +69,6 @@ To enable application routing on an existing cluster, use the [`az aks approutin
 az aks approuting enable --resource-group <ResourceGroupName> --name <ClusterName>
 ```
 
-# [Open Service Mesh (OSM) (retired)](#tab/with-osm)
-
->[!NOTE]
->Open Service Mesh (OSM) has been retired by the CNCF. Creating Ingresses using the application routing add-on with OSM integration is not recommended and will be retired.
-
-The following add-ons are required to support this configuration:
-
-* **open-service-mesh**:  If you require encrypted intra cluster traffic (recommended) between the NGINX Ingress and your services, the Open Service Mesh add-on is required which provides mutual TLS (mTLS).
-
-### Enable on a new cluster
-
-Enable application routing on a new AKS cluster using the [`az aks create`][az-aks-create] command specifying the `--enable-app-routing` flag and the `--enable-addons` parameter with the `open-service-mesh` add-on:
-
-```azurecli-interactive
-az aks create \
-    --resource-group <ResourceGroupName> \
-    --name <ClusterName> \
-    --location <Location> \
-    --enable-app-routing \
-    --enable-addons open-service-mesh \
-    --generate-ssh-keys 
-```
-
-### Enable on an existing cluster
-
-To enable application routing on an existing cluster, use the [`az aks approuting enable`][az-aks-approuting-enable] command and the [`az aks enable-addons`][az-aks-enable-addons] command with the `--addons` parameter set to `open-service-mesh`:
-
-```azurecli-interactive
-az aks approuting enable --resource-group <ResourceGroupName> --name <ClusterName>
-az aks enable-addons --resource-group <ResourceGroupName> --name <ClusterName> --addons open-service-mesh
-```
-
-> [!NOTE]
-> To use the add-on with Open Service Mesh, you should install the `osm` command-line tool. This command-line tool contains everything needed to configure and manage Open Service Mesh. The latest binaries are available on the [OSM GitHub releases page][osm-release].
-
-# [Service annotations (retired)](#tab/service-annotations)
-
-> [!WARNING]
-> Configuring Ingresses by adding annotations on the Service object is retired. Please consider [configuring using an Ingress object](?tabs=default).
-
-### Enable on a new cluster
-
-To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying `--enable-app-routing` flag.
-
-```azurecli-interactive
-az aks create \
-    --resource-group <ResourceGroupName> \
-    --name <ClusterName> \
-    --location <Location> \
-    --enable-app-routing \
-    --generate-ssh-keys
-```
-
-### Enable on an existing cluster
-
-To enable application routing on an existing cluster,  use the [`az aks approuting enable`][az-aks-approuting-enable] command:
-
-```azurecli-interactive
-az aks approuting enable --resource-group <ResourceGroupName> --name <ClusterName>
-```
-
 ---
 
 ## Connect to your AKS cluster
@@ -148,56 +85,246 @@ az aks get-credentials --resource-group <ResourceGroupName> --name <ClusterName>
 
 The application routing add-on uses annotations on Kubernetes Ingress objects to create the appropriate resources.
 
-# [Application routing add-on](#tab/deploy-app-default)
-
-1. Create the application namespace called `hello-web-app-routing` to run the example pods using the `kubectl create namespace` command.
+1. Create the application namespace called `aks-store` to run the example pods using the `kubectl create namespace` command.
 
     ```bash
-    kubectl create namespace hello-web-app-routing
+    kubectl create namespace aks-store
     ```
 
-2. Create the deployment by copying the following YAML manifest into a new file named **deployment.yaml** and save the file to your local computer.
+2. Create the deployments by copying the following YAML manifest into a new file named **deployment.yaml** and save the file to your local computer.
 
     ```yaml
+    ---
     apiVersion: apps/v1
     kind: Deployment
     metadata:
-      name: aks-helloworld  
-      namespace: hello-web-app-routing
+      name: rabbitmq
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app: aks-helloworld
+          app: rabbitmq
       template:
         metadata:
           labels:
-            app: aks-helloworld
+            app: rabbitmq
         spec:
+          nodeSelector:
+            "kubernetes.io/os": linux
           containers:
-          - name: aks-helloworld
-            image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
+          - name: rabbitmq
+            image: mcr.microsoft.com/mirror/docker/library/rabbitmq:3.10-management-alpine
             ports:
-            - containerPort: 80
+            - containerPort: 5672
+              name: rabbitmq-amqp
+            - containerPort: 15672
+              name: rabbitmq-http
             env:
-            - name: TITLE
-              value: "Welcome to Azure Kubernetes Service (AKS)"
+            - name: RABBITMQ_DEFAULT_USER
+              value: "username"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "password"
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                cpu: 250m
+                memory: 256Mi
+            volumeMounts:
+            - name: rabbitmq-enabled-plugins
+              mountPath: /etc/rabbitmq/enabled_plugins
+              subPath: enabled_plugins
+          volumes:
+          - name: rabbitmq-enabled-plugins
+            configMap:
+              name: rabbitmq-enabled-plugins
+              items:
+              - key: rabbitmq_enabled_plugins
+                path: enabled_plugins
+    ---
+    apiVersion: v1
+    data:
+      rabbitmq_enabled_plugins: |
+        [rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0].
+    kind: ConfigMap
+    metadata:
+      name: rabbitmq-enabled-plugins
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: order-service
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: order-service
+      template:
+        metadata:
+          labels:
+            app: order-service
+        spec:
+          nodeSelector:
+            "kubernetes.io/os": linux
+          containers:
+          - name: order-service
+            image: ghcr.io/azure-samples/aks-store-demo/order-service:latest
+            ports:
+            - containerPort: 3000
+            env:
+            - name: ORDER_QUEUE_HOSTNAME
+              value: "rabbitmq"
+            - name: ORDER_QUEUE_PORT
+              value: "5672"
+            - name: ORDER_QUEUE_USERNAME
+              value: "username"
+            - name: ORDER_QUEUE_PASSWORD
+              value: "password"
+            - name: ORDER_QUEUE_NAME
+              value: "orders"
+            - name: FASTIFY_ADDRESS
+              value: "0.0.0.0"
+            resources:
+              requests:
+                cpu: 1m
+                memory: 50Mi
+              limits:
+                cpu: 75m
+                memory: 128Mi
+          initContainers:
+          - name: wait-for-rabbitmq
+            image: busybox
+            command: ['sh', '-c', 'until nc -zv rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done;']
+            resources:
+              requests:
+                cpu: 1m
+                memory: 50Mi
+              limits:
+                cpu: 75m
+                memory: 128Mi
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: product-service
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: product-service
+      template:
+        metadata:
+          labels:
+            app: product-service
+        spec:
+          nodeSelector:
+            "kubernetes.io/os": linux
+          containers:
+          - name: product-service
+            image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
+            ports:
+            - containerPort: 3002
+            resources:
+              requests:
+                cpu: 1m
+                memory: 1Mi
+              limits:
+                cpu: 1m
+                memory: 7Mi
+    ---
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: store-front
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: store-front
+      template:
+        metadata:
+          labels:
+            app: store-front
+        spec:
+          nodeSelector:
+            "kubernetes.io/os": linux
+          containers:
+          - name: store-front
+            image: ghcr.io/azure-samples/aks-store-demo/store-front:latest
+            ports:
+            - containerPort: 8080
+              name: store-front
+            env:
+            - name: VUE_APP_ORDER_SERVICE_URL
+              value: "http://order-service:3000/"
+            - name: VUE_APP_PRODUCT_SERVICE_URL
+              value: "http://product-service:3002/"
+            resources:
+              requests:
+                cpu: 1m
+                memory: 200Mi
+              limits:
+                cpu: 1000m
+                memory: 512Mi
     ```
 
 3. Create the service by copying the following YAML manifest into a new file named **service.yaml** and save the file to your local computer.
 
     ```yaml
+    ---
     apiVersion: v1
     kind: Service
     metadata:
-      name: aks-helloworld
-      namespace: hello-web-app-routing
+      name: rabbitmq
+    spec:
+      selector:
+        app: rabbitmq
+      ports:
+        - name: rabbitmq-amqp
+          port: 5672
+          targetPort: 5672
+        - name: rabbitmq-http
+          port: 15672
+          targetPort: 15672
+      type: ClusterIP
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: order-service
     spec:
       type: ClusterIP
       ports:
-      - port: 80
+      - name: http
+        port: 3000
+        targetPort: 3000
       selector:
-        app: aks-helloworld
+        app: order-service
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: product-service
+    spec:
+      type: ClusterIP
+      ports:
+      - name: http
+        port: 3002
+        targetPort: 3002
+      selector:
+        app: product-service
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: store-front
+    spec:
+      ports:
+      - port: 80
+        targetPort: 8080
+      selector:
+        app: store-front
     ```
 
 ### Create the Ingress object
@@ -210,8 +337,8 @@ The application routing add-on creates an Ingress class on the cluster named *we
     apiVersion: networking.k8s.io/v1
     kind: Ingress
     metadata:
-      name: aks-helloworld
-      namespace: hello-web-app-routing
+      name: store-front
+      namespace: aks-store
     spec:
       ingressClassName: webapprouting.kubernetes.azure.com
       rules:
@@ -220,7 +347,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
           paths:
           - backend:
               service:
-                name: aks-helloworld
+                name: store-front
                 port:
                   number: 80
             path: /
@@ -230,7 +357,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
 2. Create the cluster resources using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
-    kubectl apply -f deployment.yaml -n hello-web-app-routing
+    kubectl apply -f deployment.yaml -n aks-store
     ```
 
     The following example output shows the created resource:
@@ -240,7 +367,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
     ```
 
     ```bash
-    kubectl apply -f service.yaml -n hello-web-app-routing
+    kubectl apply -f service.yaml -n aks-store
     ```
 
     The following example output shows the created resource:
@@ -250,7 +377,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
     ```
 
     ```bash
-    kubectl apply -f ingress.yaml -n hello-web-app-routing
+    kubectl apply -f ingress.yaml -n aks-store
     ```
 
     The following example output shows the created resource:
@@ -258,217 +385,6 @@ The application routing add-on creates an Ingress class on the cluster named *we
     ```output
     ingress.networking.k8s.io/aks-helloworld created
     ```
-
-# [Open Service Mesh (retired)](#tab/deploy-app-osm)
-
-1. Create a namespace called `hello-web-app-routing` to run the exmaple pods using the `kubectl create namespace` command.
-
-    ```bash
-    kubectl create namespace hello-web-app-routing
-    ```
-
-2. Add the application namespace to the OSM control plane using the `osm namespace add` command.
-
-    ```bash
-    osm namespace add hello-web-app-routing
-    ```
-
-3. Create the deployment by copying the following YAML manifest into a new file named **deployment.yaml** and save the file to your local computer.
-
-    ```yml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: aks-helloworld  
-      namespace: hello-web-app-routing
-    spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          app: aks-helloworld
-      template:
-        metadata:
-          labels:
-            app: aks-helloworld
-        spec:
-          containers:
-          - name: aks-helloworld
-            image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
-            ports:
-            - containerPort: 80
-            env:
-            - name: TITLE
-              value: "Welcome to Azure Kubernetes Service (AKS)"
-    ```
-
-4. Create the service by copying the following YAML manifest into a new file named **service.yaml** and save the file to your local computer.
-
-    ```yml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: aks-helloworld
-      namespace: hello-web-app-routing
-    spec:
-      type: ClusterIP
-      ports:
-      - port: 80
-      selector:
-        app: aks-helloworld
-    ```
-
-### Create the Ingress object
-
-The application routing add-on creates an Ingress class on the cluster called *webapprouting.kubernetes.azure.com*. When you create an Ingress object with this class, it activates the add-on. The `kubernetes.azure.com/use-osm-mtls: "true"` annotation on the Ingress object creates an Open Service Mesh (OSM) [IngressBackend][ingress-backend] to configure a backend service to accept Ingress traffic from trusted sources.
-
-1. Copy the following YAML manifest into a new file named **ingress.yaml** and save the file to your local computer.
-
-    ```yml
-    apiVersion: networking.k8s.io/v1
-    kind: Ingress
-    metadata:
-      annotations:
-        kubernetes.azure.com/use-osm-mtls: "true"
-        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-        nginx.ingress.kubernetes.io/configuration-snippet: |2-
-          proxy_ssl_name "default.hello-web-app-routing.cluster.local";
-        nginx.ingress.kubernetes.io/proxy-ssl-secret: kube-system/osm-ingress-client-cert
-        nginx.ingress.kubernetes.io/proxy-ssl-verify: "on"
-      name: aks-helloworld
-      namespace: hello-web-app-routing
-    spec:
-      ingressClassName: webapprouting.kubernetes.azure.com
-      rules:
-      - host: <Hostname>
-        http:
-          paths:
-          - backend:
-              service:
-                name: aks-helloworld
-                port:
-                  number: 80
-            path: /
-            pathType: Prefix
-    ```
-
-1. Create the cluster resources using the [`kubectl apply`][kubectl-apply] command.
-
-    ```bash
-    kubectl apply -f deployment.yaml -n hello-web-app-routing
-    ```
-
-    The following example output shows the created resource:
-
-    ```output
-    deployment.apps/aks-helloworld created
-    ```
-
-    ```bash
-    kubectl apply -f service.yaml -n hello-web-app-routing
-    ```
-
-    The following example output shows the created resource:
-
-    ```output
-    service/aks-helloworld created
-    ```
-
-    ```bash
-    kubectl apply -f ingress.yaml -n hello-web-app-routing
-    ```
-
-    The following example output shows the created resource:
-
-    ```output
-    ingress.networking.k8s.io/aks-helloworld created
-    ```
-
-# [Service annotations (retired)](#tab/deploy-app-service-annotations)
-
-> [!WARNING]
-> Configuring Ingresses by adding annotations on the Service object is retired. Please consider [configuring using an Ingress object](?tabs=default).
-
-### Create application namespace
-
-1. Create a namespace called `hello-web-app-routing` to run the exmaple pods using the `kubectl create namespace` command.
-
-    ```bash
-    kubectl create namespace hello-web-app-routing
-    ```
-
-2. Add the application namespace to the OSM control plane using the `osm namespace add` command.
-
-    ```bash
-    osm namespace add hello-web-app-routing
-    ```
-
-3. Create the deployment by copying the following YAML manifest into a new file named **deployment.yaml** and save the file to your local computer.
-
-    ```yml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: aks-helloworld  
-      namespace: hello-web-app-routing
-    spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          app: aks-helloworld
-      template:
-        metadata:
-          labels:
-            app: aks-helloworld
-        spec:
-          containers:
-          - name: aks-helloworld
-            image: mcr.microsoft.com/azuredocs/aks-helloworld:v1
-            ports:
-            - containerPort: 80
-            env:
-            - name: TITLE
-              value: "Welcome to Azure Kubernetes Service (AKS)"
-    ```
-
-4. Create the service by copying the following YAML manifest into a new file named **service.yaml** and save the file to your local computer.
-
-    ```yml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: aks-helloworld
-      namespace: hello-web-app-routing
-    spec:
-      type: ClusterIP
-      ports:
-      - port: 80
-      selector:
-        app: aks-helloworld
-    ```
-
-5. Create the cluster resources using the [`kubectl apply`][kubectl-apply] command.
-
-    ```bash
-    kubectl apply -f deployment.yaml -n hello-web-app-routing
-    ```
-
-    The following example output shows the created resource:
-
-    ```output
-    deployment.apps/aks-helloworld created
-    ```
-
-    ```bash
-    kubectl apply -f service.yaml -n hello-web-app-routing
-    ```
-
-    The following example output shows the created resource:
-
-    ```output
-    service/aks-helloworld created
-    ```
-
----
 
 ## Verify the managed Ingress was created
 
@@ -490,7 +406,7 @@ aks-helloworld   webapprouting.kubernetes.azure.com   myapp.contoso.com   20.51.
 To remove the associated namespace, use the `kubectl delete namespace` command.
 
 ```bash
-kubectl delete namespace hello-web-app-routing
+kubectl delete namespace aks-store
 ```
 
 To remove the application routing add-on from your cluster, use the [`az aks approuting disable`][az-aks-approuting-disable] command.
