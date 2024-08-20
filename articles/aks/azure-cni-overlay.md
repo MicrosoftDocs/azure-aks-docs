@@ -368,6 +368,11 @@ You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. Th
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
+### Prerequisites
+
+* You must have the latest version of the AKS preview extension.
+* You must have Kubernetes version 1.29 or greater. 
+
 ### Install the aks-preview Azure CLI extension
 
 * Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
