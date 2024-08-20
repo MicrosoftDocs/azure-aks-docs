@@ -368,6 +368,10 @@ You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. Th
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
+### Limitations
+
+* Azure CNI Overlay Dualstack is only supporting in Kubernetes 1.29+
+
 ### Install the aks-preview Azure CLI extension
 
 * Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
