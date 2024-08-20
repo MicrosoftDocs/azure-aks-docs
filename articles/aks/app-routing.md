@@ -367,7 +367,8 @@ The application routing add-on creates an Ingress class on the cluster named *we
     configmap/rabbitmq-enabled-plugins created
     deployment.apps/order-service created
     deployment.apps/product-service created
-    deployment.apps/store-front created    ```
+    deployment.apps/store-front created
+    ```
 
     ```bash
     kubectl apply -f service.yaml -n aks-store
@@ -379,7 +380,8 @@ The application routing add-on creates an Ingress class on the cluster named *we
     service/rabbitmq created
     service/order-service created
     service/product-service created
-    service/store-front created    ```
+    service/store-front created
+    ```
 
     ```bash
     kubectl apply -f ingress.yaml -n aks-store
