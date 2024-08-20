@@ -75,7 +75,7 @@ Get-AzAksCluster -ResourceGroupName $rg_name -Name $cluster | Set-AzAksCluster -
 
 ---
 
-## Enable Azure Hybrid Benefit for Azure Kubernetes Service
+## Disable Azure Hybrid Benefit for Azure Kubernetes Service
 
 To disable Azure Hybrid Benefit for an AKS cluster:
 
