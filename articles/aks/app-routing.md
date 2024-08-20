@@ -342,7 +342,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
     spec:
       ingressClassName: webapprouting.kubernetes.azure.com
       rules:
-      - host: <Hostname>
+      - host: myapp.contoso.com
         http:
           paths:
           - backend:
@@ -363,8 +363,11 @@ The application routing add-on creates an Ingress class on the cluster named *we
     The following example output shows the created resource:
 
     ```output
-    deployment.apps/aks-helloworld created
-    ```
+    deployment.apps/rabbitmq created
+    configmap/rabbitmq-enabled-plugins created
+    deployment.apps/order-service created
+    deployment.apps/product-service created
+    deployment.apps/store-front created    ```
 
     ```bash
     kubectl apply -f service.yaml -n aks-store
@@ -373,8 +376,10 @@ The application routing add-on creates an Ingress class on the cluster named *we
     The following example output shows the created resource:
 
     ```output
-    service/aks-helloworld created
-    ```
+    service/rabbitmq created
+    service/order-service created
+    service/product-service created
+    service/store-front created    ```
 
     ```bash
     kubectl apply -f ingress.yaml -n aks-store
@@ -383,7 +388,7 @@ The application routing add-on creates an Ingress class on the cluster named *we
     The following example output shows the created resource:
 
     ```output
-    ingress.networking.k8s.io/aks-helloworld created
+    ingress.networking.k8s.io/store-front created
     ```
 
 ## Verify the managed Ingress was created
@@ -391,14 +396,14 @@ The application routing add-on creates an Ingress class on the cluster named *we
 You can verify the managed Ingress was created using the `kubectl get ingress` command.
 
 ```bash
-kubectl get ingress -n hello-web-app-routing
+kubectl get ingress -n aks-store
 ```
 
 The following example output shows the created managed Ingress:
 
 ```output
-NAME             CLASS                                HOSTS               ADDRESS       PORTS     AGE
-aks-helloworld   webapprouting.kubernetes.azure.com   myapp.contoso.com   20.51.92.19   80, 443   4m
+NAME          CLASS                                HOSTS             ADDRESS       PORTS   AGE
+store-front   webapprouting.kubernetes.azure.com   myapp.contoso.com   51.8.36.174   80      3m13s
 ```
 
 ## Remove the application routing add-on
@@ -412,7 +417,7 @@ kubectl delete namespace aks-store
 To remove the application routing add-on from your cluster, use the [`az aks approuting disable`][az-aks-approuting-disable] command.
 
 ```azurecli-interactive
-az aks approuting disable --name myAKSCluster --resource-group myResourceGroup 
+az aks approuting disable --name <ClusterName> --resource-group <ResourceGroupName> 
 ```
 
 When the application routing add-on is disabled, some Kubernetes resources might remain in the cluster. These resources include *configMaps* and *secrets* and are created in the *app-routing-system* namespace. You can remove these resources if you want.
