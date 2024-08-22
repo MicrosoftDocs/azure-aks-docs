@@ -119,14 +119,15 @@ AKS provides the following built-in roles:
 
 ### [Azure portal](#tab/azure-portal)
 
-1. Navigate to your AKS cluster resource and select **Access control (IAM)** > **Add role assignment**.
-2. On the **Role** tab, select the desired role, such as *Azure Kubernetes Service RBAC Admin*, and then select **Next**.
-3. On the **Members** tab, configure the following settings:
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. In the service menu, select **Access control (IAM)** > **Add role assignment**.
+1. On the **Role** tab, select the desired role, such as *Azure Kubernetes Service RBAC Admin*, and then select **Next**.
+1. On the **Members** tab, configure the following settings:
 
     * **Assign access to**: Select **User, group, or service principal**.
     * **Members**: Select **+ Select members**, search for and select the desired members, and then select **Select**.
 
-4. Select **Review + assign** > **Assign**.
+1. Select **Review + assign** > **Assign**.
 
     > [!NOTE]
     > In Azure portal, after creating role assignments scoped to a desired namespace, you won't be able to see "role assignments" for namespace [at a scope][list-role-assignments-at-a-scope-at-portal]. You can find it by using the [`az role assignment list`][az-role-assignment-list] command, or [list role assignments for a user or group][list-role-assignments-for-a-user-or-group-at-portal], which you assigned the role to.
@@ -240,7 +241,7 @@ AKS created the [`kubelogin`](https://github.com/Azure/kubelogin) plugin to help
 
 ### [Azure portal](#tab/azure-portal)
 
-1. Navigate to your AKS cluster resource and select **Access control (IAM)** > **Role assignments**.
+1. Navigate to your AKS cluster and select **Access control (IAM)** > **Role assignments**.
 2. Select the role assignment you want to delete, and then select **Delete** > **Yes**.
 
 ---
