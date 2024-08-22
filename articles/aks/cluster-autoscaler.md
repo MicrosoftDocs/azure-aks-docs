@@ -266,13 +266,11 @@ You can retrieve logs and status updates from the cluster autoscaler to help dia
 
 ### [Azure portal](#tab/azure-portal)
 
-* Navigate to *Node pools* from your cluster's overview page in the Azure portal. Select any of the tiles for autoscale events, autoscale warnings, or scale ups not triggered to get more details.
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+2. In the service menu, under **Settings**, select **Node pools**.
+3. Select any of the tiles for **Autoscale events**, **Autoscale warnings**, or **Scale-up not triggered** to get more details.
 
-    :::image type="content" source="./media/cluster-autoscaler/main-blade-tiles-inline.png" alt-text="Screenshot of the Azure portal page for a cluster's node pools. The section displaying autoscaler events, warning, and scale ups not triggered is highlighted." lightbox="./media/cluster-autoscaler/main-blade-tiles.png":::
-
-    This shows a list of Kubernetes events filtered to `source: cluster-autoscaler` that have occurred within the last hour. You can use this information to troubleshoot and diagnose any issues that might arise while scaling your nodes.
-
-    :::image type="content" source="./media/cluster-autoscaler/events-inline.png" alt-text="Screenshot of the Azure portal page for a cluster's events. The filter for source is highlighted, showing 'source: cluster-autoscaler'." lightbox="./media/cluster-autoscaler/events.png":::
+    :::image type="content" source="./media/cluster-autoscaler/main-blade-tiles-inline.png" alt-text="Screenshot of the Azure portal page for a cluster's node pools." lightbox="./media/cluster-autoscaler/main-blade-tiles.png":::
 
 ---
 
