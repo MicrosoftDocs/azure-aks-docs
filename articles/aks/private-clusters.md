@@ -223,15 +223,20 @@ Virtual network peering is one way to access your private cluster. To use virtua
 
 ### [Azure portal](#tab/azure-portal)
 
-1. From your browser, go to the [Azure portal](https://portal.azure.com).
-1. From the Azure portal, go to the node resource group.  
-1. Select the private DNS zone.
-1. In the left pane, select **Virtual network**.  
-1. Create a new link to add the virtual network of the VM to the private DNS zone. It takes a few minutes for the DNS zone link to become available.  
-1. In the Azure portal, navigate to the resource group that contains your cluster's virtual network.  
-1. In the right pane, select the virtual network. The virtual network name is in the form *aks-vnet-\**.  
-1. In the left pane, select **Peerings**.  
-1. Select **Add**, add the virtual network of the VM, and then create the peering. For more information, see  [Virtual network peering][virtual-network-peering].
+1. In the [Azure portal](https://portal.azure.com), navigate to your node resource group and select your **private DNS zone resource**.
+2. In the service menu, under **DNS Management**, select **Virtual Network Links** > **Add**.
+3. On the **Add Virtual Network Link** page, configure the following settings:
+   * **Link name**: Enter a name for the virtual network link.
+   * **Virtual Network**: Select the virtual network that contains the VM.
+4. Select **Create** to create the virtual network link.
+5. Navigate to the resource group that contains your cluster's virtual network and select your **virtual network resource**.
+6. In the service menu, under **Settings**, select **Peerings** > **Add**.
+7. On the **Add peering** page, configure the following settings:
+   * **Peering link name**: Enter a name for the peering link.
+   * **Virtual network**: Select the virtual network of the VM.
+8. Select **Add** to create the peering link.
+
+For more information, see  [Virtual network peering][virtual-network-peering].
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -288,33 +293,28 @@ A private endpoint can be set up so that a VNet doesn't need to be peered to com
 
 Create a private endpoint resource in your VNet:
 
-1. From your browser, go to the [Azure portal](https://portal.azure.com).
-2. From the Azure portal menu, select **Create a resource**.
-3. Search for **Private Endpoint** and select **Create > Private Endpoint**.
-4. Select **Create**.
-5. On the **Basics** tab, set up the following options:
-   * **Project details**:
-     * Select an Azure **Subscription**.
-     * Select the Azure **Resource group** where your virtual network is located with the consuming resources.
-   * **Instance details**:
-     * Enter a **Name** for the private endpoint, such as *myPrivateEndpoint*.
-     * Select a **Region** for the private endpoint.
-  
-  > [!IMPORTANT]
-  > Check that the region selected is the same as the virtual network where you want to connect from, otherwise you won't see your virtual network in the **Configuration** tab.
-
-6. Select **Next: Resource** and set up the following options:
-   * **Connection method**: Select *Connect to an Azure resource in my directory.*
+1. From the [Azure portal home page](https://portal.azure.com), select **Create a resource**.
+2. Search for **Private Endpoint** and select **Create** > **Private Endpoint**.
+3. Select **Create**.
+4. On the **Basics** tab, configure the following settings:
+   * **Project details**
+     * **Subscription**: Select the subscription where your private cluster is located.
+     * **Resource group**: Select the resource group that contains your virtual network.
+   * **Instance details**
+     * **Name**: Enter a name for your private endpoint, such as *myPrivateEndpoint*.
+     * **Region**: Select the same region as your virtual network.
+5. Select **Next: Resource** and configure the following settings:
+   * **Connection method**: Select **Connect to an Azure resource in my directory**.
    * **Subscription**: Select the subscription where your private cluster is located.
-   * **Resource type**: Select *Microsoft.ContainerService/managedClusters*.
+   * **Resource type**: Select **Microsoft.ContainerService/managedClusters**.
    * **Resource**: Select your private cluster.
-   * **Target sub-resource**: Select *management*.
-7. Select **Next: Virtual Network** and set up the following options:
-   * **Networking**:
+   * **Target sub-resource**: Select **management**.
+6. Select **Next: Virtual Network** and configure the following settings:
+   * **Networking**
      * **Virtual network**: Select your virtual network.
      * **Subnet**: Select your subnet.
-8. Select **Next: DNS** > **Next: Tags** and (optionally) set up key-values as needed.
-9. Select **Next: Review + create** > **Create**.
+7. Select **Next: DNS** > **Next: Tags** and (optionally) set up key-values as needed.
+8. Select **Next: Review + create** > **Create**.
 
 Once the resource is created, record the private IP address of the private endpoint for future use.
 
@@ -322,19 +322,19 @@ Once the resource is created, record the private IP address of the private endpo
 
 Once you create the private endpoint, create a new private DNS zone with the same name as the private DNS zone created by the private cluster. Remember to create this DNS zone in the VNet containing the consuming resources.
 
-1. Go to the node resource group in the Azure portal.  
-2. Select the private DNS zone and record:
+1. In the Azure portal, navigate to your node resource group and select your **private DNS zone resource**.
+2. In the service menu, under **DNS Management**, select **Recordsets** and note the following:
    * The name of the private DNS zone, which follows the pattern `*.privatelink.<region>.azmk8s.io`.
    * The name of the `A` record (excluding the private DNS name).
    * The time-to-live (TTL).
-3. From the Azure portal, select **Create a resource**.
-4. Search for **Private DNS zone** and select **Create > Private DNS zone**.
-5. On the **Basics** tab, set up the following options:
+3. From the [Azure portal home page](https://portal.azure.com), select **Create a resource**.
+4. Search for **Private DNS zone** and select **Create** > **Private DNS zone**.
+5. On the **Basics** tab, configure the following settings:
    * **Project details**:
      * Select your **Subscription**.
      * Select the **Resource group** where you created the private endpoint.
-   * **Instance details**:
-     * Enter the **Name** of the DNS zone retrieved from previous steps.
+   * **Instance details**
+     * **Name**: Enter the name of the DNS zone retrieved from previous steps.
      * **Region** defaults to the location of your resource group.
 6. Select **Review + create** > **Create**.
 
@@ -343,13 +343,14 @@ Once you create the private endpoint, create a new private DNS zone with the sam
 Once the private DNS zone is created, create an `A` record, which associates the private endpoint to the private cluster:
 
 1. Go to the private DNS zone you created in previous steps.
-2. On the **Overview** page, select **Record set**.
-3. On the **Add record set** tab, set up the following options:
-   * **Name**: Input the name retrieved from the `A` record in the private cluster's DNS zone.
-   * **Type**: Select *A - Address record*.
+2. In the service menu, under **DNS Management**, select **Recordsets** > **Add**.
+3. On the **Add record set** page, configure the following settings:
+   * **Name**: Enter the name retrieved from the `A` record in the private cluster's DNS zone.
+   * **Type**: Select **A - Address record**.
    * **TTL**: Enter the number from the `A` record in the private cluster's DNS zone.
    * **TTL unit**: Change the dropdown value to match the one in the `A` record from the private cluster's DNS zone.
    * **IP address**: Enter the **IP address of the private endpoint you created**.
+4. Select **Add** to create the `A` record.
 
 > [!IMPORTANT]
 > When creating the `A` record, only use the name and not the fully qualified domain name (FQDN).
@@ -359,14 +360,14 @@ Once the private DNS zone is created, create an `A` record, which associates the
 Once the `A` record is created, link the private DNS zone to the virtual network that will access the private cluster:
 
 1. Go to the private DNS zone you created in previous steps.  
-2. From the left pane, select **Virtual network links**.  
-3. Select **Add** and set up the following options:
+2. In the service menu, under **DNS Management**, select **Virtual Network Links** > **Add**.
+3. On the **Add Virtual Network Link** page, configure the following settings:
    * **Link name**: Enter a name for your virtual network link.
    * **Subscription**: Select the subscription where your private cluster is located.
-   * **Virtual network**: Select the virtual network of your private cluster.
-4. Select **OK** to create the link.
+   * **Virtual Network**: Select the virtual network of your private cluster.
+4. Select **Create** to create the link.
 
-It may take a few minutes for the operation to complete. Once the virtual network link is created, you can access it from the **Virtual network links** tab you used in step 2.
+It might take a few minutes for the operation to complete. Once the virtual network link is created, you can access it from the **Virtual Network Links** tab you used in step 2.
 
 > [!WARNING]
 >
