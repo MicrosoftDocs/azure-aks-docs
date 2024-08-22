@@ -17,11 +17,11 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
 ## Prerequisites
 
-# [**Portal**](#tab/configure-networking-portal)
+### [Azure portal](#tab/configure-networking-portal)
 
 - An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
-# [**PowerShell**](#tab/configure-networking-powershell)
+### [Azure PowerShell](#tab/configure-networking-powershell)
 
 - An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
@@ -33,7 +33,7 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
   If you run PowerShell locally, run `Connect-AzAccount` to connect to Azure.
 
-# [**CLI**](#tab/configure-networking-cli)
+### [Azure CLI](#tab/configure-networking-cli)
 
 - An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
@@ -45,42 +45,23 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
 For information on planning IP addressing for your AKS cluster, see [Plan IP addressing for your cluster](concepts-network-ip-address-planning.md).
 
-# [**Portal**](#tab/configure-networking-portal)
+### [Azure portal](#tab/configure-networking-portal)
 
 1. Sign in to the [Azure portal](https://portal.azure.com/).
+1. On the Azure portal home page, select **Create a resource**.
+1. Under **Categories**, select **Containers** > **Azure Kubernetes Service (AKS)**.
+1. On the **Basics** tab, configure the following settings:
+   - Under **Project details**:
+     - **Subscription**: Select your Azure subscription.
+     - **Resource group**: Select **Create new**, enter a resource group name, such as *test-rg*, and then select **Ok**.
+   - Under **Cluster details**:
+     - **Kubernetes cluster name**: Enter a cluster name, such as *aks-cluster*.
+     - **Region**: Select **East US 2**.
+1. Select **Next** > **Next** to get to the **Networking** tab.
+1. For **Container networking**, select **Azure CNI Node Subnet**.
+1. Select **Review + create** > **Create**.
 
-1. In the search box at the top of the portal enter **Kubernetes services**, select **Kubernetes services** from the search results.
-
-1. Select **+ Create** then **Create a Kubernetes cluster**.
-
-1. In **Create Kubernetes cluster** enter or select the following information:
-
-    | Setting | Value |
-    |---------|-------|
-    | **Project details** |  |
-    | Subscription | Select your subscription. |
-    | Resource group | Select **test-rg**. |
-    | **Cluster details** |  |
-    | Cluster preset configuration | Leave the default of **Production Standard**. |
-    | Kubernetes cluster name | Enter **aks-cluster**. |
-    | Region | Select **(US) East US 2**. |
-    | Availability zones | Leave the default of **Zones 1,2,3**. |
-    | AKS pricing tier | Leave the default of **Standard**. |
-    | Kubernetes version | Leave the default of **1.26.6**. |
-    | Automatic upgrade | Leave the default of **Enabled with patch (recommended)**. |
-    | Authentication and Authorization | Leave the default of **Local accounts with Kubernetes RBAC**. |
-
-1. Select **Next: Node pools >**, then **Next: Networking >**.
-
-1. In **Container networking** in the **Networking** tab, verify that **Azure CNI** is selected.
-
-    :::image type="content" source="./media/configure-azure-cni/aks-create-networking-tab.png" alt-text="Screenshot of the networking tab when creating an AKS cluster in the Azure portal.":::
-
-1. Select **Review + create**.
-
-1. Select **Create**.
-
-# [**PowerShell**](#tab/configure-networking-powershell)
+### [Azure PowerShell](#tab/configure-networking-powershell)
 
 When you create an AKS cluster with Azure PowerShell, you can also configure Azure CNI networking.
 
@@ -102,7 +83,7 @@ $net = @{
 New-AzAksCluster @net
 ```
 
-# [**CLI**](#tab/configure-networking-cli)
+### [Azure CLI](#tab/configure-networking-cli)
 
 When you create an AKS cluster with the Azure CLI, you can also configure Azure CNI networking. 
 
