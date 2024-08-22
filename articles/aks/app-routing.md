@@ -94,7 +94,7 @@ The application routing add-on uses annotations on Kubernetes Ingress objects to
 2. Deploy the AKS store application using the following YAML manifest file:
 
     ```yaml
-    kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/aks-store-deployments-and-services.yaml -n aks-store
+    kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/sample-manifests/docs/app-routing/aks-store-deployments-and-services.yaml -n aks-store
     ```
 
   This manifest will create the necessary deployments and services for the AKS store application.
