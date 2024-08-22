@@ -89,9 +89,9 @@ Check which Kubernetes releases are available for your cluster using the followi
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. Under **Settings**, select **Cluster configuration**.
-4. In **Kubernetes version**, select **Upgrade version**.
-5. In **Kubernetes version**, select the version to check for available upgrades.
+3. In the service menu, under **Settings**, select **Cluster configuration**.
+4. For **Kubernetes version**, select **Upgrade version**.
+5. On the **Upgrade Kubernetes version** page, select the **Kubernetes version** to check for available upgrades.
 
 The Azure portal highlights all the deprecated APIs between your current version and new available versions you intend to migrate to. For more information, see [the Kubernetes API Removal and Deprecation process][k8s-deprecation].
 
@@ -197,10 +197,10 @@ During the cluster upgrade process, AKS performs the following operations:
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. Under **Settings**, select **Cluster configuration**.
-4. In **Kubernetes version**, select **Upgrade version**.
-5. In **Kubernetes version**, select your desired version and then select **Save**.
-6. Navigate to your AKS cluster **Overview** page, and select the **Kubernetes version** to confirm the upgrade was successful.
+3. In the service menu, under **Settings**, select **Cluster configuration**.
+4. For **Kubernetes version**, select **Upgrade version**.
+5. On the **Upgrade Kubernetes version** page, select your desired **Kubernetes version** and then select **Save**.
+6. Navigate to your AKS cluster **Overview** page, and view the **Kubernetes version** to confirm the upgrade was successful.
 
 ---
 
