@@ -151,7 +151,8 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
 
     `CiliumNetworkPolicy` custom resources are partially supported. Customers may use FQDN filtering as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
 
-    This `CiliumNetworkPolicy` demonstrations an example matching pattern for services matching the given label.
+    This `CiliumNetworkPolicy` example demonstrates a sample matching pattern for services that match the specified label.
+
     ```yaml
     apiVersion: "cilium.io/v2" 
     kind: CiliumNetworkPolicy 

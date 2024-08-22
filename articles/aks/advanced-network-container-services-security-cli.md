@@ -1,5 +1,5 @@
 ---
-title: "Set up Security for Advanced Container Networking Services for Azure Kubernetes Service (AKS) - Azure managed Cilium Network Policies"
+title: "Set up Security for Advanced Container Networking Services for AKS with Cilium Network Policies"
 description: Get started with Security for Advanced Container Networking Services for your AKS cluster using Azure managed Cilium Network Policies.
 author: sf-msft
 ms.author: samfoo
@@ -10,9 +10,9 @@ ms.date: 07/30/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Security for Advanced Container Networking Services on Azure Kubernetes Service (AKS) - Azure managed Cilium Network Policies (Preview)
+# Set up Security for Advanced Container Networking Services for AKS with Cilium Network Policies
 
-This article shows you how to set up security features on Advanced Container Networking Services.
+This article shows you how to set up security features on Advanced Container Networking Services (ACNS).
 
 > [!IMPORTANT]
 > Advanced Container Networking Services is currently in PREVIEW.
@@ -38,8 +38,7 @@ az extension update --name aks-preview
 
 ### Register the `AdvancedNetworkingPreview` feature flag
 
-Register the `az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"
-` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
+Register the `az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
 
 ```azurecli-interactive 
 az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"

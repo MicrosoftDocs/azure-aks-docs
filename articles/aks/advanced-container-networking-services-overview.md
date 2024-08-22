@@ -19,19 +19,19 @@ With Advanced Container Networking Services, the focus is on delivering a seamle
 
 Advanced Container Networking Services contains features split into two pillars:
 
- - Observability - the inaugural feature of the Advanced Container Networking Services suite bringing the power of Hubble’s control plane to both Cilium and non-Cilium Linux data planes. These features aim to provide visibility into networking and performance.
+ - **Observability**: The the inaugural feature of the Advanced Container Networking Services suite bringing the power of Hubble’s control plane to both Cilium and non-Cilium Linux data planes. These features aim to provide visibility into networking and performance.
 
- - Security - For clusters using Azure CNI Powered by Cilium, network policies include fully qualified domain name (FQDN) filtering for tackling complexities of maintaining configuration.
+ - **Security**: For clusters using Azure CNI Powered by Cilium, network policies include fully qualified domain name (FQDN) filtering for tackling the complexities of maintaining configuration.
 
 ## Advanced Network Observability
 
-Advanced Network Observability equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. It unlocks Hubble metrics, Hubble’s command line interface (CLI) and the Hubble user interface (UI) on your AKS clusters providing deep, actionable insights into your containerized workloads. It allows you to precisely detect and root-cause network related issues in AKS through its next-level monitoring and diagnostics tools that provide unparalleled visibility. These features ensure that your containerized applications are secure and compliant in order to empower you to confidently manage your infrastructure.
+Advanced Network Observability equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. It unlocks Hubble metrics, Hubble’s command line interface (CLI) and the Hubble user interface (UI) on your AKS clusters providing deep, actionable insights into your containerized workloads. It allows you to precisely detect and determine the root causes of network-related issues in AKS through its next-level monitoring and diagnostics tools. These features ensure that your containerized applications are secure and compliant in order to empower you to confidently manage your infrastructure.
 
 For more information about Advanced Network Observability, see [What is Advanced Network Observability?](advanced-network-observability-concepts.md).
 
 ## Security
 
-Security features within ACNS enable more control over network security policies in order to allow greater ease of use when implementing across clusters. Clusters using Azure CNI Powered by Cilium has access to DNS-based policies. The ease of use compared to IP based policies allows restricting egress access to external services using domain names. Configuration management becomes simplified by using FQDN rather than dynamically changing IPs.
+Security features within ACNS enable greater control over network security policies for ease of use when implementing across clusters. Clusters using Azure CNI Powered by Cilium have access to DNS-based policies. The ease of use compared to IP-based policies allows restricting egress access to external services using domain names. Configuration management becomes simplified by using FQDN rather than dynamically changing IPs.
 
 ## Pricing
 > [!IMPORTANT]
