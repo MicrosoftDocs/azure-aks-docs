@@ -26,7 +26,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 
 ## Limitations
 
-* If you're using an Azure Linux GPU-enabled node pool, automatic security patches aren't applied. Refer to your current AKS API version for the default behavior of node OS upgrade channel on your cluster.
+* If you're using an Azure Linux GPU-enabled node pool, automatic security patches aren't applied. Refer to your current AKS API version for the default behavior of node OS upgrade channel.
 
 > [!NOTE]
 > For AKS API version 2023-06-01 or later, the default value for the cluster is *NodeImage*. For previous versions, the default value is *None*. To learn more, see [auto-upgrade](./auto-upgrade-node-image.md).
