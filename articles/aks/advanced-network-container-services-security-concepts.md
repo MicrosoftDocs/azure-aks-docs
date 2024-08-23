@@ -16,7 +16,7 @@ Advanced Container Networking Services (ACNS) contains a class of security featu
 > [!NOTE]
 > Azure CNI Powered by Cilium and Kubernetes version 1.29 is required in order to use security features of Advanced Container Networking Services.
 
-## Security Features
+## Security features
 
 **Traffic Filtering**: Cilium provides the tools to handle the complexity of Domain Name Server (DNS) to IP mappings though Cilium Network Policies. Users can take advantage of default deny policies extended beyond Kubernetes Network Policies.
 
@@ -25,7 +25,7 @@ Advanced Container Networking Services (ACNS) contains a class of security featu
 > [!NOTE]
 > Cilium supports additional network policy options that are not supported for AKS at this time. Unsupported network policies applied to the cluster will be blocked. Blocked network policies may be applied to the cluster, but they will not be enforced by the Cilium Agent.
 
-## Key Benefits
+## Key benefits
 
 Scalability is a key benefit of the security features of ACNS for AKS. You can control traffic from an Ingress based on DNS pattern matching and labels. Policies can be applied to cases as granular as a single workload on a pod to a much broader scope through labels. Unlike network policy rules using IP that have to be updated each time the pod IP dynamically changes, FQDN based network policies offers much more flexibility. Avoiding frequent updates which may be error-prone allows for greater ease in managing network policies at scale.
 
