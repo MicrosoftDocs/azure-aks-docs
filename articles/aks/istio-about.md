@@ -78,10 +78,8 @@ Feedback and feature ask for the Istio add-on can be provided by creating [issue
 [managed-grafana-overview]: /azure/managed-grafana/overview
 [azure-cni-cilium]: azure-cni-powered-by-cilium.md
 [open-service-mesh-about]: open-service-mesh-about.md
-[istio-meshconfig]: ./istio-meshconfig.md
 [istio-ingress]: ./istio-deploy-ingress.md
 [istio-troubleshooting]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-general-troubleshooting
-[istio-meshconfig-support]: ./istio-meshconfig.md#allowed-supported-and-blocked-values
 [istio-deploy-addon]: istio-deploy-addon.md
 
 [istio-oss-windows-issue]: https://github.com/istio/istio/issues/27893
