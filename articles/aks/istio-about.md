@@ -86,5 +86,5 @@ Feedback and feature ask for the Istio add-on can be provided by creating [issue
 
 [istio-oss-windows-issue]: https://github.com/istio/istio/issues/27893
 [aks-github-service-mesh-issues]: https://github.com/Azure/AKS/issues?q=is%3Aopen+is%3Aissue+label%3Aservice-mesh
-[istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-features-and-configurations
+[istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-customizations
 [istio-telemetry]: ./istio-telemetry.md

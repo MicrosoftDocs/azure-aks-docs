@@ -117,6 +117,6 @@ The following Telemetry API configurations are either `allowed` or `supported` f
 <!-- LINKS - internal -->
 [istio-meshconfig]: ./istio-meshconfig.md
 [support-scope-section]: #telemetry-api-support-scope
-[istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-features-and-configurations
+[istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-customizations
 [az-monitor-container-insights]: /azure/azure-monitor/containers/container-insights-overview
 [az-monitor-metrics]: /azure/azure-monitor/containers/kubernetes-monitoring-enable

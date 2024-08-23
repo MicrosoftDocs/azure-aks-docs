@@ -159,5 +159,5 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 [istio-sidecar-race-condition]: https://istio.io/latest/docs/ops/common-problems/injection/#pod-or-containers-start-with-network-issues-if-istio-proxy-is-not-ready
 [istio-deploy-add-on]: istio-deploy-addon.md
 [container-insights-docs]: /azure/azure-monitor/containers/container-insights-overview
-[istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-features-and-configurations
+[istio-support-policy]: ./istio-support-policy.md#allowed-supported-and-blocked-customizations
 [istio-telemetry]: ./istio-telemetry.md
