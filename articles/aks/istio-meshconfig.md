@@ -72,7 +72,7 @@ When you're performing [canary upgrade for Istio](./istio-upgrade.md), you need 
 
 After the upgrade is completed or rolled back, you can delete the ConfigMap of the revision that was removed from the cluster.
 
-## Allowed, supported, and blocked meshconfig values
+## Allowed, supported, and blocked MeshConfig values
 
 Fields in `MeshConfig` are classified as `allowed`, `supported`, or `blocked`. To learn more about these categories, see the [support policy][istio-support-policy] for Istio add-on features and configuration options.
 
@@ -93,10 +93,10 @@ Fields present in [open source MeshConfig reference documentation][istio-meshcon
 | outboundTrafficPolicy | Supported | Also configurable in [Sidecar CR](https://istio.io/latest/docs/reference/config/networking/sidecar/#OutboundTrafficPolicy) |
 | extensionProviders | Allowed | - |
 | defaultProviders | Allowed | - |
-| accessLogFile | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs]. Access logging can also be configured with the [Telemetry API][istio-telemetry]. |
+| accessLogFile | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs]. It is encouraged to configure access logging via the [Telemetry API][istio-telemetry]. |
 | accessLogFormat | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
 | accessLogEncoding | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
-| enableTracing | Allowed | Tracing can also be configured with the [Telemetry API][istio-telemetry]. |
+| enableTracing | Allowed | It is encouraged to configure tracing via the [Telemetry API][istio-telemetry]. |
 | enableEnvoyAccessLogService | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
 | disableEnvoyListenerLog | Supported | This field addresses the generation of access logs. For a managed experience on collection and querying of logs, refer to [Azure Monitor Container Insights on AKS][container-insights-docs] |
 | trustDomain | Allowed | - |
@@ -122,14 +122,14 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 
 | **Field** | **Supported/Allowed** | **Notes** |
 |-----------|-----------------------|-----------|
-| tracingServiceName | Allowed | Tracing can also be configured with the [Telemetry API][istio-telemetry]. |
+| tracingServiceName | Allowed | It is encouraged to configure tracing via the [Telemetry API][istio-telemetry]. |
 | drainDuration | Supported | - |
 | statsUdpAddress | Allowed | - |
 | proxyAdminPort | Allowed | - |
-| tracing | Allowed | Tracing can also be configured with the [Telemetry API][istio-telemetry]. |
+| tracing | Allowed | It is encouraged to configure tracing via the [Telemetry API][istio-telemetry]. |
 | concurrency | Supported | - |
-| envoyAccessLogService | Allowed | Tracing can also be configured with the [Telemetry API][istio-telemetry]. |
-| envoyMetricsService | Allowed | Metrics collection can also be configured with the [Telemetry API][istio-telemetry].
+| envoyAccessLogService | Allowed | It is encouraged to configure tracing via the [Telemetry API][istio-telemetry]. |
+| envoyMetricsService | Allowed | It is encouraged to configure metrics collection via the [Telemetry API][istio-telemetry].
 | proxyMetadata | Allowed | - |
 | statusPort | Allowed | - |
 | extraStatTags | Allowed | - |

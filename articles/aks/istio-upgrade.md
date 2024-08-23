@@ -13,7 +13,7 @@ ms.custom: devx-track-azurecli
 
 This article addresses upgrade experiences for Istio-based service mesh add-on for Azure Kubernetes Service (AKS).
 
-Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To learn more about support for service mesh add-on versioning and upgrades, read the [support policy][istio-support].
+Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To learn more about support for service mesh add-on versioning and upgrades and the release calendar, read the [support policy][istio-support].
 
 ## Minor revision upgrade
 
@@ -132,7 +132,18 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
 If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways will not change throughout the course of an upgrade. 
 
-Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, incoming traffic will be served by the ingress gateway pods of both revisions. 
+Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, incoming traffic will be served by the ingress gateway pods of both revisions.
+
+### Minor revision upgrades with horizontal pod autoscaling customizations
+
+If you have customized the [Horizontal pod autoscaling (HPA) settings for Istiod or the ingress gateways][istio-scale-hpa], note the following behavior for how HPA settings are applied across both revisions to maintain consistency during a canary upgrade:
+
+- If you have updated the HPA spec before initiating an upgrade, the settings from the existing (stable) revision will be applied to the HPAs of the canary revision when the new control plane is installed. 
+- If you update the HPA spec while a canary upgrade is in progress, the HPA spec of the stable revision will take precedence and be applied to the HPA of the canary revision. 
+  - If you update the HPA of the stable revision during an upgrade, the HPA spec of the canary revision will be updated to reflect the new settings applied to the stable revision.
+  - If you update the HPA of the canary revision during an upgrade, the HPA spec of the canary revision will be reverted to the HPA spec of the stable revision.
+
+prior to initiating a canary upgrade, note that the Istiod and ingress gateway HPA specifications for the stable revision will be applied to the HPAs for the canary revision, to maintain consistency across both minor versions during a canary upgrade. For instance, if the `minReplicas` and `maxReplicas` for the HPA `istiod-asm-1-21` have been set to `3` and `6`, respectively, then after an upgrade has been initiated, the hpa for `istiod-asm-1-22` will also have `minReplicas` and `maxReplicas` set to `3` and `6` as well. If the HPA for the canary revision is modified in the middle of the upgrade, it will be reverted back to the HPA specifications of the stable revision. If the HPA of the stable revision is modified in the middle of the upgrade, then the HPA spec of the canary revision will be updated to reflect the modified HPA spec for the canary upgrade. 
 
 ## Patch version upgrade
 
@@ -194,8 +205,9 @@ Thus, during the canary upgrade, when two revisions exist simultaneously on the 
 [istio-canary-upstream]: https://istio.io/latest/docs/setup/upgrade/canary/
 
 <!-- LINKS - Internal -->
-[istio-support]: ./istio-support-policy.md
+[istio-support]: ./istio-support-policy.md#versioning-and-support-policy
 [meshconfig]: ./istio-meshconfig.md
 [meshconfig-canary-upgrade]: ./istio-meshconfig.md#mesh-configuration-and-upgrades
 [upgrade-istio-service-mesh-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-minor-revision-upgrade
+[istio-scale-hpa]: ./istio-scale.md#horizontal-pod-autoscaling-customization
 

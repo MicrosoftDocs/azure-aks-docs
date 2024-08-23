@@ -52,8 +52,8 @@ Istio-based service mesh add-on for AKS has the following limitations:
 * The add-on doesn't yet support the sidecar-less Ambient mode. Microsoft is currently contributing to Ambient workstream under Istio open source. Product integration for Ambient mode is on the roadmap and is being continuously evaluated as the Ambient workstream evolves.
 * The add-on doesn't yet support multi-cluster deployments.
 * The add-on doesn't yet support Windows Server containers. Windows Server containers aren't yet supported in open source Istio right now. Issue tracking this feature ask can be found [here][istio-oss-windows-issue].
-* Customization of mesh through the following custom resources is blocked for now - `ProxyConfig, WorkloadEntry, WorkloadGroup, IstioOperator, WasmPlugin, EnvoyFilter`. 
-* `Telemetry API v1` is available for the Istio add-on, for minor revisions `asm-1-22` and above. See the [Istio add-on Telemetry document][istio-telemetry] for more information about the support scope for `Telemetry API` configurations.
+* The add-on doesn't yet allow customization of mesh through the following custom resources - `ProxyConfig, WorkloadEntry, WorkloadGroup, IstioOperator, WasmPlugin`. 
+* `Telemetry API v1` is available for the Istio add-on, starting from minor revision `asm-1-22`. See the [Istio add-on Telemetry document][istio-telemetry] for more information about the support scope for `Telemetry API` configurations.
 * For `EnvoyFilter`, the add-on allows the following filter types, with other filter types blocked:
     * Lua (`type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua`).
     * Compressor (`type.googleapis.com/envoy.extensions.filters.http.compressor.v3.Compressor`)

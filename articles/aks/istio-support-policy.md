@@ -12,7 +12,9 @@ ms.custom: devx-track-azurecli
 
 This article outlines the support policy for the Istio-based service mesh add-on for Azure Kubernetes Service (AKS).
 
-## Service mesh add-on release calendar
+## Versioning and support policy
+
+### Service mesh add-on release calendar
 
 The Istio-based service mesh add-on release calendar indicates each revision's AKS compatibility and estimated release and deprecation dates.
 
@@ -28,9 +30,6 @@ To learn more about support and compatibility for service mesh add-on revisions,
 | asm-1-20 | Nov 2023 | Feb 2024 | Aug 2024 | 1.25, 1.26, 1.27, 1.28, 1.29 |
 | asm-1-21 | Mar 2024 | Apr 2024 | ~Oct 2024 (expected) | 1.26, 1.27, 1.28, 1.29, 1.30 |
 | asm-1-22 | May 2024 | Jul 2024 | ~Feb 2025 (expected) | 1.27, 1.28, 1.29, 1.30 |
-
-
-## Versioning and support policy
 
 ### Supported revisions
 - **Minor revision**:
@@ -49,7 +48,7 @@ If a revision isn't explicitly provided by user during installation, the `n-1` r
 ### AKS compatibility
 Each revision of the add-on is compatible with a set of AKS minor versions established by the [upstream Istio support and release calendar][istio-support-calendar].
 
-## Allowed, supported, and blocked features and configurations
+## Allowed, supported, and blocked customizations
 
 The Istio-based service mesh add-on for AKS designates features and [configuration options][istio-meshconfig] as `allowed`, `supported`, or `blocked`.
 
