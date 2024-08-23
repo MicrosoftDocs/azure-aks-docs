@@ -17,7 +17,7 @@ Announcements about the releases of new minor revisions or patches to the Istio-
 
 ## Minor revision upgrade
 
-Istio add-on allows upgrading the minor revision using [canary upgrade process][istio-canary-upstream]. When an upgrade is initiated, the control plane of the new (canary) revision is deployed alongside the old (stable) revision's control plane. You can then manually roll over data plane workloads while using monitoring tools to track the health of workloads during this process. If you don't observe any issues with the health of your workloads, you can complete the upgrade so that only the new revision remains on the cluster. Else, you can roll back to the previous revision of Istio.
+Istio add-on allows upgrading the minor revision using [canary upgrade process][istio-canary-upstream]. When an upgrade is initiated, the control plane of the new (canary) revision is deployed alongside the initial (stable) revision's control plane. You can then manually roll over data plane workloads while using monitoring tools to track the health of workloads during this process. If you don't observe any issues with the health of your workloads, you can complete the upgrade so that only the new revision remains on the cluster. Else, you can roll back to the previous revision of Istio.
 
 If the cluster is currently using a supported minor revision of Istio, upgrades are only allowed one minor revision at a time. If the cluster is using an unsupported revision of Istio, you must upgrade to the lowest supported minor revision of Istio for that Kubernetes version. After that, upgrades can again be done one minor revision at a time.
 
@@ -31,7 +31,7 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
     If you expect to see a newer revision not returned by this command, you may need to upgrade your AKS cluster first so that it's compatible with the newest revision.
 
-1. If you've set up [mesh configuration][meshconfig] for the existing mesh revision on your cluster, you need to create a separate ConfigMap corresponding to the new revision in the `aks-istio-system` namespace **before initiating the canary upgrade** in the next step. This configuration is applicable the moment the new revision's control plane is deployed on cluster. More details can be found [here][meshconfig-canary-upgrade].
+1. If you set up [mesh configuration][meshconfig] for the existing mesh revision on your cluster, you need to create a separate ConfigMap corresponding to the new revision in the `aks-istio-system` namespace **before initiating the canary upgrade** in the next step. This configuration is applicable the moment the new revision's control plane is deployed on cluster. More details can be found [here][meshconfig-canary-upgrade].
 
 1. Initiate a canary upgrade from revision `asm-1-20` to `asm-1-21` using [az aks mesh upgrade start](/cli/azure/aks/mesh/upgrade#az-aks-mesh-upgrade-start):
 
@@ -130,20 +130,18 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
 ### Minor revision upgrades with the ingress gateway
 
-If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways will not change throughout the course of an upgrade. 
+If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways won't change throughout the course of an upgrade. 
 
-Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, incoming traffic will be served by the ingress gateway pods of both revisions.
+Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, the ingress gateway pods of both revisions serve incoming traffic.
 
 ### Minor revision upgrades with horizontal pod autoscaling customizations
 
-If you have customized the [Horizontal pod autoscaling (HPA) settings for Istiod or the ingress gateways][istio-scale-hpa], note the following behavior for how HPA settings are applied across both revisions to maintain consistency during a canary upgrade:
+If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or the ingress gateways][istio-scale-hpa], note the following behavior for how HPA settings are applied across both revisions to maintain consistency during a canary upgrade:
 
-- If you have updated the HPA spec before initiating an upgrade, the settings from the existing (stable) revision will be applied to the HPAs of the canary revision when the new control plane is installed. 
+- If you update the HPA spec before initiating an upgrade, the settings from the existing (stable) revision will be applied to the HPAs of the canary revision when the new control plane is installed. 
 - If you update the HPA spec while a canary upgrade is in progress, the HPA spec of the stable revision will take precedence and be applied to the HPA of the canary revision. 
   - If you update the HPA of the stable revision during an upgrade, the HPA spec of the canary revision will be updated to reflect the new settings applied to the stable revision.
   - If you update the HPA of the canary revision during an upgrade, the HPA spec of the canary revision will be reverted to the HPA spec of the stable revision.
-
-prior to initiating a canary upgrade, note that the Istiod and ingress gateway HPA specifications for the stable revision will be applied to the HPAs for the canary revision, to maintain consistency across both minor versions during a canary upgrade. For instance, if the `minReplicas` and `maxReplicas` for the HPA `istiod-asm-1-21` have been set to `3` and `6`, respectively, then after an upgrade has been initiated, the hpa for `istiod-asm-1-22` will also have `minReplicas` and `maxReplicas` set to `3` and `6` as well. If the HPA for the canary revision is modified in the middle of the upgrade, it will be reverted back to the HPA specifications of the stable revision. If the HPA of the stable revision is modified in the middle of the upgrade, then the HPA spec of the canary revision will be updated to reflect the modified HPA spec for the canary upgrade. 
 
 ## Patch version upgrade
 
