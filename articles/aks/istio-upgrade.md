@@ -13,7 +13,7 @@ ms.custom: devx-track-azurecli
 
 This article addresses upgrade experiences for Istio-based service mesh add-on for Azure Kubernetes Service (AKS).
 
-Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To learn more about support for service mesh add-on versioning and upgrades and the release calendar, read the [support policy][istio-support].
+Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To learn more about the release schedule and support for service mesh add-on revisions, read the [support policy][istio-support].
 
 ## Minor revision upgrade
 
