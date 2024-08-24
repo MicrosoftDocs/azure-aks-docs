@@ -750,7 +750,7 @@
               href: istio-support-policy.md
             - name: Istio service mesh add-on performance
               href: istio-scale.md
-            - name: Istio-based service mesh add-on telemetry
+            - name: Telemetry API for Istio service mesh
               href: istio-telemetry.md
         - name: Open Service Mesh AKS add-on
           items:
