@@ -13,7 +13,7 @@ author: niranjanshankar
 Istio can [generate metrics, distributed traces, and access logs][istio-telemetry-overview] for all workloads in the mesh. The Istio-based service mesh add-on for Azure Kubernetes Service (AKS) provides telemetry customization options through the [shared MeshConfig][istio-meshconfig] and the Istio Telemetry API `v1` for Istio add-on minor revisions `asm-1-22` and higher.
 
 > [!NOTE]
-> While the [Istio MeshConfig][istio-meshconfig] also provides options for configuring telemetry globally across the mesh, the Telemetry API offers more granular control over telemetry settings on a per-service or per-workload basis. As the Istio community continues to invest in the Telemetry API, it is now the preferred method for telemetry configuration, with the MeshConfig considered more of a legacy approach. Therefore, we strongly encourage migrating to the Telemetry API for telemetry customization for the Istio add-on. 
+> While the [Istio MeshConfig][istio-meshconfig] also provides options for configuring telemetry globally across the mesh, the Telemetry API offers more granular control over telemetry settings on a per-service or per-workload basis. As the Istio community continues to invest in the Telemetry API, it is now the preferred method for telemetry configuration. We encourage migrating to the Telemetry API for configuring telemetry to be collected in the mesh.
 
 ## Prerequisites
 
