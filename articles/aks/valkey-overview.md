@@ -44,6 +44,19 @@ We create two distinct [`StatefulSet`][kubernetes-stateful-sets] resources: one 
 > [!div class="nextstepaction"]
 > [Create the infrastructure resources for running a Valkey cluster on AKS][create-valkey-infrastructure]
 
+## Contributors
+
+* Nelly Kiboi | Service Engineer
+* Saverio Proto | Principal Customer Experience Engineer
+* Don High | Principal Customer Engineer
+* LaBrina Loving | Principal Service Engineer
+* Ken Kilty | Principal TPM
+* Russell de Pina | Principal TPM
+* Colin Mixon | Product Manager
+* Ketan Chawda | Senior Customer Engineer
+* Naveed Kharadi | Customer Experience Engineer
+* Erin Schaffer | Content Developer 2
+
 <!-- External links -->
 [valkey]: https://valkey.io/
 [redis]: https://redis.io/
