@@ -303,17 +303,17 @@ Create a private endpoint resource in your VNet:
    * **Instance details**
      * **Name**: Enter a name for your private endpoint, such as *myPrivateEndpoint*.
      * **Region**: Select the same region as your virtual network.
-5. Select **Next: Resource** and configure the following settings:
+5. Select **Next: Resource >** and configure the following settings:
    * **Connection method**: Select **Connect to an Azure resource in my directory**.
    * **Subscription**: Select the subscription where your private cluster is located.
    * **Resource type**: Select **Microsoft.ContainerService/managedClusters**.
    * **Resource**: Select your private cluster.
    * **Target sub-resource**: Select **management**.
-6. Select **Next: Virtual Network** and configure the following settings:
+6. Select **Next: Virtual Network >** and configure the following settings:
    * **Networking**
      * **Virtual network**: Select your virtual network.
      * **Subnet**: Select your subnet.
-7. Select **Next: DNS** > **Next: Tags** and (optionally) set up key-values as needed.
+7. Select **Next: DNS >**, **Next: Tags >** and (optionally) set up key-values as needed.
 8. Select **Next: Review + create** > **Create**.
 
 Once the resource is created, record the private IP address of the private endpoint for future use.
