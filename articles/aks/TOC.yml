@@ -494,8 +494,10 @@
                       href: enable-authentication-microsoft-entra-id.md
                     - name: Manage local accounts
                       href: manage-local-accounts-managed-azure-ad.md
-                    - name: Cluster access control
+                    - name: Cluster access control with Conditional Access
                       href: access-control-managed-azure-ad.md
+                    - name: Cluster access control with Privileged Identity Management
+                      href: privileged-identity-management.md
                 - name: Microsoft Entra integration (legacy)
                   href: azure-ad-integration-cli.md
                 - name: Enable GMSA integration
