@@ -1,0 +1,11 @@
+# YamlMime:ZonePivotGroups
+groups:
+
+- id: tutorial-type
+  title: Choose the tutorial type
+  prompt: Choose the tutorial type
+  pivots:
+  - id: serviceconnector
+    title: Service Connector
+  - id: manual
+    title: Manual

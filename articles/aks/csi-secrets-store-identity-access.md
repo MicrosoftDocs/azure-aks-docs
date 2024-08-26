@@ -7,11 +7,21 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 12/19/2023
 ms.custom: devx-track-azurecli
+zone_pivot_group_filename: aks/zone-pivot-groups.json
+zone_pivot_groups: passwordless
 ---
 
 # Connect your Azure identity provider to the Azure Key Vault Secrets Store CSI Driver in Azure Kubernetes Service (AKS)
 
 The Secrets Store Container Storage Interface (CSI) Driver on Azure Kubernetes Service (AKS) provides various methods of identity-based access to your Azure Key Vault. This article outlines these methods and best practices for when to use Role-based access control (RBAC) or OpenID Connect (OIDC) security models to access your key vault and AKS cluster.
+
+::: zone pivot="serviceconnector"
+
+[!INCLUDE [service connector tutorial snippet](./includes/service-connectoraks-keyvault-csi-driver.md)]
+
+::: zone-end
+
+::: zone pivot="manual"
 
 You can use one of the following access methods:
 
@@ -350,10 +360,11 @@ A key vault certificate also contains public x509 certificate metadata. The key 
 
 ## Next steps
 
-In this article, you learned how to create and provide an identity to access your Azure Key Vault. The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Use the Azure Key Vault provider for Secrets Store CSI Driver in an AKS cluster](/azure/service-connector/tutorial-python-aks-keyvault-csi-driver) and the [Service Connector introduction](https://azure.github.io/AKS/2024/05/23/service-connector-intro).
+In this article, you learned how to create and provide an identity to access your Azure Key Vault. The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, choose Service Connector at the beginning of the page.
 
 If you want to configure extra configuration options or perform troubleshooting, see [Configuration options and troubleshooting resources for Azure Key Vault provider with Secrets Store CSI Driver in AKS](./csi-secrets-store-configuration-options.md).
 
+::: zone-end
 
 <!-- LINKS INTERNAL -->
 
