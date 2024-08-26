@@ -19,7 +19,7 @@ To view Kubernetes resources in the Azure portal, you need an AKS cluster. Any c
 ## View Kubernetes resources
 
 1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource.
-2. On the left side menu, select **Kubernetes resources**. The Kubernetes resources list displays the following categories:
+2. From the service menu, select **Kubernetes resources**. The Kubernetes resources list displays the following categories:
 
    - **Namespaces** shows information about the namespaces of your cluster.
    - **Workloads** shows information about deployments, pods, replica sets, stateful sets, daemon sets, jobs, and cron jobs deployed to your cluster.
@@ -295,14 +295,14 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
 
 AKS clusters with [Container Insights][enable-monitor] enabled can access various deployment insights in the Azure portal. If you don't have monitoring enabled on your cluster, you can enable it using the following steps:
 
-1. On the left side menu of your AKS cluster resource, select **Monitoring** > **Insights** > **Configure monitoring**.
+1. From the service menu of your AKS cluster resource, select **Monitoring** > **Insights** > **Configure monitoring**.
 2. On the *Configure Container Insights* page, select **Configure**.
 
     It might take a few minutes for the monitoring solution to deploy and begin collecting data.
 
 ### View deployment insights
 
-1. On the left side menu of your AKS cluster resource, select **Workloads**.
+1. From the service menu of your AKS cluster resource, select **Workloads**.
 2. Select a deployment from the list to view deployment insights, such as CPU and memory usage.
 
 > [!NOTE]
