@@ -97,7 +97,7 @@ The following upgrade channels are available:
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, navigate to your AKS cluster.
-2. In the **Settings** section, select **Cluster configuration**.
+2. In the service menu, under **Settings**, select **Cluster configuration**.
 3. Under **Upgrade** > **Kubernetes version**, select **Upgrade version**.
 
     :::image type="content" source="./media/auto-upgrade-cluster/portal-autoupgrade-existing-cluster.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal.":::
