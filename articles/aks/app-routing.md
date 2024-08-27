@@ -499,7 +499,8 @@ To remove the application routing add-on from your cluster, use the [`az aks app
 az aks approuting disable --name myAKSCluster --resource-group myResourceGroup 
 ```
 
-When the application routing add-on is disabled, some Kubernetes resources might remain in the cluster. These resources include *configMaps* and *secrets* and are created in the *app-routing-system* namespace. You can remove these resources if you want.
+>[!NOTE]
+> To avoid potential disruption of traffic into the cluster when the application routing add-on is disabled, some Kubernetes resources, including *configMaps*, *secrets*, and the *deployment* that runs the controller, will remain on the cluster. These resources are in the *app-routing-system* namespace. You can remove these resources if they're no longer needed by deleting the namespace with `kubectl delete ns app-routing-system`.
 
 ## Next steps
 
