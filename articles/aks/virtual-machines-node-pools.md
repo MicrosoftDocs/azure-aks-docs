@@ -10,14 +10,33 @@ author: wdarko1
 ---
 
 # Use Virtual Machines node pools (preview) in Azure Kubernetes Services
-A node pool is composed of a set of virtual machines, where the virtual machine sizes are designed to support different types of workloads. These VM sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about VM families and their purposes, visit [VM SKUs][vm-SKU].
 
-When configuring a cluster on Azure Kubernetes Services, a separate node pool is required for each virtual machine type or VM SKU used. Virtual Machines node pools allow you to add multiple [VM SKUs][vm-SKU] of a similar family to a single node pool. With Virtual Machines node pools you can diversify your compute, making it more resilient to capacity and compute quota bottlenecks.
+We're introducing a new node pool type - Virtual Machine based. For Virtual Machine node pools, Azure Kubernetes Services manages the provisioning and bootstrapping of every single node directly. Alternatively, when using Virtual Machine Scale Sets Uniform node pools,  Azure Kubernetes Services manages the model of the Virtual Machine Scale Sets, and leverage it to achieve consistency across all nodes in the node pool. Virtual Machine based node pools allow you to orchestrate your cluster with virtual machines that best fit your individual workloads.
+ 
+Virtual Machine node pool brings the benefit of:
+- **Flexibility** - Node specifications can be updated to be adaptive to your current workload and needs.
+- **Fine-Tuned Control** - More single node level controls to allow specifying and mixing nodes of different specs, that lifts the restrictions from a single model and consistency.
+- **Efficiency** - You can reduce node footprint, simplifying your operational effort and allowing you to focus more time on work rather than infrastructure.
+
+Overall this will bring a better experience on more dynamic workloads and higher availability requirements, as well as keeping the existing features Azure Kubernetes Services offers. Virtual Machine node pools allow you to set up multiple similar family virtual machines in one node pool and your workload will be automatically scheduled on the available resources that you configure.
+
+# How It Works
+A node pool is composed of a set of virtual machines, where the virtual machine sizes are designed to support different types of workloads. These VM sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about VM families and their purposes, visit [VM SKUs][vm-SKU].
 
 To allow the scale of multiple virtual machine sizes, a Virtual Machines node pool type uses a `ScaleProfile`, which contains the configurations for how the node pool can scale, specifically the desired list of virtual machine size and count. `ManualScaleProfile`, a type of scale profile, is the list that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`, and a separate `ManualScaleProfile` must be created for each virtual machine size you will have in your node pool.
  
 > [!NOTE]
 > When creating a new VirtualMachines node pool, at least one `ManualScaleProfile` is needed in the `ScaleProfile`, and it can be updated later. A VirtualMachines node pool can have multiple manual scale profiles.
+
+# Feature Capabilities
+The following capabilities highlight how Virtual Machine node pools compare with standard Uniform scale set node pools.
+
+**Virtual Machine based node pools**
+- add, remove, or update nodes in a node pool. VM types can be any virtual machine of the same family type (eg. D-series, A-Series, etc.)
+
+**VMSS Uniform based node pools**
+- add or remove nodes in a node pool (of the same SKU type). Should a new SKU type be added to the cluster, a new node pool must be created.
+
 
 ## Prerequisites
 
