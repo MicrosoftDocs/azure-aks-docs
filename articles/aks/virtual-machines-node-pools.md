@@ -29,13 +29,13 @@ To allow the scale of multiple virtual machine sizes, a Virtual Machines node po
 > When creating a new VirtualMachines node pool, at least one `ManualScaleProfile` is needed in the `ScaleProfile`, and it can be updated later. A VirtualMachines node pool can have multiple manual scale profiles.
 
 # Feature Capabilities
-The following capabilities highlight how Virtual Machine node pools compare with standard Uniform scale set node pools.
+The following capabilities highlight how Virtual Machine node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
 
 **Virtual Machine based node pools**
 - add, remove, or update nodes in a node pool. VM types can be any virtual machine of the same family type (eg. D-series, A-Series, etc.)
 
 **VMSS Uniform based node pools**
-- add or remove nodes in a node pool (of the same SKU type). Should a new SKU type be added to the cluster, a new node pool must be created.
+- add or remove nodes in a node pool (of the same size and type). Should a new virtual machine size be added to the cluster, a new node pool must be created.
 
 
 ## Prerequisites
@@ -213,3 +213,4 @@ In this article, you learned how to use VirtualMachines node pools in Azure Kube
 [az extension update]: /cli/azure/extension#az-extension-update
 [az account set]: /cli/azure/account#az-account-set
 [create node pools]: create-node-pools.md
+[VMSS orchestrate]: /azure/virtual-machine-scale-sets/virtual-machine-scale-sets-orchestration-modes
