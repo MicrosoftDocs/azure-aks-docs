@@ -62,6 +62,8 @@ If you're a developer or application owner, you can simplify your development ex
     * Includes defining pod resource requests and limits, configuring development tools, and checking for application issues.
 * [Best practices for pod security](developer-best-practices-pod-security.md)
     * Includes securing access to resources, limiting credential exposure, and using pod identities and digital key vaults.
+* [Best practices for deployment and cluster reliability](best-practices-app-cluster-reliability.md)
+    * Includes deployment, cluster, and node pool level best practices.
 
 ## Kubernetes and AKS concepts
 
