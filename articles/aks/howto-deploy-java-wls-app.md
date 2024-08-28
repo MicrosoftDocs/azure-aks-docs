@@ -429,17 +429,106 @@ Use the following steps to build the image:
 
    ```bash
    export ACR_NAME=<value-from-clipboard>
+   export IMAGE="wlsaks-auxiliary-image:1.0"
    ```
+
+   Double check the staging files.
 
    ```bash
    cd ${BASE_DIR}/mystaging
-   az acr build -t wlsaks-auxiliary-image:1.0 --build-arg AUXILIARY_IMAGE_PATH=/auxiliary -r myregistry ${ACR_NAME} --platform linux/amd64  .
+   find -maxdepth 2 -type f -print
+   ```
+
+   You will find output similar to the following content.
+
+   ```text
+   ./models/model.properties
+   ./models/model.yaml
+   ./models/archive.zip
+   ./Dockerfile
+   ./weblogic-deploy/VERSION.txt
+   ./weblogic-deploy/LICENSE.txt
+   ```
+
+   Build the image with `az acr build`.
+
+
+   ```bash
+   az acr build -t ${IMAGE} --build-arg AUXILIARY_IMAGE_PATH=/auxiliary -r ${ACR_NAME} --platform linux/amd64 .
    ```
 
    When you build the image successfully, the output looks similar to the following example:
 
    ```output
-   
+   ...
+   Step 1/9 : FROM busybox
+   latest: Pulling from library/busybox
+   Digest: sha256:9ae97d36d26566ff84e8893c64a6dc4fe8ca6d1144bf5b87b2b85a32def253c7
+   Status: Image is up to date for busybox:latest
+   ---> 65ad0d468eb1
+   Step 2/9 : ARG AUXILIARY_IMAGE_PATH=/auxiliary
+   ---> Running in 1f8f4e82ccb6
+   Removing intermediate container 1f8f4e82ccb6
+   ---> 947fde618be9
+   Step 3/9 : ARG USER=oracle
+   ---> Running in dda021591e41
+   Removing intermediate container dda021591e41
+   ---> f43d84be4517
+   Step 4/9 : ARG USERID=1000
+   ---> Running in cac4df6dfd13
+   Removing intermediate container cac4df6dfd13
+   ---> e5513f426c74
+   Step 5/9 : ARG GROUP=root
+   ---> Running in 8fec1763270c
+   Removing intermediate container 8fec1763270c
+   ---> 9ef233dbe279
+   Step 6/9 : ENV AUXILIARY_IMAGE_PATH=${AUXILIARY_IMAGE_PATH}
+   ---> Running in b7754f58157a
+   Removing intermediate container b7754f58157a
+   ---> 4a26a97eb572
+   Step 7/9 : RUN adduser -D -u ${USERID} -G $GROUP $USER
+   ---> Running in b6c1f1a81af1
+   Removing intermediate container b6c1f1a81af1
+   ---> 97d3e5ad7540
+   Step 8/9 : COPY --chown=$USER:$GROUP ./ ${AUXILIARY_IMAGE_PATH}/
+   ---> 21088171876f
+   Step 9/9 : USER $USER
+   ---> Running in 825e0abc9f6a
+   Removing intermediate container 825e0abc9f6a
+   ---> b81d6430fcda
+   Successfully built b81d6430fcda
+   Successfully tagged wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image:1.0
+   2024/08/28 03:06:19 Successfully executed container: build
+   2024/08/28 03:06:19 Executing step ID: push. Timeout(sec): 3600, Working directory: '', Network: ''
+   2024/08/28 03:06:19 Pushing image: wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image:1.0, attempt 1
+   The push refers to repository [wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image]
+   ee589b3cda86: Preparing
+   c1fd1adab3b9: Preparing
+   d51af96cf93e: Preparing
+   c1fd1adab3b9: Pushed
+   d51af96cf93e: Pushed
+   ee589b3cda86: Pushed
+   1.0: digest: sha256:c813eb75576eb07a179c3cb4e70106ca7dd280f933ab33a2f6858de673b12eac size: 946
+   2024/08/28 03:06:21 Successfully pushed image: wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image:1.0
+   2024/08/28 03:06:21 Step ID: build marked as successful (elapsed time in seconds: 8.780235)
+   2024/08/28 03:06:21 Populating digests for step ID: build...
+   2024/08/28 03:06:22 Successfully populated digests for step ID: build
+   2024/08/28 03:06:22 Step ID: push marked as successful (elapsed time in seconds: 1.980158)
+   2024/08/28 03:06:22 The following dependencies were found:
+   2024/08/28 03:06:22
+   - image:
+      registry: wlsaksacru6jyly7kztoqu.azurecr.io
+      repository: wlsaks-auxiliary-image
+      tag: "1.0"
+      digest: sha256:c813eb75576eb07a179c3cb4e70106ca7dd280f933ab33a2f6858de673b12eac
+   runtime-dependency:
+      registry: registry.hub.docker.com
+      repository: library/busybox
+      tag: latest
+      digest: sha256:9ae97d36d26566ff84e8893c64a6dc4fe8ca6d1144bf5b87b2b85a32def253c7
+   git: {}
+
+   Run ID: ca1 was successful after 14s
    ```
 
    The image will be pushed to ACR after a success build.
@@ -447,7 +536,7 @@ Use the following steps to build the image:
 1. You can run `az acr repository show` to test whether the image is pushed to the remote repository successfully, as shown in the following example:
 
    ```bash
-   az acr repository show --name ${ACR_NAME} --image wlsaks-auxiliary-image:1.0
+   az acr repository show --name ${ACR_NAME} --image ${IMAGE}
    ```
 
    This command should produce output similar to the following example:
@@ -467,25 +556,6 @@ Use the following steps to build the image:
       "quarantineState": "Passed",
       "signed": false
    }
-   ```
-
-1. You can use `az acr run` to verify the contents of the image: 
-
-   ```bash
-   az acr run -it --rm model-in-image:WLS-v1 find /auxiliary -maxdepth 2 -type f -print
-   ```
-
-   This command should produce output similar to the following example:
-
-   ```output
-   /auxiliary/models/model.properties
-   /auxiliary/models/dbmodel.yaml
-   /auxiliary/models/model.yaml
-   /auxiliary/models/archive.zip
-   /auxiliary/models/appmodel.yaml
-   /auxiliary/Dockerfile
-   /auxiliary/weblogic-deploy/LICENSE.txt
-   /auxiliary/weblogic-deploy/VERSION.txt
    ```
 
 ### Apply the auxiliary image
