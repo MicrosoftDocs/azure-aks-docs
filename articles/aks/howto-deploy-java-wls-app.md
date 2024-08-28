@@ -665,7 +665,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
      {
        "op": "add",
        "path": "/spec/configuration/model/auxiliaryImages",
-       "value": [{"image": "$ACR_LOGIN_SERVER/wlsaks-auxiliary-image:1.0", "imagePullPolicy": "IfNotPresent", "sourceModelHome": "/auxiliary/models", "sourceWDTInstallHome": "/auxiliary/weblogic-deploy"}]
+       "value": [{"image": "$ACR_LOGIN_SERVER/$IMAGE", "imagePullPolicy": "IfNotPresent", "sourceModelHome": "/auxiliary/models", "sourceWDTInstallHome": "/auxiliary/weblogic-deploy"}]
      },
      {
        "op": "add",
