@@ -1,29 +1,29 @@
 ---
 title: Use Virtual Machine-based node pools in Azure Kubernetes Services (AKS)
-description: Learn how to add multiple VM types of a similar family to a node pool in an AKS cluster.
+description: Learn how to add multiple Virtual Machine types of a similar family to a node pool in an AKS cluster.
 ms.topic: article
 ms.custom: devx-track-azurecli
 ms.date: 07/26/2024
 ms.author: wilsondarko
 author: wdarko1
-#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple VM types.
+#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
 # Use Virtual Machines node pools (preview) in Azure Kubernetes Services
 
-We're introducing a new node pool type - Virtual Machine based. For Virtual Machine node pools, Azure Kubernetes Services manages the provisioning and bootstrapping of every single node directly. Alternatively, when using Virtual Machine Scale Sets Uniform node pools,  Azure Kubernetes Services manages the model of the Virtual Machine Scale Sets, and leverage it to achieve consistency across all nodes in the node pool. Virtual Machine based node pools allow you to orchestrate your cluster with virtual machines that best fit your individual workloads.
+We're introducing a new node pool type - Virtual Machine based. For Virtual Machine node pools, Azure Kubernetes Services manages the provisioning and bootstrapping of every single node directly. Alternatively, when using Virtual Machine Scale Sets Uniform node pools, Azure Kubernetes Services manages the model of the Virtual Machine Scale Sets, and use it to achieve consistency across all nodes in the node pool. Virtual Machine based node pools allow you to orchestrate your cluster with virtual machines that best fit your individual workloads.
  
 Virtual Machine node pool brings the benefit of:
 - **Flexibility** - Node specifications can be updated to be adaptive to your current workload and needs.
-- **Fine-Tuned Control** - More single node level controls to allow specifying and mixing nodes of different specs, that lifts the restrictions from a single model and consistency.
+- **Fine-Tuned Control** - More single node level controls to allow specifying and mixing nodes of different specs, that lift the restrictions from a single model and consistency.
 - **Efficiency** - You can reduce node footprint, simplifying your operational effort and allowing you to focus more time on work rather than infrastructure.
 
-Overall this will bring a better experience on more dynamic workloads and higher availability requirements, as well as keeping the existing features Azure Kubernetes Services offers. Virtual Machine node pools allow you to set up multiple similar family virtual machines in one node pool and your workload will be automatically scheduled on the available resources that you configure.
+Overall this brings a better experience on more dynamic workloads and higher availability requirements, while keeping the existing features Azure Kubernetes Services offers. Virtual Machine node pools allow you to set up multiple similar family virtual machines in one node pool, and your workload will be automatically scheduled on the available resources that you configure.
 
 # How It Works
-A node pool is composed of a set of virtual machines, where the virtual machine sizes are designed to support different types of workloads. These VM sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about VM families and their purposes, visit [VM SKUs][vm-SKU].
+A node pool is composed of a set of virtual machines, where the virtual machine sizes are designed to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about virtual machine families and their purposes, visit [VM SKUs][vm-SKU].
 
-To allow the scale of multiple virtual machine sizes, a Virtual Machines node pool type uses a `ScaleProfile`, which contains the configurations for how the node pool can scale, specifically the desired list of virtual machine size and count. `ManualScaleProfile`, a type of scale profile, is the list that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`, and a separate `ManualScaleProfile` must be created for each virtual machine size you will have in your node pool.
+To allow the scale of multiple virtual machine sizes, a Virtual Machines node pool type uses a `ScaleProfile`, which contains the configurations for how the node pool can scale, specifically the desired list of virtual machine size and count. `ManualScaleProfile`, a type of scale profile, is the list that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`, and a separate `ManualScaleProfile` must be created for each virtual machine size in your node pool.
  
 > [!NOTE]
 > When creating a new VirtualMachines node pool, at least one `ManualScaleProfile` is needed in the `ScaleProfile`, and it can be updated later. A VirtualMachines node pool can have multiple manual scale profiles.
@@ -32,7 +32,7 @@ To allow the scale of multiple virtual machine sizes, a Virtual Machines node po
 The following capabilities highlight how Virtual Machine node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
 
 **Virtual Machine based node pools**
-- add, remove, or update nodes in a node pool. VM types can be any virtual machine of the same family type (eg. D-series, A-Series, etc.)
+- add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.)
 
 **VMSS Uniform based node pools**
 - add or remove nodes in a node pool (of the same size and type). Should a new virtual machine size be added to the cluster, a new node pool must be created.
@@ -41,7 +41,7 @@ The following capabilities highlight how Virtual Machine node pools compare with
 ## Prerequisites
 
 - An Azure subscription is required to use this feature. To create a free account, click [Free Azure Account](https://azure.microsoft.com/free).
-- The Virtual Machines Node Pool feature is in preview, and only available in API version >= 2023-10-02-preview, or install the az cli extension >= 2.61.0 version.
+- The Virtual Machines Node Pool feature is in preview, and only available in API version >= 2023-10-02-preview, or by installing the az cli extension >= 2.61.0 version.
 - If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
 - The minimum minor Kubernetes release version required for this feature is release 1.26.
 
@@ -96,8 +96,8 @@ The following capabilities highlight how Virtual Machine node pools compare with
 - Windows node pool isn't supported.
 - This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
 - [Node pool snapshot][node pool snapshot] isn't supported.
-- All VM sizes selected in a node pool need to be from a similar VM family. For example, an N-Series VM size cannot be mixed with a D-Series VM size in the same node pool.
-- VirtualMachines node pools allow up to 5 different virtual machine sizes per node pool.
+- All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, an N-Series virtual machine type cannot be mixed with a D-Series virtual machine type in the same node pool.
+- VirtualMachines node pools allow up to five different virtual machine sizes per node pool.
 
 ## Create an AKS cluster with VirtualMachines node pools
 
