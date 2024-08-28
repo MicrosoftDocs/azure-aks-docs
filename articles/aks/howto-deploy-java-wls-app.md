@@ -429,7 +429,6 @@ Use the following steps to build the image:
 
    ```bash
    export ACR_NAME=<value-from-clipboard>
-   export ACR_LOGIN_SERVER=<value-from-clipboard>
    export IMAGE="wlsaks-auxiliary-image:1.0"
    ```
 
@@ -611,6 +610,9 @@ In the previous steps, you created the auxiliary image including models and WDT.
    export WLS_DOMAIN_NS=sample-domain1-ns
    export WLS_DOMAIN_UID=sample-domain1
    export SECRET_NAME=sqlserver-secret
+
+   
+   export ACR_LOGIN_SERVER=$(az acr show --name ${ACR_NAME} --query "loginServer" --output tsv)
 
    kubectl -n ${WLS_DOMAIN_NS} create secret generic \
        ${SECRET_NAME} \
