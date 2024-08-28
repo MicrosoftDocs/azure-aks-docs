@@ -37,6 +37,15 @@ The following capabilities highlight how Virtual Machine node pools compare with
 **VMSS Uniform based node pools**
 - add or remove nodes in a node pool (of the same size and type). Should a new virtual machine size be added to the cluster, a new node pool must be created.
 
+## Limitations
+
+- [Cluster autoscaler][cluster autoscaler] is currently not supported.
+- [InifiniBand][InifiniBand] isn't available.
+- Windows node pool isn't supported.
+- This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
+- [Node pool snapshot][node pool snapshot] isn't supported.
+- All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, an N-Series virtual machine type cannot be mixed with a D-Series virtual machine type in the same node pool.
+- VirtualMachines node pools allow up to five different virtual machine sizes per node pool.
 
 ## Prerequisites
 
@@ -89,15 +98,7 @@ The following capabilities highlight how Virtual Machine node pools compare with
     az provider register --namespace "Microsoft.ContainerService"
     ```
 
-## Limitations
 
-- [Cluster autoscaler][cluster autoscaler] is currently not supported.
-- [InifiniBand][InifiniBand] isn't available.
-- Windows node pool isn't supported.
-- This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
-- [Node pool snapshot][node pool snapshot] isn't supported.
-- All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, an N-Series virtual machine type cannot be mixed with a D-Series virtual machine type in the same node pool.
-- VirtualMachines node pools allow up to five different virtual machine sizes per node pool.
 
 ## Create an AKS cluster with VirtualMachines node pools
 
