@@ -47,7 +47,6 @@ If you're interested in providing feedback or working closely on your migration 
   > Get a support entitlement from Oracle before going to production. Failure to do so results in running insecure images that are not patched for critical security flaws. For more information on Oracle's critical patch updates, see [Critical Patch Updates, Security Alerts and Bulletins](https://www.oracle.com/security-alerts/) from Oracle.
 - Prepare a local machine with Unix-like operating system installed - for example, Ubuntu, Azure Linux, macOS, Windows Subsystem for Linux.
   - [Azure CLI](/cli/azure). Use `az --version` to test whether az works. This document was tested with version 2.55.1.
-  - [Podman](https://podman.io/). This document was tested with Podman version 3.4.4.
   - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl). Use `kubectl version` to test whether kubectl works. This document was tested with version v1.21.2.
   - A Java Development Kit (JDK) compatible with the version of WebLogic Server you intend to run. The article directs you to install a version of WebLogic Server that uses JDK 11. Ensure that your `JAVA_HOME` environment variable is set correctly in the shells in which you run the commands.
   - [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
@@ -216,7 +215,7 @@ mvn clean package --file $BASE_DIR/weblogic-on-azure/javaee/weblogic-cafe/pom.xm
 
 The package should be successfully generated and located at *$BASE_DIR/weblogic-on-azure/javaee/weblogic-cafe/target/weblogic-cafe.war*. If you don't see the package, you must troubleshoot and resolve the issue before you continue.
 
-### Use Podman to create an auxiliary image
+### Use ACR to create an auxiliary image
 
 The steps in this section show you how to build an auxiliary image. This image includes the following components:
 
@@ -409,7 +408,7 @@ Use the following steps to build the image:
    rm weblogic-deploy.zip
    ```
 
-1. Use the following commands to build an auxiliary image using Podman:
+1. Use the following commands to create a docker file:
 
    ```bash
    cd ${BASE_DIR}/mystaging
@@ -426,62 +425,54 @@ Use the following steps to build the image:
    EOF
    ```
 
-1. Run the `podman buildx build` command using *${BASE_DIR}/mystaging/Dockerfile*, as shown in the following example:
+1. Run the `az acr build` command using *${BASE_DIR}/mystaging/Dockerfile*, as shown in the following example:
+
+   ```bash
+   export ACR_NAME=<value-from-clipboard>
+   ```
 
    ```bash
    cd ${BASE_DIR}/mystaging
-   podman buildx build --platform linux/amd64 --build-arg AUXILIARY_IMAGE_PATH=/auxiliary --tag model-in-image:WLS-v1 .
+   az acr build -t wlsaks-auxiliary-image:1.0 --build-arg AUXILIARY_IMAGE_PATH=/auxiliary -r myregistry ${ACR_NAME} --platform linux/amd64  .
    ```
 
    When you build the image successfully, the output looks similar to the following example:
 
    ```output
-   STEP 1/9: FROM busybox
-   Resolved "busybox" as an alias (/etc/containers/registries.conf.d/shortnames.conf)
-   Trying to pull docker.io/library/busybox:latest...
-   Getting image source signatures
-   Copying blob ec562eabd705 done
-   Copying config 65ad0d468e done
-   Writing manifest to image destination
-   Storing signatures
-   STEP 2/9: ARG AUXILIARY_IMAGE_PATH=/auxiliary
-   --> 41107094076
-   STEP 3/9: ARG USER=oracle
-   --> beecaed6c39
-   STEP 4/9: ARG USERID=1000
-   --> ef47d9ebe8b
-   STEP 5/9: ARG GROUP=root
-   --> bbea3bc4917
-   STEP 6/9: ENV AUXILIARY_IMAGE_PATH=${AUXILIARY_IMAGE_PATH}
-   --> d8ad2e03c72
-   STEP 7/9: RUN adduser -D -u ${USERID} -G $GROUP $USER
-   --> 279a7ecf639
-   STEP 8/9: COPY --chown=$USER:$GROUP ./ ${AUXILIARY_IMAGE_PATH}/
-   --> f85f1d546b0
-   STEP 9/9: USER $USER
-   COMMIT model-in-image:WLS-v1
-   --> 55f4662fb46
-   Successfully tagged localhost/model-in-image:WLS-v1
-   55f4662fb462f6ce6d3362e3b058a46915d57f488b061d7c4cf92fbe62b8cdb1
+   
    ```
 
-1. If you successfully created the image, then it should now be in your local machine's Podman repository. You can verify the image creation by using the following command:
+   The image will be pushed to ACR after a success build.
 
-   ```text
-   podman images model-in-image:WLS-v1
+1. You can run `az acr repository show` to test whether the image is pushed to the remote repository successfully, as shown in the following example:
+
+   ```bash
+   az acr repository show --name ${ACR_NAME} --image wlsaks-auxiliary-image:1.0
    ```
 
    This command should produce output similar to the following example:
 
    ```output
-   REPOSITORY                TAG         IMAGE ID      CREATED        SIZE
-   localhost/model-in-image  WLS-v1      55f4662fb462  2 minutes ago  13.3 MB
+   {
+      "changeableAttributes": {
+         "deleteEnabled": true,
+         "listEnabled": true,
+         "readEnabled": true,
+         "writeEnabled": true
+      },
+      "createdTime": "2024-01-24T06:14:19.4546321Z",
+      "digest": "sha256:a1befbefd0181a06c6fe00848e76f1743c1fecba2b42a975e9504ba2aaae51ea",
+      "lastUpdateTime": "2024-01-24T06:14:19.4546321Z",
+      "name": "1.0",
+      "quarantineState": "Passed",
+      "signed": false
+   }
    ```
 
-   After the image is created, it should have the WDT executables in */auxiliary/weblogic-deploy*, and WDT model, property, and archive files in */auxiliary/models*. Use the following command to verify the contents of the image:
+1. You can use `az acr run` to verify the contents of the image: 
 
    ```bash
-   podman run -it --rm model-in-image:WLS-v1 find /auxiliary -maxdepth 2 -type f -print
+   az acr run -it --rm model-in-image:WLS-v1 find /auxiliary -maxdepth 2 -type f -print
    ```
 
    This command should produce output similar to the following example:
@@ -496,56 +487,6 @@ Use the following steps to build the image:
    /auxiliary/weblogic-deploy/LICENSE.txt
    /auxiliary/weblogic-deploy/VERSION.txt
    ```
-
-1. Use the following steps to push the auxiliary image to Azure Container Registry:
-
-   1. Open the Azure portal and go to the resource group that you provisioned in the [Deploy WebLogic Server on AKS](#deploy-weblogic-server-on-aks) section.
-   1. Select the resource of type **Container registry** from the resource list.
-   1. Hover the mouse over the value next to **Login server** and select the copy icon next to the text.
-   1. Save the value in the `ACR_NAME` and `ACR_LOGIN_SERVER` environment variable by using the following command:
-
-      ```bash
-      export ACR_NAME=<value-from-clipboard>
-      export ACR_LOGIN_SERVER=<value-from-clipboard>
-      ```
-
-   1. Run the following commands to tag and push the image. Make sure Podman is running before executing these commands.
-
-      ```bash
-      export ACR_TOKEN=$(az acr login --name ${ACR_NAME}--expose-token --output tsv --query accessToken)
-      export ACR_USER="00000000-0000-0000-0000-000000000000"
-      podman login ${ACR_LOGIN_SERVER} -u $ACR_USER-p $ACR_TOKEN
-      ```
-
-      ```bash
-      podman tag model-in-image:WLS-v1 $ACR_LOGIN_SERVER/wlsaks-auxiliary-image:1.0
-      podman push $ACR_LOGIN_SERVER/wlsaks-auxiliary-image:1.0
-      ```
-
-   1. You can run `az acr repository show` to test whether the image is pushed to the remote repository successfully, as shown in the following example:
-
-      ```bash
-      az acr repository show --name ${ACR_NAME} --image wlsaks-auxiliary-image:1.0
-      ```
-
-      This command should produce output similar to the following example:
-
-      ```output
-      {
-        "changeableAttributes": {
-          "deleteEnabled": true,
-          "listEnabled": true,
-          "readEnabled": true,
-          "writeEnabled": true
-        },
-        "createdTime": "2024-01-24T06:14:19.4546321Z",
-        "digest": "sha256:a1befbefd0181a06c6fe00848e76f1743c1fecba2b42a975e9504ba2aaae51ea",
-        "lastUpdateTime": "2024-01-24T06:14:19.4546321Z",
-        "name": "1.0",
-        "quarantineState": "Passed",
-        "signed": false
-      }
-      ```
 
 ### Apply the auxiliary image
 
