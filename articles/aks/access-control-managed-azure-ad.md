@@ -23,27 +23,12 @@ When you integrate Microsoft Entra ID with your AKS cluster, you can use [Condit
 ## Use Conditional Access with Microsoft Entra ID and AKS
 
 1. In the Azure portal, go to the **Microsoft Entra ID** page and select **Enterprise applications**.
-2. Select **Conditional Access** > **Policies** > **New policy**.
-
-    :::image type="content" source="./media/managed-aad/conditional-access-new-policy.png" alt-text="Screenshot of adding a Conditional Access policy." lightbox="./media/managed-aad/conditional-access-new-policy.png":::
-
-3. Enter a name for the policy, such as *aks-policy*.
-
-4. Under **Assignments**, select **Users and groups**. Choose the users and groups you want to apply the policy to. In this example, choose the same Microsoft Entra group that has administrator access to your cluster.
-
-    :::image type="content" source="./media/managed-aad/conditional-access-users-groups.png" alt-text="Screenshot of selecting users or groups to apply the Conditional Access policy." lightbox="./media/managed-aad/conditional-access-users-groups.png":::
-
-5. Under **Cloud apps or actions** > **Include**, select **Select apps**. Search for **Azure Kubernetes Service** and select **Azure Kubernetes Service Microsoft Entra Server**.
-
-    :::image type="content" source="./media/managed-aad/conditional-access-apps.png" alt-text="Screenshot of selecting Azure Kubernetes Service AD Server for applying the Conditional Access policy." lightbox="./media/managed-aad/conditional-access-apps.png":::
-
-6. Under **Access controls** > **Grant**, select **Grant access**, **Require device to be marked as compliant**, and **Require all the selected controls**.
-
-    :::image type="content" source="./media/managed-aad/conditional-access-grant-compliant.png" alt-text="Screenshot of selecting to only allow compliant devices for the Conditional Access policy." lightbox="./media/managed-aad/conditional-access-grant-compliant.png" :::
-
-7. Confirm your settings, set **Enable policy** to **On**, and then select **Create**.
-
-    :::image type="content" source="./media/managed-aad/conditional-access-enable-policy.png" alt-text="Screenshot of enabling the Conditional Access policy." lightbox="./media/managed-aad/conditional-access-enable-policy.png":::
+1. Select **Conditional Access** > **Policies** > **New policy**.
+1. Enter a name for the policy, such as *aks-policy*.
+1. Under **Assignments**, select **Users and groups**. Choose the users and groups you want to apply the policy to. In this example, choose the same Microsoft Entra group that has administrator access to your cluster.
+1. Under **Cloud apps or actions** > **Include**, select **Select apps**. Search for **Azure Kubernetes Service** and select **Azure Kubernetes Service Microsoft Entra Server**.
+1. Under **Access controls** > **Grant**, select **Grant access**, **Require device to be marked as compliant**, and **Require all the selected controls**.
+1. Confirm your settings, set **Enable policy** to **On**, and then select **Create**.
 
 ## Verify your Conditional Access policy has been successfully listed
 
@@ -53,19 +38,17 @@ When you integrate Microsoft Entra ID with your AKS cluster, you can use [Condit
      az aks get-credentials --resource-group myResourceGroup --name myManagedCluster
     ```
 
-2. Follow the instructions to sign in.
+1. Follow the instructions to sign in.
 
-3. View the nodes in the cluster using the `kubectl get nodes` command.
+1. View the nodes in the cluster using the `kubectl get nodes` command.
 
     ```azurecli-interactive
     kubectl get nodes
     ```
 
-4. In the Azure portal, navigate to **Microsoft Entra ID** and select **Enterprise applications** > **Activity** > **Sign-ins**.
+1. In the Azure portal, navigate to **Microsoft Entra ID** and select **Enterprise applications** > **Activity** > **Sign-ins**.
 
-5. Under the **Conditional Access** column you should see a status of *Success*. Select the event and then select the **Conditional Access** tab. Your Conditional Access policy will be listed.
-
-    :::image type="content" source="./media/managed-aad/conditional-access-sign-in-activity.png" alt-text="Screenshot that shows failed sign-in entry due to Conditional Access policy." lightbox="./media/managed-aad/conditional-access-sign-in-activity.png":::
+1. Under the **Conditional Access** column you should see a status of *Success*. Select the event and then select the **Conditional Access** tab. Your Conditional Access policy will be listed.
 
 ## Next steps
 

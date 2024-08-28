@@ -14,12 +14,12 @@ When setting up permissions for different teams, you might want to set default p
 
 In this article, you learn how to:
 
-[!div class="checklist"]
-
-- Set default roles for example groups to access or perform operations on AKS clusters based on Microsoft Entra group memberships.
-- Configure basic roles for accessing AKS clusters.
-- Self-activate roles to get just-in-time access to AKS clusters.
-- Set approvers to approve or deny approval requests for just-in-time access.
+> [!div class="checklist"]
+>
+> - Set default roles for example groups to access or perform operations on AKS clusters based on Microsoft Entra group memberships.
+> - Configure basic roles for accessing AKS clusters.
+> - Self-activate roles to get just-in-time access to AKS clusters.
+> - Set approvers to approve or deny approval requests for just-in-time access.
 
 > [!NOTE]
 > Microsoft Entra Privileged Identity Management (PIM) has Microsoft Entra ID P2 or Microsoft Entra ID Governance capabilities requiring a Premium P2 SKU. For more information, see [Microsoft Entra ID Governance licensing fundamentals][licensing-fundamentals] and [pricing guide][aad-pricing].
@@ -50,7 +50,7 @@ You *can* use just the **default** and **admin** groups instead of creating a se
         --output tsv)
     ```
 
-2. Get the *resource group ID* of the AKS cluster using the [`az group show`][az-group-show] command.
+1. Get the *resource group ID* of the AKS cluster using the [`az group show`][az-group-show] command.
 
     ```azurecli-interactive
     RG_ID=$(az group show \
@@ -59,7 +59,7 @@ You *can* use just the **default** and **admin** groups instead of creating a se
         --output tsv)
     ```
 
-3. Create the **default** group using the [`az ad group create`][az-ad-group-create] command.
+1. Create the **default** group using the [`az ad group create`][az-ad-group-create] command.
 
     ```azurecli-interactive
     DEFAULT_ID=$(az ad group create \
@@ -69,7 +69,7 @@ You *can* use just the **default** and **admin** groups instead of creating a se
         --output tsv)
     ```
 
-4. Create an Azure role assignment for the **default** group using the [`az role assignment create`][az-role-assignment-create] command.
+1. Create an Azure role assignment for the **default** group using the [`az role assignment create`][az-role-assignment-create] command.
 
     There are *three* roles you can assign to the **default** group depending on your specific requirements:
 
@@ -109,7 +109,7 @@ You *can* use just the **default** and **admin** groups instead of creating a se
         --output tsv)
     ```
 
-2. Assign the `Azure Kubernetes Service RBAC Admin` role to the **admin** group using the [`az role assignment create`][az-role-assignment-create] command.
+1. Assign the `Azure Kubernetes Service RBAC Admin` role to the **admin** group using the [`az role assignment create`][az-role-assignment-create] command.
 
     ```azurecli-interactive
     az role assignment create \
@@ -160,7 +160,7 @@ In this section, we create two users in Microsoft Entra ID: a **normal** user wi
         --output tsv)
     ```
 
-2. Add the **normal** user to the default group using the [`az ad group member add`][az-ad-group-member-add] command.
+1. Add the **normal** user to the default group using the [`az ad group member add`][az-ad-group-member-add] command.
 
     ```azurecli-interactive
     az ad group member add \
@@ -168,7 +168,7 @@ In this section, we create two users in Microsoft Entra ID: a **normal** user wi
         --member-id $NUSER_ID
     ```
 
-3. Create the **privileged** user using the [`az ad user create`][az-ad-user-create] command.
+1. Create the **privileged** user using the [`az ad user create`][az-ad-user-create] command.
 
     ```azurecli-interactive
     PUSER_ID=$(az ad user create \
@@ -179,7 +179,7 @@ In this section, we create two users in Microsoft Entra ID: a **normal** user wi
         --output tsv)
     ```
 
-4. Add the **privileged** user to the approver group using the [`az ad group member add`][az-ad-group-member-add] command.
+1. Add the **privileged** user to the approver group using the [`az ad group member add`][az-ad-group-member-add] command.
 
     ```azurecli-interactive
     az ad group member add \
@@ -190,25 +190,23 @@ In this section, we create two users in Microsoft Entra ID: a **normal** user wi
 ## Enable Privileged Identity Management (PIM) for the admin group
 
 1. From the [Azure portal home page](https://portal.azure.com/), select **Microsoft Entra ID**.
-2. From the service menu, under **Manage**, select **Groups**, and then select the **admin** group.
-3. From the service menu, under **Activity**, select **Privileged Identity Management**, and then select **Enable PIM for this group**.
+1. From the service menu, under **Manage**, select **Groups**, and then select the **admin** group.
+1. From the service menu, under **Activity**, select **Privileged Identity Management**, and then select **Enable PIM for this group**.
 
 ### Set an approver for the admin group
 
 1. From the [Azure portal home page](https://portal.azure.com/), search for and select **Privileged Identity Management**.
-2. From the service menu, under **Manage**, select **Groups**, and then select the **admin** group.
-3. From the service menu, under **Manage**, select **Assignments** > **Add assignments**.
-4. On the **Membership** tab of the **Add assignments** page, select **Member** as the selected role and **default** as the selected member, and then select **Next**.
-5. On the **Settings** tab, select **Eligible** as the assignment type, and then select **Assign**.
-6. From the service menu, under **Manage**, select **Settings** > **Member** > **Edit**.
-7. On the **Edit role setting - Member** page, select the **Require approval to activate** checkbox and add the **approver** group as the selected approver.
+1. From the service menu, under **Manage**, select **Groups**, and then select the **admin** group.
+1. From the service menu, under **Manage**, select **Assignments** > **Add assignments**.
+1. On the **Membership** tab of the **Add assignments** page, select **Member** as the selected role and **default** as the selected member, and then select **Next**.
+1. On the **Settings** tab, select **Eligible** as the assignment type, and then select **Assign**.
+1. From the service menu, under **Manage**, select **Settings** > **Member** > **Edit**.
+1. On the **Edit role setting - Member** page, select the **Require approval to activate** checkbox and add the **approver** group as the selected approver.
 
     > [!NOTE]
-    > If you don't select the **Require approval to activate** checkbox, the users in the **default** group can self-activate the role to get just-in-time access to the AKS cluster without approval.
+    > If you don't select the **Require approval to activate** checkbox, the users in the **default** group can self-activate the role to get just-in-time access to the AKS cluster without approval. The user in the **approver** group has to be a member of the group. Even if you set the user as the **owner**, they still aren't able to review just-in-time requests because the group owner only has administrative rights to the group, not the role assignment. You *can* set the user as the member and owner of the same group without conflict.
 
-8. Make any other necessary changes, and then select **Update**.
-
-The user in the **approver** group has to be a member of the group. Even if you set the user as the ***owner***, they still aren't able to review just-in-time requests because the group owner only has administrative rights to the group, not the role assignment. You *can* set the user as the member and owner of the same group without conflict.
+1. Make any other necessary changes, and then select **Update**.
 
 For more information about PIM configuration, see [Configure PIM for groups][configure-pim-for-groups].
 
@@ -222,13 +220,13 @@ Now, we can try to access the AKS cluster using the **normal** user, who is a me
     az login --username n01@$DOMAIN --password ${PASSWORD}
     ```
 
-2. Get the user credentials to access the cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+1. Get the user credentials to access the cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group <resource-group-name> --name <cluster-name>
     ```
 
-3. Try to access the cluster pods using the `kubectl get` command.
+1. Try to access the cluster pods using the `kubectl get` command.
 
     ```bash
     kubectl get pods --namespace kube-system
@@ -250,7 +248,7 @@ Now, we can try to access the AKS cluster using the **normal** user, who is a me
     metrics-server-5955767688-lpbjb        2/2     Running   0          30h
     ```
 
-4. Try to access the cluster secrets using the `kubectl get` command.
+1. Try to access the cluster secrets using the `kubectl get` command.
 
     ```bash
     kubectl get secrets --namespace kube-system
@@ -281,7 +279,7 @@ After temporarily adding the `Azure Kubernetes Service RBAC Admin` role, you can
     > [!NOTE]
     > If you encounter an error due to lack of permissions, log in to refresh the permissions using the `az login` command.
 
-2. Try to access the cluster secrets again using the `kubectl get secrets` command.
+1. Try to access the cluster secrets again using the `kubectl get secrets` command.
 
     ```bash
     kubectl get secrets --namespace kube-system
