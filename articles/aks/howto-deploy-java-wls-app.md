@@ -429,6 +429,7 @@ Use the following steps to build the image:
 
    ```bash
    export ACR_NAME=<value-from-clipboard>
+   export ACR_LOGIN_SERVER=<value-from-clipboard>
    export IMAGE="wlsaks-auxiliary-image:1.0"
    ```
 
