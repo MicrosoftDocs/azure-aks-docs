@@ -13,7 +13,7 @@ author: wdarko1
 
 Azure Kubernetes Service (AKS) is introducing a new Virtual Machines node pool type (preview). With Virtual Machines node pools, AKS manages the provisioning and bootstrapping of every single node directly. Alternatively, for Virtual Machine Scale Sets node pools with Uniform orchestration, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
  
-Virtual Machine node pool brings the benefit of:
+Advantages of the Virtual Machines node pool type include:
 - **Flexibility** - Node specifications can be updated to be adaptive to your current workload and needs.
 - **Fine-Tuned Control** - More single node level controls to allow specifying and mixing nodes of different specs, that lift the restrictions from a single model and consistency.
 - **Efficiency** - You can reduce node footprint, simplifying your operational effort and allowing you to focus more time on work rather than infrastructure.
