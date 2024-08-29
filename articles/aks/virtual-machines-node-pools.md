@@ -1,5 +1,5 @@
 ---
-title: Use Virtual Machine-based node pools in Azure Kubernetes Services (AKS)
+title: Use Virtual Machines node pools in Azure Kubernetes Services (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a node pool in an AKS cluster.
 ms.topic: article
 ms.custom: devx-track-azurecli
@@ -15,27 +15,25 @@ Azure Kubernetes Service (AKS) is introducing a new Virtual Machines node pool t
  
 Advantages of the Virtual Machines node pool type include:
 - **Flexibility** - Node specifications can be updated to adapt to your current workload and needs.
-- **Fine-Tuned Control** - More single node level controls to allow specifying and mixing nodes of different specs, that lift the restrictions from a single model and consistency.
-- **Efficiency** - You can reduce node footprint, simplifying your operational effort and allowing you to focus more time on work rather than infrastructure.
+- **Fine-tuned control** - Single node-level controls allow specifying and mixing nodes of different specs  to lift restrictions from a single model and improve consistency.
+- **Efficiency** - You can reduce the node footprint for your cluster, simplifying your operational requirements.
 
-Overall this brings a better experience on more dynamic workloads and higher availability requirements, while keeping the existing features Azure Kubernetes Services offers. Virtual Machine node pools allow you to set up multiple similar family virtual machines in one node pool, and your workload will be automatically scheduled on the available resources that you configure.
+Overall Virtual Machines node pools provide a better experience for dynamic workloads and high availability requirements. Virtual Machines node pools enable you to set up multiple similar-family virtual machines in one node pool. Your workload will be automatically scheduled on the available resources that you configure.
 
-# How It Works
-A node pool is composed of a set of virtual machines, where the virtual machine sizes are designed to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about virtual machine families and their purposes, visit [VM SKUs][vm-SKU].
+# How it works
+A node pool is composed of a set of virtual machines, where different virtual machine sizes are designated to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about virtual machine families and their purposes, visit [VM SKUs][vm-SKU].
 
-To allow the scale of multiple virtual machine sizes, a Virtual Machines node pool type uses a `ScaleProfile`, which contains the configurations for how the node pool can scale, specifically the desired list of virtual machine size and count. `ManualScaleProfile`, a type of scale profile, is the list that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`, and a separate `ManualScaleProfile` must be created for each virtual machine size in your node pool.
+To enable scaling of multiple virtual machine sizes, the Virtual Machines node pool type uses a `ScaleProfile` that contains configurations indicating how the node pool can scale, specifically the desired list of virtual machine size and count. `ManualScaleProfile`, a type of scale profile, is the list that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`, and a separate `ManualScaleProfile` must be created for each virtual machine size in your node pool.
  
 > [!NOTE]
-> When creating a new VirtualMachines node pool, at least one `ManualScaleProfile` is needed in the `ScaleProfile`, and it can be updated later. A VirtualMachines node pool can have multiple manual scale profiles.
+> When creating a new Virtual Machines node pool, at least one `ManualScaleProfile` is needed in the `ScaleProfile`. A Virtual Machines node pool can have multiple manual scale profiles.
 
-# Feature Capabilities
-The following capabilities highlight how Virtual Machine node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
+## Feature Capabilities
+The following capabilities highlight how Virtual Machines node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
 
-**Virtual Machine based node pools**
-- add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.)
+**Virtual Machine based node pools**: You can add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.)
 
-**VMSS Uniform based node pools**
-- add or remove nodes in a node pool (of the same size and type). Should a new virtual machine size be added to the cluster, a new node pool must be created.
+**VMSS Uniform based node pools**: YOu can add or remove nodes in a node pool (of the same size and type). Should a new virtual machine size be added to the cluster, a new node pool must be created.
 
 ## Limitations
 
@@ -45,12 +43,12 @@ The following capabilities highlight how Virtual Machine node pools compare with
 - This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, an N-Series virtual machine type cannot be mixed with a D-Series virtual machine type in the same node pool.
-- VirtualMachines node pools allow up to five different virtual machine sizes per node pool.
+- Virtual Machines node pools allow up to five different virtual machine sizes per node pool.
 
 ## Prerequisites
 
 - An Azure subscription is required to use this feature. To create a free account, click [Free Azure Account](https://azure.microsoft.com/free).
-- The Virtual Machines Node Pool feature is in preview, and only available in API version >= 2023-10-02-preview, or by installing the az cli extension >= 2.61.0 version.
+- The Virtual Machines node pool feature is in preview, and is available only in API versions 2023-10-02-preview and greater, or by installing the az cli extension 2.61.0 version or greater.
 - If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
 - The minimum minor Kubernetes release version required for this feature is release 1.26.
 
@@ -100,14 +98,14 @@ The following capabilities highlight how Virtual Machine node pools compare with
 
 
 
-## Create an AKS cluster with VirtualMachines node pools
+## Create an AKS cluster with Virtual Machines node pools
 
 > [!NOTE]
-> Only *one* VM size is allowed in a scale profile, and the maximum limit is *five* VM scale profiles overall for a VirtualMachines node pool.
+> Only *one* VM size is allowed in a scale profile, and the maximum limit is *five* VM scale profiles overall for a Virtual Machines node pool.
 
-- Create an AKS cluster with VirtualMachines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
+- Create an AKS cluster with Virtual Machines node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
 
-    The following example creates a cluster named *myAKSCluster* with a VirtualMachines node pool containing two nodes in the *myResourceGroup*, generates SSH keys, sets the load balancer SKU to *standard*, and sets the Kubernetes version to *1.28.5*:
+    The following example creates a cluster named *myAKSCluster* with a Virtual Machines node pool containing two nodes, generates SSH keys, sets the load balancer SKU to *standard*, and sets the Kubernetes version to *1.28.5*:
 
     ```azurecli-interactive
     az aks create \
@@ -120,11 +118,11 @@ The following capabilities highlight how Virtual Machine node pools compare with
         --kubernetes-version 1.28.5
     ```
 
-## Add a VirtualMachines SKU node pool to an existing cluster
+## Add a Virtual Machines node pool to an existing cluster
 
-- Add a VirtualMachines node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
+- Add a Virtual Machines node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
 
-    The following example creates a VirtualMachines node pool named *myvmpool* to the *myAKSCluster* cluster with three nodes and a maximum VM SKU of *Standard_D4s_v3*:
+    The following example adds a Virtual Machines node pool named *myvmpool* to the *myAKSCluster* cluster. The node pool has three nodes and a maximum VM SKU of *Standard_D4s_v3*:
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -136,11 +134,11 @@ The following capabilities highlight how Virtual Machine node pools compare with
         --node-count 3
     ```
 
-## Add manual scale profile to a node pool
+## Add a manual scale profile to a node pool
 
 - Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"`.
 
-    The following example adds a manual scale profile to node pool *myvmpool* in cluster *myAKSCluster* in resource group *myResourceGroup* with two nodes with a VM SKU of *Standard_D2s_v3*:
+    The following example adds a manual scale profile to node pool *myvmpool* in cluster *myAKSCluster*. The node pool includes two nodes with a VM SKU of *Standard_D2s_v3*:
 
     ```azurecli-interactive
     az aks nodepool manual-scale add \
@@ -156,9 +154,9 @@ The following capabilities highlight how Virtual Machine node pools compare with
 - Update an existing manual scale profile in a node pool using the [`az aks nodepool manual-scale update`][az aks nodepool manual-scale update] command with the `--vm-sizes` flag set to `"Standard_D2s_v3"`.
 
     > [!NOTE]
-    > Use the `--current-vm-sizes` Azure CLI flag to specify the size of the existing node pool that you want to update. You can update `--vm-sizes` and/or `--node-count`. When using other tools or REST APIs, you need to pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field when updating the node pool scale profile.
+    > Use the `--current-vm-sizes` parameter to specify the size of the existing node pool that you want to update. You can update `--vm-sizes` and/or `--node-count`. When using other tools or REST APIs, you need to pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field when updating the node pool scale profile.
 
-    The following example updates a manual scale profile to the *myvmpool1* node pool in the *myAKSCluster* cluster in the *myResourceGroup* resource group. The commmand  with five nodes and changes the VM SKU from *Standard_D4s_v3* to *Standard_D8s_v3*:
+    The following example updates a manual scale profile to the *myvmpool1* node pool in the *myAKSCluster* cluster. The commmand updates the numder of nodes to five and changes the VM SKU from *Standard_D4s_v3* to *Standard_D8s_v3*:
 
     ```azurecli-interactive
     az aks nodepool manual-scale update \
@@ -175,9 +173,9 @@ The following capabilities highlight how Virtual Machine node pools compare with
 - Delete an existing manual scale profile using the [`az aks nodepool manual-scale delete`][az aks nodepool manual-scale delete] command.
 
     > [!NOTE]
-    > The `--current-vm-sizes` Azure CLI flag specifies the size of the existing node pool to be deleted. When using other tools or REST APIs to update the node pool scale profile, pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field.
+    > The `--current-vm-sizes` parameter specifies the size of the existing node pool to be deleted. When using other tools or REST APIs to update the node pool scale profile, pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field.
 
-    The following example deletes the manual scale profile using the *Standard_D8s_v3* VM SKU in the *myvmpool1* node pool in the *myAKSCluster* cluster in the *myResourceGroup* resource group.
+    The following example deletes the manual scale profile for the *Standard_D8s_v3* VM SKU in the *myvmpool1* node pool.
 
     ```azurecli-interactive
     az aks nodepool manual-scale delete \
@@ -189,7 +187,7 @@ The following capabilities highlight how Virtual Machine node pools compare with
 
 ## Next steps
 
-In this article, you learned how to use VirtualMachines node pools in Azure Kubernetes Services (AKS). To learn more about node pools in AKS, see [Create node pools][create node pools].
+In this article, you learned how to use Virtual Machines node pools in AKS. To learn more about node pools in AKS, see [Create node pools][create node pools].
 
 <!-- EXTERNAL LINKS -->
 
