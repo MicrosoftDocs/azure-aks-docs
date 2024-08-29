@@ -83,9 +83,9 @@ Recommendations can have one of the following attestation statuses:
 |1.2.13|Ensure that the admission control plugin NamespaceLifecycle is set|Automated|L2|Pass|
 |1.2.14|Ensure that the admission control plugin NodeRestriction is set|Automated|L2|Pass|
 |1.2.15|Ensure that the `--profiling` argument is set to false|Automated|L1|Pass|
-|1.2.16|Ensure that the `--audit-log-path` argument is set|Automated|L1|Equivalent Control|
+|1.2.16|Ensure that the `--audit-log-path` argument is set|Automated|L1|Pass|
 |1.2.17|Ensure that the `--audit-log-maxage` argument is set to 30 or as appropriate|Automated|L1|Equivalent Control|
-|1.2.18|Ensure that the `--audit-log-maxbackup` argument is set to 10 or as appropriate|Automated|L1|Pass|
+|1.2.18|Ensure that the `--audit-log-maxbackup` argument is set to 10 or as appropriate|Automated|L1|Equivalent Control|
 |1.2.19|Ensure that the `--audit-log-maxsize` argument is set to 100 or as appropriate|Automated|L1|Pass|
 |1.2.20|Ensure that the `--request-timeout` argument is set as appropriate|Manual|L1|Pass|
 |1.2.21|Ensure that the `--service-account-lookup` argument is set to true|Automated|L1|Pass|
@@ -93,7 +93,7 @@ Recommendations can have one of the following attestation statuses:
 |1.2.23|Ensure that the `--etcd-certfile` and `--etcd-keyfile` arguments are set as appropriate|Automated|L1|Pass|
 |1.2.24|Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate|Automated|L1|Pass|
 |1.2.25|Ensure that the `--client-ca-file` argument is set as appropriate|Automated|L1|Pass|
-|1.2.26|Ensure that the `--etcd-cafile` argument is set as appropriate|Automated|L1|Depends on Environment|
+|1.2.26|Ensure that the `--etcd-cafile` argument is set as appropriate|Automated|L1|Pass|
 |1.2.27|Ensure that the `--encryption-provider-config` argument is set as appropriate|Manual|L1|Depends on Environment|
 |1.2.28|Ensure that encryption providers are appropriately configured|Manual|L1|Depends on Environment|
 |1.2.29|Ensure that the API Server only makes use of Strong Cryptographic Ciphers|Manual|L1|Pass|
@@ -103,7 +103,7 @@ Recommendations can have one of the following attestation statuses:
 |1.3.3|Ensure that the `--use-service-account-credentials` argument is set to true|Automated|L1|Pass|
 |1.3.4|Ensure that the `--service-account-private-key-file` argument is set as appropriate|Automated|L1|Pass|
 |1.3.5|Ensure that the `--root-ca-file` argument is set as appropriate|Automated|L1|Pass|
-|1.3.6|Ensure that the RotateKubeletServerCertificate argument is set to true|Automated|L2|Fail|
+|1.3.6|Ensure that the RotateKubeletServerCertificate argument is set to true|Automated|L2|Pass|
 |1.3.7|Ensure that the `--bind-address` argument is set to 127.0.0.1|Automated|L1|Equivalent Control|
 |1.4|Scheduler||||
 |1.4.1|Ensure that the `--profiling` argument is set to false|Automated|L1|Pass|
@@ -118,9 +118,9 @@ Recommendations can have one of the following attestation statuses:
 |2.7|Ensure that a unique Certificate Authority is used for etcd|Manual|L2|Pass|
 |3|Control Plane Configuration||||
 |3.1|Authentication and Authorization||||
-|3.1.1|Client certificate authentication should not be used for users|Manual|L2|Pass|
-|3.1.2|Service account token authentication should not be used for users|Manual|L2|Pass|
-|3.1.3|Bootstrap token authentication should not be used for users|Manual|L2|Pass|
+|3.1.1|Client certificate authentication should not be used for users|Manual|L1|Pass|
+|3.1.2|Service account token authentication should not be used for users|Manual|L1|Pass|
+|3.1.3|Bootstrap token authentication should not be used for users|Manual|L1|Pass|
 |3.2|Logging||||
 |3.2.1|Ensure that a minimal audit policy is created|Manual|L1|Pass|
 |3.2.2|Ensure that the audit policy covers key security concerns|Manual|L2|Pass|
