@@ -9,7 +9,7 @@ author: wdarko1
 #Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
-# Use Virtual Machines node pools (preview) in Azure Kubernetes Services
+# Use Virtual Machines node pools (preview) in AKS
 
 We're introducing a new node pool type - Virtual Machine based. For Virtual Machine node pools, Azure Kubernetes Services manages the provisioning and bootstrapping of every single node directly. Alternatively, when using Virtual Machine Scale Sets Uniform node pools, Azure Kubernetes Services manages the model of the Virtual Machine Scale Sets, and use it to achieve consistency across all nodes in the node pool. Virtual Machine based node pools allow you to orchestrate your cluster with virtual machines that best fit your individual workloads.
  
