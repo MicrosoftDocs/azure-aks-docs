@@ -432,16 +432,16 @@ Use the following steps to build the image:
    export IMAGE="wlsaks-auxiliary-image:1.0"
    ```
 
-   Double check the staging files.
+1. Use the following commands to double-check the staging files:
 
    ```bash
    cd ${BASE_DIR}/mystaging
    find -maxdepth 2 -type f -print
    ```
 
-   You will find output similar to the following content.
+   These commands produce output similar to the following example:
 
-   ```text
+   ```output
    ./models/model.properties
    ./models/model.yaml
    ./models/archive.zip
@@ -450,7 +450,7 @@ Use the following steps to build the image:
    ./weblogic-deploy/LICENSE.txt
    ```
 
-   Build the image with `az acr build`.
+1. Build the image with `az acr build`, as shown in the following example:
 
 
    ```bash
@@ -531,7 +531,7 @@ Use the following steps to build the image:
    Run ID: ca1 was successful after 14s
    ```
 
-   The image will be pushed to ACR after a success build.
+   The image is pushed to ACR after a success build.
 
 1. You can run `az acr repository show` to test whether the image is pushed to the remote repository successfully, as shown in the following example:
 
@@ -610,13 +610,8 @@ In the previous steps, you created the auxiliary image including models and WDT.
    export WLS_DOMAIN_NS=sample-domain1-ns
    export WLS_DOMAIN_UID=sample-domain1
    export SECRET_NAME=sqlserver-secret
-   ```
-
-   ```bash
    export ACR_LOGIN_SERVER=$(az acr show --name ${ACR_NAME} --query "loginServer" --output tsv)
-   ```
 
-   ```bash
    kubectl -n ${WLS_DOMAIN_NS} create secret generic \
        ${SECRET_NAME} \
        --from-literal=password="${DB_PASSWORD}" \
@@ -706,7 +701,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
 Use the following steps to verify the functionality of the deployment by viewing the WebLogic Server admin console and the sample app:
 
-1. Paste the **adminConsoleExternalUrl** value into the address bar of an Internet-connected web browser. You should see the familiar WebLogic Server admin console login screen.
+1. Paste the **adminConsoleExternalUrl** value into the address bar of an Internet-connected web browser. You should see the familiar WebLogic Server admin console sign-in screen.
 
 1. Sign in with the username `weblogic` and the password you entered when deploying WebLogic Server from the Azure portal. Recall that this value is `wlsAksCluster2022`.
 
@@ -720,7 +715,7 @@ Use the following steps to verify the functionality of the deployment by viewing
 
 1. In the **Domain Structure** box, select **Deployments**.
 
-1. In the **Deployments** table, there should be one row. The name should be the same value as the `Application` value in your *appmodel.yaml* file. Click on the name.
+1. In the **Deployments** table, there should be one row. The name should be the same value as the `Application` value in your *appmodel.yaml* file. Select the name.
 
 1. Select the **Testing** tab.
 
