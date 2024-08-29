@@ -48,6 +48,7 @@ NPD emits events with relevant information to help you diagnose underlying issue
 |CustomPluginMonitor|PreemptScheduled|
 |CustomPluginMonitor|DNSProblem|
 |CustomPluginMonitor|PodIPProblem|
+|NodeEgressMonitor|EgressBlocked|
 |SystemLogMonitor|OOMKilling|
 |SystemLogMonitor|TaskHung|
 |SystemLogMonitor|UnregisterNetDevice|
