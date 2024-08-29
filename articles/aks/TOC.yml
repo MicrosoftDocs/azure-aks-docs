@@ -109,6 +109,8 @@
           href: monitor-aks.md
         - name: Network Observability
           href: network-observability-overview.md
+        - name: Advanced Network Observability
+          href: advanced-network-observability-concepts.md
     - name: Security
       items:
         - name: Security concepts

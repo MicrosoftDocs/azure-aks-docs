@@ -47,7 +47,6 @@ If you're interested in providing feedback or working closely on your migration 
   > Get a support entitlement from Oracle before going to production. Failure to do so results in running insecure images that are not patched for critical security flaws. For more information on Oracle's critical patch updates, see [Critical Patch Updates, Security Alerts and Bulletins](https://www.oracle.com/security-alerts/) from Oracle.
 - Prepare a local machine with Unix-like operating system installed - for example, Ubuntu, Azure Linux, macOS, Windows Subsystem for Linux.
   - [Azure CLI](/cli/azure). Use `az --version` to test whether az works. This document was tested with version 2.55.1.
-  - [Docker](https://docs.docker.com/get-docker). This document was tested with Docker version 20.10.7. Use `docker info` to test whether Docker Daemon is running.
   - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl). Use `kubectl version` to test whether kubectl works. This document was tested with version v1.21.2.
   - A Java Development Kit (JDK) compatible with the version of WebLogic Server you intend to run. The article directs you to install a version of WebLogic Server that uses JDK 11. Ensure that your `JAVA_HOME` environment variable is set correctly in the shells in which you run the commands.
   - [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
@@ -216,7 +215,7 @@ mvn clean package --file $BASE_DIR/weblogic-on-azure/javaee/weblogic-cafe/pom.xm
 
 The package should be successfully generated and located at *$BASE_DIR/weblogic-on-azure/javaee/weblogic-cafe/target/weblogic-cafe.war*. If you don't see the package, you must troubleshoot and resolve the issue before you continue.
 
-### Use Docker to create an auxiliary image
+### Use ACR to create an auxiliary image
 
 The steps in this section show you how to build an auxiliary image. This image includes the following components:
 
@@ -409,7 +408,7 @@ Use the following steps to build the image:
    rm weblogic-deploy.zip
    ```
 
-1. Use the following commands to build an auxiliary image using docker:
+1. Use the following commands to create a docker file:
 
    ```bash
    cd ${BASE_DIR}/mystaging
@@ -421,116 +420,143 @@ Use the following steps to build the image:
    ARG GROUP=root
    ENV AUXILIARY_IMAGE_PATH=\${AUXILIARY_IMAGE_PATH}
    RUN adduser -D -u \${USERID} -G \$GROUP \$USER
-   # ARG expansion in COPY command's --chown is available in docker version 19.03.1+.
-   # For older docker versions, change the Dockerfile to use separate COPY and 'RUN chown' commands.
    COPY --chown=\$USER:\$GROUP ./ \${AUXILIARY_IMAGE_PATH}/
    USER \$USER
    EOF
    ```
 
-1. Run the `docker buildx build` command using *${BASE_DIR}/mystaging/Dockerfile*, as shown in the following example:
+1. Run the `az acr build` command using *${BASE_DIR}/mystaging/Dockerfile*, as shown in the following example:
+
+   ```bash
+   export ACR_NAME=<value-from-clipboard>
+   export IMAGE="wlsaks-auxiliary-image:1.0"
+   ```
+
+1. Use the following commands to double-check the staging files:
 
    ```bash
    cd ${BASE_DIR}/mystaging
-   docker buildx build --platform linux/amd64 --build-arg AUXILIARY_IMAGE_PATH=/auxiliary --tag model-in-image:WLS-v1 .
+   find -maxdepth 2 -type f -print
+   ```
+
+   These commands produce output similar to the following example:
+
+   ```output
+   ./models/model.properties
+   ./models/model.yaml
+   ./models/archive.zip
+   ./Dockerfile
+   ./weblogic-deploy/VERSION.txt
+   ./weblogic-deploy/LICENSE.txt
+   ```
+
+1. Build the image with `az acr build`, as shown in the following example:
+
+
+   ```bash
+   az acr build -t ${IMAGE} --build-arg AUXILIARY_IMAGE_PATH=/auxiliary -r ${ACR_NAME} --platform linux/amd64 .
    ```
 
    When you build the image successfully, the output looks similar to the following example:
 
    ```output
-   [+] Building 12.0s (8/8) FINISHED                                   docker:default
-   => [internal] load build definition from Dockerfile                          0.8s
-   => => transferring dockerfile: 473B                                          0.0s
-   => [internal] load .dockerignore                                             1.1s
-   => => transferring context: 2B                                               0.0s
-   => [internal] load metadata for docker.io/library/busybox:latest             5.0s
-   => [1/3] FROM docker.io/library/busybox@sha256:6d9ac9237a84afe1516540f40a0f  0.0s
-   => [internal] load build context                                             0.3s
-   => => transferring context: 21.89kB                                          0.0s
-   => CACHED [2/3] RUN adduser -D -u 1000 -G root oracle                        0.0s
-   => [3/3] COPY --chown=oracle:root ./ /auxiliary/                             1.5s
-   => exporting to image                                                        1.3s
-   => => exporting layers                                                       1.0s
-   => => writing image sha256:2477d502a19dcc0e841630ea567f50d7084782499fe3032a  0.1s
-   => => naming to docker.io/library/model-in-image:WLS-v1                      0.2s
+   ...
+   Step 1/9 : FROM busybox
+   latest: Pulling from library/busybox
+   Digest: sha256:9ae97d36d26566ff84e8893c64a6dc4fe8ca6d1144bf5b87b2b85a32def253c7
+   Status: Image is up to date for busybox:latest
+   ---> 65ad0d468eb1
+   Step 2/9 : ARG AUXILIARY_IMAGE_PATH=/auxiliary
+   ---> Running in 1f8f4e82ccb6
+   Removing intermediate container 1f8f4e82ccb6
+   ---> 947fde618be9
+   Step 3/9 : ARG USER=oracle
+   ---> Running in dda021591e41
+   Removing intermediate container dda021591e41
+   ---> f43d84be4517
+   Step 4/9 : ARG USERID=1000
+   ---> Running in cac4df6dfd13
+   Removing intermediate container cac4df6dfd13
+   ---> e5513f426c74
+   Step 5/9 : ARG GROUP=root
+   ---> Running in 8fec1763270c
+   Removing intermediate container 8fec1763270c
+   ---> 9ef233dbe279
+   Step 6/9 : ENV AUXILIARY_IMAGE_PATH=${AUXILIARY_IMAGE_PATH}
+   ---> Running in b7754f58157a
+   Removing intermediate container b7754f58157a
+   ---> 4a26a97eb572
+   Step 7/9 : RUN adduser -D -u ${USERID} -G $GROUP $USER
+   ---> Running in b6c1f1a81af1
+   Removing intermediate container b6c1f1a81af1
+   ---> 97d3e5ad7540
+   Step 8/9 : COPY --chown=$USER:$GROUP ./ ${AUXILIARY_IMAGE_PATH}/
+   ---> 21088171876f
+   Step 9/9 : USER $USER
+   ---> Running in 825e0abc9f6a
+   Removing intermediate container 825e0abc9f6a
+   ---> b81d6430fcda
+   Successfully built b81d6430fcda
+   Successfully tagged wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image:1.0
+   2024/08/28 03:06:19 Successfully executed container: build
+   2024/08/28 03:06:19 Executing step ID: push. Timeout(sec): 3600, Working directory: '', Network: ''
+   2024/08/28 03:06:19 Pushing image: wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image:1.0, attempt 1
+   The push refers to repository [wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image]
+   ee589b3cda86: Preparing
+   c1fd1adab3b9: Preparing
+   d51af96cf93e: Preparing
+   c1fd1adab3b9: Pushed
+   d51af96cf93e: Pushed
+   ee589b3cda86: Pushed
+   1.0: digest: sha256:c813eb75576eb07a179c3cb4e70106ca7dd280f933ab33a2f6858de673b12eac size: 946
+   2024/08/28 03:06:21 Successfully pushed image: wlsaksacru6jyly7kztoqu.azurecr.io/wlsaks-auxiliary-image:1.0
+   2024/08/28 03:06:21 Step ID: build marked as successful (elapsed time in seconds: 8.780235)
+   2024/08/28 03:06:21 Populating digests for step ID: build...
+   2024/08/28 03:06:22 Successfully populated digests for step ID: build
+   2024/08/28 03:06:22 Step ID: push marked as successful (elapsed time in seconds: 1.980158)
+   2024/08/28 03:06:22 The following dependencies were found:
+   2024/08/28 03:06:22
+   - image:
+      registry: wlsaksacru6jyly7kztoqu.azurecr.io
+      repository: wlsaks-auxiliary-image
+      tag: "1.0"
+      digest: sha256:c813eb75576eb07a179c3cb4e70106ca7dd280f933ab33a2f6858de673b12eac
+   runtime-dependency:
+      registry: registry.hub.docker.com
+      repository: library/busybox
+      tag: latest
+      digest: sha256:9ae97d36d26566ff84e8893c64a6dc4fe8ca6d1144bf5b87b2b85a32def253c7
+   git: {}
+
+   Run ID: ca1 was successful after 14s
    ```
 
-1. If you successfully created the image, then it should now be in your local machine's Docker repository. You can verify the image creation by using the following command:
+   The image is pushed to ACR after a success build.
 
-   ```text
-   docker images model-in-image:WLS-v1
-   ```
-
-   This command should produce output similar to the following example:
-
-   ```output
-   REPOSITORY       TAG       IMAGE ID       CREATED       SIZE
-   model-in-image   WLS-v1    76abc1afdcc6   2 hours ago   8.61MB
-   ```
-
-   After the image is created, it should have the WDT executables in */auxiliary/weblogic-deploy*, and WDT model, property, and archive files in */auxiliary/models*. Use the following command to verify the contents of the image:
+1. You can run `az acr repository show` to test whether the image is pushed to the remote repository successfully, as shown in the following example:
 
    ```bash
-   docker run -it --rm model-in-image:WLS-v1 find /auxiliary -maxdepth 2 -type f -print
+   az acr repository show --name ${ACR_NAME} --image ${IMAGE}
    ```
 
    This command should produce output similar to the following example:
 
    ```output
-   /auxiliary/models/model.properties
-   /auxiliary/models/dbmodel.yaml
-   /auxiliary/models/model.yaml
-   /auxiliary/models/archive.zip
-   /auxiliary/models/appmodel.yaml
-   /auxiliary/Dockerfile
-   /auxiliary/weblogic-deploy/LICENSE.txt
-   /auxiliary/weblogic-deploy/VERSION.txt
+   {
+      "changeableAttributes": {
+         "deleteEnabled": true,
+         "listEnabled": true,
+         "readEnabled": true,
+         "writeEnabled": true
+      },
+      "createdTime": "2024-01-24T06:14:19.4546321Z",
+      "digest": "sha256:a1befbefd0181a06c6fe00848e76f1743c1fecba2b42a975e9504ba2aaae51ea",
+      "lastUpdateTime": "2024-01-24T06:14:19.4546321Z",
+      "name": "1.0",
+      "quarantineState": "Passed",
+      "signed": false
+   }
    ```
-
-1. Use the following steps to push the auxiliary image to Azure Container Registry:
-
-   1. Open the Azure portal and go to the resource group that you provisioned in the [Deploy WebLogic Server on AKS](#deploy-weblogic-server-on-aks) section.
-   1. Select the resource of type **Container registry** from the resource list.
-   1. Hover the mouse over the value next to **Login server** and select the copy icon next to the text.
-   1. Save the value in the `ACR_LOGIN_SERVER` environment variable by using the following command:
-
-      ```bash
-      export ACR_LOGIN_SERVER=<value-from-clipboard>
-      ```
-
-   1. Run the following commands to tag and push the image. Make sure Docker is running before executing these commands.
-
-      ```bash
-      export ACR_NAME=$(echo ${ACR_LOGIN_SERVER} | cut -d '.' -f 1)
-      az acr login -n $ACR_NAME
-      docker tag model-in-image:WLS-v1 $ACR_LOGIN_SERVER/wlsaks-auxiliary-image:1.0
-      docker push $ACR_LOGIN_SERVER/wlsaks-auxiliary-image:1.0
-      ```
-
-   1. You can run `az acr repository show` to test whether the image is pushed to the remote repository successfully, as shown in the following example:
-
-      ```bash
-      az acr repository show --name ${ACR_NAME} --image wlsaks-auxiliary-image:1.0
-      ```
-
-      This command should produce output similar to the following example:
-
-      ```output
-      {
-        "changeableAttributes": {
-          "deleteEnabled": true,
-          "listEnabled": true,
-          "readEnabled": true,
-          "writeEnabled": true
-        },
-        "createdTime": "2024-01-24T06:14:19.4546321Z",
-        "digest": "sha256:a1befbefd0181a06c6fe00848e76f1743c1fecba2b42a975e9504ba2aaae51ea",
-        "lastUpdateTime": "2024-01-24T06:14:19.4546321Z",
-        "name": "1.0",
-        "quarantineState": "Passed",
-        "signed": false
-      }
-      ```
 
 ### Apply the auxiliary image
 
@@ -584,6 +610,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
    export WLS_DOMAIN_NS=sample-domain1-ns
    export WLS_DOMAIN_UID=sample-domain1
    export SECRET_NAME=sqlserver-secret
+   export ACR_LOGIN_SERVER=$(az acr show --name ${ACR_NAME} --query "loginServer" --output tsv)
 
    kubectl -n ${WLS_DOMAIN_NS} create secret generic \
        ${SECRET_NAME} \
@@ -636,7 +663,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
      {
        "op": "add",
        "path": "/spec/configuration/model/auxiliaryImages",
-       "value": [{"image": "$ACR_LOGIN_SERVER/wlsaks-auxiliary-image:1.0", "imagePullPolicy": "IfNotPresent", "sourceModelHome": "/auxiliary/models", "sourceWDTInstallHome": "/auxiliary/weblogic-deploy"}]
+       "value": [{"image": "$ACR_LOGIN_SERVER/$IMAGE", "imagePullPolicy": "IfNotPresent", "sourceModelHome": "/auxiliary/models", "sourceWDTInstallHome": "/auxiliary/weblogic-deploy"}]
      },
      {
        "op": "add",
@@ -674,7 +701,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
 Use the following steps to verify the functionality of the deployment by viewing the WebLogic Server admin console and the sample app:
 
-1. Paste the **adminConsoleExternalUrl** value into the address bar of an Internet-connected web browser. You should see the familiar WebLogic Server admin console login screen.
+1. Paste the **adminConsoleExternalUrl** value into the address bar of an Internet-connected web browser. You should see the familiar WebLogic Server admin console sign-in screen.
 
 1. Sign in with the username `weblogic` and the password you entered when deploying WebLogic Server from the Azure portal. Recall that this value is `wlsAksCluster2022`.
 
@@ -688,7 +715,7 @@ Use the following steps to verify the functionality of the deployment by viewing
 
 1. In the **Domain Structure** box, select **Deployments**.
 
-1. In the **Deployments** table, there should be one row. The name should be the same value as the `Application` value in your *appmodel.yaml* file. Click on the name.
+1. In the **Deployments** table, there should be one row. The name should be the same value as the `Application` value in your *appmodel.yaml* file. Select the name.
 
 1. Select the **Testing** tab.
 
