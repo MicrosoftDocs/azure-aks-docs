@@ -5,7 +5,7 @@ description: Learn how to configure SSH and manage SSH keys on Azure Kubernetes 
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 02/12/2024
+ms.date: 08/29/2024
 author: nickomang
 ms.author: nickoman
 
@@ -143,6 +143,9 @@ Use the [`az aks create`][az-aks-create] command to create a new cluster, and in
 
 > [!IMPORTANT]
 > After you disable the SSH service, you can't SSH into the cluster to perform administrative tasks or to troubleshoot.
+
+>[!NOTE]
+>On a newly created cluster, disable ssh will only configure the 1st system nodepool.  All other nodepools need to be configured at the nodepool level. 
 
 ```azurecli-interactive
 az aks create --resource-group myResourceGroup --name myManagedCluster --ssh-access disabled
