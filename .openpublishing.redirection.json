@@ -7,7 +7,7 @@
     },
     {
       "source_path_from_root": "/articles/aks/faq.md",
-      "redirect_url": "/azure/aks/faq.yml",
+      "redirect_url": "/azure/aks/faq",
       "redirect_document_id": false
     }
   ]
