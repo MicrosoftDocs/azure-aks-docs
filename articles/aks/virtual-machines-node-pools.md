@@ -11,22 +11,31 @@ author: wdarko1
 
 # Use Virtual Machines node pools (preview) in AKS
 
-Azure Kubernetes Service (AKS) is introducing a new Virtual Machines node pool type (preview). With Virtual Machines node pools, AKS manages the provisioning and bootstrapping of every single node directly. Alternatively, for Virtual Machine Scale Sets node pools with Uniform orchestration, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
- 
-Advantages of the Virtual Machines node pool type include:
-- **Flexibility** - Node specifications can be updated to adapt to your current workload and needs.
-- **Fine-tuned control** - Single node-level controls allow specifying and mixing nodes of different specs  to lift restrictions from a single model and improve consistency.
-- **Efficiency** - You can reduce the node footprint for your cluster, simplifying your operational requirements.
+In this article, you learn about the new Virtual Machines node pool type (preview) for AKS. 
 
-Overall Virtual Machines node pools provide a better experience for dynamic workloads and high availability requirements. Virtual Machines node pools enable you to set up multiple similar-family virtual machines in one node pool. Your workload will be automatically scheduled on the available resources that you configure.
+With Virtual Machines node pools, AKS directly manages the provisioning and bootstrapping of every single node. For Virtual Machine Scale Sets node pools with Uniform orchestration, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
 
-# How it works
-A node pool is composed of a set of virtual machines, where different virtual machine sizes are designated to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families, each optimized for specific purposes. Examples of these purposes can include enterprise-grade applications, compute-optimizing, memory-optimizing, etc. To learn more about virtual machine families and their purposes, visit [VM SKUs][vm-SKU].
+## Overview
 
-To enable scaling of multiple virtual machine sizes, the Virtual Machines node pool type uses a `ScaleProfile` that contains configurations indicating how the node pool can scale, specifically the desired list of virtual machine size and count. `ManualScaleProfile`, a type of scale profile, is the list that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`, and a separate `ManualScaleProfile` must be created for each virtual machine size in your node pool.
+### How it works
+
+A node pool consists of a set of virtual machines, where different virtual machine sizes are designated to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families that are optimized for specific purposes. For more information, see [VM SKUs][vm-SKU].
+
+To enable scaling of multiple virtual machine sizes, the Virtual Machines node pool type uses a `ScaleProfile` that contains configurations indicating how the node pool can scale, specifically the desired list of virtual machine size and count. A `ManualScaleProfile` is a scale profile that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`. You need to create a separate `ManualScaleProfile` for each virtual machine size in your node pool.
  
 > [!NOTE]
-> When creating a new Virtual Machines node pool, at least one `ManualScaleProfile` is needed in the `ScaleProfile`. A Virtual Machines node pool can have multiple manual scale profiles.
+> When creating a new Virtual Machines node pool, you need at least one `ManualScaleProfile` in the `ScaleProfile`. A Virtual Machines node pool can have multiple manual scale profiles.
+
+### Advantages
+
+Advantages of the Virtual Machines node pool type include:
+
+- **Flexibility**: Node specifications can be updated to adapt to your current workload and needs.
+- **Fine-tuned control**: Single node-level controls allow specifying and mixing nodes of different specs to lift restrictions from a single model and improve consistency.
+- **Efficiency**: You can reduce the node footprint for your cluster, simplifying your operational requirements.
+
+Virtual Machines node pools provide a better experience for dynamic workloads and high availability requirements. Virtual Machines node pools enable you to set up multiple similar-family virtual machines in one node pool. Your workload will be automatically scheduled on the available resources that you configure.
+
 
 ## Feature Capabilities
 The following capabilities highlight how Virtual Machines node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
