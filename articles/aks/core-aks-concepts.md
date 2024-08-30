@@ -150,9 +150,9 @@ For information on more core concepts for AKS, see the following resources:
 [container-runtime]: https://kubernetes.io/docs/concepts/overview/components/#container-runtime
 [create-node-pools]: ./create-node-pools.md
 [manage-node-pools]: ./manage-node-pools.md
-[node-resource-group]: ./faq.md#why-are-two-resource-groups-created-with-aks
-[custom-nrg]: ./faq.md#can-i-provide-my-own-name-for-the-aks-node-resource-group
-[modify-nrg-resources]: ./faq.md#can-i-modify-tags-and-other-properties-of-the-aks-resources-in-the-node-resource-group
+[node-resource-group]: ./faq.yml
+[custom-nrg]: ./faq.yml
+[modify-nrg-resources]: ./faq.yml
 [kubernetes-namespaces]: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/#initial-namespaces
 [use-system-pool]: ./use-system-pools.md
 [automatic-standard]: ./intro-aks-automatic.md#aks-automatic-and-standard-feature-comparison

@@ -118,14 +118,14 @@ sections:
           - Specify a different subscription for the node resource group.
           - Change the node resource group name after the cluster has been created.
           - Specify names for the managed resources within the node resource group.
-          - Modify or delete Azure-created tags of managed resources within the node resource group. See additional information in the [next section](#can-i-modify-tags-and-other-properties-of-the-aks-resources-in-the-node-resource-group).
+          - Modify or delete Azure-created tags of managed resources within the node resource group.
 
       - question: |
           Can I modify tags and other properties of the AKS resources in the node resource group?
         answer: |
-          Yes, but you might get unexpected scaling and upgrading errors if you modify or delete Azure-created tags and other resource properties in the node resource group. AKS allows you to create and modify custom tags created by end users, and you can add those tags when [creating a node pool](manage-node-pools.md#specify-a-taint-label-or-tag-for-a-node-pool). You might want to create or modify custom tags, for example, to assign a business unit or cost center. Another option is to create Azure Policies with a scope on the managed resource group.
+          You might get unexpected scaling and upgrading errors if you modify or delete Azure-created tags and other resource properties in the node resource group. AKS allows you to create and modify custom tags created by end users, and you can add those tags when [creating a node pool](manage-node-pools.md#specify-a-taint-label-or-tag-for-a-node-pool). You might want to create or modify custom tags, for example, to assign a business unit or cost center. Another option is to create Azure Policies with a scope on the managed resource group.
 
-          Azure-created tags are created for their respective Azure Services and should always be allowed. For AKS, there are the `aks-managed` and `k8s-azure` tags. Modifying any **Azure-created tags** on resources under the node resource group in the AKS cluster is an unsupported action, which breaks the service-level objective (SLO). For more information, see [Does AKS offer a service-level agreement?](#does-aks-offer-a-service-level-agreement)
+          Azure-created tags are created for their respective Azure Services and should always be allowed. For AKS, there are the `aks-managed` and `k8s-azure` tags. Modifying any **Azure-created tags** on resources under the node resource group in the AKS cluster is an unsupported action, which breaks the service-level objective (SLO).
 
           > [!NOTE]
           > In the past, the tag name "Owner" was reserved for AKS to manage the public IP that is assigned on front end IP of the load balancer. Now, services follow use the `aks-managed` prefix. For legacy resources, don't use Azure policies to apply the "Owner" tag name. Otherwise, all resources on your AKS cluster deployment and update operations will break. This doesn't apply to newly created resources.
