@@ -9,7 +9,7 @@ author: wdarko1
 #Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
-# Use Virtual Machines node pools (preview) in AKS
+# Use Virtual Machines node pools (preview) in Azure Kubernetes Service (AKS)
 
 In this article, you learn about the new Virtual Machines node pool type (preview) for AKS. 
 
