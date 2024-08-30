@@ -1,7 +1,7 @@
 ---
 title: Use Virtual Machines node pools in Azure Kubernetes Services (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a node pool in an AKS cluster.
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 07/26/2024
 ms.author: wilsondarko
