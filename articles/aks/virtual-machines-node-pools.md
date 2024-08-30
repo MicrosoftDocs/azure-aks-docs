@@ -37,12 +37,14 @@ Advantages of the Virtual Machines node pool type include:
 Virtual Machines node pools provide a better experience for dynamic workloads and high availability requirements. Virtual Machines node pools enable you to set up multiple similar-family virtual machines in one node pool. Your workload will be automatically scheduled on the available resources that you configure.
 
 
-## Feature Capabilities
-The following capabilities highlight how Virtual Machines node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
+### Feature comparison
 
-**Virtual Machine based node pools**: You can add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.)
+The following table highlights how Virtual Machines node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
 
-**VMSS Uniform based node pools**: YOu can add or remove nodes in a node pool (of the same size and type). Should a new virtual machine size be added to the cluster, a new node pool must be created.
+| Node pool type | Capabilities |
+| ----------------- | ------------- |
+| Virtual Machines node pool | You can add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.). |
+| Virtual Machine Scale Sets Uniform based node pool | You can add or remove nodes of the same size and type in a node pool. If you add a new virtual machine size to the cluster, you need to create a new node pool. |
 
 ### Limitations
 
