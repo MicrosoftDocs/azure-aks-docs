@@ -165,7 +165,7 @@ The following capabilities highlight how Virtual Machines node pools compare wit
     > [!NOTE]
     > Use the `--current-vm-sizes` parameter to specify the size of the existing node pool that you want to update. You can update `--vm-sizes` and/or `--node-count`. When using other tools or REST APIs, you need to pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field when updating the node pool scale profile.
 
-    The following example updates a manual scale profile to the *myvmpool1* node pool in the *myAKSCluster* cluster. The commmand updates the numder of nodes to five and changes the VM SKU from *Standard_D4s_v3* to *Standard_D8s_v3*:
+    The following example updates a manual scale profile to the *myvmpool1* node pool in the *myAKSCluster* cluster. The commmand updates the number of nodes to five and changes the VM SKU from *Standard_D4s_v3* to *Standard_D8s_v3*:
 
     ```azurecli-interactive
     az aks nodepool manual-scale update \
