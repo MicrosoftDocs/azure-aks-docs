@@ -56,8 +56,8 @@ The following capabilities highlight how Virtual Machines node pools compare wit
 
 ## Prerequisites
 
-- An Azure subscription is required to use this feature. To create a free account, click [Free Azure Account](https://azure.microsoft.com/free).
-- The Virtual Machines node pool feature is in preview, and is available only in API versions 2023-10-02-preview and greater, or by installing the az cli extension 2.61.0 version or greater.
+- An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
+- The Virtual Machines node pool feature is in preview. This feature is only available with API versions 2023-10-02-preview and greater, or with the Azure CLI extension versions 2.61.0 or greater.
 - If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
 - The minimum minor Kubernetes release version required for this feature is release 1.26.
 
@@ -77,7 +77,7 @@ The following capabilities highlight how Virtual Machines node pools compare wit
     az extension update --name aks-preview
     ```
 
-## Register the `VMsAgentPoolPreview` feature flag
+### Register the `VMsAgentPoolPreview` feature flag
 
 1. Select the subscription where you want to enable the feature flag using the [`az account set`][az account set] command.
 
@@ -104,8 +104,6 @@ The following capabilities highlight how Virtual Machines node pools compare wit
     ```azurecli-interactive
     az provider register --namespace "Microsoft.ContainerService"
     ```
-
-
 
 ## Create an AKS cluster with Virtual Machines node pools
 
