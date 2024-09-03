@@ -1,5 +1,5 @@
 ---
-title: "Set up FQDN Filtering Feature for Enhanced Security in Advanced Container Networking Services (ACNS)"
+title: "Set up FQDN filtering feature for enhanced security in Advanced Container Networking Services (ACNS)"
 description: Get started with FQDN Filtering Feature for Advanced Container Networking Services for your AKS cluster using Azure managed Cilium Network Policies.
 author: sf-msft
 ms.author: samfoo
@@ -10,13 +10,14 @@ ms.date: 07/30/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up FQDN Filtering Feature for Enhanced Security in Advanced Container Networking Services (ACNS)
+# Set up FQDN filtering feature for enhanced security in Advanced Container Networking Services (ACNS)
 
 This article shows you how to set up Advanced Container Networking Services (ACNS) with FQDN Filtering Feature in AKS clusters.
 
 > [!IMPORTANT]
 > Advanced Container Networking Services is currently in PREVIEW.
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
+
 ## Prerequisites
 
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
@@ -83,7 +84,7 @@ az aks create \
     --enable-acns
 ```
 
-### Create an AKS cluster with FQDN Filtering Feature without ACNS Observability
+### Create an AKS cluster with FQDN filtering feature without ACNS Observability
 
 The `az aks create` command with the FQDN Filtering feature flag, `--enable-fqdn-policy`, creates a new AKS cluster with the FQDN Filtering feature without ACNS Observability.
 
@@ -117,7 +118,7 @@ az aks update \
     --enable-acns
 ```
 
-## Enable FQDN Filtering Feature without ACNS Observability
+## Enable FQDN filtering feature without ACNS Observability
 
 The [`az aks update`](/cli/azure/aks#az_aks_update) command with the FQDN Filtering feature flag, `--enable-fqdn-policy`, updates an existing AKS cluster with the FQDN Filtering feature without ACNS Observability.
 
@@ -128,7 +129,7 @@ az aks update \
     --enable-fqdn-policy
 ```
 
-## Disable FQDN Filtering
+## Disable FQDN filtering
 
 The `--disable-fqdn-policy` flag disables the FQDN Filtering feature on an existing AKS cluster.
 
