@@ -118,9 +118,12 @@ Microsoft and you share responsibility for Kubernetes agent nodes where:
 
 ### Customer responsibilities for AKS agent nodes
 
-Microsoft provides patches and new images for your image nodes weekly, but doesn't automatically patch them by default. To keep your agent node OS and runtime components patched, you should keep a regular [node image upgrade](node-image-upgrade.md) schedule or automate it.
+Microsoft provides patches and new images for your image nodes weekly. To keep your agent node OS and runtime components up to date, you should apply these patches and updates regularly either manually or automatically. For more information, see:
 
-Similarly, AKS regularly releases new kubernetes patches and minor versions. These updates can contain security or functionality improvements to Kubernetes. You're responsible to keep your clusters' kubernetes version updated and according to the [AKS Kubernetes Support Version Policy](supported-kubernetes-versions.md).
+* [Manually upgrade AKS node images](./node-image-upgrade.md)
+* [Automatically upgrade AKS node images](./auto-upgrade-node-os-image.md)
+
+Similarly, AKS regularly releases new Kubernetes patches and minor versions. These updates can contain security or functionality improvements to Kubernetes. You're responsible to keep your clusters' Kubernetes version updated and according to the [AKS Kubernetes support version policy](supported-kubernetes-versions.md).
 
 #### User customization of agent nodes
 
