@@ -242,7 +242,7 @@ To get started with Windows Server containers in AKS, see [Create a node pool th
 [nodepool-upgrade]: manage-node-pools.md#upgrade-a-single-node-pool
 [windows-node-cli]: ./learn/quick-windows-container-deploy-cli.md
 [aks-support-policies]: support-policies.md
-[aks-faq]: faq.md
+[aks-faq]: faq.yml
 [upgrade-cluster]: upgrade-cluster.md
 [upgrade-cluster-cp]: manage-node-pools.md#upgrade-a-cluster-control-plane-with-multiple-node-pools
 [azure-outbound-traffic]: ../load-balancer/load-balancer-outbound-connections.md#defaultsnat
@@ -254,7 +254,7 @@ To get started with Windows Server containers in AKS, see [Create a node pool th
 [upgrade-node-image]: node-image-upgrade.md
 [managed-identity]: use-managed-identity.md
 [hybrid-vms]: /azure/virtual-machines/windows/hybrid-use-benefit-licensing
-[resource-groups]: faq.md#why-are-two-resource-groups-created-with-aks
+[resource-groups]: faq.yml
 [dsr]: ../load-balancer/load-balancer-multivip-overview.md#rule-type-2-backend-port-reuse-by-using-floating-ip
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference
 

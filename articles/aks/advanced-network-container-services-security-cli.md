@@ -1,6 +1,6 @@
 ---
-title: "Set up Security for Advanced Container Networking Services for AKS with Cilium Network Policies"
-description: Get started with Security for Advanced Container Networking Services for your AKS cluster using Azure managed Cilium Network Policies.
+title: "Set up FQDN filtering feature for enhanced security in Advanced Container Networking Services (ACNS)"
+description: Get started with FQDN Filtering Feature for Advanced Container Networking Services for your AKS cluster using Azure managed Cilium Network Policies.
 author: sf-msft
 ms.author: samfoo
 ms.service: azure-kubernetes-service
@@ -10,13 +10,14 @@ ms.date: 07/30/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Security for Advanced Container Networking Services for AKS with Cilium Network Policies
+# Set up FQDN filtering feature for enhanced security in Advanced Container Networking Services (ACNS)
 
-This article shows you how to set up security features on Advanced Container Networking Services (ACNS).
+This article shows you how to set up Advanced Container Networking Services (ACNS) with FQDN Filtering Feature in AKS clusters.
 
 > [!IMPORTANT]
 > Advanced Container Networking Services is currently in PREVIEW.
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
+
 ## Prerequisites
 
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
@@ -65,7 +66,7 @@ az group create --name $RESOURCE_GROUP --location $LOCATION
 
 ## Create an AKS cluster with Advanced Container Networking Services
 
-Security features can be enabled using the Advanced Container Networking Services bundle or toggled individually with a CLI flag.
+The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all ACNS features which includes [ACNS Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -83,9 +84,29 @@ az aks create \
     --enable-acns
 ```
 
+### Create an AKS cluster with FQDN filtering feature without ACNS Observability
+
+The `az aks create` command with the FQDN Filtering feature flag, `--enable-fqdn-policy`, creates a new AKS cluster with the FQDN Filtering feature without ACNS Observability.
+
+```azurecli-interactive
+# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
+export CLUSTER_NAME="<aks-cluster-name>"
+
+# Create an AKS cluster
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --generate-ssh-keys \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --pod-cidr 192.168.0.0/16 \
+    --network-dataplane cilium \
+    --enable-fqdn-policy
+```
+
 ## Enable Advanced Container Networking Services on an existing cluster
 
-Enable security features through Advanced Container Networking Services on an existing cluster using the [`az aks update`](/cli/azure/aks#az_aks_update) command.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all ACNS features which includes [ACNS Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
 
 > [!NOTE]
 > Only clusters with the Cilium data plane support Advanced Security and Advanced Container Networking Services.
@@ -97,15 +118,37 @@ az aks update \
     --enable-acns
 ```
 
-## Enable FQDN Filtering without Advanced Observability
+## Enable FQDN filtering feature without ACNS Observability
 
-Enable FQDN Filtering on an existing cluster using the [`az aks update`](/cli/azure/aks#az_aks_update) command.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the FQDN Filtering feature flag, `--enable-fqdn-policy`, updates an existing AKS cluster with the FQDN Filtering feature without ACNS Observability.
 
 ```azurecli-interactive
 az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-fqdn-policy
+```
+
+## Disable FQDN filtering
+
+The `--disable-fqdn-policy` flag disables the FQDN Filtering feature on an existing AKS cluster.
+
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --disable-fqdn-policy
+```
+
+## Disable Advanced Container Networking Services
+
+The `--disable-acns` flag disables all ACNS features on an existing AKS cluster which includes FQDN Filtering and ACNS Observability.
+
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --disable-acns
 ```
 
 ---
