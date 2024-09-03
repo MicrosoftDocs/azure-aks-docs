@@ -46,9 +46,7 @@ When FQDN Filtering is enabled, DNS requests are first evaluated to determine if
 The DNS Proxy then decides whether to forward a DNS request to the DNS server based on the policy criteria. If permitted, the request is sent to the DNS server, and upon receiving the response, the DNS Proxy updates the Cilium Agent with FQDN mappings. This allows the Cilium Agent to update the network policy within the policy engine. The following image illustrates the high-level flow of FQDN Filtering.
 
 
-
-
-Fig. 1 FQDN filtering steps
+:::image type="content" source="./media/how-dns-proxy-works.png" alt-text="Screenshot showing how DNS Proxy works in FQDN filtering.":::
 
 ## Key benefits
 
