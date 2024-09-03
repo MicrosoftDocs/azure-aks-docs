@@ -69,7 +69,7 @@ New-AzAksCluster -ResourceGroupName myResourceGroup `
 After a few minutes, the command completes and returns information about the cluster.
 
 > [!NOTE]
-> When you create an AKS cluster, a second resource group is automatically created to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.md#why-are-two-resource-groups-created-with-aks)
+> When you create an AKS cluster, a second resource group is automatically created to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
 
 ## Connect to the cluster
 

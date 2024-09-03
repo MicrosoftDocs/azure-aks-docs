@@ -285,7 +285,7 @@ This article showed you how to automatically scale the number of AKS nodes. You 
 To further help improve cluster resource utilization and free up CPU and memory for other pods, see [Vertical Pod Autoscaler][vertical-pod-autoscaler].
 
 <!-- LINKS - internal -->
-[aks-faq-node-resource-group]: faq.md#can-i-modify-tags-and-other-properties-of-the-aks-resources-in-the-node-resource-group
+[aks-faq-node-resource-group]: faq.yml
 [aks-multiple-node-pools]: create-node-pools.md
 [aks-scale-apps]: tutorial-kubernetes-scale.md
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
