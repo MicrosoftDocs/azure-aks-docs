@@ -168,7 +168,7 @@
           href: advanced-container-networking-services-overview.md
         - name: Advanced Network Observability overview
           href: advanced-network-observability-concepts.md
-        - name: Security on Advanced Container Networking Services overview
+        - name: Security
           href: advanced-network-container-services-security-concepts.md
     - name: Storage
       href: concepts-storage.md
@@ -632,7 +632,7 @@
               href: troubleshoot-udp-packet-drops.md
             - name: Network Security
               items:
-                - name: Security with Advanced Container Networking Services
+                - name: FQDN Filtering with Advanced Container Networking Services
                   href: advanced-network-container-services-security-cli.md
     - name: Storage
       items:
