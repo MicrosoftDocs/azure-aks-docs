@@ -13,7 +13,7 @@ author: wdarko1
 
 In this article, you learn about the new Virtual Machines node pool type (preview) for AKS. 
 
-With Virtual Machines node pools, AKS directly manages the provisioning and bootstrapping of every single node. For Virtual Machine Scale Sets node pools with Uniform orchestration, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
+With Virtual Machines node pools, AKS directly manages the provisioning and bootstrapping of every single node. For Virtual Machine Scale Sets node pools, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
 
 ## Overview
 
@@ -39,12 +39,12 @@ Virtual Machines node pools provide a better experience for dynamic workloads an
 
 ### Feature comparison
 
-The following table highlights how Virtual Machines node pools compare with standard [Uniform scale set][VMSS orchestrate] node pools.
+The following table highlights how Virtual Machines node pools compare with standard [Scale Set][VMSS orchestrate] node pools.
 
 | Node pool type | Capabilities |
 | ----------------- | ------------- |
 | Virtual Machines node pool | You can add, remove, or update nodes in a node pool. Virtual machine types can be any virtual machine of the same family type (for example, D-series, A-Series, etc.). |
-| Virtual Machine Scale Sets Uniform based node pool | You can add or remove nodes of the same size and type in a node pool. If you add a new virtual machine size to the cluster, you need to create a new node pool. |
+| Virtual Machine Scale Set based node pool | You can add or remove nodes of the same size and type in a node pool. If you add a new virtual machine size to the cluster, you need to create a new node pool. |
 
 ### Limitations
 
