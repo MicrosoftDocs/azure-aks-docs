@@ -146,55 +146,19 @@ FIPS-enabled node pools also have a *kubernetes.azure.com/fips_enabled=true* lab
 
 FIPS-enabled node pools also have a *kubernetes.azure.com/fips_enabled=true* label, which deployments can use to target those node pools.
 
-## Update an existing node pool to enable or disable FIPS (preview)
+## Update an existing node pool to enable or disable FIPS
 
-Existing node pools can be updated to enable or disable FIPS. If you are planning to migrate your node pools from non-FIPS to FIPS, first validate that your application is working properly in a test environment before migrating it to a production environment. Validating your application in a test environment should prevent issues caused by the FIPS kernel blocking some weak cipher or encryption algorithm, such as an MD4 algorithm that is not FIPS compliant.
+Existing Linux node pools can be updated to enable or disable FIPS. If you are planning to migrate your node pools from non-FIPS to FIPS, first validate that your application is working properly in a test environment before migrating it to a production environment. Validating your application in a test environment should prevent issues caused by the FIPS kernel blocking some weak cipher or encryption algorithm, such as an MD4 algorithm that is not FIPS compliant.
 
 > [!NOTE]
 >   When updating an existing Linux node pool to enable or disable FIPS, the node pool update will move between the fips and non-fips image. This node pool update will trigger a reimage to complete the update. This may cause the node pool update to take a few minutes to complete.
 
 ### Prerequisites
 
-* Azure CLI version 2.56.0 or later, together with the [aks-preview](https://github.com/cli/azure/azure-cli-extensions-list) extension installed and configured. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-### Install the `aks-preview` Azure CLI extension
-
-* Register or update the aks-preview extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    # Register the aks-preview extension
-    az extension add --name aks-preview
-
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-### Register the `MutableFipsPreview` feature flag
-
-1. Register the `MutableFipsPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "MutableFipsPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "MutableFipsPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
+* Azure CLI version 2.64.0 or later. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ### Enable FIPS on an existing node pool
-Existing node pools can be updated to enable FIPS. When you update an existing node pool, the node image will change from the current image to the recommended FIPS image of the same OS SKU. 
+Existing Linux node pools can be updated to enable FIPS. When you update an existing node pool, the node image will change from the current image to the recommended FIPS image of the same OS SKU. 
 
 1. Update a node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-fips-image` parameter.
 
