@@ -210,6 +210,17 @@ If your environment can be successfully provisioned without your custom CAs, you
 
     If no other node pools with the feature enabled exist, the cluster has to reconcile its settings for the changes to take effect. This operation happens automatically as a part of AKS's reconcile loop. Before the operation, the daemon set and pods don't appear on the cluster. You can trigger an immediate reconcile operation using the [`az aks update`][az-aks-update] command. The daemon set and pods appear after the update completes.
 
+## Disable Custom certificate authority (CA) feature on a nodepool
+* Disable the feature on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--disable-custom-ca-trust` parameter.
+
+    ```azurecli
+    az aks nodepool update \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name myNodepool \
+        --disable-custom-ca-trust
+    ```
+
 ## Troubleshooting
 
 ### Feature is enabled and secret with CAs is added, but operations are failing with X.509 Certificate Signed by Unknown Authority error
