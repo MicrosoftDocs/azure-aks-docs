@@ -122,8 +122,6 @@ The following table highlights how Virtual Machines node pools compare with stan
         --name myAKSCluster \
         --vm-set-type "VirtualMachines" \
         --node-count 2 \
-        --generate-ssh-keys \
-        --load-balancer-sku standard \
         --kubernetes-version 1.28.5
     ```
 
