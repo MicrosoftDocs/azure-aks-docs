@@ -39,13 +39,13 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 1. Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
 
-    ```azurecli
+    ```azurecli-interactive
     az extension add --name aks-preview
     ```
 
 2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
 
-    ```azurecli
+    ```azurecli-interactive
     az extension update --name aks-preview
     ```
 
@@ -53,7 +53,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 1. Register the `CustomCATrustPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
-    ```azurecli
+    ```azurecli-interactive
     az feature register --namespace "Microsoft.ContainerService" --name "CustomCATrustPreview"
     ```
 
@@ -61,13 +61,13 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 2. Verify the registration status using the [`az feature show`][az-feature-show] command.
 
-    ```azurecli
+    ```azurecli-interactive
     az feature show --namespace "Microsoft.ContainerService" --name "CustomCATrustPreview"
     ```
 
 3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
 
-    ```azurecli
+    ```azurecli-interactive
     az provider register --namespace Microsoft.ContainerService
     ```
 
@@ -89,12 +89,12 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 #### Install CAs during node pool creation
 
-* Install CAs during node pool creation using the [`az aks create][az-aks-create] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
+* Install CAs during node pool creation using the [`az aks create`][az-aks-create] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks create \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
+        --resource-group <resource-group-name> \
+        --name <cluster-name> \
         --node-count 2 \
         --enable-custom-ca-trust \
         --custom-ca-trust-certificates pathToFileWithCAs \
@@ -105,10 +105,10 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 * Update CAs passed to your cluster during boot up using the [`az aks update`][az-aks-update] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks update \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
+        --resource-group <resource-group-name> \
+        --name <cluster-name> \
         --custom-ca-trust-certificates pathToFileWithCAs
     ```
 
@@ -147,10 +147,10 @@ If your environment can be successfully provisioned without your custom CAs, you
 
 * Configure a new AKS cluster to use a custom CA using the [`az aks create`][az-aks-create] command with the `--enable-custom-ca-trust` parameter.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks create \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
+        --resource-group <resource-group-name> \
+        --name <cluster-name> \
         --node-count 2 \
         --enable-custom-ca-trust \
         --generate-ssh-keys
@@ -160,10 +160,10 @@ If your environment can be successfully provisioned without your custom CAs, you
 
 * Configure a new AKS cluster to use custom CA with CAs installed before the node boots up using the [`az aks create`][az-aks-create] command with the `--enable-custom-ca-trust` and `--custom-ca-trust-certificates` parameters.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks create \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
+        --resource-group <resource-group-name> \
+        --name <cluster-name> \
         --node-count 2 \
         --enable-custom-ca-trust \
         --custom-ca-trust-certificates pathToFileWithCAs \
@@ -174,10 +174,10 @@ If your environment can be successfully provisioned without your custom CAs, you
 
 * Configure an existing AKS cluster to have your custom CAs added to node's trust store before it boots up using the [`az aks update`][az-aks-update] command with the `--custom-ca-trust-certificates` parameter.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks update \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
+        --resource-group <resource-group-name> \
+        --name <cluster-name> \
         --custom-ca-trust-certificates pathToFileWithCAs
     ```
 
@@ -185,11 +185,11 @@ If your environment can be successfully provisioned without your custom CAs, you
 
 * Configure a new node pool to use a custom CA using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-custom-ca-trust` parameter.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks nodepool add \
-        --cluster-name myAKSCluster \
-        --resource-group myResourceGroup \
-        --name myNodepool \
+        --cluster-name <cluster-name> \
+        --resource-group <resource-group-name> \
+        --name <node-pool-name> \
         --enable-custom-ca-trust \
         --os-type Linux
     ```
@@ -200,15 +200,27 @@ If your environment can be successfully provisioned without your custom CAs, you
 
 * Configure an existing node pool to use a custom CA using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-custom-trust-ca` parameter.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks nodepool update \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name myNodepool \
+        --resource-group <resource-group-name> \
+        --cluster-name <cluster-name> \
+        --name <node-pool-name> \
         --enable-custom-ca-trust
     ```
 
     If no other node pools with the feature enabled exist, the cluster has to reconcile its settings for the changes to take effect. This operation happens automatically as a part of AKS's reconcile loop. Before the operation, the daemon set and pods don't appear on the cluster. You can trigger an immediate reconcile operation using the [`az aks update`][az-aks-update] command. The daemon set and pods appear after the update completes.
+
+## Disable custom CA on a node pool
+
+* Disable the custom CA feature on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--disable-custom-ca-trust` parameter.
+
+    ```azurecli-interactive
+    az aks nodepool update \
+        --resource-group <resource-group-name> \
+        --cluster-name <cluster-name> \
+        --name <node-pool-name> \
+        --disable-custom-ca-trust
+    ```
 
 ## Troubleshooting
 
@@ -239,4 +251,4 @@ For more information on AKS security best practices, see [Best practices for clu
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
-
+[kubernetes-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/

@@ -19,12 +19,10 @@ Containerized environments present unique security challenges. Traditional netwo
 
 FQDN filtering offers an efficient and user-friendly approach for managing network policies. By defining these policies based on domain names rather than IP addresses, organizations can significantly simplify the process of policy management. This approach eliminates the need for frequent updates that are typically required when IP addresses change, as a result reducing the administrative burden and minimizing the risk of configuration errors.
 
-In a Kubernetes cluster, pod IP addresses can change often, which makes it challenging to secure the pods with security policies using IP addresses. FQDN filtering allows you to create pod level policies using domain names rather than IP addresses, which eliminates the need to update policies when a pod IP address changes.
+In a Kubernetes cluster, pod IP addresses can change often, which makes it challenging to secure the pods with security policies using IP addresses. FQDN filtering allows you to create pod level policies using domain names rather than IP addresses, which eliminates the need to update policies when an IP address changes.
 
 > [!NOTE]
 > Azure CNI Powered by Cilium and Kubernetes version 1.29 is required in order to use security features of Advanced Container Networking Services like FQDN filtering.
-
-FQDN filtering uses the following components in a node:
 
 ## Components of FQDN filtering
 
@@ -49,7 +47,9 @@ The DNS Proxy then decides whether to forward a DNS request to the DNS server ba
 
 ## Key benefits
 
-**Scalable security policy management**: Cluster and security admins don't have to update security policies each time an IP address changes making operations more efficient. Enhanced security compliance: FQDN filtering supports a zero trust security model. Network traffic is restricted to trusted domains only mitigating risks from unauthorized access.
+**Scalable security policy management**: Cluster and security admins don't have to update security policies each time an IP address changes making operations more efficient.
+
+**Enhanced security compliance**: FQDN filtering supports a zero trust security model. Network traffic is restricted to trusted domains only mitigating risks from unauthorized access.
 
 **Resilient Policy enforcement**: The DNS proxy that is implemented with FQDN filtering ensures that DNS resolution continues seamlessly even if the Cilium agent goes down and policies continue to remain enforced. This implementation critically ensures that security and stability are maintained in dynamic and distributed environments.
 
