@@ -98,7 +98,7 @@ az aks nodepool scale --cluster-name <cluster-name> -n <nodepool-name> --node-co
 Define the gateway configuration by creating a `StaticGatewayConfiguration` custom resource. This configuration specifies which nodepool and public IP prefix to use.
 
 ```yaml
-apiVersion: v1alpha1
+apiVersion: egressgateway.kubernetes.azure.com/v1alpha1
 kind: staticgatewayconfiguration.sgw.kubernetes.azure.com
 metadata:
   name: <gateway-config-name>
