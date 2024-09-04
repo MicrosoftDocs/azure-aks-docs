@@ -5,7 +5,7 @@ groups:
   prompt: Choose a Pipelines version
   pivots:
   - id: pipelines-yaml
-    title: YAML
+    title: YAML TEST
   - id: pipelines-classic
     title: Classic
  # Owner: rahulmehta
