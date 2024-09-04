@@ -240,3 +240,6 @@ For more information on AKS security best practices, see [Best practices for clu
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 
+<!-- LINKS EXTERNAL -->
+[kubernetes-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
+
