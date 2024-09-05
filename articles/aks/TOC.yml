@@ -356,6 +356,14 @@
       items:   
         - name: Stateful workloads 
           items:
+            - name: Deploy a MongoDB cluster on AKS
+              items:
+                - name: Overview
+                  href: mongodb-overview.md
+                - name: Create MongoDB infrastructure
+                  href: create-mongodb-infrastructure.md
+                - name: Deploy MongoDB cluster
+                  href: deploy-mongodb-cluster.md
             - name: Deploy a highly available PostgreSQL database
               items:
                 - name: Overview
