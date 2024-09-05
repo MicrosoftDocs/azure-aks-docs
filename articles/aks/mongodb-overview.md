@@ -30,7 +30,7 @@ A MongoDB Sharded Cluster is a setup designed to handle large datasets and high 
 
 The Percona Operator for MongoDB is an open-source tool developed by [Percona](https://www.percona.com/) designed to automate the deployment, management, and scaling of MongoDB clusters within Kubernetes environments. It simplifies operations by handling tasks such as provisioning, scaling, backup, and recovery, all while ensuring high availability and performance of MongoDB clusters. The Operator uses Kubernetes Custom Resource Definitions (CRDs) to manage MongoDB configurations declaratively and handles failovers, monitoring, and alerts, which results in reduced administrative overhead and consistent management practices. Ideal for development, testing, and production scenarios, the Percona Operator enhances the efficiency and reliability of MongoDB deployments, particularly in cloud-native applications.
 
-![MongoDB Cluster](../includes/media/mongodb-shared-cluster.png)
+![MongoDB Cluster](../aks/media/mongodb-overview/mongodb-shared-cluster.png)
 
 ## MongoDB solution overview
 

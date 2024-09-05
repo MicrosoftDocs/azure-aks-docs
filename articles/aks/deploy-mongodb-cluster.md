@@ -297,17 +297,18 @@ The Percona Operator is typically distributed as a Kubernetes `Deployment` or `O
 kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.16.0/deploy/bundle.yaml -n "${AKS_MONGODB_NAMESPACE}"
 ```
 
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    customresourcedefinition.apiextensions.k8s.io/perconaservermongodbbackups.psmdb.percona.com serverside-applied
-    customresourcedefinition.apiextensions.k8s.io/perconaservermongodbrestores.psmdb.percona.com serverside-applied
-    customresourcedefinition.apiextensions.k8s.io/perconaservermongodbs.psmdb.percona.com serverside-applied
-    role.rbac.authorization.k8s.io/percona-server-mongodb-operator serverside-applied
-    serviceaccount/percona-server-mongodb-operator serverside-applied
-    rolebinding.rbac.authorization.k8s.io/service-account-percona-server-mongodb-operator serverside-applied
-    deployment.apps/percona-server-mongodb-operator serverside-applied
-    ```
+``` Example output:
+<!-- expected_similarity=0.8 -->
+```output
+customresourcedefinition.apiextensions.k8s.io/perconaservermongodbbackups.psmdb.percona.com serverside-applied
+customresourcedefinition.apiextensions.k8s.io/perconaservermongodbrestores.psmdb.percona.com serverside-applied
+customresourcedefinition.apiextensions.k8s.io/perconaservermongodbs.psmdb.percona.com serverside-applied
+role.rbac.authorization.k8s.io/percona-server-mongodb-operator serverside-applied
+serviceaccount/percona-server-mongodb-operator serverside-applied
+rolebinding.rbac.authorization.k8s.io/service-account-percona-server-mongodb-operator serverside-applied
+deployment.apps/percona-server-mongodb-operator serverside-applied
+```
+
 ## Deploy the MongoDB cluster
 
  1. We deploy a MongoDB cluster with the Percona Operator. To ensure high availability, the MongoDB cluster is deployed with a replica set, sharding enabled and in multiple availability zones. The MongoDB cluster is deployed with a backup solution that stores the backups in an Azure Blob storage account.
@@ -753,5 +754,5 @@ kubectl logs pod/${AKS_MONGODB_CLUSTER_NAME}-rs0-0 -c backup-agent -n ${AKS_MONG
 
 To learn more about deploying open-source software on Azure Kubernetes Service (AKS), see the following articles:
 
-* [Deploy a highly available PostgreSQL database on AKS](https://learn.microsoft.com/azure/aks/postgresql-ha-overview)
-* [Build and deploy data and machine learning pipelines with Flyte on AKS](https://learn.microsoft.com/azure/aks/use-flyte)
+* [Deploy a highly available PostgreSQL database on AKS](../aks/postgresql-ha-overview.md)
+* [Build and deploy data and machine learning pipelines with Flyte on AKS](../aks/use-flyte.md)
