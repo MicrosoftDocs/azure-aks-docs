@@ -66,6 +66,239 @@ The following Azure services and features of Azure Monitor can be used for extra
 | [Azure Monitor managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) | [Prometheus](https://prometheus.io/) is a cloud-native metrics solution from the Cloud Native Compute Foundation. It's the most common tool used for collecting and analyzing metric data from Kubernetes clusters. Azure Monitor managed service for Prometheus is a fully managed Prometheus-compatible monitoring solution in Azure. If you don't enable managed Prometheus when you create your cluster, see [Collect Prometheus metrics from an AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana) for other options to enable it.<br><br>Azure Monitor managed service for Prometheus stores its data in an [Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-overview), which is [linked to a Grafana workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage#link-a-grafana-workspace) so that you can analyze the data with Azure Managed Grafana. |
 | [Azure Managed Grafana](/azure/managed-grafana/overview) | Fully managed implementation of [Grafana](https://grafana.com/), which is an open-source data visualization platform commonly used to present Prometheus data. Multiple predefined Grafana dashboards are available for monitoring Kubernetes and full-stack troubleshooting. If you don't enable managed Grafana when you create your cluster, see [Link a Grafana workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage#link-a-grafana-workspace). You can link it to your Azure Monitor workspace so it can access Prometheus metrics for your cluster. |
 
+### Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)
+
+This section shows you how to use the control plane metrics (preview) feature in Azure Kubernetes Service (AKS) to collect metrics from the control plane and view the telemetry in Azure Monitor. The control plane metrics feature is fully compatible with Prometheus and Grafana and provides more visibility into the availability and performance of the control plane components, such as the API server, ETCD, Scheduler, Autoscaler, and controller manager. You can use these metrics to maximize overall observability and maintain operational excellence for your AKS cluster.
+
+#### Prerequisites and limitations
+
+- Control plane metrics (preview) only supports [Azure Monitor managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview).
+- [Private link](/azure/azure-monitor/logs/private-link-security) isn't supported.
+- You can only customize the default [ama-metrics-settings-config-map](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration#configmaps). All other customizations aren't supported.
+- The AKS cluster must use [managed identity authentication](use-managed-identity.md).
+
+Install or update the `aks-preview` Azure CLI extension.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+- Install or update the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) or [`az extension update`](/cli/azure/extension#az-extension-update) command.
+
+    ```azurecli-interactive
+    # Install the aks-preview extension
+    az extension add --name aks-preview
+    
+    # Update the aks-preview extension
+    az extension update --name aks-preview
+    ```
+
+Register the `AzureMonitorMetricsControlPlanePreview` feature flag.
+
+1. Register the `AzureMonitorMetricsControlPlanePreview` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+1. Verify the registration status using the [`az feature show`](/cli/azure/feature#az-feature-show) command.
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"
+    ```
+
+1. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
+
+    ```azurecli-interactive
+    az provider register --namespace "Microsoft.ContainerService"
+    ```
+
+#### Enable control plane metrics on your AKS cluster
+
+You can enable control plane metrics with the Azure Monitor managed service for Prometheus add-on when creating a new cluster or updating an existing cluster.
+
+Enable control plane metrics on a new AKS cluster:
+
+To collect Prometheus metrics from your Kubernetes cluster, see [Enable Prometheus and Grafana for AKS clusters](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana) and follow the steps on the **CLI** tab for an AKS cluster.
+
+#### Enable control plane metrics on an existing AKS cluster
+
+- If your cluster already has the Prometheus add-on, update the cluster to ensure it starts collecting control plane metrics using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
+
+    ```azurecli-interactive
+    az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+    ```
+
+> [!NOTE]
+> Unlike the metrics collected from cluster nodes, control plane metrics are collected by a component which isn't part of the **ama-metrics** add-on. Enabling the `AzureMonitorMetricsControlPlanePreview` feature flag and the managed Prometheus add-on ensures control plane metrics are collected. After enabling metric collection, it can take several minutes for the data to appear in the workspace.
+
+#### Query control plane metrics
+
+Control plane metrics are stored in an Azure Monitor workspace in the cluster's region. You can query the metrics directly from the workspace or through the Azure managed Grafana instance connected to the workspace.
+
+View the control plane metrics in the Azure Monitor workspace using the following steps:
+
+1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster.
+1. Under **Monitoring**, select **Insights**.
+
+    :::image type="content" source="media/monitor-control-plane-metrics/insights-azmon.png" alt-text="Screenshot of the Azure Monitor workspace." lightbox="media/monitor-control-plane-metrics/insights-azmon.png":::
+
+> [!NOTE]
+> AKS provides dashboard templates to help you view and analyze your control plane telemetry data in real-time. If you're using Azure managed Grafana to visualize the data, you can import the following dashboards:
+>
+> - [API server](https://grafana.com/grafana/dashboards/20331-kubernetes-api-server/)
+> - [ETCD]https://grafana.com/grafana/dashboards/20330-kubernetes-etcd/
+
+#### Customize control plane metrics
+
+AKS includes a preconfigured set of metrics to collect and store for each component. `API server` and `etcd` are enabled by default. You can customize this list through the [`ama-settings-configmap`](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml).
+
+The default targets include the following:
+
+```yaml
+controlplane-apiserver = true
+controlplane-cluster-autoscaler = false
+controlplane-kube-scheduler = false
+controlplane-kube-controller-manager = false
+controlplane-etcd = true
+```
+
+All ConfigMaps should be applied to the `kube-system` namespace for any cluster.
+
+For more information about `minimal-ingestion` profile metrics, see [Minimal ingestion profile for control plane metrics in managed Prometheus](control-plane-metrics-default-list.md).
+
+Ingest only minimal metrics from default targets:
+
+When setting `default-targets-metrics-keep-list.minimalIngestionProfile="true"`, only the minimal set of metrics are ingested for each of the default targets: `controlplane-apiserver` and `controlplane-etcd`.
+
+Ingest all metrics from all targets:
+
+Collect all metrics from all targets on the cluster using the following steps:
+
+1. Download the ConfigMap file [ama-metrics-settings-configmap.yaml](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Set `minimalingestionprofile = false`.
+1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify are: `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`, `controlplane-kube-controller-manager`, and `controlplane-etcd`.
+1. Apply the ConfigMap using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command.
+
+    ```bash
+    kubectl apply -f configmap-controlplane.yaml
+    ```
+
+   After the configuration is applied, it takes several minutes before the metrics from the specified targets scraped from the control plane appear in the Azure Monitor workspace.
+
+Ingest a few other metrics in addition to minimal metrics:
+
+The `minimal ingestion profile` setting helps reduce the ingestion volume of metrics, as it only collects metrics used by default dashboards, default recording rules, and default alerts are collected. To customize this setting, use the following steps:
+
+1. Download the ConfigMap file [ama-metrics-settings-configmap](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Set `minimalingestionprofile = true`.
+1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify are: `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`, `controlplane-kube-controller-manager`, and `controlplane-etcd`.
+1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets. For example:
+
+    ```yaml
+    controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds| apiserver_longrunning_requests"
+    ```
+
+1. Apply the ConfigMap using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command.
+
+    ```bash
+    kubectl apply -f configmap-controlplane.yaml
+    ```
+
+   After the configuration is applied, it takes several minutes before the metrics from the specified targets scraped from the control plane appear in the Azure Monitor workspace.
+
+Ingest only specific metrics from some targets:
+
+1. Download the ConfigMap file [ama-metrics-settings-configmap](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Set `minimalingestionprofile = false`.
+1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify here are `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`,`controlplane-kube-controller-manager`, and `controlplane-etcd`.
+1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets. For example:
+
+    ```yaml
+    controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds| apiserver_longrunning_requests"
+    ```
+
+1. Apply the ConfigMap using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command.
+
+    ```bash
+    kubectl apply -f configmap-controlplane.yaml
+    ```
+
+   After the configuration is applied, it takes several minutes before the metrics from the specified targets scraped from the control plane appear in the Azure Monitor workspace.
+
+#### Troubleshoot control plane metrics issues
+
+Make sure the feature flag `AzureMonitorMetricsControlPlanePreview` is enabled and the `ama-metrics` pods are running.
+
+> [!NOTE]
+> The [troubleshooting methods](/azure/azure-monitor/containers/prometheus-metrics-troubleshoot) for Azure managed service Prometheus don't directly translate here, as the components scraping the control plane aren't present in the managed Prometheus add-on.
+
+- ConfigMap formatting:
+
+  Make sure you're using proper formatting in the ConfigMap and that the fields, specifically `default-targets-metrics-keep-list`, `minimal-ingestion-profile`, and `default-scrape-settings-enabled`, are correctly populated with their intended values.
+
+- Isolate control plane from data plane
+
+  Start by setting some of the [node related metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default) to `true` and verify the metrics are being forwarded to the workspace. This helps determine if the issue is specific to scraping control plane metrics.
+
+- Events ingested
+
+  Once you applied the changes, you can open metrics explorer from the **Azure Monitor overview** page or from the **Monitoring** section the selected cluster and check for an increase or decrease in the number of events ingested per minute. It should help you determine if a specific metric is missing or if all metrics are missing.
+
+- Specific metric isn't exposed
+
+  There have been cases where metrics are documented, but aren't exposed from the target and aren't forwarded to the Azure Monitor workspace. In this case, it's necessary to verify other metrics are being forwarded to the workspace.
+
+- No access to the Azure Monitor workspace
+
+  When you enable the add-on, you might have specified an existing workspace that you don't have access to. In that case, it might look like the metrics aren't being collected and forwarded. Make sure that you create a new workspace while enabling the add-on or while creating the cluster.
+
+#### Disable control plane metrics on your AKS cluster
+
+You can disable control plane metrics at any time by disabling the managed Prometheus add-on and unregistering the `AzureMonitorMetricsControlPlanePreview` feature flag.
+
+1. Remove the metrics add-on that scrapes Prometheus metrics using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
+
+    ```azurecli-interactive
+    az aks update --disable-azure-monitor-metrics --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+    ```
+
+2. Disable scraping of control plane metrics on the AKS cluster by unregistering the `AzureMonitorMetricsControlPlanePreview` feature flag using the [`az feature unregister`](/cli/azure/feature#az-feature-unregister) command.
+
+    ```azurecli-interactive
+    az feature unregister "Microsoft.ContainerService" --name "AzureMonitorMetricsControlPlanePreview"
+    ```
+
+#### FAQ
+
+- Can I scrape control plane metrics with self hosted Prometheus?
+
+  No, you currently can't scrape control plane metrics with self hosted Prometheus. Self hosted Prometheus can only scrape the single instance depending on the load balancer. The metrics aren't reliable, as there are often multiple replicas of the control plane metrics are only visible through managed Prometheus
+
+- Why is the user agent not available through the control plane metrics?
+
+  [Control plane metrics in Kubernetes](https://kubernetes.io/docs/reference/instrumentation/metrics/) don't have the user agent. The user agent is only available through the control plane logs available in the [diagnostic settings](/azure/azure-monitor/essentials/diagnostic-settings).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [!INCLUDE [horz-monitor-resource-logs](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-resource-logs.md)]
 
 For the available resource log categories, their associated Log Analytics tables, and the log schemas for AKS, see [Azure Kubernetes Service monitoring data reference](monitor-aks-reference.md#resource-logs).
@@ -148,6 +381,77 @@ In addition, this schema is compatible with [Basic Logs](/azure/azure-monitor/lo
 ContainerLogV2 is the recommended approach and is the default schema for customers onboarding container insights with Managed Identity Auth using ARM, Bicep, Terraform, Policy, and Azure portal. For more information about how to enable ContainerLogV2 through either the cluster's Data Collection Rule (DCR) or ConfigMap, see [Enable the ContainerLogV2 schema](/azure/azure-monitor/containers/container-insights-logs-schema?tabs=configure-portal#enable-the-containerlogv2-schema).
 
 [!INCLUDE [horz-monitor-activity-log](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-activity-log.md)]
+
+## View Azure Kubernetes Service (AKS) container logs, events, and pod metrics in real time
+
+In this section, you learn how to use the *live data* feature in Container Insights to view Azure Kubernetes Service (AKS) container logs, events, and pod metrics in real time. This feature provides direct access to `kubectl logs -c`, `kubectl get` events, and `kubectl top pods` to help you troubleshoot issues in real time.
+
+> [!NOTE]
+> AKS uses [Kubernetes cluster-level logging architectures](https://kubernetes.io/docs/concepts/cluster-administration/logging/#cluster-level-logging-architectures). The container logs are located inside `/var/log/containers` on the node. To access a node, see [Connect to Azure Kubernetes Service (AKS) cluster nodes](./node-access.md).
+
+For help with setting up the *live data* feature, see [Configure live data in Container Insights](/azure/azure-monitor/containers/container-insights-livedata-setup). This feature directly accesses the Kubernetes API. For more information about the authentication model, see [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/).
+
+### View AKS resource live logs
+
+> [!NOTE]
+> To access logs from a private cluster, you need to be on a machine on the same private network as the cluster.
+
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. Under **Kubernetes resources**, select **Workloads**.
+1. Select the *Deployment*, *Pod*, *Replica Set*, *Stateful Set*, *Job* or *Cron Job* that you want to view logs for, and then select **Live Logs**.
+1. Select the resource you want to view logs for.
+
+   The following example shows the logs for a *Pod* resource:
+
+   :::image type="content" source="./media/container-insights-live-data/live-data-deployment.png" alt-text="Screenshot that shows the deployment of live logs." lightbox="./media/container-insights-live-data/live-data-deployment.png":::
+
+### View live logs
+
+You can view real time log data as it's generated by the container engine on the *Cluster*, *Nodes*, *Controllers*, or *Containers*.
+
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. Under **Monitoring**, select **Insights**.
+1. Select the *Cluster*, *Nodes*, *Controllers*, or *Containers* tab, and then select the object you want to view logs for.
+1. On the resource **Overview**, select **Live Logs**.
+
+   > [!NOTE]
+   > To view the data from your Log Analytics workspace, select **View Logs in Log Analytics**. To learn more about viewing historical logs, events, and metrics, see [How to query logs from Container Insights](/azure/azure-monitor/containers/container-insights-log-query).
+
+   After successful authentication, if data can be retrieved, it begins streaming to the Live Logs tab. You can view log data here in a continuous stream. The following image shows the logs for a *Container* resource:
+
+   :::image type="content" source="./media/container-insights-live-data/container-live-logs.png" alt-text="Screenshot that shows the container Live Logs view data option." lightbox="./media/container-insights-live-data/container-live-logs.png":::
+
+### View live events
+
+You can view real-time event data as it's generated by the container engine on the *Cluster*, *Nodes*, *Controllers*, or *Containers*.
+
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. Under **Monitoring**, select **Insights**.
+1. Select the *Cluster*, *Nodes*, *Controllers*, or *Containers* tab, and then select the object you want to view events for.
+1. On the resource **Overview** page, select **Live Events**.
+
+   > [!NOTE]
+   > To view the data from your Log Analytics workspace, select **View Events in Log Analytics**. To learn more about viewing historical logs, events, and metrics, see [How to query logs from Container Insights](/azure/azure-monitor/containers/container-insights-log-query).
+
+   After successful authentication, if data can be retrieved, it begins streaming to the Live Events tab. The following image shows the events for a *Container* resource:
+
+   :::image type="content" source="./media/container-insights-live-data/container-live-events.png" alt-text="Screenshot that shows the container Live Events view data option." lightbox="./media/container-insights-live-data/container-live-events.png":::
+
+### View metrics
+
+You can view real-time metrics data as it's generated by the container engine on the *Nodes* or *Controllers* by selecting a *Pod* resource.
+
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. Under **Monitoring**, select **Insights**.
+1. Select the *Nodes* or *Controllers* tab, and then select the *Pod* object you want to view metrics for.
+1. On the resource **Overview** page, select **Live Metrics**.
+
+   > [!NOTE]
+   > To view the data from your Log Analytics workspace, select **View Events in Log Analytics**. To learn more about viewing historical logs, events, and metrics, see [How to query logs from Container Insights](/azure/azure-monitor/containers/container-insights-log-query).
+
+   After successful authentication, if data can be retrieved, it begins streaming to the Live Metrics tab. The following image shows the metrics for a *Pod* resource:
+
+   :::image type="content" source="./media/container-insights-live-data/pod-live-metrics.png" alt-text="Screenshot that shows the pod Live Metrics view data option." lightbox="./media/container-insights-live-data/pod-live-metrics.png":::
 
 [!INCLUDE [horz-monitor-analyze-data](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-analyze-data.md)]
 

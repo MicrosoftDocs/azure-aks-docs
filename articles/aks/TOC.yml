@@ -722,14 +722,8 @@
           href: events.md
         - name: Monitor kube-audit events
           href: monitor-apiserver.md
-        - name: Monitor control plane metrics
-          href: monitor-control-plane-metrics.md
-        - name: Control plane metrics reference
-          href: control-plane-metrics-default-list.md
         - name: View the kubelet logs
           href: kubelet-logs.md
-        - name: View container data in real time
-          href: container-insights-live-data.md
         - name: Cost analysis
           items:
           - name: Enable cost analysis on your cluster
