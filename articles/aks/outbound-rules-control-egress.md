@@ -4,7 +4,7 @@ description: Learn what ports and addresses are required to control egress traff
 ms.subservice: aks-networking
 ms.custom:
   - build-2024
-ms.topic: article
+ms.topic: how-to
 ms.author: allensu
 ms.date: 06/13/2023
 author: asudbring
