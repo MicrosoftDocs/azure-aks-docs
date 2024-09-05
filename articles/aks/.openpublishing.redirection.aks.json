@@ -296,7 +296,7 @@
             "redirect_document_id": false
         },
         {
-            "source_path_from_root": "/articles/aks/monitor-control-plane-metrics-apiserver.md",
+            "source_path_from_root": "/articles/aks/monitor-control-plane-metrics.md",
             "redirect_url": "/azure/aks/monitor-aks",
             "redirect_document_id": false
         },
