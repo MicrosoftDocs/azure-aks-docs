@@ -1,6 +1,6 @@
 ---
-title: Access a private Azure Kubernetes Service (AKS) cluster
-description: Learn how to access a private Azure Kubernetes Service (AKS) cluster using the Azure CLI or Azure portal.
+title: Access a private Azure Kubernetes Service (AKS) cluster using the command invoke or Run command feature
+description: Learn how to access a private Azure Kubernetes Service (AKS) cluster using the Azure CLI command invoke feature or the Azure portal Run command feature.
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
@@ -9,7 +9,7 @@ author: schaffererin
 ms.author: schaffererin
 ---
 
-# Access a private Azure Kubernetes Service (AKS) cluster
+# Access a private Azure Kubernetes Service (AKS) cluster using the command invoke or Run command feature
 
 When you access a private AKS cluster, you need to connect to the cluster from the cluster virtual network, a peered network, or a configured private endpoint. These approaches require configuring a VPN, Express Route, deploying a *jumpbox* within the cluster virtual network, or creating a private endpoint inside of another virtual network.
 
