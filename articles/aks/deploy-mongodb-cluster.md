@@ -295,22 +295,23 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
 The Percona Operator is typically distributed as a Kubernetes `Deployment` or `Operator`. You can deploy it using a `kubectl apply -f` command with a manifest file. You can find the latest manifests in the [Percona GitHub repository](https://github.com/percona/percona-server-mongodb-operator) or the [official documentation](https://docs.percona.com/percona-operator-for-mongodb/aks.html).
 
-```bash
-#Deploy the Operator and crds
-kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.16.0/deploy/bundle.yaml -n "${AKS_MONGODB_NAMESPACE}"
-```
+* Deploy the Percona Operator and CRDs using the `kubectl apply` command.
 
-``` Example output:
-<!-- expected_similarity=0.8 -->
-```output
-customresourcedefinition.apiextensions.k8s.io/perconaservermongodbbackups.psmdb.percona.com serverside-applied
-customresourcedefinition.apiextensions.k8s.io/perconaservermongodbrestores.psmdb.percona.com serverside-applied
-customresourcedefinition.apiextensions.k8s.io/perconaservermongodbs.psmdb.percona.com serverside-applied
-role.rbac.authorization.k8s.io/percona-server-mongodb-operator serverside-applied
-serviceaccount/percona-server-mongodb-operator serverside-applied
-rolebinding.rbac.authorization.k8s.io/service-account-percona-server-mongodb-operator serverside-applied
-deployment.apps/percona-server-mongodb-operator serverside-applied
-```
+    ```bash
+    kubectl apply --server-side -f https://raw.githubusercontent.com/percona/percona-server-mongodb-operator/v1.16.0/deploy/bundle.yaml -n "${AKS_MONGODB_NAMESPACE}"
+    ```
+
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    customresourcedefinition.apiextensions.k8s.io/perconaservermongodbbackups.psmdb.percona.com serverside-applied
+    customresourcedefinition.apiextensions.k8s.io/perconaservermongodbrestores.psmdb.percona.com serverside-applied
+    customresourcedefinition.apiextensions.k8s.io/perconaservermongodbs.psmdb.percona.com serverside-applied
+    role.rbac.authorization.k8s.io/percona-server-mongodb-operator serverside-applied
+    serviceaccount/percona-server-mongodb-operator serverside-applied
+    rolebinding.rbac.authorization.k8s.io/service-account-percona-server-mongodb-operator serverside-applied
+    deployment.apps/percona-server-mongodb-operator serverside-applied
+    ```
 
 ## Deploy the MongoDB cluster
 
