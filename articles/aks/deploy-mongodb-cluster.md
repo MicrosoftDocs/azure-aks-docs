@@ -134,28 +134,29 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
 1. Create a `SecretStore` resource to access the MongoDB passwords stored in your key vault using the `kubectl apply` command.
 
-```bash
-kubectl apply -f - <<EOF
-apiVersion: external-secrets.io/v1beta1
-kind: SecretStore
-metadata:
-  name: azure-store
-  namespace: ${AKS_MONGODB_NAMESPACE}
-spec:
-  provider:
-    # provider type: azure keyvault
-    azurekv:
-      authType: WorkloadIdentity
-      vaultUrl: "${KEYVAULTURL}"
-      serviceAccountRef:
-        name: ${SERVICE_ACCOUNT_NAME}
-EOF
-```
-Example output:
-<!-- expected_similarity=0.8 -->
-```output
-secretstore.external-secrets.io/azure-store created
-```
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: external-secrets.io/v1beta1
+    kind: SecretStore
+    metadata:
+      name: azure-store
+      namespace: ${AKS_MONGODB_NAMESPACE}
+    spec:
+      provider:
+        # provider type: azure keyvault
+        azurekv:
+          authType: WorkloadIdentity
+          vaultUrl: "${KEYVAULTURL}"
+          serviceAccountRef:
+            name: ${SERVICE_ACCOUNT_NAME}
+    EOF
+    ```
+
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    secretstore.external-secrets.io/azure-store created
+    ```
 
 2. Create an `ExternalSecret` resource, which creates a Kubernetes `Secret` in the `mongodb` namespace with the `MongoDB` secrets stored in your key vault, using the `kubectl apply` command.
 
