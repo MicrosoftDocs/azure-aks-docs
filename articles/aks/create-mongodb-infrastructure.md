@@ -23,26 +23,26 @@ In this article, we create the infrastructure resources required to run a MongoD
 
 ## Set environment variables
 
-Set the required environment variables for use throughout this guide:
+* Set the required environment variables for use throughout this guide:
 
-```bash
-random=$(echo $RANDOM | tr '[0-9]' '[a-z]')
-export MY_LOCATION=australiaeast
-export MY_RESOURCE_GROUP_NAME=myResourceGroup-rg-$(echo $MY_LOCATION)
-export MY_ACR_REGISTRY=mydnsrandomname$(echo $random)
-export MY_IDENTITY_NAME=ua-identity-123
-export MY_KEYVAULT_NAME=vault-$(echo $random)-kv
-export MY_CLUSTER_NAME=cluster-aks
-export SERVICE_ACCOUNT_NAME=mongodb
-export SERVICE_ACCOUNT_NAMESPACE=mongodb
-export AKS_MONGODB_NAMESPACE=mongodb
-export AKS_MONGODB_SECRETS_NAME=cluster-aks-mongodb-secrets
-export AKS_MONGODB_CLUSTER_NAME=cluster-aks-mongodb
-export AKS_MONGODB_SECRETS_ENCRYPTION_KEY=cluster-aks-mongodb-secrets-mongodb-encryption-key
-export AKS_AZURE_SECRETS_NAME=cluster-aks-azure-secrets
-export AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME=mongodbsa$(echo $random)
-export AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME=backups
-```
+    ```bash
+    random=$(echo $RANDOM | tr '[0-9]' '[a-z]')
+    export MY_LOCATION=australiaeast
+    export MY_RESOURCE_GROUP_NAME=myResourceGroup-rg-$(echo $MY_LOCATION)
+    export MY_ACR_REGISTRY=mydnsrandomname$(echo $random)
+    export MY_IDENTITY_NAME=ua-identity-123
+    export MY_KEYVAULT_NAME=vault-$(echo $random)-kv
+    export MY_CLUSTER_NAME=cluster-aks
+    export SERVICE_ACCOUNT_NAME=mongodb
+    export SERVICE_ACCOUNT_NAMESPACE=mongodb
+    export AKS_MONGODB_NAMESPACE=mongodb
+    export AKS_MONGODB_SECRETS_NAME=cluster-aks-mongodb-secrets
+    export AKS_MONGODB_CLUSTER_NAME=cluster-aks-mongodb
+    export AKS_MONGODB_SECRETS_ENCRYPTION_KEY=cluster-aks-mongodb-secrets-mongodb-encryption-key
+    export AKS_AZURE_SECRETS_NAME=cluster-aks-azure-secrets
+    export AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME=mongodbsa$(echo $random)
+    export AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME=backups
+    ```
 
 ## Create a resource group
 
