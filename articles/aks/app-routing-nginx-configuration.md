@@ -75,7 +75,7 @@ Here are the possible configuration options:
 
 #### Control the default ingress controller configuration when creating the cluster
 
-To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying the `--enable-app-routing` and the `--app-routing-default-nginx-controller` flags. You need to set the `<DefaultIngressControllerType> to one of the configuration options.
+To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying the `--enable-app-routing` and the `--app-routing-default-nginx-controller` flags. You need to set the `<DefaultIngressControllerType>` to one of the configuration options.
 
 ```azurecli-interactive
 az aks create \
