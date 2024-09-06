@@ -22,7 +22,7 @@ FQDN filtering offers an efficient and user-friendly approach for managing netwo
 In a Kubernetes cluster, pod IP addresses can change often, which makes it challenging to secure the pods with security policies using IP addresses. FQDN filtering allows you to create pod level policies using domain names rather than IP addresses, which eliminates the need to update policies when an IP address changes.
 
 > [!NOTE]
-> Azure CNI Powered by Cilium and Kubernetes version 1.29 is required in order to use security features of Advanced Container Networking Services like FQDN filtering.
+> Azure CNI Powered by Cilium and Kubernetes version 1.29 or greater is required in order to use security features of Advanced Container Networking Services like FQDN filtering.
 
 ## Components of FQDN filtering
 

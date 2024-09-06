@@ -2,10 +2,9 @@
 title: Kubernetes on Azure tutorial - Prepare an application for Azure Kubernetes Service (AKS)
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to prepare and build a multi-container app with Docker Compose that you can then deploy to AKS.
 ms.topic: tutorial
-ms.date: 06/10/2024
+ms.date: 09/06/2024
 author: schaffererin
 ms.author: schaffererin
-
 ms.custom: mvc, devx-track-extended-azdevcli
 
 #Customer intent: As a developer, I want to learn how to build a container-based application so that I can deploy the app to Azure Kubernetes Service.
@@ -49,7 +48,6 @@ The [sample application][sample-application] used in this tutorial is a basic st
 * **Order service**: Places orders.
 * **Rabbit MQ**: Message queue for an order queue.
 
-
 ### [Git](#tab/azure-cli)
 
 1. Use [git][] to clone the sample application to your development environment.
@@ -63,7 +61,6 @@ The [sample application][sample-application] used in this tutorial is a basic st
     ```console
     cd aks-store-demo
     ```
-
 
 ### [Azure Developer CLI](#tab/azure-azd)
 
@@ -91,11 +88,10 @@ The [sample application][sample-application] used in this tutorial is a basic st
 
 The sample application you create in this tutorial uses the [*docker-compose-quickstart* YAML file](https://github.com/Azure-Samples/aks-store-demo/blob/main/docker-compose-quickstart.yml) from the [repository](https://github.com/Azure-Samples/aks-store-demo/tree/main) you cloned.
 
-```yaml
-version: "3.7"
+```YAML
 services:
   rabbitmq:
-    image: rabbitmq:3.11.17-management-alpine
+    image: rabbitmq:3.13.2-management-alpine
     container_name: 'rabbitmq'
     restart: always
     environment:
@@ -113,14 +109,14 @@ services:
       - ./rabbitmq_enabled_plugins:/etc/rabbitmq/enabled_plugins
     networks:
       - backend_services
-  orderservice:
+  order-service:
     build: src/order-service
-    container_name: 'orderservice'
+    container_name: 'order-service'
     restart: always
     ports:
       - 3000:3000
     healthcheck:
-      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://orderservice:3000/health"]
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://order-service:3000/health"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -136,38 +132,40 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
-  productservice:
+  product-service:
     build: src/product-service
-    container_name: 'productservice'
+    container_name: 'product-service'
     restart: always
     ports:
       - 3002:3002
     healthcheck:
-      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://productservice:3002/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    networks:
-      - backend_services
-  storefront:
-    build: src/store-front
-    container_name: 'storefront'
-    restart: always
-    ports:
-      - 8080:8080
-    healthcheck:
-      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://storefront:80/health"]
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://product-service:3002/health"]
       interval: 30s
       timeout: 10s
       retries: 5
     environment:
-      - VUE_APP_PRODUCT_SERVICE_URL=http://productservice:3002/
-      - VUE_APP_ORDER_SERVICE_URL=http://orderservice:3000/
+      - AI_SERVICE_URL=http://ai-service:5001/
+    networks:
+      - backend_services
+  store-front:
+    build: src/store-front
+    container_name: 'store-front'
+    restart: always
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "http://store-front:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    environment:
+      - VUE_APP_PRODUCT_SERVICE_URL=http://product-service:3002/
+      - VUE_APP_ORDER_SERVICE_URL=http://order-service:3000/
     networks:
       - backend_services
     depends_on:
-      - productservice
-      - orderservice
+      - product-service
+      - order-service
 networks:
   backend_services:
     driver: bridge
@@ -198,11 +196,11 @@ You can use [Docker Compose][docker-compose] to automate building container imag
     The following condensed example output shows the created images:
 
     ```output
-    REPOSITORY                       TAG                          IMAGE ID
-    aks-store-demo-productservice    latest                       2b66a7e91eca
-    aks-store-demo-orderservice      latest                       54ad5de546f9
-    aks-store-demo-storefront        latest                       d9e3ac46a225
-    rabbitmq                         3.11.17-management-alpine    79a570297657
+    REPOSITORY                        TAG                          IMAGE ID
+    aks-store-demo-product-service    latest                       72f5cd7e6b84
+    aks-store-demo-order-service      latest                       54ad5de546f9
+    aks-store-demo-store-front        latest                       1125f85632ae
+    rabbitmq                          3.13.2-management-alpine     b1dafc50c098
     ...
     ```
 
@@ -216,10 +214,10 @@ You can use [Docker Compose][docker-compose] to automate building container imag
 
     ```output
     CONTAINER ID        IMAGE
-    21574cb38c1f        aks-store-demo-productservice
-    c30a5ed8d86a        aks-store-demo-orderservice
-    d10e5244f237        aks-store-demo-storefront
-    94e00b50b86a        rabbitmq:3.11.17-management-alpine
+    f27fe74cfd0a        aks-store-demo-product-service
+    df1eaa137885        aks-store-demo-order-service
+    b3ce9e496e96        aks-store-demo-store-front
+    31df28627ffa        rabbitmq:3.13.2-management-alpine
     ```
 
 ## Test application locally
@@ -261,6 +259,7 @@ infra:
 ```
 
 ---
+
 ## Next steps
 
 ### [Azure CLI](#tab/azure-cli) 
@@ -268,6 +267,7 @@ infra:
 In this tutorial, you created a sample application, created container images for the application, and then tested the application. You learned how to:
 
 > [!div class="checklist"]
+>
 > * Clone a sample application source from GitHub.
 > * Create a container image from the sample application source.
 > * Test the multi-container application in a local Docker environment.
@@ -282,13 +282,14 @@ In the next tutorial, you learn how to store container images in an ACR.
 In this tutorial, you cloned a sample application using `azd`. You learned how to:
 
 > [!div class="checklist"]
+>
 > * Clone a sample `azd` template from GitHub.
 > * View where container images are used from the sample application source.
 
 In the next tutorial, you learn how to create a cluster using the `azd` template you cloned.
 
 > [!div class="nextstepaction"]
-> [Create an AKS Cluster][aks-tutorial-deploy-cluster]
+> [Create an AKS cluster][aks-tutorial-deploy-cluster]
 
 ---
 
