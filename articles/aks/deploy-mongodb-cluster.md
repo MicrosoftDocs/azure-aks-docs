@@ -159,66 +159,67 @@ secretstore.external-secrets.io/azure-store created
 
 2. Create an `ExternalSecret` resource, which creates a Kubernetes `Secret` in the `mongodb` namespace with the `MongoDB` secrets stored in your key vault, using the `kubectl apply` command.
 
-```bash
-kubectl apply -f - <<EOF
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: ${AKS_MONGODB_SECRETS_NAME}
-  namespace: ${AKS_MONGODB_NAMESPACE}
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    kind: SecretStore
-    name: azure-store
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: external-secrets.io/v1beta1
+    kind: ExternalSecret
+    metadata:
+      name: ${AKS_MONGODB_SECRETS_NAME}
+      namespace: ${AKS_MONGODB_NAMESPACE}
+    spec:
+      refreshInterval: 1h
+      secretStoreRef:
+        kind: SecretStore
+        name: azure-store
 
-  target:
-    name: "${AKS_MONGODB_SECRETS_NAME}"
-    creationPolicy: Owner
+      target:
+        name: "${AKS_MONGODB_SECRETS_NAME}"
+        creationPolicy: Owner
 
-  data:
-    # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
-    - secretKey: MONGODB_BACKUP_USER
-      remoteRef:
-        key: MONGODB-BACKUP-USER
-    - secretKey: MONGODB_BACKUP_PASSWORD
-      remoteRef:
-        key: MONGODB-BACKUP-PASSWORD
-    - secretKey: MONGODB_DATABASE_ADMIN_USER
-      remoteRef:
-        key: MONGODB-DATABASE-ADMIN-USER
-    - secretKey: MONGODB_DATABASE_ADMIN_PASSWORD
-      remoteRef:
-        key: MONGODB-DATABASE-ADMIN-PASSWORD
-    - secretKey: MONGODB_CLUSTER_ADMIN_USER
-      remoteRef:
-        key: MONGODB-CLUSTER-ADMIN-USER
-    - secretKey: MONGODB_CLUSTER_ADMIN_PASSWORD
-      remoteRef:
-        key: MONGODB-CLUSTER-ADMIN-PASSWORD
-    - secretKey: MONGODB_CLUSTER_MONITOR_USER
-      remoteRef:
-        key: MONGODB-CLUSTER-MONITOR-USER
-    - secretKey: MONGODB_CLUSTER_MONITOR_PASSWORD
-      remoteRef:
-        key: MONGODB-CLUSTER-MONITOR-PASSWORD
-    - secretKey: MONGODB_USER_ADMIN_USER
-      remoteRef:
-        key: MONGODB-USER-ADMIN-USER
-    - secretKey: MONGODB_USER_ADMIN_PASSWORD
-      remoteRef:
-        key: MONGODB-USER-ADMIN-PASSWORD
-    - secretKey: PMM_SERVER_API_KEY
-      remoteRef:
-        key: PMM-SERVER-API-KEY
-EOF
-```
+      data:
+        # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
+        - secretKey: MONGODB_BACKUP_USER
+          remoteRef:
+            key: MONGODB-BACKUP-USER
+        - secretKey: MONGODB_BACKUP_PASSWORD
+          remoteRef:
+            key: MONGODB-BACKUP-PASSWORD
+        - secretKey: MONGODB_DATABASE_ADMIN_USER
+          remoteRef:
+            key: MONGODB-DATABASE-ADMIN-USER
+        - secretKey: MONGODB_DATABASE_ADMIN_PASSWORD
+          remoteRef:
+            key: MONGODB-DATABASE-ADMIN-PASSWORD
+        - secretKey: MONGODB_CLUSTER_ADMIN_USER
+          remoteRef:
+            key: MONGODB-CLUSTER-ADMIN-USER
+        - secretKey: MONGODB_CLUSTER_ADMIN_PASSWORD
+          remoteRef:
+            key: MONGODB-CLUSTER-ADMIN-PASSWORD
+        - secretKey: MONGODB_CLUSTER_MONITOR_USER
+          remoteRef:
+            key: MONGODB-CLUSTER-MONITOR-USER
+        - secretKey: MONGODB_CLUSTER_MONITOR_PASSWORD
+          remoteRef:
+            key: MONGODB-CLUSTER-MONITOR-PASSWORD
+        - secretKey: MONGODB_USER_ADMIN_USER
+          remoteRef:
+            key: MONGODB-USER-ADMIN-USER
+        - secretKey: MONGODB_USER_ADMIN_PASSWORD
+          remoteRef:
+            key: MONGODB-USER-ADMIN-PASSWORD
+        - secretKey: PMM_SERVER_API_KEY
+          remoteRef:
+            key: PMM-SERVER-API-KEY
+    EOF
+    ```
 
-Example output:
-<!-- expected_similarity=0.8 -->
-```output
-externalsecret.external-secrets.io/cluster-aks-mongodb-secrets created
-```
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    externalsecret.external-secrets.io/cluster-aks-mongodb-secrets created
+    ```
+
 3. Create an `ExternalSecret` resource, which creates a Kubernetes `Secret` in the `mongodb` namespace for `Azure Blob Storage` secrets stored in your key vault, using the `kubectl apply` command.
 
 ```bash
