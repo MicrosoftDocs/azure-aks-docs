@@ -67,7 +67,7 @@ In this step, we create a user-assigned managed identity that the External Secre
 
 * Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command.
 
-    ```bash
+    ```azurecli-interactive
     az identity create --name $MY_IDENTITY_NAME --resource-group $MY_RESOURCE_GROUP_NAME --output table
     export MY_IDENTITY_NAME_ID=$(az identity show --name $MY_IDENTITY_NAME -g $MY_RESOURCE_GROUP_NAME --query id -o tsv)
     export MY_IDENTITY_NAME_PRINCIPAL_ID=$(az identity show --name $MY_IDENTITY_NAME -g $MY_RESOURCE_GROUP_NAME --query principalId -o tsv)
