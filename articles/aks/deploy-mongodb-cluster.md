@@ -98,7 +98,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
 3. Generate a random password for the mongodb cluster and store it in your Azure Key Vault using the [`az keyvault secret set`](/cli/azure/keyvault/secret#az-keyvault-secret-set) command.
 
-    ```bash
+    ```azurecli-interactive
     #MongoDB connection strings can contain special characters in the password which need to be URL encoded. 
     #This is because the connection string is a URI, and special characters can interfere with the URI structure.
     #This function generates secrets of 32 characters using only alphanumeric characters
