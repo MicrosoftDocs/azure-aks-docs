@@ -155,7 +155,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
 
 1. Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
 
-    ```bash
+    ```azurecli-interactive
     az aks create \
     --location $MY_LOCATION \
     --name $MY_CLUSTER_NAME \
