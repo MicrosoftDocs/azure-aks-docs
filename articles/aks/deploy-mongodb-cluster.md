@@ -279,7 +279,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
 5. Give permission to the user-assigned identity to access the secret using the [`az keyvault set-policy`](/cli/azure/keyvault#az-keyvault-set-policy) command.
 
-    ```bash
+    ```azurecli-interactive
     az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $MY_IDENTITY_NAME_PRINCIPAL_ID --secret-permissions get --output table
     ```
 
