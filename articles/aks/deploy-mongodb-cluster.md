@@ -676,7 +676,7 @@ Logical backups use less storage, but are slower than physical backup/restore.
 To store backups on the Azure Blob storage, you need to create a Secret with you created in *Step 2:*
 
 #### Making scheduled backups
-Backups schedule is defined in the backup section of the Custom Resource and can be configured via the *mongodb-cr.yaml.*
+Backups schedule is defined in the backup section of the Custom Resource and can be configured via the [deploy/cr.yaml.](https://github.com/percona/percona-server-mongodb-operator/blob/main/deploy/cr.yaml)
 
 - The **backup.enabled** key should be set to true,
 
