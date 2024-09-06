@@ -53,12 +53,14 @@ In this article, we create the infrastructure resources required to run a MongoD
     ```
 
     Example output:
+    
     <!-- expected_similarity=0.8 -->
     ```output
     Location       Name
     -------------  --------------------------------
     australiaeast  myResourceGroup-rg-australiaeast   
     ```
+
 ## Create an identity to access secrets in Azure Key Vault
 
 In this step, we create a user-assigned managed identity that the External Secrets Operator uses to access the MongoDB passwords stored in Azure Key Vault.
