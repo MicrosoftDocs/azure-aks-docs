@@ -529,11 +529,11 @@ EOF
 
 ## Connect to the Percona Server
 
-1. To connect to Percona Server for MongoDB you need to construct the MongoDB connection URI string. It includes the credentials of the admin user, which are stored in the Secrets object:
+To connect to Percona Server for MongoDB, you need to construct the MongoDB connection URI string. It includes the credentials of the admin user, which are stored in the Secrets object.
 
-    List the Secrets objects.
+1. List the Secrets objects using the `kubectl get` command.
+
     ```bash
-    #List the Secrets objects
     kubectl get secrets -n ${AKS_MONGODB_NAMESPACE}
     ```
 
@@ -552,10 +552,9 @@ EOF
     sh.helm.release.v1.external-secrets.v1               helm.sh/release.v1   1      3m49s
     ```
 
-2. View the Secret contents to retrieve the admin user credentials:
+2. View the Secret contents to retrieve the admin user credentials using the `kubectl get` command.
 
     ```bash
-    #View the Secret contents to retrive the admin user credentials.
     kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -o yaml -n ${AKS_MONGODB_NAMESPACE}
     ```
 
