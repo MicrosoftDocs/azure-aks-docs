@@ -115,6 +115,8 @@ Fields present in [open source MeshConfig reference documentation][istio-meshcon
 | serviceSettings | Allowed | - |
 | meshMTLS | Allowed | - |
 | tlsDefaults | Allowed | - |
+| ingressService | Allowed | Name of the Kubernetes service used for the istio ingress controller. |
+| ingressSelector | Allowed | Defines which gateway deployment to use as the Ingress controller. This field corresponds to the Gateway.selector field, and will be set as istio: INGRESS_SELECTOR. |
 
 ### ProxyConfig (meshConfig.defaultConfig)
 
