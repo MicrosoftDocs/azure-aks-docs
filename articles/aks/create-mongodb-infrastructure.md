@@ -190,7 +190,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
 
 3. Assign the `AcrPull` role to the kubelet identity using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
 
-    ```bash
+    ```azurecli-interactive
     export KUBELET_IDENTITY=$(az aks show -g $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME -o tsv --query identityProfile.kubeletidentity.objectId)
     az role assignment create \
     --assignee ${KUBELET_IDENTITY} \
