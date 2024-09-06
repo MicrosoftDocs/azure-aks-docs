@@ -479,17 +479,20 @@ EOF
     ```bash
     while [ "$(kubectl get psmdb -n ${AKS_MONGODB_NAMESPACE} -o jsonpath='{.items[0].status.state}')" != "ready" ]; do echo "waiting for MongoDB cluster to be ready"; sleep 10; done
     ```
-    When the process is over, your cluster will obtain the ready status.
+
+    When the process completes, your cluster show the `ready` status.
     
     ```bash
     kubectl get psmdb -n ${AKS_MONGODB_NAMESPACE}
     ```
+
     Example output:
     <!-- expected_similarity=0.8 -->
     ```output
     NAME                  ENDPOINT                                               STATUS   AGE
     cluster-aks-mongodb   cluster-aks-mongodb-mongos.mongodb.svc.cluster.local   ready    3m1s
     ```
+
 3. To ensure high availability the MongoDB cluster will be deployed in multiple availability zones. To view this information, run the following command:
 
     ```bash
