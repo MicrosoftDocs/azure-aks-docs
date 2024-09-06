@@ -617,29 +617,37 @@ To connect to Percona Server for MongoDB, you need to construct the MongoDB conn
     rfCglDl4vIR3W...
     cluster-aks-mongodb
     ```
-4. In order to verify your MongoDB cluster, run a container with a MongoDB client and connect its console output to your terminal.
+## Verify the MongoDB cluster
+
+In order to verify your MongoDB cluster, you run a container with a MongoDB client and connect its console output to your terminal.
+
+1. Create a pod named *`percona-client`* under the `${AKS_MONGODB_NAMESPACE}` namespace in your cluster using the `kubectl run` command.
 
     ```bash
     kubectl -n "${AKS_MONGODB_NAMESPACE}" run -i --rm --tty percona-client --image=${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5 --restart=Never -- bash -il
     ```
-5. Running the above command creates a Pod with Name `percona-client` under `${AKS_MONGODB_NAMESPACE}` namespace in your cluster. You can verify it by running following command in a different terminal window.
+
+2. In a different terminal window, verify the pod was successfully created using the `kubectl get` command.
 
     ```bash
     kubectl get pod percona-client -n ${AKS_MONGODB_NAMESPACE}
     ```
+
     Example output:
     <!-- expected_similarity=0.4 -->
     ```output
     NAME             READY   STATUS    RESTARTS   AGE
     percona-client   1/1     Running   0          39s
     ```
-6. Run the following command to connect to the MongoDB cluster using the admin user credentials that are printed earlier in step 3 in a terminal window used in step 4.
+
+3. Connect to the MongoDB cluster using the admin user credentials from the previous section in the terminal window you used to create the *`percona-client`* pod.
 
     ```bash
-    #Note: Replace variables `databaseAdmin` , `databaseAdminPassword` and `AKS_MONGODB_CLUSTER_NAME` with actual values printed in step 3.
+    # Note: Replace variables `databaseAdmin` , `databaseAdminPassword` and `AKS_MONGODB_CLUSTER_NAME` with actual values printed in step 3.
 
     mongosh "mongodb://${databaseAdmin}:${databaseAdminPassword}@${AKS_MONGODB_CLUSTER_NAME}-mongos.mongodb.svc.cluster.local/admin?replicaSet=rs0&ssl=false&directConnection=true"
     ```
+
     Example output:
     <!-- expected_similarity=0.4 -->
     ```output
@@ -651,11 +659,13 @@ To connect to Percona Server for MongoDB, you need to construct the MongoDB conn
     For mongosh info see: https://docs.mongodb.com/mongodb-shell/
     ...
     ```
-7. Execute the following command to list the databases in the cluster.
+
+4. List the databases in your cluster using the `show dbs` command.
 
     ```bash
     show dbs
     ```
+
     Example output:
     <!-- expected_similarity=0.8 -->
     ```output
