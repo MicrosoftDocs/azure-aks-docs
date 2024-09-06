@@ -28,25 +28,25 @@ In this article, we configure and deploy a MongoDB cluster on Azure Kubernetes S
 
 2. Create a service account and configure workload identity using the `kubectl apply` command.
 
-```bash
-export TENANT_ID=$(az account show --query tenantId -o tsv)
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  annotations:
-    azure.workload.identity/client-id: "${MY_IDENTITY_NAME_CLIENT_ID}"
-    azure.workload.identity/tenant-id: "${TENANT_ID}"
-  name: "${SERVICE_ACCOUNT_NAME}"
-  namespace: "${AKS_MONGODB_NAMESPACE}"
-EOF
-```
+    ```bash
+    export TENANT_ID=$(az account show --query tenantId -o tsv)
+    cat <<EOF | kubectl apply -f -
+    apiVersion: v1
+    kind: ServiceAccount
+    metadata:
+      annotations:
+        azure.workload.identity/client-id: "${MY_IDENTITY_NAME_CLIENT_ID}"
+        azure.workload.identity/tenant-id: "${TENANT_ID}"
+      name: "${SERVICE_ACCOUNT_NAME}"
+      namespace: "${AKS_MONGODB_NAMESPACE}"
+    EOF
+    ```
 
-The expected output is as follows:
-<!-- expected_similarity=0.8 -->
- ```output
-serviceaccount/mongodb created
-```
+    Example output:
+    <!-- expected_similarity=0.8 -->
+     ```output
+    serviceaccount/mongodb created
+    ```
 
 ## Install the External Secrets Operator
 
