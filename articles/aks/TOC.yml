@@ -356,7 +356,7 @@
       items:   
         - name: Stateful workloads 
           items:
-            - name: Deploy a MongoDB cluster on AKS
+            - name: Deploy a MongoDB cluster
               items:
                 - name: Overview
                   href: mongodb-overview.md
