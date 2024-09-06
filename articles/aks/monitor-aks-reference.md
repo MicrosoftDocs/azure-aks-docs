@@ -1,7 +1,7 @@
 ---
 title: Monitoring data reference for Azure Kubernetes Service
 description: This article contains important reference material you need when you monitor Azure Kubernetes Service (AKS) by using Azure Monitor.
-ms.date: 09/05/2024
+ms.date: 09/06/2024
 ms.custom: horz-monitor
 ms.topic: reference
 author: nickomang
