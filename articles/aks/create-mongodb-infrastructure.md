@@ -216,7 +216,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
 
 ## Upload Percona images to your Azure Container Registry
 
-In this section, we download the Percona images from Dockerhub and upload it to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
+In this section, we download the Percona images from Docker Hub and upload them to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
 
 * Import the Percona images from Dockerhub and upload it to your Azure Container Registry using the [`az acr import`](/cli/azure/acr#az-acr-import) command.
     ```bash
