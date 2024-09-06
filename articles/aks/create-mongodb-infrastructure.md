@@ -48,7 +48,7 @@ In this article, we create the infrastructure resources required to run a MongoD
 
 * Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.
 
-    ```bash
+    ```azurecli-interactive
     az group create --name $MY_RESOURCE_GROUP_NAME --location $MY_LOCATION --output table
     ```
 
