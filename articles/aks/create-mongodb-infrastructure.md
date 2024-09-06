@@ -104,7 +104,7 @@ In this step, we create a user-assigned managed identity that the External Secre
 
 * Create an Azure Container Registry to store and manage your container images using the [`az acr create`](/cli/azure/acr#az-acr-create) command.
 
-    ```bash
+    ```azurecli-interactive
     az acr create \
     --name ${MY_ACR_REGISTRY} \
     --resource-group $MY_RESOURCE_GROUP_NAME \
