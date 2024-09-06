@@ -468,11 +468,11 @@ spec:
 EOF
 ```  
 
-Example output:
-<!-- expected_similarity=0.8 -->
-```output
-perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
-```
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
+    ```
 
 2. Wait for the process to complete. The following script will wait until the MongoDB cluster is ready.
 
