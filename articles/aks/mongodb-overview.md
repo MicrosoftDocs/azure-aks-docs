@@ -43,15 +43,33 @@ The operator uses Kubernetes Custom Resource Definitions (CRDs) to manage MongoD
 
 ## MongoDB solution overview
 
-We'll explain how to run MongoDB on AKS with high availability.
+The goal of the proposed solution is to ensure that the MongoDB cluster can effectively handle large datasets and high throughput operations and maintain high availability and fault tolerance through the use of replica sets, anti-affinity rules, and proper resource allocation.
+
+We'll explain the challenges of correctly applying Azure availability zones when running a MongoDB cluster on AKS and make some suggestions on how to run MongoDB on AKS.
 
 ### Deployment strategy
 
-* **Sharded cluster**: Sharding is enabled to distribute data across multiple shards, improving scalability and performance.
-* **Configuration servers**: Managed by a three-member replica set to ensure fault tolerance and high availability, with anti-affinity rules to distribute these servers across different failure domains.
-* **Mongos instances**: Three query routers handle client requests and are distributed across availability zones and exposed internally within the cluster for load balancing and resiliency.
+The MongoDB deployment strategy consists of the following components:
 
-This strategy ensures that the MongoDB cluster can handle large datasets and high-throughput operations effectively. It also maintains high availability and fault tolerance through the use of replica sets, anti-affinity rules, and proper resource allocation.
+* A **sharded cluster** to enable the distribution of data across multiple shards, improving scalability and performance.
+* **Configuration servers** managed by a three-member replica set to ensure fault tolerance and high availability, with anti-affinity rules to distribute these servers across different failure domains.
+* Three **Mongos instances** distributed across availability zones and exposed internally within the cluster for load balancing and resiliency to route client requests.
+
+## Contributors
+
+*This article is maintained by Microsoft. It was originally written by the following contributors*:
+
+* Nelly Kiboi | Service Engineer
+* Saverio Proto | Principal Customer Experience Engineer
+* Don High | Principal Customer Engineer
+* LaBrina Loving | Principal Service Engineer
+* Ken Kilty | Principal TPM
+* Russell de Pina | Principal TPM
+* Colin Mixon | Product Manager
+* Ketan Chawda | Senior Customer Engineer
+* Naveed Kharadi | Customer Experience Engineer
+* Erin Schaffer | Content Developer 2
+* Carol Smith | Senior Content Developer
 
 ## Next steps
 

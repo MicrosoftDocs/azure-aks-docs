@@ -686,25 +686,24 @@ The Operator can perform either a logical or a physical backup. A ***logical bac
 
 To store backups on the Azure Blob storage, you need to create a Secret , this was already created above
 
-#### Making scheduled backups
-Backups schedule is defined in the backup section of the Custom Resource and can be configured via the [deploy/cr.yaml.](https://github.com/percona/percona-server-mongodb-operator/blob/main/deploy/cr.yaml)
+### Configure scheduled backups
 
-- The **backup.enabled** key should be set to true,
+You can define the backup schedule in the backup section of the CRD in the *mongodb-cr.yaml* using the following guidance:
 
-- The **backup.storages** subsection should contain at least one configured storage.
+* Set the `backup.enabled` key to `true`.
+* Ensure the `backup.storages` subsection contains at least one configured storage.
+* Ensure the `backup.tasks` subsection enables backup scheduling.
 
-- The **backup.tasks** subsection allows to actually schedule backups
+For more information, see [Making scheduled backups](https://docs.percona.com/percona-operator-for-mongodb/backups-scheduled.html).
 
-Please see docs [(Making scheduled backups)](https://docs.percona.com/percona-operator-for-mongodb/backups-scheduled.html)
+### Perform manual backups
 
-#### Making on-demand backups
-To make an on-demand backup, you should first check your Custom Resource for the necessary options and make changes, if needed, using the [deploy/cr.yaml.](https://github.com/percona/percona-server-mongodb-operator/blob/main/deploy/cr.yaml) configuration file:
+You can make a manual, on-demand backup in the backup section of the CRD in the *mongodb-cr.yaml* using the following guidance:
 
-- the ***backup.enabled*** key should be set to true,
+* Set the `backup.enabled` key to `true`.
+* Ensure the `backup.storages` subsection contains at least one configured storage.
 
-- ***backup.storages*** subsection should contain at least one configured storage.
-
-Please see docs [(Making on-demand backups)](https://docs.percona.com/percona-operator-for-mongodb/backups-ondemand.html)
+For more information, see [Making on-demand backups](https://docs.percona.com/percona-operator-for-mongodb/backups-ondemand.html).
 
 ## Deploy MongoDB backup
 
