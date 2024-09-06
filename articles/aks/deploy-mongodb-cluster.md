@@ -673,7 +673,7 @@ The Operator can do either logical or physical backups.
 
 Logical backups use less storage, but are slower than physical backup/restore.
 
-To store backups on the Azure Blob storage, you need to create a Secret with you created in *Step 2:*
+To store backups on the Azure Blob storage, you need to create a Secret , this was already created above
 
 #### Making scheduled backups
 Backups schedule is defined in the backup section of the Custom Resource and can be configured via the [deploy/cr.yaml.](https://github.com/percona/percona-server-mongodb-operator/blob/main/deploy/cr.yaml)
