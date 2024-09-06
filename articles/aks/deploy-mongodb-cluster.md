@@ -755,5 +755,5 @@ Please see docs [(Making on-demand backups)](https://docs.percona.com/percona-op
 
 To learn more about deploying open-source software on Azure Kubernetes Service (AKS), see the following articles:
 
-* [Deploy a highly available PostgreSQL database on AKS](../aks/postgresql-ha-overview.md)
-* [Build and deploy data and machine learning pipelines with Flyte on AKS](../aks/use-flyte.md)
+* [Deploy a highly available PostgreSQL database on AKS](postgresql-ha-overview.md)
+* [Build and deploy data and machine learning pipelines with Flyte on AKS](use-flyte.md)
