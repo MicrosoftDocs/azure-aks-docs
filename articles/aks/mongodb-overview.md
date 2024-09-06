@@ -34,7 +34,7 @@ The Percona Operator for MongoDB is an open-source tool developed by [Percona](h
 
 ## MongoDB solution overview
 
-We will explain the challenges of applying Azure availability zones correctly when running a MongoDB cluster on AKS. We propose a solution and we make some considerations on how to run MongoDB on AKS.
+We will explain how to run MongoDB on AKS with high availability
 
 ### Deployment Strategy
 
