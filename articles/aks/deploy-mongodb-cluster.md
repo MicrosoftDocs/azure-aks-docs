@@ -293,7 +293,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
 ## Install the Percona Operator and CRDS
 
-The Percona Operator is typically distributed as a Kubernetes `Deployment` or `Operator`. You can deploy it using a `kubectl apply -f` command with a manifest file. You can find the latest manifests in the [Percona GitHub repository](https://github.com/percona/percona-server-mongodb-operator) or [official documentation](https://docs.percona.com/percona-operator-for-mongodb/aks.html).
+The Percona Operator is typically distributed as a Kubernetes `Deployment` or `Operator`. You can deploy it using a `kubectl apply -f` command with a manifest file. You can find the latest manifests in the [Percona GitHub repository](https://github.com/percona/percona-server-mongodb-operator) or the [official documentation](https://docs.percona.com/percona-operator-for-mongodb/aks.html).
 
 ```bash
 #Deploy the Operator and crds
