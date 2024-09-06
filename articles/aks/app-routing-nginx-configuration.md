@@ -75,7 +75,7 @@ Here are the possible configuration options:
 
 #### Control the default ingress controller configuration when creating the cluster
 
-To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying the `--enable-app-routing` and the `--app-routing-default-nginx-controller` flags. You need to set the `<DefaultIngressControllerType>` to one of the configuration options.
+To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying the `--enable-app-routing` and the `--app-routing-default-nginx-controller` flags. You need to set the `<DefaultIngressControllerType>` to one of the configuration options described earlier.
 
 ```azurecli-interactive
 az aks create \
@@ -88,7 +88,7 @@ az aks create \
 
 #### Update the default ingress controller configuration on an existing cluster
 
-To update the application routing default ingress controller configuration on an existing cluster, use the [`az aks approuting update`][az-aks-approuting-update] command, specifying the `--nginx` flag. You need to set the `<DefaultIngressControllerType>` to one of the configuration options.
+To update the application routing default ingress controller configuration on an existing cluster, use the [`az aks approuting update`][az-aks-approuting-update] command, specifying the `--nginx` flag. You need to set the `<DefaultIngressControllerType>` to one of the configuration options described earlier.
 
 ```azurecli-interactive
 az aks approuting update --resource-group <ResourceGroupName> --name <ClusterName> --nginx <DefaultIngressControllerType>
@@ -96,7 +96,7 @@ az aks approuting update --resource-group <ResourceGroupName> --name <ClusterNam
 
 # [Bicep](#tab/bicep)
 
-The `webAppRouting` profile has an optional `nginx` configuration with a `defaultIngressControllerType` property. You need to set the `defaultIngressControllerType` property to one of the configuration options.
+The `webAppRouting` profile has an optional `nginx` configuration with a `defaultIngressControllerType` property. You need to set the `defaultIngressControllerType` property to one of the configuration options described earlier.
 
 ```bicep
 "ingressProfile": {
