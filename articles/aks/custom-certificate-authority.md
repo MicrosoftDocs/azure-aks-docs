@@ -198,7 +198,7 @@ If your environment can be successfully provisioned without your custom CAs, you
 
 ## Configure an existing node pool to use a custom CA
 
-* Configure an existing node pool to use a custom CA using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-custom-trust-ca` parameter.
+* Configure an existing node pool to use a custom CA using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-custom-ca-trust` parameter.
 
     ```azurecli-interactive
     az aks nodepool update \
