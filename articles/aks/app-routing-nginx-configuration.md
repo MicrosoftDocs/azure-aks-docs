@@ -94,8 +94,6 @@ To update the application routing default ingress controller configuration on an
 az aks approuting update --resource-group <ResourceGroupName> --name <ClusterName> --nginx <DefaultIngressControllerType>
 ```
 
----
-
 # [Bicep](#tab/bicep)
 
 The `webAppRouting` profile has an optional `nginx` configuration with a `defaultIngressControllerType` property. You need to set the `defaultIngressControllerType` property to one of the configuration options.
