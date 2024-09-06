@@ -223,39 +223,39 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
 3. Create an `ExternalSecret` resource, which creates a Kubernetes `Secret` in the `mongodb` namespace for `Azure Blob Storage` secrets stored in your key vault, using the `kubectl apply` command.
 
-```bash
-kubectl apply -f - <<EOF
-apiVersion: external-secrets.io/v1beta1
-kind: ExternalSecret
-metadata:
-  name: ${AKS_AZURE_SECRETS_NAME}
-  namespace: ${AKS_MONGODB_NAMESPACE}
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    kind: SecretStore
-    name: azure-store
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: external-secrets.io/v1beta1
+    kind: ExternalSecret
+    metadata:
+      name: ${AKS_AZURE_SECRETS_NAME}
+      namespace: ${AKS_MONGODB_NAMESPACE}
+    spec:
+      refreshInterval: 1h
+      secretStoreRef:
+        kind: SecretStore
+        name: azure-store
 
-  target:
-    name: "${AKS_AZURE_SECRETS_NAME}"
-    creationPolicy: Owner
+      target:
+        name: "${AKS_AZURE_SECRETS_NAME}"
+        creationPolicy: Owner
 
-  data:
-    # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
-    - secretKey: AZURE_STORAGE_ACCOUNT_NAME
-      remoteRef:
-        key: AZURE-STORAGE-ACCOUNT-NAME
-    - secretKey: AZURE_STORAGE_ACCOUNT_KEY
-      remoteRef:
-        key: AZURE-STORAGE-ACCOUNT-KEY
-EOF
-```
+      data:
+        # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
+        - secretKey: AZURE_STORAGE_ACCOUNT_NAME
+          remoteRef:
+            key: AZURE-STORAGE-ACCOUNT-NAME
+        - secretKey: AZURE_STORAGE_ACCOUNT_KEY
+          remoteRef:
+            key: AZURE-STORAGE-ACCOUNT-KEY
+    EOF
+    ```
 
-Example output:
-<!-- expected_similarity=0.8 -->
-```output
-externalsecret.external-secrets.io/cluster-aks-azure-secrets created
-```
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    externalsecret.external-secrets.io/cluster-aks-azure-secrets created
+    ```
 
 4. Create a federated credential using the `az identity federated-credential create` command.
 
