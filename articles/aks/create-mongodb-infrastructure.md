@@ -211,7 +211,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
 
 * Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
 
-    ```bash
+    ```azurecli-interactive
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
     ```
 
