@@ -206,6 +206,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
     ------------------------------------  --------------------------------  ------------------------------------  ------------------------------------  ------------------------------------  ----------------  --------------------------------  ------------------------------------------------------------------------------------------------------------------------------------------  --------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------  ------------------------------------  --------------------------------
     d3a2023b-03fe-41bb-8b6f-08fb78ac4da6  2024-07-01T12:23:20.749750+00:00  8247e9bb-bc6b-414f-98a6-4768dbb961ad  9686a88e-25bc-4b4c-b611-d1057a26acdc  0b40421c-343b-4986-b691-980d6154429e  ServicePrincipal  myResourceGroup-rg-australiaeast  /subscriptions/83a15f8c-a05a-4cf3-b4bb-f6bcd6dbbfa9/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d  AcrPull               /subscriptions/83a15f8c-a05a-4cf3-b4bb-f6bcd6dbbfa9/resourceGroups/myResourceGroup-rg-australiaeast/providers/Microsoft.ContainerRegistry/registries/mydnsrandomnamecjcfc  d3a2023b-03fe-41bb-8b6f-08fb78ac4da6  2024-07-01T12:23:20.749750+00:00
     ```
+
 ## Connect to the AKS cluster
 
 * Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
