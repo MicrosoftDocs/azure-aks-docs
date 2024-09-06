@@ -527,7 +527,7 @@ EOF
     aks-nodepool1-28994785-vmss000002   australiaeast-3
     ```
 
-## Verifying the MongoDB cluster
+## Connect to the Percona Server
 
 1. To connect to Percona Server for MongoDB you need to construct the MongoDB connection URI string. It includes the credentials of the admin user, which are stored in the Secrets object:
 
