@@ -474,7 +474,7 @@ EOF
     perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
     ```
 
-2. Wait for the process to complete. The following script will wait until the MongoDB cluster is ready.
+2. Wait for the MongoDB cluster deployment process to complete using the following script.
 
     ```bash
     while [ "$(kubectl get psmdb -n ${AKS_MONGODB_NAMESPACE} -o jsonpath='{.items[0].status.state}')" != "ready" ]; do echo "waiting for MongoDB cluster to be ready"; sleep 10; done
