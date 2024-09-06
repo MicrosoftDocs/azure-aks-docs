@@ -695,60 +695,61 @@ To make an on-demand backup, you should first check your Custom Resource for the
 
 Please see docs [(Making on-demand backups)](https://docs.percona.com/percona-operator-for-mongodb/backups-ondemand.html)
 
-```bash
-kubectl apply -f - <<EOF
-apiVersion: psmdb.percona.com/v1
-kind: PerconaServerMongoDBBackup
-metadata:
-  finalizers:
-  - delete-backup
-  name: az-backup1
-  namespace: ${AKS_MONGODB_NAMESPACE}
-spec:
-  clusterName: ${AKS_MONGODB_CLUSTER_NAME}
-  storageName: azure-blob
-  type: logical
-EOF
-```
+## Deploy MongoDB backup
 
-The expected output is as follows:
-<!-- expected_similarity=0.8 -->
-```output
-perconaservermongodbbackup.psmdb.percona.com/az-backup1 created
-```
+1. Deploy your MongoDB backup using the `kubectl apply` command.
 
-Wait for the process to complete. The following script waits until the backup is ready.
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: psmdb.percona.com/v1
+    kind: PerconaServerMongoDBBackup
+    metadata:
+      finalizers:
+      - delete-backup
+      name: az-backup1
+      namespace: ${AKS_MONGODB_NAMESPACE}
+    spec:
+      clusterName: ${AKS_MONGODB_CLUSTER_NAME}
+      storageName: azure-blob
+      type: logical
+    EOF
+    ```
 
-```bash
-while [ "$(kubectl get psmdb-backup -n ${AKS_MONGODB_NAMESPACE} -o jsonpath='{.items[0].status.state}')" != "ready" ]; do echo "waiting for the backup to be ready"; sleep 10; done
-```
-Example output:
-<!-- expected_similarity=0.8 -->
-```output
-waiting for the backup to be ready
-```
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+   perconaservermongodbbackup.psmdb.percona.com/az-backup1 created
+    ```
 
+2. Wait for the MongoDB backup deployment process to complete using the following script.
 
-When the process is over the following command will return the ready status. You can check the status of the backup by running the following command:
+    ```bash
+    while [ "$(kubectl get psmdb-backup -n ${AKS_MONGODB_NAMESPACE} -o jsonpath='{.items[0].status.state}')" != "ready" ]; do echo "waiting for the backup to be ready"; sleep 10; done
+    ```
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    waiting for the backup to be ready
+    ```
 
-```bash
-kubectl get psmdb-backup -n ${AKS_MONGODB_NAMESPACE}
-```
+3. When the process completes, the backup should return the `ready` status. Verify the backup deployment was successful using the `kubectl get` command.
 
-Example output:
-<!-- expected_similarity=0.8 -->
-```output
-NAME         CLUSTER               STORAGE      DESTINATION                                                                       TYPE      STATUS   COMPLETED   AGE
-az-backup1   cluster-aks-mongodb   azure-blob   https://mongodbsacjcfc.blob.core.windows.net/backups/psmdb/2024-07-01T12:27:57Z   logical   ready    3h3m        3h3m
-```
+    ```bash
+    kubectl get psmdb-backup -n ${AKS_MONGODB_NAMESPACE}
+    ```
 
-It should show the status as ```READY``` when the backup process is over.
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    NAME         CLUSTER               STORAGE      DESTINATION                                                                       TYPE      STATUS   COMPLETED   AGE
+    az-backup1   cluster-aks-mongodb   azure-blob   https://mongodbsacjcfc.blob.core.windows.net/backups/psmdb/2024-07-01T12:27:57Z   logical   ready    3h3m        3h3m
+    ```
 
-If you have any issues with the backup, you can view logs from the backup-agent container of the appropriate Pod as follows:
+4. If you have any issues with the backup, you can view logs from the `backup-agent` container of the appropriate pod using the following command.
 
-```powershell
-kubectl logs pod/${AKS_MONGODB_CLUSTER_NAME}-rs0-0 -c backup-agent -n ${AKS_MONGODB_NAMESPACE}
-```
+    ```bash
+    kubectl logs pod/${AKS_MONGODB_CLUSTER_NAME}-rs0-0 -c backup-agent -n ${AKS_MONGODB_NAMESPACE}
+    ```
 
 ## Next steps
 
