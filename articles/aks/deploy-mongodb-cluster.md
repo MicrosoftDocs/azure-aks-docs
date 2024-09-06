@@ -257,9 +257,9 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     externalsecret.external-secrets.io/cluster-aks-azure-secrets created
     ```
 
-4. Create a federated credential using the `az identity federated-credential create` command.
+4. Create a federated credential using the [`az identity federated-credential create`](/cli/azure/identity/federated-credential#az-identity-federated-credential-create) command.
 
-    ```bash
+    ```azurecli-interactive
     az identity federated-credential create \
                 --name external-secret-operator \
                 --identity-name ${MY_IDENTITY_NAME} \
@@ -268,6 +268,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                 --subject system:serviceaccount:${AKS_MONGODB_NAMESPACE}:${SERVICE_ACCOUNT_NAME} \
                 --output table
     ```
+
     Example output:
     <!-- expected_similarity=0.8 -->
     ```output
