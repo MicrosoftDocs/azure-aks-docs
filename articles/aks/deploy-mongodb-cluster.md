@@ -675,20 +675,14 @@ In order to verify your MongoDB cluster, you run a container with a MongoDB clie
     rs0 [direct: mongos] admin>
     ```
 
-## Create MongoDB Backup
+## Create MongoDB backup
 
-You can backup your data to Azure in two ways:
+You can back up your data to Azure using one of the following methods:
 
-- On-demand. You can do them manually at any moment.
-- Scheduled backups. Configure backups and their schedule in the crd yaml. The Operator makes them automatically according to the specified schedule.
+* **Manual**:  Manually back up your data at any time.
+* **Scheduled*** Configure backups and their schedules in the CRD YAML. The Operator makes them automatically according to the specified schedule.
 
-The Operator can do either logical or physical backups.
-
-***Logical backup*** means querying the Percona Server for MongoDB for the database data and writing the retrieved data to the remote backup storage.
-
-***Physical backup*** means copying physical files from the Percona Server for MongoDB dbPath data directory to the remote backup storage.
-
-Logical backups use less storage, but are slower than physical backup/restore.
+The Operator can perform either a logical or a physical backup. A ***logical backup*** queries the Percona Server for MongoDB for the database data and writes the retrieved data to the remote backup storage. A ***physical backup*** copies physical files from the Percona Server for MongoDB dbPath data directory to the remote backup storage. Logical backups use less storage but are slower than physical backups.
 
 To store backups on the Azure Blob storage, you need to create a Secret , this was already created above
 
