@@ -687,7 +687,7 @@ Backups schedule is defined in the backup section of the Custom Resource and can
 Please see docs [(Making scheduled backups)](https://docs.percona.com/percona-operator-for-mongodb/backups-scheduled.html)
 
 #### Making on-demand backups
-To make an on-demand backup, you should first check your Custom Resource for the necessary options and make changes, if needed, using the *mongodb-cr.yaml.* configuration file:
+To make an on-demand backup, you should first check your Custom Resource for the necessary options and make changes, if needed, using the [deploy/cr.yaml.](https://github.com/percona/percona-server-mongodb-operator/blob/main/deploy/cr.yaml) configuration file:
 
 - the ***backup.enabled*** key should be set to true,
 
