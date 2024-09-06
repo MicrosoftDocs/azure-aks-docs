@@ -127,7 +127,7 @@ In this step, we create a user-assigned managed identity that the External Secre
 
 * Create an Azure Storage Account to store the MongoDB backups using the [`az acr create`](/cli/azure/storage/account#az-storage-account-create) command.
 
-    ```bash
+    ```azurecli-interactive
     az storage account create --name $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --resource-group $MY_RESOURCE_GROUP_NAME --location $MY_LOCATION --sku Standard_ZRS --output table
     az storage container create --name $AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME --account-name $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --output table
     export AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_KEY=$(az storage account keys list --account-name $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
