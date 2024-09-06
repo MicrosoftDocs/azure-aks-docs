@@ -598,7 +598,7 @@ To connect to Percona Server for MongoDB, you need to construct the MongoDB conn
     type: Opaque
     ```
 
-3. Decode login name and password on the output that are base64-encoded.
+3. Decode the base64-encoded login name and password from the output using the follow commands.
 
     ```bash
     #Decode login name and password on the output which are base64-encoded
