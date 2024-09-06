@@ -498,6 +498,7 @@ EOF
     ```bash
     kubectl get pods -n mongodb -l app.kubernetes.io/instance=cluster-aks-mongodb -o custom-columns=NAME:.metadata.name,NODE:.spec.nodeName
     ```
+
     Example output:
     <!-- expected_similarity=0.8 -->
     ```output
