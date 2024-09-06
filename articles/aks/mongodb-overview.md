@@ -43,15 +43,13 @@ The operator uses Kubernetes Custom Resource Definitions (CRDs) to manage MongoD
 
 ## MongoDB solution overview
 
-We will explain how to run MongoDB on AKS with high availability
+We'll explain how to run MongoDB on AKS with high availability.
 
-### Deployment Strategy
+### Deployment strategy
 
-**Sharded Cluster**: Sharding is enabled to distribute data across multiple shards, improving scalability and performance.
-
-**Configuration Servers**: Managed by a three-member replica set, to ensure fault tolerance and high availability, with anti-affinity rules to distribute these servers across different failure domains.
-
-**Mongos Instances**: Three query routers handle client requests, distributed across availability zones, and exposed internally within the cluster for load balancing and resiliency.
+* **Sharded cluster**: Sharding is enabled to distribute data across multiple shards, improving scalability and performance.
+* **Configuration servers**: Managed by a three-member replica set to ensure fault tolerance and high availability, with anti-affinity rules to distribute these servers across different failure domains.
+* **Mongos instances**: Three query routers handle client requests and are distributed across availability zones and exposed internally within the cluster for load balancing and resiliency.
 
 This strategy ensures that the MongoDB cluster can handle large datasets and high-throughput operations effectively. It also maintains high availability and fault tolerance through the use of replica sets, anti-affinity rules, and proper resource allocation.
 
