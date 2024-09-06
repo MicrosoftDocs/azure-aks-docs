@@ -184,7 +184,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
 
 2. Get the OIDC issuer URL to use for the workload identity configuration using the [`az aks show`](/cli/azure/aks#az-aks-show) command.
 
-    ```bash
+    ```azurecli-interactive
     export OIDC_URL=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query oidcIssuerProfile.issuerUrl -o tsv)
     ```
 
