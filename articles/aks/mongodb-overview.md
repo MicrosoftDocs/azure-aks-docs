@@ -10,9 +10,9 @@ ms.custom: aks-related-content
 
 # Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)
 
-> [!NOTE]
-> MongoDB Community Edition is not open source software, it is licensed under the [Server Side Public License](https://en.wikipedia.org/wiki/Server_Side_Public_License) with "source available."
+This article walks through prerequisite information for deploying a MongoDB cluster on [AKS](what-is-aks.md) and provides an overview of the deployment strategy.
 
+[!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 ## What is MongoDB?
 [MongoDB](https://www.mongodb.com/) is a popular NoSQL database management system designed to handle large volumes of unstructured data. Unlike traditional relational databases that use tables and rows, MongoDB uses a flexible, document-oriented approach.
 
