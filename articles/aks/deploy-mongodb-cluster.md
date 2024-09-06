@@ -518,7 +518,7 @@ EOF
     kubectl get node -o custom-columns=Name:.metadata.name,Zone:".metadata.labels.topology\.kubernetes\.io/zone"
     ```
 
-    This is the expected output:
+    Example output:
     <!-- expected_similarity=0.8 -->
     ```output
     Name                                Zone
