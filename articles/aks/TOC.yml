@@ -360,6 +360,8 @@
       items:   
         - name: Stateful workloads 
           items:
+            - name: Overview
+              href: stateful-workloads-overview.md
             - name: Deploy a highly available PostgreSQL database
               items:
                 - name: Overview
