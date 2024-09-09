@@ -495,24 +495,6 @@ EOF
 
 3. To ensure high availability the MongoDB cluster will be deployed in multiple availability zones. To view this information, run the following command:
 
-    ```bash
-    kubectl get pods -n mongodb -l app.kubernetes.io/instance=cluster-aks-mongodb -o custom-columns=NAME:.metadata.name,NODE:.spec.nodeName
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    NAME                           NODE
-    cluster-aks-mongodb-cfg-0      aks-nodepool1-28994785-vmss000001
-    cluster-aks-mongodb-cfg-1      aks-nodepool1-28994785-vmss000002
-    cluster-aks-mongodb-cfg-2      aks-nodepool1-28994785-vmss000000
-    cluster-aks-mongodb-mongos-0   aks-nodepool1-28994785-vmss000001
-    cluster-aks-mongodb-mongos-1   aks-nodepool1-28994785-vmss000002
-    cluster-aks-mongodb-mongos-2   aks-nodepool1-28994785-vmss000000
-    cluster-aks-mongodb-rs0-0      aks-nodepool1-28994785-vmss000000
-    cluster-aks-mongodb-rs0-1      aks-nodepool1-28994785-vmss000002
-    cluster-aks-mongodb-rs0-2      aks-nodepool1-28994785-vmss000001
-    ```
 
     ```bash
     kubectl get node -o custom-columns=Name:.metadata.name,Zone:".metadata.labels.topology\.kubernetes\.io/zone"
