@@ -45,8 +45,6 @@ The operator uses Kubernetes Custom Resource Definitions (CRDs) to manage MongoD
 
 The goal of the proposed solution is to ensure that the MongoDB cluster can effectively handle large datasets and high throughput operations and maintain high availability and fault tolerance through the use of replica sets, anti-affinity rules, and proper resource allocation.
 
-We'll explain the challenges of correctly applying Azure availability zones when running a MongoDB cluster on AKS and make some suggestions on how to run MongoDB on AKS.
-
 ### Deployment strategy
 
 The MongoDB deployment strategy consists of the following components:
