@@ -106,20 +106,47 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     generateRandomPasswordString() {
         cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
     }
+    ```
 
-    #The following script will generate random passwords and store them as secrets in the Key Vault.
+    Create a MongoDB [backup user and password](https://www.mongodb.com/docs/manual/reference/built-in-roles/#backup-and-restoration-roles) secret to be used for any backup and restore operations.
+
+    ```azurecli-interactive
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-BACKUP-USER --value MONGODB_BACKUP_USER --output table
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-BACKUP-PASSWORD --value $(generateRandomPasswordString) --output table
+    ```
+
+    Create a MongoDB [database admin user and password](https://www.mongodb.com/docs/manual/reference/built-in-roles/#all-database-roles) secret for database administration.
+
+    ```azurecli-interactive
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-DATABASE-ADMIN-USER --value MONGODB_DATABASE_ADMIN_USER --output table
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-DATABASE-ADMIN-PASSWORD --value $(generateRandomPasswordString) --output table
+    ```
+
+    Create a MongoDB [cluster administration user and admin](https://www.mongodb.com/docs/manual/reference/built-in-roles/#mongodb-authrole-clusterAdmin) secret for a cluster administration role that provides administration for more than one database.
+
+    ```azurecli-interactive
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CLUSTER-ADMIN-USER --value MONGODB_CLUSTER_ADMIN_USER --output table
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CLUSTER-ADMIN-PASSWORD --value $(generateRandomPasswordString) --output table
+    ```
+
+    Create a MongoDB [cluster monitoring user and admin](https://www.mongodb.com/docs/manual/reference/built-in-roles/#mongodb-authrole-clusterMonitor) secret for cluster monitoring.
+
+   ```azurecli-interactive
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CLUSTER-MONITOR-USER --value MONGODB_CLUSTER_MONITOR_USER --output table
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CLUSTER-MONITOR-PASSWORD --value $(generateRandomPasswordString) --output table
+    ```
+
+    Create a user and password secret for [user administration] https://www.mongodb.com/docs/manual/reference/built-in-roles/#mongodb-authrole-userAdminAnyDatabase
+
+    ```azurecli-interactive
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-USER-ADMIN-USER --value MONGODB_USER_ADMIN_USER --output table
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-USER-ADMIN-PASSWORD --value $(generateRandomPasswordString) --output table
-    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name PMM-SERVER-API-KEY --value $(openssl rand -base64 32) --output table
-    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name AZURE-STORAGE-ACCOUNT-NAME --value $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --output table
+    ```
+    
+    Add the `AZURE-STORAGE-ACCOUNT-NAME` to be used later for backups
+    
+    ```azurecli-interactive
+ az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name AZURE-STORAGE-ACCOUNT-NAME --value $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --output table
     ```
 
     Example output:
