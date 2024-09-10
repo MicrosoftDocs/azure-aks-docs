@@ -314,21 +314,17 @@ To upgrade from *1.27.x* -> *1.29.x*:
 1. Upgrade from *1.27.x* -> *1.28.x*.
 2. Upgrade from *1.28.x* -> *1.29.x*.
 
-Skipping multiple versions can only be done when upgrading from an unsupported version back into the minimum supported version. For example, you can upgrade from an unsupported *1.25.x* to a supported *1.27.x* if *1.27* is the minimum supported minor version. Note starting from 1.28 version onwards, agentpool versions can be upto 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). Skipping multiple versions is also possible and useful when your version is much behind the minimum supported version, in such cases you may have to do more than one control plane upgrade operation. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. First upgrade from *1.23.x* to *1.25.x*, since that is the maximum possible limit allowed within the [version skew policy](https://kubernetes.io/releases/version-skew-policy/). Subsequently try upgrading from *1.25.x* into the minimum supported minor version *1.27.x*. Agent pools may upgrade upto the control plane minor version.
+Note starting from 1.28 version onwards, agentpool versions can be upto 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). When your version is much behind the minimum supported version, you may have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. You may have to upgrade sequentially 4 times from *1.23.x* in order to get to *1.27.x*. Also note that Agent pool versions can be upgraded upto the control plane minor version within the limits of [version skew policy](https://kubernetes.io/releases/version-skew-policy/). This means in the above example you can upgrade agentpool version twice i.e once from *1.23.x* to *1.25.x*, when the control plane version is at *1.25.x*. And subsequently from *1.25.x* to *1.27.x* , when control plane version is at *1.27.x*. When upgrading in-place i.e control plane and agent pool together the same rules applicable to control plane upgrade written above applies. 
 
 When performing an upgrade from an _unsupported version_ that skips two or more minor versions, the upgrade is performed without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported version_ has the flexibility of decoupling control plane upgrades with node pool upgrades. However if your version is significantly out of date, we recommend that you re-create the cluster.
 
-### Can I create a new 1.xx.x cluster during its 30 day support window?
+### Can I create a new 1.xx.x cluster during the platform support window?
 
-No. Once a version is deprecated/removed, you can't create a cluster with that version. As the change rolls out, you'll start to see the old version removed from your version list. This process might take up to two weeks from announcement, progressively by region.
+Yes Creation of agent pools and clusters are allowed during Platform Support period.
 
-### I'm on a freshly deprecated version, can I still add new node pools? Or will I have to upgrade?
+### I'm on a freshly deprecated version that is out of platform support, can I still add new node pools? Or will I have to upgrade?
 
 No. You aren't allowed to add node pools of the deprecated version to your cluster. Creation or upgrade of node pools upto the _unsupported version_ control plane version is allowed, irrespective of version difference between node pool and the control plane. Only alias minor upgrades are allowed.
-
-### How often do you update patches?
-
-Patches have a two month minimum lifecycle. To keep up to date when new patches are released, follow the [AKS release notes](https://github.com/Azure/AKS/releases).
 
 ## Next steps
 
