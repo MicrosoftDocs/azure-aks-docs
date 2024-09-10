@@ -690,7 +690,7 @@ You can back up your data to Azure using one of the following methods:
 
 The Operator can perform either a logical or a physical backup. A ***logical backup*** queries the Percona Server for MongoDB for the database data and writes the retrieved data to the remote backup storage. A ***physical backup*** copies physical files from the Percona Server for MongoDB dbPath data directory to the remote backup storage. Logical backups use less storage but are slower than physical backups.
 
-To store backups on the Azure Blob storage, you need to create a Secret , this was already created above
+To store backups on Azure Blob storage using Percona, you need to create a Secret. This step has already been completed above. For detailed instructions, please follow the steps outlined in the [Percona documentation on Microsoft Azure Blob Storage.](https://docs.percona.com/percona-operator-for-mongodb/backups-storage.html#microsoft-azure-blob-storage)
 
 ### Configure scheduled backups
 
