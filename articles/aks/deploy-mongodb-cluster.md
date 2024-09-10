@@ -236,9 +236,6 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         - secretKey: MONGODB_USER_ADMIN_PASSWORD
           remoteRef:
             key: MONGODB-USER-ADMIN-PASSWORD
-        - secretKey: PMM_SERVER_API_KEY
-          remoteRef:
-            key: PMM-SERVER-API-KEY
     EOF
     ```
 
