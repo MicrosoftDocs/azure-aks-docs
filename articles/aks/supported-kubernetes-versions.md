@@ -307,14 +307,14 @@ When you upgrade a supported AKS cluster, Kubernetes minor versions can't be ski
 * *1.27.x* -> *1.28.x*: allowed.
 * *1.27.x* -> *1.29.x*: not allowed.
 
-Please note that for control plane version upgrades, skipping versions in upgrade upto 3 minor versions is allowed for community supported versions. 
+Please note that for control plane version upgrades, you can go upto 3 minor versions for community supported versions in sequential fashion. 
 
 To upgrade from *1.27.x* -> *1.29.x*:
 
 1. Upgrade from *1.27.x* -> *1.28.x*.
 2. Upgrade from *1.28.x* -> *1.29.x*.
 
-Skipping multiple versions can only be done when upgrading from an unsupported version back into the minimum supported version. For example, you can upgrade from an unsupported *1.25.x* to a supported *1.27.x* if *1.27* is the minimum supported minor version.
+Skipping multiple versions can only be done when upgrading from an unsupported version back into the minimum supported version. For example, you can upgrade from an unsupported *1.25.x* to a supported *1.27.x* if *1.27* is the minimum supported minor version. Note starting from 1.28 version onwards, agentpool versions can be upto 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). Skipping multiple versions is also possible when your version is much behind the minimum supported version, in such cases you may have to do more than one control plane upgrade operation. For example, if your version is *1.23.x* then upgrade to *1.25.x* first and then try a subsequent upgrade into a minimum supported minor version such as *1.27.x*, where *1.27* is the minimum supported minor version in this example. Agent pools may upgrade to a minor version upto the control plane version.
 
 When performing an upgrade from an _unsupported version_ that skips two or more minor versions, the upgrade is performed without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported version_ has the flexibility of decoupling control plane upgrades with node pool upgrades. However if your version is significantly out of date, we recommend that you re-create the cluster.
 
@@ -339,6 +339,7 @@ For information on how to upgrade your cluster, see:
 <!-- LINKS - External -->
 [azure-update-channel]: https://azure.microsoft.com/updates/?product=kubernetes-service
 [aks-release]: https://releases.aks.azure.com/
+[skew-policy]: https://kubernetes.io/releases/version-skew-policy/
 
 <!-- LINKS - Internal -->
 [aks-upgrade]: upgrade-cluster.md
