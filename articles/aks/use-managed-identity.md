@@ -40,7 +40,7 @@ It's also possible to create a cluster with an application service principal rat
 
 You can update an existing cluster to use a managed identity from an application service principal. You can also update an existing cluster to a different type of managed identity. If your cluster is already using a managed identity and the identity was changed, for example if you updated the cluster identity type from system-assigned to user-assigned, then there is a delay while control plane components switch to the new identity. Control plane components continue to use the old identity until its token expires. After the token is refreshed, they switch to the new identity. This process can take several hours.
 
-The system-assigned and user-assigned identity types differ a [Microsoft Entra Workload identity][workload-identity-overview], which is intended for use by an application running on a pod.
+The system-assigned and user-assigned identity types differ from a [Microsoft Entra Workload identity][workload-identity-overview], which is intended for use by an application running on a pod.
 
 ## Before you begin
 
