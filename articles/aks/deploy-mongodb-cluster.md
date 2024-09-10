@@ -149,7 +149,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
      az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name AZURE-STORAGE-ACCOUNT-NAME --value $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --output table
     ```
 
-    Example output:
+    Example outputs for each of the above:
     <!-- expected_similarity=0.5 -->
     ```output
     Name                Value
