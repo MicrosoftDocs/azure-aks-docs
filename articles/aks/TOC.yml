@@ -362,6 +362,14 @@
           items:
             - name: Overview
               href: stateful-workloads-overview.md
+            - name: Deploy a MongoDB cluster
+              items:
+                - name: Overview
+                  href: mongodb-overview.md
+                - name: Create MongoDB infrastructure
+                  href: create-mongodb-infrastructure.md
+                - name: Deploy MongoDB cluster
+                  href: deploy-mongodb-cluster.md
             - name: Deploy a highly available PostgreSQL database
               items:
                 - name: Overview
