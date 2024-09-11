@@ -315,7 +315,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     australiaeast  vault-cjcfc-kv  myResourceGroup-rg-australiaeast
     ```
 
-## Install the Percona Operator and CRDS
+## Install the Percona Operator and CRDs
 
 The Percona Operator is typically distributed as a Kubernetes `Deployment` or `Operator`. You can deploy it using a `kubectl apply -f` command with a manifest file. You can find the latest manifests in the [Percona GitHub repository](https://github.com/percona/percona-server-mongodb-operator) or the [official documentation](https://docs.percona.com/percona-operator-for-mongodb/aks.html).
 
@@ -344,31 +344,31 @@ The Percona Operator is typically distributed as a Kubernetes `Deployment` or `O
 The script deploys a MongoDB cluster with the following configuration:
 
 ```bash
-kubectl apply -f - <<EOF
-apiVersion: psmdb.percona.com/v1
-kind: PerconaServerMongoDB
-metadata:
-  name: ${AKS_MONGODB_CLUSTER_NAME}
-  namespace: ${AKS_MONGODB_NAMESPACE}
-  finalizers:
-    - delete-psmdb-pods-in-order
-spec:
-  crVersion: 1.16.0
-  image: ${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5
-  imagePullPolicy: Always
-  updateStrategy: SmartUpdate
-  upgradeOptions:
-    versionServiceEndpoint: https://check.percona.com
-    apply: disabled
-    schedule: "0 2 * * *"
-    setFCV: false
-  secrets:
-    users: "${AKS_MONGODB_SECRETS_NAME}"
-    encryptionKey: "${AKS_MONGODB_SECRETS_ENCRYPTION_KEY}"
-  pmm:
-    enabled: false
-    image: ${MY_ACR_REGISTRY}.azurecr.io/pmm-client:2.41.2
-    serverHost: monitoring-service
+  kubectl apply -f - <<EOF
+  apiVersion: psmdb.percona.com/v1
+  kind: PerconaServerMongoDB
+  metadata:
+    name: ${AKS_MONGODB_CLUSTER_NAME}
+    namespace: ${AKS_MONGODB_NAMESPACE}
+    finalizers:
+      - delete-psmdb-pods-in-order
+  spec:
+    crVersion: 1.16.0
+    image: ${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5
+    imagePullPolicy: Always
+    updateStrategy: SmartUpdate
+    upgradeOptions:
+      versionServiceEndpoint: https://check.percona.com
+      apply: disabled
+      schedule: "0 2 * * *"
+      setFCV: false
+    secrets:
+      users: "${AKS_MONGODB_SECRETS_NAME}"
+      encryptionKey: "${AKS_MONGODB_SECRETS_ENCRYPTION_KEY}"
+    pmm:
+      enabled: false
+      image: ${MY_ACR_REGISTRY}.azurecr.io/pmm-client:2.41.2
+      serverHost: monitoring-service
   replsets:
     - name: rs0
       size: 3
@@ -504,7 +504,7 @@ perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
     while [ "$(kubectl get psmdb -n ${AKS_MONGODB_NAMESPACE} -o jsonpath='{.items[0].status.state}')" != "ready" ]; do echo "waiting for MongoDB cluster to be ready"; sleep 10; done
     ```
 
-    When the process completes, your cluster show the `ready` status.
+    When the process completes, your cluster shows the `ready` status.
     
     ```bash
     kubectl get psmdb -n ${AKS_MONGODB_NAMESPACE}
@@ -603,7 +603,7 @@ To connect to Percona Server for MongoDB, you need to construct the MongoDB conn
     type: Opaque
     ```
 
-3. Decode the base64-encoded login name and password from the output using the follow commands.
+3. Decode the base64-encoded login name and password from the output using the following commands.
 
     ```bash
     #Decode login name and password on the output which are base64-encoded
@@ -685,7 +685,7 @@ In order to verify your MongoDB cluster, you run a container with a MongoDB clie
 You can back up your data to Azure using one of the following methods:
 
 * **Manual**:  Manually back up your data at any time.
-* **Scheduled*** Configure backups and their schedules in the CRD YAML. The Operator makes them automatically according to the specified schedule.
+* **Scheduled**: Configure backups and their schedules in the CRD YAML. The Operator makes them automatically according to the specified schedule.
 
 The Operator can perform either a logical or a physical backup. A ***logical backup*** queries the Percona Server for MongoDB for the database data and writes the retrieved data to the remote backup storage. A ***physical backup*** copies physical files from the Percona Server for MongoDB dbPath data directory to the remote backup storage. Logical backups use less storage but are slower than physical backups.
 
