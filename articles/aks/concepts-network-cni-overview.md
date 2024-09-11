@@ -71,7 +71,7 @@ When choosing a networking model, consider the use cases for each CNI plugin and
 | CNI plugin | Networking model | Use case highlights |
 |-------------|----------------------|-----------------------|
 | **Azure CNI Overlay** | Overlay | - Best for VNET IP conservation<br/>- Max node count supported by API Server + 250 pods per node<br/>- Simpler configuration<br/> -No direct external pod IP access |
-| **Azure CNI Pod Subnet (Preview)** | Flat | - Direct external pod access<br/>- Modes for efficient VNet IP usage _or_ large cluster scale support |
+| **Azure CNI Pod Subnet** | Flat | - Direct external pod access<br/>- Modes for efficient VNet IP usage _or_ large cluster scale support(Preview) |
 | **Kubenet (Legacy)** | Overlay | - Prioritizes IP conservation<br/>- Limited scale<br/>- Manual route management |
 | **Azure CNI Node Subnet (Legacy)** | Flat | - Direct external pod access<br/>- Simpler configuration <br/>- Limited scale <br/>- Inefficient use of VNet IPs |
 
