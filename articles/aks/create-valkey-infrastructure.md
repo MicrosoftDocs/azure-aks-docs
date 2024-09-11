@@ -227,6 +227,19 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
 > [!div class="nextstepaction"]
 > [Configure and deploy the Valkey cluster on AKS][deploy-valkey]
 
+## Contributors
+
+* Nelly Kiboi | Service Engineer
+* Saverio Proto | Principal Customer Experience Engineer
+* Don High | Principal Customer Engineer
+* LaBrina Loving | Principal Service Engineer
+* Ken Kilty | Principal TPM
+* Russell de Pina | Principal TPM
+* Colin Mixon | Product Manager
+* Ketan Chawda | Senior Customer Engineer
+* Naveed Kharadi | Customer Experience Engineer
+* Erin Schaffer | Content Developer 2
+
 <!-- External links -->
 [install-helm]: https://helm.sh/docs/intro/install/
 [install-docker]: https://docs.docker.com/get-docker/

@@ -56,7 +56,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 
 If you prefer to see this information visually, here's a Gantt chart with all the current releases displayed:
 
-:::image type="content" source="./media/supported-kubernetes-versions/kubernetes-versions-gantt.png" alt-text="Gantt chart showing the lifecycle of all Kubernetes versions currently active in AKS." lightbox="./media/supported-kubernetes-versions/kubernetes-versions-gantt.png":::
+:::image type="content" source="media/supported-kubernetes-versions/kubernetes-versions-gantt.png" alt-text="Gantt chart showing the lifecycle of all Kubernetes versions currently active in AKS." lightbox="media/supported-kubernetes-versions/kubernetes-versions-gantt.png":::
 
 ## AKS components breaking changes by version
 
@@ -168,7 +168,7 @@ This table outlines support guidelines for Community Support compared to Platfor
 | Applying bug fixes | Supported | Not supported|
 | Applying security patches | Supported | Not supported|
 | Kubernetes API support | Supported | Not supported|
-| Cluster or node pool creation| Supported | Not supported|
+| Cluster or node pool creation| Supported | Supported|
 | Node pool snapshot| Supported | Not supported|
 | Node image upgrade| Supported | Supported|
 
@@ -306,6 +306,8 @@ When you upgrade a supported AKS cluster, Kubernetes minor versions can't be ski
 * *1.28.x* -> *1.29.x*: allowed.
 * *1.27.x* -> *1.28.x*: allowed.
 * *1.27.x* -> *1.29.x*: not allowed.
+
+Please note that for control plane version upgrades, skipping versions in upgrade upto 3 minor versions is allowed for community supported versions. 
 
 To upgrade from *1.27.x* -> *1.29.x*:
 

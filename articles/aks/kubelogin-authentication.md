@@ -12,7 +12,7 @@ ms.date: 11/28/2023
 
 # Use kubelogin to authenticate users in Azure Kubernetes Service
 
-The kubelogin plugin in Azure is a client-go credential [plugin][client-go-cred-plugin] that implements Microsoft Entra authentication. The kubelogin plugin offers features that aren't available in the kubectl command-line tool.
+The kubelogin plugin in Azure is a client-go credential [plugin][client-go-cred-plugin] that implements Microsoft Entra authentication. The kubelogin plugin offers features that aren't available in the kubectl command-line tool. For more information, see the [kubelogin introduction](https://azure.github.io/kubelogin/index.html) and the [kubectl introduction](https://kubernetes.io/docs/reference/kubectl/introduction/).
 
 Azure Kubernetes Service (AKS) clusters that are integrated with Microsoft Entra ID and running Kubernetes version 1.24 or later automatically use the kubelogin format.
 

@@ -786,6 +786,19 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 * [Deploy a highly available PostgreSQL database on AKS][postgresql-aks]
 * [Build and deploy data and machine learning pipelines with Flyte on AKS][flyte-aks]
 
+## Contributors
+
+* Nelly Kiboi | Service Engineer
+* Saverio Proto | Principal Customer Experience Engineer
+* Don High | Principal Customer Engineer
+* LaBrina Loving | Principal Service Engineer
+* Ken Kilty | Principal TPM
+* Russell de Pina | Principal TPM
+* Colin Mixon | Product Manager
+* Ketan Chawda | Senior Customer Engineer
+* Naveed Kharadi | Customer Experience Engineer
+* Erin Schaffer | Content Developer 2
+
 <!-- External links -->
 [reloader]: https://github.com/stakater/Reloader
 

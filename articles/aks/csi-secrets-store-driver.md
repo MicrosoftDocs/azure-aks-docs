@@ -42,7 +42,7 @@ A container using *subPath volume mount* doesn't receive secret updates when it'
     az group create --name myResourceGroup --location eastus2
     ```
 
-2. Create an AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver capability using the [`az aks create`][az-aks-create] command with the `--enable-addons azure-keyvault-secrets-provider` parameter. The add-on creates a user-assigned managed identity you can use to authenticate to your key vault. The following example creates an AKS cluster with the Azure Key Vault provider for Secrets Store CSI Driver enabled.
+1. Create an AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver capability using the [`az aks create`][az-aks-create] command with the `--enable-addons azure-keyvault-secrets-provider` parameter. The add-on creates a user-assigned managed identity you can use to authenticate to your key vault. The following example creates an AKS cluster with the Azure Key Vault provider for Secrets Store CSI Driver enabled.
 
     > [!NOTE]
     > If you want to use Microsoft Entra Workload ID, you must also use the `--enable-oidc-issuer` and `--enable-workload-identity` parameters, such as in the following example:
@@ -59,7 +59,7 @@ A container using *subPath volume mount* doesn't receive secret updates when it'
         --generate-ssh-keys
     ```
 
-3. The previous command creates a user-assigned managed identity, `azureKeyvaultSecretsProvider`, to access Azure resources. The following example uses this identity to connect to the key vault that stores the secrets, but you can also use other [identity access methods][identity-access-methods]. Take note of the identity's `clientId` in the output.
+1. The previous command creates a user-assigned managed identity, `azureKeyvaultSecretsProvider`, to access Azure resources. The following example uses this identity to connect to the key vault that stores the secrets, but you can also use other [identity access methods][identity-access-methods]. Take note of the identity's `clientId` in the output.
 
     ```output
     ...,
@@ -74,7 +74,7 @@ A container using *subPath volume mount* doesn't receive secret updates when it'
     ```
 
 > [!NOTE]
-> After you enable this feature, AKS creates a managed `identity named azurekeyvaultsecretsprovider-xxx` in the node resource group and assigns it to the Virtual Machine Scale Sets (VMSS) automatically. You can use this managed identity or your own managed identity to access the key vault. It's not supported to prevent creation of the identity.
+> After you enable this feature, AKS creates a managed identity named `azurekeyvaultsecretsprovider-xxx` in the node resource group and assigns it to the Virtual Machine Scale Sets (VMSS) automatically. You can use this managed identity or your own managed identity to access the key vault. It's not supported to prevent creation of the identity.
 
 ## Upgrade an existing AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver support
 
@@ -85,9 +85,15 @@ A container using *subPath volume mount* doesn't receive secret updates when it'
     ```
 
 > [!NOTE]
-> After you enable this feature, AKS creates a managed `identity named azurekeyvaultsecretsprovider-xxx` in the node resource group and assigns it to the Virtual Machine Scale Sets (VMSS) automatically. You can use this managed identity or your own managed identity to access the key vault. It's not supported to prevent creation of the identity.
+> After you enable this feature, AKS creates a managed identity named `azurekeyvaultsecretsprovider-xxx` in the node resource group and assigns it to the Virtual Machine Scale Sets (VMSS) automatically. You can use this managed identity or your own managed identity to access the key vault. It's not supported to prevent creation of the identity.
 
 ## Verify the Azure Key Vault provider for Secrets Store CSI Driver installation
+
+1. Get the AKS cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --name myAKSCluster --resource-group myResourceGroup
+    ```
 
 1. Verify the installation is finished using the `kubectl get pods` command, which lists all pods with the `secrets-store-csi-driver` and `secrets-store-provider-azure` labels in the kube-system namespace.
 
@@ -107,12 +113,11 @@ A container using *subPath volume mount* doesn't receive secret updates when it'
     aks-secrets-store-provider-azure-f5qlm   1/1     Running   0          4m25s
     ```
 
-2. Verify that each node in your cluster's node pool has a Secrets Store CSI Driver pod and a Secrets Store Provider Azure pod running.
+1. Verify that each node in your cluster's node pool has a Secrets Store CSI Driver pod and a Secrets Store Provider Azure pod running.
 
 ## Create or use an existing Azure Key Vault
 
 1. Create or update a key vault with Azure role-based access control (Azure RBAC) enabled using the [`az keyvault create`][az-keyvault-create] command or the [`az keyvault update`][az-keyvault-update] command with the `--enable-rbac-authorization` flag. The name of the key vault must be globally unique. For more details on key vault permission models and Azure RBAC, see [Provide access to Key Vault keys, certificates, and secrets with an Azure role-based access control](/azure/key-vault/general/rbac-guide)
-
 
     ```azurecli-interactive
     ## Create a new Azure key vault
@@ -122,13 +127,13 @@ A container using *subPath volume mount* doesn't receive secret updates when it'
     az keyvault update --name <keyvault-name> --resource-group myResourceGroup --location eastus2 --enable-rbac-authorization
     ```
 
-2. Your key vault can store keys, secrets, and certificates. In this example, use the [`az keyvault secret set`][az-keyvault-secret-set] command to set a plain-text secret called `ExampleSecret`.
+1. Your key vault can store keys, secrets, and certificates. In this example, use the [`az keyvault secret set`][az-keyvault-secret-set] command to set a plain-text secret called `ExampleSecret`.
 
     ```azurecli-interactive
     az keyvault secret set --vault-name <keyvault-name> --name ExampleSecret --value MyAKSExampleSecret
     ```
 
-3. Take note of the following properties for future use:
+1. Take note of the following properties for future use:
 
    * The name of the secret object in the key vault
    * The object type (secret, key, or certificate)
@@ -154,4 +159,3 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 <!-- LINKS EXTERNAL -->
 [kube-csi]: https://kubernetes-csi.github.io/docs/
 [kubernetes-version-support]: ./supported-kubernetes-versions.md?tabs=azure-cli#kubernetes-version-support-policy
-

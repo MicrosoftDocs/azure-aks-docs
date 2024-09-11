@@ -205,4 +205,4 @@ az disk update --subscription subscriptionName --resource-group myResourceGroup 
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [az-disk-update]: /cli/azure/disk#az-disk-update
 [manage-resources-azure-portal]: /azure/azure-resource-manager/management/manage-resources-portal#open-resources
-[aks-two-resource-groups]: faq.md#why-are-two-resource-groups-created-with-aks
+[aks-two-resource-groups]: faq.yml

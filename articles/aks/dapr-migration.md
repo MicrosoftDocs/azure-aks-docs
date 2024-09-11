@@ -5,7 +5,7 @@ author: hhunter-ms
 ms.author: hannahhunter
 ms.reviewer: nigreenf
 ms.topic: article
-ms.date: 02/14/2024
+ms.date: 09/05/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli
 ---
@@ -14,13 +14,15 @@ ms.custom: devx-track-azurecli
 
 This article shows you how to migrate from Dapr OSS to the Dapr extension for AKS.
 
-You can configure the Dapr extension to use and manage the Kubernetes resources created by Dapr OSS by [checking for an existing Dapr installation using the Azure CLI](#check-for-an-existing-dapr-installation) (*default method*) or [configuring the existing Dapr installation using `--configuration-settings`](#configure-the-existing-dapr-installation-using---configuration-settings).
+You can configure the Dapr extension to use and manage the Kubernetes resources created by Dapr OSS by either:
+- [Checking for an existing Dapr installation using the Azure CLI](#check-for-an-existing-dapr-installation) (*default method*), or
+- [Configuring the existing Dapr installation using `--configuration-settings`](#configure-the-existing-dapr-installation-using---configuration-settings).
 
-For more information, see [Dapr extension for AKS][dapr-extension-aks].
+For more information, see [an overview of the Dapr extension for AKS][dapr-extension-aks].
 
 ## Check for an existing Dapr installation
 
-When you [create the Dapr extension](./dapr.md), the extension checks for an existing Dapr installation on your cluster. If Dapr exists, the extension uses and manages the Kubernetes resources created by Dapr OSS.
+When you [install the Dapr extension](./dapr.md), the extension checks for an existing Dapr installation on your cluster. If Dapr exists, the extension uses and manages the Kubernetes resources created by Dapr OSS.
 
 1. List the details of your current Dapr installation using the `helm list -A` command and save the Dapr release name and namespace from the output.
 
@@ -45,7 +47,7 @@ When you [create the Dapr extension](./dapr.md), you can configure the extension
     helm list -A
     ```
 
-2. Create the Dapr extension using the [`az k8s-extension create`][az-k8s-extension-create] and use the `--configuration-settings` flags to set the Dapr release name and namespace.
+1. Create the Dapr extension using the [`az k8s-extension create`][az-k8s-extension-create] and use the `--configuration-settings` flags to set the Dapr release name and namespace.
 
     ```azurecli-interactive
     az k8s-extension create --cluster-type managedClusters \
@@ -73,7 +75,7 @@ Kubernetes only allows patching for limited fields in StatefulSets. If any of th
    kubectl delete statefulset.apps/dapr-placement-server -n dapr-system
    ```
 
-2. Update the HA mode using the [`az k8s-extension update`][az-k8s-extension-update] command.
+1. Update the HA mode using the [`az k8s-extension update`][az-k8s-extension-update] command.
 
    ```azurecli-interactive
    az k8s-extension update --cluster-type managedClusters \
