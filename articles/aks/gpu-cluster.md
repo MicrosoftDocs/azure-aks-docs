@@ -241,9 +241,9 @@ The NVIDIA GPU Operator automates the management of all NVIDIA software componen
 ### Use the AKS GPU image (preview)
 
 > [!NOTE]
-> We recommend migrating to or using the default GPU configuration rather than the dedicated GPU image, as the dedicated GPU image is based on Ubuntu 18.04 which is no longer supported by Canonical.
+> AKS GPU image (previw) will retire on January 10, 2025. The custom header used below will no longer be available, meaning you can't create new GPU-enabled node pools using the AKS GPU image (preview). We recommend migrating to or using the default GPU configuration rather than the dedicated GPU image, as the dedicated GPU image is no longer supported. For more information, see AKS release notes or retirement announcements in our AKS public roadmap.
 
-AKS provides a fully configured AKS image containing the [NVIDIA device plugin for Kubernetes][nvidia-github]. The AKS GPU image is currently only supported for Ubuntu 18.04.
+AKS provides a fully configured AKS image containing the [NVIDIA device plugin for Kubernetes][nvidia-github]. The AKS GPU image is currently only available on Ubuntu 18.04.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
