@@ -492,11 +492,11 @@ spec:
 EOF
 ```  
 
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
-    ```
+Example output:
+<!-- expected_similarity=0.8 -->
+```output
+perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
+```
 
 2. Wait for the MongoDB cluster deployment process to complete using the following script.
 
