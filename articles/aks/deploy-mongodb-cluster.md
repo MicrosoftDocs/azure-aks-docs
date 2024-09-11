@@ -136,7 +136,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CLUSTER-MONITOR-PASSWORD --value $(generateRandomPasswordString) --output table
     ```
 
-    Create a user and password secret for [user administration] (https://www.mongodb.com/docs/manual/reference/built-in-roles/#mongodb-authrole-userAdminAnyDatabase)
+    Create a user and password secret for [user administration](https://www.mongodb.com/docs/manual/reference/built-in-roles/#mongodb-authrole-userAdminAnyDatabase)
 
     ```azurecli-interactive
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-USER-ADMIN-USER --value MONGODB_USER_ADMIN_USER --output table
