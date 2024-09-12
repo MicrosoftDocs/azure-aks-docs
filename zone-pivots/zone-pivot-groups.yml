@@ -44,7 +44,7 @@ groups:
   title: Choose a Secrets Store CSI Driver access method
   prompt: Choose an access method
   pivots:
-  - id: access-with-an-azure-ad-workload-identity
+  - id: access-with-a-microsoft-entra-workload-identity
     title: Microsoft Entra Workload ID
   - id: access-with-a-user-assigned-managed-identity
     title: Managed identity

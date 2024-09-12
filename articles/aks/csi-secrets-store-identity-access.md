@@ -26,14 +26,12 @@ You can use one of the following access methods:
 
 ::: zone-end
 
-::: zone pivot="access-with-an-azure-ad-workload-identity"
+::: zone pivot="access-with-a-microsoft-entra-workload-identity"
 
 ## Prerequisites for CSI Driver
 
 - Before you begin, make sure you finish the steps in [Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster][csi-secrets-store-driver] to enable the Azure Key Vault Secrets Store CSI Driver in your AKS cluster.
 - Microsoft Entra Workload ID supports both Windows and Linux clusters.
-
-<a name='access-with-an-azure-ad-workload-identity'></a>
 
 ## Access with a Microsoft Entra Workload ID
 
@@ -203,8 +201,6 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
 
 - Before you begin, make sure you finish the steps in [Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster][csi-secrets-store-driver] to enable the Azure Key Vault Secrets Store CSI Driver in your AKS cluster.
 
-<a name='access-with-a-user-assigned-managed-identity'></a>
-
 ## Access with managed identity
 
 A [Microsoft Entra Managed ID][managed-identity] is an identity that an administrator uses to authenticate themselves against other Azure services. The managed identity uses RBAC to federate with external identity providers.
@@ -327,7 +323,7 @@ In this security model, you can grant access to your cluster's resources to team
 
 ::: zone-end
 
-::: zone pivot="access-with-an-azure-ad-workload-identity,access-with-a-user-assigned-managed-identity"
+::: zone pivot="access-with-a-microsoft-entra-workload-identity,access-with-a-user-assigned-managed-identity"
 
 ## Validate Key Vault secrets
 
@@ -373,7 +369,7 @@ A key vault certificate also contains public x509 certificate metadata. The key 
 
 ::: zone-end
 
-::: zone pivot="access-with-microsoft-entra-workload-identity,access-with-a-user-assigned-managed-identity,access-with-service-connector"
+::: zone pivot="access-with-a-microsoft-entra-workload-identity,access-with-a-user-assigned-managed-identity,access-with-service-connector"
 
 ## Next steps
 

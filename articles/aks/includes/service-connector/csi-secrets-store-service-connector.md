@@ -74,7 +74,7 @@ Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an 
 
 ## Create a service connection in AKS with Service Connector (preview)
 
-You can create a service connection to Azure Key Vault using the [Azure portal](#azure-portal) or [Azure CLI](#azure-cli).
+You can create a service connection to Azure Key Vault using the Azure portal or Azure CLI.
 
 ### [Azure portal](#tab/azure-portal)
 
