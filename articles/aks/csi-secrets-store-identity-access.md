@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 12/19/2023
 ms.custom: devx-track-azurecli
+zone_pivot_groups: csi-secrets-store-identity-access
 ---
 
 # Connect your Azure identity provider to the Azure Key Vault Secrets Store CSI Driver in Azure Kubernetes Service (AKS)
@@ -15,12 +16,22 @@ The Secrets Store Container Storage Interface (CSI) Driver on Azure Kubernetes S
 
 You can use one of the following access methods:
 
-- [Microsoft Entra Workload ID](#access-with-a-microsoft-entra-workload-id)
-- [User-assigned managed identity](#access-with-a-user-assigned-managed-identity)
+- Microsoft Entra Workload ID
+- User-assigned managed identity
+- Service Connector
+
+::: zone pivot="access-with-service-connector"
+
+[!INCLUDE [Service Connector tutorial snippet](./includes/service-connector/csi-secrets-store-service-connector.md)]
+
+::: zone-end
+
+::: zone pivot="access-with-an-azure-ad-workload-identity"
 
 ## Prerequisites for CSI Driver
 
 - Before you begin, make sure you finish the steps in [Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster][csi-secrets-store-driver] to enable the Azure Key Vault Secrets Store CSI Driver in your AKS cluster.
+- Microsoft Entra Workload ID supports both Windows and Linux clusters.
 
 <a name='access-with-an-azure-ad-workload-identity'></a>
 
@@ -184,6 +195,14 @@ In this security model, the AKS cluster acts as token issuer. Microsoft Entra ID
     EOF
     ```
 
+::: zone-end
+
+::: zone pivot="access-with-a-user-assigned-managed-identity"
+
+## Prerequisites for CSI Driver
+
+- Before you begin, make sure you finish the steps in [Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster][csi-secrets-store-driver] to enable the Azure Key Vault Secrets Store CSI Driver in your AKS cluster.
+
 <a name='access-with-a-user-assigned-managed-identity'></a>
 
 ## Access with managed identity
@@ -306,6 +325,10 @@ In this security model, you can grant access to your cluster's resources to team
     kubectl apply -f pod.yaml
     ```
 
+::: zone-end
+
+::: zone pivot="access-with-an-azure-ad-workload-identity,access-with-a-user-assigned-managed-identity"
+
 ## Validate Key Vault secrets
 
 After the pod starts, the mounted content at the volume path specified in your deployment YAML is available. Use the following commands to validate your secrets and print a test secret.
@@ -348,12 +371,17 @@ A key vault certificate also contains public x509 certificate metadata. The key 
 > [!NOTE]
 > When you disable the add-on, existing workloads should have no issues or see any updates in the mounted secrets. If the pod restarts or a new pod is created as part of scale-up event, the pod fails to start because the driver is no longer running.
 
+::: zone-end
+
+::: zone pivot="access-with-microsoft-entra-workload-identity,access-with-a-user-assigned-managed-identity,access-with-service-connector"
+
 ## Next steps
 
 In this article, you learned how to create and provide an identity to access your Azure Key Vault. The [Service Connector](/azure/service-connector/overview) integration helps simplify the connection configuration for AKS workloads and Azure backing services. It securely handles authentication and network configurations and follows best practices for connecting to Azure services. For more information, see [Use the Azure Key Vault provider for Secrets Store CSI Driver in an AKS cluster](/azure/service-connector/tutorial-python-aks-keyvault-csi-driver) and the [Service Connector introduction](https://azure.github.io/AKS/2024/05/23/service-connector-intro).
 
 If you want to configure extra configuration options or perform troubleshooting, see [Configuration options and troubleshooting resources for Azure Key Vault provider with Secrets Store CSI Driver in AKS](./csi-secrets-store-configuration-options.md).
 
+::: zone-end
 
 <!-- LINKS INTERNAL -->
 
