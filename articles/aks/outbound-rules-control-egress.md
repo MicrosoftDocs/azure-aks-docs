@@ -42,6 +42,8 @@ The following network and FQDN/application rules are required for an AKS cluster
 * If you have an app or solution that needs to talk to the API server, you must either add an **additional** network rule to allow **TCP communication to port 443 of your API server's IP** **OR** , if you have a layer 7 firewall configured to allow traffic to the API Server's domain name, set `kubernetes.azure.com/set-kube-service-host-fqdn` in your pod specs.
 * On rare occasions, if there's a maintenance operation, your API server IP might change. Planned maintenance operations that can change the API server IP are always communicated in advance.
 * Under certain circumstances, it might happen that traffic towards "md-*.blob.storage.azure.net" is required. This dependency is due to some internal mechanisms of Azure Managed Disks. You might also want to use the Storage [service tag](/azure/virtual-network/service-tags-overview).
+* You might notice traffic towards "umsa*.blob.core.windows.net" endpoint. This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. 
+
 
 
 ### Azure Global required network rules
