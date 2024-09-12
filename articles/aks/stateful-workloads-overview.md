@@ -3,7 +3,7 @@ title: Stateful workloads in Azure Kubernetes Service (AKS)
 description: Learn about running stateful workloads in Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 09/09/2024
+ms.date: 09/11/2024
 author: schaffererin
 ms.author: schaffererin
 ---
@@ -31,8 +31,7 @@ The Kubernetes stateful framework begins with a common foundation stack. In this
 
 The AKS guides don't implement ArgoCD or Terraform because they're designed for *Day 1* operations. However, as your deployment scales and requirements evolve, it should be easier for you to integrate ArgoCD and Terraform since the guides use part of the KATE stack.
 
-## Kubernetes stateful framework for Azure
-
+## Kubernetes stateful framework for Az
 With the foundation stack established, we now need to enhance the framework to support stateful workloads on Azure, specifically by integrating the essential resources for running data infrastructure on [Azure Kubernetes Service (AKS)](what-is-aks.md).
 
 Supporting complex stateful workloads, such as databases or message queues, requires storage capabilities that exceed ephemeral options. Specifically, we need systems that offer increased resilience and availability to address various events, such as application failures or workload reassignments to different hosts. We can achieve this using the [*PersistentVolume subsystem*](https://kubernetes.io/docs/concepts/storage/persistent-volumes/), which comprises three interconnected Kubernetes resources: *PersistentVolumes*, *PersistentVolumeClaims*, and *StorageClasses*. This subsystem provides an API for users and administrators to abstract the details of how storage is provided from how the storage is consumed.
@@ -47,6 +46,12 @@ We also need a Kubernetes Controller or Kubernetes Operator, like the [Secrets S
 
 The following sections provide links to design and deployment information for stateful workload scenarios on Azure.
 
+### MongoDB
+
+* [MongoDB stateful workload design overview](mongodb-overview.md)
+* [Create the infrastructure for running a MongoDB cluster on Azure Kubernetes Service (AKS)](create-mongodb-infrastructure.md)
+* [Configure and deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](deploy-mongodb-cluster.md)
+
 ### PostgreSQL
 
 * [PostgreSQL stateful workload design overview](postgresql-ha-overview.md)
@@ -58,3 +63,11 @@ The following sections provide links to design and deployment information for st
 * [Valkey stateful workload design overview](valkey-overview.md)
 * [Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)](create-valkey-infrastructure.md)
 * [Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)](deploy-valkey-cluster.md)
+
+## Contributors
+
+*This article is maintained by Microsoft. It was originally written by the following contributors:*
+
+* Don High | Principal Customer Engineer
+* Colin Mixon | Product Manager
+* Erin Schaffer | Content Developer 2
