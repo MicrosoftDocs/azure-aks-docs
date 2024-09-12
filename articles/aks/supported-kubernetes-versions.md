@@ -56,7 +56,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 
 If you prefer to see this information visually, here's a Gantt chart with all the current releases displayed:
 
-:::image type="content" source="media/supported-kubernetes-versions/kubernetes-versions-gantt.png" alt-text="Gantt chart showing the lifecycle of all Kubernetes versions currently active in AKS." lightbox="media/supported-kubernetes-versions/kubernetes-versions-gantt.png":::
+:::image type="content" source="media/supported-kubernetes-versions/kubernetes-versions-gantt-9122024.png" alt-text="Gantt chart showing the lifecycle of all Kubernetes versions currently active in AKS, including long term support." lightbox="media/supported-kubernetes-versions/kubernetes-versions-gantt-9122024.png":::
 
 ## AKS components breaking changes by version
 
