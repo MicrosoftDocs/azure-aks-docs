@@ -3,6 +3,8 @@ title: Use Microsoft Entra ID and Kubernetes RBAC for clusters
 titleSuffix: Azure Kubernetes Service
 description: Learn how to use Microsoft Entra group membership to restrict access to cluster resources using Kubernetes role-based access control (Kubernetes RBAC) in Azure Kubernetes Service (AKS)
 ms.topic: article
+ms.author: schaffererin
+author: schaffererin
 ms.subservice: aks-integration
 ms.custom: devx-track-azurecli
 ms.date: 02/13/2023
@@ -31,11 +33,9 @@ Use the Azure portal or Azure CLI to verify Microsoft Entra integration with Kub
 
 To verify using the Azure portal:
 
-* From your browser, sign in to the [Azure portal](https://portal.azure.com).
-* Navigate to **Kubernetes services**, and from the left-hand pane select **Cluster configuration**.
-* Under the **Authentication and Authorization** section, verify the **Microsoft Entra authentication with Kubernetes RBAC** option is selected.
-
-:::image type="content" source="./media/azure-ad-rbac/rbac-portal.png" alt-text="Example of AKS Authentication and Authorization page in Azure portal." lightbox="./media/azure-ad-rbac/rbac-portal.png":::
+1. Sign in to the [Azure portal](https://portal.azure.com) and navigate to your AKS cluster resource.
+2. In the service menu, under **Settings**, select **Cluster configuration**.
+3. Under the **Authentication and Authorization** section, verify the **Microsoft Entra authentication with Kubernetes RBAC** option is selected.
 
 #### [Azure CLI](#tab/azure-cli)
 

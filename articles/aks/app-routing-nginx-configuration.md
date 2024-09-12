@@ -55,27 +55,14 @@ Here is a reference to properties you can set to configure an `NginxIngressContr
 
 ## Common configurations
 
-### Control the default NGINX ingress controller configuration
+### Control the default NGINX ingress controller configuration (preview)
 
 > [!NOTE]
-> Controlling the NGINX ingress controller configuration when enabling the add-on is available in `API 2024-06-02-preview` and Kubernetes version 1.30 or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
+> Controlling the NGINX ingress controller configuration when enabling the add-on is available in `API 2024-06-02-preview`, Kubernetes version 1.30 or later, and the [aks-preview](/cli/azure/aks) Azure CLI extension version `7.0.0b5` or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
 
 When you enable the application routing add-on with NGINX, it creates an ingress controller called `default` in the `app-routing-namespace` configured with a public facing Azure load balancer. That ingress controller uses an ingress class name of `webapprouting.kubernetes.azure.com`.
 
 You can also control if the default gets a public or an internal IP, or if it gets created at all when enabling the add-on.
-
-# [Bicep](#tab/bicep)
-
-The `webAppRouting` profile has an optional `nginx` configuration with a `defaultIngressControllerType` property.
-
-```bicep
-    "ingressProfile": {
-      "webAppRouting": {
-        "nginx": {
-            "defaultIngressControllerType": "None|Internal|External|AnnotationControlled"
-        }
-    }
-```
 
 Here are the possible configuration options:
 
@@ -83,6 +70,42 @@ Here are the possible configuration options:
 - **`Internal`**: The default Nginx ingress controller is created with an internal load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it external will be overwritten.
 - **`External`**: The default Nginx ingress controller created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be overwritten.
 - **`AnnotationControlled`** (default): The default Nginx ingress controller is created with an external load balancer. Users can edit the default `NginxIngressController` custom resource to configure load balancer annotations.
+
+# [Azure CLI](#tab/azurecli)
+
+#### Control the default ingress controller configuration when creating the cluster
+
+To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying the `--enable-app-routing` and the `--app-routing-default-nginx-controller` flags. You need to set the `<DefaultIngressControllerType>` to one of the configuration options described earlier.
+
+```azurecli-interactive
+az aks create \
+--resource-group <ResourceGroupName> \
+--name <ClusterName> \
+--location <Location> \
+--enable-app-routing \
+--app-routing-default-nginx-controller <DefaultIngressControllerType>
+```
+
+#### Update the default ingress controller configuration on an existing cluster
+
+To update the application routing default ingress controller configuration on an existing cluster, use the [`az aks approuting update`][az-aks-approuting-update] command, specifying the `--nginx` flag. You need to set the `<DefaultIngressControllerType>` to one of the configuration options described earlier.
+
+```azurecli-interactive
+az aks approuting update --resource-group <ResourceGroupName> --name <ClusterName> --nginx <DefaultIngressControllerType>
+```
+
+# [Bicep](#tab/bicep)
+
+The `webAppRouting` profile has an optional `nginx` configuration with a `defaultIngressControllerType` property. You need to set the `defaultIngressControllerType` property to one of the configuration options described earlier.
+
+```bicep
+"ingressProfile": {
+  "webAppRouting": {
+    "nginx": {
+        "defaultIngressControllerType": "None|Internal|External|AnnotationControlled"
+    }
+}
+```
 
 ---
 
@@ -585,6 +608,7 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [csi-secrets-store-autorotation]: csi-secrets-store-configuration-options.md#enable-and-disable-auto-rotation
 [azure-key-vault-overview]: ../key-vault/general/overview.md
 [az-aks-approuting-update]: /cli/azure/aks/approuting#az-aks-approuting-update
+[az-aks-approuting-enable]: /cli/azure/aks/approuting#az-aks-approuting-enable
 [az-aks-approuting-zone]: /cli/azure/aks/approuting/zone
 [az-network-dns-zone-show]: /cli/azure/network/dns/zone#az-network-dns-zone-show
 [az-network-dns-zone-create]: /cli/azure/network/dns/zone#az-network-dns-zone-create
@@ -600,3 +624,4 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [prometheus-in-grafana]: app-routing-nginx-prometheus.md
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [aks-upgrade]: ./upgrade-cluster.md
+[az-aks-create]: /cli/azure/aks#az-aks-create

@@ -6,7 +6,7 @@ ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
-ms.date: 07/02/2024
+ms.date: 08/16/2024
 ---
 
 # Configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS)
@@ -142,7 +142,7 @@ az aks nodepool add --resource-group $resourceGroup --cluster-name $clusterName 
 >
 > - The cluster is on Kubernetes version 1.22+.
 > - Doesn't use the dynamic pod IP allocation feature.
-> - Doesn't have network policies enabled. Network Policy engine can be uninstalled before the upgrade, see [Uninstall Azure Network Policy Manager or Calico](use-network-policies.md#uninstall-azure-network-policy-manager-or-calico-preview)
+> - Doesn't have network policies enabled. Network Policy engine can be uninstalled before the upgrade, see [Uninstall Azure Network Policy Manager or Calico](use-network-policies.md#uninstall-azure-network-policy-manager-or-calico)
 > - Doesn't use any Windows node pools with docker as the container runtime.
 
 > [!NOTE]
@@ -360,11 +360,18 @@ The application routing addon is the recommended way for ingress in an AKS clust
     nginx-ipv6   LoadBalancer   fd12:3456:789a:1::981a   2603:1030:8:5::2d   80:32002/TCP   63s
     ```
 
+---
+
 ## Dual-stack networking with Azure CNI Powered by Cilium - (Preview)
 
 You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+### Prerequisites
+
+* You must have the latest version of the AKS preview extension.
+* You must have Kubernetes version 1.29 or greater. 
 
 ### Install the aks-preview Azure CLI extension
 
@@ -497,8 +504,6 @@ az aks nodepool add \
     --name winpool1 \
     --node-count 2
 ```
-
----
 
 ## Next steps
 

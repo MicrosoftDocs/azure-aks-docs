@@ -73,13 +73,10 @@ When creating a cluster with API server authorized IP ranges enabled, you use th
 
 When creating a cluster with API server authorized IP ranges enabled, you specify a list of authorized public IP address ranges. When you specify a CIDR range, start with the first IP address in the range. For example, *137.117.106.90/29* is a valid range, but make sure you specify the first IP address in the range, such as *137.117.106.88/29*.
 
-1. Navigate to the Azure portal and select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
+1. From the [Azure portal home page](https://ms.portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
 2. Configure the cluster settings as needed.
 3. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
 4. For **Specify IP ranges**, enter the IP address ranges you want to authorize to access the API server.
-
-    :::image type="content" source="media/api-server-authorized-ip-ranges/create-cluster-api-server-authorized-ip-ranges-portal.png" alt-text="This screenshot shows the cluster resource's specify IP ranges networking settings Azure portal page.":::
-
 5. Configure the rest of the cluster settings as needed.
 6. When you're ready, select **Review + create** > **Create** to create the cluster.
 
@@ -121,13 +118,10 @@ When you enable API server authorized IP ranges during cluster creation, the out
 
 When you enable API server authorized IP ranges during cluster creation, the outbound public IP for the Standard SKU load balancer for your cluster is also allowed by default in addition to the ranges you specify. To allow only the outbound public IP of the Standard SKU load balancer, you use *0.0.0.0/32* when specifying the IP ranges.
 
-1. Navigate to the Azure portal and select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
+1. From the [Azure portal home page](https://ms.portal.azure.com/#home), select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
 2. Configure the cluster settings as needed.
 3. In the **Networking** section under **Public access**, select **Set authorized IP ranges**.
 4. For **Specify IP ranges**, enter *0.0.0.0/32*. This allows only the outbound public IP of the Standard SKU load balancer.
-
-    :::image type="content" source="media/api-server-authorized-ip-ranges/api-server-authorized-only-outbound-ip-ranges-portal.png" alt-text="This screenshot shows the cluster resource's specify IP ranges networking settings Azure portal page set to allow only the outbound public IP of the load balancer.":::
-
 5. Configure the rest of the cluster settings as needed.
 6. When you're ready, select **Review + create** > **Create** to create the cluster.
 
@@ -164,15 +158,9 @@ When you enable API server authorized IP ranges during cluster creation, the out
 ### [Azure portal](#tab/azure-portal)
 
 1. Navigate to the Azure portal and select the AKS cluster you want to update.
-2. Under **Settings**, select **Networking**.
-3. Under **Resource Settings**, select **Manage**.
-
-    :::image type="content" source="media/api-server-authorized-ip-ranges/update-existing-authorized-ip-ranges-portal.png" alt-text="This screenshot shows the cluster resource's resource settings in the networking settings Azure portal page.":::
-
+2. In the service menu, under **Settings**, select **Networking**.
+3. Under **Resource settings**, select **Manage**.
 4. On the **Authorized IP ranges** page, update the **Authorized IP ranges** as needed.
-
-    :::image type="content" source="media/api-server-authorized-ip-ranges/authorized-ip-ranges-update-page-portal.png" alt-text="This screenshot shows the cluster resource's update authorized IP ranges Azure portal page.":::
-
 5. When you're done, select **Save**.
 
 ---
@@ -198,16 +186,10 @@ When you enable API server authorized IP ranges during cluster creation, the out
 ### [Azure portal](#tab/azure-portal)
 
 1. Navigate to the Azure portal and select the AKS cluster you want to update.
-2. Under **Settings**, select **Networking**.
-3. Under **Resource Settings**, select **Manage**.
-
-    :::image type="content" source="media/api-server-authorized-ip-ranges/update-existing-authorized-ip-ranges-portal.png" alt-text="This screenshot shows the cluster resource's networking settings Azure portal page.":::
-
+2. In the service menu, under **Settings**, select **Networking**.
+3. Under **Resource settings**, select **Manage**.
 4. On the **Authorized IP ranges** page, deselect the **Set authorized IP ranges** checkbox.
-
-    :::image type="content" source="media/api-server-authorized-ip-ranges/disable-authorized-ip-ranges-portal.png" alt-text="This screenshot shows the cluster resource's disable authorized IP ranges Azure portal page.":::
-
-5. When you're done, select **Save**.
+5. Select **Save**.
 
 ---
 
@@ -232,9 +214,7 @@ When you enable API server authorized IP ranges during cluster creation, the out
 ### [Azure portal](#tab/azure-portal)
 
 1. Navigate to the Azure portal and select your AKS cluster.
-2. Under **Settings**, select **Networking**. The existing authorized IP ranges are listed under **Resource Settings**:
-
-    :::image type="content" source="media/api-server-authorized-ip-ranges/find-existing-authorized-ip-ranges-portal.png" alt-text="This screenshot shows the cluster resource's existing authorized IP networking settings in the Azure portal page.":::
+2. In the service menu, under **Settings**, select **Networking**. The existing authorized IP ranges are listed under **Resource settings**.
 
 ---
 

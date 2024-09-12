@@ -44,8 +44,7 @@ az extension update --name aks-preview
 
 ### Register the `AdvancedNetworkingPreview` feature flag
 
-Register the `az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"
-` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
+Register the `AdvancedNetworkingPreview` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
 
 ```azurecli-interactive 
 az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"

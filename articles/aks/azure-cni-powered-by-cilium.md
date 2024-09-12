@@ -4,7 +4,7 @@ description: Learn how to create an Azure Kubernetes Service (AKS) cluster with 
 author: asudbring
 ms.author: allensu
 ms.subservice: aks-networking
-ms.topic: article
+ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli, build-2023
 ms.date: 02/12/2024
 ---
@@ -51,15 +51,11 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * Network policies cannot use `ipBlock` to allow access to node or pod IPs. See [frequently asked questions](#frequently-asked-questions) for details and recommended workaround.
 
-* Kubernetes services with `internalTrafficPolicy=Local` aren't supported ([Cilium issue #17796](https://github.com/cilium/cilium/issues/17796)).
-
 * Multiple Kubernetes services can't use the same host port with different protocols (for example, TCP or UDP) ([Cilium issue #14287](https://github.com/cilium/cilium/issues/14287)).
 
 * Network policies may be enforced on reply packets when a pod connects to itself via service cluster IP ([Cilium issue #19406](https://github.com/cilium/cilium/issues/19406)).
 
 * Network policies are not applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
-
-* Incompatible with Microsoft Entra pod-managed identities ([aad-pod-identity](https://github.com/Azure/aad-pod-identity)). Use [Microsoft Entra Workload ID](./workload-identity-overview.md) instead.
 
 ## Prerequisites
 
@@ -69,7 +65,6 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 > [!NOTE]
 > Previous AKS API versions (2022-09-02preview to 2023-01-02preview) used the field [`networkProfile.ebpfDataplane=cilium`](https://github.com/Azure/azure-rest-api-specs/blob/06dbe269f7d9c709cc225c92358b38c3c2b74d60/specification/containerservice/resource-manager/Microsoft.ContainerService/aks/preview/2022-09-02-preview/managedClusters.json#L6939-L6955). AKS API versions since 2023-02-02preview use the field [`networkProfile.networkDataplane=cilium`](https://github.com/Azure/azure-rest-api-specs/blob/06dbe269f7d9c709cc225c92358b38c3c2b74d60/specification/containerservice/resource-manager/Microsoft.ContainerService/aks/preview/2023-02-02-preview/managedClusters.json#L7152-L7173) to enable Azure CNI Powered by Cilium.
-
 ## Create a new AKS Cluster with Azure CNI Powered by Cilium
 
 ### Option 1: Assign IP addresses from an overlay network
@@ -90,7 +85,6 @@ az aks create \
 
 > [!NOTE]
 > The `--network-dataplane cilium` flag replaces the deprecated `--enable-ebpf-dataplane` flag used in earlier versions of the aks-preview CLI extension.
-
 ### Option 2: Assign IP addresses from a virtual network
 
 Run the following commands to create a resource group and virtual network with a subnet for nodes and a subnet for pods.
@@ -129,13 +123,10 @@ az aks create \
 >
 > - The cluster uses either [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md). This does **not** include [Azure CNI](./configure-azure-cni.md).
 > - The cluster does not have any Windows node pools.  
-
 > [!NOTE]
-> When enabling Cilium in a cluster with a different network policy engine (Azure NPM or Calico), the network policy engine will be uninstalled and replaced with Cilium. See [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico-preview) for more details.
-
+> When enabling Cilium in a cluster with a different network policy engine (Azure NPM or Calico), the network policy engine will be uninstalled and replaced with Cilium. See [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico) for more details.
 > [!WARNING]
 > The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is re-imaged.
-
 Cilium will begin enforcing network policies only after all nodes have been re-imaged.
 
 To perform the upgrade, you will need Azure CLI version 2.52.0 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
@@ -158,7 +149,23 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
 
 - **Can I use `CiliumNetworkPolicy` custom resources instead of Kubernetes `NetworkPolicy` resources?**
 
-    `CiliumNetworkPolicy` custom resources aren't officially supported. We recommend that customers use Kubernetes `NetworkPolicy` resources to configure network policies.
+    `CiliumNetworkPolicy` custom resources are partially supported. Customers may use FQDN filtering as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
+
+    This `CiliumNetworkPolicy` example demonstrates a sample matching pattern for services that match the specified label.
+
+    ```yaml
+    apiVersion: "cilium.io/v2" 
+    kind: CiliumNetworkPolicy 
+    metadata: 
+      name: "example-fqdn" 
+    spec: 
+      endpointSelector: 
+        matchLabels: 
+          foo: bar 
+      egress: 
+      - toFQDNs: 
+        - matchPattern: "*.example.com" 
+    ```
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
@@ -202,7 +209,6 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
 
     > [!NOTE]
     > It is not currently possible to specify a `NetworkPolicy` with an `ipBlock` to allow traffic to node IPs.
-
 - **Does AKS configure CPU or memory limits on the Cilium `daemonset`?**
 
     No, AKS doesn't configure CPU or memory limits on the Cilium `daemonset` because Cilium is a critical system component for pod networking and network policy enforcement.
@@ -224,4 +230,3 @@ Learn more about networking in AKS in the following articles:
 
 <!-- LINKS - Internal -->
 [aks-ingress-basic]: ingress-basic.md
-
