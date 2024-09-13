@@ -53,7 +53,7 @@ This diagram illustrates a PostgreSQL cluster setup with one primary replica and
 
 Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing another way to restore the database in the event of an issue with streaming replication from the primary replica.
 
-:::image source="./media/postgresql-ha-overview/architecture-diagram.png" alt-text="Diagram of CNPG architecture." lightbox="./media/postgresql-ha-overview/architecture-diagram.png":::
+:::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Diagram of CNPG architecture." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
 
 > [!NOTE]
 > For applications that require data separation at the database level, you can add more databases with postInitSQL commands and similar. It is not currently possible with the CNPG operator to add more databases in a declarative way.
