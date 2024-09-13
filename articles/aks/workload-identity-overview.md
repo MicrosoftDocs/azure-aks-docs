@@ -226,7 +226,7 @@ The following table describes the required OIDC issuer endpoints for Microsoft E
 
 The following diagram summarizes the authentication sequence using OpenID Connect.
 
-:::image type="content" source="media/workload-identity-overview/aks-workload-id-oidc-authentication-model.png" alt-text="Diagram of the AKS workload identity OIDC authentication sequence." lightbox="media/workload-id-overview/aks-workload-id-oidc-authentication-model.png":::
+:::image type="content" source="media/workload-identity-overview/aks-workload-id-oidc-authentication-model.png" alt-text="Diagram of the AKS workload identity OIDC authentication sequence." lightbox="media/workload-identity-overview/aks-workload-id-oidc-authentication-model.png":::
 
 ### Webhook Certificate Auto Rotation
 
