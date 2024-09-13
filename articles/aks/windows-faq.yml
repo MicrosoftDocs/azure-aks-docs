@@ -29,7 +29,7 @@ sections:
       - question: |
           How do I patch my Windows nodes?
         answer: |
-          To get the latest patches for Windows nodes, you can either [upgrade the node pool](./manage-node-pools.md#upgrade-a-single-node-pool) or [upgrade the node image](./node-image-upgrade.md). See the attached links for more information.
+          To get the latest patches for Windows nodes, you can either [upgrade the node pool](./manage-node-pools.md#upgrade-a-single-node-pool) or [upgrade the node image](./node-image-upgrade.md).
 
       - question: |
           Is preserving the client source IP supported?
@@ -49,13 +49,13 @@ sections:
       - question: |
           Why am I seeing an error when I try to create a new Windows agent pool?
         answer: |
-          If you created your cluster before February 2020 and have never done any cluster upgrade operations, the cluster still uses an old Windows image. You might have seen an error that resembles the following:
+          If you created your cluster before February 2020 and didn't perform any upgrade operations, the cluster still uses an old Windows image. You might see an error that resembles the following example:
 
-          "The following list of images referenced from the deployment template is not found: Publisher: MicrosoftWindowsServer, Offer: WindowsServer, Sku: 2019-datacenter-core-smalldisk-2004, Version: latest. Please refer to [Find and use Azure Marketplace VM images with Azure PowerShell](/azure/virtual-machines/windows/cli-ps-findimage) for instructions on finding available images."
+          "The following list of images referenced from the deployment template is not found: Publisher: MicrosoftWindowsServer, Offer: WindowsServer, Sku: 2019-datacenter-core-smalldisk-2004, Version: latest. Refer to [Find and use Azure Marketplace Virtual Machine images with Azure PowerShell](/azure/virtual-machines/windows/cli-ps-findimage) for instructions on finding available images."
 
           To fix this issue, you need to perform the following steps:
 
-          1. Upgrade the [cluster control plane](./manage-node-pools.md#upgrade-a-cluster-control-plane-with-multiple-node-pools) to update the image offer and publisher.
+          1. Upgrade the [cluster control plane](./manage-node-pools.md#upgrade-a-cluster-control-plane-with-multiple-node-pools), which updates the image offer and publisher.
           2. Create new Windows agent pools.
           3. Move Windows pods from existing Windows agent pools to new Windows agent pools.
           4. Delete old Windows agent pools.
@@ -67,7 +67,7 @@ sections:
 
           To fix this error, use the `az aks nodepool add` command with a high enough `--max-pods` value. For example:
 
-          ```azurecli-interactive
+          ```azurecli
           az aks nodepool add \
               --cluster-name $CLUSTER_NAME \
               --resource-group $RESOURCE_GROUP \
@@ -94,7 +94,7 @@ sections:
         answer: |
           To change the administrator password using the Azure CLI, use the `az aks update` command with the `--admin-password` parameter. For example:
 
-          ```azurecli-interactive
+          ```azurecli
           az aks update \
               --resource-group $RESOURCE_GROUP \
               --name $CLUSTER_NAME \
@@ -103,7 +103,7 @@ sections:
 
           To change the password using Azure PowerShell, use the `Set-AzAksCluster` cmdlet with the `-AdminPassword` parameter. For example:
             
-            ```azurepowershell-interactive
+            ```azurepowershell
             Set-AzAksCluster `
                 -ResourceGroupName $RESOURCE_GROUP `
                 -Name $CLUSTER_NAME `
@@ -129,24 +129,24 @@ sections:
       - question: |
           Are there any limitations on the number of services on a cluster with Windows nodes?
         answer: |
-          A cluster with Windows nodes can have approximately 500 services (sometimes less) before it encounters port exhaustion. This limitation applies to a Kubernetes Service with External Traffic Policy set to “Cluster”. 
+          A cluster with Windows nodes can have approximately 500 services (sometimes less) before it encounters port exhaustion. This limitation applies to a Kubernetes Service with External Traffic Policy set to "Cluster". 
 
-          When external traffic policy on a Service is configured as Cluster, the traffic undergoes an additional Source NAT on the node which also results in reservation of a port from the TCPIP dynamic port pool. This port pool is a limited resource (~16K ports by default) and many active connections to a Service(s) can lead to dynamic port pool exhaustion resulting in connection drops.
+          When external traffic policy on a Service is configured as Cluster, the traffic undergoes an additional Source NAT on the node which also results in reservation of a port from the TCPIP dynamic port pool. This port pool is a limited resource (~16K ports by default) and many active connections to a Service can lead to dynamic port pool exhaustion resulting in connection drops.
 
-          If the Kubernetes Service is configured with External Traffic Policy set to “Local”, port exhaustion problems aren't likely to occur at 500 services.
+          If the Kubernetes Service is configured with External Traffic Policy set to "Local", port exhaustion problems aren't likely to occur at 500 services.
 
       - question: |
           How do I change the time zone of a running container?
         answer: |
           To change the time zone of a running Windows Server container, connect to the running container with a PowerShell session. For example:
     
-          ```azurecli-interactive
+          ```azurecli
           kubectl exec -it CONTAINER-NAME -- powershell
           ```
 
           In the running container, use [Set-TimeZone](/powershell/module/microsoft.powershell.management/set-timezone) to set the time zone of the running container. For example:
 
-          ```azurepowershell-interactive
+          ```azurepowershell
           Set-TimeZone -Id "Russian Standard Time"
           ```
 
