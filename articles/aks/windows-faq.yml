@@ -42,7 +42,7 @@ sections:
           Yes. For more information, see [Maximum number of pods](./concepts-network-ip-address-planning.md#maximum-pods-per-node).
           
       - question: |
-          What is the default TCP timeout in Windows OS?
+          What is the default transmission control protocol (TCP) timeout in Windows OS?
         answer: |
           The default TCP timeout in Windows OS is four minutes. This value isn't configurable. When an application uses a longer timeout, the TCP connections between different containers in the same node close after four minutes.
           
@@ -51,7 +51,7 @@ sections:
         answer: |
           If you created your cluster before February 2020 and didn't perform any upgrade operations, the cluster still uses an old Windows image. You might see an error that resembles the following example:
 
-          "The following list of images referenced from the deployment template is not found: Publisher: MicrosoftWindowsServer, Offer: WindowsServer, Sku: 2019-datacenter-core-smalldisk-2004, Version: latest. Refer to [Find and use Azure Marketplace Virtual Machine images with Azure PowerShell](/azure/virtual-machines/windows/cli-ps-findimage) for instructions on finding available images."
+          "The following list of images referenced from the deployment template isn't found: Publisher: MicrosoftWindowsServer, Offer: WindowsServer, Sku: 2019-datacenter-core-smalldisk-2004, Version: latest. Refer to [Find and use Azure Marketplace Virtual Machine images with Azure PowerShell](/azure/virtual-machines/windows/cli-ps-findimage) for instructions on finding available images."
 
           To fix this issue, you need to perform the following steps:
 
@@ -78,7 +78,7 @@ sections:
           For more details, see the [`--max-pods` documentation](/cli/azure/aks/nodepool#az-aks-nodepool-add:~:text=for%20system%20nodepool.-,%2D%2Dmax%2Dpods%20%2Dm,-The%20maximum%20number).
           
       - question: |
-          Why is there an unexpected user named "sshd" on my VM node?
+          Why is there an unexpected user named "sshd" on my virtual machine node?
         answer: |
           AKS adds a user named "sshd" when installing the OpenSSH service. This user isn't malicious. We recommend that customers update their alerts to ignore this unexpected user account.
 
@@ -131,7 +131,7 @@ sections:
         answer: |
           A cluster with Windows nodes can have approximately 500 services (sometimes less) before it encounters port exhaustion. This limitation applies to a Kubernetes Service with External Traffic Policy set to "Cluster". 
 
-          When external traffic policy on a Service is configured as Cluster, the traffic undergoes an additional Source NAT on the node which also results in reservation of a port from the TCPIP dynamic port pool. This port pool is a limited resource (~16K ports by default) and many active connections to a Service can lead to dynamic port pool exhaustion resulting in connection drops.
+          When the external traffic policy on a Service is configured as a Cluster, the traffic undergoes an extra Source NAT on the node. This process also also results in reservation of a port from the TCPIP dynamic port pool. This port pool is a limited resource (~16K ports by default) and many active connections to a Service can lead to dynamic port pool exhaustion resulting in connection drops.
 
           If the Kubernetes Service is configured with External Traffic Policy set to "Local", port exhaustion problems aren't likely to occur at 500 services.
 
