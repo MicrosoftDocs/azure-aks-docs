@@ -871,7 +871,7 @@
     - name: Windows Server containers
       items:
         - name: Windows Server containers FAQ
-          href: windows-faq.md
+          href: windows-faq.yml
         - name: Connect remotely
           href: rdp.md
         - name: Use HostProcess containers
