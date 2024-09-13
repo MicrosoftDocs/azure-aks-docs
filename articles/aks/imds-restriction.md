@@ -1,27 +1,36 @@
 ---
-title: Block traffic from a cluster to the IMDS endpoint (preview)
-description: Learn how to enable IDMS restriction on an AKS cluster to block traffic to the IMDS endpoint (preview).
+title: Block traffic from an AKS cluster to the Azure Instance Metadata Service (IMDS) endpoint (preview)
+description: Learn how to enable IMDS restriction on an AKS cluster to block traffic to the IMDS endpoint (preview).
 author: tamram
 
 ms.topic: article
 ms.custom: devx-track-azurecli
-ms.date: 08/07/2024
+ms.date: 09/12/2024
 ms.author: tamram
 ---
 
 # Block traffic from a cluster to the IMDS endpoint (preview)
 
-[Azure Instance Metadata Service (IMDS)](/azure/virtual-machines/instance-metadata-service) is a REST API that's available at a well-known, nonroutable IP address (169.254.169.254). IMDS provides information about currently running virtual machine instances. This information includes the SKU, storage, network configurations, and upcoming maintenance events.
-
-By default, all pods running in an Azure Kubernetes Service (AKS) cluster can access the IMDS endpoints. The default behavior introduces certain security risks for an AKS cluster. You can now opt to restrict access to the IMDS endpoint for non host-network pods running in your cluster.
-
-When IMDS restriction (preview) is enabled, nonhost network pods are unable to access IMDS endpoints. Nonhost network pods also cannot acquire OAuth 2.0 tokens for authorization by a managed identity after IMDS restriction is enabled, and should rely on [Microsoft Entra Workload ID][workload-identity-overview] instead. Host network pods and threads can continue to access the IMDS endpoints after IMDS restriction is enabled.
+[Azure Instance Metadata Service (IMDS)](/azure/virtual-machines/instance-metadata-service) is a REST API that provides information about currently running virtual machine instances. This information includes the SKU, storage, network configurations, and upcoming maintenance events. You can now restrict access to the IMDS endpoint from your AKS clusters to enhance security (preview).
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
+## About IMDS restriction for AKS clusters
+
+The IMDS REST API is available at a well-known, nonroutable IP address (169.254.169.254). By default, all pods running in an Azure Kubernetes Service (AKS) cluster can access the IMDS endpoint. The default behavior introduces certain security risks for an AKS cluster:
+
+- Malicious users might exploit the service to obtain sensitive information, leading to information leakage.
+- Potential authentication vulnerabilities are then exposed, because applications could misuse these credentials.
+
+You can now opt to restrict access to the IMDS endpoint for nonhost network pods running in your cluster. Nonhost network pods have  `hostNetwork` set to **false** in their specs.
+
+When IMDS restriction is enabled, nonhost network pods are unable to access the IMDS endpoint or acquire OAuth 2.0 tokens for authorization by a managed identity. Nonhost network pods should rely on [Microsoft Entra Workload ID][workload-identity-overview]  after IMDS restriction is enabled.
+
+Host network pods have `hostNetwork` set to **true** in their specs. Host network pods and threads can continue to access the IMDS endpoint after IMDS restriction is enabled as they share the same network namespace with the host processes. Local processes in nodes may need to access the IMDS endpoint to retrieve instance metadata and therefore can still continue to access it after IMDS restriction is enabled.
+
 ## Before you begin
 
-- Make sure you have Azure CLI version x.y.z or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- Make sure you have Azure CLI version 2.61.0 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ## Enable IMDS restriction on a new cluster
 
@@ -70,7 +79,7 @@ To verify that IMDS restriction is in effect, test traffic to both the nonhost a
     EOF
     ```
 
-1. Sign in to the pod with `kubectl exec`.
+1. Connect to the shell in the pod with `kubectl exec`.
 
     ```bash
     kubectl exec -it non-host-nw -- /bin/bash
@@ -82,13 +91,15 @@ To verify that IMDS restriction is in effect, test traffic to both the nonhost a
     apt update && apt install curl
     ```
 
-1. Test the traffic from the pod to the IMDS endpoints.
+1. Test the traffic from the pod to the IMDS endpoint.
 
     ```bash
-    curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2023-11-15" 
+    curl -s -H Metadata:true --connect-timeout 10 --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2023-11-15" 
     ```
 
-Wait about two minutes and observe that that command doesn't return anything, which means that the connection has timed out and the pod can't access the IMDS endpoint.
+Wait about 10 seconds and observe that the command doesn't return anything, which means that the connection has timed out and the pod is unable to access the IMDS endpoint.
+
+After that, clean up the pod with `kubectl delete pod non-host-nw`.
 
 ### Verify the traffic on a host network pod
 
@@ -109,7 +120,7 @@ Wait about two minutes and observe that that command doesn't return anything, wh
     EOF
     ```
 
-1. Sign in to the pod with `kubectl exec`.
+1. Connect to the shell in the pod with `kubectl exec`.
 
     ```bash
     kubectl exec -it host-nw -- /bin/bash
@@ -121,13 +132,15 @@ Wait about two minutes and observe that that command doesn't return anything, wh
     apt update && apt install curl
     ```
 
-1. Test the traffic from the pod to IMDS endpoints
+1. Test the traffic from the pod to the IMDS endpoint
 
     ```bash
     curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2023-11-15" 
     ```
 
-Observe that the command returns the results, which means that the pod can access IMDS endpoints.
+Observe that the command returns the results, which means that the pod can access IMDS endpoints as expected.
+
+After that, clean up the pod with `kubectl delete pod host-nw`.
 
 ## Disable IMDS restriction for a cluster
 
@@ -144,9 +157,9 @@ After you update the cluster, you must [reimage][node-image-upgrade] the nodes i
 
 ## Limitations
 
-Nonhost network addons that need to access IMDS endpoints will not work after you enable IMDS restriction. Unsupported addons include:
+Nonhost network addons that need to access the IMDS endpoint will not work after you enable IMDS restriction. Unsupported addons include:
 
-- HTTPApplicationRouting
+- HTTPApplicationRouting (retired)
 - IngressApplicationGateway
 - OmsAgent
 - ACIConnectorLinux
