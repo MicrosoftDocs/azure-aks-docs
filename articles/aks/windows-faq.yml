@@ -17,7 +17,7 @@ sections:
       - question: |
           What kind of disks are supported for Windows?
         answer: |
-          Azure Disks and Azure Files are the supported volume types, and are accessed as NTFS volumes in the Windows Server container.
+          Azure Disks and Azure Files are the supported volume types, and are accessed as New Technology File System (NTFS) volumes in the Windows Server container.
           
       - question: |
           Does Windows support generation 2 virtual machines (VMs)?
@@ -75,7 +75,7 @@ sections:
               --max-pods 3
           ```
 
-          For more details, see the [`--max-pods` documentation](/cli/azure/aks/nodepool#az-aks-nodepool-add:~:text=for%20system%20nodepool.-,%2D%2Dmax%2Dpods%20%2Dm,-The%20maximum%20number).
+          For more details, see the [`--max-pods` documentation](/cli/azure/aks/nodepool#az-aks-nodepool-add).
           
       - question: |
           Why is there an unexpected user named "sshd" on my virtual machine node?
@@ -131,7 +131,7 @@ sections:
         answer: |
           A cluster with Windows nodes can have approximately 500 services (sometimes less) before it encounters port exhaustion. This limitation applies to a Kubernetes Service with External Traffic Policy set to "Cluster". 
 
-          When the external traffic policy on a Service is configured as a Cluster, the traffic undergoes an extra Source NAT on the node. This process also also results in reservation of a port from the TCPIP dynamic port pool. This port pool is a limited resource (~16K ports by default) and many active connections to a Service can lead to dynamic port pool exhaustion resulting in connection drops.
+          When the external traffic policy on a Service is configured as a Cluster, the traffic undergoes an extra Source NAT on the node. This process also results in reservation of a port from the TCPIP dynamic port pool. This port pool is a limited resource (~16K ports by default) and many active connections to a Service can lead to dynamic port pool exhaustion resulting in connection drops.
 
           If the Kubernetes Service is configured with External Traffic Policy set to "Local", port exhaustion problems aren't likely to occur at 500 services.
 
