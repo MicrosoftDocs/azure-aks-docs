@@ -277,9 +277,9 @@ All annotations are optional. If the annotation isn't specified, the default val
 
  <sup>1</sup> Takes precedence if the service account is also annotated.
 
-## How to migrate to Entra Workload ID
+## How to migrate to Microsoft Entra Workload ID
 
-On a cluster that is already running a pod-managed identity, you can configure it to use workload identity one of two ways. The first option allows you to use the same configuration that you've implemented for pod-managed identity. You can annotate the service account within the namespace with the identity to enable Entra Workload ID and inject the annotations into the pods.
+On a cluster that is already running a pod-managed identity, you can configure it to use workload identity one of two ways. The first option allows you to use the same configuration that you've implemented for pod-managed identity. You can annotate the service account within the namespace with the identity to enable Microsoft Entra Workload ID and inject the annotations into the pods.
 
 The second option is to rewrite your application to use the latest version of the Azure Identity client library.
 
