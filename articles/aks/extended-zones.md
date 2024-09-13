@@ -1,8 +1,8 @@
 ---
 title: Azure Kubernetes Service (AKS) for Extended Zones (preview)
 description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Extended Zone cluster
-author: moushumig
-ms.author: moghosal
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: article
 ms.date: 04/04/2023
@@ -293,7 +293,7 @@ If you don't have an Azure subscription, create an Azure free account before you
     - **Cluster details**:
         * Ensure the **Preset configuration** is *Production Standard ($$)*. For more information on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
 
-            :::image type="content" source="./learn/media/quick-kubernetes-deploy-portal/cluster-preset-options.png" alt-text="Screenshot of Create AKS cluster - portal preset options.":::
+            :::image type="content" source="./learn/media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options.":::
 
         * Enter a **Kubernetes cluster name**, such as *myAKSCluster*.
         * Select **Deploy to an Azure Extended Zone** under the region locator for the AKS cluster.
