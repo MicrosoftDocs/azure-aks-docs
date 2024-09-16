@@ -108,7 +108,6 @@
       ],
       "breadcrumb_path": "/azure/breadcrumb/azure-aks/toc.json",
       "_op_documentIdPathDepotMapping": {
-        "articles/iot-central/": {}
       },
       "brand": "azure",
       "feedback_github_repo": "MicrosoftDocs/azure-aks-docs",
@@ -131,8 +130,8 @@
     },
     "fileMetadata": {
       "adobe-target": {
-        "articles/aks/*": true,
-        "articles/kubernetes-fleet/*": true
+        "articles/aks/**/*": true,
+        "articles/kubernetes-fleet/**/*": true
       },
       "author": {
         "articles/aks/**/*": "schaffererin"
@@ -152,9 +151,6 @@
       "feedback_help_link_url": {
         "articles/aks/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/",
         "articles/kubernetes-fleet/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/"
-      },
-      "feedback_help_link_type": {
-        "**/*": "get-help-at-qna"
       },
       "open_source_feedback_contributorGuideUrl": {
         "articles/aks/**/*": "https://learn.microsoft.com/contribute/content/"
