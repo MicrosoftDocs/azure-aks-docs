@@ -104,9 +104,9 @@ For more information, see the [Kubernetes Event-driven Autoscaling (KEDA) add-on
 
 ### Vertical pod autoscaling
 
-Use the [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler-overview.md) to automatically adjust the resource requests of your pods based on their usage.
+Use the [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) to automatically adjust the resource requests of your pods based on their usage.
 
-For more information, see the [Vertical pod autoscaling in Azure Kubernetes Service (AKS) overview](./vertical-pod-autoscaler.md). To configure VPA in AKS, see [Deploy, upgrade, or disable VPA on a cluster](./vertical-pod-autoscaler.md#deploy-upgrade-or-disable-vpa-on-a-cluster).
+For more information, see the [Vertical pod autoscaling in Azure Kubernetes Service (AKS) overview](./vertical-pod-autoscaler.md). To configure VPA in AKS, see [Deploy, upgrade, or disable VPA on a cluster](./use-vertical-pod-autoscaler.md).
 
 ### Horizontal pod autoscaling
 
