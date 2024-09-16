@@ -36,7 +36,7 @@ sections:
       - question: |
           Can I run Windows Server containers on AKS?
         answer: |
-          Yes, AKS supports Windows Server containers. For more information, see [Windows Server containers on AKS](./windows-faq.md).
+          Yes, AKS supports Windows Server containers. For more information, see the [Windows Server on AKS FAQ](./windows-faq.yml).
           
       - question: |
           Can I apply Azure reservation discounts to my AKS agent nodes?

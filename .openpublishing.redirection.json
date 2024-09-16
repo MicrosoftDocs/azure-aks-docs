@@ -9,6 +9,11 @@
       "source_path_from_root": "/articles/aks/markdown-faq.md",
       "redirect_url": "/azure/aks/faq",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/markdown-windows-faq.md",
+      "redirect_url": "/azure/aks/windows-faq",
+      "redirect_document_id": false
     }
   ]
 }

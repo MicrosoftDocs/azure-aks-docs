@@ -28,7 +28,7 @@ This article shows you how to use dual-stack networking with an AKS cluster. For
   * [Calico network policies](use-network-policies.md#create-an-aks-cluster-and-enable-network-policy)
   * [NAT Gateway][nat-gateway]
   * [Virtual nodes add-on](virtual-nodes.md#network-requirements)
-  * [Windows node pools](./windows-faq.md)
+  * [Windows node pools](./windows-faq.yml)
 
 ## Prerequisites
 
