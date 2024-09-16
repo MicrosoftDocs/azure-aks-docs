@@ -71,7 +71,7 @@ If you want to carry out an in-place migration, the AKS service will migrate you
     ```
 
     > [!NOTE]
-    > 1.30 is the next LTS version after 1.27. You can begin upgrading from 1.27 LTS to 1.30 LTS starting in August 2024. LTS version 1.27 will go end of life (EOL) by July 2025.  
+    > 1.30 is the next LTS version after 1.27. You can opt into LTS from a 1.30 version cluster through the steps given above. LTS version 1.27 will go end of life (EOL) by July 2025.  
 
 ## Disable long-term support on an existing cluster
 

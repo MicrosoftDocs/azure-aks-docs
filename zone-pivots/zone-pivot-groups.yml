@@ -39,3 +39,14 @@ groups:
   - id: development-environment-azure-developer
     title: Azure Developer CLI
 # Owner: jopeng
+# Owner: schaffererin
+- id: csi-secrets-store-identity-access
+  title: Choose a Secrets Store CSI Driver access method
+  prompt: Choose an access method
+  pivots:
+  - id: access-with-service-connector
+    title: Service Connector with Workload ID
+  - id: access-with-a-microsoft-entra-workload-identity
+    title: Workload ID
+  - id: access-with-a-user-assigned-managed-identity
+    title: Managed identity
