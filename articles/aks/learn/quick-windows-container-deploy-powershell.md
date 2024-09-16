@@ -83,9 +83,9 @@ To create the AKS cluster with Azure PowerShell, follow these steps:
 
     If you get a password validation error, and the password that you set meets the length and complexity requirements, try creating your resource group in another region. Then try creating the cluster with the new resource group.
 
-    If you don't specify an administrator username and password when creating the node pool, the username is set to *azureuser* and the password is set to a random value. For more information, see [How do I change the administrator password for Windows Server nodes on my cluster?](../windows-faq.md#how-do-i-change-the-administrator-password-for-windows-server-nodes-on-my-cluster).
+    If you don't specify an administrator username and password when creating the node pool, the username is set to *azureuser* and the password is set to a random value. For more information, see the [Windows Server FAQ](../windows-faq.yml).
 
-    The administrator username can't be changed, but you can change the administrator password that your AKS cluster uses for Windows Server nodes using `az aks update`. For more information, see [Windows Server node pools FAQ][win-faq-change-admin-creds].
+    The administrator username can't be changed, but you can change the administrator password that your AKS cluster uses for Windows Server nodes using `az aks update`. For more information, see the [Windows Server FAQ](../windows-faq.yml).
 
     To run an AKS cluster that supports node pools for Windows Server containers, your cluster needs to use a network policy that uses [Azure CNI (advanced)][azure-cni] network plugin. The `-NetworkPlugin azure` parameter specifies Azure CNI.
 
@@ -324,5 +324,3 @@ To learn more about AKS, and to walk through a complete code-to-deployment examp
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference
 [new-azaksnodepool]: /powershell/module/az.aks/new-azaksnodepool
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-[win-faq-change-admin-creds]: ../windows-faq.md#how-do-i-change-the-administrator-password-for-windows-server-nodes-on-my-cluster
-
