@@ -12,7 +12,7 @@
     },
     {
       "source_path_from_root": "/articles/aks/markdown-windows-faq.md",
-      "redirect_url": "/azure/aks/windows-faq.yml",
+      "redirect_url": "/azure/aks/windows-faq",
       "redirect_document_id": false
     }
   ]
