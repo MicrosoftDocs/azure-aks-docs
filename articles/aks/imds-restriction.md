@@ -1,15 +1,15 @@
 ---
 title: Block traffic from an AKS cluster to the Azure Instance Metadata Service (IMDS) endpoint (preview)
-description: Learn how to enable IMDS restriction on an AKS cluster to block traffic to the IMDS endpoint (preview).
+description: Learn how to enable IMDS restriction on an AKS cluster to restrict pod access to the IMDS endpoint (preview).
 author: tamram
 
 ms.topic: article
 ms.custom: devx-track-azurecli
-ms.date: 09/12/2024
+ms.date: 09/16/2024
 ms.author: tamram
 ---
 
-# Block traffic from a cluster to the IMDS endpoint (preview)
+# Block traffic from an AKS cluster to the IMDS endpoint (preview)
 
 [Azure Instance Metadata Service (IMDS)](/azure/virtual-machines/instance-metadata-service) is a REST API that provides information about currently running virtual machine instances. This information includes the SKU, storage, network configurations, and upcoming maintenance events. You can now restrict access to the IMDS endpoint from your AKS clusters to enhance security (preview).
 
