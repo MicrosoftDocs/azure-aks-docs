@@ -9,8 +9,7 @@
         "exclude": [
           "**/_themes/**",
           "**/includes/**",
-          "**/obj/**",
-          "**/*.graffle"
+          "**/obj/**"
         ],
         "src": "articles",
         "dest": "."
@@ -131,7 +130,8 @@
     },
     "fileMetadata": {
       "adobe-target": {
-        "articles/aks/*": true
+        "articles/aks/*": true,
+        "articles/kubernetes-fleet/*": true
       },
       "author": {
         "articles/aks/**/*.md": "schaffererin"
@@ -148,7 +148,8 @@
         "articles/aks/**/*": "OpenSource"
       },
       "feedback_help_link_url": {
-        "articles/aks/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/"
+        "articles/aks/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/",
+        "articles/kubernetes-fleet/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/"
       },
       "feedback_help_link_type": {
         "**/*": "get-help-at-qna"
