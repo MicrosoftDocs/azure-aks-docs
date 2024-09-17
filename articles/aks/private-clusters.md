@@ -203,6 +203,9 @@ az aks update --name <private-cluster-name> --resource-group <private-cluster-re
 > [!NOTE]
 > You can only update from `byo` or `system` to `none`. No other combination of update values is supported.
 
+> [!WARNING]
+> When you update a private cluster from `byo` or `system` to `none`, the agent nodes change to use a public FQDN. In an AKS cluster that uses Azure Virtual Machine Scale Sets, a [node image upgrade][node-image-upgrade] is performed to update your nodes with the Public FQDN.
+
 ## Options for connecting to the private cluster
 
 The API server endpoint has no public IP address. To manage the API server, you'll need to use a VM that has access to the AKS cluster's Azure Virtual Network (VNet). There are several options for establishing network connectivity to the private cluster:
