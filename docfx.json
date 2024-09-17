@@ -108,6 +108,7 @@
       ],
       "breadcrumb_path": "/azure/breadcrumb/azure-aks/toc.json",
       "_op_documentIdPathDepotMapping": {
+        "articles/iot-central/": {}
       },
       "brand": "azure",
       "feedback_github_repo": "MicrosoftDocs/azure-aks-docs",
@@ -130,27 +131,27 @@
     },
     "fileMetadata": {
       "adobe-target": {
-        "articles/aks/**/*": true,
-        "articles/kubernetes-fleet/**/*": true
+        "articles/aks/*": true
       },
       "author": {
-        "articles/aks/**/*": "schaffererin"
+        "articles/aks/**/*.md": "schaffererin"
       },
       "featureFlags": {
-        "articles/**/*": [
+        "articles/**/*.md": [
           "show_learn_banner"
         ]
       },
       "feedback_product_url": {
-        "articles/aks/**/*": "https://feedback.azure.com/d365community/forum/aabe212a-f724-ec11-b6e6-000d3a4f0da0",
-        "articles/kubernetes-fleet/**/*": "https://feedback.azure.com/d365community/forum/aabe212a-f724-ec11-b6e6-000d3a4f0da0"
+        "articles/aks/**/*.md": "https://feedback.azure.com/d365community/forum/aabe212a-f724-ec11-b6e6-000d3a4f0da0"
       },
       "feedback_system": {
         "articles/aks/**/*": "OpenSource"
       },
       "feedback_help_link_url": {
-        "articles/aks/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/",
-        "articles/kubernetes-fleet/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/"
+        "articles/aks/**/*": "https://learn.microsoft.com/answers/tags/200/azure-kubernetes-service/"
+      },
+      "feedback_help_link_type": {
+        "**/*": "get-help-at-qna"
       },
       "open_source_feedback_contributorGuideUrl": {
         "articles/aks/**/*": "https://learn.microsoft.com/contribute/content/"
@@ -174,15 +175,15 @@
         "articles/aks/**/*": "Azure Kubernetes Service"
       },
       "learn_banner_products": {
-        "articles/**/*": [
+        "articles/**/*.md": [
           "azure"
         ]
       },
       "ms.author": {
-        "articles/aks/**/*": "magoedte"
+        "articles/aks/**/*.md": "magoedte"
       },
       "ms.service": {
-        "articles/aks/**/*": "azure-kubernetes-service"
+        "articles/aks/**/*.md": "azure-kubernetes-service"
       },
       "searchScope": {
         "articles/aks/**/*.md": [
@@ -195,7 +196,7 @@
         ]
       },
       "titleSuffix": {
-        "articles/aks/**/*": "Azure Kubernetes Service"
+        "articles/aks/**/*.md": "Azure Kubernetes Service"
       }
     },
     "overwrite": [],
