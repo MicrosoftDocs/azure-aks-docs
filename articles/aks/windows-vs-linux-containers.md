@@ -55,7 +55,7 @@ For more information on Windows containers, see the [Windows Server containers F
 [hpc-containers]: use-windows-hpc.md#limitations
 [node-upgrade]: ./manage-node-pools.md#upgrade-a-single-node-pool
 [aks-image-cleaner]: image-cleaner.md#limitations
-[windows-server-containers-faq]: windows-faq.md
+[windows-server-containers-faq]: windows-faq.yml
 [azure-network-policy]: use-network-policies.md#overview-of-network-policy
 [node-image-upgrade]: node-image-upgrade.md
 [byo-cni]: use-byo-cni.md

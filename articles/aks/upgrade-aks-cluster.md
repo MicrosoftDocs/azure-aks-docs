@@ -25,7 +25,7 @@ When you perform an upgrade from an *unsupported version* that skips two or more
 * If you're using the Azure CLI, this article requires Azure CLI version 2.34.1 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 * If you're using Azure PowerShell, this article requires Azure PowerShell version 5.9.0 or later. Run `Get-InstalledModule -Name Az` to find the version. If you need to install or upgrade, see [Install Azure PowerShell][azure-powershell-install].
 * Performing upgrade operations requires the `Microsoft.ContainerService/managedClusters/agentPools/write` RBAC role. For more on Azure RBAC roles, see the [Azure resource provider operations][azure-rp-operations].
-* Starting with 1.30 kubernetes version and 1.27 LTS versions the beta apis will be disabled by default when you upgrade to them.
+* Starting with 1.30 kubernetes version and 1.27 LTS versions the beta APIs will be disabled by default when you upgrade to them.
 
 > [!WARNING]
 > An AKS cluster upgrade triggers a cordon and drain of your nodes. If you have a low compute quota available, the upgrade might fail. For more information, see [increase quotas](/azure/azure-portal/supportability/regional-quota-requests).
@@ -89,13 +89,13 @@ Check which Kubernetes releases are available for your cluster using the followi
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. Under **Settings**, select **Cluster configuration**.
-4. In **Kubernetes version**, select **Upgrade version**.
-5. In **Kubernetes version**, select the version to check for available upgrades.
+3. In the service menu, under **Settings**, select **Cluster configuration**.
+4. For **Kubernetes version**, select **Upgrade version**.
+5. On the **Upgrade Kubernetes version** page, select the **Kubernetes version** to check for available upgrades.
 
 The Azure portal highlights all the deprecated APIs between your current version and new available versions you intend to migrate to. For more information, see [the Kubernetes API Removal and Deprecation process][k8s-deprecation].
 
-:::image type="content" source="./media/upgrade-cluster/portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
+:::image type="content" source="./media/upgrade-cluster/azure-portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
 
 ---
 
@@ -137,7 +137,7 @@ During the cluster upgrade process, AKS performs the following operations:
 
 * Add a new buffer node (or as many nodes as configured in [max surge](#customize-node-surge-upgrade)) to the cluster that runs the specified Kubernetes version.
 * [Cordon and drain][kubernetes-drain] one of the old nodes to minimize disruption to running applications. If you're using max surge, it [cordons and drains][kubernetes-drain] as many nodes at the same time as the number of buffer nodes specified.
-* For long running pods, you can configure the node drain timeout, which allows for custom wait time on the eviction of pods and graceful termination per node. If not specified, the default is 30 minutes.
+* For long running pods, you can configure the node drain timeout, which allows for custom wait time on the eviction of pods and graceful termination per node. If not specified, the default is 30 minutes. Minimum allowed timeout value is 5 minutes.
 * When the old node is fully drained, it's reimaged to receive the new version and becomes the buffer node for the following node to be upgraded.
 * Optionally, you can set a duration of time to wait between draining a node and proceeding to reimage it and move on to the next node. A short interval allows you to complete other tasks, such as checking application health from a Grafana dashboard during the upgrade process. We recommend a short timeframe for the upgrade process, as close to 0 minutes as reasonably possible. Otherwise, a higher node soak time affects how long before you discover an issue. The minimum soak time value is 0 minutes, with a maximum of 30 minutes. If not specified, the default value is 0 minutes.
 * This process repeats until all nodes in the cluster are upgraded.
@@ -197,10 +197,10 @@ During the cluster upgrade process, AKS performs the following operations:
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. Under **Settings**, select **Cluster configuration**.
-4. In **Kubernetes version**, select **Upgrade version**.
-5. In **Kubernetes version**, select your desired version and then select **Save**.
-6. Navigate to your AKS cluster **Overview** page, and select the **Kubernetes version** to confirm the upgrade was successful.
+3. In the service menu, under **Settings**, select **Cluster configuration**.
+4. For **Kubernetes version**, select **Upgrade version**.
+5. On the **Upgrade Kubernetes version** page, select your desired **Kubernetes version** and then select **Save**.
+6. Navigate to your AKS cluster **Overview** page, and view the **Kubernetes version** to confirm the upgrade was successful.
 
 ---
 
@@ -238,7 +238,9 @@ AKS accepts both integer values and a percentage value for max surge. An integer
 
 #### Set node drain timeout value
 
-At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade.
+At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. Minimum allowed drain timeout value is 5 minutes. 
+
+If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade.
 
 * Set node drain timeout for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command.
 

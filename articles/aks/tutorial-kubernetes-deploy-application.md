@@ -29,7 +29,7 @@ In this tutorial, part four of seven, you deploy a sample application into a Kub
 
 ## Before you begin
 
-In previous tutorials, you packaged an application into a container image, uploaded the image to Azure Container Registry, and created a Kubernetes cluster. To complete this tutorial, you need the precreated `aks-store-quickstart.yaml` Kubernetes manifest file. This file was downloaded in the application source code from [Tutorial 1 - Prepare application for AKS][aks-tutorial-prepare-app]. 
+In previous tutorials, you packaged an application into a container image, uploaded the image to Azure Container Registry, and created a Kubernetes cluster. To complete this tutorial, you need the precreated `aks-store-quickstart.yaml` Kubernetes manifest file. This file was downloaded in the application source code from [Tutorial 1 - Prepare application for AKS][aks-tutorial-prepare-app].
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -226,13 +226,12 @@ If the application doesn't load, it might be an authorization problem with your 
 
 ### Azure portal
 
-Navigate to your Azure portal to find your deployment information.
+Navigate to the Azure portal to find your deployment information.
 
-1. Open your [Resource Group][azure-rg] on the Azure portal
-1. Navigate to the Kubernetes service for your cluster
-1. Select `Services and Ingress` under `Kubernetes Resources`
-1. Copy the External IP shown in the column for the `store-front` service
-1. Paste the IP into your browser and visit your store page
+1. Navigate to your AKS cluster resource.
+2. From the service menu, under **Kubernetes Resources**, select **Services and ingresses**.
+3. Copy the External IP shown in the column for the `store-front` service.
+4. Paste the IP into your browser to visit your store page.
 
     :::image type="content" source="./learn/media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="./learn/media/quick-kubernetes-deploy-cli/aks-store-application.png":::
 
@@ -240,13 +239,13 @@ Navigate to your Azure portal to find your deployment information.
 
 Since you validated the application's functionality, you can now remove the cluster from the application. We will deploy the application again in the next tutorial.
 
-1. Stop and remove the container instances and resources using the [`docker-compose down`][docker-compose-down] command.
+1. Stop and remove the container instances and resources using the `kubectl delete` command.
 
     ```console
     kubectl delete -f aks-store-quickstart.yaml
     ```
 
-1. Check that all the application pods have been removed:
+2. Check that all the application pods have been removed using the `kubectl get pods` command.
 
     ```console
     kubectl get pods
@@ -257,7 +256,7 @@ Since you validated the application's functionality, you can now remove the clus
 In this tutorial, you deployed a sample Azure application to a Kubernetes cluster in AKS. You learned how to:
 
 > [!div class="checklist"]
-> 
+>
 > * Update a Kubernetes manifest file.
 > * Run an application in Kubernetes.
 > * Test the application.

@@ -36,102 +36,93 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 1. Sign in to the [Azure portal][azure-portal].
 1. On the Azure portal home page, select **Create a resource**.
 1. In the **Categories** section, select **Containers** > **Azure Kubernetes Service (AKS)**.
-1. On the **Basics** tab, configure the following options:
+1. On the **Basics** tab, configure the following settings:
     - Under **Project details**:
-        - Select an Azure **Subscription**.
-        - Create an Azure **Resource group**, such as *myResourceGroup*. While you can select an existing resource group, for testing or evaluation purposes, we recommend creating a resource group to temporarily host these resources and avoid impacting your production or development workloads.
+        - **Subscription**: Select the Azure subscription you want to use for this AKS cluster.
+        - **Resource group**: Select **Create new**, enter a resource group name, such as *myResourceGroup*, and then select **Ok**. While you can select an existing resource group, for testing or evaluation purposes, we recommend creating a resource group to temporarily host these resources and avoid impacting your production or development workloads.
     - Under **Cluster details**:
-      - Set the **Cluster preset configuration** to *Dev/Test*. For more details on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
+      - **Cluster preset configuration**: Select **Dev/Test**. For more details on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
 
         > [!NOTE]
-        > You can change the preset configuration when creating your cluster by selecting *Compare presets* and choosing a different option.
-        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-preset-options.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-preset-options.png":::
+        > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
+        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
 
-      - Enter a **Kubernetes cluster name**, such as *myAKSCluster*.
-      - Select a **Region** for the AKS cluster.
-      - Set the **Availability zones** setting to *None*.
-      - Set the **AKS pricing tier** to *Free*.
-      - Leave the default value selected for **Kubernetes version**.
-      - Leave the **Automatic upgrade** setting set to the recommended value, which is *Enabled with patch*.
-      - Leave the **Authentication and authorization** setting set to *Local accounts with Kubernetes RBAC*.
+      - **Kubernetes cluster name**: Enter a cluster name, such as *myAKSCluster*.
+      - **Region**: Select a region, such as *East US 2*.
+      - **Availability zones**: Select **None**.
+      - **AKS pricing tier**: Select **Free**.
+      - Leave the default values for the remaining settings, and select **Next**.
 
-        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster-basics.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster-basics.png":::
+        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster.png":::
 
-1. Select **Next**. On the **Node pools** tab, add a new node pool:
-    - Select **Add node pool**.
-    - Enter a **Node pool name**, such as *nplinux*.
-    - For **Mode**, select **User**.
-    - For **OS SKU**, select **Ubuntu Linux**.
-    - Set the **Availability zones** setting to *None*.
+1. On the **Node pools** tab, configure the following settings:
+    - Select **Add node pool** and enter a **Node pool name**, such as *nplinux*.
+    - **Mode**: Select **User**.
+    - **OS SKU**: Select **Ubuntu Linux**.
+    - **Availability zones**: Select **None**.
     - Leave the **Enable Azure Spot instances** checkbox unchecked.
-    - For **Node size**, select **Choose a size**. On the **Select a VM size** page, select *D2s_v3*, then choose the **Select** button.
-    - Leave the **Scale method** setting set to *Autoscale*.
-    - Leave the **Minimum node count** and **Maximum node count** fields set to their default settings.
+    - **Node size**: Select **Choose a size**. On the **Select a VM size** page, select **D2s_v3**, and then select **Select**.
+    - Leave the default values for the remaining settings, and select **Add**.
 
-        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-node-pool-linux.png" alt-text="Screenshot showing how to create a node pool running Ubuntu Linux." lightbox="media/quick-kubernetes-deploy-portal/create-node-pool-linux.png":::
+        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png" alt-text="Screenshot showing how to create a node pool running Ubuntu Linux." lightbox="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png":::
 
-1. Leave all settings on the other tabs set to their defaults, except for the settings on the **Monitoring** tab. By default, the [Azure Monitor features][azure-monitor-features-containers] Container insights, Azure Monitor managed service for Prometheus, and Azure Managed Grafana are enabled. You can save costs by disabling them.
+1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 
-1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create** to create the AKS cluster.
-
-It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by either:
-
-- Selecting **Go to resource**, or
-- Browsing to the AKS cluster resource group and selecting the AKS resource. In this example you browse for *myResourceGroup* and select the resource *myAKSCluster*.
+    It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by selecting **Go to resource**, or by browsing to the AKS cluster resource group and selecting the AKS resource.
 
 ## Connect to the cluster
 
-To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. If you're unfamiliar with the Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
+You use the Kubernetes command-line client, [kubectl][kubectl], to manage Kubernetes clusters. `kubectl` is already installed if you use Azure Cloud Shell. If you're unfamiliar with the Cloud Shell, review [Overview of Azure Cloud Shell](/azure/cloud-shell/overview).
 
 If you're using Cloud Shell, open it with the `>_` button on the top of the Azure portal. If you're using PowerShell locally, connect to Azure via the `Connect-AzAccount` command. If you're using Azure CLI locally, connect to Azure via the `az login` command.
 
 ### [Azure CLI](#tab/azure-cli)
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
 1. Verify the connection to your cluster using `kubectl get` to return a list of the cluster nodes.
 
-    ```azurecli
+    ```azurecli-interactive
     kubectl get nodes
     ```
 
     The following example output shows the single node created in the previous steps. Make sure the node status is *Ready*.
 
     ```output
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-31718369-0   Ready    agent   6m44s   v1.15.10
+    NAME                                STATUS   ROLES   AGE       VERSION
+    aks-nodepool1-31718369-0   Ready    agent    6m44s   v1.15.10
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [Import-AzAksCredential][import-azakscredential] cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`Import-AzAksCredential`][import-azakscredential] cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurepowershell
+    ```azurepowershell-interactive
     Import-AzAksCredential -ResourceGroupName myResourceGroup -Name myAKSCluster
     ```
 
 1. Verify the connection to your cluster using `kubectl get` to return a list of the cluster nodes.
 
-    ```azurepowershell
+    ```azurepowershell-interactive
     kubectl get nodes
     ```
 
     The following example output shows the single node created in the previous steps. Make sure the node status is *Ready*.
 
     ```output
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-31718369-0   Ready    agent   6m44s   v1.15.10
+    NAME                                STATUS   ROLES   AGE       VERSION
+    aks-nodepool1-31718369-0   Ready    agent    6m44s   v1.15.10
     ```
 
 ---
 
 ## Deploy the application
 
-To deploy the application, you use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A Kubernetes manifest file defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
+You use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A Kubernetes manifest file defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
 
 :::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
 
@@ -144,7 +135,7 @@ To deploy the application, you use a manifest file to create all the objects req
 > We don't recommend running stateful containers, such as Rabbit MQ, without persistent storage for production. These are used here for simplicity, but we recommend using managed services, such as Azure CosmosDB or Azure Service Bus.
 
 1. In the Cloud Shell, open an editor and create a file named `aks-store-quickstart.yaml`.
-1. Paste the following manifest into the editor:
+2. Paste the following manifest into the editor:
 
     ```yaml
     apiVersion: apps/v1
@@ -379,9 +370,9 @@ To deploy the application, you use a manifest file to create all the objects req
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-1. Deploy the application using the `kubectl apply` command and specify the name of your YAML manifest:
+3. Deploy the application using the `kubectl apply` command and specify the name of your YAML manifest:
 
-    ```console
+    ```bash
     kubectl apply -f aks-store-quickstart.yaml
     ```
 
@@ -402,15 +393,15 @@ To deploy the application, you use a manifest file to create all the objects req
 
 When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete.
 
-1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding.
+1. Check the status of the deployed pods using the [`kubectl get pods`][kubectl-get] command. Make sure all pods are `Running` before proceeding.
 
-    ```console
+    ```bash
     kubectl get pods
     ```
 
-1. Check for a public IP address for the store-front application. Monitor progress using the [kubectl get service][kubectl-get] command with the `--watch` argument.
+1. Check for a public IP address for the `store-front` application. Monitor progress using the [`kubectl get service`][kubectl-get] command with the `--watch` argument.
 
-    ```azurecli
+    ```azurecli-interactive
     kubectl get service store-front --watch
     ```
 
@@ -436,7 +427,7 @@ When the application runs, a Kubernetes service exposes the application front en
 
 ## Delete the cluster
 
-If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure charges.
+If you don't plan on going through the [AKS tutorial series][aks-tutorial], clean up unnecessary resources to avoid Azure charges.
 
 1. In the Azure portal, navigate to your AKS cluster resource group.
 1. Select **Delete resource group**.
@@ -447,12 +438,12 @@ If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up un
 
 ## Next steps
 
-In this quickstart, you deployed a Kubernetes cluster and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
+In this quickstart, you deployed a Kubernetes cluster, and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
 
-To learn more about AKS and walk through a complete code-to-deployment example, continue to the Kubernetes cluster tutorial.
+To learn more about AKS and walk through a complete code-to-deployment example, continue to the Kubernetes cluster tutorial series.
 
 > [!div class="nextstepaction"]
-> [AKS tutorial][aks-tutorial]
+> [AKS tutorial series][aks-tutorial]
 
 <!-- LINKS - external -->
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
@@ -468,4 +459,3 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [intro-azure-linux]: /azure/azure-linux/intro-azure-linux
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-[azure-monitor-features-containers]: /azure/azure-monitor/containers/container-insights-overview

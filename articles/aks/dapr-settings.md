@@ -6,7 +6,7 @@ ms.author: hannahhunter
 ms.topic: article
 ms.custom: build-2023, devx-track-azurecli, linux-related-content
 ms.subservice: aks-developer
-ms.date: 08/02/2024
+ms.date: 09/05/2024
 ---
 
 # Configure the Dapr extension for your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes project
@@ -375,7 +375,7 @@ The Dapr extension requires the following outbound URLs on `https://:443` to fun
 ## Next Steps
 
 - [Walk through the tutorial for deploying Dapr Workflow via the extension][dapr-workflow]
-- [Determine if you need to migrate from Dapr open source to the Dapr extension][dapr-migration].
+- [Migrate from Dapr open source to the Dapr extension][dapr-migration].
 
 
 <!-- LINKS INTERNAL -->

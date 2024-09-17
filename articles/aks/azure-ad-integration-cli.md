@@ -10,7 +10,7 @@ ms.author: miwithro
 ---
 
 # Integrate Microsoft Entra ID with Azure Kubernetes Service (AKS) using the Azure CLI (legacy)
- 
+
 > [!WARNING]
 > The feature described in this document, Microsoft Entra Integration (legacy) was **deprecated on June 1st, 2023**. At this time, no new clusters can be created with Microsoft Entra Integration (legacy). 
 >

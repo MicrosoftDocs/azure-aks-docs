@@ -1,16 +1,15 @@
 ---
-title: Access a private Azure Kubernetes Service (AKS) cluster
-description: Learn how to access a private Azure Kubernetes Service (AKS) cluster using the Azure CLI or Azure portal.
+title: Access a private Azure Kubernetes Service (AKS) cluster using the command invoke or Run command feature
+description: Learn how to access a private Azure Kubernetes Service (AKS) cluster using the Azure CLI command invoke feature or the Azure portal Run command feature.
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 09/15/2023
 author: schaffererin
 ms.author: schaffererin
-
 ---
 
-# Access a private Azure Kubernetes Service (AKS) cluster
+# Access a private Azure Kubernetes Service (AKS) cluster using the command invoke or Run command feature
 
 When you access a private AKS cluster, you need to connect to the cluster from the cluster virtual network, a peered network, or a configured private endpoint. These approaches require configuring a VPN, Express Route, deploying a *jumpbox* within the cluster virtual network, or creating a private endpoint inside of another virtual network.
 
@@ -73,7 +72,7 @@ The pod created by the `run` command provides `helm` and the latest compatible v
       --file deployment.yaml
     ```
 
-#### Use `command invoke` to run commands with all files in the current directory attached
+### Use `command invoke` to run commands with all files in the current directory attached
 
 * Run commands with all files in the current directory attached using the `az aks command invoke --command` command with the `--file` parameter. The following example command runs  `kubectl apply -f deployment.yaml configmap.yaml -n default` on the *myPrivateCluster* cluster in *myResourceGroup*. The `deployment.yaml` and `configmap.yaml` files are part of the current directory on the development computer where `az aks command invoke` was run.
 
@@ -87,9 +86,7 @@ The pod created by the `run` command provides `helm` and the latest compatible v
 
 ### [Azure portal - `Run command`](#tab/azure-portal)
 
-To get started with `Run command`, navigate to your private cluster in the Azure portal. Under the **Kubernetes resources** section, select **Run command**.
-
-:::image type="content" source="media/access-private-cluster/azure-portal-run-command.png" alt-text="Screenshot of browsing to the Azure portal Run command feature.":::
+To get started with `Run command`, navigate to your private cluster in the Azure portal. In the service menu, under **Kubernetes resources**, select **Run command**.
 
 ### `Run command` commands
 
@@ -106,22 +103,21 @@ You can use the following kubectl commands with the `Run command` feature:
 ### Use `Run command` to run a single command
 
 1. In the Azure portal, navigate to your private cluster.
-2. Under the **Kubernetes resources** section, select **Run command**.
+2. In the service menu, under **Kubernetes resources**, select **Run command**.
 3. Enter the command you want to run and select **Run**.
 
 ### Use `Run command` to run commands with attached files
 
 1. In the Azure portal, navigate to your private cluster.
-2. Under the **Kubernetes resources** section, select **Run command**.
-3. Select **Attach files**.
-4. Select **Browse for files**.
+2. In the service menu, under **Kubernetes resources**, select **Run command**.
+3. Select **Attach files** > **Browse for files**.
 
     :::image type="content" source="media/access-private-cluster/azure-portal-run-command-attach-files.png" alt-text="Screenshot of attaching files to the Azure portal Run command.":::
 
-5. Select the file(s) you want to attach and then select **Attach**.
-6. Enter the command you want to run and select **Run**.
+4. Select the file(s) you want to attach and then select **Attach**.
+5. Enter the command you want to run and select **Run**.
 
---
+---
 
 ## Troubleshooting
 
@@ -136,6 +132,4 @@ In this article, you learned how to access a private cluster and run commands on
 * [Hub and spoke with custom DNS in AKS](./private-clusters.md#hub-and-spoke-with-custom-dns)
 
 <!-- links - internal -->
-
 [command-invoke-troubleshoot]: /troubleshoot/azure/azure-kubernetes/resolve-az-aks-command-invoke-failures
-

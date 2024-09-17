@@ -164,7 +164,7 @@ To learn more about Windows Containers on AKS, see the following resources:
 
 <!--- LINKS --->
 [windows-best-practices]: ./windows-best-practices.md
-[windows-FAQ]: ./windows-faq.md
+[windows-FAQ]: ./windows-faq.yml
 [upgrade-aks-cluster]: ./upgrade-aks-cluster.md
 [upgrade-windows-os]: ./upgrade-windows-os.md
 [install-azure-cli]: /cli/azure/install-azure-cli

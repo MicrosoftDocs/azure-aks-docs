@@ -32,12 +32,82 @@ az aks get-credentials -resource-group <ResourceGroupName> --name <ClusterName>
 
 The application routing add-on uses a Kubernetes [custom resource definition (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) called [`NginxIngressController`](https://github.com/Azure/aks-app-routing-operator/blob/main/config/crd/bases/approuting.kubernetes.azure.com_nginxingresscontrollers.yaml) to configure NGINX ingress controllers. You can create more ingress controllers or modify existing configuration.
 
-`NginxIngressController` CRD has a `loadBalancerAnnotations` field to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations). 
+Here is a reference to properties you can set to configure an `NginxIngressController`.
 
+| Property                  | Description                                                                 |
+|---------------------------|-----------------------------------------------------------------------------|
+| **ingressClassName**          | The name of the `IngressClass` that will be used for the NGINX Ingress Controller. Defaults to the name of the `NginxIngressController` if not specified. | 
+| **controllerNamePrefix**      | A name used to prefix the managed NGINX ingress controller resources. Defaults to `nginx`. |
+| **loadBalancerAnnotations**   | A set of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations)  |
+| **scaling**                   | Configuration options for how the NGINX Ingress Controller scales. |
+| _scaling.minReplicas_           | The lower limit for the number of Ingress Controller replicas. It defaults to 2 pods.  |
+| _scaling.maxReplicas_           | The upper limit for the number of Ingress Controller replicas. It defaults to 100 pods.  |
+| _scaling.threshold_             | Defines how quickly the NGINX Ingress Controller pods should scale based on workload. **`Rapid`** means the Ingress Controller will scale quickly and aggressively for handling sudden and significant traffic spikes. **`Steady`** prioritizes cost-effectiveness with fewer replicas handling more work. **`Balanced`** is a good mix between the two that works for most use-cases. If unspecified, this field defaults to **`Balanced`**. |
+| **defaultBackendService**     | The Kubernetes service that the NGINX ingress controller should default to which handles all URL paths and hosts the Ingress-NGINX controller doesn't understand (i.e., all the requests that are not mapped with an Ingress). The controller directs traffic to the first port of the service. If not specified, this will use the [default backend](https://kubernetes.github.io/ingress-nginx/user-guide/default-backend/) that is built-in. |
+| _defaultBackendService.namespace_            | Namespace of the service.                                                   |
+| _defaultBackendService.name_                 | Name of the service.                                                        |
+| **defaultSSLCertificate**     |  The secret referred to by this property contains the default certificate to be used when accessing the default backend service. If this property is not provided NGINX will use a self-signed certificate. If the `tls:` section is not set on an Ingress, NGINX will provide the default certificate but will not force HTTPS redirect. | 
+| _defaultSSLCertificate.forceSSLRedirect_       |  Forces a redirect for Ingresses that do not specify a `tls:` section. |
+| _defaultSSLCertificate.keyVaultURI_             | The Azure Key Vault URI where the default SSL certificate can be found. The add-on needs to be [configured to use the key vault](app-routing-dns-ssl.md#enable-azure-key-vault-integration).|
+| _defaultSSLCertificate.secret_                  | Configures the name and namespace where the the default SSL secret is on the cluster.  |
+| _defaultSSLCertificate.secret.name_                   | Name of the secret. |
+| _defaultSSLCertificate.secret.namespace_              | Namespace of the secret.      |
 
-### The default NGINX ingress controller
+## Common configurations
+
+### Control the default NGINX ingress controller configuration (preview)
+
+> [!NOTE]
+> Controlling the NGINX ingress controller configuration when enabling the add-on is available in `API 2024-06-02-preview`, Kubernetes version 1.30 or later, and the [aks-preview](/cli/azure/aks) Azure CLI extension version `7.0.0b5` or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
 
 When you enable the application routing add-on with NGINX, it creates an ingress controller called `default` in the `app-routing-namespace` configured with a public facing Azure load balancer. That ingress controller uses an ingress class name of `webapprouting.kubernetes.azure.com`.
+
+You can also control if the default gets a public or an internal IP, or if it gets created at all when enabling the add-on.
+
+Here are the possible configuration options:
+
+- **`None`**: The default Nginx ingress controller is not created and will not be deleted if it already exists. Users should delete the default `NginxIngressController` custom resource manually if desired.
+- **`Internal`**: The default Nginx ingress controller is created with an internal load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it external will be overwritten.
+- **`External`**: The default Nginx ingress controller created with an external load balancer. Any annotations changes on the `NginxIngressController` custom resource to make it internal will be overwritten.
+- **`AnnotationControlled`** (default): The default Nginx ingress controller is created with an external load balancer. Users can edit the default `NginxIngressController` custom resource to configure load balancer annotations.
+
+# [Azure CLI](#tab/azurecli)
+
+#### Control the default ingress controller configuration when creating the cluster
+
+To enable application routing on a new cluster, use the [`az aks create`][az-aks-create] command, specifying the `--enable-app-routing` and the `--app-routing-default-nginx-controller` flags. You need to set the `<DefaultIngressControllerType>` to one of the configuration options described earlier.
+
+```azurecli-interactive
+az aks create \
+--resource-group <ResourceGroupName> \
+--name <ClusterName> \
+--location <Location> \
+--enable-app-routing \
+--app-routing-default-nginx-controller <DefaultIngressControllerType>
+```
+
+#### Update the default ingress controller configuration on an existing cluster
+
+To update the application routing default ingress controller configuration on an existing cluster, use the [`az aks approuting update`][az-aks-approuting-update] command, specifying the `--nginx` flag. You need to set the `<DefaultIngressControllerType>` to one of the configuration options described earlier.
+
+```azurecli-interactive
+az aks approuting update --resource-group <ResourceGroupName> --name <ClusterName> --nginx <DefaultIngressControllerType>
+```
+
+# [Bicep](#tab/bicep)
+
+The `webAppRouting` profile has an optional `nginx` configuration with a `defaultIngressControllerType` property. You need to set the `defaultIngressControllerType` property to one of the configuration options described earlier.
+
+```bicep
+"ingressProfile": {
+  "webAppRouting": {
+    "nginx": {
+        "defaultIngressControllerType": "None|Internal|External|AnnotationControlled"
+    }
+}
+```
+
+---
 
 ### Create another public facing NGINX ingress controller
 
@@ -247,7 +317,7 @@ You can verify the managed Ingress was created using the [`kubectl get ingress`]
 kubectl get ingress -n hello-web-app-routing
 ```
 
-The following example output shows the created managed Ingress. The ingress class, host and IP address may be different:
+The following example output shows the created managed Ingress. The ingress class, host, and IP address may be different:
 
 ```output
 NAME             CLASS                                HOSTS               ADDRESS       PORTS     AGE
@@ -475,7 +545,7 @@ spec:
 
 ### URL rewriting
 
-In some scenarios, the exposed URL in the backend service differs from the specified path in the Ingress rule. Without a rewrite any request returns 404. This is particularly useful with [path based routing](https://kubernetes.github.io/ingress-nginx/user-guide/ingress-path-matching/) where you can serve two different web applications under the same domain. You can set path expected by the service using the annotation:
+In some scenarios, the exposed URL in the backend service differs from the specified path in the Ingress rule. Without a rewrite any request returns 404. This configuration is useful with [path based routing](https://kubernetes.github.io/ingress-nginx/user-guide/ingress-path-matching/) where you can serve two different web applications under the same domain. You can set path expected by the service using the annotation:
 
 ```yml
 nginx.ingress.kubernetes.io/rewrite-target": /$2
@@ -538,6 +608,7 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [csi-secrets-store-autorotation]: csi-secrets-store-configuration-options.md#enable-and-disable-auto-rotation
 [azure-key-vault-overview]: ../key-vault/general/overview.md
 [az-aks-approuting-update]: /cli/azure/aks/approuting#az-aks-approuting-update
+[az-aks-approuting-enable]: /cli/azure/aks/approuting#az-aks-approuting-enable
 [az-aks-approuting-zone]: /cli/azure/aks/approuting/zone
 [az-network-dns-zone-show]: /cli/azure/network/dns/zone#az-network-dns-zone-show
 [az-network-dns-zone-create]: /cli/azure/network/dns/zone#az-network-dns-zone-create
@@ -552,3 +623,5 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [az-keyvault-certificate-show]: /cli/azure/keyvault/certificate#az-keyvault-certificate-show
 [prometheus-in-grafana]: app-routing-nginx-prometheus.md
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[aks-upgrade]: ./upgrade-cluster.md
+[az-aks-create]: /cli/azure/aks#az-aks-create

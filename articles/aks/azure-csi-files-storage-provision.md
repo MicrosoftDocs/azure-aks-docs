@@ -513,7 +513,7 @@ For associated best practices, see [Best practices for storage and backups in AK
 [concepts-storage]: concepts-storage.md
 [persistent-volume]: #mount-file-share-as-a-persistent-volume
 [use-tags]: use-tags.md
-[node-resource-group]: faq.md#why-are-two-resource-groups-created-with-aks
+[node-resource-group]: faq.yml
 [storage-skus]: /azure/storage/common/storage-redundancy
 [mount-options]: #mount-options
 [az-aks-show]: /cli/azure/aks#az-aks-show
