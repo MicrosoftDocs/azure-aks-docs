@@ -267,5 +267,5 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [istio-secure-gateway]: istio-secure-gateway.md
 [istio-scaling-guide]: istio-scale.md#scaling
 [istio-ingress-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-ingress-gateway
-[azure-nsg-docs]: azure/virtual-network/network-security-groups-overview#augmented-security-rules
-[azure-service-tags]: azure/virtual-network/service-tags-overview
+[azure-nsg-docs]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
+[azure-service-tags]: /azure/virtual-network/service-tags-overview
