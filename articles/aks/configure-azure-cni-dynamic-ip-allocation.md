@@ -147,15 +147,9 @@ az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAM
 
 ### Apply the config
 
-1.	Open terminal in the folder the downloaded **container-azm-ms-agentconfig.yaml** file is saved.
-
-2.	First, apply the config using the command: `kubectl apply -f container-azm-ms-agentconfig.yaml`
-
-3.	This will restart the pod and after 5-10 minutes, the metrics will be visible.
-
-4.	To view the metrics on the cluster, go to Workbooks on the cluster page in the Azure portal, and find the workbook named "Subnet IP Usage". Your view will look similar to the following:
-
-    :::image type="content" source="media/configure-azure-cni-dynamic-ip-allocation/ip-subnet-usage.png" alt-text="A diagram of the Azure portal's workbook blade is shown, and metrics for an AKS cluster's subnet IP usage are displayed.":::
+1. Open the terminal in the folder in which the downloaded **container-azm-ms-agentconfig.yaml** file is saved.
+1. Apply the config using the `kubectl apply -f container-azm-ms-agentconfig.yaml` command. This will restart the pod and after 5-10 minutes, the metrics will be visible.
+1. View the metrics on the cluster by navigating to Workbooks on the cluster page in the Azure portal, and find the workbook named *Subnet IP Usage*.
 
 ## Dynamic allocation of IP addresses and enhanced subnet support FAQs
 
