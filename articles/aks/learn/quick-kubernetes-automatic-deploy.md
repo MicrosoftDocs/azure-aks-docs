@@ -31,16 +31,16 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - This article requires the `aks-preview` Azure CLI extension version **3.0.0b13** or later.
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command.
 - Register the `AutomaticSKUPreview` feature in your Azure subscription.
-- The identity creating the cluster should also have the [following permissions on the subscription][Azure-Policy-RBAC-permissions] on the resource group:
-
+- The identity creating the cluster should also have the [following permissions on the resource group][Azure-Policy-RBAC-permissions]:
     - `Microsoft.Authorization/policyAssignments/write`
     - `Microsoft.Authorization/policyAssignments/read`
-> [!IMPORTANT]
-> Make sure your subscription has quota for 24 vCPUs of the [Standard_DS4_v2](/azure/virtual-machines/dv2-dsv2-series) virtual machine for the region you're deploying the cluster to. You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
-.png
+- AKS Automatic clusters require deployment in Azure regions that support at least 3 [availability zones][availability-zones].
 :::zone target="docs" pivot="bicep"
 - To deploy a Bicep file, you need to write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
 :::zone-end
+
+> [!IMPORTANT]
+> AKS Automatic tries to dynamically select a virtual machine SKU for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following SKUs in the region you're deploying the cluster to: [Standard_D4pds_v5](/azure/virtual-machines/sizes/general-purpose/dpsv5-series), [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddsv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/ddv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
 
 ### Install the aks-preview Azure CLI extension
 
@@ -60,14 +60,9 @@ az extension update --name aks-preview
 
 ### Register the feature flags
 
-To use AKS Automatic in preview, you must register feature flags for other required features. Register the following flags using the [az feature register][az-feature-register] command.
+To use AKS Automatic in preview, register the following flag using the [az feature register][az-feature-register] command.
 
 ```azurecli-interactive
-az feature register --namespace Microsoft.ContainerService --name EnableAPIServerVnetIntegrationPreview
-az feature register --namespace Microsoft.ContainerService --name NRGLockdownPreview
-az feature register --namespace Microsoft.ContainerService --name SafeguardsPreview
-az feature register --namespace Microsoft.ContainerService --name NodeAutoProvisioningPreview
-az feature register --namespace Microsoft.ContainerService --name DisableSSHPreview
 az feature register --namespace Microsoft.ContainerService --name AutomaticSKUPreview
 ```
 
@@ -153,11 +148,10 @@ The following sample output will show how you're asked to log in.
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
 ```
 
-After you log in, the following sample output shows the managed node pools created in the previous steps. Make sure the node status is *Ready*.
+After you log in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
 NAME                                STATUS   ROLES   AGE     VERSION
-aks-default-f8vj2                   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000000   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000001   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
@@ -220,11 +214,10 @@ The following sample output will show how you're asked to log in.
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
 ```
 
-After you log in, the following sample output shows the managed node pools created in the previous steps. Make sure the node status is *Ready*.
+After you log in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
 NAME                                STATUS   ROLES   AGE     VERSION
-aks-default-f8vj2                   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000000   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000001   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
@@ -275,16 +268,12 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
   name: clusterName
   location: location  
   sku: {
-		name: 'Automatic'
-  		tier: 'Standard'
+	name: 'Automatic'
   }
   properties: {
     agentPoolProfiles: [
       {
         name: 'systempool'
-        count: 3
-        vmSize: 'Standard_DS4_v2'
-        osType: 'Linux'
         mode: 'System'
       }
     ]
@@ -340,11 +329,10 @@ The following sample output will show how you're asked to log in.
 To sign in, use a web browser to open the page https://microsoft.com/devicelogin and enter the code AAAAAAAAA to authenticate.
 ```
 
-After you log in, the following sample output shows the managed node pools created in the previous steps. Make sure the node status is *Ready*.
+After you log in, the following sample output shows the managed system node pools. Make sure the node status is *Ready*.
 
 ```output
 NAME                                STATUS   ROLES   AGE     VERSION
-aks-default-f8vj2                   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000000   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000001   Ready    agent   2m26s   v1.28.5
 aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
@@ -475,3 +463,4 @@ To learn more about AKS Automatic, continue to the introduction.
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
 [aks-entra-rbac]: /azure/aks/manage-azure-rbac
 [aks-entra-rbac-builtin-roles]: /azure/aks/manage-azure-rbac#create-role-assignments-for-users-to-access-the-cluster
+[availability-zones]: /azure/reliability/availability-zones-service-support#azure-regions-with-availability-zone-support
