@@ -230,7 +230,7 @@ The following annotations can be added to the Kubernetes service for the externa
 
 - `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`: to bind an internal ingress gateway to a specific subnet.
 - `service.beta.kubernetes.io/azure-shared-securityrule`: for exposing the ingress gateway through an [augmented security rule][azure-nsg-docs].
-- `service.beta.kubernetes.io/azure-allowed-service-tags`: for specifying which service tags the ingress gateway can receive requests from.
+- `service.beta.kubernetes.io/azure-allowed-service-tags`: for specifying which [service tags][azure-service-tags] the ingress gateway can receive requests from.
 - `service.beta.kubernetes.io/azure-load-balancer-ipv4`: for configuring a static IPv4 address.
 - `service.beta.kubernetes.io/azure-load-balancer-resource-group`: for specifying the resource group of a public IP in a different resource group from the cluster.
 - `service.beta.kubernetes.io/azure-pip-name`: for specifying the name of a public IP address.
