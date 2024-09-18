@@ -100,6 +100,34 @@ To create a Windows GPU-enabled node pool, you need to use a supported GPU-enabl
 2. Check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable).
 3. Once you confirm that your GPUs are schedulable, you can run your GPU workload.
 
+#### Specify GPU Driver Type (preview)
+
+By default, AKS specifies a default GPU driver type for each supported GPU-enabled VM. Because workload and driver compatibility are important for functioning GPU workloads, you can specify the driver type for your Windows GPU node. This feature is not supported for Linux GPU node pools.
+
+When creating a Windows agent pool with GPU support, you have the option to specify the type of GPU driver using the driverType property within the GPUProfile. 
+
+The available options are:
+- GRID: For applications requiring virtualization support.
+- CUDA: Optimized for computational tasks in scientific computing and data-intensive applications.
+
+ > [!NOTE]
+ > When you set the driverType property, you assume responsibility for ensuring that the selected driver type is compatible with the specific VM size and configuration of your node pool. While AKS attempts to validate compatibility, there are scenarios where the node pool creation might fail due to incompatibilities between the specified driver type and the underlying VM or hardware.
+
+To create a Windows GPU-enabled node pool with a specific GPU Driver type, use the [`az aks nodepool add`][az-aks-nodepool-add] command.
+
+    ```azurecli-interactive
+    az aks nodepool add \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name gpunp \
+        --node-count 1 \
+        --os-type Windows \
+        --kubernetes-version 1.29.0 \
+        --node-vm-size Standard_NC6s_v3
+        --drivertype GRID
+    ```
+The above command creates a GPU-enabled node pool using the "GRID" GPU driver type despite that the default for NC series VM skus is "CUDA" GPU driver type.
+
 ## Using Windows GPU with manual driver installation
 
 When creating a Windows node pool with N-series (NVIDIA GPU) VM sizes in AKS, the GPU driver and Kubernetes DirectX device plugin are installed automatically. To bypass this automatic installation, use the following steps:
