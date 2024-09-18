@@ -31,7 +31,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 - This article requires the `aks-preview` Azure CLI extension version **3.0.0b13** or later.
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command.
 - Register the `AutomaticSKUPreview` feature in your Azure subscription.
-- The identity creating the cluster should also have the [following permissions on the subscription][Azure-Policy-RBAC-permissions]:
+- The identity creating the cluster should also have the [following permissions on the subscription][Azure-Policy-RBAC-permissions] on the resource group:
 
     - `Microsoft.Authorization/policyAssignments/write`
     - `Microsoft.Authorization/policyAssignments/read`
