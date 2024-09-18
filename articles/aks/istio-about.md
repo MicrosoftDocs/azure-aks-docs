@@ -60,8 +60,7 @@ Istio-based service mesh add-on for AKS has the following limitations:
     
     > [!NOTE]
     > While these `EnvoyFilter`s are allowed, any issue arising from them (for example from the Lua scipt or from the compression library) are outside the support scope of the Istio add-on. See the [support policy document][istio-support-policy] for more information about the support categories for Istio add-on features and configuration options.
-
-* Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) are currently not yet supported with Istio addon. Customizations such as ingress static IP address configuration are planned as part of the Gateway API implementation for the add-on in future.
+* Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) are currently not yet supported with Istio addon.
 
 ## Feedback and feature ask
 
