@@ -126,7 +126,7 @@ To create a Windows GPU-enabled node pool with a specific GPU Driver type, use t
         --node-vm-size Standard_NC6s_v3
         --drivertype GRID
     ```
-The above command creates a GPU-enabled node pool using the "GRID" GPU driver type despite that the default for NC series VM skus is "CUDA" GPU driver type.
+For example, the above command creates a GPU-enabled node pool using the `GRID` GPU driver type. Selecting this driver type overrides the default of `CUDA` driver type for NC series VM skus.
 
 ## Using Windows GPU with manual driver installation
 
