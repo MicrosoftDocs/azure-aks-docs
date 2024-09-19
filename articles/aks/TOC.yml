@@ -824,15 +824,13 @@
           items:
             - name: About Kubernetes Event-driven Autoscaler (KEDA)
               href: keda-about.md
-            - name: Enable KEDA add-on on a new cluster
+            - name: Enable KEDA add-on for your cluster
               items:
                 - name: Use an ARM template
                   href: keda-deploy-add-on-arm.md
                 - name: Use the Azure CLI
                   href: keda-deploy-add-on-cli.md
-            - name: Enable KEDA add-on on an existing cluster
-              items:
-                - name: Use the Azure portal
+                - name: Enable on an existing cluster using the Azure portal
                   href: enable-keda-existing-cluster.md
             - name: Securely scale your applications using the Kubernetes Event-driven Autoscaling (KEDA) add-on and workload identity
               href: keda-workload-identity.md
