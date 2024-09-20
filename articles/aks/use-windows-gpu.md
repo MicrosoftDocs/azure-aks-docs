@@ -124,7 +124,7 @@ To create a Windows GPU-enabled node pool with a specific GPU Driver type, use t
         --os-type Windows \
         --kubernetes-version 1.29.0 \
         --node-vm-size Standard_NC6s_v3
-        --drivertype GRID
+        --driver-type GRID
     ```
 For example, the above command creates a GPU-enabled node pool using the `GRID` GPU driver type. Selecting this driver type overrides the default of `CUDA` driver type for NC series VM skus.
 
