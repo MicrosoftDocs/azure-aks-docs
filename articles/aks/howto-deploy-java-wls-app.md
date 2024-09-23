@@ -52,6 +52,34 @@ If you're interested in providing feedback or working closely on your migration 
   - [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
   - Ensure that you have the zip/unzip utility installed. Use `zip/unzip -v` to test whether `zip/unzip` works.
 
+## Create an Azure SQL Database using Microsoft Entra authentication
+
+[!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database-passwordless.md)]
+
+### Create schema for the sample application
+
+1. Open the **Query editor** pane by following the steps in the [Query the database](/azure/azure-sql/database/single-database-create-quickstart#query-the-database) section of [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart).
+
+1. Enter and run the following query:
+
+   ```sql
+   CREATE TABLE COFFEE (ID NUMERIC(19) NOT NULL, NAME VARCHAR(255) NULL, PRICE FLOAT(32) NULL, PRIMARY KEY (ID));
+   CREATE TABLE SEQUENCE (SEQ_NAME VARCHAR(50) NOT NULL, SEQ_COUNT NUMERIC(28) NULL, PRIMARY KEY (SEQ_NAME));
+   INSERT INTO SEQUENCE VALUES ('SEQ_GEN',0);
+   ```
+
+   After a successful run, you should see the message **Query succeeded: Affected rows: 1**. If you don't see this message, troubleshoot and resolve the problem before proceeding.
+
+
+Finally, use the following command to get the connection string that you use in the next section.
+
+```azurecli-interactive
+export CONNECTION_STRING="jdbc:sqlserver://myazuresql20130213.database.windows.net:1433;database=mysingledatabase20230213;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
+echo ${CONNECTION_STRING}
+```
+
+You can proceed to deploy WLS on AKS offer.
+
 ## Deploy WebLogic Server on AKS
 
 The following steps show you how to find the WebLogic Server on AKS offer and fill out the **Basics** pane.
@@ -130,28 +158,6 @@ If you navigated away from the **Deployment is in progress** page, the following
 1. The **shellCmdtoConnectAks** value is the Azure CLI command to connect to this specific AKS cluster.
 
 The other values in the outputs are beyond the scope of this article, but are explained in detail in the [WebLogic on AKS user guide](https://aka.ms/wls-aks-docs).
-
-## Create an Azure SQL Database
-
-[!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database.md)]
-
-Then, create a schema for the sample application by using the following steps:
-
-1. Open the **Query editor** pane by following the steps in the [Query the database](/azure/azure-sql/database/single-database-create-quickstart#query-the-database) section of [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart).
-
-1. Enter and run the following query:
-
-   ```sql
-   CREATE TABLE COFFEE (ID NUMERIC(19) NOT NULL, NAME VARCHAR(255) NULL, PRICE FLOAT(32) NULL, PRIMARY KEY (ID));
-   CREATE TABLE SEQUENCE (SEQ_NAME VARCHAR(50) NOT NULL, SEQ_COUNT NUMERIC(28) NULL, PRIMARY KEY (SEQ_NAME));
-   INSERT INTO SEQUENCE VALUES ('SEQ_GEN',0);
-   ```
-
-   After a successful run, you should see the message **Query succeeded: Affected rows: 1**. If you don't see this message, troubleshoot and resolve the problem before proceeding.
-
-The database, tables, AKS cluster, and WebLogic Server cluster are created. If you want, you can explore the admin console by opening a browser and navigating to the address of **adminConsoleExternalUrl**. Sign in with the values you entered during the WebLogic Server on AKS deployment.
-
-You can proceed to preparing AKS to host your WebLogic application.
 
 ## Configure and deploy the sample application
 
