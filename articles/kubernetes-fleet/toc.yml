@@ -26,7 +26,7 @@
     href: concepts-rbac.md
   - name: Scheduler and scheduling framework
     href: concepts-scheduler-scheduling-framework.md
-  - name: Update orchestration across multiple member clusters
+  - name: Update Kubernetes and node images across multiple member clusters
     href: concepts-update-orchestration.md
   - name: Kubernetes workload orchestration
     href: concepts-resource-propagation.md
@@ -38,22 +38,24 @@
     href: intelligent-resource-placement.md
   - name: Upgrade hub cluster type
     href: upgrade-hub-cluster-type.md
-  - name: Orchestrate updates across multiple member clusters
+  - name: Update Kubernetes and node images across multiple clusters
     href: update-orchestration.md
+  - name: Automate updates of Kubernetes and node images across multiple clusters
+    href: update-automation.md
   - name: Multi-cluster Layer 4 Load Balancing
     href: l4-load-balancing.md
   - name: Use taints and tolerations to schedule workloads
     href: use-taints-tolerations.md
   - name: Customize cluster scoped resources with cluster resource overrides
     href: cluster-resource-override.md
-  - name: Customized namespace scoped resources with resource overrides
+  - name: Customize namespace scoped resources with resource overrides
     href: resource-override.md
 - name: Resources
   items:
   - name: Pricing
     href: https://azure.microsoft.com/pricing/details/kubernetes-fleet-manager/#pricing
-  - name: Fleet manager roadmap
-    href: https://github.com/Azure/AKS/projects/3
+  - name: Fleet Manager roadmap
+    href: https://aka.ms/fleet/roadmap
 - name: Reference
   items:
   - name: Azure CLI
