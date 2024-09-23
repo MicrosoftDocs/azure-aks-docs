@@ -36,9 +36,9 @@ This article covers how to use autoupgrade profiles to automatically trigger upd
     export STRATEGYID=<strategy-id>
     ```
 
-* You need Azure CLI version 2.58.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* You need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.3.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet

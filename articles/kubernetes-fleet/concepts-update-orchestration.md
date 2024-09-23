@@ -14,7 +14,7 @@ ms.topic: conceptual
 
 Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs. 
 
-Update runs consist of stages, groups, and strategies and can be applied either manually, for one-time updates, or automatically, for ongoing regular updates using autoupgrade profiles. All update runs (manual or automated) honor member cluster maintenance windows.
+Update runs consist of stages, groups, and strategies and can be applied either manually, for one-time updates, or automatically, for ongoing regular updates using autoupgrade profiles. All update runs (manual or automated) honor member cluster [maintenance windows][aks-maintenance-windows].
 
 ## Understanding update runs
 
@@ -78,7 +78,8 @@ An update run can be in one of the following states:
   - Marks all parents (group -> stage -> run) as `Failed` with a summary error message.
   - Stops the update run from progressing any further.
 
-You can re-run an update run at any time in order to re-apply upgrades that may have been skipped or failed.
+> [!NOTE]
+> You can re-run an update run at any time in order to re-apply upgrades that may have been skipped or failed.
 
 ## Planned maintenance
 
@@ -92,27 +93,43 @@ Within an update run (for both [One by one](./update-orchestration.md#update-all
 
 ## Understanding autoupgrade profiles (preview)
 
-Autoupgrade profiles are used to automatically trigger update runs when new Kubernetes or node image versions are made available. 
+Autoupgrade profiles are used to automatically trigger update runs when new Kubernetes or node image versions are made available for AKS. 
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 In an autoupgrade profile you can configure:
 
-- a `Channel` (Stable, Rapid, NodeImage) which determines the type of autoupgrade that will be applied to the clusters. For further information see the following table.
+- a `Channel` (Stable, Rapid, NodeImage) which determines the type of autoupgrade that will be applied to the clusters. Further explanation can be found below.
 - an `UpdateStrategy` which configures the sequence in which the clusters will be upgraded. If a strategy is not supplied, clusters are updated one by one sequentially.
 - the `NodeImageSelectionType` (Latest, Consistent) to specify how the node image will be selected when upgrading the Kubernetes version.
 
-The Channel behaviors are shown in the table.
+### Stable Channel
 
-|Channel| Action | Example
-|---|---|---|
-| `Stable`| Automatically upgrades member clusters to the latest supported patch release on minor version *N-1*, where *N* is the latest supported minor version.| If a member cluster runs version *1.28.12* and version *1.29.7* is made available, the member cluster upgrades to *1.29.7*.|
-| `Rapid`| Automatically upgrades member clusters to the latest supported patch release on the latest supported minor version. | In cases where a member cluster's Kubernetes version is an *N-2* minor version, where *N* is the latest supported minor version, the member cluster first upgrades to the latest supported patch version on *N-1* minor version. For example, if a member cluster runs version *1.28.9* and versions *1.28.12*, *1.29.2*, *1.29.4* are available, and *1.30.2* is made available, the member cluster first upgrades to *1.29.4*, then upgrades to *1.30.2*.|
-| `NodeImage` | Member cluster nodes are updated with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option. If you use this channel, Linux unattended upgrades are disabled by default. Node image upgrades support patch versions that are deprecated, so long as the minor Kubernetes version is still supported. Node images are AKS-tested, fully managed, and applied with safe deployment practices. | If your member clusters have a NodeImage of *AKSWindows-2022-containerd* with a version of *20348.2582.240716*, and a new version *20348.2582.240916* is released, your member clusters NodeImage will automatically be upgraded to version *20348.2582.240916*. |
+The Stable Channel is always the latest AKS-supported Kubernetes patch release on minor version *N-1*, where *N* is the latest supported minor version.
+
+Example: if the latest supported minor version is *1.30* then patch releases in the *1.29* minor range would be considered for Stable channel updates.
+
+### Rapid Channel
+
+The Rapid Channel is always the most recent AKS-supported Kubernetes minor release.
+
+Example: if the latest supported minor version is *1.30* then any patch release in the *1.30* minor range would be considered for Rapid channel updates.
+
+### NodeImage Channel
+
+Member cluster nodes are updated with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option. If you use this channel, Linux unattended upgrades are disabled by default. Node image upgrades support patch versions that are deprecated, so long as the minor Kubernetes version is still supported. Node images are AKS-tested, fully managed, and applied with safe deployment practices.
+
+Example: if your member clusters nodes with a NodeImage of *AKSWindows-2022-containerd* with a version of *20348.2582.240716*, and a new version *20348.2582.240916* is released, your member clusters NodeImage will automatically be upgraded to version *20348.2582.240916*.
+
+### Update behavior
+
+Autoupgrade will not shift clusters between minor Kubernetes versions when there is more than one minor version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kuberenets versions it is recommended to first use one or more [update runs](#understanding-update-runs) to bring member cluster into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure this consistency is maintained in future.
 
 > [!NOTE]
 >
 > Keep the following information in mind when using auto upgrade:
+>
+> * Autoupgrade requires version 1.3.0 or later of the Fleet Azure CLI extension.
 >
 > * Autoupgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
 >
@@ -131,3 +148,4 @@ The Channel behaviors are shown in the table.
 
 <!-- INTERNAL LINKS -->
 [supported-kubernetes-versions]: /azure/aks/supported-kubernetes-versions
+[aks-maintenance-windows]: /azure/aks/planned-maintenance
