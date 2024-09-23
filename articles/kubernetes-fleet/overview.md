@@ -20,7 +20,7 @@ Azure Kubernetes Fleet Manager (Fleet) enables at-scale management of multiple A
 
 * Orchestrate Kubernetes version upgrades and node image upgrades across multiple clusters by using update runs, stages, and groups.
 
-* Automatically trigger version upgrades when new Kubernetes or node image versions are published (prevew).
+* Automatically trigger version upgrades when new Kubernetes or node image versions are published (preview).
 
 * Create Kubernetes resource objects on the Fleet resource's hub cluster and control their propagation to member clusters.
 
