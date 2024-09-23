@@ -103,27 +103,35 @@ In an autoupgrade profile you can configure:
 - an `UpdateStrategy` which configures the sequence in which the clusters will be upgraded. If a strategy is not supplied, clusters are updated one by one sequentially.
 - the `NodeImageSelectionType` (Latest, Consistent) to specify how the node image will be selected when upgrading the Kubernetes version.
 
-### Stable Channel
+### Stable channel
 
-The Stable Channel is always the latest AKS-supported Kubernetes patch release on minor version *N-1*, where *N* is the latest supported minor version.
+The Stable channel is always the latest AKS-supported Kubernetes patch release on minor version *N-1*, where *N* is the latest supported minor version.
 
-Example: if the latest supported minor version is *1.30* then patch releases in the *1.29* minor range would be considered for Stable channel updates.
+Examples: 
 
-### Rapid Channel
+- The latest supported minor Kubernetes version is *1.30*. Any patch releases in the *1.29* minor range would be considered for Stable channel updates.
+- A new minor Kubernetes version of *1.31* is published. Any patch release in the *1.30* minor range would be considered for Stable channel updates. Any cluster previously receiving updates from *1.29* would be updated to the most recent patch for *1.30*.
 
-The Rapid Channel is always the most recent AKS-supported Kubernetes minor release.
+### Rapid channel
 
-Example: if the latest supported minor version is *1.30* then any patch release in the *1.30* minor range would be considered for Rapid channel updates.
+The Rapid channel is always the most recent AKS-supported Kubernetes minor release.
 
-### NodeImage Channel
+Examples: 
+
+- The latest supported minor version is *1.30*. Any patch release in the *1.30* minor range would be considered for Rapid channel updates.
+- A new minor Kubernetes version of *1.31* is published. *1.30* shifts to the Stable channel. Any cluster previously receiving updates from *1.30* would be updated to the most recent patch for *1.31* which is now the Rapid channel.
+
+### NodeImage channel
 
 Member cluster nodes are updated with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option. If you use this channel, Linux unattended upgrades are disabled by default. Node image upgrades support patch versions that are deprecated, so long as the minor Kubernetes version is still supported. Node images are AKS-tested, fully managed, and applied with safe deployment practices.
+
+Nodes on different operating systems will be updated in accordance with the node image versions aligned to those operating systems. 
 
 Example: if your member clusters nodes with a NodeImage of *AKSWindows-2022-containerd* with a version of *20348.2582.240716*, and a new version *20348.2582.240916* is released, your member clusters NodeImage will automatically be upgraded to version *20348.2582.240916*.
 
 ### Update behavior
 
-Autoupgrade will not shift clusters between minor Kubernetes versions when there is more than one minor version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kuberenets versions it is recommended to first use one or more [update runs](#understanding-update-runs) to bring member cluster into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure this consistency is maintained in future.
+Autoupgrade will not shift clusters between minor Kubernetes versions when there is more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kuberenetes versions it is recommended to first use one or more [update runs](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
 
 > [!NOTE]
 >
@@ -135,9 +143,9 @@ Autoupgrade will not shift clusters between minor Kubernetes versions when there
 >
 > * Autoupgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions].
 >
-> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid` or `Stable` Channels.
+> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid` or `Stable` channels.
 >
-> * If you want to have your NodeImage version upgraded, you need to create an `autoupgradeprofile` with `NodeImage` Channel.
+> * If you want to have your NodeImage version upgraded, you need to create an `autoupgradeprofile` with `NodeImage` channel.
 >
 > * You can create multiple autoupgrade profiles for the same Fleet.
 
