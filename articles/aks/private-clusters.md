@@ -48,6 +48,8 @@ Private clusters are available in public regions, Azure Government, and Microsof
 
 ## Create a private AKS cluster
 
+### [Default basic networking](#tab/default-basic-networking)
+
 1. Create a resource group using the [`az group create`][az-group-create] command. You can also use an existing resource group for your AKS cluster.
 
     ```azurecli-interactive
@@ -56,9 +58,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
         --location <location>
     ```
 
-### [Default basic networking](#tab/default-basic-networking)
-
-2. Create a private cluster with default basic networking using the [`az aks create`][az-aks-create] command with the `--enable-private-cluster` flag.
+1. Create a private cluster with default basic networking using the [`az aks create`][az-aks-create] command with the `--enable-private-cluster` flag.
 
     ```azurecli-interactive
     az aks create \
@@ -71,7 +71,15 @@ Private clusters are available in public regions, Azure Government, and Microsof
 
 ### [Advanced networking](#tab/advanced-networking)
 
-2. Create a private cluster with advanced networking using the [`az aks create`][az-aks-create] command with the following flags:
+1. Create a resource group using the [`az group create`][az-group-create] command. You can also use an existing resource group for your AKS cluster.
+
+    ```azurecli-interactive
+    az group create \
+        --name <private-clusterresource-group> \
+        --location <location>
+    ```
+
+1. Create a private cluster with advanced networking using the [`az aks create`][az-aks-create] command with the following flags:
 
     ```azurecli-interactive
     az aks create \
