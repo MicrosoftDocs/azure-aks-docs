@@ -58,17 +58,15 @@ If you're interested in providing feedback or working closely on your migration 
 
 ### Create schema for the sample application
 
-1. Open the **Query editor** pane by following the steps in the [Query the database](/azure/azure-sql/database/single-database-create-quickstart#query-the-database) section of [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart).
+Select **New Query**, in the Query 2 editor, run the following query:
 
-1. Enter and run the following query:
+```sql
+CREATE TABLE COFFEE (ID NUMERIC(19) NOT NULL, NAME VARCHAR(255) NULL, PRICE FLOAT(32) NULL, PRIMARY KEY (ID));
+CREATE TABLE SEQUENCE (SEQ_NAME VARCHAR(50) NOT NULL, SEQ_COUNT NUMERIC(28) NULL, PRIMARY KEY (SEQ_NAME));
+INSERT INTO SEQUENCE VALUES ('SEQ_GEN',0);
+```
 
-   ```sql
-   CREATE TABLE COFFEE (ID NUMERIC(19) NOT NULL, NAME VARCHAR(255) NULL, PRICE FLOAT(32) NULL, PRIMARY KEY (ID));
-   CREATE TABLE SEQUENCE (SEQ_NAME VARCHAR(50) NOT NULL, SEQ_COUNT NUMERIC(28) NULL, PRIMARY KEY (SEQ_NAME));
-   INSERT INTO SEQUENCE VALUES ('SEQ_GEN',0);
-   ```
-
-   After a successful run, you should see the message **Query succeeded: Affected rows: 1**. If you don't see this message, troubleshoot and resolve the problem before proceeding.
+After a successful run, you should see the message **Query succeeded: Affected rows: 1**. If you don't see this message, troubleshoot and resolve the problem before proceeding.
 
 
 Finally, use the following command to get the connection string that you use in the next section.
@@ -128,14 +126,26 @@ The following steps make it so the WebLogic Server admin console and the sample 
 
    :::image type="content" source="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png" alt-text="Screenshot of the Azure portal that shows the Application Gateway Ingress Controller configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png":::
 
+The following steps make show you how to configure database connection information with managed identity.
+
+1. For **Connect to database?**, select **Yes**.
+1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Azure SQL (with support for passwordless connection)**.
+1. For **JNDI Name**, input *jdbc/WebLogicCafeDB* or your expected value.
+1. For **DataSource Connection String**, input the connection string you obtained in last section.
+1. Select **Use passwordless datasource connection**.
+1. For **User assigned managed identity**, select the managed identity you created in previous step. In this example, its name is `myManagedIdentity`.
+1. Select **Add**.
+
+The **Connection settings** section should look like the following screenshot.
+
+:::image type="content" source="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png" alt-text="Screenshot of the Azure portal showing the Configure Azure SQL database page." lightbox="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png":::
+
 1. Leave the default values for other fields.
 1. Select **Review + create**. Ensure the validation doesn't fail. If it fails, fix any validation problems, then select **Review + create** again.
 1. Select **Create**.
 1. Track the progress of the deployment on the **Deployment is in progress** page.
 
 Depending on network conditions and other activity in your selected region, the deployment might take up to 50 minutes to complete.
-
-You can perform the steps in the section [Create an Azure SQL Database](#create-an-azure-sql-database) while you wait. Return to this section when you finish creating the database.
 
 ## Examine the deployment output
 

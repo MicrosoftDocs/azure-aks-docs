@@ -6,7 +6,7 @@ ms.date: 09/23/2024
 ms.author: haiche
 ---
 
-This section will create an Azure SQL Database using Microsoft Entra authentication, a database with managed identity connection enabled.
+This section creates an Azure SQL Database using Microsoft Entra authentication, a database with managed identity connection enabled.
 
 ### Create a resource group
 
@@ -31,7 +31,7 @@ export AZURESQL_ADMIN_PASSWORD="Secret123456"
 az sql server create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $AZURESQL_SERVER_NAME \
-    --location eastus \
+    --location westus \
     --admin-user $AZURESQL_ADMIN_USER \
     --admin-password $AZURESQL_ADMIN_PASSWORD
 ```
