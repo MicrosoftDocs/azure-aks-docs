@@ -57,7 +57,7 @@ This article covers how to use autoupgrade profiles to automatically trigger upd
 
 Use the [`az fleet autoupgradeprofile create`][az-fleet-autoupgradeprofile-create] command to create profiles as shown.
 
-You can create a disabled autoupgrade profile by passing the `--disabled` argument when using the `create` command. In order to enable the autoupgrade profile you must re-issue the entire `create` command and ommit the `--disabled` argument.
+You can create a disabled autoupgrade profile by passing the `--disabled` argument when using the `create` command. In order to enable the autoupgrade profile, you must reissue the entire `create` command and omit the `--disabled` argument.
 
 ### Stable channel Kubernetes updates
 
@@ -156,7 +156,7 @@ az fleet autoupgradeprofile list \
 
 ## Delete autoupgrade profile
 
-Use the following command to delete an existing autoupgrade profile. You will be asked to confirm the deletion. Include `--yes` to immediately delete the profile.
+Use the following command to delete an existing autoupgrade profile. You are asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile delete \
@@ -179,7 +179,7 @@ az aks show --resource-group $GROUP --name $CLUSTER | grep '"currentKubernetesVe
 az aks show --resource-group $GROUP --name $CLUSTER --query "agentPoolProfiles[].{name:name,mode:mode, nodeImageVersion:nodeImageVersion, osSku:osSku, osType:osType}"
 ```
 
-Once update runs have occurred, you can rerun these commands and view the updated versions that are deployed.
+Once update runs have completed, you can rerun these commands and view the updated versions that are deployed.
 
 ---
 
