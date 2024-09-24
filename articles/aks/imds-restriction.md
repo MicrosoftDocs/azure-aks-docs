@@ -5,7 +5,7 @@ author: tamram
 
 ms.topic: article
 ms.custom: devx-track-azurecli
-ms.date: 09/16/2024
+ms.date: 09/24/2024
 ms.author: tamram
 ---
 
@@ -19,22 +19,37 @@ ms.author: tamram
 
 The IMDS REST API is available at a well-known, nonroutable IP address (169.254.169.254). By default, all pods running in an Azure Kubernetes Service (AKS) cluster can access the IMDS endpoint. The default behavior introduces certain security risks for an AKS cluster:
 
-- Malicious users might exploit the service to obtain sensitive information, leading to information leakage.
+- Malicious users might exploit the service to obtain sensitive information such as tokens and other platform information, leading to information leakage.
 - Potential authentication vulnerabilities are then exposed, because applications could misuse these credentials.
 
-You can now opt to restrict access to the IMDS endpoint for nonhost network pods running in your cluster. Nonhost network pods have  `hostNetwork` set to **false** in their specs.
+You can now opt to restrict access to the IMDS endpoint for non-host network pods running in your cluster. Non-host network pods have  `hostNetwork` set to **false** in their specs.
 
-When IMDS restriction is enabled, nonhost network pods are unable to access the IMDS endpoint or acquire OAuth 2.0 tokens for authorization by a managed identity. Nonhost network pods should rely on [Microsoft Entra Workload ID][workload-identity-overview]  after IMDS restriction is enabled.
+When IMDS restriction is enabled, non-host network pods are unable to access the IMDS endpoint or acquire OAuth 2.0 tokens for authorization by a managed identity. Non-host network pods should rely on [Microsoft Entra Workload ID][workload-identity-overview]  after IMDS restriction is enabled.
 
-Host network pods have `hostNetwork` set to **true** in their specs. Host network pods and threads can continue to access the IMDS endpoint after IMDS restriction is enabled as they share the same network namespace with the host processes. Local processes in nodes may need to access the IMDS endpoint to retrieve instance metadata and therefore can still continue to access it after IMDS restriction is enabled.
+Host network pods have `hostNetwork` set to **true** in their specs. Host network pods and threads can continue to access the IMDS endpoint after IMDS restriction is enabled as they share the same network namespace with the host processes. Local processes in nodes might need to access the IMDS endpoint to retrieve instance metadata and therefore can still continue to access it after IMDS restriction is enabled.
 
 ## Before you begin
 
 - Make sure you have Azure CLI version 2.61.0 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
+## Limitations
+
+Non-host network addons that need to access the IMDS endpoint won't work after you enable IMDS restriction. Unsupported addons include:
+
+- HTTPApplicationRouting (retired)
+- IngressApplicationGateway
+- OmsAgent
+- ACIConnectorLinux
+- AzurePolicy
+- GitOps
+- ExtensionManager
+- AIToolchainOperator
+
+The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
+
 ## Enable IMDS restriction on a new cluster
 
-To enable IMDS restriction on a new cluster and block all traffic from non host-network pods to the IMDS endpoint, call the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--imds-restriction` parameter set to `enabled`.
+To enable IMDS restriction on a new cluster and block all traffic from non-host network pods to the IMDS endpoint, call the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--imds-restriction` parameter set to `enabled`.
 
 ```azurecli-interactive
 az aks create \
@@ -45,7 +60,7 @@ az aks create \
 
 ## Enable IMDS restriction on an existing cluster
 
-To enable IMDS restriction on an existing cluster and block all traffic from nonhost network pods to the IMDS endpoint, call the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--imds-restriction` parameter set to `enabled`.
+To enable IMDS restriction on an existing cluster and block all traffic from non-host network pods to the IMDS endpoint, call the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--imds-restriction` parameter set to `enabled`.
 
 ```azurecli-interactive
 az aks update \
@@ -58,9 +73,9 @@ After you update the cluster, you must [reimage][node-image-upgrade] the nodes i
 
 ## Verify the traffic on a cluster with IMDS restriction enabled
 
-To verify that IMDS restriction is in effect, test traffic to both the nonhost and host network pods.
+To verify that IMDS restriction is in effect, test traffic to both the non-host and host network pods.
 
-### Verify the traffic on a nonhost network pod
+### Verify the traffic on a non-host network pod
 
 1. Create a pod with `hostNetwork: false`. If you don't have a test pod with `hostNetwork: false`, you can run the following command to create one.
 
@@ -154,21 +169,6 @@ az aks update \
 ```
 
 After you update the cluster, you must [reimage][node-image-upgrade] the nodes in your cluster to begin to allow all traffic to the cluster's pods.
-
-## Limitations
-
-Nonhost network addons that need to access the IMDS endpoint will not work after you enable IMDS restriction. Unsupported addons include:
-
-- HTTPApplicationRouting (retired)
-- IngressApplicationGateway
-- OmsAgent
-- ACIConnectorLinux
-- AzurePolicy
-- GitOps
-- ExtensionManager
-- AIToolchainOperator
-
-Azure Key Vault provider for Secrets Store CSI driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
 
 ## See also
 
