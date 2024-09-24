@@ -149,6 +149,12 @@ The **Connection settings** section should look like the following screenshot.
 
 Depending on network conditions and other activity in your selected region, the deployment might take up to 50 minutes to complete.
 
+> [!NOTE]
+> If your organization requires deploying the workload within a corporate VNET with no public IPs allowed, you can choose the internal Load Balancer service.
+> Follow the screenshot to configure internal Load Balancer service in the **Load balancing** pane.
+> :::image type="content" source="media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png" alt-text="Screenshot of the Azure portal that shows the internal load balancer configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png":::
+> After the deployment, you can find access URL of admin server and cluster: **adminConsoleExternalUrl**, **clusterExternalUrl** from output.
+
 ## Examine the deployment output
 
 Use the steps in this section to verify that the deployment was successful.
@@ -361,7 +367,9 @@ Use the following steps to build the image:
    curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
 
    mvn dependency:copy-dependencies -f azure-identity-extensions.xml
+   ```
 
+   ```bash
    mkdir -p ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries
    mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson
    # fix JARs conflict issue in GA images, put jackson libraries to PRE_CLASSPATH to upgrade the existing libs.
@@ -370,7 +378,7 @@ Use the following steps to build the image:
    mv target/dependency/jackson-databind-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
    mv target/dependency/jackson-dataformat-xml-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
    # Thoes jars will be appended to CLASSPATH
-   mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/   
+   mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/
    ```
 
    Clean up resources:
@@ -662,7 +670,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
      },
      {
       "op": "remove",
-      "path": "spec/configuration/model/configMap"
+      "path": "/spec/configuration/model/configMap"
      }
    ]
    EOF
