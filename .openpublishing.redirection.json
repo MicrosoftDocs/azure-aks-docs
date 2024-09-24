@@ -1,6 +1,21 @@
 {
   "redirections": [
     {
+      "source_path": "articles/aks/http-application-routing.md",
+      "redirect_url": "/previous-versions/azure/aks/http-application-routing",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/ingress-basic.md",
+      "redirect_url": "/previous-versions/azure/aks/ingress-basic",
+      "redirect_document_id": false
+    },
+    {
+      "source_path": "articles/aks/ingress-tls.md",
+      "redirect_url": "/previous-versions/azure/aks/ingress-tls",
+      "redirect_document_id": false
+    },
+    {
       "source_path_from_root": "/articles/aks/learn/quick-kubernetes-deploy-bicep-extensibility-kubernetes-provider.md",
       "redirect_url": "/azure/aks/learn/quick-kubernetes-deploy-bicep-kubernetes-extension",
       "redirect_document_id": false
@@ -8,6 +23,11 @@
     {
       "source_path_from_root": "/articles/aks/markdown-faq.md",
       "redirect_url": "/azure/aks/faq",
+      "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/aks/markdown-windows-faq.md",
+      "redirect_url": "/azure/aks/windows-faq",
       "redirect_document_id": false
     }
   ]

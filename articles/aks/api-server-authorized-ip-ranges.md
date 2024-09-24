@@ -259,13 +259,6 @@ Service tags are a convenient way to specify a group of IP addresses correspondi
 ### Limitations
 
 - This feature is not compatible with [API Server VNet Integration][api-server-vnet-integration].
-- This feature is available **only** in the following regions: 
-  - eastus2euap
-  - centraluseuap
-  - westcentralus
-  - eastasia
-  - uksouth
-  - eastus
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 

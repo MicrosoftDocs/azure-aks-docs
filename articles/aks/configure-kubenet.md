@@ -56,7 +56,7 @@ With *Azure CNI*, each pod receives an IP address in the IP subnet and can commu
 * AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic between the node and pod CIDR. For more details, see [Network security groups][aks-network-nsg].
 * Features **not supported on kubenet** include:
   * [Azure network policies](use-network-policies.md#create-an-aks-cluster-and-enable-network-policy)
-  * [Windows node pools](./windows-faq.md)
+  * [Windows node pools](./windows-faq.yml)
   * [Virtual nodes add-on](virtual-nodes.md#network-requirements)
 
 > [!NOTE]

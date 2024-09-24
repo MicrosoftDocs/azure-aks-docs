@@ -3,13 +3,14 @@
     {
       "docset_name": "azure-aks",
       "build_source_folder": ".",
+      "build_output_subfolder": "azure-aks",
+      "locale": "en-us",
+      "monikers": [],
+      "moniker_ranges": [],
       "xref_query_tags": [
         "/dotnet",
         "/python"
       ],
-      "build_output_subfolder": "azure-aks",
-      "locale": "en-us",
-      "monikers": [],
       "open_to_public_contributors": true,
       "type_mapping": {
         "Conceptual": "Content",
@@ -63,9 +64,5 @@
     }
   ],
   "branch_target_mapping": {},
-  "targets": {},
-  "redirection_files": [
-    ".openpublishing.redirection.json",
-    "articles/aks/.openpublishing.redirection.aks.json"
-  ]
+  "targets": {}
 }

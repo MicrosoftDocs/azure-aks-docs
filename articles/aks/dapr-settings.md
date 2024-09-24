@@ -385,7 +385,7 @@ The Dapr extension requires the following outbound URLs on `https://:443` to fun
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [sample-application]: ./quickstart-dapr.md
 [k8s-version-support-policy]: ./supported-kubernetes-versions.md?tabs=azure-cli#kubernetes-version-support-policy
-[arc-k8s-cluster]: ../azure-arc/kubernetes/quickstart-connect-cluster.md
+[arc-k8s-cluster]: azure/azure-arc/kubernetes/quickstart-connect-cluster
 [update-extension]: ./cluster-extensions.md#update-extension-instance
 [install-cli]: /cli/azure/install-azure-cli
 [dapr-migration]: ./dapr-migration.md
