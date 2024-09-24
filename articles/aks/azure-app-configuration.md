@@ -189,13 +189,6 @@ az deployment group create \
 The Azure App Configuration extension supports the following version of Azure App Configuration Kubernetes Provider:
 - `2.0.0`
 
-## Regions
-
-The Azure App Configuration extension is available in the following regions:
-
-> Australia Central, Australia East, Brazil South, Canada Central, Canada East, Central India, Central US, East Asia, East US, East US 2, East US 2 EUAP, France Central, France South, Germany North, Germany West Central, Israel Central, Japan East, Japan West, Jio India West, Korea Central, Korea South, North Central US, North Europe, Norway East, Noway East, South Africa North, South Central US, South India, Southeast Asia, Sweden Central, UAE North, UK South, UK West, West Central US, West Europe, West US, West US 2, West US 3
-
-
 ## Troubleshoot extension installation errors
 
 If the extension fails to create or update, try suggestions and solutions in the [Azure App Configuration extension troubleshooting guide](/troubleshoot/azure/azure-kubernetes/extensions/troubleshoot-app-configuration-extension-installation-errors).
