@@ -375,13 +375,15 @@ Use the following steps to build the image:
    The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
 
    ```bash
-   export DB_K8S_SECRET_NAME=$(kubectl get secret -n sample-domain1-ns | grep "ds-secret" | awk '{print $1}')
+   export WLS_DOMAIN_UID=sample-domain1
+   export WLS_DOMAIN_NS=${WLS_DOMAIN_UID}-ns
+   export DB_K8S_SECRET_NAME=$(kubectl get secret -n ${WLS_DOMAIN_NS} | grep "ds-secret" | awk '{print $1}')
    ```
 
    Next, extract the database model with this command:
 
    ```bash
-   kubectl get configmap sample-domain1-wdt-config-map -n sample-domain1-ns -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
+   kubectl get configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS} -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
    ```
 
    Finally, verify the content of dbmodel.yaml. It should resemble the following structure:
@@ -416,7 +418,7 @@ Use the following steps to build the image:
 1. The current database connection is configured using a ConfigMap. Since it will be set up in the auxiliary image, run the following command to remove the ConfigMap.
 
    ```bash
-   kubectl delete configmap sample-domain1-wdt-config-map -n sample-domain1-ns
+   kubectl delete configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS}
    ```
 
 1. Use the following commands to create an application archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
@@ -632,6 +634,10 @@ In the previous steps, you created the auxiliary image including models and WDT.
        "op": "add",
        "path": "/spec/configuration/model/auxiliaryImages",
        "value": [{"image": "$ACR_LOGIN_SERVER/$IMAGE", "imagePullPolicy": "IfNotPresent", "sourceModelHome": "/auxiliary/models", "sourceWDTInstallHome": "/auxiliary/weblogic-deploy"}]
+     },
+     {
+      "op": "remove",
+      "path": "spec/configuration/model/configMap"
      }
    ]
    EOF
