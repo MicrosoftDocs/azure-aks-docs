@@ -77,17 +77,6 @@ az identity create \
     --name myManagedIdentity
 ```
 
-To configure the identity in the following steps, use the [az identity show](/cli/azure/identity#az-identity-show) command to store the identity's client ID in a shell variable.
-
-```azurecli-interactive
-# Get client ID of the user-assigned identity
-export CLIENT_ID=$(az identity show \
-    --resource-group ${RESOURCE_GROUP_NAME} \
-    --name myManagedIdentity \
-    --query clientId \
-    --output tsv)
-```
-
 ### Create a database user for your managed identity
 
 Now, connect as the Microsoft Entra administrator user to your Azure SQL database from the Azure portal, and create a user for your managed identity.

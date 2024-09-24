@@ -395,7 +395,7 @@ Use the following steps to build the image:
    Merged "<name>" as current context in /Users/<username>/.kube/config
    ```
 
-1. Next, export the database connection model and save it to `${BASE_DIR}/mystaging/models/dbmodel.yaml`. The following steps will extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. (The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.) 
+1. Export the database connection model and save it to `${BASE_DIR}/mystaging/models/dbmodel.yaml`. The following steps will extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. (The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.) 
 
    The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
 
@@ -438,12 +438,6 @@ Use the following steps to build the image:
          JDBCConnectionPoolParams:
                TestTableName: SQL SELECT 1
                TestConnectionsOnReserve: true
-   ```
-
-1. The current database connection is configured using a ConfigMap. Since it will be set up in the auxiliary image, run the following command to remove the ConfigMap.
-
-   ```bash
-   kubectl delete configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS}
    ```
 
 1. Use the following commands to create an application archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
@@ -678,6 +672,12 @@ In the previous steps, you created the auxiliary image including models and WDT.
        --patch-file patch-file.json
 
    kubectl get pod -n ${WLS_DOMAIN_NS} -w
+   ```
+
+1. Since database connection is configured in the auxiliary image, run the following command to remove the ConfigMap.
+
+   ```bash
+   kubectl delete configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS}
    ```
 
 1. Wait until the admin server and managed servers show the values in the following output block before you proceed:
