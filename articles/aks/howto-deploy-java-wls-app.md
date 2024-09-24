@@ -72,7 +72,7 @@ After a successful run, you should see the message **Query succeeded: Affected r
 Finally, use the following command to get the connection string that you use in the next section.
 
 ```azurecli-interactive
-export CONNECTION_STRING="jdbc:sqlserver://myazuresql20130213.database.windows.net:1433;database=mysingledatabase20230213;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
+export CONNECTION_STRING="jdbc:sqlserver://${AZURESQL_SERVER_NAME}.database.windows.net:1433;database=${DATABASE_NAME};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
 echo ${CONNECTION_STRING}
 ```
 
@@ -126,11 +126,13 @@ The following steps make it so the WebLogic Server admin console and the sample 
 
    :::image type="content" source="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png" alt-text="Screenshot of the Azure portal that shows the Application Gateway Ingress Controller configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png":::
 
-The following steps make show you how to configure database connection information with managed identity.
+The following steps show you how to configure database connection with managed identity.
 
+1. Select Next to see the **DNS** pane.
+1. Select Next to see the **Database** pane.
 1. For **Connect to database?**, select **Yes**.
-1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Azure SQL (with support for passwordless connection)**.
-1. For **JNDI Name**, input *jdbc/WebLogicCafeDB* or your expected value.
+1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Microsoft SQL Server (with support for passwordless connection)**.
+1. For **JNDI Name**, input *jdbc/WebLogicCafeDB*.
 1. For **DataSource Connection String**, input the connection string you obtained in last section.
 1. Select **Use passwordless datasource connection**.
 1. For **User assigned managed identity**, select the managed identity you created in previous step. In this example, its name is `myManagedIdentity`.
@@ -353,50 +355,28 @@ Use the following steps to build the image:
             Target: 'cluster-1'
       EOF
       ```
-
-1. Use the following commands to download and install Microsoft SQL Server JDBC driver to *wlsdeploy/externalJDBCLibraries*:
+1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
 
    ```bash
-   export DRIVER_VERSION="10.2.1.jre8"
-   export MSSQL_DRIVER_URL="https://repo.maven.apache.org/maven2/com/microsoft/sqlserver/mssql-jdbc/${DRIVER_VERSION}/mssql-jdbc-${DRIVER_VERSION}.jar"
-
-   mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries
-   curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
+   az account set --subscription <subscription>; 
+   az aks get-credentials \
+       --resource-group <resource-group> \
+       --name <name>
    ```
 
-1. Next, use the following commands to create the database connection model file with the contents shown. Save the model file to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The model uses placeholders (secret `sqlserver-secret`) for database username, password, and URL. Make sure the following fields are set correctly. The following model names the resource with `jdbc/WebLogicCafeDB`.
+   You should see output similar to the following example. If you don't see this output, troubleshoot and resolve the problem before continuing.
 
-   | Item Name         | Field                                                                                     | Value                                          |
-   |-------------------|-------------------------------------------------------------------------------------------|------------------------------------------------|
-   | JNDI name         | `resources.JDBCSystemResource.<resource-name>.JdbcResource.JDBCDataSourceParams.JNDIName` | `jdbc/WebLogicCafeDB`                          |
-   | Driver name       | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.DriverName`                | `com.microsoft.sqlserver.jdbc.SQLServerDriver` |
-   | Database Url      | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.URL`                       | `@@SECRET:sqlserver-secret:url@@`              |
-   | Database password | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.PasswordEncrypted`         | `@@SECRET:sqlserver-secret:password@@`         |
-   | Database username | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.Properties.user.Value`     | `'@@SECRET:sqlserver-secret:user@@'`           |
+   ```output
+   Merged "<name>" as current context in /Users/<username>/.kube/config
+   ```
+
+1. Next, export the database connection model and save to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. 
+
+   
+   
+1. The current database connection is configured using a ConfigMap. Since it will be set up in the auxiliary image, run the following command to remove the ConfigMap.
 
    ```bash
-   cat <<EOF >dbmodel.yaml
-   resources:
-     JDBCSystemResource:
-       jdbc/WebLogicCafeDB:
-         Target: 'cluster-1'
-         JdbcResource:
-           JDBCDataSourceParams:
-             JNDIName: [
-               jdbc/WebLogicCafeDB
-             ]
-             GlobalTransactionsProtocol: None
-           JDBCDriverParams:
-             DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-             URL: '@@SECRET:sqlserver-secret:url@@'
-             PasswordEncrypted: '@@SECRET:sqlserver-secret:password@@'
-             Properties:
-               user:
-                 Value: '@@SECRET:sqlserver-secret:user@@'
-           JDBCConnectionPoolParams:
-             TestTableName: SQL SELECT 1
-             TestConnectionsOnReserve: true
-   EOF
    ```
 
 1. Use the following commands to create an application archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
@@ -576,75 +556,7 @@ Use the following steps to build the image:
 
 ### Apply the auxiliary image
 
-In the previous steps, you created the auxiliary image including models and WDT. Before you apply the auxiliary image to the WebLogic Server cluster, use the following steps to create the secret for the datasource URL, username, and password. The secret is used as part of the placeholder in *dbmodel.yaml*.
-
-1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
-
-   ```bash
-   az account set --subscription <subscription>; 
-   az aks get-credentials \
-       --resource-group <resource-group> \
-       --name <name>
-   ```
-
-   You should see output similar to the following example. If you don't see this output, troubleshoot and resolve the problem before continuing.
-
-   ```output
-   Merged "<name>" as current context in /Users/<username>/.kube/config
-   ```
-
-1. Use the following steps to get values for the variables shown in the following table. You use these values to create the secret for the datasource connection.
-
-   | Variable               | Description                                | Example                                                                                       |
-   |------------------------|--------------------------------------------|-----------------------------------------------------------------------------------------------|
-   | `DB_CONNECTION_STRING` | The connection string of SQL server.       | `jdbc:sqlserver://server-name.database.windows.net:1433;database=wlsaksquickstart0125` |
-   | `DB_USER`              | The username to sign in to the SQL server. | `welogic@sqlserverforwlsaks`                                                                  |
-   | `DB_PASSWORD`          | The password to sign in to the sQL server. | `Secret123456`                                                                                |
-
-   1. Visit the SQL database resource in the Azure portal.
-
-   1. In the navigation pane, under **Settings**, select **Connection strings**.
-
-   1. Select the **JDBC** tab.
-
-   1. Select the copy icon to copy the connection string to the clipboard.
-
-   1. For `DB_CONNECTION_STRING`, use the entire connection string, but replace the placeholder `{your_password_here}` with your database password.
-
-   1. For `DB_USER`, use the portion of the connection string from `azureuser` up to but not including `;password={your_password_here}`.
-
-   1. For `DB_PASSWORD`, use the value you entered when you created the database.
-
-1. Use the following commands to create the Kubernetes Secret. This article uses the secret name `sqlserver-secret` for the secret of the datasource connection. If you use a different name, make sure the value is the same as the one in *dbmodel.yaml*.
-
-   In the following commands, be sure to set the variables `DB_CONNECTION_STRING`, `DB_USER`, and `DB_PASSWORD` correctly by replacing the placeholder examples with the values described in the previous steps. To prevent the shell from interfering with them, enclose the value of the `DB_` variables in single quotes.
-
-   ```bash
-   export DB_CONNECTION_STRING='<example-jdbc:sqlserver://server-name.database.windows.net:1433;database=wlsaksquickstart0125>'
-   export DB_USER='<example-welogic@sqlserverforwlsaks>'
-   export DB_PASSWORD='<example-Secret123456>'
-   export WLS_DOMAIN_NS=sample-domain1-ns
-   export WLS_DOMAIN_UID=sample-domain1
-   export SECRET_NAME=sqlserver-secret
-   export ACR_LOGIN_SERVER=$(az acr show --name ${ACR_NAME} --query "loginServer" --output tsv)
-
-   kubectl -n ${WLS_DOMAIN_NS} create secret generic \
-       ${SECRET_NAME} \
-       --from-literal=password="${DB_PASSWORD}" \
-       --from-literal=url="${DB_CONNECTION_STRING}" \
-       --from-literal=user="${DB_USER}"
-
-   kubectl -n ${WLS_DOMAIN_NS} label secret \
-       ${SECRET_NAME} \
-       weblogic.domainUID=${WLS_DOMAIN_UID}
-   ```
-
-   You must see the following output before you continue. If you don't see this output, troubleshoot and resolve the problem before you continue.
-
-   ```output
-   secret/sqlserver-secret created
-   secret/sqlserver-secret labeled
-   ```
+In the previous steps, you created the auxiliary image including models and WDT. Apply the auxiliary image to the WebLogic Server cluster with the following steps.
 
 1. Apply the auxiliary image by patching the domain custom resource definition (CRD) using the `kubectl patch` command.
 
