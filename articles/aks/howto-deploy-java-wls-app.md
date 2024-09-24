@@ -370,13 +370,53 @@ Use the following steps to build the image:
    Merged "<name>" as current context in /Users/<username>/.kube/config
    ```
 
-1. Next, export the database connection model and save to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. 
+1. Next, export the database connection model and save it to `${BASE_DIR}/mystaging/models/dbmodel.yaml`. The following steps will extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. (The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.) 
 
-   
-   
+   The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
+
+   ```bash
+   export DB_K8S_SECRET_NAME=$(kubectl get secret -n sample-domain1-ns | grep "ds-secret" | awk '{print $1}')
+   ```
+
+   Next, extract the database model with this command:
+
+   ```bash
+   kubectl get configmap sample-domain1-wdt-config-map -n sample-domain1-ns -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
+   ```
+
+   Finally, verify the content of dbmodel.yaml. It should resemble the following structure:
+
+   ```bash
+   cat ${BASE_DIR}/mystaging/models/dbmodel.yaml
+   # Copyright (c) 2020, 2021, Oracle and/or its affiliates.
+   # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+   resources:
+   JDBCSystemResource:
+      jdbc/WebLogicCafeDB:
+         Target: 'cluster-1'
+         JdbcResource:
+         JDBCDataSourceParams:
+            JNDIName: [
+               jdbc/WebLogicCafeDB
+            ]
+            GlobalTransactionsProtocol: OnePhaseCommit
+         JDBCDriverParams:
+            DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+            URL: '@@SECRET:ds-secret-sqlserver-1727147748:url@@'
+            PasswordEncrypted: '@@SECRET:ds-secret-sqlserver-1727147748:password@@'
+            Properties:
+               user:
+               Value: '@@SECRET:ds-secret-sqlserver-1727147748:user@@'
+         JDBCConnectionPoolParams:
+               TestTableName: SQL SELECT 1
+               TestConnectionsOnReserve: true
+   ```
+
 1. The current database connection is configured using a ConfigMap. Since it will be set up in the auxiliary image, run the following command to remove the ConfigMap.
 
    ```bash
+   kubectl delete configmap sample-domain1-wdt-config-map -n sample-domain1-ns
    ```
 
 1. Use the following commands to create an application archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
