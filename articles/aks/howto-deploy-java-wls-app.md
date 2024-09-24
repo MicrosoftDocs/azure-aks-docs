@@ -355,6 +355,31 @@ Use the following steps to build the image:
             Target: 'cluster-1'
       EOF
       ```
+1. Install Azure Identity Extension to enable connecting database with managed identity.
+
+   ```bash
+   curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
+
+   mvn dependency:copy-dependencies -f azure-identity-extensions.xml
+
+   mkdir -p ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries
+   mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson
+   # fix JARs conflict issue in GA images, put jackson libraries to PRE_CLASSPATH to upgrade the existing libs.
+   mv target/dependency/jackson-annotations-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+   mv target/dependency/jackson-core-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+   mv target/dependency/jackson-databind-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+   mv target/dependency/jackson-dataformat-xml-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+   # Thoes jars will be appended to CLASSPATH
+   mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/   
+   ```
+
+   Clean up resources:
+
+   ```bash
+   rm target -f -r
+   rm azure-identity-extensions.xml
+   ```
+
 1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
 
    ```bash
@@ -482,6 +507,8 @@ Use the following steps to build the image:
    ```output
    ./models/model.properties
    ./models/model.yaml
+   ./models/appmodel.yaml
+   ./models/dbmodel.yaml
    ./models/archive.zip
    ./Dockerfile
    ./weblogic-deploy/VERSION.txt
@@ -623,6 +650,10 @@ In the previous steps, you created the auxiliary image including models and WDT.
    export VERSION=$(kubectl -n ${WLS_DOMAIN_NS} get domain ${WLS_DOMAIN_UID} -o=jsonpath='{.spec.restartVersion}' | tr -d "\"")
    export VERSION=$((VERSION+1))
 
+   export ACR_LOGIN_SERVER=$(az acr show --name ${ACR_NAME} --query "loginServer" --output tsv)
+   ```
+
+   ```bash
    cat <<EOF >patch-file.json
    [
      {
