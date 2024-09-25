@@ -141,12 +141,6 @@ After that, clean up the pod with `kubectl delete pod non-host-nw`.
     kubectl exec -it host-nw -- /bin/bash
     ```
 
-1. Install `curl` on the pod for networking test
-
-    ```bash
-    apt update && apt install curl
-    ```
-
 1. Test the traffic from the pod to the IMDS endpoint
 
     ```bash
