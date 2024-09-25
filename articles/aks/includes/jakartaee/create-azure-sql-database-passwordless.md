@@ -8,7 +8,7 @@ ms.author: haiche
 
 <!-- The content of this file is part of /azure-dev-docs/blob/main/articles/java/ee/how-to-configure-passwordless-datasource.md. Ensure any changes made here are also applied to the original file. -->
 
-This section creates an Azure SQL Database using Microsoft Entra authentication, a database with managed identity connection enabled.
+This section creates an Azure SQL Database using Microsoft Entra authentication, with managed identity connection enabled.
 
 ### Create a resource group
 
@@ -23,12 +23,12 @@ az group create \
 
 ### Create a database server and a database
 
-Create a server with the [az sql server create](/cli/azure/sql/server#az-sql-server-create) command. This example creates a server named `myazuresql20130213` with admin user `azureuser` and admin password `Secret123456`. Replace the password with yours. For more information, see [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart?tabs=azure-cli).
+Create a server with the [az sql server create](/cli/azure/sql/server#az-sql-server-create) command. This example creates a server named `myazuresql20130213` with admin user `azureuser` and admin password. Replace `<your-password>` with your password. For more information, see [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart?tabs=azure-cli).
 
 ```bash
 export AZURESQL_SERVER_NAME="myazuresql20130213"
 export AZURESQL_ADMIN_USER="azureuser"
-export AZURESQL_ADMIN_PASSWORD="Secret123456"
+export AZURESQL_ADMIN_PASSWORD="<your-password>"
 export DATABASE_NAME="mysingledatabase20230213"
 ```
 

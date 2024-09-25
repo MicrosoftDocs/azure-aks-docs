@@ -4,7 +4,7 @@ description: Shows how to quickly stand up WebLogic Server on Azure Kubernetes S
 author: KarlErickson
 ms.author: edburns
 ms.topic: how-to
-ms.date: 07/10/2024
+ms.date: 09/25/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-wls, devx-track-javaee-wls-aks, devx-track-extended-java
 ---
@@ -52,7 +52,7 @@ If you're interested in providing feedback or working closely on your migration 
   - [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
   - Ensure that you have the zip/unzip utility installed. Use `zip/unzip -v` to test whether `zip/unzip` works.
 
-## Create an Azure SQL Database using Microsoft Entra authentication
+## Create an Azure SQL Database
 
 [!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database-passwordless.md)]
 
@@ -362,7 +362,7 @@ Use the following steps to build the image:
       EOF
       ```
 
-1. Use the following commands to download and install Microsoft SQL Server JDBC driver and enable connetion with Azure Managed Identity.
+1. Use the following commands to download and install Microsoft SQL Server JDBC driver and Azure Identity Extension that enables database connetion with Azure Managed Identity.
 
    1. Download and install Microsoft SQL Server JDBC driver to `wlsdeploy/externalJDBCLibraries`:
 
@@ -374,7 +374,7 @@ Use the following steps to build the image:
       curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
       ```
 
-   1. Install Azure Identity Extension to enable connecting database with managed identity.
+   1. Install Azure Identity Extension to `wlsdeploy/classpathLibraries`:
 
       ```bash
       curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
