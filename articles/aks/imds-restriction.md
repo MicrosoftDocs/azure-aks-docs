@@ -129,7 +129,7 @@ After that, clean up the pod with `kubectl delete pod non-host-nw`.
     spec:
       hostNetwork: true
       containers:
-      - name: ubuntu-container
+      - name: host-nw
         image: mcr.microsoft.com/azurelinux/base/nginx:1
         command: ["sleep", "infinity"]
     EOF
