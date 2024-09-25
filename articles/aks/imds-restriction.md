@@ -91,8 +91,8 @@ To verify that IMDS restriction is in effect, test traffic to both the non-host 
     spec:
       hostNetwork: false
       containers:
-      - name: ubuntu-container
-        image: ubuntu:latest
+      - name: non-host-nw
+        image: mcr.microsoft.com/azurelinux/base/nginx:1
         command: ["sleep", "infinity"]
     EOF
     ```
@@ -101,12 +101,6 @@ To verify that IMDS restriction is in effect, test traffic to both the non-host 
 
     ```bash
     kubectl exec -it non-host-nw -- /bin/bash
-    ```
-
-1. Install `curl` on the pod for the networking test.
-
-    ```bash
-    apt update && apt install curl
     ```
 
 1. Test the traffic from the pod to the IMDS endpoint.
@@ -132,8 +126,8 @@ After that, clean up the pod with `kubectl delete pod non-host-nw`.
     spec:
       hostNetwork: true
       containers:
-      - name: ubuntu-container
-        image: ubuntu:latest
+      - name: host-nw
+        image: mcr.microsoft.com/azurelinux/base/nginx:1
         command: ["sleep", "infinity"]
     EOF
     ```
@@ -142,12 +136,6 @@ After that, clean up the pod with `kubectl delete pod non-host-nw`.
 
     ```bash
     kubectl exec -it host-nw -- /bin/bash
-    ```
-
-1. Install `curl` on the pod for networking test
-
-    ```bash
-    apt update && apt install curl
     ```
 
 1. Test the traffic from the pod to the IMDS endpoint
