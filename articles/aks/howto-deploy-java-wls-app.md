@@ -439,6 +439,9 @@ Use the following steps to build the image:
 
       ```bash
       cat ${BASE_DIR}/mystaging/models/dbmodel.yaml
+      ```
+
+      ```yaml
       # Copyright (c) 2020, 2021, Oracle and/or its affiliates.
       # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
@@ -693,9 +696,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
    kubectl -n ${WLS_DOMAIN_NS} patch domain ${WLS_DOMAIN_UID} \
        --type=json \
-       --patch-file patch-file.json
-
-   kubectl get pod -n ${WLS_DOMAIN_NS} -w
+       --patch-file patch-file.json   
    ```
 
 1. Since database connection is configured in the auxiliary image, run the following command to remove the ConfigMap.
@@ -705,6 +706,10 @@ In the previous steps, you created the auxiliary image including models and WDT.
    ```
 
 1. Wait until the admin server and managed servers show the values in the following output block before you proceed:
+
+   ```bash
+   kubectl get pod -n ${WLS_DOMAIN_NS} -w
+   ```
 
    ```output
    NAME                             READY   STATUS    RESTARTS   AGE
