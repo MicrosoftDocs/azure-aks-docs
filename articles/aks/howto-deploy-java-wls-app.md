@@ -152,8 +152,8 @@ Depending on network conditions and other activity in your selected region, the 
 > [!NOTE]
 > If your organization requires deploying the workload within a corporate VNET with no public IPs allowed, you can choose the internal Load Balancer service.
 > Follow the screenshot to configure internal Load Balancer service in the **Load balancing** pane.
-> :::image type="content" source="media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png" alt-text="Screenshot of the Azure portal that shows the internal load balancer configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png":::
-> After the deployment, you can find access URL of admin server and cluster: **adminConsoleExternalUrl**, **clusterExternalUrl** from output.
+> :::image type="content" source="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png" alt-text="Screenshot of the Azure portal that shows the internal load balancer configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png":::
+> After the deployment, you can find access URL of admin server and cluster from output: **adminConsoleExternalUrl**, **clusterExternalUrl**.
 
 ## Examine the deployment output
 
