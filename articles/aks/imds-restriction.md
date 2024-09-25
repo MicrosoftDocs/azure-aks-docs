@@ -47,6 +47,9 @@ Non-host network addons that need to access the IMDS endpoint won't work after y
 
 The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
 
+> [!CAUTION]
+> Enabling IMDS restrictions for a cluster that uses unsupported add-ons results in an error.
+
 ## Enable IMDS restriction on a new cluster
 
 To enable IMDS restriction on a new cluster and block all traffic from non-host network pods to the IMDS endpoint, call the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--imds-restriction` parameter set to `enabled`.
@@ -69,7 +72,7 @@ az aks update \
     --imds-restriction enabled
 ```
 
-After you update the cluster, you must [reimage][node-image-upgrade] the nodes in your cluster to begin to block traffic to the cluster's pods.
+After you update the cluster, you must [reimage][node-image-upgrade] the nodes in your cluster with `az aks upgrade --node-image-only` to begin to block traffic to the cluster's pods.
 
 ## Verify the traffic on a cluster with IMDS restriction enabled
 
