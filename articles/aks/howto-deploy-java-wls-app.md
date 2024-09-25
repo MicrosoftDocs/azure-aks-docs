@@ -361,40 +361,53 @@ Use the following steps to build the image:
             Target: 'cluster-1'
       EOF
       ```
-1. Install Azure Identity Extension to enable connecting database with managed identity.
 
-   ```bash
-   curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
+1. Use the following commands to download and install Microsoft SQL Server JDBC driver and enable connetion with Azure Managed Identity.
 
-   mvn dependency:copy-dependencies -f azure-identity-extensions.xml
-   ```
+   1. Download and install Microsoft SQL Server JDBC driver to `wlsdeploy/externalJDBCLibraries`:
 
-   ```bash
-   mkdir -p ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries
-   mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson
-   # fix JARs conflict issue in GA images, put jackson libraries to PRE_CLASSPATH to upgrade the existing libs.
-   mv target/dependency/jackson-annotations-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-   mv target/dependency/jackson-core-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-   mv target/dependency/jackson-databind-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-   mv target/dependency/jackson-dataformat-xml-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-   # Thoes jars will be appended to CLASSPATH
-   mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/
-   ```
+      ```bash
+      export DRIVER_VERSION="10.2.1.jre8"
+      export MSSQL_DRIVER_URL="https://repo.maven.apache.org/maven2/com/microsoft/sqlserver/mssql-jdbc/${DRIVER_VERSION}/mssql-jdbc-${DRIVER_VERSION}.jar"
 
-   Clean up resources:
+      mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries
+      curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
+      ```
 
-   ```bash
-   rm target -f -r
-   rm azure-identity-extensions.xml
-   ```
+   1. Install Azure Identity Extension to enable connecting database with managed identity.
+
+      ```bash
+      curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
+
+      mvn dependency:copy-dependencies -f azure-identity-extensions.xml
+      ```
+
+      ```bash
+      mkdir -p ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries
+      mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson
+      # fix JARs conflict issue in GA images, put jackson libraries to PRE_CLASSPATH to upgrade the existing libs.
+      mv target/dependency/jackson-annotations-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+      mv target/dependency/jackson-core-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+      mv target/dependency/jackson-databind-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+      mv target/dependency/jackson-dataformat-xml-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+      # Thoes jars will be appended to CLASSPATH
+      mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/
+      ```
+
+      Clean up resources:
+
+      ```bash
+      rm target -f -r
+      rm azure-identity-extensions.xml
+      ```
 
 1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
 
    ```bash
    az account set --subscription <subscription>; 
    az aks get-credentials \
-       --resource-group <resource-group> \
-       --name <name>
+      --resource-group <resource-group> \
+      --name <name>
    ```
 
    You should see output similar to the following example. If you don't see this output, troubleshoot and resolve the problem before continuing.
@@ -405,50 +418,50 @@ Use the following steps to build the image:
 
 1. Export the database connection model and save it to `${BASE_DIR}/mystaging/models/dbmodel.yaml`. The following steps will extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. (The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.) 
 
-   The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
+   1. The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
 
-   ```bash
-   export WLS_DOMAIN_UID=sample-domain1
-   export WLS_DOMAIN_NS=${WLS_DOMAIN_UID}-ns
-   export DB_K8S_SECRET_NAME=$(kubectl get secret -n ${WLS_DOMAIN_NS} | grep "ds-secret" | awk '{print $1}')
-   ```
+      ```bash
+      export WLS_DOMAIN_UID=sample-domain1
+      export WLS_DOMAIN_NS=${WLS_DOMAIN_UID}-ns
+      export DB_K8S_SECRET_NAME=$(kubectl get secret -n ${WLS_DOMAIN_NS} | grep "ds-secret" | awk '{print $1}')
+      ```
 
-   Next, extract the database model with this command:
+   1. Next, extract the database model with this command:
 
-   ```bash
-   kubectl get configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS} -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
-   ```
+      ```bash
+      kubectl get configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS} -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
+      ```
 
-   Finally, verify the content of dbmodel.yaml. It should resemble the following structure:
+   1. Finally, verify the content of dbmodel.yaml. It should resemble the following structure:
 
-   ```bash
-   cat ${BASE_DIR}/mystaging/models/dbmodel.yaml
-   # Copyright (c) 2020, 2021, Oracle and/or its affiliates.
-   # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+      ```bash
+      cat ${BASE_DIR}/mystaging/models/dbmodel.yaml
+      # Copyright (c) 2020, 2021, Oracle and/or its affiliates.
+      # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-   resources:
-   JDBCSystemResource:
-      jdbc/WebLogicCafeDB:
-         Target: 'cluster-1'
-         JdbcResource:
-         JDBCDataSourceParams:
-            JNDIName: [
-               jdbc/WebLogicCafeDB
-            ]
-            GlobalTransactionsProtocol: OnePhaseCommit
-         JDBCDriverParams:
-            DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-            URL: '@@SECRET:ds-secret-sqlserver-1727147748:url@@'
-            PasswordEncrypted: '@@SECRET:ds-secret-sqlserver-1727147748:password@@'
-            Properties:
-               user:
-               Value: '@@SECRET:ds-secret-sqlserver-1727147748:user@@'
-         JDBCConnectionPoolParams:
-               TestTableName: SQL SELECT 1
-               TestConnectionsOnReserve: true
-   ```
+      resources:
+      JDBCSystemResource:
+         jdbc/WebLogicCafeDB:
+            Target: 'cluster-1'
+            JdbcResource:
+            JDBCDataSourceParams:
+               JNDIName: [
+                  jdbc/WebLogicCafeDB
+               ]
+               GlobalTransactionsProtocol: OnePhaseCommit
+            JDBCDriverParams:
+               DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+               URL: '@@SECRET:ds-secret-sqlserver-1727147748:url@@'
+               PasswordEncrypted: '@@SECRET:ds-secret-sqlserver-1727147748:password@@'
+               Properties:
+                  user:
+                  Value: '@@SECRET:ds-secret-sqlserver-1727147748:user@@'
+            JDBCConnectionPoolParams:
+                  TestTableName: SQL SELECT 1
+                  TestConnectionsOnReserve: true
+      ```
 
-1. Use the following commands to create an application archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
+1. Use the following commands to create an archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
 
    ```bash
    cd ${BASE_DIR}/mystaging/models
@@ -467,7 +480,7 @@ Use the following steps to build the image:
    rm ./weblogic-deploy/bin/*.cmd
    ```
 
-1. Use the following command to remove the WDT installer:
+   Clean up the WDT installer:
 
    ```bash
    rm weblogic-deploy.zip
