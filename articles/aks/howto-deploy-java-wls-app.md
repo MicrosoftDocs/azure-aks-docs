@@ -224,8 +224,11 @@ weblogic-cafe
 Use the following commands to clone the repository:
 
 ```bash
-cd <parent-directory-to-check-out-sample-code>
+# cd <parent-directory-to-check-out-sample-code>
 export BASE_DIR=$PWD
+```
+
+```bash
 git clone --single-branch https://github.com/microsoft/weblogic-on-azure.git --branch 20240201 $BASE_DIR/weblogic-on-azure
 ```
 
