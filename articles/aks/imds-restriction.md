@@ -100,12 +100,6 @@ To verify that IMDS restriction is in effect, test traffic to both the non-host 
     kubectl exec -it non-host-nw -- /bin/bash
     ```
 
-1. Install `curl` on the pod for the networking test.
-
-    ```bash
-    apt update && apt install curl
-    ```
-
 1. Test the traffic from the pod to the IMDS endpoint.
 
     ```bash
