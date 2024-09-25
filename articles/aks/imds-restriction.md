@@ -89,7 +89,7 @@ To verify that IMDS restriction is in effect, test traffic to both the non-host 
       hostNetwork: false
       containers:
       - name: ubuntu-container
-        image: ubuntu:latest
+        image: mcr.microsoft.com/azurelinux/base/nginx:1
         command: ["sleep", "infinity"]
     EOF
     ```
