@@ -79,4 +79,4 @@
 - name: FAQ
   href: faq.md
 - name: Troubleshooting
-  href: https://github.com/Azure/fleet/blob/main/docs/troubleshooting
+  href: /troubleshoot/azure/kubernetes-fleet/welcome-azure-kubernetes-fleet
