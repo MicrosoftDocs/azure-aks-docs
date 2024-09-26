@@ -86,6 +86,7 @@ An update run can be in one of the following states:
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
 
 Within an update run (for both [One by one](./update-orchestration.md#update-all-clusters-one-by-one) or [Stages](./update-orchestration.md#update-clusters-in-a-specific-order) type update runs), update run prioritizes upgrading the clusters in the following order: 
+
   1. Member with an open ongoing maintenance window.
   1. Member with maintenance window opening in the next four hours.
   1. Member with no maintenance window.
@@ -123,15 +124,19 @@ Examples:
 
 ### NodeImage channel
 
-Member cluster nodes are updated with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option. If you use this channel, Linux unattended upgrades are disabled by default. Node image upgrades support patch versions that are deprecated, so long as the minor Kubernetes version is still supported. Node images are AKS-tested, fully managed, and applied with safe deployment practices.
+Member cluster nodes are updated with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option.
+
+If you use this channel, Linux unattended upgrades are disabled by default. Node image upgrades support patch versions that are deprecated, so long as the minor Kubernetes version is still supported. Node images are AKS-tested, fully managed, and applied with safe deployment practices.
 
 Nodes on different operating systems will be updated in accordance with the node image versions aligned to those operating systems. 
 
-Example: if your member cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*, and a new version *20348.2582.240916* is released, the NodeImage is automatically upgraded to version *20348.2582.240916*.
+Example:
 
-### Update behavior
+- A cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*. A new NodeImage version *20348.2582.240916* is released and the cluster nodes are automatically upgraded to version *20348.2582.240916*.
 
-Autoupgrade does not move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kuberenetes versions it's recommended to first use one or more [update runs](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
+### Minor version skipping behavior
+
+Autoupgrade does not move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kuberenetes versions it's recommended to first use one or more [update run](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
 
 > [!NOTE]
 >
@@ -140,6 +145,8 @@ Autoupgrade does not move clusters between minor Kubernetes versions when there'
 > * Autoupgrade requires version 1.3.0 or later of the Fleet Azure CLI extension.
 >
 > * Autoupgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
+>
+> * If a cluster has no defined planned maintenance window it will be upgraded immediately when the update run reaches the cluster.
 >
 > * Autoupgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions].
 >
