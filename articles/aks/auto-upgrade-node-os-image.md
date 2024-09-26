@@ -155,6 +155,10 @@ On the `Unmanaged` channel, AKS has no control over how and when the security up
 
 AKS limits reimages to only when absolutely necessary, such as certain kernel packages that may require a reimage to get fully applied. `SecurityPatch` is designed to minimize disruptions as much as possible. If AKS decides reimaging nodes isn't necessary, it will patch nodes live without draining pods and no VHD update is performed in such cases.
 
+### Why does `SecurityPatch` channel requires to reach `snapshot.ubuntu.com` endpoint?
+
+With the `SecurityPatch` channel, the Linux cluster nodes have to download the required security patches and updates from ubuntu snapshot service described in [ubuntu-snapshots-on-azure-ensuring-predictability-and-consistency-in-cloud-deployments](https://ubuntu.com/blog/ubuntu-snapshots-on-azure-ensuring-predictability-and-consistency-in-cloud-deployments).
+
 ### How do I know if a `SecurityPatch` or `NodeImage` upgrade is applied on my node?
  
  Run the following command to obtain node labels:
