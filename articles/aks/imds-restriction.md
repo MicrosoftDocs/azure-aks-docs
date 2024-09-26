@@ -26,7 +26,7 @@ You can now opt to restrict access to the IMDS endpoint for non-host network pod
 
 When IMDS restriction is enabled, non-host network pods are unable to access the IMDS endpoint or acquire OAuth 2.0 tokens for authorization by a managed identity. Non-host network pods should rely on [Microsoft Entra Workload ID][workload-identity-overview]  after IMDS restriction is enabled.
 
-Host network pods have `hostNetwork` set to **true** in their specs. Host network pods and threads can continue to access the IMDS endpoint after IMDS restriction is enabled as they share the same network namespace with the host processes. Local processes in nodes might need to access the IMDS endpoint to retrieve instance metadata and therefore can still continue to access it after IMDS restriction is enabled.
+Host network pods have `hostNetwork` set to **true** in their specs. Host network pods can continue to access the IMDS endpoint after IMDS restriction is enabled as they share the same network namespace with the host processes. Local processes in nodes could use the IMDS endpoint to retrieve instance metadata and therefore it is still allowed to access the endpoint after the IMDS restriction is enabled.
 
 ## Before you begin
 
@@ -42,7 +42,6 @@ Non-host network addons that need to access the IMDS endpoint won't work after y
 - ACIConnectorLinux
 - AzurePolicy
 - GitOps
-- ExtensionManager
 - AIToolchainOperator
 
 The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
