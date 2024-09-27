@@ -67,7 +67,7 @@ This article listed different upgrade options for AKS clusters. For a detailed d
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
 [drain-timeout]: ./upgrade-aks-cluster.md#set-node-drain-timeout-value
 [soak-time]: ./upgrade-aks-cluster.md#set-node-soak-time-value
-[nodepool-upgrade]: manage-node-pools.md#upgrade-a-single-node-pool
+[nodepool-upgrade]: manage-node-pools.md#upgrade-a-cluster-control-plane-with-multiple-node-pools
 [planned-maintenance]: planned-maintenance.md
 [specific-nodepool]: node-image-upgrade.md#upgrade-a-specific-node-pool
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
