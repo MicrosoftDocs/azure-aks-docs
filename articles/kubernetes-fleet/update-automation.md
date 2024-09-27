@@ -171,7 +171,7 @@ Autoupgrades will happen only when new Kubernetes or node images are made availa
 
 ```azurecli-interactive
 # Get Kubernetes version for a member cluster
-az aks show --resource-group $GROUP --name $CLUSTER | grep '"currentKubernetesVersion"' | awk -F'"' '{print $4}'
+az aks show --resource-group $GROUP --name $CLUSTER --query currentKubernetesVersion
 ```
 
 ```azurecli-interactive
