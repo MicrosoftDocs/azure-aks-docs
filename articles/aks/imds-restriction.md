@@ -17,7 +17,7 @@ By default, all pods running in an Azure Kubernetes Service (AKS) cluster can ac
 
 ## About IMDS restriction for AKS clusters
 
-[Azure Instance Metadata Service (IMDS)](/azure/virtual-machines/instance-metadata-service) is a REST API that provides information about currently running virtual machine instances. This information includes the SKU, storage, network configurations, and upcoming maintenance events.
+Azure IMDS is a REST API that provides information about currently running virtual machine instances. This information includes the SKU, storage, network configurations, and upcoming maintenance events.
 
 The IMDS REST API is available at a well-known, nonroutable IP address (169.254.169.254) that is by default accessible from all pods running in an AKS cluster. This default access introduces certain security risks for an AKS cluster:
 
