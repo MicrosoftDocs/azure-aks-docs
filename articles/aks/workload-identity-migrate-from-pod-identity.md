@@ -231,7 +231,7 @@ This article showed you how to set up your pod to authenticate using a workload 
 [azure-identity-libraries]: ../active-directory/develop/reference-v2-libraries.md
 [openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [install-azure-cli]: /cli/azure/install-azure-cli
-[assign-rbac-managed-identity]: /azure/active-directory/managed-identities-azure-resources/howto-assign-access-cli
+[assign-rbac-managed-identity]: /azure/role-based-access-control/role-assignments-portal-managed-identity
 
 <!-- EXTERNAL LINKS -->
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe

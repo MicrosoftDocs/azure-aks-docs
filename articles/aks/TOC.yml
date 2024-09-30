@@ -734,16 +734,8 @@
           href: events.md
         - name: Monitor kube-audit events
           href: monitor-apiserver.md
-        - name: Monitor control plane metrics
-          href: monitor-control-plane-metrics.md
-        - name: Monitor reference
-          href: monitor-aks-reference.md
-        - name: Control plane metrics reference
-          href: control-plane-metrics-default-list.md
         - name: View the kubelet logs
           href: kubelet-logs.md
-        - name: View container data in real time
-          href: container-insights-live-data.md
         - name: Cost analysis
           items:
           - name: Enable cost analysis on your cluster
@@ -824,10 +816,14 @@
           items:
             - name: About Kubernetes Event-driven Autoscaler (KEDA)
               href: keda-about.md
-            - name: Use ARM template
-              href: keda-deploy-add-on-arm.md
-            - name: Use Azure CLI
-              href: keda-deploy-add-on-cli.md
+            - name: Enable KEDA add-on for your cluster
+              items:
+                - name: Use an ARM template
+                  href: keda-deploy-add-on-arm.md
+                - name: Use the Azure CLI
+                  href: keda-deploy-add-on-cli.md
+                - name: Enable on an existing cluster using the Azure portal
+                  href: enable-keda-existing-cluster.md
             - name: Securely scale your applications using the Kubernetes Event-driven Autoscaling (KEDA) add-on and workload identity
               href: keda-workload-identity.md
             - name: Kubernetes Event-driven Autoscaler (KEDA) integrations
@@ -871,7 +867,7 @@
     - name: Windows Server containers
       items:
         - name: Windows Server containers FAQ
-          href: windows-faq.md
+          href: windows-faq.yml
         - name: Connect remotely
           href: rdp.md
         - name: Use HostProcess containers
@@ -962,6 +958,8 @@
           href: ai-toolchain-operator.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
+        - name: Work with clusters using Copilot
+          href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: DevOps
       items:
         - name: Azure DevOps Project
@@ -1015,6 +1013,8 @@
     - name: Azure Policy built-ins
       displayName: samples, policies, definitions
       href: ./policy-reference.md
+    - name: AKS monitoring data reference
+      href: monitor-aks-reference.md
 - name: Resources
   items:
     - name: Build your skills with Microsoft Learn training
