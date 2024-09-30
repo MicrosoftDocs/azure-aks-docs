@@ -30,7 +30,7 @@ You can update expiring certficates and restart your system services.
 
 ### Generate custom certificates
 
-Create your own custom certificate; for example, [an Azure Key Vault certificate](/key-vault/certificates/certificate-scenarios.md).
+Create your own custom certificate; for example, [an Azure Key Vault certificate](/azure/key-vault/certificates/certificate-scenarios).
 
 ### Update your custom certficate manually
 
