@@ -512,7 +512,7 @@ The output of the commands resembles the following example:
 [persistent-volume-claim-overview]: concepts-storage.md#persistent-volume-claims
 [operator-best-practices-storage]: operator-best-practices-storage.md
 [concepts-storage]: concepts-storage.md
-[node-resource-group]: faq.md#why-are-two-resource-groups-created-with-aks
+[node-resource-group]: faq.yml
 [storage-skus]: /azure/storage/common/storage-redundancy
 [private-endpoint-overview]: /azure/private-link/private-endpoint-overview
 [persistent-volume]: concepts-storage.md#persistent-volumes

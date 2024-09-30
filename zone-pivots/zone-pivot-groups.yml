@@ -1,0 +1,52 @@
+### YamlMime:ZonePivotGroups
+groups:
+- id: pipelines-version
+  title: Pipelines version
+  prompt: Choose a Pipelines version
+  pivots:
+  - id: pipelines-yaml
+    title: YAML
+  - id: pipelines-classic
+    title: Classic
+ # Owner: rahulmehta
+- id: client-operating-system
+  title: Programming languages
+  prompt: Choose a client operating system
+  pivots:
+  - id: client-operating-system-linux
+    title: Linux
+  - id: client-operating-system-macos
+    title: macOS
+  - id: client-operating-system-windows
+    title: Windows
+- id: bicep-azure-cli-portal
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-portal
+    title: Azure portal
+  - id: azure-cli
+    title: Azure CLI
+  - id: bicep
+    title: Bicep
+# Owner: ruslany
+- id: aks-azure-developer-cli
+  title: Azure command line interfaces
+  prompt: Choose a command line interface
+  pivots:
+  - id: development-environment-azure-cli
+    title: Azure CLI
+  - id: development-environment-azure-developer
+    title: Azure Developer CLI
+# Owner: jopeng
+# Owner: schaffererin
+- id: csi-secrets-store-identity-access
+  title: Choose a Secrets Store CSI Driver access method
+  prompt: Choose an access method
+  pivots:
+  - id: access-with-service-connector
+    title: Service Connector with Workload ID
+  - id: access-with-a-microsoft-entra-workload-identity
+    title: Workload ID
+  - id: access-with-a-user-assigned-managed-identity
+    title: Managed identity

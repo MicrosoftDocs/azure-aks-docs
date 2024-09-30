@@ -40,7 +40,7 @@ It's also possible to create a cluster with an application service principal rat
 
 You can update an existing cluster to use a managed identity from an application service principal. You can also update an existing cluster to a different type of managed identity. If your cluster is already using a managed identity and the identity was changed, for example if you updated the cluster identity type from system-assigned to user-assigned, then there is a delay while control plane components switch to the new identity. Control plane components continue to use the old identity until its token expires. After the token is refreshed, they switch to the new identity. This process can take several hours.
 
-The system-assigned and user-assigned identity types differ a [Microsoft Entra Workload identity][workload-identity-overview], which is intended for use by an application running on a pod.
+The system-assigned and user-assigned identity types differ from a [Microsoft Entra Workload identity][workload-identity-overview], which is intended for use by an application running on a pod.
 
 ## Before you begin
 
@@ -326,13 +326,13 @@ Your output should resemble the following example output:
 
 ### Assign an RBAC role to the kubelet managed identity
 
-Assign the `Managed Identity Operator` role on the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command. Provide the kubelet identity's principal ID for the $KUBELET_CLIENT_ID variable.
+Assign the `ACRPull` role on the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command. Provide the kubelet identity's principal ID for the $KUBELET_CLIENT_ID variable and provide the ACR registry ID for the $ACR_REGISTRY_ID variable.
 
 ```azurecli-interactive
 az role assignment create \
     --assignee $KUBELET_CLIENT_ID \
-    --role "Managed Identity Operator" \
-    --scope "<kubelet-identity-resource-id>"
+    --role "acrpull" \
+    --scope "$ACR_REGISTRY_ID"
 ```
 
 ### Create a cluster to use the kubelet identity

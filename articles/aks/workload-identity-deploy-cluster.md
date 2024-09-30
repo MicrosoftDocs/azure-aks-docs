@@ -376,7 +376,7 @@ The [Service Connector](/azure/service-connector/overview) integration helps sim
 [tutorial-python-aks-storage-workload-identity]: /azure/service-connector/tutorial-python-aks-storage-workload-identity
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az aks update]: /cli/azure/aks#az-aks-update
-[aks-two-resource-groups]: faq.md#why-are-two-resource-groups-created-with-aks
+[aks-two-resource-groups]: faq.yml
 [az-account-set]: /cli/azure/account#az-account-set
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials

@@ -157,7 +157,7 @@ az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-n
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, go to your AKS cluster.
-2. In the **Settings** section, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**.
 
     :::image type="content" source="./media/planned-maintenance/add-schedule-portal.png" alt-text="Screenshot that shows the option to add a schedule in the Azure portal.":::
@@ -264,7 +264,7 @@ az aks maintenanceconfiguration update --resource-group myResourceGroup --cluste
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, go to your AKS cluster.
-2. In the **Settings** section, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/edit-schedule-portal.png" alt-text="Screenshot that shows the option for editing a schedule in the Azure portal.":::
@@ -372,7 +372,7 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, go to your AKS cluster.
-2. In the **Settings** section, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/edit-schedule-portal.png" alt-text="Screenshot that shows the option for editing a schedule in the Azure portal.":::
@@ -422,6 +422,8 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
 * Why was one of my agent pools upgraded outside the maintenance window?
 
   If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is called a "catch-up upgrade." It avoids letting agent pools be upgraded with a different version from the AKS control plane.
+
+  Another reason why an agent pool could be upgraded unexpectedly is when there is no defined maintenance configuration, or if it's been deleted. In that case, a cluster with auto-upgrade *but without a maintenance configuration* will be upgraded at random times (*fallback schedule*), which might be an undesired timeframe.
 
 * Are there any best practices for the maintenance configurations?
 

@@ -121,9 +121,19 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/container-insights-live-data.md",
+            "redirect_url": "/azure/aks/monitor-aks",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/container-service-quotas.md",
             "redirect_url": "/azure/aks/quotas-skus-regions",
             "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/control-plane-metrics-default-list.md",
+            "redirect_url": "/azure/aks/monitor-aks-reference",
+            "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/create-cluster.md",
@@ -277,12 +287,17 @@
         },
         {
             "source_path_from_root": "/articles/aks/mixed-sku-node-pools.md",
-            "redirect_url": "/azure/aks/what-is-aks",
+            "redirect_url": "/azure/aks/virtual-machines-node-pools",
             "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/monitor-apiserver.md",
             "redirect_url": "/azure/aks/monitor-aks#resource-logs",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/monitor-control-plane-metrics.md",
+            "redirect_url": "/azure/aks/monitor-aks",
             "redirect_document_id": false
         },
         {

@@ -7,7 +7,7 @@ ms.author: tamram
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 06/05/2024
+ms.date: 08/29/2024
 ---
 
 # Certificate rotation in Azure Kubernetes Service (AKS)
@@ -74,7 +74,7 @@ Microsoft maintains all certificates mentioned in this section, except for the c
 * Check the expiration date of the virtual machine scale set agent node certificate using the `az vm run-command invoke` command.
 
     ```azurecli-interactive
-    az vmss run-command invoke --resource-group "MC_rg_myAKSCluster_region" --name "vmss-name" --command-id RunShellScript --instance-id 1 --scripts "openssl x509 -in /etc/kubernetes/certs/apiserver.crt -noout -enddate" --query "value[0].message"
+    az vmss run-command invoke --resource-group "MC_rg_myAKSCluster_region" --name "vmss-name" --command-id RunShellScript --instance-id 1 --scripts "openssl x509 -in  /var/lib/kubelet/pki/kubelet-client-current.pem -text" --query "value[0].message"
     ```
 
 ## Certificate auto-rotation

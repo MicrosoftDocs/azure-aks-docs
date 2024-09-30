@@ -1,0 +1,365 @@
+### YamlMime:FAQ
+metadata:
+  title: "AKS frequently asked questions"
+  description: Frequently asked questions about Azure Kubernetes Service (AKS)
+  keywords: frequently asked questions, faq
+  ms.service: azure-kubernetes-service
+  ms.topic: faq
+  ms.date: 11/06/2023
+title: "AKS frequently asked questions"
+summary: |
+    This article provides answers to some of the most common questions about Azure Kubernetes Service (AKS).
+  
+
+sections:
+  - name: Support
+    questions:
+      - question: |
+          Does AKS offer a service-level agreement?
+        answer: |
+          AKS provides SLA guarantees in the [Standard pricing tier with the Uptime SLA feature](./free-standard-pricing-tiers.md).
+          
+      - question: |
+          What is platform support, and what does it include?
+        answer: |
+          Platform support is a reduced support plan for unsupported "N-3" version clusters. Platform support only includes Azure infrastructure support.
+
+          For more information, see the [platform support policy](./supported-kubernetes-versions.md).
+          
+      - question: |
+          Does AKS automatically upgrade my unsupported clusters?
+        answer: |
+          Yes, AKS initiates auto-upgrades for unsupported clusters. When a cluster in an n-3 version (where n is the latest supported AKS GA minor version) is about to drop to n-4, AKS automatically upgrades the cluster to n-2 to remain in an AKS support policy.
+          
+          For more information, see [Supported Kubernetes versions](./supported-kubernetes-versions.md), [Planned maintenance windows](./planned-maintenance.md), and [Automatic upgrades](./auto-upgrade-cluster.md).
+          
+      - question: |
+          Can I run Windows Server containers on AKS?
+        answer: |
+          Yes, AKS supports Windows Server containers. For more information, see the [Windows Server on AKS FAQ](./windows-faq.yml).
+          
+      - question: |
+          Can I apply Azure reservation discounts to my AKS agent nodes?
+        answer: |
+          AKS agent nodes are billed as standard Azure virtual machines. If you purchased [Azure reservations](/azure/cost-management-billing/reservations/save-compute-costs-reservations) for the VM size that you're using in AKS, those discounts are automatically applied.
+          
+  - name: Operations
+    questions:
+      - question: |
+          Can I move/migrate my cluster between Azure tenants?
+        answer: |
+          No, moving your AKS cluster between tenants is currently unsupported.
+          
+      - question: |
+          Can I move/migrate my cluster between subscriptions?
+        answer: |
+          No, moving your AKS cluster between subscriptions is currently unsupported.
+          
+      - question: |
+          Can I move my AKS cluster or AKS infrastructure resources to other resource groups or rename them?
+        answer: |
+          No, moving or renaming your AKS cluster and its associated resources isn't supported.
+
+      - question: |
+          Can I restore my cluster after deleting it?
+        answer: |
+          No, you can't restore your cluster after deleting it. When you delete your cluster, the node resource group and all its resources are also deleted.
+
+          If you want to keep any of your resources, move them to another resource group before deleting your cluster. If you want to protect against accidental deletes, you can lock the AKS managed resource group hosting your cluster resources using [Node resource group lockdown](./cluster-configuration.md#create-an-aks-cluster-with-node-resource-group-lockdown).
+      
+      - question: |
+          Can I scale my AKS cluster to zero?
+        answer: |
+          You can completely [stop a running AKS cluster](./start-stop-cluster.md) or [scale or autoscale all or specific `User` node pools](./scale-cluster.md#scale-user-node-pools-to-0) to zero.
+
+          You can't directly scale [system node pools](./use-system-pools.md) to zero.
+          
+      - question: |
+          Can I use the Virtual Machine Scale Set APIs to scale manually?
+        answer: |
+          No, scale operations using the Virtual Machine Scale Set APIs aren't supported. You can use the AKS APIs (`az aks scale`).
+          
+      - question: |
+          Can I use Virtual Machine Scale Sets to manually scale to zero nodes?
+        answer: |
+          No, scale operations using the Virtual Machine Scale Set APIs aren't supported. You can use the AKS API to scale non-system node pools to zero or [stop your cluster](./start-stop-cluster.md) instead.
+
+      - question: |
+          Can I stop or de-allocate all my VMs?
+        answer: |
+          No, this isn't a supported configuration. [Stop your cluster](./start-stop-cluster.md) instead.
+          
+      - question: |
+          Why are two resource groups created with AKS?
+        answer: |
+          No, scale operations using the Virtual Machine Scale Set APIs aren't supported. You can use the AKS APIs (`az aks scale`). AKS builds upon many Azure infrastructure resources, including Virtual Machine Scale Sets, virtual networks, and managed disks. These integrations enable you to apply many of the core capabilities of the Azure platform within the managed Kubernetes environment provided by AKS. For example, most Azure virtual machine types can be used directly with AKS and Azure Reservations can be used to receive discounts on those resources automatically.
+
+          To enable this architecture, each AKS deployment spans two resource groups:
+
+          1. You create the first resource group. This group contains only the Kubernetes service resource. The AKS resource provider automatically creates the second resource group during deployment. An example of the second resource group is *MC_myResourceGroup_myAKSCluster_eastus*. For information on how to specify the name of this second resource group, see the next section.
+          2. The second resource group, known as the *node resource group*, contains all of the infrastructure resources associated with the cluster. These resources include the Kubernetes node VMs, virtual networking, and storage. By default, the node resource group has a name like *MC_myResourceGroup_myAKSCluster_eastus*. AKS automatically deletes the node resource group whenever you delete the cluster. You should only use this resource group for resources that share the cluster's lifecycle.
+
+            > [!NOTE]
+            > Modifying any resource under the node resource group in the AKS cluster is an unsupported action and will cause cluster operation failures. You can prevent changes from being made to the node resource group by [blocking users from modifying resources](./cluster-configuration.md#fully-managed-resource-group-preview) managed by the AKS cluster.
+
+      - question: |
+          Can I provide my own name for the AKS node resource group?
+        answer: |
+          By default, AKS names the node resource group *MC_resourcegroupname_clustername_location*, but you can provide your own name. 
+
+          To specify your own resource group name, install the [aks-preview](/cli/azure/aks) Azure CLI extension version *0.3.2* or later. When you create an AKS cluster using the [`az aks create`][az-aks-create] command, use the `--node-resource-group` parameter and specify a name for the resource group. If you use an [Azure Resource Manager template](/azure/templates/microsoft.containerservice/2022-09-01/managedclusters) to deploy an AKS cluster, you can define the resource group name using the *nodeResourceGroup* property.
+
+          - The Azure resource provider automatically creates the secondary resource group.
+          - You can specify a custom resource group name only when you're creating the cluster.
+
+          As you work with the node resource group, keep in mind that you can't:
+
+          - Specify an existing resource group for the node resource group.
+          - Specify a different subscription for the node resource group.
+          - Change the node resource group name after the cluster has been created.
+          - Specify names for the managed resources within the node resource group.
+          - Modify or delete Azure-created tags of managed resources within the node resource group.
+
+      - question: |
+          Can I modify tags and other properties of the AKS resources in the node resource group?
+        answer: |
+          You might get unexpected scaling and upgrading errors if you modify or delete Azure-created tags and other resource properties in the node resource group. AKS allows you to create and modify custom tags created by end users, and you can add those tags when [creating a node pool](manage-node-pools.md#specify-a-taint-label-or-tag-for-a-node-pool). You might want to create or modify custom tags, for example, to assign a business unit or cost center. Another option is to create Azure Policies with a scope on the managed resource group.
+
+          Azure-created tags are created for their respective Azure Services and should always be allowed. For AKS, there are the `aks-managed` and `k8s-azure` tags. Modifying any **Azure-created tags** on resources under the node resource group in the AKS cluster is an unsupported action, which breaks the service-level objective (SLO).
+
+          > [!NOTE]
+          > In the past, the tag name "Owner" was reserved for AKS to manage the public IP that is assigned on front end IP of the load balancer. Now, services follow use the `aks-managed` prefix. For legacy resources, don't use Azure policies to apply the "Owner" tag name. Otherwise, all resources on your AKS cluster deployment and update operations will break. This doesn't apply to newly created resources.
+
+  - name: Quotas, limits, and region availability
+    questions:
+      - question: |
+          Which Azure regions currently provide AKS? 
+        answer: |
+          For a complete list of available regions, see [AKS regions and availability](https://azure.microsoft.com/global-infrastructure/services/?products=kubernetes-service).
+          
+      - question: |
+          Can I spread an AKS cluster across regions?
+        answer: |
+          No, AKS clusters are regional resources and can't span regions. See [best practices for business continuity and disaster recovery](./operator-best-practices-multi-region.md#plan-for-multiregion-deployment) for guidance on how to create an architecture that includes multiple regions.
+          
+      - question: |
+          Can I spread an AKS cluster across availability zones?
+        answer: |
+          Yes, you can deploy an AKS cluster across one or more [availability zones](./availability-zones.md) in [regions that support them](/azure/availability-zones/az-region).
+
+      - question: |
+          Can I have different VM sizes in a single cluster?
+        answer: |
+          Yes, you can use different virtual machine sizes in your AKS cluster by creating [multiple node pools](./create-node-pools.md).
+
+      - question: |
+          What's the size limit on a container image in AKS?
+        answer: |
+          AKS doesn't set a limit on the container image size. However, it's important to understand that the larger the image, the higher the memory demand. A larger size could potentially exceed resource limits or the overall available memory of worker nodes. By default, memory for VM size Standard_DS2_v2 for an AKS cluster is set to 7 GiB.
+
+          When a container image is excessively large, as in the Terabyte (TBs) range, kubelet might not be able to pull it from your container registry to a node due to lack of disk space.
+
+          For Windows Server nodes, Windows Update doesn't automatically run and apply the latest updates. On a regular schedule around the Windows Update release cycle and your own validation process, you should perform an upgrade on the cluster and the Windows Server node pool(s) in your AKS cluster. This upgrade process creates nodes that run the latest Windows Server image and patches, then removes the older nodes. For more information on this process, see [Upgrade a node pool in AKS](./manage-node-pools.md#upgrade-a-single-node-pool).
+
+      - question: |
+          Are AKS images required to run as root?
+        answer: |
+          The following images have functional requirements to "Run as Root" and exceptions must be filed for any policies:
+
+          - *mcr.microsoft.com/oss/kubernetes/coredns*
+          - *mcr.microsoft.com/azuremonitor/containerinsights/ciprod*
+          - *mcr.microsoft.com/oss/calico/node*
+          - *mcr.microsoft.com/oss/kubernetes-csi/azuredisk-csi*
+
+  - name: Security, access, and identity
+    questions:
+      - question: |
+          Can I limit who has access to the Kubernetes API server?
+        answer: |
+          Yes, there are two options for limiting access to the API server:
+
+          - Use [API Server Authorized IP Ranges](./api-server-authorized-ip-ranges.md) if you want to maintain a public endpoint for the API server but restrict access to a set of trusted IP ranges.
+          - Use a [private cluster](./private-clusters.md) if you want to limit the API server to *only* be accessible from within your virtual network.
+          
+      - question: |
+          Are security updates applied to AKS agent nodes?
+        answer: |
+          AKS patches CVEs that have a "vendor fix" every week. CVEs without a fix are waiting on a "vendor fix" before they can be remediated. The AKS images are automatically updated inside of 30 days. We recommend you apply an updated Node Image on a regular cadence to ensure that latest patched images and OS patches are all applied and current. You can do this using one of the following methods:
+
+          - Manually, through the Azure portal or the Azure CLI.
+          - By upgrading your AKS cluster. The cluster upgrades [cordon and drain nodes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/) automatically and then bring a new node online with the latest Ubuntu image and a new patch version or a minor Kubernetes version. For more information, see [Upgrade an AKS cluster](./upgrade-cluster.md).
+          - By using [node image upgrade](./node-image-upgrade.md).
+          
+      - question: |
+          Are there security threats targeting AKS that I should be aware of?
+        answer: |
+          Microsoft provides guidance for other actions you can take to secure your workloads through services like [Microsoft Defender for Containers](/azure/defender-for-cloud/defender-for-containers-introduction?tabs=defender-for-container-arch-aks). The following security threat is related to AKS and Kubernetes that you should be aware of:
+
+          - [New large-scale campaign targets Kubeflow](https://techcommunity.microsoft.com/t5/azure-security-center/new-large-scale-campaign-targets-kubeflow/ba-p/2425750) (June 8, 2021).
+
+      - question: |
+          Does AKS store any customer data outside of the cluster's region?
+        answer: |
+          No, all data is stored in the cluster's region.
+
+      - question: |
+          How can I avoid permission ownership setting slow issues when the volume has numerous files?
+        answer: |
+          Traditionally if your pod is running as a nonroot user (which you should), you must specify a `fsGroup` inside the pod's security context so the volume can be readable and writable by the Pod. This requirement is covered in more detail [here](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/).
+
+          A side effect of setting `fsGroup` is that each time a volume is mounted, Kubernetes must recursively `chown()` and `chmod()` all the files and directories inside the volume (with a few exceptions noted below). This scenario happens even if group ownership of the volume already matches the requested `fsGroup`. It can be expensive for larger volumes with lots of small files, which can cause pod startup to take a long time. This scenario has been a known problem before v1.20, and the workaround is setting the Pod run as root:
+
+          ```yaml
+          apiVersion: v1
+          kind: Pod
+          metadata:
+            name: security-context-demo
+          spec:
+            securityContext:
+              runAsUser: 0
+              fsGroup: 0
+          ```
+
+          The issue has been resolved with Kubernetes version 1.20. For more information, see [Kubernetes 1.20: Granular Control of Volume Permission Changes](https://kubernetes.io/blog/2020/12/14/kubernetes-release-1.20-fsgroupchangepolicy-fsgrouppolicy/).
+
+  - name: Networking
+    questions:
+      - question: |
+          How does the managed Control Plane communicate with my Nodes?
+        answer: |
+          AKS uses a secure tunnel communication to allow the api-server and individual node kubelets to communicate even on separate virtual networks. The tunnel is secured through mTLS encryption. The current main tunnel that is used by AKS is [Konnectivity, previously known as apiserver-network-proxy](https://kubernetes.io/docs/tasks/extend-kubernetes/setup-konnectivity/). Verify all network rules follow the [Azure required network rules and FQDNs](./limit-egress-traffic.md).
+          
+      - question: |
+          Can my pods use the API server FQDN instead of the cluster IP?
+        answer: |
+          Yes, you can add the annotation `kubernetes.azure.com/set-kube-service-host-fqdn` to pods to set the `KUBERNETES_SERVICE_HOST` variable to the domain name of the API server instead of the in-cluster service IP. This is useful in cases where your cluster egress is done via a layer 7 firewall, such as when using Azure Firewall with Application Rules.
+          
+      - question: |
+          Can I configure NSGs with AKS?
+        answer: |
+          AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. AKS only modifies the network interfaces NSGs settings. If you're using CNI, you also must ensure the security rules in the NSGs allow traffic between the node and pod CIDR ranges. If you're using kubenet, you must also ensure the security rules in the NSGs allow traffic between the node and pod CIDR. For more information, see [Network security groups](./concepts-network.md#network-security-groups).
+          
+      - question: |
+          How does Time synchronization work in AKS?
+        answer: |
+          AKS nodes run the "chrony" service, which pulls time from the localhost. Containers running on pods get the time from the AKS nodes. Applications launched inside a container use time from the container of the pod.
+ 
+  - name: Add-ons, extensions, and integrations
+    questions:
+      - question: |
+          Can I use custom VM extensions?
+        answer: |
+          No, AKS is a managed service, and manipulation of the IaaS resources isn't supported. To install custom components, use the Kubernetes APIs and mechanisms. For example, use DaemonSets to install required components.
+          
+      - question: |
+          What Kubernetes admission controllers does AKS support? Can admission controllers be added or removed?
+        answer: |
+          AKS supports the following [admission controllers](https://kubernetes.io/docs/reference/access-authn-authz/admission-controllers/):
+
+          - *NamespaceLifecycle*
+          - *LimitRanger*
+          - *ServiceAccount*
+          - *DefaultIngressClass*
+          - *DefaultStorageClass*
+          - *DefaultTolerationSeconds*
+          - *MutatingAdmissionWebhook*
+          - *ValidatingAdmissionWebhook*
+          - *ResourceQuota*
+          - *PodNodeSelector*
+          - *PodTolerationRestriction*
+          - *ExtendedResourceToleration*
+
+          Currently, you can't modify the list of admission controllers in AKS.
+           
+      - question: |
+          Can I use admission controller webhooks on AKS?
+        answer: |
+          Yes, you can use admission controller webhooks on AKS. It's recommended you exclude internal AKS namespaces, which are marked with the **control-plane** label. For example:
+
+          ```output
+          namespaceSelector:
+              matchExpressions:
+              - key: control-plane
+                operator: DoesNotExist
+          ```
+
+           AKS firewalls the API server egress so your admission controller webhooks need to be accessible from within the cluster.
+          
+      - question: |
+          Can admission controller webhooks impact kube-system and internal AKS namespaces?
+        answer: |
+          To protect the stability of the system and prevent custom admission controllers from impacting internal services in the kube-system, namespace AKS has an **Admissions Enforcer**, which automatically excludes kube-system and AKS internal namespaces. This service ensures the custom admission controllers don't affect the services running in kube-system.
+
+          If you have a critical use case for deploying something on kube-system (not recommended) in support of your custom admission webhook, you may add the following label or annotation so that Admissions Enforcer ignores it.
+
+          Label: ```"admissions.enforcer/disabled": "true"``` or Annotation: ```"admissions.enforcer/disabled": true```
+          
+      - question: |
+          Is Azure Key Vault integrated with AKS?
+        answer: |
+          [Azure Key Vault Provider for Secrets Store CSI Driver](./csi-secrets-store-driver.md) provides native integration of Azure Key Vault into AKS.
+           
+      - question: |
+          Can I use FIPS cryptographic libraries with deployments on AKS?
+        answer: |
+          FIPS-enabled nodes are now supported on Linux-based node pools. For more information, see [Add a FIPS-enabled node pool](./create-node-pools.md#fips-enabled-node-pools).
+          
+      - question: |
+          How are AKS addons updated?
+        answer: |
+          Any patch, including a security patch, is automatically applied to the AKS cluster. Anything bigger than a patch, like major or minor version changes (which can have breaking changes to your deployed objects), is updated when you update your cluster if a new release is available. You can find when a new release is available by visiting the [AKS release notes](https://github.com/Azure/AKS/releases).
+
+      - question: |
+          What is the purpose of the AKS Linux Extension I see installed on my Linux Virtual Machine Scale Sets instances?
+        answer: |
+          The AKS Linux Extension is an Azure VM extension that installs and configures monitoring tools on Kubernetes worker nodes. The extension is installed on all new and existing Linux nodes. It configures the following monitoring tools:
+
+          - [Node-exporter](https://github.com/prometheus/node_exporter): Collects hardware telemetry from the virtual machine and makes it available using a metrics endpoint. Then, a monitoring tool, such as Prometheus, is able to scrap these metrics.
+          - [Node-problem-detector](https://github.com/kubernetes/node-problem-detector): Aims to make various node problems visible to upstream layers in the cluster management stack. It's a systemd unit that runs on each node, detects node problems, and reports them to the cluster's API server using Events and NodeConditions.
+          - [ig](https://go.microsoft.com/fwlink/p/?linkid=2260320): An eBPF-powered open-source framework for debugging and observing Linux and Kubernetes systems. It provides a set of tools (or gadgets) designed to gather relevant information, allowing users to identify the cause of performance issues, crashes, or other anomalies. Notably, its independence from Kubernetes enables users to employ it also for debugging control plane issues.
+
+          These tools help provide observability around many node health related problems, such as:
+
+          - Infrastructure daemon issues: NTP service down
+          - Hardware issues: Bad CPU, memory, or disk
+          - Kernel issues: Kernel deadlock, corrupted file system
+          - Container runtime issues: Unresponsive runtime daemon
+
+          The extension **doesn't require additional outbound access** to any URLs, IP addresses, or ports beyond the [documented AKS egress requirements](./limit-egress-traffic.md). It doesn't require any special permissions granted in Azure. It uses kubeconfig to connect to the API server to send the monitoring data collected.
+
+  - name: Troubleshooting cluster issues
+    questions:
+      - question: |
+          Why is my cluster delete taking so long?
+        answer: |
+          Most clusters are deleted upon user request. In some cases, especially cases where you bring your own Resource Group or perform cross-RG tasks, deletion can take more time or even fail. If you have an issue with deletes, double-check that you don't have locks on the RG, that any resources outside of the RG are disassociated from the RG, and so on.
+          
+      - question: |
+          Why is my cluster create/update taking so long?
+        answer: |
+          If you have issues with create and update cluster operations, make sure you don't have any assigned policies or service constraints that may block your AKS cluster from managing resources like VMs, load balancers, tags, etc.
+          
+      - question: |
+          If I have pod / deployments in state 'NodeLost' or 'Unknown' can I still upgrade my cluster?
+        answer: |
+          You can, but we don't recommend it. You should perform updates when the state of the cluster is known and healthy.
+
+      - question: |
+          If I have a cluster with one or more nodes in an Unhealthy state or shut down, can I perform an upgrade?
+        answer: |
+          No, delete/remove any nodes in a failed state or otherwise from the cluster before upgrading.
+          
+      - question: |
+          I ran a cluster delete, but see the error `[Errno 11001] getaddrinfo failed`
+        answer: |
+          Most commonly, this error arises if you have one or more Network Security Groups (NSGs) still in use that are associated with the cluster. Remove them and attempt the delete again.
+
+      - question: |
+          I ran an upgrade, but now my pods are in crash loops, and readiness probes fail
+        answer: |
+          Confirm your service principal hasn't expired. See [AKS service principal](./kubernetes-service-principal.md) and [AKS update credentials](./update-credentials.md).
+          
+      - question: |
+          My cluster was working, but suddenly can't provision LoadBalancers, mount PVCs, etc.
+        answer: |
+          Confirm your service principal hasn't expired. See [AKS service principal](./kubernetes-service-principal.md) and [AKS update credentials](./update-credentials.md).

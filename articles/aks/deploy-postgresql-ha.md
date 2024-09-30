@@ -103,7 +103,8 @@ In this section, you create a federated identity credential for PostgreSQL backu
     az identity federated-credential create \
         --name $AKS_PRIMARY_CLUSTER_FED_CREDENTIAL_NAME \
         --identity-name $AKS_UAMI_CLUSTER_IDENTITY_NAME \
-        --resource-group $RESOURCE_GROUP_NAME --issuer "${AKS_PRIMARY_CLUSTER_OIDC_ISSUER}" \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --issuer "${AKS_PRIMARY_CLUSTER_OIDC_ISSUER}" \
         --subject system:serviceaccount:"${PG_NAMESPACE}":"${PG_PRIMARY_CLUSTER_NAME}" \
         --audience api://AzureADTokenExchange
     ```

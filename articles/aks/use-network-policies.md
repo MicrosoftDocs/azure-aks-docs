@@ -67,7 +67,7 @@ With Azure Network Policy Manager for Linux, we don't allow scaling beyond 250 n
 If you attempt to scale beyond these limits, you might encounter "Out of Memory" (OOM) errors.
 
 For better scale and performance, consider using Cilium to manage network policies.
-To upgrade from Azure NPM to Cilium, see [these instructions](./azure-cni-powered-by-cilium.md#upgrade-an-existing-cluster-to-azure-cni-powered-by-cilium).
+To upgrade from Azure NPM to Cilium, see [these instructions](./azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium).
 
 ## Before you begin
 
@@ -266,7 +266,7 @@ az aks update
 ```
 
 ## Upgrade an existing cluster that has Azure NPM or Calico installed to Azure CNI Powered by Cilium
-To upgrade an existing cluster that has Network Policy engine installed to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](azure-cni-powered-by-cilium.md#upgrade-an-existing-cluster-to-azure-cni-powered-by-cilium)
+To upgrade an existing cluster that has Network Policy engine installed to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium)
 
 ## Verify network policy setup
 
@@ -373,12 +373,11 @@ Run the following command to label the `client` and verify connectivity with the
 kubectl label pod client -n demo app=client
 ```
 
-## Uninstall Azure Network Policy Manager or Calico (Preview)
+## Uninstall Azure Network Policy Manager or Calico
 
 Requirements:
- - aks-preview Azure CLI extension version 0.5.166 or later. See [Install the aks-preview Azure CLI extension](#install-the-aks-preview-azure-cli-extension).
- - Azure CLI version 2.54 or later
- - AKS REST API version 2023-08-02-preview or later
+ - Azure CLI version 2.63 or later
+
 
 > [!NOTE]
  > - The uninstall process does _**not**_ remove Custom Resource Definitions (CRDs) and Custom Resources (CRs) used by Calico. These CRDs and CRs all have names ending with either "projectcalico.org" or "tigera.io".

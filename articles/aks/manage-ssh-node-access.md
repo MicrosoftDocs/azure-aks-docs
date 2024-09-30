@@ -5,7 +5,7 @@ description: Learn how to configure SSH and manage SSH keys on Azure Kubernetes 
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 02/12/2024
+ms.date: 08/29/2024
 author: nickomang
 ms.author: nickoman
 
@@ -121,7 +121,7 @@ The following are examples of this command:
 
 ## Disable SSH overview
 
-To improve security and support your corporate security requirements or strategy, AKS supports disabling SSH (preview) both on the cluster and at the node pool level. Disable SSH introduces a simplified approach compared to the only supported solution, which requires configuring [network security group rules][network-security-group-rules-overview] on the AKS subnet/node network interface card (NIC).
+To improve security and support your corporate security requirements or strategy, AKS supports disabling SSH (preview) both on the cluster and at the node pool level. Disable SSH introduces a simplified approach compared to the only supported solution, which requires configuring [network security group rules][network-security-group-rules-overview] on the AKS subnet/node network interface card (NIC). Disable SSH only supports Virtual Machine Scale Sets node pools.
 
 When you disable SSH at cluster creation time, it takes effect after the cluster is created. However, when you disable SSH on an existing cluster or node pool, AKS doesn't automatically disable SSH. At any time, you can choose to perform a nodepool upgrade operation. The disable/enable SSH keys operation takes effect after the node image update is complete.
 
@@ -143,6 +143,9 @@ Use the [`az aks create`][az-aks-create] command to create a new cluster, and in
 
 > [!IMPORTANT]
 > After you disable the SSH service, you can't SSH into the cluster to perform administrative tasks or to troubleshoot.
+
+>[!NOTE]
+>On a newly created cluster, disable ssh will only configure the 1st system nodepool.  All other nodepools need to be configured at the nodepool level. 
 
 ```azurecli-interactive
 az aks create --resource-group myResourceGroup --name myManagedCluster --ssh-access disabled

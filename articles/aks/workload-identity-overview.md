@@ -2,7 +2,6 @@
 title: Use a Microsoft Entra Workload ID on AKS
 description: Learn about Microsoft Entra Workload ID for Azure Kubernetes Service (AKS) and how to migrate your application to authenticate using this identity.  
 author: tamram
-
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: build-2023
@@ -216,7 +215,7 @@ The following client libraries are the **minimum** version required.
 
 In this security model, the AKS cluster acts as the token issuer. Microsoft Entra ID uses OpenID Connect to discover public signing keys and verify the authenticity of the service account token before exchanging it for a Microsoft Entra token. Your workload can exchange a service account token projected to its volume for a Microsoft Entra token using the Azure Identity client library or the Microsoft Authentication Library (MSAL).
 
-:::image type="content" source="media/workload-identity-overview/aks-workload-identity-model.png" alt-text="Diagram of the AKS workload identity security model." lightbox="media/workload-identity-overview/aks-workload-identity-model.png":::
+:::image type="content" source="media/workload-identity-overview/workload-id-model.png" alt-text="Diagram of the AKS workload identity security model." lightbox="media/workload-identity-overview/workload-id-model.png":::
 
 The following table describes the required OIDC issuer endpoints for Microsoft Entra Workload ID:
 
@@ -227,7 +226,7 @@ The following table describes the required OIDC issuer endpoints for Microsoft E
 
 The following diagram summarizes the authentication sequence using OpenID Connect.
 
-:::image type="content" source="media/workload-identity-overview/aks-workload-identity-oidc-authentication-model.png" alt-text="Diagram of the AKS workload identity OIDC authentication sequence." lightbox="media/workload-identity-overview/aks-workload-identity-oidc-authentication-model.png":::
+:::image type="content" source="media/workload-identity-overview/workload-id-oidc-authentication-model.png" alt-text="Diagram of the AKS workload identity OIDC authentication sequence." lightbox="media/workload-identity-overview/workload-id-oidc-authentication-model.png":::
 
 ### Webhook Certificate Auto Rotation
 
@@ -278,9 +277,9 @@ All annotations are optional. If the annotation isn't specified, the default val
 
  <sup>1</sup> Takes precedence if the service account is also annotated.
 
-## How to migrate to Entra Workload ID
+## How to migrate to Microsoft Entra Workload ID
 
-On a cluster that is already running a pod-managed identity, you can configure it to use workload identity one of two ways. The first option allows you to use the same configuration that you've implemented for pod-managed identity. You can annotate the service account within the namespace with the identity to enable Entra Workload ID and inject the annotations into the pods.
+On a cluster that is already running a pod-managed identity, you can configure it to use workload identity one of two ways. The first option allows you to use the same configuration that you've implemented for pod-managed identity. You can annotate the service account within the namespace with the identity to enable Microsoft Entra Workload ID and inject the annotations into the pods.
 
 The second option is to rewrite your application to use the latest version of the Azure Identity client library.
 

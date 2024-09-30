@@ -100,6 +100,9 @@ When you use storage CSI drivers on AKS, there are two additional built-in Stora
 
 The reclaim policy on both storage classes ensures that the underlying Azure Blob storage is deleted when the respective PV is deleted. The storage classes also configure the container to be expandable by default, as the `set allowVolumeExpansion` parameter is set to **true**.
 
+> [!NOTE]
+> Shrinking persistent volumes is not supported.
+
 Use the [kubectl get sc][kubectl-get] command to see the storage classes. The following example shows the `azureblob-fuse-premium` and `azureblob-nfs-premium` storage classes available within an AKS cluster:
 
 ```output
