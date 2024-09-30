@@ -11,7 +11,7 @@ ms.author: nickomang
 # Azure Kubernetes Service (AKS) node auto-drain
 [Scheduled events][scheduled-events] can occur on the underlying VMs in any of your node pools. For [spot node pools][spot-node-pools], scheduled events may cause a *preempt* node event for the node. Certain node events, such as  *preempt*, cause AKS node auto-drain to attempt a cordon and drain of the affected node. This process enables rescheduling for any affected workloads on that node. You might notice the node receives a taint with `"remediator.kubernetes.azure.com/unschedulable"`, because of `"kubernetes.azure.com/scalesetpriority: spot"`.
 
-The following table shows the node events and actions they cause for AKS node auto-drain:
+The following table shows the node events for AKS node auto-drain and describes their associated actions:
 
 | Event | Description |   Action   |
 | --- | --- | --- |
@@ -23,12 +23,12 @@ The following table shows the node events and actions they cause for AKS node au
 
 ## Limitations
 
-In many cases, AKS can determine if a node is unhealthy and attempt to repair the issue. However, there are cases where AKS either can't repair the issue or detect that an issue exists. For example, AKS can't detect issues in the following example scenarios:
+In many cases, AKS can determine whether a node is unhealthy and then attempt to repair the node. However, there are cases where AKS either can't detect that an issue exists or can't repair the node. For example, AKS can't detect issues in the following example scenarios:
 
-* A node status isn't being reported due to error in network configuration.
+* A node's status isn't being reported due to an error in network configuration.
 * A node failed to initially register as a healthy node.
 
-Node Autodrain is a best effort service and cannot be guaranteed to operate perfectly in all scenarios
+Node auto-drain is a best effort service and cannot be guaranteed to operate perfectly in all scenarios.
 ## Next steps
 
 Use [availability zones][availability-zones] to increase high availability with your AKS cluster workloads.

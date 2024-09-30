@@ -30,7 +30,7 @@ You can manually check the health state of your nodes with the `kubectl get node
 
 If AKS identifies an unhealthy node that remains unhealthy for at least *five* minutes, AKS performs the following actions:
 
-1. Reboot the node.
+1. AKS reboots the node.
 2. If the node remains unhealthy after reboot, AKS reimages the node.
 3. If the node remains unhealthy after reimage and it's a Linux node, AKS redeploys the node.
 
@@ -39,22 +39,22 @@ AKS retries the restart, reimage, and redeploy sequence up to three times if the
 ## Limitations
 AKS node auto-repair is a best effort service and we cannot guarantee that the node will be restored back to healthy status. If your node persists in an unhealthy state, it is highly encouraged that you perform manual investigation of the node. See [TSG Link] to learn more.
 
-Additionally, there are cases where AKS will not perform automatic repair. This may occur either by design or if we cannot detect that an issue exists:
+Additionally, there are cases where AKS will not perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure cannot detect that an issue exists:
 
 * A node status isn't being reported due to error in network configuration.
 * A node failed to initially register as a healthy node.
 * If the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
 
 ## How to monitor node auto-repair
-When AKS performs node auto-repair in your cluster, Kubernetes events are emitted for visibility. The events will appear on the node object and be emitted from the "aks-auto-repair" source. Learn more about how to access, store, and configure alerts on Kubernetes events [here][events].
+When AKS performs node auto-repair in your cluster, Kubernetes events are emitted for visibility. The events appear on the node object and are emitted from the "aks-auto-repair" source. Learn more about how to access, store, and configure alerts on Kubernetes events [here][events].
 
 | Reason | Event Message | Description |
 | --- | --- | --- |
-| NodeRebootStart | Node auto-repair is initiating a reboot action due to NotReady status persisting >5 minutes. | This event is emitted to notify you when reboot is about to be performed on your node. This is the first action in the overall node auto-repair sequence. |
+| NodeRebootStart | Node auto-repair is initiating a reboot action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when reboot is about to be performed on your node. This action is the first in the overall node auto-repair sequence. |
 | NodeRebootEnd | Reboot action from node auto-repair has completed. | Emitted once reboot has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the reboot is performed. |
-| NodeReimageStart | Node auto-repair is initiating a reimage action due to NotReady status persisting >5 minutes. | This event is emitted to notify you when reimage is about to be performed on your node. |
+| NodeReimageStart | Node auto-repair is initiating a reimage action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when a reimage is about to be performed on your node. |
 | NodeReimageEnd | Reimage action from node auto-repair has completed. | Emitted once reimage has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the reimage is performed. |
-| NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting >5 minutes. | This event is emitted to notify you when redeploy is about to be performed on your node. This is the last action in the overall node auto-repair sequence. |
+| NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting more than 5 minutes. | This event is emitted to notify you when a redeploy is about to be performed on your node. This is the last action in the node auto-repair sequence. |
 | NodeRedeployEnd | Redeploy action from node auto-repair has completed. | Emitted once redeploy has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the redeploy is performed. |
 
 If any errors occur during the node auto-repair process, the following events will be emitted with the verbatim error message. Learn about how to troubleshooting and resolve common errors here: [TSG Link].
