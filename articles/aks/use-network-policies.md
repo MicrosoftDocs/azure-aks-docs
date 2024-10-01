@@ -48,24 +48,27 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 ## Limitations of Azure Network Policy Manager
 
 > [!NOTE]
-> For better scalability and IPv6 support, and if the limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium) to use Cilium as the network policy engine.
+> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium) to use Cilium as the network policy engine.
 
-Azure Network Policy Manager has the following limitations:
+Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy specifications in Linux.
 
-* IPv6 isn't supported.
-* Azure NPM for Linux doesn't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors.
-* With Azure NPM for Windows, there's a chance of hitting a race condition that can result in an error. For more information, see [Editing/deleting network policies](#editingdeleting-network-policies). Azure NPM for Linux fully supports the network policy specification.
+In Windows, Azure NPM doesn't support the following features of the network policy specifications:
+
+* Named ports.
+* Stream Control Transmission Protocol (SCTP) ports.
+* Negative match label or namespace selectors. For example, all labels except `debug=true`.
+* `except` classless interdomain routing (CIDR) blocks (CIDR with exceptions).
 
 > [!NOTE]
 > Azure Network Policy Manager pod logs record an error if an unsupported network policy is created.
 
 ### Editing/deleting network policies
 
-With Azure Network Policy Manager, in some rare cases, there's a chance of hitting a race condition that might result in temporary, unexpected connectivity for new connections to/from pods on any impacted nodes when either editing or deleting a "large enough" network policy. Hitting this race condition doesn't impact active connections.
+In some rare cases, there's a chance of hitting a race condition that might result in temporary, unexpected connectivity for new connections to/from pods on any impacted nodes when either editing or deleting a "large enough" network policy. Hitting this race condition never impacts active connections.
 
-If this race condition occurs for a node, the Azure NPM pod on that node enters a state where it can't update security rules. To mitigate the issue, the Azure NPM pod automatically restarts ~15 seconds after entering this state. While Azure NPM is rebooting on the impacted node, it deletes all security rules, then reapplies security rules for all network policies. While all the security rules are being reapplied, there's a chance of temporary, unexpected connectivity for new connections to/from pods on the impacted node.
+If this race condition occurs for a node, the Azure NPM pod on that node enters a state where it can't update security rules, which might lead to unexpected connectivity for new connections to/from pods on the impacted node. To mitigate the issue, the Azure NPM pod automatically restarts ~15 seconds after entering this state. While Azure NPM is rebooting on the impacted node, it deletes all security rules, then reapplies security rules for all network policies. While all the security rules are being reapplied, there's a chance of temporary, unexpected connectivity for new connections to/from pods on the impacted node.
 
-To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with multiple `ipBlock` sections. A network policy with *four or less* `ipBlock` sections is less likely to hit the issue.
+To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with *four or less* `ipBlock` sections is less likely to hit the issue.
 
 ## Before you begin
 
