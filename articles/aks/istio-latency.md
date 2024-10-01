@@ -15,9 +15,11 @@ This document compares Container Network Interface (CNI) plugins: Azure CNI Over
 
 ## Test Specifications
 - Node SKU - Standard D16 v5 (16 vCPU, 64-GB memory)
+- 25 user nodes
+- 5 system nodes
 - Two proxy workers
 - 1-KB payload
-- 1,000 Queries per second (QPS) at 16 client connections
+- 1,000 queries per second (QPS) at 16 client connections
 - `http/1.1` protocol 
 - mTLS enabled
 
