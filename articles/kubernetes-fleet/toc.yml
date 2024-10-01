@@ -32,6 +32,8 @@
     href: concepts-resource-propagation.md
   - name: Multi-cluster layer-4 load balancing
     href: concepts-l4-load-balancing.md
+  - name: Hub cluster security
+    href: concepts-security.md
 - name: How-to guides
   items:
   - name: Intelligent Kubernetes resource placement based on member cluster properties
