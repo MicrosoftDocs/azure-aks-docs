@@ -38,6 +38,7 @@ NPD emits events with relevant information to help you diagnose underlying issue
 
 |Problem Daemon type| Reason  |
 |---|---|
+|CustomPluginMonitor|EgressBlocked|
 |CustomPluginMonitor|FilesystemCorruptionDetected|
 |CustomPluginMonitor|KubeletIsDown|
 |CustomPluginMonitor|ContainerRuntimeIsDown|
