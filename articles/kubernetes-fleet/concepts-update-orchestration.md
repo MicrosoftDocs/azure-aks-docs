@@ -14,7 +14,7 @@ ms.topic: conceptual
 
 Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs. 
 
-Update runs consist of stages, groups, and strategies and can be applied either manually, for one-time updates, or automatically, for ongoing regular updates using autoupgrade profiles. All update runs (manual or automated) honor member cluster [maintenance windows][aks-maintenance-windows].
+Update runs consist of stages, groups, and strategies and can be applied either manually, for one-time updates, or automatically, for ongoing regular updates using auto-upgrade profiles. All update runs (manual or automated) honor member cluster [maintenance windows][aks-maintenance-windows].
 
 ## Understanding update runs
 
@@ -92,15 +92,15 @@ Within an update run (for both [One by one](./update-orchestration.md#update-all
   1. Member with no maintenance window.
   1. Member with a closed maintenance window.
 
-## Understanding autoupgrade profiles (preview)
+## Understanding auto-upgrade profiles (preview)
 
-Autoupgrade profiles are used to automatically trigger update runs when new Kubernetes or node image versions are made available for AKS. 
+Auto-upgrade profiles are used to automatically trigger update runs when new Kubernetes or node image versions are made available for AKS. 
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
-In an autoupgrade profile you can configure:
+In an auto-upgrade profile you can configure:
 
-- a `Channel` (Stable, Rapid, NodeImage) which determines the type of autoupgrade that is applied to the clusters.
+- a `Channel` (Stable, Rapid, NodeImage) which determines the type of auto-upgrade that is applied to the clusters.
 - an `UpdateStrategy` which configures the sequence in which the clusters are upgraded. If a strategy isn't supplied, clusters are updated one by one sequentially.
 - the `NodeImageSelectionType` (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
@@ -136,25 +136,25 @@ Example:
 
 ### Minor version skipping behavior
 
-Autoupgrade does not move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kuberenetes versions it's recommended to first use one or more [update run](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
+Auto-upgrade does not move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kuberenetes versions it's recommended to first use one or more [update run](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
 
 > [!NOTE]
 >
 > Keep the following information in mind when using auto upgrade:
 >
-> * Autoupgrade requires version 1.3.0 or later of the Fleet Azure CLI extension.
+> * Auto-upgrade requires version 1.3.0 or later of the Fleet Azure CLI extension.
 >
-> * Autoupgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
+> * Auto-upgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
+>
+> * Auto-upgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions].
 >
 > * If a cluster has no defined planned maintenance window it will be upgraded immediately when the update run reaches the cluster.
->
-> * Autoupgrade requires the cluster's Kubernetes version to be within the [AKS support window][supported-kubernetes-versions].
 >
 > * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid` or `Stable` channels.
 >
 > * If you want to have your NodeImage version upgraded, you need to create an `autoupgradeprofile` with `NodeImage` channel.
 >
-> * You can create multiple autoupgrade profiles for the same Fleet.
+> * You can create multiple auto-upgrade profiles for the same Fleet.
 
 ## Next steps
 

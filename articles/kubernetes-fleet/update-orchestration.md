@@ -16,7 +16,7 @@ ms.custom:
 
 Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs.
 
-Update runs consist of stages, groups, and strategies and can be applied manually for one-time updates, or automatically, for ongoing regular updates using autoupgrade profiles. All update runs (manual or automated) honor member cluster maintenance windows.
+Update runs consist of stages, groups, and strategies and can be applied manually for one-time updates, or automatically, for ongoing regular updates using auto-upgrade profiles. All update runs (manual or automated) honor member cluster maintenance windows.
 
 This guide covers how to configure and manually execute update runs. 
 
@@ -110,7 +110,6 @@ When creating an update run, you have the ability to control the scope of the up
 Also, `--node-image-selection` flag supports the following values:
 - **Latest**: Updates every AKS cluster in the update run to the latest image available for that cluster in its region.
 - **Consistent**: As it's possible for an update run to have AKS clusters across multiple regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). The update run picks the **latest common** image across all these regions to achieve consistency.
-
 
 **Starting an update run**:
 
@@ -314,7 +313,7 @@ Creating an update run required the stages, groups, and their order to be specif
     ```
 ---
 
-### Manage an Update run 
+### Manage an update run 
 
 There are a few options to manage update runs:
 
@@ -358,11 +357,11 @@ There are a few options to manage update runs:
 
     For more information, see [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
 
-## Automate update runs using auto upgrade profiles
+## Automate update runs using auto-upgrade profiles
 
-Autoupgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available. 
+Auto-upgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available. 
 
-For more information on configuring autoupgrade profiles, see [automate upgrades of Kubernetes and node images using Azure Kubernetes Fleet Manager](./update-automation.md).
+For more information on configuring auto-upgrade profiles, see [automate upgrades of Kubernetes and node images using Azure Kubernetes Fleet Manager](./update-automation.md).
 
 ---
 
