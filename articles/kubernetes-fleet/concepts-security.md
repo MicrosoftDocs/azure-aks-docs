@@ -28,7 +28,7 @@ AKS deploys node image version upgrades weekly following Safe Deployment Practic
 
 The [Kubernetes patch version](aks-upgrade-aks-cluster) includes fixes for security vulnerabilities or major bugs.
 
-AKS releases new Kubernetes patch versions after an upstream release of a security patch. The release can be tracked on [AKS Release Status](aks-release-status). Similarly, the AKS release follows SDP and can take up to 24 hours after rollout to be applied to hubs.
+AKS releases new Kubernetes patch versions after an upstream release of a security patch. The release can be tracked on [AKS Release Status](aks-release-status). Similarly, the AKS release follows SDP, and it can take up to 24 hours after rollout for the upgrade to be applied to hubs.
 
 ### 3. Kubernetes minor version (x.30.y)
 
@@ -38,10 +38,10 @@ Upstream releases of new minor versions happen quarterly, and there are no secur
 
 ## Requirements from customers
 
-In order for Fleet to keep hub clusters up-to-date with the latest security patch, you should ensure they are in the following conditions:
+In order for Fleet to keep hub clusters up-to-date with the latest security patches, ensure that the hub clusters meet the following conditions:
 
 1. **Hubs have sufficient quota.** Sufficient quota is required to install updates. For more information on increasing quota, see [documentation on quota](quotas-regional-quota-requests).
-2. **Hubs have internet access.** Outbound connectivity is required to communicate with the API server to install updates. For instance, hubs with user-defined routing tables (UDR) or Firewall might block outbound connectivity. For more information on outbound connectivity, see [documentation on AKS outbound network](aks-outbound-rules-control-egress).
+2. **Hubs have internet access.** Outbound connectivity is required to communicate with the API server to install updates. For instance, hubs with user-defined routing tables (UDR) or firewall rules might block outbound connectivity. For more information on outbound connectivity, see [documentation on AKS outbound network](aks-outbound-rules-control-egress).
 
 ## Security configuration details
 
