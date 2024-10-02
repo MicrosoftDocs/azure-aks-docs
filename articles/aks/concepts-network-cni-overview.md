@@ -112,8 +112,8 @@ There are several requirements and considerations to keep in mind when planning 
 - AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range.
 - In BYO VNet scenarios, the cluster identity used by the AKS cluster must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you wish to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
   - `Microsoft.Network/virtualNetworks/subnets/join/action`
-  - `Microsoft.Network/virtualNetworks/subnets/read`
   - `Microsoft.Authorization/roleAssignments/write`
+  - `Microsoft.Network/virtualNetworks/subnets/read` (only needed if you are defining your own subnets and CIDRs)
 - The subnet assigned to the AKS node pool can't be a [delegated subnet][delegated-subnet].
 - AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
 
