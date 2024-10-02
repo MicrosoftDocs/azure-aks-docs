@@ -55,7 +55,7 @@ Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy 
 In Windows, Azure NPM doesn't support the following features of the network policy specifications:
 
 * Named ports.
-* Stream Control Transmission Protocol (SCTP) ports.
+* Stream Control Transmission Protocol (SCTP).
 * Negative match label or namespace selectors. For example, all labels except `debug=true`.
 * `except` classless interdomain routing (CIDR) blocks (CIDR with exceptions).
 
