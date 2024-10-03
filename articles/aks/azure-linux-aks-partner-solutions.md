@@ -7,7 +7,7 @@ author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: conceptual
 ms.custom: linux-related-content
-ms.date: 07/25/2024
+ms.date: 10/03/2024
 ---
 
 # Azure Linux AKS Container Host partner solutions
@@ -157,7 +157,7 @@ We uncover patterns that create overspending on infrastructure and help teams pr
 
 </details>
 
-For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/stackwatchinc1625592579012.kubecost?tab=overview).
+For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/stackwatchinc1625592579012.kubecost?tab=overview).
 
 ### NetApp
 
