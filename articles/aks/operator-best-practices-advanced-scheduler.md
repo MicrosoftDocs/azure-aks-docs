@@ -59,11 +59,11 @@ With a taint applied to nodes in the node pool, you define a toleration in the p
 kind: Pod
 apiVersion: v1
 metadata:
-  name: tf-mnist
+  name: app
 spec:
   containers:
-  - name: tf-mnist
-    image: mcr.microsoft.com/azuredocs/samples-tf-mnist-demo:gpu
+  - name: app
+    image: <your-workload>:gpu
     resources:
       requests:
         cpu: 0.5
@@ -147,11 +147,11 @@ A pod specification then adds the `nodeSelector` property to define a node selec
 kind: Pod
 apiVersion: v1
 metadata:
-  name: tf-mnist
+  name: app
 spec:
   containers:
-  - name: tf-mnist
-    image: mcr.microsoft.com/azuredocs/samples-tf-mnist-demo:gpu
+  - name: app
+    image: <your-workload>:gpu
     resources:
       requests:
         cpu: 0.5
@@ -180,11 +180,11 @@ The following example sets the node affinity to *requiredDuringSchedulingIgnored
 kind: Pod
 apiVersion: v1
 metadata:
-  name: tf-mnist
+  name: app
 spec:
   containers:
-  - name: tf-mnist
-    image: mcr.microsoft.com/azuredocs/samples-tf-mnist-demo:gpu
+  - name: app
+    image: <your-workload>:gpu
     resources:
       requests:
         cpu: 0.5
