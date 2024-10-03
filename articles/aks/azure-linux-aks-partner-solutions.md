@@ -18,7 +18,7 @@ The third party partners featured in this article have introduction guides to he
 
 |          | DevOps | Networking | Observability | Security | Storage | Config Management | Migration |
 |----------|--------|------------|---------------|----------|---------|-------------------|-----------|
-| **Partners** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [NetApp](#netapp) | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Dynatrace](#dynatrace) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) | • [Corent](#corent) | • [Catalogic](#catalogic) |
+| **Partners** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) | • [Corent](#corent) | • [Catalogic](#catalogic) |
 
 ## DevOps
 
@@ -140,6 +140,24 @@ Kong’s extensive ecosystem of community and enterprise plugins delivers critic
 </details>
 
 For more information, see [Kong Solutions](https://konghq.com/) and [Kong on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/konginc1581527938760.kong-enterprise?tab=Overview).
+
+### Kubecost
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/kubecost.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Kubecost Kubernetes Cost Monitoring | DevOps <br> Observability |
+
+Kubecost provides real-time cost visibility and insights for teams using Kubernetes.
+
+<details> <summary> See more </summary><br>
+
+We uncover patterns that create overspending on infrastructure and help teams prioritize where to focus optimization efforts. By identifying root causes for negative patterns, customers using Kubecost save 30-50% or more of their Kubernetes cloud infrastructure costs. Today, Kubecost empowers more than 10,000 teams across companies of all sizes to monitor and reduce costs, while balancing cost, performance, and reliability. Kubecost is tightly integrated with the open-source cloud-native ecosystem and built for engineers and developers first, making it easy to drive adoption within your organization.
+
+</details>
+
+For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/stackwatchinc1625592579012.kubecost?tab=overview).
 
 ### NetApp
 
