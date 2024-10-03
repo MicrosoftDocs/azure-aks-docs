@@ -53,7 +53,7 @@ In addition to managing periodic component upgrades, the Fleet service sets the 
 
 
 <!-- LINKS -->
-[concepts-choosing-fleet]: /kubernetes-fleet/concepts-choosing-fleet#kubernetes-fleet-resource-with-hub-clusters
+[concepts-choosing-fleet]: /azure/kubernetes-fleet/concepts-choosing-fleet#kubernetes-fleet-resource-with-hub-clusters
 [aks-node-image-upgrade]: /azure/aks/node-image-upgrade
 [aks-upgrade-aks-cluster]: /azure/aks/upgrade-aks-cluster
 [aks-outbound-rules-control-egress]: /azure/aks/outbound-rules-control-egress
