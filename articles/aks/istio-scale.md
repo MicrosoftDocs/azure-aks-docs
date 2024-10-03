@@ -141,4 +141,4 @@ Istio's ServiceEntry custom resource definition enables adding other services in
 [serviceentry]: https://istio.io/latest/docs/reference/config/networking/service-entry/
 [understanding-dns]: https://preliminary.istio.io/latest/docs/ops/configuration/traffic-management/dns/#proxy-dns-resolution
 [hpa]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-[isito-upgrade-hpa]: ./istio-upgrade.md#minor-revision-upgrades-with-horizontal-pod-autoscaling-customizations
+[istio-upgrade-hpa]: ./istio-upgrade.md#minor-revision-upgrades-with-horizontal-pod-autoscaling-customizations
