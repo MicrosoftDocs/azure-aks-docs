@@ -1,6 +1,6 @@
 ---
-title: Fleet hub cluster security overview
-description: This article provides an overview on how Azure Kubernetes Fleet Manager conducts security and lifecycle management.
+title: Fleet hub cluster lifecycle overview
+description: This article provides an overview on how Azure Kubernetes Fleet Manager conducts lifecycle management.
 ms.date: 10/03/2024
 author: yoobinshin
 ms.author: yoobinshin
@@ -8,9 +8,9 @@ ms.service: kubernetes-fleet
 ms.topic: conceptual
 ---
 
-# Fleet hub cluster security overview
+# Fleet hub cluster lifecycle overview
 
-This article provides an overview on how Azure Kubernetes Fleet Manager (Fleet) conducts security and lifecycle management.
+This article provides an overview on how Azure Kubernetes Fleet Manager (Fleet) conducts lifecycle management.
 
 A Fleet resource can be created with or without a hub cluster. A [hub cluster][concepts-choosing-fleet] is a managed Azure Kubernetes Service (AKS) cluster that acts as a hub to store and propagate Kubernetes resources. As hub clusters are locked down, preventing user-initiated configuration changes, the Fleet service manages keeping them up-to-date.
 
@@ -22,13 +22,13 @@ The lifecycle management of a hub cluster involves updating the following three 
 
 The [node image version][aks-node-image-upgrade] includes newly released Virtual Hard Disks (VHDs) containing security fixes and bug fixes.
 
-AKS releases node image version upgrades weekly. The release involves gradual region deployment, which can take up to 10 days. Once a new image is available in a region, there can typically be a delay of up to 24 hours before the upgrade is applied to hubs.
+AKS releases node image version upgrades weekly. The release involves gradual region deployment, which can take up to 10 days to reach all regions. Once a new image is available in a region, there can typically be a delay of up to 24 hours before the upgrade is applied to hubs.
 
 ### 2. Kubernetes patch version (x.y.1)
 
 The [Kubernetes patch version][aks-upgrade-aks-cluster] includes fixes for security vulnerabilities or major bugs.
 
-AKS releases new Kubernetes patch versions after an upstream release of a security patch. The release can be tracked on [AKS Release Status][aks-release-status]. Similarly, the AKS release follows SDP, and it can take up to 24 hours after rollout for the upgrade to be applied to hubs.
+AKS releases new Kubernetes patch versions after an upstream release of a security patch. The release can be tracked on [AKS Release Status][aks-release-status]. Similarly, the release can take up to 10 days to reach all regions, and it can take up to 24 hours for the upgrade to be applied to hubs.
 
 ### 3. Kubernetes minor version (x.30.y)
 
@@ -38,14 +38,14 @@ Upstream releases of new minor versions happen approximately quarterly, and are 
 
 ## Requirements from customers
 
-In order for Fleet to keep hub clusters up-to-date with the latest security patches, ensure that the hub clusters meet the following conditions:
+In order for Fleet to keep hub clusters up-to-date with the latest patches, ensure that the hub clusters meet the following conditions:
 
-1. **Hubs have sufficient quota.** Additional quota that matches the hub cluster's node Virtual Machine (VM) SKU type is briefly required during the upgrade proccess. For more information on increasing quota, see [documentation on quota][quotas-regional-quota-requests].
+1. **Hubs have sufficient quota.** Additional quota that matches the hub cluster's node Virtual Machine (VM) SKU type is briefly required during the upgrade process. For more information on increasing quota, see [documentation on quota][quotas-regional-quota-requests].
 2. **Hubs have internet access.** Outbound connectivity is required to install updates. For instance, hubs with user-defined routing tables (UDR) or firewall rules might block outbound connectivity. For more information on outbound connectivity, see [documentation on AKS outbound network][aks-outbound-rules-control-egress].
 
-## Security configuration details
+## Hub cluster configuration details
 
-In addition to periodic security upgrades, the following configurations are set on hub clusters to harden security:
+In addition to managing periodic component upgrades, the Fleet service sets the following configurations on hub clusters to harden security:
 
 - Using `command invoke` [with Azure CLI][aks-access-private-cluster] is disabled on hub clusters.
 - Hub clusters use Azure Linux for node images.
