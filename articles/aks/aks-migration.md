@@ -2,7 +2,7 @@
 title: Migrate to Azure Kubernetes Service (AKS)
 description: This article shows you how to migrate to Azure Kubernetes Service (AKS).
 ms.topic: article
-ms.date: 09/25/2024
+ms.date: 10/04/2024
 ms.custom: mvc, devx-track-azurecli
 ---
 
@@ -62,7 +62,8 @@ AKS clusters backed by [virtual machine availability sets](/azure/virtual-machin
 
 The following example creates an AKS cluster with single node pool backed by a virtual machine (VM) scale set. It enables the cluster autoscaler on the node pool for the cluster and sets a minimum of *one* and a maximum of *three* nodes.
 
-### [AzureCLI](#tab/azure-cli)
+### [Azure CLI](#tab/azure-cli)
+
 
 1. Create a resource group using the [`az group create`][az-group-create] command.
 
@@ -97,28 +98,35 @@ The following code creates a resource group and a Kubernetes cluster in Azure, w
 1. Create a directory in which to test and run the sample Terraform code and make it the current directory.
 
 1. Create a file named `main.tf` and insert the following code.
-:::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/main.tf":::
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/main.tf":::
+
 
 1. Create a file named `outputs.tf` and insert the following code.
-:::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/outputs.tf":::
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/outputs.tf":::
+
 
 1. Create a file named `providers.tf` and insert the following code.
-:::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/providers.tf":::
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/providers.tf":::
+
 
 1. Create a file named `variables.tf` and insert the following code.
-:::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/variables.tf":::
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/variables.tf":::
+
 
 1. Initialize Terraform.
 
-[!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
+    [!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
+
 
 1. Create a Terraform execution plan.
 
-[!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
+    [!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
+
 
 1. Apply a Terraform execution plan.
 
-[!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
+    [!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
+
 
 ---
 
