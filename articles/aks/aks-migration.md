@@ -98,7 +98,8 @@ The following code creates a resource group and a Kubernetes cluster in Azure, w
 1. Create a directory in which to test and run the sample Terraform code and make it the current directory.
 
 1. Create a file named `main.tf` and insert the following code.
-:::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/main.tf":::
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/main.tf":::
+
 
 1. Create a file named `outputs.tf` and insert the following code.
 :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/outputs.tf":::
