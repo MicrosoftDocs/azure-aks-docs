@@ -109,7 +109,8 @@ The following code creates a resource group and a Kubernetes cluster in Azure, w
 :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/providers.tf":::
 
 1. Create a file named `variables.tf` and insert the following code.
-:::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/variables.tf":::
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/variables.tf":::
+
 
 1. Initialize Terraform.
 
