@@ -87,16 +87,16 @@ To create a Windows GPU-enabled node pool, you need to use a supported GPU-enabl
 
 1. Create a Windows GPU-enabled node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name gpunp \
-        --node-count 1 \
-        --os-type Windows \
-        --kubernetes-version 1.29.0 \
-        --node-vm-size Standard_NC6s_v3
-    ```
+   ```azurecli-interactive
+   az aks nodepool add \
+      --resource-group myResourceGroup \
+      --cluster-name myAKSCluster \
+      --name gpunp \
+      --node-count 1 \
+      --os-type Windows \
+      --kubernetes-version 1.29.0 \
+      --node-vm-size Standard_NC6s_v3
+   ```
 
 2. Check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable).
 3. Once you confirm that your GPUs are schedulable, you can run your GPU workload.
@@ -116,17 +116,17 @@ The available options are:
 
 To create a Windows GPU-enabled node pool with a specific GPU Driver type, use the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name gpunp \
-        --node-count 1 \
-        --os-type Windows \
-        --kubernetes-version 1.29.0 \
-        --node-vm-size Standard_NC6s_v3
-        --driver-type GRID
-    ```
+  ```azurecli-interactive
+  az aks nodepool add \
+      --resource-group myResourceGroup \
+      --cluster-name myAKSCluster \
+      --name gpunp \
+      --node-count 1 \
+      --os-type Windows \
+      --kubernetes-version 1.29.0 \
+      --node-vm-size Standard_NC6s_v3
+      --driver-type GRID
+  ```
 For example, the above command creates a GPU-enabled node pool using the `GRID` GPU driver type. Selecting this driver type overrides the default of `CUDA` driver type for NC series VM skus.
 
 ## Using Windows GPU with manual driver installation
