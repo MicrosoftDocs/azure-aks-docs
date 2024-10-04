@@ -331,7 +331,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                   topologyKey: kubernetes.io/hostname
           containers:
           - name: valkey
-            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:7.2.5"
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
             envFrom:
             - secretRef:
                 name: valkey-password
