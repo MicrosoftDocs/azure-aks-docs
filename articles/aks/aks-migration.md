@@ -62,7 +62,8 @@ AKS clusters backed by [virtual machine availability sets](/azure/virtual-machin
 
 The following example creates an AKS cluster with single node pool backed by a virtual machine (VM) scale set. It enables the cluster autoscaler on the node pool for the cluster and sets a minimum of *one* and a maximum of *three* nodes.
 
-### [AzureCLI](#tab/azure-cli)
+### [Azure CLI](#tab/azure-cli)
+
 
 1. Create a resource group using the [`az group create`][az-group-create] command.
 
