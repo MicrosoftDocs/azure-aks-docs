@@ -123,7 +123,8 @@ The following code creates a resource group and a Kubernetes cluster in Azure, w
 
 1. Apply a Terraform execution plan.
 
-[!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
+    [!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
+
 
 ---
 
