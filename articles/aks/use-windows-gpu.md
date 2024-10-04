@@ -31,6 +31,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * You need the Azure CLI version 1.0.0b2 or later installed and configured to use the `--skip-gpu-driver-install` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* You need the Azure CLI version 9.0.0b5 or later installed and configured to use the `--driver-type` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ## Get the credentials for your cluster
 
@@ -104,14 +105,14 @@ To create a Windows GPU-enabled node pool, you need to use a supported GPU-enabl
 
 By default, AKS specifies a default GPU driver type for each supported GPU-enabled VM. Because workload and driver compatibility are important for functioning GPU workloads, you can specify the driver type for your Windows GPU node. This feature is not supported for Linux GPU node pools.
 
-When creating a Windows agent pool with GPU support, you have the option to specify the type of GPU driver using the driverType property within the GPUProfile. 
+When creating a Windows agent pool with GPU support, you have the option to specify the type of GPU driver using the `--driver-type`flag. 
 
 The available options are:
 - GRID: For applications requiring virtualization support.
 - CUDA: Optimized for computational tasks in scientific computing and data-intensive applications.
 
  > [!NOTE]
- > When you set the driverType property, you assume responsibility for ensuring that the selected driver type is compatible with the specific VM size and configuration of your node pool. While AKS attempts to validate compatibility, there are scenarios where the node pool creation might fail due to incompatibilities between the specified driver type and the underlying VM or hardware.
+ > When you set the `--driver-type`flag, you assume responsibility for ensuring that the selected driver type is compatible with the specific VM size and configuration of your node pool. While AKS attempts to validate compatibility, there are scenarios where the node pool creation might fail due to incompatibilities between the specified driver type and the underlying VM or hardware.
 
 To create a Windows GPU-enabled node pool with a specific GPU Driver type, use the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
