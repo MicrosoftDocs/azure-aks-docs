@@ -15,7 +15,7 @@ In this article, we summarize migration details for:
 > [!div class="checklist"]
 >
 > * Containerizing applications through Azure Migrate
-> * AKS with standard load balancer and Virtual Machine Scale Sets
+> * AKS with standard load balancer and Azure Virtual Machine Scale Sets
 > * Existing attached Azure services
 > * Ensure valid quotas
 > * High availability and business continuity
@@ -56,14 +56,13 @@ We recommend using AKS clusters backed by [Virtual Machine Scale Sets](/azure/vi
 * [Azure Policy for AKS](/azure/governance/policy/concepts/policy-for-kubernetes), and
 * Other new features as they're released.
 
-AKS clusters backed by [virtual machine availability sets](/azure/virtual-machines/availability#availability-sets) lack support for many of these features.
+AKS clusters backed by [virtual machine (VM) availability sets](/azure/virtual-machines/availability#availability-sets) lack support for many of these features.
 
 ### Create an AKS cluster with Standard Load Balancer and Virtual Machine Scale Sets
 
-The following example creates an AKS cluster with single node pool backed by a virtual machine (VM) scale set. It enables the cluster autoscaler on the node pool for the cluster and sets a minimum of *one* and a maximum of *three* nodes.
-
 ### [Azure CLI](#tab/azure-cli)
 
+The following example creates an AKS cluster with single node pool backed by a Virtual Machine Scale Set. It enables the cluster autoscaler on the node pool for the cluster and sets a minimum of *one* and a maximum of *three* nodes.
 
 1. Create a resource group using the [`az group create`][az-group-create] command.
 
@@ -210,7 +209,7 @@ If you're migrating existing persistent volumes to AKS, you generally follow the
 1. Point your live traffic to your new AKS cluster.
 
 > [!IMPORTANT]
-> If you choose not to quiesce writes, you need to replicate data to the new deployment. Otherwise you miss the data that was written after you took the disk snapshots.
+> If you choose not to quiesce writes, you need to replicate data to the new deployment. Otherwise, you miss the data that was written after you took the disk snapshots.
 
 The following open-source tools can help you create managed disks and migrate volumes between Kubernetes clusters:
 
