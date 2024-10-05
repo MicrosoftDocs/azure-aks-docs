@@ -29,7 +29,7 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
   The steps in this quickstart run the Azure PowerShell cmdlets interactively in [Azure Cloud Shell](/azure/cloud-shell/overview). To run the commands in the Cloud Shell, select **Open Cloudshell** at the upper-right corner of a code block. Select **Copy** to copy the code and then paste it into Cloud Shell to run it. You can also run the Cloud Shell from within the Azure portal.
 
-  You can also [install Azure PowerShell locally](/powershell/azure/install-azure-powershell) to run the cmdlets. The steps in this article require Azure PowerShell module version 5.4.1 or later. Run `Get-Module -ListAvailable Az` to find your installed version. If you need to upgrade, see [Update the Azure PowerShell module](/powershell/azure/install-Az-ps#update-the-azure-powershell-module).
+  You can also [install Azure PowerShell locally](/powershell/azure/install-azure-powershell) to run the cmdlets. The steps in this article require Azure PowerShell module version 5.4.1 or later. Run `Get-Module -ListAvailable Az` to find your installed version. If you need to upgrade for specific OS, see [macOS][macOSUpgrade], [Windows][windowsUpgrade] or [Linux][linuxUpgrade].
 
   If you run PowerShell locally, run `Connect-AzAccount` to connect to Azure.
 
@@ -109,3 +109,6 @@ To configure Azure CNI networking with dynamic IP allocation and enhanced subnet
 
 <!-- LINKS - Internal -->
 [az-aks-create]: /cli/azure/aks#az_aks_create
+[macOSUpgrade]: https://learn.microsoft.com/en-us/powershell/azure/install-azps-macos?view=azps-12.3.0#update-the-azure-powershell-module
+[windowsUpgrade]: https://learn.microsoft.com/en-us/powershell/azure/install-azps-windows?view=azps-12.3.0&tabs=powershell&pivots=windows-psgallery#update-the-az-powershell-module
+[linuxUpgrade]: https://learn.microsoft.com/en-us/powershell/azure/install-azps-linux?view=azps-12.3.0#update-the-az-powershell-module
