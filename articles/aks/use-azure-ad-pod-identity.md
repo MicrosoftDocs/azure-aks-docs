@@ -4,7 +4,7 @@ description: Learn how to use Microsoft Entra pod-managed identities in Azure Ku
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 08/15/2023
+ms.date: 08/29/2024
 author: schaffererin
 ms.author: schaffererin
 
@@ -20,7 +20,7 @@ Microsoft Entra pod-managed identities use Kubernetes primitives to associate [m
 > Kubernetes native capabilities to federate with any external identity providers on behalf of the
 > application.
 >
-> The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service was deprecated on 10/24/2022, and the project archived in Sept. 2023. For more information, see the [deprecation notice](https://github.com/Azure/aad-pod-identity#-announcement). The AKS Managed add-on begins deprecation in Sept. 2024.
+> The open source Microsoft Entra pod-managed identity (preview) in Azure Kubernetes Service was deprecated on 10/24/2022, and the project archived in Sept. 2023. For more information, see the [deprecation notice](https://github.com/Azure/aad-pod-identity#-announcement). The AKS Pod Identity Managed add-on will be patched and supported through Sept 2025 to allow time for customers to move over to [Microsoft Entra Workload ID][workload-identity-overview]
 >
 > To disable the AKS Managed add-on, use the following command: `az feature unregister --namespace "Microsoft.ContainerService" --name "EnablePodIdentityPreview"`.
 

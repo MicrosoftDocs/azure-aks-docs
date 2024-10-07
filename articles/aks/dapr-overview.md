@@ -3,7 +3,7 @@ title: Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kuberne
 description: Learn more about using Dapr on your Azure Kubernetes Service (AKS) cluster to develop applications.
 ms.author: nickoman
 ms.topic: overview
-ms.date: 04/22/2024
+ms.date: 09/05/2024
 ---
 
 # Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
@@ -29,12 +29,12 @@ Additionally, the extension offers support for all [native Dapr configuration ca
 
 Dapr provides the following set of capabilities to help with your microservice development on AKS:
 
-- Easy provisioning of Dapr on AKS through [cluster extensions][cluster-extensions].
+- Easy provisioning of Dapr on AKS through [cluster extensions][cluster-extensions]
 - Portability enabled through HTTP and gRPC APIs which abstract underlying technologies choices
 - Reliable, secure, and resilient service-to-service calls through HTTP and gRPC APIs
 - Publish and subscribe messaging made easy with support for CloudEvent filtering and “at-least-once” semantics for message delivery
 - Pluggable observability and monitoring through Open Telemetry API collector
-- Works independent of language, while also offering language specific software development kits (SDKs)
+- Independent of language, while also offering language specific software development kits (SDKs)
 - Integration with Visual Studio Code through the Dapr extension
 - [More APIs for solving distributed application challenges][dapr-blocks]
 
@@ -59,9 +59,9 @@ The following table breaks down support priority levels for each of these catego
 
 Microsoft provides best-effort support for [the latest version of Dapr and two previous versions (N-2)][dapr-supported-version]. The latest patch version is the only supported version of each minor version release. Currently, the Dapr extension for AKS or Arc-enabled Kubernetes supports the following Dapr versions:
 
+- 1.14.x 
 - 1.13.x 
 - 1.12.x 
-- 1.11.x 
 
 You can run Azure CLI commands to retrieve a list of available versions in [a cluster](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-cluster) or [a location](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-location).
 
@@ -77,7 +77,7 @@ Self-managed runtime requires manual upgrade to remain in the support window. To
 After a Dapr runtime version reaches end of Microsoft support, your applications continue to run unchanged. However, Microsoft can no longer provide security patches or related customer support for that runtime version. If your application encounters any problems past the end-of-support date for that version, we recommend upgrading to a supported version to receive the latest security patches and features.
 
 #### Auto-upgrade  
-Enabling auto-upgrade requires careful consideration. While auto-upgrade keeps your Dapr extension updated to the latest minor version, you may experience breaking changes between updates. Microsoft isn't responsible for any downtime caused due to breaking changes between auto-updates.
+[Enabling auto-upgrade](./dapr.md#configuring-automatic-updates-to-dapr-control-plane) requires careful consideration. While auto-upgrade keeps your Dapr extension updated to the latest minor version, you may experience breaking changes between updates. Microsoft isn't responsible for any downtime caused due to breaking changes between auto-updates.
 
 ### Components and APIs
 
@@ -146,7 +146,7 @@ Global Azure cloud is supported with AKS and Arc support on the following region
 
 ### How do Dapr and Service meshes compare?
 
-A: Where a service mesh is defined as a networking service mesh, Dapr isn't a service mesh. While Dapr and service meshes do offer some overlapping capabilities, a service mesh is focused on networking concerns, whereas Dapr is focused on providing building blocks that make it easier for developers to build applications as microservices. Dapr is developer-centric, while service meshes are infrastructure-centric.  
+While Dapr and service meshes do offer some overlapping capabilities, a service mesh is focused on networking concerns, whereas Dapr is focused on providing building blocks that make building applications as microservices easier. Dapr is developer-centric, while service meshes are infrastructure-centric.  
 
 Some common capabilities that Dapr shares with service meshes include:
 
@@ -155,13 +155,17 @@ Some common capabilities that Dapr shares with service meshes include:
 - Service-to-service distributed tracing
 - Resiliency through retries
 
-In addition, Dapr provides other application-level building blocks for state management, pub/sub messaging, actors, and more. However, Dapr doesn't provide capabilities for traffic behavior such as routing or traffic splitting. If your solution would benefit from the traffic splitting a service mesh provides, consider using [Open Service Mesh][osm-docs].  
+Dapr provides other application-level building blocks for state management, pub/sub messaging, actors, and more. However, Dapr doesn't provide capabilities for traffic behavior, such as routing or traffic splitting. If your solution would benefit from the traffic splitting a service mesh provides, consider using [Open Service Mesh][osm-docs].  
 
 For more information on Dapr and service meshes, and how they can be used together, visit the [Dapr documentation][dapr-docs].
 
 ### How does the Dapr secrets API compare to the Secrets Store CSI driver?
 
-Both the Dapr secrets API and the managed Secrets Store CSI driver allow for the integration of secrets held in an external store, abstracting secret store technology from application code. The Secrets Store CSI driver mounts secrets held in Azure Key Vault as a CSI volume for consumption by an application. Dapr exposes secrets via a RESTful API that can be:
+Both the Dapr secrets API and the managed Secrets Store CSI driver allow for the integration of secrets held in an external store, abstracting secret store technology from application code. 
+
+The Secrets Store CSI driver mounts secrets held in Azure Key Vault as a CSI volume for consumption by an application. 
+
+Dapr exposes secrets via a RESTful API that can be:
 - Called by application code
 - Configured with assorted secret stores 
 
@@ -197,7 +201,7 @@ Lastly, the Dapr extension is an extension of AKS, therefore you can expect the 
 
 ### How can I switch to using the Dapr extension if I’ve already installed Dapr via a method, such as Helm?
 
-Recommended guidance is to completely uninstall Dapr from the AKS cluster and reinstall it via the cluster extension.  
+Recommended guidance is to completely uninstall Dapr from the AKS cluster and reinstall it via the cluster extension. [You can also check for the existing Dapr installation and migrate it to AKS.](./dapr-migration.md)
 
 If you install Dapr through the AKS extension, our recommendation is to continue using the extension for future management of Dapr instead of the Dapr CLI. Combining the two tools can cause conflicts and result in undesired behavior.
 

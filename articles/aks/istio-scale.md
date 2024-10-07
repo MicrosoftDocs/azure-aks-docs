@@ -97,7 +97,7 @@ The following results evaluate the impact of adding sidecar proxies to the data 
 
 ## Scaling 
 
-### Horizontal pod autoscaling
+### Horizontal pod autoscaling customization
 
 [Horizontal pod autoscaling (HPA)][hpa] is enabled for the `istiod` and ingress gateway pods. The default configurations for `istiod` and the gateways are:
 - Min Replicas: 2
@@ -123,6 +123,9 @@ The HPA configuration can be modified through patches and direct edits. Example:
 kubectl patch hpa aks-istio-ingressgateway-external-asm-1-19 -n aks-istio-ingress --type merge --patch '{"spec": {"minReplicas": 3, "maxReplicas": 6}}'
 ```
 
+> [!NOTE]
+> See the [Istio add-on upgrade documentation][istio-upgrade-hpa] for details on how HPA settings are applied across both revisions during a canary upgrade.
+
 ## Service entry
 Istio's ServiceEntry custom resource definition enables adding other services into the Istio’s internal service registry. A [ServiceEntry][serviceentry] allows services already in the mesh to route or access the services specified. However, the configuration of multiple ServiceEntries with the `resolution` field set to DNS can cause a [heavy load on Domain Name System (DNS) servers][understanding-dns]. The following suggestions can help reduce the load:
 
@@ -138,3 +141,4 @@ Istio's ServiceEntry custom resource definition enables adding other services in
 [serviceentry]: https://istio.io/latest/docs/reference/config/networking/service-entry/
 [understanding-dns]: https://preliminary.istio.io/latest/docs/ops/configuration/traffic-management/dns/#proxy-dns-resolution
 [hpa]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+[istio-upgrade-hpa]: ./istio-upgrade.md#minor-revision-upgrades-with-horizontal-pod-autoscaling-customizations

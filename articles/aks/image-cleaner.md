@@ -29,7 +29,7 @@ Image Cleaner doesn't yet support Windows node pools or AKS virtual nodes.
 
 After you enable Image Cleaner, there will be a controller manager pod named `eraser-controller-manager` deployed to your cluster.
 
-:::image type="content" source="./media/image-cleaner/Image-cleaner-1015.png" alt-text="Screenshot of a diagram showing ImageCleaner's workflow. The ImageCleaner pods running on the cluster can generate an ImageList, or manual input can be provided.":::
+:::image type="content" source="./media/image-cleaner/image-cleaner.png" alt-text="Screenshot of a diagram showing ImageCleaner's workflow. The ImageCleaner pods running on the cluster can generate an ImageList, or manual input can be provided.":::
 
 With Image Cleaner, you can choose between manual and automatic mode and the following configuration options:
 
@@ -291,13 +291,9 @@ The `eraser-aks-xxxxx` pod deletes within 10 minutes after work completion. You 
 
 5. Select **Run**. Any deleted image logs appear in the **Results** area.
 
-     :::image type="content" source="media/image-cleaner/eraser-log-analytics.png" alt-text="Screenshot showing deleted image logs in the Azure portal." lightbox="media/image-cleaner/eraser-log-analytics.png":::
-
 <!-- LINKS -->
 
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
-[trivy]: https://github.com/aquasecurity/trivy
 [az-aks-show]: /cli/azure/aks#az_aks_show
-

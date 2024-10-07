@@ -331,10 +331,10 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
     kube-system     hubble-server-certs           kubernetes.io/tls     3     9d    
     ```
 
-1. Make sure the Hubble Relay pod is running using the `hubble relay service` command.
+2. Make sure the Hubble Relay pod is running using the `hubble observe` command.
 
     ```azurecli-interactive
-    hubble relay service 
+    hubble observe --pod hubble-relay-7ddd887cdb-h6khj
     ```
 
 ## Visualize using Hubble UI

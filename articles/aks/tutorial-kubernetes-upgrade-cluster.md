@@ -102,7 +102,7 @@ If using Azure PowerShell, this tutorial requires Azure PowerShell version 5.9.0
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. Under **Settings**, select **Cluster configuration**.
+3. From the service menu, under **Settings**, select **Cluster configuration**.
 4. In **Kubernetes version**, select **Upgrade version**. This redirects you to a new page.
 5. In **Kubernetes version**, select the version to check for available upgrades.
 
@@ -218,7 +218,7 @@ You can either [manually upgrade your cluster](#manually-upgrade-cluster) or [co
 #### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, navigate to your AKS cluster.
-2. Under **Settings**, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. In **Kubernetes version**, select **Upgrade version**. This redirects you to a new page.
 4. In **Kubernetes version**, select your desired version and then select **Save**.
 
@@ -249,7 +249,7 @@ It takes a few minutes to upgrade the cluster, depending on how many nodes you h
 #### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, navigate to your AKS cluster.
-2. Under **Settings**, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. In **Kubernetes version**, select **Upgrade version**.
 4. For **Automatic upgrade**, select **Enabled with patch (recommended)** > **Save**.
 

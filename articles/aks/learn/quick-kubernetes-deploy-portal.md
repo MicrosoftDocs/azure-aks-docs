@@ -45,7 +45,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
         > [!NOTE]
         > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
-        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-preset-options.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-preset-options.png":::
+        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
 
       - **Kubernetes cluster name**: Enter a cluster name, such as *myAKSCluster*.
       - **Region**: Select a region, such as *East US 2*.
@@ -53,7 +53,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
       - **AKS pricing tier**: Select **Free**.
       - Leave the default values for the remaining settings, and select **Next**.
 
-        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster-basics.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster-basics.png":::
+        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster.png":::
 
 1. On the **Node pools** tab, configure the following settings:
     - Select **Add node pool** and enter a **Node pool name**, such as *nplinux*.
@@ -64,7 +64,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     - **Node size**: Select **Choose a size**. On the **Select a VM size** page, select **D2s_v3**, and then select **Select**.
     - Leave the default values for the remaining settings, and select **Add**.
 
-        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-node-pool-linux.png" alt-text="Screenshot showing how to create a node pool running Ubuntu Linux." lightbox="media/quick-kubernetes-deploy-portal/create-node-pool-linux.png":::
+        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png" alt-text="Screenshot showing how to create a node pool running Ubuntu Linux." lightbox="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png":::
 
 1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 

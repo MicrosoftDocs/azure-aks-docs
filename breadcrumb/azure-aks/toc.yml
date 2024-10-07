@@ -6,3 +6,6 @@ items:
   - name: Azure Kubernetes Service
     tocHref: /azure/aks/
     topicHref: /azure/aks/
+  - name: Kubernetes Fleet Manager
+    tocHref: /azure/kubernetes-fleet/
+    topicHref: /azure/kubernetes-fleet/

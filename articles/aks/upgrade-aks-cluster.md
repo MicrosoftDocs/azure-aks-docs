@@ -25,7 +25,7 @@ When you perform an upgrade from an *unsupported version* that skips two or more
 * If you're using the Azure CLI, this article requires Azure CLI version 2.34.1 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][azure-cli-install].
 * If you're using Azure PowerShell, this article requires Azure PowerShell version 5.9.0 or later. Run `Get-InstalledModule -Name Az` to find the version. If you need to install or upgrade, see [Install Azure PowerShell][azure-powershell-install].
 * Performing upgrade operations requires the `Microsoft.ContainerService/managedClusters/agentPools/write` RBAC role. For more on Azure RBAC roles, see the [Azure resource provider operations][azure-rp-operations].
-* Starting with 1.30 kubernetes version and 1.27 LTS versions the beta apis will be disabled by default when you upgrade to them.
+* Starting with 1.30 kubernetes version and 1.27 LTS versions the beta APIs will be disabled by default when you upgrade to them.
 
 > [!WARNING]
 > An AKS cluster upgrade triggers a cordon and drain of your nodes. If you have a low compute quota available, the upgrade might fail. For more information, see [increase quotas](/azure/azure-portal/supportability/regional-quota-requests).
@@ -89,13 +89,13 @@ Check which Kubernetes releases are available for your cluster using the followi
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. Under **Settings**, select **Cluster configuration**.
-4. In **Kubernetes version**, select **Upgrade version**.
-5. In **Kubernetes version**, select the version to check for available upgrades.
+3. In the service menu, under **Settings**, select **Cluster configuration**.
+4. For **Kubernetes version**, select **Upgrade version**.
+5. On the **Upgrade Kubernetes version** page, select the **Kubernetes version** to check for available upgrades.
 
 The Azure portal highlights all the deprecated APIs between your current version and new available versions you intend to migrate to. For more information, see [the Kubernetes API Removal and Deprecation process][k8s-deprecation].
 
-:::image type="content" source="./media/upgrade-cluster/portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
+:::image type="content" source="./media/upgrade-cluster/azure-portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
 
 ---
 
@@ -197,10 +197,10 @@ During the cluster upgrade process, AKS performs the following operations:
 
 1. Sign in to the [Azure portal](https://portal.azure.com).
 2. Navigate to your AKS cluster.
-3. Under **Settings**, select **Cluster configuration**.
-4. In **Kubernetes version**, select **Upgrade version**.
-5. In **Kubernetes version**, select your desired version and then select **Save**.
-6. Navigate to your AKS cluster **Overview** page, and select the **Kubernetes version** to confirm the upgrade was successful.
+3. In the service menu, under **Settings**, select **Cluster configuration**.
+4. For **Kubernetes version**, select **Upgrade version**.
+5. On the **Upgrade Kubernetes version** page, select your desired **Kubernetes version** and then select **Save**.
+6. Navigate to your AKS cluster **Overview** page, and view the **Kubernetes version** to confirm the upgrade was successful.
 
 ---
 

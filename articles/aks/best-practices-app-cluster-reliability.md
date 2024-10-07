@@ -10,7 +10,7 @@ ms.author: schaffererin
 
 # Deployment and cluster reliability best practices for Azure Kubernetes Service (AKS)
 
-This article provides best practices for cluster reliability implemented both at a deployment and cluster level for your Azure kubernetes Service (AKS) workloads. The article is intended for cluster operators and developers who are responsible for deploying and managing applications in AKS.
+This article provides best practices for cluster reliability implemented both at a deployment and cluster level for your Azure Kubernetes Service (AKS) workloads. The article is intended for cluster operators and developers who are responsible for deploying and managing applications in AKS.
 
 The best practices in this article are organized into the following categories:
 

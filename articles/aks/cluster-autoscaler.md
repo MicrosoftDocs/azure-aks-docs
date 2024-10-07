@@ -158,9 +158,9 @@ The following table lists the available settings for the cluster autoscaler prof
 | `scale-down-delay-after-failure` | How long after scale down failure that scale down evaluation resumes. | Three minutes |
 | `scale-down-unneeded-time` | How long a node should be unneeded before it's eligible for scale down. | 10 minutes |
 | `scale-down-unready-time` | How long an unready node should be unneeded before it's eligible for scale down. | 20 minutes |
-| `ignore-daemonsets-utilization` (Preview) | Whether DaemonSet pods will be ignored when calculating resource utilization for scale down. | `false` |
-| `daemonset-eviction-for-empty-nodes` (Preview) | Whether DaemonSet pods will be gracefully terminated from empty nodes. | `false` |
-| `daemonset-eviction-for-occupied-nodes` (Preview) | Whether DaemonSet pods will be gracefully terminated from non-empty nodes. | `true` |
+| `ignore-daemonsets-utilization` | Whether DaemonSet pods will be ignored when calculating resource utilization for scale down. | `false` |
+| `daemonset-eviction-for-empty-nodes` | Whether DaemonSet pods will be gracefully terminated from empty nodes. | `false` |
+| `daemonset-eviction-for-occupied-nodes` | Whether DaemonSet pods will be gracefully terminated from non-empty nodes. | `true` |
 | `scale-down-utilization-threshold` | Node utilization level, defined as sum of requested resources divided by capacity, in which a node can be considered for scale down. | 0.5 |
 | `max-graceful-termination-sec` | Maximum number of seconds the cluster autoscaler waits for pod termination when trying to scale down a node. | 600 seconds |
 | `balance-similar-node-groups` | Detects similar node pools and balances the number of nodes between them. | `false` |
@@ -172,6 +172,9 @@ The following table lists the available settings for the cluster autoscaler prof
 | `max-total-unready-percentage` | Maximum percentage of unready nodes in the cluster. After this percentage is exceeded, CA halts operations. | 45% |
 | `max-node-provision-time` | Maximum time the autoscaler waits for a node to be provisioned. | 15 minutes |
 | `ok-total-unready-count` | Number of allowed unready nodes, irrespective of max-total-unready-percentage. | Three nodes |
+
+> [!NOTE]
+> The ignore-daemonsets-utilization, daemonset-eviction-for-empty-nodes, and daemonset-eviction-for-occupied-nodes parameters are GA from API version 2024-05-01. If you are using the CLI to update these flags, please ensure you are using version 2.63 or later.
 
 ### Set the cluster autoscaler profile on a new cluster
 
@@ -234,28 +237,29 @@ The following table lists the available settings for the cluster autoscaler prof
 You can retrieve logs and status updates from the cluster autoscaler to help diagnose and debug autoscaler events. AKS manages the cluster autoscaler on your behalf and runs it in the managed control plane. You can enable control plane node to see the logs and operations from the cluster autoscaler.
 
 ### [Azure CLI](#tab/azure-cli)
+
 1. Set up a rule for resource logs to push cluster autoscaler logs to Log Analytics using the [instructions here][aks-view-master-logs]. Make sure you check the box for `cluster-autoscaler` when selecting options for **Logs**.
-2. Select the **Log** section on your cluster.
-3. Enter the following example query into Log Analytics:
+1. Select the **Log** section on your cluster.
+1. Enter the following example query into Log Analytics:
 
     ```kusto
     AzureDiagnostics
     | where Category == "cluster-autoscaler"
     ```
 
-    As long as there are logs to retrieve, you should see logs similar to the following logs:
+1. View cluster autoscaler scale-up not triggered events on CLI.
 
-    :::image type="content" source="media/cluster-autoscaler/autoscaler-logs.png" alt-text="Screenshot of Log Analytics logs.":::
-   
-4. View cluster autoscaler scale-up not triggered events on CLI 
     ```bash
     kubectl get events --field-selector source=cluster-autoscaler,reason=NotTriggerScaleUp
     ```
-5. View cluster autoscaler warning events on CLI 
+
+1. View cluster autoscaler warning events on CLI.
+
     ```bash
     kubectl get events --field-selector source=cluster-autoscaler,type=Warning
     ```
-6. The cluster autoscaler also writes out the health status to a `configmap` named `cluster-autoscaler-status`. You can retrieve these logs using the following `kubectl` command:
+
+1. The cluster autoscaler also writes out the health status to a `configmap` named `cluster-autoscaler-status`. You can retrieve these logs using the following `kubectl` command:
 
     ```bash
     kubectl get configmap -n kube-system cluster-autoscaler-status -o yaml
@@ -263,17 +267,16 @@ You can retrieve logs and status updates from the cluster autoscaler to help dia
 
 ### [Azure portal](#tab/azure-portal)
 
-* Navigate to *Node pools* from your cluster's overview page in the Azure portal. Select any of the tiles for autoscale events, autoscale warnings, or scale ups not triggered to get more details.
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+2. In the service menu, under **Settings**, select **Node pools**.
+3. Select any of the tiles for **Autoscale events**, **Autoscale warnings**, or **Scale-up not triggered** to get more details.
 
-    :::image type="content" source="./media/cluster-autoscaler/main-blade-tiles-inline.png" alt-text="Screenshot of the Azure portal page for a cluster's node pools. The section displaying autoscaler events, warning, and scale ups not triggered is highlighted." lightbox="./media/cluster-autoscaler/main-blade-tiles.png":::
-
-    This shows a list of Kubernetes events filtered to `source: cluster-autoscaler` that have occurred within the last hour. You can use this information to troubleshoot and diagnose any issues that might arise while scaling your nodes.
-
-    :::image type="content" source="./media/cluster-autoscaler/events-inline.png" alt-text="Screenshot of the Azure portal page for a cluster's events. The filter for source is highlighted, showing 'source: cluster-autoscaler'." lightbox="./media/cluster-autoscaler/events.png":::
+    :::image type="content" source="./media/cluster-autoscaler/main-blade-tiles-inline-ca.png" alt-text="Screenshot of the Azure portal page for a cluster's node pools." lightbox="./media/cluster-autoscaler/main-blade-tiles-inline-ca.png":::
 
 ---
 
 For more information, see the [Kubernetes/autoscaler GitHub project FAQ][kubernetes-faq].
+
 ## Cluster Autoscaler Metrics
 You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from the [cluster autoscaler](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
 
@@ -284,7 +287,7 @@ This article showed you how to automatically scale the number of AKS nodes. You 
 To further help improve cluster resource utilization and free up CPU and memory for other pods, see [Vertical Pod Autoscaler][vertical-pod-autoscaler].
 
 <!-- LINKS - internal -->
-[aks-faq-node-resource-group]: faq.md#can-i-modify-tags-and-other-properties-of-the-aks-resources-in-the-node-resource-group
+[aks-faq-node-resource-group]: faq.yml
 [aks-multiple-node-pools]: create-node-pools.md
 [aks-scale-apps]: tutorial-kubernetes-scale.md
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
