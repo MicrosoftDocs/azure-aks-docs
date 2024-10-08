@@ -11,13 +11,13 @@ ms.author: allensu
 
 # Configure NGINX ingress controller to support Azure private DNS zone with application routing add-on
 
-This article demonstrates how to configure an NGINX ingress controller to work with Azure internal load balancer and configure a private Azure DNS zone to enable DNS resolution for the private endpoints to resolve specific domains.
+This article shows you how to configure an NGINX ingress controller to work with an Azure internal load balancer. It also explains how to configure a private Azure DNS zone to enable DNS resolution for the private endpoints to resolve specific domains.
 
 ## Before you begin
 
 - An AKS cluster with the [application routing add-on][app-routing-add-on-basic-configuration].
 
-- To attach an Azure private DNS Zone, you need the [Owner][rbac-owner], [Azure account administrator][rbac-classic], or [Azure co-administrator][rbac-classic] role on your Azure subscription.
+- To attach an Azure private DNS Zone, you need the [Owner][rbac-owner], [Azure account administrator][rbac-classic], or [Azure coadministrator][rbac-classic] role on your Azure subscription.
 
 ## Connect to your AKS cluster
 
@@ -33,7 +33,7 @@ az aks get-credentials \
 
 ## Create a virtual network
 
-To publish a private DNS zone to your virtual network, you need to specify a list of virtual networks that are allowed to resolve records within the zone. These are called [virtual network links][virtual-network-links].
+To publish a private DNS zone to your virtual network, specify a list of virtual networks that are allowed to resolve records within the zone with [virtual network links][virtual-network-links].
 
 The following example creates a virtual network named *vnet-1* in the *test-rg* resource group, and one subnet named *subnet-1* to create within the virtual network with a specific address prefix.
 
@@ -60,7 +60,7 @@ az network private-dns zone create \
     --name private.contoso.com
 ```
 
-You create a virtual network link to the DNS zone created earlier using the [az network private-dns link vnet create][az-network-private-dns-link-vnet-create] command. The following example creates a link named *dns-link* to the zone *private.contoso.com* for the virtual network *vnet-1*. Include the `--registration-enabled` parameter to specify the link is not registration enabled.
+You create a virtual network link to the DNS zone created earlier using the [az network private-dns link vnet create][az-network-private-dns-link-vnet-create] command. The following example creates a link named *dns-link* to the zone *private.contoso.com* for the virtual network *vnet-1*. Include the `--registration-enabled` parameter to specify the link isn't registration enabled.
 
 ```azurecli-interactive
 az network private-dns link vnet create \
@@ -140,7 +140,7 @@ Perform the following steps to create an NGINX ingress controller with an intern
     kubectl get nginxingresscontroller
     ```
 
-    The following example output shows the created resource. It may take a few minutes for the controller to be available:
+    The following example output shows the created resource. It might take a few minutes for the controller to be available:
 
     ```output
     NAME             INGRESSCLASS                         CONTROLLERNAMEPREFIX   AVAILABLE
@@ -164,7 +164,7 @@ The application routing add-on uses annotations on Kubernetes Ingress objects to
     kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/sample-manifests/docs/app-routing/aks-store-deployments-and-services.yaml -n aks-store
     ```
 
-  This manifest will create the necessary deployments and services for the AKS store application.
+  This manifest creates the necessary deployments and services for the AKS store application.
 
 ## Create the Ingress resource that uses a host name on the Azure private DNS zone and a private IP address
 
