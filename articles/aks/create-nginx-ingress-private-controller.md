@@ -27,7 +27,7 @@ The following example configures connecting to your cluster named *aks-cluster* 
 
 ```azurecli-interactive
 az aks get-credentials \
-    --resource-group test-rg
+    --resource-group test-rg \
     --name aks-cluster
 ```
 
@@ -217,7 +217,8 @@ kubectl get ingress -n aks-store
 The following example output shows the created managed Ingress:
 
 ```output
-
+NAME          CLASS            HOSTS                             ADDRESS   PORTS   AGE
+store-front   nginx-internal   store-front.private.contoso.com             80      10s
 ```
 
 ## Verify the Azure private DNS zone was updated
@@ -240,12 +241,12 @@ The following example output shows the created record:
         "ipv4Address": "10.224.0.7"
       }
     ],
-    "etag": "188f0ce5-90e3-49e6-a479-9e4053f21965",
+    "etag": "ecc303c5-4577-4ca2-b545-d34e160d1c2d",
     "fqdn": "store-front.private.contoso.com.",
-    "id": "/subscriptions/xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx/resourceGroups/foo/providers/Microsoft.Network/privateDnsZones/private.contoso.com/A/store-front",
+    "id": "/subscriptions/68ed2a89-5b8a-45e0-b2f9-65b8fa556333/resourceGroups/test-rg/providers/Microsoft.Network/privateDnsZones/private.contoso.com/A/store-front",
     "isAutoRegistered": false,
     "name": "store-front",
-    "resourceGroup": "foo",
+    "resourceGroup": "test-rg",
     "ttl": 300,
     "type": "Microsoft.Network/privateDnsZones/A"
   }
