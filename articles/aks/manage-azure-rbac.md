@@ -233,7 +233,7 @@ AKS created the [`kubelogin`](https://github.com/Azure/kubelogin) plugin to help
     az role assignment list --scope $AKS_ID --query [].id --output tsv
     ```
 
-2. Delete role assignments using the [`az role assignment delete`][az-role-assignment-create] command.
+2. Delete role assignments using the [`az role assignment delete`][az-role-assignment-delete] command.
 
     ```azurecli-interactive
     az role assignment delete --ids <LIST OF ASSIGNMENT IDS>
@@ -248,7 +248,7 @@ AKS created the [`kubelogin`](https://github.com/Azure/kubelogin) plugin to help
 
 ### Delete role definition
 
-* Delete the custom role definition using the [`az role definition delete`][az-role-definition-create] command.
+* Delete the custom role definition using the [`az role definition delete`][az-role-definition-delete] command.
 
     ```azurecli-interactive
     az role definition delete --name "AKS Deployment Reader"
@@ -258,7 +258,7 @@ AKS created the [`kubelogin`](https://github.com/Azure/kubelogin) plugin to help
 
 ### [Azure CLI](#tab/azure-cli)
 
-* Delete the resource group and AKS cluster using the [`az group delete`][az-group-create] command.
+* Delete the resource group and AKS cluster using the [`az group delete`][az-group-delete] command.
 
     ```azurecli-interactive
     az group delete --name $RESOURCE_GROUP --yes --no-wait
@@ -292,12 +292,15 @@ To learn more about AKS authentication, authorization, Kubernetes RBAC, and Azur
 [list-role-assignments-at-a-scope-at-portal]: /azure/role-based-access-control/role-assignments-list-portal#list-role-assignments-at-a-scope
 [list-role-assignments-for-a-user-or-group-at-portal]: /azure/role-based-access-control/role-assignments-list-portal#list-role-assignments-for-a-user-or-group
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-role-assignment-delete]: /cli/azure/role/assignment#az-role-assignment-delete
 [az-role-assignment-list]: /cli/azure/role/assignment#az-role-assignment-list
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-group-create]: /cli/azure/group#az-group-create
+[az-group-delete]: /cli/azure/group#az-group-delete
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [managed-aad]: ./managed-azure-ad.md
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-role-definition-create]: /cli/azure/role/definition#az-role-definition-create
+[az-role-definition-delete]: /cli/azure/role/definition#az-role-definition-delete
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [kubernetes-rbac]: /azure/aks/concepts-identity#azure-rbac-for-kubernetes-authorization
