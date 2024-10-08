@@ -10,7 +10,7 @@ ms.topic: conceptual
 
 # Fleet hub cluster lifecycle overview
 
-This article provides an overview on how Azure Kubernetes Fleet Manager (Fleet) conducts lifecycle management.
+This article provides an overview on how Azure Kubernetes Fleet Manager (Fleet) conducts hub cluster lifecycle management.
 
 A Fleet resource can be created with or without a hub cluster. A [hub cluster][concepts-choosing-fleet] is a managed Azure Kubernetes Service (AKS) cluster that acts as a hub to store and propagate Kubernetes resources. As hub clusters are locked down, preventing user-initiated configuration changes, the Fleet service manages keeping them up-to-date.
 
@@ -40,7 +40,7 @@ Upstream releases of new minor versions happen approximately quarterly, and are 
 
 In order for Fleet to keep hub clusters up-to-date with the latest patches, ensure that the hub clusters meet the following conditions:
 
-1. **Hubs have sufficient quota.** Additional quota that matches the hub cluster's node Virtual Machine (VM) SKU type is briefly required during the upgrade process. For more information on increasing quota, see [documentation on quota][quotas-regional-quota-requests].
+1. **Hubs have sufficient quota.** Additional quota sufficient for one extra VM instance of the hub cluster's node Virtual Machine (VM) SKU type is briefly required during the upgrade process. For more information on increasing quota, see [documentation on quota][quotas-regional-quota-requests].
 2. **Hubs have internet access.** Outbound connectivity is required to install updates. For instance, hubs with user-defined routing tables (UDR) or firewall rules might block outbound connectivity. For more information on outbound connectivity, see [documentation on AKS outbound network][aks-outbound-rules-control-egress].
 
 ## Hub cluster configuration details
