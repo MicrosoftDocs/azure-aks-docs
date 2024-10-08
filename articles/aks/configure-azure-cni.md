@@ -109,6 +109,6 @@ To configure Azure CNI networking with dynamic IP allocation and enhanced subnet
 
 <!-- LINKS - Internal -->
 [az-aks-create]: /cli/azure/aks#az_aks_create
-[macOSUpgrade]: https://learn.microsoft.com/powershell/azure/install-azps-macos
-[windowsUpgrade]: https://learn.microsoft.com/powershell/azure/install-azps-windows
-[linuxUpgrade]: https://learn.microsoft.com/powershell/azure/install-azps-linux
+[macOSUpgrade]: /powershell/azure/install-azps-macos#update-the-azure-powershell-module
+[windowsUpgrade]: /powershell/azure/install-azps-windows#update-the-az-powershell-module
+[linuxUpgrade]: /powershell/azure/install-azps-linux#update-the-az-powershell-module
