@@ -51,6 +51,9 @@ As a good practice, OpenFaaS and OpenFaaS functions should be stored in their ow
     --from-literal=basic-auth-password="$PASSWORD"
     ```
 
+> [!IMPORTANT]
+> Using a username and password for authentication is an insecure pattern. If you have an OpenFaaS enterprise license, we recommend using [Identity and Access Management (IAM) for OpenFaaS](https://www.openfaas.com/blog/walkthrough-iam-for-openfaas/) instead.
+
 3. Get the value for your password using the following `echo` command.
 
     ```console
