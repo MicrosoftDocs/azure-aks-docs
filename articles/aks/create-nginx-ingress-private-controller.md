@@ -168,7 +168,7 @@ The application routing add-on uses annotations on Kubernetes Ingress objects to
 
 ## Create the Ingress resource that uses a host name on the Azure private DNS zone and a private IP address
 
-Update <Hostname> with the name of your DNS host, for example, **store-front.private.contoso.com**. Verify you're specifying nginx-internal for the ingressClassName.
+Update **`host`** with the name of your DNS host, for example, **store-front.private.contoso.com**. Verify you're specifying nginx-internal for the ingressClassName.
 
 1. Copy the following YAML manifest into a new file named **ingress.yaml** and save the file to your local computer.
 
@@ -181,7 +181,7 @@ Update <Hostname> with the name of your DNS host, for example, **store-front.pri
     spec:
       ingressClassName: nginx-internal
       rules:
-      - host: <Hostname>
+      - host: store-front.private.contoso.com
       - http:
           paths:
           - backend:
