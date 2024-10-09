@@ -1,6 +1,6 @@
 ---
-title: "Set up Advanced Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana"
-description: Get started with Advanced Network Observability for your AKS cluster using Azure managed Prometheus and Grafana.
+title: "Set up Container Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana"
+description: Get started with Container Network Observability for your AKS cluster using Azure managed Prometheus and Grafana.
 author: Khushbu-Parekh
 ms.author: kparekh
 ms.service: azure-kubernetes-service
@@ -10,16 +10,16 @@ ms.date: 05/10/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Advanced Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana (Preview)
+# Set up Container Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana (Preview)
 
-This article shows you how to set up Advanced Network Observability for Azure Kubernetes Service (AKS) using Managed Prometheus and Grafana to visualize the scraped metrics.
+This article shows you how to set up Container Network Observability for Azure Kubernetes Service (AKS) using Managed Prometheus and Grafana to visualize the scraped metrics.
 
-You can use Advanced Network Observability to collect data about the network traffic of your AKS clusters. It enables a centralized platform for monitoring application and network health. Currently, metrics are stored in Prometheus and Grafana can be used to visualize them. Advanced Network Observability also offers the ability to enable Hubble. These capabilities are supported for both Cilium and non-Cilium clusters. 
+You can use Container Network Observability to collect data about the network traffic of your AKS clusters. It enables a centralized platform for monitoring application and network health. Currently, metrics are stored in Prometheus and Grafana can be used to visualize them. Container Network Observability also offers the ability to enable Hubble. These capabilities are supported for both Cilium and non-Cilium clusters. 
 
-Advanced Network Observability is one of the features of Advanced Container Networking Services. For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
+Container Network Observability is one of the features of Advanced Container Networking Services. For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
 > [!IMPORTANT]
-> Advanced Network Observability is currently in PREVIEW.
+> Container Network Observability is currently in PREVIEW.
 > See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
 
 ## Prerequisites
@@ -71,32 +71,14 @@ export LOCATION="<azure-region>"
 az group create --name $RESOURCE_GROUP --location $LOCATION
 ```
 
-## Create an AKS cluster with Advanced Network Observability
+## Create an AKS cluster with Container Network Observability
 
-### [**Non-Cilium**](#tab/non-cilium)
-Create an AKS cluster with Advanced Network Observability with a non-Cilium data plane using the [`az aks create`](/cli/azure/aks#az_aks_create) command and the `--enable-advanced-networking-observability` flag.
-    
-```azurecli-interactive
-# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
-export CLUSTER_NAME="<aks-cluster-name>"
-
-# Create an AKS cluster
-az aks create \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --generate-ssh-keys \
-    --network-plugin azure \
-    --network-plugin-mode overlay \
-    --pod-cidr 192.168.0.0/16 \
-    --enable-advanced-network-observability
-```
-    
 ### [**Cilium**](#tab/cilium)
 
-Create an AKS cluster with Advanced Network Observability with a Cilium data plane using the [`az aks create`](/cli/azure/aks#az_aks_create) command and the `--enable-advanced-networking-observability` flag.
+Create an AKS cluster with Container Network Observability with a Cilium data plane using the [`az aks create`](/cli/azure/aks#az_aks_create) command and the `--enable-advanced-networking-observability` flag.
 
 > [!NOTE]
-> Clusters with the Cilium data plane support Advanced Network Observability starting with Kubernetes version 1.29.
+> Clusters with the Cilium data plane support Container Network Observability starting with Kubernetes version 1.29.
 
 
 ```azurecli-interactive
@@ -119,14 +101,32 @@ az aks create \
     --enable-advanced-network-observability
 ```
 
+### [**Non-Cilium**](#tab/non-cilium)
+Create an AKS cluster with Container Network Observability with a non-Cilium data plane using the [`az aks create`](/cli/azure/aks#az_aks_create) command and the `--enable-advanced-networking-observability` flag.
+    
+```azurecli-interactive
+# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
+export CLUSTER_NAME="<aks-cluster-name>"
+
+# Create an AKS cluster
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --generate-ssh-keys \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --pod-cidr 192.168.0.0/16 \
+    --enable-advanced-network-observability
+```
+
 ---
 
-## Enable Advanced Network Observability on an existing cluster
+## Enable Container Network Observability on an existing cluster
 
-Enable Advanced Network Observability on an existing cluster using the [`az aks update`](/cli/azure/aks#az_aks_update) command.
+Enable Container Network Observability on an existing cluster using the [`az aks update`](/cli/azure/aks#az_aks_update) command.
 
 > [!NOTE]
-> Clusters with the Cilium data plane support Advanced Network Observability starting with Kubernetes version 1.29.
+> Clusters with the Cilium data plane support Container Network Observability starting with Kubernetes version 1.29.
 
 ```azurecli-interactive
 az aks update \
@@ -602,9 +602,9 @@ If you don't plan on using this application, delete the other resources you crea
 
 ## Next steps
 
-In this how-to article, you learned how to install and enable Advanced Network Observability for your AKS cluster.
+In this how-to article, you learned how to install and enable Container Network Observability for your AKS cluster.
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
-* To create an Advanced Network Observability - BYO Prometheus and Grafana, see [Setup Advanced Network Observability for Azure Kubernetes Service (AKS) - BYO Prometheus and Grafana](advanced-network-observability-bring-your-own-cli.md).
+* To create an Container Network Observability - BYO Prometheus and Grafana, see [Setup Container Network Observability for Azure Kubernetes Service (AKS) - BYO Prometheus and Grafana](advanced-network-observability-bring-your-own-cli.md).
 

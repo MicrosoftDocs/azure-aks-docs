@@ -1,5 +1,5 @@
 ---
-title: FQDN filtering for enhanced security with Advanced Container Networking Services
+title: FQDN filtering for Container Network Security with Advanced Container Networking Services (ACNS)
 description: An overview of Advanced Container Networking Services' Security capabilities using FQDN filtering on Azure Kubernetes Service (AKS).
 author: sf-msft
 ms.author: samfoo
@@ -9,11 +9,15 @@ ms.topic: conceptual
 ms.date: 07/30/2024
 ---
 
-# FQDN filtering for enhanced security with Advanced Container Networking Services
+# Container Network security with Advanced Container Networking Services (ACNS)
+
+## What is Container Network Security ?
+
+## Features of Container Network Security
 
 ## Overview of FQDN filtering
 
-Advanced Container Networking Services (ACNS) offers advanced observability and security features to address the complexities of maintaining microservices infrastructure for users looking to tackle these problems at scale.
+Advanced Container Networking Services (ACNS) offers Container Network observability and Container Network security features to address the complexities of maintaining microservices infrastructure for users looking to tackle these problems at scale.
 
 Containerized environments present unique security challenges. Traditional network security methods, often reliant on IP-based filtering, can become cumbersome and less effective as IP addresses frequently change. Additionally, understanding network traffic patterns and identifying potential threats can be complex.
 
@@ -22,7 +26,7 @@ FQDN filtering offers an efficient and user-friendly approach for managing netwo
 In a Kubernetes cluster, pod IP addresses can change often, which makes it challenging to secure the pods with security policies using IP addresses. FQDN filtering allows you to create pod level policies using domain names rather than IP addresses, which eliminates the need to update policies when an IP address changes.
 
 > [!NOTE]
-> Azure CNI Powered by Cilium and Kubernetes version 1.29 or greater is required in order to use security features of Advanced Container Networking Services like FQDN filtering.
+> Azure CNI Powered by Cilium and Kubernetes version 1.29 or greater is required in order to use container security features of Advanced Container Networking Services.
 
 ## Components of FQDN filtering
 
@@ -64,4 +68,4 @@ The DNS Proxy then decides whether to forward a DNS request to the DNS server ba
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
-* Explore more of the observability features in Advanced Container Networking Services in [What is Advanced Network Observability?](advanced-network-observability-concepts.md).
+* Explore more of the observability features in Advanced Container Networking Services in [What is Container Network Observability?](advanced-network-observability-concepts.md).
