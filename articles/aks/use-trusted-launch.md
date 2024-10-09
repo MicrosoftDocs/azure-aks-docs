@@ -31,7 +31,7 @@ Trusted launch is composed of several, coordinated infrastructure technologies t
 - AKS supports trusted launch on version 1.25.2 and higher.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Cluster nodes running Windows Server operating system aren't supported.
-- Trusted launch doesn't support node pools with FIPS enabled or based on ARM64.
+- Trusted launch doesn't support node pools with FIPS enabled or based on Arm64.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see[Skip GPU driver installation][skip-gpu-driver-install].
