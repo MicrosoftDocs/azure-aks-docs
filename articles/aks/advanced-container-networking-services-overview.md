@@ -26,7 +26,7 @@ Advanced Container Networking Services contains features split into two pillars:
 ## Container Network Observability
  Container Network Observability equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. It unlocks Hubble metrics, Hubble’s command line interface (CLI) and the Hubble user interface (UI) on your AKS clusters providing deep, actionable insights into your containerized workloads. It allows you to precisely detect and determine the root causes of network-related issues in AKS through its next-level monitoring and diagnostics tools. These features ensure that your containerized applications are secure and compliant in order to empower you to confidently manage your infrastructure.
 
-For more information about Container Network Observability, see [What is Container Network Observability?](container-network-observability-concepts.md).
+For more information about Container Network Observability, see [What is Container Network Observability?](advanced-network-observability-concepts.md).
 
 ## Container Network Security
 
