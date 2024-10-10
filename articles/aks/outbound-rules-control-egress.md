@@ -162,6 +162,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
 | **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server.|
+| **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server in Azure Government.|
 
 ### Azure Monitor for containers
 
