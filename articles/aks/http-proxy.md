@@ -120,8 +120,7 @@ You can deploy an AKS cluster with an HTTP proxy using an ARM template. The same
 
 In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. Next, you can deploy the template. Your cluster should initialize with your HTTP proxy configured on the nodes.
 
-To enable your application to access non-cluster or external resources via the HTTP Proxy, you must create a Service Entry representing the proxy, as shown in the following example:
-
+To enable your application to access non-cluster or external resources via the HTTP Proxy, you must create a Service Entry. For example:
 ```yml
 apiVersion: networking.istio.io/v1
 kind: ServiceEntry
