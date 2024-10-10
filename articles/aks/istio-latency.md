@@ -9,19 +9,17 @@ ms.author: shalierxia
 ---
 
 # Latency comparison across versions
-This document compares Container Network Interface (CNI) plugins: Azure CNI Overlay and Azure CNI Overlay with Cilium [ (recommended network plugins for large scale clusters) ](/azure/aks/azure-cni-overlay?tabs=kubectl#choosing-a-network-model-to-use) across Istio add-on versions and respective latest Kubernetes version. The latency difference shown represents the latency with traffic going through the sidecar minus the latency with traffic directly going to the pod.
+This document is an expansion of the [data plane latency performance](./istio-scale.md#data-plane-performance) across Istio add-on versions and respective latest Kubernetes version. The results evaluate the impact of adding sidecar proxies to the data path, showcasing the P90 and P99 latency difference. The comparison measures the difference between traffic routed through the sidecar and traffic sent directly to the pod.
 - Traffic going through the sidecar: client --> client-sidecar --> server-sidecar --> server
 - Traffic directly going to the pod: client --> server
 
 ## Test Specifications
-- Node SKU - Standard D16 v5 (16 vCPU, 64-GB memory)
-- 25 user nodes
-- 5 system nodes
+- Node SKU: Standard D16 v5 (16 vCPU, 64-GB memory)
+- Kubernetes version: 1.28.5
 - Two proxy workers
 - 1-KB payload
-- 1,000 queries per second (QPS) at 16 client connections
-- `http/1.1` protocol 
-- mTLS enabled
+- 1,000 Queries per second (QPS) at varying client connections
+- `http/1.1` protocol and mutual Transport Layer Security (TLS) enabled
 
 | P99 Latency Difference | P90 Latency Difference |
 |:-------------------------:|:-------------------------:|
