@@ -100,7 +100,7 @@ az aks create \
     --generate-ssh-keys
 ```
 
-## Configure an HTTP proxy using an Azure Resource Manager (ARM) template and deploy Service Entry
+## Configure an HTTP proxy using an Azure Resource Manager (ARM) template
 
 You can deploy an AKS cluster with an HTTP proxy using an ARM template. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
 
@@ -119,6 +119,8 @@ You can deploy an AKS cluster with an HTTP proxy using an ARM template. The same
 ```
 
 In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. Next, you can deploy the template. Your cluster should initialize with your HTTP proxy configured on the nodes.
+
+### Istio HTTP Proxy for External Services
 
 To enable your application to access non-cluster or external resources via the HTTP Proxy, you must create a Service Entry. For example:
 ```yml
