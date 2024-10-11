@@ -39,11 +39,11 @@ You should choose `Latest` to use fresher image versions and minimize security r
 
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
 
-Within an update run (for both [One by one](./update-orchestration.md#update-all-clusters-one-by-one) or [Stages](./update-orchestration.md#update-clusters-in-a-specific-order) type update runs), update run prioritizes upgrading the clusters in the following order: 
+Within an update run (for both [One by one](./update-orchestration.md#update-all-clusters-one-by-one) or [Stages](./update-orchestration.md#assign-clusters-to-update-groups-and-stages) type update runs), update run prioritizes upgrading the clusters in the following order: 
   1. Member with an open ongoing maintenance window.
-  1. Member with maintenance window opening in the next four hours.
-  1. Member with no maintenance window.
-  1. Member with a closed maintenance window.
+  2. Member with maintenance window opening in the next four hours.
+  3. Member with no maintenance window.
+  4. Member with a closed maintenance window.
 
 ## Update run states
 

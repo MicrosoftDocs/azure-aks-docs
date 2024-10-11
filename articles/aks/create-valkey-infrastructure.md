@@ -137,7 +137,7 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
      --enable-workload-identity \
      --zones 1 2 3 \
      --generate-ssh-keys \
-     --output table 
+     --output table
     ```
 
     Example output:
@@ -181,7 +181,7 @@ In this section, we create a node pool dedicated to running the Valkey workload.
 
     ```azurecli-interactive
     while [ "$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --output tsv --query provisioningState)" != "Succeeded" ]; do echo "waiting for cluster to be ready"; sleep 10; done
-    
+
     az aks nodepool add \
         --resource-group $MY_RESOURCE_GROUP_NAME \
         --cluster-name  $MY_CLUSTER_NAME \
@@ -217,8 +217,8 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
     ```azurecli-interactive
     az acr import \
         --name $MY_ACR_REGISTRY \
-        --source docker.io/valkey/valkey:7.2.5  \
-        --image valkey:7.2.5 \
+        --source docker.io/valkey/valkey:latest  \
+        --image valkey:latest \
         --output table
     ```
 
