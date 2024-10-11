@@ -136,29 +136,31 @@ The following steps make it so the WebLogic Server admin console and the sample 
 
    :::image type="content" source="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png" alt-text="Screenshot of the Azure portal that shows the Application Gateway Ingress Controller configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png":::
 
-### [Passwordless (Recommended)](#tab/passwordless)
+The following steps show you how to configure database connection.
 
-The following steps show you how to configure database connection with managed identity.
+   ### [Passwordless (Recommended)](#tab/passwordless)
 
-1. Select Next to see the **DNS** pane.
-1. Select Next to see the **Database** pane.
-1. For **Connect to database?**, select **Yes**.
-1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Microsoft SQL Server (with support for passwordless connection)**.
-1. For **JNDI Name**, input *jdbc/WebLogicCafeDB*.
-1. For **DataSource Connection String**, input the connection string you obtained in last section.
-1. Select **Use passwordless datasource connection**.
-1. For **User assigned managed identity**, select the managed identity you created in previous step. In this example, its name is `myManagedIdentity`.
-1. Select **Add**.
+   Connect database with managed identity.
 
-The **Connection settings** section should look like the following screenshot.
+   1. Select Next to see the **DNS** pane.
+   1. Select Next to see the **Database** pane.
+   1. For **Connect to database?**, select **Yes**.
+   1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Microsoft SQL Server (with support for passwordless connection)**.
+   1. For **JNDI Name**, input *jdbc/WebLogicCafeDB*.
+   1. For **DataSource Connection String**, input the connection string you obtained in last section.
+   1. Select **Use passwordless datasource connection**.
+   1. For **User assigned managed identity**, select the managed identity you created in previous step. In this example, its name is `myManagedIdentity`.
+   1. Select **Add**.
 
-:::image type="content" source="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png" alt-text="Screenshot of the Azure portal showing the Configure Azure SQL database page." lightbox="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png":::
+   The **Connection settings** section should look like the following screenshot.
 
-### [Password](#tab/password)
+   :::image type="content" source="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png" alt-text="Screenshot of the Azure portal showing the Configure Azure SQL database page." lightbox="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png":::
 
-The database connection will be configured later.
+   ### [Password](#tab/password)
 
----
+   The database connection with password will be configured later.
+
+   ---
 
 1. Leave the default values for other fields.
 1. Select **Review + create**. Ensure the validation doesn't fail. If it fails, fix any validation problems, then select **Review + create** again.
@@ -382,11 +384,115 @@ Use the following steps to build the image:
             Target: 'cluster-1'
       EOF
       ```
-### [Passwordless (Recommended)](#tab/passwordless)
+1. Configure data source connection.
 
-1. Use the following commands to download and install Microsoft SQL Server JDBC driver and Azure Identity Extension that enables database connetion with Azure Managed Identity.
+   ### [Passwordless (Recommended)](#tab/passwordless)
 
-   1. Download and install Microsoft SQL Server JDBC driver to `wlsdeploy/externalJDBCLibraries`:
+   1. Use the following commands to download and install Microsoft SQL Server JDBC driver and Azure Identity Extension that enables database connetion with Azure Managed Identity.
+
+      1. Download and install Microsoft SQL Server JDBC driver to `wlsdeploy/externalJDBCLibraries`:
+
+         ```bash
+         export DRIVER_VERSION="10.2.1.jre8"
+         export MSSQL_DRIVER_URL="https://repo.maven.apache.org/maven2/com/microsoft/sqlserver/mssql-jdbc/${DRIVER_VERSION}/mssql-jdbc-${DRIVER_VERSION}.jar"
+
+         mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries
+         curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
+         ```
+
+      1. Install Azure Identity Extension to `wlsdeploy/classpathLibraries`:
+
+         ```bash
+         curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
+
+         mvn dependency:copy-dependencies -f azure-identity-extensions.xml
+         ```
+
+         ```bash
+         mkdir -p ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries
+         mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson
+         # fix JARs conflict issue in GA images, put jackson libraries to PRE_CLASSPATH to upgrade the existing libs.
+         mv target/dependency/jackson-annotations-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+         mv target/dependency/jackson-core-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+         mv target/dependency/jackson-databind-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+         mv target/dependency/jackson-dataformat-xml-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
+         # Thoes jars will be appended to CLASSPATH
+         mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/
+         ```
+
+         Clean up resources:
+
+         ```bash
+         rm target -f -r
+         rm azure-identity-extensions.xml
+         ```
+
+   1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
+
+      ```bash
+      az account set --subscription <subscription>; 
+      az aks get-credentials \
+         --resource-group <resource-group> \
+         --name <name>
+      ```
+
+      You should see output similar to the following example. If you don't see this output, troubleshoot and resolve the problem before continuing.
+
+      ```output
+      Merged "<name>" as current context in /Users/<username>/.kube/config
+      ```
+
+   1. Export the database connection model and save it to `${BASE_DIR}/mystaging/models/dbmodel.yaml`. The following steps will extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. (The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.) 
+
+      1. The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
+
+         ```bash
+         export WLS_DOMAIN_UID=sample-domain1
+         export WLS_DOMAIN_NS=${WLS_DOMAIN_UID}-ns
+         export DB_K8S_SECRET_NAME=$(kubectl get secret -n ${WLS_DOMAIN_NS} | grep "ds-secret" | awk '{print $1}')
+         ```
+
+      1. Next, extract the database model with this command:
+
+         ```bash
+         kubectl get configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS} -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
+         ```
+
+      1. Finally, verify the content of dbmodel.yaml. It should resemble the following structure:
+
+         ```bash
+         cat ${BASE_DIR}/mystaging/models/dbmodel.yaml
+         ```
+
+         ```yaml
+         # Copyright (c) 2020, 2021, Oracle and/or its affiliates.
+         # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+         resources:
+         JDBCSystemResource:
+            jdbc/WebLogicCafeDB:
+               Target: 'cluster-1'
+               JdbcResource:
+               JDBCDataSourceParams:
+                  JNDIName: [
+                     jdbc/WebLogicCafeDB
+                  ]
+                  GlobalTransactionsProtocol: OnePhaseCommit
+               JDBCDriverParams:
+                  DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+                  URL: '@@SECRET:ds-secret-sqlserver-1727147748:url@@'
+                  PasswordEncrypted: '@@SECRET:ds-secret-sqlserver-1727147748:password@@'
+                  Properties:
+                     user:
+                     Value: '@@SECRET:ds-secret-sqlserver-1727147748:user@@'
+               JDBCConnectionPoolParams:
+                     TestTableName: SQL SELECT 1
+                     TestConnectionsOnReserve: true
+         ```
+
+   ### [Password](#tab/password)
+
+   1. Use the following commands to download and install Microsoft SQL Server JDBC driver to *wlsdeploy/externalJDBCLibraries*:
 
       ```bash
       export DRIVER_VERSION="10.2.1.jre8"
@@ -396,74 +502,18 @@ Use the following steps to build the image:
       curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
       ```
 
-   1. Install Azure Identity Extension to `wlsdeploy/classpathLibraries`:
+   1. Next, use the following commands to create the database connection model file with the contents shown. Save the model file to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The model uses placeholders (secret `sqlserver-secret`) for database username, password, and URL. Make sure the following fields are set correctly. The following model names the resource with `jdbc/WebLogicCafeDB`.
+
+      | Item Name         | Field                                                                                     | Value                                          |
+      |-------------------|-------------------------------------------------------------------------------------------|------------------------------------------------|
+      | JNDI name         | `resources.JDBCSystemResource.<resource-name>.JdbcResource.JDBCDataSourceParams.JNDIName` | `jdbc/WebLogicCafeDB`                          |
+      | Driver name       | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.DriverName`                | `com.microsoft.sqlserver.jdbc.SQLServerDriver` |
+      | Database Url      | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.URL`                       | `@@SECRET:sqlserver-secret:url@@`              |
+      | Database password | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.PasswordEncrypted`         | `@@SECRET:sqlserver-secret:password@@`         |
+      | Database username | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.Properties.user.Value`     | `'@@SECRET:sqlserver-secret:user@@'`           |
 
       ```bash
-      curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
-
-      mvn dependency:copy-dependencies -f azure-identity-extensions.xml
-      ```
-
-      ```bash
-      mkdir -p ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries
-      mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson
-      # fix JARs conflict issue in GA images, put jackson libraries to PRE_CLASSPATH to upgrade the existing libs.
-      mv target/dependency/jackson-annotations-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-      mv target/dependency/jackson-core-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-      mv target/dependency/jackson-databind-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-      mv target/dependency/jackson-dataformat-xml-*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson/
-      # Thoes jars will be appended to CLASSPATH
-      mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/
-      ```
-
-      Clean up resources:
-
-      ```bash
-      rm target -f -r
-      rm azure-identity-extensions.xml
-      ```
-
-1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
-
-   ```bash
-   az account set --subscription <subscription>; 
-   az aks get-credentials \
-      --resource-group <resource-group> \
-      --name <name>
-   ```
-
-   You should see output similar to the following example. If you don't see this output, troubleshoot and resolve the problem before continuing.
-
-   ```output
-   Merged "<name>" as current context in /Users/<username>/.kube/config
-   ```
-
-1. Export the database connection model and save it to `${BASE_DIR}/mystaging/models/dbmodel.yaml`. The following steps will extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. (The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.) 
-
-   1. The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
-
-      ```bash
-      export WLS_DOMAIN_UID=sample-domain1
-      export WLS_DOMAIN_NS=${WLS_DOMAIN_UID}-ns
-      export DB_K8S_SECRET_NAME=$(kubectl get secret -n ${WLS_DOMAIN_NS} | grep "ds-secret" | awk '{print $1}')
-      ```
-
-   1. Next, extract the database model with this command:
-
-      ```bash
-      kubectl get configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS} -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
-      ```
-
-   1. Finally, verify the content of dbmodel.yaml. It should resemble the following structure:
-
-      ```bash
-      cat ${BASE_DIR}/mystaging/models/dbmodel.yaml
-      ```
-
-      ```yaml
-      # Copyright (c) 2020, 2021, Oracle and/or its affiliates.
-      # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
-
+      cat <<EOF >dbmodel.yaml
       resources:
       JDBCSystemResource:
          jdbc/WebLogicCafeDB:
@@ -473,67 +523,21 @@ Use the following steps to build the image:
                JNDIName: [
                   jdbc/WebLogicCafeDB
                ]
-               GlobalTransactionsProtocol: OnePhaseCommit
+               GlobalTransactionsProtocol: None
             JDBCDriverParams:
                DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-               URL: '@@SECRET:ds-secret-sqlserver-1727147748:url@@'
-               PasswordEncrypted: '@@SECRET:ds-secret-sqlserver-1727147748:password@@'
+               URL: '@@SECRET:sqlserver-secret:url@@'
+               PasswordEncrypted: '@@SECRET:sqlserver-secret:password@@'
                Properties:
                   user:
-                  Value: '@@SECRET:ds-secret-sqlserver-1727147748:user@@'
+                  Value: '@@SECRET:sqlserver-secret:user@@'
             JDBCConnectionPoolParams:
-                  TestTableName: SQL SELECT 1
-                  TestConnectionsOnReserve: true
+               TestTableName: SQL SELECT 1
+               TestConnectionsOnReserve: true
+      EOF
       ```
 
-### [Password](#tab/password)
-
-1. Use the following commands to download and install Microsoft SQL Server JDBC driver to *wlsdeploy/externalJDBCLibraries*:
-
-   ```bash
-   export DRIVER_VERSION="10.2.1.jre8"
-   export MSSQL_DRIVER_URL="https://repo.maven.apache.org/maven2/com/microsoft/sqlserver/mssql-jdbc/${DRIVER_VERSION}/mssql-jdbc-${DRIVER_VERSION}.jar"
-
-   mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries
-   curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
-   ```
-
-1. Next, use the following commands to create the database connection model file with the contents shown. Save the model file to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The model uses placeholders (secret `sqlserver-secret`) for database username, password, and URL. Make sure the following fields are set correctly. The following model names the resource with `jdbc/WebLogicCafeDB`.
-
-   | Item Name         | Field                                                                                     | Value                                          |
-   |-------------------|-------------------------------------------------------------------------------------------|------------------------------------------------|
-   | JNDI name         | `resources.JDBCSystemResource.<resource-name>.JdbcResource.JDBCDataSourceParams.JNDIName` | `jdbc/WebLogicCafeDB`                          |
-   | Driver name       | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.DriverName`                | `com.microsoft.sqlserver.jdbc.SQLServerDriver` |
-   | Database Url      | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.URL`                       | `@@SECRET:sqlserver-secret:url@@`              |
-   | Database password | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.PasswordEncrypted`         | `@@SECRET:sqlserver-secret:password@@`         |
-   | Database username | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.Properties.user.Value`     | `'@@SECRET:sqlserver-secret:user@@'`           |
-
-   ```bash
-   cat <<EOF >dbmodel.yaml
-   resources:
-     JDBCSystemResource:
-       jdbc/WebLogicCafeDB:
-         Target: 'cluster-1'
-         JdbcResource:
-           JDBCDataSourceParams:
-             JNDIName: [
-               jdbc/WebLogicCafeDB
-             ]
-             GlobalTransactionsProtocol: None
-           JDBCDriverParams:
-             DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-             URL: '@@SECRET:sqlserver-secret:url@@'
-             PasswordEncrypted: '@@SECRET:sqlserver-secret:password@@'
-             Properties:
-               user:
-                 Value: '@@SECRET:sqlserver-secret:user@@'
-           JDBCConnectionPoolParams:
-             TestTableName: SQL SELECT 1
-             TestConnectionsOnReserve: true
-   EOF
-   ```
-
----
+   ---
 
 1. Use the following commands to create an archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
 
@@ -899,26 +903,26 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
 ---
 
-1. Wait until the admin server and managed servers show the values in the following output block before you proceed:
+Wait until the admin server and managed servers show the values in the following output block before you proceed:
 
-   ```bash
-   kubectl get pod -n ${WLS_DOMAIN_NS} -w
-   ```
+```bash
+kubectl get pod -n ${WLS_DOMAIN_NS} -w
+```
 
-   ```output
-   NAME                             READY   STATUS    RESTARTS   AGE
-   sample-domain1-admin-server      1/1     Running   0          20m
-   sample-domain1-managed-server1   1/1     Running   0          19m
-   sample-domain1-managed-server2   1/1     Running   0          18m
-   ```
+```output
+NAME                             READY   STATUS    RESTARTS   AGE
+sample-domain1-admin-server      1/1     Running   0          20m
+sample-domain1-managed-server1   1/1     Running   0          19m
+sample-domain1-managed-server2   1/1     Running   0          18m
+```
 
-   It might take 5-10 minutes for the system to reach this state. The following list provides an overview of what's happening while you wait:
+It might take 5-10 minutes for the system to reach this state. The following list provides an overview of what's happening while you wait:
 
-   - You should see the `sample-domain1-introspector` running first. This software looks for changes to the domain custom resource so it can take the necessary actions on the Kubernetes cluster.
-   - When changes are detected, the domain introspector kills and starts new pods to roll out the changes.
-   - Next, you should see the `sample-domain1-admin-server` pod terminate and restart.
-   - Then, you should see the two managed servers terminate and restart.
-   - Only when all three pods show the `1/1 Running` state, is it ok to proceed.
+- You should see the `sample-domain1-introspector` running first. This software looks for changes to the domain custom resource so it can take the necessary actions on the Kubernetes cluster.
+- When changes are detected, the domain introspector kills and starts new pods to roll out the changes.
+- Next, you should see the `sample-domain1-admin-server` pod terminate and restart.
+- Then, you should see the two managed servers terminate and restart.
+- Only when all three pods show the `1/1 Running` state, is it ok to proceed.
 
 ## Verify the functionality of the deployment
 
