@@ -537,8 +537,6 @@ Use the following steps to build the image:
       EOF
       ```
 
-   ---
-
 1. Use the following commands to create an archive file and then remove the *wlsdeploy* folder, which you don't need anymore:
 
    ```bash
