@@ -326,13 +326,13 @@ Your output should resemble the following example output:
 
 ### Assign an RBAC role to the kubelet managed identity
 
-Assign the `Managed Identity Operator` role on the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command. Provide the kubelet identity's principal ID for the $KUBELET_CLIENT_ID variable.
+Assign the `ACRPull` role on the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command. Provide the kubelet identity's principal ID for the $KUBELET_CLIENT_ID variable and provide the ACR registry ID for the $ACR_REGISTRY_ID variable.
 
 ```azurecli-interactive
 az role assignment create \
     --assignee $KUBELET_CLIENT_ID \
-    --role "Managed Identity Operator" \
-    --scope "<kubelet-identity-resource-id>"
+    --role "acrpull" \
+    --scope "$ACR_REGISTRY_ID"
 ```
 
 ### Create a cluster to use the kubelet identity

@@ -25,6 +25,9 @@ az group create \
 
 Create a server with the [az sql server create](/cli/azure/sql/server#az-sql-server-create) command. This example creates a server named `myazuresql20130213` with admin user `azureuser` and admin password. Replace `<your-password>` with your password. For more information, see [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart?tabs=azure-cli).
 
+> [!NOTE]
+> Even though you are using a username and password here, these credentials are not exposed outside the database. The connection between the application layer and the database is secured with managed identities.
+
 ```bash
 export AZURESQL_SERVER_NAME="myazuresql20130213"
 export AZURESQL_ADMIN_USER="azureuser"

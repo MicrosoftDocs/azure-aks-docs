@@ -45,6 +45,12 @@ IPs are allocated to nodes in batches of 16. Pod subnet IP allocation should be 
 
 The planning of IPs for Kubernetes services and Docker bridge remain unchanged.
 
+To view and verify the NodeNetworkConfiguration (NNC) resources responsible for these IP allocations, you can run the following command:
+
+```bash
+kubectl get nodenetworkconfigs -n kube-system -o wide
+```
+
 ## Maximum pods per node in a cluster with dynamic allocation of IPs and enhanced subnet support
 
 The pods per node values when using Azure CNI with dynamic allocation of IPs slightly differ from the traditional CNI behavior:

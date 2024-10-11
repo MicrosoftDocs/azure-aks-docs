@@ -142,6 +142,10 @@ No, you need to explicitly enable LTS on the cluster to receive LTS support. Ena
 
 LTS is available on the Premium tier, please refer to the [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/) for more information.
 
+### After enabling LTS, my cluster's autoUpgradeChannel has changed to patch channel
+
+This is expected. If there was no defined autoUpgradeChannel for the AKS cluster, it will default to `patch` with LTS.
+
 <!-- LINKS -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update

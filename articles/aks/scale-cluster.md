@@ -10,7 +10,7 @@ ms.author: schaffererin
 
 # Manually scale the node count in an Azure Kubernetes Service (AKS) cluster
 
-If the resource needs of your applications change, your cluster performance may be impacted due to low capacity on CPU, memory, PID space, or disk sizes. To address these changes, you can manually scale your AKS cluster to run a different number of nodes. When you scale down, nodes are carefully [cordoned and drained][kubernetes-drain] to minimize disruption to running applications. When you scale up, AKS waits until nodes are marked **Ready** by the Kubernetes cluster before pods are scheduled on them.
+If the resource needs of your applications change, your cluster performance may be impacted due to low capacity on CPU, memory, PID space, or disk sizes. To address these changes, you can manually scale your AKS cluster to run a different number of nodes. When you scale in, nodes are carefully [cordoned and drained][kubernetes-drain] to minimize disruption to running applications. When you scale out, AKS waits until nodes are marked **Ready** by the Kubernetes cluster before pods are scheduled on them.
 
 This article describes how to manually increase or decrease the number of nodes in an AKS cluster.
 

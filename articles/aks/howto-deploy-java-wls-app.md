@@ -18,12 +18,12 @@ This article demonstrates how to:
 - Build an application Docker image that includes WebLogic Deploy Tooling (WDT) models.
 - Deploy the containerized application to the WebLogic Server cluster on AKS with connection to Microsoft Azure SQL.
 
-This article uses the [Azure Marketplace offer for WebLogic Server](https://aka.ms/wlsaks) to accelerate your journey to AKS. The offer automatically provisions several Azure resources, including the following resources:
+This article uses the [Azure Marketplace offer for WebLogic Server](https://aka.ms/wlsaks) to accelerate your journey to AKS. The offer automatically provisions several Azure resources, including the following:
 
 - An Azure Container Registry instance
 - An AKS cluster
 - An Azure App Gateway Ingress Controller (AGIC) instance
-- The WebLogic Operator
+- The WebLogic Kubernetes Operator
 - A container image including the WebLogic runtime
 - A WebLogic Server cluster without an application
 

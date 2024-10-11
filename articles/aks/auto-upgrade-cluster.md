@@ -62,6 +62,8 @@ The following upgrade channels are available:
 > * If you're using the preview API `11-02-preview` or later, and you select the `node-image` cluster auto-upgrade channel, the [node image auto-upgrade channel][node-image-auto-upgrade] automatically sets to `NodeImage`.
 >
 > * Each cluster can only be associated with a single auto-upgrade channel. This is because your specified channel determines the Kubernetes version that runs on the cluster.
+>   
+> * If your cluster has no auto-upgrade channel and you enable it for LTS *(Long-Term Support)*, it will default to a `patch` auto-upgrade channel.
 
 ## Use cluster auto-upgrade with a new AKS cluster
 
