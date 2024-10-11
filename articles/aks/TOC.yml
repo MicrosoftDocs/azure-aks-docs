@@ -527,7 +527,7 @@
             - name: Control deployments with Azure Policy
               href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Application security
-          - items:
+          items:
             - name: Create an OIDC Issuer for your cluster
               href: use-oidc-issuer.md
             - name: Workload identity

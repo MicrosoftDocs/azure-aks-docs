@@ -66,7 +66,7 @@ The DNS Proxy then decides whether to forward a DNS request to the DNS server ba
 
 ## Next steps
 
-* Learn how to enable [Container Network Security](advanced-network-container-services-security-cli) on AKS.
+* Learn how to enable [Container Network Security](./advanced-network-container-services-security-cli.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 
