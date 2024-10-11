@@ -25,130 +25,130 @@ This article shows you how to set up Advanced Container Networking Services with
 
 * The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
+* To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-cli.md) enabled.
 
-### Install the `aks-preview` Azure CLI extension
+## Get cluster credentials 
 
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-# Update the extension to make sure you have the latest version installed
-az extension update --name aks-preview
-```
-
-### Register the `AdvancedNetworkingPreview` feature flag
-
-Register the `AdvancedNetworkingPreview` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
-
-```azurecli-interactive 
-az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"
-```
-Verify successful registration using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to complete.
+Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.
 
 ```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"
+az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
-Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
+## Test connectivity with a policy
 
-## Create a resource group
+This section demonstrates how to observe a policy being enforced through the Cilium Agent. A DNS request is made to an allowed FQDN and another case where it is blocked.
 
-A resource group is a logical container into which Azure resources are deployed and managed. Create a resource group using the [`az group create`](/cli/azure/group#az_group_create) command.
+Create a file named `demo-policy.yaml` and paste the following YAML manifest:
 
-```azurecli-interactive
-# Set environment variables for the resource group name and location. Make sure to replace the placeholders with your own values.
-export RESOURCE_GROUP="<resource-group-name>"
-export LOCATION="<azure-region>"
-# Create a resource group
-az group create --name $RESOURCE_GROUP --location $LOCATION
+```yaml
+apiVersion: "cilium.io/v2"
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-bing-fqdn"
+spec:
+  endpointSelector:
+    matchLabels:
+      app: demo-container
+  egress:
+    - toEndpoints:
+      - matchLabels:
+          "k8s:io.kubernetes.pod.namespace": kube-system
+          "k8s:k8s-app": kube-dns
+      toPorts:
+        - ports:
+           - port: "53"
+             protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+      - matchPattern: "*.bing.com"
+```
+Specify the name of your YAML manifest and apply it by using [kubectl apply][kubectl-apply]:
+```console
+kubectl apply –f demo-policy.yaml -n demo
 ```
 
-## Create an AKS cluster with Advanced Container Networking Services
+### Create a demo pod
 
-The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
+Create a `client` pod running Bash:
 
-```azurecli-interactive
-# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
-export CLUSTER_NAME="<aks-cluster-name>"
-
-# Create an AKS cluster
-az aks create \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --generate-ssh-keys \
-    --network-plugin azure \
-    --network-plugin-mode overlay \
-    --pod-cidr 192.168.0.0/16 \
-    --network-dataplane cilium \
-    --enable-acns
+```bash
+kubectl run -it client -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.43 --labels="demo-container" --command -- bash
 ```
 
-### Create an AKS cluster with FQDN filtering feature without Container Network  Observability
+A shell with utilities for testing FQDN should open with the following output:
 
-The `az aks create` command with the FQDN Filtering feature flag, `--enable-fqdn-policy`, creates a new AKS cluster with the FQDN Filtering feature without Container Network Observability.
-
-```azurecli-interactive
-# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
-export CLUSTER_NAME="<aks-cluster-name>"
-
-# Create an AKS cluster
-az aks create \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --generate-ssh-keys \
-    --network-plugin azure \
-    --network-plugin-mode overlay \
-    --pod-cidr 192.168.0.0/16 \
-    --network-dataplane cilium \
-    --enable-fqdn-policy
+```output
+If you don't see a command prompt, try pressing enter.
+bash-5.0#
 ```
 
-## Enable Advanced Container Networking Services on an existing cluster
+In a separate window, run the following command to get the node of the running pod.
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
-
-> [!NOTE]
-> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services.
-
-```azurecli-interactive
-az aks update \
-    --resource-group $RESOURCE_GROUP \
-    --name $CLUSTER_NAME \
-    --enable-acns
+```bash
+kubectl get po -n demo --sort-by="{spec.nodeName}" -o wide
 ```
 
-## Enable FQDN filtering feature without Container Network Observability
+The output should look similar to the following example:
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the FQDN Filtering feature flag, `--enable-fqdn-policy`, updates an existing AKS cluster with the FQDN Filtering feature without Container Network Observability.
-
-```azurecli-interactive
-az aks update \
-    --resource-group $RESOURCE_GROUP \
-    --name $CLUSTER_NAME \
-    --enable-fqdn-policy
+```output
+NAME     READY   STATUS    RESTARTS   AGE     IP              NODE                                NOMINATED NODE   READINESS GATES
+client   1/1     Running   0          5m50s   192.168.0.139   aks-nodepool1-22058664-vmss000001   <none>           <none>
 ```
 
-## Disable FQDN filtering
+The pod is running on a node named `aks-nodepool1-22058664-vmss000001`. Obtain the Cilium Agent instance running on that node:
 
-The `--disable-fqdn-policy` flag disables the FQDN Filtering feature on an existing AKS cluster.
-
-```azurecli-interactive
-az aks update \
-    --resource-group $RESOURCE_GROUP \
-    --name $CLUSTER_NAME \
-    --disable-fqdn-policy
+```bash
+k get po -n kube-system -o wide --field-selector spec.nodeName="aks-nodepool1-22058664-vmss000001" | grep "cilium"
 ```
 
-## Disable Advanced Container Networking Services
+The expected `cilium-s4x24` should be in the output.
 
-The `--disable-acns` flag disables all Advanced Container Networking Services features on an existing AKS cluster which includes FQDN Filtering and Container Network Observability.
+```output
+cilium-s4x24                          1/1     Running   0          47m   10.224.0.4      aks-nodepool1-22058664-vmss000001   <none>           <none>
+```
 
-```azurecli-interactive
-az aks update \
-    --resource-group $RESOURCE_GROUP \
-    --name $CLUSTER_NAME \
-    --disable-acns
+### Inspect a Cilium Agent
+
+Use the `cilium` CLI to monitor traffic being blocked.
+
+```bash
+kubectl exec -it -n kube-system cilium-s4x24 -- sh
+```
+
+```output
+Defaulted container "cilium-agent" out of: cilium-agent, install-cni-binaries (init), mount-cgroup (init), apply-sysctl-overwrites (init), mount-bpf-fs (init), clean-cilium-state (init), block-wireserver (init)
+#
+```
+
+Inside this shell, run `cilium monitor -t drop`:
+
+```output
+Listening for events on 2 CPUs with 64x4096 of shared memory
+Press Ctrl-C to quit
+time="2024-10-08T17:48:27Z" level=info msg="Initializing dissection cache..." subsys=monitor
+```
+
+### Verify policy
+
+From the first shell, create a request to the allowed FQDN, `*.bing.com`, as specified by the policy. This should succeed and allowed by the agent.
+
+```bash
+bash-5.0# ./agnhost connect www.bing.com:80
+```
+
+Then create another request to an FQDN expected to be blocked:
+
+```bash
+bash-5.0# ./agnhost connect www.example.com:80
+```
+
+Cilium Agent blocked the request with the output:
+
+```output
+xx drop (Policy denied) flow 0xfddd76f6 to endpoint 0, ifindex 29, file bpf_lxc.c:1274, , identity 48447->world: 192.168.0.149:45830 -> 93.184.215.14:80 tcp SYN
 ```
 
 ---

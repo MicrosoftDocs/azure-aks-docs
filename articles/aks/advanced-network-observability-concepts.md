@@ -118,8 +118,7 @@ For *incoming traffic*, there will be a `destination` label with destination pod
 * Pod-level metrics are available only on Linux.
 * Cilium data plane is supported starting with Kubernetes version 1.29.
 * Metric labels may have subtle differences between Cilium and non-Cilium clusters.
-* Cilium data plane does not currently support DNS metrics.
-* DNS metrics show up only when you have applied Cilium Network Policies on your Cilium clusters. To learn more visit []
+* DNS metrics are only available for pods that have Cilium Network polices (CNP) configured on their clusters.
 
 ### Scale
 

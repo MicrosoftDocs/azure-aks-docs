@@ -527,7 +527,7 @@
             - name: Control deployments with Azure Policy
               href: /azure/governance/policy/concepts/policy-for-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Application security
-          items:
+          - items:
             - name: Create an OIDC Issuer for your cluster
               href: use-oidc-issuer.md
             - name: Workload identity
@@ -960,6 +960,10 @@
           href: use-flyte.md
         - name: Work with clusters using Copilot
           href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Advanced Container Networking Services 
+      items:
+        - name: Enable Advanced Container Networking Services
+          href: advanced-container-networking-services-cli.md
     - name: DevOps
       items:
         - name: Azure DevOps Project
