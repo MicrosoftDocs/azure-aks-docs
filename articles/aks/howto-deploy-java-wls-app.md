@@ -54,11 +54,20 @@ If you're interested in providing feedback or working closely on your migration 
 
 ## Create an Azure SQL Database
 
+### [Passwordless (Recommended)](#tab/passwordless)
+
 [!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database-passwordless.md)]
+
+### [Password](#tab/password)
+
+[!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database.md)]
+
+Open the **Query editor** pane by following the steps in the [Query the database](/azure/azure-sql/database/single-database-create-quickstart#query-the-database) section of [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart).
+
 
 ### Create schema for the sample application
 
-Select **New Query**, in the Query 2 editor, run the following query:
+Select **New Query**, in the query editor, run the following query:
 
 ```sql
 CREATE TABLE COFFEE (ID NUMERIC(19) NOT NULL, NAME VARCHAR(255) NULL, PRICE FLOAT(32) NULL, PRIMARY KEY (ID));
