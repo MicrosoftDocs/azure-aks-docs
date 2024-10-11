@@ -150,6 +150,36 @@ For any AKS clusters created or upgraded after March 2022, Azure Kubernetes Serv
     > [!NOTE]
     > If you have any services that run on top of AKS, you might need to update their certificates.
 
+## Kubelet Serving Certificate Rotation
+Kubelet Serving Certificate Rotation allows AKS to utilize kubelet server TLS bootstrapping for both bootstrapping and rotating serving certificates signed by the cluster Certificate Authority (CA).
+
+### Limitations
+- This feature is only enabled in EUAP regions.
+- Supported on kubernetes version 1.27 and above.
+
+### Verify kubelet goes through TLS bootstrapping process
+
+With this feature enabled, you should see the kubelet running on every one of your nodes go through the serving [TLS bootstrapping process](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/#certificate-rotation).
+
+Verify the bootstrapping process is taking place by using the [`kubectl get`][kubectl-get] command to get the current csr objects within your cluster.
+
+ ```azurecli-interactive
+kubectl get csr
+```
+
+ All serving CSRs (those with signer name of kubernetes.io/kubelet-serving) should be in the `Approved,Issued` state, indicating the CSR was approved and issued a signed certificate. See example output:
+
+    ```output
+   NAME        AGE    SIGNERNAME                                    REQUESTOR                    REQUESTEDDURATION   CONDITION
+csr-8mx4w   113s   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:uoxr9r      <none>              Approved,Issued
+csr-bchlj   111s   kubernetes.io/kubelet-serving                 system:node:akswinp7000000   <none>              Approved,Issued
+csr-sb4wz   46m    kubernetes.io/kubelet-serving                 system:node:akswinp6000000   <none>              Approved,Issued
+csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:ho7zyu      <none>              Approved,Issued
+    ```
+
+### Disable kubelet serving certificate rotation
+Kubelet serving certificate rotation can be disabled by updating a nodepool with a node pool tag.
+
 ## Next steps
 
 This article showed you how to manually and automatically rotate your cluster certificates, CAs, and SAs. For more information, see [Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)][aks-best-practices-security-upgrades].
