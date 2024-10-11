@@ -1,12 +1,12 @@
 ---
 title: Configure Static Egress Gateway in Azure Kubernetes Service (AKS) - Preview
 titleSuffix: Azure Kubernetes Service
-description: Learn how to configure Static Egress Gateway in Azure Kubernetes Service (AKS) manage egress traffic from a constant IP address.
+description: Learn how to configure Static Egress Gateway in Azure Kubernetes Service (AKS) to manage egress traffic from a constant IP address.
 author: asudbring
 ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 08/12/2024
+ms.date: 10/11/2024
 ---
 
 # Configure Static Egress Gateway in Azure Kubernetes Service (AKS)
@@ -21,7 +21,8 @@ This article provides step-by-step instructions to set up a Static Egress Gatewa
 
 - Static Egress Gateway is not supported in clusters with [Azure CNI Pod Subnet][azure-cni-pod-subnet].
 - Kubernetes network policies will not apply to traffic leaving the cluster through the gateway nodepool.
-  - This should not impact cluster traffic control as **only** egress traffic from annotated pods are affected.
+  - This should not impact cluster traffic control as **only** egress traffic from annotated pods **routed to the gateway nodepool** are affected.  
+
 - The gateway nodepool is not intended for general-purpose workloads and should be used for egress traffic only.
 - Windows nodepools cannot be used as gateway nodepools.
 - hostNetwork pods **cannot** be annotated to use the gateway nodepool.
@@ -76,18 +77,18 @@ az aks create -n <cluster-name> -g <resource-group> --enable-static-egress-gatew
 
 ## Create a Gateway Nodepool
 
-After enabling the feature, create a dedicated gateway nodepool. This nodepool will handle the egress traffic through the specified public IP prefix.
+After enabling the feature, create a dedicated gateway nodepool. This nodepool will handle the egress traffic through the specified public IP prefix. The `--gateway-prefix-size` is the size of the public IP prefix to be applied to the gateway nodepool nodes. The allowed range is `28`-`31`. 
 
 ```azurecli-interactive
 az aks nodepool create --cluster-name <cluster-name> -n <nodepool-name> --mode gateway --node-count <number-of-nodes> --gateway-prefix-size <prefix-size>
 ```
 
 > [!NOTE] 
-> The number of nodes **must** align with the selected prefix size. For example, a `/30` prefix allows up to 4 nodes.
+> The number of nodes must fit within the capacity allowed by the selected prefix size. For example, a /30 prefix supports up to 4 nodes, and at least 2 nodes are required for high availability. Since you can’t adjust the node count dynamically, plan your nodes according to the fixed limit set by the prefix size.
 
 ## Scale the Gateway Nodepool (Optional)
 
-If necessary, you can resize the gateway nodepool within the limits defined by the prefix size.
+If necessary, you can resize the gateway nodepool within the limits defined by the prefix size but it does not support autoscaling.
 
 ```azurecli-interactive
 az aks nodepool scale --cluster-name <cluster-name> -n <nodepool-name> --node-count <desired-node-count>
@@ -104,11 +105,11 @@ metadata:
   name: <gateway-config-name>
   namespace: <namespace>
 spec:
-  gatewayNodePoolName: <nodepool-name>
-  exceptionCidrs:
+  gatewayNodepoolName: <nodepool-name>
+  exceptionCidrs:  # Optional
   - 10.0.0.0/8
   - 172.16.0.0/12
-  publicIpPrefixId: /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Network/publicIPPrefixes/<prefix-name>
+  publicIpPrefixId: /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Network/publicIPPrefixes/<prefix-name> # Optional
 ```
 
 > [!TIP]
@@ -162,6 +163,4 @@ By following these steps, you can effectively set up and manage Static Egress Ga
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-aks-create]: /cli/azure/aks#az-aks-create
-[az-aks-update]: /cli/azure/aks#az-aks-update
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
