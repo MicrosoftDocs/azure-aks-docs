@@ -200,6 +200,16 @@ Now, you generate simulated load using the producer app to populate the queue wi
 
     You should see a single pod in the output.
 
+1. Verify that a Karpenter node pool was created. Do this using the kubectl get nodepool command. The command response will look like this:
+
+   :::image type="content" source="media/eks-edw-deploy/sample-karpenter-node.png" lightbox="media/eks-edw-deploy/sample-karpenter-node.png" alt-text="Screenshot showing an example of the Karpenter node pool creation.":::
+
+    Verify that the default node pool is a Karpenter node pool using the kubectl describe nodepool command. In the command response, you can verify that the nodepool is a Karpenter nodepool. You should see something like this: 
+
+      :::image type="content" source="media/eks-edw-deploy/sample-response-nodepool.png" lightbox="media/eks-edw-deploy/sample-response-nodepool.png" alt-text="Screenshot showing an example of the Karpenter node pool response.":::
+
+
+
 ## Monitor scale out for pods and nodes with k9s
 
 You can use various tools to verify the operation of apps deployed to AKS, including the Azure portal and k9s. For more information on k9s, see the [k9s overview][k9s].
@@ -270,6 +280,10 @@ You can use various tools to verify the operation of apps deployed to AKS, inclu
     In these two images, notice how the number of nodes whose names contain `aks-default` increased from one to three nodes. If you stop the producer app from putting messages on the queue, eventually the consumers will reduce the queue depth below the threshold, and both KEDA and Karpenter will scale in. If you're using k9s, you should see something like this:
 
     :::image type="content" source="media/eks-edw-deploy/sample-k9s-reduce.png" alt-text="Screenshot showing an example of the K9s view with reduced queue depth.":::
+
+1. Finally, you can view Karpenter autoscaling activity using the kubectl command as shown here: 
+
+    :::image type="content" source="media/eks-edw-deploy/sample-kubectl-command.png" alt-text="Screenshot showing an example of the kubectl command.":::
 
 ## Clean up resources
 
