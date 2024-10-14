@@ -200,7 +200,7 @@ Now, you generate simulated load using the producer app to populate the queue wi
 
     You should see a single pod in the output.
 
-1. Verify that a Karpenter node pool was created. Do this using the kubectl get nodepool command. The command response will look like this:
+1. Verify that a Karpenter node pool was created. Do this using the `kubectl get nodepool` command. The command response will look like this:
 
    :::image type="content" source="media/eks-edw-deploy/sample-karpenter-node.png" lightbox="media/eks-edw-deploy/sample-karpenter-node.png" alt-text="Screenshot showing an example of the Karpenter node pool creation.":::
 
