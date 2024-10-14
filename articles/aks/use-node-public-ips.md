@@ -3,7 +3,7 @@ title: Use instance-level public IPs in Azure Kubernetes Service (AKS)
 description: Learn how to manage instance-level public IPs Azure Kubernetes Service (AKS)
 ms.topic: article
 ms.custom: devx-track-azurecli
-ms.date: 04/29/2024
+ms.date: 14/10/2024
 ms.author: pahealy
 author: phealy
 ---
@@ -15,16 +15,16 @@ AKS nodes don't require their own public IP addresses for communication. However
 First, create a new resource group.
 
 ```azurecli-interactive
-az group create --name myResourceGroup2 --location eastus
+az group create --name <resourceGroup> --location <region>
 ```
 
 Create a new AKS cluster and attach a public IP for your nodes. Each of the nodes in the node pool receives a unique public IP. You can verify this by looking at the Virtual Machine Scale Set instances.
 
 ```azurecli-interactive
 az aks create \
-    --resource-group MyResourceGroup2 \
-    --name MyManagedCluster \
-    --location eastus \
+    --resource-group <resourceGroup> \
+    --name <aksClusterName> \
+    --location <region> \
     --enable-node-public-ip \
     --generate-ssh-keys
 ```
@@ -32,17 +32,17 @@ az aks create \
 For existing AKS clusters, you can also add a new node pool, and attach a public IP for your nodes.
 
 ```azurecli-interactive
-az aks nodepool add --resource-group MyResourceGroup2 --cluster-name MyManagedCluster --name nodepool2 --enable-node-public-ip
+az aks nodepool add --resource-group <resourceGroup> --cluster-name <aksClusterName> --name <newNodePool> --enable-node-public-ip
 ```
 
 ## Use a public IP prefix
 
-There are a number of [benefits to using a public IP prefix][public-ip-prefix-benefits]. AKS supports using addresses from an existing public IP prefix for your nodes by passing the resource ID with the flag `node-public-ip-prefix` when creating a new cluster or adding a node pool.
+There are a number of [benefits to using a public IP prefix][public-ip-prefix-benefits]. AKS supports using addresses from an existing public IP prefix for your nodes by passing the resource ID with the flag `--node-public-ip-prefix-id` when creating a new cluster or adding a node pool.
 
 First, create a public IP prefix using [az network public-ip prefix create][az-public-ip-prefix-create]:
 
 ```azurecli-interactive
-az network public-ip prefix create --length 28 --location eastus --name MyPublicIPPrefix --resource-group MyResourceGroup3
+az network public-ip prefix create --length 28 --location <region> --name <publicIPPrefixName> --resource-group <resourceGroup>
 ```
 
 View the output, and take note of the `id` for the prefix:
@@ -50,20 +50,20 @@ View the output, and take note of the `id` for the prefix:
 ```output
 {
   ...
-  "id": "/subscriptions/<subscription-id>/resourceGroups/myResourceGroup3/providers/Microsoft.Network/publicIPPrefixes/MyPublicIPPrefix",
+  "id": "/subscriptions/<subscription-id>/resourceGroups/<resourceGroup>/providers/Microsoft.Network/publicIPPrefixes/<publicIPPrefixName>",
   ...
 }
 ```
 
-Finally, when creating a new cluster or adding a new node pool, use the flag `node-public-ip-prefix` and pass in the prefix's resource ID:
+Finally, when creating a new cluster or adding a new node pool, use the flag `--node-public-ip-prefix-id` and pass in the prefix's resource ID:
 
 ```azurecli-interactive
 az aks create \
-    --resource-group MyResourceGroup3 \
-    --name MyManagedCluster \
-    --location eastus \
+    --resource-group <resourceGroup> \
+    --name <aksClusterName> \
+    --location <region> \
     --enable-node-public-ip \
-    --node-public-ip-prefix /subscriptions/<subscription-id>/resourcegroups/MyResourceGroup3/providers/Microsoft.Network/publicIPPrefixes/MyPublicIPPrefix \
+    --node-public-ip-prefix-id /subscriptions/<subscription-id>/resourceGroups/<resourceGroup>/providers/Microsoft.Network/publicIPPrefixes/<publicIPPrefixName> \
     --generate-ssh-keys
 ```
 
@@ -79,7 +79,7 @@ You can locate the public IPs for your nodes in various ways:
 > The [node resource group][node-resource-group] contains the nodes and their public IPs. Use the node resource group when executing commands to find the public IPs for your nodes.
 
 ```azurecli
-az vmss list-instance-public-ips --resource-group MC_MyResourceGroup2_MyManagedCluster_eastus --name YourVirtualMachineScaleSetName
+az vmss list-instance-public-ips --resource-group <MC_region_aksClusterName_region> --name <virtualMachineScaleSetName>
 ```
 
 ## Use public IP tags on node public IPs
@@ -88,14 +88,14 @@ Public IP tags can be utilized on node public IPs to utilize the [Azure Routing 
 
 ### Requirements
 
-* AKS version 1.24 or greater is required.
+* AKS version 1.29 or greater is required.
 
 ### Create a new cluster using routing preference internet
 
 ```azurecli-interactive
 az aks create \
-    --name <clusterName> \
-    --location <location> \
+    --name <aksClusterName> \
+    --location <region> \
     --resource-group <resourceGroup> \
     --enable-node-public-ip \
     --node-public-ip-tags RoutingPreference=Internet \
@@ -105,7 +105,10 @@ az aks create \
 ### Add a node pool with routing preference internet
 
 ```azurecli-interactive
-az aks nodepool add --cluster-name <clusterName> --name <nodepoolName> --location <location> --resource-group <resourceGroup> \
+az aks nodepool add --cluster-name <aksClusterName> \
+  --name <nodePoolName> \
+  --location <region> \
+  --resource-group <resourceGroup> \
   --enable-node-public-ip \
   --node-public-ip-tags RoutingPreference=Internet
 ```
@@ -129,15 +132,15 @@ Examples:
 
 ### Requirements
 
-* AKS version 1.24 or greater is required.
+* AKS version 1.29 or greater is required.
 
 ### Create a new cluster with allowed ports and application security groups
 
 ```azurecli-interactive
 az aks create \
     --resource-group <resourceGroup> \
-    --name <clusterName> \
-    --nodepool-name <nodepoolName> \
+    --name <aksClusterName> \
+    --nodepool-name <nodePoolName> \
     --nodepool-allowed-host-ports 80/tcp,443/tcp,53/udp,40000-60000/tcp,40000-50000/udp\
     --nodepool-asg-ids "<asgId>,<asgId>" \
     --generate-ssh-keys
@@ -145,20 +148,22 @@ az aks create \
 
 ### Add a new node pool with allowed ports and application security groups
 
-```az aks nodepool add \
+```azurecli-interactive
+az aks nodepool add \
   --resource-group <resourceGroup> \
-  --cluster-name <clusterName> \
-  --name <nodepoolName> \
+  --cluster-name <aksClusterName> \
+  --name <nodePoolName> \
   --allowed-host-ports 80/tcp,443/tcp,53/udp,40000-60000/tcp,40000-50000/udp \
   --asg-ids "<asgId>,<asgId>"
 ```
 
 ### Update the allowed ports and application security groups for a node pool
 
-```az aks nodepool update \
+```azurecli-interactive
+az aks nodepool update \
   --resource-group <resourceGroup> \
-  --cluster-name <clusterName> \
-  --name <nodepoolName> \
+  --cluster-name <aksClusterName> \
+  --name <nodePoolName> \
   --allowed-host-ports 80/tcp,443/tcp,53/udp,40000-60000/tcp,40000-50000/udp \
   --asg-ids "<asgId>,<asgId>"
 ```
@@ -174,7 +179,7 @@ When public IPs are configured on nodes, host ports can be utilized to allow pod
 
 ### Requirements
 
-* AKS version 1.24 or greater is required.
+* AKS version 1.29 or greater is required.
 
 ### Register the 'PodHostPortAutoAssignPreview' feature flag
 
