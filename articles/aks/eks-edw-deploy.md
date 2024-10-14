@@ -281,7 +281,7 @@ You can use various tools to verify the operation of apps deployed to AKS, inclu
 
     :::image type="content" source="media/eks-edw-deploy/sample-k9s-reduce.png" lightbox="media/eks-edw-deploy/sample-k9s-reduce.png"alt-text="Screenshot showing an example of the K9s view with reduced queue depth.":::
 
-1. Finally, you can view Karpenter autoscaling activity using the kubectl command as shown here: 
+1. Finally, you can view Karpenter autoscaling activity using the `kubectl get events` command as shown here: 
 
     :::image type="content" source="media/eks-edw-deploy/sample-kubectl-command.png" alt-text="Screenshot showing an example of the kubectl command.":::
 
