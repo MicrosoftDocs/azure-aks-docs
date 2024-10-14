@@ -135,6 +135,7 @@ The following steps make it so the WebLogic Server admin console and the sample 
 
    :::image type="content" source="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png" alt-text="Screenshot of the Azure portal that shows the Application Gateway Ingress Controller configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png":::
 1. Select Next to see the **DNS** pane.
+1. Select Next to see the **Database** pane.
 
 The following steps show you how to configure database connection.
 
