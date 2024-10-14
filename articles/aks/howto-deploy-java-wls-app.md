@@ -515,25 +515,25 @@ Use the following steps to build the image:
       ```bash
       cat <<EOF >dbmodel.yaml
       resources:
-      JDBCSystemResource:
-         jdbc/WebLogicCafeDB:
+        JDBCSystemResource:
+          jdbc/WebLogicCafeDB:
             Target: 'cluster-1'
             JdbcResource:
-            JDBCDataSourceParams:
-               JNDIName: [
+              JDBCDataSourceParams:
+                JNDIName: [
                   jdbc/WebLogicCafeDB
-               ]
-               GlobalTransactionsProtocol: None
-            JDBCDriverParams:
-               DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
-               URL: '@@SECRET:sqlserver-secret:url@@'
-               PasswordEncrypted: '@@SECRET:sqlserver-secret:password@@'
-               Properties:
+                ]
+                GlobalTransactionsProtocol: None
+              JDBCDriverParams:
+                DriverName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+                URL: '@@SECRET:sqlserver-secret:url@@'
+                PasswordEncrypted: '@@SECRET:sqlserver-secret:password@@'
+                Properties:
                   user:
-                  Value: '@@SECRET:sqlserver-secret:user@@'
-            JDBCConnectionPoolParams:
-               TestTableName: SQL SELECT 1
-               TestConnectionsOnReserve: true
+                    Value: '@@SECRET:sqlserver-secret:user@@'
+              JDBCConnectionPoolParams:
+                TestTableName: SQL SELECT 1
+                TestConnectionsOnReserve: true
       EOF
       ```
 
