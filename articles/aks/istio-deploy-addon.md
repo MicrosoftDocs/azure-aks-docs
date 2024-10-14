@@ -155,7 +155,7 @@ Use `kubectl apply` to deploy the sample application on the cluster:
 kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.18/samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 > [!NOTE]
-> Clusters using an HTTP proxy for outbound internet access will need to set up a Service Proxy. For setup instructions see [HTTP proxy support in Azure Kubernetes Service](./http-proxy.md#istio-add-on-http-proxy-for-external-services)
+> Clusters using an HTTP proxy for outbound internet access will need to set up a Service Entry. For setup instructions see [HTTP proxy support in Azure Kubernetes Service](./http-proxy.md#istio-add-on-http-proxy-for-external-services)
 
 Confirm several deployments and services are created on your cluster. For example:
 
