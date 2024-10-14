@@ -279,7 +279,7 @@ You can use various tools to verify the operation of apps deployed to AKS, inclu
 
     In these two images, notice how the number of nodes whose names contain `aks-default` increased from one to three nodes. If you stop the producer app from putting messages on the queue, eventually the consumers will reduce the queue depth below the threshold, and both KEDA and Karpenter will scale in. If you're using k9s, you should see something like this:
 
-    :::image type="content" source="media/eks-edw-deploy/sample-k9s-reduce.png" alt-text="Screenshot showing an example of the K9s view with reduced queue depth.":::
+    :::image type="content" source="media/eks-edw-deploy/sample-k9s-reduce.png" lightbox="media/eks-edw-deploy/sample-k9s-reduce.png"alt-text="Screenshot showing an example of the K9s view with reduced queue depth.":::
 
 1. Finally, you can view Karpenter autoscaling activity using the kubectl command as shown here: 
 
