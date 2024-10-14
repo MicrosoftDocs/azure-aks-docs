@@ -48,7 +48,7 @@ If you're interested in providing feedback or working closely on your migration 
 - Prepare a local machine with Unix-like operating system installed - for example, Ubuntu, Azure Linux, macOS, Windows Subsystem for Linux.
   - [Azure CLI](/cli/azure). Use `az --version` to test whether az works. This document was tested with version 2.55.1.
   - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl). Use `kubectl version` to test whether kubectl works. This document was tested with version v1.21.2.
-  - A Java Development Kit (JDK) compatible with the version of WebLogic Server you intend to run. The article directs you to install a version of WebLogic Server that uses JDK 11. Ensure that your `JAVA_HOME` environment variable is set correctly in the shells in which you run the commands.
+  - A Java Development Kit (JDK). The article directs you to install [Microsoft Build of OpenJDK 11](https://learn.microsoft.com/en-us/java/openjdk/download). Ensure that your `JAVA_HOME` environment variable is set correctly in the shells in which you run the commands.
   - [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
   - Ensure that you have the zip/unzip utility installed. Use `zip/unzip -v` to test whether `zip/unzip` works.
 
@@ -57,6 +57,13 @@ If you're interested in providing feedback or working closely on your migration 
 ### [Passwordless (Recommended)](#tab/passwordless)
 
 [!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database-passwordless.md)]
+
+Use the following command to get the connection string that you use in the next section.
+
+```azurecli-interactive
+export CONNECTION_STRING="jdbc:sqlserver://${AZURESQL_SERVER_NAME}.database.windows.net:1433;database=${DATABASE_NAME};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
+echo ${CONNECTION_STRING}
+```
 
 ### [Password](#tab/password)
 
@@ -77,14 +84,6 @@ INSERT INTO SEQUENCE VALUES ('SEQ_GEN',0);
 ```
 
 After a successful run, you should see the message **Query succeeded: Affected rows: 1**. If you don't see this message, troubleshoot and resolve the problem before proceeding.
-
-
-Finally, use the following command to get the connection string that you use in the next section.
-
-```azurecli-interactive
-export CONNECTION_STRING="jdbc:sqlserver://${AZURESQL_SERVER_NAME}.database.windows.net:1433;database=${DATABASE_NAME};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
-echo ${CONNECTION_STRING}
-```
 
 You can proceed to deploy WLS on AKS offer.
 
@@ -135,6 +134,7 @@ The following steps make it so the WebLogic Server admin console and the sample 
 1. For **Create ingress for Administration Console**, select **Yes**.
 
    :::image type="content" source="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png" alt-text="Screenshot of the Azure portal that shows the Application Gateway Ingress Controller configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png":::
+1. Select Next to see the **DNS** pane.
 
 The following steps show you how to configure database connection.
 
@@ -142,7 +142,7 @@ The following steps show you how to configure database connection.
 
    Connect database with managed identity.
 
-   1. Select Next to see the **DNS** pane.
+
    1. Select Next to see the **Database** pane.
    1. For **Connect to database?**, select **Yes**.
    1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Microsoft SQL Server (with support for passwordless connection)**.
@@ -469,8 +469,8 @@ Use the following steps to build the image:
          # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
          resources:
-         JDBCSystemResource:
-            jdbc/WebLogicCafeDB:
+           JDBCSystemResource:
+             jdbc/WebLogicCafeDB:
                Target: 'cluster-1'
                JdbcResource:
                JDBCDataSourceParams:
