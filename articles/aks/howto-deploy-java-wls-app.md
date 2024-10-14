@@ -895,8 +895,6 @@ In the previous steps, you created the auxiliary image including models and WDT.
    kubectl -n ${WLS_DOMAIN_NS} patch domain ${WLS_DOMAIN_UID} \
        --type=json \
        --patch-file patch-file.json
-
-   kubectl get pod -n ${WLS_DOMAIN_NS} -w
    ```
 
 ---
