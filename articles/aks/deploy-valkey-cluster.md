@@ -101,7 +101,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     configmap/valkey-cluster created
     ```
 
-2. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1, preferably in different nodes, using the `kubectl apply` command.
+2. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -137,8 +137,26 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
                     operator: In
                     values:
                     - ${MY_LOCATION}-1
+                - matchExpressions:
+                  - key: agentpool
+                    operator: In
+                    values:
+                    - valkey
+                  - key: topology.kubernetes.io/zone
+                    operator: In
+                    values:
+                    - ${MY_LOCATION}-2
             podAntiAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 90
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                      - valkey
+                  topologyKey: topology.kubernetes.io/zone
               - weight: 90
                 podAffinityTerm:
                   labelSelector:
@@ -208,7 +226,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     statefulset.apps/valkey-masters created
     ```
 
-3. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 2, preferably in different nodes, using the `kubectl apply` command.
+3. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -243,7 +261,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
                   - key: topology.kubernetes.io/zone
                     operator: In
                     values:
-                    - ${MY_LOCATION}-2
+                    - ${MY_LOCATION}-3
             podAntiAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
               - weight: 90
