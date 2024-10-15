@@ -13,7 +13,7 @@ ms.date: 10/10/2024
 
 ## Prerequisites
 
-* An App Configuration store. [Create a store](./quickstart-azure-app-configuration-create.md#create-an-app-configuration-store).
+* An App Configuration store. [Create a store](/azure/azure-app-configuration/quickstart-azure-app-configuration-create#create-an-app-configuration-store).
 * An Azure Kubernetes Service (AKS) cluster. [Create an AKS cluster](/azure/aks/tutorial-kubernetes-deploy-cluster#create-a-kubernetes-cluster).
 * A running workload in Azure Kubernetes Service (AKS) cluster. If you don't have one, you can [create an demo application running in AKS](/azure/azure-app-configuration/quickstart-azure-kubernetes-service#create-an-application-running-in-aks).
 
