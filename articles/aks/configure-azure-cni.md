@@ -29,7 +29,7 @@ This article shows you how to use Azure CNI networking to create and use a virtu
 
   The steps in this quickstart run the Azure PowerShell cmdlets interactively in [Azure Cloud Shell](/azure/cloud-shell/overview). To run the commands in the Cloud Shell, select **Open Cloudshell** at the upper-right corner of a code block. Select **Copy** to copy the code and then paste it into Cloud Shell to run it. You can also run the Cloud Shell from within the Azure portal.
 
-  You can also [install Azure PowerShell locally](/powershell/azure/install-azure-powershell) to run the cmdlets. The steps in this article require Azure PowerShell module version 5.4.1 or later. Run `Get-Module -ListAvailable Az` to find your installed version. If you need to upgrade for specific OS, see [macOS][macOSUpgrade], [Windows][windowsUpgrade] or [Linux][linuxUpgrade].
+  You can also [install Azure PowerShell locally](/powershell/azure/install-azure-powershell) to run the cmdlets. The steps in this article require Azure PowerShell module version 5.4.1 or later. Run `Get-Module -ListAvailable Az` to find your installed version. If you need to upgrade for a specific OS, see [macOS][macOSUpgrade], [Windows][windowsUpgrade], or [Linux][linuxUpgrade].
 
   If you run PowerShell locally, run `Connect-AzAccount` to connect to Azure.
 
