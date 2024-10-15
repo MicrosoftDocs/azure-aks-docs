@@ -206,7 +206,7 @@ Now, you generate simulated load using the producer app to populate the queue wi
 
     Verify that the default node pool is a Karpenter node pool using the `kubectl describe nodepool` command. In the command response, you can verify that the node pool is a Karpenter node pool. You should see something like this: 
 
-      :::image type="content" source="media/eks-edw-deploy/sample-response-nodepool.png" lightbox="media/eks-edw-deploy/sample-response-nodepool.png" alt-text="Screenshot showing an example of the Karpenter node pool response.":::
+      :::image type="content" source="media/eks-edw-deploy/sample-response-nodepool.png" lightbox="media/eks-edw-deploy/sample-response-nodepool.png" alt-text="Screenshot showing the node pool response, including API version noted as karpenter.":::
 
 
 
