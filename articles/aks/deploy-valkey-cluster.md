@@ -635,6 +635,9 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Next steps
 
+> [!div class="nextstepaction"]
+> [Validate the resiliency of the Valkey cluster on AKS][validate-valkey-cluster]
+
 To learn more about deploying open-source software on Azure Kubernetes Service (AKS), see the following articles:
 
 * [Deploy a highly available PostgreSQL database on AKS][postgresql-aks]
@@ -664,3 +667,4 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 [az-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md
+[validate-valkey-cluster]: ./validate-valkey-cluster.md
