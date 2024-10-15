@@ -283,7 +283,7 @@ You can use various tools to verify the operation of apps deployed to AKS, inclu
 
 1. Finally, you can view Karpenter autoscaling activity using the `kubectl get events` command as shown here: 
 
-    :::image type="content" source="media/eks-edw-deploy/sample-kubectl-command.png" lightbox="media/eks-edw-deploy/sample-kubectl-command.png alt-text="Screenshot showing an example of the kubectl command.":::
+    :::image type="content" source="media/eks-edw-deploy/sample-kubectl-command.png" lightbox="media/eks-edw-deploy/sample-kubectl-command.png" alt-text="Screenshot showing an example of the kubectl command.":::
 
 ## Clean up resources
 
