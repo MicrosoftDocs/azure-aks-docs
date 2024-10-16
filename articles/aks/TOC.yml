@@ -977,18 +977,14 @@
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-dapr-extension-installation-errors?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: GitOps
           href: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Build applications with Azure App Configuration
+        - name: Configure applications with Azure App Configuration
           items:
-            - name: Install the Azure App Configuration extension
+            - name: Build ConfigMap from Azure App Configuration
+              href: azure-app-configuration-quickstart.md
+            - name: Azure App Configuration extension reference
               href: azure-app-configuration.md
             - name: Configure the Azure App Configuration extension
               href: azure-app-configuration-settings.md
-            - name: Azure App Configuration extension quickstart
-              href: azure-app-configuration-quickstart.md
-            - name: Azure App Configuration extension reference
-              href: /azure/azure-app-configuration/reference-kubernetes-provider?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-            - name: Troubleshoot the Azure App Configuration extension
-              href: /troubleshoot/azure/azure-kubernetes/extensions/troubleshoot-app-configuration-extension-installation-errors?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: AI and machine learning
       items:
         - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
