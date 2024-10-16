@@ -198,19 +198,13 @@ For more information, see [Kubernetes resource propagation from hub cluster to m
       Normal  PlacementRolloutCompleted  103s  cluster-resource-placement-controller  Resources have been applied to the selected clusters
     ````
 
-### [Portal](#tab/azure-portal)
+### [Azure portal](#tab/azure-portal)
 
-1. Sign in to the Azure portal.
+1. In the Azure portal, navigate to your Fleet resource.
+1. From the service menu, under **Fleet Resources**, select **Resource placements** > **Create**.
+1. Replace the placeholder values with the following YAML, and then select **Add**.
 
-1. On the Azure portal overview page for your Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
-
-1. Select **Create**.
-
-1. Replace the placeholder values with the following YAML, and select **Add**.
-
-    :::image type="content" source="./media/quickstart-resource-propagation/create-crp-inline.png" lightbox="./media/quickstart-resource-propagation/create-crp.png" alt-text="A screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values.":::
-
-    ```yml
+    ```YAML
     apiVersion: placement.kubernetes-fleet.io/v1beta1
     kind: ClusterResourcePlacement
     metadata:
@@ -224,7 +218,6 @@ For more information, see [Kubernetes resource propagation from hub cluster to m
       policy:
         placementType: PickAll
     ```
-    
 
 1. Verify that the cluster resource placement is created successfully.
 
@@ -250,15 +243,13 @@ If you no longer wish to use the `ClusterResourcePlacement` object, you can dele
 kubectl delete clusterresourceplacement crp
 ```
 
-### [Portal](#tab/azure-portal)
+### [Azure portal](#tab/azure-portal)
 
 If you no longer wish to use your cluster resource placement, you can delete it from the Azure portal:
 
-1. On the Azure portal overview page for your Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
-
+1. From the service menu, under **Fleet Resources**, select **Resource placements**.
 1. Select the cluster resource placement objects you want to delete, then select **Delete**.
-
-1. In the **Delete** tab, verify the correct objects are chosen. Once you're ready, select **Confirm delete** and **Delete**.
+1. On the **Delete** tab, verify the correct objects are chosen. Once you're ready, select **Confirm delete** > **Delete**.
 
 ---
 

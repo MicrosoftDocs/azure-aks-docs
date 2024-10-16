@@ -91,10 +91,10 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     TEST SUITE: None
     NOTES:
     external-secrets has been deployed successfully in namespace external-secrets!
-    
+
     In order to begin using ExternalSecrets, you will need to set up a SecretStore
     or ClusterSecretStore resource (for example, by creating a 'vault' SecretStore).
-    
+
     More information on the different types of SecretStores and how to configure them
     can be found in our Github: https://github.com/external-secrets/external-secrets
     ```
@@ -331,7 +331,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                   topologyKey: kubernetes.io/hostname
           containers:
           - name: valkey
-            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:7.2.5"
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
             envFrom:
             - secretRef:
                 name: valkey-password
@@ -443,7 +443,7 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                   topologyKey: failure-domain.beta.kubernetes.io/zone
           containers:
           - name: valkey
-            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:7.2.5"
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
             envFrom:
             - secretRef:
                 name: valkey-password
