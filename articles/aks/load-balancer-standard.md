@@ -81,7 +81,7 @@ kubectl get service public-svc
 
 ```console
 NAMESPACE     NAME          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)         AGE
-default       public-svc    LoadBalancer   10.0.39.110    52.156.88.187   80:32068/TCP    52s
+default       public-svc    LoadBalancer   10.0.39.110    203.0.113.187   80:32068/TCP    52s
 ```
 
 When you view the service details, the public IP address created for this service on the load balancer is shown in the *EXTERNAL-IP* column. It might take a few minutes for the IP address to change from *\<pending\>* to an actual public IP address.
@@ -103,7 +103,7 @@ Selector:                    app=public-app
 ...
 IP:                          10.0.39.110
 ...
-LoadBalancer Ingress:        52.156.88.187
+LoadBalancer Ingress:        203.0.113.187
 ...
 TargetPort:                  80/TCP
 NodePort:                    32068/TCP
