@@ -5,7 +5,7 @@ author: tamram
 
 ms.topic: article
 ms.custom: devx-track-azurecli
-ms.date: 09/27/2024
+ms.date: 10/16/2024
 ms.author: tamram
 ---
 
@@ -34,15 +34,14 @@ Host network pods have `hostNetwork` set to **true** in their specs. Host networ
 
 ## Limitations
 
-Non-host network addons that need to access the IMDS endpoint won't work after you enable IMDS restriction. Unsupported addons include:
+Certain add-ons that need to access the IMDS endpoint are not supported with IMDS restriction. If you have these add-ons installed on your cluster, you will not be able to enable IMDS restriction. Conversely, if you have already enabled IMDS restriction, then you will not be able to install these add-ons. Unsupported addons include:
 
-- HTTPApplicationRouting (retired)
-- IngressApplicationGateway
-- OmsAgent
-- ACIConnectorLinux
-- AzurePolicy
+- Application gateway ingress controller
+- Azure Monitor for containers (Container Insights)
+- Virtual nodes
+- Azure Policy
 - GitOps
-- AIToolchainOperator
+- AI toolchain operator (preview)
 
 The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
 
