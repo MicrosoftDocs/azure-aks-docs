@@ -92,6 +92,8 @@ The following results evaluate the impact of adding sidecar proxies to the data 
 - Sidecar traffic path: client --> client-sidecar --> server-sidecar --> server
 - Baseline traffic path: client --> server
 
+A comparison of data plane latency performance across Istio add-on and AKS versions can be found [here](./istio-latency.md)
+
 | Azure CNI Overlay |Azure CNI Overlay with Cilium |
 |:-------------------------:|:-------------------------:|
 [ ![Diagram that compares P99 latency for Azure CNI Overlay.](./media/aks-istio-addon/latency-box-plot/overlay-azure-p99.png) ](./media/aks-istio-addon/latency-box-plot/overlay-azure-p99.png#lightbox) |  [ ![Diagram that compares P99 latency for Azure CNI Overlay with Cilium.](./media/aks-istio-addon/latency-box-plot/overlay-cilium-p99.png) ](./media/aks-istio-addon/latency-box-plot/overlay-cilium-p99.png#lightbox)
