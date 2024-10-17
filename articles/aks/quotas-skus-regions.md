@@ -25,7 +25,7 @@ AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttli
 
 The buckets have a fixed size and refill over time at a fixed rate. Each throttling limit is in effect at the regional level for the specified resource in that region.
 
-| API Request | Bucket Size | Refill Rate | Resource |
+| API request | Bucket size | Refill rate | Resource |
 |---|---|---|---|
 | LIST | 500 requests | 1 requests / 1 second | Subscription |
 | PUT | 20 requests | 1 request / 1 minute | AgentPools |
