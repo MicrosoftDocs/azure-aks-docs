@@ -19,7 +19,7 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 [!INCLUDE [container-service-limits](~/reusable-content/ce-skilling/azure/includes/container-service-limits.md)]
 
-### Throttling Limits on Azure Kubernetes Service (AKS) Resource Provider APIs
+### Throttling limits on AKS resource provider APIs
 
 AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttling algorithm to limit certain AKS [resource provider](https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types) APIs. This ensures the performance of the service and promotes fair usage of the service for all customers.
 
