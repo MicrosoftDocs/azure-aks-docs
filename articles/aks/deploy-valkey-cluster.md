@@ -154,10 +154,16 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
             env:
             - name: VALKEY_PASSWORD_FILE
               value: "/etc/valkey-password/valkey-password-file.conf"
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             command:
               - "valkey-server"
             args:
               - "/conf/valkey.conf"
+              - "--cluster-announce-ip"
+              - "\$(MY_POD_IP)"
             resources:
               requests:
                 cpu: "100m"
@@ -261,10 +267,16 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
             env:
             - name: VALKEY_PASSWORD_FILE
               value: "/etc/valkey-password/valkey-password-file.conf"
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             command:
               - "valkey-server"
             args:
               - "/conf/valkey.conf"
+              - "--cluster-announce-ip"
+              - "\$(MY_POD_IP)"
             resources:
               requests:
                 cpu: "100m"
