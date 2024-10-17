@@ -27,8 +27,6 @@ Azure Monitor Container insights collect custom metrics for nodes, pods, contain
 
 [Azure Monitor Application Insights](/azure/azure-monitor/app/app-insights-overview) is used for Application Performance Management (APM). To enable Application Insights with code changes, see [Enable Azure Monitor OpenTelemetry](/azure/azure-monitor/app/opentelemetry-overview). To enable Application Insights without code changes, see [AKS autoinstrumentation](/azure/azure-monitor/app/kubernetes-codeless). For more details on instrumentation, see [data collection basics](/azure/azure-monitor/app/opentelemetry-overview).
 
-Azure Monitor Application Insights 
-
 ## Monitoring data
 
 AKS generates the same kinds of monitoring data as other Azure resources that are described in [Monitoring data from Azure resources](/azure/azure-monitor/essentials/monitor-azure-resource#monitoring-data-from-azure-resources). See [Monitoring AKS data reference](monitor-aks-reference.md) for detailed information on the metrics and logs created by AKS. [Other Azure services and features](#integrations) collect other data and enable other analysis options as shown in the following diagram and table.
