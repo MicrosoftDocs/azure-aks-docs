@@ -1,5 +1,5 @@
 ---
-title: Configure workload with Azure App Configuration in Azure Kubernetes Service
+title: Build ConfigMap by Azure App Configuration extension to configure workload in Azure Kubernetes Service (AKS)
 description: Learn how to configure the workload in Azure Kubernetes Service (AKS) with Azure App Configuration.
 author: RichardChen820
 ms.author: junbchen
@@ -9,9 +9,9 @@ ms.subservice: aks-developer
 ms.date: 10/10/2024
 ---
 
-# Build ConfigMap from Azure App Configuration to configure workload in Azure Kubernetes Service (AKS)
+# Build ConfigMap by Azure App Configuration extension to configure workload in Azure Kubernetes Service (AKS)
 
-Typically, ConfigMap is usd to configure workloads in AKS. [Azure App Configuration](/azure/azure-app-configuration/overview) provides a service to centrally manage application settings and feature flags. Following this tutorial, you will learn how to source the configuration data from Azure App Configuration into a ConfigMap and use it to configure your workload in AKS.
+Typically, ConfigMap is used to configure workloads in AKS. [Azure App Configuration](/azure/azure-app-configuration/overview) provides a service to centrally manage application settings and feature flags. Following this tutorial, you will learn how to source the configuration data from Azure App Configuration into a ConfigMap and use it to configure your workload in AKS.
 
 ## Prerequisites
 
@@ -30,14 +30,14 @@ Create a service connection between your AKS cluster and your App Configuration 
    
    - **Kubernetes namespace**: Specify the namespace you'd like to create ConfigMap or Secret to.
    - **Service type**: Select `App Configuration`.
-   - Check the checkbox **Enable App Configuration Extension on Kubernetes**: This will install the [Azure App Configuration AKS extension](./azure-app-configuration.md) on your AKS cluster.
+   - Check the checkbox **Enable App Configuration Extension on Kubernetes**: This will enable you use the [Azure App Configuration AKS extension](./azure-app-configuration.md) for this connection, if the Azure App Configuration AKS extension is not installed yet, it will be installed automatically.
    - **Connection name**: Use the connection name provided by Service Connector or enter your own connection name.
    - **Subscription**: Select the subscription of your App Configuration store.
    - **App Configuration**: Select your App Configuration store. If you don't have one, you can create a new one by clicking **Create new**.
 
     ![Screenshot showing create connection](./media/azure-app-configuration/create-connection.png)
 
-1. Select **Next: Authentication**. On the **Authentication** tab, select Workload Identity and choose one User assigned managed identity.
+1. Select **Next: Authentication**. On the **Authentication** tab, select the authentication method you would like to use to access the App Configuration store.
 
 1. Select **Next: Networking** > **Next: Review + create**
 
@@ -73,7 +73,7 @@ Now that you created a connection between your AKS cluster and the App Configura
    - **Kubernetes Workload**: select an existing Kubernetes workload. The snippet includes highlighted sections showing the newly generated configMap will be used as mounted file on your selected workload. Select **Apply** to update the workload.
 
 > [!TIP]
-> This tutorial just show you a basic example of how to use Azure App Configuration to configure your workload in AKS. Azure App Configuration provides many features, e.g. dynamic refresh configuration data, to help you manage your application settings and feature flags. Refer to the [Azure App Configuration Kubernetes Provider reference](/azure/azure-app-configuration/reference-kubernetes-provider) for more information.
+> This tutorial just show you a basic example of how to use Azure App Configuration AKS extension to configure your workload in AKS. Refer to the [Azure App Configuration Kubernetes Provider reference](/azure/azure-app-configuration/reference-kubernetes-provider) to learn more about all supported features.
 >
 
 ## Next Steps
