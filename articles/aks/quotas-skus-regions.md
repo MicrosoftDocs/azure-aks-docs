@@ -31,7 +31,8 @@ The buckets have a fixed size and refill over time at a fixed rate. Each throttl
 | PUT | 20 requests | 1 request / 1 minute | AgentPools |
 | PUT | 20 requests | 1 request / 1 minute | ManagedClusters |
 
-Note: The ManagedClusters and AgentPools bucket are counted separately for the same Managed Cluster.
+> [!NOTE]
+> The ManagedClusters and AgentPools buckets are counted separately for the same AKS cluster.
 
 If a request is throttled, the error code will show up as `Throttled` and will be returned with a `429` HTTP Response Code. Please wait the specified time and try again. Each throttled request will have a `Retry-After` in the HTTP response header with the amount of seconds to wait before trying again.
 
