@@ -34,7 +34,7 @@ The buckets have a fixed size and refill over time at a fixed rate. Each throttl
 > [!NOTE]
 > The ManagedClusters and AgentPools buckets are counted separately for the same AKS cluster.
 
-If a request is throttled, the error code will show up as `Throttled` and will be returned with a `429` HTTP Response Code. Please wait the specified time and try again. Each throttled request will have a `Retry-After` in the HTTP response header with the amount of seconds to wait before trying again.
+If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. 
 
 ## Provisioned infrastructure
 
