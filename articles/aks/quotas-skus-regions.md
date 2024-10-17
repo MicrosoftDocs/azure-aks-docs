@@ -23,7 +23,7 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttling algorithm to limit certain AKS [resource provider](https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types) APIs. This ensures the performance of the service and promotes fair usage of the service for all customers.
 
-The buckets have a fixed size and will refill over time at a fixed rate. Each throttling limit is at the regional level and with the specificed resource in that region.
+The buckets have a fixed size and refill over time at a fixed rate. Each throttling limit is in effect at the regional level for the specified resource in that region.
 
 | API Request | Bucket Size | Refill Rate | Resource |
 |---|---|---|---|
