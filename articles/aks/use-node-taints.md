@@ -242,21 +242,7 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
 
 ## Remove node taints
 
-### Remove a specific node taint
-
-* Remove node taints using the [`az aks nodepool update`][az-aks-nodepool-update] command. The following example command removes the `"sku=gpu:NoSchedule"` node taint from the node pool.
-
-    ```azurecli-interactive
-    az aks nodepool update \
-    --cluster-name $CLUSTER_NAME \
-    --name $NODE_POOL_NAME \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --node-taints "sku=gpu:NoSchedule"
-    ```
-
-### Remove all node taints
-
-* Remove all node taints from a node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command. The following example command removes all node taints from the node pool.
+* Remove node taints from a node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command. The following example command removes all node taints from the node pool.
 
     ```azurecli-interactive
     az aks nodepool update \
