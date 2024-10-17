@@ -4,173 +4,111 @@ description: Learn how to deploy Kubernetes applications from Azure Marketplace 
 author: nickomang
 ms.author: nickoman
 ms.topic: how-to
-ms.date: 08/18/2023
+ms.date: 10/15/2024
+ms.service: azure-kubernetes-service
 ms.subservice: aks-developer
 ms.custom: ignite-fall-2022, references_regions
 ---
 
 # Deploy and manage a Kubernetes application from Azure Marketplace
 
+In this article, you learn how to deploy and manage a Kubernetes application from Azure Marketplace.
+
 [Azure Marketplace][azure-marketplace] is an online store that contains thousands of IT software applications and services built by industry-leading technology companies. In Azure Marketplace, you can find, try, buy, and deploy the software and services that you need to build new solutions and manage your cloud infrastructure. The catalog includes solutions for different industries and technical areas, free trials, and consulting services from Microsoft partners.
-
-Included among these solutions are Kubernetes application-based container offers. These offers contain applications that are meant to run on Kubernetes clusters such as Azure Kubernetes Service (AKS). In this article, you'll learn how to:
-
-- Browse offers in Azure Marketplace.
-- Purchase an application.
-- Deploy the application on your AKS cluster.
-- Monitor usage and billing information.
 
 ## Limitations
 
-This feature is currently supported only in the following regions:
-
-- Australia East, Australia Southeast, Brazil South, Canada Central, Canada East, Central India, Central US, East Asia, East US, East US 2, East US 2 EAUP, France Central, France South, Germany North, Germany West Central, Japan East, Japan West, Jio India West, Korea Central, Korea South, North Central Us, North Europe, Norway East, Norway West, South Africa North, South Central US, South India, Southeast Asia, Sweden Central, Switzerland North, UAE North, UK South, UK West, West Central US, West Europe, West US, West US 2, West US 3
-
-Kubernetes application-based container offers can't be deployed on AKS for Azure Stack HCI or AKS Edge Essentials.
+* This feature is currently supported only in the following regions:
+  * Australia East, Australia Southeast, Brazil South, Canada Central, Canada East, Central India, Central US, East Asia, East US, East US 2, East US 2 EAUP, France Central, France South, Germany North, Germany West Central, Japan East, Japan West, Jio India West, Korea Central, Korea South, North Central Us, North Europe, Norway East, Norway West, South Africa North, South Central US, South India, Southeast Asia, Sweden Central, Switzerland North, UAE North, UK South, UK West, West Central US, West Europe, West US, West US 2, West US 3
+* You can't deploy Kubernetes application-based container offers on AKS for Azure Stack HCI or AKS Edge Essentials.
 
 ## Select and deploy a Kubernetes application
 
 ### From an AKS cluster
 
-1. In the [Azure portal](https://portal.azure.com/), you can deploy a Kubernetes application from an existing cluster by navigating to **Marketplace** or selecting **Extensions + applications**, then selecting **+ Add**.
+1. In the Azure portal, navigate to your AKS cluster resource.
+1. From the service menu, under **Settings**, select **Extensions + applications** > **Add**.
+1. You can search for an offer or publisher directly by name, or you can browse all offers. To view Kubernetes application offers, select **Containers** under **Categories**.
+1. After you decide on an application, select the offer. The following example uses the **TrilioVault for Kubernetes - BYOL** offer.
+1. Select **Plans + Pricing** to ensure the terms are acceptable, and then select **Create**.
 
-   :::image type="content" source="./media/deploy-marketplace/add-inline.png" alt-text="The Azure portal page for the A K S cluster is shown. 'Extensions + Applications' is selected, and '+ Add' is highlighted." lightbox="./media/deploy-marketplace/add.png":::
+   :::image type="content" source="./media/deploy-marketplace/plans-pricing.png" alt-text="Screenshot of the offer purchasing page in the Azure portal, showing plan and pricing information." lightbox="./media/deploy-marketplace/plans-pricing.png":::
 
-1. You can search for an offer or publisher directly by name, or you can browse all offers.
+1. Follow each page in the application creation process, filling in information for your resource group, your cluster, and any configuration options that the application requires. You can decide to deploy on a new AKS cluster or use an existing cluster.
+1. Once you've filled in all the required information, select **Review + create** > **Create**.
 
-   :::image type="content" source="./media/deploy-marketplace/marketplace-view-inline.png" alt-text="Screenshot of Kubernetes offers in the Azure portal." lightbox="./media/deploy-marketplace/marketplace-view.png":::
-
-1. After you decide on an application, select the offer.
-
-1. On the **Plans + Pricing** tab, select an option. Ensure that the terms are acceptable, and then select **Create**.
-
-   :::image type="content" source="./media/deploy-marketplace/plan-pricing.png" alt-text="Screenshot of the offer purchasing page in the Azure portal, showing plan and pricing information.":::
-
-1. Follow each page in the wizard, all the way through **Review + Create**. Fill in information for your resource group, your cluster, and any configuration options that the application requires.
-
-   :::image type="content" source="./media/deploy-marketplace/review-create.png" alt-text="Screenshot of the Azure portal wizard for deploying a new offer, with the selector for creating a cluster or using an existing one.":::
-
-1. When the application is deployed, the portal shows your deployment in progress, along with details.
-
-   :::image type="content" source="./media/deploy-marketplace/deploying.png" alt-text="Screenshot of the Azure portal deployments screen, showing that the Kubernetes offer is currently being deployed.":::
+    It might take a few minutes for the application to deploy. You can monitor the deployment status from the **Extensions + applications** page.
 
 ### Search in the Azure portal
 
-1. In the [Azure portal](https://portal.azure.com/), search for **Marketplace** on the top search bar. In the results, under **Services**, select **Marketplace**.
-
+1. From the Azure portal home page, search for and select **Marketplace**.
 1. You can search for an offer or publisher directly by name, or you can browse all offers. To find Kubernetes application offers, on the left side under **Categories** select **Containers**.
+1. After you decide on an application, select the offer. The following example uses the **TrilioVault for Kubernetes - BYOL** offer.
+1. Select **Plans + Pricing** to ensure the terms are acceptable, and then select **Create**.
 
-   :::image type="content" source="./media/deploy-marketplace/containers-inline.png" alt-text="Screenshot of Azure Marketplace offers in the Azure portal, with the container category on the left side highlighted." lightbox="./media/deploy-marketplace/containers.png":::
-   
-   > [!IMPORTANT]
-   > The **Containers** category includes Kubernetes applications. This walkthrough is specific to Kubernetes applications. 
-1. You'll see several Kubernetes application offers displayed on the page. To view all of the Kubernetes application offers, select **See more**.
+   :::image type="content" source="./media/deploy-marketplace/plans-pricing.png" alt-text="Screenshot of the offer purchasing page in the Azure portal, showing plan and pricing information." lightbox="./media/deploy-marketplace/plans-pricing.png":::
 
-   :::image type="content" source="./media/deploy-marketplace/see-more-inline.png" alt-text="Screenshot of Azure Marketplace K8s offers in the Azure portal. 'See More' is highlighted." lightbox="./media/deploy-marketplace/see-more.png":::
+1. Follow each page in the application creation process, filling in information for your resource group, your cluster, and any configuration options that the application requires. You can decide to deploy on a new AKS cluster or use an existing cluster.
+1. Once you've filled in all the required information, select **Review + create** > **Create**.
 
-1. After you decide on an application, select the offer.
-
-1. On the **Plans + Pricing** tab, select an option. Ensure that the terms are acceptable, and then select **Create**.
-
-   :::image type="content" source="./media/deploy-marketplace/plans-pricing-inline.png" alt-text="Screenshot of the offer purchasing page in the Azure portal, including plan and pricing information." lightbox="./media/deploy-marketplace/plans-pricing-full.png":::
-
-1. Follow each page in the wizard, all the way through **Review + Create**. Fill in information for your resource group, your cluster, and any configuration options that the application requires. You can decide to deploy on a new AKS cluster or use an existing cluster.
-
-   :::image type="content" source="./media/deploy-marketplace/purchase-experience-inline.png" alt-text="Screenshot of the Azure portal wizard for deploying a new offer, with the selector for creating a new cluster or using an existing cluster." lightbox="./media/deploy-marketplace/purchase-experience-full.png":::
-
-   When the application is deployed, the portal shows **Your deployment is complete**, along with details of the deployment.
-
-   :::image type="content" source="./media/deploy-marketplace/deployment-inline.png" alt-text="Screenshot of the Azure portal that shows a successful resource deployment to the cluster." lightbox="./media/deploy-marketplace/deployment-full.png":::
+      It might take a few minutes for the application to deploy. You can monitor the deployment status from the **Extensions + applications** page.
 
 ## Verify the deployment
 
-### [Portal](#tab/azure-portal)
+### [Azure portal](#tab/azure-portal)
 
-Verify the deployment navigating to the cluster you recently installed the extension on, then navigate to "Extensions + Applications", where you'll see the extension status:
-
-   :::image type="content" source="./media/deploy-marketplace/verify-inline.png" lightbox="./media/deploy-marketplace/verify.png" alt-text="The Azure portal page for the A K S cluster is shown. 'Extensions + Applications' is selected, and the deployed extension is listed.":::
+1. Navigate to the cluster where you recently installed the application.
+1. From the service menu, under **Settings**, select **Extensions + applications**.
+1. Verify that the extension is listed and the *Provisioning State* shows **Succeeded**.
 
 ### [Azure CLI](#tab/azure-cli)
 
-Verify the deployment by using the following command to list the extensions that are running on your cluster:
+1. Connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
-```azurecli-interactive
-az k8s-extension list --cluster-name <clusterName> --resource-group <resourceGroupName> --cluster-type managedClusters
-```
+    ```azurecli-interactive
+    az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+    ```
 
+1. List the installed extensions on the cluster using the [`az k8s-extension list`][az-k8s-extension-list] command.
 
+    ```azurecli-interactive
+    az k8s-extension list --cluster-name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --cluster-type managedClusters
+    ```
 
-
+1. Verify that the extension is listed and the *Provisioning State* shows **Succeeded**.
 
 ---
 
 ## Manage the offer lifecycle
 
-For lifecycle management, an Azure Kubernetes offer is represented as a cluster extension for AKS. For more information, see [Cluster extensions for AKS][cluster-extensions].
+For lifecycle management, a Kubernetes offer is represented as a cluster extension for AKS. For more information, see [Cluster extensions for AKS][cluster-extensions]. Purchasing an offer from Azure Marketplace creates a new instance of the extension on your AKS cluster.
 
-Purchasing an offer from Azure Marketplace creates a new instance of the extension on your AKS cluster.
-
-### [Portal](#tab/azure-portal)
-
-First, navigate to an existing cluster, then select "Extensions + applications":
-
-:::image type="content" source="./media/deploy-marketplace/cluster-view.png" alt-text="The Azure portal page for the A K S cluster. 'Extensions + Applications' is highlighted.":::
-
-You'll see your recently installed extensions listed:
-
-:::image type="content" source="./media/deploy-marketplace/verify-inline.png" lightbox="./media/deploy-marketplace/verify.png" alt-text="The Azure portal page for the A K S cluster. 'Extensions + Applications' is selected, and deployed extensions are listed.":::
-
-Select an extension name to navigate to a properties view where you're able to disable auto upgrades, check the provisioning state, delete the extension instance, or modify configuration settings as needed.
-
-:::image type="content" source="./media/deploy-marketplace/properties.png" alt-text="The Azure portal page for extension properties."::: 
-
-To manage settings of your installed extension, you can edit the configuration settings:
-
-![Screenshot of Cluster-extension-config-settings.](media/deploy-marketplace/cluster-extension-config-settings.png)
-
-### [Azure CLI](#tab/azure-cli)
-
-You can view the extension instance from the cluster by using the following command:
-
-```azurecli-interactive
-az k8s-extension show --name <extension-name> --cluster-name <clusterName> --resource-group <resourceGroupName> --cluster-type managedClusters
-```
-
-
-
-
-
----
+1. In the Azure portal, navigate to the cluster where you recently installed the application.
+1. From the service menu, under **Settings**, select **Extensions + applications**.
+1. Select an extension name to navigate to a properties view where you're able to disable autoupgrades, check the provisioning state, delete the extension instance, or modify configuration settings as needed.
 
 ## Monitor billing and usage information
 
-To monitor billing and usage information for the offer that you deployed:
-
-1. In the Azure portal, go to the page for your cluster's resource group.
-
-1. Select **Cost Management** > **Cost analysis**. Under **Product**, you can see a cost breakdown for the plan that you selected.
-
-   :::image type="content" source="./media/deploy-marketplace/billing-inline.png" alt-text="Screenshot of the Azure portal page for a resource group, with billing information broken down by offer plan." lightbox="./media/deploy-marketplace/billing-full.png":::
+1. In the Azure portal, navigate to your cluster's resource group.
+1. From the service menu, under **Cost Management**, select **Cost analysis**. Under **Product**, you can see a cost breakdown for the plan that you selected.
 
 ## Remove an offer
 
 You can delete a purchased plan for an Azure container offer by deleting the extension instance on the cluster.
 
-### [Portal](#tab/azure-portal)
+### [Azure portal](#tab/azure-portal)
 
-Select an application, then select the uninstall button to remove the extension from your cluster:
-
-:::image type="content" source="./media/deploy-marketplace/uninstall-inline.png" alt-text="The Azure portal page for the A K S cluster is shown. The deployed extension is listed with the 'uninstall' button highlighted." lightbox="./media/deploy-marketplace/uninstall.png":::
+1. Navigate to the cluster where you recently installed the application.
+1. From the service menu, under **Settings**, select **Extensions + applications**.
+1. Select an application, then select **Uninstall**.
 
 ### [Azure CLI](#tab/azure-cli)
 
-```azurecli-interactive
-az k8s-extension delete --name <extension-name> --cluster-name <clusterName> --resource-group <resourceGroupName> --cluster-type managedClusters
-```
+* Uninstall the extension on your AKS cluster using the [`az k8s-extension delete`][az-k8s-extension-delete] command.
 
-
-
-
+    ```azurecli-interactive
+    az k8s-extension delete --name $EXTENSION_NAME --cluster-name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --cluster-type managedClusters
+    ```
 
 ---
 
@@ -180,19 +118,15 @@ If you experience issues, see the [troubleshooting checklist for failed deployme
 
 ## Next steps
 
-- Learn more about [exploring and analyzing costs][billing].
-- Learn more about [deploying a Kubernetes application programmatically using Azure CLI](/azure/aks/deploy-application-az-cli)
-
-- Learn more about [deploying a Kubernetes application through an ARM template](/azure/aks/deploy-application-template)
+* Learn more about [exploring and analyzing costs][billing].
+* Learn more about [deploying a Kubernetes application programmatically using Azure CLI](/azure/aks/deploy-application-az-cli).
+* Learn more about [deploying a Kubernetes application using an ARM template](/azure/aks/deploy-application-template).
 
 <!-- LINKS -->
 [azure-marketplace]: /marketplace/azure-marketplace-overview
-
 [cluster-extensions]: ./cluster-extensions.md
-
 [billing]: /azure/cost-management-billing/costs/quick-acm-cost-analysis
-
 [marketplace-troubleshoot]: /troubleshoot/azure/azure-kubernetes/troubleshoot-failed-kubernetes-deployment-offer
-
-
-
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-k8s-extension-list]: /cli/azure/k8s-extension#az-k8s-extension-list
+[az-k8s-extension-delete]: /cli/azure/k8s-extension#az-k8s-extension-delete

@@ -4,7 +4,7 @@ description: Learn how to use Key Management Service (KMS) etcd encryption with 
 ms.topic: article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 07/19/2024
+ms.date: 09/26/2024
 ---
 
 # Add Key Management Service etcd encryption to an Azure Kubernetes Service cluster
@@ -24,10 +24,13 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 * Azure CLI version 2.39.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 > [!WARNING]
-> KMS supports Konnectivity or [API Server VNet Integration (preview)][api-server-vnet-integration] for public key vault.
 >
-> KMS only supports [API Server VNet Integration (preview)][api-server-vnet-integration] for private key vault.
-> 
+> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that have not previously used this configuration. For subscriptions that are currently using this configuration or have used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
+>
+> KMS supports Konnectivity or [API Server VNet Integration (preview)][api-server-vnet-integration] for public key vaults.
+>
+> KMS supports [API Server VNet Integration (preview)][api-server-vnet-integration] for both private and public key vaults.
+>
 > You can use `kubectl get po -n kube-system` to verify the results and show that a konnectivity-agent pod is running. If a pod is running, the AKS cluster is using Konnectivity. When you use API Server VNet Integration, you can run the `az aks show -g -n` command to verify that the `enableVnetIntegration` setting is set to `true`.
 
 ## Limitations

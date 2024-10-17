@@ -42,7 +42,17 @@ The target node image versions are automatically selected for you based on your 
 
 You should choose `Latest` to use fresher image versions and minimize security risks, and choose `Consistent` to improve reliability by using and verifying those images in clusters in earlier stages before using them in later clusters.
 
-### Update run states
+## Planned maintenance
+
+Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
+
+Within an update run (for both [One by one](./update-orchestration.md#update-all-clusters-one-by-one) or [Stages](./update-orchestration.md#assign-clusters-to-update-groups-and-stages) type update runs), update run prioritizes upgrading the clusters in the following order: 
+  1. Member with an open ongoing maintenance window.
+  2. Member with maintenance window opening in the next four hours.
+  3. Member with no maintenance window.
+  4. Member with a closed maintenance window.
+
+## Update run states
 
 An update run can be in one of the following states:
 
@@ -80,17 +90,6 @@ An update run can be in one of the following states:
 
 > [!NOTE]
 > You can re-run an update run at any time in order to re-apply upgrades that may have been skipped or failed.
-
-## Planned maintenance
-
-Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
-
-Within an update run (for both [One by one](./update-orchestration.md#update-all-clusters-one-by-one) or [Stages](./update-orchestration.md#update-clusters-in-a-specific-order) type update runs), update run prioritizes upgrading the clusters in the following order: 
-
-  1. Member with an open ongoing maintenance window.
-  1. Member with maintenance window opening in the next four hours.
-  1. Member with no maintenance window.
-  1. Member with a closed maintenance window.
 
 ## Understanding auto-upgrade profiles (preview)
 

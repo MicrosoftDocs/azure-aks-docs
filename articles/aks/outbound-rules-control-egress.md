@@ -122,6 +122,7 @@ The following FQDN / application rules aren't required, but are recommended for 
 | Destination FQDN                                                               | Port          | Use      |
 |--------------------------------------------------------------------------------|---------------|----------|
 | **`security.ubuntu.com`, `azure.archive.ubuntu.com`, `changelogs.ubuntu.com`** | **`HTTP:80`** | This address lets the Linux cluster nodes download the required security patches and updates. |
+| **`snapshot.ubuntu.com`** | **`HTTPS:443`** | This address lets the Linux cluster nodes download the required security patches and updates from ubuntu snapshot service. |
 
 If you choose to block/not allow these FQDNs, the nodes will only receive OS updates when you do a [node image upgrade](node-image-upgrade.md) or [cluster upgrade](upgrade-cluster.md). Keep in mind that node image upgrades also come with updated packages including security fixes.
 
@@ -161,6 +162,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
 | **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server.|
+| **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server in Azure Government.|
 
 ### Azure Monitor for containers
 

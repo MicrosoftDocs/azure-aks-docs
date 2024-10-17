@@ -604,6 +604,8 @@
               href: use-node-public-ips.md
             - name: Restrict and control cluster egress traffic 
               href: limit-egress-traffic.md
+            - name: Configure Static Egress Gateway
+              href: configure-static-egress-gateway.md
         - name: Ingress
           items:
             - name: Use application routing add-on 
@@ -734,16 +736,8 @@
           href: events.md
         - name: Monitor kube-audit events
           href: monitor-apiserver.md
-        - name: Monitor control plane metrics
-          href: monitor-control-plane-metrics.md
-        - name: Monitor reference
-          href: monitor-aks-reference.md
-        - name: Control plane metrics reference
-          href: control-plane-metrics-default-list.md
         - name: View the kubelet logs
           href: kubelet-logs.md
-        - name: View container data in real time
-          href: container-insights-live-data.md
         - name: Cost analysis
           items:
           - name: Enable cost analysis on your cluster
@@ -824,10 +818,14 @@
           items:
             - name: About Kubernetes Event-driven Autoscaler (KEDA)
               href: keda-about.md
-            - name: Use ARM template
-              href: keda-deploy-add-on-arm.md
-            - name: Use Azure CLI
-              href: keda-deploy-add-on-cli.md
+            - name: Enable KEDA add-on for your cluster
+              items:
+                - name: Use an ARM template
+                  href: keda-deploy-add-on-arm.md
+                - name: Use the Azure CLI
+                  href: keda-deploy-add-on-cli.md
+                - name: Enable on an existing cluster using the Azure portal
+                  href: enable-keda-existing-cluster.md
             - name: Securely scale your applications using the Kubernetes Event-driven Autoscaling (KEDA) add-on and workload identity
               href: keda-workload-identity.md
             - name: Kubernetes Event-driven Autoscaler (KEDA) integrations
@@ -1017,6 +1015,8 @@
     - name: Azure Policy built-ins
       displayName: samples, policies, definitions
       href: ./policy-reference.md
+    - name: AKS monitoring data reference
+      href: monitor-aks-reference.md
 - name: Resources
   items:
     - name: Build your skills with Microsoft Learn training
