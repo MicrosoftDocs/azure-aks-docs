@@ -48,7 +48,7 @@ You have two options to mitigate the issue: you can [remove usage of deprecated 
 
     :::image type="content" source="./media/upgrade-cluster/applens-api-detection-full-v2.png" alt-text="A screenshot of the Azure portal showing the 'Selected Kubernetes API deprecations' section.":::
 
-3. Wait 12 hours from the time the last deprecated API usage was seen. Check the verb in the deprecated API usage to know if it's a [watch][k8s-api]. If it's a watch, you can wait for the usage to drop to zero. (You can also check past API usage by enabling [Container insights][container-insights] and exploring kube audit logs.)
+3. Wait 12 hours from the time the last deprecated API usage was seen. Read-Only verbs are excluded from the deprecated api usage namely [Get/List/Watch][k8s-api].(You can also check past API usage by enabling [Container insights][container-insights] and exploring kube audit logs.)
 4. Retry your cluster upgrade.
 
 ### Bypass validation to ignore API changes
