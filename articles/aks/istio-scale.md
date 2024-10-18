@@ -89,6 +89,10 @@ The memory and CPU usage for both the client and server proxy for 16 client conn
 The sidecar Envoy proxy collects raw telemetry data after responding to a client, which doesn't directly affect the request's total processing time. However, this process delays the start of handling the next request, contributing to queue wait times and influencing average and tail latencies. Depending on the traffic pattern, the actual tail latency varies. 
 
 The following results evaluate the impact of adding sidecar proxies to the data path, showcasing the P90 and P99 latency.
+- Sidecar traffic path: client --> client-sidecar --> server-sidecar --> server
+- Baseline traffic path: client --> server
+
+A comparison of data plane latency performance across Istio add-on and AKS versions can be found [here](./istio-latency.md).
 
 | Azure CNI Overlay |Azure CNI Overlay with Cilium |
 |:-------------------------:|:-------------------------:|
