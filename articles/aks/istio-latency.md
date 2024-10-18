@@ -13,7 +13,7 @@ This document elaborates on the [data plane latency performance](./istio-scale.m
 - Traffic going through the sidecar: client --> client-sidecar --> server-sidecar --> server
 - Traffic directly going to the pod: client --> server
 
-## Test Specifications
+## Test specifications
 - Node SKU: Standard D16 v5 (16 vCPU, 64-GB memory)
 - Two proxy workers
 - 1-KB payload

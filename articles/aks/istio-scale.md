@@ -92,7 +92,7 @@ The following results evaluate the impact of adding sidecar proxies to the data 
 - Sidecar traffic path: client --> client-sidecar --> server-sidecar --> server
 - Baseline traffic path: client --> server
 
-A comparison of data plane latency performance across Istio add-on and AKS versions can be found [here](./istio-latency.md)
+A comparison of data plane latency performance across Istio add-on and AKS versions can be found [here](./istio-latency.md).
 
 | Azure CNI Overlay |Azure CNI Overlay with Cilium |
 |:-------------------------:|:-------------------------:|
