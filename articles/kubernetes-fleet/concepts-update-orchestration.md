@@ -4,7 +4,7 @@ description: This article describes the concept of update orchestration across m
 ms.date: 03/04/2024
 author: sjwaight
 ms.author: simonwaight
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
 ms.topic: conceptual

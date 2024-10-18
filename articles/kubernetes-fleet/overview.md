@@ -1,7 +1,7 @@
 ---
 title: "Overview of Azure Kubernetes Fleet Manager"
 services: kubernetes-fleet
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - ignite-2023
 ms.date: 11/06/2023

@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.date: 11/06/2023
 author: sjwaight
 ms.author: simonwaight
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - devx-track-azurecli
   - ignite-2023
