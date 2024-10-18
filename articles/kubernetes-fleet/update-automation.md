@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.date: 09/16/2024
 author: sjwaight
 ms.author: simonwaight
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ---
 
 # Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager (preview)
