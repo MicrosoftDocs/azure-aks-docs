@@ -4,7 +4,7 @@ description: This article provides an overview on how Azure Kubernetes Fleet Man
 ms.date: 10/03/2024
 author: yoobinshin
 ms.author: yoobinshin
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ---
 
