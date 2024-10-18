@@ -4,7 +4,7 @@ description: This article covers the frequently asked questions for Azure Kubern
 ms.date: 10/03/2022
 author: shashankbarsin
 ms.author: shasb
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ---
 
