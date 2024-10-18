@@ -4,7 +4,7 @@ description: In this quickstart, you learn how to propagate resources from an Az
 ms.date: 03/28/2024
 author: schaffererin
 ms.author: schaffererin
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
 ms.topic: quickstart

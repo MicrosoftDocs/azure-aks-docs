@@ -5,7 +5,7 @@ ms.topic: quickstart
 ms.date: 04/01/2024
 author: schaffererin
 ms.author: schaffererin
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ---
 
 # Quickstart: Access the Kubernetes API of the Fleet resource

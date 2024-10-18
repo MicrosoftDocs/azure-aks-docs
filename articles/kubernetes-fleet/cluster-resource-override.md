@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.date: 05/10/2024
 author: schaffererin
 ms.author: schaffererin
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
 ---
