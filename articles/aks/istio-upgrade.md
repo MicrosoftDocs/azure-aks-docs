@@ -41,6 +41,24 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
     A canary upgrade means the 1.20 control plane is deployed alongside the 1.21 control plane. They continue to coexist until you either complete or roll back the upgrade.
 
+1. Optionally, revision tags may be used to roll over the dataplane to the new revision without needing to manually relabelling each namespace. To use revision tags:
+
+    1. [Install istioctl CLI][install-istioctl]
+    1. Create a revision tag for each of the two revisions:
+       ```bash
+       istioctl tag set prod-stable --revision asm-1-21 --istioNamespace aks-istio-system
+       istioctl tag set prod-canary --revision asm-1-22 --istioNamespace aks-istio-system
+       ```
+
+    1. Label application namespaces to map to revision tags:
+       ```bash
+       # label default namespace to map to asm-1-21
+       kubectl label ns default istio.io/rev=prod-stable --overwrite
+       ```
+       You may also label namespaces with `istio.io/rev=prod-canary` for the newer revision, however this will not change the workloads in those namespaces until they are restarted.
+
+       If a new application is created in a namespace after it is labelled, a sidecar will be injected corresponding to the revision tag on that namespace.
+
 1. Verify control plane pods corresponding to both `asm-1-20` and `asm-1-21` exist:
 
     * Verify `istiod` pods:
@@ -83,6 +101,23 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
 1. Relabel the namespace so that any new pods get the Istio sidecar associated with the new revision and its control plane:
 
+    1. If using revision tags, overwrite the `prod-stable` tag itself to change its mapping:
+    ```bash
+    istioctl tag set prod-stable --revision asm-1-22 --istioNamespace aks-istio-system --overwrite 
+    ```
+    
+    On inpsection, both tags should point to the newly installed revision:
+    ```bash
+    istioctl tag list
+    TAG           REVISION   NAMESPACES
+    prod-canary   asm-1-23   default
+    prod-stable   asm-1-23   ...
+    ```
+
+    In this case, you do not need to relabel each namespace individually.
+
+
+    1. If not using revision tags, dataplane namespaces must be relabelled to point to the new revision:
     ```bash
     kubectl label namespace default istio.io/rev=asm-1-21 --overwrite
     ```
@@ -106,7 +141,12 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
     * **Rollback the canary upgrade**: In case you observe any issues with the health of your workloads, you can roll back to the previous revision of Istio:
 
       * Relabel the namespace to the previous revision:
+          If using revision tags:
+          ```bash
+          istioctl tag set prod-stable --revision asm-1-21 --istioNamespace aks-istio-system --overwrite
+          ```
 
+          Or, if not using revision tags:
           ```bash
           kubectl label namespace default istio.io/rev=asm-1-20 --overwrite
           ```
@@ -122,6 +162,11 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
           ```azurecli-interactive
           az aks mesh upgrade rollback --resource-group $RESOURCE_GROUP --name $CLUSTER
           ```
+
+    The `prod-canary` revision tag can be removed:
+    ```bash
+    istioctl tag remove prod-canary --istioNamespace aks-istio-system 
+    ```
 
 1. If [mesh configuration][meshconfig] was previously set up for the revisions, you can now delete the ConfigMap for the revision that was removed from the cluster during complete/rollback.
 
@@ -201,6 +246,8 @@ If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or 
 <!-- LINKS - External -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases
 [istio-canary-upstream]: https://istio.io/latest/docs/setup/upgrade/canary/
+[istio-revision-tags]: https://istio.io/latest/docs/setup/upgrade/canary/#stable-revision-labels
+[install-istioctl]: https://istio.io/latest/docs/ops/diagnostic-tools/istioctl/
 
 <!-- LINKS - Internal -->
 [istio-support]: ./istio-support-policy.md#versioning-and-support-policy
