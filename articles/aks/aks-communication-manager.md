@@ -15,9 +15,9 @@ The AKS Communication Manager facilitates notifications for all your AKS mainten
 
 ## Prerequisites
 
-1. Configure your cluster for either [Auto upgrade channel][aks-auto-upgrade] or [Node Auto upgrade channel][aks-node-auto-upgrade].
+1. Configure your cluster for either [Auto upgrade channel](aks-auto-upgrade) or [Node Auto upgrade channel](aks-node-auto-upgrade).
 
-2. Create [Planned maintenance window][planned-maintenance] as mentioned here for your auto upgrade above. 
+2. Create [Planned maintenance window](planned-maintenance)as mentioned here for your auto upgrade above. 
 
 ## How to set up communication manager
 
@@ -124,7 +124,7 @@ Check Azure Resource Graph database for the scheduled notification record. Each 
 
 :::image type="content" source="./media/auto-upgrade-cluster/ARG.jpeg" alt-text="How to look up ARG":::
 
-<!-- INTERNAL LINKS -->
-[aks-auto-upgrade]:./auto-upgrade-cluster.md
-[aks-node-auto-upgrade]:./auto-upgrade-node-os-image.md
-[planned-maintenance]:./planned-maintenance.md
+<!-- LINKS - internal -->
+[aks-auto-upgrade]: auto-upgrade-cluster.md
+[aks-node-auto-upgrade]: auto-upgrade-node-os-image.md
+[planned-maintenance]: planned-maintenance.md
