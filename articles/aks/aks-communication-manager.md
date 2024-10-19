@@ -17,7 +17,7 @@ The AKS Communication Manager facilitates notifications for all your AKS mainten
 
 1. Configure your cluster for either [Auto upgrade channel](aks-auto-upgrade) or [Node Auto upgrade channel](aks-node-auto-upgrade).
 
-2. Create [Planned maintenance window](planned-maintenance)as mentioned here for your auto upgrade above. 
+2. Create [Planned maintenance window](planned-maintenance) as mentioned here for your auto upgrade above. 
 
 ## How to set up communication manager
 
@@ -25,7 +25,7 @@ The AKS Communication Manager facilitates notifications for all your AKS mainten
 
 Create an Azure "Logic App" resource. It will be used to send auto upgrade event notices to your email.
 
-    :::image type="content" source="./media/auto-upgrade-cluster/Logic_apps.jpg" alt-text="The screenshot of the create blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
+ :::image type="content" source="./media/auto-upgrade-cluster/Logic_apps.jpg" alt-text="The screenshot of the create blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
 
 2. Open the created Logic App and click "Logic app designer" on the left, then click "Add a trigger" button.
 
@@ -81,16 +81,16 @@ Create an Azure "Logic App" resource. It will be used to send auto upgrade event
     "EventEnqueuedUtcTime": "2024-04-16T22:17:13.1700000Z"
   }
 ]
-    ```
-6. Click the "+" button and "Add an action"
+ ```
+ 6. Click the "+" button and "Add an action"
 
    :::image type="content" source="./media/auto-upgrade-cluster/Add_an_Action.jpeg" alt-text="The screenshot shows how to add an action.":::
 
-7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
+ 7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Add_Action2.jpeg" alt-text="The screenshot shows how to add an action.":::
 
-8. Customize by providing recipient email. Click the Subject and Body fields, and there is a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestrion of the email content.
+ 8. Customize by providing recipient email. Click the Subject and Body fields, and there is a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestrion of the email content.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Customize_email.jpeg" alt-text="The screenshot shows how to customize email.":::
 
