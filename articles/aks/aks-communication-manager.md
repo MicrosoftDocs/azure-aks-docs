@@ -124,7 +124,7 @@ Check Azure Resource Graph database for the scheduled notification record. Each 
 
 :::image type="content" source="./media/auto-upgrade-cluster/ARG.jpeg" alt-text="How to look up ARG":::
 
-<!---LINKS--->
-[aks-auto-upgrade]: auto-upgrade-cluster.md
-[aks-node-auto-upgrade]:auto-upgrade-node-os-upgrade.md
-[planned-maintenance]: planned-maintenance.md
+<!-- INTERNAL LINKS -->
+[aks-auto-upgrade]:./auto-upgrade-cluster.md
+[aks-node-auto-upgrade]:./auto-upgrade-node-os-image.md
+[planned-maintenance]:./planned-maintenance.md
