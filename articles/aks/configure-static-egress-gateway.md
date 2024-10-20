@@ -6,7 +6,7 @@ author: asudbring
 ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 10/11/2024
+ms.date: 10/18/2024
 ---
 
 # Configure Static Egress Gateway in Azure Kubernetes Service (AKS)
@@ -80,11 +80,17 @@ az aks create -n <cluster-name> -g <resource-group> --enable-static-egress-gatew
 After enabling the feature, create a dedicated gateway node pool. This node pool handles the egress traffic through the specified public IP prefix. The `--gateway-prefix-size` is the size of the public IP prefix to be applied to the gateway node pool nodes. The allowed range is `28`-`31`. 
 
 ```azurecli-interactive
-az aks nodepool create --cluster-name <cluster-name> -n <nodepool-name> --mode gateway --node-count <number-of-nodes> --gateway-prefix-size <prefix-size>
+az aks nodepool add --cluster-name <cluster-name> \
+    --name <nodepool-name> \
+    --resource-group <resource-group> \
+    --mode gateway \
+    --node-count <number-of-nodes> \
+    --gateway-prefix-size <prefix-size>
 ```
 
 > [!NOTE] 
-> The number of nodes must fit within the capacity allowed by the selected prefix size. For example, a /30 prefix supports up to 4 nodes, and at least 2 nodes are required for high availability. Since you can’t adjust the node count dynamically, plan your nodes according to the fixed limit set by the prefix size.
+> - The number of nodes must fit within the capacity allowed by the selected prefix size. For example, a /30 prefix supports up to 4 nodes, and at least 2 nodes are required for high availability. Since you can’t adjust the node count dynamically, plan your nodes according to the fixed limit set by the prefix size.
+> - You can define the SKU of the VM to use in your gateway node pool with the `--vm-size` parameter. You should understand your specific needs and plan accordingly to ensure the right performance and cost balance.
 
 ## Scale the Gateway Node pool (Optional)
 
@@ -100,7 +106,7 @@ Define the gateway configuration by creating a `StaticGatewayConfiguration` cust
 
 ```yaml
 apiVersion: egressgateway.kubernetes.azure.com/v1alpha1
-kind: staticgatewayconfiguration.sgw.kubernetes.azure.com
+kind: StaticGatewayConfiguration
 metadata:
   name: <gateway-config-name>
   namespace: <namespace>
