@@ -62,7 +62,7 @@ You can also install external scalers to autoscale on other Azure services:
 
 <!-- LINKS - external -->
 [keda-scalers]: https://keda.sh/docs/latest/scalers/
-[keda-event-docs]: https://keda.sh/docs/2.14/operate/events/
+[keda-event-docs]: https://keda.sh/docs/latest/reference/events/
 [keda-sample]: https://github.com/kedacore/sample-dotnet-worker-servicebus-queue
 [prometheus-scaler]: https://keda.sh/docs/2.11/scalers/prometheus/
 [keda]: https://keda.sh/docs/2.12/
