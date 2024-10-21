@@ -21,7 +21,7 @@ Istio add-on allows upgrading the minor revision using [canary upgrade process][
 
 If the cluster is currently using a supported minor revision of Istio, upgrades are only allowed one minor revision at a time. If the cluster is using an unsupported revision of Istio, you must upgrade to the lowest supported minor revision of Istio for that Kubernetes version. After that, upgrades can again be done one minor revision at a time.
 
-The following example illustrates how to upgrade from revision `asm-1-20` to `asm-1-21`. The steps are the same for all minor upgrades.
+The following example illustrates how to upgrade from revision `asm-1-20` to `asm-1-21` with all workloads in the `default` namespace. The steps are the same for all minor upgrades and may be used for any number of data plane namespaces.
 
 1. Use the [az aks mesh get-upgrades](/cli/azure/aks/mesh#az-aks-mesh-get-upgrades) command to check which revisions are available for the cluster as upgrade targets:
 
@@ -41,12 +41,21 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
     A canary upgrade means the 1.20 control plane is deployed alongside the 1.21 control plane. They continue to coexist until you either complete or roll back the upgrade.
 
-1. Optionally, revision tags may be used to roll over the dataplane to the new revision without needing to manually relabelling each namespace. To use revision tags:
+1. Optionally, revision tags may be used to roll over the data plane to the new revision without needing to manually relabel each namespace. Manually relabeling namespaces when moving them to a new revision can be tedious and error-prone. [Revision tags][istio-revision-tags] solve this problem by serving as stable identifiers that point to revisions. 
+    
+   Rather than relabeling each namespace, a mesh operator can simply change the tag to point to a new revision. All namespaces labeled with that tag will be updated at the same time. However, you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.
+
+   To use revision tags during an upgrade:
 
     1. [Install istioctl CLI][install-istioctl]
-    1. Create a revision tag for each of the two revisions:
+    
+    1. Create a revision tag for the initial revision. In this example, we name it `prod-stable`:
        ```bash
        istioctl tag set prod-stable --revision asm-1-21 --istioNamespace aks-istio-system
+       ```
+
+    1. Create a revision tag for the revision installed during the upgrade. In this example, we name it `prod-canary`:
+       ```bash
        istioctl tag set prod-canary --revision asm-1-22 --istioNamespace aks-istio-system
        ```
 
@@ -55,13 +64,13 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
        # label default namespace to map to asm-1-21
        kubectl label ns default istio.io/rev=prod-stable --overwrite
        ```
-       You may also label namespaces with `istio.io/rev=prod-canary` for the newer revision, however this will not change the workloads in those namespaces until they are restarted.
+       You may also label namespaces with `istio.io/rev=prod-canary` for the newer revision. However, the workloads in those namespaces won't be updated to a new sidecar until they are restarted.
 
-       If a new application is created in a namespace after it is labelled, a sidecar will be injected corresponding to the revision tag on that namespace.
+       If a new application is created in a namespace after it is labeled, a sidecar will be injected corresponding to the revision tag on that namespace.
 
 1. Verify control plane pods corresponding to both `asm-1-20` and `asm-1-21` exist:
 
-    * Verify `istiod` pods:
+    1. Verify `istiod` pods:
 
         ```bash
         kubectl get pods -n aks-istio-system
@@ -77,7 +86,7 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
         istiod-asm-1-21-f85f46bf5-8p9qx             1/1     Running   0          51m
         ```
 
-    * If ingress is enabled, verify ingress pods:
+    1. If ingress is enabled, verify ingress pods:
 
         ```bash
         kubectl get pods -n aks-istio-ingress
@@ -99,28 +108,31 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
         Observe that ingress gateway pods of both revisions are deployed side-by-side. However, the service and its IP remain immutable.
 
-1. Relabel the namespace so that any new pods get the Istio sidecar associated with the new revision and its control plane:
+1. Relabel the namespace so that any new pods are mapped to the Istio sidecar associated with the new revision and its control plane:
 
     1. If using revision tags, overwrite the `prod-stable` tag itself to change its mapping:
-    ```bash
-    istioctl tag set prod-stable --revision asm-1-22 --istioNamespace aks-istio-system --overwrite 
-    ```
+       ```bash
+       istioctl tag set prod-stable --revision asm-1-22 --istioNamespace aks-istio-system --overwrite 
+       ```
     
-    On inpsection, both tags should point to the newly installed revision:
-    ```bash
-    istioctl tag list
-    TAG           REVISION   NAMESPACES
-    prod-canary   asm-1-23   default
-    prod-stable   asm-1-23   ...
-    ```
+       Verify the tag-to-revision mappings:
+       ```bash
+       istioctl tag list
+       ```
+       Both tags should point to the newly installed revision:
+       ```
+       TAG           REVISION   NAMESPACES
+       prod-canary   asm-1-22   default
+       prod-stable   asm-1-22   ...
+       ```
 
-    In this case, you do not need to relabel each namespace individually.
+       In this case, you don't need to relabel each namespace individually.
 
 
-    1. If not using revision tags, dataplane namespaces must be relabelled to point to the new revision:
-    ```bash
-    kubectl label namespace default istio.io/rev=asm-1-21 --overwrite
-    ```
+    1. If not using revision tags, data plane namespaces must be relabeled to point to the new revision:
+       ```bash
+       kubectl label namespace default istio.io/rev=asm-1-22 --overwrite
+       ```
 
     Relabeling doesn't affect your workloads until they're restarted.
 
@@ -132,13 +144,13 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
 
 1. Check your monitoring tools and dashboards to determine whether your workloads are all running in a healthy state after the restart. Based on the outcome, you have two options:
 
-    * **Complete the canary upgrade**: If you're satisfied that the workloads are all running in a healthy state as expected, you can complete the canary upgrade. Completion of the upgrade removes the previous revision's control plane and leaves behind the new revision's control plane on the cluster. Run the following command to complete the canary upgrade:
+    1. **Complete the canary upgrade**: If you're satisfied that the workloads are all running in a healthy state as expected, you can complete the canary upgrade. Completion of the upgrade removes the previous revision's control plane and leaves behind the new revision's control plane on the cluster. Run the following command to complete the canary upgrade:
 
       ```azurecli-interactive
       az aks mesh upgrade complete --resource-group $RESOURCE_GROUP --name $CLUSTER
       ```
 
-    * **Rollback the canary upgrade**: In case you observe any issues with the health of your workloads, you can roll back to the previous revision of Istio:
+    1. **Rollback the canary upgrade**: In case you observe any issues with the health of your workloads, you can roll back to the previous revision of Istio:
 
       * Relabel the namespace to the previous revision:
           If using revision tags:
@@ -169,9 +181,6 @@ The following example illustrates how to upgrade from revision `asm-1-20` to `as
     ```
 
 1. If [mesh configuration][meshconfig] was previously set up for the revisions, you can now delete the ConfigMap for the revision that was removed from the cluster during complete/rollback.
-
-> [!NOTE]
-> Manually relabeling namespaces when moving them to a new revision can be tedious and error-prone. [Revision tags](https://istio.io/latest/docs/setup/upgrade/canary/#stable-revision-labels) solve this problem. Revision tags are stable identifiers that point to revisions and can be used to avoid relabeling namespaces. Rather than relabeling the namespace, a mesh operator can simply change the tag to point to a new revision. All namespaces labeled with that tag will be updated at the same time. However, note that you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.
 
 ### Minor revision upgrades with the ingress gateway
 
