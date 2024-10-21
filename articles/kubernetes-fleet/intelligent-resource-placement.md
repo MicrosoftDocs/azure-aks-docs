@@ -1,5 +1,5 @@
 ---
-title: "Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager (Preview)"
+title: "Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager"
 description: Learn how to use Kubernetes Fleet to intelligently place your workloads on target member clusters based on cost and resource availability.
 ms.topic: how-to
 ms.date: 05/13/2024
@@ -10,7 +10,7 @@ ms.custom:
   - build-2024
 ---
 
-# Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager (Preview)
+# Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager
 
 Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for placing the workloads based on heuristics such as cost of compute in the clusters or available resources such as memory and CPU. It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how Azure Kubernetes Fleet Manager (Fleet) allows you to address these scenarios using the intelligent Kubernetes resource placement feature.
 
@@ -21,8 +21,6 @@ Fleet provides resource placement capability that can make scheduling decisions 
 - Cost of compute in target member clusters
 - Resource (CPU/Memory) availability in target member clusters
 
-[!INCLUDE [preview-callout](./includes/preview/preview-callout.md)]
-
 This article discusses creating cluster resource placements, which can be done via Azure CLI or the Azure portal. For more, see [Propagate resources from a Fleet hub cluster to member clusters](./quickstart-resource-propagation.md).
 
 ## Prerequisites
@@ -31,7 +29,6 @@ This article discusses creating cluster resource placements, which can be done v
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 * You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI](quickstart-create-fleet-and-members.md).
 * You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Kubernetes API of the Fleet resource with Azure Kubernetes Fleet Manager](./quickstart-access-fleet-kubernetes-api.md).
-
 
 ## Filter clusters at the time of scheduling based on member cluster properties
 

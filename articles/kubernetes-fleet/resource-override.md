@@ -3,18 +3,16 @@ title: "Customize namespace scoped resources in Azure Kubernetes Fleet Manager w
 description: This article provides an overview of how to use the Fleet ResourceOverride API to override namespace scoped resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 05/10/2024
-author: schaffererin
-ms.author: schaffererin
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
 ---
 
-# Customize namespace scoped resources in Azure Kubernetes Fleet Manager with resource overrides (preview)
+# Customize namespace scoped resources in Azure Kubernetes Fleet Manager with resource overrides
 
 This article provides an overview of how to use the Fleet `ResourceOverride` API to override namespace scoped resources in Azure Kubernetes Fleet Manager.
-
-[!INCLUDE [preview features callout](./includes/preview/preview-callout.md)]
 
 ## Resource override overview
 

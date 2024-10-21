@@ -2,8 +2,8 @@
 title: "Kubernetes resource propagation from hub cluster to member clusters"
 description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
 ms.date: 03/04/2024
-author: shashankbarsin
-ms.author: shasb
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
@@ -26,8 +26,6 @@ Application developers often need to deploy Kubernetes resources into multiple c
 * Deploying a batch compute application into clusters with inexpensive spot node pools available.
 
 It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Fleet, you can create Kubernetes resources in the hub cluster and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`. Fleet supports these custom resources based on an [open-source cloud-native multi-cluster solution][fleet-github]. For more information, see the [upstream Fleet documentation][fleet-github].
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ## Resource propagation workflow
 
