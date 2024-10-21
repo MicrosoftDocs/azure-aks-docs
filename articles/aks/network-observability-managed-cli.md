@@ -110,7 +110,7 @@ Wait for the feature to say **Registered** before preceding with the article.
 
 ```output
 {
-  "id": "/subscriptions/23250d6d-28f0-41dd-9776-61fc80805b6e/providers/Microsoft.Features/providers/Microsoft.ContainerService/features/NetworkObservabilityPreview",
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Features/providers/Microsoft.ContainerService/features/NetworkObservabilityPreview",
   "name": "Microsoft.ContainerService/NetworkObservabilityPreview",
   "properties": {
     "state": "Registering"
