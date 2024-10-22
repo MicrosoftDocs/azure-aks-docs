@@ -51,7 +51,7 @@ For example, your pipeline can automate:
 
 * Model tuning/retraining at regular time intervals or when a certain amount of new data is collected in your application.
 * Detection of performance degradation to kickstart fine-tuning or retraining on a different subset of data.
-* CVE scanning on base container images pulled from external container registries to ensure safe security practices.
+* Common vulnerability and exposure (CVE) scanning on base container images pulled from external container registries to ensure safe security practices.
 
 #### Continuous integration (CI)
 

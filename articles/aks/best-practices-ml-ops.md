@@ -52,7 +52,7 @@ Scalability and resource management are critical for ensuring that your AI pipel
 
 Security and compliance are critical for protecting your data and ensuring that your AI pipeline meets regulatory requirements. By implementing security and compliance best practices, you can:
 
-* Integrate CVE scanning to detect common vulnerabilities on open-source model container images.
+* Integrate common vulnerability and exposure (CVE) scanning to detect common vulnerabilities on open-source model container images.
   * Use [Microsoft Defender for Containers][defender-for-containers] for model container images stored in your Azure Container Registry.
 * Maintain an audit trail of the ingested data, model changes, and metrics to remain compliant with your organizational policies.
 
