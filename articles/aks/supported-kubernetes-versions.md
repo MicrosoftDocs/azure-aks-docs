@@ -44,7 +44,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 
 |  K8s version | Upstream release  | AKS preview  | AKS GA  | End of life | Platform support |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
-| 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan,15 2025 - Note community support is ending by Oct, 2024. This means patches wont be available post end of community support | Until 1.32 GA|
+| 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan 2025 | Until 1.32 GA|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Until 1.33 GA |
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Until 1.34 GA |
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Until 1.35 GA |
