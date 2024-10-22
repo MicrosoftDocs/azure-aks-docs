@@ -32,7 +32,6 @@ In this article, we create the infrastructure resources required to run a Valkey
     export MY_ACR_REGISTRY=mydnsrandomname$(echo $random)
     export MY_KEYVAULT_NAME=vault-$(echo $random)-kv
     export MY_CLUSTER_NAME=cluster-aks
-    export SERVICE_ACCOUNT_NAME=valkey
     export SERVICE_ACCOUNT_NAMESPACE=valkey
     export TENANT_ID=$(az account show --query tenantId --output tsv)
     ```
@@ -168,7 +167,7 @@ In this section, we create a node pool dedicated to running the Valkey workload.
         --name valkey \
         --node-vm-size Standard_D4s_v3 \
         --node-count 6 \
-        --zones 1 2 \
+        --zones 1 2 3 \
         --output table
     ```
 
