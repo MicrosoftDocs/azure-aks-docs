@@ -58,9 +58,19 @@ Security and compliance are critical for protecting your data and ensuring that 
 
 ## Next steps
 
+Learn about best practices across other areas of your application deployment and operations on AKS:
+	
+* [Application resiliency and reliability best practices][resiliency-reliability-best-practices]
+* [Resource management best practices][resource-management-best-practices]
+* [Pod security best practices][pod-security-best-practices]
+* [Enforce best practices with Deployment Safeguards][deployment-safeguards]
+
 <!-- LINKS -->
+[defender-for-containers]: /azure/defender-for-cloud/defender-for-containers-introduction
+[resource-management-best-practices]: ./developer-best-practices-resource-management.md
+[pod-security-best-practices]: ./developer-best-practices-pod-security.md
+[deployment-safeguards]: ./deployment-safeguards.md
 [mlops-concepts]: ./concepts-machine-learning-ops.md
 [what-is-iac]: /devops/deliver/what-is-infrastructure-as-code
 [deploy-kaito]: ./ai-toolchain-operator.md
 [resiliency-reliability-best-practices]: ./ha-dr-overview.md
-[defender-for-containers]: /azure/defender-for-cloud/defender-for-containers-introduction

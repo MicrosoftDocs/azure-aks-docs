@@ -20,9 +20,14 @@ MLOps requires multiple roles and tools to work together effectively. Data scien
 
 ### MLOps pipeline
 
-The following diagram illustrates the MLOps pipeline:
+Your MLOps pipeline may leverage various tools and microservices that are deployed sequentially or in parallel. Below are examples of key components in your pipeline that benefit from implementing the following best practices to reduce overhead and allow for faster iteration:
 
-:::image type="content" source="./media/concepts-machine-learning-ops/ml-ops-pipeline.png" alt-text="Screenshot of a diagram illustrating the machine learning operations pipeline." lightbox="./media/concepts-machine-learning-ops/ml-ops-pipeline.png":::
+- Unstructured data store for new data flowing into your application
+- Vector database to store and query structured, pre-processed data
+- Data ingestion and indexing framework
+- Vector ingestion and/or model retraining workflows
+- Metrics collection and alerting tools (tracking model performance, volume of ingested data, etc.)
+- Lifecycle management tools
 
 ## DevOps and MLOps
 
