@@ -2,7 +2,7 @@
 title: Migrate to Azure Kubernetes Service (AKS)
 description: This article shows you how to migrate to Azure Kubernetes Service (AKS).
 ms.topic: article
-ms.date: 10/04/2024
+ms.date: 10/22/2024
 ms.custom: mvc, devx-track-azurecli
 ---
 
@@ -15,7 +15,7 @@ In this article, we summarize migration details for:
 > [!div class="checklist"]
 >
 > * Containerizing applications through Azure Migrate
-> * AKS with standard load balancer and Azure Virtual Machine Scale Sets
+> * AKS with Azure Load Balancer (Standard) and Virtual Machine Scale Sets
 > * Existing attached Azure services
 > * Ensure valid quotas
 > * High availability and business continuity
@@ -43,11 +43,11 @@ Azure Migrate offers a unified platform to assess and migrate to Azure on-premis
 * [Containerizing ASP.NET applications and migrating to AKS](/azure/migrate/tutorial-app-containerization-aspnet-kubernetes).
 * [Containerizing Java web applications and migrating to AKS](/azure/migrate/tutorial-app-containerization-java-kubernetes).
 
-## AKS with standard load balancer and Virtual Machine Scale Sets
+## AKS with Standard Load Balancer and Virtual Machine Scale Sets
 
 AKS is a managed service offering unique capabilities with lower management overhead. Since AKS is a managed service, you must select from a set of AKS-supported [regions](./quotas-skus-regions.md). You may need to modify your existing applications to keep them healthy on the AKS-managed control plane during the transition from your existing cluster to AKS.
 
-We recommend using AKS clusters backed by [Virtual Machine Scale Sets](/azure/virtual-machine-scale-sets/) and the [Azure Standard Load Balancer](./load-balancer-standard.md) to ensure you get the following features:
+We recommend using AKS clusters backed by [Virtual Machine Scale Sets](/azure/virtual-machine-scale-sets/) and [Load Balancer (Standard)](./load-balancer-standard.md) to ensure you get the following features:
 
 * [Multiple node pools](./create-node-pools.md),
 * [Availability zones](/azure/reliability/availability-zones-overview),
@@ -58,7 +58,7 @@ We recommend using AKS clusters backed by [Virtual Machine Scale Sets](/azure/vi
 
 AKS clusters backed by [virtual machine (VM) availability sets](/azure/virtual-machines/availability#availability-sets) lack support for many of these features.
 
-### Create an AKS cluster with Standard Load Balancer and Virtual Machine Scale Sets
+### Create an AKS cluster with Load Balancer (Standard) and Virtual Machine Scale Sets
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -94,51 +94,44 @@ The following code creates a resource group and a Kubernetes cluster in Azure, w
 > 
 > See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform)
 
-1. Create a directory in which to test and run the sample Terraform code and make it the current directory.
+1. Create a directory in which to test and run the sample Terraform code, and make it the current directory.
 
-1. Create a file named `main.tf` and insert the following code.
+1. Create a file named `main.tf`, and insert the following code:
     :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/main.tf":::
 
-
-1. Create a file named `outputs.tf` and insert the following code.
+1. Create a file named `outputs.tf`, and insert the following code:
     :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/outputs.tf":::
 
-
-1. Create a file named `providers.tf` and insert the following code.
+1. Create a file named `providers.tf`, and insert the following code:
     :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/providers.tf":::
 
-
-1. Create a file named `variables.tf` and insert the following code.
+1. Create a file named `variables.tf`, and insert the following code:
     :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-standard-lb-and-vmss/variables.tf":::
-
 
 1. Initialize Terraform.
 
     [!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
 
-
 1. Create a Terraform execution plan.
 
     [!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
-
 
 1. Apply a Terraform execution plan.
 
     [!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
 
-
 ---
 
 ## Existing attached Azure Services
 
-When migrating clusters, you may have attached external Azure services. While the following services don't require resource recreation, they require updating connections from previous to new clusters to maintain functionality.
+When migrating clusters, you may have attached external Azure services. While the following services don't require resource recreation, they require updating connections from previous to new clusters to maintain functionality:
 
 * Azure Container Registry
-* Log Analytics
-* Application Insights
-* Traffic Manager
-* Storage Account
-* External Databases
+* Azure Log Analytics
+* Azure Application Insights
+* Azure Traffic Manager
+* Azure Storage account
+* External databases
 
 ## Ensure valid quotas
 
@@ -162,7 +155,7 @@ In a multi-cluster deployment, customers should connect to a Traffic Manager DNS
 
 ![AKS with Traffic Manager](media/operator-best-practices-bc-dr/aks-azure-traffic-manager.png)
 
-[Azure Front Door Service](/azure/frontdoor/front-door-overview) is another option for routing traffic for AKS clusters. With Azure Front Door Service, you can define, manage, and monitor the global routing for your web traffic by optimizing for best performance and instant global failover for high availability.
+[Azure Front Door](/azure/frontdoor/front-door-overview) is another option for routing traffic for AKS clusters. With Azure Front Door, you can define, manage, and monitor the global routing for your web traffic by optimizing for best performance and instant global failover for high availability.
 
 ### Considerations for stateless applications
 
@@ -218,9 +211,9 @@ The following open-source tools can help you create managed disks and migrate vo
 
 ### Deployment of your cluster configuration
 
-We recommend you use your existing Continuous Integration (CI) and Continuous Delivery (CD) pipeline to deploy a known-good configuration to AKS. You can use Azure Pipelines to [build and deploy your applications to AKS](/azure/devops/pipelines/ecosystems/kubernetes/aks-template). Clone your existing deployment tasks and ensure `kubeconfig` points to the new AKS cluster.
+We recommend you use your existing continuous integration and continuous delivery pipeline to deploy a known-good configuration to AKS. You can use Azure Pipelines to [build and deploy your applications to AKS](/azure/devops/pipelines/ecosystems/kubernetes/aks-template). Clone your existing deployment tasks and ensure `kubeconfig` points to the new AKS cluster.
 
-If that's not possible, export resource definitions from your existing Kubernetes cluster and then apply them to AKS. You can use `kubectl` to export objects. For example:
+If that's not possible, export resource definitions from your existing Kubernetes cluster, and then apply them to AKS. You can use `kubectl` to export objects. For example:
 
 ```console
 kubectl get deployment -o yaml > deployments.yaml
@@ -230,7 +223,7 @@ Be sure to examine the output and remove any unnecessary live data fields.
 
 ### Moving existing resources to another region
 
-You may want to move your AKS cluster to a [different region supported by AKS][region-availability]. We recommend you create a new cluster in the other region and then deploy your resources and applications to your new cluster.
+You might want to move your AKS cluster to a [different region supported by AKS][region-availability]. We recommend you create a new cluster in the other region and then deploy your resources and applications to your new cluster.
 
 If you have any services running on your AKS cluster, you need to install and configure those services on your cluster in the new region.
 
@@ -239,13 +232,13 @@ In this article, we summarized migration details for:
 > [!div class="checklist"]
 >
 > * Containerizing applications through Azure Migrate
-> * AKS with standard load balancer and Virtual Machine Scale Sets
+> * AKS with Load Balancer (Standard) and Virtual Machine Scale Sets
 > * Existing attached Azure services
-> * Ensure valid quotas
+> * Ensuring valid quotas
 > * High availability and business continuity
 > * Considerations for stateless applications
 > * Considerations for stateful applications
-> * Deployment of your cluster configuration
+> * Deploying your cluster configuration
 
 <!-- LINKS - internal -->
 [region-availability]: https://azure.microsoft.com/global-infrastructure/services/?products=kubernetes-service
