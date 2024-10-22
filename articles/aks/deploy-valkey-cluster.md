@@ -343,23 +343,23 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     Example output:
     <!-- expected_similarity=0.4 -->
     ```output
-    NAME                READY   STATUS    RESTARTS   AGE     IP             NODE                                NOMINATED NODE   READINESS GATES
-    valkey-masters-0    1/1     Running   0          2m22s   10.224.0.14    aks-nodepool1-11412955-vmss000000   <none>           <none>
-    valkey-masters-1    1/1     Running   0          2m2s    10.224.0.247   aks-valkey-27955880-vmss000000      <none>           <none>
-    valkey-masters-2    1/1     Running   0          89s     10.224.0.176   aks-valkey-27955880-vmss000002      <none>           <none>
-    valkey-replicas-0   1/1     Running   0          2m2s    10.224.0.224   aks-valkey-27955880-vmss000001      <none>           <none>
-    valkey-replicas-1   1/1     Running   0          80s     10.224.0.103   aks-valkey-27955880-vmss000005      <none>           <none>
-    valkey-replicas-2   1/1     Running   0          50s     10.224.0.200   aks-valkey-27955880-vmss000004      <none>           <none>
+    NAME                READY   STATUS    RESTARTS   AGE     IP             NODE                             NOMINATED NODE   READINESS GATES
+    valkey-masters-0    1/1     Running   0          2m55s   10.224.0.4     aks-valkey-18693609-vmss000004   <none>           <none>
+    valkey-masters-1    1/1     Running   0          2m31s   10.224.0.137   aks-valkey-18693609-vmss000000   <none>           <none>
+    valkey-masters-2    1/1     Running   0          2m7s    10.224.0.222   aks-valkey-18693609-vmss000001   <none>           <none>
+    valkey-replicas-0   1/1     Running   0          88s     10.224.0.237   aks-valkey-18693609-vmss000005   <none>           <none>
+    valkey-replicas-1   1/1     Running   0          70s     10.224.0.18    aks-valkey-18693609-vmss000002   <none>           <none>
+    valkey-replicas-2   1/1     Running   0          48s     10.224.0.242   aks-valkey-18693609-vmss000005   <none>           <none>
     Name                                Zone
-    aks-nodepool1-11412955-vmss000000   eastus-1
-    aks-nodepool1-11412955-vmss000001   eastus-2
-    aks-nodepool1-11412955-vmss000002   eastus-3
-    aks-valkey-27955880-vmss000000      eastus-1
-    aks-valkey-27955880-vmss000001      eastus-2
-    aks-valkey-27955880-vmss000002      eastus-1
-    aks-valkey-27955880-vmss000003      eastus-2
-    aks-valkey-27955880-vmss000004      eastus-1
-    aks-valkey-27955880-vmss000005      eastus-2
+    aks-nodepool1-17621399-vmss000000   centralus-1
+    aks-nodepool1-17621399-vmss000001   centralus-2
+    aks-nodepool1-17621399-vmss000003   centralus-3
+    aks-valkey-18693609-vmss000000      centralus-1
+    aks-valkey-18693609-vmss000001      centralus-2
+    aks-valkey-18693609-vmss000002      centralus-3
+    aks-valkey-18693609-vmss000003      centralus-1
+    aks-valkey-18693609-vmss000004      centralus-2
+    aks-valkey-18693609-vmss000005      centralus-3
     ```
 
     Wait for all pods to be running before proceeding to the next step.
@@ -437,7 +437,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Run the Valkey cluster
 
-1. Add the Valkey primaries, each in a different availability zone, to the cluster using the `kubectl exec` command.
+1. Add the Valkey primaries, in zone 1 and 2, to the cluster using the `kubectl exec` command.
 
     ```bash
     kubectl exec -it -n valkey valkey-masters-0 -- valkey-cli --cluster create --cluster-yes --cluster-replicas 0 \
@@ -478,7 +478,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     [OK] All 16384 slots covered.
     ```
 
-2. Add the Valkey replicas, each in a different availability zone, to the cluster using the `kubectl exec` command.
+2. Add the Valkey replicas, in zone 3, to the cluster using the `kubectl exec` command.
 
     ```bash
     kubectl exec -ti -n valkey valkey-masters-0 -- valkey-cli --cluster add-node \
