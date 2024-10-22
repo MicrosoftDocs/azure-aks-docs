@@ -162,6 +162,8 @@
           href: concepts-ai-ml-language-models.md
         - name: Fine-tuning language models
           href: concepts-fine-tune-language-models.md
+        - name: Machine learning operations (MLOps)
+          href: concepts-machine-learning-ops.md
     - name: Advanced Container Networking Services 
       items:
         - name: Advanced Container Networking Services overview
@@ -250,6 +252,10 @@
       href: windows-best-practices.md
     - name: Enforce best practices with deployment safeguards
       href: deployment-safeguards.md
+    - name: AI and machine learning
+      items:
+        - name: Machine learning operations (MLOps)
+          href: best-practices-ml-ops.md
 - name: How-to guides
   items:
     - name: AKS extension for Visual Studio Code
