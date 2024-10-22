@@ -216,15 +216,15 @@ All built-in plugins are supported, so the [CoreDNS hosts][coredns hosts] plugin
 
 ## Invalid search domain completions for internal.cloudapp.net and reddog.microsoft.com 
 
-Azure DNS configures a default search domain of `<vnetId>.<region>.internal.cloudapp.net` in virtual networks using Azure DNS and a non-functional stub `reddog.microsoft.com` in virtual networks using custom DNS servers (see the [name resolution for resources documentation](https://learn.microsoft.com/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances) for more details). Kubernetes configures pod DNS settings with `ndots: 5` to properly support cluster service hostname resolution. These two configurations can combine to result in invalid search domain completion queries that will never succeed being sent to upstream name servers while the system processes through the domain search list. These invalid queries cause name resolution delays and can place additional load on upstream DNS servers.
+Azure DNS configures a default search domain of `<vnetId>.<region>.internal.cloudapp.net` in virtual networks using Azure DNS and a non-functional stub `reddog.microsoft.com` in virtual networks using custom DNS servers (see the [name resolution for resources documentation](https://learn.microsoft.com/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances) for more details). Kubernetes configures pod DNS settings with `ndots: 5` to properly support cluster service hostname resolution. These two configurations combine to result in invalid search domain completion queries that never succeed being sent to upstream name servers while the system processes through the domain search list. These invalid queries cause name resolution delays and can place extra load on upstream DNS servers.
 
 As of November 2024, AKS configures CoreDNS to prevent these invalid search domain completion queries from being forwarded to upstream DNS for the following two cases:
 
 - Any query for `reddog.microsoft.com`.
 - Any query for `internal.cloudapp.net` that has seven or more labels in the domain name.
-  - This configuration allows VM resolution by hostname to still suceed. For example, `aks12345.myvnetid.myregion.internal.cloudapp.net` (6 labels) will be sent to Azure DNS, but `mcr.microsoft.com.myvnetid.myregion.internal.cloudapp.net` (8 labels) will be rejected by CoreDNS)
+  - This configuration allows virtual machine resolution by hostname to still suceed. For example, CoreDNS sends `aks12345.myvnetid.myregion.internal.cloudapp.net` (6 labels) to Azure DNS, but rejects  `mcr.microsoft.com.myvnetid.myregion.internal.cloudapp.net` (8 labels)
 
-This block is implemented in the default server block in the Corefile for the cluster. If needed, this can be disabled by creating custom server blocks for the appropriate domain with a forward plugin enabled:
+This block is implemented in the default server block in the Corefile for the cluster. If needed, this rejection configuration can be disabled by creating custom server blocks for the appropriate domain with a forward plugin enabled:
 
 1. Create a file named `corednsms.yaml` and paste the following example configuration. Make sure to update the IP addresses and hostnames with the values for your own environment.
 
