@@ -58,7 +58,7 @@ az provider register --namespace Microsoft.ContainerService
 
 ## Limitations
 
-* Currently, WASI Node Pools only support [Spin][spin] applications which use the [Wasmtime][wasmtime] runtime, and native Linux containers.
+* Currently, WASI Node Pools only support [Spin][spin] applications, which use the [Wasmtime][wasmtime] runtime and native Linux containers.
 * The SpinKube operator is not supported on Wasm/WASI node pools.
 * The Wasm/WASI node pools can't be used for system node pool.
 * The *os-type* for Wasm/WASI node pools must be Linux.
