@@ -74,7 +74,7 @@ The following tables show the supported migration paths between outbound types f
 
 Each row shows whether the outbound type can be migrated to the types listed across the top. "Supported" means migration is possible, while "Not Supported" or "N/A" means it isn’t.
 
-| `outboundType`           | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
+| From\|To    | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
 |--------------------------|----------------|---------------------|--------------------------|----------------------|
 | `loadBalancer`           | N/A            | Supported           | Not Supported            | Not Supported        |
 | `managedNATGateway`      | Supported      | N/A                 | Not Supported            | Not Supported        |
