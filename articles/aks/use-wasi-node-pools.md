@@ -173,7 +173,7 @@ spec:
 ```
 
 > [!NOTE]
-> When developing applications, modules should be build against the `wasm32-wasi` target. For more details, see the [spin][spin] documentation.
+> If you want to know more about how to develop Spin applications, see the [spin][spin] documentation.
 
 Use `kubectl` to run your example deployment:
 
