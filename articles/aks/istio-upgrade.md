@@ -43,7 +43,7 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
 1. Optionally, revision tags may be used to roll over the data plane to the new revision without needing to manually relabel each namespace. Manually relabeling namespaces when moving them to a new revision can be tedious and error-prone. [Revision tags][istio-revision-tags] solve this problem by serving as stable identifiers that point to revisions. 
     
-   Rather than relabeling each namespace, a cluster operator can simply change the tag to point to a new revision. All namespaces labeled with that tag will be updated at the same time. However, you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.
+   Rather than relabeling each namespace, a cluster operator can change the tag to point to a new revision. All namespaces labeled with that tag are updated at the same time. However, you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.
 
    To use revision tags during an upgrade:
 
@@ -64,7 +64,7 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
        # label default namespace to map to asm-1-22
        kubectl label ns default istio.io/rev=prod-stable --overwrite
        ```
-       You may also label namespaces with `istio.io/rev=prod-canary` for the newer revision. However, the workloads in those namespaces won't be updated to a new sidecar until they are restarted.
+       You may also label namespaces with `istio.io/rev=prod-canary` for the newer revision. However, the workloads in those namespaces aren't updated to a new sidecar until they're restarted.
 
        If a new application is created in a namespace after it is labeled, a sidecar will be injected corresponding to the revision tag on that namespace.
 
@@ -184,7 +184,7 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
 ### Minor revision upgrades with the ingress gateway
 
-If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways won't change throughout the course of an upgrade. 
+If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways remains unchanged throughout the course of an upgrade. 
 
 Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, the ingress gateway pods of both revisions serve incoming traffic.
 
