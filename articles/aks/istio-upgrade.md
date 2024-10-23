@@ -21,7 +21,7 @@ Istio add-on allows upgrading the minor revision using [canary upgrade process][
 
 If the cluster is currently using a supported minor revision of Istio, upgrades are only allowed one minor revision at a time. If the cluster is using an unsupported revision of Istio, you must upgrade to the lowest supported minor revision of Istio for that Kubernetes version. After that, upgrades can again be done one minor revision at a time.
 
-The following example illustrates how to upgrade from revision `asm-1-22` to `asm-1-23` with all workloads in the `default` namespace. The steps are the same for all minor upgrades and may be used for any number of data plane namespaces.
+The following example illustrates how to upgrade from revision `asm-1-22` to `asm-1-23` with all workloads in the `default` namespace. The steps are the same for all minor upgrades and may be used for any number of namespaces.
 
 1. Use the [az aks mesh get-upgrades](/cli/azure/aks/mesh#az-aks-mesh-get-upgrades) command to check which revisions are available for the cluster as upgrade targets:
 
@@ -43,7 +43,7 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
 1. Optionally, revision tags may be used to roll over the data plane to the new revision without needing to manually relabel each namespace. Manually relabeling namespaces when moving them to a new revision can be tedious and error-prone. [Revision tags][istio-revision-tags] solve this problem by serving as stable identifiers that point to revisions. 
     
-   Rather than relabeling each namespace, a mesh operator can simply change the tag to point to a new revision. All namespaces labeled with that tag will be updated at the same time. However, you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.
+   Rather than relabeling each namespace, a cluster operator can simply change the tag to point to a new revision. All namespaces labeled with that tag will be updated at the same time. However, you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.
 
    To use revision tags during an upgrade:
 
@@ -146,9 +146,9 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
     1. **Complete the canary upgrade**: If you're satisfied that the workloads are all running in a healthy state as expected, you can complete the canary upgrade. Completion of the upgrade removes the previous revision's control plane and leaves behind the new revision's control plane on the cluster. Run the following command to complete the canary upgrade:
 
-      ```azurecli-interactive
-      az aks mesh upgrade complete --resource-group $RESOURCE_GROUP --name $CLUSTER
-      ```
+        ```azurecli-interactive
+        az aks mesh upgrade complete --resource-group $RESOURCE_GROUP --name $CLUSTER
+        ```
 
     1. **Rollback the canary upgrade**: In case you observe any issues with the health of your workloads, you can roll back to the previous revision of Istio:
 
