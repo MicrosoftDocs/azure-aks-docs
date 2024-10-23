@@ -11,10 +11,10 @@ ms.author: schaffererin
 
 # Create WebAssembly System Interface (WASI) node pools in Azure Kubernetes Service (AKS) to run your WebAssembly (Wasm) workload (preview)
 
-[WebAssembly (Wasm)][wasm] is a binary format that is optimized for fast download and maximum execution speed in a Wasm runtime. A Wasm runtime is designed to run on a target architecture and execute Wasm components in a sandbox, isolated from the host computer, at near-native performance. By default, Wasm components can't access resources on the host outside of the sandbox unless it is explicitly allowed, and they can't communicate over sockets to access things like environment variables or HTTP traffic. The [WebAssembly System Interface (WASI)][wasi] standard defines an API for Wasm runtimes to provide access to Wasm components to the environment and resources outside the host using a capabilities model.
+[WebAssembly (Wasm)][wasm] is a binary format that is optimized for fast download and maximum execution speed in a Wasm runtime. A Wasm runtime is designed to run on a target architecture and execute Wasm components in a sandbox, isolated from the host computer, at near-native performance. By default, Wasm components can't access resources on the host outside of the sandbox unless it is explicitly allowed. For example, Wasm components can't communicate over sockets, receive or send HTTP traffic, or even to access things like environment variables without explicit approval. The [WebAssembly System Interface (WASI)][wasi] standard defines an API for Wasm runtimes to provide access to Wasm components to the environment and resources outside the host using a capabilities model.
 
 > [!IMPORTANT]
-> WASI nodepools now use [SpinKube shim][containerd-shim-spin] to run Wasm workloads. Previously, AKS used [Krustlet][krustlet] to allow Wasm modules to be run on Kubernetes. If you are still using Krustlet-based WASI nodepools, you can migrate to containerd shims by creating a new WASI nodepool and migrating your workloads to the new nodepool.
+> WASI nodepools now use [SpinKube containerd shim][containerd-shim-spin] to run Wasm workloads. Previously, AKS used [Krustlet][krustlet] to allow Wasm modules to be run on Kubernetes. If you are still using Krustlet-based WASI nodepools, you can migrate to containerd shims by creating a new WASI nodepool and migrating your workloads to the new nodepool.
 
 ## Before you begin
 
@@ -58,7 +58,7 @@ az provider register --namespace Microsoft.ContainerService
 
 ## Limitations
 
-* Currently, there are only containerd shims available for [spin][spin] applications, which use the [wasmtime][wasmtime] runtime. In addition to wasmtime runtime applications, you can also run containers on Wasm/WASI node pools.
+* Currently, WASI Node Pools only support [Spin][spin] applications which use the [Wasmtime][wasmtime] runtime, and native Linux containers.
 * The SpinKube operator is not supported on Wasm/WASI node pools.
 * The Wasm/WASI node pools can't be used for system node pool.
 * The *os-type* for Wasm/WASI node pools must be Linux.
