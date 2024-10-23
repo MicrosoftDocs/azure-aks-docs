@@ -82,7 +82,7 @@ Each row shows whether the outbound type can be migrated to the types listed acr
 
 ### Supported Migration Paths for BYO VNet
 
-| `outboundType`           | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
+| From\|To          | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
 |--------------------------|----------------|---------------------|--------------------------|----------------------|
 | `loadBalancer`           | N/A            | Not Supported       | Supported                | Supported            |
 | `managedNATGateway`      | Not Supported  | N/A                 | Not Supported            | Not Supported        |
