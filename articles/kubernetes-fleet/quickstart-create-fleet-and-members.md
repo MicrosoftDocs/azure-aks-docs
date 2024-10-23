@@ -4,7 +4,7 @@ description: In this quickstart, you learn how to create an Azure Kubernetes Fle
 ms.date: 03/18/2024
 author: shashankbarsin
 ms.author: shasb
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other, devx-track-azurecli, ignite-2023, build-2024
 ms.devlang: azurecli
 ms.topic: quickstart

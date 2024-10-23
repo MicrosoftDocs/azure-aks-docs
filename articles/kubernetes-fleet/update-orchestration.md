@@ -1,25 +1,33 @@
 ---
-title: "Orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager"
+title: "Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 11/06/2023
-author: shashankbarsin
-ms.author: shasb
-ms.service: kubernetes-fleet
+author: sjwaight
+ms.author: simonwaight
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - devx-track-azurecli
   - ignite-2023
   - build-2024
 ---
 
-# Orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager
+# Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager
 
-Platform admins managing Kubernetes fleets with large number of clusters often have problems with staging updates across multiple clusters in a safe and predictable way. To address this pain point, Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs, stages, groups, and strategies.
+Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs.
+
+Update runs consist of stages, groups, and strategies and can be applied manually for one-time updates, or automatically, for ongoing regular updates using auto-upgrade profiles. All update runs (manual or automated) honor member cluster maintenance windows.
+
+This guide covers how to configure and manually execute update runs. 
+
+:::image type="content" source="./media/update-orchestration/fleet-overview-inline.png" alt-text="Screenshot of the Azure portal pane for a fleet resource, showing member cluster Kubernetes versions and node images in use across all node pools of member clusters." lightbox="./media/update-orchestration/fleet-overview-lightbox.png":::
 
 ## Prerequisites
 
-* Read the [conceptual overview of this feature](./concepts-update-orchestration.md), which provides an explanation of update strategies, runs, stages, and groups references in this document.
-* You need a Fleet resource with one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
+* Read the [conceptual overview of this feature](./concepts-update-orchestration.md), which provides an explanation of update strategies, runs, stages, and groups referenced in this guide.
+
+* You must have a Fleet resource with one or more member cluster. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
+
 * Set the following environment variables:
 
     ```bash
@@ -27,8 +35,9 @@ Platform admins managing Kubernetes fleets with large number of clusters often h
     export FLEET=<fleet-name>
     ```
 
-* If you're using the Azure CLI, you need Azure CLI version 2.53.1 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
-* You need the `fleet` Azure CLI extension, which you can install using the [`az extension add`][az-extension-add] command.
+* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.58.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+
+* You also need the `fleet` Azure CLI extension, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -100,6 +109,22 @@ Update run supports two options for the cluster upgrade sequence:
     az fleet updaterun start --resource-group $GROUP --fleet-name $FLEET --name run-1
     ```
 
+When creating an update run, you have the ability to control the scope of the update run. The `--upgrade-type` flag supports the following values: 
+- `ControlPlaneOnly` only upgrades the Kubernetes version for the control plane of the cluster. 
+- `Full` upgrades Kubernetes version for control plane and node pools along with the node images.
+- `NodeImageOnly` only upgrades the node images.
+
+Also, `--node-image-selection` flag supports the following values:
+- **Latest**: Updates every AKS cluster in the update run to the latest image available for that cluster in its region.
+- **Consistent**: As it's possible for an update run to have AKS clusters across multiple regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). The update run picks the **latest common** image across all these regions to achieve consistency.
+
+**Starting an update run**:
+
+To start update runs, run the following command:
+
+```azurecli-interactive
+az fleet updaterun start --resource-group $GROUP --fleet-name $FLEET --name <run-name>
+```
 ---
 
 ## Assign clusters to update groups and stages
@@ -309,10 +334,9 @@ You can create an update strategy using one of the following methods:
     ```azurecli-interactive
     az fleet updaterun create --resource-group $GROUP --fleet-name $FLEET --name run-5 --update-strategy-name strategy-1 --upgrade-type NodeImageOnly --node-image-selection Consistent
     ```
-
 ---
 
-## Manage update runs
+### Manage an update run 
 
 The following sections explain how to manage an update run using the Azure portal and Azure CLI.
 
@@ -351,6 +375,14 @@ The following sections explain how to manage an update run using the Azure porta
     ```azurecli-interactive
     az fleet updaterun skip --resource-group $GROUP --fleet-name $FLEET --name <run-name> --targets Group:my-group-name Stage:my-stage-name
     ```
+
+    For more information, see [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
+
+## Automate update runs using auto-upgrade profiles
+
+Auto-upgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available. 
+
+For more information on configuring auto-upgrade profiles, see [automate upgrades of Kubernetes and node images using Azure Kubernetes Fleet Manager](./update-automation.md).
 
 ---
 
