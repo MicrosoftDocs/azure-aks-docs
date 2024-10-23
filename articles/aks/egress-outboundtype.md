@@ -72,21 +72,22 @@ The following tables show the supported migration paths between outbound types f
 
 ### Supported Migration Paths for Managed VNet
 
-| Managed VNet           | loadBalancer  | managedNATGateway | userAssignedNATGateway | userDefinedRouting |
-|------------------------|---------------|-------------------|------------------------|--------------------|
-| loadBalancer           | N/A           | Supported         | Not Supported          | Not Supported      |
-| managedNATGateway      | Supported     | N/A               | Not Supported          | Not Supported      |
-| userAssignedNATGateway | Not Supported | Not Supported     | N/A                    | Not Supported      |
-| userDefinedRouting     | Supported     | Supported         | Not Supported          | N/A                |
+Each row shows whether the outbound type can be migrated to the types listed across the top. "Supported" means migration is possible, while "Not Supported" or "N/A" means it isn’t.
+
+| From\|To    | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
+|--------------------------|----------------|---------------------|--------------------------|----------------------|
+| `loadBalancer`           | N/A            | Supported           | Not Supported            | Not Supported        |
+| `managedNATGateway`      | Supported      | N/A                 | Not Supported            | Not Supported        |
+| `userAssignedNATGateway` | Not Supported  | Not Supported       | N/A                      | Not Supported        |
 
 ### Supported Migration Paths for BYO VNet
 
-| BYO VNet               | loadBalancer  | managedNATGateway | userAssignedNATGateway | userDefinedRouting |
-|------------------------|---------------|-------------------|------------------------|--------------------|
-| loadBalancer           | N/A           | Not Supported     | Supported              | Supported          |
-| managedNATGateway      | Not Supported | N/A               | Not Supported          | Not Supported      |
-| userAssignedNATGateway | Supported     | Not Supported     | N/A                    | Supported          |
-| userDefinedRouting     | Supported     | Not Supported     | Supported              | N/A                |
+| From\|To          | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
+|--------------------------|----------------|---------------------|--------------------------|----------------------|
+| `loadBalancer`           | N/A            | Not Supported       | Supported                | Supported            |
+| `managedNATGateway`      | Not Supported  | N/A                 | Not Supported            | Not Supported        |
+| `userAssignedNATGateway` | Supported      | Not Supported       | N/A                      | Supported            |
+| `userDefinedRouting`     | Supported      | Not Supported       | Supported                | N/A                  |
 
 Migration is only supported between `loadBalancer`, `managedNATGateway` (if using a managed virtual network), `userAssignedNATGateway` and `userDefinedRouting` (if using a custom virtual network).
 
