@@ -10,8 +10,7 @@ ms.subservice: aks-maintenances
 ---
 
 # Azure Kubernetes Service Communication Manager
-
-The AKS Communication Manager facilitates notifications for all your AKS maintenance activities using the power of Azure Resource Notification and Azure Resource Graph frameworks. Currently in preview, you can follow these steps to set up notifications for all types of auto upgrades that utilize maintenance windows.
+The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by leveraging Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it will notify you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. Currently in preview, you can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
 
 ## Prerequisites
 
@@ -106,11 +105,16 @@ Create an Azure "Logic App" resource. It will be used to send auto upgrade event
 
 Click "Event Subscription" to create an event subscription of the above system topic.
 
-:::image type="content" source="./media/auto-upgrade-cluster/System_Topic.jpeg" alt-text="The screenshot shows how to create an event subscription.":::
+:::image type="content" source="./media/auto-upgrade-cluster/Event_Sub1.jpeg" alt-text="The screenshot shows how to create an event subscription.":::
 
 Then fill in the event subscription information, in the "EndPoint Type", choose "Web hook", and configure it using the URL when configure "When a HTTP request is received" trigger.
 
-:::image type="content" source="./media/auto-upgrade-cluster/Event_subscription.jpeg" alt-text="The screenshot shows how to configure endpoint.":::
+:::image type="content" source="./media/auto-upgrade-cluster/Event_sub2.jpeg" alt-text="The screenshot shows how to configure endpoint.":::
+
+You can also do it via CLI as below
+
+``` az eventgrid system-topic create --name arnSystemTopic --resource-group testrg --source /subscriptions/TestSub --topic-type microsoft.resourcenotifications.containerserviceeventresources --location global
+```
 
 Configure receive notifications for resources in a resource group, enable subject filtering with the resource group URI.
 
