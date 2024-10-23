@@ -1,12 +1,12 @@
 ---
 title:  Block pod access to the IMDS endpoint (preview)
 description: Learn how to enable IMDS restriction on an AKS cluster to restrict pod access to the IMDS endpoint (preview).
-author: tamram
+author: charleswool
 
 ms.topic: article
 ms.custom: devx-track-azurecli
-ms.date: 10/16/2024
-ms.author: tamram
+ms.date: 10/23/2024
+ms.author: yuewu2
 ---
 
 # Block pod access to the Azure Instance Metadata Service (IMDS) endpoint (preview)
@@ -47,6 +47,13 @@ The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI)
 
 > [!CAUTION]
 > Enabling IMDS restrictions for a cluster that uses unsupported add-ons results in an error.
+
+## Important considerations
+
+When IMDS restriction is enabled, AKS manages the iptables rules on the node. Keep in mind the following points to prevent the iptables rules from being accidentally removed or tampered with:
+
+- Because iptables rules can be modified with SSH or node-shell, we recommend using [Disable SSH][disable-ssh] or using a policy to disable privileged pods.
+- The iptables rules that restrict access to IMDS are restored when the node is [reimaged][node-image-upgrade] or restarted.
 
 ## Enable IMDS restriction on a new cluster
 
@@ -167,3 +174,4 @@ After you update the cluster, you must [reimage][node-image-upgrade] the nodes i
 [install-azure-cli]: /cli/azure/install-azure-cli
 [node-image-upgrade]: node-image-upgrade.md
 [workload-identity-overview]: workload-identity-overview.md
+[disable-ssh]: manage-ssh-node-access.md
