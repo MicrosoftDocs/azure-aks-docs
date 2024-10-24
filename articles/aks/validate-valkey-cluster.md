@@ -20,14 +20,14 @@ The sample client application uses the [Locust load testing framework](https://d
     ```bash
     mkdir valkey-client
     cd valkey-client
-    
+
     cat > Dockerfile <<EOF
     FROM python:3.10-slim-bullseye
     COPY requirements.txt .
     COPY locustfile.py .
     RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
     EOF
-    
+
     cat > requirements.txt <<EOF
     valkey
     locust
@@ -40,10 +40,10 @@ The sample client application uses the [Locust load testing framework](https://d
     import time
     from locust import between, task, User, events,tag
     from valkey import ValkeyCluster
-    
-        
+
+
     class ValkeyLocust(User):
-    
+
         def __init__(self, *args, **kwargs):
             super(ValkeyLocust, self).__init__(*args, **kwargs)
             self.client = ValkeyClient()
@@ -55,7 +55,7 @@ The sample client application uses the [Locust load testing framework](https://d
         @tag("get")
         def get_value(self):
             self.client.get_value("get_value")
-    
+
     class ValkeyClient(object):
          # Read the Valkey password from the Secret Store CSI driver mounted file
         f = open("/etc/valkey-password/valkey-password-file.conf", "r")
@@ -69,7 +69,7 @@ The sample client application uses the [Locust load testing framework](https://d
             self.port = self.port
             self.password = self.password
             self.vc = ValkeyCluster(host=self.host, port=self.port, password=self.password, username="default")
-            
+
         def set_value(self, key, command='SET'):
             # Start time for the 'set' operation with high-resolution timer
             start_time = time.perf_counter()
@@ -124,7 +124,7 @@ The sample client application uses the [Locust load testing framework](https://d
                     exception=e  # Pass the exception to register a failure
                 )
             return result
-    
+
         def on_stop(self):
             self.vc.close()
     EOF
@@ -142,7 +142,7 @@ The sample client application uses the [Locust load testing framework](https://d
 
 1. Create a Pod that uses the Valkey client image we built in the previous step.
     The pod spec contains also the Secret Store CSI volume with the valkey password the client will use to connect to the Valkey cluster.
-    
+
     ```bash
     kubectl apply -f - <<EOF
     ---
@@ -150,6 +150,7 @@ The sample client application uses the [Locust load testing framework](https://d
     apiVersion: v1
     metadata:
       name: valkey-client
+      namespace: valkey
     spec:
         containers:
         - name: valkey-client
@@ -171,23 +172,23 @@ The sample client application uses the [Locust load testing framework](https://d
 2. Port forward the port 8089 to access the Locust web interface on your local machine:
 
     ```bash
-     kubectl port-forward valkey-client 8089:8089
+     kubectl port-forward -n valkey valkey-client 8089:8089
     ```
 
     Access the Locust web interface at `http://localhost:8089` and start the test.
-    
+
     :::image type="content" source="media/valkey-stateful-workload/locust.png" alt-text="Screenshot of a web page showing the Locust test dashboard.":::
 
 
 3. To simulate an outage lets delete the StatefulSet with the option [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/).
-   
+
     The goal is to be able to delete a single Pod without having the StatefulSet recreating that Pod immediately.
-    
+
     ```bash
     kubectl delete statefulset valkey-masters --cascade=orphan
     ```
     Now let's delete the `valkey-masters-0` Pod:
-    
+
     ```bash
     kubectl delete pod valkey-masters-0
     ```
@@ -202,10 +203,10 @@ The sample client application uses the [Locust load testing framework](https://d
         valkey-replicas-1   1/1     Running   0          16m
         valkey-replicas-2   1/1     Running   0          16m
     ```
-     
-    
+
+
     When we read the logs of the `valkey-replicas-0` Pod, by running `kubectl logs valkey-replicas-0`, we observe that the complete event lasts for about 18 seconds:
-    
+
     ```
     1:S 18 Oct 2024 14:40:26.324 * Connection with primary lost.
     1:S 18 Oct 2024 14:40:26.324 * Caching the disconnected primary state.
@@ -229,9 +230,9 @@ The sample client application uses the [Locust load testing framework](https://d
     1:M 18 Oct 2024 14:40:44.768 * Setting secondary replication ID to d388030cb4bd3b28aabaec0392bf6190635be431, valid up to offset: 3234599076. New replication ID is 721ae1f7f6d9c918b7cc2ee424a723bf559d9452
     1:M 18 Oct 2024 14:40:44.769 * Cluster state changed: ok
     ```
-    
+
     During this time window of 18 seconds, we observe a short outage from ` 14:40:43.987 # Cluster state changed: fail` to `14:40:44.768 * Failover election won: I'm the new primary.` of about 1 second. The requests to the cluster did not fail, but we see a spike in the request latency where the 95th percentile spikes to 970ms.
-    
+
     :::image type="content" source="media/valkey-stateful-workload/percentile.png" alt-text="Screenshot of a graph showing the 95th percentile of request latencies spiking to 970ms.":::
 
 ## Conclusion
