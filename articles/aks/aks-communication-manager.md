@@ -1,5 +1,5 @@
 ---
-title: AKS Communication Manager
+title: AKS Communication Manager(Preview)
 description: Start here to learn how to set up and receive notices in Azure Resource Notification for AKS Maintenance events. 
 ms.date: 10/16/2024
 ms.custom: aks communication manager
@@ -9,7 +9,7 @@ ms.author: kaarthis
 ms.subservice: aks-maintenances
 ---
 
-# Azure Kubernetes Service Communication Manager
+# Azure Kubernetes Service Communication Manager(Preview)
 The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. Currently in preview, you can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
 
 ## Prerequisites
@@ -22,11 +22,11 @@ The AKS Communication Manager streamlines notifications for all your AKS mainten
 
 1. Create Logic Apps as shown here
 
-Create an Azure "Logic App" resource. It is used to send auto upgrade event notices to your email.
+Create an Azure "Logic App" resource. It's used to send auto upgrade event notices to your email.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Logic_apps.jpg" alt-text="The screenshot of the created blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
 
-2. Open the created Logic App and click "Logic app designer", then click "Add a trigger" button.
+2. Open the created Logic App and click "Logic app designer," then click "Add a trigger" button.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Logic_App1.jpeg" alt-text="The screenshot shows how to add a trigger.":::
 
@@ -34,7 +34,7 @@ Create an Azure "Logic App" resource. It is used to send auto upgrade event noti
 
   :::image type="content" source="./media/auto-upgrade-cluster/Trigger1.jpeg" alt-text="The screenshot shows HTTP request is received.":::
 
-  4. In the opened "When an HTTP request is received", click "Use sample payload to generate schema".
+  4. In the opened "When an HTTP request is received," click "Use sample payload to generate schema".
 
   :::image type="content" source="./media/auto-upgrade-cluster/Trigger2.jpeg" alt-text="The screenshot shows Sample Payload is used.":::
 
@@ -89,7 +89,7 @@ Create an Azure "Logic App" resource. It is used to send auto upgrade event noti
 
  :::image type="content" source="./media/auto-upgrade-cluster/Add_Action2.jpeg" alt-text="The screenshot shows how to add an action.":::
 
- 8. Customize by providing recipient email. Click the Subject and Body fields, and there is a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
+ 8. Customize by providing recipient email. Click the Subject and Body fields, and there's a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Customize_email.jpeg" alt-text="The screenshot shows how to customize email.":::
 
@@ -107,7 +107,7 @@ Click "Event Subscription" to create an event subscription of the system topic.
 
 :::image type="content" source="./media/auto-upgrade-cluster/Event_Sub1.jpeg" alt-text="The screenshot shows how to create an event subscription.":::
 
-Then fill in the event subscription information, in the "EndPoint Type", choose "Web hook", and configure it using the URL when configure "When a HTTP request is received" trigger.
+Then fill in the event subscription information, in the "EndPoint Type," choose "Web hook," and configure it using the URL when configure "When a HTTP request is received" trigger.
 
 :::image type="content" source="./media/auto-upgrade-cluster/Event_sub2.jpeg" alt-text="The screenshot shows how to configure endpoint.":::
 
