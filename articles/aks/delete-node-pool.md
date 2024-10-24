@@ -24,7 +24,6 @@ When you delete a node pool, the following resources are deleted:
 > Keep the following information in mind when deleting a node pool:
 >
 > * **You can't recover a node pool after it's deleted**. You need to create a new node pool and redeploy your applications.
-> * When you delete a node pool, AKS doesn't perform cordon and drain. To minimize the disruption of rescheduling pods currently running on the node pool you plan to delete, perform a cordon and drain on all nodes in the node pool before deleting. You can learn more about how to cordon and drain using the example scenario provided in the [resizing node pools][resize-node-pool] tutorial.
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -46,7 +45,6 @@ $params = @{
     ResourceGroupName = '<resource-group-name>'
     ClusterName       = '<cluster-name>'
     Name              = '<node-pool-name>'
-    Force             = $true
 }
 Remove-AzAksNodePool @params
 ```
@@ -59,7 +57,7 @@ To delete a node pool in Azure portal, navigate to the **Settings > Node pools**
 
 To verify that the node pool was deleted successfully, use the `kubectl get nodes` command to confirm that the nodes in the node pool no longer exist.
 
-## Ignore PodDisruptionBudgets (PDBs) when removing an existing node pool (Preview)
+## Ignore PodDisruptionBudgets (PDBs) when removing an existing node pool
 
 If your cluster has PodDisruptionBudgets that are preventing the deletion of the node pool, you can ignore the PodDisruptionBudget requirements by setting `--ignore-pod-disruption-budget` to `true`. To learn more about PodDisruptionBudgets, see:
 
@@ -67,19 +65,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
 * [Specifying a Disruption Budget for your Application][specify-disruption-budget]
 * [Disruptions][disruptions]
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Register or update the `aks-preview` extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    # Register the aks-preview extension
-    az extension add --name aks-preview
-
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-2. Delete an existing node pool without following any PodDisruptionBudgets set on the cluster using the [`az aks nodepool delete`][az-aks-delete-nodepool] command with the `--ignore-pod-disruption-budget` flag set to `true`:
+1. Delete an existing node pool without following any PodDisruptionBudgets set on the cluster using the [`az aks nodepool delete`][az-aks-delete-nodepool] command with the `--ignore-pod-disruption-budget` flag set to `true`:
 
     ```azurecli-interactive
     az aks nodepool delete \
@@ -89,7 +75,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
         --ignore-pod-disruption-budget true
     ```
 
-3. To verify that the node pool was deleted successfully, use the `kubectl get nodes` command to confirm that the nodes in the node pool no longer exist.
+2. To verify that the node pool was deleted successfully, use the `kubectl get nodes` command to confirm that the nodes in the node pool no longer exist.
 
 ## Next steps
 
