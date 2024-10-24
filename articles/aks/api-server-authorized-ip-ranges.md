@@ -326,3 +326,5 @@ In this article, you enabled API server authorized IP ranges. This approach is o
 [new-azakscluster]: /powershell/module/az.aks/new-azakscluster
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
 [get-azakscluster]: /powershell/module/az.aks/get-azakscluster
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show

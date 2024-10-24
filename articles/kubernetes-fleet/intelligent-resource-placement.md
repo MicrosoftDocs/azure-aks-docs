@@ -3,20 +3,20 @@ title: "Intelligent cross-cluster Kubernetes resource placement using Azure Kube
 description: Learn how to use Kubernetes Fleet to intelligently place your workloads on target member clusters based on cost and resource availability.
 ms.topic: how-to
 ms.date: 05/13/2024
-author: shashankbarsin
-ms.author: shasb
-ms.service: kubernetes-fleet
+author: sjwaight
+ms.author: simonwaight
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
 ---
 
 # Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager (Preview)
 
-Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for placing the workloads based on heuristics such as cost of compute in the clusters or available resources such as memory and CPU. It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how Azure Kubernetes Fleet Manager (Kubernetes Fleet) allows you to address these scenarios using the intelligent Kubernetes resource placement feature.
+Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for placing the workloads based on heuristics such as cost of compute in the clusters or available resources such as memory and CPU. It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how Azure Kubernetes Fleet Manager (Fleet) allows you to address these scenarios using the intelligent Kubernetes resource placement feature.
 
 ## Overview
 
-Kubernetes Fleet provides resource placement capability that can make scheduling decisions based on the following properties:
+Fleet provides resource placement capability that can make scheduling decisions based on the following properties:
 - Node count
 - Cost of compute in target member clusters
 - Resource (CPU/Memory) availability in target member clusters
@@ -253,5 +253,4 @@ If you no longer wish to use your cluster resource placement, you can delete it 
 
 To learn more about resource propagation, see the following resources:
 
-* [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md)
 * [Upstream Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md)

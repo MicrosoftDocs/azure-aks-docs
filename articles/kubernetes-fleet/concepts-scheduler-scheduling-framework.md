@@ -4,7 +4,7 @@ description: This article provides a conceptual overview of the Azure Kubernetes
 ms.date: 04/01/2024
 author: schaffererin
 ms.author: schaffererin
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ---
 

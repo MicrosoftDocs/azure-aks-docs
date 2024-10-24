@@ -3,9 +3,9 @@ title: "How to set up multi-cluster Layer 4 load balancing across Azure Kubernet
 description: Learn how to use Azure Kubernetes Fleet Manager to set up multi-cluster Layer 4 load balancing across workloads deployed on multiple member clusters.
 ms.topic: how-to
 ms.date: 03/20/2024
-author: shashankbarsin
-ms.author: shasb
-ms.service: kubernetes-fleet
+author: sjwaight
+ms.author: simonwaight
+ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - devx-track-azurecli
 ---
@@ -39,10 +39,13 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
     export GROUP=<resource-group>
     export FLEET=<fleet-name>
     export MEMBER_CLUSTER_1=aks-member-1
+    export MEMBER_CLUSTER_2=aks-member-2
 
     az fleet get-credentials --resource-group ${GROUP} --name ${FLEET} --file fleet
 
     az aks get-credentials --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1} --file aks-member-1
+
+    az aks get-credentials --resource-group ${GROUP} --name ${MEMBER_CLUSTER_2} --file aks-member-2
     ```
 
 [!INCLUDE [preview features note](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
