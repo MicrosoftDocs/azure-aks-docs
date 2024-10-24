@@ -189,7 +189,7 @@ For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use
 ## Remove specific VMs in the existing node pool
 
 > [!NOTE]
-> Deleting a machine will proceed without any cordon or drain.
+> When you delete a VM with this command, AKS doesn't perform cordon and drain. To minimize the disruption of rescheduling pods currently running on the VM you plan to delete, perform a cordon and drain on the VM before deleting. You can learn more about how to cordon and drain using the example scenario provided in the resizing node pools tutorial.
 
 1. List the existing nodes using the `kubectl get nodes` command.
 
