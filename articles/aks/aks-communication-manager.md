@@ -10,31 +10,31 @@ ms.subservice: aks-maintenances
 ---
 
 # Azure Kubernetes Service Communication Manager
-The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by leveraging Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it will notify you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. Currently in preview, you can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
+The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. Currently in preview, you can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
 
 ## Prerequisites
 
 1. Configure your cluster for either [Auto upgrade channel][aks-auto-upgrade] or [Node Auto upgrade channel][aks-node-auto-upgrade].
 
-2. Create [Planned maintenance window][planned-maintenance] as mentioned here for your auto upgrade above. 
+2. Create [Planned maintenance window][planned-maintenance] as mentioned here for your auto upgrade configuration. 
 
 ## How to set up communication manager
 
-1. Create Logic Apps as below
+1. Create Logic Apps as shown here
 
-Create an Azure "Logic App" resource. It will be used to send auto upgrade event notices to your email.
+Create an Azure "Logic App" resource. It is used to send auto upgrade event notices to your email.
 
- :::image type="content" source="./media/auto-upgrade-cluster/Logic_apps.jpg" alt-text="The screenshot of the create blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
+ :::image type="content" source="./media/auto-upgrade-cluster/Logic_apps.jpg" alt-text="The screenshot of the created blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
 
-2. Open the created Logic App and click "Logic app designer" on the left, then click "Add a trigger" button.
+2. Open the created Logic App and click "Logic app designer", then click "Add a trigger" button.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Logic_App1.jpeg" alt-text="The screenshot shows how to add a trigger.":::
 
- 3. In the opened "Add a trigger" box, type "http" in the search box, and then select "When a HTTP request is received" trigger.
+ 3. In the opened "Add a trigger" box, type "http" in the search box, and then select "When an HTTP request is received" trigger.
 
   :::image type="content" source="./media/auto-upgrade-cluster/Trigger1.jpeg" alt-text="The screenshot shows HTTP request is received.":::
 
-  4. In the opened "When a HTTP request is received", click "Use sample payload to generate schema".
+  4. In the opened "When an HTTP request is received", click "Use sample payload to generate schema".
 
   :::image type="content" source="./media/auto-upgrade-cluster/Trigger2.jpeg" alt-text="The screenshot shows Sample Payload is used.":::
 
@@ -89,7 +89,7 @@ Create an Azure "Logic App" resource. It will be used to send auto upgrade event
 
  :::image type="content" source="./media/auto-upgrade-cluster/Add_Action2.jpeg" alt-text="The screenshot shows how to add an action.":::
 
- 8. Customize by providing recipient email. Click the Subject and Body fields, and there is a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestrion of the email content.
+ 8. Customize by providing recipient email. Click the Subject and Body fields, and there is a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Customize_email.jpeg" alt-text="The screenshot shows how to customize email.":::
 
@@ -97,13 +97,13 @@ Create an Azure "Logic App" resource. It will be used to send auto upgrade event
 
  :::image type="content" source="./media/auto-upgrade-cluster/Save.jpeg" alt-text="The screenshot shows how to save.":::
 
- 10. Click the "When a HTTP request is received" button and copy the URL in the "HTTP POST URL" field. This URL will be used shortly to configure event subscription web hook.
+ 10. Click the "When a HTTP request is received" button and copy the URL in the "HTTP POST URL" field. This URL is used shortly to configure event subscription web hook.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Http_post.jpeg" alt-text="The screenshot shows how to copy Http post URL.":::
 
 ## Create ARN system topic and event subscription.
 
-Click "Event Subscription" to create an event subscription of the above system topic.
+Click "Event Subscription" to create an event subscription of the system topic.
 
 :::image type="content" source="./media/auto-upgrade-cluster/Event_Sub1.jpeg" alt-text="The screenshot shows how to create an event subscription.":::
 
@@ -111,7 +111,7 @@ Then fill in the event subscription information, in the "EndPoint Type", choose 
 
 :::image type="content" source="./media/auto-upgrade-cluster/Event_sub2.jpeg" alt-text="The screenshot shows how to configure endpoint.":::
 
-You can also do it via CLI as below
+You can also do it via CLI as shown here
 
 ``` az eventgrid system-topic create --name arnSystemTopic --resource-group testrg --source /subscriptions/TestSub --topic-type microsoft.resourcenotifications.containerserviceeventresources --location global
 ```
@@ -120,8 +120,8 @@ Configure receive notifications for resources in a resource group, enable subjec
 
 :::image type="content" source="./media/auto-upgrade-cluster/Endpoint_type.jpeg" alt-text="The screenshot shows how to configure endpoint type":::
 
-## Verification:
-Wait for the auto upgrader to start to upgrade the cluster. Then verify.
+## Verification
+Wait for the auto upgrader to start to upgrade the cluster. Then verify if you recieve notices promptly on the email configured to receive these notices.
 
 Check Azure Resource Graph database for the scheduled notification record. Each scheduled event notification should be listed as one record in the "containerserviceeventresources" table.
 !
