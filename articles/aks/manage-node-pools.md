@@ -186,22 +186,12 @@ AKS offers a separate feature to automatically scale node pools with a feature c
 
 For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use-the-cluster-autoscaler-on-multiple-node-pools).
 
-## Remove specific VMs in the existing node pool (Preview)
+## Remove specific VMs in the existing node pool
 
 > [!NOTE]
-> Deleting a node pool implicitly dissociates that node pool from any associated capacity reservation group before the node pool is deleted. Deleting a cluster implicitly dissociates all node pools in that cluster from their associated capacity reservation groups.
+> Deleting a machine will proceed without any cordon or drain.
 
-1. Register or update the `aks-preview` extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    # Register the aks-preview extension
-    az extension add --name aks-preview
-
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-2. List the existing nodes using the `kubectl get nodes` command.
+1. List the existing nodes using the `kubectl get nodes` command.
 
     ```bash
     kubectl get nodes
@@ -216,7 +206,7 @@ For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use
     aks-mynodepool-20823458-vmss000002   Ready    agent   63m   v1.21.9
     ```
 
-3. Delete the specified VMs using the [`az aks nodepool delete-machines`][az-aks-nodepool-delete-machines] command. Make sure to replace the placeholders with your own values.
+2. Delete the specified VMs using the [`az aks nodepool delete-machines`][az-aks-nodepool-delete-machines] command. Make sure to replace the placeholders with your own values.
 
     ```azurecli-interactive
     az aks nodepool delete-machines \
@@ -226,7 +216,7 @@ For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use
         --machine-names <vm-name-1> <vm-name-2>
     ```
 
-4. Verify the VMs were successfully deleted using the `kubectl get nodes` command.
+3. Verify the VMs were successfully deleted using the `kubectl get nodes` command.
 
     ```bash
     kubectl get nodes
