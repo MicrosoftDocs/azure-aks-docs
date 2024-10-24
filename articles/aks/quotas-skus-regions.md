@@ -19,6 +19,23 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 [!INCLUDE [container-service-limits](~/reusable-content/ce-skilling/azure/includes/container-service-limits.md)]
 
+### Throttling limits on AKS resource provider APIs
+
+AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttling algorithm to limit certain AKS [resource provider](https://learn.microsoft.com/azure/azure-resource-manager/management/resource-providers-and-types) APIs. This ensures the performance of the service and promotes fair usage of the service for all customers.
+
+The buckets have a fixed size and refill over time at a fixed rate. Each throttling limit is in effect at the regional level for the specified resource in that region.
+
+| API request | Bucket size | Refill rate | Resource |
+|---|---|---|---|
+| LIST | 500 requests | 1 requests / 1 second | Subscription |
+| PUT | 20 requests | 1 request / 1 minute | AgentPools |
+| PUT | 20 requests | 1 request / 1 minute | ManagedClusters |
+
+> [!NOTE]
+> The ManagedClusters and AgentPools buckets are counted separately for the same AKS cluster.
+
+If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. 
+
 ## Provisioned infrastructure
 
 All other network, compute, and storage limitations apply to the provisioned infrastructure. For the relevant limits, see [Azure subscription and service limits](/azure/azure-resource-manager/management/azure-subscription-service-limits).
