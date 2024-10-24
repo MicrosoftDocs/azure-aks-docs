@@ -22,7 +22,7 @@ The current architecture layout of the [Yelb][yelb] sample web application consi
 
 :::image type="content" source="media/eks-web-rearchitect/yelb-architecture.png" alt-text="Architecture diagram of the Yel web application.":::
 
-The `yelb-ui` is responsible for serving the JavaScript code to the browser. This code is compiled from an Angular 2 application. Depending on the deployment model, the code can be served from an EC2 instance, a container (Docker, Kubernetes, ECS), or an S3 bucket (serverless). The `yelb-ui` component may also include an `nginx` proxy, depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres backend database (`yelb-db`). Redis is used to store the number of page views, while Postgres is used to persist the votes. In the serverless deployment model, DynamoDB is used as a replacement for both redis and postgres.
+The `yelb-ui` is responsible for serving the JavaScript code to the browser. This code is compiled from an [Angular][angular] application. The `yelb-ui` component may also include an `nginx` proxy, depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres backend database (`yelb-db`). Redis is used to store the number of page views, while Postgres is used to persist the votes. 
 
 Yelb allows users to vote on a set of alternatives (restaurants) and dynamically updates pie charts based on the number of votes received. 
 
@@ -55,15 +55,19 @@ For more information, see [Protecting your Amazon EKS web apps with AWS WAF](htt
 
 To recreate the AWS workload in Azure with minimal changes, use an Azure equivalent for each AWS service. The following table summarizes the service mapping:
 
-| **Service mapping** |       **AWS service**                         |     **Azure service**    |
-|:--------------------|:----------------------------------------------|:-------------------------|
-| Queuing             | [AWS Web Application Firewall (WAF)][aws-waf] | [Azure Queue Storage][azure-queue-storage]      |
-| Persistence         | DynamoDB (No SQL)                             | [Azure Table storage][azure-table-storage]      |
-| Orchestration       | [Elastic Kubernetes Service (EKS)][aws-eks]   | [Azure Kubernetes Service (AKS)][aks] |
-| Identity | AWS IAM | [Microsoft Entra][microsoft-entra] |
+| **Service mapping**         |       **AWS service**                              |     **Azure service**                                   |
+|:----------------------------|:---------------------------------------------------|:--------------------------------------------------------|
+| Web Access Firewall         | [AWS Web Application Firewall (WAF)][aws-waf]      | [Azure Web Application Firewall (WAF)][azure-waf]       |
+| Application Load Balancing  | [Application Load Balancer (ALB)][aws-alb]         | [Azure Application Gateway][azure-ag]<br> [Application Gateway for Containers (AGC)][azure-agc] |
+| Content Delivery Network    | [Amazon CloudFront][aws-cloudfront]                | [Azure Front Door (AFD)][azure-fd]                            |
+| Orchestration               | [Elastic Kubernetes Service (EKS)][aws-eks]        | [Azure Kubernetes Service (AKS)][aks]                   |
+| Secret Vault                | [AWS Key Management Service (KMS)][aws-kms]        | [Azure Key Vault][azure-kv]                             |
+| Container Registry          | [Amazon Elastic Container Registry (ECR)][aws-ecr] | [Azure Container Registry (ACR)][azure-cr]              |
 
+For a comprehensive comparison between Azure and AWS services, you can refer to the [AWS to Azure services comparison][aws-to-azure] article by Microsoft. It provides in-depth analysis and insights into the features and capabilities of both cloud platforms.
 
 <!-- LINKS -->
+[angular]: https://angular.dev/
 [yelb]: https://github.com/mreferre/yelb/
 [aws-waf]: https://aws.amazon.com/waf/
 [aws-firewall-manager]: https://aws.amazon.com/firewall-manager/
@@ -74,5 +78,14 @@ To recreate the AWS workload in Azure with minimal changes, use an Azure equival
 [aws-api-gateway]: https://aws.amazon.com/api-gateway
 [aws-appsync]: https://aws.amazon.com/appsync
 [aws-organizations]: https://aws.amazon.com/organizations
+[aws-kms]: https://aws.amazon.com/kms/
+[aws-ecr]: https://aws.amazon.com/ecr
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
+[azure-waf]: /azure/web-application-firewall/overview
+[azure-ag]: /azure/application-gateway/overview
+[azure-agc]: /azure/application-gateway/for-containers/overview
+[azure-fd]: /azure/frontdoor/front-door-overview
+[azure-kv]: /azure/key-vault/general/overview
+[azure-cr]: /azure/container-registry/container-registry-intro
+[aws-to-azure]: /azure/architecture/aws-professional/services
