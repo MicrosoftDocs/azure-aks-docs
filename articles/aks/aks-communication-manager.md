@@ -1,6 +1,6 @@
 ---
 title: AKS Communication Manager
-description: Start here to learn how to set up and recieve notices in Azure Resource Notification for AKS Maintenance events. 
+description: Start here to learn how to set up and receive notices in Azure Resource Notification for AKS Maintenance events. 
 ms.date: 10/16/2024
 ms.custom: aks communication manager
 ms.topic: conceptual
@@ -14,9 +14,9 @@ The AKS Communication Manager streamlines notifications for all your AKS mainten
 
 ## Prerequisites
 
-1. Configure your cluster for either [Auto upgrade channel](aks-auto-upgrade) or [Node Auto upgrade channel](aks-node-auto-upgrade).
+1. Configure your cluster for either [Auto upgrade channel][aks-auto-upgrade] or [Node Auto upgrade channel][aks-node-auto-upgrade].
 
-2. Create [Planned maintenance window](planned-maintenance) as mentioned here for your auto upgrade above. 
+2. Create [Planned maintenance window][planned-maintenance] as mentioned here for your auto upgrade above. 
 
 ## How to set up communication manager
 
@@ -42,18 +42,18 @@ Create an Azure "Logic App" resource. It will be used to send auto upgrade event
 
    ```[
   {
-    "id": "5bdb52cf-5489-4845-86c8-7fe94a4fc6c1",
-    "topic": "/subscriptions/26fe00f8-9173-4872-9134-bb1d2e00343a",
-    "subject": "/subscriptions/26fe00f8-9173-4872-9134-bb1d2e00343a/resourcegroups/jusu-test/providers/Microsoft.ContainerService/managedClusters/jusu-sp/scheduledEvents/eb3646f9-4ec9-46d5-8a9d-440a75ee2845",
+    "id": "5b11111-5000-4444-8888-11111116c1",
+    "topic": "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111",
+    "subject": "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/b11111-4111-4000-8000-444444444",
     "data": {
       "resourceInfo": {
-        "id": "/subscriptions/26fe00f8-9173-4872-9134-bb1d2e00343a/resourcegroups/jusu-test/providers/Microsoft.ContainerService/managedClusters/jusu-sp/scheduledEvents/eb3646f9-4ec9-46d5-8a9d-440a75ee2845",
-        "name": "eb3646f9-4ec9-46d5-8a9d-440a75ee2845",
+        "id": "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/b11111-4111-4000-8000-444444444",
+        "name": "b11111-4111-4000-8000-444444444",
         "type": "Microsoft.ContainerService/managedClusters/scheduledEvents",
         "location": "westus2",
         "properties": {
           "description": "ScheduledEvents",
-          "eventId": "bbe82027-0444-4f73-897a-0bbfe3af66f1",
+          "eventId": "bb111111-0444-4444-8888-0bbbbbbbb",
           "eventSource": "AutoUprader",
           "eventStatus": "Started",
           "eventDetails": "Start to upgrade security vhd",
@@ -61,7 +61,7 @@ Create an Azure "Logic App" resource. It will be used to send auto upgrade event
           "startTime": "0001-01-01T00:00:00.0000000Z",
           "lastUpdateTime": "0001-01-01T00:00:00.0000000Z",
           "resources": [
-            "/subscriptions/26fe00f8-9173-4872-9134-bb1d2e00343a/resourcegroups/jusu-test/providers/Microsoft.ContainerService/managedClusters/jusu-sp"
+            "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp"
           ],
           "resourceType": "ManagedCluster"
         }
