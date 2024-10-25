@@ -48,7 +48,7 @@ Host network pods have `hostNetwork` set to **true** in their specs. Host networ
 
 ## Limitations
 
-Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS restriction. If you have these add-ons installed on your cluster, you won't be able to enable IMDS restriction. Conversely, if you have enabled IMDS restriction, then you can't install these add-ons. Unsupported addons include:
+Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS restriction. If you have these add-ons installed on your cluster, you can't enable IMDS restriction. Conversely, if IMDS restriction is enabled, then you can't install these add-ons. Unsupported addons include:
 
 - Application gateway ingress controller
 - Azure Monitor for containers (Container Insights)
