@@ -33,7 +33,9 @@ If the web application on AWS utilizes an [AWS Identity and Access Management (I
 - Enable the OpenID Connect issuer and Microsoft Entra Workload ID on your AKS cluster. For detailed instructions, refer to [Deploy and configure workload identity on an Azure Kubernetes Service (AKS) cluster][aks-oidc]
 - Create a token federation for the managed identity with the [Kubernetes service account][kubernetes-sa] used by the workload on AKS.
 
-For more information, see [Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)][aks-workload-id].
+[Microsoft Entra Workload ID][entra] uses [Service Account Token Volume Projection][token-projection], specifically a service account, to enable pods to use a Kubernetes identity. A Kubernetes token is issued and [OIDC federation][oidc-federation] enables Kubernetes applications to access Azure resources securely with Microsoft Entra ID, based on annotated service accounts. 
+
+Microsoft Entra Workload ID works particularly well with the [Azure Identity client libraries][identity-libraries] or the [Microsoft Authentication Library][msal], along with [application registration][app-registration]. These libraries enable your workload to authenticate seamlessly and access Azure cloud resources. For more information, see [Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)][aks-workload-id].
 
 ## Next steps
 
@@ -47,42 +49,14 @@ For more information, see [Use Microsoft Entra Workload ID with Azure Kubernetes
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
 
 <!-- LINKS -->
-[postgresql]: https://www.postgresql.org/
-[redis-cache]: https://redis.io/solutions/caching/
-[angular]: https://angular.dev/
 [yelb]: https://github.com/mreferre/yelb/
-[nginx]: https://github.com/kubernetes/ingress-nginx
-[nginx-helm-chart]: https://kubernetes.github.io/ingress-nginx
-[mod-security]: https://github.com/SpiderLabs/ModSecurity
-[aws-waf]: https://aws.amazon.com/waf/
-[aws-firewall-manager]: https://aws.amazon.com/firewall-manager/
 [aws-eks]: https://docs.aws.amazon.com/en_us/eks/latest/userguide/what-is-eks.html
-[aws-alb]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer
-[aws-web-acl]: https://docs.aws.amazon.com/waf/latest/developerguide/web-acl.html
-[aws-cloudfront]: https://aws.amazon.com/cloudfront
-[aws-api-gateway]: https://aws.amazon.com/api-gateway
-[aws-appsync]: https://aws.amazon.com/appsync
-[aws-organizations]: https://aws.amazon.com/organizations
-[aws-kms]: https://aws.amazon.com/kms/
-[aws-ecr]: https://aws.amazon.com/ecr
-[aws-route53]: https://aws.amazon.com/it/route53/
 [aws-dynamodb]: https://aws.amazon.com/it/dynamodb/
 [aws-cache]: https://aws.amazon.com/it/elasticache/
 [aws-s3]: https://aws.amazon.com/s3
 [aws-iam]: https://aws.amazon.com/iam/
-[kubernetes]: https://kubernetes.io/
-[kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [kubernetes-sa]: https://kubernetes.io/docs/concepts/security/service-accounts/
 [aks]: ./what-is-aks.md
-[aks-app-routing-addon]: ./app-routing.md
-[azure-waf]: /azure/web-application-firewall/overview
-[azure-ag]: /azure/application-gateway/overview
-[azure-agc]: /azure/application-gateway/for-containers/overview
-[azure-fd]: /azure/frontdoor/front-door-overview
-[azure-kv]: /azure/key-vault/general/overview
-[azure-cr]: /azure/container-registry/container-registry-intro
-[azure-lb]: /azure/load-balancer/load-balancer-overview
-[azure-dns]: /azure/dns/dns-overview
 [azure-redis]: /azure/azure-cache-for-redis/cache-overview
 [azure-postgresql]: /azure/postgresql/flexible-server/service-overview
 [azure-blob]: /azure/storage/blobs/storage-blobs-overview
@@ -93,7 +67,10 @@ For more information, see [Use Microsoft Entra Workload ID with Azure Kubernetes
 [azure-role-assignment]: /azure/role-based-access-control/role-assignments-portal
 [aks-oidc]: /azure/aks/workload-identity-deploy-cluster
 [aks-workload-id]:/azure/aks/workload-identity-overview?tabs=dotnet
-[agic]: /azure/application-gateway/ingress-controller-overview
-[aws-to-azure]: /azure/architecture/aws-professional/services
-[azure-sample]: https://github.com/Azure-Samples/aks-web-application-replicate-from-aws
 [eks-web-prepare]: ./eks-web-prepare.md
+[entra]: /azure/active-directory/develop/workload-identities-overview
+[token-projection]: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#serviceaccount-token-volume-projection
+[oidc-federation]: https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens
+[identity-libraries]: /azure/aks/workload-identity-overview?tabs=dotnet#azure-identity-client-libraries
+[msal]: /azure/active-directory/develop/msal-overview
+[app-registration]: /azure/active-directory/develop/application-model#register-an-application

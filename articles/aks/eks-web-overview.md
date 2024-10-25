@@ -1,8 +1,8 @@
 ---
 title: Replicate an AWS Web Application with AWS WAF in Azure Kubernetes Service (AKS)
 description: Learn how to replicate an AWS web application protected by AWS WAF in Azure Kubernetes Service (AKS).
-author: paolosalvatori
-ms.author: paolos
+author: DixitArora-MSFT
+ms.author: dixitaro
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
@@ -13,4 +13,83 @@ ms.custom:
 ---
 
 # Replicate an AWS Web Application with AWS WAF in Azure Kubernetes Service (AKS)
+
+In this article, you learn how to replicate an Amazon Elastic Kubernetes Service(EKS) web apps with AWS Web Application Firewall with [Azure Web Application Firewall (WAF)][Azure Web Application Firewal] with [Azure Application Gateway][Application Gateway] in [Azure Kubernetes Service (AKS)][Azure Kubernetes Service]. 
+
+This workload demonstrates how to implement a web application firewall to protect web-based application Yelb running in Kubernetes cluster. Applications rely on web application firewalls to block unwanted traffic and protect apps from common vulnerabilities. A centralized web application firewall helps make security management much simpler and gives better assurance to application administrators against threats or intrusions.
+
+For a more detailed understanding of the AWS workload, see [Protecting your Amazon EKS web apps with AWS WAF][eks-aws-waf].
+
+
+## Deployment process
+
+1. [**Understand the conceptual differences**]: Start by reviewing the differences between AWS and AKS in terms of services, architecture, and deployment.
+1. [**Rearchitect the workload**]: Analyze the existing AWS workload architecture and identify the components or services that you need to redesign to fit AKS. You need to make changes to the workload infrastructure, application architecture, and deployment process.
+1. [**Update the application code**]: Ensure your code is compatible with Azure APIs, services, and authentication models.
+1. [**Prepare for deployment**]: Modify the AWS deployment process to use the Azure CLI.
+1. [**Deploy the workload**]: Deploy the replicated workload in AKS and test the workload to ensure that it functions as expected.
+
+## Prerequisites
+
+- An active [Azure subscription](/azure/guides/developer/azure-developer-guide#understanding-accounts-subscriptions-and-billing). If you don't have one, create a [free Azure account][azure-free] before you begin.
+- The **Owner** [Azure built-in role][azure-built-in-roles], or the **User Access Administrator** and **Contributor** built-in roles, on a subscription in your Azure account.
+- [Azure CLI][azure-cli] version 2.61.0 or later. For more information, see [Install Azure CLI][azure-cli].
+- [Azure Kubernetes Service (AKS) preview extension][aks-preview].
+- [jq][install-jq] version 1.5 or later.
+- [Python 3][install-python] or later.
+- [kubectl][install-kubectl] version 1.21.0 or later
+- [Helm][install-helm] version 3.0.0 or later
+- [Visual Studio Code][download-vscode] installed on one of the [supported platforms](https://code.visualstudio.com/docs/supporting/requirements#_platforms) along with the [Bicep extension][bicep-extension].
+- An existing [Azure Key Vault][azure-kv] resource with a valid TLS certificate for the Yelb web application.
+- An existing [Azure DNS Zone](https://learn.microsoft.com/en-us/azure/dns/dns-zones-records) or equivalent DNS server for the name resolution of the [Yelb][yelb] application.
+
+### Download the Azure application code
+
+The **completed** application code for this workflow is available in our [GitHub repository][github-repo]. Clone the repository to a directory called `aws-to-azure-web-app-workshop` on your local machine by running the following command:
+
+```bash
+git clone https://github.com/azure-samples/aks-web-application-replicate-from-aws ./aws-to-azure-web-app-workshop
+```
+
+After you clone the repository, navigate to the `aws-to-azure-web-app-workshop` directory and start Visual Studio Code by running the following commands:
+
+```bash
+cd aws-to-azure-web-app-workshop
+code .
+```
+
+## Next steps
+
+> [!div class="nextstepaction"]
+> [Understand platform differences][eks-edw-understand]
+
+## Contributors
+
+*This article is maintained by Microsoft. It was originally written by the following contributors*:
+
+- Dixit Arora | Senior Customer Engineer
+- Paolo Salvatori | Principal Customer Engineer
+- Ken Kilty | Principal TPM
+- Russell de Pina | Principal TPM
+
+<!-- LINKS -->
+[yelb]: https://github.com/mreferre/yelb/
+
+[eks-aws-waf]: https://aws.amazon.com/it/blogs/containers/protecting-your-amazon-eks-web-apps-with-aws-waf/
+[Application Gateway]: https://azure.microsoft.com/services/application-gateway/
+[Azure Web Application Firewal]: https://azure.microsoft.com/services/web-application-firewall
+[Azure Kubernetes Service]: https://azure.microsoft.com/services/kubernetes-service/
+[azure-free]: https://azure.microsoft.com/free/
+[azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
+[azure-cli]: /cli/azure/install-azure-cli
+[aks-preview]: /azure/aks/draft#install-the-aks-preview-azure-cli-extension
+[install-jq]: https://jqlang.github.io/jq/
+[install-python]: https://www.python.org/downloads/
+[install-kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
+[install-helm]: https://helm.sh/docs/intro/install/
+[download-vscode]: https://code.visualstudio.com/Download
+[bicep-extension]: https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep
+[github-repo]: https://github.com/azure-samples/aks-web-application-replicate-from-aws
+[eks-edw-understand]: ./eks-edw-understand.md
+[azure-kv]: /azure/key-vault/general/overview
 
