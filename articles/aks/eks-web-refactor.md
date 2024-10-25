@@ -1,6 +1,6 @@
 ---
-title: Migrate AWS Web Application Deployment to AKS
-description: Step-by-step guide on updating and migrating the deployment of an AWS web application to Azure Kubernetes Service (AKS).
+title: Migrate AWS Web Application to AKS
+description: Step-by-step guide on updating and migrating the AWS web application to Azure Kubernetes Service (AKS).
 author: paolosalvatori
 ms.author: paolos
 ms.topic: how-to
@@ -12,7 +12,7 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Migrate AWS Web Application Deployment to AKS
+# Migrate AWS Web Application to AKS
 
 Since the [Yelb][yelb] application is self-contained and does not rely on external services, migrating it from AWS to Azure can be done without any code changes. On AWS, [Amazon ElastiCache][aws-cache] and [DynamoDB][aws-dynamodb] can be used as replacements for the Redis Cache and PostgreSQL instances deployed on [Amazon Elastic Kubernetes Service (EKS)][aws-eks]. On Azure, [Azure Cache for Redis][azure-redis] and [Azure Database for PostgreSQL][azure-postgresql] can be used as replacements for the Redis Cache and PostgreSQL services deployed on [Azure Kubernetes Service (AKS)][aks].
 
