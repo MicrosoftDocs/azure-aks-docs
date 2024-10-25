@@ -75,7 +75,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
         --ignore-pod-disruption-budget true
     ```
 
-2. To verify that the node pool was deleted successfully, use the `kubectl get nodes` command to confirm that the nodes in the node pool no longer exist.
+1. To verify that the node pool was deleted successfully, use the `kubectl get nodes` command to confirm that the nodes in the node pool no longer exist.
 
 ## Next steps
 
