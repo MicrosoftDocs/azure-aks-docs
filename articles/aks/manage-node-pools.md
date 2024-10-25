@@ -206,7 +206,7 @@ For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use
     aks-mynodepool-20823458-vmss000002   Ready    agent   63m   v1.21.9
     ```
 
-2. Delete the specified VMs using the [`az aks nodepool delete-machines`][az-aks-nodepool-delete-machines] command. Make sure to replace the placeholders with your own values.
+1. Delete the specified VMs using the [`az aks nodepool delete-machines`][az-aks-nodepool-delete-machines] command. Make sure to replace the placeholders with your own values.
 
     ```azurecli-interactive
     az aks nodepool delete-machines \
