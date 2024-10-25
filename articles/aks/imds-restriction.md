@@ -30,7 +30,21 @@ Host network pods have `hostNetwork` set to **true** in their specs. Host networ
 
 ## Before you begin
 
-- Make sure you have Azure CLI version 2.61.0 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+1. Make sure you have Azure CLI version 2.61.0 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+
+1. Install the `aks-preview` Azure CLI extension version 7.0.0b2 or later.
+
+    - If you don't already have the `aks-preview` extension, install it using the [`az extension add`][az-extension-add] command.
+
+        ```azurecli-interactive
+        az extension add --name aks-preview
+        ```
+
+    - If you already have the `aks-preview` extension, update it to make sure you have the latest version using the [`az extension update`][az-extension-update] command.
+
+        ```azurecli-interactive
+        az extension update --name aks-preview
+        ```
 
 ## Limitations
 
@@ -57,24 +71,24 @@ When IMDS restriction is enabled, AKS manages the iptables rules on the node. Ke
 
 ## Enable IMDS restriction on a new cluster
 
-To enable IMDS restriction on a new cluster and block all traffic from non-host network pods to the IMDS endpoint, call the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--imds-restriction` parameter set to `enabled`.
+To enable IMDS restriction on a new cluster and block all traffic from non-host network pods to the IMDS endpoint, run the [`az aks create`](/cli/azure/aks#az-aks-create) command with the `--enable-imds-restriction` parameter.
 
 ```azurecli-interactive
 az aks create \
     –-resource-group myResourceGroup \
     -–name myAKSCluster \
-    --imds-restriction enabled
+    --enable-imds-restriction
 ```
 
 ## Enable IMDS restriction on an existing cluster
 
-To enable IMDS restriction on an existing cluster and block all traffic from non-host network pods to the IMDS endpoint, call the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--imds-restriction` parameter set to `enabled`.
+To enable IMDS restriction on an existing cluster and block all traffic from non-host network pods to the IMDS endpoint, run the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--enable-imds-restriction` parameter.
 
 ```azurecli-interactive
 az aks update \
     -–resource-group myResourceGroup \
     -–name myAKSCluster \
-    --imds-restriction enabled
+    --enable-imds-restriction
 ```
 
 After you update the cluster, you must [reimage][node-image-upgrade] the nodes in your cluster with `az aks upgrade --node-image-only` to begin to block traffic to the cluster's pods.
@@ -155,13 +169,13 @@ After that, clean up the pod with `kubectl delete pod host-nw`.
 
 ## Disable IMDS restriction for a cluster
 
-To disable IMDS restriction on an existing cluster and allow all traffic from any pods to the IMDS endpoint, call the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--imds-restriction` parameter set to `disabled`.
+To disable IMDS restriction on an existing cluster and allow all traffic from any pods to the IMDS endpoint, run the [`az aks update`](/cli/azure/aks#az-aks-update) command with the `--disable-imds-restriction` parameter.
 
 ```azurecli-interactive
 az aks update \
     –-resource-group myResourceGroup \
     –-name myAKSCluster \
-    --imds-restriction disabled
+    --disable-imds-restriction
 ```
 
 After you update the cluster, you must [reimage][node-image-upgrade] the nodes in your cluster to begin to allow all traffic to the cluster's pods.
@@ -175,3 +189,5 @@ After you update the cluster, you must [reimage][node-image-upgrade] the nodes i
 [node-image-upgrade]: node-image-upgrade.md
 [workload-identity-overview]: workload-identity-overview.md
 [disable-ssh]: manage-ssh-node-access.md
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
