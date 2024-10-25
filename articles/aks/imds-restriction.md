@@ -46,6 +46,24 @@ Host network pods have `hostNetwork` set to **true** in their specs. Host networ
         az extension update --name aks-preview
         ```
 
+1. Register the `IMDSRestrictionPreview` feature flag using the [az feature register][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace Microsoft.ContainerService --name IMDSRestrictionPreview
+    ```
+
+    Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*:
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name IMDSRestrictionPreview
+    ```
+
+    When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
 ## Limitations
 
 Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS restriction. If you have these add-ons installed on your cluster, you can't enable IMDS restriction. Conversely, if IMDS restriction is enabled, then you can't install these add-ons. Unsupported addons include:
