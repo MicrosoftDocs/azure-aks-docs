@@ -118,7 +118,7 @@ This solution leverages the cutting-edge [Application Gateway for Containers][az
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-for-containers-aks.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway for Containers.":::
 
-This innovative product enhances the experience for developers and administrators as part of Azure's Application Load Balancing portfolio. It builds upon the capabilities of the [Application Gateway Ingress Controller (AGIC)][agic] and allows Azure Kubernetes Service (AKS) customers to utilize Azure's native Application Gateway load balancer. This guide will walk you through deploying an [Azure Kubernetes Service (AKS)][aks] cluster with an [Application Gateway for Containers][azure-agc] in a fully-automated manner, supporting both bring your own (BYO) and managed by ALB deployments. As described in the previous [section](#azure-application-gateway-for-containers), the Application Gateway for Containers offers several features:
+This innovative product enhances the experience for developers and administrators as part of Azure's Application Load Balancing portfolio. It builds upon the capabilities of the [Application Gateway Ingress Controller (AGIC)][agic] and allows Azure Kubernetes Service (AKS) customers to utilize Azure's native Application Gateway load balancer. This guide will walk you through deploying an [Azure Kubernetes Service (AKS)][aks] cluster with an [Application Gateway for Containers][azure-agc] in a fully-automated manner, supporting both bring your own (BYO) and managed by ALB deployments. The [Application Gateway for Containers][azure-agc] offers several features:
 
 - [Load Balancing](/azure/application-gateway/for-containers/overview#load-balancing-features): Efficiently distributes incoming traffic across multiple containers for optimal performance and scalability.
 - [Gateway API Implementation](/azure/application-gateway/for-containers/overview#implementation-of-gateway-api): Supports the Gateway API, allowing you to define routing rules and policies in a Kubernetes-native way.
@@ -130,10 +130,10 @@ This innovative product enhances the experience for developers and administrator
 
 However, at this time the Azure Application Gateway for Containers has some limitations. For example, the following features are not currently supported:
 
-- [Azure Web Application Firewall](https://docs.microsoft.com/en-us/azure/application-gateway/waf-overview)
-- WebSockets
-- Private Frontends
+- [Azure Web Application Firewall](/azure/application-gateway/waf-overview)
 - [Azure CNI Overlay](/azure/aks/azure-cni-overlay)
+- [WebSockets](https://datatracker.ietf.org/doc/html/rfc6455)
+- Private Frontends
 
 It's important to consider that while Application Gateway for Containers can be a great choice for customers adopting a single-cloud approach, particularly focusing on Azure, it may not be the best fit for customers requiring a multi-cloud architecture. If deployment across different cloud platforms such as AWS and GCP is essential, customers might opt for a cloud-agnostic ingress controller like NGINX, Traefik, or HAProxy to avoid vendor lock-in issues. For more information, see [Deploying an Azure Kubernetes Service (AKS) Cluster with Application Gateway for Containers](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/deploying-an-azure-kubernetes-service-aks-cluster-with/ba-p/3967434).
 
