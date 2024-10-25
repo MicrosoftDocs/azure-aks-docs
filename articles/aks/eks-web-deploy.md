@@ -83,9 +83,9 @@ nginx-ingress-ingress-nginx-controller-metrics     ClusterIP      172.16.109.138
 
 ## Deploy the Yelb application
 
-If you choose to deploy the sample using the [TLS Termination at Application Gateway and Yelb Invocation via HTTP](#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the [http](./scripts/http/) folder. Instead, if you want to deploy the sample using the [Implementing End-to-End TLS Using Azure Application Gateway](#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the [https](./scripts/https/) folder.
+If you choose to deploy the sample using the [TLS Termination at Application Gateway and Yelb Invocation via HTTP]((./eks-web-prepare.md#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder. Instead, if you want to deploy the sample using the [Implementing End-to-End TLS Using Azure Application Gateway](./eks-web-prepare.md#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `https` folder.
 
-In the remaining part of this article, we will guide you through the deployment process of the Yelb application using the end-to-end TLS approach. Before running any script, make sure to customize the values of the variables within the [00-variables.sh](./scripts/https/00-variables.sh) file. This file is included in all scripts and contains the following variables:
+In the remaining part of this article, we will guide you through the deployment process of the Yelb application using the end-to-end TLS approach. Before running any script, make sure to customize the values of the variables within the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
 
 ```bash
 # Azure Subscription and Tenant
@@ -129,10 +129,10 @@ NAMESPACE="yelb"
 
 Make sure to properly set a value for each variable, and in particular to set `INGRESS_CLASS_NAME` to one of the following values:
 
-- `webapprouting.kubernetes.azure.com` if you installed the NGINX Ingress Controller via the [application routing add-on for AKS](/azure/application-gateway/ingress-controller-add-on-for-aks).
+- `webapprouting.kubernetes.azure.com` if you installed the NGINX Ingress Controller via the [application routing add-on for AKS][aks-app-routing-addon].
 - `nginx` if you installed the NGINX Ingress Controller via [Helm](https://helm.sh/).
 
-You can run the following [az aks show](/cli/azure/aks?view=azure-cli-latest#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide?tabs=azure-cli#azure-built-in-roles-for-key-vault-data-plane-operations) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress][kubernetes-ingress] used to expose the `yelb-ui` service via the [NGINX ingress controller][nginx].
+You can run the following [az aks show](/cli/azure/aks?#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress][kubernetes-ingress] used to expose the `yelb-ui` service via the [NGINX ingress controller][nginx].
 
 ```bash
 az aks show \
@@ -307,7 +307,7 @@ spec:
               secretProviderClass: yelb
 ```
 
-The script utilizes the [yelb.yml](./scripts/https/yelb.yml) YAML manifest for deploying the application, and the [ingress.yml](./scripts/https/ingress.yml) for creating the ingress object. If you are using an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. In detail, the script does the following:
+The script utilizes the `yelb.yml` YAML manifest for deploying the application, and the `ingress.yml` for creating the ingress object. If you are using an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. In detail, the script does the following:
 
 1. Retrieves the public address of the Azure Public IP used by the frontend IP configuration of the Application Gateway.
 2. Checks if an A record exists for the subdomain used by the `yelb-ui` service.
@@ -498,6 +498,7 @@ For more information on developing and running applications in AKS, see the foll
 [nginx]: https://github.com/kubernetes/ingress-nginx
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
+[aks-app-routing-addon]: ./app-routing.md
 [helm-aks]: ./kubernetes-helm.md
 [k8s-aks]: ./deploy-marketplace.md
 [openai-aks]: ./open-ai-quickstart.md
