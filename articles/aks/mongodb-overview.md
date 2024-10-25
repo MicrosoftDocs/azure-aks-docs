@@ -40,7 +40,7 @@ The Percona Operator for MongoDB is an open-source tool developed by [Percona](h
 
 The operator uses Kubernetes custom resource definitions (CRDs) to manage MongoDB configurations declaratively and to handle failovers, monitoring, and alerts. The result is reduced administrative overhead and consistent management practices. The Percona Operator enhances the efficiency and reliability of MongoDB deployments, particularly in cloud-native applications. It's well suited for development, testing, and production scenarios.
 
-:::image source="../aks/media/mongodb-overview/mongodb-shared-cluster.png" alt-text="Diagram that show how the Percona Operator relates to a MongoDB cluster." lightbox="../aks/media/mongodb-overview/mongodb-shared-cluster.png":::
+:::image source="../aks/media/mongodb-overview/mongodb-shared-cluster.png" alt-text="Diagram that shows how the Percona Operator relates to a MongoDB cluster." lightbox="../aks/media/mongodb-overview/mongodb-shared-cluster.png":::
 
 ## MongoDB solution overview
 
