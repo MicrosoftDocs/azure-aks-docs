@@ -14,7 +14,7 @@ ms.custom:
 
 # Rearchitect AWS EKS Web Application for Azure Kubernetes Service (AKS)
 
-Now that you have gained an understanding of the platform differences between AWS and Azure that are relevant to this workload, let's examine the web application architecture and explore the necessary modifications to make it compatible with AKS.
+Now that you have gained an understanding of the platform differences between AWS and Azure that are relevant to this workload, let's examine the web application architecture and explore the necessary modifications to make it compatible with [Azure Kubernetes Service (AKS)][aks].
 
 ## Yelb Application
 
@@ -22,7 +22,7 @@ The current architecture layout of the [Yelb][yelb] sample web application consi
 
 :::image type="content" source="media/eks-web-rearchitect/yelb-architecture.png" alt-text="Architecture diagram of the Yel web application.":::
 
-The `yelb-ui` is responsible for serving the JavaScript code to the browser. This code is compiled from an [Angular][angular] application. The `yelb-ui` component may also include an `nginx` proxy, depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres backend database (`yelb-db`). Redis is used to store the number of page views, while Postgres is used to persist the votes. 
+The `yelb-ui` is responsible for serving the JavaScript code to the browser. This code is compiled from an [Angular][angular] application. The `yelb-ui` component may also include an `nginx` proxy, depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres backend database (`yelb-db`). [Redis Cache][redis-cache] is used to store the number of page views, while [PostgreSQL][postgresql] is used to persist the votes. Both services are deployed on [Kubernetes][kubernetes], without utilizing any managed service for storing data on AWS or Azure. Since the original Yelb application is self-contained and does not rely on external services, migrating it from AWS to Azure can be done without any code changes. On AWS, [DynamoDB][aws-dynamodb] can be used as a replacement for the Redis Cache and PostgreSQL instances deployed on [Amazon Elastic Kubernetes Service (EKS)][aws-eks]. On Azure, [Azure Cache for Redis][azure-redis] and [Azure Database for PostgreSQL][azure-postgresql] can be used as replacements for the Redis Cache and PostgreSQL services deployed on [Azure Kubernetes Service (AKS)][aks].
 
 Yelb allows users to vote on a set of alternatives (restaurants) and dynamically updates pie charts based on the number of votes received. 
 
@@ -223,9 +223,11 @@ In conclusion, there are multiple architectures available on Azure to deploy and
 
 *This article is maintained by Microsoft. It was originally written by the following contributors*:
 
--[Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
+- [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
 
 <!-- LINKS -->
+[postgresql]: https://www.postgresql.org/
+[redis-cache]: https://redis.io/solutions/caching/
 [angular]: https://angular.dev/
 [yelb]: https://github.com/mreferre/yelb/
 [nginx]: https://github.com/kubernetes/ingress-nginx
@@ -243,6 +245,8 @@ In conclusion, there are multiple architectures available on Azure to deploy and
 [aws-kms]: https://aws.amazon.com/kms/
 [aws-ecr]: https://aws.amazon.com/ecr
 [aws-route53]: https://aws.amazon.com/it/route53/
+[aws-dynamodb]: https://aws.amazon.com/it/dynamodb/
+[kubernetes]: https://kubernetes.io/
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
 [aks-app-routing-addon]: ./app-routing.md
@@ -254,6 +258,8 @@ In conclusion, there are multiple architectures available on Azure to deploy and
 [azure-cr]: /azure/container-registry/container-registry-intro
 [azure-lb]: /azure/load-balancer/load-balancer-overview
 [azure-dns]: /azure/dns/dns-overview
+[azure-redis]: /azure/azure-cache-for-redis/cache-overview
+[azure-postgresql]: /azure/postgresql/flexible-server/service-overview
 [agic]: /azure/application-gateway/ingress-controller-overview
 [aws-to-azure]: /azure/architecture/aws-professional/services
 [azure-sample]: https://github.com/Azure-Samples/aks-web-application-replicate-from-aws
