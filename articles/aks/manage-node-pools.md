@@ -216,7 +216,7 @@ For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use
         --machine-names <vm-name-1> <vm-name-2>
     ```
 
-3. Verify the VMs were successfully deleted using the `kubectl get nodes` command.
+1. Verify the VMs were successfully deleted using the `kubectl get nodes` command.
 
     ```bash
     kubectl get nodes
