@@ -52,7 +52,7 @@ To enhance security, the [Yelb][yelb] application is protected by an [Azure Appl
 - [Helm][install-helm] version 3.0.0 or later
 - [Visual Studio Code][download-vscode] installed on one of the [supported platforms](https://code.visualstudio.com/docs/supporting/requirements#_platforms) along with the [Bicep extension][bicep-extension].
 - An existing [Azure Key Vault][azure-kv] resource with a valid TLS certificate for the Yelb web application.
-- An existing [Azure DNS Zone](https://learn.microsoft.com/en-us/azure/dns/dns-zones-records) or equivalent DNS server for the name resolution of the [Yelb][yelb] application.
+- An existing [Azure DNS Zone][azure-dns] or equivalent DNS server for the name resolution of the [Yelb][yelb] application.
 
 ## Architecture
 
@@ -91,7 +91,7 @@ Before diving into the solution, let's quickly go over [TLS termination and end-
 
 ### TLS termination with Application Gateway
 
-[Azure Application Gateway](https://azure.microsoft.com/en-us/services/application-gateway/) supports the termination of Transport Layer Security (TLS) at the gateway level, which means that traffic is decrypted at the gateway before being sent to the backend servers. This approach offers several benefits:
+[Azure Application Gateway][azure-ag] supports the termination of Transport Layer Security (TLS) at the gateway level, which means that traffic is decrypted at the gateway before being sent to the backend servers. This approach offers several benefits:
 
 - **Improved performance**: The initial handshake for TLS decryption can be resource-intensive. By caching TLS session IDs and managing TLS session tickets at the application gateway, multiple requests from the same client can utilize cached values, improving performance. If TLS decryption is performed on the backend servers, the client needs to reauthenticate with each server change.
 - **Better utilization of backend servers**: SSL/TLS processing requires significant CPU resources, especially with increasing key sizes. By offloading this work from the backend servers to the application gateway, the servers can focus more efficiently on delivering content.
@@ -119,11 +119,11 @@ In summary, the zero trust security model, when implemented as described in the 
 
 You can implement a zero trust approach by configuring Azure Application Gateway for end-to-end TLS encryption with the backend servers. [End-to-end TLS encryption](/azure/application-gateway/ssl-overview#end-to-end-tls-encryption) allows you to securely transmit sensitive data to the backend while also utilizing Application Gateway's Layer-7 load-balancing features. These features include cookie-based session affinity, URL-based routing, routing based on sites, and the ability to rewrite or inject X-Forwarded-* headers.
 
-When Application Gateway is configured with end-to-end TLS communication mode, it terminates the TLS sessions at the gateway and decrypts user traffic. It then applies the configured rules to select the appropriate backend pool instance to route the traffic to. Next, Application Gateway initiates a new TLS connection to the backend server and re-encrypts the data using the backend server's public key certificate before transmitting the request to the backend. The response from the web server follows the same process before reaching the end user. To enable end-to-end TLS, you need to set the protocol setting in the Backend HTTP Setting to HTTPS and apply it to a backend pool. This ensures that your communication with the backend servers is secured and compliant with your requirements. For more information, you can refer to the documentation on [Application Gateway end-to-end TLS encryption](https://docs.microsoft.com/azure/application-gateway/end-to-end-ssl-portal). Additionally, you may find it useful to review [best practices for securing your Application Gateway](https://docs.microsoft.com/azure/application-gateway/securing-application-gateway).
+When Application Gateway is configured with end-to-end TLS communication mode, it terminates the TLS sessions at the gateway and decrypts user traffic. It then applies the configured rules to select the appropriate backend pool instance to route the traffic to. Next, Application Gateway initiates a new TLS connection to the backend server and re-encrypts the data using the backend server's public key certificate before transmitting the request to the backend. The response from the web server follows the same process before reaching the end user. To enable end-to-end TLS, you need to set the protocol setting in the Backend HTTP Setting to HTTPS and apply it to a backend pool. This ensures that your communication with the backend servers is secured and compliant with your requirements. For more information, you can refer to the documentation on [Application Gateway end-to-end TLS encryption](/azure/application-gateway/end-to-end-ssl-portal). Additionally, you may find it useful to review [best practices for securing your Application Gateway](/azure/application-gateway/securing-application-gateway).
 
 ### Solution
 
-In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures the security of the system by blocking malicious attacks. The [Azure Application Gateway][azure-ag] handles incoming calls from client applications and performs TLS termination. It also implements [end-to-end TLS]((/azure/application-gateway/ssl-overview#end-to-end-tls-encryption)) by invoking the underlying AKS-hosted `yelb-ui` service using the HTTPS transport protocol via the internal load balancer and NGINX Ingress controller. The following diagram illustrates the architecture:
+In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures the security of the system by blocking malicious attacks. The [Azure Application Gateway][azure-ag] handles incoming calls from client applications and performs TLS termination. It also implements [end-to-end TLS](/azure/application-gateway/ssl-overview#end-to-end-tls-encryption) by invoking the underlying AKS-hosted `yelb-ui` service using the HTTPS transport protocol via the internal load balancer and NGINX Ingress controller. The following diagram illustrates the architecture:
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Architecture diagram of the solution based on Application Gateway WAFv2 and NGINX Ingress controller via HTTPS.":::
 
@@ -497,10 +497,10 @@ We suggest reading sensitive configuration data such as passwords or SSH keys fr
 
 The sample includes four distinct Bicep parameter files that allow you to deploy four different variations of the solution:
 
-- [main.http.nginxviaaddon.bicepparam](./bicep/main.http.nginxviaaddon.bicepparam): the Application Gateway communicates via HTTP with a managed NGINX Ingress Controller instance installed via the application routing add-on.
-- [main.http.nginxviahelm.bicepparam](./bicep/main.http.nginxviahelm.bicepparam): the Application Gateway communicates via HTTP an unmanaged NGINX Ingress Controller instance installed via Helm.
-- [main.https.nginxviaaddon.bicepparam](./bicep/main.https.nginxviaaddon.bicepparam): the Application Gateway communicates via HTTPS with the managed NGINX Ingress Controller installed via the application routing add-on.
-- [main.https.nginxviahelm.bicepparam](./bicep/main.https.nginxviahelm.bicepparam): the Application Gateway communicates via HTTPS an unmanaged NGINX Ingress Controller instance installed via Helm.
+- `main.http.nginxviaaddon.bicepparam`: the Application Gateway communicates via HTTP with a managed NGINX Ingress Controller instance installed via the application routing add-on.
+- `main.http.nginxviahelm.bicepparam`: the Application Gateway communicates via HTTP an unmanaged NGINX Ingress Controller instance installed via Helm.
+- `main.https.nginxviaaddon.bicepparam`: the Application Gateway communicates via HTTPS with the managed NGINX Ingress Controller installed via the application routing add-on.
+- `main.https.nginxviahelm.bicepparam`: the Application Gateway communicates via HTTPS an unmanaged NGINX Ingress Controller instance installed via Helm.
 
 The `deploy.sh` Bash script allows to choose one of these solutions. Choose solution number `3`.
 
@@ -974,7 +974,7 @@ The script creates a [ClusterIssuer](https://cert-manager.io/docs/concepts/issue
 
 <!-- LINKS -->
 [aws-cli]: https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html
-[eksctl]: https://eksctl.io/introduction/#installation
+[eksctl]: https://eksctl.io/installation/
 [kubectl]: https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 [helm]: https://helm.sh/docs/intro/install/
 [yelb]: https://github.com/mreferre/yelb/

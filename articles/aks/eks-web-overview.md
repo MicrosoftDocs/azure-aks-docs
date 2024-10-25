@@ -41,7 +41,7 @@ For a more detailed understanding of the AWS workload, see [Protecting your Amaz
 - [Helm][install-helm] version 3.0.0 or later
 - [Visual Studio Code][download-vscode] installed on one of the [supported platforms](https://code.visualstudio.com/docs/supporting/requirements#_platforms) along with the [Bicep extension][bicep-extension].
 - An existing [Azure Key Vault][azure-kv] resource with a valid TLS certificate for the Yelb web application.
-- An existing [Azure DNS Zone](https://learn.microsoft.com/en-us/azure/dns/dns-zones-records) or equivalent DNS server for the name resolution of the [Yelb][yelb] application.
+- An existing [Azure DNS Zone][azure-dns] or equivalent DNS server for the name resolution of the [Yelb][yelb] application.
 
 ### Download the Azure application code
 
@@ -92,4 +92,5 @@ code .
 [github-repo]: https://github.com/azure-samples/aks-web-application-replicate-from-aws
 [eks-edw-understand]: ./eks-edw-understand.md
 [azure-kv]: /azure/key-vault/general/overview
+[azure-dns]: /azure/dns/dns-overview
 
