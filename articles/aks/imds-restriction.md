@@ -204,8 +204,9 @@ After you update the cluster, you must [reimage][node-image-upgrade] the nodes i
 
 <!-- LINKS - internal -->
 [install-azure-cli]: /cli/azure/install-azure-cli
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-feature-register]: /cli/azure/feature#az_feature_register
 [node-image-upgrade]: node-image-upgrade.md
 [workload-identity-overview]: workload-identity-overview.md
 [disable-ssh]: manage-ssh-node-access.md
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update
