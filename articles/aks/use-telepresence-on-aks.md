@@ -178,6 +178,9 @@ The port field must have the local port and the remote-port, which is the port u
 
 The env-file field is the path where Telepresence will create an env file containing the appropriate environment variables needed to intercept traffic. This is **needed** to properly intercept your service's traffic to your local machine. If a file doesn't exist, telepresence will create it for you.
 
+> [!NOTE]
+> `sshfs` is required in order for volume mounts to work correctly during intercepts for both linux and macos versions of Telepresence. If you don't have it installed, view the official [documentation](https://www.telepresence.io/docs/troubleshooting#volume-mounts-are-not-working-on-macos) for more information.
+
 
     ```console
     telepresence intercept store-front --port 8080:80 --env-file store-front-service-intercept.env
