@@ -19,6 +19,9 @@ This article covers the various types of outbound connectivity that are availabl
 > [!NOTE]
 > You can now update the `outboundType` after cluster creation.
 
+> [!IMPORTANT]
+> In non-private clusters, API server cluster traffic is routed and processed through the clusters outbound type. To prevent API server traffic from being processed as public traffic, consider using a [private cluster][private-cluster], or check out the [API Server VNet Integration][api-server-vnet-integration] feature.
+
 ## Limitations
 
 - Setting `outboundType` requires AKS clusters with a `vm-set-type` of `VirtualMachineScaleSets` and `load-balancer-sku` of `Standard`.
@@ -148,5 +151,6 @@ az aks update --resource-group <resourceGroup> --name <clusterName> --outbound-t
 - [Manage route tables](/azure/virtual-network/manage-route-table)
 
 <!-- LINKS - internal -->
+[api-server-vnet-integration]: api-server-vnet-integration.md
 [az-aks-update]: /cli/azure/aks#az_aks_update
-
+[private-cluster]: private-clusters.md
