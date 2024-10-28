@@ -59,7 +59,7 @@ Both AKS and EKS offer command-line tools to simplify the creation and managemen
 
 [Azure Application Gateway][azure-ag] is a powerful application delivery controller that provides layer 7 load balancing, SSL/TLS termination, URL-based routing, and other advanced features. It's designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] and [Application Gateway Ingress Controller][agic] for [Azure Kubernetes Service (AKS)][aks].
 
-On the other hand, [AWS Application Load Balancer][aws-alb] is a highly scalable and efficient load balancer that operates at the application layer, allowing it to intelligently distribute traffic based on application-level information. It supports features like SSL/TLS termination, URL-based routing, and session affinity.
+[AWS Application Load Balancer][aws-alb] is a highly scalable and efficient load balancer that operates at the application layer, allowing it to intelligently distribute traffic based on application-level information. It supports features like SSL/TLS termination, URL-based routing, and session affinity.
 
 [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] provide a comparable feature set. Here's an exhaustive comparison between [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] based on the provided features:
 
@@ -81,13 +81,6 @@ On the other hand, [AWS Application Load Balancer][aws-alb] is a highly scalable
 | Custom Error Pages                       | [Supported](/azure/application-gateway/features#custom-error-pages)                    | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/listener-update.html#change-default-reqs)     |
 | Rewrite HTTP Headers and URL             | [Supported](/azure/application-gateway/features?branch=main#rewrite-http-headers-and-url)                  | [Supported with AWS WAF](https://docs.aws.amazon.com/waf/latest/developerguide/customizing-the-incoming-request.html) Supported                                                                                                                   |
 | Sizing                                   | [Multiple Sizes Available](/azure/application-gateway/features#sizing)                 | [Multiple Sizes Available](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-limits.html) |
-
-
-It's also worth mentioning that both [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] support secure SSL/TLS termination. However, [Azure Application Gateway][azure-ag] offers more flexible and advanced options for SSL/TLS termination.
-
-In terms of sizing, both [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] offer multiple sizes to cater to different application needs.
-
-In summary, while [Azure Application Gateway][azure-ag] provides some unique features like Web Application Firewall and Ingress Controller for AKS, [AWS Application Load Balancer][aws-alb] has a simpler feature set with a focus on core load balancing capabilities. The choice between the two would depend on the specific requirements and preferences of your application deployment.
 
 
 ## Next steps
