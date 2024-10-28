@@ -14,7 +14,7 @@ ms.custom:
 
 # Rearchitect AWS EKS Web Application for Azure Kubernetes Service (AKS)
 
-Now that you have gained an understanding of the platform differences between AWS and Azure that are relevant to this workload, let's examine the web application architecture and explore the necessary modifications to make it compatible with [Azure Kubernetes Service (AKS)][aks].
+Now that you gained an understanding of the platform differences between AWS and Azure that are relevant to this workload, let's examine the web application architecture and the necessary modifications to make it compatible with [Azure Kubernetes Service (AKS)][aks].
 
 ## Yelb Application
 
@@ -28,7 +28,7 @@ Yelb allows users to vote on a set of alternatives (restaurants) and dynamically
 
 :::image type="content" source="media/eks-web-rearchitect/yelb-ui.png" alt-text="Screenshot of the Yelb service interface.":::
 
-The Yelb application also keeps track of the number of page views and displays the hostname of the `yelb-appserver` instance serving the API request upon a vote or a page refresh. This allows individuals to demo the application solo or involve others in interacting with the application.
+The sample web application also keeps track of the number of page views and displays the hostname of the `yelb-appserver` instance serving the API request upon a vote or a page refresh. This feature allows individuals to demo the application solo or involve others in interacting with the application.
 
 ## Architecture on AWS
 
@@ -40,11 +40,11 @@ To demonstrate the implementation of a web application firewall using [AWS Web A
 2. Expose the sample application using an [Application Load Balancer (ALB)][aws-alb].
 3. Create a [Kubernetes ingress][kubernetes-ingress] and associate an [AWS WAF web access control list (web ACL)][aws-web-acl] with the ALB in front of the ingress.
 
-AWS WAF provides control over the type of traffic that reaches your web applications, ensuring protection against unauthorized access attempts and unwanted traffic. It integrates seamlessly with [Amazon CloudFront][aws-cloudfront], [Application Load Balancer (ALB)][aws-alb], [Amazon API Gateway][aws-api-gateway], and [AWS AppSync][aws-appsync]. By leveraging an existing ALB as an ingress for Kubernetes-hosted applications, adding a web application firewall to your apps can be accomplished quickly.
+AWS WAF provides control over the type of traffic that reaches your web applications, ensuring protection against unauthorized access attempts and unwanted traffic. It integrates seamlessly with [Amazon CloudFront][aws-cloudfront], [Application Load Balancer (ALB)][aws-alb], [Amazon API Gateway][aws-api-gateway], and [AWS AppSync][aws-appsync]. By using an existing ALB as an ingress for Kubernetes-hosted applications, adding a web application firewall to your apps can be accomplished quickly.
 
-For customers operating in multiple AWS accounts, [AWS Organizations][aws-organizations] and [AWS Firewall Manager][aws-firewall-manager] offer centralized control over AWS WAF rules. With Firewall Manager, security policies can be enforced across accounts to ensure compliance and adherence to best practices. It is recommended to run EKS clusters in dedicated Virtual Private Clouds (VPCs), and Firewall Manager can ensure that WAF rules are correctly applied across accounts, regardless of where your applications run.
+For customers operating in multiple AWS accounts, [AWS Organizations][aws-organizations] and [AWS Firewall Manager][aws-firewall-manager] offer centralized control over AWS WAF rules. With Firewall Manager, security policies can be enforced across accounts to ensure compliance and adherence to best practices. It is recommended to run EKS clusters in dedicated Virtual Private Clouds (VPCs). [AWS Firewall Manager][aws-firewall-manager] ensures that WAF rules are correctly applied across accounts, regardless of where your applications run.
 
-By implementing these measures, the [Yelb][yelb] can be effectively deployed on [AWS EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html) and protected by [AWS WAF][aws-waf] safeguarding web-based workloads and ensuring a secure and reliable user experience.
+By implementing these measures, you can effectively deploy the sample web application on [AWS EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html) and protect it using [AWS WAF][aws-waf].
 
 :::image type="content" source="media/eks-web-rearchitect/architecture-on-aws.png" alt-text="Architecture diagram of the Yelb web application in AWS.":::
 
@@ -85,7 +85,7 @@ For other configurations, see:
 - [Application routing add-on configuration](/azure/aks/app-routing-nginx-configuration)
 - [Configure internal NGINX ingress controller for Azure private DNS zone](/azure/aks/create-nginx-ingress-private-controller).
 
-The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azure/application-gateway/overview) resource that is deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. The access to the Yelb application hosted by Azure Kubernetes Service (AKS) and exposed via an [Azure Application Gateway](/azure/application-gateway/overview) is secured by the [Azure Web Application Firewall (WAF)](/azure/web-application-firewall/overview) that provides centralized protection of web applications from common exploits and vulnerabilities. The solution architecture is depicted in the diagram below.
+The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azure/application-gateway/overview) resource deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. You can secure access to the Yelb application hosted by Azure Kubernetes Service (AKS) and exposed via an [Azure Application Gateway](/azure/application-gateway/overview) by using the [Azure Web Application Firewall (WAF)](/azure/web-application-firewall/overview), which provides centralized protection of web applications from common exploits and vulnerabilities. The solution architecture is depicted in the diagram below.
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Architecture diagram of the solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
 
@@ -116,11 +116,11 @@ Azure offers several options for deploying a web application such as the [Yelb a
 
 ### Use Azure Application Gateway for Containers
 
-This solution leverages the cutting-edge [Application Gateway for Containers][azure-agc], a new Azure service that provides load balancing and dynamic traffic management for applications in a Kubernetes cluster.
+This solution uses the cutting-edge [Application Gateway for Containers][azure-agc], a new Azure service that provides load balancing and dynamic traffic management for applications in a Kubernetes cluster.
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-for-containers-aks.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway for Containers.":::
 
-This innovative product enhances the experience for developers and administrators as part of Azure's Application Load Balancing portfolio. It builds upon the capabilities of the [Application Gateway Ingress Controller (AGIC)][agic] and allows Azure Kubernetes Service (AKS) customers to utilize Azure's native Application Gateway load balancer. This guide will walk you through deploying an [Azure Kubernetes Service (AKS)][aks] cluster with an [Application Gateway for Containers][azure-agc] in a fully-automated manner, supporting both bring your own (BYO) and managed by ALB deployments. The [Application Gateway for Containers][azure-agc] offers several features:
+This innovative product enhances the experience for developers and administrators as part of Azure's Application Load Balancing portfolio. It builds upon the capabilities of the [Application Gateway Ingress Controller (AGIC)][agic] and allows Azure Kubernetes Service (AKS) customers to utilize Azure's native Application Gateway load balancer. This guide walks you through deploying an [Azure Kubernetes Service (AKS)][aks] cluster with an [Application Gateway for Containers][azure-agc] in a fully-automated manner, supporting both bring your own (BYO) and managed by ALB deployments. The [Application Gateway for Containers][azure-agc] offers several features:
 
 - [Load Balancing](/azure/application-gateway/for-containers/overview#load-balancing-features): Efficiently distributes incoming traffic across multiple containers for optimal performance and scalability.
 - [Gateway API Implementation](/azure/application-gateway/for-containers/overview#implementation-of-gateway-api): Supports the Gateway API, allowing you to define routing rules and policies in a Kubernetes-native way.
@@ -130,14 +130,14 @@ This innovative product enhances the experience for developers and administrator
 - Header Rewrites: Rewrite HTTP headers of client requests and responses from backend targets using the `IngressExtension` custom resource definition. Learn more about [Ingress API](/azure/application-gateway/for-containers/how-to-header-rewrite-ingress-api) and [Gateway API](/azure/application-gateway/for-containers/how-to-header-rewrite-gateway-api).
 - URL Rewrites: Modify the URL of client requests, including hostname and/or path, and include the newly rewritten URL when initiating requests to backend targets. Find more information on [Ingress API](/azure/application-gateway/for-containers/how-to-url-rewrite-ingress-api) and [Gateway API](/azure/application-gateway/for-containers/how-to-url-rewrite-gateway-api).
 
-However, at this time the Azure Application Gateway for Containers has some limitations. For example, the following features are not currently supported:
+However, at this time, the Azure Application Gateway for Containers has some limitations. For example, the following features are not currently supported:
 
 - [Azure Web Application Firewall](/azure/application-gateway/waf-overview)
 - [Azure CNI Overlay](/azure/aks/azure-cni-overlay)
 - [WebSockets](https://datatracker.ietf.org/doc/html/rfc6455)
 - Private Frontends
 
-It's important to consider that while Application Gateway for Containers can be a great choice for customers adopting a single-cloud approach, particularly focusing on Azure, it may not be the best fit for customers requiring a multi-cloud architecture. If deployment across different cloud platforms such as AWS and GCP is essential, customers might opt for a cloud-agnostic ingress controller like NGINX, Traefik, or HAProxy to avoid vendor lock-in issues. For more information, see [Deploying an Azure Kubernetes Service (AKS) Cluster with Application Gateway for Containers](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/deploying-an-azure-kubernetes-service-aks-cluster-with/ba-p/3967434).
+For more information, see [Deploying an Azure Kubernetes Service (AKS) Cluster with Application Gateway for Containers](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/deploying-an-azure-kubernetes-service-aks-cluster-with/ba-p/3967434).
 
 ### Use Azure Front Door
 
@@ -147,7 +147,7 @@ The following solution uses [Azure Front Door][azure-fd] as a global layer 7 loa
 
 This solution uses [Azure Front Door Premium][azure-fd], [end-to-end TLS encryption](/azure/frontdoor/end-to-end-tls), [Azure Web Application Firewall][azure-waf], and a [Private Link service](/azure/private-link/private-link-service-overview) to securely expose and protect a workload that runs in [AKS](/azure/aks/intro-kubernetes).
 
-This architecture uses the Azure Front Door TLS and Secure Sockets Layer (SSL) offload capability to terminate the TLS connection and decrypt the incoming traffic at the front door. The traffic is reencrypted before it's forwarded to the origin, which is a web application that's hosted in an AKS cluster. HTTPS is configured as the forwarding protocol on Azure Front Door when Azure Front Door connects to the AKS-hosted workload that's configured as an origin. This practice enforces end-to-end TLS encryption for the entire request process, from the client to the origin. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link).
+This architecture uses the Azure Front Door TLS and Secure Sockets Layer (SSL) offload capability to terminate the TLS connection and decrypt the incoming traffic at the front door. Azure Front Door reencrypts the incoming traffic before forwarding it to the AKS-hosted web application via. This practice enforces end-to-end TLS encryption for the entire request process, from the client to the origin. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link).
 
 The [NGINX ingress controller][nginx] exposes the AKS-hosted web application. The NGINX ingress controller is configured to use a private IP address as a front-end IP configuration of the `kubernetes-internal` internal load balancer. The NGINX ingress controller uses HTTPS as the transport protocol to expose the web application. For more information, see [Create an ingress controller by using an internal IP address](/azure/aks/ingress-basic#create-an-ingress-controller-using-an-internal-ip-address).
 
@@ -155,7 +155,7 @@ This solution is recommended in those scenarios where customers deploy the same 
 
 - [Latency](/azure/frontdoor/routing-methods#latency): The latency-based routing ensures that requests are sent to the lowest latency origins acceptable within a sensitivity range. In other words, requests get sent to the nearest set of origins in respect to network latency.
 - [Priority](/azure/frontdoor/routing-methods#priority): A priority can be set to your origins when you want to configure a primary origin to service all traffic. The secondary origin can be a backup in case the primary origin becomes unavailable.
-- [Weighted](/azure/frontdoor/routing-methods#weighted): A weighted value can be assigned to your origins when you want to distribute traffic across a set of origins evenly or according to the weight coefficients. Traffic gets distributed by the weight value if the latencies of the origins are within the acceptable latency sensitivity range in the origin group.
+- [Weighted](/azure/frontdoor/routing-methods#weighted): You can assign a weight to your origins when you want to distribute traffic across a set of origins evenly or according to the weight coefficients. Traffic gets distributed by the weight value if the latencies of the origins are within the acceptable latency sensitivity range in the origin group.
 - [Session Affinity](/azure/frontdoor/routing-methods#affinity): You can configure session affinity for your frontend hosts or domains to ensure requests from the same end user gets sent to the same origin.
 
 The following diagram shows the steps for the message flow during deployment time and runtime.
@@ -174,9 +174,9 @@ The following steps describe the deployment process. This workflow corresponds t
    - The name and resource group of the DNS zone that's used to resolve the Azure Front Door custom domain.
 3. You can use a [deployment script](/azure/azure-resource-manager/bicep/deployment-script-bicep) to install the following packages to your AKS cluster. For more information, check the parameters section of the Bicep module:
    - [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/) using the [Prometheus Community Kubernetes Helm Charts](https://prometheus-community.github.io/helm-charts/). By default, this sample configuration does not install Prometheus and Grafana to the AKS cluster, and rather installs [Azure Managed Prometheus](/azure/azure-monitor/essentials/azure-monitor-workspace-overview) and [Azure Managed Grafana](/azure/managed-grafana/overview).
-   - [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller will use a TLS certificate that has been uploaded to Azure Key Vault in advance.
+   - [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller use a pre-uploaded TLS certificate from Azure Key Vault.
    - [NGINX Ingress Controller][nginx] via an Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on](/azure/aks/app-routing), you don't need to install another instance of the NGINX Ingress Controller via Helm.
-4. An Azure front door [secret resource](/azure/templates/microsoft.cdn/profiles/secrets) is used to manage and store the TLS certificate that's in the Azure key vault. This certificate is used by the [custom domain](/azure/templates/microsoft.cdn/profiles/customdomains) that's associated with the Azure Front Door endpoint.
+4. An Azure front door [secret resource](/azure/templates/microsoft.cdn/profiles/secrets) is used to manage and store the TLS certificate in the Azure key vault. This certificate is used by the [custom domain](/azure/templates/microsoft.cdn/profiles/customdomains) associated with the Azure Front Door endpoint.
 
 > [!NOTE]
 > At the end of the deployment, you need to approve the private endpoint connection before traffic can pass to the origin privately. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link). To approve private endpoint connections, use the Azure portal, the Azure CLI, or Azure PowerShell. For more information, see [Manage a private endpoint connection](/azure/private-link/manage-private-endpoint).
@@ -185,9 +185,9 @@ The following steps describe the deployment process. This workflow corresponds t
 
 The following steps describe the message flow for a request that an external client application initiates during runtime. This workflow corresponds to the orange numbers in the preceding diagram.
 
-1. The client application uses its custom domain to send a request to the web application. The DNS zone that's associated with the custom domain uses a [CNAME record](https://en.wikipedia.org/wiki/CNAME_record) to redirect the DNS query for the custom domain to the original hostname of the Azure Front Door endpoint.
+1. The client application uses its custom domain to send a request to the web application. The DNS zone associated with the custom domain uses a [CNAME record](https://en.wikipedia.org/wiki/CNAME_record) to redirect the DNS query for the custom domain to the original hostname of the Azure Front Door endpoint.
 2. Azure Front Door traffic routing occurs in several stages. Initially, the request is sent to one of the [Azure Front Door points of presence](/azure/frontdoor/edge-locations-by-region). Then Azure Front Door uses the configuration to determine the appropriate destination for the traffic. Various factors can influence the routing process, such as the Azure front door caching, web application firewall (WAF), routing rules, rules engine, and caching configuration. For more information, see [Routing architecture overview](/azure/frontdoor/front-door-routing-architecture).
-3. Azure Front Door forwards the incoming request to the [Azure private endpoint](/azure/private-link/private-endpoint-overview) that's connected to the [Private Link service](/azure/private-link/private-link-service-overview) that exposes the AKS-hosted workload.
+3. Azure Front Door forwards the incoming request to the [Azure private endpoint](/azure/private-link/private-endpoint-overview) connected to the [Private Link service](/azure/private-link/private-link-service-overview) that exposes the AKS-hosted workload.
 4. The request is sent to the Private Link service.
 5. The request is forwarded to the *kubernetes-internal* AKS internal load balancer.
 6. The request is sent to one of the agent nodes that hosts a pod of the NGINX ingress controller.
@@ -214,7 +214,7 @@ The cloud-agnostic nature of this solution allows multi-cloud customers to deplo
 
 ## Conclusions
 
-In conclusion, there are multiple architectures available on Azure to deploy and protect the [Yelb][yelb] application on [Azure Kubernetes Service (AKS)][aks]. These solutions include using [Azure Web Application Firewall (WAF)][azure-waf] with [Azure Application Gateway][azure-ag] or [Azure Front Door][azure-fd], or leveraging the open-source web access firewall [ModSecurity][mod-security] with the [NGINX ingress controller][nginx], or using the cutting-edge [Application Gateway for Containers][azure-agc]. Each of these solutions offers its own set of features and benefits, allowing you to choose the one that best suits your requirements. Whether you need regional load balancing, integrated WAF protection, or a cloud-agnostic approach, Azure provides the necessary tools and services to securely deploy and protect your Yelb application.
+In conclusion, there are multiple architectures available on Azure to deploy and protect the [Yelb][yelb] application on [Azure Kubernetes Service (AKS)][aks]. These solutions include using [Azure Web Application Firewall (WAF)][azure-waf] with [Azure Application Gateway][azure-ag] or [Azure Front Door][azure-fd], or using the open-source web access firewall [ModSecurity][mod-security] with the [NGINX ingress controller][nginx], or using the cutting-edge [Application Gateway for Containers][azure-agc]. Each of these solutions offers its own set of features and benefits, allowing you to choose the one that best suits your requirements. Whether you need regional load balancing, integrated WAF protection, or a cloud-agnostic approach, Azure provides the necessary tools and services to securely deploy and protect your Yelb application.
 
 ## Next steps
 
