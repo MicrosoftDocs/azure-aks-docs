@@ -53,7 +53,7 @@ Both AKS and EKS offer command-line tools to simplify the creation and managemen
 - AKS: [Azure CLI][azure-cli] is the primary command-line tool for managing AKS clusters. It provides a comprehensive set of commands to create, configure, and manage AKS resources. Azure CLI's intuitive interface and extensive documentation make it easy to work with AKS.
 - EKS: Amazon provides [eksctl][eksctl], a dedicated command-line tool for managing EKS clusters. eksctl automates many of the cluster creation and management tasks, making it simpler for developers and operators to work with EKS. eksctl is designed for ease of use and provides a streamlined experience for managing EKS environments.
 
-## Application Gateway
+## Load Balancing
 
 [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] are two popular load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
 
