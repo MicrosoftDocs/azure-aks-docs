@@ -5,7 +5,7 @@ description: Learn how to move a persistent volume between Azure Kubernetes Serv
 author: tamram
 
 ms.author: tamram
-ms.topic: article
+ms.topic: concept-article
 ms.date: 04/08/2024
 ---
 

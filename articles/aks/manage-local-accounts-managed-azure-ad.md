@@ -1,7 +1,7 @@
 ---
 title: Manage local accounts with AKS-managed Microsoft Entra integration
 description: Learn how to managed local accounts when integrating Microsoft Entra ID in your Azure Kubernetes Service (AKS) clusters.
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 04/20/2023
 author: tamram

@@ -1,7 +1,7 @@
 ---
 title: Node autoprovisioning (preview)
 description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning (preview).
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
 ms.author: schaffererin

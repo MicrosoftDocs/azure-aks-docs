@@ -1,7 +1,7 @@
 ---
 title: View kubelet logs in Azure Kubernetes Service (AKS)
 description: Learn how to view troubleshooting information in the kubelet logs from Azure Kubernetes Service (AKS) nodes
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-monitoring
 ms.date: 05/09/2023
 author: nickomang

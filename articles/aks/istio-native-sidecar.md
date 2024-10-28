@@ -1,7 +1,7 @@
 ---
 title: Enable native sidecar mode for Istio-based service mesh add-on in Azure Kubernetes Service (AKS) (preview)
 description: Enable native sidecar mode for Istio-based service mesh add-on in Azure Kubernetes Service (AKS) (preview).
-ms.topic: article
+ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.date: 05/07/2024

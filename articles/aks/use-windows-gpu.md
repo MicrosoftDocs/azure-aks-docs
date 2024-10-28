@@ -1,7 +1,7 @@
 ---
 title: Use GPUs for Windows node pools on Azure Kubernetes Service (AKS) (preview)
 description: Learn how to use Windows GPUs for high performance compute or graphics-intensive workloads on Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 03/18/2024
 author: schaffererin

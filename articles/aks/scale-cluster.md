@@ -1,7 +1,7 @@
 ---
 title: Manually scale nodes in an Azure Kubernetes Service (AKS) cluster
 description: Learn how to manually scale the number of nodes in an Azure Kubernetes Service (AKS) cluster.
-ms.topic: article
+ms.topic: concept-article
 ms.date: 01/22/2024
 author: schaffererin
 ms.author: schaffererin

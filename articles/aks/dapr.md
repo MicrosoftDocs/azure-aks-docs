@@ -4,7 +4,7 @@ description: Install and configure Dapr on your Azure Kubernetes Service (AKS) a
 author: greenie-msft
 ms.author: nigreenf
 ms.service: azure-kubernetes-service
-ms.topic: article
+ms.topic: concept-article
 ms.date: 07/16/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions

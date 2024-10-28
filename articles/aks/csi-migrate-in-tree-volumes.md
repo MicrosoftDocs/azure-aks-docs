@@ -1,7 +1,7 @@
 ---
 title: Migrate from in-tree storage class to CSI drivers on Azure Kubernetes Service (AKS)
 description: Learn how to migrate from in-tree persistent volume to the Container Storage Interface (CSI) driver in an Azure Kubernetes Service (AKS) cluster.
-ms.topic: article
+ms.topic: concept-article
 ms.date: 07/20/2024
 author: mgoedtel
 ms.subservice: aks-storage

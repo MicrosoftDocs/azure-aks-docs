@@ -4,7 +4,7 @@ description: Learn how to configure the OpenID Connect (OIDC) provider for a clu
 author: tamram
 
 ms.author: tamram
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 05/13/2024

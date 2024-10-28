@@ -3,7 +3,7 @@ title:  Block pod access to the IMDS endpoint (preview)
 description: Learn how to enable IMDS restriction on an AKS cluster to restrict pod access to the IMDS endpoint (preview).
 author: charleswool
 
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 10/23/2024
 ms.author: yuewu2

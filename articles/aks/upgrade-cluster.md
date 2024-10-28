@@ -1,7 +1,7 @@
 ---
 title: Upgrade options for Azure Kubernetes Service (AKS) clusters
 description: Learn the different ways to upgrade an Azure Kubernetes Service (AKS) cluster.
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-upgrade
 ms.date: 02/08/2024
 author: schaffererin

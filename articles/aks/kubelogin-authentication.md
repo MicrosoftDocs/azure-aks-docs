@@ -4,7 +4,7 @@ description: Learn how to use the kubelogin plugin for all Microsoft Entra authe
 author: tamram
 
 ms.author: tamram
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom:
 ms.date: 11/28/2023

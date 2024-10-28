@@ -2,7 +2,7 @@
 title: Secure pod traffic with network policies
 titleSuffix: Azure Kubernetes Service
 description: Learn how to secure traffic that flows in and out of pods by using Kubernetes network policies in Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 03/28/2024
 author: schaffererin

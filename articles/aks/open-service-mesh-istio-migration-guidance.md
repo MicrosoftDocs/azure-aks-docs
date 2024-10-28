@@ -2,7 +2,7 @@
 title: Migration guidance for Open Service Mesh to Istio
 description: Migration guidance for Open Service Mesh configurations to Istio
 services: container-service
-ms.topic: article
+ms.topic: concept-article
 ms.date: 09/25/2024
 ms.author: pgibson
 ---

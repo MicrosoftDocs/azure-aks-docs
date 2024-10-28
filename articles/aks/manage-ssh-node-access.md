@@ -2,7 +2,7 @@
 title: Manage SSH access on Azure Kubernetes Service cluster nodes 
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure SSH and manage SSH keys on Azure Kubernetes Service (AKS) cluster nodes.
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/29/2024
