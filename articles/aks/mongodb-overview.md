@@ -25,7 +25,7 @@ This article walks through prerequisite information for deploying a MongoDB clus
 
 A [MongoDB sharded cluster](https://www.mongodb.com/docs/manual/core/sharded-cluster-components/) handles large datasets and high throughput by distributing data across multiple servers or shards. This architecture enables horizontal scaling, which is essential for applications that have growing data and performance needs.
 
-Here's a breakdown of the key components of a MongoDB sharded cluster and how it works:
+Here's a breakdown of its key components and how it works:
 
 * **Shards**: Individual MongoDB instances called [shards](https://www.mongodb.com/docs/manual/core/sharded-cluster-shards/) hold subsets of the data. Each shard is a replica set, or a group of MongoDB instances that replicate data among themselves. Replica sets help ensure high availability and fault tolerance.
 * **Config servers**: The servers that store metadata and configuration settings for the sharded cluster are called [config servers](https://www.mongodb.com/docs/manual/core/sharded-cluster-config-servers/). They keep track of the cluster's data distribution and routing information. A cluster typically has three config servers to provide redundancy.
@@ -36,9 +36,9 @@ Here's a breakdown of the key components of a MongoDB sharded cluster and how it
 
 ### Percona Operator for MongoDB
 
-The Percona Operator for MongoDB is an open-source tool developed by [Percona](https://www.percona.com/). It automates the deployment, management, and scaling of MongoDB clusters within Kubernetes environments. It simplifies operations by handling tasks such as provisioning, scaling, backup, and recovery. Its handling of all those tasks helps ensure high availability and performance of MongoDB clusters.
+The Percona Operator for MongoDB is an open-source tool that [Percona](https://www.percona.com/) developed. It automates the deployment, management, and scaling of MongoDB clusters within Kubernetes environments. It simplifies operations by handling tasks such as provisioning, scaling, backup, and recovery. Its handling of all those tasks helps ensure high availability and performance of MongoDB clusters.
 
-The operator uses Kubernetes custom resource definitions (CRDs) to manage MongoDB configurations declaratively and to handle failovers, monitoring, and alerts. The result is reduced administrative overhead and consistent management practices. The Percona Operator enhances the efficiency and reliability of MongoDB deployments, particularly in cloud-native applications. It's well suited for development, testing, and production scenarios.
+The operator uses Kubernetes custom resource definitions (CRDs) to manage MongoDB configurations declaratively and to handle failovers, monitoring, and alerts. The result is reduced administrative overhead and consistent management practices. The Percona Operator enhances the efficiency and reliability of MongoDB deployments, particularly in cloud-native applications. It's ideal for development, testing, and production scenarios.
 
 :::image source="../aks/media/mongodb-overview/mongodb-shared-cluster.png" alt-text="Diagram that shows how the Percona Operator relates to a MongoDB cluster." lightbox="../aks/media/mongodb-overview/mongodb-shared-cluster.png":::
 
@@ -49,7 +49,7 @@ The goal of the proposed solution is to:
 * Ensure that the MongoDB cluster can effectively handle large datasets and high-throughput operations.
 * Maintain high availability and fault tolerance.
 
-It will accomplish this goal through the use of replica sets, anti-affinity rules, and proper resource allocation.
+The solution will accomplish this goal through the use of replica sets, anti-affinity rules, and proper resource allocation.
 
 ### Deployment strategy
 

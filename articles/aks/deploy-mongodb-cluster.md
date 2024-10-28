@@ -105,7 +105,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     ```azurecli-interactive
     #MongoDB connection strings can contain special characters in the password, which need to be URL encoded. 
     #This is because the connection string is a URI, and special characters can interfere with the URI structure.
-    #This function generates secrets of 32 characters using only alphanumeric characters
+    #This function generates secrets of 32 characters using only alphanumeric characters.
 
     generateRandomPasswordString() {
         cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
@@ -191,7 +191,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     secretstore.external-secrets.io/azure-store created
     ```
 
-2. Create an `ExternalSecret` resource, which creates a Kubernetes secret in the `mongodb` namespace with the MongoDB secrets stored in your key vault, by using the `kubectl apply` command:
+2. Create an `ExternalSecret` resource by using the `kubectl apply` command. This resource creates a Kubernetes secret in the `mongodb` namespace with the MongoDB secrets stored in your key vault.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -211,7 +211,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
         creationPolicy: Owner
 
       data:
-        # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
+        # name of the SECRET in the Azure key vault (no prefix is by default a SECRET)
         - secretKey: MONGODB_BACKUP_USER
           remoteRef:
             key: MONGODB-BACKUP-USER
@@ -252,7 +252,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     externalsecret.external-secrets.io/cluster-aks-mongodb-secrets created
     ```
 
-3. Create an `ExternalSecret` resource, which creates a Kubernetes secret in the `mongodb` namespace for Azure Blob Storage secrets stored in your key vault, by using the `kubectl apply` command:
+3. Create an `ExternalSecret` resource by using the `kubectl apply` command. This resource creates a Kubernetes secret in the `mongodb` namespace for Azure Blob Storage secrets stored in your key vault.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -272,7 +272,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
         creationPolicy: Owner
 
       data:
-        # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
+        # name of the SECRET in the Azure key vault (no prefix is by default a SECRET)
         - secretKey: AZURE_STORAGE_ACCOUNT_NAME
           remoteRef:
             key: AZURE-STORAGE-ACCOUNT-NAME
@@ -709,12 +709,12 @@ You can back up your data to Azure by using one of the following methods:
 
 The Percona Operator can perform either of these backup types:
 
-* **Logical backup**: Query the Percona Server for MongoDB for the database data, and then write the retrieved data to the remote backup storage.
+* **Logical backup**: Query Percona Server for MongoDB for the database data, and then write the retrieved data to the remote backup storage.
 * **Physical backup**: Copy physical files from the Percona Server for MongoDB `dbPath` data directory to the remote backup storage.
 
 Logical backups use less storage but are slower than physical backups.
 
-To store backups on Azure Blob Storage by using Percona, you need to create a secret. You completed this step in an earlier command. For detailed instructions, follow the steps in the [Percona documentation on Azure Blob Storage](https://docs.percona.com/percona-operator-for-mongodb/backups-storage.html#microsoft-azure-blob-storage).
+To store backups on Azure Blob Storage by using Percona, you need to create a secret. You completed this step in an earlier command. For detailed instructions, follow the steps in the [Percona documentation about Azure Blob Storage](https://docs.percona.com/percona-operator-for-mongodb/backups-storage.html#microsoft-azure-blob-storage).
 
 ### Configure scheduled backups
 

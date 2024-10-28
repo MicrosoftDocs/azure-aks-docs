@@ -155,7 +155,7 @@ AZURE-STORAGE-ACCOUNT-KEY  xxx4tE3xxxxxxxxxxxxxxxxxxxxxxxxxxxx...
 
 ## Create an AKS cluster
 
-In this step, you create an AKS cluster with a workload identity and OpenID Connect (OIDC) issuer enabled. The workload identity gives the External Secrets Operator service account permission to access the MongoDB passwords stored in your key vault.
+In the following steps, you create an AKS cluster with a workload identity and OpenID Connect (OIDC) issuer enabled. The workload identity gives the External Secrets Operator service account permission to access the MongoDB passwords stored in your key vault.
 
 1. Create an AKS cluster by using the [`az aks create`](/cli/azure/aks#az-aks-create) command:
 
