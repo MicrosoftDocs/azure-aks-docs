@@ -88,7 +88,7 @@ In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures 
 
 The message flow can be described as follows:
 
-- The [Azure Application Gateway][azure-ag] takes care of TLS termination and sends incoming calls to to the AKS-hosted `yelb-ui` service over HTTP.
+- The [Azure Application Gateway][azure-ag] takes care of TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
 - To ensure secure communication, the Application Gateway Listener makes use of an SSL certificate obtained from [Azure Key Vault][azure-kv].
 - The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing malicious attacks.
 - The Application Gateway Backend HTTP Settings are configured to invoke the Yelb application via HTTP, utilizing port 80.
@@ -110,7 +110,7 @@ Before diving into the solution, let's quickly go over [TLS termination and end-
 [Azure Application Gateway][azure-ag] supports the termination of Transport Layer Security (TLS) at the gateway level, which means that traffic is decrypted at the gateway before being sent to the backend servers. This approach offers several benefits:
 
 - **Improved performance**: The initial handshake for TLS decryption can be resource-intensive. By caching TLS session IDs and managing TLS session tickets at the application gateway, multiple requests from the same client can utilize cached values, improving performance. If TLS decryption is performed on the backend servers, the client needs to reauthenticate with each server change.
-- **Better utilization of backend servers**: SSL/TLS processing requires significant CPU resources, especially with increasing key sizes. By offloading this work from the backend servers to the application gateway, the servers can focus more efficiently on delivering content.
+- **Better utilization of backend servers**: SSL/TLS processing requires significant CPU resources, especially with increasing key sizes. If you offload this work from the backend servers to the Application Gateway, the servers can focus more efficiently on delivering content.
 - **Intelligent routing**: Decrypting traffic at the application gateway allows access to request content such as headers and URIs. This data can be utilized to intelligently route requests.
 - **Certificate management**: By adding TLS termination at the application gateway, certificates only need to be purchased and installed on the gateway rather than on every backend server.
 
@@ -122,7 +122,7 @@ If you adopt a [Zero Trust](https://www.microsoft.com/en-us/security/business/ze
 
 In our scenario, implementing the zero trust security model involves utilizing the Azure Application Gateway as a service proxy, which acts as a front-end for incoming requests. These requests then travel down to the NGINX Ingress controller on Azure Kubernetes Service (AKS) in an encrypted format.
 
-By employing the zero trust security model, several advantages can be gained concerning the privacy and security of communications:
+Zero trust security model provides several advantages to improve the privacy and security of communications:
 
 1. **Enhanced Access Control:** With zero trust, access control is based on continuous verification. This approach ensures that only authorized users or devices are granted access to specific resources, thus reducing the risk of unauthorized access and potential data breaches.
 2. **Stronger Data Protection:** The encryption of requests ensures that sensitive information is transmitted securely and mitigates the risk of unauthorized interception and protects the privacy of communications.
@@ -172,7 +172,7 @@ The Application Gateway Listener and the [Kubernetes ingress][kubernetes-ingress
 - **Cookie Issues**: Cookies play a crucial role in maintaining user sessions and passing information between the client and the server. When the hostname differs, cookies may not work as expected, leading to issues such as failed authentication, improper session handling, and incorrect redirection.
 - **End-to-End TLS/SSL Requirements**: If end-to-end TLS/SSL is required for secure communication between the proxy and the backend service, a matching TLS certificate for the original hostname is necessary. Using the same hostname simplifies the certificate management process and ensures that secure communication is established seamlessly.
 
-By using the same hostname for the service proxy and the backend web application, these potential problems can be avoided. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling are all functioning correctly. This technique is especially important in platform as a service (PaaS) offerings, where the complexity of certificate management can be reduced by utilizing the managed TLS certificates provided by the PaaS service. 
+You can avoid these problems if you adopt the same hostname for the service proxy and the backend web application. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling are all functioning correctly. This technique is especially important in platform as a service (PaaS) offerings, where the complexity of certificate management can be reduced by utilizing the managed TLS certificates provided by the PaaS service. 
 
 ### Message Flow
 
@@ -195,19 +195,19 @@ The following steps describe the deployment process. This workflow corresponds t
    - [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller use a pre-uploaded TLS certificate from Azure Key Vault.
    - [NGINX Ingress Controller][nginx] via a Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon], you don't need to install another instance of the NGINX Ingress Controller via Helm.
 4. The Application Gateway Listener retrieves the TLS certificate from Azure key Vault.
-5. When deploying the Yelb application, the [Kubernetes ingress][kubernetes-ingress] object utilizes the certificate obtained from the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] to expose the Yelb UI service via HTTPS.
+5. The [Kubernetes ingress][kubernetes-ingress] object utilizes the certificate obtained from the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] to expose the Yelb UI service via HTTPS.
 
 #### Runtime workflow
 
 The following steps describe the message flow for a request that an external client application initiates during runtime. This workflow corresponds to the orange numbers in the preceding diagram.
 
-1. The client application calls the Yelb application using its hostname. The DNS zone associated with the custom domain of the Application Gateway Listener uses an A record to resolve the DNS query with the addres of the Azure Public IP used by the Frontend IP Configuration of the Application Gateway.
+1. The client application calls the sample web application using its hostname. The DNS zone associated with the custom domain of the Application Gateway Listener uses an A record to resolve the DNS query with the addres of the Azure Public IP used by the Frontend IP Configuration of the Application Gateway.
 2. The request is sent to the Azure Public IP used by the Frontend IP Configuration of the Application Gateway.
 3. The Application Gateway performs thw following actions.
    - The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
    - The Application Gateway Listener utilizes an SSL certificate obtained from [Azure Key Vault][azure-kv].
    - The Azure WAF Policy associated to the Listener is used to run OWASP rules and custom rules against the incoming request and block malicious attacks.
-   - The Application Gateway Backend HTTP Settings are configured to invoke the Yelb application via HTTPS on port 443.
+   - The Application Gateway Backend HTTP Settings are configured to invoke the sample web application via HTTPS on port 443.
 4. The Application Gateway Backend Pool calls the NGINX ingress controller through the AKS internal load balancer using HTTPS.
 5. The request is sent to one of the agent nodes that hosts a pod of the NGINX ingress controller.
 6. One of the NGINX ingress controller replicas handles the request and sends the request to one of the service endpoints of the `yelb-ui` service.
@@ -278,7 +278,7 @@ You can deploy the [Bicep templates][bicep-dir] in the companion [sample][azure-
 - `vmAdminUsername`: specifies the name of the administrator account of the virtual machine.
 - `vmAdminPasswordOrKey`: specifies the SSH Key or password for the virtual machine.
 - `aksClusterSshPublicKey`:  specifies the SSH Key or password for AKS cluster agent nodes.
-- `aadProfileAdminGroupObjectIDs`: when deploying an AKS cluster with Azure AD and Azure RBAC integration, this array parameter contains the list of Azure AD group object IDs that have the admin role of the cluster.
+- `aadProfileAdminGroupObjectIDs`: when creating an an AKS cluster with [Microsoft Entra ID](/en-us/azure/aks/azure-ad-integration-cli) and [Azure RBAC](/azure/aks/azure-ad-rbac) integration, this array parameter contains the list of Microsoft Entra ID group object IDs that have the admin role of the cluster.
 
 This is the full list of the parameters.
 
@@ -699,21 +699,21 @@ fi
 
 # Get the user principal name of the current user
 if [ -z $userPrincipalName ]; then
-  echo "Retrieving the user principal name of the current user from the [$tenantId] Azure AD tenant..."
+  echo "Retrieving the user principal name of the current user from the [$tenantId] Microsoft Entra ID tenant..."
   userPrincipalName=$(az account show \
     --query user.name \
     --output tsv \
     --only-show-errors)
   if [[ -n $userPrincipalName ]]; then
-    echo "[$userPrincipalName] user principal name successfully retrieved from the [$tenantId] Azure AD tenant"
+    echo "[$userPrincipalName] user principal name successfully retrieved from the [$tenantId] Microsoft Entra ID tenant"
   else
-    echo "Failed to retrieve the user principal name of the current user from the [$tenantId] Azure AD tenant"
+    echo "Failed to retrieve the user principal name of the current user from the [$tenantId] Microsoft Entra ID tenant"
     exit
   fi
 fi
 
-# Retrieve the objectId of the user in the Azure AD tenant used by AKS for user authentication
-echo "Retrieving the objectId of the [$userPrincipalName] user principal name from the [$tenantId] Azure AD tenant..."
+# Retrieve the objectId of the user in the Microsoft Entra ID tenant used by AKS for user authentication
+echo "Retrieving the objectId of the [$userPrincipalName] user principal name from the [$tenantId] Microsoft Entra ID tenant..."
 userObjectId=$(az ad user show \
   --id $userPrincipalName \
   --query id \
