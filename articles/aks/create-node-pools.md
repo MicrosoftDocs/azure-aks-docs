@@ -1,7 +1,7 @@
 ---
 title: Create node pools in Azure Kubernetes Service (AKS)
 description: Learn how to create multiple node pools for a cluster in Azure Kubernetes Service (AKS).
-ms.topic: concept-article
+ms.topic: how-to
 ms.custom: devx-track-azurecli, build-2023, linux-related-content
 ms.date: 12/08/2023
 author: schaffererin

@@ -2,7 +2,7 @@
 title: RDP to AKS Windows Server nodes
 titleSuffix: Azure Kubernetes Service
 description: Learn how to create an RDP connection with Azure Kubernetes Service (AKS) cluster Windows Server nodes for troubleshooting and maintenance tasks.
-ms.topic: concept-article
+ms.topic: how-to
 ms.custom: devx-track-azurecli, devx-track-azurepowershell
 ms.author: mattmcinnes
 ms.date: 04/26/2023

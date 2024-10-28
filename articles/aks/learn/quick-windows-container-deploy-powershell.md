@@ -1,7 +1,7 @@
 ---
 title: Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using PowerShell
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in a Windows Server container in Azure Kubernetes Service (AKS) using PowerShell.
-ms.topic: concept-article
+ms.topic: how-to
 ms.date: 01/11/2024
 author: tamram
 ms.author: tamram

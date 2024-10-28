@@ -1,7 +1,7 @@
 ---
 title: Use Windows HostProcess containers
 description: Learn how to use HostProcess & Privileged containers for Windows workloads on AKS
-ms.topic: concept-article
+ms.topic: how-to
 ms.date: 05/09/2023
 ms.author: juda
 

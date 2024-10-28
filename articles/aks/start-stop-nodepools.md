@@ -1,7 +1,7 @@
 ---
 title: Start and stop a node pool on Azure Kubernetes Service (AKS)
 description: Learn how to start or stop a node pool on Azure Kubernetes Service (AKS).
-ms.topic: concept-article
+ms.topic: how-to
 ms.date: 04/25/2023
 author: qpetraroia
 ms.author: qpetraroia

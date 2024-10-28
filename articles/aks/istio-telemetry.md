@@ -1,7 +1,7 @@
 ---
 title: Istio-based service mesh add-on telemetry
 description: Configure telemetry for Istio-based service mesh add-on for Azure Kubernetes Service.
-ms.topic: concept-article
+ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 08/14/2024
 ms.author: nshankar

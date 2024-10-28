@@ -1,7 +1,7 @@
 ---
 title: Install the Open Service Mesh (OSM) add-on using Azure CLI
 description: Use Azure CLI to install the Open Service Mesh (OSM) add-on on an Azure Kubernetes Service (AKS) cluster.
-ms.topic: concept-article
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 09/25/2024
 ms.author: pgibson

@@ -4,7 +4,7 @@ description: Learn how to migrate your managed clusters from Dapr OSS to the Dap
 author: hhunter-ms
 ms.author: hannahhunter
 ms.reviewer: nigreenf
-ms.topic: concept-article
+ms.topic: how-to
 ms.date: 09/05/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli

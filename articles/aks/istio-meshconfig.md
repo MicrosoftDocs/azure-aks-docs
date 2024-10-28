@@ -1,7 +1,7 @@
 ---
 title: Configure Istio-based service mesh add-on for Azure Kubernetes Service
 description: Configure Istio-based service mesh add-on for Azure Kubernetes Service
-ms.topic: concept-article
+ms.topic: how-to
 ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 02/14/2024

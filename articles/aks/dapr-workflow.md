@@ -5,7 +5,7 @@ author: hhunter-ms
 ms.author: hannahhunter
 ms.reviewer: nuversky
 ms.service: azure-kubernetes-service
-ms.topic: concept-article
+ms.topic: how-to
 ms.date: 08/02/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli

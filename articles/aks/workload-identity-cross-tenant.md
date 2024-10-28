@@ -2,7 +2,7 @@
 title: Configure cross-tenant workload identity on Azure Kubernetes Service (AKS)
 description: Learn how to configure cross-tenant workload identity on Azure Kubernetes Service (AKS).
 author: schaffererin
-ms.topic: concept-article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 07/03/2024
 ms.author: schaffererin
