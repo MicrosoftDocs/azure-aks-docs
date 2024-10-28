@@ -64,7 +64,6 @@ You can generate various Kubectl commands for your AKS cluster using these promp
  * [@azure] what is the kubectl command to get pod info for my AKS cluster?
  * [@azure] Can you get kubectl command for getting all API resources
 
----
 
 For more information, see [AKS extension for Visual Studio Code features][aks-vscode-features].
 
