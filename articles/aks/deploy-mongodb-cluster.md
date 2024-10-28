@@ -344,31 +344,31 @@ The Percona Operator is typically distributed as a Kubernetes `Deployment` or `O
 The script deploys a MongoDB cluster with the following configuration:
 
 ```bash
-  kubectl apply -f - <<EOF
-  apiVersion: psmdb.percona.com/v1
-  kind: PerconaServerMongoDB
-  metadata:
-    name: ${AKS_MONGODB_CLUSTER_NAME}
-    namespace: ${AKS_MONGODB_NAMESPACE}
-    finalizers:
-      - delete-psmdb-pods-in-order
-  spec:
-    crVersion: 1.16.0
-    image: ${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5
-    imagePullPolicy: Always
-    updateStrategy: SmartUpdate
-    upgradeOptions:
-      versionServiceEndpoint: https://check.percona.com
-      apply: disabled
-      schedule: "0 2 * * *"
-      setFCV: false
-    secrets:
-      users: "${AKS_MONGODB_SECRETS_NAME}"
-      encryptionKey: "${AKS_MONGODB_SECRETS_ENCRYPTION_KEY}"
-    pmm:
-      enabled: false
-      image: ${MY_ACR_REGISTRY}.azurecr.io/pmm-client:2.41.2
-      serverHost: monitoring-service
+kubectl apply -f - <<EOF
+apiVersion: psmdb.percona.com/v1
+kind: PerconaServerMongoDB
+metadata:
+  name: ${AKS_MONGODB_CLUSTER_NAME}
+  namespace: ${AKS_MONGODB_NAMESPACE}
+  finalizers:
+    - delete-psmdb-pods-in-order
+spec:
+  crVersion: 1.16.0
+  image: ${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5
+  imagePullPolicy: Always
+  updateStrategy: SmartUpdate
+  upgradeOptions:
+    versionServiceEndpoint: https://check.percona.com
+    apply: disabled
+    schedule: "0 2 * * *"
+    setFCV: false
+  secrets:
+    users: "${AKS_MONGODB_SECRETS_NAME}"
+    encryptionKey: "${AKS_MONGODB_SECRETS_ENCRYPTION_KEY}"
+  pmm:
+    enabled: false
+    image: ${MY_ACR_REGISTRY}.azurecr.io/pmm-client:2.41.2
+    serverHost: monitoring-service
   replsets:
     - name: rs0
       size: 3
@@ -490,7 +490,7 @@ The script deploys a MongoDB cluster with the following configuration:
         compressionType: gzip
         compressionLevel: 6
 EOF
-```  
+``` 
 
 Example output:
 <!-- expected_similarity=0.8 -->
