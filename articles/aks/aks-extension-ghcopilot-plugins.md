@@ -26,7 +26,7 @@ You can access the AKS plugins for GitHub Copilot for Azure by opening up the Gi
 
 ### Create an AKS cluster
 
-:::image type="content" source="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-create-cluster-1.png" alt-text="Screenshot showing a cluster being created via GitHub Copilot for Azure." lightbox="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-create-cluster-1.png":::
+:::image type="content" source="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-create-cluster.png" alt-text="Screenshot showing a cluster being created via GitHub Copilot for Azure." lightbox="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-create-cluster.png":::
 
 You can create an AKS cluster using the following prompts:
 
