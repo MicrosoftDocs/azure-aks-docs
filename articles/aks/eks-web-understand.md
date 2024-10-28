@@ -55,7 +55,7 @@ Both AKS and EKS offer command-line tools to simplify the creation and managemen
 
 ## Application Gateway
 
-[Azure Application Gateway][azure-ag] and [[AWS Application Load Balancer][aws-alb]] are two popular load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
+[Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] are two popular load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
 
 [Azure Application Gateway][azure-ag] is a powerful application delivery controller that provides layer 7 load balancing, SSL/TLS termination, URL-based routing, and other advanced features. It's designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] and [Application Gateway Ingress Controller][agic] for [Azure Kubernetes Service (AKS)][aks].
 
