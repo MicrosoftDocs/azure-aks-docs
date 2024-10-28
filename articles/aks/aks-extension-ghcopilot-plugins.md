@@ -22,7 +22,7 @@ Before you begin, make sure you have the following resources:
 
 ## How to start using the AKS plugins for GitHub Copilot for Azure
 
-You can access the AKS plugins for GitHub Copilot for Azure by opening up the GitHub Copilot side-bar pannel in Visual Studio Code.
+You can access the AKS plugins for GitHub Copilot for Azure by opening up the GitHub Copilot side-bar panel in Visual Studio Code.
 
 ### Create an AKS cluster
 
