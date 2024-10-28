@@ -83,7 +83,7 @@ For other configurations, see:
 
 - [DNS and SSL configuration](/azure/aks/app-routing-dns-ssl)
 - [Application routing add-on configuration](/azure/aks/app-routing-nginx-configuration)
-- [Configure internal NGIX ingress controller for Azure private DNS zone](/azure/aks/create-nginx-ingress-private-controller).
+- [Configure internal NGINX ingress controller for Azure private DNS zone](/azure/aks/create-nginx-ingress-private-controller).
 
 The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azure/application-gateway/overview) resource that is deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. The access to the Yelb application hosted by Azure Kubernetes Service (AKS) and exposed via an [Azure Application Gateway](/azure/application-gateway/overview) is secured by the [Azure Web Application Firewall (WAF)](/azure/web-application-firewall/overview) that provides centralized protection of web applications from common exploits and vulnerabilities. The solution architecture is depicted in the diagram below.
 

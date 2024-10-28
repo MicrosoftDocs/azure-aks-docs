@@ -72,7 +72,7 @@ If you run the following command:
 kubectl get service --namespace ingress-basic
 ```
 
-you can see that the `EXTERNAL-IP` of the `nginx-ingress-ingress-nginx-controller` service is a private IP address. This is the private IP addres of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster.
+You can see that the `EXTERNAL-IP` of the `nginx-ingress-ingress-nginx-controller` service is a private IP address. This address is the private IP of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster.
 
 ```bash
 NAME                                               TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
@@ -83,9 +83,9 @@ nginx-ingress-ingress-nginx-controller-metrics     ClusterIP      172.16.109.138
 
 ## Deploy the Yelb application
 
-If you choose to deploy the sample using the [TLS Termination at Application Gateway and Yelb Invocation via HTTP]((./eks-web-prepare.md#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder. Instead, if you want to deploy the sample using the [Implementing End-to-End TLS Using Azure Application Gateway](./eks-web-prepare.md#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `https` folder.
+If you choose to deploy the sample using the [TLS Termination at Application Gateway and Yelb Invocation via HTTP]((./eks-web-prepare.md#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder. Instead, if you want to deploy the sample using the [Implementing End-to-End TLS Using Azure Application Gateway](./eks-web-prepare.md#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the web application in the `https` folder.
 
-In the remaining part of this article, we guide you through the deployment process of the Yelb application using the end-to-end TLS approach. Before running any script, make sure to customize the values of the variables within the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
+In the remaining part of this article, we guide you through the deployment process of the sample application using the end-to-end TLS approach. Before running any script, make sure to customize the values of the variables within the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
 
 ```bash
 # Azure Subscription and Tenant
@@ -187,7 +187,7 @@ fi
 helm get values $NGINX_RELEASE_NAME --namespace $NGINX_NAMESPACE
 ```
 
-You are now ready to deploy the [Yelb][yelb] application. You can run the `03-deploy-yelb.sh` to deploy the Yelb application and a [Kubernetes Ingress][kubernetes-ingress] object to make the `yelb-ui`service accessible to the public internet.
+You're now ready to deploy the [Yelb][yelb] application. You can run the `03-deploy-yelb.sh` to deploy the Yelb application and a [Kubernetes Ingress][kubernetes-ingress] object to make the `yelb-ui`service accessible to the public internet.
 
 ```bash
 #!/bin/bash
@@ -264,7 +264,7 @@ cat ingress.yml |
 kubectl get all -n yelb
 ```
 
-Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It's important to note that the Kubernetes secret containing the TLS certificate is only created by the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) when the `SecretProviderClass` and volume definition is included in the `deployment`. To this purpose, we need to modify the YAML manifest of the `yelb-ui` deployment as follows:
+Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It's important to note that the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) creates the Kubernetes secret containing the TLS certificate only when the `SecretProviderClass` and volume definition is included in the `deployment`. To this purpose, we need to modify the YAML manifest of the `yelb-ui` deployment as follows:
 
 - A `csi volume` definition is added, utilizing the `secrets-store.csi.k8s.io` driver, which references the `SecretProviderClass` object responsible for retrieving the TLS certificate from Azure Key Vault.
 - A `volume mount` is included to read the certificate as a secret from Azure Key Vault.
@@ -307,11 +307,11 @@ spec:
               secretProviderClass: yelb
 ```
 
-The script utilizes the `yelb.yml` YAML manifest for deploying the application, and the `ingress.yml` for creating the ingress object. If you are using an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. In detail, the script does the following:
+The script utilizes the `yelb.yml` YAML manifest for deploying the application, and the `ingress.yml` for creating the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. The script performs the following steps:
 
 1. Retrieves the public address of the Azure Public IP used by the frontend IP configuration of the Application Gateway.
 2. Checks if an A record exists for the subdomain used by the `yelb-ui` service.
-3. If the A record does not exist, the script creates it.
+3. If the A record doesn't exist, the script creates it.
 
 ```bash
 #!/bin/bash

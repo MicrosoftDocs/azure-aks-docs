@@ -18,15 +18,15 @@ This article describes how to deploy the environment to host, protect, scale, an
 
 ## Yelb deployment on AWS
 
-The [Yelb][yelb] application on AWS is deployed using Bash, [AWS CLI][aws-cli], [eksctl][eksctl], [kubectl][kubectl], and [Helm][helm]. The companion [sample][azure-sample] contains Bash scripts and YAML manifests that you can use to automate the deployment of the [Yelb][yelb] application on [AWS Elastic Kubernetes Service (EKS)][aws-eks]. This solution demonstrates how to implement a web application firewall using [AWS WAF][aws-waf] to protect a web application running on [Amazon Elastic Kubernetes Service (EKS)][aws-eks]. You can use the Bash scripts to create an EKS cluster and deploy the [Yelb][yelb] application. The [Yelb][yelb] web application is exposed to the public internet using an [Amazon Application Load Balancer (ALB)][aws-alb] and protected using [AWS WAF web access control list (web ACL)][aws-web-acl].For detailed instructions, see [Porting a Web Application from AWS Elastic Kubernetes Service (EKS) to Azure Kubernetes Service (AKS)][azure-sample].
+The [Yelb][yelb] sample web application on AWS is deployed using Bash, [AWS CLI][aws-cli], [eksctl][eksctl], [kubectl][kubectl], and [Helm][helm]. The companion [sample][azure-sample] contains Bash scripts and YAML manifests that you can use to automate the deployment of the [Yelb][yelb] application on [AWS Elastic Kubernetes Service (EKS)][aws-eks]. This solution demonstrates how to implement a web application firewall using [AWS WAF][aws-waf] to protect a web application running on [Amazon Elastic Kubernetes Service (EKS)][aws-eks]. You can use the Bash scripts to create an EKS cluster and deploy the [Yelb][yelb] application. The [Yelb][yelb] web application is exposed to the public internet using an [Amazon Application Load Balancer (ALB)][aws-alb] and protected using [AWS WAF web access control list (web ACL)][aws-web-acl]. For detailed instructions, see [Porting a Web Application from AWS Elastic Kubernetes Service (EKS) to Azure Kubernetes Service (AKS)][azure-sample].
 
 :::image type="content" source="media/eks-web-rearchitect/yelb-ui.png" alt-text="Screenshot of the Yelb service interface.":::
 
 ## Yelb deployment on Azure
 
-In this tutorial, you will learn how to deploy the [Yelb][yelb] application on an [Azure Kubernetes Service (AKS)][aks] cluster and expose it through an ingress controller like the [NGINX ingress controller][nginx]. The ingress controller service is accessible via an [internal (or private) load balancer][azure-lb], which is used to balance traffic within the virtual network housing the AKS cluster. This load balancer frontend can also be accessed from an on-premises network in a hybrid scenario. To learn more about utilizing an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS), refer to the guide [Use an internal load balancer with Azure Kubernetes Service (AKS)](/azure/aks/internal-lb?tabs=set-service-annotations).
+In this tutorial, you learn how to deploy the Yelb sample web application on an [Azure Kubernetes Service (AKS)][aks] cluster and expose it through an ingress controller like the [NGINX ingress controller][nginx]. The ingress controller service is accessible via an [internal (or private) load balancer][azure-lb], which is used to balance traffic within the virtual network housing the AKS cluster. This load balancer frontend can also be accessed from an on-premises network in a hybrid scenario. To learn more about utilizing an internal load balancer to restrict the access to your applications in Azure Kubernetes Service (AKS), refer to the guide [Use an internal load balancer with Azure Kubernetes Service (AKS)](/azure/aks/internal-lb?tabs=set-service-annotations).
 
-The companion [sample][azure-sample] supports installing the a [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] or an unmanaged [NGINX ingress controller][nginx] using the [Helm chart][nginx-helm-chart]. The application routing add-on with NGINX ingress controller provides the following features:
+The companion [sample][azure-sample] supports installing a [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] or an unmanaged [NGINX ingress controller][nginx] using the [Helm chart][nginx-helm-chart]. The application routing add-on with NGINX ingress controller provides the following features:
 
 - Easy configuration of managed NGINX Ingress controllers based on [Kubernetes NGINX Ingress controller][nginx].
 - Integration with [Azure DNS][azure-dns] for public and private zone management.
@@ -38,7 +38,8 @@ For other configurations, see:
 - [Application routing add-on configuration](/azure/aks/app-routing-nginx-configuration)
 - [Configure internal NGIX ingress controller for Azure private DNS zone](/azure/aks/create-nginx-ingress-private-controller).
 
-To enhance security, the [Yelb][yelb] application is protected by an [Azure Application Gateway][azure-ag] resource, which is deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. Access to the Yelb application hosted on Azure Kubernetes Service (AKS) and exposed via the [Azure Application Gateway][azure-ag] is secured by the [Azure Web Application Firewall (WAF)][azure-waf]. The WAF provides centralized protection for web applications against common exploits and vulnerabilities.
+To enhance security, the [Yelb][yelb] application is protected by an [Azure Application Gateway][azure-ag] resource. This resource is deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. 
+The [Azure Web Application Firewall (WAF)][azure-waf] secures access to the web application hosted on [Azure Kubernetes Service (AKS)][aks] and exposed via the [Azure Application Gateway][azure-ag] against common exploits and vulnerabilities.
 
 ## Prerequisites
 
@@ -69,9 +70,9 @@ The sample includes two separate Bicep parameter files and two sets of Bash scri
 [Bicep][bicep]is an open-source declarative domain-specific language (DSL) for deploying Azure resources using an [Infrastructure as Code](https://en.wikipedia.org/wiki/Infrastructure_as_code) approach. Here are some key points to compare Bicep with AWS CloudFormation:
 
 1. **Syntax:** Bicep uses a simplified and more intuitive syntax, allowing developers to write Azure infrastructure as code in a more readable and concise manner. On the other hand, CloudFormation uses JSON or YAML templates, which can be complex and verbose.
-2. **Compilation:** Bicep files are compiled into [ARM templates](/azure/azure-resource-manager/templates/overview) before deployment, ensuring that the resulting template is valid and compatible with [Azure Resource Manager](/azure/azure-resource-manager/management/overview). This compilation step helps identify any syntax or logical errors before deployment. CloudFormation templates are interpreted directly by AWS CloudFormation.
-3. **Modularity:** Bicep supports modular development, allowing you to break down your infrastructure code into reusable modules. This enhances code organization and promotes code sharing across projects.
-4. **Ecosystem:** Bicep benefits from the rich Azure ecosystem, offering built-in functions, resource types, and integration with Azure services. CloudFormation, on the other hand, leverages the extensive AWS service offerings and ecosystem.
+2. **Compilation:** Bicep files are compiled into [ARM templates](/azure/azure-resource-manager/templates/overview) before deployment, ensuring that the resulting template is valid and compatible with [Azure Resource Manager](/azure/azure-resource-manager/management/overview). This compilation step helps identify any syntax or logical errors before deployment.  AWS CloudFormation directly interprets CloudFormation templates.
+3. **Modularity:** Bicep supports modular development, allowing you to break down your infrastructure code into reusable modules. Modularity enhances code organization and promotes code sharing across projects.
+4. **Ecosystem:** Bicep benefits from the rich Azure ecosystem, offering built-in functions, resource types, and integration with Azure services. 
 
 For more information on Bicep, see: 
 
@@ -111,7 +112,7 @@ Before diving into the solution, let's quickly go over [TLS termination and end-
 - **Improved performance**: The initial handshake for TLS decryption can be resource-intensive. By caching TLS session IDs and managing TLS session tickets at the application gateway, multiple requests from the same client can utilize cached values, improving performance. If TLS decryption is performed on the backend servers, the client needs to reauthenticate with each server change.
 - **Better utilization of backend servers**: SSL/TLS processing requires significant CPU resources, especially with increasing key sizes. By offloading this work from the backend servers to the application gateway, the servers can focus more efficiently on delivering content.
 - **Intelligent routing**: Decrypting traffic at the application gateway allows access to request content such as headers and URIs. This data can be utilized to intelligently route requests.
-- **Certificate management**: By adding TLS termination at the application gateway, certificates only need to be purchased and installed on the gateway rather than on every backend server. This saves time and money.
+- **Certificate management**: By adding TLS termination at the application gateway, certificates only need to be purchased and installed on the gateway rather than on every backend server.
 
 To configure TLS termination, you need to add a TLS/SSL certificate to the listener. The certificate should be in Personal Information Exchange (PFX) format, which contains both the private and public keys. You can import the certificate from Azure Key Vault to the Application Gateway. For more information on TLS termination with Key Vault certificates, refer to the [TLS termination with Key Vault certificates](/azure/application-gateway/key-vault-certs) documentation.
 
@@ -123,18 +124,18 @@ In our scenario, implementing the zero trust security model involves utilizing t
 
 By employing the zero trust security model, several advantages can be gained concerning the privacy and security of communications:
 
-1. **Enhanced Access Control:** With zero trust, access control is based on continuous verification. This ensures that only authorized users or devices are granted access to specific resources, thereby reducing the risk of unauthorized access and potential data breaches.
-2. **Stronger Data Protection:** The encryption of requests ensures that sensitive information is transmitted securely. This mitigates the risk of unauthorized interception and protects the privacy of communications.
-3. **Reduction in Lateral Movement:** Zero trust restricts the movement of threats within the network by enforcing strict access controls. Even if one part of the network is compromised, the attacker's ability to move laterally and access other resources is significantly limited.
+1. **Enhanced Access Control:** With zero trust, access control is based on continuous verification. This approach ensures that only authorized users or devices are granted access to specific resources, thus reducing the risk of unauthorized access and potential data breaches.
+2. **Stronger Data Protection:** The encryption of requests ensures that sensitive information is transmitted securely and mitigates the risk of unauthorized interception and protects the privacy of communications.
+3. **Reduction in Lateral Movement:** Zero trust restricts the movement of threats within the network by enforcing strict access controls. Even if one part of the network is compromised, the attacker's ability to move laterally and access other resources is limited.
 4. **Improved Visibility and Monitoring:** The zero trust security model typically employs advanced monitoring and analytics tools. These tools offer better insight into the network's behavior, allowing for quick detection and response to any potential security incidents.
 
-In summary, the zero trust security model, when implemented as described in the scenario, enhances privacy and security by enforcing continuous verification, encrypting communications, and limiting lateral movement of threats within the network. 
+Zero trust security model enhances privacy and security by enforcing continuous verification, encrypting communications, and limiting lateral movement of threats within the network. 
 
 ### End-to-End TLS with Application Gateway
 
 You can implement a zero trust approach by configuring Azure Application Gateway for end-to-end TLS encryption with the backend servers. [End-to-end TLS encryption](/azure/application-gateway/ssl-overview#end-to-end-tls-encryption) allows you to securely transmit sensitive data to the backend while also utilizing Application Gateway's Layer-7 load-balancing features. These features include cookie-based session affinity, URL-based routing, routing based on sites, and the ability to rewrite or inject X-Forwarded-* headers.
 
-When Application Gateway is configured with end-to-end TLS communication mode, it terminates the TLS sessions at the gateway and decrypts user traffic. It then applies the configured rules to select the appropriate backend pool instance to route the traffic to. Next, Application Gateway initiates a new TLS connection to the backend server and re-encrypts the data using the backend server's public key certificate before transmitting the request to the backend. The response from the web server follows the same process before reaching the end user. To enable end-to-end TLS, you need to set the protocol setting in the Backend HTTP Setting to HTTPS and apply it to a backend pool. This ensures that your communication with the backend servers is secured and compliant with your requirements. For more information, you can refer to the documentation on [Application Gateway end-to-end TLS encryption](/azure/application-gateway/end-to-end-ssl-portal). Additionally, you may find it useful to review [best practices for securing your Application Gateway](/security/benchmark/azure/baselines/application-gateway-security-baseline).
+When Application Gateway is configured with end-to-end TLS communication mode, it terminates the TLS sessions at the gateway and decrypts user traffic. It then applies the configured rules to select the appropriate backend pool instance to route the traffic to. Next, Application Gateway initiates a new TLS connection to the backend server and re-encrypts the data using the backend server's public key certificate before transmitting the request to the backend. The response from the web server follows the same process before reaching the end user. To enable end-to-end TLS, you need to set the protocol setting in the Backend HTTP Setting to HTTPS and apply it to a backend pool. This approach ensures that your communication with the backend servers is secured and compliant with your requirements. For more information, you can refer to the documentation on [Application Gateway end-to-end TLS encryption](/azure/application-gateway/end-to-end-ssl-portal). Additionally, you may find it useful to review [best practices for securing your Application Gateway](/security/benchmark/azure/baselines/application-gateway-security-baseline).
 
 ### Solution
 
@@ -166,12 +167,12 @@ In order to ensure the security and stability of the system, it is important to 
 The Application Gateway Listener and the [Kubernetes ingress][kubernetes-ingress] are configured to use the same hostname. Here are the reasons why it is important to use the same hostname for a service proxy and a backend web application:
 
 - **Preservation of Session State**: When a different hostname is used between the proxy and the backend application, session state can get lost. This means that user sessions may not persist properly, resulting in a poor user experience and potential loss of data.
-- **Authentication Failure**: If the hostname differs between the proxy and the backend application, authentication mechanisms may fail. This can lead to users being unable to login or access secure resources within the application.
+- **Authentication Failure**: If the hostname differs between the proxy and the backend application, authentication mechanisms may fail. This approach can lead to users being unable to log in or access secure resources within the application.
 - **Inadvertent Exposure of URLs**: If the hostname is not preserved, there is a risk that backend URLs may be exposed to end users. This can lead to potential security vulnerabilities and unauthorized access to sensitive information.
 - **Cookie Issues**: Cookies play a crucial role in maintaining user sessions and passing information between the client and the server. When the hostname differs, cookies may not work as expected, leading to issues such as failed authentication, improper session handling, and incorrect redirection.
 - **End-to-End TLS/SSL Requirements**: If end-to-end TLS/SSL is required for secure communication between the proxy and the backend service, a matching TLS certificate for the original hostname is necessary. Using the same hostname simplifies the certificate management process and ensures that secure communication is established seamlessly.
 
-By using the same hostname for the service proxy and the backend web application, these potential problems can be avoided. The backend application will see the same domain as the web browser, ensuring that session state, authentication, and URL handling are all functioning correctly. This is especially important in platform as a service (PaaS) offerings, where the complexity of certificate management can be reduced by utilizing the managed TLS certificates provided by the PaaS service. 
+By using the same hostname for the service proxy and the backend web application, these potential problems can be avoided. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling are all functioning correctly. This technique is especially important in platform as a service (PaaS) offerings, where the complexity of certificate management can be reduced by utilizing the managed TLS certificates provided by the PaaS service. 
 
 ### Message Flow
 
@@ -184,28 +185,28 @@ The following diagram shows the steps for the message flow during deployment and
 The following steps describe the deployment process. This workflow corresponds to the green numbers in the preceding diagram.
 
 1. A security engineer generates a certificate for the custom domain that the workload uses, and saves it in an Azure key vault. You can obtain a valid certificate from a well-known [certification authority (CA)](https://en.wikipedia.org/wiki/Certificate_authority).
-2. A platform engineer specifies the necessary information in the *main.bicepparams* Bicep parameters file and deploys the Bicep modules to create the Azure resources. The necessary information includes:
+2. A platform engineer specifies the necessary information in the *main.bicepparams* Bicep parameters file and deploys the Bicep templates to create the Azure resources. The necessary information includes:
    - A prefix for the Azure resources.
    - The name and resource group of the existing Azure Key Vault that holds the TLS certificate for the workload hostname and the Azure Front Door custom domain.
    - The name of the certificate in the key vault.
    - The name and resource group of the DNS zone that's used to resolve the Azure Front Door custom domain.
 3. You can configure the [deployment script][azure-deployment-script] to install the following packages to your AKS cluster. For more information, check the parameters section of the Bicep module:
    - [Prometheus][prometheus] and [Grafana][grafana] using the [Prometheus Community Kubernetes Helm Charts](https://prometheus-community.github.io/helm-charts/). By default, this sample configuration does not install Prometheus and Grafana to the AKS cluster, and rather installs [Azure Managed Prometheus][azure-prometheus] and [Azure Managed Grafana][azure-grafana].
-   - [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller will use a TLS certificate that has been uploaded to Azure Key Vault in advance.
-   - [NGINX Ingress Controller][nginx] via an Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon], you don't need to install another instance of the NGINX Ingress Controller via Helm.
+   - [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller use a pre-uploaded TLS certificate from Azure Key Vault.
+   - [NGINX Ingress Controller][nginx] via a Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon], you don't need to install another instance of the NGINX Ingress Controller via Helm.
 4. The Application Gateway Listener retrieves the TLS certificate from Azure key Vault.
-5. When a DevOps engineer deploys the Yelb application, the [Kubernetes ingress][kubernetes-ingress] object uses the certificate retrieved by the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] from Key Vault to expose the Yelb UI service via HTTPS.
+5. When deploying the Yelb application, the [Kubernetes ingress][kubernetes-ingress] object utilizes the certificate obtained from the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] to expose the Yelb UI service via HTTPS.
 
 #### Runtime workflow
 
 The following steps describe the message flow for a request that an external client application initiates during runtime. This workflow corresponds to the orange numbers in the preceding diagram.
 
-1. The client application calls the Yelb application using its hostname. The DNS zone that's associated with the custom domain of the Application Gateway Listener uses an A record to resolve the DNS query with the addres of the Azure Public IP used by the Frontend IP Configuration of the Application Gateway.
+1. The client application calls the Yelb application using its hostname. The DNS zone associated with the custom domain of the Application Gateway Listener uses an A record to resolve the DNS query with the addres of the Azure Public IP used by the Frontend IP Configuration of the Application Gateway.
 2. The request is sent to the Azure Public IP used by the Frontend IP Configuration of the Application Gateway.
 3. The Application Gateway performs thw following actions.
    - The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
    - The Application Gateway Listener utilizes an SSL certificate obtained from [Azure Key Vault][azure-kv].
-   - The Azure WAF Policy associated to the Listener is used to run OWASP rules and custom rules against the incoming request and block malicous attacks.
+   - The Azure WAF Policy associated to the Listener is used to run OWASP rules and custom rules against the incoming request and block malicious attacks.
    - The Application Gateway Backend HTTP Settings are configured to invoke the Yelb application via HTTPS on port 443.
 4. The Application Gateway Backend Pool calls the NGINX ingress controller through the AKS internal load balancer using HTTPS.
 5. The request is sent to one of the agent nodes that hosts a pod of the NGINX ingress controller.
@@ -215,13 +216,7 @@ The following steps describe the message flow for a request that an external cli
 
 ## Deployment
 
-You can configure the [deployment script][azure-deployment-script] included in the companion [sample][azure-sample] to install the following packages to your AKS cluster. For more information, check the parameters section of the Bicep module:
-
-- [Prometheus][prometheus] and [Grafana][grafana] using the [Prometheus Community Kubernetes Helm Charts](https://prometheus-community.github.io/helm-charts/). By default, this sample configuration does not install Prometheus and Grafana to the AKS cluster, and rather installs [Azure Managed Prometheus][azure-prometheus] and [Azure Managed Grafana][azure-grafana].
-- [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller will use a TLS certificate that has been uploaded to Azure Key Vault in advance.
-- [NGINX Ingress Controller][nginx] via an Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon], you don't need to install another instance of the NGINX Ingress Controller via Helm. You can configure the NGINX ingress controller configured to utilize a public IP over the `kubernetes` public load balancer of the AKS cluster or a private IP address of the `kubernetes-internal` internal load balancer as its external IP. By default, Bicep modules install the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] and does not install another instance of the NGINX Ingress Controller via Helm.
-
-By default, Bicep modules install the AKS cluster with the [Azure CNI Overlay](/azure/aks/azure-cni-overlay) network plugin and the [Cilium](/azure/aks/azure-cni-powered-by-cilium) data plane. However, Bicep modules are parametric, so you can choose any network plugin.
+By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay](/azure/aks/azure-cni-overlay) network plugin and the [Cilium](/azure/aks/azure-cni-powered-by-cilium) data plane. However, Bicep templates are parametric, so you can choose any network plugin.
 
 - [Azure CNI with static IP allocation](/azure/aks/configure-azure-cni)
 - [Azure CNI with dynamic IP allocation](/azure/aks/configure-azure-cni-dynamic-ip-allocation)
@@ -249,41 +244,41 @@ In a production environment, we strongly recommend deploying a [private AKS clus
 
 ### Azure Resources
 
-The Bicep modules deploy or use the following Azure resources:
+The Bicep templates deploy or use the following Azure resources:
 
 | Resource | Type | Description |
 |----------|------|-------------|
 | [Azure Kubernetes Service(AKS)][aks] | [Microsoft.ContainerService/managedClusters](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep) | A public or private AKS cluster composed of a `system` node pool in a dedicated subnet that hosts only critical system pods and services, and a `user` node pool hosting user workloads and artifacts in a dedicated subnet. |
 | [Azure Application Gateway][azure-ag] | [Microsoft.Network/applicationGateways](/azure/templates/microsoft.network/applicationgateways?pivots=deployment-language-bicep) | A fully managed regional layer 7 load balancer and service proxy used to expose AKS-hosted workloads such as the Yelb application. |
-|[Azure Web Application Firewall (WAF)](/azure/web-application-firewall/ag/ag-overview)|[Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies](/azure/templates/microsoft.network/applicationgatewaywebapplicationfirewallpolicies?pivots=deployment-language-bicep)| A fully-managed web access firewall used to provide centralized protection for AKS-hosted web applications exposed via the Azure Application Gateway. |
+|[Azure Web Application Firewall (WAF)](/azure/web-application-firewall/ag/ag-overview)|[Microsoft.Network/ApplicationGatewayWebApplicationFirewallPolicies](/azure/templates/microsoft.network/applicationgatewaywebapplicationfirewallpolicies?pivots=deployment-language-bicep)| A fully managed web access firewall used to provide centralized protection for AKS-hosted web applications exposed via the Azure Application Gateway. |
 | [Grafana Admin Role Assignment](/azure/managed-grafana/how-to-share-grafana-workspace?tabs=azure-portal) | [Microsoft.Authorization/roleDefinitions](/azure/templates/microsoft.authorization/roleassignments?pivots=deployment-language-bicep) | A `Grafana Admin` role assignment on the Azure Managed Grafana for the Microsoft Entra ID user whose objectID is defined in the `userId` parameter. |
 | [Key Vault Administrator Role Assignment][azure-kv-csi-driver] | [Microsoft.Authorization/roleDefinitions](/azure/templates/microsoft.authorization/roleassignments?pivots=deployment-language-bicep) | A `Key Vault Administrator` role assignment on the existing Azure Key Vault resource which contains the TLS certificate for the user-defined managed identity used by the Azure Key Vault provider for Secrets Store CSI Driver. |
 | [Azure DNS Zone](/azure/dns/private-dns-overview) | [Microsoft.Network/dnsZones](/azure/templates/microsoft.network/dnszones?pivots=deployment-language-bicep) | An existing Azure DNS zone used for the name resolution of AKS-hosted workloads. This resource is optional. |
 | [Virtual Network](/azure/virtual-network/virtual-networks-overview) | [Microsoft.Network/virtualNetworks](/azure/templates/microsoft.network/virtualnetworks) | A new virtual network with multiple subnets for different purposes: `SystemSubnet`is used for the agent nodes of the `system` node pool, `UserSubnet` is used for the agent nodes of the `user` node pool, `ApiServerSubnet` is used by API Server VNET Integration, `AzureBastionSubnet` is used by Azure Bastion Host, `VmSubnet` is used for a jump-box virtual machine used to connect to the (private) AKS cluster and for Azure Private Endpoints, `AppGatewaySubnet` hosts the Application Gateway. |
-| [User-Assigned Managed Identity](/azure/active-directory/managed-identities-azure-resources/overview) | [Microsoft.ManagedIdentity/userAssignedIdentities](/azure/templates/microsoft.managedidentity/2018-11-30/userassignedidentities?pivots=deployment-language-bicep) | A user-defined managed identity used by the AKS cluster to create additional resources in Azure. |
+| [User-Assigned Managed Identity](/azure/active-directory/managed-identities-azure-resources/overview) | [Microsoft.ManagedIdentity/userAssignedIdentities](/azure/templates/microsoft.managedidentity/2018-11-30/userassignedidentities?pivots=deployment-language-bicep) | A user-defined managed identity used by the AKS cluster to create more resources in Azure. |
 | [Virtual Machine](/azure/virtual-machines/windows/) | [Microsoft.Compute/virtualMachines](/azure/templates/microsoft.compute/virtualmachines) | A jump-box virtual machine used to manage the private AKS cluster. |
 | [Azure Bastion][azure-bastion] | [Microsoft.Network/bastionHosts](/azure/templates/microsoft.network/bastionhosts) | An Azure Bastion deployed in the AKS cluster virtual network to provide SSH connectivity to agent nodes and virtual machines. |
 | [Storage Account](/azure/storage/common/storage-account-overview) | [Microsoft.Storage/storageAccounts](/azure/templates/microsoft.storage/storageaccounts) | A storage account used to store the boot diagnostics logs of the jumpbox virtual machine. |
-| [Azure Container Registry][azure-cr] | [Microsoft.ContainerRegistry/registries](/azure/templates/microsoft.containerregistry/registries?pivots=deployment-language-bicep) | An Azure Container Registry to build, store, and manage container images and artifacts in a private registry. This is not required to deploy the `Yelb` application as the sample uses public container images. |
+| [Azure Container Registry][azure-cr] | [Microsoft.ContainerRegistry/registries](/azure/templates/microsoft.containerregistry/registries?pivots=deployment-language-bicep) | An Azure Container Registry to build, store, and manage container images and artifacts in a private registry. This resource is not required to deploy the `Yelb` application as the sample uses public container images. |
 | [Azure Key Vault](/azure/key-vault/general/basic-concepts) | [Microsoft.KeyVault/vaults](/azure/templates/microsoft.keyvault/vaults?pivots=deployment-language-bicep) | An existing Azure Key Vault used to store secrets, certificates, and keys. |
 | [Azure Private Endpoint](/azure/private-link/private-endpoint-overview)| [Microsoft.Network/privateEndpoints](/azure/templates/microsoft.network/privateendpoints) | Azure Private Endpoints for Azure Container Registry, Azure Key Vault, and Azure Storage Account. |
 | [Azure Private DNS Zone](/azure/dns/private-dns-overview) | [Microsoft.Network/privateDnsZones](/azure/templates/microsoft.network/privatednszones) |  Azure Private DNS Zones are used for the DNS resolution of the Azure Private Endpoints for Azure Container Registry, Azure Key Vault, Azure Storage Account, API Server when deploying a private AKS cluster. |
 | [Azure Network Security Group](/azure/virtual-network/network-security-groups-overview) | [Microsoft.Network/networkSecurityGroups](/azure/templates/microsoft.network/networksecuritygroups?tabs=bicep) | Azure Network Security Groups used to filter inbound and outbound traffic for subnets hosting virtual machines. |
-| [Azure Monitor Workspace][azure-prometheus] | [Microsoft.Monitor/accounts][azure-prometheus] | An [Azure Monitor workspace][azure-prometheus] to store Prometheus metrics generated by the AKS cluster and workloads.You can [Prometheus query language (PromQL)](https://aka.ms/azureprometheus-promio-promql) to analyze and alert on the performance of monitored infrastructure and workloads without having to operate the underlying infrastructure. The primary method for visualizing Prometheus metrics is [Azure Managed Grafana][azure-grafana]. |
+| [Azure Monitor Workspace][azure-prometheus] | [Microsoft.Monitor/accounts][azure-prometheus] | This is an [Azure Monitor workspace][azure-prometheus] to store Prometheus metrics generated by the AKS cluster and workloads. You can [Prometheus query language (PromQL)](https://aka.ms/azureprometheus-promio-promql) to analyze and alert on the performance of monitored infrastructure and workloads without having to operate the underlying infrastructure. The primary method for visualizing Prometheus metrics is [Azure Managed Grafana][azure-grafana]. |
 | [Azure Managed Grafana][azure-grafana] | [Microsoft.Dashboard/grafana](/azure/templates/microsoft.dashboard/grafana?pivots=deployment-language-bicep) | an [Azure Managed Grafana][azure-grafana] instance used to visualize the [Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-enable?tabs=azure-portal) generated by the [Azure Kubernetes Service(AKS)][aks] cluster. [Azure Managed Grafana][azure-grafana] provides a set of built-in dashboards to visualize Prometheus metrics generated by your AKS cluster and workloads. |
 | [Azure Log Analytics Workspace](/azure/azure-monitor/logs/log-analytics-workspace-overview) | [Microsoft.OperationalInsights/workspaces](/azure/templates/microsoft.operationalinsights/workspaces) | A centralized Azure Log Analytics workspace used to collect diagnostics logs and metrics from various Azure resources. |
-| [Deployment Script][azure-deployment-script] | [Microsoft.Resources/deploymentScripts](/azure/templates/microsoft.resources/deploymentscripts?pivots=deployment-language-bicep) | A deployment script is utilized to run the `install-packages.sh` Bash script, which can optionally install the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/), [Cert-Manager](https://cert-manager.io/docs/), [Prometheus][prometheus], and [Grafana](https://grafana.com) to the AKS cluster using [Helm](https://helm.sh/). However, the in-cluster Prometheus and Grafana instances are not necessary as the Bicep modules install [Azure Managed Prometheus][azure-prometheus] and [Azure Managed Grafana][azure-grafana] to collect and monitor AKS Prometheus metrics. For more details on deployment scripts, refer to the [Use deployment scripts in Bicep][azure-deployment-script] documentation.|
+| [Deployment Script][azure-deployment-script] | [Microsoft.Resources/deploymentScripts](/azure/templates/microsoft.resources/deploymentscripts?pivots=deployment-language-bicep) | A deployment script is utilized to run the `install-packages.sh` Bash script, which can optionally install the [NGINX Ingress Controller](https://docs.nginx.com/nginx-ingress-controller/), [Cert-Manager](https://cert-manager.io/docs/), [Prometheus][prometheus], and [Grafana](https://grafana.com) to the AKS cluster using [Helm](https://helm.sh/). However, the in-cluster Prometheus and Grafana instances are not necessary as the Bicep templates install [Azure Managed Prometheus][azure-prometheus] and [Azure Managed Grafana][azure-grafana] to collect and monitor AKS Prometheus metrics. For more details on deployment scripts, refer to the [Use deployment scripts in Bicep][azure-deployment-script] documentation.|
 
-## Deploy the Bicep modules
+## Deploy the Bicep templates
 
-You can deploy the [Bicep modules][bicep-dir] in the companion [sample][azure-sample] using the `deploy.sh` Bash script. Specify a value for the following parameters in the `deploy.sh` script and `main.https.nginxviaaddon.bicepparam` parameters file before deploying the Bicep modules.
+You can deploy the [Bicep templates][bicep-dir] in the companion [sample][azure-sample] using the `deploy.sh` Bash script. Specify a value for the following parameters in the `deploy.sh` script and `main.https.nginxviaaddon.bicepparam` parameters file before deploying the Bicep templates.
 
 - `prefix`: specifies a prefix for all the Azure resources.
 - `authenticationType`: specifies the type of authentication when accessing the Virtual Machine. `sshPublicKey` is the recommended value. Allowed values: `sshPublicKey` and `password`.
 - `vmAdminUsername`: specifies the name of the administrator account of the virtual machine.
 - `vmAdminPasswordOrKey`: specifies the SSH Key or password for the virtual machine.
 - `aksClusterSshPublicKey`:  specifies the SSH Key or password for AKS cluster agent nodes.
-- `aadProfileAdminGroupObjectIDs`: when deploying an AKS cluster with Azure AD and Azure RBAC integration, this array parameter contains the list of Azure AD group object IDs that will have the admin role of the cluster.
+- `aadProfileAdminGroupObjectIDs`: when deploying an AKS cluster with Azure AD and Azure RBAC integration, this array parameter contains the list of Azure AD group object IDs that have the admin role of the cluster.
 
 This is the full list of the parameters.
 
@@ -308,7 +303,7 @@ This is the full list of the parameters.
 | `aksClusterDnsServiceIP`                  | `string`                 | Specifies the IP address assigned to the Kubernetes DNS service. It must be within the Kubernetes service address range specified in serviceCidr.       |
 | `aksClusterLoadBalancerSku`               | `string`                 | Specifies the sku of the load balancer used by the virtual machine scale sets used by nodepools.   |
 | `loadBalancerBackendPoolType`             | `string`                 | Specifies the type of the managed inbound Load Balancer BackendPool.  |
-| `advancedNetworking`                      | `object`                 | Specifies Advanced Networking profile for enabling observability on a cluster. Note that enabling advanced networking features may incur additional costs. |
+| `advancedNetworking`                      | `object`                 | Specifies Advanced Networking profile for enabling observability on a cluster. Enabling advanced networking features may incur extra costs. |
 | `aksClusterIpFamilies`                    | `array`                  | Specifies the IP families are used to determine single-stack or dual-stack clusters. For single-stack, the expected value is IPv4. For dual-stack, the expected values are IPv4 and IPv6. |
 | `aksClusterOutboundType`                  | `string`                 | Specifies outbound (egress) routing method. - loadBalancer or userDefinedRouting.           |
 | `aksClusterSkuTier`                       | `string`                 | Specifies the tier of a managed cluster SKU: Paid or Free              |
@@ -316,14 +311,14 @@ This is the full list of the parameters.
 | `aksClusterAdminUsername`                 | `string`                 | Specifies the administrator username of Linux virtual machines.        |
 | `aksClusterSshPublicKey`                  | `string`                 | Specifies the SSH RSA public key string for the Linux nodes.           |
 | `aadProfileTenantId`                      | `string`                 | Specifies the tenant id of the Azure Active Directory used by the AKS cluster for authentication.  |
-| `aadProfileAdminGroupObjectIDs`           | `array`                  | Specifies the AAD group object IDs that will have admin role of the cluster.                |
+| `aadProfileAdminGroupObjectIDs`           | `array`                  | Specifies the Microsoft Entra ID group object IDs that have admin role of the cluster.                |
 | `aksClusterNodeOSUpgradeChannel`          | `string`                 | Specifies the node OS upgrade channel. The default is Unmanaged, but may change to either NodeImage or SecurityPatch at GA. .                             |
 | `aksClusterUpgradeChannel`                | `string`                 | Specifies the upgrade channel for auto upgrade. Allowed values include rapid, stable, patch, node-image, none.                                          |
 | `aksClusterEnablePrivateCluster`          | `bool`                   | Specifies whether to create the cluster as a private cluster or not.  |
 | `aksClusterWebAppRoutingEnabled`          | `bool`                   | Specifies whether the managed NGINX Ingress Controller application routing addon is enabled.|
 | `aksClusterNginxDefaultIngressControllerType` | `string`             | Specifies the ingress type for the default NginxIngressController custom resource for the managed NGINX ingress controller. |
 | `aksPrivateDNSZone`                       | `string`                 | Specifies the Private DNS Zone mode for private cluster. When the value is equal to None, a Public DNS Zone is used in place of a Private DNS Zone       |
-| `aksEnablePrivateClusterPublicFQDN`       | `bool`                   | Specifies whether to create additional public FQDN for private cluster or not.            |
+| `aksEnablePrivateClusterPublicFQDN`       | `bool`                   | Specifies whether to create public FQDN for private cluster or not.            |
 | `aadProfileManaged`                       | `bool`                   | Specifies whether to enable managed AAD integration.                  |
 | `aadProfileEnableAzureRBAC`               | `bool`                   | Specifies whether to enable Azure RBAC for Kubernetes authorization.  |
 | `systemAgentPoolName`                     | `string`                 | Specifies the unique name of of the system node pool profile in the context of the subscription and resource group.                                     |
@@ -334,9 +329,9 @@ This is the full list of the parameters.
 | `systemAgentPoolOsType`                   | `string`                 | Specifies the OS type for the vms in the system node pool. Choose from Linux and Windows. Default to Linux.                                             |
 | `systemAgentPoolOsSKU`                    | `string`                 | Specifies the OS SKU used by the system agent pool. If not specified, the default is Ubuntu if OSType=Linux or Windows2019 if OSType=Windows. |
 | `systemAgentPoolMaxPods`                  | `int`                    | Specifies the maximum number of pods that can run on a node in the system node pool. The maximum number of pods per node in an AKS cluster is 250. |
-| `systemAgentPoolMaxCount`                 | `int`                    | Specifies the maximum number of nodes for auto-scaling for the system node pool.            |
-| `systemAgentPoolMinCount`                 | `int`                    | Specifies the minimum number of nodes for auto-scaling for the system node pool.            |
-| `systemAgentPoolEnableAutoScaling`        | `bool`                   | Specifies whether to enable auto-scaling for the system node pool.    |
+| `systemAgentPoolMaxCount`                 | `int`                    | Specifies the maximum number of nodes for autoscaling for the system node pool.            |
+| `systemAgentPoolMinCount`                 | `int`                    | Specifies the minimum number of nodes for autoscaling for the system node pool.            |
+| `systemAgentPoolEnableAutoScaling`        | `bool`                   | Specifies whether to enable autoscaling for the system node pool.    |
 | `systemAgentPoolScaleSetPriority`         | `string`                 | Specifies the virtual machine scale set priority in the system node pool: Spot or Regular. |
 | `systemAgentPoolScaleSetEvictionPolicy`   | `string`                 | Specifies the ScaleSetEvictionPolicy to be used to specify eviction policy for spot virtual machine scale set. Default to Delete. Allowed values are Delete or Deallocate.      |
 | `systemAgentPoolNodeLabels`               | `object`                 | Specifies the Agent pool node labels to be persisted across all nodes in the system node pool.     |
@@ -352,9 +347,9 @@ This is the full list of the parameters.
 | `userAgentPoolOsType`                     | `string`                 | Specifies the OS type for the vms in the user node pool. Choose from Linux and Windows. Default to Linux.                                                |
 | `userAgentPoolOsSKU`                      | `string`                 | Specifies the OS SKU used by the system agent pool. If not specified, the default is Ubuntu if OSType=Linux or Windows2019 if OSType=Windows. |
 | `userAgentPoolMaxPods`                    | `int`                    | Specifies the maximum number of pods that can run on a node in the user node pool. |
-| `userAgentPoolMaxCount`                   | `int`                    | Specifies the maximum number of nodes for auto-scaling for the user node pool.              |
-| `userAgentPoolMinCount`                   | `int`                    | Specifies the minimum number of nodes for auto-scaling for the user node pool.              |
-| `userAgentPoolEnableAutoScaling`          | `bool`                   | Specifies whether to enable auto-scaling for the user node pool.      |
+| `userAgentPoolMaxCount`                   | `int`                    | Specifies the maximum number of nodes for autoscaling for the user node pool.              |
+| `userAgentPoolMinCount`                   | `int`                    | Specifies the minimum number of nodes for autoscaling for the user node pool.              |
+| `userAgentPoolEnableAutoScaling`          | `bool`                   | Specifies whether to enable autoscaling for the user node pool.      |
 | `userAgentPoolScaleSetPriority`           | `string`                 | Specifies the virtual machine scale set priority in the user node pool: Spot or Regular.   |
 | `userAgentPoolScaleSetEvictionPolicy`     | `string`                 | Specifies the ScaleSetEvictionPolicy to be used to specify eviction policy for spot virtual machine scale set. Default to Delete. Allowed values are Delete or Deallocate.      |
 | `userAgentPoolNodeLabels`                 | `object`                 | Specifies the Agent pool node labels to be persisted across all nodes in the user node pool.|
@@ -376,14 +371,14 @@ This is the full list of the parameters.
 | `azureKeyvaultSecretsProviderEnabled`     | `bool`                   | Specifies whether the Azure Key Vault Provider for Secrets Store CSI Driver addon is enabled or not.                                                    |
 | `kubeDashboardEnabled`                    | `bool`                   | Specifies whether the kubeDashboard add-on is enabled or not.         |
 | `podIdentityProfileEnabled`               | `bool`                   | Specifies whether the pod identity addon is enabled..                 |
-| `autoScalerProfileScanInterval`           | `string`                 | Specifies the scan interval of the auto-scaler of the AKS cluster.   |
-| `autoScalerProfileScaleDownDelayAfterAdd` | `string`                 | Specifies the scale down delay after add of the auto-scaler of the AKS cluster.            |
-| `autoScalerProfileScaleDownDelayAfterDelete` | `string`               | Specifies the scale down delay after delete of the auto-scaler of the AKS cluster.         |
-| `autoScalerProfileScaleDownDelayAfterFailure` | `string`               | Specifies scale down delay after failure of the auto-scaler of the AKS cluster.           |
-| `autoScalerProfileScaleDownUnneededTime`  | `string`                 | Specifies the scale down unneeded time of the auto-scaler of the AKS cluster.              |
-| `autoScalerProfileScaleDownUnreadyTime`   | `string`                 | Specifies the scale down unready time of the auto-scaler of the AKS cluster.               |
-| `autoScalerProfileUtilizationThreshold`   | `string`                 | Specifies the utilization threshold of the auto-scaler of the AKS cluster.                 |
-| `autoScalerProfileMaxGracefulTerminationSec` | `string` | Specifies the max graceful termination time interval in seconds for the auto-scaler of the AKS cluster.       |
+| `autoScalerProfileScanInterval`           | `string`                 | Specifies the scan interval of the autoscaler of the AKS cluster.   |
+| `autoScalerProfileScaleDownDelayAfterAdd` | `string`                 | Specifies the scale down delay after add of the autoscaler of the AKS cluster.            |
+| `autoScalerProfileScaleDownDelayAfterDelete` | `string`               | Specifies the scale down delay after delete of the autoscaler of the AKS cluster.         |
+| `autoScalerProfileScaleDownDelayAfterFailure` | `string`               | Specifies scale down delay after failure of the autoscaler of the AKS cluster.           |
+| `autoScalerProfileScaleDownUnneededTime`  | `string`                 | Specifies the scale down unneeded time of the autoscaler of the AKS cluster.              |
+| `autoScalerProfileScaleDownUnreadyTime`   | `string`                 | Specifies the scale down unready time of the autoscaler of the AKS cluster.               |
+| `autoScalerProfileUtilizationThreshold`   | `string`                 | Specifies the utilization threshold of the autoscaler of the AKS cluster.                 |
+| `autoScalerProfileMaxGracefulTerminationSec` | `string` | Specifies the max graceful termination time interval in seconds for the autoscaler of the AKS cluster.       |
 | `enableVnetIntegration`                    | `bool`    | Specifies whether to enable API server VNET integration for the cluster or not.                                |
 | `virtualNetworkName`                       | `string` | Specifies the name of the virtual network.            |
 | `virtualNetworkAddressPrefixes`            | `string` | Specifies the address prefixes of the virtual network.                                                         |
@@ -418,7 +413,7 @@ This is the full list of the parameters.
 | `vmSize`                                   | `string` | Specifies the size of the virtual machine.           |
 | `imagePublisher`                           | `string` | Specifies the image publisher of the disk image used to create the virtual machine.                             |
 | `imageOffer`                               | `string` | Specifies the offer of the platform image or marketplace image used to create the virtual machine.              |
-| `imageSku`                                 | `string` | Specifies the Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version.    |
+| `imageSku`                                 | `string` | Specifies the Ubuntu version for the VM. This picks a fully patched image of this given Ubuntu version.    |
 | `authenticationType`                       | `string` | Specifies the type of authentication when accessing the Virtual Machine. SSH key is recommended.               |
 | `vmAdminUsername`                          | `string` | Specifies the name of the administrator account of the virtual machine.                                         |
 | `vmAdminPasswordOrKey`                     | `string` | Specifies the SSH Key or password for the virtual machine. SSH key is recommended.                              |
@@ -476,13 +471,13 @@ This is the full list of the parameters.
 | `clusterTags`                              | `object`  | Specifies the resource tags.                          |
 | `actionGroupName`                          | `string` | Specifies the name of the Action Group.               |
 | `actionGroupShortName`                     | `string` | Specifies the short name of the action group.        |
-| `actionGroupEnabled`                        | `bool`    | Specifies whether this action group is enabled. If an action group is not enabled, then none of its receivers will receive communications.|
+| `actionGroupEnabled`                        | `bool`    | Specifies whether this action group is enabled. |
 | `actionGroupEmailAddress`                    | `string` | Specifies the email address of the receiver.         |
 | `actionGroupUseCommonAlertSchema`            | `bool`    | Specifies whether to use common alert schema.        |
 | `actionGroupCountryCode`                   | `string` | Specifies the country code of the SMS receiver.      |
 | `actionGroupPhoneNumber`                   | `string` | Specifies the phone number of the SMS receiver.      |
-| `metricAnnotationsAllowList`               | `string` | Specifies a comma-separated list of additional Kubernetes label keys that will be used in the resource labels metric. |
-| `metricLabelsAllowlist`                     | `string` | Specifies a comma-separated list of Kubernetes annotations keys that will be used in the resource labels metric. |
+| `metricAnnotationsAllowList`               | `string` | Specifies a comma-separated list of additional Kubernetes label keys used in the resource labels metric. |
+| `metricLabelsAllowlist`                     | `string` | Specifies a comma-separated list of Kubernetes annotations keys used in the resource labels metric. |
 | `prometheusName`                           | `string` | Specifies the name of the Azure Monitor managed service for Prometheus resource.                                |
 | `prometheusPublicNetworkAccess`            | `string` | Specifies whether or not public endpoint access is allowed for the Azure Monitor managed service for Prometheus resource.  |
 | `grafanaName`                              | `string` | Specifies the name of the Azure Managed Grafana resource.                                                      |
@@ -503,12 +498,12 @@ This is the full list of the parameters.
 | `azCliVersion`                             | `string` | Specifies the Azure CLI module version. |
 | `timeout`                                  | `string` | Specifies the maximum allowed script execution time specified in ISO 8601 format. Default value is P1D. |
 | `cleanupPreference`                        | `string` | Specifies the clean up preference when the script execution gets in a terminal state. Default setting is Always. |
-| `retentionInterval`                        | `string` | Specifies the interval for which the service retains the script resource after it reaches a terminal state. Resource will be deleted when this duration expires. |
+| `retentionInterval`                        | `string` | Specifies the interval for which the service retains the script resource after it reaches a terminal state. |
 | `dnsZoneName`                              | `string` | Specifies the name of an existing public DNS zone.   |
 | `dnsZoneResourceGroupName`                 | `string` | Specifies the name of the resource group which contains the public DNS zone.  |
 | `keyVaultCertificateName`                  | `string` | Specifies the name of the Key Vault certificate.     |
 
-We suggest reading sensitive configuration data such as passwords or SSH keys from a pre-existing Azure Key Vault resource. For more information, see [Create parameters files for Bicep deployment](/azure/azure-resource-manager/bicep/parameter-files?tabs=Bicep).
+We suggest reading sensitive configuration data such as passwords or SSH keys from a preexisting  Azure Key Vault resource. For more information, see [Create parameters files for Bicep deployment](/azure/azure-resource-manager/bicep/parameter-files?tabs=Bicep).
 
 The sample includes four distinct Bicep parameter files that allow you to deploy four different variations of the solution:
 
@@ -517,7 +512,7 @@ The sample includes four distinct Bicep parameter files that allow you to deploy
 - `main.https.nginxviaaddon.bicepparam`: the Application Gateway communicates via HTTPS with the managed NGINX Ingress Controller installed via the application routing add-on.
 - `main.https.nginxviahelm.bicepparam`: the Application Gateway communicates via HTTPS an unmanaged NGINX Ingress Controller instance installed via Helm.
 
-The `deploy.sh` Bash script allows to choose one of these solutions. Choose solution number `3`.
+The `deploy.sh` Bash script provides the flexibility to select from multiple solutions. Simply choose solution option `3`.
 
 ```bash
 #!/bin/bash
@@ -828,10 +823,10 @@ fi
 The sample makes use of a [Deployment Script][azure-deployment-script] to run the `install-packages.sh` Bash script, which can optionally install the following packages:
 
 - [Prometheus][prometheus] and [Grafana][grafana] using the [Prometheus Community Kubernetes Helm Charts](https://prometheus-community.github.io/helm-charts/). By default, this sample configuration does not install Prometheus and Grafana to the AKS cluster, and rather installs [Azure Managed Prometheus][azure-prometheus] and [Azure Managed Grafana][azure-grafana].
-- [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller will use a TLS certificate that has been uploaded to Azure Key Vault in advance.
-- [NGINX Ingress Controller][nginx] via an Helm chart. By default, this sample configuration installs the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] and does not install the NGINX Ingress Controller via Helm.
+- [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller use a pre-uploaded TLS certificate from Azure Key Vault.
+- [NGINX Ingress Controller][nginx] via a Helm chart. By default, this sample configuration installs the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] and does not install the NGINX Ingress Controller via Helm.
 
-For more details on deployment scripts, refer to the [Use deployment scripts in Bicep][azure-deployment-script] documentation.
+For more details on deployment scripts, see the [Use deployment scripts in Bicep][azure-deployment-script] documentation.
 
 ```bash
 # Install kubectl
