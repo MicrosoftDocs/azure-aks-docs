@@ -14,11 +14,11 @@ ms.custom:
 
 # Deploy an AWS Web Application Workload to Azure
 
-You are now ready to deploy the [Yelb][yelb] application to the [Azure Kubernetes Service (AKS)][aks] cluster built at the previous step.
+You're now ready to deploy the [Yelb][yelb] application to the [Azure Kubernetes Service (AKS)][aks] cluster built at the previous step.
 
 ## Check the Environment
 
-Before deploying the application, check your AKS cluster to make sure it's properly configured. Start by listing the namespaces in your Kubernetes cluster by running the following command:
+Before you deploy the application, ensure that your AKS cluster is properly configured. Start by listing the namespaces in your Kubernetes cluster by running the following command:
 
 ```bash
  kubectl get namespace
@@ -44,7 +44,7 @@ If you run the following command:
 kubectl get service --namespace app-routing-system -o wide
 ```
 
-you can see that the `EXTERNAL-IP` of the `nginx` service is a private IP address. This is the private IP addres of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster.
+You can see that the `EXTERNAL-IP` of the `nginx` service is a private IP address. This address is the private IP of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster.
 
 ```bash
 NAME    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                      AGE     SELECTOR
@@ -85,7 +85,7 @@ nginx-ingress-ingress-nginx-controller-metrics     ClusterIP      172.16.109.138
 
 If you choose to deploy the sample using the [TLS Termination at Application Gateway and Yelb Invocation via HTTP]((./eks-web-prepare.md#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder. Instead, if you want to deploy the sample using the [Implementing End-to-End TLS Using Azure Application Gateway](./eks-web-prepare.md#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `https` folder.
 
-In the remaining part of this article, we will guide you through the deployment process of the Yelb application using the end-to-end TLS approach. Before running any script, make sure to customize the values of the variables within the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
+In the remaining part of this article, we guide you through the deployment process of the Yelb application using the end-to-end TLS approach. Before running any script, make sure to customize the values of the variables within the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
 
 ```bash
 # Azure Subscription and Tenant
@@ -264,7 +264,7 @@ cat ingress.yml |
 kubectl get all -n yelb
 ```
 
-Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It is important to note that the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) only creates the Kubernetes secret containing the TLS certificate when the `deployment` with the `SecretProviderClass` and volume definition is created. To accommodate this, the YAML manifest of the `yelb-ui` deployment has been modified as follows:
+Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It's important to note that the Kubernetes secret containing the TLS certificate is only created by the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) when the `SecretProviderClass` and volume definition is included in the `deployment`. To this purpose, we need to modify the YAML manifest of the `yelb-ui` deployment as follows:
 
 - A `csi volume` definition is added, utilizing the `secrets-store.csi.k8s.io` driver, which references the `SecretProviderClass` object responsible for retrieving the TLS certificate from Azure Key Vault.
 - A `volume mount` is included to read the certificate as a secret from Azure Key Vault.
@@ -437,7 +437,7 @@ echo "Simulating query string manipulation with the 'blockme' word in the query 
 curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users?task=blockme
 ```
 
-The Bash script should produce the following output, where the first call succeeds, while the following two calls are blocked by ModSecurity rules.
+The Bash script should produce the following output, where the first call succeeds, while ModSecurity rules block the following two calls.
 
 ```Bash
 Calling Yelb UI service at https://yelb.contoso.com...
@@ -466,7 +466,7 @@ Get-AzResource -ResourceGroupName <resource-group-name>
 
 ## Clean up resources
 
-You can delete the resource group using the following Azure CLI command when you no longer need the resources you created. This will remove all the Azure resources.
+You can delete the resource group using the following Azure CLI command when you no longer need the resources you created.
 
 ```azurecli
 az group delete --name <resource-group-name>
