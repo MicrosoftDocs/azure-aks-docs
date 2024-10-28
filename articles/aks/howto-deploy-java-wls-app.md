@@ -4,7 +4,7 @@ description: Shows how to quickly stand up WebLogic Server on Azure Kubernetes S
 author: KarlErickson
 ms.author: edburns
 ms.topic: how-to
-ms.date: 09/25/2024
+ms.date: 10/29/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-wls, devx-track-javaee-wls-aks, devx-track-extended-java
 ---
@@ -155,7 +155,7 @@ The following steps show you how to configure database connection.
 
    The **Connection settings** section should look like the following screenshot.
 
-   :::image type="content" source="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png" alt-text="Screenshot of the Azure portal showing the Configure Azure SQL database page." lightbox="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png":::
+   :::image type="content" source="media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png" alt-text="Screenshot of the Azure portal that shows the Database tab of the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png":::
 
    ### [Password](#tab/password)
 
@@ -171,10 +171,22 @@ The following steps show you how to configure database connection.
 Depending on network conditions and other activity in your selected region, the deployment might take up to 50 minutes to complete.
 
 > [!NOTE]
-> If your organization requires deploying the workload within a corporate VNET with no public IPs allowed, you can choose the internal Load Balancer service.
-> Follow the screenshot to configure internal Load Balancer service in the **Load balancing** pane.
-> :::image type="content" source="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png" alt-text="Screenshot of the Azure portal that shows the internal load balancer configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="includes/jakartaee/media/howto-deploy-java-wls-app/azure-portal-internal-loadbalancer.png":::
-> After the deployment, you can find access URL of admin server and cluster from output: **adminConsoleExternalUrl**, **clusterExternalUrl**.
+> If your organization requires you to deploy the workload within a corporate virtual network with no public IPs allowed, you can choose the internal Load Balancer service. To configure the internal Load Balancer service, use the following steps in the **Load balancing** tab:
+>
+> 1. For **Load Balancing Options**, select **Standard Load Balancer Service**.
+> 1. Select **Use Internal Load Balancer**.
+> 1. Add the following rows to the table:
+>
+>    | Service name prefix    | Target         | Port |
+>    |------------------------|----------------|------|
+>    | `wls-admin-internal`   | `admin-server` | 7001 |
+>    | `wls-cluster-internal` | `cluster-1`    | 8001 |
+>
+> The **Load balancing** tab should look like the following screenshot:
+>
+> :::image type="content" source="media/howto-deploy-java-wls-app/azure-portal-internal-load-balancer.png" alt-text="Screenshot of the Azure portal that shows the Load balancing tab of the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/azure-portal-internal-load-balancer.png":::
+>
+> After the deployment, you can find the access URLs of the admin server and cluster from the output, labeled **adminConsoleExternalUrl** and **clusterExternalUrl**.
 
 ## Examine the deployment output
 
