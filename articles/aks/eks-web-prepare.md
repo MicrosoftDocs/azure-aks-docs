@@ -67,7 +67,7 @@ The sample includes two separate Bicep parameter files and two sets of Bash scri
 
 ## What is Bicep?
 
-[Bicep][bicep]is an open-source declarative domain-specific language (DSL) for deploying Azure resources using an [Infrastructure as Code](https://en.wikipedia.org/wiki/Infrastructure_as_code) approach. Here are some key points to compare Bicep with AWS CloudFormation:
+[Bicep][bicep]is an open-source declarative domain-specific language (DSL) for deploying Azure resources using an [Infrastructure as Code](https://en.wikipedia.org/wiki/Infrastructure_as_code) approach. Here are some key points to compare Bicep with [AWS CloudFormation][aws-cloudformation]:
 
 1. **Syntax:** Bicep uses a simplified and more intuitive syntax, allowing developers to write Azure infrastructure as code in a more readable and concise manner. On the other hand, CloudFormation uses JSON or YAML templates, which can be complex and verbose.
 2. **Compilation:** Bicep files are compiled into [ARM templates](/azure/azure-resource-manager/templates/overview) before deployment, ensuring that the resulting template is valid and compatible with [Azure Resource Manager](/azure/azure-resource-manager/management/overview). This compilation step helps identify any syntax or logical errors before deployment.  AWS CloudFormation directly interprets CloudFormation templates.
@@ -996,6 +996,7 @@ The script creates a [ClusterIssuer](https://cert-manager.io/docs/concepts/issue
 [aws-eks]: https://docs.aws.amazon.com/en_us/eks/latest/userguide/what-is-eks.html
 [aws-alb]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer
 [aws-web-acl]: https://docs.aws.amazon.com/waf/latest/developerguide/web-acl.html
+[aws-cloudformation]: https://aws.amazon.com/it/cloudformation/
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
 [aks-app-routing-addon]: ./app-routing.md

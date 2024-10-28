@@ -14,7 +14,7 @@ ms.custom:
 
 # Replicate an AWS Web Application with AWS WAF in Azure Kubernetes Service (AKS)
 
-In this article, you learn how to replicate an Amazon Elastic Kubernetes Service(EKS) web apps with AWS Web Application Firewall with [Azure Web Application Firewall (WAF)][Azure Web Application Firewal] with [Azure Application Gateway][Application Gateway] in [Azure Kubernetes Service (AKS)][Azure Kubernetes Service]. 
+In this article, you learn how to replicate an Amazon Elastic Kubernetes Service(EKS) web apps with AWS Web Application Firewall with [Azure Web Application Firewall (WAF)][azure-waf] with [Azure Application Gateway][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
 
 This workload demonstrates how to implement a web application firewall to protect web-based application Yelb running in Kubernetes cluster. Applications rely on web application firewalls to block unwanted traffic and protect apps from common vulnerabilities. A centralized web application firewall helps make security management much simpler and gives better assurance to application administrators against threats or intrusions.
 
@@ -76,9 +76,9 @@ code .
 [yelb]: https://github.com/mreferre/yelb/
 
 [eks-aws-waf]: https://aws.amazon.com/it/blogs/containers/protecting-your-amazon-eks-web-apps-with-aws-waf/
-[Application Gateway]: https://azure.microsoft.com/services/application-gateway/
-[Azure Web Application Firewal]: https://azure.microsoft.com/services/web-application-firewall
-[Azure Kubernetes Service]: https://azure.microsoft.com/services/kubernetes-service/
+[azure-ag]: /azure/application-gateway/overview
+[azure-waf]: /azure/web-application-firewall/overview
+[aks]: ./what-is-aks.md
 [azure-free]: https://azure.microsoft.com/free/
 [azure-built-in-roles]: /azure/role-based-access-control/built-in-roles
 [azure-cli]: /cli/azure/install-azure-cli
