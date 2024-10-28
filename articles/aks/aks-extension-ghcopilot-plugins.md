@@ -40,7 +40,7 @@ You can create an AKS cluster using the following prompts:
 
 :::image type="content" source="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-deploy-manifest-1.png" alt-text="Screenshot showing a manifest being deployed via GitHub Copilot for Azure." lightbox="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-deploy-manifest-1.png":::
 
-Users can deploy their application manifests to an AKS cluster directly from the GitHub Copilot Chat view. This simplifies the deployment process and ensures consistency. By using predefined prompts, the risk of errors during deployment is minimized, leading to more reliable and stable deployments.
+You can deploy your application manifests to an AKS cluster directly from the GitHub Copilot Chat view. This simplifies the deployment process and ensures consistency. By using predefined prompts, the risk of errors during deployment is minimized leading to more reliable and stable deployments.
 
 To deploy a manifest file to an AKS cluster you can use these prompts:
 
