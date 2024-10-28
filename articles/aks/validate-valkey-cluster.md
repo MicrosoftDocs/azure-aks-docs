@@ -40,7 +40,7 @@ The sample client application uses the [Locust load testing framework](https://d
     import time
     from locust import between, task, User, events,tag
     from valkey import ValkeyCluster
-
+    from random import randint
 
     class ValkeyLocust(User):
 
@@ -75,7 +75,7 @@ The sample client application uses the [Locust load testing framework](https://d
             start_time = time.perf_counter()
             try:
                 # Execute the set operation
-                result = self.vc.set("locust", "python")
+                result = self.vc.set("locust", randint(0, 10))
                 length = len(str(result))
                 if not result:
                     result = ''
@@ -129,7 +129,7 @@ The sample client application uses the [Locust load testing framework](https://d
             self.vc.close()
     EOF
     ```
-    This python class is implementing a Locust User class that connects to the Valkey cluster and performs a set and get operation.
+    This python code is implementing a Locust User class that connects to the Valkey cluster and performs a set and get operation.
     You can expand this class to implement more complex operations.
 
 3. Build the Docker image and upload it to the Azure Container Registry (ACR):
