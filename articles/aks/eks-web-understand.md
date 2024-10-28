@@ -9,7 +9,7 @@ ms.topic: how-to
 
 # Understand Platform Differences for the Web Application Workload
 
-Before you port the sample web application to Azure, make sure to obtain a solid understanding of the operational differences between the AWS and Azure platforms. This article walks through some of the key concepts for this workload and provides links to resources for more information. For a comprehensive comparison between Azure and AWS services, you can refer to the [AWS to Azure services comparison][aws-to-azure] article by Microsoft. It provides in-depth analysis and insights into the features and capabilities of both cloud platforms.
+Before you migrate the sample web application to Azure, make sure to obtain a solid understanding of the operational differences between the AWS and Azure platforms. This article walks through some of the key concepts for this workload and provides links to resources for more information. For a comprehensive comparison between Azure and AWS services, you can refer to the [AWS to Azure services comparison][aws-to-azure] article by Microsoft. It provides in-depth analysis and insights into the features and capabilities of both cloud platforms.
 
 ## Orchestration
 
