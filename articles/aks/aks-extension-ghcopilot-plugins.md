@@ -54,7 +54,7 @@ To deploy a manifest file to an AKS cluster you can use these prompts:
 
 :::image type="content" source="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-kubectl-generation-1.png" alt-text="Screenshot showing kubectl commands via GitHub Copilot for Azure." lightbox="./media/aks-extension/ghcopilot-for-azure-aks/aks-gh-chat-kubectl-generation-1.png":::
 
-Users can generate various Kubectl commands to manage their AKS clusters without needing to remember complex command syntax. This makes cluster management more accessible, especially for those who may not be Kubernetes experts. Quickly generating the necessary commands helps users perform cluster operations more efficiently, saving time and effort.
+You can generate various Kubectl commands to manage your AKS clusters without needing to remember complex command syntax. This makes cluster management more accessible, especially for those who may not be Kubernetes experts. Quickly generating the necessary commands helps you perform cluster operations more efficiently, saving time and effort.
 
 You can generate various Kubectl commands for your AKS cluster using these prompts:
 
