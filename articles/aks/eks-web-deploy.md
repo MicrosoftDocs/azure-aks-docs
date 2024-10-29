@@ -450,6 +450,67 @@ Simulating query string manipulation with the 'blockme' word in the query string
 HTTP Status: 403
 ```
 
+## Monitoring
+
+In the proposed solution, the deployment process automatically configures the [Azure Application Gateway][azure-ag] resource to collect diagnostic logs and metrics to an [Azure Log Analytics Workspace][azure-la] workspace. By enabling logs, you can gain valuable insights into the evaluations, matches, and blocks performed by the [Azure Web Application Firewall (WAF)][azure-waf] within the Application Gateway. For more information, see [Diagnostic logs for Application Gateway](/azure/application-gateway/application-gateway-diagnostics#firewall-log).To further enhance your analysis, the data within the firewall logs can be examined using Log Analytics. When you have the firewall logs in your Log Analytics workspace, you can view data, write queries, create visualizations, and add them to your portal dashboard. For detailed information on log queries, refer to the [Overview of log queries in Azure Monitor](/azure/azure-monitor/logs/log-query-overview) documentation.
+
+### Explore data with examples
+
+When utilizing the **AzureDiagnostics** table in your Log Analytics workspace, you can access the raw firewall log data by executing the following query:
+
+```kusto
+AzureDiagnostics 
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| limit 10
+```
+
+Alternatively, when working with the **Resource-specific** table, the raw firewall log data can be accessed using the following query. To learn more about resource-specific tables, refer to the [Monitoring data reference](/azure/application-gateway/monitor-application-gateway-reference#supported-resource-log-categories-for-microsoftnetworkapplicationgateways) documentation.
+
+```kusto
+AGWFirewallLogs
+| limit 10
+```
+
+Once you have the data, you can delve deeper and create graphs or visualizations. Here are some additional examples of AzureDiagnostics queries that can be utilized:
+
+### Matched/Blocked requests by IP
+
+```kusto
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize count() by clientIp_s, bin(TimeGenerated, 1m)
+| render timechart
+```
+
+### Matched/Blocked requests by URI
+
+```kusto
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize count() by requestUri_s, bin(TimeGenerated, 1m)
+| render timechart
+```
+
+### Top matched rules
+
+```kusto
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize count() by ruleId_s, bin(TimeGenerated, 1m)
+| where count_ > 10
+| render timechart
+```
+
+### Top five matched rule groups
+
+```kusto
+AzureDiagnostics
+| where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
+| summarize Count=count() by details_file_s, action_s
+| top 5 by Count desc
+| render piechart
+```
+
 ## Review deployed resources
 
 You can use the Azure portal or the Azure CLI to list the deployed resources in the resource group:
@@ -481,12 +542,20 @@ Remove-AzResourceGroup -Name <resource-group-name>
 
 ## Next steps
 
-For more information on developing and running applications in AKS, see the following resources:
+You can increase security and threat protection of the solution byt using [Azure DDoS Protection][azure-ddos] and [Azure Firewall][azure-fw]. 
 
-- [Install existing applications with Helm in AKS][helm-aks]
-- [Deploy and manage a Kubernetes application from Azure Marketplace in AKS][k8s-aks]
-- [Deploy an application that uses OpenAI on AKS][openai-aks]
-- 
+[Azure DDoS Protection][azure-ddos], combined with application design best practices, provides advanced mitigation against distributed denial of service (DDoS) attacks. It's automatically tuned to help protect your specific Azure resources in a virtual network. Azure DDoS Protection protects at layer 3 and layer 4 network layers, while [Azure Web Access Firewall (WAF)][azure-waf] provides protection at layer 7 for web applications. For more information, see [Application DDoS protection](https://learn.microsoft.com/en-us/azure/web-application-firewall/shared/application-ddos-protection). You can use [Azure DDoS Network Protection][azure-ddos] to protect the virtual network hosting your [Azure Application Gateway][azure-ag] and [Azure Kubernetes Service (AKS)][aks] cluster. For more infomation, see [Tutorial: Protect your application gateway with Azure DDoS Network Protection][azure-ddos-ag].
+
+[Azure Firewall][azure-fw] is a cutting-edge, cloud-native network security service that offers best of breed threat protection for your Azure based cloud workloads. As a fully stateful firewall as a service, Azure Firewall is designed with built-in high availability and unlimited scalability within the cloud environment. This service encompasses comprehensive inspection of both east-west and north-south traffic. To gain a deeper understanding of east-west and north-south traffic, see [East-West and North-South Traffic](https://learn.microsoft.com/en-us/azure/architecture/framework/security/design-network-flow#east-west-and-north-south-traffic). You can use [Azure Firewall][azure-fw] in combination with the [Azure Application Gateway][azure-ag] to increase the protection at both the network and application layers. For more information, see: 
+
+- [Firewall and Application Gateway for virtual networks][azure-fw-ag-1] 
+- [Zero-trust network for web applications with Azure Firewall and Application Gateway][azure-fw-ag-2]
+
+If you use the NGINX ingress controller or any other AKS hosted ingress controller in place of the Azure Application Gateway, you can use the [Azure Firewall][azure-fw] to inspect traffic to and from the [Azure Kubernetes Service (AKS)](https://learn.microsoft.com/en-us/azure/aks) and protect the cluster from data exfiltration and other undesired network traffic. For more information, see: 
+
+- [Use Azure Firewall to protect Azure Kubernetes Service (AKS) clusters][azure-fw-aks-1]
+- [Use Azure Firewall to help protect an Azure Kubernetes Service (AKS) cluster][azure-fw-aks-2]
+ 
 ## Contributors
 
 *This article is maintained by Microsoft. It was originally written by the following contributors*:
@@ -499,6 +568,13 @@ For more information on developing and running applications in AKS, see the foll
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
 [aks-app-routing-addon]: ./app-routing.md
-[helm-aks]: ./kubernetes-helm.md
-[k8s-aks]: ./deploy-marketplace.md
-[openai-aks]: ./open-ai-quickstart.md
+[azure-waf]: /azure/web-application-firewall/overview
+[azure-ag]: /azure/application-gateway/overview
+[azure-ddos]: /azure/ddos-protection/ddos-protection-overview
+[azure-fw]: /en-us/azure/firewall/overview
+[azure-ddos-ag]: /azure/application-gateway/tutorial-protect-application-gateway-ddos
+[azure-fw-ag-1]: /azure/architecture/example-scenario/gateway/application-gateway-before-azure-firewall
+[azure-fw-ag-2]: /azure/architecture/example-scenario/gateway/firewall-application-gateway
+[azure-fw-aks-1]: /azure/firewall/protect-azure-kubernetes-service
+[azure-fw-aks-2]: /azure/architecture/guide/aks/aks-firewall
+[azure-la]: /azure/azure-monitor/logs/log-analytics-workspace-overview
