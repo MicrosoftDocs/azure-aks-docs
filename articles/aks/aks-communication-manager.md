@@ -29,18 +29,18 @@ Create an Azure "Logic App" resource. It's used to send auto upgrade event notic
 2. Open the created Logic App and click "Logic app designer," then click "Add a trigger" button.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Logic_App1.jpeg" alt-text="The screenshot shows how to add a trigger.":::
-
- 3. In the opened "Add a trigger" box, type "http" in the search box, and then select "When an HTTP request is received" trigger.
+ 
+3. In the opened "Add a trigger" box, type "http" in the search box, and then select "When an HTTP request is received" trigger.
 
   :::image type="content" source="./media/auto-upgrade-cluster/Trigger1.jpeg" alt-text="The screenshot shows HTTP request is received.":::
 
-  4. In the opened "When an HTTP request is received," click "Use sample payload to generate schema".
+4. In the opened "When an HTTP request is received," click "Use sample payload to generate schema".
 
   :::image type="content" source="./media/auto-upgrade-cluster/Trigger2.jpeg" alt-text="The screenshot shows Sample Payload is used.":::
 
-  5. In the opened "Enter or paste a sample JSON payload" box, paste the following JSON data and click "Done" button
+5. In the opened "Enter or paste a sample JSON payload" box, paste the following JSON data and click "Done" button
 
-   ```[
+ ```[
   {
     "id": "11112222-bbbb-3333-cccc-4444dddd5555",
     "topic": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000",
@@ -79,25 +79,25 @@ Create an Azure "Logic App" resource. It's used to send auto upgrade event notic
     "PartitionId": 0,
     "EventEnqueuedUtcTime": "2024-04-16T22:17:13.1700000Z"
   }
-]
+ ]
  ```
- 6. Click the "+" button and "Add an action"
+6. Click the "+" button and "Add an action"
 
    :::image type="content" source="./media/auto-upgrade-cluster/Add_an_Action.jpeg" alt-text="The screenshot shows how to add an action.":::
 
- 7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
+7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Add_Action2.jpeg" alt-text="The screenshot shows how to add an action.":::
 
- 8. Customize by providing recipient email. Click the Subject and Body fields, and there's a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
+8. Customize by providing recipient email. Click the Subject and Body fields, and there's a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Customize_email.jpeg" alt-text="The screenshot shows how to customize email.":::
 
- 9. Click the "Save" button.
+9. Click the "Save" button.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Save.jpeg" alt-text="The screenshot shows how to save.":::
 
- 10. Click the "When a HTTP request is received" button and copy the URL in the "HTTP POST URL" field. This URL is used shortly to configure event subscription web hook.
+10. Click the "When a HTTP request is received" button and copy the URL in the "HTTP POST URL" field. This URL is used shortly to configure event subscription web hook.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Http_post.jpeg" alt-text="The screenshot shows how to copy Http post URL.":::
 
@@ -113,14 +113,16 @@ Then fill in the event subscription information, in the "EndPoint Type," choose 
 
 You can also do it via CLI as shown here
 
-``` az eventgrid system-topic create --name arnSystemTopic --resource-group testrg --source /subscriptions/TestSub --topic-type microsoft.resourcenotifications.containerserviceeventresources --location global
-```
+```azurecli-interactive
+    az eventgrid system-topic create --name arnSystemTopic --resource-group testrg --source /subscriptions/TestSub --topic-type microsoft.resourcenotifications.containerserviceeventresources --location global 
+    ```
 
 Configure receive notifications for resources in a resource group, enable subject filtering with the resource group URI.
 
 :::image type="content" source="./media/auto-upgrade-cluster/Endpoint_type.jpeg" alt-text="The screenshot shows how to configure endpoint type":::
 
-## Verification
+### Verification
+
 Wait for the auto upgrader to start to upgrade the cluster. Then verify if you recieve notices promptly on the email configured to receive these notices.
 
 Check Azure Resource Graph database for the scheduled notification record. Each scheduled event notification should be listed as one record in the "containerserviceeventresources" table.
@@ -128,7 +130,12 @@ Check Azure Resource Graph database for the scheduled notification record. Each 
 
 :::image type="content" source="./media/auto-upgrade-cluster/ARG.jpeg" alt-text="How to look up ARG":::
 
+### Next Steps
+See how you can set up a [planned maintenance][planned-maintenance] window for your upgrades.
+See how you can optimize your [upgrades][upgrade-cluster].
+
 <!-- LINKS - internal -->
 [aks-auto-upgrade]: auto-upgrade-cluster.md
 [aks-node-auto-upgrade]: auto-upgrade-node-os-image.md
 [planned-maintenance]: planned-maintenance.md
+[upgrade-cluster]:upgrade-cluster.md
