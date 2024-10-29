@@ -352,163 +352,163 @@ deployment.apps/percona-server-mongodb-operator serverside-applied
 
 1. Deploy a MongoDB cluster with the Percona Operator. To help ensure high availability, the MongoDB cluster is deployed with a replica set, with sharding enabled, and in multiple availability zones. The MongoDB cluster is deployed with a backup solution that stores the backups in an Azure Blob Storage account.
 
-   The script deploys a MongoDB cluster with the following configuration:
+    The script deploys a MongoDB cluster with the following configuration:
 
-   ```bash
-   kubectl apply -f - <<EOF
-   apiVersion: psmdb.percona.com/v1
-   kind: PerconaServerMongoDB
-   metadata:
-     name: ${AKS_MONGODB_CLUSTER_NAME}
-     namespace: ${AKS_MONGODB_NAMESPACE}
-     finalizers:
-       - delete-psmdb-pods-in-order
-   spec:
-     crVersion: 1.16.0
-     image: ${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5
-     imagePullPolicy: Always
-     updateStrategy: SmartUpdate
-     upgradeOptions:
-       versionServiceEndpoint: https://check.percona.com
-       apply: disabled
-       schedule: "0 2 * * *"
-       setFCV: false
-     secrets:
-       users: "${AKS_MONGODB_SECRETS_NAME}"
-       encryptionKey: "${AKS_MONGODB_SECRETS_ENCRYPTION_KEY}"
-     pmm:
-       enabled: false
-       image: ${MY_ACR_REGISTRY}.azurecr.io/pmm-client:2.41.2
-       serverHost: monitoring-service
-   replsets:
-     - name: rs0
-       size: 3
-       affinity:
-         antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
-       podDisruptionBudget:
-         maxUnavailable: 1
-       expose:
-         enabled: false
-         exposeType: ClusterIP
-       resources:
-         limits:
-           cpu: "300m"
-           memory: "0.5G"
-         requests:
-           cpu: "300m"
-           memory: "0.5G"
-       volumeSpec:
-         persistentVolumeClaim:
-           storageClassName: managed-csi-premium
-           accessModes: ["ReadWriteOnce"]
-           resources:
-             requests:
-               storage: 1Gi
-       nonvoting:
-         enabled: false
-         size: 3
-         affinity:
-           antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
-         podDisruptionBudget:
-           maxUnavailable: 1
-         resources:
-           limits:
-             cpu: "300m"
-             memory: "0.5G"
-           requests:
-             cpu: "300m"
-             memory: "0.5G"
-         volumeSpec:
-           persistentVolumeClaim:
-             storageClassName: managed-csi-premium
-             accessModes: ["ReadWriteOnce"]
-             resources:
-               requests:
-                 storage: 1Gi
-       arbiter:
-         enabled: false
-         size: 1
-         affinity:
-           antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
-         resources:
-           limits:
-             cpu: "300m"
-             memory: "0.5G"
-           requests:
-             cpu: "300m"
-             memory: "0.5G"
-   sharding:
-     enabled: true
-     configsvrReplSet:
-       size: 3
-       affinity:
-         antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
-       podDisruptionBudget:
-         maxUnavailable: 1
-       expose:
-         enabled: false
-       resources:
-         limits:
-           cpu: "300m"
-           memory: "0.5G"
-         requests:
-           cpu: "300m"
-           memory: "0.5G"
-       volumeSpec:
-         persistentVolumeClaim:
-           storageClassName: managed-csi-premium
-           accessModes: ["ReadWriteOnce"]
-           resources:
-             requests:
-               storage: 1Gi
-     mongos:
-       size: 3
-       affinity:
-         antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
-       podDisruptionBudget:
-         maxUnavailable: 1
-       resources:
-         limits:
-           cpu: "300m"
-           memory: "0.5G"
-         requests:
-           cpu: "300m"
-           memory: "0.5G"
-       expose:
-         exposeType: ClusterIP
-   backup:
-     enabled: true
-     image: ${MY_ACR_REGISTRY}.azurecr.io/percona-backup-mongodb:2.4.1
-     storages:
-       azure-blob:
-         type: azure
-         azure:
-           container: "${AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME}"
-           prefix: psmdb
-           endpointUrl: https://${AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME}.blob.core.windows.net
-           credentialsSecret: "${AKS_AZURE_SECRETS_NAME}"
-     pitr:
-       enabled: false
-       oplogOnly: false
-       compressionType: gzip
-       compressionLevel: 6
-     tasks:
-       - name: daily-azure-us-east
-         enabled: true
-         schedule: "0 0 * * *"
-         keep: 3
-         storageName: azure-blob    
-         compressionType: gzip
-         compressionLevel: 6
-   EOF
-   ```  
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: psmdb.percona.com/v1
+    kind: PerconaServerMongoDB
+    metadata:
+      name: ${AKS_MONGODB_CLUSTER_NAME}
+      namespace: ${AKS_MONGODB_NAMESPACE}
+      finalizers:
+        - delete-psmdb-pods-in-order
+    spec:
+      crVersion: 1.16.0
+      image: ${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5
+      imagePullPolicy: Always
+      updateStrategy: SmartUpdate
+      upgradeOptions:
+        versionServiceEndpoint: https://check.percona.com
+        apply: disabled
+        schedule: "0 2 * * *"
+        setFCV: false
+      secrets:
+        users: "${AKS_MONGODB_SECRETS_NAME}"
+        encryptionKey: "${AKS_MONGODB_SECRETS_ENCRYPTION_KEY}"
+      pmm:
+        enabled: false
+        image: ${MY_ACR_REGISTRY}.azurecr.io/pmm-client:2.41.2
+        serverHost: monitoring-service
+      replsets:
+        - name: rs0
+          size: 3
+          affinity:
+            antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
+          podDisruptionBudget:
+            maxUnavailable: 1
+          expose:
+            enabled: false
+            exposeType: ClusterIP
+          resources:
+            limits:
+              cpu: "300m"
+              memory: "0.5G"
+            requests:
+              cpu: "300m"
+              memory: "0.5G"
+          volumeSpec:
+            persistentVolumeClaim:
+              storageClassName: managed-csi-premium
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 1Gi
+          nonvoting:
+            enabled: false
+            size: 3
+            affinity:
+              antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
+            podDisruptionBudget:
+              maxUnavailable: 1
+            resources:
+              limits:
+                cpu: "300m"
+                memory: "0.5G"
+              requests:
+                cpu: "300m"
+                memory: "0.5G"
+            volumeSpec:
+              persistentVolumeClaim:
+                storageClassName: managed-csi-premium
+                accessModes: ["ReadWriteOnce"]
+                resources:
+                  requests:
+                    storage: 1Gi
+          arbiter:
+            enabled: false
+            size: 1
+            affinity:
+              antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
+            resources:
+              limits:
+                cpu: "300m"
+                memory: "0.5G"
+              requests:
+                cpu: "300m"
+                memory: "0.5G"
+      sharding:
+        enabled: true
+        configsvrReplSet:
+          size: 3
+          affinity:
+            antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
+          podDisruptionBudget:
+            maxUnavailable: 1
+          expose:
+            enabled: false
+          resources:
+            limits:
+              cpu: "300m"
+              memory: "0.5G"
+            requests:
+              cpu: "300m"
+              memory: "0.5G"
+          volumeSpec:
+            persistentVolumeClaim:
+              storageClassName: managed-csi-premium
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 1Gi
+        mongos:
+          size: 3
+          affinity:
+            antiAffinityTopologyKey: "failure-domain.beta.kubernetes.io/zone"
+          podDisruptionBudget:
+            maxUnavailable: 1
+          resources:
+            limits:
+              cpu: "300m"
+              memory: "0.5G"
+            requests:
+              cpu: "300m"
+              memory: "0.5G"
+          expose:
+            exposeType: ClusterIP
+      backup:
+        enabled: true
+        image: ${MY_ACR_REGISTRY}.azurecr.io/percona-backup-mongodb:2.4.1
+        storages:
+          azure-blob:
+            type: azure
+            azure:
+              container: "${AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME}"
+              prefix: psmdb
+              endpointUrl: https://${AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME}.blob.core.windows.net
+              credentialsSecret: "${AKS_AZURE_SECRETS_NAME}"
+        pitr:
+          enabled: false
+          oplogOnly: false
+          compressionType: gzip
+          compressionLevel: 6
+        tasks:
+          - name: daily-azure-us-east
+            enabled: true
+            schedule: "0 0 * * *"
+            keep: 3
+            storageName: azure-blob    
+            compressionType: gzip
+            compressionLevel: 6
+    EOF
+    ```
 
-   Example output:
+    Example output:
 
-   <!-- expected_similarity=0.8 -->
-   ```output
-   perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
-   ```
+    <!-- expected_similarity=0.8 -->
+    ```output
+    perconaservermongodb.psmdb.percona.com/cluster-aks-mongodb created
+    ```
 
 2. Finish the MongoDB cluster deployment process by using the following script:
 
