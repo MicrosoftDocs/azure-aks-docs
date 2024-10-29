@@ -6,7 +6,7 @@ ms.custom: aks communication manager
 ms.topic: conceptual
 author: kaarthis
 ms.author: kaarthis
-ms.subservice: aks-maintenances
+ms.subservice: aks-upgrade
 ---
 
 # Azure Kubernetes Service Communication Manager(Preview)
@@ -87,7 +87,7 @@ Create an Azure "Logic App" resource. It's used to send auto upgrade event notic
 
 7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
 
- :::image type="content" source="./media/auto-upgrade-cluster/Add_Action2.jpeg" alt-text="The screenshot shows how to add an action.":::
+ :::image type="content" source="./media/auto-upgrade-cluster/Add_Action2.jpeg" alt-text="The screenshot shows how to send an email.":::
 
 8. Customize by providing recipient email. Click the Subject and Body fields, and there's a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
 
@@ -115,7 +115,7 @@ You can also do it via CLI as shown here
 
 ```azurecli-interactive
     az eventgrid system-topic create --name arnSystemTopic --resource-group testrg --source /subscriptions/TestSub --topic-type microsoft.resourcenotifications.containerserviceeventresources --location global 
-    ```
+```
 
 Configure receive notifications for resources in a resource group, enable subject filtering with the resource group URI.
 
