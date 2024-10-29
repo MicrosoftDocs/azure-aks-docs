@@ -269,6 +269,14 @@ To allow for a duration of time to wait between draining a node and proceeding t
     az aks nodepool upgrade --name MyNodePool --resource-group MyResourceGroup --cluster-name MyManagedCluster --max-surge 33% --node-soak-duration 20
     ```
 
+## Upgrading through significant version drift
+
+When upgrading from an unsupported version of Kubernetes to a supported version, it is important to test your workloads on the target version.  Whilst AKS will make every effort to upgrade your control plane and data plane, where is no guarantee your workloads will continue to work if they rely on deprecated Kubernetes APIs, or the platform has introduced breaking changes or behaviours (documented in the AKS release notes).
+
+In these situations we recommend testing your workloads on the new version, and resolving any version issues before doing an in place upgrade of your cluster.  This  may also lead to forward compatibility issues for your workloads before triggering the upgrade.
+
+A common pattern in this situation is to carry out a blue / green deployment of your modified workloads to a new cluster that is on a supported Kubernetes version, and route requests to the new cluster.
+
 ## View upgrade events
 
 * View upgrade events using the `kubectl get events` command.
