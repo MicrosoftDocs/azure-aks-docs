@@ -2,7 +2,7 @@
 author: haiche
 ms.service: azure-kubernetes-service
 ms.topic: include
-ms.date: 09/23/2024
+ms.date: 10/29/2024
 ms.author: haiche
 ---
 
