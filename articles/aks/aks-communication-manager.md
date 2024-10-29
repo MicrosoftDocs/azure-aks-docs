@@ -42,18 +42,18 @@ Create an Azure "Logic App" resource. It's used to send auto upgrade event notic
 
    ```[
   {
-    "id": "5b11111-5000-4444-8888-11111116c1",
-    "topic": "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111",
-    "subject": "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/b11111-4111-4000-8000-444444444",
+    "id": "11112222-bbbb-3333-cccc-4444dddd5555",
+    "topic": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000",
+    "subject": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/55556666-ffff-7777-aaaa-8888bbbb9999",
     "data": {
       "resourceInfo": {
-        "id": "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/b11111-4111-4000-8000-444444444",
-        "name": "b11111-4111-4000-8000-444444444",
+        "id": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/55556666-ffff-7777-aaaa-8888bbbb9999",
+        "name": "55556666-ffff-7777-aaaa-8888bbbb9999",
         "type": "Microsoft.ContainerService/managedClusters/scheduledEvents",
         "location": "westus2",
         "properties": {
           "description": "ScheduledEvents",
-          "eventId": "bb111111-0444-4444-8888-0bbbbbbbb",
+          "eventId": "22223333-cccc-4444-dddd-5555eeee6666",
           "eventSource": "AutoUprader",
           "eventStatus": "Started",
           "eventDetails": "Start to upgrade security vhd",
@@ -61,7 +61,7 @@ Create an Azure "Logic App" resource. It's used to send auto upgrade event notic
           "startTime": "0001-01-01T00:00:00.0000000Z",
           "lastUpdateTime": "0001-01-01T00:00:00.0000000Z",
           "resources": [
-            "/subscriptions/2AAAAAA-9111-4444-9999-bb11111111/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp"
+            "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp"
           ],
           "resourceType": "ManagedCluster"
         }
