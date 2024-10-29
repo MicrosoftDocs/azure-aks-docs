@@ -1,5 +1,5 @@
 ---
-title: Deploy an AWS Web Application Workload to Azure
+title: Deploy an AWS Web Application to Azure
 description: Learn how to deploy an AWS web application to Azure and validate your deployment.
 author: paolosalvatori
 ms.author: paolos
@@ -12,7 +12,7 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Deploy an AWS Web Application Workload to Azure
+# Deploy an AWS Web Application to Azure
 
 You're now ready to deploy the [Yelb][yelb] application to the [Azure Kubernetes Service (AKS)][aks] cluster built at the previous step.
 
