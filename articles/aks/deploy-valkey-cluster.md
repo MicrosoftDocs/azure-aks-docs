@@ -147,8 +147,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
                     values:
                     - ${MY_LOCATION}-2
             podAntiAffinity:
-              preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 90
+              requiredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
                 podAffinityTerm:
                   labelSelector:
                     matchExpressions:
@@ -445,6 +445,29 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     service/valkey-cluster created
     service/valkey-masters created
     service/valkey-replicas created
+    ```
+
+6. Create a Pod Disruption Budget (PDB) to ensure that at most one  pod is available at all times using the `kubectl apply` command.
+
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: policy/v1
+    kind: PodDisruptionBudget
+    metadata:
+      name: valkey
+      namespace: valkey
+    spec:
+      maxUnavailable: 1
+      selector:
+        matchLabels:
+          app: valkey
+    EOF
+    ```
+
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    poddisruptionbudget.policy/valkey created
     ```
 
 ## Run the Valkey cluster

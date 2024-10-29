@@ -38,12 +38,13 @@ The sample client application uses the [Locust load testing framework](https://d
     ```bash
     cat > locustfile.py <<EOF
     import time
-    from locust import between, task, User, events,tag
+    from locust import between, task, User, events,tag, constant_throughput
     from valkey import ValkeyCluster
     from random import randint
 
     class ValkeyLocust(User):
-
+        wait_time = constant_throughput(50)
+        host = "valkey-cluster.valkey.svc.cluster.local"
         def __init__(self, *args, **kwargs):
             super(ValkeyLocust, self).__init__(*args, **kwargs)
             self.client = ValkeyClient()
@@ -75,10 +76,10 @@ The sample client application uses the [Locust load testing framework](https://d
             start_time = time.perf_counter()
             try:
                 # Execute the set operation
-                result = self.vc.set("locust", randint(0, 10))
-                length = len(str(result))
+                result = self.vc.set(randint(0, 10), randint(0, 10))
                 if not result:
                     result = ''
+                length = len(str(result))
                 # Success event
                 total_time = (time.perf_counter()- start_time) * 1000
                 events.request.fire(
@@ -94,18 +95,20 @@ The sample client application uses the [Locust load testing framework](https://d
                     request_type=command,  # You can give it any name
                     name=key,  # Operation name
                     response_time=total_time,
+                    response_length=0,
                     exception=e  # Pass the exception to register a failure
                 )
+                result = ''
             return result
         def get_value(self, key, command='GET'):
             # Start time for the 'get' operation with high-resolution timer
             start_time = time.perf_counter()
             try:
                 # Execute the get operation
-                result = self.vc.get("locust")
-                length = len(str(result))
+                result = self.vc.get(randint(0, 10))
                 if not result:
                     result = ''
+                length = len(str(result))
                 # Success event
                 total_time = (time.perf_counter()- start_time) * 1000
                 events.request.fire(
@@ -121,8 +124,10 @@ The sample client application uses the [Locust load testing framework](https://d
                     request_type=command,  # You can give it any name
                     name=key,  # Operation name
                     response_time=total_time,
+                    response_length=0,
                     exception=e  # Pass the exception to register a failure
                 )
+                result = ''
             return result
 
         def on_stop(self):
@@ -152,6 +157,15 @@ The sample client application uses the [Locust load testing framework](https://d
       name: valkey-client
       namespace: valkey
     spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: agentpool
+                  operator: In
+                  values:
+                  - nodepool1
         containers:
         - name: valkey-client
           image: ${MY_ACR_REGISTRY}.azurecr.io/valkey-client
