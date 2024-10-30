@@ -55,8 +55,6 @@ Use CLI preview and install `aks-preview` extension 9.0.0b3 or later.
 
 You can use the following commands to update or install `aks-preview` extension:
 
-#### [Azure CLI](#tab/azure-cli)
-
 ```azurecli-interactive
 az extension update --name aks-preview
 ```
