@@ -1,12 +1,12 @@
 ---
 title: Upgrade options for Azure Kubernetes Service (AKS) clusters
 description: Learn the different ways to upgrade an Azure Kubernetes Service (AKS) cluster.
-ms.topic: article
+ms.topic: overview
+ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
 ms.date: 02/08/2024
 author: schaffererin
 ms.author: schaffererin
-
 ---
 
 # Upgrade options for Azure Kubernetes Service (AKS) clusters
@@ -41,9 +41,83 @@ To configure automatic upgrades, see the following articles:
 
 ## Special considerations for node pools that span multiple availability zones
 
-AKS uses best-effort zone balancing in node groups. During an upgrade surge, the zones for the surge nodes in Virtual Machine Scale Sets are unknown ahead of time, which can temporarily cause an unbalanced zone configuration during an upgrade. However, AKS deletes surge nodes once the upgrade completes and preserves the original zone balance. If you want to keep your zones balanced during upgrades, you can increase the surge to a multiple of *three nodes*, and Virtual Machine Scale Sets balances your nodes across availability zones with best-effort zone balancing. With best-effort zone balance, the scale set attempts to scale in and out while maintaining balance. However, if for some reason this is not possible (for example, if one zone goes down, the scale set cannot create a new VM in that zone), the scale set allows temporary imbalance to successfully scale in or out.
+AKS uses best-effort zone balancing in node groups. During an upgrade surge, the zones for the surge nodes in Virtual Machine Scale Sets are unknown ahead of time, which can temporarily cause an unbalanced zone configuration during an upgrade. However, AKS deletes surge nodes once the upgrade completes and preserves the original zone balance. If you want to keep your zones balanced during upgrades, you can increase the surge to a multiple of *three nodes*, and Virtual Machine Scale Sets balances your nodes across availability zones with best-effort zone balancing. With best-effort zone balance, the scale set attempts to scale in and out while maintaining balance. However, if for some reason this isn't possible (for example, if one zone goes down, the scale set can't create a new VM in that zone), the scale set allows temporary imbalance to successfully scale in or out.
 
 Persistent volume claims (PVCs) backed by Azure locally redundant storage (LRS) Disks are bound to a particular zone and might fail to recover immediately if the surge node doesn't match the zone of the PVC. If the zones don't match, it can cause downtime on your application when the upgrade operation continues to drain nodes but the PVs are bound to a zone. To handle this case and maintain high availability, configure a [Pod Disruption Budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) on your application to allow Kubernetes to respect your availability requirements during the drain operation.
+
+## Optimize for undrainable node behavior (Preview)
+
+You can configure the upgrade process behavior for drain failures. The default upgrade behavior is `Schedule`, which consists of a node drain failure causing the upgrade operation to fail, leaving the undrained nodes in a schedulable state. Alternatively, you can select the `Cordon` behavior, which skips nodes that fail to drain by placing them in a quarantined state, labels them `kubernetes.azure.com/upgrade-status:Quarantined`, and proceeds with upgrading the remaining nodes. This behavior ensures that all nodes are either upgraded or quarantined. This approach allows you to troubleshoot drain failures and gracefully manage the quarantined nodes.
+
+### How do I set the new Cordon behavior?
+
+Use CLI preview and install `aks-preview` extension 9.0.0b3 or later.
+
+You can use the following commands to update or install `aks-preview` extension:
+
+#### [Azure CLI](#tab/azure-cli)
+
+```azurecli-interactive
+az extension update --name aks-preview
+```
+
+```azurecli-interactive
+az extension add --name aks-preview
+```
+
+Update the nodepool undrainable node behavior to `Cordon`.
+
+```azurecli-interactive
+az aks nodepool update --cluster-name $CLUSTER_NAME --name $NODE_POOL_NAME --resource-group $RESOURCE_GROUP --max-surge 1 --undrainable-node-behavior Cordon
+```
+
+The following example output shows the undrainable node behavior updated:
+
+```output  
+"upgradeSettings": {
+    "drainTimeoutInMinutes": null,
+    "maxSurge": "1",
+    "nodeSoakDurationInMinutes": null,
+    "undrainableNodeBehavior": "Cordon"
+  }
+```
+
+Verify the label on any blocked nodes. When there's a drain node failure on upgrade using the following command:
+
+```bash
+kubectl get nodes --show-labels=true
+```
+
+The blocked nodes are unscheduled for pods and marked with the label `"kubernetes.azure.com/upgrade-status: Quarantined"`. The maximum number of nodes that can be left blocked can't be more than the `Max-Surge` value.
+
+### How do I remove the blocked nodes?
+
+First resolve the issue causing the drain. The following example removes the responsible PDB:
+
+```bash
+kubectl delete pdb nginx-pdb
+poddisruptionbudget.policy "nginx-pdb" deleted.
+```
+
+Then delete the blocked node using the `az aks nodepool delete-machines` command. This command is useful if you intend to reduce the node pool footprint by removing nodes left behind in older versions.
+
+ ```azurecli-interactive
+az aks nodepool delete-machines --cluster-name MyCluster --machine-names aks-nodepool1-test123-vmss000000 --name nodepool1 --resource-group TestRG
+```
+
+After you complete this step, you can reconcile the cluster status by performing any update operation without the optional fields as outlined [here](/cli/azure/aks?view=azure-cli-latest#az-aks-update).
+
+Example command:
+
+```azurecli-interactive
+az aks update --resource-group TestRG --name MyCluster
+```
+
+Alternatively, you can scale the node pool to the same number of nodes as the count of upgraded nodes. This action ensures the node pool gets to its intended original size. AKS prioritizes the removal of the blocked nodes. This command also restores the cluster provisioning status to `Succeeded`. In the example given, `2` is the total number of upgraded nodes.
+
+```azurecli-interactive
+az aks nodepool scale --resource-group TestRG --cluster-name MyCluster --name nodepool1 --node-count 2 
+```
 
 ## Optimize upgrades to improve performance and minimize disruptions
 
