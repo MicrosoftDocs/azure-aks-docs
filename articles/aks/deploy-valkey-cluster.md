@@ -147,7 +147,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
                     values:
                     - ${MY_LOCATION}-2
             podAntiAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
+              preferredDuringSchedulingIgnoredDuringExecution:
               - weight: 100
                 podAffinityTerm:
                   labelSelector:
