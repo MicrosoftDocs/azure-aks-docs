@@ -61,7 +61,7 @@ The MongoDB deployment strategy consists of the following components:
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it*:
 
 * Nelly Kiboi | Service Engineer
 * Saverio Proto | Principal Customer Experience Engineer
