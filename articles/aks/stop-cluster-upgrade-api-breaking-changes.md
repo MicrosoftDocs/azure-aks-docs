@@ -48,28 +48,21 @@ You have two options to mitigate the issue: you can [remove usage of deprecated 
 
     :::image type="content" source="./media/upgrade-cluster/applens-api-detection-full-v2.png" alt-text="A screenshot of the Azure portal showing the 'Selected Kubernetes API deprecations' section.":::
 
-3. Wait 12 hours from the time the last deprecated API usage was seen. Check the verb in the deprecated API usage to know if it's a [watch][k8s-api]. If it's a watch, you can wait for the usage to drop to zero. (You can also check past API usage by enabling [Container insights][container-insights] and exploring kube audit logs.)
+3. Wait 12 hours from the time the last deprecated API usage was seen. Read-Only verbs are excluded from the deprecated api usage namely [Get/List/Watch][k8s-api].(You can also check past API usage by enabling [Container insights][container-insights] and exploring kube audit logs.)
 4. Retry your cluster upgrade.
 
 ### Bypass validation to ignore API changes
 
 > [!NOTE]
-> This method requires you to use the Azure CLI version 2.53 or later. If you have the `aks-preview` CLI extension installed, you need to update to version `0.5.154` or later. This method isn't recommended, as deprecated APIs in the targeted Kubernetes version might not work long term. We recommend removing them as soon as possible after the upgrade completes.
+> This method requires you to use the Azure CLI version 2.57 or later. If you have the preview CLI extension installed, you need to update to version `3.0.0b10` or later. This method isn't recommended, as deprecated APIs in the targeted Kubernetes version might not work long term. We recommend removing them as soon as possible after the upgrade completes.
 
-1. Bypass validation to ignore API breaking changes using the [`az aks update`][az-aks-update] command. Specify the `enable-force-upgrade` flag and set the `upgrade-override-until` property to define the end of the window during which validation is bypassed. If no value is set, it defaults the window to three days from the current time. The date and time you specify must be in the future.
+1. Bypass validation to ignore API breaking changes and invoke an upgrade. Specify the `enable-force-upgrade` flag and set the `upgrade-override-until` property to define the end of the window during which validation is bypassed. If no value is set, it defaults the window to three days from the current time. The date and time you specify must be in the future.
 
     ```azurecli-interactive
-    az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --enable-force-upgrade --upgrade-override-until 2023-10-01T13:00:00Z
+    az aks upgrade --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --kubernetes-version $KUBERNETES_VERSION --enable-force-upgrade --upgrade-override-until 2023-10-01T13:00:00Z
     ```
-
     > [!NOTE]
     > `Z` is the zone designator for the zero UTC/GMT offset, also known as 'Zulu' time. This example sets the end of the window to `13:00:00` GMT. For more information, see [Combined date and time representations](https://wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations).
-
-2. Retry your cluster upgrade using the [`az aks upgrade`][az-aks-upgrade] command.
-
-    ```azurecli-interactive
-    az aks upgrade --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --kubernetes-version $KUBERNETES_VERSION
-    ```
 
 ## Next steps
 

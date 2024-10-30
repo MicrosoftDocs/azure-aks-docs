@@ -34,7 +34,7 @@ The following table lists key features of the Azure Cache for Redis Premium tier
 | **Replication** | Adding at least *one* replica pod per primary pod. |
 | **Zone redundancy** | Placing primary and replica pods in different availability zones. |
 
-We create two distinct [`StatefulSet`][kubernetes-stateful-sets] resources: one for the Valkey primaries and one for the replicas. The `spec.affinity` of the `StatefulSet` API places the primary pods in one availability zone and the replica pods in another availability zone. This approach ensures that a single zone failure doesn't impact the availability for any Valkey shard.
+We create two distinct [`StatefulSet`][kubernetes-stateful-sets] resources: one for the Valkey primaries and one for the replicas. The `spec.affinity` of the `StatefulSet` API places the primary pods in two different availability zones and the replica pods in another third availability zone. This approach ensures that a single zone failure doesn't impact the availability for any Valkey shard.
 
 > [!NOTE]
 > Note that the solution suggested in this article differs from the Valkey documentation, where cluster Pods belong to a single `StatefulSet`, and the `spec.affinity` only ensures that the Pods are placed on different nodes. The automatic Valkey cluster initialization presented in the Valkey documentation doesn't ensure that the primary and replica Pods for the same shard are placed in different availability zones.

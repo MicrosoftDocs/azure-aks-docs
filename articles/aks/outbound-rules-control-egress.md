@@ -42,6 +42,8 @@ The following network and FQDN/application rules are required for an AKS cluster
 * If you have an app or solution that needs to talk to the API server, you must either add an **additional** network rule to allow **TCP communication to port 443 of your API server's IP** **OR** , if you have a layer 7 firewall configured to allow traffic to the API Server's domain name, set `kubernetes.azure.com/set-kube-service-host-fqdn` in your pod specs.
 * On rare occasions, if there's a maintenance operation, your API server IP might change. Planned maintenance operations that can change the API server IP are always communicated in advance.
 * Under certain circumstances, it might happen that traffic towards "md-*.blob.storage.azure.net" is required. This dependency is due to some internal mechanisms of Azure Managed Disks. You might also want to use the Storage [service tag](/azure/virtual-network/service-tags-overview).
+* You might notice traffic towards "umsa*.blob.core.windows.net" endpoint. This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. 
+
 
 
 ### Azure Global required network rules
@@ -120,6 +122,7 @@ The following FQDN / application rules aren't required, but are recommended for 
 | Destination FQDN                                                               | Port          | Use      |
 |--------------------------------------------------------------------------------|---------------|----------|
 | **`security.ubuntu.com`, `azure.archive.ubuntu.com`, `changelogs.ubuntu.com`** | **`HTTP:80`** | This address lets the Linux cluster nodes download the required security patches and updates. |
+| **`snapshot.ubuntu.com`** | **`HTTPS:443`** | This address lets the Linux cluster nodes download the required security patches and updates from ubuntu snapshot service. |
 
 If you choose to block/not allow these FQDNs, the nodes will only receive OS updates when you do a [node image upgrade](node-image-upgrade.md) or [cluster upgrade](upgrade-cluster.md). Keep in mind that node image upgrades also come with updated packages including security fixes.
 
@@ -159,6 +162,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 | FQDN                                          | Port      | Use      |
 |-----------------------------------------------|-----------|----------|
 | **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server.|
+| **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server in Azure Government.|
 
 ### Azure Monitor for containers
 

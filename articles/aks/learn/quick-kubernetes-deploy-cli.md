@@ -11,7 +11,7 @@ ms.custom: H1Hack27Feb2017, mvc, devcenter, devx-track-azurecli, mode-api, innov
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2262758)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2286152)
 
 Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you quickly deploy and manage clusters. In this quickstart, you learn how to:
 

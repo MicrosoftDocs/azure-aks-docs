@@ -12,7 +12,7 @@ ms.date: 05/22/2024
 
 # Use kubenet networking with your own IP address ranges in Azure Kubernetes Service (AKS)
 
-AKS clusters use [kubenet][kubenet] and create an Azure virtual network and subnet for you by default. With kubenet, nodes get an IP address from the Azure virtual network subnet. Pods receive an IP address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address. This approach greatly reduces the number of IP addresses you need to reserve in your network space for pods to use.
+AKS clusters use kubenet and create an Azure virtual network and subnet for you by default. With kubenet, nodes get an IP address from the Azure virtual network subnet. Pods receive an IP address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address. This approach greatly reduces the number of IP addresses you need to reserve in your network space for pods to use.
 
 With [Azure Container Networking Interface (CNI)][cni-networking], every pod gets an IP address from the subnet and can be accessed directly. These IP addresses must be planned in advance and unique across your network space. Each node has a configuration parameter for the maximum number of pods it supports. The equivalent number of IP addresses per node are then reserved up front for that node. This approach requires more planning, and often leads to IP address exhaustion or the need to rebuild clusters in a larger subnet as your application demands grow. You can configure the maximum pods deployable to a node at cluster creation time or when creating new node pools. If you don't specify `maxPods` when creating new node pools, you receive a default value of *110* for kubenet.
 
@@ -56,7 +56,7 @@ With *Azure CNI*, each pod receives an IP address in the IP subnet and can commu
 * AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic between the node and pod CIDR. For more details, see [Network security groups][aks-network-nsg].
 * Features **not supported on kubenet** include:
   * [Azure network policies](use-network-policies.md#create-an-aks-cluster-and-enable-network-policy)
-  * [Windows node pools](./windows-faq.md)
+  * [Windows node pools](./windows-faq.yml)
   * [Virtual nodes add-on](virtual-nodes.md#network-requirements)
 
 > [!NOTE]

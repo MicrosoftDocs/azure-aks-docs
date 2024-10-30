@@ -95,7 +95,7 @@ Check which Kubernetes releases are available for your cluster using the followi
 
 The Azure portal highlights all the deprecated APIs between your current version and new available versions you intend to migrate to. For more information, see [the Kubernetes API Removal and Deprecation process][k8s-deprecation].
 
-:::image type="content" source="./media/upgrade-cluster/portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
+:::image type="content" source="./media/upgrade-cluster/azure-portal-upgrade.png" alt-text="The screenshot of the upgrade blade for an AKS cluster in the Azure portal. The automatic upgrade field shows 'patch' selected, and several APIs deprecated between the selected Kubernetes version and the cluster's current version are described.":::
 
 ---
 
@@ -240,7 +240,7 @@ AKS accepts both integer values and a percentage value for max surge. An integer
 
 At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. Minimum allowed drain timeout value is 5 minutes. 
 
-If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade.
+If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade. It is also recommended for long running pods to configure the [`terminationGracePeriodSeconds`][https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/].
 
 * Set node drain timeout for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command.
 

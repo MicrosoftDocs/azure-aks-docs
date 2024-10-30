@@ -30,11 +30,10 @@ In this article, we create the infrastructure resources required to run a Valkey
     export MY_RESOURCE_GROUP_NAME=myResourceGroup-rg
     export MY_LOCATION=eastus
     export MY_ACR_REGISTRY=mydnsrandomname$(echo $random)
-    export MY_IDENTITY_NAME=ua-identity-123
     export MY_KEYVAULT_NAME=vault-$(echo $random)-kv
     export MY_CLUSTER_NAME=cluster-aks
-    export SERVICE_ACCOUNT_NAME=valkey
     export SERVICE_ACCOUNT_NAMESPACE=valkey
+    export TENANT_ID=$(az account show --query tenantId --output tsv)
     ```
 
 ## Create a resource group
@@ -53,35 +52,12 @@ In this article, we create the infrastructure resources required to run a Valkey
     eastus      myResourceGroup-rg
     ```
 
-## Create an identity to access secrets in Azure Key Vault
-
-In this step, we create a user-assigned managed identity that the External Secrets Operator uses to access the Valkey password stored in Azure Key Vault.
-
-* Create a user-assigned managed identity using the [`az identity create`][az-identity-create] command.
-
-    ```azurecli-interactive
-    az identity create --name $MY_IDENTITY_NAME --resource-group $MY_RESOURCE_GROUP_NAME --output table
-    export MY_IDENTITY_NAME_ID=$(az identity show --name $MY_IDENTITY_NAME --resource-group $MY_RESOURCE_GROUP_NAME --query id --output tsv)
-    export MY_IDENTITY_NAME_PRINCIPAL_ID=$(az identity show --name $MY_IDENTITY_NAME --resource-group $MY_RESOURCE_GROUP_NAME --query principalId --output tsv)
-    export MY_IDENTITY_NAME_CLIENT_ID=$(az identity show --name $MY_IDENTITY_NAME --resource-group $MY_RESOURCE_GROUP_NAME --query clientId --output tsv)
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    ClientId                              Location    Name             PrincipalId                           ResourceGroup       TenantId
-    ------------------------------------  ----------  ---------------  ------------------------------------  ------------------  ------------------------------------
-    fb5abb97-3c21-4b94-b6e0-26d7ae5272fa  eastus      ua-identity-123  145c602b-5806-4571-bd9c-898d7e8e9248  myResourceGroup-rg  77275f04-b611-46f7-8917-d70a089a6127
-    ```
-
 ## Create an Azure Key Vault instance
 
 * Create an Azure Key Vault instance using the [`az keyvault create`][az-keyvault-create]command.
 
     ```azurecli-interactive
     az keyvault create --name $MY_KEYVAULT_NAME --resource-group $MY_RESOURCE_GROUP_NAME --location $MY_LOCATION --enable-rbac-authorization false --output table
-    export KEYVAULTID=$(az keyvault show --name $MY_KEYVAULT_NAME --query "id" --output tsv)
-    export KEYVAULTURL=$(az keyvault show --name $MY_KEYVAULT_NAME --query "properties.vaultUri" --output tsv)
     ```
 
     Example output:
@@ -117,7 +93,7 @@ In this step, we create a user-assigned managed identity that the External Secre
 
 ## Create an AKS cluster
 
-In this step, we create an AKS cluster with workload identity and OIDC issuer enabled. The workload identity gives the External Secrets Operator service account permission to access the Valkey password stored in your key vault.
+In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Provider Addon, which allows the AKS cluster to access secrets stored in Azure Key Vault. We also enable Workload Identity, which allows the AKS cluster to access other Azure resources securely.
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
@@ -135,9 +111,10 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
      --attach-acr ${MY_ACR_REGISTRY} \
      --enable-oidc-issuer \
      --enable-workload-identity \
+     --enable-addons azure-keyvault-secrets-provider \
      --zones 1 2 3 \
      --generate-ssh-keys \
-     --output table 
+     --output table
     ```
 
     Example output:
@@ -148,10 +125,12 @@ In this step, we create an AKS cluster with workload identity and OIDC issuer en
     cluster-ak-myresourcegroup--9b70ac-hhrizake.portal.hcp.eastus.azmk8s.io  1.28.9                      False                   cluster-ak-myResourceGroup--9b70ac  efecebf9-8894-46b9-9d68-09bfdadc474a  False                      True          cluster-ak-myresourcegroup--9b70ac-hhrizake.hcp.eastus.azmk8s.io Base     1.28                 eastus      100              cluster-aks  MC_myResourceGroup-rg_cluster-aks_eastus  Succeeded            myResourceGroup-rg  66681ad812cd770001814d32  KubernetesOfficial
     ```
 
-2. Get the OIDC issuer URL to use for the workload identity configuration using the [`az aks show`][az-aks-show] command.
+2. Get the Identity ID and the Object ID created by the Azure KeyVault Secret Provider Addon, using the [`az aks show`][az-aks-show] command.
 
     ```azurecli-interactive
-    export OIDC_URL=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query oidcIssuerProfile.issuerUrl --output tsv)
+    export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
+    export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
+
     ```
 
 3. Assign the `AcrPull` role to the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command.
@@ -181,14 +160,14 @@ In this section, we create a node pool dedicated to running the Valkey workload.
 
     ```azurecli-interactive
     while [ "$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --output tsv --query provisioningState)" != "Succeeded" ]; do echo "waiting for cluster to be ready"; sleep 10; done
-    
+
     az aks nodepool add \
         --resource-group $MY_RESOURCE_GROUP_NAME \
         --cluster-name  $MY_CLUSTER_NAME \
         --name valkey \
         --node-vm-size Standard_D4s_v3 \
         --node-count 6 \
-        --zones 1 2 \
+        --zones 1 2 3 \
         --output table
     ```
 
@@ -217,8 +196,8 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
     ```azurecli-interactive
     az acr import \
         --name $MY_ACR_REGISTRY \
-        --source docker.io/valkey/valkey:7.2.5  \
-        --image valkey:7.2.5 \
+        --source docker.io/valkey/valkey:latest  \
+        --image valkey:latest \
         --output table
     ```
 

@@ -59,9 +59,9 @@ The following table breaks down support priority levels for each of these catego
 
 Microsoft provides best-effort support for [the latest version of Dapr and two previous versions (N-2)][dapr-supported-version]. The latest patch version is the only supported version of each minor version release. Currently, the Dapr extension for AKS or Arc-enabled Kubernetes supports the following Dapr versions:
 
+- 1.14.x 
 - 1.13.x 
 - 1.12.x 
-- 1.11.x 
 
 You can run Azure CLI commands to retrieve a list of available versions in [a cluster](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-cluster) or [a location](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-location).
 
