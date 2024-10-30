@@ -222,7 +222,7 @@ As of the v20241025 AKS release, AKS configures CoreDNS to respond with NXDOMAIN
 
 - Any query for the root domain or a subdomain of `reddog.microsoft.com`.
 - Any query for a subdomain of `internal.cloudapp.net` that has seven or more labels in the domain name.
-  - This configuration allows virtual machine resolution by hostname to still suceed. For example, CoreDNS sends `aks12345.myvnetid.myregion.internal.cloudapp.net` (6 labels) to Azure DNS, but rejects  `mcr.microsoft.com.myvnetid.myregion.internal.cloudapp.net` (8 labels)
+  - This configuration allows virtual machine resolution by hostname to still succeed. For example, CoreDNS sends `aks12345.myvnetid.myregion.internal.cloudapp.net` (6 labels) to Azure DNS, but rejects  `mcr.microsoft.com.myvnetid.myregion.internal.cloudapp.net` (8 labels)
 
 This block is implemented in the default server block in the Corefile for the cluster. If needed, this rejection configuration can be disabled by creating custom server blocks for the appropriate domain with a forward plugin enabled:
 
