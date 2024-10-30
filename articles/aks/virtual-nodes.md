@@ -56,11 +56,9 @@ Virtual nodes are often one component of a scaling solution in AKS. For more inf
 
 - [Use the Kubernetes horizontal pod autoscaler][aks-hpa]
 - [Use the Kubernetes cluster autoscaler][aks-cluster-autoscaler]
-- [Check out the Autoscale sample for virtual nodes][virtual-node-autoscale]
 - [Read more about the Virtual Kubelet open source library][virtual-kubelet-repo]
 
 <!-- LINKS - external -->
 [aks-hpa]: tutorial-kubernetes-scale.md
 [aks-cluster-autoscaler]: ./cluster-autoscaler.md
-[virtual-node-autoscale]: https://github.com/Azure-Samples/virtual-node-autoscale
 [virtual-kubelet-repo]: https://github.com/virtual-kubelet/virtual-kubelet
