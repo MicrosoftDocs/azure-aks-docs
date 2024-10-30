@@ -65,7 +65,7 @@ az extension update --name aks-preview
 az extension add --name aks-preview
 ```
 
-Update the nodepool undrainable node behavior to `Cordon`.
+Update the node pool undrainable node behavior to `Cordon`:
 
 ```azurecli-interactive
 az aks nodepool update --cluster-name $CLUSTER_NAME --name $NODE_POOL_NAME --resource-group $RESOURCE_GROUP --max-surge 1 --undrainable-node-behavior Cordon
