@@ -1,7 +1,7 @@
 ---
 title: Deploy to Azure Kubernetes Service with Azure Pipelines
 description: Build and push images to Azure Container Registry; Deploy to Azure Kubernetes Service with Azure Pipelines
-ms.topic: article
+ms.topic: how-to
 ms.author: jukullam
 author: juliakm
 ms.date: 10/11/2023

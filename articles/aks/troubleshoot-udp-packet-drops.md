@@ -1,7 +1,7 @@
 ---
 title: Diagnose and solve UDP packet drops in Azure Kubernetes Service (AKS)
 description: Learn how to diagnose and solve UDP packet drops in Azure Kubernetes Service (AKS).
-ms.topic: how-to
+ms.topic: troubleshooting
 ms.date: 07/25/2024
 author: schaffererin
 ms.author: schaffererin
