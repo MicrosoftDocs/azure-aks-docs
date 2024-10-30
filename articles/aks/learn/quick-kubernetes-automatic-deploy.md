@@ -130,12 +130,6 @@ Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-
 az aks get-credentials --resource-group myResourceGroup --name myAKSAutomaticCluster
 ```
 
-Configure `kubelogin` to use the Azure CLI credentials for [authentication](../kubelogin-authentication.md). The Azure CLI authentication method uses the signed-in context that the Azure CLI establishes to get the access token. The token is issued in the same Microsoft Entra tenant as `az login`.
-
-```azurecli
-kubelogin convert-kubeconfig -l azurecli
-```
-
 Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
 
 ```bash
@@ -194,12 +188,6 @@ Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-
 
 ```azurecli
 az aks get-credentials --resource-group myResourceGroup --name myAKSAutomaticCluster
-```
-
-Configure `kubelogin` to use the Azure CLI credentials for [authentication](../kubelogin-authentication.md). The Azure CLI authentication method uses the signed-in context that the Azure CLI establishes to get the access token. The token is issued in the same Microsoft Entra tenant as `az login`.
-
-```azurecli
-kubelogin convert-kubeconfig -l azurecli
 ```
 
 Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
@@ -310,12 +298,6 @@ Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-
 
 ```azurecli
 az aks get-credentials --resource-group myResourceGroup --name
-```
-
-Configure `kubelogin` to use the Azure CLI credentials for [authentication](../kubelogin-authentication.md). The Azure CLI authentication method uses the signed-in context that the Azure CLI establishes to get the access token. The token is issued in the same Microsoft Entra tenant as `az login`.
-
-```azurecli
-kubelogin convert-kubeconfig -l azurecli
 ```
 
 Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
