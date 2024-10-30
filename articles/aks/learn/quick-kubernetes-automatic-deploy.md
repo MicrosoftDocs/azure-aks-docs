@@ -275,6 +275,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
       {
         name: 'systempool'
         mode: 'System'
+	count: 3
       }
     ]
   }
