@@ -485,7 +485,7 @@ deployment.apps/percona-server-mongodb-operator serverside-applied
             azure:
               container: "${AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME}"
               prefix: psmdb
-              endpointUrl: https://${AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME}.blob.core.windows.net
+              endpointUrl: "https://${AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME}.blob.core.windows.net"
               credentialsSecret: "${AKS_AZURE_SECRETS_NAME}"
         pitr:
           enabled: false
