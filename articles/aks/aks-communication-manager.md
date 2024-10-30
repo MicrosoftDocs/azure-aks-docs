@@ -20,9 +20,7 @@ The AKS Communication Manager streamlines notifications for all your AKS mainten
 
 ## How to set up communication manager
 
-1. Create Logic Apps as shown here
-
-Create an Azure "Logic App" resource. It's used to send auto upgrade event notices to your email.
+1. Create an Azure "Logic App" resource. It's used to send auto upgrade event notices to your email.
 
  :::image type="content" source="./media/auto-upgrade-cluster/Logic_apps.jpg" alt-text="The screenshot of the created blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
 
