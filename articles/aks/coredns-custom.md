@@ -218,7 +218,7 @@ All built-in plugins are supported, so the [CoreDNS hosts][coredns hosts] plugin
 
 Azure DNS configures a default search domain of `<vnetId>.<region>.internal.cloudapp.net` in virtual networks using Azure DNS and a non-functional stub `reddog.microsoft.com` in virtual networks using custom DNS servers (see the [name resolution for resources documentation](https://learn.microsoft.com/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances) for more details). Kubernetes configures pod DNS settings with `ndots: 5` to properly support cluster service hostname resolution. These two configurations combine to result in invalid search domain completion queries that never succeed being sent to upstream name servers while the system processes through the domain search list. These invalid queries cause name resolution delays and can place extra load on upstream DNS servers.
 
-As of November 2024, AKS configures CoreDNS to respond with NXDOMAIN in the following two cases, in order to prevent these invalid search domain completion queries from being forwarded to upstream DNS.
+As of the v20241025 AKS release, AKS configures CoreDNS to respond with NXDOMAIN in the following two cases, in order to prevent these invalid search domain completion queries from being forwarded to upstream DNS.
 
 - Any query for the root domain or a subdomain of `reddog.microsoft.com`.
 - Any query for a subdomain of `internal.cloudapp.net` that has seven or more labels in the domain name.
