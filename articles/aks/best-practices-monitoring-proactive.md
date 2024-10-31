@@ -51,7 +51,8 @@ Below is a list of the key signals which we recommend all AKS customers monitor 
 | OOMKilled Pods | Azure Managed Prometheus Metric |  |  |
 
 ### Kubernetes Control Plane Alerts
-Alert Scenario	Source	Signal	Recommended Threshold
+| Alert Scenario | Source | Signal | Recommended Threshold |
+|---|---|---|---|
 | ETCD is Filled Up | Azure Managed Prometheus Metric |  |  |
 | API Server Too Many Requests Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error code 429	|
 | API Server Webhook and Tunnel Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error codes 500 and 503 |
