@@ -58,7 +58,7 @@ az provider register --namespace Microsoft.ContainerService
 
 ## Limitations
 
-* Currently, WASI Node Pools only support [Spin][spin] applications, which use the [Wasmtime][wasmtime] runtime and native Linux containers.
+* Currently, WASI node pools only support [Spin][spin] applications, which use the [Wasmtime][wasmtime] runtime and native Linux containers.
 * The SpinKube operator is not supported on Wasm/WASI node pools.
 * The Wasm/WASI node pools can't be used for system node pool.
 * The *os-type* for Wasm/WASI node pools must be Linux.
@@ -232,7 +232,7 @@ The suffix `-v0-15-1`, `-v0-8-0`, `-v0-5-1`, and `-v0-3-0` are the versions of t
 
 | **shim version** | v0.15.1                                                                          | v0.8                                                                             | v0.5.1                                                                    | v0.3.0                                                                    |
 | ---------------- | -------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| **[Spin](spin)**         | [v2.6.0](https://github.com/fermyon/spin/releases/tag/v2.6.0)                    | [v1.4.1](https://github.com/fermyon/spin/releases/tag/v1.4.1)                    | [v1.0.0](https://github.com/fermyon/spin/releases/tag/v1.0.0)             | [v0.4.0](https://github.com/fermyon/spin/releases/tag/v0.4.0)             |
+| **[Spin][spin]**         | [v2.6.0](https://github.com/fermyon/spin/releases/tag/v2.6.0)                    | [v1.4.1](https://github.com/fermyon/spin/releases/tag/v1.4.1)                    | [v1.0.0](https://github.com/fermyon/spin/releases/tag/v1.0.0)             | [v0.4.0](https://github.com/fermyon/spin/releases/tag/v0.4.0)             |
 
 <!-- EXTERNAL LINKS -->
 [krustlet]: https://krustlet.dev/
