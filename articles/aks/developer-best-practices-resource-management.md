@@ -2,7 +2,7 @@
 title: Resource management best practices for Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn the application developer best practices for resource management in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: best-practice
 ms.date: 05/25/2023
 author: nickomang
 ms.author: nickoman

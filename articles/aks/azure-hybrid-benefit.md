@@ -2,7 +2,7 @@
 title: Use Azure Hybrid Benefit
 titleSuffix: Azure Kubernetes Service
 description: Learn how to save costs for Windows workloads by using existing Windows Server licenses on Azure Kubernetes Service.
-ms.topic: article
+ms.topic: concept-article
 ms.date: 02/09/2024
 ms.author: viniap
 author: vrapolinario
