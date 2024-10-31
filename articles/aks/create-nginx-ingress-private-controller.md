@@ -182,7 +182,7 @@ Update **`host`** with the name of your DNS host, for example, **store-front.pri
       ingressClassName: nginx-internal
       rules:
       - host: store-front.private.contoso.com
-      - http:
+        http:
           paths:
           - backend:
               service:
