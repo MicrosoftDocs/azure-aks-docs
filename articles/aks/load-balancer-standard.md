@@ -276,14 +276,11 @@ az aks create \
 
 > [!IMPORTANT]
 >
-> If you have applications on your cluster that can establish a large number of connections to small set of destinations, like many instances of a frontend application connecting to a database, you might have a scenario susceptible to encounter SNAT port exhaustion. SNAT port exhaustion happens when an application runs out of outbound ports to use to establish a connection to another application or host. If you have a scenario susceptible to encounter SNAT port exhaustion, we highly recommended you increase the allocated outbound ports and outbound frontend IPs on the load balancer.
+> If you have applications on your cluster that can establish a large number of connections to small set of destinations on public IP addresses, like many instances of a frontend application connecting to a database, you might have a scenario susceptible to encounter SNAT port exhaustion. SNAT port exhaustion happens when an application runs out of outbound ports to use to establish a connection to another application or host. If you have a scenario susceptible to encounter SNAT port exhaustion, we highly recommended you increase the allocated outbound ports and outbound frontend IPs on the load balancer.
 >
 > For more information on SNAT, see [Use SNAT for outbound connections](/azure/load-balancer/load-balancer-outbound-connections).
 
-By default, AKS sets *AllocatedOutboundPorts* on its load balancer to `0`, which enables [automatic outbound port assignment based on backend pool size][azure-lb-outbound-preallocatedports] when creating a cluster. For example, if a cluster has 50 or fewer nodes, 1024 ports are allocated to each node. As the number of nodes in the cluster increases, fewer ports are available per node. 
-
-> [!IMPORTANT]
-> There is a hard limit of 1024 ports regardless of whether front-end IPs are added when the node size is less than or equal to 50 (1-50).
+By default, AKS sets *AllocatedOutboundPorts* on its load balancer to `0`, which enables [automatic outbound port assignment based on backend pool size][azure-lb-outbound-preallocatedports] when creating a cluster. For example, if a cluster has 50 or fewer nodes, 1024 ports are allocated to each node. This value allows for scaling to cluster maximum node counts without requiring networking reconfiguration, but can make SNAT port exhaustion more common as more nodes are added. As the number of nodes in the cluster increases, fewer ports are available per node. Increasing the node counts across the boundaries in the chart (for example, going from 50 to 51 nodes or 100 to 101) may be disruptive to connectivity as the SNAT ports allocated to existing nodes are reduced to allow for more nodes. Using an explicit value for *AllocatedOutboundPorts*, as shown below, is recommended.
 
 To show the *AllocatedOutboundPorts* value for the AKS cluster load balancer, use `az network lb outbound-rule list`.
 
@@ -301,6 +298,9 @@ AllocatedOutboundPorts    EnableTcpReset    IdleTimeoutInMinutes    Name        
 ```
 
 To configure a specific value for *AllocatedOutboundPorts* and outbound IP address when creating or updating a cluster, use `load-balancer-outbound-ports` and either `load-balancer-managed-outbound-ip-count`, `load-balancer-outbound-ips`, or `load-balancer-outbound-ip-prefixes`. Before setting a specific value or increasing an existing value for either outbound ports or outbound IP addresses, you must calculate the appropriate number of outbound ports and IP addresses. Use the following equation for this calculation rounded to the nearest integer: `64,000 ports per IP / <outbound ports per node> * <number of outbound IPs> = <maximum number of nodes in the cluster>`.
+
+> [!IMPORTANT]
+> Adding more outbound IP addresses to a cluster will not provide more available SNAT ports for nodes unless a non-zero value for *AllocatedOutboundPorts* is set. If *AllocatedOutboundPorts* is left at the default value of `0`, the SNAT ports for the nodes will still be set per the table in the Load Balancer documentation and the extra ports from the additional IPs will not be used.
 
 When calculating the number of outbound ports and IPs and setting the values, keep the following information in mind:
 
