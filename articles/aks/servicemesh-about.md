@@ -2,7 +2,7 @@
 title: About service meshes
 description: Obtain an overview of service meshes, supported scenarios, selection criteria, and next steps to explore.
 author: phillipgibson
-ms.topic: article
+ms.topic: concept-article
 ms.date: 04/18/2023
 ms.author: pgibson
 ---

@@ -4,7 +4,7 @@ description: Install and configure Azure App Configuration extension on your Azu
 author: RichardChen820
 ms.author: junbchen
 ms.service: azure-kubernetes-service
-ms.topic: article
+ms.topic: concept-article
 ms.date: 09/10/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions

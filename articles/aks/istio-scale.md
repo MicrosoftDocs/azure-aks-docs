@@ -1,7 +1,7 @@
 ---
 title: Istio service mesh Azure Kubernetes Service add-on performance and scaling
 description: Istio service mesh Azure Kubernetes Service add-on performance and scaling
-ms.topic: article
+ms.topic: concept-article
 ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 03/19/2024

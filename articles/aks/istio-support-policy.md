@@ -1,7 +1,7 @@
 ---
 title: Support policy for Istio-based service mesh add-on for Azure Kubernetes Service
 description: Support policy for Istio-based service mesh add-on for Azure Kubernetes Service
-ms.topic: article
+ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 08/02/2024
 ms.author: kochhars

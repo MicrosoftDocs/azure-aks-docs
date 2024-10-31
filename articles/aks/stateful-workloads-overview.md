@@ -66,7 +66,7 @@ The following sections provide links to design and deployment information for st
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors:*
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 * Don High | Principal Customer Engineer
 * Colin Mixon | Product Manager
