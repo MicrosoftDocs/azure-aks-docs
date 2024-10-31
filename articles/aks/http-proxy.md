@@ -120,6 +120,31 @@ You can deploy an AKS cluster with an HTTP proxy using an ARM template. The same
 
 In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. Next, you can deploy the template. Your cluster should initialize with your HTTP proxy configured on the nodes.
 
+### Istio Add-On HTTP Proxy for External Services
+
+If you are using the [Istio-based service mesh add-on for AKS][istio-add-on-docs], you must create a Service Entry to enable your applications in the mesh to access non-cluster or external resources via the HTTP proxy. For example:
+```yaml
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+  name: proxy
+spec:
+  hosts:
+  - my-company-proxy.com # ignored
+  addresses:
+  - $PROXY_IP/32
+  ports:
+  - number: $PROXY_PORT
+    name: tcp
+    protocol: TCP
+  location: MESH_EXTERNAL
+```
+Create a file and provide values for `PROXY_IP` and `PROXY_PORT`. You can deploy the Service Entry using 
+
+```bash
+kubectl apply -f service_proxy.yaml
+```
+
 ## Update proxy configuration
 
 > [!NOTE]
@@ -160,4 +185,5 @@ For more information regarding the network requirements of AKS clusters, see [Co
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [install-azure-cli]: /cli/azure/install-azure-cli
+[istio-add-on-docs]: ./istio-about.md
 

@@ -1,7 +1,7 @@
 ---
 title: Istio-based service mesh add-on for Azure Kubernetes Service
 description: Istio-based service mesh add-on for Azure Kubernetes Service.
-ms.topic: article
+ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 04/09/2023
 ms.author: shasb
@@ -60,7 +60,7 @@ Istio-based service mesh add-on for AKS has the following limitations:
     
     > [!NOTE]
     > While these `EnvoyFilter`s are allowed, any issue arising from them (for example from the Lua scipt or from the compression library) are outside the support scope of the Istio add-on. See the [support policy document][istio-support-policy] for more information about the support categories for Istio add-on features and configuration options.
-* Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) are currently not yet supported with Istio addon.
+* Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) are currently not yet supported with Istio add-on. While add-on supports [annotation customization for the Istio ingress gateways][istio-ingress-annotation-customization] for IP addresses and service tags, port or protocol configuration is currently not supported.
 
 ## Feedback and feature ask
 
@@ -77,6 +77,7 @@ Feedback and feature ask for the Istio add-on can be provided by creating [issue
 [azure-cni-cilium]: azure-cni-powered-by-cilium.md
 [open-service-mesh-about]: open-service-mesh-about.md
 [istio-ingress]: ./istio-deploy-ingress.md
+[istio-ingress-annotation-customization]: ./istio-deploy-ingress.md#ingress-gateway-service-annotation-customization
 [istio-troubleshooting]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-general-troubleshooting
 [istio-deploy-addon]: istio-deploy-addon.md
 

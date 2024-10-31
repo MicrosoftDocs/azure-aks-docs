@@ -5,7 +5,7 @@ author: htaubenfeld
 ms.author: htaubenfeld
 ms.service: microsoft-linux
 ms.custom: linux-related-content
-ms.topic: article
+ms.topic: concept-article
 ms.date: 12/07/2023
 ---
 

@@ -44,10 +44,10 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 
 |  K8s version | Upstream release  | AKS preview  | AKS GA  | End of life | Platform support |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
-| 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan,15 2025 - Note community support is ending by Oct, 2024. This means patches wont be available post end of community support | Until 1.32 GA|
+| 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan 2025 | Until 1.32 GA|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Until 1.33 GA |
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Until 1.34 GA |
-| 1.31 | Aug 2024 | Sep 2024 | Oct 2024 | Nov 2025 | Until 1.35 GA |
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Mar 2025 | Mar 2026 | Until 1.36 GA |
 
 
@@ -63,7 +63,7 @@ LTS Versions
 
 If you prefer to see this information visually, here's a Gantt chart with all the current releases displayed:
 
-:::image type="content" source="media/supported-kubernetes-versions/kubernetes-versions-gantt-9122024.png" alt-text="Gantt chart showing the lifecycle of all Kubernetes versions currently active in AKS, including long term support." lightbox="media/supported-kubernetes-versions/kubernetes-versions-gantt-9122024.png":::
+:::image type="content" source="media/supported-kubernetes-versions/kubernetes-versions-gantt.png" alt-text="Gantt chart showing the lifecycle of all Kubernetes versions currently active in AKS, including long term support." lightbox="media/supported-kubernetes-versions/kubernetes-versions-gantt.png":::
 
 ## AKS components breaking changes by version
 

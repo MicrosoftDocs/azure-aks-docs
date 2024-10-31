@@ -162,6 +162,8 @@
           href: concepts-ai-ml-language-models.md
         - name: Fine-tuning language models
           href: concepts-fine-tune-language-models.md
+        - name: Machine learning operations (MLOps)
+          href: concepts-machine-learning-ops.md
     - name: Advanced Container Networking Services 
       items:
         - name: Advanced Container Networking Services overview
@@ -252,6 +254,10 @@
       href: windows-best-practices.md
     - name: Enforce best practices with deployment safeguards
       href: deployment-safeguards.md
+    - name: AI and machine learning
+      items:
+        - name: Machine learning operations (MLOps)
+          href: best-practices-ml-ops.md
 - name: How-to guides
   items:
     - name: AKS extension for Visual Studio Code
@@ -264,6 +270,8 @@
           href: aks-extension-draft-deployment.md
         - name: Create a GitHub Workflow
           href: aks-extension-draft-github-workflow.md
+        - name: Use AKS plugins for GitHub Copilot for Azure
+          href: aks-extension-ghcopilot-plugins.md
     - name: Migration
       items:
         - name: Plan and execute a migration
@@ -496,6 +504,8 @@
               href: use-cvm.md
             - name: Use Dedicated Hosts with AKS
               href: use-azure-dedicated-hosts.md
+            - name: Restrict access to IMDS
+              href: imds-restriction.md       
         - name: Authentication and authorization
           items: 
             - name: Use managed identities
@@ -606,6 +616,8 @@
               href: use-node-public-ips.md
             - name: Restrict and control cluster egress traffic 
               href: limit-egress-traffic.md
+            - name: Configure Static Egress Gateway
+              href: configure-static-egress-gateway.md
         - name: Ingress
           items:
             - name: Use application routing add-on 
@@ -774,6 +786,8 @@
               href: istio-support-policy.md
             - name: Istio service mesh add-on performance
               href: istio-scale.md
+            - name: Latency comparison for Istio
+              href: istio-latency.md
             - name: Telemetry API for Istio service mesh
               href: istio-telemetry.md
         - name: Open Service Mesh AKS add-on
@@ -818,10 +832,14 @@
           items:
             - name: About Kubernetes Event-driven Autoscaler (KEDA)
               href: keda-about.md
-            - name: Use ARM template
-              href: keda-deploy-add-on-arm.md
-            - name: Use Azure CLI
-              href: keda-deploy-add-on-cli.md
+            - name: Enable KEDA add-on for your cluster
+              items:
+                - name: Use an ARM template
+                  href: keda-deploy-add-on-arm.md
+                - name: Use the Azure CLI
+                  href: keda-deploy-add-on-cli.md
+                - name: Enable on an existing cluster using the Azure portal
+                  href: enable-keda-existing-cluster.md
             - name: Securely scale your applications using the Kubernetes Event-driven Autoscaling (KEDA) add-on and workload identity
               href: keda-workload-identity.md
             - name: Kubernetes Event-driven Autoscaler (KEDA) integrations

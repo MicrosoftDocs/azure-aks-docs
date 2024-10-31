@@ -1,15 +1,15 @@
 ---
-title: Trusted launch (preview) with Azure Kubernetes Service (AKS)
-description: Learn how trusted launch (preview) protects the Azure Kubernetes Cluster (AKS) nodes against boot kits, rootkits, and kernel-level malware. 
-ms.topic: article
+title: Trusted launch with Azure Kubernetes Service (AKS)
+description: Learn how trusted launch protects the Azure Kubernetes Cluster (AKS) nodes against boot kits, rootkits, and kernel-level malware. 
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
-ms.date: 03/08/2024
+ms.date: 10/09/2024
 ---
 
-# Trusted launch (preview) for Azure Kubernetes Service (AKS)
+# Trusted launch for Azure Kubernetes Service (AKS)
 
-[Trusted launch][trusted-launch-overview] (preview) improves the security of generation 2 virtual machines (VMs) by protecting against advanced and persistent attack techniques. It enables administrators to deploy AKS nodes, which contain the underlying virtual machines, with verified and signed bootloaders, OS kernels, and drivers. By using secure and measured boot, administrators gain insights and confidence of the entire boot chain's integrity.
+[Trusted launch][trusted-launch-overview] improves the security of generation 2 virtual machines (VMs) by protecting against advanced and persistent attack techniques. It enables administrators to deploy AKS nodes, which contain the underlying virtual machines, with verified and signed bootloaders, OS kernels, and drivers. By using secure and measured boot, administrators gain insights and confidence of the entire boot chain's integrity.
 
 This article helps you understand this new feature, and how to implement it.
 
@@ -24,57 +24,15 @@ Trusted launch is composed of several, coordinated infrastructure technologies t
 ## Before you begin
 
 - The Azure CLI version 2.44.1 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-
-- The `aks-preview` Azure CLI extension version 1.0.0b6 or later.
-
-- Register the `TrustedLaunchPreview` feature in your Azure subscription.
-
-- AKS supports trusted launch (preview) on version 1.25.2 and higher.
-
-- Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
-
 - Secure Boot requires signed boot loaders, OS kernels, and drivers.
-
-### Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-To install the aks-preview extension, run the following command:
-
-```azurecli
-az extension add --name aks-preview
-```
-
-Run the following command to update to the latest version of the extension released:
-
-```azurecli
-az extension update --name aks-preview
-```
-
-### Register the TrustedLaunchPreview feature flag
-
-Register the `TrustedLaunchPreview` feature flag by using the [az feature register][az-feature-register] command, as shown in the following example:
-
-```azurecli-interactive
-az feature register --namespace "Microsoft.ContainerService" --name "TrustedLaunchPreview"
-```
-
-It takes a few minutes for the status to show *Registered*. Verify the registration status by using the [az feature show][az-feature-show] command:
-
-```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "TrustedLaunchPreview"
-```
-
-When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
-
-```azurecli-interactive
-az provider register --namespace "Microsoft.ContainerService"
-```
 
 ## Limitations
 
+- AKS supports trusted launch on version 1.25.2 and higher.
+- Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Cluster nodes running Windows Server operating system aren't supported.
-- Trusted launch (preview) doesn't support node pools with FIPS enabled or based on ARM64.
+- Trusted launch doesn't support node pools with FIPS enabled or based on Arm64.
+- Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see[Skip GPU driver installation][skip-gpu-driver-install].
 - Ephemeral OS disks can be created with Trusted launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
@@ -148,9 +106,7 @@ Update a node pool with trusted launch enabled using the [az aks nodepool update
    * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
 > [!NOTE]
-> The existing nodepool must be using a trusted launch image in order to enable on an existing node pool. Hence, for the nodepools created before registering the `TrustedLaunchPreview` feature, you cannot update them with trusted launch enabled.
-> 
-> By default, creating a node pool with a TL-compatible configuration and the feature flag registered results in a trusted launch image. Without specifying `--enable-vtpm` or `--enable-secure-boot` parameters, they are disabled by default and you can enable later using `az aks nodepool update` command.
+> By default, creating a node pool with a TL-compatible configuration results in a trusted launch image. Without specifying `--enable-vtpm` or `--enable-secure-boot` parameters, they are disabled by default and you can enable later using `az aks nodepool update` command. The existing nodepool must be using a trusted launch image in order to enable on an existing node pool.
 
 
 > [!NOTE]

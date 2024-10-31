@@ -1,7 +1,7 @@
 ---
 title: Create node pools in Azure Kubernetes Service (AKS)
 description: Learn how to create multiple node pools for a cluster in Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli, build-2023, linux-related-content
 ms.date: 12/08/2023
 author: schaffererin
@@ -128,6 +128,7 @@ The ARM64 processor provides low power compute for your Kubernetes workloads. To
 
 * ARM64 node pools aren't supported on Defender-enabled clusters with Kubernetes version less than 1.29.0.
 * FIPS-enabled node pools aren't supported with ARM64 SKUs.
+* Windows node pools aren't supported with ARM64 SKUs.
 
 ### Add an ARM64 node pool
 

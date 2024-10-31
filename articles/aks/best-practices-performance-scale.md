@@ -2,7 +2,7 @@
 title: Performance and scaling best practices for small to medium workloads in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn the best practices for performance and scaling for small to medium workloads in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: best-practice
 ms.date: 11/03/2023
 author: schaffererin
 ms.author: schaffererin

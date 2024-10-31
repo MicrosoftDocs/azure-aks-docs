@@ -2,7 +2,7 @@
 title: Secure pod traffic with network policies
 titleSuffix: Azure Kubernetes Service
 description: Learn how to secure traffic that flows in and out of pods by using Kubernetes network policies in Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 03/28/2024
 author: schaffererin
@@ -35,7 +35,6 @@ Azure provides three Network Policy engines for enforcing network policies:
 Cilium is our recommended Network Policy engine. Cilium enforces network policy on the traffic using Linux Berkeley Packet Filter (BPF), which is generally more efficient than "IPTables". See more details in [Azure CNI Powered by Cilium documentation](./azure-cni-powered-by-cilium.md).  
 To enforce the specified policies, Azure Network Policy Manager for Linux uses Linux _IPTables_. Azure Network Policy Manager for Windows uses _Host Network Service (HNS) ACLPolicies_. Policies are translated into sets of allowed and disallowed IP pairs. These pairs are then programmed as `IPTable` or `HNS ACLPolicy` filter rules.
 
-
 ## Differences between Network Policy engines: Cilium, Azure NPM, and Calico
 
 | Capability                               | Azure Network Policy Manager                    | Calico                     | Cilium
@@ -46,28 +45,30 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 | Other features                           | None.                       | Extended policy model consisting of Global Network Policy, Global Network Set, and Host Endpoint. For more information on using the `calicoctl` CLI to manage these extended features, see [calicoctl user reference][calicoctl]. | None.
 | Support                                  | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team.
 
-## Limitations
+## Limitations of Azure Network Policy Manager
 
-Azure Network Policy Manager doesn't support IPv6. Otherwise, Azure Network Policy Manager fully supports the network policy specifications in Linux.
+> [!NOTE]
+> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium) to use Cilium as the network policy engine.
 
-In Windows, Azure Network Policy Manager doesn't support:
+Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy specifications in Linux.
 
-  * Named ports.
-  * Stream Control Transmission Protocol (SCTP).
-  * Negative match label or namespace selectors (for example, all labels except `debug=true`).
-  * `except` classless interdomain routing (CIDR) blocks (a CIDR with exceptions).
+In Windows, Azure NPM doesn't support the following features of the network policy specifications:
 
->[!NOTE]
->
-> Azure Network Policy Manager pod logs record an error if an unsupported policy is created.
+* Named ports.
+* Stream Control Transmission Protocol (SCTP).
+* Negative match label or namespace selectors. For example, all labels except `debug=true`.
+* `except` classless interdomain routing (CIDR) blocks (CIDR with exceptions).
 
-## Scale
+> [!NOTE]
+> Azure Network Policy Manager pod logs record an error if an unsupported network policy is created.
 
-With Azure Network Policy Manager for Linux, we don't allow scaling beyond 250 nodes and 20,000 pods.
-If you attempt to scale beyond these limits, you might encounter "Out of Memory" (OOM) errors.
+### Editing/deleting network policies
 
-For better scale and performance, consider using Cilium to manage network policies.
-To upgrade from Azure NPM to Cilium, see [these instructions](./azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium).
+In some rare cases, there's a chance of hitting a race condition that might result in temporary, unexpected connectivity for new connections to/from pods on any impacted nodes when either editing or deleting a "large enough" network policy. Hitting this race condition never impacts active connections.
+
+If this race condition occurs for a node, the Azure NPM pod on that node enters a state where it can't update security rules, which might lead to unexpected connectivity for new connections to/from pods on the impacted node. To mitigate the issue, the Azure NPM pod automatically restarts ~15 seconds after entering this state. While Azure NPM is rebooting on the impacted node, it deletes all security rules, then reapplies security rules for all network policies. While all the security rules are being reapplied, there's a chance of temporary, unexpected connectivity for new connections to/from pods on the impacted node.
+
+To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with *four or less* `ipBlock` sections is less likely to hit the issue.
 
 ## Before you begin
 
