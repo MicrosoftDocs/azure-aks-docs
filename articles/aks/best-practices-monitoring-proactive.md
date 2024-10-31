@@ -25,9 +25,7 @@ To get holistic coverage of your AKS environment, you will need to set up alerts
 1. **Application health**: Alerts for monitoring the health of your pods and applications. Some common indicators of unhealthy applications include out-of-memory kills (OOMKills) of your pods, pods in not ready state, etc.
 1. **Kubernetes control plane**: Alerts on AKS control plane to monitor the health and performance of the API server, etcd, and other components.
 
-Below is a list of the key signals which we recommend all AKS customers monitor closely. The AKS team is working to add all critical signals to the existing Recommended Alerts feature, which will allow you to easily enable alerts on all of the signals below with a one-click experience. This is estimated to be available in early 2025; for now, you can read the following blog posts for detailed instructions on configuring alerts via Azure Portal and API (Terraform, Bicep):
-•	[Link to blog post on configuring alerts via Azure Portal]
-•	[Link to blog post on configuring monitoring best practices with API (Terraform, Bicep)]
+Below is a list of the key signals which we recommend all AKS customers monitor closely. The AKS team is working to add all critical signals to the existing [Recommended Alerts](/azure/azure-monitor/containers/kubernetes-metric-alerts) feature, which will allow you to easily enable alerts on all of the signals below with a one-click experience. The Prometheus metrics alerts are available in Public Preview today, and the remaining alerts are estimated to be available in early 2025. For now, you can manually configure alerts on the signals below.
 
 ### Cluster infrastructure alerts 
 | Alert Scenario | Source | Signal | Recommended Threshold |
