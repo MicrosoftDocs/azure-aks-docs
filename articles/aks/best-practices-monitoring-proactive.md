@@ -55,5 +55,3 @@ Below is a list of the key signals which we recommend all AKS customers monitor 
 | API Server Too Many Requests Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error code 429	|
 | API Server Webhook and Tunnel Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error codes 500 and 503 |
 | API Server timeouts and retries | Azure Managed Prometheus Metric |  |  |
- 
-## Set up Observability best practices through Terraform/Bicep
