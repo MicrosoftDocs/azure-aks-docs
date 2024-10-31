@@ -2,7 +2,7 @@
 title: Cluster isolation best practices for Azure Kubernetes Service (AKS) 
 titleSuffix: Azure Kubernetes Service
 description: Learn the cluster operator best practices for isolation in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: best-practice
 ms.date: 05/25/2023
 ms.author: schaffererin
 author: schaffererin

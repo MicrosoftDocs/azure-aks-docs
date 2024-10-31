@@ -1,7 +1,7 @@
 ---
 title: Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using Azure CLI
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in a Windows Server container in Azure Kubernetes Service (AKS) using Azure CLI.
-ms.topic: article
+ms.topic: quickstart
 ms.custom: devx-track-azurecli
 ms.date: 01/11/2024
 author: tamram
