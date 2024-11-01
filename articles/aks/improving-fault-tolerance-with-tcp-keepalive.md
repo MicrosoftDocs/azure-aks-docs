@@ -19,14 +19,12 @@ Several Azure Networking services, such as Azure Load Balancer, enable you to [c
 
 The idle timeout feature helps to remove inactive connections from both the client and server in order to optimize resource utilization. However, for long-running operations, you might want to wait for a longer period than the configured timeout duration on the networking service. To ensure that the connection does not stay idle beyond the configured duration on the network service, or to ensure that the server is still available while the client is waiting for a response (or vice versa) so that you can retry the operation rather than waiting for a timeout, consider using the TCP keepalive feature.
 
-The idle timeout feature helps to remove inactive connections from both the client and server in order to optimize resource utilization. However, for long-running operations, you might want to wait for a longer period than the configured timeout duration on the networking service. If you want to ensure that the connection does not stay idle beyond the configured duration on the network service, or want to ensure that the server is still available while the client is waiting for a response (or vice versa) so that you can retry the operation sooner rather than waiting for a timeout, you should consider using the TCP Keepalive feature.
-
 In a TCP connection, either of the peers can request keepalives for their side of the connection. Keepalives can be configured for the client, the server, both, or neither. The keepalive mechanism follows the standard specifications defined in [RFC1122](https://datatracker.ietf.org/doc/html/rfc1122#section-4.2.3.6). A keepalive probe is either an empty segment or a segment that contains only one byte, featuring a sequence number that is one less than the largest Acknowledgment (ACK) number received from the peer so far. Since the receiving side has already acknowledged the original packet, the probe packet essentially mimics a packet that has already been received. In response, the receiving side sends another ACK packet as response to indicate to the sender that the connection is still active.
 
-The RFC1122 specification states that if either the probe or the ACK is lost, they are not retransmitted. Therefore, if there is no response to a single Keepalive probe, it does not necessarily mean that the connection has stopped working. In this case, the sender must attempt to send the probe a certain number of times before terminating the connection. The idle time of the connection resets when an ACK is received for a probe, and the process is then repeated. Keepalive probes enable you to configure the following parameters to govern their behavior. The parameters are listed together with their default values on Linux-based OSes:
+The RFC1122 specification states that if either the probe or the ACK is lost, they are not retransmitted. Therefore, if there is no response to a single keepalive probe, it does not necessarily mean that the connection has stopped working. In this case, the sender must attempt to send the probe a certain number of times before terminating the connection. The idle time of the connection resets when an ACK is received for a probe, and the process is then repeated. keepalive probes enable you to configure the following parameters to govern their behavior. The parameters are listed together with their default values on Linux-based OSes:
 
-- **Keepalive Time (in seconds)**: The duration of inactivity after which the first Keepalive probe is sent. The default duration is 2 hours.
-- **Keepalive Interval  (in seconds)**: The interval between subsequent Keepalive probes if no acknowledgment is received. The default interval is 75 seconds.
+- **Keepalive Time (in seconds)**: The duration of inactivity after which the first keepalive probe is sent. The default duration is 2 hours.
+- **Keepalive Interval  (in seconds)**: The interval between subsequent keepalive probes if no acknowledgment is received. The default interval is 75 seconds.
 - **Keepalive Probes**: The maximum number of unacknowledged probes before the connection is considered unusable. The default value is 9.
 
 Keepalive probes are managed at the TCP layer. Therefore, during normal operations, they don't affect the requestor application. However, in other cases, if the probes weren't acknowledged due to the peer rebooting or crashing, the application will receive a "connection timed out" error. If the peer sends a RESET (RST) response due to a crash, the application will receive a "connection reset by peer" error. In the case where the peer's host is up but unreachable from the requestor due to a network error, the application may receive a "connection timed out" or another error.
@@ -59,7 +57,7 @@ az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-gr
 
 You can find more detailed information about the supported configurations for both the node operating system and kubelet in our [prescriptive guidance](https://learn.microsoft.com/en-us/azure/aks/custom-node-configuration).
 
-After the cluster is ready, you can configure TCP Keepalive sysctls in your desired pod by setting the security context in your pod definitions as follows:
+After the cluster is ready, you can configure TCP keepalive sysctls in your desired pod by setting the security context in your pod definitions as follows:
 
 ```yaml
 apiVersion: v1
@@ -81,13 +79,13 @@ spec:
       command: ["sleep", "3600"]
 ```
 
-Applying the specification will implement the following TCP Keepalive behavior:
+Applying the specification will implement the following TCP keepalive behavior:
 
-1. `net.ipv4.tcp_keepalive_time` will configure Keepalive probes to be sent out after 45 seconds of inactivity on the connection.
-2. `net.ipv4.tcp_keepalive_probes` will configure the operating system send 5 unacknowledged Keepalive probes before deeming the connection as unusable.
-3. `net.ipv4.tcp_keepalive_intvl` will set the duration between dispatch of two Keepalive probes as 45 seconds.
+1. `net.ipv4.tcp_keepalive_time` will configure keepalive probes to be sent out after 45 seconds of inactivity on the connection.
+2. `net.ipv4.tcp_keepalive_probes` will configure the operating system send five unacknowledged keepalive probes before deeming the connection as unusable.
+3. `net.ipv4.tcp_keepalive_intvl` will set the duration between dispatch of two keepalive probes as 45 seconds.
 
-Your pod is now ready to send and respond to Keepalive probes. To verify the settings, you can execute the `sysctl` command on the pod as follows:
+Your pod is now ready to send and respond to keepalive probes. To verify the settings, you can execute the `sysctl` command on the pod as follows:
 
 ```shell
 kubectl exec -it busybox-sysctls -- sh -c "sysctl net.ipv4.tcp_keepalive_time net.ipv4.tcp_keepalive_intvl net.ipv4.tcp_keepalive_probes"
@@ -101,11 +99,11 @@ net.ipv4.tcp_keepalive_intvl = 45
 net.ipv4.tcp_keepalive_probes = 5
 ```
 
- Now you need to ensure that your applications have TCP Keepalive enabled, which is what we will discuss next.
+ Now you need to ensure that your applications have TCP keepalive enabled, which is what we will discuss next.
 
 ## Configuring TCP keepalive in applications
 
-The TCP client application needs to ensure that TCP Keepalive is enabled to ensure that it sends Keepalive probes to the server. Most programming languages and frameworks provide options to enable TCP keepalive on socket connections. Below is an example using Python's `socket` library:
+The TCP client application needs to ensure that TCP keepalive is enabled to ensure that it sends keepalive probes to the server. Most programming languages and frameworks provide options to enable TCP keepalive on socket connections. Below is an example using Python's `socket` library:
 
 ```python
 import socket
@@ -142,10 +140,10 @@ finally:
     sock.close()
 ```
 
-In this example, the application activates Keepalive probes, which are sent to the server after 60 seconds of inactivity. If there are five probe failures, the connection will be closed. Keep in mind that the socket-level TCP Keepalive probe configurations take precedence over any OS-level settings.
+In this example, the application activates keepalive probes, which are sent to the server after 60 seconds of inactivity. If there are five probe failures, the connection will be closed. Keep in mind that the socket-level TCP keepalive probe configurations take precedence over any OS-level settings.
 
 > [!NOTE]
-> The socket level TCP Keepalive settings configured through the application in the previous code listing will override the settings that you applied via the kubelet configuration earlier. If you don't set the socket level TCP Keepalive configuration values and only enable TCP Keepalive on the socket, the settings will default to the values set by the kubelet.
+> The socket level TCP keepalive settings configured through the application in the previous code listing will override the settings that you applied via the kubelet configuration earlier. If you don't set the socket level TCP keepalive configuration values and only enable TCP keepalive on the socket, the settings will default to the values set by the kubelet.
 
 If you are using .NET, the following code will produce the same result:
 
@@ -195,15 +193,15 @@ static async Task Main()
 ```
 For more information, see the [`ConnectCallback` handler] (/dotnet/api/system.net.http.socketshttphandler.connectcallback).
 
-Enabling TCP Keepalive helps to maintain the connection, especially when the server is placed behind a load balancer and uses NAT for outgoing traffic. In this way, the client can promptly detect server failures and switch to another instance without waiting for a timeout.
+Enabling TCP keepalive helps to maintain the connection, especially when the server is placed behind a load balancer and uses NAT for outgoing traffic. In this way, the client can promptly detect server failures and switch to another instance without waiting for a timeout.
 
-## HTTP/2 Keepalive
+## HTTP/2 keepalive
 
-If you are using HTTP/2 based communication protocols such as gRPC, the TCP Keepalive settings won't affect your applications. HTTP/2 follows the [RFC 7540 specifications](https://httpwg.org/specs/rfc7540.html), which mandates that the client send a PING frame to the server and that the server immediately replies with a PING ACK frame. Since HTTP/2 transport is reliable as opposed to TCP, the only Keepalive configuration necessary in HTTP/2 transport is timeout. If the PING ACK is not received before the configured timeout period, the connection is disconnected.
+If you are using HTTP/2 based communication protocols such as gRPC, the TCP keepalive settings won't affect your applications. HTTP/2 follows the [RFC 7540 specifications](https://httpwg.org/specs/rfc7540.html), which mandates that the client send a PING frame to the server and that the server immediately replies with a PING ACK frame. Since HTTP/2 transport is reliable as opposed to TCP, the only keepalive configuration necessary in HTTP/2 transport is timeout. If the PING ACK is not received before the configured timeout period, the connection is disconnected.
 
-When using the HTTP/2 transport, the server is responsible for supporting Keepalives and defining its behavior. The client's Keepalive settings must be compatible with the server's settings. For example, if the client sends the PING frame more frequently than what the server is willing to accept, the connection will be terminated with a HTTP2 GOAWAY frame response from the server.
+When using the HTTP/2 transport, the server is responsible for supporting keepalives and defining its behavior. The client's keepalive settings must be compatible with the server's settings. For example, if the client sends the PING frame more frequently than what the server is willing to accept, the connection will be terminated with a HTTP2 GOAWAY frame response from the server.
 
-For gRPC applications, the following Keepalive settings and the default values can be customized by the client and the server, as described in the [GRPC specification](https://grpc.io/docs/guides/keepalive/):
+For gRPC applications, the following keepalive settings and the default values can be customized by the client and the server, as described in the [GRPC specification](https://grpc.io/docs/guides/keepalive/):
 
 | Channel Argument                 | Availability      | Description                                                                                                                                                   | Client Default     | Server Default     |
 | -------------------------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------ |
@@ -216,7 +214,7 @@ For gRPC applications, the following Keepalive settings and the default values c
 | `MAX_CONNECTION_AGE`             | Server            | Maximum time that a channel may exist.                                                                                                                        | N/A                | INT_MAX (Infinite) |
 | `MAX_CONNECTION_AGE_GRACE`       | Server            | Grace period after the channel reaches its max age.                                                                                                           | N/A                | INT_MAX (Infinite) |
 
-The gRPC GitHub repository includes examples that demonstrate client and server applications that implement gRPC Keepalive:
+The gRPC GitHub repository includes examples that demonstrate client and server applications that implement gRPC keepalive:
 
 | Programming Language | Example                                                                                                         | Documentation                                                                                                                                       |
 | -------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -227,12 +225,12 @@ The gRPC GitHub repository includes examples that demonstrate client and server 
 
 ## Considerations
 
-While Keepalive probes can improve the fault tolerance of your applications, they can also consume additional bandwidth. Additionally, on mobile devices, increased network activity may impact the device's battery life. Therefore, it's important to adhere to the following best practices:
+While keepalive probes can improve the fault tolerance of your applications, they can also consume additional bandwidth. Additionally, on mobile devices, increased network activity may impact the device's battery life. Therefore, it's important to adhere to the following best practices:
 
-- **Customize Parameters**: Adjust Keepalive settings based on application requirements and network conditions.
-- **Application-Level Keepalives**: For encrypted connections (e.g., TLS/SSL), consider implementing keepalive mechanisms at the application layer to ensure probes are sent over secure channels.
-- **Monitoring and Logging**: Implement logging to monitor keepalive-induced connection closures for troubleshooting.
-- **Fallback Mechanisms**: Design applications to handle disconnections gracefully, including retry logic and failover strategies.
+- **Customize parameters**: Adjust keepalive settings based on application requirements and network conditions.
+- **Application-Level keepalives**: For encrypted connections (e.g., TLS/SSL), consider implementing keepalive mechanisms at the application layer to ensure probes are sent over secure channels.
+- **Monitoring and logging**: Implement logging to monitor keepalive-induced connection closures for troubleshooting.
+- **Fallback mechanisms**: Design applications to handle disconnections gracefully, including retry logic and failover strategies.
 
 ## See also
 
