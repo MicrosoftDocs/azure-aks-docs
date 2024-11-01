@@ -27,47 +27,39 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 1. Sign in to the [Azure portal][azure-portal].
 1. On the Azure portal home page, select **Create a resource**.
 1. In the **Categories** section, select **Containers** > **Azure Kubernetes Service (AKS)**.
-1. On the **Basics** tab, configure the following options:
+1. On the **Basics** tab, configure the following settings:
     - Under **Project details**:
-        - Select an Azure **Subscription**.
-        - Create an Azure **Resource group**, such as *myResourceGroup*. While you can select an existing resource group, for testing or evaluation purposes, we recommend creating a resource group to temporarily host these resources and avoid impacting your production or development workloads.
+        - **Subscription**: Select the Azure subscription you want to use for this AKS cluster.
+        - **Resource group**: Select **Create new**, enter a resource group name, such as *myResourceGroup*, and then select **Ok**. While you can select an existing resource group, for testing or evaluation purposes, we recommend creating a resource group to temporarily host these resources and avoid impacting your production or development workloads.
     - Under **Cluster details**:
-      - Set the **Cluster preset configuration** to *Production Standard*. For more details on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
+      - **Cluster preset configuration**: Select **Dev/Test**. For more details on preset configurations, see [Cluster configuration presets in the Azure portal][preset-config].
 
         > [!NOTE]
-        > You can change the preset configuration when creating your cluster by selecting *Compare presets* and choosing a different option.
-        > :::image type="content" source="media/quick-windows-container-deploy-portal/cluster-preset-options.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-windows-container-deploy-portal/cluster-preset-options.png":::
+        > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
+        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
 
-      - Enter a **Kubernetes cluster name**, such as *myAKSCluster*.
-      - Select a **Region** for the AKS cluster.
-      - Leave the **Availability zones** setting set to *None*.
-      - Leave the **AKS pricing tier** setting set to *Standard*.
-      - Leave the default value selected for **Kubernetes version**.
-      - Leave the **Automatic upgrade** setting set to the recommended value, which is *Enabled with patch*.
-      - Leave the **Authentication and authorization** setting set to *Local accounts with Kubernetes RBAC*.
+      - **Kubernetes cluster name**: Enter a cluster name, such as *myAKSCluster*.
+      - **Region**: Select a region, such as *East US 2*.
+      - **Availability zones**: Select **None**.
+      - **AKS pricing tier**: Select **Free**.
+      - Leave the default values for the remaining settings, and select **Next**.
 
-        :::image type="content" source="media/quick-windows-container-deploy-portal/create-cluster-basics.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-windows-container-deploy-portal/create-cluster-basics.png":::
+        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster.png":::
 
-1. Select **Next**. On the **Node pools** tab, add a new node pool:
-    - Select **Add node pool**.
-    - Enter a **Node pool name**, such as *npwin*. For a Windows node pool, the name must be six characters or fewer.
-    - For **Mode**, select **User**.
-    - For **OS SKU**, select **Windows**.
-    - Leave the **Availability zones** setting set to *None*.
+1. On the **Node pools** tab, configure the following settings:
+    - Select **Add node pool** and enter a **Node pool name**, such as *npwin*. For a Windows node pool, the name must be *six characters or fewer*.
+    - **Mode**: Select **User**.
+    - **OS SKU**: Select **Windows 2022**.
+    - **Availability zones**: Select **None**.
     - Leave the **Enable Azure Spot instances** checkbox unchecked.
-    - For **Node size**, select **Choose a size**. On the **Select a VM size** page, select *D2s_v3*, then choose the **Select** button.
-    - Leave the **Scale method** setting set to *Autoscale*.
-    - Leave the **Minimum node count** and **Maximum node count** fields set to their default settings.
+    - **Node size**: Select **Choose a size**. On the **Select a VM size** page, select **D2s_v3**, and then select **Select**.
+    - Leave the default values for the remaining settings, and select **Add**.
 
-        :::image type="content" source="media/quick-windows-container-deploy-portal/create-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server." lightbox="media/quick-windows-container-deploy-portal/create-node-pool-windows.png":::
+        :::image type="content" source="media/quick-windows-container-deploy-portal/add-node-pool-windows.png" alt-text="Screenshot showing how to create a node pool running Windows Server 2022." lightbox="media/quick-windows-container-deploy-portal/add-node-pool-windows.png":::
 
-1. Leave all settings on the other tabs set to their defaults.
-1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create** to create the AKS cluster.
+1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 
-It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by either:
-
-- Selecting **Go to resource**, or
-- Browsing to the AKS cluster resource group and selecting the AKS resource. In this example you browse for *myResourceGroup* and select the resource *myAKSCluster*.
+    It takes a few minutes to create the AKS cluster. When your deployment is complete, navigate to your resource by selecting **Go to resource**, or by browsing to the AKS cluster resource group and selecting the AKS resource.
 
 ## Connect to the cluster
 
@@ -76,53 +68,53 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 ### [Azure CLI](#tab/azure-cli)
 
 1. Open Cloud Shell by selecting the `>_` button at the top of the Azure portal page.
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. The following command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. The following command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurecli
+    ```azurecli-interactive
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
 1. Verify the connection to your cluster using the `kubectl get nodes` command, which returns a list of the cluster nodes.
 
-    ```azurecli
+    ```bash
     kubectl get nodes
     ```
 
     The following sample output shows all the nodes in the cluster. Make sure the status of all nodes is *Ready*:
 
     ```output
-    NAME                                STATUS   ROLES   AGE   VERSION
-    aks-agentpool-41946322-vmss000001   Ready    agent   28h   v1.27.7
-    aks-agentpool-41946322-vmss000002   Ready    agent   28h   v1.27.7
-    aks-npwin-41946322-vmss000000       Ready    agent   28h   v1.27.7
-    aks-userpool-41946322-vmss000001    Ready    agent   28h   v1.27.7
-    aks-userpool-41946322-vmss000002    Ready    agent   28h   v1.27.7
+    NAME                                STATUS   ROLES   AGE     VERSION
+    aks-agentpool-11741175-vmss000000   Ready    agent   8m17s   v1.29.9
+    aks-agentpool-11741175-vmss000001   Ready    agent   8m17s   v1.29.9
+    aksnpwin000000                      Ready    agent   8m17s   v1.29.9
+    aks-userpool-11741175-vmss000000    Ready    agent   8m17s   v1.29.9
+    aks-userpool-11741175-vmss000001    Ready    agent   8m17s   v1.29.9
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
 1. Open Cloud Shell by selecting the `>_` button at the top of the Azure portal page.
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [Import-AzAksCredential][import-azakscredential] cmdlet. The following command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`Import-AzAksCredential`][import-azakscredential] cmdlet. The following command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurepowershell
+    ```azurepowershell-interactive
     Import-AzAksCredential -ResourceGroupName myResourceGroup -Name myAKSCluster
     ```
 
 1. Verify the connection to your cluster using the `kubectl get nodes` command, which returns a list of the cluster nodes.
 
-    ```azurepowershell
+    ```bash
     kubectl get nodes
     ```
 
     The following sample output shows all the nodes in the cluster. Make sure the status of all nodes is *Ready*:
 
     ```output
-    NAME                                STATUS   ROLES   AGE   VERSION
-    aks-agentpool-41946322-vmss000001   Ready    agent   28h   v1.27.7
-    aks-agentpool-41946322-vmss000002   Ready    agent   28h   v1.27.7
-    aks-npwin-41946322-vmss000000       Ready    agent   28h   v1.27.7
-    aks-userpool-41946322-vmss000001    Ready    agent   28h   v1.27.7
-    aks-userpool-41946322-vmss000002    Ready    agent   28h   v1.27.7
+    NAME                                STATUS   ROLES   AGE     VERSION
+    aks-agentpool-11741175-vmss000000   Ready    agent   8m17s   v1.29.9
+    aks-agentpool-11741175-vmss000001   Ready    agent   8m17s   v1.29.9
+    aksnpwin000000                      Ready    agent   8m17s   v1.29.9
+    aks-userpool-11741175-vmss000000    Ready    agent   8m17s   v1.29.9
+    aks-userpool-11741175-vmss000001    Ready    agent   8m17s   v1.29.9
     ```
 
 ---
@@ -131,7 +123,7 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 
 A Kubernetes manifest file defines a desired state for the cluster, such as which container images to run. In this quickstart, you use a manifest file to create all objects needed to run the ASP.NET sample application in a Windows Server container. This manifest file includes a [Kubernetes deployment][kubernetes-deployment] for the ASP.NET sample application and an external [Kubernetes service][kubernetes-service] to access the application from the internet.
 
-The ASP.NET sample application is provided as part of the [.NET Framework Samples](https://hub.docker.com/_/microsoft-dotnet-framework-samples/) and runs in a Windows Server container. AKS requires Windows Server containers to be based on images of *Windows Server 2019* or greater. The Kubernetes manifest file must also define a [node selector][node-selector] to tell your AKS cluster to run your ASP.NET sample application's pod on a node that can run Windows Server containers.
+The ASP.NET sample application is provided as part of the [.NET Framework Samples](https://hub.docker.com/_/microsoft-dotnet-framework-samples/) and runs in a Windows Server container. The Kubernetes manifest file must define a [node selector][node-selector] to tell your AKS cluster to run your ASP.NET sample application's pod on a node that can run Windows Server containers.
 
 1. Create a file named `sample.yaml` and paste in the following YAML definition.
 
@@ -182,9 +174,9 @@ The ASP.NET sample application is provided as part of the [.NET Framework Sample
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-1. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
+2. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
 
-    ```console
+    ```bash
     kubectl apply -f sample.yaml
     ```
 
@@ -199,15 +191,15 @@ The ASP.NET sample application is provided as part of the [.NET Framework Sample
 
 When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete. Occasionally, the service can take longer than a few minutes to provision. Allow up to 10 minutes for provisioning.
 
-1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make all pods are `Running` before proceeding.
+1. Check the status of the deployed pods using the [`kubectl get pods`][kubectl-get] command. Make all pods are `Running` before proceeding.
 
-    ```console
+    ```bash
     kubectl get pods
     ```
 
-1. Monitor progress using the [kubectl get service][kubectl-get] command with the `--watch` argument.
+1. Monitor progress using the [`kubectl get service`][kubectl-get] command with the `--watch` argument.
 
-    ```console
+    ```bash
     kubectl get service sample --watch
     ```
 
@@ -218,12 +210,7 @@ When the application runs, a Kubernetes service exposes the application front en
     sample             LoadBalancer   10.0.37.27   <pending>     80:30572/TCP   6s
     ```
 
-    When the *EXTERNAL-IP* address changes from *pending* to an actual public IP address, use `CTRL-C` to stop the `kubectl` watch process. The following sample output shows a valid public IP address assigned to the service:
-
-    ```output
-    sample  LoadBalancer   10.0.37.27   52.179.23.131   80:30572/TCP   2m
-    ```
-
+1. When the *EXTERNAL-IP* address changes from *pending* to an actual public IP address, use `CTRL-C` to stop the `kubectl` watch process.
 1. See the sample app in action by opening a web browser to the external IP address of your service.
 
     :::image type="content" source="media/quick-windows-container-deploy-portal/asp-net-sample-app.png" alt-text="Screenshot of browsing to ASP.NET sample application." lightbox="media/quick-windows-container-deploy-portal/asp-net-sample-app.png":::
