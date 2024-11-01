@@ -4,7 +4,7 @@ description: This article describes the concept of multi-cluster layer-4 load ba
 ms.date: 03/04/2024
 author: shashankbarsin
 ms.author: shasb
-ms.service: kubernetes-fleet
+ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ---
 

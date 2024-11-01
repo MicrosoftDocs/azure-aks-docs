@@ -1,7 +1,7 @@
 ---
 title: Access a private Azure Kubernetes Service (AKS) cluster using the command invoke or Run command feature
 description: Learn how to access a private Azure Kubernetes Service (AKS) cluster using the Azure CLI command invoke feature or the Azure portal Run command feature.
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 09/15/2023

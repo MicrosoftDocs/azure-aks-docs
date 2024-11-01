@@ -1,7 +1,7 @@
 ---
 title: Provision Azure NetApp Files NFS volumes for Azure Kubernetes Service
 description: Describes how to statically and dynamically provision Azure NetApp Files NFS volumes for Azure Kubernetes Service.
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
 ms.date: 05/08/2023

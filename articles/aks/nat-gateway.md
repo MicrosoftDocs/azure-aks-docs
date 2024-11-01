@@ -22,6 +22,9 @@ This article shows you how to create an Azure Kubernetes Service (AKS) cluster w
 * Make sure you're using Kubernetes version 1.20.x or above.
 * Managed NAT gateway is incompatible with custom virtual networks.
 
+> [!IMPORTANT]
+> In non-private clusters, API server cluster traffic is routed and processed through the clusters outbound type. To prevent API server traffic from being processed as public traffic, consider using a [private cluster][private-cluster], or check out the [API Server VNet Integration][api-server-vnet-integration] feature.
+
 ## Create an AKS cluster with a managed NAT gateway
 
 * Create an AKS cluster with a new managed NAT gateway using the [`az aks create`][az-aks-create] command with the `--outbound-type managedNATGateway`, `--nat-gateway-managed-outbound-ip-count`, and `--nat-gateway-idle-timeout` parameters. If you want the NAT gateway to operate out of a specific availability zone, specify the zone using `--zones`.
@@ -51,8 +54,6 @@ This article shows you how to create an Azure Kubernetes Service (AKS) cluster w
 ## Create an AKS cluster with a user-assigned NAT gateway
 
 This configuration requires bring-your-own networking (via [Kubenet][byo-vnet-kubenet] or [Azure CNI][byo-vnet-azure-cni]) and that the NAT gateway is preconfigured on the subnet. The following commands create the required resources for this scenario.
-
-
 
 1. Create a resource group using the [`az group create`][az-group-create] command.
 
@@ -180,19 +181,15 @@ Windows enables OutboundNAT by default. You can now manually disable OutboundNAT
 For more information on Azure NAT Gateway, see [Azure NAT Gateway][nat-docs].
 
 <!-- LINKS - internal -->
+[api-server-vnet-integration]: api-server-vnet-integration.md
+[byo-vnet-azure-cni]: configure-azure-cni.md
+[byo-vnet-kubenet]: configure-kubenet.md
+[private-cluster]: private-clusters.md
+[upgrade-kubernetes]:tutorial-kubernetes-upgrade-cluster.md
 
 <!-- LINKS - external-->
 [nat-docs]: /azure/virtual-network/nat-gateway/nat-overview
-[az-feature-list]: /cli/azure/feature#az_feature_list
-[az-feature-register]: /cli/azure/feature#az_feature_register
-[byo-vnet-azure-cni]: configure-azure-cni.md
-[byo-vnet-kubenet]: configure-kubenet.md
-[az-extension-add]: /cli/azure/extension#az_extension_add
-[az-extension-update]: /cli/azure/extension#az_extension_update
 [az-cli]: /cli/azure/install-azure-cli
-[agic]: ../application-gateway/ingress-controller-overview.md
-[app-gw]: ../application-gateway/overview.md
-[upgrade-kubernetes]:tutorial-kubernetes-upgrade-cluster.md
 [aks-upgrade]: /cli/azure/aks#az-aks-update
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
@@ -201,5 +198,3 @@ For more information on Azure NAT Gateway, see [Azure NAT Gateway][nat-docs].
 [az-network-nat-gateway-create]: /cli/azure/network/nat/gateway#az_network_nat_gateway_create
 [az-network-vnet-create]: /cli/azure/network/vnet#az_network_vnet_create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
-[az-provider-register]: /cli/azure/provider#az_provider_register
-

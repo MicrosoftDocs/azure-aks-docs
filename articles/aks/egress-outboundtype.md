@@ -19,6 +19,9 @@ This article covers the various types of outbound connectivity that are availabl
 > [!NOTE]
 > You can now update the `outboundType` after cluster creation.
 
+> [!IMPORTANT]
+> In non-private clusters, API server cluster traffic is routed and processed through the clusters outbound type. To prevent API server traffic from being processed as public traffic, consider using a [private cluster][private-cluster], or check out the [API Server VNet Integration][api-server-vnet-integration] feature.
+
 ## Limitations
 
 - Setting `outboundType` requires AKS clusters with a `vm-set-type` of `VirtualMachineScaleSets` and `load-balancer-sku` of `Standard`.
@@ -72,21 +75,22 @@ The following tables show the supported migration paths between outbound types f
 
 ### Supported Migration Paths for Managed VNet
 
-| Managed VNet           | loadBalancer  | managedNATGateway | userAssignedNATGateway | userDefinedRouting |
-|------------------------|---------------|-------------------|------------------------|--------------------|
-| loadBalancer           | N/A           | Supported         | Not Supported          | Not Supported      |
-| managedNATGateway      | Supported     | N/A               | Not Supported          | Not Supported      |
-| userAssignedNATGateway | Not Supported | Not Supported     | N/A                    | Not Supported      |
-| userDefinedRouting     | Supported     | Supported         | Not Supported          | N/A                |
+Each row shows whether the outbound type can be migrated to the types listed across the top. "Supported" means migration is possible, while "Not Supported" or "N/A" means it isn’t.
+
+| From\|To    | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
+|--------------------------|----------------|---------------------|--------------------------|----------------------|
+| `loadBalancer`           | N/A            | Supported           | Not Supported            | Not Supported        |
+| `managedNATGateway`      | Supported      | N/A                 | Not Supported            | Not Supported        |
+| `userAssignedNATGateway` | Not Supported  | Not Supported       | N/A                      | Not Supported        |
 
 ### Supported Migration Paths for BYO VNet
 
-| BYO VNet               | loadBalancer  | managedNATGateway | userAssignedNATGateway | userDefinedRouting |
-|------------------------|---------------|-------------------|------------------------|--------------------|
-| loadBalancer           | N/A           | Not Supported     | Supported              | Supported          |
-| managedNATGateway      | Not Supported | N/A               | Not Supported          | Not Supported      |
-| userAssignedNATGateway | Supported     | Not Supported     | N/A                    | Supported          |
-| userDefinedRouting     | Supported     | Not Supported     | Supported              | N/A                |
+| From\|To          | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
+|--------------------------|----------------|---------------------|--------------------------|----------------------|
+| `loadBalancer`           | N/A            | Not Supported       | Supported                | Supported            |
+| `managedNATGateway`      | Not Supported  | N/A                 | Not Supported            | Not Supported        |
+| `userAssignedNATGateway` | Supported      | Not Supported       | N/A                      | Supported            |
+| `userDefinedRouting`     | Supported      | Not Supported       | Supported                | N/A                  |
 
 Migration is only supported between `loadBalancer`, `managedNATGateway` (if using a managed virtual network), `userAssignedNATGateway` and `userDefinedRouting` (if using a custom virtual network).
 
@@ -147,5 +151,6 @@ az aks update --resource-group <resourceGroup> --name <clusterName> --outbound-t
 - [Manage route tables](/azure/virtual-network/manage-route-table)
 
 <!-- LINKS - internal -->
+[api-server-vnet-integration]: api-server-vnet-integration.md
 [az-aks-update]: /cli/azure/aks#az_aks_update
-
+[private-cluster]: private-clusters.md

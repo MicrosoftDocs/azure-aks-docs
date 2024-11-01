@@ -2,7 +2,7 @@
 title: Optimize costs in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Recommendations and best practices for optimizing costs in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: best-practice
 ms.date: 02/21/2024
 author: nickomang
 ms.author: nickoman

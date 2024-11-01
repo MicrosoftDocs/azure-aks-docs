@@ -2,7 +2,7 @@
 title: Use Microsoft Entra ID and Kubernetes RBAC for clusters
 titleSuffix: Azure Kubernetes Service
 description: Learn how to use Microsoft Entra group membership to restrict access to cluster resources using Kubernetes role-based access control (Kubernetes RBAC) in Azure Kubernetes Service (AKS)
-ms.topic: article
+ms.topic: concept-article
 ms.author: schaffererin
 author: schaffererin
 ms.subservice: aks-integration

@@ -162,6 +162,8 @@
           href: concepts-ai-ml-language-models.md
         - name: Fine-tuning language models
           href: concepts-fine-tune-language-models.md
+        - name: Machine learning operations (MLOps)
+          href: concepts-machine-learning-ops.md
     - name: Advanced Container Networking Services 
       items:
         - name: Advanced Container Networking Services (ACNS) overview 
@@ -250,6 +252,10 @@
       href: windows-best-practices.md
     - name: Enforce best practices with deployment safeguards
       href: deployment-safeguards.md
+    - name: AI and machine learning
+      items:
+        - name: Machine learning operations (MLOps)
+          href: best-practices-ml-ops.md
 - name: How-to guides
   items:
     - name: AKS extension for Visual Studio Code
@@ -262,6 +268,8 @@
           href: aks-extension-draft-deployment.md
         - name: Create a GitHub Workflow
           href: aks-extension-draft-github-workflow.md
+        - name: Use AKS plugins for GitHub Copilot for Azure
+          href: aks-extension-ghcopilot-plugins.md
     - name: Migration
       items:
         - name: Plan and execute a migration
@@ -494,6 +502,8 @@
               href: use-cvm.md
             - name: Use Dedicated Hosts with AKS
               href: use-azure-dedicated-hosts.md
+            - name: Restrict access to IMDS
+              href: imds-restriction.md       
         - name: Authentication and authorization
           items: 
             - name: Use managed identities
@@ -774,6 +784,8 @@
               href: istio-support-policy.md
             - name: Istio service mesh add-on performance
               href: istio-scale.md
+            - name: Latency comparison for Istio
+              href: istio-latency.md
             - name: Telemetry API for Istio service mesh
               href: istio-telemetry.md
         - name: Open Service Mesh AKS add-on
