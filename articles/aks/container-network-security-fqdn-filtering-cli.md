@@ -10,20 +10,14 @@ ms.date: 07/30/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up FQDN filtering feature for Container Network Security in Advanced Container Networking Services (ACNS)
+# Set up FQDN filtering feature for Container Network Security in Advanced Container Networking Services
 
-This article shows you how to set up Advanced Container Networking Services with FQDN Filtering Feature in AKS clusters.
-
-> [!IMPORTANT]
-> Advanced Container Networking Services is currently in PREVIEW.
-> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
+This article shows you how to set up Advanced Container Networking Services with Container Network Security feature in AKS clusters.
 
 ## Prerequisites
 
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
-
-* The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 * To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-cli.md) enabled.
 
@@ -61,7 +55,7 @@ spec:
              protocol: ANY
           rules:
             dns:
-              - matchPattern: "*"
+              - matchPattern: "*.bing.com"
     - toFQDNs:
       - matchPattern: "*.bing.com"
 ```
@@ -75,7 +69,7 @@ kubectl apply –f demo-policy.yaml -n demo
 Create a `client` pod running Bash:
 
 ```bash
-kubectl run -it client -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.43 --labels="demo-container" --command -- bash
+kubectl run -it client -n demo --image=k8s.gcr.io/e2e-test-images/agnhost:2.43 --labels="app=demo-container" --command -- bash
 ```
 
 A shell with utilities for testing FQDN should open with the following output:

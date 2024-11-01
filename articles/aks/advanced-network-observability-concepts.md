@@ -9,11 +9,11 @@ ms.topic: conceptual
 ms.date: 05/10/2024
 ---
 
-# Container Network Observability with Advanced Container Networking Services (ACNS)
+# Container Network Observability with Advanced Container Networking Services
 
 ## What is Container Network Observability?
 
-Container Network Observability is a debut feature of the [Advanced Container Networking Services](advanced-container-networking-services-overview.md) suite. It equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. These tools empower you to pinpoint and troubleshoot network issues with ease, ensuring optimal performance for your applications.
+Container Network Observability is a feature of the [Advanced Container Networking Services](advanced-container-networking-services-overview.md) suite. It equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. These tools empower you to pinpoint and troubleshoot network issues with ease, ensuring optimal performance for your applications.
 
 Container Network Observability is compatible with all Linux workloads seamlessly integrating with Hubble regardless of whether the underlying data plane is Cilium or non-Cilium (both are supported) ensuring flexibility for your container networking needs.
 
@@ -21,7 +21,7 @@ Container Network Observability is compatible with all Linux workloads seamlessl
 
 > [!NOTE]
 > For Cilium data plane scenarios, Container Network Observability is available beginning with Kubernetes version 1.29.
-> For non-Cilium data plane scenarios, Container Network Observability is supported on all Linux distributions including Azure Linux beginning with version 2.0.
+> Container Network Observability is supported on all Linux distributions including Azure Linux beginning with version 2.0.
 
 ## Features of Container Network Observability
 
@@ -118,11 +118,18 @@ For *incoming traffic*, there will be a `destination` label with destination pod
 * Pod-level metrics are available only on Linux.
 * Cilium data plane is supported starting with Kubernetes version 1.29.
 * Metric labels may have subtle differences between Cilium and non-Cilium clusters.
-* DNS metrics are only available for pods that have Cilium Network polices (CNP) configured on their clusters.
+* For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network polices (CNP) configured on their clusters.
+* Flow logs are not currently available in the air gapped cloud.
+* Hubble relay may crash if one of the hubble node agents goes down and may cause interruptions to Hubble CLI.
 
 ### Scale
 
 Azure managed Prometheus and Grafana impose service-specific scale limitations. For more information, see [Scrape Prometheus metrics at scale in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-scrape-scale)
+
+
+## What is Retina and how Contribute ?
+
+Retina is an open-source project developed by Microsoft that provides network metrics for customers using non-Cilium clusters. Advanced container networking services use Retina to surface network metrics for these clusters. As an open-source initiative, anyone can contribute to Retina to learn and enhance its capabilities. To learn more, see [How to contribute to Retina] (https://retina.sh/docs/Contributing/).
 
 ## Next steps
 
