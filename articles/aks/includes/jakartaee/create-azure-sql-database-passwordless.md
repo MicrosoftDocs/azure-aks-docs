@@ -2,7 +2,7 @@
 author: haiche
 ms.service: azure-kubernetes-service
 ms.topic: include
-ms.date: 10/29/2024
+ms.date: 11/01/2024
 ms.author: haiche
 ---
 
@@ -68,7 +68,7 @@ Use the following steps to configure a Microsoft Entra administrator account to 
 1. Select **Settings**, then select **Microsoft Entra ID**. On the **Microsoft Entra ID** page, select **Set admin**.
 1. On the **Add admin** page, search for a user, select the user or group to be an administrator, and then select **Select**.
 1. At the top of the **Microsoft Entra ID** page, select **Save**. For Microsoft Entra users and groups, the Object ID is displayed next to the admin name.
-1. The process of changing the administrator may take several minutes. Then, the new administrator appears in the **Microsoft Entra ID** box.
+1. The process of changing the administrator might take several minutes. Then, the new administrator appears in the **Microsoft Entra ID** box.
 
 ### Create a user-assigned managed identity
 

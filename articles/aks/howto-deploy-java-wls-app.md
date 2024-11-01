@@ -4,7 +4,7 @@ description: Shows how to quickly stand up WebLogic Server on Azure Kubernetes S
 author: KarlErickson
 ms.author: edburns
 ms.topic: how-to
-ms.date: 10/29/2024
+ms.date: 11/01/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-wls, devx-track-javaee-wls-aks, devx-track-extended-java
 ---
@@ -18,7 +18,7 @@ This article demonstrates how to:
 - Build an application Docker image that includes WebLogic Deploy Tooling (WDT) models.
 - Deploy the containerized application to the WebLogic Server cluster on AKS with connection to Microsoft Azure SQL.
 
-This article uses the [Azure Marketplace offer for WebLogic Server](https://aka.ms/wlsaks) to accelerate your journey to AKS. The offer automatically provisions several Azure resources, including the following:
+This article uses the [Azure Marketplace offer for WebLogic Server](https://aka.ms/wlsaks) to accelerate your journey to AKS. The offer automatically provisions several Azure resources, including the following resources:
 
 - An Azure Container Registry instance
 - An AKS cluster
@@ -73,7 +73,7 @@ Open the **Query editor** pane by following the steps in the [Query the database
 
 ---
 
-### Create schema for the sample application
+### Create a schema for the sample application
 
 Select **New Query** and then, in the query editor, run the following query:
 
@@ -272,7 +272,7 @@ mvn clean package --file $BASE_DIR/weblogic-on-azure/javaee/weblogic-cafe/pom.xm
 
 The package should be successfully generated and located at *$BASE_DIR/weblogic-on-azure/javaee/weblogic-cafe/target/weblogic-cafe.war*. If you don't see the package, you must troubleshoot and resolve the issue before you continue.
 
-### Use ACR to create an auxiliary image
+### Use Azure Container Registry to create an auxiliary image
 
 The steps in this section show you how to build an auxiliary image. This image includes the following components:
 
@@ -450,7 +450,7 @@ Use the following steps to build the image:
       Merged "<name>" as current context in /Users/<username>/.kube/config
       ```
 
-   1. Export the database connection model and save it to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The following steps extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.
+   1. Export the database connection model and save it to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The following steps extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you modified the default value, replace it with your own domain UID.
 
       1. The data key is *\<db-secret-name>.yaml*. Use the following command to retrieve the database secret name:
 
