@@ -31,6 +31,12 @@ The `MemberCluster` represents a cluster-scoped API established within the hub c
 
 You can join Azure Kubernetes Service (AKS) clusters to a fleet as member clusters. Member clusters must reside in the same Microsoft Entra tenant as the fleet, but they can be in different regions, different resource groups, and/or different subscriptions.
 
+## What are hub clusters?
+
+In Azure Kubernetes Fleet Manager, hub clusters play a crucial role in managing multiple member clusters, but they are optional.
+
+The hub cluster facilitates the orchestration of updates and resource management across member clusters. However, you can create a fleet without a hub cluster. This flexibility allows you to manage clusters as a single entity without the need for a dedicated hub. This would be more suitable for simpler setups or specific use cases.
+
 ### Taints
 
 Member clusters support the specification of taints, which apply to the `MemberCluster` resource. Each taint object consists of the following fields:
