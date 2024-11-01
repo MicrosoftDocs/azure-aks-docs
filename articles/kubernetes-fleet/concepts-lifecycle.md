@@ -45,6 +45,24 @@ In order for Fleet to keep hub clusters up-to-date with the latest patches, ensu
 
 ## Hub cluster configuration details
 
+In Azure Kubernetes Fleet Manager, hub clusters serve as the central management point for multiple member clusters. Here’s a detailed overview of their functionality and security measures:
+
+- **Definition and Functionality:**
+    - A hub cluster is a managed Azure Kubernetes Service (AKS) cluster that orchestrates and propagates Kubernetes resources across member clusters.
+    - It is responsible for managing periodic component upgrades, ensuring that all clusters within the fleet are up-to-date with the latest security patches and features.
+
+- **Managed by Microsoft:**
+    - Hub clusters are managed by Microsoft, meaning users do not have the ability to create or deploy applications directly on these clusters. This restriction helps maintain a stable and secure environment.
+
+- **Protections Against Modifications:**
+    - To prevent unauthorized changes, several protections are in place:
+        - **Command Invocation Disabled:** Using command invocation with Azure CLI is disabled on hub clusters, preventing users from executing commands that could alter the cluster’s configuration.
+        - **Local Authentication Disabled:** Access via admin kubeconfig is disabled, ensuring that authentication is exclusively handled through Microsoft Entra ID. This enhances security by centralizing access control.
+
+- **Envelope ConfigMap:**
+    - An **envelope ConfigMap** is utilized to manage configurations without causing side effects on the hub cluster. This approach allows for the safe propagation of settings to member clusters while maintaining the integrity of the hub cluster’s environment.
+      These configurations collectively enhance the security and stability of hub clusters, ensuring they function effectively as the backbone of Azure Kubernetes Fleet Manager.
+
 In addition to managing periodic component upgrades, the Fleet service sets the following configurations on hub clusters to harden security:
 
 - Using `command invoke` [with Azure CLI][aks-access-private-cluster] is disabled on hub clusters.
