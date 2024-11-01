@@ -22,7 +22,7 @@
     href: concepts-fleet.md
   - name: Choosing a fleet type
     href: concepts-choosing-fleet.md
-  - name: Fleet hub cluster lifecycle overview
+  - name: Fleet hub cluster overview
     href: concepts-lifecycle.md
   - name: Grant access to resources with Azure RBAC
     href: concepts-rbac.md
