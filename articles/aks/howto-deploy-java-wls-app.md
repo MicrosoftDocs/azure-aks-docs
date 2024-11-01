@@ -58,7 +58,7 @@ If you're interested in providing feedback or working closely on your migration 
 
 [!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database-passwordless.md)]
 
-Use the following command to get the connection string that you use in the next section.
+Use the following command to get the connection string that you use in the next section:
 
 ```azurecli-interactive
 export CONNECTION_STRING="jdbc:sqlserver://${AZURESQL_SERVER_NAME}.database.windows.net:1433;database=${DATABASE_NAME};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
@@ -75,7 +75,7 @@ Open the **Query editor** pane by following the steps in the [Query the database
 
 ### Create schema for the sample application
 
-Select **New Query**, in the query editor, run the following query:
+Select **New Query** and then, in the query editor, run the following query:
 
 ```sql
 CREATE TABLE COFFEE (ID NUMERIC(19) NOT NULL, NAME VARCHAR(255) NULL, PRICE FLOAT(32) NULL, PRIMARY KEY (ID));
@@ -89,7 +89,7 @@ You can proceed to deploy WLS on AKS offer.
 
 ## Deploy WebLogic Server on AKS
 
-The following steps show you how to find the WebLogic Server on AKS offer and fill out the **Basics** pane.
+Use the following steps to find the WebLogic Server on AKS offer and fill out the **Basics** pane:
 
 1. In the search bar at the top of the Azure portal, enter *weblogic*. In the autosuggested search results, in the **Marketplace** section, select **WebLogic Server on AKS**.
 
@@ -108,7 +108,7 @@ The following steps show you how to find the WebLogic Server on AKS offer and fi
 1. Fill in `wlsAksCluster2022` for the **Password for WebLogic Administrator**. Use the same value for the confirmation and **Password for WebLogic Model encryption** fields.
 1. Select **Next**.
 
-The following steps show you how to start the deployment process.
+Use the following steps start the deployment process:
 
 1. Scroll to the section labeled **Provide an Oracle Single Sign-On (SSO) account**. Fill in your Oracle SSO credentials from the preconditions.
 
@@ -134,37 +134,36 @@ The following steps make it so the WebLogic Server admin console and the sample 
 1. For **Create ingress for Administration Console**, select **Yes**.
 
    :::image type="content" source="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png" alt-text="Screenshot of the Azure portal that shows the Application Gateway Ingress Controller configuration on the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/configure-appgateway-ingress-admin-console.png":::
-1. Select Next to see the **DNS** pane.
-1. Select Next to see the **Database** pane.
 
-The following steps show you how to configure database connection.
-
-   ### [Passwordless (Recommended)](#tab/passwordless)
-
-   Connect database with managed identity.
+1. Select **Next** to see the **DNS** pane.
+1. Select **Next** to see the **Database** pane.
 
 
-   1. Select Next to see the **Database** pane.
-   1. For **Connect to database?**, select **Yes**.
-   1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Microsoft SQL Server (with support for passwordless connection)**.
-   1. For **JNDI Name**, input *jdbc/WebLogicCafeDB*.
-   1. For **DataSource Connection String**, input the connection string you obtained in last section.
-   1. Select **Use passwordless datasource connection**.
-   1. For **User assigned managed identity**, select the managed identity you created in previous step. In this example, its name is `myManagedIdentity`.
-   1. Select **Add**.
+### [Passwordless (Recommended)](#tab/passwordless)
 
-   The **Connection settings** section should look like the following screenshot.
+Use the following steps to configure a database connection using a managed identity:
 
-   :::image type="content" source="media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png" alt-text="Screenshot of the Azure portal that shows the Database tab of the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png":::
+1. For **Connect to database?**, select **Yes**.
+1. Under **Connection settings**, for **Choose database type**, open the dropdown menu and then select **Microsoft SQL Server (with support for passwordless connection)**.
+1. For **JNDI Name**, input *jdbc/WebLogicCafeDB*.
+1. For **DataSource Connection String**, input the connection string you obtained in last section.
+1. Select **Use passwordless datasource connection**.
+1. For **User assigned managed identity**, select the managed identity you created in previous step. In this example, its name is `myManagedIdentity`.
+1. Select **Add**.
 
-   ### [Password](#tab/password)
+The **Connection settings** section should look like the following screenshot:
 
-   The database connection with password will be configured later.
+:::image type="content" source="media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png" alt-text="Screenshot of the Azure portal that shows the Database tab of the Create Oracle WebLogic Server on Azure Kubernetes Service page." lightbox="media/howto-deploy-java-wls-app/azure-portal-azure-sql-configuration.png":::
 
-   ---
+### [Password](#tab/password)
 
-1. Leave the default values for other fields.
-1. Select **Review + create**. Ensure the validation doesn't fail. If it fails, fix any validation problems, then select **Review + create** again.
+To configure a database connection using a password, follow the instructions shown later in this article.
+
+---
+
+Use the following steps to complete the deployment:
+
+1. Select **Review + create**. Ensure that validation doesn't fail. If it fails, fix any validation problems, then select **Review + create** again.
 1. Select **Create**.
 1. Track the progress of the deployment on the **Deployment is in progress** page.
 
@@ -259,9 +258,7 @@ Use the following commands to clone the repository:
 ```bash
 # cd <parent-directory-to-check-out-sample-code>
 export BASE_DIR=$PWD
-```
 
-```bash
 git clone --single-branch https://github.com/microsoft/weblogic-on-azure.git --branch 20240201 $BASE_DIR/weblogic-on-azure
 ```
 
@@ -397,13 +394,13 @@ Use the following steps to build the image:
             Target: 'cluster-1'
       EOF
       ```
-1. Configure data source connection.
+1. Use the following steps to configure the data source connection.
 
    ### [Passwordless (Recommended)](#tab/passwordless)
 
-   1. Use the following commands to download and install Microsoft SQL Server JDBC driver and Azure Identity Extension that enables database connetion with Azure Managed Identity.
+   1. Use the following steps to download and install the Microsoft SQL Server JDBC driver and Azure Identity Extension that enables database connections using Azure Managed Identity.
 
-      1. Download and install Microsoft SQL Server JDBC driver to `wlsdeploy/externalJDBCLibraries`:
+      1. Use the following commands to download and install Microsoft SQL Server JDBC driver to `wlsdeploy/externalJDBCLibraries`:
 
          ```bash
          export DRIVER_VERSION="10.2.1.jre8"
@@ -413,15 +410,13 @@ Use the following steps to build the image:
          curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
          ```
 
-      1. Install Azure Identity Extension to `wlsdeploy/classpathLibraries`:
+      1. Use the following commands to install Azure Identity Extension to `wlsdeploy/classpathLibraries`:
 
          ```bash
          curl -LO https://github.com/oracle/weblogic-azure/raw/refs/heads/main/weblogic-azure-aks/src/main/resources/azure-identity-extensions.xml
 
          mvn dependency:copy-dependencies -f azure-identity-extensions.xml
-         ```
 
-         ```bash
          mkdir -p ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries
          mkdir ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/jackson
          # fix JARs conflict issue in GA images, put jackson libraries to PRE_CLASSPATH to upgrade the existing libs.
@@ -433,7 +428,7 @@ Use the following steps to build the image:
          mv target/dependency/*.jar ${BASE_DIR}/mystaging/models/wlsdeploy/classpathLibraries/azureLibraries/
          ```
 
-         Clean up resources:
+      1. Use the following commands to clean up resources:
 
          ```bash
          rm target -f -r
@@ -443,10 +438,10 @@ Use the following steps to build the image:
    1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
 
       ```bash
-      az account set --subscription <subscription>; 
+      az account set --subscription <subscription>;
       az aks get-credentials \
-         --resource-group <resource-group> \
-         --name <name>
+          --resource-group <resource-group> \
+          --name <name>
       ```
 
       You should see output similar to the following example. If you don't see this output, troubleshoot and resolve the problem before continuing.
@@ -455,9 +450,9 @@ Use the following steps to build the image:
       Merged "<name>" as current context in /Users/<username>/.kube/config
       ```
 
-   1. Export the database connection model and save it to `${BASE_DIR}/mystaging/models/dbmodel.yaml`. The following steps will extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. (The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.) 
+   1. Export the database connection model and save it to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The following steps extract the database configuration model from the ConfigMap `sample-domain1-wdt-config-map`. The name follows the format `<domain-uid>-wdt-config-map`, where `<domain-uid>` is set during the offer deployment. If you've modified the default value, replace it with your own domain UID.
 
-      1. The data key is `<db-secret-name>.yaml`. Run the following command to retrieve the database secret name:
+      1. The data key is *\<db-secret-name>.yaml*. Use the following command to retrieve the database secret name:
 
          ```bash
          export WLS_DOMAIN_UID=sample-domain1
@@ -471,11 +466,13 @@ Use the following steps to build the image:
          kubectl get configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS} -o=jsonpath="{['data']['${DB_K8S_SECRET_NAME}\.yaml']}" >${BASE_DIR}/mystaging/models/dbmodel.yaml
          ```
 
-      1. Finally, verify the content of dbmodel.yaml. It should resemble the following structure:
+      1. Finally, use the following command to verify the content of *dbmodel.yaml*.
 
          ```bash
          cat ${BASE_DIR}/mystaging/models/dbmodel.yaml
          ```
+
+         The output of this command should resemble the following structure:
 
          ```yaml
          # Copyright (c) 2020, 2021, Oracle and/or its affiliates.
@@ -515,15 +512,15 @@ Use the following steps to build the image:
       curl -m 120 -fL ${MSSQL_DRIVER_URL} -o ${BASE_DIR}/mystaging/models/wlsdeploy/externalJDBCLibraries/mssql-jdbc-${DRIVER_VERSION}.jar
       ```
 
-   1. Next, use the following commands to create the database connection model file with the contents shown. Save the model file to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The model uses placeholders (secret `sqlserver-secret`) for database username, password, and URL. Make sure the following fields are set correctly. The following model names the resource with `jdbc/WebLogicCafeDB`.
+   1. Next, use the following commands to create the database connection model file with the contents shown. Save the model file to *${BASE_DIR}/mystaging/models/dbmodel.yaml*. The model uses placeholders - secret `sqlserver-secret` - for database username, password, and URL. Make sure the following fields are set correctly. The following model names the resource with `jdbc/WebLogicCafeDB`.
 
       | Item Name         | Field                                                                                     | Value                                          |
       |-------------------|-------------------------------------------------------------------------------------------|------------------------------------------------|
       | JNDI name         | `resources.JDBCSystemResource.<resource-name>.JdbcResource.JDBCDataSourceParams.JNDIName` | `jdbc/WebLogicCafeDB`                          |
-      | Driver name       | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.DriverName`                | `com.microsoft.sqlserver.jdbc.SQLServerDriver` |
-      | Database Url      | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.URL`                       | `@@SECRET:sqlserver-secret:url@@`              |
-      | Database password | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.PasswordEncrypted`         | `@@SECRET:sqlserver-secret:password@@`         |
-      | Database username | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.Properties.user.Value`     | `'@@SECRET:sqlserver-secret:user@@'`           |
+      | driver name       | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.DriverName`                | `com.microsoft.sqlserver.jdbc.SQLServerDriver` |
+      | database URL      | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.URL`                       | `@@SECRET:sqlserver-secret:url@@`              |
+      | database password | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.PasswordEncrypted`         | `@@SECRET:sqlserver-secret:password@@`         |
+      | database username | `resources.JDBCSystemResource.<resource-name>.JDBCDriverParams.Properties.user.Value`     | `'@@SECRET:sqlserver-secret:user@@'`           |
 
       ```bash
       cat <<EOF >dbmodel.yaml
@@ -569,7 +566,7 @@ Use the following steps to build the image:
    rm ./weblogic-deploy/bin/*.cmd
    ```
 
-   Clean up the WDT installer:
+1. Use the following command to clean up the WDT installer:
 
    ```bash
    rm weblogic-deploy.zip
@@ -735,8 +732,8 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
 1. Apply the auxiliary image by patching the domain custom resource definition (CRD) using the `kubectl patch` command.
 
-   The auxiliary image is defined in `spec.configuration.model.auxiliaryImages`, as shown in the following example.
-   
+   The auxiliary image is defined in `spec.configuration.model.auxiliaryImages`, as shown in the following example:
+
    ```yaml
    spec:
      clusters:
@@ -757,9 +754,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
    export VERSION=$((VERSION+1))
 
    export ACR_LOGIN_SERVER=$(az acr show --name ${ACR_NAME} --query "loginServer" --output tsv)
-   ```
 
-   ```bash
    cat <<EOF >patch-file.json
    [
      {
@@ -781,10 +776,10 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
    kubectl -n ${WLS_DOMAIN_NS} patch domain ${WLS_DOMAIN_UID} \
        --type=json \
-       --patch-file patch-file.json   
+       --patch-file patch-file.json
    ```
 
-1. Since database connection is configured in the auxiliary image, run the following command to remove the ConfigMap.
+1. Because the database connection is configured in the auxiliary image, run the following command to remove the ConfigMap:
 
    ```bash
    kubectl delete configmap sample-domain1-wdt-config-map -n ${WLS_DOMAIN_NS}
@@ -795,7 +790,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
 1. Connect to the AKS cluster by copying the **shellCmdtoConnectAks** value that you saved aside previously, pasting it into the Bash window, then running the command. The command should look similar to the following example:
 
    ```bash
-   az account set --subscription <subscription>; 
+   az account set --subscription <subscription>;
    az aks get-credentials \
        --resource-group <resource-group> \
        --name <name>
@@ -811,9 +806,9 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
    | Variable               | Description                                | Example                                                                                       |
    |------------------------|--------------------------------------------|-----------------------------------------------------------------------------------------------|
-   | `DB_CONNECTION_STRING` | The connection string of SQL server.       | `jdbc:sqlserver://server-name.database.windows.net:1433;database=wlsaksquickstart0125` |
+   | `DB_CONNECTION_STRING` | The connection string of the SQL server.   | `jdbc:sqlserver://server-name.database.windows.net:1433;database=wlsaksquickstart0125` |
    | `DB_USER`              | The username to sign in to the SQL server. | `welogic@sqlserverforwlsaks`                                                                  |
-   | `DB_PASSWORD`          | The password to sign in to the sQL server. | `Secret123456`                                                                                |
+   | `DB_PASSWORD`          | The password to sign in to the SQL server. | `Secret123456`                                                                                |
 
    1. Visit the SQL database resource in the Azure portal.
 
@@ -840,9 +835,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
    export WLS_DOMAIN_NS=sample-domain1-ns
    export WLS_DOMAIN_UID=sample-domain1
    export SECRET_NAME=sqlserver-secret
-   ```
 
-   ```bash
    kubectl -n ${WLS_DOMAIN_NS} create secret generic \
        ${SECRET_NAME} \
        --from-literal=password="${DB_PASSWORD}" \
@@ -864,7 +857,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
 1. Apply the auxiliary image by patching the domain custom resource definition (CRD) using the `kubectl patch` command.
 
    The auxiliary image is defined in `spec.configuration.model.auxiliaryImages`, as shown in the following example.
-   
+
    ```yaml
    spec:
      clusters:
@@ -912,7 +905,7 @@ In the previous steps, you created the auxiliary image including models and WDT.
 
 ---
 
-Wait until the admin server and managed servers show the values in the following output block before you proceed:
+Before you proceed, wait until the following command produces the following output for the admin server and managed servers:
 
 ```bash
 kubectl get pod -n ${WLS_DOMAIN_NS} -w

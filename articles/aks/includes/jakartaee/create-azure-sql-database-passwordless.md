@@ -12,7 +12,7 @@ This section creates an Azure SQL Database using Microsoft Entra authentication,
 
 ### Create a resource group
 
-Create a resource group with [az group create](/cli/azure/group#az-group-create). Because resource groups must be unique within a subscription, pick a unique name. An easy way to have unique names is to use a combination of your initials, today's date, and some identifier. For example, *abc1228rg*. This example creates a resource group named `abc1228rg` in the `eastus` location:
+Create a resource group with [az group create](/cli/azure/group#az-group-create). Because resource groups must be unique within a subscription, pick a unique name. An easy way to have unique names is to use a combination of your initials, today's date, and some identifier. For example, `abc1228rg`. This example creates a resource group named `abc1228rg` in the `eastus` location:
 
 ```azurecli-interactive
 export RESOURCE_GROUP_NAME="abc1228rg"
@@ -26,7 +26,7 @@ az group create \
 Create a server with the [az sql server create](/cli/azure/sql/server#az-sql-server-create) command. This example creates a server named `myazuresql20130213` with admin user `azureuser` and admin password. Replace `<your-password>` with your password. For more information, see [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart?tabs=azure-cli).
 
 > [!NOTE]
-> Even though you are using a username and password here, these credentials are not exposed outside the database. The connection between the application layer and the database is secured with managed identities.
+> Even though you're using a username and password here, these credentials are not exposed outside the database. The connection between the application layer and the database is secured with managed identities.
 
 ```bash
 export AZURESQL_SERVER_NAME="myazuresql20130213"
@@ -62,7 +62,7 @@ az sql db create \
 
 For information on how Azure SQL Server interacts with managed identities, see [Connect using Microsoft Entra authentication](/sql/connect/jdbc/connecting-using-azure-active-directory-authentication).
 
-The following example configures a Microsoft Entra administrator account to Azure SQL server from the portal.
+Use the following steps to configure a Microsoft Entra administrator account to Azure SQL server from the Azure portal:
 
 1. In the [Azure portal](https://portal.azure.com/), open the Azure SQL server instance `myazuresql20130213`.
 1. Select **Settings**, then select **Microsoft Entra ID**. On the **Microsoft Entra ID** page, select **Set admin**.
@@ -84,18 +84,18 @@ az identity create \
 
 Now, connect as the Microsoft Entra administrator user to your Azure SQL database from the Azure portal, and create a user for your managed identity.
 
-First, create a firewall rule to access the Azure SQL server from portal, as shown in the following steps.
+First, create a firewall rule to access the Azure SQL server from portal, as shown in the following steps:
 
 1. In the [Azure portal](https://portal.azure.com/), open the Azure SQL server instance `myazuresql20130213`.
 1. Select **Security**, then select **Networking**.
 1. Under **Firewall rules**, select **Add your client IPV4 IP address**.
-1. Under  **Exceptions**, select **Allow Azure services and resources to access this server**.
+1. Under **Exceptions**, select **Allow Azure services and resources to access this server**.
 1. Select **Save**.
 
-After the firewall rule is created, you can access the Azure SQL server from portal. Use the following steps to create a database user.
+After the firewall rule is created, you can access the Azure SQL server from portal. Use the following steps to create a database user:
 
 1. Select **Settings**, then select **SQL databases**. Select `mysingledatabase20230213`.
-1. Select **Query editor**. On the **Welcome to SQL Database Query Editor** page, under **Active Directory authentication**, find a message like "Logged in as user@contoso.com".
+1. Select **Query editor**. On the **Welcome to SQL Database Query Editor** page, under **Active Directory authentication**, find a message like `Logged in as user@contoso.com`.
 1. Select **Continue as user@contoso.com**, where `user` is your AD admin account name.
 1. After signing in, in the **Query 1** editor, run the following commands to create a database user for managed identity `myManagedIdentity`.
 
@@ -108,4 +108,4 @@ After the firewall rule is created, you can access the Azure SQL server from por
    ```
 
 1. In the **Query 1** editor, select **Run** to run the SQL commands.
-1. If the commands complete successfully, you can find a message saying "Query succeeded: Affected rows: 0".
+1. If the commands complete successfully, you can find a message saying `Query succeeded: Affected rows: 0`.
