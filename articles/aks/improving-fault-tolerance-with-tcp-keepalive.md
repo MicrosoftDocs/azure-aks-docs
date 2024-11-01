@@ -214,14 +214,7 @@ For gRPC applications, the following keepalive settings and the default values c
 | `MAX_CONNECTION_AGE`             | Server            | Maximum time that a channel may exist.                                                                                                                        | N/A                | INT_MAX (Infinite) |
 | `MAX_CONNECTION_AGE_GRACE`       | Server            | Grace period after the channel reaches its max age.                                                                                                           | N/A                | INT_MAX (Infinite) |
 
-The gRPC GitHub repository includes examples that demonstrate client and server applications that implement gRPC keepalive:
-
-| Programming Language | Example                                                                                                         | Documentation                                                                                                                                       |
-| -------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| C++                  | [C++ Example](https://github.com/grpc/grpc/tree/master/examples/cpp/keepalive)                                  | [C++ Documentation](https://github.com/grpc/grpc/blob/master/doc/keepalive.md)                                                                      |
-| Go                   | [Go Example](https://github.com/grpc/grpc-go/tree/master/examples/features/keepalive)                           | [Go Documentation](https://github.com/grpc/grpc-go/blob/master/Documentation/keepalive.md)                                                          |
-| Java                 | [Java Example](https://github.com/grpc/grpc-java/tree/master/examples/src/main/java/io/grpc/examples/keepalive) | [Java Documentation](https://grpc.github.io/grpc-java/javadoc/io/grpc/ManagedChannelBuilder.html#keepAliveTime-long-java.util.concurrent.TimeUnit-) |
-| Python               | [Python Example](https://github.com/grpc/grpc/tree/master/examples/python/keep_alive)                           | [Python Documentation](https://github.com/grpc/grpc/blob/master/doc/keepalive.md)                                                                   |
+Refer to the programming language-specific examples and documentation listed in the [gRPC specification](https://grpc.io/docs/guides/keepalive/) that demonstrate client and server applications using keepalive.
 
 ## Considerations
 
