@@ -19,6 +19,18 @@ Monitoring on AKS involves using metrics, logs, and events to ensure the health 
 
 The best way to proactively monitor your cluster is to configure [Azure Monitor alerts](/azure/azure-monitor/alerts/alerts-overview). Alerts act as proactive measures to notify you of potential issues or anomalies before they escalate into critical problems. By defining thresholds for key metrics and logs, you receive immediate alerts when these signals exceed predefined limits, indicating potential issues like resource exhaustion or application failures. We highly recommend defining [service-level objectives (SLOs)](/azure/well-architected/reliability/metrics) for your application to measure the performance and reliability of your service. Configuring alerts on the key signals for your SLOs allows you to quickly detect any degradation of your application's quality of service that your customers receive. Overall, setting timely alerts enables you to quickly investigate and remediate problems, minimizing downtime and ensuring high availability of applications running on your AKS cluster.
 
+
+## How to configure alerts on specific metric types
+| Metric type | Where to find these metrics | How to configure alerts |
+|---|---|---|
+| [AKS Platform Metric](./monitor-aks.md#azure-monitor-platform-metrics) | Azure Portal |  |
+| [Azure Managed Prometheus Metric](/azure/azure-monitor/essentials/prometheus-metrics-overview) |  |  |
+| [Azure Activity Logs](./monitor-aks-reference.md#activity-log) |  |  |
+| Virtual Machine Scale Set (VMSS) Metric |  |  |
+| Load Balancer Metric |  |  |
+| Kubernetes Event |  |  |
+
+
 ## Critical signals for configuring alerts
 
 To get holistic coverage of your AKS environment, you need to configure alerts on the three main components of your cluster:
@@ -35,7 +47,7 @@ The following sections contain the key signals which we recommend all AKS custom
 |---|---|---|---|
 | Cluster is in a failed state | Azure Activity Logs | Create or update managed cluster | Status of the log is Failed, indicating that the cluster upgrade or creation action failed. |
 | Node pool is in a failed state | Azure Activity Logs | Create or update agent pool | Status of the log is Failed, indicating that the nodepool is in a Failed state due to a failed Create, Read, Upgrade, or Delete (CRUD) operation. |
-| High Node OS Disk Bandwidth Usage | VMSS Metric | OS Disk Bandwidth Consumed Percentage | Node OS disk bandwidth utilization is above 95%. |
+| High Node OS Disk Bandwidth Usage | Virtual Machine Scale Set (VMSS) Metric | OS Disk Bandwidth Consumed Percentage | Node OS disk bandwidth utilization is above 95%. |
 | High Node OS Disk IOPS Usage | VMSS Metric | OS Disk IOPS Consumed Percentage | Node OS disk IOPS utilization is above 95%. |
 | High Node OS Disk Space Usage | AKS Platform Metric | Disk Used Percentage | Node OS disk space percentage utilization is above 90%. |
 | High Node CPU Usage | AKS Platform Metric | CPU Usage Percentage | Node CPU Usage is greater than 90%. |
@@ -60,6 +72,7 @@ The following sections contain the key signals which we recommend all AKS custom
 | API Server Too Many Requests Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error code 429 |
 | API Server Webhook and Tunnel Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error codes 500 and 503 |
 | API Server timeouts and retries | Azure Managed Prometheus Metric |  |  |
+
 
 ## Next steps
 
