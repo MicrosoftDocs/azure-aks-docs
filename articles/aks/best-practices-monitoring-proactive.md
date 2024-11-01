@@ -3,9 +3,10 @@ title: Proactive monitoring best practices for Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn the best practices for proactively monitoring your Azure Kubernetes Service (AKS) cluster and workloads.
 ms.topic: best-practice
-ms.date: 10/31/2024
-author: 
-ms.author: 
+ms.service: azure-kubernetes-service
+ms.date: 11/01/2024
+author: schaffererin
+ms.author: schaffererin
 ---
 
 # Proactive monitoring best practices for Azure Kubernetes Service (AKS)
@@ -14,44 +15,57 @@ Proactively monitoring your Azure Kubernetes Service (AKS) cluster is crucial fo
 
 ## Monitoring and alerting overview
 
-Monitoring on AKS involves utilizing metrics, logs, and events to ensure the health and performance of your cluster. Metrics are primarily used to identify any signs of abnormal behavior in your cluster, and common scenarios to monitor include node performance, pod status, and overall resource utilization in your cluster. Logs provide insights into system events, and cluster operations and activity. Learn more about the various methods and signals AKS provides for monitoring at [Monitor Azure Kubernetes Service (AKS)](./monitor-aks.md).
+Monitoring on AKS involves using metrics, logs, and events to ensure the health and performance of your cluster. Common scenarios to monitor include node performance, pod status, and overall resource utilization in your cluster. Logs provide insights into system events and cluster operations and activity. For more information about the methods and signals AKS provides for monitoring, see [Monitor Azure Kubernetes Service (AKS)](./monitor-aks.md).
 
-The best way to proactively monitor your cluster is by configuring [Azure Monitor alerts](/azure/azure-monitor/alerts/alerts-overview). Alerts act as proactive measures to notify you of potential issues or anomalies before they escalate into critical problems. By defining thresholds for key metrics and logs, you receive immediate alerts when these signals exceed predefined limits, indicating potential issues such as resource exhaustion or application failures. AKS highly recommends that you define [service-level objectives (SLOs)](/azure/well-architected/reliability/metrics) for your application to measure the performance and reliability of your service. Configuring alerts on the key signals for your SLOs allows you to quickly detect any degradation of your application's quality of service that your customers are receiving. Overall, setting timely alerts enables you to quickly investigate and remediate problems, minimizing downtime and ensuring high availability of applications running on your AKS cluster.
+The best way to proactively monitor your cluster is to configure [Azure Monitor alerts](/azure/azure-monitor/alerts/alerts-overview). Alerts act as proactive measures to notify you of potential issues or anomalies before they escalate into critical problems. By defining thresholds for key metrics and logs, you receive immediate alerts when these signals exceed predefined limits, indicating potential issues like resource exhaustion or application failures. We highly recommend defining [service-level objectives (SLOs)](/azure/well-architected/reliability/metrics) for your application to measure the performance and reliability of your service. Configuring alerts on the key signals for your SLOs allows you to quickly detect any degradation of your application's quality of service that your customers receive. Overall, setting timely alerts enables you to quickly investigate and remediate problems, minimizing downtime and ensuring high availability of applications running on your AKS cluster.
 
 ## Critical signals for configuring alerts
 
 To get holistic coverage of your AKS environment, you need to configure alerts on the three main components of your cluster:
-1. **Cluster infrastructure**: Alerts targeting the underlying infrastructure of your cluster such as nodes, disks, and networking. 
-1. **Application health**: Alerts for monitoring the health of your pods and applications. Some common indicators of unhealthy applications include out-of-memory kills (OOMKills) of your pods, pods in not ready state, etc.
-1. **Kubernetes control plane**: Alerts on AKS control plane to monitor the health and performance of the API server, etcd, and other components.
+
+- **Cluster infrastructure**: Alerts targeting the underlying infrastructure of your cluster such as nodes, disks, and networking.
+- **Application health**: Alerts for monitoring the health of your pods and applications. Some common indicators of unhealthy applications include out-of-memory kills (OOMKills) of your pods, pods in not ready state, etc.
+- **Kubernetes control plane**: Alerts on AKS control plane to monitor the health and performance of the API server, etcd, and other components.
 
 The following sections contain the key signals which we recommend all AKS customers monitor closely. The AKS team is working to add all critical signals to the existing [Recommended Alerts](/azure/azure-monitor/containers/kubernetes-metric-alerts) feature, which allows you to easily enable alerts on all of the signals below with a one-click experience. The Prometheus metrics alerts are available in Public Preview today, and the remaining alerts are estimated to be available in early 2025. For now, you can manually configure alerts on the critical signals.
 
-### Cluster infrastructure alerts 
-| Alert Scenario | Source | Signal | Recommended Threshold |
+### Cluster infrastructure alerts
+
+| Alert scenario | Source | Signal | Recommended threshold |
 |---|---|---|---|
 | Cluster is in a failed state | Azure Activity Logs | Create or update managed cluster | Status of the log is Failed, indicating that the cluster upgrade or creation action failed. |
-| Nodepool is in a failed state | Azure Activity Logs | Create or update agent pool | Status of the log is Failed, indicating that the nodepool is in a Failed state due to a failed Create, Read, Upgrade, or Delete (CRUD) operation |
-| High Node OS Disk Bandwidth Usage | VMSS Metric | OS Disk Bandwidth Consumed Percentage | Node OS disk bandwidth utilization is above 95% |
-| High Node OS Disk IOPS Usage | VMSS Metric | OS Disk IOPS Consumed Percentage | Node OS disk IOPS utilization is above 95% |
-| High Node OS Disk Space Usage | AKS Platform Metric | Disk Used Percentage | Node OS disk space percentage utilization is above 90% |
-| High Node CPU Usage | AKS Platform Metric | CPU Usage Percentage | Node CPU Usage is greater than 90% |
-| High Node Memory Usage | AKS Platform Metric | Memory Working Set Percentage | Node Memory Usage is greater than 90% |
-| Node is in NotReady state | AKS Platform Metric | Status for various node conditions | Node is in NotReady state for >20 minutes |
+| Node pool is in a failed state | Azure Activity Logs | Create or update agent pool | Status of the log is Failed, indicating that the nodepool is in a Failed state due to a failed Create, Read, Upgrade, or Delete (CRUD) operation. |
+| High Node OS Disk Bandwidth Usage | VMSS Metric | OS Disk Bandwidth Consumed Percentage | Node OS disk bandwidth utilization is above 95%. |
+| High Node OS Disk IOPS Usage | VMSS Metric | OS Disk IOPS Consumed Percentage | Node OS disk IOPS utilization is above 95%. |
+| High Node OS Disk Space Usage | AKS Platform Metric | Disk Used Percentage | Node OS disk space percentage utilization is above 90%. |
+| High Node CPU Usage | AKS Platform Metric | CPU Usage Percentage | Node CPU Usage is greater than 90%. |
+| High Node Memory Usage | AKS Platform Metric | Memory Working Set Percentage | Node Memory Usage is greater than 90%. |
+| Node is in NotReady state | AKS Platform Metric | Status for various node conditions | Node is in NotReady state for >20 minutes. |
 | SNAT port exhaustion | Load Balancer (LB) Metric | SNAT Connection Count | What is a good threshold to set here? |
 
-### Application Health Alerts
-| Alert Scenario | Source | Signal | Recommended Threshold |
+### Application health alerts
+
+| Alert scenario | Source | Signal | Recommended threshold |
 |---|---|---|---|
-| Critical System Pods are Unhealthy | AKS Platform Metric | Number of pods by phase | Set the alert for pods with Namespace = kube-system, Phase = Pending or Failed for >15 minutes |
-| Application Pods are Unhealthy | Azure Managed Prometheus Metric |  | Set the alert for pods within your application namespace where phase = Pending or Failed for >15 minutes |
+| Critical System Pods are Unhealthy | AKS Platform Metric | Number of pods by phase | Set the alert for pods with Namespace = kube-system, Phase = Pending or Failed for >15 minutes. |
+| Application Pods are Unhealthy | Azure Managed Prometheus Metric |  | Set the alert for pods within your application namespace where phase = Pending or Failed for >15 minutes. |
 | Pods are in Crash Loop State | Azure Managed Prometheus Metric |  |  |
 | OOMKilled Pods | Azure Managed Prometheus Metric |  |  |
 
-### Kubernetes Control Plane Alerts
-| Alert Scenario | Source | Signal | Recommended Threshold |
+### Kubernetes control plane alerts
+
+| Alert scenario | Source | Signal | Recommended threshold |
 |---|---|---|---|
 | ETCD is Filled Up | Azure Managed Prometheus Metric |  |  |
-| API Server Too Many Requests Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error code 429	|
+| API Server Too Many Requests Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error code 429 |
 | API Server Webhook and Tunnel Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error codes 500 and 503 |
 | API Server timeouts and retries | Azure Managed Prometheus Metric |  |  |
+
+## Next steps
+
+For more information about monitoring on AKS, see the following articles:
+
+- [Monitor Kubernetes object events in Azure Kubernetes Service (AKS)](events.md)
+- [Enable monitoring for Azure Kubernetes Service (AKS) clusters](/azure/azure-monitor/containers/kubernetes-monitoring-enable)
+- [Configure Azure Kubernetes Service (AKS) diagnostics](aks-diagnostics.md)
+
