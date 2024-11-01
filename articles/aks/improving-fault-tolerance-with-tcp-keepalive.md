@@ -9,6 +9,8 @@ ms.subservice: aks-networking
 ms.date: 10/30/2024
 ---
 
+# Improving fault tolerance in Azure Kubernetes Service using TCP keepalive
+
 In a standard TCP connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. TCP connection losses can be more prominent in cloud environments, which are susceptible to infrastructure failures, network disruptions, or unexpected application crashes. In this article, you will learn to use TCP keepalive to enhance fault tolerance in cloud applications hosted in Azure Kubernetes Service (AKS).
 
 ## Understanding TCP keepalive
