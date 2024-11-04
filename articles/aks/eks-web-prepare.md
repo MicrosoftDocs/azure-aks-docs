@@ -1,5 +1,5 @@
 ---
-title: Prepare to Deploy Web Application Workload to Azure
+title: Prepare to deploy web application workload to Azure
 description: Learn the steps to deploy your web application workload to Azure Kubernetes Service (AKS).
 author: paolosalvatori
 ms.author: paolos
