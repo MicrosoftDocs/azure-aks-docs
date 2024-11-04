@@ -195,16 +195,18 @@ The following steps describe the deployment process:
 
 #### Runtime workflow
 
-The following steps describe the message flow for a request that an external client application initiates during runtime. This workflow corresponds to the orange numbers in the preceding diagram.
+The following steps describe the message flow for a request that an external client application initiates during runtime:
+
+*This workflow corresponds to the orange numbers in the preceding diagram.*
 
 1. The client application uses its custom domain to send a request to the web application. The DNS zone associated with the custom domain uses a [CNAME record](https://en.wikipedia.org/wiki/CNAME_record) to redirect the DNS query for the custom domain to the original hostname of the Azure Front Door endpoint.
-2. Azure Front Door traffic routing occurs in several stages. Initially, the request is sent to one of the [Azure Front Door points of presence](/azure/frontdoor/edge-locations-by-region). Then Azure Front Door uses the configuration to determine the appropriate destination for the traffic. Various factors can influence the routing process, such as the Azure front door caching, web application firewall (WAF), routing rules, rules engine, and caching configuration. For more information, see [Routing architecture overview](/azure/frontdoor/front-door-routing-architecture).
-3. Azure Front Door forwards the incoming request to the [Azure private endpoint](/azure/private-link/private-endpoint-overview) connected to the [Private Link service](/azure/private-link/private-link-service-overview) that exposes the AKS-hosted workload.
-4. The request is sent to the Private Link service.
-5. The request is forwarded to the *kubernetes-internal* AKS internal load balancer.
-6. The request is sent to one of the agent nodes that hosts a pod of the NGINX ingress controller.
-7. One of the NGINX ingress controller replicas handles the request.
-8. The NGINX ingress controller forwards the request to one of the workload pods.
+1. Azure Front Door traffic routing occurs in several stages. Initially, the request is sent to one of the [Azure Front Door points of presence](/azure/frontdoor/edge-locations-by-region). Then, Azure Front Door uses the configuration to determine the appropriate destination for the traffic. Various factors can influence the routing process, such as the Azure front door caching, web application firewall (WAF), routing rules, rules engine, and caching configuration. For more information, see [Routing architecture overview](/azure/frontdoor/front-door-routing-architecture).
+1. Azure Front Door forwards the incoming request to the [Azure private endpoint](/azure/private-link/private-endpoint-overview) connected to the [Private Link service](/azure/private-link/private-link-service-overview) that exposes the AKS-hosted workload.
+1. The request is sent to the Private Link service.
+1. The request is forwarded to the *kubernetes-internal* AKS internal load balancer.
+1. The request is sent to one of the agent nodes that hosts a pod of the NGINX ingress controller.
+1. One of the NGINX ingress controller replicas handles the request.
+1. The NGINX ingress controller forwards the request to one of the workload pods.
 
 For more information, see [Use Azure Front Door to secure AKS workloads](/azure/architecture/example-scenario/aks-front-door/aks-front-door)
 
