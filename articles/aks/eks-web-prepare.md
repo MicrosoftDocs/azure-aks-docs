@@ -193,7 +193,7 @@ The following steps describe the message flow for a request that an external cli
 
 ## Deployment
 
-By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay](/azure/aks/azure-cni-overlay) network plugin and the [Cilium](/azure/aks/azure-cni-powered-by-cilium) data plane. However, Bicep templates are parametric, so you can choose any network plugin.
+By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay](azure-cni-overlay.md) network plugin and the [Cilium](azure-cni-powered-by-cilium.md) data plane. You can also use any one of the following network plugins:
 
 - [Azure CNI with static IP allocation](configure-azure-cni.md)
 - [Azure CNI with dynamic IP allocation](configure-azure-cni-dynamic-ip-allocation.md)
