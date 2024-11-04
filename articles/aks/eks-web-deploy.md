@@ -445,13 +445,13 @@ fi
     HTTP Status: 403
     ```
 
-## Monitoring
+## Monitor the application
 
-In the proposed solution, the deployment process automatically configures the [Azure Application Gateway][azure-ag] resource to collect diagnostic logs and metrics to an [Azure Log Analytics Workspace][azure-la] workspace. By enabling logs, you can gain valuable insights into the evaluations, matches, and blocks performed by the [Azure Web Application Firewall (WAF)][azure-waf] within the Application Gateway. For more information, see [Diagnostic logs for Application Gateway](/azure/application-gateway/application-gateway-diagnostics#firewall-log).To further enhance your analysis, the data within the firewall logs can be examined using Log Analytics. When you have the firewall logs in your Log Analytics workspace, you can view data, write queries, create visualizations, and add them to your portal dashboard. For detailed information on log queries, refer to the [Overview of log queries in Azure Monitor](/azure/azure-monitor/logs/log-query-overview) documentation.
+In the proposed solution, the deployment process automatically configures the [Azure Application Gateway][azure-ag] resource to collect diagnostic logs and metrics to an [Azure Log Analytics Workspace][azure-la] workspace. By enabling logs, you can gain valuable insights into the evaluations, matches, and blocks performed by the [Azure Web Application Firewall (WAF)][azure-waf] within the Application Gateway. For more information, see [Diagnostic logs for Application Gateway](/azure/application-gateway/application-gateway-diagnostics#firewall-log). You can also use Log Analytics to examine the data within the firewall logs. When you have the firewall logs in your Log Analytics workspace, you can view data, write queries, create visualizations, and add them to your portal dashboard. For detailed information on log queries, see [Overview of log queries in Azure Monitor](/azure/azure-monitor/logs/log-query-overview).
 
 ### Explore data with examples
 
-When utilizing the **AzureDiagnostics** table in your Log Analytics workspace, you can access the raw firewall log data by executing the following query:
+When using the **AzureDiagnostics** table in your Log Analytics workspace, you can access the raw firewall log data with the following query:
 
 ```kusto
 AzureDiagnostics 
