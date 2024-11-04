@@ -12,7 +12,7 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Replicate an AWS Web Application with AWS WAF in Azure Kubernetes Service (AKS)
+# Replicate an AWS web application with AWS WAF in Azure Kubernetes Service (AKS)
 
 In this article, you learn how to replicate an Amazon Elastic Kubernetes Service(EKS) web apps with AWS Web Application Firewall with [Azure Web Application Firewall (WAF)][azure-waf] with [Azure Application Gateway][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
 
