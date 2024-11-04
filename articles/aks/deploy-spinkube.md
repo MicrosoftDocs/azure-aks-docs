@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 11/04/2024
 author: ThorstenHans
-ms.author: ThorstenHans
+ms.author: schaffererin
 ---
 
 # Deploy SpinKube to Azure Kubernetes Service (AKS) to run serverless WebAssembly (Wasm) workloads
@@ -16,14 +16,14 @@ This article shows you how to deploy SpinKube to Azure Kubernetes Service (AKS) 
 
 [WebAssembly (Wasm)][wasm] is a binary format optimized for fast download and near-native execution speed. It runs in a sandbox isolated from the host computer provided by a Wasm runtime. By default, WebAssembly modules can't access resources, including sockets and environment variables, on the host outside of the sandbox unless they're explicitly allowed. The [WebAssembly System Interface (WASI)][wasi] standard defines a set of interfaces for Wasm runtimes to provide access to WebAssembly modules to the environment and resources outside the host using a capability-based security model.
 
-[SpinKube][spinkube] is a open-source project that runs serverless Wasm workloads (Spin Apps) built with open-source [Spin][spin] in Kubernetes. In contrast to earlier Wasm runtimes for Kubernetes, SpinKube executes Spin Apps natively on the underlying Kubernetes nodes and doesn't rely on containers. Spin Apps are regular Wasm modules that align with the [WebAssembly Component Model][wasm-component-model] specification.
+[SpinKube][spinkube] is an open-source project that runs serverless Wasm workloads (Spin Apps) built with open-source [Spin][spin] in Kubernetes. In contrast to earlier Wasm runtimes for Kubernetes, SpinKube executes Spin Apps natively on the underlying Kubernetes nodes and doesn't rely on containers. Spin Apps are regular Wasm modules that align with the [WebAssembly Component Model][wasm-component-model] specification.
 
-By running Spin Apps on Kubernetes with SpinKube, you can achieve the following:
+By running Spin Apps on Kubernetes with SpinKube, you can run the following workloads:
 
 * Run Wasm workloads next to existing containerized applications.
 * Run similar workloads while consuming fewer resources.
 * Run more workloads on a given set of resources.
-* Run workloads on different architectures (e.g. `amd64` and `arm64`) without cross-compiling them.
+* Run workloads on different architectures (such as `amd64` and `arm64`) without cross-compiling them.
 
 SpinKube consists of two top-level components:
 
@@ -80,9 +80,9 @@ If you haven't deployed [`cert-manager`][cert-manager] to your AKS cluster yet, 
       --wait
     ```
 
-### Deploy `runtime-class-manager` (aka KWasm)
+### Deploy `runtime-class-manager` (also known as KWasm)
 
-The `runtime-class-manager` (aka [KWasm][kwasm]) is responsible for deploying and managing [`containerd-shim`][containerd-shim] on the desired Kubernetes nodes.
+The `runtime-class-manager` (also known as [KWasm][kwasm]) is responsible for deploying and managing [`containerd-shim`][containerd-shim] on the desired Kubernetes nodes.
 
 1. Add the KWasm Helm repository using the `helm repo add` command.
 
@@ -110,7 +110,7 @@ Once `runtime-class-manager` is installed on your AKS cluster, you must annotate
     kubectl annotate node --all kwasm.sh/kwasm-node=true
     ```
 
-1. After annotating the Kubernetes nodes, `runtime-class-manager` uses a Kubernetes *Job* to modify the desired nodes. After successful deployment of `containerd-shim-spin`, the nodes are labeled with a `kwasm.sh/kwasm-provisioned` label. You can check if the desired nodes have the `kwasm.sh/kwasm-provisioned` label assigned using the `kubectl get nodes --show-labels` command.
+1. After you annotate the Kubernetes nodes, `runtime-class-manager` uses a Kubernetes *Job* to modify the desired nodes. After successful deployment of `containerd-shim-spin`, the nodes are labeled with a `kwasm.sh/kwasm-provisioned` label. You can check if the desired nodes have the `kwasm.sh/kwasm-provisioned` label assigned using the `kubectl get nodes --show-labels` command.
 
     ```bash
     kubectl get nodes --show-labels
@@ -200,7 +200,7 @@ In this section, you verify the SpinKube installation by creating a simple Spin 
     spin registry push $ACR_LOGIN_SERVER/hello-spinkube:0.0.1
     ```
 
-1. Create a Kubernetes Secret of type `docker-registry` which will be referenced when deploying the Spin App to your AKS cluster using the `kubectl create secret` command. In this example, the secret is named `spinkube-on-aks`.
+1. Create a Kubernetes Secret of type `docker-registry` for referencing during the deployment of the Spin App to your AKS cluster using the `kubectl create secret` command. In this example, the secret is named `spinkube-on-aks`.
 
     ```bash
     kubectl create secret docker-registry spinkube-on-aks \
@@ -253,7 +253,7 @@ In this section, you verify the SpinKube installation by creating a simple Spin 
 
 ### Retrieve the Kubernetes primitives created by the `spin-operator`
 
-Upon deployment, the `spin-operator` creates underlying Kubernetes primitives such as a *Service*, a *Deployment* and corresponding *Pods*.
+Upon deployment, the `spin-operator` creates underlying Kubernetes primitives such as a *Service*, a *Deployment*, and corresponding *Pods*.
 
 1. Retrieve the list of services using the `kubectl get service` command.
 
@@ -353,7 +353,7 @@ To invoke the Spin App, you configure port-forwarding to the service provisioned
     # Remove the SpinKube CRDs
     kubectl delete -f https://github.com/spinkube/spin-operator/releases/download/v0.2.0/spin-operator.crds.yaml
     
-    # Remove runtime-class-manager (aka KWasm)
+    # Remove runtime-class-manager (also known as KWasm)
     helm delete kwasm-operator --namespace kwasm
     
     # Remove cert-manager Helm Release
@@ -368,7 +368,7 @@ To invoke the Spin App, you configure port-forwarding to the service provisioned
 In this article, you learned how to deploy SpinKube to Azure Kubernetes Service (AKS) to run serverless WebAssembly (Wasm) workloads. To deploy more workloads on AKS, see the following articles:
 
 * [Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](./mongodb-overview.md)
-* [Deploy a PostgreSQL database on Azure Kubernetes Service (AKS)](./postgresql-overview.md)
+* [Deploy a PostgreSQL database on Azure Kubernetes Service (AKS)](./postgresql-ha-overview.md)
 
 <!-- EXTERNAL LINKS -->
 [wasm]: https://webassembly.org/
