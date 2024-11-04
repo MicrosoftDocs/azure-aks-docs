@@ -12,9 +12,9 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Migrate AWS Web Application to AKS
+# Migrate AWS web application to AKS
 
-Since the [Yelb][yelb] application is self-contained and does not rely on external services, migrating it from AWS to Azure can be done without any code changes. On AWS, [Amazon ElastiCache][aws-cache] and [DynamoDB][aws-dynamodb] can be used as replacements for the Redis Cache and PostgreSQL instances deployed on [Amazon Elastic Kubernetes Service (EKS)][aws-eks]. On Azure, [Azure Cache for Redis][azure-redis] and [Azure Database for PostgreSQL][azure-postgresql] can be used as replacements for the Redis Cache and PostgreSQL services deployed on [Azure Kubernetes Service (AKS)][aks].
+This article outlines key considerations for migrating the Yelb application from AWS to AKS. Remember that since the [Yelb][yelb] application is self-contained and doesn't rely on external services, migrating it from AWS to Azure can be done without any code changes. 
 
 ## Handling Cloud Platform API Dependencies
 In a real-world scenario, migrating a web application from AWS to Azure may require refactoring the code if the application relies on specific cloud platform APIs or SDKs. For example, if the web application uses [Amazon Simple Storage Service (S3)][aws-s3] storage to store unstructured data and you plan to use [Azure Bob Storage][azure-blob] as a replacement on the Azure platform, you have two alternative solutions:
