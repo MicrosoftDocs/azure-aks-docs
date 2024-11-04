@@ -16,7 +16,7 @@ This article walks through some of the key concepts for this workload and provid
 
 ### Deployment
 
-Both AKS and EKS provide multiple options for deploying a managed Kubernetes cluster on Azure and AWS. These options include native solutions and provisioning solutions based on third-party systems or open source technologies.
+Both AKS and EKS provide multiple options for deploying a managed Kubernetes cluster on Azure and AWS. These options include native solutions and provisioning solutions based on third-party systems or open-source technologies.
 
 - AKS: To create an [Azure Kubernetes Service (AKS)][aks] cluster, you can use options such as [Azure Resource Manager (ARM)][arm], [Bicep][bicep], [Azure CLI][azure-cli], [Terraform][terraform], [Pulumi](https://www.pulumi.com/registry/packages/azure-native/how-to-guides/azure-cs-aks/), [Crossplane](https://docs.crossplane.io/latest/getting-started/provider-azure/), or [Kubernetes Cluster API](https://capz.sigs.k8s.io/).
 - EKS: Similarly, for EKS deployment, you have options like [AWS CloudFormation][aws-cloudformation], [eksctl][eksctl], [Terraform][terraform], [Pulumi](https://www.pulumi.com/docs/iac/clouds/aws/guides/eks/), [Crossplane](https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/v0.37.1/resources/eks.aws.crossplane.io/Cluster/v1beta1), or [Kubernetes Cluster API](https://cluster-api-aws.sigs.k8s.io/topics/eks/).
