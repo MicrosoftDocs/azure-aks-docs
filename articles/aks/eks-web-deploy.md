@@ -132,18 +132,20 @@ In the remaining sections of this article, we guide you through the deployment p
     NAMESPACE="yelb"
     ```
 
-You can run the following [az aks show](/cli/azure/aks?#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress][kubernetes-ingress] used to expose the `yelb-ui` service via the [NGINX ingress controller][nginx].
+#### Retrieve values
 
-```bash
-az aks show \
-  --name <aks-name> \
-  --resource-group <aks-resource-group-name> \
-  --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId \
-  --output tsv \
-  --only-show-errors
-```
+1. Retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access) using the [`az aks show`](/cli/azure/aks#az-aks-show) command. The `keyVault.bicep` module assigns the [Key Vault Administrator](/azure/key-vault/general/rbac-guide) role to the user-assigned managed identity of the add-on to let it retrieve the certificate that the [Kubernetes Ingress][kubernetes-ingress] uses to expose the `yelb-ui` service via the [NGINX ingress controller][nginx].
 
-If you deployed the Azure infrastructure using the Bicep modules provided with this sample, you can proceed to deploy the Yelb application. If you instead want to deploy the application in your AKS cluster, you can use the following scripts to configure your environment. You can use the `02-create-nginx-ingress-controller.sh` to install the [NGINX ingress controller][nginx] with the [ModSecurity](https://github.com/SpiderLabs/ModSecurity) open-source web application firewall (WAF) enabled.
+    ```azurecli-interactive
+    az aks show \
+      --name <aks-name> \
+      --resource-group <aks-resource-group-name> \
+      --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId \
+      --output tsv \
+      --only-show-errors
+    ```
+
+1. If you deployed the Azure infrastructure using the Bicep modules provided with this sample, you can proceed to [deploy the Yelb application](#deploy-the-application). If you want to deploy the application in your AKS cluster, you can use the following scripts to configure your environment. You can use the `02-create-nginx-ingress-controller.sh` to install the [NGINX ingress controller][nginx] with the [ModSecurity](https://github.com/SpiderLabs/ModSecurity) open-source web application firewall (WAF) enabled.
 
 ```bash
 #!/bin/bash
