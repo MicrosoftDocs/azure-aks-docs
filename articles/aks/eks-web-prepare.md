@@ -80,9 +80,7 @@ The message flow is as follows:
 - A [Kubernetes ingress][kubernetes-ingress] object uses the [NGINX ingress controller][nginx] to expose the application via HTTP through the internal load balancer.
 - The `yelb-ui` service with the `ClusterIP` type restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
 
-## Implementing End-to-End TLS Using Azure Application Gateway
-
-Before diving into the solution, let's quickly go over [TLS termination and end-to-end TLS with Application Gateway](/azure/application-gateway/ssl-overview).
+## Implementing end-to-end TLS using Azure Application Gateway
 
 ### TLS termination with Application Gateway
 
