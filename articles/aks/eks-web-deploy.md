@@ -12,9 +12,9 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Deploy an AWS Web Application to Azure
+# Deploy an AWS web application to Azure
 
-You're now ready to deploy the [Yelb][yelb] application to the [Azure Kubernetes Service (AKS)][aks] cluster built at the previous step.
+In this article, you deploy the [Yelb application][yelb] to the [Azure Kubernetes Service (AKS)][aks] cluster you created in the previous article.
 
 ## Check the Environment
 
