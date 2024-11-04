@@ -111,7 +111,7 @@ For comprehensive instructions on deploying the [Yelb application][yelb] on AKS 
 ## Alternative solutions
 Azure offers several options for deploying a web application on an AKS cluster and securing it with a web application firewall:
 
-- [Application Gateway Ingress Controller](#use-azure-application-gateway-ingress-controller)
+- [Application Gateway Ingress Controller](#use-application-gateway-ingress-controller)
 - [Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
 - [Azure Front Door](#use-azure-front-door)
 - [NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
@@ -119,8 +119,6 @@ Azure offers several options for deploying a web application on an AKS cluster a
 ### Use Application Gateway Ingress Controller
 
 The [Application Gateway Ingress Controller (AGIC)](/azure/application-gateway/ingress-controller-overview) is a Kubernetes application, which makes it possible for [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/services/kubernetes-service/) customers to leverage Azure's native [Application Gateway](https://azure.microsoft.com/services/application-gateway/) L7 load-balancer to expose cloud software to the Internet. AGIC monitors the Kubernetes cluster it's hosted on and continuously updates an Application Gateway, so that selected services are exposed to the Internet.
-
-![Use Application Gateway Ingress Controller and Azure WAF Policy](../images/application-gateway-ingress-controller-aks-http.png)
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-ingress-controller-aks-http.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway Ingress Controller.":::
 
