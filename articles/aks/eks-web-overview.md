@@ -14,7 +14,7 @@ ms.custom:
 
 # Replicate an AWS web application with AWS WAF in Azure Kubernetes Service (AKS)
 
-In this article, you learn how to replicate an Amazon Elastic Kubernetes Service(EKS) web apps with AWS Web Application Firewall with [Azure Web Application Firewall (WAF)][azure-waf] with [Azure Application Gateway][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
+In this article, you learn how to replicate an Amazon Elastic Kubernetes Service (EKS) web application with AWS Web Application Firewall (WAF) using [Azure Web Application Firewall (WAF)][azure-waf] and [Azure Application Gateway][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
 
 This workload demonstrates how to implement a web application firewall to protect web-based application Yelb running in Kubernetes cluster. Applications rely on web application firewalls to block unwanted traffic and protect apps from common vulnerabilities. A centralized web application firewall helps make security management much simpler and gives better assurance to application administrators against threats or intrusions.
 
