@@ -82,16 +82,16 @@ The message flow is as follows:
 
 ## Implementing end-to-end TLS using Azure Application Gateway
 
-### TLS termination with Application Gateway
+### TLS termination
 
-[Azure Application Gateway][azure-ag] supports the termination of Transport Layer Security (TLS) at the gateway level, which means that traffic is decrypted at the gateway before being sent to the backend servers. This approach offers several benefits:
+[Azure Application Gateway][azure-ag] supports TLS termination at the gateway level, which means that traffic is decrypted at the gateway before being sent to the backend servers. This approach offers several benefits:
 
-- **Improved performance**: The initial handshake for TLS decryption can be resource-intensive. By caching TLS session IDs and managing TLS session tickets at the application gateway, multiple requests from the same client can utilize cached values, improving performance. If TLS decryption is performed on the backend servers, the client needs to reauthenticate with each server change.
+- **Improved performance**: The initial handshake for TLS decryption can be resource-intensive. By caching TLS session IDs and managing TLS session tickets at the application gateway, multiple requests from the same client can use cached values, improving performance. If TLS decryption is performed on the backend servers, the client needs to reauthenticate with each server change.
 - **Better utilization of backend servers**: SSL/TLS processing requires significant CPU resources, especially with increasing key sizes. If you offload this work from the backend servers to the Application Gateway, the servers can focus more efficiently on delivering content.
-- **Intelligent routing**: Decrypting traffic at the application gateway allows access to request content such as headers and URIs. This data can be utilized to intelligently route requests.
+- **Intelligent routing**: Decrypting traffic at the application gateway allows access to request content such as headers and URIs. This data can be used to intelligently route requests.
 - **Certificate management**: By adding TLS termination at the application gateway, certificates only need to be purchased and installed on the gateway rather than on every backend server.
 
-To configure TLS termination, you need to add a TLS/SSL certificate to the listener. The certificate should be in Personal Information Exchange (PFX) format, which contains both the private and public keys. You can import the certificate from Azure Key Vault to the Application Gateway. For more information on TLS termination with Key Vault certificates, refer to the [TLS termination with Key Vault certificates](/azure/application-gateway/key-vault-certs) documentation.
+To configure TLS termination, you need to add a TLS/SSL certificate to the listener. The certificate should be in Personal Information Exchange (PFX) format, which contains both the private and public keys. You can import the certificate from Azure Key Vault to the Application Gateway. For more information on TLS termination with Key Vault certificates, see [TLS termination with Key Vault certificates](/azure/application-gateway/key-vault-certs).
 
 ### Zero Trust Security Model
 
