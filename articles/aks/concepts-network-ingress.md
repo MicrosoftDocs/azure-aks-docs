@@ -27,7 +27,7 @@ The following table lists the feature differences between the different ingress 
 | Feature                                           | Application Routing addon | Application Gateway for Containers       | Azure Service Mesh/Istio-based service mesh |
 |---------------------------------------------------|---------------------------|------------------------------------------|---------------------------------------------|
 | **Ingress/Gateway controller**                    | NGINX ingress controller  | Azure Application Gateway for Containers | Istio Ingress Gateway                       |
-| **API**                                           | Ingress API               | Ingress API and Gateway API              | Gateway API                                 |
+| **API**                                           | Ingress API               | Ingress API and Gateway API              | [Istio Ingress API][istio-ingress-link]     |
 | **Hosting**                                       | In-cluster                | Azure hosted                             | In-cluster                                  |
 | **Scaling**                                       | Autoscaling               | Autoscaling                              | Autoscaling                                 |
 | **Load balancing**                                | Internal/External         | External                                 | Internal/External                           |
@@ -43,7 +43,10 @@ The following table lists the different scenarios where you might use each ingre
 |----------------|-------------|
 | **Managed NGINX - Application Routing addon** | • In-cluster hosted, customizable, and scalable NGINX ingress controllers. </br> • Basic load balancing and routing capabilities. </br> • Internal and external load balancer configuration. </br> • Static IP address configuration. </br> • Integration with Azure Key Vault for certificate management. </br> • Integration with Azure DNS Zones for public and private DNS management. </br> • Supports the Ingress API. |
 | **Application Gateway for Containers** | • Azure hosted ingress gateway. </br> • Flexible deployment strategies managed by the controller or bring your own Application Gateway for Containers. </br> • Advanced traffic management features such as automatic retries, availability zone resiliency, mutual authentication (mTLS) to backend target, traffic splitting / weighted round robin, and autoscaling. </br> • Integration with Azure Key Vault for certificate management. </br> • Integration with Azure DNS Zones for public and private DNS management. </br> • Supports the Ingress and Gateway APIs. |
-| **Istio Ingress Gateway** | • Based on Envoy, when using with Istio for a service mesh. </br> • Advanced traffic management features such as rate limiting and circuit breaking. </br> • Support for mTLS </br> • Supports the Gateway API. |
+| **Istio Ingress Gateway** | • Based on Envoy, when using with Istio for a service mesh. </br> • Advanced traffic management features such as rate limiting and circuit breaking. </br> • Support for mTLS |
+
+> [!NOTE]
+> Gateway API for [Istio ingress gateway][istio-add-on-ingress] is not yet supported for the Istio add-on, but is currently under active development. 
 
 ## Create an Ingress resource
 
@@ -70,7 +73,9 @@ To learn more about client source IP preservation, see [How client source IP pre
 
 <!-- LINKS - External -->
 [k8s-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
+[istio-ingress-link]: https://istio.io/latest/docs/reference/config/networking/gateway/
 
 <!-- LINKS - Internal -->
 [ip-preservation]: https://techcommunity.microsoft.com/t5/fasttrack-for-azure/how-client-source-ip-preservation-works-for-loadbalancer/ba-p/3033722#:~:text=Enable%20Client%20source%20IP%20preservation%201%20Edit%20loadbalancer,is%20the%20same%20as%20the%20source%20IP%20%28srjumpbox%29.
 [services]: concepts-network-services.md
+[istio-add-on-ingress]: istio-deploy-ingress.md
