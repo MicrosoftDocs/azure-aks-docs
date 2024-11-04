@@ -16,13 +16,15 @@ ms.custom:
 
 This article outlines key considerations for migrating the Yelb application from AWS to AKS. Remember that since the [Yelb][yelb] application is self-contained and doesn't rely on external services, migrating it from AWS to Azure can be done without any code changes. 
 
-## Handling Cloud Platform API Dependencies
-In a real-world scenario, migrating a web application from AWS to Azure may require refactoring the code if the application relies on specific cloud platform APIs or SDKs. For example, if the web application uses [Amazon Simple Storage Service (S3)][aws-s3] storage to store unstructured data and you plan to use [Azure Bob Storage][azure-blob] as a replacement on the Azure platform, you have two alternative solutions:
+## Handling cloud platform API dependencies
+
+In a real-world scenario, migrating a web application from AWS to Azure might require refactoring the code if the application relies on specific cloud platform APIs or SDKs. For example, if the web application uses [Amazon Simple Storage Service (S3)][aws-s3] storage to store unstructured data and you plan to use [Azure Bob Storage][azure-blob] as a replacement on the Azure platform, you have two alternative solutions:
 
 1. Refactor the code to replace the Amazon S3 API with the [Azure Storage REST API][azure-blob-api] or the [Microsoft Azure Storage SDK][azure-storage-sdk] for one of the supported programming languages (.NET, Java, JavaScript, Python, and Go). This solution involves modifying the codebase to use the equivalent Azure Storage APIs.
-2. Use an S3 gateway to access AWS S3 and Azure Storage seamlessly, without requiring any code changes. Here are two S3 gateways:
-- [MinIO Gateway](https://min.io/): Minio is an open-source S3-compatible object storage server that can be used as a gateway to Azure Storage. It allows you to access Azure Blob storage using the S3 API. Minio provides a simple and lightweight solution for S3 API compatibility on Azure.
-- [S3Proxy](https://github.com/andrewgaul/s3proxy): S3Proxy is an open-source S3-compatible proxy server that can be used as a gateway to various storage backends, including Azure Storage. It translates S3 API calls to the appropriate Azure Storage API calls, providing compatibility and flexibility for accessing Azure Storage using the S3 API.
+1. Use an S3 gateway to access AWS S3 and Azure Storage. This solution doesn't require any code changes. Here are two S3 gateway options:
+
+    - [**MinIO Gateway**](https://min.io/): Minio is an open-source S3-compatible object storage server that you can use as a gateway to Azure Storage. It allows you to access Azure Blob storage using the S3 API. Minio provides a simple and lightweight solution for S3 API compatibility on Azure.
+- [**S3Proxy**](https://github.com/andrewgaul/s3proxy): S3Proxy is an open-source S3-compatible proxy server that you can use as a gateway to various storage backends, including Azure Storage. It translates S3 API calls to the appropriate Azure Storage API calls, providing compatibility and flexibility for accessing Azure Storage using the S3 API.
 
 ## Migrating from AWS IAM to Azure RBAC
 
