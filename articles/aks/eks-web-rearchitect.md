@@ -212,19 +212,15 @@ For more information, see [Use Azure Front Door to secure AKS workloads](/azure/
 
 ### Use NGINX Ingress Controller and ModSecurity
 
-The following solution makes use of [NGINX ingress controller][nginx] to expose the Yelb application and ModSecurity to block any malicious or suspicious traffic based on predefined OWASP or custom rules. [ModSecurity][mod-security] is an open-source web application firewall (WAF) that is compatible with popular web servers such as Apache, NGINX, and ISS. It provides protection from a wide range of attacks by using a powerful rule-definition language.
+The following solution uses the [NGINX ingress controller][nginx] to expose the Yelb application and ModSecurity to block any malicious or suspicious traffic based on predefined OWASP or custom rules. [ModSecurity][mod-security] is an open-source web application firewall (WAF) that's compatible with popular web servers such as Apache, NGINX, and ISS. It provides protection from a wide range of attacks by using a powerful rule-definition language.
 
 :::image type="content" source="media/eks-web-rearchitect/nginx-modsecurity-aks.png" alt-text="Architecture diagram of the solution based on NGINX Ingress Controller and ModSecurity.":::
 
-[ModSecurity][mod-security] can be used with the NGINX Ingress controller to provide an extra layer of security to web applications exposed via Kubernetes. The NGINX Ingress controller acts as a reverse proxy, forwarding traffic to the web application, while ModSecurity inspects the incoming requests and blocks any malicious or suspicious traffic based on the defined rules.
+You can use [ModSecurity][mod-security] with the NGINX Ingress controller to provide an extra layer of security to web applications exposed via Kubernetes. The NGINX Ingress controller acts as a reverse proxy, forwarding traffic to the web application, while ModSecurity inspects the incoming requests and blocks any malicious or suspicious traffic based on the defined rules.
 
-Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that can be deployed on any managed Kubernetes cluster on any cloud platform. This means the solution can be deployed "as is" on various cloud platforms, including:
+Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform, including [Amazon Elastic Kubernetes Service (EKS)](https://aws.amazon.com/eks/), [Azure Kubernetes Service (AKS)][aks], and [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine).
 
-- [Amazon Elastic Kubernetes Service (EKS)](https://aws.amazon.com/eks/)
-- [Azure Kubernetes Service (AKS)][aks]
-- [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine)
-
-The cloud-agnostic nature of this solution allows multi-cloud customers to deploy and configure their web applications, such as Yelb, consistently across different cloud platforms without significant modifications. It provides flexibility and portability, enabling you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
+The cloud-agnostic nature of this solution allows multi-cloud customers to deploy and configure their web applications consistently across different cloud platforms without significant modifications. It provides flexibility and portability, enabling you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
 
 ## Conclusions
 
