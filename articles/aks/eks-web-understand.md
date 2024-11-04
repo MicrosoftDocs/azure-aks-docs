@@ -28,11 +28,12 @@ Effective monitoring is essential for identifying and resolving issues in Kubern
 - **AKS**: [Azure Monitor](/azure/aks/monitor-aks) provides built-in monitoring capabilities for AKS clusters. It offers metrics, logs, and alerts, giving you visibility into the performance and health of your AKS environment. AKS integrates well with commonly used monitoring tools like Prometheus and Grafana, allowing you to build custom monitoring solutions. [Azure Monitor managed service for Prometheus][azure-prometheus] is a component of [Azure Monitor Metrics](/azure/azure-monitor/essentials/data-platform-metrics) that provides more flexibility in the types of metric data that you can collect and analyze. You can use analysis tools like [Azure Monitor Metrics Explorer with PromQL][azure-metrics-explorer] and open-source tools such as [PromQL][promql] and [Azure Managed Grafana][azure-grafana] to effectively observe, analyze, and visualize Prometheus metrics.
 - **EKS**: EKS integrates with [Amazon CloudWatch][aws-cloudwatch], a comprehensive monitoring service provided by AWS. CloudWatch collects and provides insights into logs, metrics, and resource utilization for EKS clusters. EKS also supports integration with popular monitoring tools like [Amazon Managed Service for Prometheus][aws-prometheus] and [Amazon Managed Grafana][aws-grafana], empowering you to build robust monitoring solutions.
 
-### Support for Open Source Projects
+### Support for open-Source projects
+
 Both AKS and EKS provide support for open-source projects, enabling you to utilize more capabilities and features:
 
-- AKS: AKS supports projects like [Kubernetes Event-driven Autoscaling (KEDA)][keda] and [Karpenter][karpenter]. KEDA enables event-driven autoscaling in AKS, allowing you to scale your workloads based on event-driven metrics. Karpenter provides a framework for automated cluster autoscaling and intelligent pod bin packing within AKS. AKS supports a managed version of Karpenter called [Node Autoprovisioning][node-autoprovisioning].
-- EKS: EKS also supports open-source projects like KEDA and Karpenter. These projects enable similar functionalities in EKS clusters, allowing you to dynamically scale your applications and optimize resource utilization.
+- **AKS**: AKS supports projects like [Kubernetes Event-driven Autoscaling (KEDA)][keda] and [Karpenter][karpenter]. KEDA enables event-driven autoscaling in AKS, allowing you to scale your workloads based on event-driven metrics. Karpenter provides a framework for automated cluster autoscaling and intelligent pod bin packing within AKS. AKS supports a managed version of Karpenter called [Node Autoprovisioning][node-autoprovisioning].
+- **EKS**: EKS also supports open-source projects like KEDA and Karpenter. These projects enable similar functionalities in EKS clusters, allowing you to dynamically scale your applications and optimize resource utilization.
 
 ### Deployment Tools
 Both AKS and EKS offer command-line tools to simplify the creation and management of Kubernetes clusters:
