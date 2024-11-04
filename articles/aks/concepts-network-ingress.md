@@ -46,7 +46,7 @@ The following table lists the different scenarios where you might use each ingre
 | **Istio Ingress Gateway** | • Based on Envoy, when using with Istio for a service mesh. </br> • Advanced traffic management features such as rate limiting and circuit breaking. </br> • Support for mTLS |
 
 > [!NOTE]
-> Gateway API for [Istio ingress gateway][istio-add-on-ingress] is not yet supported for the Istio add-on, but is currently under active development. 
+> Gateway API for [Istio ingress traffic][istio-add-on-ingress] is not yet supported for the Istio add-on, but is currently under active development. 
 
 ## Create an Ingress resource
 
