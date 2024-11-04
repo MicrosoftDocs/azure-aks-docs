@@ -81,11 +81,11 @@ The AKS Communication Manager streamlines notifications for all your AKS mainten
  ```
 6. Click the "+" button and "Add an action". Then sign into your preferred email account in outlook.com with password.
 
-   :::image type="content" source="./media/auto-upgrade-cluster/add-action.jpg" alt-text="The screenshot shows how to add an action.":::
+   :::image type="content" source="./media/auto-upgrade-cluster/add-action.jpeg" alt-text="The screenshot shows how to add an action.":::
 
 7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
 
- :::image type="content" source="./media/auto-upgrade-cluster/add-action-2.jpeg" alt-text="The screenshot shows how to send an email.":::
+ :::image type="content" source="./media/auto-upgrade-cluster/add-action-2.jpg" alt-text="The screenshot shows how to send an email.":::
 
 8. Customize by providing recipient email. Click the Subject and Body fields, and there's a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
 
