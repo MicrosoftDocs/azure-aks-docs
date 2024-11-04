@@ -68,25 +68,23 @@ To recreate the AWS workload in Azure with minimal changes, use an Azure equival
 
 For a comprehensive comparison between Azure and AWS services, see [AWS to Azure services comparison][aws-to-azure].
 
-### Architecture on Azure
+## Architecture on Azure
 
-In this solution, the [Yelb][yelb] application is deployed hosted by an [Azure Kubernetes Service (AKS)][aks] cluster and exposed via an ingress controller such as [NGINX ingress controller][nginx]. The ingress controller service is exposed via an [internal (or private) load balancer][azure-lb]. Internal load balancers are used to load balance traffic inside a virtual network, in this case the virtual network hosting the AKS cluster. An internal load balancer frontend can be accessed from an on-premises network in a hybrid scenario. For more information on how to use an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS), see [Use an internal load balancer with Azure Kubernetes Service (AKS)](/azure/aks/internal-lb?tabs=set-service-annotations).
+In this solution, the [Yelb][yelb] application is deployed to an AKS cluster and is exposed via an ingress controller like the [NGINX ingress controller][nginx]. The ingress controller service is exposed via an [internal (or private) load balancer][azure-lb]. For more information on how to use an internal load balancer to restrict access to your applications in AKS, see [Use an internal load balancer with Azure Kubernetes Service (AKS)](internal-lb.md).
 
-This sample supports installing the a [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] or an unmanaged [NGINX ingress controller][nginx] using the [Helm chart][nginx-helm-chart]. The application routing add-on with NGINX ingress controller provides the following features:
+This sample supports installing a [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] or an unmanaged [NGINX ingress controller][nginx] using the [Helm chart][nginx-helm-chart]. The application routing add-on with NGINX ingress controller provides the following features:
 
 - Easy configuration of managed NGINX Ingress controllers based on [Kubernetes NGINX Ingress controller][nginx].
 - Integration with [Azure DNS](/azure/dns/dns-overview) for public and private zone management.
 - SSL termination with certificates stored in [Azure Key Vault][azure-kv].
 
-For other configurations, see:
+For other configurations, see the following articles:
 
-- [DNS and SSL configuration](/azure/aks/app-routing-dns-ssl)
-- [Application routing add-on configuration](/azure/aks/app-routing-nginx-configuration)
-- [Configure internal NGINX ingress controller for Azure private DNS zone](/azure/aks/create-nginx-ingress-private-controller).
+- [DNS and SSL configuration](app-routing-dns-ssl.md)
+- [Application routing add-on configuration](app-routing-nginx-configuration.md)
+- [Configure internal NGINX ingress controller for Azure private DNS zone](create-nginx-ingress-private-controller.md).
 
-The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azure/application-gateway/overview) resource deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. You can secure access to the Yelb application hosted by Azure Kubernetes Service (AKS) and exposed via an [Azure Application Gateway](/azure/application-gateway/overview) by using the [Azure Web Application Firewall (WAF)](/azure/web-application-firewall/overview), which provides centralized protection of web applications from common exploits and vulnerabilities. The solution architecture is depicted in the diagram below.
-
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Architecture diagram of the solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
+The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azure/application-gateway/overview) resource deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. You can secure access to the Yelb application using [Azure Web Application Firewall (WAF)](/azure/web-application-firewall/overview), which provides centralized protection of web applications from common exploits and vulnerabilities. 
 
 The solution architecture is designed as follows:
 
