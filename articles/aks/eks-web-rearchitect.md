@@ -147,24 +147,24 @@ For more information, see [Deploying an Azure Kubernetes Service (AKS) Cluster w
 
 ### Use Azure Front Door
 
-The following solution uses [Azure Front Door][azure-fd] as a global layer 7 load balancer to securely expose and protect a workload that runs in [Azure Kubernetes Service (AKS)][aks] by using the [Azure Web Application Firewall][azure-waf], and an [Azure Private Link](/azure/private-link/private-link-service-overview) service.
+[Azure Front Door][azure-fd] is global layer 7 load balancer that securely exposes and protects workloads running in AKS by using the [Azure Web Application Firewall][azure-waf, and an [Azure Private Link](/azure/private-link/private-link-service-overview) service.
 
 :::image type="content" source="media/eks-web-rearchitect/front-door-aks.png" alt-text="Architecture diagram of the solution based on Azure Front Door.":::
 
 This solution uses [Azure Front Door Premium][azure-fd], [end-to-end TLS encryption](/azure/frontdoor/end-to-end-tls), [Azure Web Application Firewall][azure-waf], and a [Private Link service](/azure/private-link/private-link-service-overview) to securely expose and protect a workload that runs in [AKS](/azure/aks/intro-kubernetes).
 
-This architecture uses the Azure Front Door TLS and Secure Sockets Layer (SSL) offload capability to terminate the TLS connection and decrypt the incoming traffic at the front door. Azure Front Door reencrypts the incoming traffic before forwarding it to the AKS-hosted web application via. This practice enforces end-to-end TLS encryption for the entire request process, from the client to the origin. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link).
+This architecture uses the Azure Front Door TLS and Secure Sockets Layer (SSL) offload capability to terminate the TLS connection and decrypt the incoming traffic at the front door. Azure Front Door reencrypts the incoming traffic before forwarding it to the AKS-hosted web application. This practice enforces end-to-end TLS encryption for the entire request process, from the client to the origin. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link).
 
 The [NGINX ingress controller][nginx] exposes the AKS-hosted web application. The NGINX ingress controller is configured to use a private IP address as a front-end IP configuration of the `kubernetes-internal` internal load balancer. The NGINX ingress controller uses HTTPS as the transport protocol to expose the web application. For more information, see [Create an ingress controller by using an internal IP address](/azure/aks/ingress-basic#create-an-ingress-controller-using-an-internal-ip-address).
 
-This solution is recommended in those scenarios where customers deploy the same web application across multiple regional AKS clusters for business continuity and disaster recovery, or even across multiple cloud platforms or on-premises installations. In this case, Front Door can forward incoming calls to one of the backends also known as origins using one of the available routing methods.
+We recommend this solution for scenarios where you're deploying the same web application across multiple regional AKS clusters for business continuity and disaster recovery, or even across multiple cloud platforms or on-premises installations. In this case, Front Door can forward incoming calls to one of the backends (also known as *origins*) using one of the following routing methods:
 
-- [Latency](/azure/frontdoor/routing-methods#latency): The latency-based routing ensures that requests are sent to the lowest latency origins acceptable within a sensitivity range. In other words, requests get sent to the nearest set of origins in respect to network latency.
-- [Priority](/azure/frontdoor/routing-methods#priority): A priority can be set to your origins when you want to configure a primary origin to service all traffic. The secondary origin can be a backup in case the primary origin becomes unavailable.
-- [Weighted](/azure/frontdoor/routing-methods#weighted): You can assign a weight to your origins when you want to distribute traffic across a set of origins evenly or according to the weight coefficients. Traffic gets distributed by the weight value if the latencies of the origins are within the acceptable latency sensitivity range in the origin group.
-- [Session Affinity](/azure/frontdoor/routing-methods#affinity): You can configure session affinity for your frontend hosts or domains to ensure requests from the same end user gets sent to the same origin.
+- [**Latency**](/azure/frontdoor/routing-methods#latency): Latency-based routing ensures that requests are sent to the lowest latency origins acceptable within a sensitivity range. In other words, requests get sent to the nearest set of origins in respect to network latency.
+- [**Priority**](/azure/frontdoor/routing-methods#priority): You can set priorities to origins when you want to configure a primary origin to service all traffic. The secondary origin can be a backup in case the primary origin becomes unavailable.
+- [**Weighted**](/azure/frontdoor/routing-methods#weighted): You can assign a weight to your origins when you want to distribute traffic across a set of origins evenly or according to the weight coefficients. Traffic gets distributed by the weight value if the latencies of the origins are within the acceptable latency sensitivity range in the origin group.
+- [**Session affinity**](/azure/frontdoor/routing-methods#affinity): You can configure session affinity for your frontend hosts or domains to ensure requests from the same end user gets sent to the same origin.
 
-The following diagram shows the steps for the message flow during deployment time and runtime.
+The following diagram shows the steps for the message flow during deployment time and runtime:
 
 :::image type="content" source="media/eks-web-rearchitect/front-door-aks-flow.png" alt-text="Details of the solution based on Azure Front Door.":::
 
