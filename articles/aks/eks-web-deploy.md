@@ -16,70 +16,66 @@ ms.custom:
 
 In this article, you deploy the [Yelb application][yelb] to the [Azure Kubernetes Service (AKS)][aks] cluster you created in the previous article.
 
-## Check the Environment
+## Check the environment
 
-Before you deploy the application, ensure that your AKS cluster is properly configured. Start by listing the namespaces in your Kubernetes cluster by running the following command:
+Before you deploy the application, ensure that your AKS cluster is properly configured.
 
-```bash
- kubectl get namespace
-```
+1. List the namespaces in your cluster using the `kubectl get namespace` command.
 
-If you installed the NGINX Ingress Controller using the application routing add-on, you should see the `app-routing-system` namespace.
+    ```bash
+    kubectl get namespace
+    ```
 
-```bash
-NAME                 STATUS   AGE
-app-routing-system   Active   4h28m
-cert-manager         Active   109s
-dapr-system          Active   4h18m
-default              Active   4h29m
-gatekeeper-system    Active   4h28m
-kube-node-lease      Active   4h29m
-kube-public          Active   4h29m
-kube-system          Active   4h29m
-```
+    If you installed the NGINX Ingress Controller using the application routing add-on, you should see the `app-routing-system` namespace in the output:
 
-If you run the following command:
+    ```output
+    NAME                 STATUS   AGE
+    app-routing-system   Active   4h28m
+    cert-manager         Active   109s
+    dapr-system          Active   4h18m
+    default              Active   4h29m
+    gatekeeper-system    Active   4h28m
+    kube-node-lease      Active   4h29m
+    kube-public          Active   4h29m
+    kube-system          Active   4h29m
+    ```
 
-```bash
-kubectl get service --namespace app-routing-system -o wide
-```
+    If you installed the NGINX Ingress Controller via Helm, you should see the `ingress-basic` namespace in the output:
 
-You can see that the `EXTERNAL-IP` of the `nginx` service is a private IP address. This address is the private IP of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster.
+    ```output
+    NAME                STATUS   AGE
+    cert-manager        Active   7m42s
+    dapr-system         Active   11m
+    default             Active   21m
+    gatekeeper-system   Active   20m
+    ingress-basic       Active   7m19s
+    kube-node-lease     Active   21m
+    kube-public         Active   21m
+    kube-system         Active   21m
+    prometheus          Active   8m9s
+    ```
 
-```bash
-NAME    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                      AGE     SELECTOR
-nginx   LoadBalancer   172.16.55.104   10.240.0.7    80:31447/TCP,443:31772/TCP,10254:30459/TCP   4h28m   app=nginx
-```
+1. Get the service details of the `app-routing-system` or the `ingress-basic` namespace using the `kubectl get service command`.
 
-Instead, if you installed the NGINX Ingress Controller via Helm, you should see the `ingress-basic` namespace.
+    ```bash
+    kubectl get service --namespace <namespace-name> -o wide
+    ```
 
-```bash
-NAME                STATUS   AGE
-cert-manager        Active   7m42s
-dapr-system         Active   11m
-default             Active   21m
-gatekeeper-system   Active   20m
-ingress-basic       Active   7m19s
-kube-node-lease     Active   21m
-kube-public         Active   21m
-kube-system         Active   21m
-prometheus          Active   8m9s
-```
+    If you used the application routing add-on, you should see the `EXTERNAL-IP` of the `nginx` service is a private IP address. This address is the private IP of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster:
 
-If you run the following command:
+    ```output
+    NAME    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                      AGE     SELECTOR
+    nginx   LoadBalancer   172.16.55.104   10.240.0.7    80:31447/TCP,443:31772/TCP,10254:30459/TCP   4h28m   app=nginx
+    ```
 
-```bash
-kubectl get service --namespace ingress-basic
-```
-
-You can see that the `EXTERNAL-IP` of the `nginx-ingress-ingress-nginx-controller` service is a private IP address. This address is the private IP of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster.
-
-```bash
-NAME                                               TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
-nginx-ingress-ingress-nginx-controller             LoadBalancer   172.16.42.152    10.240.0.7    80:32117/TCP,443:32513/TCP   7m31s
-nginx-ingress-ingress-nginx-controller-admission   ClusterIP      172.16.78.85     <none>        443/TCP                      7m31s
-nginx-ingress-ingress-nginx-controller-metrics     ClusterIP      172.16.109.138   <none>        10254/TCP                    7m31s
-```
+    If you used Helm, you should see the `EXTERNAL-IP` of the `nginx-ingress-ingress-nginx-controller` service is a private IP address. This address is the private IP of a frontend IP configuration in the `kubernetes-internal` private load balancer of your AKS cluster.
+  
+    ```output
+    NAME                                               TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                      AGE
+    nginx-ingress-ingress-nginx-controller             LoadBalancer   172.16.42.152    10.240.0.7    80:32117/TCP,443:32513/TCP   7m31s
+    nginx-ingress-ingress-nginx-controller-admission   ClusterIP      172.16.78.85     <none>        443/TCP                      7m31s
+    nginx-ingress-ingress-nginx-controller-metrics     ClusterIP      172.16.109.138   <none>        10254/TCP                    7m31s
+    ```
 
 ## Deploy the Yelb application
 
