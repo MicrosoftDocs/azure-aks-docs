@@ -503,7 +503,7 @@ AzureDiagnostics
 
 ## Review deployed resources
 
-You can use the Azure portal or the Azure CLI to list the deployed resources in the resource group:
+You can use Azure CLI to list the deployed resources in the resource group:
 
 ```azurecli
 az resource list --resource-group <resource-group-name>
