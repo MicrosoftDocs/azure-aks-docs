@@ -23,8 +23,8 @@ In a real-world scenario, migrating a web application from AWS to Azure might re
 1. Refactor the code to replace the Amazon S3 API with the [Azure Storage REST API][azure-blob-api] or the [Microsoft Azure Storage SDK][azure-storage-sdk] for one of the supported programming languages (.NET, Java, JavaScript, Python, and Go). This solution involves modifying the codebase to use the equivalent Azure Storage APIs.
 1. Use an S3 gateway to access AWS S3 and Azure Storage. This solution doesn't require any code changes. Here are two S3 gateway options:
 
-    - [**MinIO Gateway**](https://min.io/): Minio is an open-source S3-compatible object storage server that you can use as a gateway to Azure Storage. It allows you to access Azure Blob storage using the S3 API. Minio provides a simple and lightweight solution for S3 API compatibility on Azure.
-- [**S3Proxy**](https://github.com/andrewgaul/s3proxy): S3Proxy is an open-source S3-compatible proxy server that you can use as a gateway to various storage backends, including Azure Storage. It translates S3 API calls to the appropriate Azure Storage API calls, providing compatibility and flexibility for accessing Azure Storage using the S3 API.
+   - [**MinIO Gateway**](https://min.io/): Minio is an open-source S3-compatible object storage server that you can use as a gateway to Azure Storage. It allows you to access Azure Blob storage using the S3 API. Minio provides a simple and lightweight solution for S3 API compatibility on Azure.
+   - [**S3Proxy**](https://github.com/andrewgaul/s3proxy): S3Proxy is an open-source S3-compatible proxy server that you can use as a gateway to various storage backends, including Azure Storage. It translates S3 API calls to the appropriate Azure Storage API calls, providing compatibility and flexibility for accessing Azure Storage using the S3 API.
 
 ## Migrating from AWS IAM to Azure RBAC
 
@@ -50,19 +50,18 @@ Microsoft Entra Workload ID works well with the [Azure Identity client libraries
 
 *This article is maintained by Microsoft. It was originally written by the following contributors*:
 
+Principal author:
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
+
+Other contributors:
+- [Erin Schaffer](https://www.linkedin.com/in/erin-schaffer-65800215b/) | Content Developer 2
 
 <!-- LINKS -->
 [yelb]: https://github.com/mreferre/yelb/
 [aws-eks]: https://docs.aws.amazon.com/en_us/eks/latest/userguide/what-is-eks.html
-[aws-dynamodb]: https://aws.amazon.com/it/dynamodb/
-[aws-cache]: https://aws.amazon.com/it/elasticache/
 [aws-s3]: https://aws.amazon.com/s3
 [aws-iam]: https://aws.amazon.com/iam/
 [kubernetes-sa]: https://kubernetes.io/docs/concepts/security/service-accounts/
-[aks]: ./what-is-aks.md
-[azure-redis]: /azure/azure-cache-for-redis/cache-overview
-[azure-postgresql]: /azure/postgresql/flexible-server/service-overview
 [azure-blob]: /azure/storage/blobs/storage-blobs-overview
 [azure-blob-api]: /rest/api/storageservices/blob-service-rest-api
 [azure-storage-sdk]: /azure/storage/common/storage-srp-overview?tabs=dotnet

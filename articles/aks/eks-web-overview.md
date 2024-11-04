@@ -61,17 +61,17 @@ code .
 
 > [!div class="nextstepaction"]
 > [Understand platform differences][eks-edw-understand]
-
+  
 ## Contributors
 
-*Microsoft maintains this article. The following contributors originally wrote it:*
+*This article is maintained by Microsoft. It was originally written by the following contributors*:
 
+Principal author:
 - Dixit Arora | Senior Customer Engineer
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
-- Ken Kilty | Principal TPM
-- Russell de Pina | Principal TPM
-- Erin Schaffer | Content Developer 2
-- Carol Smith | Senior Content Developer
+
+Other contributors:
+- [Erin Schaffer](https://www.linkedin.com/in/erin-schaffer-65800215b/) | Content Developer 2
 
 <!-- LINKS -->
 [yelb]: https://github.com/mreferre/yelb/

@@ -114,21 +114,20 @@ For more information about the differences between AKS and EKS, see the followin
 - [Agent node and node pool management](/azure/architecture/aws-professional/eks-to-aks/node-pools)
 - [Cluster governance](/azure/architecture/aws-professional/eks-to-aks/governance)
 - [Workload migration](/azure/architecture/aws-professional/eks-to-aks/migrate-eks-to-aks)
+
 ## Contributors
 
-*Microsoft maintains this article. The following contributors originally wrote it:*
+*This article is maintained by Microsoft. It was originally written by the following contributors*:
 
+Principal author:
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
-- Dixit Arora | Senior Customer Engineer
-- Ken Kilty | Principal TPM
-- Russell de Pina | Principal TPM
-- Erin Schaffer | Content Developer 2
-- Carol Smith | Senior Content Developer
+
+Other contributors:
+- [Erin Schaffer](https://www.linkedin.com/in/erin-schaffer-65800215b/) | Content Developer 2
 
 <!-- LINKS -->
 [eksctl]: https://eksctl.io/installation/
 [aws-waf]: https://aws.amazon.com/waf/
-[aws-eks]: https://docs.aws.amazon.com/en_us/eks/latest/userguide/what-is-eks.html
 [aws-alb]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer
 [aws-web-acl]: https://docs.aws.amazon.com/waf/latest/developerguide/web-acl.html
 [aws-cloudformation]: https://aws.amazon.com/cloudformation/

@@ -75,11 +75,11 @@ Before you deploy the application, ensure that your AKS cluster is properly conf
     nginx-ingress-ingress-nginx-controller             LoadBalancer   172.16.42.152    10.240.0.7    80:32117/TCP,443:32513/TCP   7m31s
     nginx-ingress-ingress-nginx-controller-admission   ClusterIP      172.16.78.85     <none>        443/TCP                      7m31s
     nginx-ingress-ingress-nginx-controller-metrics     ClusterIP      172.16.109.138   <none>        10254/TCP                    7m31s
-    ```
+    ```#tls-termination-at-the-application-gateway-and-yelb-invocation-via-http
 
 ## Deploy the Yelb application
 
-If you want to deploy the sample using the [TLS termination at Application Gateway and Yelb invocation via HTTP](eks-web-prepare.md#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder.
+If you want to deploy the sample using the [TLS termination at Application Gateway and Yelb invocation via HTTP](eks-web-prepare.md#tls-termination-at-the-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder.
 
 If you want to deploy the sample using the [Implementing end-to-end TLS using Azure Application Gateway](./eks-web-prepare.md#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the web application in the `https` folder.
 
@@ -547,14 +547,17 @@ If you use the NGINX ingress controller or any other AKS hosted ingress controll
 
 *This article is maintained by Microsoft. It was originally written by the following contributors*:
 
+Principal author:
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
+
+Other contributors:
+- [Erin Schaffer](https://www.linkedin.com/in/erin-schaffer-65800215b/) | Content Developer 2
 
 <!-- LINKS -->
 [yelb]: https://github.com/mreferre/yelb/
 [nginx]: https://github.com/kubernetes/ingress-nginx
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
-[aks-app-routing-addon]: ./app-routing.md
 [azure-waf]: /azure/web-application-firewall/overview
 [azure-ag]: /azure/application-gateway/overview
 [azure-ddos]: /azure/ddos-protection/ddos-protection-overview

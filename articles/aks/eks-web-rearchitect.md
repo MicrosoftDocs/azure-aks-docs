@@ -90,7 +90,7 @@ The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azu
 
 The solution architecture consists of the following components and configurations:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https-detail.png" alt-text="Details of the solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
 
 - Network configuration: Azure CNI Overlay
 - Network data plane: Cilium
@@ -112,9 +112,43 @@ For comprehensive instructions on deploying the [Yelb application][yelb] on AKS 
 
 Azure offers several options for deploying a web application on an AKS cluster and securing it with a web application firewall:
 
-- [Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
-- [Azure Front Door](#use-azure-front-door)
-- [NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
+- [Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)](#rearchitect-aws-eks-web-application-for-azure-kubernetes-service-aks)
+  - [Yelb application architecture](#yelb-application-architecture)
+  - [Architecture on AWS](#architecture-on-aws)
+  - [Map AWS services to Azure services](#map-aws-services-to-azure-services)
+  - [Architecture on Azure](#architecture-on-azure)
+    - [Solution architecture design](#solution-architecture-design)
+  - [Alternative solutions](#alternative-solutions)
+    - [Use Application Gateway Ingress Controller](#use-application-gateway-ingress-controller)
+    - [Use Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
+      - [Key features](#key-features)
+      - [Limitations](#limitations)
+    - [Use Azure Front Door](#use-azure-front-door)
+    - [Use NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
+  - [Next step](#next-step)
+  - [Contributors](#contributors)
+
+### Use Application Gateway Ingress Controller
+
+The [Application Gateway Ingress Controller (AGIC)](https://docs.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview) is a Kubernetes application, which makes it possible for [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/services/kubernetes-service/) customers to leverage Azure's native [Application Gateway](https://azure.microsoft.com/services/application-gateway/) L7 load-balancer to expose cloud software to the Internet. AGIC monitors the Kubernetes cluster it's hosted on and continuously updates an Application Gateway, so that selected services are exposed to the Internet.
+
+![Use Application Gateway Ingress Controller and Azure WAF Policy](../images/application-gateway-ingress-controller-aks-http.png)
+
+The Ingress Controller runs in its own pod on the customer's AKS. AGIC monitors a subset of Kubernetes Resources for changes. The state of the AKS cluster is translated to Application Gateway specific configuration and applied to the [Azure Resource Manager (ARM)](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/overview). For more information, see [What is Application Gateway Ingress Controller?](https://docs.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview). The Application Gateway Ingress Controller (AGIC) offers the following advantages.
+
+1. **Native Integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway. This allows for seamless and efficient routing of traffic to services running on Azure Kubernetes Service (AKS).
+2. **Simplified Deployment**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods like using Helm charts. It enables a quick and easy setup of an Application Gateway and AKS cluster with AGIC enabled.
+3. **Fully Managed Service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an additional layer of support.
+
+However, there are also some disadvantages and limitations to consider when using AGIC:
+
+1. **Single Cloud Approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach, usually focusing on Azure. It may not be the best choice for customers who require a multi-cloud architecture, where deployment across different cloud platforms like AWS and GCP is essential. In this case customers may decide to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.
+2. **Container Network Interface Support**: AGIC is not supported by all Container Network Interfaces (CNI) configurations. For example, the [Azure CNI Overlay](https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay) does not currently support AGIC. It is important to verify that the chosen CNI is compatible with AGIC before implementation.
+
+For more information, see the following resources:
+
+- [What is Application Gateway Ingress Controller?](https://docs.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview)
+- [Documentation for Application Gateway Ingress Controller](https://azure.github.io/application-gateway-kubernetes-ingress/)
 
 ### Use Azure Application Gateway for Containers
 
@@ -164,50 +198,6 @@ We recommend this solution for scenarios where you're deploying the same web app
 - [**Weighted**](/azure/frontdoor/routing-methods#weighted): You can assign a weight to your origins when you want to distribute traffic across a set of origins evenly or according to the weight coefficients. Traffic gets distributed by the weight value if the latencies of the origins are within the acceptable latency sensitivity range in the origin group.
 - [**Session affinity**](/azure/frontdoor/routing-methods#affinity): You can configure session affinity for your frontend hosts or domains to ensure requests from the same end user gets sent to the same origin.
 
-The following diagram shows the steps for the message flow during deployment time and runtime:
-
-:::image type="content" source="media/eks-web-rearchitect/front-door-aks-flow.png" alt-text="Details of the solution based on Azure Front Door.":::
-
-#### Deployment workflow
-
-The following steps describe the deployment process:
-
-*This workflow corresponds to the green numbers in the preceding diagram.*
-
-1. A security engineer generates a certificate for the custom domain that the workload uses and saves it in an Azure Key Vault. You can obtain a valid certificate from a well-known [certification authority (CA)](https://en.wikipedia.org/wiki/Certificate_authority).
-1. A platform engineer specifies the necessary information in the parameters and deploys the infrastructure using an Infrastructure as Code (IaC) technology such as Terraform or Bicep. The necessary information includes:
-
-    - A prefix for the Azure resources.
-    - The name and resource group of the existing Azure Key Vault that holds the TLS certificate for the workload hostname and the Azure Front Door custom domain.
-    - The name of the certificate in the key vault.
-    - The name and resource group of the DNS zone that's used to resolve the Azure Front Door custom domain.
-
-1. You can use a [deployment script](/azure/azure-resource-manager/bicep/deployment-script-bicep) to install the following packages to your AKS cluster. For more information, check the parameters section of the Bicep module.
-
-    - [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/) using the [Prometheus Community Kubernetes Helm Charts](https://prometheus-community.github.io/helm-charts/). By default, this sample configuration doesn't install Prometheus and Grafana to the AKS cluster. Instead, it installs [Azure Managed Prometheus](/azure/azure-monitor/essentials/azure-monitor-workspace-overview) and [Azure Managed Grafana](/azure/managed-grafana/overview).
-    - [cert-manager](https://cert-manager.io/docs/). Certificate Manager isn't necessary in this sample, as both the Application Gateway and NGINX Ingress Controller use a pre-uploaded TLS certificate from Azure Key Vault.
-    - [NGINX Ingress Controller][nginx] via an Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on](/azure/aks/app-routing), you don't need to install another instance of the NGINX Ingress Controller via Helm.
-
-1. An Azure Front Door [secret resource](/azure/templates/microsoft.cdn/profiles/secrets) to manage and store the TLS certificate in the Azure key vault. This certificate is used by the [custom domain](/azure/templates/microsoft.cdn/profiles/customdomains) associated with the Azure Front Door endpoint.
-
-> [!NOTE]
-> At the end of the deployment, you need to approve the private endpoint connection before traffic can pass to the origin privately. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link). To approve private endpoint connections, use the Azure portal, the Azure CLI, or Azure PowerShell. For more information, see [Manage a private endpoint connection](/azure/private-link/manage-private-endpoint).
-
-#### Runtime workflow
-
-The following steps describe the message flow for a request that an external client application initiates during runtime:
-
-*This workflow corresponds to the orange numbers in the preceding diagram.*
-
-1. The client application uses its custom domain to send a request to the web application. The DNS zone associated with the custom domain uses a [CNAME record](https://en.wikipedia.org/wiki/CNAME_record) to redirect the DNS query for the custom domain to the original hostname of the Azure Front Door endpoint.
-1. Azure Front Door traffic routing occurs in several stages. Initially, the request is sent to one of the [Azure Front Door points of presence](/azure/frontdoor/edge-locations-by-region). Then, Azure Front Door uses the configuration to determine the appropriate destination for the traffic. Various factors can influence the routing process, such as the Azure front door caching, web application firewall (WAF), routing rules, rules engine, and caching configuration. For more information, see [Routing architecture overview](/azure/frontdoor/front-door-routing-architecture).
-1. Azure Front Door forwards the incoming request to the [Azure private endpoint](/azure/private-link/private-endpoint-overview) connected to the [Private Link service](/azure/private-link/private-link-service-overview) that exposes the AKS-hosted workload.
-1. The request is sent to the Private Link service.
-1. The request is forwarded to the *kubernetes-internal* AKS internal load balancer.
-1. The request is sent to one of the agent nodes that hosts a pod of the NGINX ingress controller.
-1. One of the NGINX ingress controller replicas handles the request.
-1. The NGINX ingress controller forwards the request to one of the workload pods.
-
 For more information, see [Use Azure Front Door to secure AKS workloads](/azure/architecture/example-scenario/aks-front-door/aks-front-door)
 
 ### Use NGINX Ingress Controller and ModSecurity
@@ -232,12 +222,11 @@ The cloud-agnostic nature of this solution allows multi-cloud customers to deplo
 
 *Microsoft maintains this article. The following contributors originally wrote it:*
 
+Principal author:
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
-- Dixit Arora | Senior Customer Engineer
-- Ken Kilty | Principal TPM
-- Russell de Pina | Principal TPM
-- Erin Schaffer | Content Developer 2
-- Carol Smith | Senior Content Developer
+
+Other contributors:
+- [Erin Schaffer](https://www.linkedin.com/in/erin-schaffer-65800215b/) | Content Developer 2
 
 <!-- LINKS -->
 [postgresql]: https://www.postgresql.org/
