@@ -330,9 +330,9 @@ kubectl get nodes
 
 AKS uses a pair of first-party Microsoft Entra applications. These application IDs are the same in all environments.
 
-The AKS Microsoft Entra server application ID that the server side uses is `00001111-aaaa-2222-bbbb-3333cccc4444`. The access token that accesses AKS clusters must be issued for this application. In most kubelogin authentication methods, you must use `--server-id` with `kubelogin get-token`.
+The AKS Microsoft Entra server application ID that the server side uses is `6dae42f8-4368-4678-94ff-3960e28e3630`. The access token that accesses AKS clusters must be issued for this application. In most kubelogin authentication methods, you must use `--server-id` with `kubelogin get-token`.
 
-The AKS Microsoft Entra client application ID that kubelogin uses to perform public client authentication on behalf of the user is `11112222-bbbb-3333-cccc-4444dddd5555`. The client application ID is used in device code and web browser interactive authentication methods.
+The AKS Microsoft Entra client application ID that kubelogin uses to perform public client authentication on behalf of the user is `80faf920-1908-4b52-b5ef-a8e7bedfc67a`. The client application ID is used in device code and web browser interactive authentication methods.
 
 ## Related content
 
