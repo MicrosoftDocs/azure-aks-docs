@@ -268,48 +268,51 @@ helm get values $NGINX_RELEASE_NAME --namespace $NGINX_NAMESPACE
     kubectl get all -n yelb
     ```
 
-Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It's important to note that the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) creates the Kubernetes secret containing the TLS certificate only when the `SecretProviderClass` and volume definition is included in the `deployment`. To this purpose, we need to modify the YAML manifest of the `yelb-ui` deployment as follows:
+> [!NOTE]
+> Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It's important to note that the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) creates the Kubernetes secret containing the TLS certificate only when the `SecretProviderClass` and volume definition is included in the `deployment`. To ensure the TLS certificate is properly retrieved from Azure Key Vault and stored in the Kubernetes secret used by the `ingress` object, we need to make the following modifications to the YAML manifest of the `yelb-ui` deployment:
+>
+> - Add `csi volume` definition using the `secrets-store.csi.k8s.io` driver, which references the `SecretProviderClass` object responsible for retrieving the TLS certificate from Azure Key Vault.
+> - Include `volume mount` to read the certificate as a secret from Azure Key Vault.
+>
+> For more information, see [Set up Secrets Store CSI Driver to enable NGINX Ingress Controller with TLS](/azure/aks/csi-secrets-store-nginx-tls#deploy-a-secretproviderclass).
 
-- A `csi volume` definition is added, utilizing the `secrets-store.csi.k8s.io` driver, which references the `SecretProviderClass` object responsible for retrieving the TLS certificate from Azure Key Vault.
-- A `volume mount` is included to read the certificate as a secret from Azure Key Vault.
+1. Update the `yelb-ui` YAML manifest to include the `csi volume` definition and `volume mount` to read the certificate as a secret from Azure Key Vault.
 
-These modifications ensure that the TLS certificate is properly retrieved from Azure Key Vault and stored in Kubernetes secret used by the `ingress` object. For more information, see [Set up Secrets Store CSI Driver to enable NGINX Ingress Controller with TLS](/azure/aks/csi-secrets-store-nginx-tls#deploy-a-secretproviderclass).
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  namespace: yelb
-  name: yelb-ui
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: yelb-ui
-      tier: frontend
-  template:
+    ```yaml
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      labels:
-        app: yelb-ui
-        tier: frontend
+      namespace: yelb
+      name: yelb-ui
     spec:
-      containers:
-        - name: yelb-ui
-          image: mreferre/yelb-ui:0.7
-          ports:
-            - containerPort: 80
-          volumeMounts:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: yelb-ui
+          tier: frontend
+      template:
+        metadata:
+          labels:
+            app: yelb-ui
+            tier: frontend
+        spec:
+          containers:
+            - name: yelb-ui
+              image: mreferre/yelb-ui:0.7
+              ports:
+                - containerPort: 80
+              volumeMounts:
+                - name: secrets-store-inline
+                  mountPath: "/mnt/secrets-store"
+                  readOnly: true
+          volumes:
             - name: secrets-store-inline
-              mountPath: "/mnt/secrets-store"
-              readOnly: true
-      volumes:
-        - name: secrets-store-inline
-          csi:
-            driver: secrets-store.csi.k8s.io
-            readOnly: true
-            volumeAttributes:
-              secretProviderClass: yelb
-```
+              csi:
+                driver: secrets-store.csi.k8s.io
+                readOnly: true
+                volumeAttributes:
+                  secretProviderClass: yelb
+    ```
 
 The script utilizes the `yelb.yml` YAML manifest for deploying the application, and the `ingress.yml` for creating the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. The script performs the following steps:
 
