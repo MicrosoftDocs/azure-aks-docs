@@ -57,28 +57,9 @@ The [Azure Web Application Firewall (WAF)][azure-waf] secures access to the web 
 
 ## Architecture
 
-This sample provides a collection of [Bicep][bicep] templates, Bash scripts, and YAML manifests for building an [Azure Kubernetes Service (AKS)][aks] cluster, deploying the [Yelb][yelb] application, exposing the UI service using the [NGINX ingress controller][nginx], and protecting it with the [Azure Application Gateway][azure-ag] and [Azure Web Application Firewall (WAF)][azure-waf].
+This sample provides a collection of [Bicep][bicep] templates, Bash scripts, and YAML manifests for building an AKS cluster, deploying the [Yelb][yelb] application, exposing the UI service using the [NGINX ingress controller][nginx] and protecting it with the [Azure Application Gateway][azure-ag] and [Azure Web Application Firewall (WAF)][azure-waf].
 
-The [Yelb][yelb] application is deployed on an [Azure Kubernetes Service (AKS)][aks] cluster and exposed through the [NGINX ingress controller][nginx]. The NGINX ingress controller service is accessible via an [internal (or private) load balancer][azure-lb], which is used to balance traffic within the virtual network hosting the AKS cluster.
-
-To enhance security, the [Yelb][yelb] application is protected by an [Azure Application Gateway][azure-ag] resource, which is deployed in a dedicated subnet within the same virtual network as the AKS cluster. Access to the Yelb application hosted on [Azure Kubernetes Service (AKS)][aks] and exposed via the [Azure Application Gateway][azure-ag] is secured by the [Azure Web Application Firewall (WAF)][azure-waf]. The WAF provides centralized protection for web applications against common exploits and vulnerabilities.
-
-The sample includes two separate Bicep parameter files and two sets of Bash scripts and YAML manifests, each geared towards deploying two different solution options.
-
-## What is Bicep?
-
-[Bicep][bicep]is an open-source declarative domain-specific language (DSL) for deploying Azure resources using an [Infrastructure as Code](https://en.wikipedia.org/wiki/Infrastructure_as_code) approach. Here are some key points to compare Bicep with [AWS CloudFormation][aws-cloudformation]:
-
-1. **Syntax:** Bicep uses a simplified and more intuitive syntax, allowing developers to write Azure infrastructure as code in a more readable and concise manner. On the other hand, CloudFormation uses JSON or YAML templates, which can be complex and verbose.
-2. **Compilation:** Bicep files are compiled into [ARM templates](/azure/azure-resource-manager/templates/overview) before deployment, ensuring that the resulting template is valid and compatible with [Azure Resource Manager](/azure/azure-resource-manager/management/overview). This compilation step helps identify any syntax or logical errors before deployment.  AWS CloudFormation directly interprets CloudFormation templates.
-3. **Modularity:** Bicep supports modular development, allowing you to break down your infrastructure code into reusable modules. Modularity enhances code organization and promotes code sharing across projects.
-4. **Ecosystem:** Bicep benefits from the rich Azure ecosystem, offering built-in functions, resource types, and integration with Azure services. 
-
-For more information on Bicep, see: 
-
-- [Azure Bicep Documentation](/azure/azure-resource-manager/bicep/).
-- [Learn modules for Bicep](/azure/azure-resource-manager/bicep/learn-bicep)
-
+This sample also includes two separate Bicep parameter files and two sets of Bash scripts and YAML manifests, each geared towards deploying two different solution options. For more information on Bicep, see [What is Bicep?](/azure/azure-resource-manager/bicep/overview)
 
 ## TLS Termination at Application Gateway and Yelb Invocation via HTTP
 
