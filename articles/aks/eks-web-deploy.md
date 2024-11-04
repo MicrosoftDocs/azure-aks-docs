@@ -79,9 +79,11 @@ Before you deploy the application, ensure that your AKS cluster is properly conf
 
 ## Deploy the Yelb application
 
-If you choose to deploy the sample using the [TLS Termination at Application Gateway and Yelb Invocation via HTTP]((./eks-web-prepare.md#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder. Instead, if you want to deploy the sample using the [Implementing End-to-End TLS Using Azure Application Gateway](./eks-web-prepare.md#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the web application in the `https` folder.
+If you want to deploy the sample using the [TLS termination at Application Gateway and Yelb invocation via HTTP](eks-web-prepare.md#tls-termination-at-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder.
 
-In the remaining part of this article, we guide you through the deployment process of the sample application using the end-to-end TLS approach. Before running any script, make sure to customize the values of the variables within the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
+If you want to deploy the sample using the [Implementing end-to-end TLS using Azure Application Gateway](./eks-web-prepare.md#implementing-end-to-end-tls-using-azure-application-gateway) architecture, you can find the Bash scripts and YAML templates to deploy the web application in the `https` folder.
+
+In the remaining sections of this article, we guide you through the deployment process of the sample application using the end-to-end TLS approach.
 
 ```bash
 # Azure Subscription and Tenant
