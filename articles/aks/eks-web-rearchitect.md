@@ -223,10 +223,10 @@ Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-
 The cloud-agnostic nature of this solution allows multi-cloud customers to deploy and configure their web applications consistently across different cloud platforms without significant modifications. It provides flexibility and portability, enabling you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
 
 
-## Next steps
+## Next step
 
 > [!div class="nextstepaction"]
-> [Migrate AWS Web Application Deployment to AKS][eks-web-refactor]
+> [Migrate AWS web application deployment to AKS][eks-web-refactor]
 
 ## Contributors
 
