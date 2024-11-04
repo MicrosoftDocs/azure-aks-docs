@@ -76,7 +76,7 @@ The sample client application uses the [Locust load testing framework](https://d
             start_time = time.perf_counter()
             try:
                 # Execute the set operation
-                result = self.vc.set(randint(0, 10), randint(0, 10))
+                result = self.vc.set(randint(0, 1000), randint(0, 1000))
                 if not result:
                     result = ''
                 length = len(str(result))
@@ -105,7 +105,7 @@ The sample client application uses the [Locust load testing framework](https://d
             start_time = time.perf_counter()
             try:
                 # Execute the get operation
-                result = self.vc.get(randint(0, 10))
+                result = self.vc.get(randint(0, 1000))
                 if not result:
                     result = ''
                 length = len(str(result))
@@ -169,7 +169,7 @@ The sample client application uses the [Locust load testing framework](https://d
         containers:
         - name: valkey-client
           image: ${MY_ACR_REGISTRY}.azurecr.io/valkey-client
-          command: ["locust"]
+          command: ["locust", "--processes", "4"]
           volumeMounts:
             - name: valkey-password
               mountPath: "/etc/valkey-password"
