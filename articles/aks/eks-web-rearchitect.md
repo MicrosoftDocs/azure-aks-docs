@@ -54,19 +54,19 @@ For more information, see [Protecting your Amazon EKS web apps with AWS WAF](htt
 
 To recreate the AWS workload in Azure with minimal changes, use an Azure equivalent for each AWS service. The following table summarizes the service mapping:
 
-| **Service mapping**         |       **AWS service**                              |     **Azure service**                                                                           |
-|:----------------------------|:---------------------------------------------------|:------------------------------------------------------------------------------------------------|
-| Web Access Firewall         | [AWS Web Application Firewall (WAF)][aws-waf]      | [Azure Web Application Firewall (WAF)][azure-waf]                                               |
-| Application Load Balancing  | [Application Load Balancer (ALB)][aws-alb]         | [Azure Application Gateway][azure-ag]<br> [Application Gateway for Containers (AGC)][azure-agc] |
-| Content Delivery Network    | [Amazon CloudFront][aws-cloudfront]                | [Azure Front Door (AFD)][azure-fd]                                                              |
-| Orchestration               | [Elastic Kubernetes Service (EKS)][aws-eks]        | [Azure Kubernetes Service (AKS)][aks]                                                           |
-| Secret Vault                | [AWS Key Management Service (KMS)][aws-kms]        | [Azure Key Vault][azure-kv]                                                                     |
-| Container Registry          | [Amazon Elastic Container Registry (ECR)][aws-ecr] | [Azure Container Registry (ACR)][azure-cr]                                                      |
-| Domain Name System (DNS)    | [Amazon Route 53][aws-route53]                     | [Azure DNS][azure-dns]                                                                          |
-| Caching                     | [Amazon ElastiCache][aws-cache]                    | [Azure Cache for Redis][azure-redis]                                                            |
-| NoSQL                       | [Amazon DynamoDB][aws-dynamodb]                    | [Azure Database for PostgreSQL][azure-postgresql]                                               |
+| **Service mapping** | **AWS service** | **Azure service** |
+|------------------------|-------------------|--------------------|
+| Web access firewall | [AWS Web Application Firewall (WAF)][aws-waf] | [Azure Web Application Firewall (WAF)][azure-waf] |
+| Application load balancing | [Application Load Balancer (ALB)][aws-alb] | [Azure Application Gateway][azure-ag]<br> [Application Gateway for Containers (AGC)][azure-agc] |
+| Content delivery network | [Amazon CloudFront][aws-cloudfront] | [Azure Front Door (AFD)][azure-fd] |
+| Orchestration | [Elastic Kubernetes Service (EKS)][aws-eks] | [Azure Kubernetes Service (AKS)][aks] |
+| Secrets vault | [AWS Key Management Service (KMS)][aws-kms] | [Azure Key Vault][azure-kv] |
+| Container registry | [Amazon Elastic Container Registry (ECR)][aws-ecr] | [Azure Container Registry (ACR)][azure-cr] |
+| Domain Name System (DNS) | [Amazon Route 53][aws-route53] | [Azure DNS][azure-dns] |
+| Caching | [Amazon ElastiCache][aws-cache] | [Azure Cache for Redis][azure-redis] |
+| NoSQL | [Amazon DynamoDB][aws-dynamodb] | [Azure Database for PostgreSQL][azure-postgresql] |
 
-For a comprehensive comparison between Azure and AWS services, you can refer to the [AWS to Azure services comparison][aws-to-azure] article by Microsoft. It provides in-depth analysis and insights into the features and capabilities of both cloud platforms.
+For a comprehensive comparison between Azure and AWS services, see [AWS to Azure services comparison][aws-to-azure].
 
 ### Architecture on Azure
 
