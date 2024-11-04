@@ -133,11 +133,11 @@ The message flow can be described as follows:
 - A [Kubernetes ingress][kubernetes-ingress] object utilizes the [NGINX ingress controller][nginx] to expose the application via HTTPS through the AKS internal load balancer.
 - The `yelb-ui` service has a ClusterIP type, which restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
 
-In order to ensure the security and stability of the system, it is important to consider the following recommendations:
+To help ensure the security and stability of the system, consider the following recommendations:
 
-- It is crucial to regularly update the Azure WAF Policy with the latest rules to ensure optimal security.
-- Monitoring and logging mechanisms should be implemented to track and analyze incoming requests and potential attacks.
-- Regular maintenance and updates of the AKS cluster, NGINX ingress controller, and Application Gateway are necessary to address any security vulnerabilities and maintain a secure infrastructure.
+- Regularly update the Azure WAF Policy with the latest rules to ensure optimal security.
+- Implement monitoring and logging mechanisms to track and analyze incoming requests and potential attacks.
+- Regularly perform maintenance and updates of the AKS cluster, NGINX ingress controller, and Application Gateway to address any security vulnerabilities and maintain a secure infrastructure.
 
 ### Hostname
 
