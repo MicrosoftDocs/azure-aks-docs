@@ -57,7 +57,7 @@ cd aws-to-azure-web-app-workshop
 code .
 ```
 
-## Next steps
+## Next step
 
 > [!div class="nextstepaction"]
 > [Understand platform differences][eks-edw-understand]
