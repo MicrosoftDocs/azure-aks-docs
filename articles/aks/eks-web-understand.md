@@ -8,26 +8,11 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ---
 
-# Understand Platform Differences for the Web Application Workload
+# Understand platform differences for the web application workload
 
-Before you migrate the sample web application to Azure, make sure to obtain a solid understanding of the operational differences between the AWS and Azure platforms. This article walks through some of the key concepts for this workload and provides links to resources for more information. For a comprehensive comparison between Azure and AWS services, you can refer to the [AWS to Azure services comparison][aws-to-azure] article by Microsoft. It provides in-depth analysis and insights into the features and capabilities of both cloud platforms.
+Before you migrate the sample web application to Azure, make sure you have a solid understanding of the operational differences between the AWS and Azure platforms.
 
-## Orchestration
-
-In recent years, Kubernetes became the de facto standard for container orchestration, enabling organizations to efficiently manage and scale their containerized applications. [Azure Kubernetes Service (AKS)][aks] and [Amazon Elastic Kubernetes Service (EKS)][aws-eks] are both fully managed Kubernetes services offered by Microsoft Azure and Amazon Web Services (AWS) respectively. Let's compare AKS and EKS along multiple dimensions.
-
-For more information, see:
-
-- [Migrate from Amazon EKS to Azure Kubernetes Service (AKS)](/azure/architecture/aws-professional/eks-to-aks/migrate-eks-to-aks)
-- [AKS for Amazon EKS professionals](/azure/architecture/aws-professional/eks-to-aks/)
-- [Identity and access management](/azure/architecture/aws-professional/eks-to-aks/workload-identity)
-- [Cluster logging and monitoring](/azure/architecture/aws-professional/eks-to-aks/monitoring)
-- [Secure network topologies](/azure/architecture/aws-professional/eks-to-aks/private-clusters)
-- [Storage options](/azure/architecture/aws-professional/eks-to-aks/storage)
-- [Cost optimization and management](/azure/architecture/aws-professional/eks-to-aks/cost-management)
-- [Agent node and node pool management](/azure/architecture/aws-professional/eks-to-aks/node-pools)
-- [Cluster governance](/azure/architecture/aws-professional/eks-to-aks/governance)
-- [Workload Migration](/azure/architecture/aws-professional/eks-to-aks/migrate-eks-to-aks)
+This article walks through some of the key concepts for this workload and provides links to resources for more information. For a comprehensive comparison between Azure and AWS services, see [AWS to Azure services comparison][aws-to-azure].
 
 ### Deployment
 
