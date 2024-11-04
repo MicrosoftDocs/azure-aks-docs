@@ -167,6 +167,19 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
                       - valkey
                   topologyKey: kubernetes.io/hostname
           containers:
+          - name: role-master-checker
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
+            command:
+              - "/bin/bash"
+              - "-c"
+            args:
+              [
+                "while true; do role=\$(valkey-cli --pass \$(cat /etc/valkey-password/valkey-password-file.conf | awk '{print \$2; exit}') role | awk '{print \$1; exit}');     if [ \"\$role\" = \"slave\" ]; then valkey-cli --pass \$(cat /etc/valkey-password/valkey-password-file.conf | awk '{print \$2; exit}') cluster failover; fi; sleep 30; done"
+              ]
+            volumeMounts:
+            - name: valkey-password
+              mountPath: /etc/valkey-password
+              readOnly: true
           - name: valkey
             image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
             env:
