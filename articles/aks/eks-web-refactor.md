@@ -28,16 +28,18 @@ In a real-world scenario, migrating a web application from AWS to Azure might re
 
 ## Migrating from AWS IAM to Azure RBAC
 
-If the web application on AWS utilizes an [AWS Identity and Access Management (IAM)][aws-iam] role for accessing managed services, the role needs to be assigned to [EKS][aws-eks] pods to grant access to AWS resources such as [Amazon Simple Storage Service (S3)][aws-s3]. In contrast, Azure implements [role-based access control (RBAC)][azure-rbac] differently from AWS. In Azure, you can assign a [role][azure-role-assignment] to users, groups, service principals, or managed identities at a specific scope: management group, subscription, resource group, or resource. This allows you to grant specific permissions to the workload identity on a Microsoft Entra protected resource. To achieve this, follow these steps:
+If the web application on AWS uses an [AWS Identity and Access Management (IAM)][aws-iam] role for accessing managed services, you need to assign the role to the [EKS][aws-eks] pods to grant access to AWS resources. In contrast, Azure implements [role-based access control (RBAC)][azure-rbac] differently than AWS. In Azure, you can assign a [role][azure-role-assignment] to users, groups, service principals, or managed identities at a specific scope: management group, subscription, resource group, or resource. This allows you to grant specific permissions to the workload identity on a Microsoft Entra protected resource.
 
-- Create a [user-assigned managed identity][azure-user-assigned-managed-identity] [Kubernetes service account][kubernetes-sa] for the workload.
-- Assign the necessary [roles][azure-role-assignment] to the managed identity to let the AKS-hosted workload access the required Microsoft Entra protected resources.
-- Enable the OpenID Connect issuer and Microsoft Entra Workload ID on your AKS cluster. For detailed instructions, refer to [Deploy and configure workload identity on an Azure Kubernetes Service (AKS) cluster][aks-oidc]
-- Create a token federation for the managed identity with the [Kubernetes service account][kubernetes-sa] used by the workload on AKS.
+You can configure Azure RBAC using the following steps:
 
-[Microsoft Entra Workload ID][entra] uses [Service Account Token Volume Projection][token-projection], specifically a service account, to enable pods to use a Kubernetes identity. A Kubernetes token is issued and [OIDC federation][oidc-federation] enables Kubernetes applications to access Azure resources securely with Microsoft Entra ID, based on annotated service accounts. 
+1. Create a [user-assigned managed identity][azure-user-assigned-managed-identity] and [Kubernetes service account][kubernetes-sa] for the workload.
+1. Assign the necessary [roles][azure-role-assignment] to the managed identity to let the AKS-hosted workload access the required Microsoft Entra protected resources.
+1. Enable the OpenID Connect (OIDC) issuer and Microsoft Entra Workload ID on your AKS cluster. For detailed instructions, see [Deploy and configure workload identity on an Azure Kubernetes Service (AKS) cluster][aks-oidc]
+1. Create a token federation for the managed identity with the [Kubernetes service account][kubernetes-sa] used by the workload on AKS.
 
-Microsoft Entra Workload ID works particularly well with the [Azure Identity client libraries][identity-libraries] or the [Microsoft Authentication Library][msal], along with [application registration][app-registration]. These libraries enable your workload to authenticate seamlessly and access Azure cloud resources. For more information, see [Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)][aks-workload-id].
+[Microsoft Entra Workload ID][entra] uses [Service Account Token Volume Projection][token-projection], specifically a service account, to enable pods to use a Kubernetes identity. A Kubernetes token is issued and [OIDC federation][oidc-federation] enables Kubernetes applications to securely access Azure resources with Microsoft Entra ID based on annotated service accounts. 
+
+Microsoft Entra Workload ID works well with the [Azure Identity client libraries][identity-libraries] or the [Microsoft Authentication Library][msal], along with [application registration][app-registration]. These libraries enable your workload to authenticate seamlessly and access Azure cloud resources. For more information, see [Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)][aks-workload-id].
 
 ## Next steps
 
