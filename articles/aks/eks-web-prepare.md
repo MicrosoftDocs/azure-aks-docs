@@ -12,7 +12,7 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Prepare to Deploy Web Application Workload to Azure
+# Prepare to deploy web application workload to Azure
 
 This article provides a comprehensive guide on how to deploy a robust and production-ready infrastructure to facilitate the hosting, protection, scaling, and monitoring of a web application on the Azure platform.
 
