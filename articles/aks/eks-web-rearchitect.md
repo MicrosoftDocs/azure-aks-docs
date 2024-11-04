@@ -86,26 +86,27 @@ For other configurations, see the following articles:
 
 The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azure/application-gateway/overview) resource deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. You can secure access to the Yelb application using [Azure Web Application Firewall (WAF)](/azure/web-application-firewall/overview), which provides centralized protection of web applications from common exploits and vulnerabilities. 
 
-The solution architecture is designed as follows:
+### Solution architecture design
 
-- The AKS cluster is deployed with the following features:
-  - Network Configuration: Azure CNI Overlay
-  - Network Dataplane: Cilium
-  - Network Policy: Cilium
-- The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
-- The Application Gateway Listener utilizes an SSL certificate obtained from [Azure Key Vault][azure-kv].
-- The Azure WAF Policy associated to the Listener is used to run OWASP rules and custom rules against the incoming request and block malicous attacks.
-- The Application Gateway Backend HTTP Settings are configured to invoke the Yelb application via HTTPS on port 443.
-- The Application Gateway Backend Pool and Health Probe are set to call the NGINX ingress controller through the AKS internal load balancer using HTTPS.
-- The NGINX ingress controller is deployed to use the AKS internal load balancer instead of the public one.
-- The Azure Kubernetes Service (AKS) cluster is configured with the [Azure Key Vault provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-driver) addonto retrieve secret, certificates, and keys from Azure Key Vault via a [CSI volume](https://kubernetes-csi.github.io/docs/).
-- A [SecretProviderClass](/azure/aks/hybrid/secrets-store-csi-driver)  is used to retrieve the same certificate used by the Application Gateway from Key Vault.
-- An [Kubernetes ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) object employs the NGINX ingress controller to expose the application via HTTPS through the AKS internal load balancer.
-- The Yelb service is of type ClusterIP, as it is exposed via the NGINX ingress controller.
+The solution architecture consists of the following components and configurations:
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https-detail.png" alt-text="Details of the solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
 
-For comprehensive instructions and resources to successfully deploy the [Yelb application][yelb] on [Azure Kubernetes Service (AKS)][aks] using this architecture, please refer to the companion [sample][azure-sample].
+- Network configuration: Azure CNI Overlay
+- Network data plane: Cilium
+- Network policy: Cilium
+- The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
+- The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
+- The Azure WAF Policy associated to the Listener runs OWASP rules and custom rules against the incoming requests and blocks malicious attacks.
+- The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTPS on port 443.
+- The Application Gateway Backend Pool and Health Probe call the NGINX ingress controller through the AKS internal load balancer using HTTPS.
+- The NGINX ingress controller uses the AKS internal load balancer.
+- The AKS cluster is configured with the [Azure Key Vault provider for Secrets Store CSI Driver add-on](/azure/aks/csi-secrets-store-driver) to retrieve secrets, certificates, and keys from Azure Key Vault via a [CSI volume](https://kubernetes-csi.github.io/docs/).
+- A [SecretProviderClass](/azure/aks/hybrid/secrets-store-csi-driver) retrieves the same certificate used by the Application Gateway from Azure Key Vault.
+- An [Kubernetes ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) object employs the NGINX ingress controller to expose the application via HTTPS through the AKS internal load balancer.
+- The Yelb service is of type `ClusterIP` and is exposed via the NGINX ingress controller.
+
+For comprehensive instructions on deploying the [Yelb application][yelb] on AKS using this architecture, see the [companion sample][azure-sample].
 
 ## Alternative Solutions
 
