@@ -109,30 +109,20 @@ The solution architecture consists of the following components and configuration
 For comprehensive instructions on deploying the [Yelb application][yelb] on AKS using this architecture, see the [companion sample][azure-sample].
 
 ## Alternative solutions
-
 Azure offers several options for deploying a web application on an AKS cluster and securing it with a web application firewall:
 
-- [Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)](#rearchitect-aws-eks-web-application-for-azure-kubernetes-service-aks)
-  - [Yelb application architecture](#yelb-application-architecture)
-  - [Architecture on AWS](#architecture-on-aws)
-  - [Map AWS services to Azure services](#map-aws-services-to-azure-services)
-  - [Architecture on Azure](#architecture-on-azure)
-    - [Solution architecture design](#solution-architecture-design)
-  - [Alternative solutions](#alternative-solutions)
-    - [Use Application Gateway Ingress Controller](#use-application-gateway-ingress-controller)
-    - [Use Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
-      - [Key features](#key-features)
-      - [Limitations](#limitations)
-    - [Use Azure Front Door](#use-azure-front-door)
-    - [Use NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
-  - [Next step](#next-step)
-  - [Contributors](#contributors)
+- [Application Gateway Ingress Controller](#use-azure-application-gateway-ingress-controller)
+- [Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
+- [Azure Front Door](#use-azure-front-door)
+- [NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
 
 ### Use Application Gateway Ingress Controller
 
 The [Application Gateway Ingress Controller (AGIC)](/azure/application-gateway/ingress-controller-overview) is a Kubernetes application, which makes it possible for [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/services/kubernetes-service/) customers to leverage Azure's native [Application Gateway](https://azure.microsoft.com/services/application-gateway/) L7 load-balancer to expose cloud software to the Internet. AGIC monitors the Kubernetes cluster it's hosted on and continuously updates an Application Gateway, so that selected services are exposed to the Internet.
 
 ![Use Application Gateway Ingress Controller and Azure WAF Policy](../images/application-gateway-ingress-controller-aks-http.png)
+
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-ingress-controller-aks-http.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway Ingress Controller.":::
 
 The Ingress Controller runs in its own pod on the customer's AKS. AGIC monitors a subset of Kubernetes Resources for changes. The state of the AKS cluster is translated to Application Gateway specific configuration and applied to the [Azure Resource Manager (ARM)](/azure/azure-resource-manager/management/overview). For more information, see [What is Application Gateway Ingress Controller?](/azure/application-gateway/ingress-controller-overview). The Application Gateway Ingress Controller (AGIC) offers the following advantages.
 

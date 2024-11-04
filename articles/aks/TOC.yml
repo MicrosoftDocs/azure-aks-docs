@@ -1002,6 +1002,20 @@
           href: eks-edw-prepare.md
         - name: Deploy to Azure
           href: eks-edw-deploy.md
+      - name: Migrate EKS web application workloads
+        items:
+        - name: Overview
+          href: eks-web-overview.md
+        - name: Understand platform differences
+          href: eks-web-understand.md
+        - name: Rearchitect for AKS
+          href: eks-web-rearchitect.md
+        - name: Refactor app
+          href: eks-web-refactor.md
+        - name: Prepare for deployment
+          href: eks-web-prepare.md
+        - name: Deploy to Azure
+          href: eks-web-deploy.md
 - name: FAQ
   href: faq.yml
 - name: Reference
