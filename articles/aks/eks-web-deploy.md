@@ -412,43 +412,38 @@ fi
 
 ## Test the application
 
-You can use the `05-call-yelb-ui.sh` script to invoke the `yelb-ui` service, simulate SQL injection, XSS attacks, and observe how the managed rule set of ModSecurity blocks malicious requests.
+- Use the `05-call-yelb-ui.sh` script to invoke the `yelb-ui` service, simulate SQL injection, XSS attacks, and observe how the managed rule set of ModSecurity blocks malicious requests.
 
-```bash
-#!/bin/bash
+    ```bash
+    #!/bin/bash
+    # Variables
+    source ./00-variables.sh
+    # Call REST API
+    echo "Calling Yelb UI service at $URL..."
+    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL
+    # Simulate SQL injection
+    echo "Simulating SQL injection when calling $URL..."
+    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleSQLInjection%27%20--
+    # Simulate XSS
+    echo "Simulating XSS when calling $URL..."
+    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleXSS%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E
+    # A custom rule blocks any request with the word blockme in the querystring.
+    echo "Simulating query string manipulation with the 'blockme' word in the query string..."
+    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users?task=blockme
+    ```
 
-# Variables
-source ./00-variables.sh
+    The Bash script should produce the following output, where the first call succeeds, while ModSecurity rules block the following two calls:
 
-# Call REST API
-echo "Calling Yelb UI service at $URL..."
-curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL
-
-# Simulate SQL injection
-echo "Simulating SQL injection when calling $URL..."
-curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleSQLInjection%27%20--
-
-# Simulate XSS
-echo "Simulating XSS when calling $URL..."
-curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleXSS%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E
-
-# A custom rule blocks any request with the word blockme in the querystring.
-echo "Simulating query string manipulation with the 'blockme' word in the query string..."
-curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users?task=blockme
-```
-
-The Bash script should produce the following output, where the first call succeeds, while ModSecurity rules block the following two calls.
-
-```Bash
-Calling Yelb UI service at https://yelb.contoso.com...
-HTTP Status: 200
-Simulating SQL injection when calling https://yelb.contoso.com...
-HTTP Status: 403
-Simulating XSS when calling https://yelb.contoso.com...
-HTTP Status: 403
-Simulating query string manipulation with the 'blockme' word in the query string...
-HTTP Status: 403
-```
+    ```output
+    Calling Yelb UI service at https://yelb.contoso.com...
+    HTTP Status: 200
+    Simulating SQL injection when calling https://yelb.contoso.com...
+    HTTP Status: 403
+    Simulating XSS when calling https://yelb.contoso.com...
+    HTTP Status: 403
+    Simulating query string manipulation with the 'blockme' word in the query string...
+    HTTP Status: 403
+    ```
 
 ## Monitoring
 
