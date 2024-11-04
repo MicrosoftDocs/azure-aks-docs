@@ -16,19 +16,19 @@ ms.custom:
 
 Now that you gained an understanding of the platform differences between AWS and Azure that are relevant to this workload, let's examine the web application architecture and the necessary modifications to make it compatible with [Azure Kubernetes Service (AKS)][aks].
 
-## Yelb Application
+## Yelb application architecture
 
-The current architecture layout of the [Yelb][yelb] sample web application consists of a front-end component called `yelb-ui` and an application component called `yelb-appserver`.
+The [Yelb][yelb] sample web application consists of a front-end component called `yelb-ui` and an application component called `yelb-appserver`.
 
 :::image type="content" source="media/eks-web-rearchitect/yelb-architecture.png" alt-text="Architecture diagram of the Yel web application.":::
 
-The `yelb-ui` is responsible for serving the JavaScript code to the browser. This code is compiled from an [Angular][angular] application. The `yelb-ui` component may also include an `nginx` proxy, depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres backend database (`yelb-db`). [Redis Cache][redis-cache] is used to store the number of page views, while [PostgreSQL][postgresql] is used to persist the votes. Both services are deployed on [Kubernetes][kubernetes], without utilizing any managed service for storing data on AWS or Azure. Since the original Yelb application is self-contained and does not rely on external services, migrating it from AWS to Azure can be done without any code changes. On AWS, [Amazon ElastiCache][aws-cache] and [DynamoDB][aws-dynamodb] can be used as replacements for the Redis Cache and PostgreSQL instances deployed on [Amazon Elastic Kubernetes Service (EKS)][aws-eks]. On Azure, [Azure Cache for Redis][azure-redis] and [Azure Database for PostgreSQL][azure-postgresql] can be used as replacements for the Redis Cache and PostgreSQL services deployed on [Azure Kubernetes Service (AKS)][aks].
+The `yelb-ui` is responsible for serving the JavaScript code to the browser. This code is compiled from an [Angular][angular] application. The `yelb-ui` component might also include an `nginx` proxy, depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres backend database (`yelb-db`). [Redis Cache][redis-cache] stores the number of page views, while [PostgreSQL][postgresql] persists the votes. Both services are deployed on [Kubernetes][kubernetes] without using any managed service for storing data on AWS or Azure.
 
-Yelb allows users to vote on a set of alternatives (restaurants) and dynamically updates pie charts based on the number of votes received. 
+Since the original Yelb application is self-contained and doesn't rely on external services, you can migrate it from AWS to Azure without any code changes. On AWS, you can use [Amazon ElastiCache][aws-cache] and [DynamoDB][aws-dynamodb] as replacements for the Redis Cache and PostgreSQL instances deployed on [EKS][aws-eks]. On Azure, you can use [Azure Cache for Redis][azure-redis] and [Azure Database for PostgreSQL][azure-postgresql] as replacements for the Redis Cache and PostgreSQL services deployed on [AKS][aks].
+
+The sample Yelb application allows users to vote on a set of alternatives (restaurants) and dynamically updates pie charts based on the number of votes received. The application also keeps track of the number of page views and displays the hostname of the `yelb-appserver` instance serving the API request upon a vote or a page refresh. This feature allows enables you to demo the application independently or collaboratively.
 
 :::image type="content" source="media/eks-web-rearchitect/yelb-ui.png" alt-text="Screenshot of the Yelb service interface.":::
-
-The sample web application also keeps track of the number of page views and displays the hostname of the `yelb-appserver` instance serving the API request upon a vote or a page refresh. This feature allows individuals to demo the application solo or involve others in interacting with the application.
 
 ## Architecture on AWS
 
