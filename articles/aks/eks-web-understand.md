@@ -98,8 +98,20 @@ Azure Web Application Firewall (WAF) monitoring and logging are provided through
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Prepare to Deploy Web Application Workload to Azure][eks-web-rearchitect]
+> [Prepare to deploy web application workload to Azure][eks-web-rearchitect]
 
+For more information about the differences between AKS and EKS, see the following articles:
+
+- [Migrate from Amazon EKS to Azure Kubernetes Service (AKS)](/azure/architecture/aws-professional/eks-to-aks/migrate-eks-to-aks)
+- [AKS for Amazon EKS professionals](/azure/architecture/aws-professional/eks-to-aks/)
+- [Identity and access management](/azure/architecture/aws-professional/eks-to-aks/workload-identity)
+- [Cluster logging and monitoring](/azure/architecture/aws-professional/eks-to-aks/monitoring)
+- [Secure network topologies](/azure/architecture/aws-professional/eks-to-aks/private-clusters)
+- [Storage options](/azure/architecture/aws-professional/eks-to-aks/storage)
+- [Cost optimization and management](/azure/architecture/aws-professional/eks-to-aks/cost-management)
+- [Agent node and node pool management](/azure/architecture/aws-professional/eks-to-aks/node-pools)
+- [Cluster governance](/azure/architecture/aws-professional/eks-to-aks/governance)
+- [Workload migration](/azure/architecture/aws-professional/eks-to-aks/migrate-eks-to-aks)
 ## Contributors
 
 *This article is maintained by Microsoft. It was originally written by the following contributors*:
