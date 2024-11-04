@@ -41,10 +41,10 @@ You can configure Azure RBAC using the following steps:
 
 Microsoft Entra Workload ID works well with the [Azure Identity client libraries][identity-libraries] or the [Microsoft Authentication Library][msal], along with [application registration][app-registration]. These libraries enable your workload to authenticate seamlessly and access Azure cloud resources. For more information, see [Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)][aks-workload-id].
 
-## Next steps
+## Next step
 
 > [!div class="nextstepaction"]
-> [Prepare to Deploy Web Application Workload to Azure][eks-web-prepare]
+> [Prepare to deploy web application workload to Azure][eks-web-prepare]
 
 ## Contributors
 
