@@ -141,15 +141,15 @@ To help ensure the security and stability of the system, consider the following 
 
 ### Hostname
 
-The Application Gateway Listener and the [Kubernetes ingress][kubernetes-ingress] are configured to use the same hostname. Here are the reasons why it is important to use the same hostname for a service proxy and a backend web application:
+The Application Gateway Listener and the [Kubernetes ingress][kubernetes-ingress] are configured to use the same hostname. It's important to use the same hostname for a service proxy and a backend web application for the following reasons:
 
-- **Preservation of Session State**: When a different hostname is used between the proxy and the backend application, session state can get lost. This means that user sessions may not persist properly, resulting in a poor user experience and potential loss of data.
-- **Authentication Failure**: If the hostname differs between the proxy and the backend application, authentication mechanisms may fail. This approach can lead to users being unable to log in or access secure resources within the application.
-- **Inadvertent Exposure of URLs**: If the hostname is not preserved, there is a risk that backend URLs may be exposed to end users. This can lead to potential security vulnerabilities and unauthorized access to sensitive information.
-- **Cookie Issues**: Cookies play a crucial role in maintaining user sessions and passing information between the client and the server. When the hostname differs, cookies may not work as expected, leading to issues such as failed authentication, improper session handling, and incorrect redirection.
-- **End-to-End TLS/SSL Requirements**: If end-to-end TLS/SSL is required for secure communication between the proxy and the backend service, a matching TLS certificate for the original hostname is necessary. Using the same hostname simplifies the certificate management process and ensures that secure communication is established seamlessly.
+- **Preservation of session state**: When you use a different hostname for the proxy and the backend application, session state can get lost. This means that user sessions might not persist properly, resulting in a poor user experience and potential loss of data.
+- **Authentication failure**: If the hostname differs between the proxy and the backend application, authentication mechanisms might fail. This approach can lead to users being unable to log in or access secure resources within the application.
+- **Inadvertent exposure of URLs**: If the hostname isn't preserved, there's a risk that backend URLs might be exposed to end users. This can lead to potential security vulnerabilities and unauthorized access to sensitive information.
+- **Cookie issues**: Cookies play a crucial role in maintaining user sessions and passing information between the client and the server. When the hostname differs, cookies might not work as expected, leading to issues such as failed authentication, improper session handling, and incorrect redirection.
+- **End-to-end TLS/SSL requirements**: If end-to-end TLS/SSL is required for secure communication between the proxy and the backend service, a matching TLS certificate for the original hostname is necessary. Using the same hostname simplifies the certificate management process and ensures that secure communication is established seamlessly.
 
-You can avoid these problems if you adopt the same hostname for the service proxy and the backend web application. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling are all functioning correctly. This technique is especially important in platform as a service (PaaS) offerings, where the complexity of certificate management can be reduced by utilizing the managed TLS certificates provided by the PaaS service. 
+You can avoid these problems by using the same hostname for the service proxy and the backend web application. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling function correctly. This technique is especially important in platform as a service (PaaS) offerings, where you can reduce the complexity of certificate management by using the managed TLS certificates provided by the PaaS service. 
 
 ### Message Flow
 
