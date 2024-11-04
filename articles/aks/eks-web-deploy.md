@@ -85,50 +85,52 @@ If you want to deploy the sample using the [Implementing end-to-end TLS using Az
 
 In the remaining sections of this article, we guide you through the deployment process of the sample application using the end-to-end TLS approach.
 
-```bash
-# Azure Subscription and Tenant
-RESOURCE_GROUP_NAME="<aks-resource-group>"
-SUBSCRIPTION_ID=$(az account show --query id --output tsv)
-SUBSCRIPTION_NAME=$(az account show --query name --output tsv)
-TENANT_ID=$(az account show --query tenantId --output tsv)
-AKS_CLUSTER_NAME="<aks-name>"
-AGW_NAME="<application-gateway-name>"
-AGW_PUBLIC_IP_NAME="<application-gateway-public-ip-name>"
-DNS_ZONE_NAME="<your-azure-dns-zone-name-eg-contoso.com>"
-DNS_ZONE_RESOURCE_GROUP_NAME="<your-azure-dns-zone-resource-group-name>"
-DNS_ZONE_SUBSCRIPTION_ID='<your-azure-dns-zone-subscription-id>'
 
-# NGINX Ingress Controller installed via Helm
-NGINX_NAMESPACE="ingress-basic"
-NGINX_REPO_NAME="ingress-nginx"
-NGINX_REPO_URL="https://kubernetes.github.io/ingress-nginx"
-NGINX_CHART_NAME="ingress-nginx"
-NGINX_RELEASE_NAME="ingress-nginx"
-NGINX_REPLICA_COUNT=3
+### Prepare your environment
 
-# Specify the ingress class name for the ingress controller.
-# - nginx: unmanaged NGINX ingress controller installed via Helm
-# - webapprouting.kubernetes.azure.com: managed NGINX ingress controller installed via AKS application routing add-on
-INGRESS_CLASS_NAME="webapprouting.kubernetes.azure.com"
+#### Customize variables
 
-# Subdomain of the Yelb UI service
-SUBDOMAIN="<yelb-application-subdomain>"
+* Before running any scripts, you need to customize the values of the variables in the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
 
-# URL of the Yelb UI service
-URL="https://$SUBDOMAIN.$DNS_ZONE_NAME"
-
-# Secret Provider Class
-KEY_VAULT_NAME="<key-vault-name>"
-KEY_VAULT_CERTIFICATE_NAME="<key-vault-resource-group-name>"
-KEY_VAULT_SECRET_PROVIDER_IDENTITY_CLIENT_ID="<key-vault-secret-provider-identity-client-id>"
-TLS_SECRET_NAME="yelb-tls-secret"
-NAMESPACE="yelb"
-```
-
-Make sure to properly set a value for each variable, and in particular to set `INGRESS_CLASS_NAME` to one of the following values:
-
-- `webapprouting.kubernetes.azure.com` if you installed the NGINX Ingress Controller via the [application routing add-on for AKS][aks-app-routing-addon].
-- `nginx` if you installed the NGINX Ingress Controller via [Helm](https://helm.sh/).
+    ```bash
+    # Azure subscription and tenant
+    RESOURCE_GROUP_NAME="<aks-resource-group>"
+    SUBSCRIPTION_ID="$(az account show --query id --output tsv)"
+    SUBSCRIPTION_NAME="$(az account show --query name --output tsv)"
+    TENANT_ID="$(az account show --query tenantId --output tsv)"
+    AKS_CLUSTER_NAME="<aks-name>"
+    AGW_NAME="<application-gateway-name>"
+    AGW_PUBLIC_IP_NAME="<application-gateway-public-ip-name>"
+    DNS_ZONE_NAME="<your-azure-dns-zone-name-eg-contoso.com>"
+    DNS_ZONE_RESOURCE_GROUP_NAME="<your-azure-dns-zone-resource-group-name>"
+    DNS_ZONE_SUBSCRIPTION_ID="<your-azure-dns-zone-subscription-id>"
+    
+    # NGINX Ingress Controller installed via Helm
+    NGINX_NAMESPACE="ingress-basic"
+    NGINX_REPO_NAME="ingress-nginx"
+    NGINX_REPO_URL="https://kubernetes.github.io/ingress-nginx"
+    NGINX_CHART_NAME="ingress-nginx"
+    NGINX_RELEASE_NAME="ingress-nginx"
+    NGINX_REPLICA_COUNT=3
+    
+    # Specify the ingress class name for the ingress controller
+    # - nginx: Unmanaged NGINX ingress controller installed via Helm
+    # - webapprouting.kubernetes.azure.com: Managed NGINX ingress controller installed via AKS application routing add-on
+    INGRESS_CLASS_NAME="webapprouting.kubernetes.azure.com"
+    
+    # Subdomain of the Yelb UI service
+    SUBDOMAIN="<yelb-application-subdomain>"
+    
+    # URL of the Yelb UI service
+    URL="https://$SUBDOMAIN.$DNS_ZONE_NAME"
+    
+    # Secret provider class
+    KEY_VAULT_NAME="<key-vault-name>"
+    KEY_VAULT_CERTIFICATE_NAME="<key-vault-resource-group-name>"
+    KEY_VAULT_SECRET_PROVIDER_IDENTITY_CLIENT_ID="<key-vault-secret-provider-identity-client-id>"
+    TLS_SECRET_NAME="yelb-tls-secret"
+    NAMESPACE="yelb"
+    ```
 
 You can run the following [az aks show](/cli/azure/aks?#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress][kubernetes-ingress] used to expose the `yelb-ui` service via the [NGINX ingress controller][nginx].
 
