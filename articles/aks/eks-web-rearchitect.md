@@ -118,26 +118,30 @@ Azure offers several options for deploying a web application on an AKS cluster a
 
 ### Use Azure Application Gateway for Containers
 
-This solution uses the cutting-edge [Application Gateway for Containers][azure-agc], a new Azure service that provides load balancing and dynamic traffic management for applications in a Kubernetes cluster.
+[Azure Application Gateway for Containers][azure-agc] provides load balancing and dynamic traffic management for applications in Kubernetes clusters.
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-for-containers-aks.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway for Containers.":::
 
-This innovative product enhances the experience for developers and administrators as part of Azure's Application Load Balancing portfolio. It builds upon the capabilities of the [Application Gateway Ingress Controller (AGIC)][agic] and allows Azure Kubernetes Service (AKS) customers to utilize Azure's native Application Gateway load balancer. This guide walks you through deploying an [Azure Kubernetes Service (AKS)][aks] cluster with an [Application Gateway for Containers][azure-agc] in a fully-automated manner, supporting both bring your own (BYO) and managed by ALB deployments. The [Application Gateway for Containers][azure-agc] offers several features:
+#### Key features
 
-- [Load Balancing](/azure/application-gateway/for-containers/overview#load-balancing-features): Efficiently distributes incoming traffic across multiple containers for optimal performance and scalability.
-- [Gateway API Implementation](/azure/application-gateway/for-containers/overview#implementation-of-gateway-api): Supports the Gateway API, allowing you to define routing rules and policies in a Kubernetes-native way.
-- [Custom Health Probe](/azure/application-gateway/for-containers/custom-health-probe): Define custom health probes to monitor container health and automatically route traffic away from unhealthy instances.
-- [Session Affinity](/azure/application-gateway/for-containers/session-affinity?tabs=session-affinity-gateway-api): Provides session affinity, routing subsequent requests from the same client to the same container for a consistent user experience.
-- [TLS Policy](/azure/application-gateway/for-containers/tls-policy?tabs=tls-policy-gateway-api): Supports TLS termination, allowing SSL/TLS encryption and decryption to be offloaded to the gateway.
-- Header Rewrites: Rewrite HTTP headers of client requests and responses from backend targets using the `IngressExtension` custom resource definition. Learn more about [Ingress API](/azure/application-gateway/for-containers/how-to-header-rewrite-ingress-api) and [Gateway API](/azure/application-gateway/for-containers/how-to-header-rewrite-gateway-api).
-- URL Rewrites: Modify the URL of client requests, including hostname and/or path, and include the newly rewritten URL when initiating requests to backend targets. Find more information on [Ingress API](/azure/application-gateway/for-containers/how-to-url-rewrite-ingress-api) and [Gateway API](/azure/application-gateway/for-containers/how-to-url-rewrite-gateway-api).
+Azure Application Gateway for Containers builds upon the capabilities of [Application Gateway Ingress Controller (AGIC)][agic] and allows you to use Azure's native Application Gateway load balancer. Key features include:
 
-However, at this time, the Azure Application Gateway for Containers has some limitations. For example, the following features are not currently supported:
+- [**Load balancing**](/azure/application-gateway/for-containers/overview#load-balancing-features): Efficiently distributes incoming traffic across multiple containers for optimal performance and scalability.
+- [**Gateway API implementation**](/azure/application-gateway/for-containers/overview#implementation-of-gateway-api): Supports the Gateway API, allowing you to define routing rules and policies in a Kubernetes-native way.
+- [**Custom health probes**](/azure/application-gateway/for-containers/custom-health-probe): Define custom health probes to monitor container health and automatically route traffic away from unhealthy instances.
+- [**Session affinity**](/azure/application-gateway/for-containers/session-affinity?tabs=session-affinity-gateway-api): Provides session affinity, routing subsequent requests from the same client to the same container for a consistent user experience.
+- [**TLS policy**](/azure/application-gateway/for-containers/tls-policy?tabs=tls-policy-gateway-api): Supports TLS termination, allowing SSL/TLS encryption and decryption to be offloaded to the gateway.
+- **Header rewrites**: Rewrite HTTP headers of client requests and responses from backend targets using the `IngressExtension` custom resource definition. For more information, see [Ingress API](/azure/application-gateway/for-containers/how-to-header-rewrite-ingress-api) and [Gateway API](/azure/application-gateway/for-containers/how-to-header-rewrite-gateway-api).
+- **URL rewrites**: Modify the URL of client requests, including hostname and/or path, and include the newly rewritten URL when initiating requests to backend targets. For more information, see [Ingress API](/azure/application-gateway/for-containers/how-to-url-rewrite-ingress-api) and [Gateway API](/azure/application-gateway/for-containers/how-to-url-rewrite-gateway-api).
+
+#### Limitations
+
+Currently, Azure Application Gateway for Containers doesn't support the following features:
 
 - [Azure Web Application Firewall](/azure/application-gateway/waf-overview)
 - [Azure CNI Overlay](/azure/aks/azure-cni-overlay)
 - [WebSockets](https://datatracker.ietf.org/doc/html/rfc6455)
-- Private Frontends
+- Private front ends
 
 For more information, see [Deploying an Azure Kubernetes Service (AKS) Cluster with Application Gateway for Containers](https://techcommunity.microsoft.com/t5/fasttrack-for-azure/deploying-an-azure-kubernetes-service-aks-cluster-with/ba-p/3967434).
 
