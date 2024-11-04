@@ -64,12 +64,14 @@ code .
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 - Dixit Arora | Senior Customer Engineer
-- Paolo Salvatori | Principal Customer Engineer
+- [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
 - Ken Kilty | Principal TPM
 - Russell de Pina | Principal TPM
+- Erin Schaffer | Content Developer 2
+- Carol Smith | Senior Content Developer
 
 <!-- LINKS -->
 [yelb]: https://github.com/mreferre/yelb/
