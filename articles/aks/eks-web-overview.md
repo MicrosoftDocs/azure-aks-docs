@@ -1,5 +1,5 @@
 ---
-title: Replicate an AWS Web Application with AWS WAF in Azure Kubernetes Service (AKS)
+title: Replicate an AWS web application with AWS WAF in Azure Kubernetes Service (AKS)
 description: Learn how to replicate an AWS web application protected by AWS WAF in Azure Kubernetes Service (AKS).
 author: DixitArora-MSFT
 ms.author: dixitaro
