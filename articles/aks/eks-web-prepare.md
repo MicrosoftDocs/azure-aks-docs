@@ -948,10 +948,10 @@ As you can note, when `$deployNginxIngressControllerViaHelm == 'Internal'`, the 
 
 The script creates a [ClusterIssuer](https://cert-manager.io/docs/concepts/issuer/) for the `Let's Encrypt` ACME certificate authority for each cluster issuer and ingress class specified, respectively, in the `ingressClassNames` and `clusterIssuerNames` environment variables. However, in this sample, the [Kubernetes Ingress][kubernetes-ingress] object uses the same certificate as the one used by the Application Gateway from Key Vault.
 
-## Next steps
+## Next step
 
 > [!div class="nextstepaction"]
-> [Deploy an AWS Web Application Workload to Azure][eks-web-deploy]
+> [Deploy an AWS web application workload to Azure][eks-web-deploy]
 
 ## Contributors
 
