@@ -1,5 +1,5 @@
 ---
-title: Deploy an AWS Web Application to Azure
+title: Deploy an AWS web application to Azure
 description: Learn how to deploy an AWS web application to Azure and validate your deployment.
 author: paolosalvatori
 ms.author: paolos
