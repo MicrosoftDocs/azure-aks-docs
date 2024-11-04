@@ -170,19 +170,25 @@ The following diagram shows the steps for the message flow during deployment tim
 
 #### Deployment workflow
 
-The following steps describe the deployment process. This workflow corresponds to the green numbers in the preceding diagram.
+The following steps describe the deployment process:
 
-1. A security engineer generates a certificate for the custom domain that the workload uses, and saves it in an Azure Key Vault. You can obtain a valid certificate from a well-known [certification authority (CA)](https://en.wikipedia.org/wiki/Certificate_authority).
-2. A platform engineer specifies the necessary information in the parameters and deploys the infrastructure using an Infrastructure as Code (IaC) technology such as Terraform or Bicep. The necessary information includes:
-   - A prefix for the Azure resources.
-   - The name and resource group of the existing Azure Key Vault that holds the TLS certificate for the workload hostname and the Azure Front Door custom domain.
-   - The name of the certificate in the key vault.
-   - The name and resource group of the DNS zone that's used to resolve the Azure Front Door custom domain.
-3. You can use a [deployment script](/azure/azure-resource-manager/bicep/deployment-script-bicep) to install the following packages to your AKS cluster. For more information, check the parameters section of the Bicep module:
-   - [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/) using the [Prometheus Community Kubernetes Helm Charts](https://prometheus-community.github.io/helm-charts/). By default, this sample configuration does not install Prometheus and Grafana to the AKS cluster, and rather installs [Azure Managed Prometheus](/azure/azure-monitor/essentials/azure-monitor-workspace-overview) and [Azure Managed Grafana](/azure/managed-grafana/overview).
-   - [cert-manager](https://cert-manager.io/docs/). Certificate Manager is not necessary in this sample as both the Application Gateway and NGINX Ingress Controller use a pre-uploaded TLS certificate from Azure Key Vault.
-   - [NGINX Ingress Controller][nginx] via an Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on](/azure/aks/app-routing), you don't need to install another instance of the NGINX Ingress Controller via Helm.
-4. An Azure front door [secret resource](/azure/templates/microsoft.cdn/profiles/secrets) is used to manage and store the TLS certificate in the Azure key vault. This certificate is used by the [custom domain](/azure/templates/microsoft.cdn/profiles/customdomains) associated with the Azure Front Door endpoint.
+*This workflow corresponds to the green numbers in the preceding diagram.*
+
+1. A security engineer generates a certificate for the custom domain that the workload uses and saves it in an Azure Key Vault. You can obtain a valid certificate from a well-known [certification authority (CA)](https://en.wikipedia.org/wiki/Certificate_authority).
+1. A platform engineer specifies the necessary information in the parameters and deploys the infrastructure using an Infrastructure as Code (IaC) technology such as Terraform or Bicep. The necessary information includes:
+
+    - A prefix for the Azure resources.
+    - The name and resource group of the existing Azure Key Vault that holds the TLS certificate for the workload hostname and the Azure Front Door custom domain.
+    - The name of the certificate in the key vault.
+    - The name and resource group of the DNS zone that's used to resolve the Azure Front Door custom domain.
+
+1. You can use a [deployment script](/azure/azure-resource-manager/bicep/deployment-script-bicep) to install the following packages to your AKS cluster. For more information, check the parameters section of the Bicep module.
+
+    - [Prometheus](https://prometheus.io/) and [Grafana](https://grafana.com/) using the [Prometheus Community Kubernetes Helm Charts](https://prometheus-community.github.io/helm-charts/). By default, this sample configuration doesn't install Prometheus and Grafana to the AKS cluster. Instead, it installs [Azure Managed Prometheus](/azure/azure-monitor/essentials/azure-monitor-workspace-overview) and [Azure Managed Grafana](/azure/managed-grafana/overview).
+    - [cert-manager](https://cert-manager.io/docs/). Certificate Manager isn't necessary in this sample, as both the Application Gateway and NGINX Ingress Controller use a pre-uploaded TLS certificate from Azure Key Vault.
+    - [NGINX Ingress Controller][nginx] via an Helm chart. If you use the [managed NGINX ingress controller with the application routing add-on](/azure/aks/app-routing), you don't need to install another instance of the NGINX Ingress Controller via Helm.
+
+1. An Azure Front Door [secret resource](/azure/templates/microsoft.cdn/profiles/secrets) to manage and store the TLS certificate in the Azure key vault. This certificate is used by the [custom domain](/azure/templates/microsoft.cdn/profiles/customdomains) associated with the Azure Front Door endpoint.
 
 > [!NOTE]
 > At the end of the deployment, you need to approve the private endpoint connection before traffic can pass to the origin privately. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link). To approve private endpoint connections, use the Azure portal, the Azure CLI, or Azure PowerShell. For more information, see [Manage a private endpoint connection](/azure/private-link/manage-private-endpoint).
