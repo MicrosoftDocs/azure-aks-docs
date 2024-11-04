@@ -222,9 +222,6 @@ Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-
 
 The cloud-agnostic nature of this solution allows multi-cloud customers to deploy and configure their web applications consistently across different cloud platforms without significant modifications. It provides flexibility and portability, enabling you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
 
-## Conclusions
-
-In conclusion, there are multiple architectures available on Azure to deploy and protect the [Yelb][yelb] application on [Azure Kubernetes Service (AKS)][aks]. These solutions include using [Azure Web Application Firewall (WAF)][azure-waf] with [Azure Application Gateway][azure-ag] or [Azure Front Door][azure-fd], or using the open-source web access firewall [ModSecurity][mod-security] with the [NGINX ingress controller][nginx], or using the cutting-edge [Application Gateway for Containers][azure-agc]. Each of these solutions offers its own set of features and benefits, allowing you to choose the one that best suits your requirements. Whether you need regional load balancing, integrated WAF protection, or a cloud-agnostic approach, Azure provides the necessary tools and services to securely deploy and protect your Yelb application.
 
 ## Next steps
 
