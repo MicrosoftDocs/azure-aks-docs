@@ -61,26 +61,24 @@ This sample provides a collection of [Bicep][bicep] templates, Bash scripts, and
 
 This sample also includes two separate Bicep parameter files and two sets of Bash scripts and YAML manifests, each geared towards deploying two different solution options. For more information on Bicep, see [What is Bicep?](/azure/azure-resource-manager/bicep/overview)
 
-## TLS Termination at Application Gateway and Yelb Invocation via HTTP
+## TLS termination at the Application Gateway and Yelb invocation via HTTP
 
-In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures the security of the system by blocking malicious attacks. The [Azure Application Gateway][azure-ag] plays a crucial role in the architecture by receiving incoming calls from client applications, performing TLS termination, and forwarding the requests to the AKS-hosted `yelb-ui` service. This communication is achieved through the internal load balancer and NGINX Ingress controller, using the HTTP transport protocol. The following diagram illustrates the architecture:
+In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures the security of the system by blocking malicious attacks. The [Azure Application Gateway][azure-ag] receives incoming calls from client applications, performs TLS termination, and forwards the requests to the AKS-hosted `yelb-ui` service. This communication is achieved through the internal load balancer and NGINX Ingress controller using the HTTP transport protocol. The following diagram illustrates the architecture:
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-http.png" alt-text="Architecture diagram of the solution based on Application Gateway WAFv2 and NGINX Ingress controller via HTTP.":::
 
-The message flow can be described as follows:
-
-- The [Azure Application Gateway][azure-ag] takes care of TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
-- To ensure secure communication, the Application Gateway Listener makes use of an SSL certificate obtained from [Azure Key Vault][azure-kv].
-- The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing malicious attacks.
-- The Application Gateway Backend HTTP Settings are configured to invoke the Yelb application via HTTP, utilizing port 80.
-- To manage traffic, the Application Gateway Backend Pool and Health Probe are set to call the [NGINX ingress controller][nginx] through the AKS internal load balancer using the HTTP protocol.
-- The [NGINX ingress controller][nginx] is deployed to utilize the AKS internal load balancer instead of the public one, ensuring secure communication within the cluster.
-- To expose the application via HTTP through the AKS internal load balancer, a [Kubernetes ingress][kubernetes-ingress] object makes use of the [NGINX ingress controller][nginx].
-- The `yelb-ui` service has a ClusterIP type, which restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
-
-The following diagram illustrates the message flow in further detail:
+The message flow is as follows:
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-http-detail.png" alt-text="Details of the solution based on Application Gateway WAFv2 and NGINX Ingress controller via HTTP.":::
+
+- The [Azure Application Gateway][azure-ag] handles TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
+- The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv] to ensure secure communication.
+- The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing malicious attacks.
+- The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTP using port 80.
+- The Application Gateway Backend Pool and Health Probe call the [NGINX ingress controller][nginx] through the AKS internal load balancer using the HTTP protocol for traffic management.
+- The [NGINX ingress controller][nginx] uses the AKS internal load balancer to ensure secure communication within the cluster.
+- A [Kubernetes ingress][kubernetes-ingress] object uses the [NGINX ingress controller][nginx] to expose the application via HTTP through the internal load balancer.
+- The `yelb-ui` service with the `ClusterIP` type restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
 
 ## Implementing End-to-End TLS Using Azure Application Gateway
 
