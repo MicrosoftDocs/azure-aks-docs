@@ -108,9 +108,13 @@ The solution architecture consists of the following components and configuration
 
 For comprehensive instructions on deploying the [Yelb application][yelb] on AKS using this architecture, see the [companion sample][azure-sample].
 
-## Alternative Solutions
+## Alternative solutions
 
-Azure offers several options for deploying a web application such as the [Yelb application][yelb] on an [Azure Kubernetes Service (AKS)][aks] cluster and securing it with a web application firewall.
+Azure offers several options for deploying a web application on an AKS cluster and securing it with a web application firewall:
+
+- [Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
+- [Azure Front Door](#use-azure-front-door)
+- [NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
 
 ### Use Azure Application Gateway for Containers
 
