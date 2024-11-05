@@ -657,7 +657,7 @@
             - name: Container Network Security
               items:
                 - name: FQDN Filtering with Advanced Container Networking Services (ACNS)
-                  href: advanced-network-container-services-security-cli.md
+                  href: how-to-apply-acns-fqdn-filtering-policies.md
     - name: Storage
       items:
         - name: CSI storage drivers
@@ -754,12 +754,8 @@
             href: cost-analysis.md
         - name: Network Observability
           items:
-            - name: Network Observability
-              href: network-observability-managed-cli.md
-            - name: Container Network Observability - Azure managed Prometheus and Grafana
+            - name: Container Network Observability
               href: advanced-network-observability-cli.md
-            - name: Container Network Observability - Bring Your Own Prometheus and Grafana
-              href: advanced-network-observability-bring-your-own-cli.md
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on
@@ -974,10 +970,6 @@
           href: use-flyte.md
         - name: Work with clusters using Copilot
           href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: Advanced Container Networking Services 
-      items:
-        - name: Enable Advanced Container Networking Services
-          href: advanced-container-networking-services-cli.md
     - name: DevOps
       items:
         - name: Azure DevOps Project

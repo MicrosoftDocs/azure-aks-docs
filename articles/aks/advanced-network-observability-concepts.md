@@ -133,6 +133,6 @@ Azure managed Prometheus and Grafana impose service-specific scale limitations. 
 
 ## Next steps
 
-* To create an AKS cluster with Container Network Observability and Azure managed Prometheus and Grafana, see [Setup Container Network Observability for Azure Kubernetes Service (AKS) Azure managed Prometheus and Grafana](advanced-network-observability-cli.md).
+* To create an AKS cluster with Container Network Observability, see [Setup Container Network Observability for Azure Kubernetes Service (AKS)](advanced-network-observability-cli.md).
 
-* To create an AKS cluster with Container Network Observability and BYO Prometheus and Grafana, see [Setup Container Network Observability for Azure Kubernetes Service (AKS) BYO Prometheus and Grafana](advanced-network-observability-bring-your-own-cli.md).
+
