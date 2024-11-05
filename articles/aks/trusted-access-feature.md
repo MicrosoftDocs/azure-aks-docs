@@ -4,7 +4,7 @@ description: Learn how to use the Trusted Access feature to give Azure resources
 author: schaffererin
 ms.topic: how-to
 ms.custom: devx-track-azurecli, innovation-engine
-ms.date: 11/04/2024
+ms.date: 11/05/2024
 ms.author: schaffererin
 ---
 
@@ -36,27 +36,15 @@ You can use Trusted Access to give explicit consent to your system-assigned mana
   * [What is Azure Kubernetes Service backup?][aks-azure-backup]
   * [Turn on an agentless container posture](/azure/defender-for-cloud/concept-agentless-containers)
 * In the same subscription as the Azure resource that you want to access the cluster, [create an AKS cluster](tutorial-kubernetes-deploy-cluster.md).
-* [Define environment variables](#define-environment-variables).
-
-### Define environment variables
-
-To simplify the configuration steps in this article, you can define environment variables using the following commands. Make sure to replace the placeholder values with your own.
-
-```azurecli-interactive
-export LOCATION="myLocation"
-export RESOURCE_GROUP_NAME="myResourceGroup"
-export CLUSTER_NAME="myClusterName"
-export ROLE_BINDING_NAME="myRoleBindingName"
-export SOURCE_RESOURCE_ID="mySourceResourceID"
-export ROLE_NAME_1="myRoleName1"
-export ROLE_NAME_2="myRoleName2"
-```
 
 ## Connect to your cluster
 
 Configure `kubectl` to connect to your cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
 ```azurecli-interactive
+export RESOURCE_GROUP_NAME="myResourceGroup"
+export CLUSTER_NAME="myClusterName"
+
 az aks get-credentials --resource-group ${RESOURCE_GROUP_NAME} --name ${CLUSTER_NAME} --overwrite-existing
 ```
 
@@ -70,14 +58,39 @@ kubectl get nodes
 
 The roles that you select depend on the Azure services that you want to access the AKS cluster. Azure services help create roles and role bindings that build the connection from the Azure service to AKS.
 
-To find the roles that you need, see the documentation for the Azure service that you want to connect to AKS. You can also use the Azure CLI to list the roles that are available for the Azure service using the `az aks trustedaccess role list --location $LOCATION` command.
+To find the roles that you need, see the documentation for the Azure service that you want to connect to AKS. You can also use the Azure CLI to list the roles that are available for the Azure service using the `az aks trustedaccess role list --location <location>` command.
 
 ## Create a Trusted Access role binding
 
 After you confirm which role to use, use the Azure CLI to create a Trusted Access role binding in the AKS cluster. The role binding associates your selected role with the Azure service.
 
 ```azurecli-interactive
+export ROLE_BINDING_NAME="myRoleBindingName"
+export SOURCE_RESOURCE_ID="mySourceResourceID"
+export ROLE_NAME_1="myRoleName1"
+export ROLE_NAME_2="myRoleName2"
+
 az aks trustedaccess rolebinding create --resource-group ${RESOURCE_GROUP_NAME} --cluster-name ${CLUSTER_NAME} --name ${ROLE_BINDING_NAME} --source-resource-id ${SOURCE_RESOURCE_ID} --roles ${ROLE_NAME_1},${ROLE_NAME_2}
+```
+
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```json
+{
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.ContainerService/managedClusters/${CLUSTER_NAME}/trustedAccessRoleBindings/${ROLE_BINDING_NAME}",
+  "name": "${ROLE_BINDING_NAME}",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "${RESOURCE_GROUP_NAME}",
+  "roles": [
+    "${ROLE_NAME_1}",
+    "${ROLE_NAME_2}"
+  ],
+  "sourceResourceId": "${SOURCE_RESOURCE_ID}",
+  "systemData": null,
+  "type": "Microsoft.ContainerService/managedClusters/trustedAccessRoleBindings"
+}
 ```
 
 ## Update an existing Trusted Access role binding
