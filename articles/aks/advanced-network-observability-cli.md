@@ -10,7 +10,7 @@ ms.date: 05/10/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Container Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana (Preview)
+# Set up Container Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana
 
 This article shows you how to set up Container Network Observability for Azure Kubernetes Service (AKS) using Managed Prometheus and Grafana to visualize the scraped metrics.
 
@@ -25,8 +25,90 @@ Container Network Observability is one of the features of Advanced Container Net
 
 * The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-* To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-cli.md) enabled.
-    
+### Install the aks-preview Azure CLI extension
+Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
+
+```azurecli-interactive
+# Install the aks-preview extension
+az extension add --name aks-preview
+
+# Update the extension to make sure you have the latest version installed
+az extension update --name aks-preview
+```
+
+### Enable Advanced Container Networking Services
+
+To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-cli.md) enabled.
+
+The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompasses:
+* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-network-observability-concepts.md).
+
+* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-network-container-services-security-concepts.md).
+
+#### [**Cilium**](#tab/cilium)
+
+> [!NOTE]
+> Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
+
+```azurecli-interactive
+# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
+export CLUSTER_NAME="<aks-cluster-name>"
+
+# Create an AKS cluster
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --generate-ssh-keys \
+    --location eastus \
+    --max-pods 250 \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --network-dataplane cilium \
+    --node-count 2 \
+    --pod-cidr 192.168.0.0/16 \
+    --kubernetes-version 1.29 \
+    --enable-acns
+```
+
+#### [**Non-Cilium**](#tab/non-cilium)
+
+> [!NOTE]
+> [Container Network Security](./advanced-network-container-services-security-concepts.md) feature is not available for Non-cilium clusters
+
+```azurecli-interactive
+# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
+export CLUSTER_NAME="<aks-cluster-name>"
+
+# Create an AKS cluster
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --generate-ssh-keys \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --pod-cidr 192.168.0.0/16 \
+    --enable-acns
+```
+
+---
+
+### Enable Advanced Container Networking Services on an existing cluster
+
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-network-observability-concepts.md) and the [Container Network Security](./advanced-network-container-services-security-concepts.md) feature.
+
+
+> [!NOTE]
+> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services.
+
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --enable-acns
+```
+
+---    
+
 ## Get cluster credentials 
 
 Once you have Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.

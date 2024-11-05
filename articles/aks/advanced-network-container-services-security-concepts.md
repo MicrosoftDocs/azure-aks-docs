@@ -64,7 +64,7 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 * Kubernetes service names aren't supported.
 * L7 policies aren't supported.
 * FQDN pods may exhibit performance degradation when handling more than 2000 requests per second.
-* Alpine-based container images might encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like below example
+* Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
 ```yml
 rules:
@@ -77,6 +77,11 @@ rules:
 - toFQDNs:
   - matchPattern: "*.example.com"
 ```
+
+## Pricing
+> [!IMPORTANT]
+> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
+
 
 ## Next steps
 

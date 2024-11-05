@@ -24,7 +24,8 @@ Advanced Container Networking Services contains features split into two pillars:
  - **Security**: For clusters using Azure CNI Powered by Cilium, network policies include fully qualified domain name (FQDN) filtering for tackling the complexities of maintaining configuration.
 
 ## Container Network Observability
- Container Network Observability equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. It unlocks Hubble metrics, Hubble’s command line interface (CLI) and the Hubble user interface (UI) on your AKS clusters providing deep, actionable insights into your containerized workloads. It allows you to precisely detect and determine the root causes of network-related issues in AKS through its next-level monitoring and diagnostics tools. These features ensure that your containerized applications are secure and compliant in order to empower you to confidently manage your infrastructure.
+ 
+Container Network Observability equips you with network related monitoring and diagnostics tools, providing  visibility into your containerized workloads. It unlocks Hubble metrics, Hubble’s command line interface (CLI) and the Hubble user interface (UI) on your AKS clusters providing deep, actionable insights into your containerized workloads allowing you to detect and determine the root causes of network-related issues in AKS. These features ensure that your containerized applications are secure and compliant in order to enable you to confidently manage your infrastructure.
 
 For more information about Container Network Observability, see [What is Container Network Observability?](advanced-network-observability-concepts.md).
 
@@ -35,6 +36,7 @@ Container Network Security features within Advanced Container Networking Service
 ## Pricing
 > [!IMPORTANT]
 > Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
+
 ## Next steps
 
 * For more information about Container Network Observability and its capabilities, see [What is Container Network Observability?](advanced-network-observability-concepts.md).

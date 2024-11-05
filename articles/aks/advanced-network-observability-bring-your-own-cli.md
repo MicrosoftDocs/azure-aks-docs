@@ -10,7 +10,7 @@ ms.date: 05/10/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Container Network Observability for Azure Kubernetes Service (AKS) (Preview)
+# Set up Container Network Observability for Azure Kubernetes Service (AKS)
 
 This article shows you how to set up Container Network Observability for Azure Kubernetes Service (AKS) and use bring your own (BYO) Prometheus and Grafana to visualize the metrics.
 

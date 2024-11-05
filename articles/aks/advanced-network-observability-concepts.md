@@ -27,7 +27,7 @@ Container Network Observability is compatible with all Linux workloads seamlessl
 
 Container Network Observability offers the following capabilities to monitor network-related issues in your cluster:
 
-* **node-Level Metrics:** Understanding the health of your container network at the node-level is crucial for maintaining optimal application performance. These metrics provide insights into traffic volume, dropped packets, number of connections, etc. by node. The metrics are stored in Prometheus format and, as such, you can view them in Grafana.
+* **Node-Level Metrics:** Understanding the health of your container network at the node-level is crucial for maintaining optimal application performance. These metrics provide insights into traffic volume, dropped packets, number of connections, etc. by node. The metrics are stored in Prometheus format and, as such, you can view them in Grafana.
 
 * **Hubble Metrics (DNS and Pod-Level Metrics):** These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors and DNS requests missing responses.
 
@@ -127,9 +127,9 @@ For *incoming traffic*, there will be a `destination` label with destination pod
 Azure managed Prometheus and Grafana impose service-specific scale limitations. For more information, see [Scrape Prometheus metrics at scale in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-scrape-scale)
 
 
-## What is Retina and how Contribute ?
-
-Retina is an open-source project developed by Microsoft that provides network metrics for customers using non-Cilium clusters. Advanced container networking services use Retina to surface network metrics for these clusters. As an open-source initiative, anyone can contribute to Retina to learn and enhance its capabilities. To learn more, see [How to contribute to Retina] (https://retina.sh/docs/Contributing/).
+## Pricing
+> [!IMPORTANT]
+> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
 
 ## Next steps
 
