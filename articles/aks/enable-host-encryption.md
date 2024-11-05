@@ -41,7 +41,7 @@ Before you begin, review the following prerequisites and limitations.
     az aks create \
         --name myAKSCluster \
         --resource-group myResourceGroup \
-        --storage-pool-sku Standard_DS2_v2 \
+        --node-vm-size Standard_DS2_v2 \
         --location westus2 \
         --enable-encryption-at-host \
         --generate-ssh-keys
