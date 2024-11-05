@@ -34,7 +34,7 @@ az extension update --name aks-preview
 
 ### Enable Advanced Container Networking Services
 
-To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-cli.md) enabled.
+To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-concepts.md) enabled.
 
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompasses:
 * **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-network-observability-concepts.md).
