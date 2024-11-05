@@ -536,8 +536,13 @@
             "redirect_document_id": false
         },
         {
-            "source_path_from_root": "articles/aks/advanced-network-observability-bring-your-own-cli.md",
+            "source_path_from_root": "/articles/aks/advanced-network-observability-bring-your-own-cli.md",
             "redirect_url": "/azure/aks/advanced-network-observability-cli",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-container-services-cli.md",
+            "redirect_url": "/azure/aks/how-to-apply-acns-fqdn-filtering-policies",
             "redirect_document_id": false
         }
      ]
