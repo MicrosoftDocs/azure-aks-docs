@@ -253,6 +253,5 @@ The settings below can be used to tune the operation of the virtual memory (VM) 
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-provider-register]: /cli/azure/provider#az-provider-register
-[az-feature-register]: /cli/azure/feature#az-feature-register
 [register-preview]: /azure/azure-resource-manager/management/preview-features?tabs=azure-cli#register-preview-feature
 
