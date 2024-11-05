@@ -79,7 +79,7 @@ Results:
 
 ```json
 {
-  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.ContainerService/managedClusters/${CLUSTER_NAME}/trustedAccessRoleBindings/${ROLE_BINDING_NAME}",
+  "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/${RESOURCE_GROUP_NAME}/providers/Microsoft.ContainerService/managedClusters/${CLUSTER_NAME}/trustedAccessRoleBindings/${ROLE_BINDING_NAME}",
   "name": "${ROLE_BINDING_NAME}",
   "provisioningState": "Succeeded",
   "resourceGroup": "${RESOURCE_GROUP_NAME}",
