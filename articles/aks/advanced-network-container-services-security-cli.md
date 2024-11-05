@@ -66,7 +66,7 @@ az group create --name $RESOURCE_GROUP --location $LOCATION
 
 ## Create an AKS cluster with Advanced Container Networking Services
 
-The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all ACNS features which includes [ACNS Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
+The `az aks create` command with the Advanced Container Networking Services flag, `--enable-advanced-network-observability`, creates a new AKS cluster with all ACNS features which includes [ACNS Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -81,7 +81,7 @@ az aks create \
     --network-plugin-mode overlay \
     --pod-cidr 192.168.0.0/16 \
     --network-dataplane cilium \
-    --enable-acns
+    --enable-advanced-network-observability
 ```
 
 ### Create an AKS cluster with FQDN filtering feature without ACNS Observability
@@ -106,7 +106,7 @@ az aks create \
 
 ## Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all ACNS features which includes [ACNS Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-advanced-network-observability`, updates an existing AKS cluster with all ACNS features which includes [ACNS Observability](./advanced-network-observability-concepts.md) and the FQDN Filtering feature.
 
 > [!NOTE]
 > Only clusters with the Cilium data plane support Advanced Security and Advanced Container Networking Services.
@@ -115,7 +115,7 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Co
 az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
-    --enable-acns
+    --enable-advanced-network-observability
 ```
 
 ## Enable FQDN filtering feature without ACNS Observability
