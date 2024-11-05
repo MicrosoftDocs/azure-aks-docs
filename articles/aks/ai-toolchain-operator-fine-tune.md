@@ -5,14 +5,20 @@ ms.topic: how-to
 ms.author: schaffererin
 author: sachidesai
 ms.service: azure-kubernetes-service
-ms.date: 10/30/2024
+ms.date: 11/05/2024
 ---
 
 # Fine-tune and deploy an AI model for inferencing on Azure Kubernetes Service (AKS) with the AI toolchain operator (Preview)
 
-This article shows you how to fine-tune and deploy a language model inferencing workload with the AI toolchain operator add-on (preview) for AKS.
+This article shows you how to fine-tune and deploy a language model inferencing workload with the AI toolchain operator add-on (preview) for AKS. You learn how to accomplish the following tasks:
 
-The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the deployment and operations for AI models on your AKS clusters. Starting with KAITO version 0.3.1 and above, you can use the AKS managed add-on to fine-tune supported foundation models with new data and enhance the accuracy of your AI models. To learn more about parameter efficient fine-tuning methods and their use cases, see [Concepts - Fine-tuning language models for AI and machine learning workflows on AKS][fine-tuning-kaito].
+* [Set environment variables](#export-environmental-variables) to reference your Azure Container Registry (ACR) and repository details.
+* [Create your container registry image push/pull secret](#create-a-new-secret-for-your-private-registry) to store and retrieve private fine-tuning adapter images.
+* [Select a supported model and fine-tune it to your data](#fine-tune-an-ai-model).
+* [Test the inference service endpoint](#test-the-model-inference-service-endpoint).
+* [Clean up resources](#clean-up-resources).
+
+The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the deployment and operations for AI models on your AKS clusters. Starting with [KAITO version 0.3.1](https://github.com/kaito-project/kaito/releases/tag/v0.3.1) and above, you can use the AKS managed add-on to fine-tune supported foundation models with new data and enhance the accuracy of your AI models. To learn more about parameter efficient fine-tuning methods and their use cases, see [Concepts - Fine-tuning language models for AI and machine learning workflows on AKS][fine-tuning-kaito].
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -26,7 +32,7 @@ The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies th
 * The Kubernetes command-line client, kubectl, installed and configured. For more information, see [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 * Configure [Azure Container Registry (ACR) integration][acr-integration] of a new or existing ACR with your AKS cluster.
 * Install the [AI toolchain operator add-on][ai-toolchain-operator] on your AKS cluster.
-  * If you already have the the AI toolchain operator add-on installed, update your AKS cluster to the latest version to run KAITO v0.3.1+ and ensure that the AI toolchain operator add-on feature flag is enabled.
+* If you already have the AI toolchain operator add-on installed, update your AKS cluster to the latest version to run KAITO v0.3.1+ and ensure that the AI toolchain operator add-on feature flag is enabled.
 
 ## Export environmental variables
 
@@ -42,6 +48,8 @@ The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies th
 
 ## Create a new secret for your private registry
 
+In this example, your KAITO fine-tuning deployment produces a containerized adapter output, and the KAITO workspace requires a new push secret as authorization to push the adapter image to your ACR.
+
 * Generate a new secret to provide the KAITO fine-tuning workspace access to push the model fine-tuning output image to your ACR using the `kubectl create secret docker-registry` command.
 
     ```bash
@@ -50,7 +58,7 @@ The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies th
 
 ## Fine-tune an AI model
 
-In this example, you fine-tune the Phi-3-mini small language model using the qLoRA tuning method by applying the following Phi-3-mini KAITO fine-tuning workspace CRD:
+In this example, you fine-tune the [Phi-3-mini small language model](https://huggingface.co/docs/transformers/main/en/model_doc/phi3) using the qLoRA tuning method by applying the following Phi-3-mini KAITO fine-tuning workspace CRD:
 
 ```yaml
 apiVersion: kaito.sh/v1alpha1
@@ -74,8 +82,9 @@ tuning:
       imagePushSecret: myregistrysecret
 ```
 
+This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/Azure/kaito/tree/main/docs/tuning) specification to adjust the input to pull an image from your ACR.
+
 > [!NOTE]
-> This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/Azure/kaito/tree/main/docs/tuning) specification to adjust the input to pull an image from your ACR.
 > The choice of GPU SKU is critical since model fine-tuning normally requires more GPU memory compared to model inference. To avoid GPU Out-Of-Memory errors, we recommend using NVIDIA A100 or higher tier GPUs.
 
 1. Apply the KAITO fine-tuning workspace CRD using the `kubectl apply` command.
@@ -84,7 +93,7 @@ tuning:
     kubectl apply workspace-tuning-phi-3-mini.yaml
     ```
 
-2. Track the readiness of your GPU resources, fine-tuning job, and workspace using the `kubectl get workspace` command.
+1. Track the readiness of your GPU resources, fine-tuning job, and workspace using the `kubectl get workspace` command.
 
     ```bash
     kubectl get workspace -w
@@ -97,7 +106,7 @@ tuning:
     workspace-tuning-phi-3-mini  Standard_NC24ads_A100_v4  True                             True                              3m 45s
     ```
 
-3. Check the status of your fine-tuning job pods using the `kubectl get pods` command.
+1. Check the status of your fine-tuning job pods using the `kubectl get pods` command.
 
     ```bash
     kubectl get pods
@@ -172,15 +181,22 @@ inference:
     export SERVICE_IP=$(kubectl get svc workspace-phi-3-mini-adapter -o jsonpath=’{.spec.clusterIP}’)
     ```
 
-1. Run the fine-tuned Phi-3-mini model with a sample input of your choice using the `kubectl run` command.
+1. Run your fine-tuned Phi-3-mini model with a sample input of your choice using the `kubectl run` command. The following example asks the generative AI model, _"What is AKS?"_:
 
     ```bash
-    kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/chat -H "accept: application/json" -H "Content-Type: application/json" -d "{\"prompt\":\"YOUR QUESTION HERE\"}"
+    kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/chat -H "accept: application/json" -H "Content-Type: application/json" -d "{\"prompt\":\"What is AKS?\"}"
+    ```
+
+    Your output might look similar to the following example output:
+
+    ```output
+    "Kubernetes on Azure" is the official name.
+    https://learn.microsoft.com/en-us/azure/aks/ ...
     ```
 
 ## Clean up resources
 
-If you no longer need these resources, you can delete them to avoid incurring extra Azure charges.
+If you no longer need these resources, you can delete them to avoid incurring extra Azure charges. To calculate the estimated cost of your resources, you can use the [Azure pricing calculator](https://azure.microsoft.com/pricing/calculator/?service=kubernetes-service).
 
 * Delete the KAITO workspaces and their allocated resources on your AKS cluster using the `kubectl delete workspace` command.
 
