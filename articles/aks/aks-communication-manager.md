@@ -126,7 +126,7 @@ Wait for the auto upgrader to start to upgrade the cluster. Then verify if you r
 Check Azure Resource Graph database for the scheduled notification record. Each scheduled event notification should be listed as one record in the "containerserviceeventresources" table.
 !
 
-:::image type="content" source="./media/auto-upgrade-cluster/azure-resource-graph.jpeg" alt-text="Screenshot of how to look up azure resource graph.":::
+:::image type="content" source="./media/auto-upgrade-cluster/azure-resource-graph.jpeg" alt-text="Screenshot of how to look up Azure resource graph.":::
 
 ### Next Steps
 See how you can set up a [planned maintenance][planned-maintenance] window for your upgrades.
