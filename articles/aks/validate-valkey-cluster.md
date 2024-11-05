@@ -58,7 +58,6 @@ The sample client application uses the [Locust load testing framework](https://d
             self.client.get_value("get_value")
 
     class ValkeyClient(object):
-         # Read the Valkey password from the Secret Store CSI driver mounted file
         f = open("/etc/valkey-password/valkey-password-file.conf", "r")
         password = f.readlines()[0].split(" ")[1].strip()
         f.close()
@@ -72,60 +71,52 @@ The sample client application uses the [Locust load testing framework](https://d
             self.vc = ValkeyCluster(host=self.host, port=self.port, password=self.password, username="default", cluster_error_retry_attempts=0)
 
         def set_value(self, key, command='SET'):
-            # Start time for the 'set' operation with high-resolution timer
             start_time = time.perf_counter()
             try:
-                # Execute the set operation
                 result = self.vc.set(randint(0, 1000), randint(0, 1000))
                 if not result:
                     result = ''
                 length = len(str(result))
-                # Success event
                 total_time = (time.perf_counter()- start_time) * 1000
                 events.request.fire(
-                    request_type=command,  # You can give it any name
-                    name=key,  # Operation name
+                    request_type=command,
+                    name=key,
                     response_time=total_time,
-                    response_length=length,  # Optionally, track response size
+                    response_length=length,
                 )
             except Exception as e:
-                # Failure event
                 total_time = (time.perf_counter()- start_time) * 1000
                 events.request.fire(
-                    request_type=command,  # You can give it any name
-                    name=key,  # Operation name
+                    request_type=command,
+                    name=key,
                     response_time=total_time,
                     response_length=0,
-                    exception=e  # Pass the exception to register a failure
+                    exception=e
                 )
                 result = ''
             return result
         def get_value(self, key, command='GET'):
-            # Start time for the 'get' operation with high-resolution timer
             start_time = time.perf_counter()
             try:
-                # Execute the get operation
                 result = self.vc.get(randint(0, 1000))
                 if not result:
                     result = ''
                 length = len(str(result))
-                # Success event
                 total_time = (time.perf_counter()- start_time) * 1000
                 events.request.fire(
-                    request_type=command,  # You can give it any name
-                    name=key,  # Operation name
+                    request_type=command,
+                    name=key,
                     response_time=total_time,
-                    response_length=length,  # Optionally, track response size
+                    response_length=length,
                 )
             except Exception as e:
-                # Failure event
                 total_time = (time.perf_counter()- start_time) * 1000
                 events.request.fire(
-                    request_type=command,  # You can give it any name
-                    name=key,  # Operation name
+                    request_type=command,
+                    name=key,
                     response_time=total_time,
                     response_length=0,
-                    exception=e  # Pass the exception to register a failure
+                    exception=e
                 )
                 result = ''
             return result
