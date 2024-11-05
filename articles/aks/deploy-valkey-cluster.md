@@ -694,9 +694,6 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 * Naveed Kharadi | Customer Experience Engineer
 * Erin Schaffer | Content Developer 2
 
-<!-- External links -->
-[reloader]: https://github.com/stakater/Reloader
-
 <!-- Internal links -->
 [az-keyvault-secret-set]: /cli/azure/keyvault/secret#az-keyvault-secret-set
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
