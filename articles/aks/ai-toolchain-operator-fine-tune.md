@@ -213,7 +213,7 @@ If you no longer need these resources, you can delete them to avoid incurring ex
 
 <!-- Links -->
 [fine-tuning-kaito]: ./concepts-fine-tune-language-models.md
-[aks-quickstart-cli]: ../learn/quick-kubernetes-deploy-cli.md
+[aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
 [install-azure-cli]: /cli/azure/install-azure-cli
