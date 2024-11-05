@@ -62,8 +62,8 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 * FQDN filtering is currently not supported with node-local DNS.
 * Dual stack isn't supported.
 * Kubernetes service names aren't supported.
-* L7 policies aren't supported.
-* FQDN pods may exhibit performance degradation when handling more than 2000 requests per second.
+* Other L7 policies aren't supported.
+* FQDN pods may exhibit performance degradation when handling more than 1000 requests per second.
 * Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
 ```yml
@@ -85,7 +85,7 @@ rules:
 
 ## Next steps
 
-* Learn how to enable [Container Network Security](./how-to-apply-acns-fqdn-filtering-policies) on AKS.
+* Learn how to enable [Container Network Security](./how-to-apply-acns-fqdn-filtering-policies.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 
