@@ -33,19 +33,21 @@ For more information about Container Network Observability, see [What is Contain
 
 Container Network Security features within Advanced Container Networking Services enable greater control over network security policies for ease of use when implementing across clusters. Clusters using Azure CNI Powered by Cilium have access to DNS-based policies. The ease of use compared to IP-based policies allows restricting egress access to external services using domain names. Configuration management becomes simplified by using FQDN rather than dynamically changing IPs.
 
+## Pricing
+> [!IMPORTANT]
+> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
 
 
+## Set up Advanced Container Networking Services on your cluster
 
-
-
-## Prerequisites
+### Prerequisites
 
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 * The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-## Install the aks-preview Azure CLI extension
+### Install the aks-preview Azure CLI extension
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
 
 ```azurecli-interactive
@@ -56,7 +58,7 @@ az extension add --name aks-preview
 az extension update --name aks-preview
 ```
 
-## Create a resource group
+### Create a resource group
 
 A resource group is a logical container into which Azure resources are deployed and managed. Create a resource group using the [`az group create`](/cli/azure/group#az_group_create) command.
 
@@ -68,16 +70,16 @@ export LOCATION="<azure-region>"
 az group create --name $RESOURCE_GROUP --location $LOCATION
 ```
 
-## Enable and Disable Advanced Container Networking Services in AKS cluster
+### Enable and Disable Advanced Container Networking Services in AKS cluster
 
-### Create an AKS cluster with Advanced Container Networking Services
+#### Create an AKS cluster with Advanced Container Networking Services
 
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompasses:
 * **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-network-observability-concepts.md).
 
 * **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-network-container-services-security-concepts.md).
 
-#### [**Cilium**](#tab/cilium)
+##### [**Cilium**](#tab/cilium)
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
@@ -102,7 +104,7 @@ az aks create \
     --enable-acns
 ```
 
-#### [**Non-Cilium**](#tab/non-cilium)
+##### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
 > [Container Network Security](./advanced-network-container-services-security-concepts.md) feature is not available for Non-cilium clusters
@@ -152,11 +154,11 @@ az aks update \
 
 ---
 
-## Disable select Advanced Container Networking Services features
+### Disable select Advanced Container Networking Services features
 
-### Disable Container Network Observability 
+#### Disable Container Network Observability 
 
-#### [**Cilium**](#tab/cilium)
+##### [**Cilium**](#tab/cilium)
 
 To disable Container Network Observability features without affecting other Advanced Container Networking Services features, use `--enable-acns`  and `--disable-acns-observability` 
 
@@ -168,7 +170,7 @@ az aks update \
     --disable-acns-observability 
 ```
 
-#### [**Non-Cilium**](#tab/non-cilium)
+##### [**Non-Cilium**](#tab/non-cilium)
 
 Since only Container Network Observability is the only feature available for non-cilium cluster, you can use --disable-acns  to disable the feature
 
@@ -200,18 +202,6 @@ az aks update \
 Container Network Security is currently not supported on non-Cilium clusters. To leverage this feature and enable Azure CNI powered by Cilium, please refer to [Azure CNI powered by cilium documentation](./azure-cni-powered-by-cilium.md)
 
 ---
-
-## Clean up resources
-
-If you don't plan on using this application, delete the other resources you created in this article using the [`az group delete`](/cli/azure/#az_group_delete) command.
-
-```azurecli-interactive
-  az group delete --name $RESOURCE_GROUP
-```
-
-## Pricing
-> [!IMPORTANT]
-> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
 
 ## Next steps
 
