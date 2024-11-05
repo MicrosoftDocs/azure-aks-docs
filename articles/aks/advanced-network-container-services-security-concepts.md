@@ -85,7 +85,7 @@ rules:
 
 ## Next steps
 
-* Learn how to enable [Container Network Security](./how-to-apply-acns-fqdn-filtering-policies.md) on AKS.
+* Learn how to enable [Container Network Security](how-to-apply-acns-fqdn-filtering-policies.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 
