@@ -69,7 +69,7 @@ The sample client application uses the [Locust load testing framework](https://d
             self.host = self.host
             self.port = self.port
             self.password = self.password
-            self.vc = ValkeyCluster(host=self.host, port=self.port, password=self.password, username="default")
+            self.vc = ValkeyCluster(host=self.host, port=self.port, password=self.password, username="default", cluster_error_retry_attempts=0)
 
         def set_value(self, key, command='SET'):
             # Start time for the 'set' operation with high-resolution timer
@@ -189,7 +189,7 @@ The sample client application uses the [Locust load testing framework](https://d
      kubectl port-forward -n valkey valkey-client 8089:8089
     ```
 
-    Access the Locust web interface at `http://localhost:8089` and start the test.
+    Access the Locust web interface at `http://localhost:8089` and start the test. You can adjust the number of users and the spawn rate to simulate a workload on the Valkey cluster. In the followin graph the values used are 100 users and 10 spawn rate.
 
     :::image type="content" source="media/valkey-stateful-workload/locust.png" alt-text="Screenshot of a web page showing the Locust test dashboard.":::
 
@@ -218,36 +218,95 @@ The sample client application uses the [Locust load testing framework](https://d
         valkey-replicas-2   1/1     Running   0          16m
     ```
 
-
     When we read the logs of the `valkey-replicas-0` Pod, by running `kubectl logs valkey-replicas-0`, we observe that the complete event lasts for about 18 seconds:
 
     ```
-    1:S 18 Oct 2024 14:40:26.324 * Connection with primary lost.
-    1:S 18 Oct 2024 14:40:26.324 * Caching the disconnected primary state.
-    1:S 18 Oct 2024 14:40:26.324 * Reconnecting to PRIMARY 10.224.0.167:6379
-    1:S 18 Oct 2024 14:40:26.324 * PRIMARY <-> REPLICA sync started
-    1:S 18 Oct 2024 14:40:26.326 # Error condition on socket for SYNC: Connection refused
-    1:S 18 Oct 2024 14:40:27.227 * Connecting to PRIMARY 10.224.0.167:6379
-    1:S 18 Oct 2024 14:40:27.227 * PRIMARY <-> REPLICA sync started
-    1:S 18 Oct 2024 14:40:42.617 * NODE 89e262203ce6e6884f383bd1382f67c0d3f8515b () possibly failing.
-    1:S 18 Oct 2024 14:40:43.987 * FAIL message received from 05dfbb00751465db264d59caf904856cd7fec0ab () about 89e262203ce6e6884f383bd1382f67c0d3f8515b ()
-    1:S 18 Oct 2024 14:40:43.987 # Cluster state changed: fail
-    1:S 18 Oct 2024 14:40:44.026 * Start of election delayed for 659 milliseconds (rank #0, offset 3234599075).
-    1:S 18 Oct 2024 14:40:44.127 * Currently unable to failover: Waiting the delay before I can start a new failover.
-    1:S 18 Oct 2024 14:40:44.630 * Node 05dfbb00751465db264d59caf904856cd7fec0ab () reported node 89e262203ce6e6884f383bd1382f67c0d3f8515b () as not reachable.
-    1:S 18 Oct 2024 14:40:44.730 * Starting a failover election for epoch 7.
-    1:S 18 Oct 2024 14:40:44.767 * Currently unable to failover: Waiting for votes, but majority still not reached.
-    1:S 18 Oct 2024 14:40:44.768 * Needed quorum: 2. Number of votes received so far: 1
-    1:S 18 Oct 2024 14:40:44.768 * Failover election won: I'm the new primary.
-    1:S 18 Oct 2024 14:40:44.768 * configEpoch set to 7 after successful failover
-    1:M 18 Oct 2024 14:40:44.768 * Discarding previously cached primary state.
-    1:M 18 Oct 2024 14:40:44.768 * Setting secondary replication ID to d388030cb4bd3b28aabaec0392bf6190635be431, valid up to offset: 3234599076. New replication ID is 721ae1f7f6d9c918b7cc2ee424a723bf559d9452
-    1:M 18 Oct 2024 14:40:44.769 * Cluster state changed: ok
+    1:S 05 Nov 2024 12:18:53.961 * Connection with primary lost.
+    1:S 05 Nov 2024 12:18:53.961 * Caching the disconnected primary state.
+    1:S 05 Nov 2024 12:18:53.961 * Reconnecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:18:53.961 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:18:53.964 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:18:54.910 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:18:54.910 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:18:54.912 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:18:55.920 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:18:55.921 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:18:55.923 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:18:56.931 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:18:56.932 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:18:56.934 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:18:57.941 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:18:57.941 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:18:57.943 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:18:58.951 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:18:58.951 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:18:58.953 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:18:59.961 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:18:59.961 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:18:59.963 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:00.970 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:00.971 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:00.973 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:01.980 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:01.981 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:01.982 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:02.990 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:02.990 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:02.993 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:04.000 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:04.000 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:04.002 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:05.010 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:05.010 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:05.012 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:06.020 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:06.020 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:06.022 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:07.030 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:07.030 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:07.032 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:08.039 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:08.039 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:08.041 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:09.048 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:09.048 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:09.050 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:10.056 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:10.057 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:10.058 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:10.709 * Node c44d4b682b6fb9b37033d3e30574873545266d67 () reported node 9e7c43890613cc3ad4006a9cdc0b5e5fc5b6d44e     () as not reachable.
+    1:S 05 Nov 2024 12:19:10.864 * NODE 9e7c43890613cc3ad4006a9cdc0b5e5fc5b6d44e () possibly failing.
+    1:S 05 Nov 2024 12:19:11.066 * 10000 changes in 60 seconds. Saving...
+    1:S 05 Nov 2024 12:19:11.068 * Background saving started by pid 29
+    1:S 05 Nov 2024 12:19:11.068 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:11.068 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:11.069 # Error condition on socket for SYNC: Connection refused
+    29:C 05 Nov 2024 12:19:11.090 * DB saved on disk
+    29:C 05 Nov 2024 12:19:11.090 * Fork CoW for RDB: current 0 MB, peak 0 MB, average 0 MB
+    1:S 05 Nov 2024 12:19:11.169 * Background saving terminated with success
+    1:S 05 Nov 2024 12:19:11.884 * FAIL message received from ba36d5167ee6016c01296a4a0127716f8edf8290 () about     9e7c43890613cc3ad4006a9cdc0b5e5fc5b6d44e ()
+    1:S 05 Nov 2024 12:19:11.884 # Cluster state changed: fail
+    1:S 05 Nov 2024 12:19:11.974 * Start of election delayed for 510 milliseconds (rank #0, offset 7225807).
+    1:S 05 Nov 2024 12:19:11.976 * Node d43f370a417d299b78bd1983792469fe5c39dcdf () reported node 9e7c43890613cc3ad4006a9cdc0b5e5fc5b6d44e     () as not reachable.
+    1:S 05 Nov 2024 12:19:12.076 * Connecting to PRIMARY 10.224.0.250:6379
+    1:S 05 Nov 2024 12:19:12.076 * PRIMARY <-> REPLICA sync started
+    1:S 05 Nov 2024 12:19:12.076 * Currently unable to failover: Waiting the delay before I can start a new failover.
+    1:S 05 Nov 2024 12:19:12.078 # Error condition on socket for SYNC: Connection refused
+    1:S 05 Nov 2024 12:19:12.581 * Starting a failover election for epoch 15.
+    1:S 05 Nov 2024 12:19:12.616 * Currently unable to failover: Waiting for votes, but majority still not reached.
+    1:S 05 Nov 2024 12:19:12.616 * Needed quorum: 2. Number of votes received so far: 1
+    1:S 05 Nov 2024 12:19:12.616 * Failover election won: I'm the new primary.
+    1:S 05 Nov 2024 12:19:12.616 * configEpoch set to 15 after successful failover
+    1:M 05 Nov 2024 12:19:12.616 * Discarding previously cached primary state.
+    1:M 05 Nov 2024 12:19:12.616 * Setting secondary replication ID to c0b5b2df8a43b19a4d43d8f8b272a07139e0ca34, valid up to offset:     7225808. New replication ID is 029fcfbae0e3e4a1dccd73066043deba6140c699
+    1:M 05 Nov 2024 12:19:12.616 * Cluster state changed: ok
     ```
 
-    During this time window of 18 seconds, we observe a short outage from ` 14:40:43.987 # Cluster state changed: fail` to `14:40:44.768 * Failover election won: I'm the new primary.` of about 1 second. The requests to the cluster did not fail, but we see a spike in the request latency where the 95th percentile spikes to 970ms.
+    During this time window of 18 seconds, we observe that writes to the shard belonging to the deleted Pod are failing, and the Valkey cluster is electing a new primary. The request latency spikes to 60ms during this time window.
 
-    :::image type="content" source="media/valkey-stateful-workload/percentile.png" alt-text="Screenshot of a graph showing the 95th percentile of request latencies spiking to 970ms.":::
+    :::image type="content" source="media/valkey-stateful-workload/percentile.png" alt-text="Screenshot of a graph showing the 95th percentile of request latencies spiking to 60ms.":::
+
+    After the new primary is elected, the Valkey cluster continues to serve requests with a latency of around 2ms.
 
 ## Conclusion
 
