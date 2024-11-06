@@ -120,7 +120,7 @@ spec:
 ```
 
 > [!TIP]
-> If you don't set `publicIpPrefixId`, it will create one for you automatically. Run command `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, you can see the "Egress Ip Prefix" in status. It's the newly created public IP prefix. You can also use an existing public IP prefix by specifying its resource ID in field `publicIpPrefixId`. You need to grant Reader role to AKS cluster's identity in this case.
+> If you don't set `publicIpPrefixId`, a public IP prefix will be created for you automatically. When running `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, you can see the "Egress Ip Prefix" in the status. This is the newly created public IP prefix. You can also use an existing public IP prefix by specifying its resource ID in the `publicIpPrefixId` argument. You need to grant "Network Contributor" role to AKS cluster's identity in this case.
 
 ## Annotate Pods to Use the Gateway Configuration
 
