@@ -68,7 +68,7 @@ The sample client application uses the [Locust load testing framework](https://d
             self.host = self.host
             self.port = self.port
             self.password = self.password
-            self.vc = ValkeyCluster(host=self.host, port=self.port, password=self.password, username="default", cluster_error_retry_attempts=0)
+            self.vc = ValkeyCluster(host=self.host, port=self.port, password=self.password, username="default", cluster_error_retry_attempts=0, socket_timeout=2)
 
         def set_value(self, key, command='SET'):
             start_time = time.perf_counter()
