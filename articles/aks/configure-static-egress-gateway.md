@@ -112,14 +112,15 @@ metadata:
   namespace: <namespace>
 spec:
   gatewayNodepoolName: <nodepool-name>
-  exceptionCidrs:  # Optional
+  excludeCidrs:  # Optional
   - 10.0.0.0/8
   - 172.16.0.0/12
+  - 169.254.169.254/32
   publicIpPrefixId: /subscriptions/<subscription-id>/resourceGroups/<resource-group>/providers/Microsoft.Network/publicIPPrefixes/<prefix-name> # Optional
 ```
 
 > [!TIP]
-> You can use an existing public IP prefix by specifying its resource ID, or let the system create one for you.
+> If you don't set value to `publicIpPrefixId`, it will create one for you automatically. Run command `kubectl describe StaticGatewayConfiguration <gateway-config-name> -n <namespace>`, you can see the "Egress Ip Prefix" in status. It's the newly created public IP prefix. You can also use an existing public IP prefix by specifying its resource ID in field `publicIpPrefixId`. You need to grant Reader role to AKS cluster's identity in this case.
 
 ## Annotate Pods to Use the Gateway Configuration
 
