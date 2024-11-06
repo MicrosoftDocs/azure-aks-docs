@@ -5,7 +5,7 @@ description: Deploy a Java application with Open Liberty or WebSphere Liberty on
 author: KarlErickson
 ms.author: edburns
 ms.topic: how-to
-ms.date: 05/29/2024
+ms.date: 11/14/2024
 ms.subservice: aks-developer
 keywords: java, jakartaee, javaee, microprofile, open-liberty, websphere-liberty, aks, kubernetes
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-liberty, devx-track-javaee-liberty-aks, devx-track-javaee-websphere, build-2023, devx-track-extended-java
@@ -16,7 +16,7 @@ ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-liberty, devx-t
 This article demonstrates how to:
 
 * Run your Java, Java EE, Jakarta EE, or MicroProfile application on the [Open Liberty](https://openliberty.io/) or [IBM WebSphere Liberty](https://www.ibm.com/cloud/websphere-liberty) runtime.
-* Build the application's Docker image by using Open Liberty or WebSphere Liberty container images.
+* Build the application's Docker image with `az acr build` by using Open Liberty or WebSphere Liberty container images.
 * Deploy the containerized application to an Azure Kubernetes Service (AKS) cluster by using the Open Liberty Operator or WebSphere Liberty Operator.
 
 The Open Liberty Operator simplifies the deployment and management of applications running on Kubernetes clusters. With the Open Liberty Operator or WebSphere Liberty Operator, you can also perform more advanced operations, such as gathering traces and dumps.
@@ -42,10 +42,9 @@ If you're interested in providing feedback or working closely on your migration 
 * Install the [Azure CLI](/cli/azure/install-azure-cli) to run Azure CLI commands.
   * Sign in to the Azure CLI by using the [az login](/cli/azure/reference-index#az-login) command. To finish the authentication process, follow the steps displayed in your terminal. For other sign-in options, see [Sign into Azure with Azure CLI](/cli/azure/authenticate-azure-cli#sign-into-azure-with-azure-cli).
   * When you're prompted, install the Azure CLI extension on first use. For more information about extensions, see [Use and manage extensions with the Azure CLI](/cli/azure/azure-cli-extensions-overview).
-  * Run [az version](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index?#az-upgrade). This article requires at least version 2.31.0 of Azure CLI.
-* Install a Java Standard Edition (SE) implementation, version 17 or later (for example, [Eclipse Open J9](https://www.eclipse.org/openj9/)).
-* Install [Maven](https://maven.apache.org/download.cgi) 3.5.0 or higher.
-* Install [Docker](https://docs.docker.com/get-docker/) for your OS.
+  * Run [az version](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index?#az-upgrade). This article requires at least version 2.61.0 of Azure CLI.
+* Install a Java Standard Edition (SE) implementation, version 17 (for example, [Eclipse Open J9](https://www.eclipse.org/openj9/)).
+* Install [Maven](https://maven.apache.org/download.cgi) 3.9.8 or higher.
 * Ensure [Git](https://git-scm.com) is installed.
 * Make sure you're assigned either the `Owner` role or the `Contributor` and `User Access Administrator` roles in the subscription. You can verify it by following steps in [List role assignments for a user or group](/azure/role-based-access-control/role-assignments-list-portal#list-role-assignments-for-a-user-or-group).
 
@@ -109,7 +108,11 @@ If you moved away from the **Deployment is in progress** pane, the following ste
 1. In the box with the text **Filter for any field**, enter the first few characters of the resource group that you created previously. If you followed the recommended convention, enter your initials, and then select the appropriate resource group.
 1. In the list of resources in the resource group, select the resource with the **Type** value of **Container registry**.
 1. On the navigation pane, under **Settings**, select **Access keys**.
-1. Save aside the values for **Login server**, **Registry name**, **Username**, and **Password**. You can use the copy icon next to each field to copy the value to the system clipboard.
+1. Save aside the values for **Login server** and **Registry name**. You can use the copy icon next to each field to copy the value to the system clipboard.
+
+   > [!NOTE]
+   > This article uses the [`az acr build`](/cli/azure/acr#az-acr-build) command to build  and push the Docker image to the Container Registry, without using `username` and `password` of the Container Registry. It's still possible to use username and password with `docker login` and `docker push`. Using username and password is less secure than passwordless authentication.
+
 1. Go back to the resource group into which you deployed the resources.
 1. In the **Settings** section, select **Deployments**.
 1. Select the bottom-most deployment in the list. The **Deployment name** value matches the publisher ID of the offer. It contains the string `ibm`.
