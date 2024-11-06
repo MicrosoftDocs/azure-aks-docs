@@ -89,7 +89,7 @@ To get started with scaling applications, see the following resources:
 - Manually scale [pods][kubectl-scale-reference] or [nodes][aks-manually-scale-nodes]
 - Use the [horizontal pod autoscaler][aks-hpa]
 - Use the [cluster autoscaler][aks-cluster-autoscaler]
-- Use the [Kubernetes Event-driven Autoscaling (KEDA) add-on][keda-addon]
+- Use the [Kubernetes Event-driven Autoscaling (KEDA) add-on][keda-overview]
 
 For more information on core Kubernetes and AKS concepts, see the following articles:
 
