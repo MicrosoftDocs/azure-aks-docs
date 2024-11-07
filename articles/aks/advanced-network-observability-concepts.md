@@ -9,9 +9,7 @@ ms.topic: conceptual
 ms.date: 05/10/2024
 ---
 
-# Container Network Observability with Advanced Container Networking Services
-
-## What is Container Network Observability?
+# What is Container Network Observability?
 
 Container Network Observability is a feature of the [Advanced Container Networking Services](advanced-container-networking-services-overview.md) suite. It equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. These tools empower you to pinpoint and troubleshoot network issues with ease, ensuring optimal performance for your applications.
 
@@ -118,18 +116,18 @@ For *incoming traffic*, there will be a `destination` label with destination pod
 * Pod-level metrics are available only on Linux.
 * Cilium data plane is supported starting with Kubernetes version 1.29.
 * Metric labels may have subtle differences between Cilium and non-Cilium clusters.
-* For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network polices (CNP) configured on their clusters.
+* For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network policies (CNP) configured on their clusters.
 * Flow logs are not currently available in the air gapped cloud.
 * Hubble relay may crash if one of the hubble node agents goes down and may cause interruptions to Hubble CLI.
 
 ### Scale
 
-Azure managed Prometheus and Grafana impose service-specific scale limitations. For more information, see [Scrape Prometheus metrics at scale in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-scrape-scale)
+Azure managed Prometheus and Grafana impose service-specific scale limitations. For more information, see [Scrape Prometheus metrics at scale in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-scrape-scale).
 
 
 ## Pricing
 > [!IMPORTANT]
-> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
+> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
 
 ## Next steps
 

@@ -542,7 +542,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/advanced-network-container-services-security-cli.md",
-            "redirect_url": "/azure/aks/how-to-apply-acns-fqdn-filtering-policies",
+            "redirect_url": "/azure/aks/how-to-apply-fqdn-filtering-policies",
             "redirect_document_id": false
         }
      ]

@@ -9,11 +9,9 @@ ms.topic: conceptual
 ms.date: 07/30/2024
 ---
 
-# Container Network security with Advanced Container Networking Services
+# What is Container Network Security?
 
-## What is Container Network Security ?
-
-Container Network Security is an offering of Advanced Container Networking Services that provides enhanced control over network traffic across containers. Container Network Security leverages Cilium-based policies, offering a more granular and user-friendly approach to managing network security compared to traditional IP-based methods.
+Container Network Security is an offering of [Advanced Container Networking Services](advanced-container-networking-services-overview.md) that provides enhanced control over network traffic across containers. Container Network Security leverages Cilium-based policies, offering a more granular and user-friendly approach to managing network security compared to traditional IP-based methods.
 
 ## Features of Container Network Security
 
@@ -42,13 +40,13 @@ When FQDN Filtering is enabled, DNS requests are first evaluated to determine if
 
 The ACNS Security Agent then decides whether to forward a DNS request to the DNS server based on the policy criteria. If permitted, the request is sent to the DNS server, and upon receiving the response, the ACNS Security Agent updates the Cilium Agent with FQDN mappings. This allows the Cilium Agent to update the network policy within the policy engine. The following image illustrates the high-level flow of FQDN Filtering.
 
-:::image type="content" source="./media/how-dns-proxy-works.png" alt-text="Screenshot showing how ACNS Security Agent works in FQDN filtering.":::
+[![Screenshot showing how ACNS Security Agent works in FQDN filtering.](./media/how-dns-proxy-works.png)](./media/how-dns-proxy-works.png#lightbox)
 
 ## Key benefits
 
 **Scalable security policy management**: Cluster and security admins don't have to update security policies each time an IP address changes making operations more efficient.
 
-**Enhanced security compliance**: FQDN filtering supports a zero trust security model. Network traffic is restricted to trusted domains only mitigating risks from unauthorized access.
+**Enhanced security compliance**: FQDN filtering supports a Zero Trust security model. Network traffic is restricted to trusted domains only mitigating risks from unauthorized access.
 
 **Resilient Policy enforcement**: The ACNS Security Agent that is implemented with FQDN filtering ensures that DNS resolution continues seamlessly even if the Cilium agent goes down and policies continue to remain enforced. This implementation critically ensures that security and stability are maintained in dynamic and distributed environments.
 
@@ -80,12 +78,12 @@ rules:
 
 ## Pricing
 > [!IMPORTANT]
-> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
+> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
 
 
 ## Next steps
 
-* Learn how to enable [Container Network Security](how-to-apply-acns-fqdn-filtering-policies.md) on AKS.
+* Learn how to enable [Container Network Security](how-to-apply-fqdn-filtering-policies.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 
