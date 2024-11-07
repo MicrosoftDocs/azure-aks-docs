@@ -165,117 +165,53 @@ For more information about AppArmor, see [AppArmor profiles in Kubernetes][k8s-a
 
 ### Secure computing
 
-While AppArmor works for any Linux application, [seccomp (*sec*ure *comp*uting)][seccomp] works at the process level. Seccomp is also a Linux kernel security module, and is natively supported by the Docker runtime used by AKS nodes. With seccomp, you can limit container process calls. Align to the best practice of granting the container minimal permission only to run by:
+While AppArmor works for any Linux application, [seccomp (*sec*ure *comp*uting)][seccomp] works at the process level. Seccomp is also a Linux kernel security module, and is natively supported by the containerD runtime used by AKS nodes. With seccomp, you can limit a container's system calls. This establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default seccomp profile for all workloads in the node. Seccomp profiles can be applied using [custom node configuration][custom-node-configuration] when creating a new linux node pool.
 
-* Defining with filters what actions to allow or deny.
-* Annotating within a pod YAML manifest to associate with the seccomp filter.
+Some workloads may require a lower amount of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the 'Unconfined' profile.
 
-To see seccomp in action, create a filter that prevents changing permissions on a file.
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-1. [SSH][aks-ssh] to an AKS node.
-1. Create a seccomp filter named */var/lib/kubelet/seccomp/prevent-chmod*.
-1. Copy and paste the following content:
+#### Register the `KubeletDefaultSeccompProfilePreview` feature flag
 
-    ```json
-    {
-      "defaultAction": "SCMP_ACT_ALLOW",
-      "syscalls": [
-        {
-          "name": "chmod",
-          "action": "SCMP_ACT_ERRNO"
-        },
-        {
-          "name": "fchmodat",
-          "action": "SCMP_ACT_ERRNO"
-        },
-        {
-          "name": "chmodat",
-          "action": "SCMP_ACT_ERRNO"
-        }
-      ]
-    }
+1. Register the `KubeletDefaultSeccompProfilePreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "KubeletDefaultSeccompProfilePreview"
     ```
 
-    In version 1.19 and later, you need to configure the following:
+    It takes a few minutes for the status to show *Registered*.
 
-    ```json
-    {
-      "defaultAction": "SCMP_ACT_ALLOW",
-      "syscalls": [
-        {
-          "names": ["chmod","fchmodat","chmodat"],
-          "action": "SCMP_ACT_ERRNO"
-        }
-      ]
-    }
+2. Verify the registration status using the [`az feature show`][az-feature-show] command.
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "KubeletDefaultSeccompProfilePreview"
     ```
 
-1. From your local machine, create a pod manifest named *aks-seccomp.yaml* and paste the following content. This manifest:
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
 
-    * Defines an annotation for `seccomp.security.alpha.kubernetes.io`.
-    * References the *prevent-chmod* filter created in the previous step.
-
-    ```yaml
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: chmod-prevented
-      annotations:
-        seccomp.security.alpha.kubernetes.io/pod: localhost/prevent-chmod
-    spec:
-      containers:
-      - name: chmod
-        image: mcr.microsoft.com/dotnet/runtime-deps:6.0
-        command:
-          - "chmod"
-        args:
-         - "777"
-         - /etc/hostname
-      restartPolicy: Never
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
     ```
 
-    In version 1.19 and later, you need to configure the following:
+### Restrict your container's system calls with seccomp
 
-    ```yaml
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      name: chmod-prevented
-    spec:
-      securityContext:
-        seccompProfile:
-          type: Localhost
-          localhostProfile: prevent-chmod
-      containers:
-      - name: chmod
-        image: mcr.microsoft.com/dotnet/runtime-deps:6.0
-        command:
-          - "chmod"
-        args:
-         - "777"
-         - /etc/hostname
-      restartPolicy: Never
-    ```
+1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying "seccompDefualt": "RuntimeDefault"
 
-1. Deploy the sample pod using the [kubectl apply][kubectl-apply] command:
+`RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls will fail. For more details, see the [containerD default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). 
 
-    ```console
-    kubectl apply -f ./aks-seccomp.yaml
-    ```
+1. Check that the configuration was applied
 
-1. View pod status using the [kubectl get pods][kubectl-get] command.
+After you apply custom node configuration, you can confirm the settings have been applied to the nodes by [connecting to the host][node-access] and verifying configuration changes have been made on the filesystem.
 
-    * The pod reports an error. 
-    * The `chmod` command is prevented from running by the seccomp filter, as shown in the following example output:
+1. Troubleshoot workload failures
 
-    ```
-    kubectl get pods
+When SeccompDefault is enabled, the container runtime default seccomp profile is used by default for all workloads scheduled on the node. This may cause workloads to fail due to blocked syscalls. 
 
-    NAME                      READY     STATUS    RESTARTS   AGE
-    chmod-prevented           0/1       Error     0          7s
-    ```
+If a workload failure has occured, you may see errors such as:
+- Workload is existing unexpectedly after the feature is enabled, with "permission denied" error.
+- Seccomp error messages can also be seen in auditd or syslog by replacing SCMP_ACT_ERRNO with SCMP_ACT_LOG in the default profile
 
-For more information about available filters, see [Seccomp security profiles for Docker][seccomp].
+If you experience the above errors, it is recommended to change your seccomp profile to `Unconfined`. `Unconfined` places no restrictions on syscalls, and all system calls are allowed which reduces security.
 
 ## Regularly update to the latest version of Kubernetes
 

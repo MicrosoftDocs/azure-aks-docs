@@ -103,11 +103,9 @@ To limit network traffic between pods in your cluster, AKS offers support for [K
 
 To protect pods running on AKS, consider [Microsoft Defender for Containers][microsoft-defender-for-containers] to detect and restrict cyber attacks against your applications running in your pods.  Run continual scanning to detect drift in the vulnerability state of your application and implement a "blue/green/canary" process to patch and replace the vulnerable images. 
 
-## Reducing system call vulnerabilities with Seccomp
+## Secure container access to resources
 
-Secure computing mode (seccomp) is used to restrict a container’s syscalls that can be sent to the kernel. This establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default seccomp profile for all workloads in the node. Seccomp profiles can be applied using [custom node configuration][custom-node-configuration].
-
-Some workloads may require a lower amount of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the 'Unconfined' profile.
+In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. Built-in Linux security features such as *AppArmor* and *seccomp* are recommended as [best practices to secure container access to resources][security-best-practices]. 
 
 ## Kubernetes Secrets
 
@@ -171,3 +169,4 @@ For more information on core Kubernetes and AKS concepts, see:
 [manage-ssh-access]: manage-ssh-node-access.md
 [trusted-launch]: use-trusted-launch.md
 [custom-node-configuration]: /azure/aks/custom-node-configuration
+[security-best-practices]: /azure/aks/operator-best-practices-cluster-security
