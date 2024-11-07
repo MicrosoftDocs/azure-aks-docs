@@ -59,10 +59,9 @@ The following sections contain the key signals which we recommend all AKS custom
 
 | Alert scenario | Source | Signal | Recommended threshold |
 |---|---|---|---|
-| Critical System Pods are Unhealthy | AKS Platform Metric | Number of pods by phase | Set the alert for pods with Namespace = kube-system, Phase = Pending or Failed for >15 minutes. |
-| Application Pods are Unhealthy | Azure Managed Prometheus Metric |  | Set the alert for pods within your application namespace where phase = Pending or Failed for >15 minutes. |
-| Pods are in Crash Loop State | Azure Managed Prometheus Metric |  |  |
-| OOMKilled Pods | Azure Managed Prometheus Metric |  |  |
+| High number of unhealthy pods | Azure Managed Prometheus Metric | Alert name: KubePodReadyStateLow | This is available as an AKS recommended alert. To enable this alert, see [Recommended alert rules for Kubernetes clusters](/azure/azure-monitor/containers/kubernetes-metric-alerts?tabs=portal) |
+| One or more pods are restarting | Azure Managed Prometheus Metric | Alert name: KubePodContainerRestart | This is available as an AKS recommended alert. To enable this alert, see [Recommended alert rules for Kubernetes clusters](/azure/azure-monitor/containers/kubernetes-metric-alerts?tabs=portal) |
+| One or more pods are in CrashLoop status | Azure Managed Prometheus Metric | Alert name: KubePodCrashLooping | This is available as an AKS recommended alert. To enable this alert, see [Recommended alert rules for Kubernetes clusters](/azure/azure-monitor/containers/kubernetes-metric-alerts?tabs=portal) |
 
 ### Kubernetes control plane alerts
 
