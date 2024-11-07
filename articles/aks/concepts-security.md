@@ -46,18 +46,18 @@ You can control access to the API server using Kubernetes role-based access cont
 AKS nodes are Azure virtual machines (VMs) that you manage and maintain.
 
 * Linux nodes run optimized versions of Ubuntu or Azure Linux.
-* Windows Server nodes run an optimized Windows Server 2019 release using the `containerd` or Docker container runtime.
+* Windows Server nodes run an optimized Windows Server 2022 release using the `containerd` container runtime.
 
 When an AKS cluster is created or scaled up, the nodes are automatically deployed with the latest OS security updates and configurations.
 
 > [!NOTE]
 > AKS clusters running:
-> * Kubernetes version 1.19 and higher - Linux node pools use `containerd` as its container runtime. Windows Server 2019 node pools use `containerd` as its container runtime, which is currently in preview. For more information, see [Add a Windows Server node pool with `containerd`][aks-add-np-containerd].
-> * Kubernetes version 1.19 and earlier - Linux node pools use Docker as its container runtime. Windows Server 2019 node pools use Docker for the default container runtime.
+> * Kubernetes version 1.19 and higher - Linux node pools use `containerd` as its container runtime. Windows Server 2019 and Windows Server 2022 node pools use `containerd` as its container runtime. For more information, see [Add a Windows Server node pool with `containerd`][aks-add-np-containerd].
+> * Kubernetes version 1.19 and earlier - Linux node pools use Docker as its container runtime. 
 
 For more information about the security upgrade process for Linux and Windows worker nodes, see [Security patching nodes][aks-vulnerability-management-nodes].
 
-AKS clusters running Azure Generation 2 VMs includes support for [Trusted Launch][trusted-launch] (preview), which protects against advanced and persistent attack techniques by combining technologies that can be independently enabled, like secure boot and virtualized version of trusted platform module (vTPM). Administrators can deploy AKS worker nodes with verified and signed bootloaders, OS kernels, and drivers to ensure integrity of the entire boot chain of the underlying VM.
+AKS clusters running Azure Generation 2 VMs includes support for [Trusted Launch][trusted-launch], which protects against advanced and persistent attack techniques by combining technologies that can be independently enabled, like secure boot and virtualized version of trusted platform module (vTPM). Administrators can deploy AKS worker nodes with verified and signed bootloaders, OS kernels, and drivers to ensure integrity of the entire boot chain of the underlying VM.
 
 ### Node authorization
 
@@ -102,6 +102,12 @@ To limit network traffic between pods in your cluster, AKS offers support for [K
 ## Application Security
 
 To protect pods running on AKS, consider [Microsoft Defender for Containers][microsoft-defender-for-containers] to detect and restrict cyber attacks against your applications running in your pods.  Run continual scanning to detect drift in the vulnerability state of your application and implement a "blue/green/canary" process to patch and replace the vulnerable images. 
+
+## Reducing system call vulnerabilities with Seccomp
+
+Secure computing mode (seccomp) is used to restrict a container’s syscalls that can be sent to the kernel. This establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default seccomp profile for all workloads in the node. Seccomp profiles can be applied using [custom node configuration][custom-node-configuration].
+
+Some workloads may require a lower amount of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the 'Unconfined' profile.
 
 ## Kubernetes Secrets
 
@@ -164,3 +170,4 @@ For more information on core Kubernetes and AKS concepts, see:
 [aks-vulnerability-management-nodes]: concepts-vulnerability-management.md#worker-nodes
 [manage-ssh-access]: manage-ssh-node-access.md
 [trusted-launch]: use-trusted-launch.md
+[custom-node-configuration]: /azure/aks/custom-node-configuration
