@@ -36,7 +36,7 @@
     href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
-    - name: 1) Configure Kubernetes Fleet Manager
+    - name: Configure Kubernetes Fleet Manager
       items:
         - name: Upgrade hub cluster type
           href: upgrade-hub-cluster-type.md
@@ -44,13 +44,13 @@
           href: cluster-resource-override.md
         - name: Customize namespace scoped resources with resource overrides
           href: resource-override.md
-    - name: 2) Manage multi-cluster updates
+    - name: Manage multi-cluster updates
       items:
         - name: Update Kubernetes and node images across multiple clusters
           href: update-orchestration.md
         - name: Automate updates of Kubernetes and node images across multiple clusters
           href: update-automation.md
-    - name: 3) Multi-cluster workload placement
+    - name: Multi-cluster workload placement
       items:
         - name: Intelligent Kubernetes resource placement based on member cluster properties
           href: intelligent-resource-placement.md
