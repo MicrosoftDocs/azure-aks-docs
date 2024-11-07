@@ -199,11 +199,11 @@ Some workloads may require a lower amount of syscall restrictions than others. T
 
 `RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls will fail. For more details, see the [containerD default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). 
 
-1. Check that the configuration was applied
+2. Check that the configuration was applied
 
 After you apply custom node configuration, you can confirm the settings have been applied to the nodes by [connecting to the host][node-access] and verifying configuration changes have been made on the filesystem.
 
-1. Troubleshoot workload failures
+3. Troubleshoot workload failures
 
 When SeccompDefault is enabled, the container runtime default seccomp profile is used by default for all workloads scheduled on the node. This may cause workloads to fail due to blocked syscalls. 
 
