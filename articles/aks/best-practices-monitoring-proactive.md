@@ -55,7 +55,7 @@ The following sections contain the key signals which we recommend all AKS custom
 | High Node CPU Usage | AKS Platform Metric | CPU Usage Percentage | Node CPU Usage is greater than 90%. |
 | High Node Memory Usage | AKS Platform Metric | Memory Working Set Percentage | Node Memory Usage is greater than 90%. |
 | Node is in NotReady state | AKS Platform Metric | Status for various node conditions | Node is in NotReady state for >20 minutes. |
-| SNAT port exhaustion | Load Balancer (LB) Metric | SNAT Connection Count |  |
+| SNAT port exhaustion | Load Balancer (LB) Metric | SNAT Connection Count | Filter for Connection State = "Failed" |
 
 ### Application health alerts
 
@@ -69,10 +69,9 @@ The following sections contain the key signals which we recommend all AKS custom
 
 | Alert scenario | Source | Signal | Recommended threshold |
 |---|---|---|---|
-| ETCD is Filled Up | Azure Managed Prometheus Metric |  |  |
+| ETCD is Filled Up | Azure Managed Prometheus Metric | etcd_mvcc_db_total_size_in_use_in_bytes | ETCD has exceeded 2GB utilization |
 | API Server Too Many Requests Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error code 429 |
 | API Server Webhook and Tunnel Errors | Azure Managed Prometheus Metric | apiserver_request_total | Filter for error codes 500 and 503 |
-| API Server timeouts and retries | Azure Managed Prometheus Metric |  |  |
 
 ## Next steps
 
