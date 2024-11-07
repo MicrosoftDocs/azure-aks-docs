@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.date: 11/01/2024
 author: schaffererin
 ms.author: schaffererin
+ms.subservice: aks-monitoring
 ---
 
 # Proactive monitoring best practices for Azure Kubernetes Service (AKS)
