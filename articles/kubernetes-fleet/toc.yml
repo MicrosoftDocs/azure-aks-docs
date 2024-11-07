@@ -36,22 +36,28 @@
     href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
-  - name: Intelligent Kubernetes resource placement based on member cluster properties
-    href: intelligent-resource-placement.md
-  - name: Upgrade hub cluster type
-    href: upgrade-hub-cluster-type.md
-  - name: Update Kubernetes and node images across multiple clusters
-    href: update-orchestration.md
-  - name: Automate updates of Kubernetes and node images across multiple clusters
-    href: update-automation.md
-  - name: Multi-cluster Layer 4 Load Balancing
-    href: l4-load-balancing.md
-  - name: Use taints and tolerations to schedule workloads
-    href: use-taints-tolerations.md
-  - name: Customize cluster scoped resources with cluster resource overrides
-    href: cluster-resource-override.md
-  - name: Customize namespace scoped resources with resource overrides
-    href: resource-override.md
+    - name: 1) Configure Kubernetes Fleet Manager
+      items:
+        - name: Upgrade hub cluster type
+          href: upgrade-hub-cluster-type.md
+        - name: Customize cluster scoped resources with cluster resource overrides
+          href: cluster-resource-override.md
+        - name: Customize namespace scoped resources with resource overrides
+          href: resource-override.md
+    - name: 2) Manage multi-cluster updates
+      items:
+        - name: Update Kubernetes and node images across multiple clusters
+          href: update-orchestration.md
+        - name: Automate updates of Kubernetes and node images across multiple clusters
+          href: update-automation.md
+    - name: 3) Multi-cluster workload placement
+      items:
+        - name: Intelligent Kubernetes resource placement based on member cluster properties
+          href: intelligent-resource-placement.md
+        - name: Multi-cluster Layer 4 Load Balancing
+          href: l4-load-balancing.md
+        - name: Use taints and tolerations to schedule workloads
+          href: use-taints-tolerations.md
 - name: Resources
   items:
   - name: Pricing
