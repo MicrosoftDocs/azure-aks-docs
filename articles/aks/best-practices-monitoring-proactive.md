@@ -23,12 +23,12 @@ The best way to proactively monitor your cluster is to configure [Azure Monitor 
 ## How to configure alerts on specific metric types
 | Metric type | Where to find these metrics | How to configure alerts |
 |---|---|---|
-| [AKS Platform Metric](./monitor-aks.md#azure-monitor-platform-metrics) | Azure Portal |  |
-| [Azure Managed Prometheus Metric](/azure/azure-monitor/essentials/prometheus-metrics-overview) |  |  |
-| [Azure Activity Logs](./monitor-aks-reference.md#activity-log) |  |  |
-| Virtual Machine Scale Set (VMSS) Metric |  |  |
-| Load Balancer Metric |  |  |
-| Kubernetes Event |  |  |
+| AKS Platform Metric | View [platform metrics](./monitor-aks.md#azure-monitor-platform-metrics) through the Metrics blade in the Azure Portal. | You can create, update, and delete metric alerts through the Azure Portal. See [Create a metric alert for an Azure resource](/azure/azure-monitor/alerts/tutorial-metric-alert) for more details. |
+| Azure Managed Prometheus Metric | To access Prometheus metrics, you need to enable Managed Prometheus. See [Azure Monitor and Prometheus](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-overview) for details on how to enable and view Prometheus metrics. | See [Azure Monitor managed service for Prometheus rule groups](/azure/azure-monitor/essentials/prometheus-rule-groups) |
+| Azure Activity Logs | View activity logs through the Azure Portal. See [Azure activity logs for AKS](./monitor-aks.md#azure-activity-log) for more details. | Configure alerts on activity logs through the Azure Portal. See [Activity log alerts](/azure/azure-monitor/alerts/alerts-types#activity-log-alerts) for more details. |
+| Virtual Machine Scale Set (VMSS) Metric | View the VMSS metrics through the VMSS page in Azure Portal. | To find the VMSS instance associated with your nodepool, navigate to the Settings -> Properties blade in the AKS Azure Portal page. Click on your Infrastructure resource group to bring up the infrastructure resources associated with your cluster. Select the VMSS instance which matches the name of your nodepool you are creating alerts for. Navigate to the Alerts blade to create your VMSS metric alert. |
+| Load Balancer Metric | View load balancer metrics through the Load Balancer page in Azure Portal. | To find the load balancer instance associated with your nodepool, navigate to the Settings -> Properties blade in the AKS Azure Portal page. Click on your Infrastructure resource group to bring up the infrastructure resources associated with your cluster. Select the Load balancer instance to bring up the Azure Portal page for load balancer. Navigate to the Alerts blade to create your load balancer metric alert. |
+| Logs and Events | To alert on logs and events, you need to enable Container Insights. See [Azure Monitor resource logs](./monitor-aks.md#azure-monitor-resource-logs) for more details. | See [Create log search alerts from Container insights](/azure/azure-monitor/containers/container-insights-log-alerts) for guidance on creating alerts on logs and events. |
 
 
 ## Critical signals for configuring alerts
