@@ -295,7 +295,7 @@ For Windows Server nodes, regularly perform a node image upgrade operation to sa
 
 <!-- EXTERNAL LINKS -->
 [k8s-apparmor]: https://kubernetes.io/docs/tutorials/clusters/apparmor/
-[seccomp]: https://kubernetes.io/docs/concepts/policy/pod-security-policy/#seccomp
+[seccomp]: https://kubernetes.io/docs/reference/node/seccomp/
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-exec]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
