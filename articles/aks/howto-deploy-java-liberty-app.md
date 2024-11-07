@@ -52,7 +52,7 @@ If you're interested in providing feedback or working closely on your migration 
 
 The following steps guide you to create a Liberty runtime on AKS. After you complete these steps, you'll have a Container Registry instance and an AKS cluster for deploying your containerized application.
 
-1. Go to the [Azure portal](https://portal.azure.com/). In the search box at the top of the page, enter **IBM Liberty on AKS**. When the suggestions appear, select the one and only match in the **Marketplace** section.
+1. Go to the [Azure portal](https://portal.azure.com/). In the search box at the top of the page, enter **WebSphere Liberty/Open Liberty on Kubernetes**. When the suggestions appear, select the one and only match in the **Marketplace** section.
 
    If you prefer, you can [go directly to the offer](https://aka.ms/liberty-aks).
 
@@ -60,24 +60,8 @@ The following steps guide you to create a Liberty runtime on AKS. After you comp
 
 1. On the **Basics** pane:
 
-   1. Create a new resource group. Because resource groups must be unique within a subscription, choose a unique name. An easy way to have unique names is to use a combination of your initials, today's date, and some identifier (for example, `ejb0913-java-liberty-project-rg`).
-   1. For **Region**, select **East US**.
-
-   1. Create an environment variable in your shell for the resource group names for the cluster and the database:
-
-      ### [Bash](#tab/in-bash)
-
-      ```bash
-      export RESOURCE_GROUP_NAME=<your-resource-group-name>
-      ```
-
-      ### [PowerShell](#tab/in-powershell)
-
-      ```powershell
-      $Env:RESOURCE_GROUP_NAME="<your-resource-group-name>"
-      ```
-
-      ---
+   1. Create a new resource group. Because resource groups must be unique within a subscription, choose a unique name. An easy way to have unique names is to use a combination of your initials, today's date, and some identifier (for example, `ejb0913-java-liberty-project-rg`). Save aside the resource group name for later use in this article.
+   1. For **Region**, select a region that's close to you. For example, select **East US 2**.
 
 1. Select **Next**. On the **AKS** pane, you can optionally select an existing AKS cluster and Container Registry instance, instead of causing the deployment to create new ones. This choice enables you to use the sidecar pattern, as shown in the [Azure Architecture Center](/azure/architecture/patterns/sidecar). You can also adjust the settings for the size and number of the virtual machines in the AKS node pool.
 
@@ -108,7 +92,7 @@ If you moved away from the **Deployment is in progress** pane, the following ste
 1. In the box with the text **Filter for any field**, enter the first few characters of the resource group that you created previously. If you followed the recommended convention, enter your initials, and then select the appropriate resource group.
 1. In the list of resources in the resource group, select the resource with the **Type** value of **Container registry**.
 1. On the navigation pane, under **Settings**, select **Access keys**.
-1. Save aside the values for **Login server** and **Registry name**. You can use the copy icon next to each field to copy the value to the system clipboard.
+1. Save aside the values for **Registry name** and **Login server**. You can use the copy icon next to each field to copy the value to the system clipboard.
 
    > [!NOTE]
    > This article uses the [`az acr build`](/cli/azure/acr#az-acr-build) command to build  and push the Docker image to the Container Registry, without using `username` and `password` of the Container Registry. It's still possible to use username and password with `docker login` and `docker push`. Using username and password is less secure than passwordless authentication.
@@ -120,46 +104,247 @@ If you moved away from the **Deployment is in progress** pane, the following ste
 1. By using the same copy technique as with the preceding values, save aside the values for the following outputs:
 
    * `cmdToConnectToCluster`
-   * `appDeploymentTemplateYaml` if the deployment doesn't include an application. That is, you selected **No** for **Deploy an application?** when you deployed the Marketplace offer.
-   * `appDeploymentYaml` if the deployment does include an application. That is, you selected **Yes** for **Deploy an application?**.
+   * `appDeploymentTemplateYaml` if the deployment doesn't include an application. That is, you selected **No** for **Deploy an application?** when you deployed the Marketplace offer. This article selected **No**. However, if you selected **Yes**, save aside the value of `appDeploymentYaml`, which includes the application deployment.
 
-   ### [Bash](#tab/in-bash)
+      ### [Bash](#tab/in-bash)
 
-   Paste the value of `appDeploymentTemplateYaml` or `appDeploymentYaml` into a Bash shell, append `| grep secretName`, and run the command.
+      Paste the value of `appDeploymentTemplateYaml` or `appDeploymentYaml` into a Bash shell, and run the command.
 
-   The output of this command is the ingress TLS secret name, such as `- secretName: secret785e2c`. Save aside the `secretName` value.
+      ### [PowerShell](#tab/in-powershell)
 
-   ### [PowerShell](#tab/in-powershell)
+      Paste the value of `appDeploymentTemplateYaml` or `appDeploymentYaml` into PowerShell (excluding the `| base64` portion), append `| ForEach-Object { [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_)) }`, and run the command.
 
-   Paste the quoted string in `appDeploymentTemplateYaml` or `appDeploymentYaml` into PowerShell (excluding the `| base64` portion), append `| ForEach-Object { [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($_)) } | Select-String "secretName"`, and run the command.
+       ---
 
-   The output of this command is the ingress TLS secret name, such as `- secretName: secret785e2c`. Save aside the `secretName` value.
+      The output of this command is the application deployment YAML. Look for the ingress TLS secret with keyword `secretName`, such as `- secretName: secret785e2c`. Save aside the `secretName` value.
 
-    ---
-
-You use these values later in this article. The outputs list several other useful commands.
-
-## Create an Azure SQL Database instance
-
-[!INCLUDE [create-azure-sql-database](includes/jakartaee/create-azure-sql-database.md)]
-
-Then, use the following command to create an environment variable in your shell for the resource group name for the database:
+Run the following commands to set the environment variables that you captured in the previous steps. These environment variables are used later in this article.
 
 ### [Bash](#tab/in-bash)
 
 ```bash
-export DB_RESOURCE_GROUP_NAME=<db-resource-group>
+export RESOURCE_GROUP_NAME=<your-resource-group-name>
+export REGISTRY_NAME=<your-registry-nam-of-container-registry>
+export LOGIN_SERVER=<your-login-server-of-container-registry>
+export INGRESS_TLS_SECRET=<your-ingress-tls-secret-name>
 ```
 
 ### [PowerShell](#tab/in-powershell)
 
 ```powershell
-$Env:DB_RESOURCE_GROUP_NAME="<db-resource-group>"
+$Env:RESOURCE_GROUP_NAME="<your-resource-group-name>"
+$Env:REGISTRY_NAME="<your-registry-nam-of-container-registry>"
+$Env:LOGIN_SERVER="<your-login-server-of-container-registry>"
+$Env:INGRESS_TLS_SECRET="<your-ingress-tls-secret-name>"
 ```
 
 ---
 
-Now that you created the database and AKS cluster, you can proceed to preparing AKS to host your Open Liberty application.
+## Create an Azure SQL Database instance
+
+In this section, you create an Azure SQL Database single database for use with your app.
+
+### [Bash](#tab/in-bash)
+
+First, set database-related environment variables. Replace `<your-unique-sql-server-name>` with a unique name for your Azure SQL Database server.
+
+```bash
+export SQL_SERVER_NAME=<your-unique-sql-server-name>
+export DB_NAME=demodb
+```
+
+Run the following command in your terminal to create a single database in Azure SQL Database and set the current signed-in user as a Microsoft Entra admin. For more information, see [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart?view=azuresql-db&preserve-view=true&tabs=azure-cli).
+
+```azurecli
+export ENTRA_ADMIN_NAME=$(az account show --query user.name --output tsv)
+
+az sql server create \
+    --name $SQL_SERVER_NAME \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --enable-ad-only-auth \
+    --external-admin-principal-type User \
+    --external-admin-name $ENTRA_ADMIN_NAME \
+    --external-admin-sid $(az ad signed-in-user show --query id --output tsv)
+az sql db create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --server $SQL_SERVER_NAME \
+    --name $DB_NAME \
+    --edition GeneralPurpose \
+    --compute-model Serverless \
+    --family Gen5 \
+    --capacity 2
+```
+
+Then, add the local IP address to the Azure SQL Database server firewall rules to allow your local machine to connect to the database for local testing later.
+
+```azurecli
+export AZ_LOCAL_IP_ADDRESS=$(curl -s https://whatismyip.akamai.com)
+az sql server firewall-rule create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --server $SQL_SERVER_NAME \
+    --name AllowLocalIP \
+    --start-ip-address $AZ_LOCAL_IP_ADDRESS \
+    --end-ip-address $AZ_LOCAL_IP_ADDRESS
+```
+
+### [PowerShell](#tab/in-powershell)
+
+First, set database-related environment variables. Replace `<your-unique-sql-server-name>` with a unique name for your Azure SQL Database server.
+
+```powershell
+$Env:SQL_SERVER_NAME = "<your-unique-sql-server-name>"
+$Env:DB_NAME = "demodb"
+```
+
+Run the following command in your terminal to create a single database in Azure SQL Database and set the current signed-in user as Microsoft Entra admin. For more information, see [Quickstart: Create a single database - Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart?view=azuresql-db&preserve-view=true&tabs=azure-powershell).
+
+```azurepowershell
+$Env:ENTRA_ADMIN_NAME = $(az account show --query user.name --output tsv)
+
+az sql server create --name $Env:SQL_SERVER_NAME --resource-group $Env:RESOURCE_GROUP_NAME --enable-ad-only-auth --external-admin-principal-type User --external-admin-name $Env:ENTRA_ADMIN_NAME --external-admin-sid $(az ad signed-in-user show --query id --output tsv)
+az sql db create --resource-group $Env:RESOURCE_GROUP_NAME --server $Env:SQL_SERVER_NAME --name $Env:DB_NAME --edition GeneralPurpose --compute-model Serverless --family Gen5 --capacity 2
+```
+
+Then, add the local IP address to the Azure SQL Database server firewall rules to allow your local machine to connect to the database for local testing later.
+
+```azurepowershell
+$Env:AZ_LOCAL_IP_ADDRESS = (Invoke-WebRequest https://whatismyip.akamai.com).Content
+az sql server firewall-rule create --resource-group $Env:RESOURCE_GROUP_NAME --server $Env:SQL_SERVER_NAME --name AllowLocalIP --start-ip-address $Env:AZ_LOCAL_IP_ADDRESS --end-ip-address $Env:AZ_LOCAL_IP_ADDRESS
+```
+
+---
+
+> [!NOTE]
+> You create an Azure SQL server with SQL authentication disabled for security considerations. Only Microsoft Entra ID is used to authenticate to the server. If you need to enable SQL authentication, see [az sql server create](/cli/azure/sql/server#az-sql-server-create) for more information.
+
+## Create a service connection in AKS with Service Connector
+
+In this section, you create a service connection between the AKS cluster and the Azure SQL Database using Microsoft Entra Workload ID with Service Connector. This connection allows the AKS cluster to access the Azure SQL Database without using SQL authentication.
+
+First, grant app **Azure Service Connector Resource Provider** permissions to the Application Gateway deployed before. This step is required to successfully create a service connection between the AKS cluster and the Azure SQL Database.
+
+1. Go to the Azure portal and navigate to the resource group that you created earlier.
+1. In the list of resources in the resource group, select the resource with the **Type** value of **Application gateway**.
+1. Select **Access control (IAM)**. Then, expand **Add** and select **Add role assignment**.
+1. In **Role** tab, select **Priviledged administrator roles**. Then, select **Contributor**. Select **Next**.
+1. In **Members** tab, select **Select members**. Then, search for the **Azure Service Connector Resource Provider** app. Select the app and select **Select**. Select **Next**.
+1. Select **Review + assign**. Wait for a few seconds for the role assignment to complete.
+
+Then, run the following commands to create a connection between the AKS cluster and the SQL database using Microsoft Entra Workload ID with Service Connector. For more information, see [Create a service connection in AKS with Service Connector (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?tabs=azure-cli&pivots=workload-id#create-a-service-connection-in-aks-with-service-connector-preview).
+
+### [Bash](#tab/in-bash)
+
+```azurecli
+# Register the Service Connector and Kubernetes Configuration resource providers
+az provider register --namespace Microsoft.ServiceLinker --wait
+az provider register --namespace Microsoft.KubernetesConfiguration --wait
+
+# Install the Service Connector passwordless extension
+az extension add --name serviceconnector-passwordless --upgrade --allow-preview true
+
+# Retrieve the AKS cluster and Azure SQL Server resource IDs
+export AKS_CLUSTER_RESOURCE_ID=$(az aks show \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $CLUSTER_NAME \
+    --query id \
+    --output tsv)
+export AZURE_SQL_SERVER_RESOURCE_ID=$(az sql server show \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $SQL_SERVER_NAME \
+    --query id \
+    --output tsv)
+
+# Create a user-assigned managed identity used for workload identity
+export USER_ASSIGNED_IDENTITY_NAME=workload-identity-uami
+az identity create \
+    --resource-group ${RESOURCE_GROUP_NAME} \
+    --name ${USER_ASSIGNED_IDENTITY_NAME}
+
+# Retrieve the user-assigned managed identity resource ID
+export UAMI_RESOURCE_ID=$(az identity show \
+    --resource-group ${RESOURCE_GROUP_NAME} \
+    --name ${USER_ASSIGNED_IDENTITY_NAME} \
+    --query id \
+    --output tsv)
+
+# Create a service connection between your AKS cluster and your SQL database using Microsoft Entra Workload ID
+az aks connection create sql \
+    --connection akssqlconn \
+    --client-type java \
+    --source-id $AKS_CLUSTER_RESOURCE_ID \
+    --target-id $AZURE_SQL_SERVER_RESOURCE_ID/databases/$DB_NAME \
+    --workload-identity $UAMI_RESOURCE_ID
+```
+
+### [PowerShell](#tab/in-powershell)
+
+```azurepowershell
+# Register the Service Connector and Kubernetes Configuration resource providers
+az provider register --namespace Microsoft.ServiceLinker --wait
+az provider register --namespace Microsoft.KubernetesConfiguration --wait
+
+# Install the Service Connector passwordless extension
+az extension add --name serviceconnector-passwordless --upgrade --allow-preview true
+
+# Retrieve the AKS cluster and Azure SQL Server resource IDs
+$Env:AKS_CLUSTER_RESOURCE_ID = $(az aks show --resource-group $Env:RESOURCE_GROUP_NAME --name $Env:CLUSTER_NAME --query id --output tsv)
+$Env:AZURE_SQL_SERVER_RESOURCE_ID = $(az sql server show --resource-group $Env:RESOURCE_GROUP_NAME --name $Env:SQL_SERVER_NAME --query id --output tsv)
+
+# Create a user-assigned managed identity used for workload identity
+$Env:USER_ASSIGNED_IDENTITY_NAME = "workload-identity-uami"
+az identity create --resource-group $Env:RESOURCE_GROUP_NAME --name $Env:USER_ASSIGNED_IDENTITY_NAME
+
+# Retrieve the user-assigned managed identity resource ID
+$Env:UAMI_RESOURCE_ID = $(az identity show --resource-group $Env:RESOURCE_GROUP_NAME --name $Env:USER_ASSIGNED_IDENTITY_NAME --query id --output tsv)
+
+# Create a service connection between your AKS cluster and your SQL database using Microsoft Entra Workload ID
+az aks connection create sql --connection akssqlconn --client-type java --source-id $Env:AKS_CLUSTER_RESOURCE_ID --target-id $Env:AZURE_SQL_SERVER_RESOURCE_ID/databases/$Env:DB_NAME --workload-identity $Env:UAMI_RESOURCE_ID
+```
+
+---
+
+> [!NOTE]
+> It's recommneded to use Microsoft Entra Workload ID for secure access to your Azure SQL Database without using SQL authentication. If you need to use SQL authentication, ignore the above steps in this section and use the username and password to connect to the Azure SQL Database.
+
+### Get servcie account and secret created by Service Connector
+
+To authenticate to the Azure SQL Database, you need to get the service account and secret created by Service Connector. Follow the section [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container). Take the option **Directly create a deployment using the YAML sample code snippet provided** and execute the following steps:
+
+1. From the highlighted sections in the sample Kubernetes deployment YAML, copy the `serviceAccountName` and `secretRef.name` values, as shown in the following example:
+
+   ```yaml
+   serviceAccountName: <service-account-name>
+   containers:
+   - name: raw-linux
+      envFrom:
+         - secretRef:
+            name: <secret-name>
+   ```
+
+1. Replace `<service-account-name>` and `<secret-name>` with the values you copied in the previous step to define the following environment variables:
+
+   ### [Bash](#tab/in-bash)
+
+   ```bash
+   export SERVICE_ACCOUNT_NAME=<service-account-name>
+   export SECRET_NAME=<secret-name>
+   ```
+
+   ### [PowerShell](#tab/in-powershell)
+
+   ```powershell
+   $Env:SERVICE_ACCOUNT_NAME = "<service-account-name>"
+   $Env:SECRET_NAME = "<secret-name>"
+   ```
+
+    ---
+
+   These values are used in the next section to deploy the Liberty application to the AKS cluster.
+
+> [!NOTE]
+> The secret created by Service Connector contains the `AZURE_SQL_CONNECTIONSTRING`, which is a password free connection string to the Azure SQL Database. See sample value from [User-assigned managed identity authentication](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java#user-assigned-managed-identity) for more information.
+
+Now that you set up the database and AKS cluster, you can proceed to preparing AKS to host your Open Liberty application.
 
 ## Configure and deploy the sample application
 
@@ -498,14 +683,12 @@ To avoid Azure charges, you should clean up unnecessary resources. When you no l
 
 ```bash
 az group delete --name $RESOURCE_GROUP_NAME --yes --no-wait
-az group delete --name $DB_RESOURCE_GROUP_NAME --yes --no-wait
 ```
 
 ### [PowerShell](#tab/in-powershell)
 
 ```powershell
 az group delete --name $Env:RESOURCE_GROUP_NAME --yes --no-wait
-az group delete --name $Env:DB_RESOURCE_GROUP_NAME --yes --no-wait
 ```
 
 ---
