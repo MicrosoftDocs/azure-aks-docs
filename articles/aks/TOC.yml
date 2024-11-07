@@ -99,6 +99,8 @@
       href: free-standard-pricing-tiers.md
     - name: Maintain and upgrade an AKS cluster
       href: upgrade.md
+    - name: AKS Communication Manager (Preview)
+      href: aks-communication-manager.md
     - name: Resource reservations
       href: node-resource-reservations.md
     - name: Backup and recover cluster
