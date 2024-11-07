@@ -354,7 +354,7 @@ Follow the steps in this section to deploy the sample application on the Liberty
 
 Clone the sample code for this article. The sample is on [GitHub](https://github.com/Azure-Samples/open-liberty-on-aks).
 
-There are a few samples in the repository. This article uses *java-app/*. Run the following commands to get the sample:
+There are a few samples in the repository. This article uses *java-app*. Run the following commands to get the sample:
 
 #### [Bash](#tab/in-bash)
 
@@ -362,7 +362,7 @@ There are a few samples in the repository. This article uses *java-app/*. Run th
 git clone https://github.com/Azure-Samples/open-liberty-on-aks.git
 cd open-liberty-on-aks
 export BASE_DIR=$PWD
-git checkout 20240220
+git checkout 20241107
 ```
 
 #### [PowerShell](#tab/in-powershell)
@@ -370,25 +370,21 @@ git checkout 20240220
 ```powershell
 git clone https://github.com/Azure-Samples/open-liberty-on-aks.git
 cd open-liberty-on-aks
-$env:BASE_DIR=$PWD.Path
-git checkout 20240109
+$Env:BASE_DIR=$PWD.Path
+git checkout 20241107
 ```
 
 ---
 
 If you see a message about being in "detached HEAD" state, you can safely ignore it. The message just means that you checked out a tag.
 
-Here's the file structure of the application:
+Here's the file structure of the application with important files and directories:
 
 ```
 java-app
 ├─ src/main/
 │  ├─ aks/
-│  │  ├─ db-secret.yaml
-│  │  ├─ openlibertyapplication-agic.yaml
-│  │  ├─ openlibertyapplication.yaml
-│  │  ├─ webspherelibertyapplication-agic.yaml
-│  │  ├─ webspherelibertyapplication.yaml
+│  │  ├─ openlibertyapplication-agic-passwordless-db.yaml
 │  ├─ docker/
 │  │  ├─ Dockerfile
 │  │  ├─ Dockerfile-wlp
@@ -398,45 +394,38 @@ java-app
 │  ├─ resources/
 │  ├─ webapp/
 ├─ pom.xml
+├─ pom-azure-identity.xml
 ```
 
 The directories *java*, *resources*, and *webapp* contain the source code of the sample application. The code declares and uses a data source named `jdbc/JavaEECafeDB`.
 
-In the *aks* directory, there are five deployment files:
+In the *aks* directory, the file *openlibertyapplication-agic-passwordless-db.yaml* is used to deploy the application image with AGIC and passwordless connection to the Azure SQL Database. This article assumes that you use this file.
 
-* *db-secret.xml*: Use this file to create [Kubernetes Secrets](https://kubernetes.io/docs/concepts/configuration/secret/) with database connection credentials.
-* *openlibertyapplication-agic.yaml*: Use this file to deploy the Open Liberty application with AGIC. This article assumes that you use this file.
-* *openlibertyapplication.yaml*: Use this file if you want to deploy the Open Liberty application without AGIC.
-* *webspherelibertyapplication-agic.yaml*: Use this file to deploy the WebSphere Liberty application with AGIC if you deployed WebSphere Liberty Operator [earlier in this article](#create-a-liberty-on-aks-deployment-using-the-portal).
-* *webspherelibertyapplication.yaml*: Use this file to deploy the WebSphere Liberty application without AGIC if you deployed WebSphere Liberty Operator earlier in this article.
+In the *docker* directory, there are two files to create the application image with either Open Liberty or WebSphere Liberty.
 
-In the *docker* directory, there are two files to create the application image:
+In the directory *liberty/config*, the *server.xml* is used to configure the database connection for the Open Liberty and WebSphere Liberty cluster. It defines a variable `azure.sql.connectionstring` that is used to connect to the Azure SQL Database.
 
-* *Dockerfile*: Use this file to build the application image with Open Liberty in this article.
-* *Dockerfile-wlp*: Use this file to build the application image with WebSphere Liberty if you deployed WebSphere Liberty Operator earlier in this article.
+The *pom.xml* file is the Maven project object model (POM) file that contains the configuration information for the project. The *pom-azure-identity.xml* file declares `azure-identity` dependency, which is used to authenticate to Azure services using Microsoft Entra ID.
 
-In the *liberty/config* directory, you use the *server.xml* file to configure the database connection for the Open Liberty and WebSphere Liberty cluster.
+> [!NOTE]
+> This sample uses `azure-identity` library to authenticate to Azure SQL Database using Microsoft Entra authencitation, which is recommended for security considerations. If you need to use SQL authentication in your Liberty application, see [Relational database connections with JDBC](https://openliberty.io/docs/latest/relational-database-connections-JDBC.html) for more information.
 
 ### Build the project
 
-Now that you have the necessary properties, you can build the application. The POM file for the project reads many variables from the environment. As part of the Maven build, these variables are used to populate values in the YAML files located in *src/main/aks*. You can do something similar for your application outside Maven if you prefer.
+Now that you gathered the necessary properties, you can build the application. The POM file for the project reads many variables from the environment. As part of the Maven build, these variables are used to populate values in the YAML files located in *src/main/aks*. You can do something similar for your application outside Maven if you prefer.
 
 #### [Bash](#tab/in-bash)
 
 ```bash
 cd $BASE_DIR/java-app
 # The following variables are used for deployment file generation into the target.
-export LOGIN_SERVER=<Azure-Container-Registry-Login-Server-URL>
-export REGISTRY_NAME=<Azure-Container-Registry-name>
-export USER_NAME=<Azure-Container-Registry-username>
-export PASSWORD='<Azure-Container-Registry-password>'
-export DB_SERVER_NAME=<server-name>.database.windows.net
-export DB_NAME=<database-name>
-export DB_USER=<server-admin-login>@<server-name>
-export DB_PASSWORD='<server-admin-password>'
-export INGRESS_TLS_SECRET=<ingress-TLS-secret-name>
+export LOGIN_SERVER=${LOGIN_SERVER}
+export SC_SERVICE_ACCOUNT_NAME=${SERVICE_ACCOUNT_NAME}
+export SC_SECRET_NAME=${SECRET_NAME}
+export INGRESS_TLS_SECRET=${INGRESS_TLS_SECRET}
 
 mvn clean install
+mvn dependency:copy-dependencies -f pom-azure-identity.xml -DoutputDirectory=target/liberty/wlp/usr/shared/resources
 ```
 
 #### [PowerShell](#tab/in-powershell)
@@ -445,33 +434,33 @@ mvn clean install
 cd $env:BASE_DIR\java-app
 
 # The following variables are used for deployment file generation into the target.
-$Env:LOGIN_SERVER="<Azure-Container-Registry-Login-Server-URL>"
-$Env:REGISTRY_NAME="<Azure-Container-Registry-name>"
-$Env:USER_NAME="<Azure-Container-Registry-username>"
-$Env:PASSWORD="<Azure-Container-Registry-password>"
-$Env:DB_SERVER_NAME="<server-name>.database.windows.net"
-$Env:DB_NAME="<database-name>"
-$Env:DB_USER="<server-admin-login>@<server-name>"
-$Env:DB_PASSWORD="<server-admin-password>"
-$Env:INGRESS_TLS_SECRET="<ingress-TLS-secret-name>"
+$Env:LOGIN_SERVER=$Env:LOGIN_SERVER
+$Env:SC_SERVICE_ACCOUNT_NAME=$Env:SERVICE_ACCOUNT_NAME
+$Env:SC_SECRET_NAME=$Env:SECRET_NAME
+$Env:INGRESS_TLS_SECRET=$Env:INGRESS_TLS_SECRET
 
 mvn clean install
+mvn dependency:copy-dependencies -f pom-azure-identity.xml -DoutputDirectory=target/liberty/wlp/usr/shared/resources
 ```
 
 ---
 
-### (Optional) Test your project locally
+### Test your project locally
 
 Run and test the project locally before deploying to Azure. For convenience, this article uses `liberty-maven-plugin`. To learn more about `liberty-maven-plugin`, see the Open Liberty article [Building a web application with Maven](https://openliberty.io/guides/maven-intro.html).
 
-For your application, you can do something similar by using any other mechanism, such as your local development environment. You can also consider using the `liberty:devc` option intended for development with containers. You can read more about `liberty:devc` in the [Open Liberty documentation](https://openliberty.io/docs/latest/development-mode.html#_container_support_for_dev_mode).
+> [!NOTE]
+> If you selected a "serverless" database deployment, verify that your SQL database has not entered pause mode. One way to do this is to log in to the database query editor as described in [Quickstart: Use the Azure portal query editor (preview) to query Azure SQL Database](/azure/azure-sql/database/connect-query-portal).
 
-1. Start the application by using `liberty:run`. `liberty:run` also uses the environment variables that you defined earlier.
+1. Start the application by using `liberty:run`.
 
    #### [Bash](#tab/in-bash)
 
    ```bash
    cd $BASE_DIR/java-app
+
+   # The value of environment variable AZURE_SQL_CONNECTIONSTRING is read by configuration variable `azure.sql.connectionstring` in server.xml
+   export AZURE_SQL_CONNECTIONSTRING="jdbc:sqlserver://$SQL_SERVER_NAME.database.windows.net:1433;databaseName=$DB_NAME;authentication=ActiveDirectoryDefault"
    mvn liberty:run
    ```
 
@@ -479,133 +468,90 @@ For your application, you can do something similar by using any other mechanism,
 
    ```powershell
    cd $env:BASE_DIR\java-app
+
+   # The value of environment variable AZURE_SQL_CONNECTIONSTRING is read by configuration variable `azure.sql.connectionstring` in server.xml
+   $Env:AZURE_SQL_CONNECTIONSTRING = "jdbc:sqlserver://$Env:SQL_SERVER_NAME.database.windows.net:1433;databaseName=$Env:DB_NAME;authentication=ActiveDirectoryDefault"
    mvn liberty:run
    ```
 
     ---
 
-1. If the test is successful, a message similar to `[INFO] [AUDIT] CWWKZ0003I: The application javaee-cafe updated in 1.930 seconds` appears in the command output. Go to `http://localhost:9080/` in your browser and verify that the application is accessible and all functions are working.
+1. Verify the application works as expected. You should see a message similar to `[INFO] [AUDIT   ] CWWKZ0001I: Application javaee-cafe started in 18.235 seconds.` appears in the command output. Go to `http://localhost:9080/` in your browser and verify that the application is accessible and all functions are working.
 
-1. Select <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop.
+1. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop. Select `Y` if you're aksed to terminate batch job.
+
+When you're finished, delete the firewall rule that allows your local IP address to access the Azure SQL Database by using the following command:
+
+### [Bash](#tab/in-bash)
+
+```azurecli
+az sql server firewall-rule delete \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --server $SQL_SERVER_NAME \
+    --name AllowLocalIP
+```
+
+### [PowerShell](#tab/in-powershell)
+
+```azurepowershell
+az sql server firewall-rule delete --resource-group $Env:RESOURCE_GROUP_NAME --server $Env:SQL_SERVER_NAME --name AllowLocalIP
+```
+
+---
 
 ### Build the image for AKS deployment
 
-You can now run the `docker build` command to build the image:
+You can now run the [az acr build](/cli/azure/acr#az-acr-build) command to build the image, as shown in the following example:
 
-#### [Bash](#tab/in-bash)
+### [Bash](#tab/in-bash)
 
-```bash
+```azurecli
 cd $BASE_DIR/java-app/target
 
-docker buildx build --platform linux/amd64 -t javaee-cafe:v1 --pull --file=Dockerfile .
+az acr build \
+    --registry ${REGISTRY_NAME} \
+    --image javaee-cafe:v1 \
+    .
 ```
 
-#### [PowerShell](#tab/in-powershell)
+### [PowerShell](#tab/in-powershell)
 
-```powershell
-cd $env:BASE_DIR\java-app\target
+```azurepowershell
+cd $Env:BASE_DIR/java-app/target
 
-docker build -t javaee-cafe:v1 --pull --file=Dockerfile .
-```
-
----
-
-### (Optional) Test the Docker image locally
-
-Use the following steps to test the Docker image locally before deploying to Azure:
-
-1. Run the image by using the following command. This command uses the environment variables that you defined previously.
-
-   #### [Bash](#tab/in-bash)
-
-   ```bash
-   docker run -it --rm -p 9080:9080 \
-      -e DB_SERVER_NAME=${DB_SERVER_NAME} \
-      -e DB_NAME=${DB_NAME} \
-      -e DB_USER=${DB_USER} \
-      -e DB_PASSWORD=${DB_PASSWORD} \
-      javaee-cafe:v1
-   ```
-
-   #### [PowerShell](#tab/in-powershell)
-
-   ```powershell
-   docker run -it --rm -p 9080:9080 `
-      -e DB_SERVER_NAME=${Env:DB_SERVER_NAME} `
-      -e DB_NAME=${Env:DB_NAME} `
-      -e DB_USER=${Env:DB_USER} `
-      -e DB_PASSWORD=${Env:DB_PASSWORD} `
-      javaee-cafe:v1
-   ```
-
-    ---
-
-1. After the container starts, go to `http://localhost:9080/` in your browser to access the application.
-
-1. Select <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop.
-
-### Upload the image to Azure Container Registry
-
-Upload the built image to the Container Registry instance that you created in the offer:
-
-#### [Bash](#tab/in-bash)
-
-```bash
-docker tag javaee-cafe:v1 ${LOGIN_SERVER}/javaee-cafe:v1
-docker login -u ${USER_NAME} -p ${PASSWORD} ${LOGIN_SERVER}
-docker push ${LOGIN_SERVER}/javaee-cafe:v1
-```
-
-#### [PowerShell](#tab/in-powershell)
-
-```powershell
-docker tag javaee-cafe:v1 ${Env:LOGIN_SERVER}/javaee-cafe:v1
-docker login -u ${Env:USER_NAME} -p ${Env:PASSWORD} ${Env:LOGIN_SERVER}
-docker push ${Env:LOGIN_SERVER}/javaee-cafe:v1
+az acr build --registry $Env:REGISTRY_NAME --image javaee-cafe:v1 .
 ```
 
 ---
 
-### Deploy and test the application
+The `az acr build` command uploads the artifacts specified in the Dockerfile to the Container Registry instance, builds the image, and stores it in the Container Registry instance.
 
-Use the following steps to deploy and test the application:
+## Deploy the application to the AKS cluster
+
+Use the following steps to deploy the Liberty application on the AKS cluster:
 
 1. Connect to the AKS cluster.
 
    Paste the value of `cmdToConnectToCluster` into a shell and run the command.
 
-1. Apply the database secret:
+1. Apply the deployment file by running the following commands:
 
    #### [Bash](#tab/in-bash)
 
    ```bash
    cd $BASE_DIR/java-app/target
-   kubectl apply -f db-secret.yaml
+
+   # Apply deployment file
+   kubectl apply -f openlibertyapplication-agic-passwordless-db.yaml
    ```
 
    #### [PowerShell](#tab/in-powershell)
 
    ```powershell
-   cd $env:BASE_DIR\java-app\target
-   kubectl apply -f db-secret.yaml
-   ```
+   cd $Env:BASE_DIR/java-app/target
 
-    ---
-
-   The output is `secret/db-secret-sql created`.
-
-1. Apply the deployment file:
-
-   #### [Bash](#tab/in-bash)
-
-   ```bash
-   kubectl apply -f openlibertyapplication-agic.yaml
-   ```
-
-   #### [PowerShell](#tab/in-powershell)
-
-   ```powershell
-   kubectl apply -f openlibertyapplication-agic.yaml
+   # Apply deployment file
+   kubectl apply -f openlibertyapplication-agic-passwordless-db.yaml
    ```
 
     ---
@@ -635,45 +581,31 @@ Use the following steps to deploy and test the application:
    javaee-cafe-cluster-agic-67cdc95bc-h47qm   1/1     Running   0          29s
    ```
 
-1. Verify the results:
+### Test the application
 
-   1. Get the address of the ingress resource deployed with the application:
+When the pods are running, you can test the application by using the public IP address of the Application Gateway instance.
 
-      #### [Bash](#tab/in-bash)
+1. Run the following command to get and display the public IP address of the Application Gateway instance, exposed by the ingress resource created by AGIC:
 
-      ```bash
-      kubectl get ingress
-      ```
+#### [Bash](#tab/in-bash)
 
-      #### [PowerShell](#tab/in-powershell)
+```bash
+export APP_URL=https://$(kubectl get ingress | grep javaee-cafe-cluster-agic-ingress | cut -d " " -f14)/
+echo $APP_URL
+```
 
-      ```powershell
-      kubectl get ingress
-      ```
+#### [PowerShell](#tab/in-powershell)
 
-       ---      
+```powershell
+$APP_URL = "https://$(kubectl get ingress | Select-String 'javaee-cafe-cluster-agic-ingress' | ForEach-Object { $_.Line.Split(' ')[13] })/"
+$APP_URL
+```
 
-      Copy the value of `ADDRESS` from the output. This value is the front-end public IP address of the deployed Application Gateway instance.
+---
 
-   1. Go to `https://<ADDRESS>` to test the application. For your convenience, this shell command creates an environment variable whose value you can paste straight into the browser:
+Copy the URL and open it in your browser to see the application home page. If the webpage doesn't render correctly or returns a `502 Bad Gateway` error, the app is still starting in the background. Wait for a few minutes and then try again.
 
-      #### [Bash](#tab/in-bash)
-
-      ```bash
-      export APP_URL=https://$(kubectl get ingress | grep javaee-cafe-cluster-agic-ingress | cut -d " " -f14)/
-      echo $APP_URL
-      ```
-
-      #### [PowerShell](#tab/in-powershell)
-
-      ```powershell
-      $APP_URL = "https://$(kubectl get ingress | Select-String 'javaee-cafe-cluster-agic-ingress' | ForEach-Object { $_.Line.Split(' ')[13] })/"
-      $APP_URL
-      ```
-
-       ---
-
-      If the webpage doesn't render correctly or returns a `502 Bad Gateway` error, the app is still starting in the background. Wait for a few minutes and then try again.
+:::image type="content" source="./media/howto-deploy-java-liberty-app/deploy-succeeded.png" alt-text="Java liberty application successfully deployed on AKS.":::
 
 ## Clean up resources
 
@@ -698,8 +630,14 @@ az group delete --name $Env:RESOURCE_GROUP_NAME --yes --no-wait
 You can learn more from the following references:
 
 * [Azure Kubernetes Service](https://azure.microsoft.com/free/services/kubernetes-service/)
+* [Tutorial: Connect an AKS app to Azure SQL Database (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli)
+* [Integrate Azure SQL Database with Service Connector](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java%2Csql-secret-java)
+* [Connect using Microsoft Entra authentication](/sql/connect/jdbc/connecting-using-azure-active-directory-authentication?view=azuresqldb-current&preserve-view=true)
 * [Open Liberty](https://openliberty.io/)
 * [Open Liberty Operator](https://github.com/OpenLiberty/open-liberty-operator)
 * [Open Liberty server configuration](https://openliberty.io/docs/ref/config/)
+* [Liberty Maven Plugin](https://github.com/OpenLiberty/ci.maven#liberty-maven-plugin)
+* [Open Liberty Container Images](https://github.com/OpenLiberty/ci.docker)
+* [WebSphere Liberty Container Images](https://github.com/WASdev/ci.docker)
 
 For more information about deploying the IBM WebSphere family on Azure, see [What are solutions to run the WebSphere family of products on Azure?](/azure/developer/java/ee/websphere-family)
