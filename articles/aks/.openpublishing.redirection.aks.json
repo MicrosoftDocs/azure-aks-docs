@@ -534,6 +534,16 @@
             "source_path_from_root": "/articles/aks/tutorial-kubernetes-app-update.md",
             "redirect_url": "/azure/aks/tutorial-kubernetes-upgrade-cluster",
             "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-observability-bring-your-own-cli.md",
+            "redirect_url": "/azure/aks/advanced-network-observability-cli",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-container-services-security-cli.md",
+            "redirect_url": "/azure/aks/how-to-apply-fqdn-filtering-policies",
+            "redirect_document_id": false
         }
      ]
 }
