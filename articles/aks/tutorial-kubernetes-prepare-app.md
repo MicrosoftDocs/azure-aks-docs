@@ -200,7 +200,6 @@ You can use [Docker Compose][docker-compose] to automate building container imag
     aks-store-demo-product-service    latest                       72f5cd7e6b84
     aks-store-demo-order-service      latest                       54ad5de546f9
     aks-store-demo-store-front        latest                       1125f85632ae
-    rabbitmq                          3.13.2-management-alpine     b1dafc50c098
     ...
     ```
 
