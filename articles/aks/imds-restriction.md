@@ -71,11 +71,16 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - Application gateway ingress controller
 - Azure Monitor for containers (Container Insights)
 - Virtual nodes
-- Azure Policy
-- GitOps
+- Azure policy
+- Cluster extenions: Flux (GitOps), Dapr, Azure App Configuration, Azure Machine Learning,  Azure Container Storage, Azure Backup 
 - AI toolchain operator (preview)
+- Application routing
+- HTTP application routing
+- Cost analysis 
 
 The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
+
+Windows node pools are not currently supported.
 
 > [!CAUTION]
 > Enabling IMDS restrictions for a cluster that uses unsupported add-ons results in an error.
