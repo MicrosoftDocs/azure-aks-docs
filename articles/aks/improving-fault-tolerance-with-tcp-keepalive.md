@@ -1,7 +1,7 @@
 ---
-title: Improving fault tolerance in Azure Kubernetes Service using TCP keepalive
+title: Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
 titleSuffix: Azure Kubernetes Service
-description: Learn how to use TCP keepalive to enhance fault tolerance in cloud applications hosted in Azure Kubernetes Service.
+description: Learn how to use TCP keepalive to enhance network fault tolerance in cloud applications hosted in Azure Kubernetes Service.
 ms.topic: article
 ms.author: rhulrai
 author: rahulrai-in
@@ -9,19 +9,43 @@ ms.subservice: aks-networking
 ms.date: 10/30/2024
 ---
 
-# Improving fault tolerance in Azure Kubernetes Service using TCP keepalive
+# Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
 
-In a standard TCP connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. TCP connection losses can be more prominent in cloud environments, which are susceptible to infrastructure failures, network disruptions, or unexpected application crashes. In this article, you will learn to use TCP keepalive to enhance fault tolerance in cloud applications hosted in Azure Kubernetes Service (AKS).
+In a standard TCP connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. TCP connection losses can be more prominent in distributed architectures, which are susceptible to infrastructure failures, network disruptions, or unexpected application crashes. In this article, you will learn to use TCP keepalive to enhance fault tolerance in cloud applications hosted in Azure Kubernetes Service (AKS).
 
 ## Understanding TCP keepalive
 
-Several Azure Networking services, such as Azure Load Balancer, enable you to [configure a timeout period](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-tcp-reset) after which an idle TCP connection is terminated. When a TCP connection remains idle for longer than the timeout duration configured on the networking service, any subsequent TCP packets sent in either direction might be dropped or receive a TCP Reset (RST) packet from the network service, depending on whether TCP resets were enabled on the service.
+Several Azure Networking services, such as Azure Load Balancer (ALB), enable you to [configure a timeout period](https://learn.microsoft.com/en-us/azure/load-balancer/load-balancer-tcp-reset) after which an idle TCP connection is terminated. When a TCP connection remains idle for longer than the timeout duration configured on the networking service, any subsequent TCP packets sent in either direction might be dropped or receive a TCP Reset (RST) packet from the network service, depending on whether TCP resets were enabled on the service. In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with a default idle timeout period of 30 minutes. You can adjust this timeout period with the following command that sets the idle timeout period to four minutes:
 
-The idle timeout feature helps to remove inactive connections from both the client and server in order to optimize resource utilization. However, for long-running operations, you might want to wait for a longer period than the configured timeout duration on the networking service. To ensure that the connection does not stay idle beyond the configured duration on the network service, or to ensure that the server is still available while the client is waiting for a response (or vice versa) so that you can retry the operation rather than waiting for a timeout, consider using the TCP keepalive feature.
+```shell
+az aks update \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
+    --load-balancer-idle-timeout 4
+```
+
+The idle timeout feature in ALB is designed to terminate inactive connections from both the client and server after a specified duration, thereby optimizing resource utilization. This timeout applies to both ingress and egress traffic managed by the ALB. 
+
+In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you will also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases can be managed by configuring the [`kube-proxy` TCP settings](https://learn.microsoft.com/en-us/azure/aks/configure-kube-proxy). For example, the following `kube-proxy` configuration will change the default TCP timeout period of 15 minutes to 20 minutes:
+
+```json
+{
+  "enabled": true,
+  "mode": "IPVS",
+  "ipvsConfig": {
+    "scheduler": "LeastConnection",
+    "TCPTimeoutSeconds": 1200,
+    "TCPFINTimeoutSeconds": 120,
+    "UDPTimeoutSeconds": 300
+  }
+}
+```
+
+For long-running operations, you might want to wait for a longer period than the configured timeout duration on the networking service. To ensure that the connection does not stay idle beyond the configured duration on the network service, or to ensure that the server is still available while the client is waiting for a response (or vice versa) so that you can retry the operation rather than waiting for a timeout, consider using the TCP keepalive feature.
 
 In a TCP connection, either of the peers can request keepalives for their side of the connection. Keepalives can be configured for the client, the server, both, or neither. The keepalive mechanism follows the standard specifications defined in [RFC1122](https://datatracker.ietf.org/doc/html/rfc1122#section-4.2.3.6). A keepalive probe is either an empty segment or a segment that contains only one byte, featuring a sequence number that is one less than the largest Acknowledgment (ACK) number received from the peer so far. Since the receiving side has already acknowledged the original packet, the probe packet essentially mimics a packet that has already been received. In response, the receiving side sends another ACK packet as response to indicate to the sender that the connection is still active.
 
-The RFC1122 specification states that if either the probe or the ACK is lost, they are not retransmitted. Therefore, if there is no response to a single keepalive probe, it does not necessarily mean that the connection has stopped working. In this case, the sender must attempt to send the probe a certain number of times before terminating the connection. The idle time of the connection resets when an ACK is received for a probe, and the process is then repeated. keepalive probes enable you to configure the following parameters to govern their behavior. The parameters are listed together with their default values on Linux-based OSes:
+The RFC1122 specification states that if either the probe or the ACK is lost, they are not retransmitted. Therefore, if there is no response to a single keepalive probe, it does not necessarily mean that the connection has stopped working. In this case, the sender must attempt to send the probe a certain number of times before terminating the connection. The idle time of the connection resets when an ACK is received for a probe, and the process is then repeated. keepalive probes enable you to configure the following parameters to govern their behavior. In AKS, Linux-based nodes have the following default TCP keepalive settings which are the same as standard Linux OSes:
 
 - **Keepalive Time (in seconds)**: The duration of inactivity after which the first keepalive probe is sent. The default duration is 2 hours.
 - **Keepalive Interval  (in seconds)**: The interval between subsequent keepalive probes if no acknowledgment is received. The default interval is 75 seconds.
@@ -31,7 +55,7 @@ Keepalive probes are managed at the TCP layer. Therefore, during normal operatio
 
 ## Configuring TCP keepalive on AKS
 
-AKS allows cluster administrators to adjust the operating system of a node, as well as kubelet parameters, to align with the requirements of their workloads. When setting up the cluster or a new node pool, administrators can modify the related sysctls to configure the Keepalive probes. To do this, create a file named **linuxkubeletconfig.json** with the following contents:
+AKS allows cluster administrators to adjust the operating system of a node, as well as kubelet parameters, to align with the requirements of their workloads. When setting up the cluster or a new node pool, administrators can modify the related sysctls to configure the keepalive probes. To do this, create a file named **linuxkubeletconfig.json** with the following contents:
 
 ```json
 {
@@ -99,7 +123,7 @@ net.ipv4.tcp_keepalive_intvl = 45
 net.ipv4.tcp_keepalive_probes = 5
 ```
 
- Now you need to ensure that your applications have TCP keepalive enabled, which is what we will discuss next.
+Now you need to ensure that your applications have TCP keepalive enabled, which is what we will discuss next.
 
 ## Configuring TCP keepalive in applications
 
@@ -115,7 +139,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Enable TCP keepalive
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
 
-# Set TCP keepalive parameters (Linux specific).
+# Optional: Set TCP keepalive parameters (Linux specific).
 sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPIDLE, 60)    # Idle time before keepalive probes
 sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPINTVL, 10)   # Interval between keepalive probes
 sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_KEEPCNT, 5)      # Number of keepalive probes
@@ -140,10 +164,10 @@ finally:
     sock.close()
 ```
 
-In this example, the application activates keepalive probes, which are sent to the server after 60 seconds of inactivity. If there are five probe failures, the connection will be closed. Keep in mind that the socket-level TCP keepalive probe configurations take precedence over any OS-level settings.
+In this example, the application enables TCP keepalive probes, which are sent to the server after 60 seconds of inactivity. If five consecutive probes fail, the connection is closed. It's important to note that socket-level TCP keepalive settings override system-level configurations set via `sysctl`. Therefore, the application's settings will take precedence. To have the application adhere to the system's TCP keepalive configurations, enable the TCP keepalive option on the socket without specifying individual parameters within the application.
 
 > [!NOTE]
-> The socket level TCP keepalive settings configured through the application in the previous code listing will override the settings that you applied via the kubelet configuration earlier. If you don't set the socket level TCP keepalive configuration values and only enable TCP keepalive on the socket, the settings will default to the values set by the kubelet.
+> The application-level TCP keepalive settings in the previous code listing override those configured via the kubelet. To maintain consistent TCP keepalive behavior across your applications, set the desired parameters at the operating system level. Allow individual applications to override these defaults only when necessary.
 
 If you are using .NET, the following code will produce the same result:
 
