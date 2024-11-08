@@ -9,6 +9,7 @@ ms.service: azure-kubernetes-service
 ms.date: 11/08/2024
 ms.author: allyford
 ---
+
 # Security container access to resources using built-in Linux security features
 
 In this article, you learn how to secure container access to resources for your Azure Kubernetes Service (AKS) workloads.
@@ -326,8 +327,6 @@ When changes are made to [Docker][seccomp] and [containerD](https://github.com/c
 |`vm86old` |	In kernel x86 real mode virtual machine. Also gated by `CAP_SYS_ADMIN`.|
 
 ## Next steps
-
-To get started with securing your AKS clusters, see [Upgrade an AKS cluster][aks-upgrade-cluster].
 
 For associated best practices, see [Best practices for cluster security and upgrades in AKS][operator-best-practices-cluster-security] and [Best practices for pod security in AKS][developer-best-practices-pod-security].
 
