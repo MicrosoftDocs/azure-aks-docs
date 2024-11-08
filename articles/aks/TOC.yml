@@ -109,8 +109,6 @@
       items:
         - name: Monitor AKS
           href: monitor-aks.md
-        - name: Network Observability
-          href: network-observability-overview.md
         - name: Container Network Observability
           href: advanced-network-observability-concepts.md
     - name: Security
