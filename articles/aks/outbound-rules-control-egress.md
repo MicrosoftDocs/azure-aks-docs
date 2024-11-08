@@ -56,6 +56,13 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`CustomDNSIP:53`** `(if using custom DNS servers)`                             | UDP      | 53      | If you're using custom DNS servers, you must ensure they're accessible by the cluster nodes. |
 | **`APIServerPublicIP:443`** `(if running pods/deployments that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server, those pods/deployments would use the API IP. This port isn't required for [private clusters][private-clusters]. |
 
+### Azure Global required network rules for priavate clusters with Network Security Groups (NSG)
+
+| Destination Endpoint                                                             | Protocol | Port    | Use  |
+|----------------------------------------------------------------------------------|----------|---------|------|
+| **APIServer Subnet CIDR`**   | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API Server in a [private clusters][private-clusters], or for clusters with the *konnectivity-agent* enabled. |
+| **APIServer Subnet CIDR`**   | UDP           | 9988      | Required to enable comminucation between Azure Load Balancer and the API server in a [private clusters][private-clusters], or for clusters with the *konnectivity-agent* enabled. Alternatively allow all communication between Load Balancer and the API Server Subnet CIDR. |
+
 ### Azure Global required FQDN / application rules
 
 | Destination FQDN                 | Port            | Use      |
