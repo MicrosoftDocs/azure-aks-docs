@@ -5,7 +5,7 @@ description: Learn how to use Azure role-based access control (Azure RBAC) for K
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 03/02/2023
+ms.date: 11/08/2024
 ms.author: jpalma
 author: palma21
 #Customer intent: As a cluster operator or developer, I want to learn how to leverage Azure RBAC permissions to authorize actions within the AKS cluster.
