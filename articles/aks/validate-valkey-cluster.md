@@ -48,6 +48,8 @@ The sample client application uses the [Locust load testing framework](https://d
         def __init__(self, *args, **kwargs):
             super(ValkeyLocust, self).__init__(*args, **kwargs)
             self.client = ValkeyClient()
+        def on_stop(self):
+            self.client.close()
         @task
         @tag("set")
         def set_value(self):
@@ -120,9 +122,6 @@ The sample client application uses the [Locust load testing framework](https://d
                 )
                 result = ''
             return result
-
-        def on_stop(self):
-            self.vc.close()
     EOF
     ```
     This python code is implementing a Locust User class that connects to the Valkey cluster and performs a set and get operation.
