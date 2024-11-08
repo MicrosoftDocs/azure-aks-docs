@@ -47,7 +47,7 @@ The sample client application uses the [Locust load testing framework](https://d
         host = "valkey-cluster.valkey.svc.cluster.local"
         def __init__(self, *args, **kwargs):
             super(ValkeyLocust, self).__init__(*args, **kwargs)
-            self.client = ValkeyClient()
+            self.client = ValkeyClient(host=self.host)
         def on_stop(self):
             self.client.close()
         @task
@@ -60,17 +60,19 @@ The sample client application uses the [Locust load testing framework](https://d
             self.client.get_value("get_value")
 
     class ValkeyClient(object):
-        f = open("/etc/valkey-password/valkey-password-file.conf", "r")
-        password = f.readlines()[0].split(" ")[1].strip()
-        f.close()
-        host = "valkey-cluster.valkey.svc.cluster.local"
-        port = 6379
-        def __init__(self, *args, **kwargs):
+        def __init__(self, host, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.host = self.host
-            self.port = self.port
-            self.password = self.password
-            self.vc = ValkeyCluster(host=self.host, port=self.port, password=self.password, username="default", cluster_error_retry_attempts=0, socket_timeout=2)
+            with open("/etc/valkey-password/valkey-password-file.conf", "r") as f:
+                self.password = f.readlines()[0].split(" ")[1].strip()
+            self.host = host
+            self.vc = ValkeyCluster(host=self.host,
+                                    port=6379,
+                                    password=self.password,
+                                    username="default",
+                                    cluster_error_retry_attempts=0,
+                                    socket_timeout=2,
+                                    keepalive=1
+                                    )
 
         def set_value(self, key, command='SET'):
             start_time = time.perf_counter()
