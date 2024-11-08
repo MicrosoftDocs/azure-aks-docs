@@ -269,7 +269,7 @@ Ensure that the existing NSG security rules permit the following types of commun
 | Destination        | Source                                                             | Protocol | Port    | Use  |
 |----------------------------------------------------------------------------------|----------|---------|------|
 | APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Load Balancer | UDP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communicatios between the Load Balancer and the API Server Subnet CIDR. |
+| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communicatios between the Azure Load Balancer and the API Server Subnet CIDR. |
 
 ## Next steps
 
