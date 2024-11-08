@@ -136,7 +136,7 @@ az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --mes
 az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --message-of-the-day ./newMOTD.txt
 ```
 
-## Troubleshooting Custom Node Configurations
+## Troubleshooting custom node configurations
 
 ### Confirm settings have been applied
 

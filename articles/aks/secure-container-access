@@ -1,18 +1,24 @@
 ---
 title: Secure container access to resources
-description: Limit access to actions that containers can perform. Provide the least number of permissions, and avoid the use of root access or privileged escalation.
+titleSuffix: Azure Kubernetes Service (AKS)
+description: Learn how to limit access to actions that containers can perform, provide the least number of permissions, and avoid the use of root access or privileged escalation.
 author: allyford
 ms.topic: how-to
 ms.subservice: aks-security
-ms.date: 11/8/2024
+ms.service: azure-kubernetes-service
+ms.date: 11/08/2024
 ms.author: allyford
 ---
 
+In this article, you learn how to secure container access to resources for your Azure Kubernetes Service (AKS) workloads.
+
+## Overview
+
 In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. 
 
-For example, set `allowPrivilegeEscalation: false` in the pod manifest. These built-in Kubernetes *pod security contexts* let you define additional permissions, such as the user or group to run as, or the Linux capabilities to expose. For more best practices, see [Secure pod access to resources][pod-security-contexts].
+You can use built-in Kubernetes *pod security contexts* to define additional permissions, such as the user or group to run as, the Linux capabilities to expose, or setting `allowPrivilegeEscalation: false` in the pod manifest. For more best practices, see [Secure pod access to resources][pod-security-contexts].
 
-For even more granular control of container actions, you can also use built-in Linux security features such as *AppArmor* and *seccomp*.
+For even more granular control of container actions, you can use built-in Linux security features such as *AppArmor* and *seccomp*.
 
 1. Define Linux security features at the node level.
 1. Implement features through a pod manifest.
@@ -20,15 +26,15 @@ For even more granular control of container actions, you can also use built-in L
 Built-in Linux security features are only available on Linux nodes and pods.
 
 > [!NOTE]
-> Currently, Kubernetes environments aren't completely safe for hostile multi-tenant usage. Additional security features, like *Microsoft Defender for Containers* *AppArmor*, *seccomp*,*Pod Security Admission*, or Kubernetes RBAC for nodes, efficiently block exploits.
+> Currently, Kubernetes environments aren't completely safe for hostile multi-tenant usage. Additional security features, like *Microsoft Defender for Containers*, *AppArmor*, *seccomp*, *Pod Security Admission*, or *Kubernetes RBAC for nodes*, efficiently block exploits.
 >
->For true security when running hostile multi-tenant workloads, only trust a hypervisor. The security domain for Kubernetes becomes the entire cluster, not an individual node. 
+> For true security when running hostile multi-tenant workloads, only trust a hypervisor. The security domain for Kubernetes becomes the entire cluster, not an individual node. 
 >
 > For these types of hostile multi-tenant workloads, you should use physically isolated clusters.
 
 ## App Armor
 
-To limit container actions, you can use the [AppArmor][k8s-apparmor] Linux kernel security module. AppArmor is available as part of the underlying AKS node OS, and is enabled by default. You create AppArmor profiles that restrict read, write, or execute actions, or system functions like mounting filesystems. Default AppArmor profiles restrict access to various `/proc` and `/sys` locations, and provide a means to logically isolate containers from the underlying node. AppArmor works for any application that runs on Linux, not just Kubernetes pods.
+To limit container actions, you can use the [AppArmor][k8s-apparmor] Linux kernel security module. AppArmor is available as part of the underlying AKS node OS and is enabled by default. You create AppArmor profiles that restrict read, write, or execute actions, or system functions like mounting filesystems. Default AppArmor profiles restrict access to various `/proc` and `/sys` locations and provide a means to logically isolate containers from the underlying node. AppArmor works for any application that runs on Linux, not just Kubernetes pods.
 
 ![AppArmor profiles in use in an AKS cluster to limit container actions](media/operator-best-practices-container-security/apparmor.png)
 
@@ -92,11 +98,11 @@ For more information about AppArmor, see [AppArmor profiles in Kubernetes][k8s-a
 
 ## Secure computing (seccomp)
 
-While AppArmor works for any Linux application, [seccomp (*sec*ure *comp*uting)][seccomp] works at the process level. Seccomp is also a Linux kernel security module, and is natively supported by the containerD runtime used by AKS nodes. With seccomp, you can limit a container's system calls. This establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default seccomp profile for all workloads in the node.
+While AppArmor works for any Linux application, [seccomp (*sec*ure *comp*uting)][seccomp] works at the process level. Seccomp is also a Linux kernel security module and is natively supported by the `containerd` runtime used by AKS nodes. With seccomp, you can limit a container's system calls. This establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default seccomp profile for all workloads in the node.
 
 ### Configure a default seccomp profile (preview)
 
-Default seccomp profiles can be applied using [custom node configuration][custom-node-configuration] when creating a new linux node pool. There are two values supported on AKS, `RuntimeDefault` and `Unconfined`. Some workloads may require a lower amount of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the 'Unconfined' profile. If your workload requires a completely custom profile, see [LINK TO BELOW SECTION].
+You can apply default seccomp profiles using [custom node configurations][custom-node-configuration] when creating a new Linux node pool. There are two values supported on AKS: `RuntimeDefault` and `Unconfined`. Some workloads might require a lower amount of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the `Unconfined` profile. If your workload requires a completely custom profile, see [Configure a custom seccomp profile](#configure-a-custom-seccomp-profile).
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -124,23 +130,22 @@ Default seccomp profiles can be applied using [custom node configuration][custom
 
 #### Restrict your container's system calls with seccomp
 
-1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying "seccompDefualt": "RuntimeDefault"
+**1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying `"seccompDefualt": "RuntimeDefault"`**.
 
 `RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls will fail. For more details, see the [containerD default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). 
 
-2. Check that the configuration was applied
+**2. Check that the configuration was applied**.
 
 After you apply custom node configuration, you can confirm the settings have been applied to the nodes by [connecting to the host][node-access] and verifying configuration changes have been made on the filesystem.
 
-3. Troubleshoot workload failures
+**3. Troubleshoot workload failures**.
 
-When SeccompDefault is enabled, the container runtime default seccomp profile is used by default for all workloads scheduled on the node. This may cause workloads to fail due to blocked syscalls. 
+When SeccompDefault is enabled, the container runtime default seccomp profile is used by default for all workloads scheduled on the node. This might cause workloads to fail due to blocked syscalls. If a workload failure has occurred, you might see errors such as:
 
-If a workload failure has occured, you may see errors such as:
 - Workload is existing unexpectedly after the feature is enabled, with "permission denied" error.
-- Seccomp error messages can also be seen in auditd or syslog by replacing SCMP_ACT_ERRNO with SCMP_ACT_LOG in the default profile
+- Seccomp error messages can also be seen in auditd or syslog by replacing SCMP_ACT_ERRNO with SCMP_ACT_LOG in the default profile.
 
-If you experience the above errors, it is recommended to change your seccomp profile to `Unconfined`. `Unconfined` places no restrictions on syscalls, and all system calls are allowed which reduces security.
+If you experience the above errors, we recommend that you change your seccomp profile to `Unconfined`. `Unconfined` places no restrictions on syscalls, allowing all system calls, which reduces security.
 
 ### Configure a custom seccomp profile
 
