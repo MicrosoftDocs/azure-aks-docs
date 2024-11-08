@@ -266,8 +266,8 @@ AKS clusters configured with API Server VNet Integration can have public network
 
 All traffic within the VNet is allowed by default. But if you have added NSG rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
-| Destination        | Source                                                             | Protocol | Port    | Use  |
-|----------------------------------------------------------------------------------|----------|---------|------|
+| Destination | Source | Protocol | Port | Use |
+|--- |--- |--- |--- |--- |
 | APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
 | APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communicatios between the Azure Load Balancer and the API Server Subnet CIDR. |
 
