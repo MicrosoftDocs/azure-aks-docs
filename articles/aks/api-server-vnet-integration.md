@@ -264,7 +264,7 @@ AKS clusters configured with API Server VNet Integration can have public network
 
 ## NSG security rules
 
-Ensure that the existing NSG security rules permit the following types of communication:
+All traffic within the VNet is allowed by default. But if you have added NSG rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
 | Destination        | Source                                                             | Protocol | Port    | Use  |
 |----------------------------------------------------------------------------------|----------|---------|------|
