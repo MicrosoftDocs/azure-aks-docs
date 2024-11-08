@@ -240,6 +240,10 @@
           href: best-practices-performance-scale.md
         - name: For large workloads
           href: best-practices-performance-scale-large.md
+    - name: Monitoring and troubleshooting
+      items:
+        - name: Proactive monitoring
+          href: best-practices-monitoring-proactive.md
     - name: Application development
       items:
         - name: Resource management
