@@ -262,6 +262,15 @@ AKS clusters configured with API Server VNet Integration can have public network
     az aks get-credentials --resource-group <resource-group> --name <cluster-name>
     ```
 
+## NSG security rules
+
+Ensure that the existing NSG security rules permit the following types of communication:
+
+| Destination        | Source                                                             | Protocol | Port    | Use  |
+|----------------------------------------------------------------------------------|----------|---------|------|
+| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
+| APIServer Subnet CIDR   | Load Balancer | UDP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communicatios between the Load Balancer and the API Server Subnet CIDR. |
+
 ## Next steps
 
 For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
