@@ -120,10 +120,11 @@ To deploy the application, you use a manifest file to create all the objects req
 
     ```yaml
     apiVersion: apps/v1
-    kind: Deployment
+    kind: StatefulSet
     metadata:
       name: rabbitmq
     spec:
+      serviceName: rabbitmq
       replicas: 1
       selector:
         matchLabels:
@@ -173,7 +174,7 @@ To deploy the application, you use a manifest file to create all the objects req
         [rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0].
     kind: ConfigMap
     metadata:
-      name: rabbitmq-enabled-plugins
+      name: rabbitmq-enabled-plugins            
     ---
     apiVersion: v1
     kind: Service
@@ -232,6 +233,27 @@ To deploy the application, you use a manifest file to create all the objects req
               limits:
                 cpu: 75m
                 memory: 128Mi
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 20
+              periodSeconds: 10
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 5
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
           initContainers:
           - name: wait-for-rabbitmq
             image: busybox
@@ -242,7 +264,7 @@ To deploy the application, you use a manifest file to create all the objects req
                 memory: 50Mi
               limits:
                 cpu: 75m
-                memory: 128Mi
+                memory: 128Mi    
     ---
     apiVersion: v1
     kind: Service
@@ -278,13 +300,30 @@ To deploy the application, you use a manifest file to create all the objects req
             image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
             ports:
             - containerPort: 3002
+            env: 
+            - name: AI_SERVICE_URL
+              value: "http://ai-service:5001/"
             resources:
               requests:
                 cpu: 1m
                 memory: 1Mi
               limits:
-                cpu: 1m
-                memory: 7Mi
+                cpu: 2m
+                memory: 20Mi
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3002
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 5
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3002
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
     ---
     apiVersion: v1
     kind: Service
@@ -321,7 +360,7 @@ To deploy the application, you use a manifest file to create all the objects req
             ports:
             - containerPort: 8080
               name: store-front
-            env:
+            env: 
             - name: VUE_APP_ORDER_SERVICE_URL
               value: "http://order-service:3000/"
             - name: VUE_APP_PRODUCT_SERVICE_URL
@@ -333,6 +372,27 @@ To deploy the application, you use a manifest file to create all the objects req
               limits:
                 cpu: 1000m
                 memory: 512Mi
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 8080
+              failureThreshold: 3
+              initialDelaySeconds: 5
+              periodSeconds: 5
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 8080
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 3
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 8080
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
     ---
     apiVersion: v1
     kind: Service
