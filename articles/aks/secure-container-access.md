@@ -339,8 +339,14 @@ For associated best practices, see [Best practices for cluster security and upgr
 
 <!-- LINKS - Internal -->
 [operator-best-practices-cluster-security]: operator-best-practices-cluster-security.md
-[developer-best-practices-pod-security]:developer-best-practices-pod-security.md
+[developer-best-practices-pod-security]: developer-best-practices-pod-security.md
 [custom-node-configuration]: /azure/aks/custom-node-configuration
 [security-best-practices]: /azure/aks/operator-best-practices-cluster-security
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
+[aks-ssh]: manage-ssh-node-access.md
+[pod-security-contexts]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
+[node-access]: node-access.md
 [security-container-access]: secure-container-access.md
 
