@@ -18,7 +18,7 @@ In this article, you learn how to secure container access to resources for your 
 
 In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. 
 
-You can use built-in Kubernetes *pod security contexts* to define additional permissions, such as the user or group to run as, the Linux capabilities to expose, or setting `allowPrivilegeEscalation: false` in the pod manifest. For more best practices, see [Secure pod access to resources][pod-security-contexts].
+You can use built-in Kubernetes *pod security contexts* to define more permissions, such as the user or group to run as, the Linux capabilities to expose, or setting `allowPrivilegeEscalation: false` in the pod manifest. For more best practices, see [Secure pod access to resources][pod-security-contexts].
 
 For even more granular control of container actions, you can use built-in Linux security features such as *AppArmor* and *seccomp*.
 
@@ -66,7 +66,7 @@ AppArmor profiles are added using the `apparmor_parser` command.
     sudo apparmor_parser deny-write.profile
     ```
 
-    If the profile is correctly parsed and applied to AppArmor, you won't see any output and you'll be returned to the command prompt.
+    If the profile is correctly parsed and applied to AppArmor, you won't see any output and you'll return to the command prompt.
 
 1. From your local machine, create a pod manifest named *aks-apparmor.yaml*. This manifest:
     * Defines an annotation for `container.apparmor.security.beta.kubernetes`.
@@ -100,11 +100,11 @@ For more information about AppArmor, see [AppArmor profiles in Kubernetes][k8s-a
 
 ## Secure computing (seccomp)
 
-While AppArmor works for any Linux application, [seccomp (*sec*ure *comp*uting)][seccomp] works at the process level. Seccomp is also a Linux kernel security module and is natively supported by the `containerd` runtime used by AKS nodes. With seccomp, you can limit a container's system calls. This establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default seccomp profile for all workloads in the node.
+While AppArmor works for any Linux application, [seccomp (*sec*ure *comp*uting)][seccomp] works at the process level. Seccomp is also a Linux kernel security module and is natively supported by the `containerd` runtime used by AKS nodes. With seccomp, you can limit a container's system calls. Seccomp establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors and allows you to specify a default profile for all workloads in the node.
 
 ### Configure a default seccomp profile (preview)
 
-You can apply default seccomp profiles using [custom node configurations][custom-node-configuration] when creating a new Linux node pool. There are two values supported on AKS: `RuntimeDefault` and `Unconfined`. Some workloads might require a lower amount of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the `Unconfined` profile. If your workload requires a completely custom profile, see [Configure a custom seccomp profile](#configure-a-custom-seccomp-profile).
+You can apply default seccomp profiles using [custom node configurations][custom-node-configuration] when creating a new Linux node pool. There are two values supported on AKS: `RuntimeDefault` and `Unconfined`. Some workloads might require a lower number of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the `Unconfined` profile. If your workload requires a custom profile, see [Configure a custom seccomp profile](#configure-a-custom-seccomp-profile).
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -134,11 +134,11 @@ You can apply default seccomp profiles using [custom node configurations][custom
 
 **1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying `"seccompDefualt": "RuntimeDefault"`**.
 
-`RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls will fail. For more details, see the [containerD default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). 
+`RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls will fail. For more information, see the [containerD default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). 
 
 **2. Check that the configuration was applied**.
 
-After you apply custom node configuration, you can confirm the settings have been applied to the nodes by [connecting to the host][node-access] and verifying configuration changes have been made on the filesystem.
+You can confirm the settings are applied to the nodes by [connecting to the host][node-access] and verifying configuration changes have been made on the filesystem.
 
 **3. Troubleshoot workload failures**.
 
@@ -182,7 +182,7 @@ To see seccomp in action, create a filter that prevents changing permissions on 
     }
     ```
 
-    In version 1.19 and later, you need to configure the following:
+    In version 1.19 and later, you need to configure:
 
     ```json
     {
@@ -220,7 +220,7 @@ To see seccomp in action, create a filter that prevents changing permissions on 
       restartPolicy: Never
     ```
 
-    In version 1.19 and later, you need to configure the following:
+    In version 1.19 and later, you need to configure:
 
     ```yaml
     apiVersion: v1
@@ -252,7 +252,7 @@ To see seccomp in action, create a filter that prevents changing permissions on 
 1. View pod status using the [kubectl get pods][kubectl-get] command.
 
     * The pod reports an error. 
-    * The `chmod` command is prevented from running by the seccomp filter, as shown in the following example output:
+    * The `chmod` command is prevented from running by the seccomp filter, as shown in the example output:
 
     ```
     kubectl get pods
@@ -263,23 +263,23 @@ To see seccomp in action, create a filter that prevents changing permissions on 
 
 ## Seccomp security profile options
 
-Seccomp security profiles are a set of defined syscalls that are allowed or restricted. Most container runtimes will have a default seccomp profile that are similar if not the same as the one Docker uses. For more information about available profiles, see [Docker][seccomp] or [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51) default seccomp profiles.
+Seccomp security profiles are a set of defined syscalls that are allowed or restricted. Most container runtimes have a default seccomp profile that is similar if not the same as the one Docker uses. For more information about available profiles, see [Docker][seccomp] or [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51) default seccomp profiles.
 
 AKS uses the [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51) default seccomp profile for our RuntimeDefault when you configure seccomp using [custom node configuration][custom-node-configuration].
 
 ### Significant syscalls blocked by default profile
 
-Both [Docker][seccomp] and [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51)  maintain allowlists of safe syscalls. The table below lists the significant (but not all) syscalls that are effectively blocked because they are not on the allowlist. If any of the below syscalls are required by your workload, do not use the `RuntimeDefault` seccomp profile.
+Both [Docker][seccomp] and [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51)  maintain allowlists of safe syscalls. This table lists the significant (but not all) syscalls that are effectively blocked because they aren't on the allowlist. If any of the blocked syscalls are required by your workload, don't use the `RuntimeDefault` seccomp profile.
 
-When changes are made to [Docker][seccomp] and [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51), AKS will update their default configuration to match. Updates to this list may cause workload failure. For release updates, see [AKS release notes](https://github.com/Azure/AKS/releases).
+When changes are made to [Docker][seccomp] and [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51), AKS updates their default configuration to match. Updates to this list may cause workload failure. For release updates, see [AKS release notes](https://github.com/Azure/AKS/releases).
 
 |  Blocked syscall | Description  | 
 |--------------|-------------------|
 | `acct`| Accounting syscall which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_PACCT`. | 
-|`add_key` | Prevent containers from using the kernel keyring, which is not namespaced. |
+|`add_key` | Prevent containers from using the kernel keyring, which isn't namespaced. |
 | `bpf` |	Deny loading potentially persistent bpf programs into kernel, already gated by `CAP_SYS_ADMIN`. |
-| `clock_adjtime` |	Time/date is not namespaced. Also gated by `CAP_SYS_TIME`. |
-|`clock_settime` |	Time/date is not namespaced. Also gated by `CAP_SYS_TIME`.|
+| `clock_adjtime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`. |
+|`clock_settime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
 | `clone` |	Deny cloning new namespaces. Also gated by `CAP_SYS_ADMIN for CLONE_*` flags, except `CLONE_NEWUSER`. |
 | `create_module` |	Deny manipulation and functions on kernel modules. Obsolete. Also gated by `CAP_SYS_MODULE`. |
 | `delete_module` |	Deny manipulation and functions on kernel modules. Also gated by `CAP_SYS_MODULE`. |
@@ -292,27 +292,27 @@ When changes are made to [Docker][seccomp] and [containerD](https://github.com/c
 |`kcmp` |	Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
 |`kexec_file_load` |	Sister syscall of kexec_load that does the same thing, slightly different arguments. Also gated by `CAP_SYS_BOOT`.|
 |`kexec_load` |	Deny loading a new kernel for later execution. Also gated by `CAP_SYS_BOOT`.|
-|`keyctl` |	Prevent containers from using the kernel keyring, which is not namespaced.|
-|`lookup_dcookie` |	Tracing/profiling syscall, which could leak a lot of information on the host. Also gated by `CAP_SYS_ADMIN`.|
+|`keyctl` |	Prevent containers from using the kernel keyring, which isn't namespaced.|
+|`lookup_dcookie` |	Tracing/profiling syscall, which could leak information on the host. Also gated by `CAP_SYS_ADMIN`.|
 |`mbind` |	Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`.|
 |`mount` |	Deny mounting, already gated by `CAP_SYS_ADMIN`.|
 |`move_pages` |	Syscall that modifies kernel memory and NUMA settings.|
 |`nfsservctl` |	Deny interaction with the kernel nfs daemon. Obsolete since Linux 3.1.|
 |`open_by_handle_at` |	Cause of an old container breakout. Also gated by `CAP_DAC_READ_SEARCH`.|
-|`perf_event_open` |	Tracing/profiling syscall, which could leak a lot of information on the host.|
-|`personality` |	Prevent container from enabling BSD emulation. Not inherently dangerous, but poorly tested, potential for a lot of kernel vulns.|
+|`perf_event_open` |	Tracing/profiling syscall, which could leak information on the host.|
+|`personality` |	Prevent container from enabling BSD emulation. Not inherently dangerous, but poorly tested, potential for kernel vulns.|
 |`pivot_root` |	Deny pivot_root, should be privileged operation.|
 |`process_vm_readv` |	Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
 |`process_vm_writev` |	Restrict process inspection capabilities, already blocked by dropping `CAP_SYS_PTRACE`.|
-|`ptrace` |	Tracing/profiling syscall. Blocked in Linux kernel versions before 4.8 to avoid seccomp bypass. Tracing/profiling arbitrary processes is already blocked by dropping CAP_SYS_PTRACE, because it could leak a lot of information on the host.|
+|`ptrace` |	Tracing/profiling syscall. Blocked in Linux kernel versions before 4.8 to avoid seccomp bypass. Tracing/profiling arbitrary processes is already blocked by dropping CAP_SYS_PTRACE, because it could leak information on the host.|
 |`query_module` |	Deny manipulation and functions on kernel modules. Obsolete.|
 |`quotactl` |	Quota syscall which could let containers disable their own resource limits or process accounting. Also gated by `CAP_SYS_ADMIN`.|
 |`reboot` |	Don't let containers reboot the host. Also gated by `CAP_SYS_BOOT`.|
-|`request_key` |	Prevent containers from using the kernel keyring, which is not namespaced.|
+|`request_key` |	Prevent containers from using the kernel keyring, which isn't namespaced.|
 |`set_mempolicy` |	Syscall that modifies kernel memory and NUMA settings. Already gated by `CAP_SYS_NICE`.|
 |`setns` |	Deny associating a thread with a namespace. Also gated by `CAP_SYS_ADMIN`.|
-|`settimeofday` |	Time/date is not namespaced. Also gated by `CAP_SYS_TIME`.|
-|`stime` |	Time/date is not namespaced. Also gated by `CAP_SYS_TIME`.|
+|`settimeofday` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
+|`stime` |	Time/date isn't namespaced. Also gated by `CAP_SYS_TIME`.|
 |`swapon` |	Deny start/stop swapping to file/device. Also gated by `CAP_SYS_ADMIN`.|
 |`swapoff` |	Deny start/stop swapping to file/device. Also gated by `CAP_SYS_ADMIN`.|
 |`sysfs` |	Obsolete syscall.|
