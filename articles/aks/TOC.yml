@@ -494,6 +494,8 @@
               href: use-oidc-issuer.md
             - name: Use KMS etcd encryption
               href: use-kms-etcd-encryption.md
+            - name: Secure container access to resources
+              href: secure-container-access.md 
         - name: Node security
           items:
             - name: BYOK for Azure managed disks
