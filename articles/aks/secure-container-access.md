@@ -28,11 +28,11 @@ For even more granular control of container actions, you can use built-in Linux 
 Built-in Linux security features are only available on Linux nodes and pods.
 
 > [!NOTE]
-> Currently, Kubernetes environments aren't completely safe for hostile multi-tenant usage. Additional security features, like *Microsoft Defender for Containers*, *AppArmor*, *seccomp*, *Pod Security Admission*, or *Kubernetes RBAC for nodes*, efficiently block exploits.
+> Currently, Kubernetes environments aren't completely safe for hostile multitenant usage. Additional security features, like *Microsoft Defender for Containers*, *AppArmor*, *seccomp*, *Pod Security Admission*, or *Kubernetes RBAC for nodes*, efficiently block exploits.
 >
-> For true security when running hostile multi-tenant workloads, only trust a hypervisor. The security domain for Kubernetes becomes the entire cluster, not an individual node. 
+> For true security when running hostile multitenant workloads, only trust a hypervisor. The security domain for Kubernetes becomes the entire cluster, not an individual node. 
 >
-> For these types of hostile multi-tenant workloads, you should use physically isolated clusters.
+> For these types of hostile multitenant workloads, you should use physically isolated clusters.
 
 ## App Armor
 
