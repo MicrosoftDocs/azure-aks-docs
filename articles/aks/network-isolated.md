@@ -177,7 +177,7 @@ az network vnet subnet create --name ${ACR_SUBNET_NAME} --vnet-name ${VNET_NAME}
     REGISTRY_ID=$(az acr show --name ${REGISTRY_NAME} -g ${RESOURCE_GROUP}  --query 'id' --output tsv)
     ```
 
-1.Create an ACR cache rule to allow users to cache MCR container images in the new ACR.
+1. Create an ACR cache rule to allow users to cache MCR container images in the new ACR.
 
     ```azurecli-interactive
     az acr cache create -n acr-cache-rule -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "*"
@@ -293,7 +293,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 > Remember to reimage the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
 
-## Update your ACR ID
+### Update your ACR ID
 
 You may want to update the resource ID of your own ACR. To identify the ACR resource ID, use the `az aks show` command.
 
@@ -316,7 +316,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
-### Validate the network isolated cluster
+## Validate the network isolated cluster
 
 To validate the network isolated cluster feature, use the `az aks show` command.
 
@@ -346,7 +346,7 @@ The following output shows that the feature is enabled, based on the values of t
 }
 ```
 
-### Disable network isolated cluster
+## Disable network isolated cluster
 
 Disable the network isolated cluster feature by running the `az aks update` command with the `--bootstrap-artifact-source` and `--outbound-type` parameters.
 
@@ -363,17 +363,17 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you disable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
-### Frequently asked questions
+## Frequently asked questions
 
-#### What's the difference between network isolated cluster and Azure Firewall?
+### What's the difference between network isolated cluster and Azure Firewall?
 
 A network isolated cluster does not require any egress traffic beyond the VNet through cluster bootstrapping by its nature. While Azure Firewall helps restrict ingress and egress traffic between the cluster and external networks per the firewall configurations.
 
-#### Do I need to set up any allowlist endpoints for the network isolated cluster to work?
+### Do I need to set up any allowlist endpoints for the network isolated cluster to work?
 
 No, you don't need to set up any network rules to create a network isolated cluster, it does not require any outbound traffic during the node bootstrapping stage.
 
-#### Can I manually upgrade packages to upgrade node pool image?
+### Can I manually upgrade packages to upgrade node pool image?
 
 No, we don't support any arbitrary repository in network isolated cluster, you can use Node OS Autoupgrade to automatically upgrade the node pool image.
 
