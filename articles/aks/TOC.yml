@@ -583,7 +583,7 @@
                       href: csi-secrets-store-identity-access.md
                     - name: 3 - Apply extra configurations or perform troubleshooting
                       href: csi-secrets-store-configuration-options.md
-    - name: Configure networking
+    - name: Networking
       items:     
         - name: CNI
           items:
@@ -623,8 +623,11 @@
               href: use-node-public-ips.md
             - name: Restrict and control cluster egress traffic 
               href: limit-egress-traffic.md
-            - name: Configure Static Egress Gateway
+            - name: Configure Static Egress Gateway (Preview)
               href: configure-static-egress-gateway.md
+            - name: Network isolated cluster
+              href: network-isolated.md
+              displayName: outbound, egress, private
         - name: Ingress
           items:
             - name: Use application routing add-on 
