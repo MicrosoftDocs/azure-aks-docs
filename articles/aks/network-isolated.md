@@ -77,6 +77,10 @@ Read the conceptual overview of this feature, which provides an explanation of h
 
 ::: zone pivot="aks-managed-acr"
 
+## Deploy a network isolated cluster with AKS-managed ACR
+
+AKS creates, manages, and reconciles an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster.
+
 ### Create a network isolated cluster using Private link-based cluster
 
 Create a private link-based network isolated AKS cluster by running the [az aks create][az-aks-create] command with `--bootstrap-artifact-source`, `--enable-private-cluster`, and `--outbound-type` parameters.
@@ -134,6 +138,8 @@ The following steps show how to prepare these resources:
 The default outbound access for the AKS subnet must be false.
 
 ```azurecli-interactive
+az group create --name ${RESOURCE_GROUP} --location ${LOCATION}
+
 az network vnet create  --resource-group ${RESOURCE_GROUP} --name ${VNET_NAME} --address-prefixes 192.168.0.0/16
 
 az network vnet subnet create --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.1.0/24 --default-outbound-access false
