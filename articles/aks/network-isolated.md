@@ -10,11 +10,11 @@ ms.date: 11/10/2024
 zone_pivot_groups: network-isolated-acr-type
 ---
 
-# Create a network isolated AKS cluster (Preview)
+# Create a network isolated Azure Kubernetes Service (AKS) cluster (Preview)
 
-Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, AKS clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. One of the solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and FQDNs is a cumbersome and complicated process.
+Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. One of the solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and FQDNs is a cumbersome and complicated process.
 
-A network isolated AKS cluster simplifies the set up of a cluster that doesn't require any outbound or inbound network traffic outside its virtual network, thus reducing the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
+A network isolated AKS cluster simplifies setting up outbound restrictions for a cluster out of the box, thus reducing the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
