@@ -436,6 +436,8 @@
           href: aks-zone-resiliency.md
         - name: Propagate Kubernetes resources across multiple clusters
           href: /azure/kubernetes-fleet/resource-propagation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Deploy SpinKube to run serverless Wasm workloads
+          href: deploy-spinkube.md
     - name: Cluster management
       items:
         - name: Azure portal Kubernetes resource view

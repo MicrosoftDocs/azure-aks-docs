@@ -240,7 +240,8 @@ az aks nodepool add \
 ## Install Azure Network Policy Manager or Calico in an existing cluster
 Installing Azure Network Policy Manager or Calico on existing AKS clusters is also supported.
 > [!WARNING]
-> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is re-imaged.
+> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported.
+> Within each node pool, nodes are re-imaged following the same process as in a standard Kubernetes version upgrade operation whereby buffer nodes are temporarily added to minimize disruption to running applications while the node re-imaging process is ongoing. Therefore any disruptions that may occur are similar to what you would expect during a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) operation.
 
 Example command to install Azure Network Policy Manager:
 ```azurecli
