@@ -7,6 +7,7 @@ author: shashankbarsin
 ms.author: shasb
 ms.topic: how-to
 ms.date: 11/10/2024
+zone_pivot_groups: network-isolated-acr-type
 ---
 
 # Create a network isolated AKS cluster (Preview)
@@ -99,7 +100,7 @@ When creating network isolated AKS cluster, you can choose one of the following 
   - [Web application routing][webapplicationrouting]
 
 
-## Deploy a network isolated cluster with AKS-managed ACR
+::: zone pivot="aks-managed-acr"
 
 ### Create a network isolated cluster using Private link-based cluster
 
@@ -138,7 +139,9 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you enable the network isolation mode for an existing cluster. Otherwise, the feature won't take effect for the cluster.
 
+::: zone-end
 
+::: zone pivot="byo-acr"
 
 ## Deploy a network isolated cluster with bring your own ACR
 
@@ -315,6 +318,8 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
+
+::: zone-end
 
 ## Validate the network isolated cluster
 
