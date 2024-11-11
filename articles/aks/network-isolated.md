@@ -105,14 +105,14 @@ To enable the network isolation on an existing AKS cluster, use the [az aks upda
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --outbound-type none
 ```
 
-After the feature is enabled, any newly added nodes can bootstrap successfully without egress. When you enable network isolation on an existing cluster, keep in mind that you need to manually re-image all existing nodes.
+After the feature is enabled, any newly added nodes can bootstrap successfully without egress. When you enable network isolation on an existing cluster, keep in mind that you need to manually reimage all existing nodes.
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
 >[!IMPORTANT]
-> Remember to re-image the cluster's node pools after you enable the network isolation mode for an existing cluster. Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools after you enable the network isolation mode for an existing cluster. Otherwise, the feature won't take effect for the cluster.
 
 ::: zone-end
 
@@ -261,14 +261,14 @@ To enable the network isolated feature on an existing AKS cluster, use the follo
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID} --outbound-type none
 ```
 
-After the network isolated cluster feature is enabled, nodes in the newly added node pool can bootstrap successfully without egress. You must re-image existing node pools so that newly scaled node can bootstrap successfully. When you enable the feature on an existing cluster, you need to manually re-image all existing nodes.
+After the network isolated cluster feature is enabled, nodes in the newly added node pool can bootstrap successfully without egress. You must reimage existing node pools so that newly scaled node can bootstrap successfully. When you enable the feature on an existing cluster, you need to manually reimage all existing nodes.
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
 >[!IMPORTANT]
-> Remember to re-image the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
 
 ### Update your ACR ID
@@ -285,14 +285,14 @@ Updating the ACR ID is performed by running the `az aks update` command with
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id <New BYO ACR resource ID>
 ```
 
-When you update the ACR ID on an existing cluster, you need to manually re-image all existing nodes.
+When you update the ACR ID on an existing cluster, you need to manually reimage all existing nodes.
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
 >[!IMPORTANT]
-> Remember to re-image the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
 ::: zone-end
 
@@ -334,14 +334,14 @@ Disable the network isolated cluster feature by running the `az aks update` 
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Direct --outbound-type LoadBalancer
 ```
 
-When you disable the feature on an existing cluster, you need to manually re-image all existing nodes.
+When you disable the feature on an existing cluster, you need to manually reimage all existing nodes.
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
 >[!IMPORTANT]
-> Remember to re-image the cluster's node pools after you disable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
+> Remember to reimage the cluster's node pools after you disable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
 ## Next steps
 
