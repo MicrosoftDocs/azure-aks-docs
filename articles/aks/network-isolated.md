@@ -18,35 +18,10 @@ A network isolated AKS cluster simplifies the set up of a cluster that doesn't r
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-## How a network isolated cluster works
-
-The following diagram shows the network communication between dependencies for an AKS network isolated cluster.
-
-:::image type="content" source="media/network-isolated-cluster/network-isolated-cluster-diagram.png" alt-text="Traffic diagram of network isolated AKS cluster.":::
-
-Normally, an AKS cluster pulls system images from the Microsoft Artifact Registry (MAR). A network isolated cluster will attempt to pull those images from a private Azure Container Registry (ACR) instance connected to the cluster instead. If the images are not present, the private ACR will pull them from MAR and serve them via its private endpoint. This eliminates the need to enable egress from the cluster to the public MAR endpoint. Thus, a network isolated AKS cluster doesn't require public access to any of these endpoints.
-
-
-The following options are supported for private ACR with network isolated clusters:
-
-* **AKS-managed ACR**: An AKS-managed ACR is completely created and managed by the AKS cluster. You don't need to assign any permissions or manage the ACR. The cache rules, private link, and private endpoint used by the network isolated cluster are also managed by the AKS. An AKS-managed ACR follows the same behavior as other resources (route table, Azure Virtual Machine Scale Sets, etc.) in the infrastructure resource group. **You should not update/delete the ACR, its cache rules, or its system images to avoid the risk of cluster components or new node boostrap failing**. In the case of AKS-managed ACR, the ACR is continuously reconciled so that cluster components and new nodes work as expected.
-
-    > [!NOTE]
-    > After you delete an AKS network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted.
-
-* **Bring your own (BYO) ACR**: Bring your own (BYO) ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][connect-privately-azure-private-link] to understand how to configure a private endpoint for your registry.
-
-    > [!NOTE]
-    > When you delete the AKS cluster, the BYO ACR, private link, and private endpoint aren't deleted automatically. If you add customized images and cache rules to the BYO ACR, they are persisted after cluster reconciliation, after you disable the feature, or after you delete the AKS cluster.
-
-
-When creating network isolated AKS cluster, you can choose one of the following private cluster modes:
-
-* [Private link-based AKS cluster][private-clusters]: The control plane or API server is in an AKS-managed Azure resource group, and your cluster or node pool is in your resource group. The server and the cluster or node pool can communicate with each other through the Azure Private Link service in the API server virtual network and a private endpoint that's exposed on the subnet of your AKS cluster
-* [API Server Vnet Integration (Preview)][api-server-vnet-integration]: A cluster configured with API Server VNet Integration projects the API server endpoint directly into a delegated subnet in the virtual network where AKS is deployed. API Server VNet Integration enables network communication between the API server and the cluster nodes without requiring a private link or tunnel.
-
 
 ## Before you begin
+
+Read the conceptual overview of this feature, which provides an explanation of how network isolated clusters work.
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
@@ -368,20 +343,6 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you disable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
-## Frequently asked questions
-
-### What's the difference between network isolated cluster and Azure Firewall?
-
-A network isolated cluster does not require any egress traffic beyond the VNet through cluster bootstrapping by its nature. While Azure Firewall helps restrict ingress and egress traffic between the cluster and external networks per the firewall configurations.
-
-### Do I need to set up any allowlist endpoints for the network isolated cluster to work?
-
-No, you don't need to set up any network rules to create a network isolated cluster, it does not require any outbound traffic during the node bootstrapping stage.
-
-### Can I manually upgrade packages to upgrade node pool image?
-
-No, we don't support any arbitrary repository in network isolated cluster, you can use Node OS Autoupgrade to automatically upgrade the node pool image.
-
 ## Next steps
 
 In this article, you learned what ports and addresses to allow if you want to restrict egress traffic for the cluster.
@@ -403,10 +364,15 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [webapplicationrouting]: /azure/cloud-adoption-framework/ready/azure-best-practices/private-link-and-dns-integration-at-scale#private-link-and-dns-integration-in-hub-and-spoke-network-architectures
 
 <!-- LINKS - Internal -->
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-feature-register]: /cli/azure/feature#az_feature_register
+[az-feature-show]: /cli/azure/feature#az_feature_show
+[az-provider-register]: /cli/azure/provider#az_provider_register
 [aks-control-plane-identity]: use-managed-identity.md
 [aks-private-link]: private-clusters.md
 [azure-acr-rbac-contributor]: /azure/container-registry/container-registry-roles
-[connect-privately-azure-private-link]: /azure/container-registry/container-registry-private-link
+[container-registry-private-link]: /azure/container-registry/container-registry-private-link
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-show]: /cli/azure/aks#az-aks-show

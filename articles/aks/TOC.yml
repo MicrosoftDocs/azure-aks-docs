@@ -161,6 +161,9 @@
             - name: Outbound network and FQDN rules for AKS clusters
               href: outbound-rules-control-egress.md
               displayName: egress, firewall
+            - name: Network isolated clusters
+              href: concepts-network-isolated.md
+              displayName: outbound, egress, private
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -625,9 +628,9 @@
               href: limit-egress-traffic.md
             - name: Configure Static Egress Gateway (Preview)
               href: configure-static-egress-gateway.md
-            - name: Network isolated cluster
+            - name: Network isolated clusters
               href: network-isolated.md
-              displayName: outbound, egress, private
+              displayName: outbound, egress, private, acr
         - name: Ingress
           items:
             - name: Use application routing add-on 
