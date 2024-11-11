@@ -40,13 +40,13 @@ The following options are supported for private ACR with network isolated cluste
 
 When creating network isolated AKS cluster, you can choose one of the following private cluster modes:
 
-* [Private link-based AKS cluster][private-clusters]: The control plane or API server is in an AKS-managed Azure resource group, and your node pool is in your resource group. The server and the node pool can communicate with each other through the Azure Private Link service in the API server virtual network and a private endpoint which is exposed on the subnet of your AKS cluster
+* [Private link-based AKS cluster][private-clusters]: The control plane or API server is in an AKS-managed Azure resource group, and your node pool is in your resource group. The server and the node pool can communicate with each other through the Azure Private Link service in the API server virtual network and a private endpoint which is exposed on the subnet of your AKS cluster.
 * [API Server Vnet Integration (Preview)][api-server-vnet-integration]: A cluster configured with API Server VNet Integration projects the API server endpoint directly into a delegated subnet in the virtual network where AKS is deployed. API Server VNet Integration enables network communication between the API server and the cluster nodes without requiring a private link or tunnel.
 
 ## Limitations
 
 * Network isolated clusters are only supported on AKS clusters of version greater than or equal to 1.30.
-* Only `NodeImage` channel of auto-upgrade for node OS images is supported for network isolated clusters
+* Only `NodeImage` channel of auto-upgrade for node OS images is supported for network isolated clusters.
 * Windows node pools are not currently supported.
 * Outbound type `block` is currently not supported for bring your own virtual network (BYO-vnet) clusters.
 
