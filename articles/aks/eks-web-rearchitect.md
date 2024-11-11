@@ -57,7 +57,7 @@ To recreate the AWS workload in Azure with minimal changes, use an Azure equival
 | **Service mapping** | **AWS service** | **Azure service** |
 |------------------------|-------------------|--------------------|
 | Web access firewall | [AWS Web Application Firewall (WAF)][aws-waf] | [Azure Web Application Firewall (WAF)][azure-waf] |
-| Application load balancing | [Application Load Balancer (ALB)][aws-alb] | [Azure Application Gateway][azure-ag]<br> [Application Gateway for Containers (AGC)][azure-agc] |
+| Application load balancing | [Application Load Balancer (ALB)][aws-alb] | [Azure Application Gateway][azure-ag] [Application Gateway for Containers (AGC)][azure-agc] |
 | Content delivery network | [Amazon CloudFront][aws-cloudfront] | [Azure Front Door (AFD)][azure-fd] |
 | Orchestration | [Elastic Kubernetes Service (EKS)][aws-eks] | [Azure Kubernetes Service (AKS)][aks] |
 | Secrets vault | [AWS Key Management Service (KMS)][aws-kms] | [Azure Key Vault][azure-kv] |
@@ -111,10 +111,21 @@ For comprehensive instructions on deploying the [Yelb application][yelb] on AKS 
 ## Alternative solutions
 Azure offers several options for deploying a web application on an AKS cluster and securing it with a web application firewall:
 
-- [Application Gateway Ingress Controller](#use-application-gateway-ingress-controller)
-- [Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
-- [Azure Front Door](#use-azure-front-door)
-- [NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
+- [Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)](#rearchitect-aws-eks-web-application-for-azure-kubernetes-service-aks)
+  - [Yelb application architecture](#yelb-application-architecture)
+  - [Architecture on AWS](#architecture-on-aws)
+  - [Map AWS services to Azure services](#map-aws-services-to-azure-services)
+  - [Architecture on Azure](#architecture-on-azure)
+    - [Solution architecture design](#solution-architecture-design)
+  - [Alternative solutions](#alternative-solutions)
+    - [Use Application Gateway Ingress Controller](#use-application-gateway-ingress-controller)
+    - [Use Azure Application Gateway for Containers](#use-azure-application-gateway-for-containers)
+      - [Key features](#key-features)
+      - [Limitations](#limitations)
+    - [Use Azure Front Door](#use-azure-front-door)
+    - [Use NGINX Ingress Controller and ModSecurity](#use-nginx-ingress-controller-and-modsecurity)
+  - [Next step](#next-step)
+  - [Contributors](#contributors)
 
 ### Use Application Gateway Ingress Controller
 
