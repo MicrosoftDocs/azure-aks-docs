@@ -106,6 +106,11 @@ While AppArmor works for any Linux application, [seccomp (*sec*ure *comp*uting)]
 
 You can apply default seccomp profiles using [custom node configurations][custom-node-configuration] when creating a new Linux node pool. There are two values supported on AKS: `RuntimeDefault` and `Unconfined`. Some workloads might require a lower number of syscall restrictions than others. This means that they can fail during runtime with the 'RuntimeDefault' profile. To mitigate such a failure, you can specify the `Unconfined` profile. If your workload requires a custom profile, see [Configure a custom seccomp profile](#configure-a-custom-seccomp-profile).
 
+#### Limitations
+
+- SeccompDefault is not a supported parameter for windows node pools.
+- SeccompDefault is available starting in 2024-09-02-preview API.
+
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 #### Register the `KubeletDefaultSeccompProfilePreview` feature flag
