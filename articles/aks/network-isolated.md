@@ -59,12 +59,12 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
     az provider register --namespace Microsoft.ContainerRegistry
     ```
 
-- If you're choosing the Bring your own (BYO) Azure Container Registry (ACR)* option, you need to ensure the ACR meets the following requirements
+- If you're choosing the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR meets the following requirements:
     * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
 
-- (Optional) Set up private connection configuration for addons based on the following guides. This step is only required when using the following add-ons:
+- (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when using the following add-ons:
   - [CSI secret store (Azure keyvault secrets provider)][csisecretstore]
   - [Azure monitor for containers (Container insights)][azuremonitoring]
   - [Application insights][applicationinsights]
