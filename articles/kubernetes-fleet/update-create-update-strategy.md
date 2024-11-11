@@ -10,7 +10,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Define re-usable update strategies using Azure Kubernetes Fleet Manager
 
-Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be defined indepdendently of update runs or auto-upgrades, allowing them to be reused as required.
+Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed indepdendently of update runs or auto-upgrades, allowing them to be reused as required.
 
 :::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an updated strategy containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
 
@@ -43,7 +43,7 @@ Administrators can control the sequence of updates to Fleet-managed clusters by 
 
 ## Assign clusters to update groups and stages
 
-Update groups and stages provide more control over the sequence that update runs follow when updating clusters. Within an update stage, updates are applied to each update groups in parallel. Within an update group, member clusters update sequentially.
+Before clusters can be used in update strategies they must be added to update groups and stages which provide control over the sequence that update runs follow when updating clusters. Within an update stage, updates are applied to each update groups in parallel. Within an update group, member clusters update sequentially.
 
 You can assign a member cluster to a specific update group in one of two ways:
 
@@ -77,6 +77,9 @@ az fleet member create \
     --member-cluster-id $AKS_CLUSTER_ID \
     --update-group group-1a
 ```
+
+---
+
 ### Assign an existing fleet member to an update group
 
 #### [Azure portal](#tab/azure-portal)
@@ -109,9 +112,9 @@ az fleet member update \
 > A fleet member can only be a part of one update group, but an update group can have multiple fleet members assigned to it.
 > An update group itself is not a separate resource type. Update groups are only strings representing references from the fleet members. So, if all fleet members with references to a common update group are deleted, that specific update group will cease to exist as well.
 
-## Create an update strategy
+## Create an update strategy using stages
 
-For demonstration purposes, we will re-create the update strategy shown in the diagram.
+An update strategy consists of one or more stage, where a stage can contain one or more update group.
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -133,6 +136,8 @@ For demonstration purposes, we will re-create the update strategy shown in the d
     :::image type="content" source="./media/update-orchestration/create-strategy-select-groups.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/update-orchestration/create-strategy-select-groups.png":::
 
 ### [Azure CLI](#tab/cli)
+
+For this scenario we will create stage and group detail that matches those used for the Azure portal example.  
 
 1. Create a JSON file to define the stages and groups for the update run. Here's an example of input from the stages file (*example-stages.json*) that represents the strategy shown for creation via the Azure portal:
 
