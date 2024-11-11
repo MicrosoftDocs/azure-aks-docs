@@ -3,7 +3,7 @@ title: Deploy SpinKube to Azure Kubernetes Service (AKS) to run serverless WebAs
 description: Learn how to deploy the open-source stack SpinKube to Azure Kubernetes Service (AKS) to run serverless WebAssembly (Wasm) workload on Kubernetes.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 11/05/2024
+ms.date: 11/11/2024
 author: ThorstenHans
 ms.author: schaffererin
 ---
@@ -389,3 +389,8 @@ In this article, you learned how to deploy SpinKube to Azure Kubernetes Service 
 <!-- INTERNAL LINKS -->
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[az-acr-create]: /cli/azure/acr#az_acr_create
+[az-acr-show]: /cli/azure/acr#az_acr_show
+[az-acr-credential-show]: /cli/azure/acr#az_acr_credential_show
+[az-acr-delete]: /cli/azure/acr#az_acr_delete
+
