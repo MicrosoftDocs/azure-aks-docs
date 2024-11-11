@@ -51,8 +51,9 @@ Both AKS and EKS offer command-line tools to simplify the creation and managemen
 [AWS Application Load Balancer][aws-alb] operates at the application layer, allowing it to intelligently distribute traffic based on application-level information. It supports features like SSL/TLS termination, URL-based routing, and session affinity.
 
 [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] provide a comparable feature set.  The following table provides a comparison of the solutions:
-| Feature | Azure Application Gateway | AWS Application Load Balancer |
-| -------- | ------------------------------ | ----------------------------------- |
+
+| **Feature** | **Azure Application Gateway** | **AWS Application Load Balancer** |
+|--------|------------------------------|-----------------------------------|
 | Secure Sockets Layer (SSL/TLS) Termination | [Supported](/azure/application-gateway/features#secure-sockets-layer-ssltls-termination) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html#listeners-ssl) |
 | Autoscaling | [Supported](/azure/application-gateway/features#autoscaling)  | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-target-group.html) |
 | Zone redundancy | [Supported](/azure/application-gateway/features#zone-redundancy) | [Supported](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-components.html#zone-configuration) |
