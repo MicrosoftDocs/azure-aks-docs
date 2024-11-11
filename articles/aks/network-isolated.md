@@ -21,13 +21,13 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
 
 ## Before you begin
 
-1. Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The conceptual overview article also captures the [current limitations][conceptual-network-isolated-limitations].
+- Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The conceptual overview article also captures the [current limitations][conceptual-network-isolated-limitations].
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-1. This article requires version 2.63.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+- This article requires version 2.63.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 
-1. Install the `aks-preview` Azure CLI extension version **9.0.0b2* or later.
+- Install the `aks-preview` Azure CLI extension version *9.0.0b2* or later.
 
     - If you don't already have the `aks-preview` extension, install it using the [`az extension add`][az-extension-add] command.
 
@@ -39,10 +39,7 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
 
         ```azurecli-interactive
         az extension update --name aks-preview
-
-
-1. Register the `NetworkIsolatedClusterPreview` feature flag using the [az feature register][az-feature-register] command.
-
+- Register the `NetworkIsolatedClusterPreview` feature flag using the [az feature register][az-feature-register] command.
     ```azurecli-interactive
     az feature register --namespace Microsoft.ContainerService --name NetworkIsolatedClusterPreview
     ```
@@ -55,7 +52,6 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
 
     > [!NOTE]
     > If you choose to create network isolated cluster with API Server VNet Integration configured for private access of the API Server, then you need to repeat the above steps to register `EnableAPIServerVnetIntegrationPreview` feature flag too.
-
     When the status reflects *Registered*, refresh the registration of the `Microsoft.ContainerService` and `Microsoft.ContainerRegistry` resource providers by using the [az provider register][az-provider-register] command:
 
     ```azurecli-interactive
@@ -63,12 +59,12 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
     az provider register --namespace Microsoft.ContainerRegistry
     ```
 
-1. If you're choosing the Bring your own (BYO) Azure Container Registry (ACR)* option, you need to ensure the ACR meets the following requirements
+- If you're choosing the Bring your own (BYO) Azure Container Registry (ACR)* option, you need to ensure the ACR meets the following requirements
     * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
 
-1. (Optional) Set up private connection configuration for addons based on the following guides. This step is only required when using the following add-ons:
+- (Optional) Set up private connection configuration for addons based on the following guides. This step is only required when using the following add-ons:
   - [CSI secret store (Azure keyvault secrets provider)][csisecretstore]
   - [Azure monitor for containers (Container insights)][azuremonitoring]
   - [Application insights][applicationinsights]
@@ -84,7 +80,7 @@ AKS creates, manages, and reconciles an ACR resource in this option. You don't n
 
 Create a private link-based network isolated AKS cluster by running the [az aks create][az-aks-create] command with `--bootstrap-artifact-source`, `--enable-private-cluster`, and `--outbound-type` parameters.
 
-`--bootstrap-artifact-source` can be set to either `Direct` or `Cache` corresponding to using direct MCR (NOT network isolated) and private ACR (network isolated) for image pulls respectively
+`--bootstrap-artifact-source` can be set to either `Direct` or `Cache` corresponding to using direct MCR (NOT network isolated) and private ACR (network isolated) for image pulls respectively.
 
 The `--outbound-type` parameter can be set to either `none` or `block`. If the outbound type is set to `none`, then AKS doesn't set up any outbound connections for the cluster, allowing the user to configure them on their own. If the outbound type is set to `block`, then all outbound connections are blocked.
 
@@ -226,7 +222,7 @@ az role assignment create --role AcrPull --scope ${REGISTRY_ID} --assignee-objec
 
 After you configure these resources, you can proceed to create the network isolated AKS cluster with BYO ACR. For private cluster type, you can either choose a private link-based cluster or an API Server VNet integration type cluster.
 
-### Step 6: Create network isolated cluster using the BYO CR
+### Step 6: Create network isolated cluster using the BYO ACR
 
 **Private link-based cluster:**
 
