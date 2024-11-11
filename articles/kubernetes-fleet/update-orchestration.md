@@ -51,13 +51,13 @@ This guide covers how to configure and manually execute update runs.
 
 ## Creating update runs
 
-> [!NOTE]
-> Update runs honor the [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance), which explains how update runs handle member clusters configured with planned maintenance windows.
-
 Update run supports two options for the cluster upgrade sequence:
 
 * **One by one**: If you don't care about controlling the cluster upgrade sequence, `one-by-one` provides a simple approach to upgrade all member clusters of the fleet in sequence one at a time.
-* **Control sequence of clusters using update groups and stages**: If you want to control the cluster upgrade sequence, you can structure member clusters in update groups and update stages. You can store this sequence as a template in the form of update strategy. You can create update runs later using the update strategies instead of defining the sequence every time you need to create an update run.
+* **Control sequence of clusters using update groups and stages**: If you want to control the cluster upgrade sequence, you can structure member clusters in update groups and update stages. You can store this sequence as a template in the form of [update strategy](./update-create-update-strategy.md). You can create update runs later using the update strategies instead of defining the sequence every time you need to create an update run.
+
+> [!NOTE]
+> Update runs honor the [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance), which explains how update runs handle member clusters configured with planned maintenance windows.
 
 ## Update all clusters one by one
 
@@ -100,13 +100,22 @@ Update run supports two options for the cluster upgrade sequence:
     * `Consistent`: As it's possible for an update run to have AKS clusters across multiple regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). The update run picks the **latest common** image across all these regions to achieve consistency.
 
     ```azurecli-interactive
-    az fleet updaterun create --resource-group $GROUP --fleet-name $FLEET --name run-1 --upgrade-type Full --kubernetes-version 1.26.0 --node-image-selection Latest
+    az fleet updaterun create \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name run-1 \
+     --upgrade-type Full \
+     --kubernetes-version 1.26.0 \
+     --node-image-selection Latest
     ```
 
 1. Start the update run using the [`az fleet updaterun start`][az-fleet-updaterun-start] command.
 
     ```azurecli-interactive
-    az fleet updaterun start --resource-group $GROUP --fleet-name $FLEET --name run-1
+    az fleet updaterun start \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name run-1
     ```
 
 When creating an update run, you have the ability to control the scope of the update run. The `--upgrade-type` flag supports the following values: 
@@ -123,70 +132,14 @@ Also, `--node-image-selection` flag supports the following values:
 To start update runs, run the following command:
 
 ```azurecli-interactive
-az fleet updaterun start --resource-group $GROUP --fleet-name $FLEET --name <run-name>
+az fleet updaterun start \
+ --resource-group $GROUP \
+ --fleet-name $FLEET \
+ --name <run-name>
 ```
 ---
 
-## Assign clusters to update groups and stages
-
-Update groups and stages provide more control over the sequence that update runs follow when you're updating the clusters. Within an update stage, updates are applied to all the different update groups in parallel. Within an update group, member clusters update sequentially.
-
-You can assign a member cluster to a specific update group in one of two ways:
-
-* [Assign to group when adding member cluster to the fleet](#assign-to-group-when-adding-member-cluster-to-the-fleet).
-* [Assign an existing fleet member to an update group](#assign-an-existing-fleet-member-to-an-update-group).
-
-### Assign to group when adding member cluster to the fleet
-
-#### [Azure portal](#tab/azure-portal)
-
-1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
-1. From the service menu, under **Settings**, select **Member clusters** > **Add**.
-
-    :::image type="content" source="./media/update-orchestration/add-members-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager member clusters." lightbox="./media/update-orchestration/add-members.png":::
-
-1. Select the cluster that you want to add, and then select **Next: Review + add**.
-1. Enter the name of the update group that you want to assign the cluster to, and then select **Add**.
-
-#### [Azure CLI](#tab/cli)
-
-* Assign a member cluster to an update group when adding the member cluster to the fleet using the [`az fleet member create`][az-fleet-member-create] command with the `--update-group` flag set to the name of the update group.
-
-    ```azurecli-interactive
-    az fleet member create --resource-group $GROUP --fleet-name $FLEET --name member1 --member-cluster-id $AKS_CLUSTER_ID --update-group group-1a
-    ```
-
----
-
-### Assign an existing fleet member to an update group
-
-#### [Azure portal](#tab/azure-portal)
-
-1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
-1. From the service menu, under **Settings**, select **Member clusters**.
-1. Select the cluster or clusters that you want to assign to an update group, and then select **Assign update group**
-
-    :::image type="content" source="./media/update-orchestration/existing-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for assigning existing member clusters to a group." lightbox="./media/update-orchestration/existing-members-assign-group.png":::
-
-1. Enter the name of the update group that you want to assign the cluster to, and then select **Assign**.
-
-    :::image type="content" source="./media/update-orchestration/group-name-inline.png" alt-text="Screenshot of the Azure portal page for member clusters that shows the form for updating a member cluster's group." lightbox="./media/update-orchestration/group-name.png":::
-
-#### [Azure CLI](#tab/cli)
-
-* Assign an existing fleet member to an update group using the [`az fleet member update`][az-fleet-member-update] command with the `--update-group` flag set to the name of the update group.
-
-    ```azurecli-interactive
-    az fleet member update --resource-group $GROUP --fleet-name $FLEET --name member1 --update-group group-1a
-    ```
-
----
-
-> [!NOTE]
-> A fleet member can only be a part of one update group, but an update group can have multiple fleet members assigned to it.
-> An update group itself is not a separate resource type. Update groups are only strings representing references from the fleet members. So, if all fleet members with references to a common update group are deleted, that specific update group will cease to exist as well.
-
-## Define an update run and stages
+## Update clusters using groups and stages
 
 You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify a wait time between the update stages.
 
@@ -279,13 +232,23 @@ You can define an update run using update stages to sequentially order the appli
     * `Consistent`: As it's possible for an update run to have AKS clusters across multiple regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). The update run picks the **latest common** image across all these regions to achieve consistency.
 
     ```azurecli-interactive
-    az fleet updaterun create --resource-group $GROUP --fleet-name $FLEET --name run-1 --upgrade-type Full --kubernetes-version 1.26.0 --node-image-selection Latest --stages example-stages.json
+    az fleet updaterun create \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name run-1 \
+     --upgrade-type Full \
+     --kubernetes-version 1.26.0 \
+     --node-image-selection Latest \
+     --stages example-stages.json
     ```
 
 1. Start the update run using the [`az fleet updaterun start`][az-fleet-updaterun-start] command.
 
     ```azurecli-interactive
-    az fleet updaterun start --resource-group $GROUP --fleet-name $FLEET --name run-1
+    az fleet updaterun start \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name run-1
     ```
 
 ---
@@ -299,42 +262,14 @@ Creating an update run requires you to specify the stages, groups, order each ti
 
 You can create an update strategy using one of the following methods:
 
+* [Create a new update strategy and then reference it when creating an update run](./update-create-update-strategy.md).
 * [Save an update strategy while creating an update run using the Azure portal](#save-an-update-strategy-while-creating-an-update-run).
-* [Create a new update strategy and then reference it when creating an update run](#create-a-new-update-strategy-and-reference-it-when-creating-an-update-run).
 
 ### Save an update strategy while creating an update run
 
 * Save an update strategy while creating an update run in the Azure portal:
 
     :::image type="content" source="./media/update-orchestration/update-strategy-creation-from-run-inline.png" alt-text="A screenshot of the Azure portal showing update run stages being saved as an update strategy." lightbox="./media/update-orchestration/update-strategy-creation-from-run-lightbox.png":::
-
-### Create a new update strategy and reference it when creating an update run
-
-#### [Azure portal](#tab/azure-portal)
-
-1. Navigate to the **Multi-cluster update** page, and then select **Strategies** > **Create a strategy**:
-
-    :::image type="content" source="./media/update-orchestration/create-strategy-inline.png" alt-text="A screenshot of the Azure portal showing creation of update strategy." lightbox="./media/update-orchestration/create-strategy-lightbox.png":::
-
-1. Configure the update strategy details, and then select **Create**.
-1. Reference the update strategy when creating new subsequent update runs:
-
-    :::image type="content" source="./media/update-orchestration/update-run-creation-from-strategy-inline.png" alt-text="A screenshot of the Azure portal showing the creation of a new update run. The 'Copy from existing strategy' button is highlighted." lightbox="./media/update-orchestration/update-run-creation-from-strategy-lightbox.png":::
-
-#### [Azure CLI](#tab/cli)
-
-1. Create a new update strategy using the [`az fleet updatestrategy create`][az-fleet-updatestrategy-create] command with the `--stages` flag set to the name of your JSON file.
-
-    ```azurecli-interactive
-    az fleet updatestrategy create --resource-group $GROUP --fleet-name $FLEET --name strategy-1 --stages example-stages.json
-    ```
-
-1. Create an update run using the [`az fleet updaterun create`][az-fleet-updaterun-create] command with the `--update-strategy-name` flag set to the name of the update strategy.
-
-    ```azurecli-interactive
-    az fleet updaterun create --resource-group $GROUP --fleet-name $FLEET --name run-5 --update-strategy-name strategy-1 --upgrade-type NodeImageOnly --node-image-selection Consistent
-    ```
----
 
 ### Manage an update run 
 
@@ -361,19 +296,29 @@ The following sections explain how to manage an update run using the Azure porta
 * You can **Start** an update run that's either in **Not started** or **Failed** state using the [`az fleet updaterun start`][az-fleet-updaterun-start] command:
 
     ```azurecli-interactive
-    az fleet updaterun start --resource-group $GROUP --fleet-name $FLEET --name <run-name>
+    az fleet updaterun start \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name <run-name>
     ```
 
 * You can **Stop** a currently **Running** update run using the [`az fleet updaterun stop`][az-fleet-updaterun-stop] command:
 
     ```azurecli-interactive
-    az fleet updaterun stop --resource-group $GROUP --fleet-name $FLEET --name <run-name>
+    az fleet updaterun stop \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name <run-name>
     ```
 
 * You can skip update stages or groups by specifying them in the `--targets` flag using the [`az fleet updaterun skip`][az-fleet-updaterun-skip] command:
 
     ```azurecli-interactive
-    az fleet updaterun skip --resource-group $GROUP --fleet-name $FLEET --name <run-name> --targets Group:my-group-name Stage:my-stage-name
+    az fleet updaterun skip \
+     --resource-group $GROUP \
+     --fleet-name $FLEET \
+     --name <run-name> \
+     --targets Group:my-group-name Stage:my-stage-name
     ```
 
     For more information, see [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
@@ -390,12 +335,11 @@ For more information, see the [conceptual overview on the update run states and 
 
 ## Next steps
 
-Learn more about [Azure Kubernetes Fleet Manager](./overview.md).
+* [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
 [azure-cli-install]: /cli/azure/install-azure-cli
-[az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-fleet-updaterun-create]: /cli/azure/fleet/updaterun#az-fleet-updaterun-create
 [az-fleet-updaterun-start]: /cli/azure/fleet/updaterun#az-fleet-updaterun-start

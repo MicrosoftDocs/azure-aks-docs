@@ -40,6 +40,8 @@
     href: intelligent-resource-placement.md
   - name: Upgrade hub cluster type
     href: upgrade-hub-cluster-type.md
+  - name: Define re-usable update strategies
+    href: update-create-update-strategy.md
   - name: Update Kubernetes and node images across multiple clusters
     href: update-orchestration.md
   - name: Automate updates of Kubernetes and node images across multiple clusters
