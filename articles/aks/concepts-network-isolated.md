@@ -67,5 +67,5 @@ No, we don't support any arbitrary repository in network isolated cluster. Inste
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
 [private-clusters]: ./private-clusters.md
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
-[autoupgrade-node-os]: ./autoupgrade-node-os-image.md
+[autoupgrade-node-os]: ./auto-upgrade-node-os-image.md
 [network-isolated]: ./network-isolated.md
