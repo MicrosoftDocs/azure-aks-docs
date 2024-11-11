@@ -21,7 +21,7 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
 
 ## Before you begin
 
-Read the conceptual overview of this feature, which provides an explanation of how network isolated clusters work.
+1. Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The conceptual overview article also captures the [current limitations][conceptual-network-isolated-limitations].
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
@@ -73,7 +73,6 @@ Read the conceptual overview of this feature, which provides an explanation of h
   - [Azure monitor for containers (Container insights)][azuremonitoring]
   - [Application insights][applicationinsights]
   - [Web application routing][webapplicationrouting]
-
 
 ::: zone pivot="aks-managed-acr"
 
@@ -204,9 +203,9 @@ az network private-dns record-set a add-record --record-set-name ${REGISTRY_NAME
 ```azurecli-interactive
 az identity create --name ${CLUSTER_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP}
 
-export CLUSTER_IDENTITY_RESOURCE_ID=$(az identity show --name ${CLUSTER_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'id' -o tsv)
+CLUSTER_IDENTITY_RESOURCE_ID=$(az identity show --name ${CLUSTER_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'id' -o tsv)
 
-export CLUSTER_IDENTITY_PRINCIPAL_ID=$(az identity show --name ${CLUSTER_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'principalId' -o tsv)
+CLUSTER_IDENTITY_PRINCIPAL_ID=$(az identity show --name ${CLUSTER_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'principalId' -o tsv)
 ```
 
 **Kubelet identity:**
@@ -214,9 +213,9 @@ export CLUSTER_IDENTITY_PRINCIPAL_ID=$(az identity show --name ${CLUSTER_IDENTIT
 ```azurecli-interactive
 az identity create --name ${KUBELET_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP}
 
-export KUBELET_IDENTITY_RESOURCE_ID=$(az identity show --name ${KUBELET_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'id' -o tsv)
+KUBELET_IDENTITY_RESOURCE_ID=$(az identity show --name ${KUBELET_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'id' -o tsv)
 
-export KUBELET_IDENTITY_PRINCIPAL_ID=$(az identity show --name ${KUBELET_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'principalId' -o tsv)
+KUBELET_IDENTITY_PRINCIPAL_ID=$(az identity show --name ${KUBELET_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'principalId' -o tsv)
 ```
 
 **Grant AcrPull permissions for the Kubelet identity:**
@@ -370,6 +369,8 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [webapplicationrouting]: /azure/cloud-adoption-framework/ready/azure-best-practices/private-link-and-dns-integration-at-scale#private-link-and-dns-integration-in-hub-and-spoke-network-architectures
 
 <!-- LINKS - Internal -->
+[conceptual-network-isolated]: ./concepts-network-isolated.md
+[conceptual-network-isolated-limitations]: ./concepts-network-isolated.md#limitations
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-register]: /cli/azure/feature#az_feature_register
