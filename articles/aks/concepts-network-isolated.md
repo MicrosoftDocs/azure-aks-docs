@@ -27,7 +27,7 @@ Normally, an AKS cluster pulls system images from the Microsoft Artifact Registr
 
 The following options are supported for private ACR with network isolated clusters:
 
-* **AKS-managed ACR**: AKS creates, manages, and reconcile an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster. An AKS-managed ACR follows the same behavior as other resources (route table, Azure Virtual Machine Scale Sets, etc.) in the infrastructure resource group. **You should not update/delete the ACR, its cache rules, or its system images to avoid the risk of cluster components or new node bootstrap failing**. The AKS-managed ACR is continuously reconciled so that cluster components and new nodes work as expected.
+* **AKS-managed ACR**: AKS creates, manages, and reconciles an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster. An AKS-managed ACR follows the same behavior as other resources (route table, Azure Virtual Machine Scale Sets, etc.) in the infrastructure resource group. **You should not update/delete the ACR, its cache rules, or its system images to avoid the risk of cluster components or new node bootstrap failing**. The AKS-managed ACR is continuously reconciled so that cluster components and new nodes work as expected.
 
     > [!NOTE]
     > After you delete an AKS network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted.
@@ -49,9 +49,9 @@ When creating network isolated AKS cluster, you can choose one of the following 
 
 A network isolated cluster doesn't require any egress traffic beyond the VNet through cluster bootstrapping by its nature. While Azure Firewall helps restrict ingress and egress traffic between the cluster and external networks per the firewall configurations.
 
-### Do I need to set-up any allowlist endpoints for the network isolated cluster to work?
+### Do I need to set up any allowlist endpoints for the network isolated cluster to work?
 
-No, you don't need to set-up any network rules for network isolated cluster as it doesn't require any outbound traffic during the node bootstrapping stage.
+No, you don't need to set up any network rules for network isolated cluster as it doesn't require any outbound traffic during the node bootstrapping stage.
 
 ### Can I manually upgrade packages to upgrade node pool image?
 
@@ -60,8 +60,6 @@ No, we don't support any arbitrary repository in network isolated cluster. Inste
 ## Next steps
 
 - [Create a network isolated cluster][network-isolated]
-
-
 
 <!-- LINKS - Internal -->
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
