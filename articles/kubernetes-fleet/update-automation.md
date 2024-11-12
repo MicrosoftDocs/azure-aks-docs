@@ -60,7 +60,7 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Auto-upgrade profiles**.
-1. Select **Create**, enter a name for the profile, and then select whether the profile is **Enabled** or not. Disabled auto-upgrade profiles do not trigger when new versions are released.
+1. Select **Create**, enter a name for the profile, and then select whether the profile is **Enabled** or not. Disabled auto-upgrade profiles don't trigger when new versions are released.
 1. Select the update sequence of either **Stages** or **One by one**.
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile that updates clusters using a strategy." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-01.png":::
@@ -218,7 +218,7 @@ az fleet autoupgradeprofile list \
 
 ### [Azure CLI](#tab/cli)
 
-Use the You can use the [`az fleet autoupgradeprofile delete`][az-fleet-autoupgradeprofile-delete] command to delete an existing auto-upgrade profile. You are asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
+Use the You can use the [`az fleet autoupgradeprofile delete`][az-fleet-autoupgradeprofile-delete] command to delete an existing auto-upgrade profile. You're asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile delete \

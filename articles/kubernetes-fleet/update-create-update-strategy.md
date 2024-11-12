@@ -10,7 +10,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Define re-usable update strategies using Azure Kubernetes Fleet Manager
 
-Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed indepdendently of update runs or auto-upgrades, allowing strategies to be reused as required.
+Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed independently of update runs or auto-upgrades, allowing strategies to be reused as required.
 
 This article covers how to define update strategies using groups and stages. 
 
@@ -20,7 +20,7 @@ This article covers how to define update strategies using groups and stages.
 
 * Read the [conceptual overview of Fleet updates](./concepts-update-orchestration.md), which provides an explanation of update runs, stages, groups, and strategies referenced in this guide.
 
-* You must have a Fleet resource with one or more member cluster. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
+* You must have a Fleet resource with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
 
 * Set the following environment variables:
 
@@ -118,7 +118,7 @@ az fleet member update \
 
 ## Create an update strategy
 
-An update strategy consists of one or more stage, where a stage can contain one or more update group.
+An update strategy consists of one or more stages, where a stage can contain one or more update groups.
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -142,7 +142,7 @@ An update strategy consists of one or more stage, where a stage can contain one 
 
 ### [Azure CLI](#tab/cli)
 
-For this scenario we will create stage and group detail that matches those used for the Azure portal process.  
+For this scenario, we'll create stages and groups to match the details used for the Azure portal process.  
 
 1. Create a JSON file to define the stages and groups for the update run. Here's an example of input from the stages file (*example-stages.json*) that represents the strategy shown for creation via the Azure portal:
 
@@ -187,7 +187,7 @@ For this scenario we will create stage and group detail that matches those used 
 
 ## Next steps
 
-Now that you have defined an update strategy, you can use it as part of a manual update run or an auto-upgrade profile. See:
+You can use an update strategy as part of a manual update run or an auto-upgrade profile. See:
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
