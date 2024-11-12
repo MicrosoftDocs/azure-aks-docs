@@ -167,6 +167,8 @@ az fleet autoupgradeprofile create \
   --channel NodeImage 
 ```
 
+---
+
 ## View auto-upgrade profile
 
 ### [Azure portal](#tab/azure-portal)
@@ -199,6 +201,8 @@ az fleet autoupgradeprofile list \
   --name $AUTOUPGRADEPROFILE
 ```
 
+---
+
 ## Delete auto-upgrade profile
 
 ### [Azure portal](#tab/azure-portal)
@@ -217,6 +221,8 @@ az fleet autoupgradeprofile delete \
   --fleet-name $FLEET \
   --name $AUTOUPGRADEPROFILE
 ```
+
+---
 
 > [!NOTE]
 > Deleting an auto-upgrade profile for an in-progress update run will not affect the existing update run which will continue.
