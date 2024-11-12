@@ -60,7 +60,7 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Auto-upgrade profiles**.
-1. Select **Create**, enter a name for the profile, and then select whether the profile is **Enabled** or not. A disabled auto-upgrade profile will not be triggered when new versions are released.
+1. Select **Create**, enter a name for the profile, and then select whether the profile is **Enabled** or not. Disabled auto-upgrade profiles do not trigger when new versions are released.
 1. Select the update sequence of either **Stages** or **One by one**.
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile that updates clusters using a strategy." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-01.png":::
@@ -78,7 +78,7 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-02.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile, defining how the update is triggered." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-02.png":::
 
-1. If you selected an update sequence using **Stages** you will need to select or create a **Strategy**.
+1. If you selected an update sequence using **Stages**, select or create a **Strategy**.
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-03.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile, selecting the update strategy to use." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-03.png":::
 
@@ -118,7 +118,7 @@ az fleet autoupgradeprofile create \
   --channel Stable
 ```
 
-Update member clusters using an existing update strategy, ensuring the same node image version is used in every Azure region. Member clusters will all run the same node image version.
+Update member clusters using an existing update strategy, ensuring the same node image version is used in every Azure region. All member clusters run the same node image version.
  
 ```azurecli-interactive
 az fleet autoupgradeprofile create \
@@ -176,13 +176,15 @@ az fleet autoupgradeprofile create \
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Auto-upgrade profiles**.
 
- IMAGE
+    :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for viewing available auto-upgrade profiles." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-01.png":::
  
-1. Select a profile to view its properties.
+1. Select the desired profile to view its properties.
+
+    :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-02.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane show the configuration of a single auto-upgrade profile." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-02.png":::
 
 ### [Azure CLI](#tab/cli)
 
-You can use the `autoupgradeprofile list` or `autoupgradeprofile show` commands to view the auto-upgrade profile.
+You can use the [`az fleet autoupgradeprofile list`][az-fleet-autoupgradeprofile-list] or [`az fleet autoupgradeprofile show`][az-fleet-autoupgradeprofile-show] commands to view the auto-upgrade profile.
 
 List all auto-upgrade profiles for a Fleet.
 
@@ -209,11 +211,14 @@ az fleet autoupgradeprofile list \
 
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Multi-cluster update** > **Auto-upgrade profiles**.
+
+    :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for viewing available auto-upgrade profiles." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-01.png":::
+
 1. Select the desired profile in the list and then select **Delete** to delete the profile.
 
 ### [Azure CLI](#tab/cli)
 
-Use the following command to delete an existing auto-upgrade profile. You are asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
+Use the You can use the [`az fleet autoupgradeprofile delete`][az-fleet-autoupgradeprofile-delete] command to delete an existing auto-upgrade profile. You are asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile delete \
@@ -254,12 +259,11 @@ Once update runs have completed, you can rerun these commands and view the updat
 ---
 
 <!-- INTERNAL LINKS -->
-[az-fleet-member-create]: /cli/azure/fleet/member#az-fleet-member-create
 [az-fleet-autoupgradeprofile-create]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-create
+[az-fleet-autoupgradeprofile-list]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-list
+[az-fleet-autoupgradeprofile-show]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-show
+[az-fleet-autoupgradeprofile-delete]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-delete
 [azure-cli-install]: /cli/azure/install-azure-cli
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
-[quickstart-create-fleet]: quickstart-create-fleet-and-members.md#create-a-fleet-resource
-[quickstart-create-fleet-member]: quickstart-create-fleet-and-members.md#join-member-clusters
-[concepts-update-orchestration]:concepts-update-orchestration.md#update-orchestration-across-multiple-member-clusters

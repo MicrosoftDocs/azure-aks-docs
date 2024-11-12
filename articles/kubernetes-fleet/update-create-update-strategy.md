@@ -65,13 +65,13 @@ You can assign a member cluster to a specific update group in one of two ways:
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Member clusters** > **Add**.
 
-    :::image type="content" source="./media/update-orchestration/add-members-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager member clusters." lightbox="./media/update-orchestration/add-members.png":::
+    :::image type="content" source="./media/update-orchestration/add-members-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager for adding member clusters." lightbox="./media/update-orchestration/add-members.png":::
 
 1. Select the cluster that you want to add, and then select **Next: Review + add**.
 
 1. Enter the name of the update group that you want to assign the cluster to, and then select **Add**.
 
-    :::image type="content" source="./media/update-orchestration/add-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager member clusters." lightbox="./media/update-orchestration/add-members-assign-group.png":::
+    :::image type="content" source="./media/update-orchestration/add-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager review and add step for member clusters." lightbox="./media/update-orchestration/add-members-assign-group.png":::
 
 #### [Azure CLI](#tab/cli)
 
