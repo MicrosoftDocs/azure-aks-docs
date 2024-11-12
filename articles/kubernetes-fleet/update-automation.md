@@ -34,7 +34,7 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
     export AUTOUPGRADEPROFILE=<upgrade-profile-name>
     # Optional
     export STRATEGYID=<strategy-id>
-    export CLUSTER=<ask-cluster-name>
+    export CLUSTER=<aks-cluster-name>
     ```
 
 * You need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
