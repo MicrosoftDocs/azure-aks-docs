@@ -134,11 +134,11 @@ An update strategy consists of one or more stage, where a stage can contain one 
     * **(Optional) Pause after stage** - select this option if you would like to define a pause before moving to the next stage.
     * **(Optional) Pause duration** - select a pre-defined duration, or enter a custom value in seconds.
 
-    :::image type="content" source="./media/update-orchestration/create-strategy-stage-detail.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/update-orchestration/create-strategy-stage-detail.png":::
+    :::image type="content" source="./media/update-orchestration/create-stage-basics-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/update-orchestration/create-stage-basics.png":::
 
 1. Assign one or more **Update Group** to the stage, and then select **Create**.
 
-    :::image type="content" source="./media/update-orchestration/create-strategy-select-groups.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/update-orchestration/create-strategy-select-groups.png":::
+    :::image type="content" source="./media/update-orchestration/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/update-orchestration/create-stage-choose-groups.png":::
 
 ### [Azure CLI](#tab/cli)
 
@@ -150,22 +150,22 @@ For this scenario we will create stage and group detail that matches those used 
     {
         "stages": [
             {
-                "name": "ring0",
+                "name": "stage-1",
                 "groups": [
                     {
-                        "name": "canary"
+                        "name": "group-1"
                     },
                     {
-                        "name": "europe"
+                        "name": "group-2"
                     }
                 ],
-                "afterStageWaitInSeconds": 600
+                "afterStageWaitInSeconds": 300
             },
             {
-                "name": "ring1",
+                "name": "stage-2",
                 "groups": [
                     {
-                        "name": "apac"
+                        "name": "group-3"
                     }
                 ]
             }
@@ -189,9 +189,8 @@ For this scenario we will create stage and group detail that matches those used 
 
 Now that you have defined an update strategy, you can use it as part of a manual update run or an auto-upgrade profile. See:
 
-> [!div class="nextstepaction"]
-> * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
-> * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
+* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
+* [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
