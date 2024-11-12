@@ -33,6 +33,7 @@ This guide covers how to configure and manually execute update runs.
     ```bash
     export GROUP=<resource-group>
     export FLEET=<fleet-name>
+    export AKS_CLUSTER_ID=<aks-cluster-resource-id>
     ```
 
 * If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.58.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
@@ -54,7 +55,7 @@ This guide covers how to configure and manually execute update runs.
 Update run supports two options for the cluster upgrade sequence:
 
 * **One by one**: If you don't care about controlling the cluster upgrade sequence, `one-by-one` provides a simple approach to upgrade all member clusters of the fleet in sequence one at a time.
-* **Control sequence of clusters using update groups and stages**: If you want to control the cluster upgrade sequence, you can structure member clusters in update groups and update stages. You can store this sequence as a template in the form of [update strategy](./update-create-update-strategy.md). You can create update runs later using the update strategies instead of defining the sequence every time you need to create an update run.
+* **Control sequence of clusters using update groups and stages**: If you want to control the cluster upgrade sequence, you can structure member clusters in update groups and update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md). You can create update runs later using the update strategies instead of defining the sequence every time you need to create an update run.
 
 > [!NOTE]
 > Update runs honor the [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance), which explains how update runs handle member clusters configured with planned maintenance windows.
@@ -141,7 +142,7 @@ az fleet updaterun start \
 
 ## Update clusters using groups and stages
 
-You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify a wait time between the update stages.
+You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify a wait time between the update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md).
 
 #### [Azure portal](#tab/azure-portal)
 
