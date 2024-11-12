@@ -12,7 +12,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed indepdendently of update runs or auto-upgrades, allowing them to be reused as required.
 
-:::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="An example updated strategy containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
+:::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="An example update strategy containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
 
 This article covers how to define update strategies using groups and stages. 
 
