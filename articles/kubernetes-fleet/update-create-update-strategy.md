@@ -10,11 +10,11 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Define re-usable update strategies using Azure Kubernetes Fleet Manager
 
-Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed indepdendently of update runs or auto-upgrades, allowing them to be reused as required.
-
-:::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="An example update strategy containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
+Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed indepdendently of update runs or auto-upgrades, allowing strategies to be reused as required.
 
 This article covers how to define update strategies using groups and stages. 
+
+:::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="An example update strategy containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
 
 ## Prerequisites
 
@@ -31,7 +31,7 @@ This article covers how to define update strategies using groups and stages.
     export STRATEGY=<strategy-name>
     ```
 
-* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.58.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 * You also need the `fleet` Azure CLI extension, which you can install by running the following command:
 
@@ -53,6 +53,10 @@ You can assign a member cluster to a specific update group in one of two ways:
 
 * [Assign to group when adding member cluster to the fleet](#assign-to-group-when-adding-member-cluster-to-the-fleet).
 * [Assign an existing fleet member to an update group](#assign-an-existing-fleet-member-to-an-update-group).
+
+> [!NOTE]
+> A fleet member can only be a part of one update group, but an update group can have multiple fleet members assigned to it.
+> An update group itself is not a separate resource type. Update groups are only strings representing references from the fleet members. So, if all fleet members with references to a common update group are deleted, that specific update group will cease to exist as well.
 
 ### Assign to group when adding member cluster to the fleet
 
@@ -111,10 +115,6 @@ az fleet member update \
 ```
 
 ---
-
-> [!NOTE]
-> A fleet member can only be a part of one update group, but an update group can have multiple fleet members assigned to it.
-> An update group itself is not a separate resource type. Update groups are only strings representing references from the fleet members. So, if all fleet members with references to a common update group are deleted, that specific update group will cease to exist as well.
 
 ## Create an update strategy
 
@@ -183,46 +183,20 @@ For this scenario we will create stage and group detail that matches those used 
      --stages example-stages.json
     ```
 
-#### Use strategy with an update run
-
-Create an update run using the [`az fleet updaterun create`][az-fleet-updaterun-create] command with the `--update-strategy-name` flag set to the name of the update strategy.
-
-```azurecli-interactive
-az fleet updaterun create \
-    --resource-group $GROUP \
-    --fleet-name $FLEET \
-    --name run-5 \
-    --update-strategy-name $STRATEGY \
-    --upgrade-type NodeImageOnly \
-    --node-image-selection Consistent
-```
-
-#### Use strategy with an auto-upgrade profile
-
-Create an auto-upgrade profile using the [`az fleet autoupgradeprofile create`][az-fleet-autoupgradeprofile-create] command with the `--update-strategy-id` set to the resource identifier of the update strategy.
-
-```azurecli-interactive
-az fleet autoupgradeprofile create \
-    --resource-group $GROUP \
-    --fleet-name $FLEET \
-    --name $AUTOUPGRADEPROFILE \
-    --update-strategy-id $STRATEGY_ID \
-    --channel NodeImage 
-```
-
 ---
 
 ## Next steps
 
-* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
-* [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
+Now that you have defined an update strategy, you can use it as part of a manual update run or an auto-upgrade profile. See:
+
+> [!div class="nextstepaction"]
+> * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
+> * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[az-fleet-updaterun-create]: /cli/azure/fleet/updaterun#az-fleet-updaterun-create
 [az-fleet-member-create]: /cli/azure/fleet/member#az-fleet-member-create
 [az-fleet-member-update]: /cli/azure/fleet/member#az-fleet-member-update
 [az-fleet-updatestrategy-create]: /cli/azure/fleet/updatestrategy#az-fleet-updatestrategy-create
-[az-fleet-autoupgradeprofile-create]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-create
