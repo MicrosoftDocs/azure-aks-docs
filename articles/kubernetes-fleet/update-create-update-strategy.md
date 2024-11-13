@@ -14,7 +14,7 @@ Administrators can control the sequence of updates to Fleet-managed clusters by 
 
 This article covers how to define update strategies using groups and stages. 
 
-:::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="An example update strategy containing two update stages, each containing two update groups with two member clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
+:::image type="content" source="./media/conceptual-update-orchestration-inline.png" alt-text="A diagram showing an example update strategy containing two update stages. Each update stage contains two update groups. Each update group contains two member clusters." lightbox="./media/conceptual-update-orchestration-inline.png":::
 
 ## Prerequisites
 
@@ -65,13 +65,13 @@ You can assign a member cluster to a specific update group in one of two ways:
 1. In the Azure portal, navigate to your Azure Kubernetes Fleet Manager resource.
 1. From the service menu, under **Settings**, select **Member clusters** > **Add**.
 
-    :::image type="content" source="./media/update-orchestration/add-members-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager for adding member clusters." lightbox="./media/update-orchestration/add-members.png":::
+    :::image type="content" source="./media/create-update-strategy/add-members-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager for adding member clusters." lightbox="./media/create-update-strategy/add-members.png":::
 
 1. Select the cluster that you want to add, and then select **Next: Review + add**.
 
 1. Enter the name of the update group that you want to assign the cluster to, and then select **Add**.
 
-    :::image type="content" source="./media/update-orchestration/add-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager review and add step for member clusters." lightbox="./media/update-orchestration/add-members-assign-group.png":::
+    :::image type="content" source="./media/create-update-strategy/add-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for Azure Kubernetes Fleet Manager review and add step for member clusters." lightbox="./media/create-update-strategy/add-members-assign-group.png":::
 
 #### [Azure CLI](#tab/cli)
 
@@ -96,11 +96,11 @@ az fleet member create \
 1. From the service menu, under **Settings**, select **Member clusters**.
 1. Select the clusters that you want to assign to an update group, and then select **Assign update group**
 
-    :::image type="content" source="./media/update-orchestration/existing-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for assigning existing member clusters to a group." lightbox="./media/update-orchestration/existing-members-assign-group.png":::
+    :::image type="content" source="./media/create-update-strategy/existing-members-assign-group-inline.png" alt-text="Screenshot of the Azure portal page for assigning existing member clusters to a group." lightbox="./media/create-update-strategy/existing-members-assign-group.png":::
 
 1. Enter the name of the update group that you want to assign the cluster to, and then select **Assign**.
 
-    :::image type="content" source="./media/update-orchestration/group-name-inline.png" alt-text="Screenshot of the Azure portal page for member clusters that shows the form for updating a member cluster's group." lightbox="./media/update-orchestration/group-name.png":::
+    :::image type="content" source="./media/create-update-strategy/group-name-inline.png" alt-text="Screenshot of the Azure portal page for member clusters that shows the form for updating a member cluster's group." lightbox="./media/create-update-strategy/group-name.png":::
 
 #### [Azure CLI](#tab/cli)
 
@@ -127,18 +127,18 @@ An update strategy consists of one or more stages, where a stage can contain one
 1. Enter a name for the strategy.
 1. The first time you view the page, an update strategy explanation diagram is displayed which can help visualize how strategies function.
 
-    :::image type="content" source="./media/update-orchestration/create-strategy-inline.png" alt-text="A screenshot of the Azure portal showing creation of update strategy." lightbox="./media/update-orchestration/create-strategy-lightbox.png":::
+    :::image type="content" source="./media/create-update-strategy/create-strategy-inline.png" alt-text="A screenshot of the Azure portal showing creation of update strategy." lightbox="./media/create-update-strategy/create-strategy-lightbox.png":::
 
 1. Select **Create Stage** and enter:
     * **Stage name** - name the stage - it must be unique across all stage names in the fleet.
     * **(Optional) Pause after stage** - select this option if you would like to define a pause before moving to the next stage.
     * **(Optional) Pause duration** - select a pre-defined duration, or enter a custom value in seconds.
 
-    :::image type="content" source="./media/update-orchestration/create-stage-basics-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/update-orchestration/create-stage-basics.png":::
+    :::image type="content" source="./media/create-update-strategy/create-stage-basics-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/create-update-strategy/create-stage-basics.png":::
 
 1. Assign one or more **Update Group** to the stage, and then select **Create**.
 
-    :::image type="content" source="./media/update-orchestration/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/update-orchestration/create-stage-choose-groups.png":::
+    :::image type="content" source="./media/create-update-strategy/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/create-update-strategy/create-stage-choose-groups.png":::
 
 ### [Azure CLI](#tab/cli)
 
