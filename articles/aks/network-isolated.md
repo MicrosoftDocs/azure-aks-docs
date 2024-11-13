@@ -53,11 +53,11 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
     > [!NOTE]
     > If you choose to create network isolated cluster with API Server VNet Integration configured for private access of the API Server, then you need to repeat the above steps to register `EnableAPIServerVnetIntegrationPreview` feature flag too.
     When the status reflects *Registered*, refresh the registration of the `Microsoft.ContainerService` and `Microsoft.ContainerRegistry` resource providers by using the [az provider register][az-provider-register] command:
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    az provider register --namespace Microsoft.ContainerRegistry
-    ```
+    > 
+    > ```azurecli-interactive
+    >  az provider register --namespace Microsoft.ContainerService
+    >  az provider register --namespace Microsoft.ContainerRegistry
+    >  ```
 
 - If you're choosing the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR meets the following requirements:
     * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
