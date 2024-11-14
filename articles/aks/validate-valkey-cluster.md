@@ -144,8 +144,7 @@ The sample client application uses the [Locust load testing framework](https://d
 
 ## Test the Valkey cluster on Azure Kubernetes Service (AKS)
 
-1. Create a Pod that uses the Valkey client image we built in the previous step.
-    The pod spec contains also the Secret Store CSI volume with the valkey password the client will use to connect to the Valkey cluster.
+1. Create a `Pod` that uses the Valkey client image built in the previous step using the `kubectl apply` command. The pod spec contains the Secret Store CSI volume with the Valkey password the client uses to connect to the Valkey cluster.
 
     ```bash
     kubectl apply -f - <<EOF
