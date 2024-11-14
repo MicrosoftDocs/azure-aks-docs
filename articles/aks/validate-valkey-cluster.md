@@ -192,28 +192,34 @@ The sample client application uses the [Locust load testing framework](https://d
     :::image type="content" source="media/valkey-stateful-workload/locust.png" alt-text="Screenshot of a web page showing the Locust test dashboard.":::
 
 
-3. To simulate an outage lets delete the StatefulSet with the option [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/).
-
-    The goal is to be able to delete a single Pod without having the StatefulSet recreating that Pod immediately.
+4. Simulate an outage by deleting the `StatefulSet` using the `kubectl delete` command with the [`--cascade=orphan`](https://kubernetes.io/docs/tasks/run-application/delete-stateful-set/) flag. The goal is to be able to delete a single Pod without the StatefulSet immediately recreating the deleted Pod.
 
     ```bash
     kubectl delete statefulset valkey-masters --cascade=orphan
     ```
-    Now let's delete the `valkey-masters-0` Pod:
+
+5. Delete the `valkey-masters-0` Pod using the `kubectl delete pod` command.
 
     ```bash
     kubectl delete pod valkey-masters-0
     ```
-    When you run `kubectl get pods`, you will see that the Pod `valkey-masters-0`has been deleted.
+
+6. Check the list of Pods using the `kubectl get pods` command.
 
     ```bash
-        NAME                READY   STATUS    RESTARTS   AGE
-        valkey-client       1/1     Running   0          6m34s
-        valkey-masters-1    1/1     Running   0          16m
-        valkey-masters-2    1/1     Running   0          16m
-        valkey-replicas-0   1/1     Running   0          16m
-        valkey-replicas-1   1/1     Running   0          16m
-        valkey-replicas-2   1/1     Running   0          16m
+    kubectl get pods
+    ```
+
+    The output should indicate that the Pod `valkey-masters-0` was deleted:
+
+    ```output
+    NAME                READY   STATUS    RESTARTS   AGE
+    valkey-client       1/1     Running   0          6m34s
+    valkey-masters-1    1/1     Running   0          16m
+    valkey-masters-2    1/1     Running   0          16m
+    valkey-replicas-0   1/1     Running   0          16m
+    valkey-replicas-1   1/1     Running   0          16m
+    valkey-replicas-2   1/1     Running   0          16m
     ```
 
     When we read the logs of the `valkey-replicas-0` Pod, by running `kubectl logs valkey-replicas-0`, we observe that the complete event lasts for about 18 seconds:
