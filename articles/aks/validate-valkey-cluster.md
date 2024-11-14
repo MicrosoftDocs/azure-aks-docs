@@ -291,7 +291,6 @@ To learn more about stateful workloads using Azure Kubernetes Service (AKS), see
 
 *Microsoft maintains this article. The following contributors originally wrote it:*
 
-*
-*
-*
+* Nelly Kiboi | Service Engineer
+* Saverio Proto | Principal Customer Experience Engineer
 
