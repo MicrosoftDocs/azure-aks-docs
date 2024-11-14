@@ -10,6 +10,11 @@ ms.author: schaffererin
 
 # Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS)
 
+This article shows how to validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS).
+
+> [!NOTE]
+> This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
+
 ## Build and run a sample client application for Valkey
 
 The following steps show how to build a sample client application for Valkey and push the Docker image of the application to Azure Container Registry (ACR).
