@@ -215,7 +215,7 @@ az sql server firewall-rule create --resource-group $Env:RESOURCE_GROUP_NAME --s
 ---
 
 > [!NOTE]
-> You create an Azure SQL server with SQL authentication disabled for security considerations. Only Microsoft Entra ID is used to authenticate to the server. If you need to enable SQL authentication, see [az sql server create](/cli/azure/sql/server#az-sql-server-create) for more information.
+> This article disables SQL authentication disabled to illustrate security best practices. Microsoft Entra ID is used to authenticate the connection to the server. If you need to enable SQL authentication, see [az sql server create](/cli/azure/sql/server#az-sql-server-create) for more information.
 
 ## Create a service connection in AKS with Service Connector
 
@@ -378,7 +378,7 @@ git checkout 20241107
 
 If you see a message about being in "detached HEAD" state, you can safely ignore it. The message just means that you checked out a tag.
 
-Here's the file structure of the application with important files and directories:
+Here's the file structure of the application, with important files and directories:
 
 ```
 java-app
@@ -405,14 +405,14 @@ In the *docker* directory, there are two files to create the application image w
 
 In the directory *liberty/config*, the *server.xml* is used to configure the database connection for the Open Liberty and WebSphere Liberty cluster. It defines a variable `azure.sql.connectionstring` that is used to connect to the Azure SQL Database.
 
-The *pom.xml* file is the Maven project object model (POM) file that contains the configuration information for the project. The *pom-azure-identity.xml* file declares `azure-identity` dependency, which is used to authenticate to Azure services using Microsoft Entra ID.
+The *pom.xml* file is the Maven project object model (POM) file that contains the configuration information for the project. The *pom-azure-identity.xml* file declares a dependency on `azure-identity`. This is used to authenticate to Azure services using Microsoft Entra ID.
 
 > [!NOTE]
-> This sample uses `azure-identity` library to authenticate to Azure SQL Database using Microsoft Entra authencitation, which is recommended for security considerations. If you need to use SQL authentication in your Liberty application, see [Relational database connections with JDBC](https://openliberty.io/docs/latest/relational-database-connections-JDBC.html) for more information.
+> This sample uses the `azure-identity` library to authenticate to Azure SQL Database using Microsoft Entra authencitation. If you need to use SQL authentication in your Liberty application, see [Relational database connections with JDBC](https://openliberty.io/docs/latest/relational-database-connections-JDBC.html) for more information.
 
 ### Build the project
 
-Now that you gathered the necessary properties, you can build the application. The POM file for the project reads many variables from the environment. As part of the Maven build, these variables are used to populate values in the YAML files located in *src/main/aks*. You can do something similar for your application outside Maven if you prefer.
+Now that you've gathered the necessary properties, build the application. The POM file for the project reads many variables from the environment. As part of the Maven build, these variables are used to populate values in the YAML files located in *src/main/aks*. You can do something similar for your application outside Maven if you prefer.
 
 #### [Bash](#tab/in-bash)
 
@@ -476,7 +476,7 @@ Run and test the project locally before deploying to Azure. For convenience, thi
 
     ---
 
-1. Verify the application works as expected. You should see a message similar to `[INFO] [AUDIT   ] CWWKZ0001I: Application javaee-cafe started in 18.235 seconds.` appears in the command output. Go to `http://localhost:9080/` in your browser and verify that the application is accessible and all functions are working.
+1. Verify the application works as expected. You should see a message similar to `[INFO] [AUDIT   ] CWWKZ0001I: Application javaee-cafe started in 18.235 seconds.` in the command output. Go to `http://localhost:9080/` in your browser and verify that the application is accessible and all functions are working.
 
 1. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop. Select `Y` if you're aksed to terminate batch job.
 
