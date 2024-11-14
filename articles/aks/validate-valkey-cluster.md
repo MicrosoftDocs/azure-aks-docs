@@ -318,7 +318,7 @@ The sample client application uses the [Locust load testing framework](https://d
 
     After the new primary is elected, the Valkey cluster continues to serve requests with a latency of around 2ms.
 
-## Conclusion
+## Next steps
 
 In this article, we learned how to build a simple test application with Locust, and how to simulate a failure of a Valkey primary Pod.
 We observed that the Valkey cluster was able to recover from the failure and continue to serve requests with a short spike in latency.
