@@ -222,7 +222,13 @@ The sample client application uses the [Locust load testing framework](https://d
     valkey-replicas-2   1/1     Running   0          16m
     ```
 
-    When we read the logs of the `valkey-replicas-0` Pod, by running `kubectl logs valkey-replicas-0`, we observe that the complete event lasts for about 18 seconds:
+7. Get the logs of the `valkey-replicas-0` Pod using the `kubectl logs valkey-replicas-0` command.
+
+    ```bash
+    kubectl logs valkey-replicas-0
+    ```
+
+    In the output, we observe that the complete event lasts for about 18 seconds:
 
     ```
     1:S 05 Nov 2024 12:18:53.961 * Connection with primary lost.
