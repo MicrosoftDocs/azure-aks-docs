@@ -320,5 +320,18 @@ The sample client application uses the [Locust load testing framework](https://d
 
 ## Next steps
 
-In this article, we learned how to build a simple test application with Locust, and how to simulate a failure of a Valkey primary Pod.
-We observed that the Valkey cluster was able to recover from the failure and continue to serve requests with a short spike in latency.
+In this article, we learned how to build a simple test application with Locust, and how to simulate a failure of a Valkey primary Pod. We observed that the Valkey cluster was able to recover from the failure and continue to serve requests with a short spike in latency.
+
+To learn more about stateful workloads using Azure Kubernetes Service (AKS), see the following articles:
+
+* [Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](./mongodb-overview.md)
+* [Deploy a highly available PostgreSQL database on AKS with Azure CLI](./postgresql-ha-overview.md)
+
+## Contributors
+
+*Microsoft maintains this article. The following contributors originally wrote it:*
+
+*
+*
+*
+
