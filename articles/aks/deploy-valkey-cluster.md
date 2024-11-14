@@ -460,7 +460,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     service/valkey-replicas created
     ```
 
-6. Create a Pod Disruption Budget (PDB) to ensure that one pod at most is available at all times using the `kubectl apply` command.
+6. Create a Pod Disruption Budget (PDB) to ensure that one pod at most is unavailable at all times using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
