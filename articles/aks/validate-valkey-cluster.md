@@ -181,13 +181,13 @@ The sample client application uses the [Locust load testing framework](https://d
     EOF
     ```
 
-2. Port forward the port 8089 to access the Locust web interface on your local machine:
+2. Port forward the port 8089 to access the Locust web interface on your local machine using the `kubectl port-forward` command.
 
     ```bash
      kubectl port-forward -n valkey valkey-client 8089:8089
     ```
 
-    Access the Locust web interface at `http://localhost:8089` and start the test. You can adjust the number of users and the spawn rate to simulate a workload on the Valkey cluster. In the followin graph the values used are 100 users and 10 spawn rate.
+3. Access the Locust web interface at `http://localhost:8089` and start the test. You can adjust the number of users and the spawn rate to simulate a workload on the Valkey cluster. The following graph uses 100 users and a 10 spawn rate:
 
     :::image type="content" source="media/valkey-stateful-workload/locust.png" alt-text="Screenshot of a web page showing the Locust test dashboard.":::
 
