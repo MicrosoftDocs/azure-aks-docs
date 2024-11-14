@@ -12,7 +12,8 @@ ms.author: schaffererin
 
 ## Build and run a sample client application for Valkey
 
-The following steps show how to build a sample client application for Valkey and push the Docker image of the application to an Azure Container Registry.
+The following steps show how to build a sample client application for Valkey and push the Docker image of the application to Azure Container Registry (ACR).
+
 The sample client application uses the [Locust load testing framework](https://docs.locust.io/en/stable/) to simulate a workload on the Valkey cluster.
 
 1. Create the `Dockerfile` and `requirements.txt` and place them in a new directory:
