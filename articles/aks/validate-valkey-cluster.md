@@ -21,7 +21,7 @@ The following steps show how to build a sample client application for Valkey and
 
 The sample client application uses the [Locust load testing framework](https://docs.locust.io/en/stable/) to simulate a workload on the Valkey cluster.
 
-1. Create the `Dockerfile` and `requirements.txt` and place them in a new directory:
+1. Create the *Dockerfile* and *requirements.txt* and place them in a new directory using the following commands:
 
     ```bash
     mkdir valkey-client
@@ -39,6 +39,7 @@ The sample client application uses the [Locust load testing framework](https://d
     locust
     EOF
     ```
+
 2. Create the `locustfile.py` file with the following content:
 
     ```bash
@@ -132,12 +133,12 @@ The sample client application uses the [Locust load testing framework](https://d
             return result
     EOF
     ```
-    This python code is implementing a Locust User class that connects to the Valkey cluster and performs a set and get operation.
-    You can expand this class to implement more complex operations.
 
-3. Build the Docker image and upload it to the Azure Container Registry (ACR):
+    This python code implements a Locust User class that connects to the Valkey cluster and performs a *set and get* operation. You can expand this class to implement more complex operations.
 
-    ```bash
+3. Build the Docker image and upload it to ACR using the [`az acr build`](/cli/azure/acr#az-acr-build) command.
+
+    ```azurecli-interactive
     az acr build --image valkey-client --registry ${MY_ACR_REGISTRY} .
     ```
 
