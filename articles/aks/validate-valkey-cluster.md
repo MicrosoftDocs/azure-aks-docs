@@ -240,47 +240,7 @@ The sample client application uses the [Locust load testing framework](https://d
     1:S 05 Nov 2024 12:18:54.910 * PRIMARY <-> REPLICA sync started
     1:S 05 Nov 2024 12:18:54.912 # Error condition on socket for SYNC: Connection refused
     1:S 05 Nov 2024 12:18:55.920 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:18:55.921 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:18:55.923 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:18:56.931 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:18:56.932 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:18:56.934 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:18:57.941 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:18:57.941 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:18:57.943 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:18:58.951 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:18:58.951 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:18:58.953 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:18:59.961 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:18:59.961 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:18:59.963 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:00.970 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:00.971 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:00.973 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:01.980 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:01.981 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:01.982 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:02.990 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:02.990 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:02.993 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:04.000 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:04.000 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:04.002 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:05.010 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:05.010 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:05.012 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:06.020 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:06.020 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:06.022 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:07.030 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:07.030 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:07.032 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:08.039 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:08.039 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:08.041 # Error condition on socket for SYNC: Connection refused
-    1:S 05 Nov 2024 12:19:09.048 * Connecting to PRIMARY 10.224.0.250:6379
-    1:S 05 Nov 2024 12:19:09.048 * PRIMARY <-> REPLICA sync started
-    1:S 05 Nov 2024 12:19:09.050 # Error condition on socket for SYNC: Connection refused
+    [..CUT..]
     1:S 05 Nov 2024 12:19:10.056 * Connecting to PRIMARY 10.224.0.250:6379
     1:S 05 Nov 2024 12:19:10.057 * PRIMARY <-> REPLICA sync started
     1:S 05 Nov 2024 12:19:10.058 # Error condition on socket for SYNC: Connection refused
