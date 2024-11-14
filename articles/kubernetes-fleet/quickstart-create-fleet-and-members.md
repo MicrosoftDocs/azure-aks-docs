@@ -258,7 +258,7 @@ Fleet currently supports joining existing AKS clusters as member clusters.
 
 ## Next steps
 
-* [Access the Kubernetes API of the Fleet resource](./quickstart-access-fleet-kubernetes-api.md).
+* [Access Fleet hub cluster Kubernetes API](./quickstart-access-fleet-hub-cluster-kubernetes-api.md).
 
 <!-- INTERNAL LINKS -->
 [az-extension-add]: /cli/azure/extension#az-extension-add

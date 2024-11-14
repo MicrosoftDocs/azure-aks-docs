@@ -12,8 +12,6 @@
       href: quickstart-create-fleet-and-members-portal.md
     - name: Use the Azure CLI
       href: quickstart-create-fleet-and-members.md
-  - name: Access the Kubernetes API of the Fleet resource
-    href: quickstart-access-fleet-kubernetes-api.md
   - name: Propagate resources from a hub cluster to member clusters
     href: quickstart-resource-propagation.md
 - name: Concepts
@@ -44,6 +42,8 @@
       items:
         - name: Upgrade hub cluster type
           href: upgrade-hub-cluster-type.md
+        - name: Access Fleet hub cluster Kubernetes API
+          href: access-fleet-hub-cluster-kubernetes-api.md
         - name: Customize cluster scoped resources with cluster resource overrides
           href: cluster-resource-override.md
         - name: Customize namespace scoped resources with resource overrides

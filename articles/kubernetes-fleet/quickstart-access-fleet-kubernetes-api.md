@@ -1,6 +1,6 @@
 ---
-title: "Quickstart: Access the Kubernetes API of the Fleet resource"
-description: Learn how to access the Kubernetes API of the Fleet resource with Azure Kubernetes Fleet Manager.
+title: "How-to guides: Access Fleet hub cluster Kubernetes API"
+description: Learn how to access fleet hub cluster kubernetes API with Azure Kubernetes Fleet Manager.
 ms.topic: quickstart
 ms.date: 04/01/2024
 author: schaffererin
@@ -8,7 +8,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-fleet-manager
 ---
 
-# Quickstart: Access the Kubernetes API of the Fleet resource
+# How-to guides: Access Fleet hub cluster Kubernetes API
 
 If your Azure Kubernetes Fleet Manager resource was created with the hub cluster enabled, then it can be used to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API of the hub cluster managed by the Fleet resource.
 
@@ -16,10 +16,10 @@ If your Azure Kubernetes Fleet Manager resource was created with the hub cluster
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
-* You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI](quickstart-create-fleet-and-members.md).
+* You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI](quickstart-access-fleet-hub-cluster-kubernetes-api.md).
 * The identity (user or service principal) you're using needs to have the Microsoft.ContainerService/fleets/listCredentials/action on the Fleet resource.
 
-## Access the Kubernetes API of the Fleet resource
+## Access Fleet hub cluster Kubernetes API
 
 1. Set the following environment variables for your subscription ID, resource group, and Fleet resource:
 

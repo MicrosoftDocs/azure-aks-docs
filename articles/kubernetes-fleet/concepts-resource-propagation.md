@@ -350,9 +350,9 @@ Each toleration is used to tolerate one or more specific taints applied on the `
 
 For more information, see [the upstream Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md#tolerations).
 
-## Access the Kubernetes API of the Fleet resource cluster
+## Access Fleet hub cluster Kubernetes API
 
-If you created an Azure Kubernetes Fleet Manager resource with the hub cluster enabled, you can use it to centrally control scenarios like Kubernetes object propagation. To access the Kubernetes API of the Fleet resource cluster, follow the steps in [Access the Kubernetes API of the Fleet resource cluster with Azure Kubernetes Fleet Manager](./quickstart-access-fleet-kubernetes-api.md).
+If you created an Azure Kubernetes Fleet Manager resource with the hub cluster enabled, you can use it to centrally control scenarios like Kubernetes object propagation. To access the Kubernetes API of the Fleet resource cluster, follow the steps in [Access Fleet hub cluster Kubernetes API](./quickstart-access-fleet-hub-cluster-kubernetes-api.md).
 
 ## Next steps
 
