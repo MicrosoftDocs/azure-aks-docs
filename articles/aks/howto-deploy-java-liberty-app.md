@@ -40,9 +40,9 @@ If you're interested in providing feedback or working closely on your migration 
 * An Azure subscription. [!INCLUDE [quickstarts-free-trial-note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * Prepare a local machine with Unix-like operating system installed - for example, Ubuntu, Azure Linux, macOS, or Windows Subsystem for Linux.
 * Install the [Azure CLI](/cli/azure/install-azure-cli) to run Azure CLI commands.
-  * Sign in to the Azure CLI by using the [az login](/cli/azure/reference-index#az-login) command. To finish the authentication process, follow the steps displayed in your terminal. For other sign-in options, see [Sign into Azure with Azure CLI](/cli/azure/authenticate-azure-cli#sign-into-azure-with-azure-cli).
+  * Sign in to the Azure CLI by using the [`az login`](/cli/azure/reference-index#az-login) command. To finish the authentication process, follow the steps displayed in your terminal. For other sign-in options, see [Sign into Azure with Azure CLI](/cli/azure/authenticate-azure-cli#sign-into-azure-with-azure-cli).
   * When you're prompted, install the Azure CLI extension on first use. For more information about extensions, see [Use and manage extensions with the Azure CLI](/cli/azure/azure-cli-extensions-overview).
-  * Run [az version](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [az upgrade](/cli/azure/reference-index?#az-upgrade). This article requires at least version 2.61.0 of Azure CLI.
+  * Run [`az version`](/cli/azure/reference-index?#az-version) to find the version and dependent libraries that are installed. To upgrade to the latest version, run [`az upgrade`](/cli/azure/reference-index?#az-upgrade). This article requires at least version 2.61.0 of Azure CLI.
 * Install a Java Standard Edition (SE) implementation, version 17 (for example, [Eclipse Open J9](https://www.eclipse.org/openj9/)).
 * Install [Maven](https://maven.apache.org/download.cgi) 3.9.8 or higher.
 * Ensure [Git](https://git-scm.com) is installed.
@@ -215,7 +215,7 @@ az sql server firewall-rule create --resource-group $Env:RESOURCE_GROUP_NAME --s
 ---
 
 > [!NOTE]
-> This article disables SQL authentication disabled to illustrate security best practices. Microsoft Entra ID is used to authenticate the connection to the server. If you need to enable SQL authentication, see [az sql server create](/cli/azure/sql/server#az-sql-server-create) for more information.
+> This article disables SQL authentication disabled to illustrate security best practices. Microsoft Entra ID is used to authenticate the connection to the server. If you need to enable SQL authentication, see [`az sql server create`](/cli/azure/sql/server#az-sql-server-create).
 
 ## Create a service connection in AKS with Service Connector
 
@@ -226,7 +226,7 @@ First, grant app **Azure Service Connector Resource Provider** permissions to th
 1. Go to the Azure portal and navigate to the resource group that you created earlier.
 1. In the list of resources in the resource group, select the resource with the **Type** value of **Application gateway**.
 1. Select **Access control (IAM)**. Then, expand **Add** and select **Add role assignment**.
-1. In **Role** tab, select **Priviledged administrator roles**. Then, select **Contributor**. Select **Next**.
+1. In **Role** tab, select **Privileged administrator roles**. Then, select **Contributor**. Select **Next**.
 1. In **Members** tab, select **Select members**. Then, search for the **Azure Service Connector Resource Provider** app. Select the app and select **Select**. Select **Next**.
 1. Select **Review + assign**. Wait for a few seconds for the role assignment to complete.
 
@@ -304,11 +304,11 @@ az aks connection create sql --connection akssqlconn --client-type java --source
 ---
 
 > [!NOTE]
-> It's recommneded to use Microsoft Entra Workload ID for secure access to your Azure SQL Database without using SQL authentication. If you need to use SQL authentication, ignore the above steps in this section and use the username and password to connect to the Azure SQL Database.
+> We recommend using Microsoft Entra Workload ID for secure access to your Azure SQL Database without using SQL authentication. If you need to use SQL authentication, ignore the previous steps in this section and use the username and password to connect to the Azure SQL Database.
 
-### Get servcie account and secret created by Service Connector
+### Get service account and secret created by Service Connector
 
-To authenticate to the Azure SQL Database, you need to get the service account and secret created by Service Connector. Follow the section [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container). Take the option **Directly create a deployment using the YAML sample code snippet provided** and execute the following steps:
+To authenticate to the Azure SQL Database, you need to get the service account and secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following steps:
 
 1. From the highlighted sections in the sample Kubernetes deployment YAML, copy the `serviceAccountName` and `secretRef.name` values, as shown in the following example:
 
@@ -321,7 +321,7 @@ To authenticate to the Azure SQL Database, you need to get the service account a
             name: <secret-name>
    ```
 
-1. Replace `<service-account-name>` and `<secret-name>` with the values you copied in the previous step to define the following environment variables:
+1. Use the following commands to define environment variables. Replace `<service-account-name>` and `<secret-name>` with the values you copied in the previous step.
 
    ### [Bash](#tab/in-bash)
 
@@ -342,7 +342,7 @@ To authenticate to the Azure SQL Database, you need to get the service account a
    These values are used in the next section to deploy the Liberty application to the AKS cluster.
 
 > [!NOTE]
-> The secret created by Service Connector contains the `AZURE_SQL_CONNECTIONSTRING`, which is a password free connection string to the Azure SQL Database. See sample value from [User-assigned managed identity authentication](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java#user-assigned-managed-identity) for more information.
+> The secret created by Service Connector contains the `AZURE_SQL_CONNECTIONSTRING`, which is a password free connection string to the Azure SQL Database. For more information, see the sample value in the [User-assigned managed identity authentication](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java#user-assigned-managed-identity) section of [Integrate Azure SQL Database with Service Connector](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java).
 
 Now that you set up the database and AKS cluster, you can proceed to preparing AKS to host your Open Liberty application.
 
@@ -354,7 +354,7 @@ Follow the steps in this section to deploy the sample application on the Liberty
 
 Clone the sample code for this article. The sample is on [GitHub](https://github.com/Azure-Samples/open-liberty-on-aks).
 
-There are a few samples in the repository. This article uses *java-app*. Run the following commands to get the sample:
+There are a few samples in the repository. This article uses **java-app**. Run the following commands to get the sample:
 
 #### [Bash](#tab/in-bash)
 
@@ -397,22 +397,22 @@ java-app
 ├─ pom-azure-identity.xml
 ```
 
-The directories *java*, *resources*, and *webapp* contain the source code of the sample application. The code declares and uses a data source named `jdbc/JavaEECafeDB`.
+The directories **java**, **resources**, and **webapp** contain the source code of the sample application. The code declares and uses a data source named `jdbc/JavaEECafeDB`.
 
-In the *aks* directory, the file *openlibertyapplication-agic-passwordless-db.yaml* is used to deploy the application image with AGIC and passwordless connection to the Azure SQL Database. This article assumes that you use this file.
+In the **aks** directory, the file **openlibertyapplication-agic-passwordless-db.yaml** is used to deploy the application image with AGIC and passwordless connection to the Azure SQL Database. This article assumes that you use this file.
 
-In the *docker* directory, there are two files to create the application image with either Open Liberty or WebSphere Liberty.
+In the **docker** directory, there are two files to create the application image with either Open Liberty or WebSphere Liberty.
 
-In the directory *liberty/config*, the *server.xml* is used to configure the database connection for the Open Liberty and WebSphere Liberty cluster. It defines a variable `azure.sql.connectionstring` that is used to connect to the Azure SQL Database.
+In the directory **liberty/config**, the **server.xml** file is used to configure the database connection for the Open Liberty and WebSphere Liberty cluster. It defines a variable `azure.sql.connectionstring` that is used to connect to the Azure SQL Database.
 
-The *pom.xml* file is the Maven project object model (POM) file that contains the configuration information for the project. The *pom-azure-identity.xml* file declares a dependency on `azure-identity`. This is used to authenticate to Azure services using Microsoft Entra ID.
+The **pom.xml** file is the Maven project object model (POM) file that contains the configuration information for the project. The **pom-azure-identity.xml** file declares a dependency on `azure-identity`. This file is used to authenticate to Azure services using Microsoft Entra ID.
 
 > [!NOTE]
-> This sample uses the `azure-identity` library to authenticate to Azure SQL Database using Microsoft Entra authencitation. If you need to use SQL authentication in your Liberty application, see [Relational database connections with JDBC](https://openliberty.io/docs/latest/relational-database-connections-JDBC.html) for more information.
+> This sample uses the `azure-identity` library to authenticate to Azure SQL Database using Microsoft Entra authentication. If you need to use SQL authentication in your Liberty application, see [Relational database connections with JDBC](https://openliberty.io/docs/latest/relational-database-connections-JDBC.html).
 
 ### Build the project
 
-Now that you've gathered the necessary properties, build the application. The POM file for the project reads many variables from the environment. As part of the Maven build, these variables are used to populate values in the YAML files located in *src/main/aks*. You can do something similar for your application outside Maven if you prefer.
+Now that you gathered the necessary properties, build the application. The POM file for the project reads many variables from the environment. As part of the Maven build, these variables are used to populate values in the YAML files located in **src/main/aks**. You can do something similar for your application outside Maven if you prefer.
 
 #### [Bash](#tab/in-bash)
 
@@ -478,7 +478,7 @@ Run and test the project locally before deploying to Azure. For convenience, thi
 
 1. Verify the application works as expected. You should see a message similar to `[INFO] [AUDIT   ] CWWKZ0001I: Application javaee-cafe started in 18.235 seconds.` in the command output. Go to `http://localhost:9080/` in your browser and verify that the application is accessible and all functions are working.
 
-1. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop. Select `Y` if you're aksed to terminate batch job.
+1. Press <kbd>Ctrl</kbd>+<kbd>C</kbd> to stop. Press <kbd>Y</kbd> if you're asked to terminate the batch job.
 
 When you're finished, delete the firewall rule that allows your local IP address to access the Azure SQL Database by using the following command:
 
@@ -501,7 +501,7 @@ az sql server firewall-rule delete --resource-group $Env:RESOURCE_GROUP_NAME --s
 
 ### Build the image for AKS deployment
 
-You can now run the [az acr build](/cli/azure/acr#az-acr-build) command to build the image, as shown in the following example:
+You can now run the [`az acr build`](/cli/azure/acr#az-acr-build) command to build the image, as shown in the following example:
 
 ### [Bash](#tab/in-bash)
 
@@ -585,7 +585,7 @@ Use the following steps to deploy the Liberty application on the AKS cluster:
 
 When the pods are running, you can test the application by using the public IP address of the Application Gateway instance.
 
-1. Run the following command to get and display the public IP address of the Application Gateway instance, exposed by the ingress resource created by AGIC:
+Run the following command to get and display the public IP address of the Application Gateway instance, exposed by the ingress resource created by AGIC:
 
 #### [Bash](#tab/in-bash)
 
@@ -605,11 +605,11 @@ $APP_URL
 
 Copy the URL and open it in your browser to see the application home page. If the webpage doesn't render correctly or returns a `502 Bad Gateway` error, the app is still starting in the background. Wait for a few minutes and then try again.
 
-:::image type="content" source="./media/howto-deploy-java-liberty-app/deploy-succeeded.png" alt-text="Java liberty application successfully deployed on AKS.":::
+:::image type="content" source="media/howto-deploy-java-liberty-app/deploy-succeeded.png" alt-text="Screenshot of the Java liberty application successfully deployed on AKS." lightbox="media/howto-deploy-java-liberty-app/deploy-succeeded.png":::
 
 ## Clean up resources
 
-To avoid Azure charges, you should clean up unnecessary resources. When you no longer need the cluster, use the [az group delete](/cli/azure/group#az-group-delete) command to remove the resource group, the container service, the container registry, the database, and all related resources:
+To avoid Azure charges, you should clean up unnecessary resources. When you no longer need the cluster, use the [`az group delete`](/cli/azure/group#az-group-delete) command to remove the resource group, the container service, the container registry, the database, and all related resources:
 
 ### [Bash](#tab/in-bash)
 
@@ -640,4 +640,4 @@ You can learn more from the following references:
 * [Open Liberty Container Images](https://github.com/OpenLiberty/ci.docker)
 * [WebSphere Liberty Container Images](https://github.com/WASdev/ci.docker)
 
-For more information about deploying the IBM WebSphere family on Azure, see [What are solutions to run the WebSphere family of products on Azure?](/azure/developer/java/ee/websphere-family)
+For more information about deploying the IBM WebSphere family on Azure, see [What are solutions to run the WebSphere family of products on Azure?](/azure/developer/java/ee/websphere-family).
