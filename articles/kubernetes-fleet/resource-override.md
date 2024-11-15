@@ -291,5 +291,5 @@ This example replaces the container image in the `Deployment` with the `nginx:1.
 
 To learn more about Fleet, see the following resources:
 
-* [Upstream Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [Open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)

@@ -302,4 +302,4 @@ In this example, we add a toleration to a `ClusterResourcePlacement` resource to
 
 ## Next steps
 
-For more information on Azure Kubernetes Fleet Manager, see the [upstream Fleet documentation](https://github.com/Azure/fleet/tree/main/docs).
+For more information see the [open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs).

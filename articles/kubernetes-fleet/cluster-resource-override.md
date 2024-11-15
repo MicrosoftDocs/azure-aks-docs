@@ -10,7 +10,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Customize cluster scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides
 
-This article provides an overview of how to use the `ClusterResourceOverride` API from the [fleet upstream project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster scoped resources in Azure Kubernetes Fleet Manager.
+This article provides an overview of how to use the `ClusterResourceOverride` API from the [fleet open-source project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster scoped resources in Azure Kubernetes Fleet Manager.
 
 ## Cluster resource override overview
 
@@ -293,5 +293,5 @@ rules:
 
 To learn more about Fleet, see the following resources:
 
-* [Upstream Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [Open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)

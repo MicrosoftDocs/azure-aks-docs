@@ -28,7 +28,7 @@ In this quickstart, you learn how to propagate resources from an Azure Kubernete
 
 The `ClusterResourcePlacement` API object is used to propagate resources from a hub cluster to member clusters. The `ClusterResourcePlacement` API object specifies the resources to propagate and the placement policy to use when selecting member clusters. The `ClusterResourcePlacement` API object is created in the hub cluster and is used to propagate resources to member clusters. This example demonstrates how to propagate a namespace to member clusters using the `ClusterResourcePlacement` API object with a `PickAll` placement policy.
 
-For more information, see [Kubernetes resource propagation from hub cluster to member clusters](./concepts-resource-propagation.md) and the [upstream Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
+For more information, see [Kubernetes resource propagation from hub cluster to member clusters](./concepts-resource-propagation.md) and the [open-source Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -258,4 +258,4 @@ If you no longer wish to use your cluster resource placement, you can delete it 
 To learn more about resource propagation, see the following resources:
 
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md)
-* [Upstream Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md)
+* [Open-source Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md)

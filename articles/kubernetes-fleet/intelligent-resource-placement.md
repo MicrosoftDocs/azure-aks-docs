@@ -84,7 +84,7 @@ Repeat these steps for each member cluster you add.
     kind: MemberCluster
     metadata:
       annotations:
-        fleet.azure.com/cluster-resource-id: /subscriptions/8xxxxxxx-dxxx-4xxx-bxxx-xxxxxxxxxxx8/resourcegroups/resource-group/providers/microsoft.containerservice/managedclusters/cluster01
+        ...
       labels:
         fleet.azure.com/location: eastus2
         fleet.azure.com/resource-group: resource-group
@@ -251,7 +251,7 @@ spec:
 
 ### Placement based on memory and CPU core cost
 
-Similar to the the [node count example](#placement-based-on-cluster-node-count), this example use a property sorter. As the sorter is using an `Ascending` order, fleet will prefer clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost would receive a weight of 20, and the cluster with the highest would receive 0. Other clusters receive proportional weights calculated using the weight calculation formula.
+As the sorter in this example has an `Ascending` order, fleet will prefer clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost would receive a weight of 20, and the cluster with the highest would receive 0. Other clusters receive proportional weights calculated using the weight calculation formula.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -290,7 +290,7 @@ Details on how to view a placement's progress can be found in the [propagate res
 
 ## Clean up resources
 
-Details on how to remove a cluster resource placement via the Azure portal or kubectl command can be found in the [propagate resources quickstart](./quickstart-resource-propagation.md#use-the-clusterresourceplacement-api-to-propagate-resources-to-member-clusters). 
+Details on how to remove a cluster resource placement via the Azure portal or kubectl command can be found in the clean up resources section of the [propagate resources quickstart](./quickstart-resource-propagation.md#clean-up-resources). 
 
 
 ## Next steps
@@ -300,6 +300,6 @@ To learn more about resource propagation, see the following resources:
 * [Open-source Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md)
 
 <!-- LINKS -->
-[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#kubernetes-fleet-resource-with-hub-cluster
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-resource
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
