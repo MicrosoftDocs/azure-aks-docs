@@ -31,7 +31,7 @@ Kubernetes Fleet supports these custom resources based on an open-source cloud-n
 
 ## Introducing ClusterResourcePlacement
 
-A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster on to member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
+A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
 
 With `ClusterResourcePlacement`, you can:
 
@@ -62,7 +62,7 @@ If you want to deploy a workload to a known set of member clusters, you can use 
 
 `clusterNames` is the only valid policy option for this placement type.
 
-The following example shows how to deploy the `test-deployment` namespace into member clusters `cluster1` and `cluster2`.
+The following example shows how to deploy the `test-deployment` namespace onto member clusters `cluster1` and `cluster2`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -121,13 +121,15 @@ The `PickN` placement type is the most flexible option and allows for placement 
 When creating this type of placement the following cluster affinity types can be specified:
 
 - **requiredDuringSchedulingIgnoredDuringExecution**: as this policy is required during scheduling, it **filters** the clusters based on the specified criteria.
-- **preferredDuringSchedulingIgnoredDuringExecution**: as this policy preferred, but not required during scheduling, it **ranks** clusters based on specified criteria.
+- **preferredDuringSchedulingIgnoredDuringExecution**: as this policy is preferred, but not required during scheduling, it **ranks** clusters based on specified criteria.
+
+You can set both required and preferred affinities. Required affinities prevent placement to clusters that don't match them those specified affinities, and preferred affinities allow for ordering the set of valid clusters when a placement decision is being made.
 
 #### `PickN` with affinities
 
-Using affinities with a `PickN` placement policy functions similarly to using affinities with pod scheduling. You can set both required and preferred affinities. Required affinities prevent placement to clusters that don't match them those specified affinities, and preferred affinities allow for ordering the set of valid clusters when a placement decision is being made.
+Using affinities with a `PickN` placement policy functions similarly to using affinities with pod scheduling. 
 
-The following example shows how to deploy a workload into three clusters. Only clusters with the `critical-allowed: "true"` label are valid placement targets, and preference is given to clusters with the label `critical-level: 1`:
+The following example shows how to deploy a workload onto three clusters. Only clusters with the `critical-allowed: "true"` label are valid placement targets, and preference is given to clusters with the label `critical-level: 1`:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -157,7 +159,7 @@ spec:
 
 #### `PickN` with topology spread constraints
 
-You can use topology spread constraints to force the division of the cluster placements across topology boundaries to satisfy availability requirements, for example, splitting placements across regions or update rings. You can also configure topology spread constraints to prevent scheduling if the constraint can't be met (`whenUnsatisfiable: DoNotSchedule`) or schedule as best possible (`whenUnsatisfiable: ScheduleAnyway`).
+You can use topology spread constraints to force the division of the cluster placements across topology boundaries to satisfy availability requirements. For example, use these constraints to split placements across regions or update rings. You can also configure topology spread constraints to prevent scheduling if the constraint can't be met (`whenUnsatisfiable: DoNotSchedule`) or schedule as best possible (`whenUnsatisfiable: ScheduleAnyway`).
 
 The following example shows how to spread a given set of resources out across multiple regions and attempts to schedule across member clusters with different update days.
 
@@ -186,19 +188,21 @@ For more information, see the [open-source Fleet documentation topology spread c
 
 The table below summarizes the available scheduling policy fields for each placement type.
 
-|                             | `PickFixed` | `PickAll` | `PickN` |
-|-----------------------------|-------------|-----------|---------|
+|       Policy Field          | PickFixed | PickAll | PickN |
+|-----------------------------|-----------|---------|-------|
 | `placementType`             | ✅ | ✅ | ✅ |
 | `affinity`                  | ❌ | ✅ | ✅ |
 | `clusterNames`              | ✅ | ❌ | ❌ |
 | `numberOfClusters`          | ❌ | ❌ | ✅ |
 | `topologySpreadConstraints` | ❌ | ❌ | ✅ | 
 
-### Available labels and properties to select clusters  
+### Selecting clusters based on labels and properties 
+
+#### Available labels and properties to select clusters  
 
 When using the `PickN` and `PickAll` placement types you can use the following labels and properties as part of your policies.
 
-#### Labels
+##### Labels
 
 The following labels are automatically added to all member clusters and can be used for target cluster selection in resource placement policies. 
 
@@ -210,7 +214,7 @@ The following labels are automatically added to all member clusters and can be u
 
 You can also use any custom labels you apply to your clusters.
 
-#### Properties
+##### Properties
 
 The following properties are available for use as part of placement policies. 
 
@@ -230,64 +234,7 @@ Cost properties are decimals which represent a per-hour cost in US Dollars for t
 | kubernetes.azure.com/per-cpu-core-cost | The per-CPU core cost of the cluster.  |
 | kubernetes.azure.com/per-gb-memory-cost | The per-GiB memory cost of the cluster. | 
 
-#### Selecting clusters based on member cluster properties
-
-When `preferredDuringSchedulingIgnoredDuringExecution` is used, a property sorter ranks all the clusters in the fleet based on their values in an ascending or descending order. The weights used for ordering are calculated based on the value specified.
-
-A property sorter consists of:
-
-* **Name**: Name of the cluster property.
-* **Sort order**: Sort order can be either `Ascending` or `Descending`. When `Ascending` order is used, member clusters with lower observed values are preferred. When `Descending` order is used, member clusters with higher observed value are preferred.
-
-###### Descending order
-
-For sort order Descending, the proportional weight is calculated using the formula:
-
-```
-((Observed Value - Minimum observed value) / (Maximum observed value - Minimum observed value)) * Weight
-```
-
-For example, let's say you want to rank clusters based on the property of available CPU capacity in descending order and that you have a fleet of three clusters with the following available CPU:
-
-| Cluster | Available CPU capacity |
-| -------- | ------- |
-| `cluster-a` | 100 |
-| `cluster-b` | 20 |
-| `cluster-c` | 10 |
-
-In this case, the sorter computes the following weights:
-
-| Cluster | Available CPU capacity | Calculation | Weight |
-| -------- | ------- | ------- | ------- | 
-| `cluster-a` | 100 | (100 - 10) / (100 - 10) | 100% |
-| `cluster-b` | 20 | (20 - 10) / (100 - 10) | 11.11% |
-| `cluster-c` | 10 | (10 - 10) / (100 - 10) | 0% |
-
-###### Ascending order
-
-For sort order Ascending, the proportional weight is calculated using the formula:
-
-```
-(1 - ((Observed Value - Minimum observed value) / (Maximum observed value - Minimum observed value))) * Weight
-```
-
-For example, let's say you want to rank clusters based on their per-CPU-core-cost in ascending order and that you have a fleet of three clusters with the following CPU core costs:
-
-| Cluster | Per-CPU core cost |
-| -------- | ------- |
-| `cluster-a` | 1 |
-| `cluster-b` | 0.2 |
-| `cluster-c` | 0.1 |
-
-In this case, the sorter computes the following weights:
-
-| Cluster | Per-CPU core cost | Calculation | Weight |
-| -------- | ------- | ------- | ------- | 
-| `cluster-a` | 1 | 1 - ((1 - 0.1) / (1 - 0.1)) | 0% |
-| `cluster-b` | 0.2 | 1 - ((0.2 - 0.1) / (1 - 0.1)) | 88.89% |
-| `cluster-c` | 0.1 | 1 - (0.1 - 0.1) / (1 - 0.1) | 100% |
-
-##### Specifying selection matching criteria
+#### Specifying selection matching criteria
 
 When using cluster properties in a policy criteria you specify:
 
@@ -335,6 +282,77 @@ spec:
                       - "5"
 ```
 
+#### How property ranking works
+
+When `preferredDuringSchedulingIgnoredDuringExecution` is used, a property sorter ranks all the clusters in the fleet based on their values in an ascending or descending order. The weights used for ordering are calculated based on the value specified.
+
+A property sorter consists of:
+
+* **Name**: Name of the cluster property.
+* **Sort order**: Sort order can be either `Ascending` or `Descending`. When `Ascending` order is used, member clusters with lower observed values are preferred. When `Descending` order is used, member clusters with higher observed value are preferred.
+
+##### Descending order
+
+For sort order Descending, the proportional weight is calculated using the formula:
+
+```
+((Observed Value - Minimum observed value) / (Maximum observed value - Minimum observed value)) * Weight
+```
+
+For example, let's say you want to rank clusters based on the property of available CPU capacity in descending order and that you have a fleet of three clusters with the following available CPU:
+
+| Cluster | Available CPU capacity |
+| -------- | ------- |
+| `cluster-a` | 100 |
+| `cluster-b` | 20 |
+| `cluster-c` | 10 |
+
+In this case, the sorter computes the following weights:
+
+| Cluster | Available CPU capacity | Calculation | Weight |
+| -------- | ------- | ------- | ------- | 
+| `cluster-a` | 100 | (100 - 10) / (100 - 10) | 100% |
+| `cluster-b` | 20 | (20 - 10) / (100 - 10) | 11.11% |
+| `cluster-c` | 10 | (10 - 10) / (100 - 10) | 0% |
+
+##### Ascending order
+
+For sort order Ascending, the proportional weight is calculated using the formula:
+
+```
+(1 - ((Observed Value - Minimum observed value) / (Maximum observed value - Minimum observed value))) * Weight
+```
+
+For example, let's say you want to rank clusters based on their per-CPU-core-cost in ascending order and that you have a fleet of three clusters with the following CPU core costs:
+
+| Cluster | Per-CPU core cost |
+| -------- | ------- |
+| `cluster-a` | 1 |
+| `cluster-b` | 0.2 |
+| `cluster-c` | 0.1 |
+
+In this case, the sorter computes the following weights:
+
+| Cluster | Per-CPU core cost | Calculation | Weight |
+| -------- | ------- | ------- | ------- | 
+| `cluster-a` | 1 | 1 - ((1 - 0.1) / (1 - 0.1)) | 0% |
+| `cluster-b` | 0.2 | 1 - ((0.2 - 0.1) / (1 - 0.1)) | 88.89% |
+| `cluster-c` | 0.1 | 1 - (0.1 - 0.1) / (1 - 0.1) | 100% |
+
+
+## Using Tolerations
+
+`ClusterResourcePlacement` objects support the specification of tolerations, which apply to the `ClusterResourcePlacement` object. Each toleration object consists of the following fields:
+
+* `key`: The key of the toleration.
+* `value`: The value of the toleration.
+* `effect`: The effect of the toleration, such as `NoSchedule`.
+* `operator`: The operator of the toleration, such as `Exists` or `Equal`.
+
+Each toleration is used to tolerate one or more specific taint applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once it's created.
+
+For more information, see the [open-source Fleet documentation on tolerations][fleet-tolerations].
+
 ## Configuring rollout strategy
 
 Fleet uses a rolling update strategy to control how updates are rolled out across clusters.
@@ -361,18 +379,6 @@ spec:
 
 For more information, see the [open-source Fleet documentation on rollout strategy][fleet-rollout].
 
-## Using Tolerations
-
-`ClusterResourcePlacement` objects support the specification of tolerations, which apply to the `ClusterResourcePlacement` object. Each toleration object consists of the following fields:
-
-* `key`: The key of the toleration.
-* `value`: The value of the toleration.
-* `effect`: The effect of the toleration, such as `NoSchedule`.
-* `operator`: The operator of the toleration, such as `Exists` or `Equal`.
-
-Each toleration is used to tolerate one or more specific taint applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once it's created.
-
-For more information, see [the upstream Fleet documentation on tolerations][fleet-tolerations].
 
 ## Determine placement status
 
