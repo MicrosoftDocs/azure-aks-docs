@@ -4,7 +4,7 @@ description: Describes how to statically provision Azure NetApp Files dual-proto
 ms.topic: concept-article
 ms.custom:
 ms.subservice: aks-storage
-ms.date: 02/26/2024
+ms.date: 11/15/2024
 author: tamram
 ms.author: tamram
 
