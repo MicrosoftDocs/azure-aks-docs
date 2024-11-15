@@ -179,100 +179,6 @@ Next, we are going to publish a workload to our hub cluster so that we can place
 
 Now that we understand the properties of our member cluster we can define a placement policy for a sample workload. intelligent placement's capabilities.
 
-
-## Filter clusters at the time of scheduling
-
-**requiredDuringSchedulingIgnoredDuringExecution** affinity type allows for **filtering** the member clusters eligible for placement using property selectors. A property selector is an array of expression conditions against cluster properties.
-
-In each condition you specify:
-
-* **Name**: Name of the property, which should be in the following format:
-
-    ```
-    resources.kubernetes-fleet.io/<CAPACITY-TYPE>-<RESOURCE-NAME>
-    ```
-
-    `<CAPACITY-TYPE>` is one of `total`, `allocatable`, or `available`, depending on which capacity (usage information) you would like to check against, and `<RESOURCE-NAME>` is the name of the resource (CPU/memory).
-
-    For example, if you would like to select clusters based on the available CPU capacity of a cluster, the name used in the property selector should be `resources.kubernetes-fleet.io/available-cpu`. For allocatable memory capacity, you can use `resources.kubernetes-fleet.io/allocatable-memory`.
-
-    The current set of available properties can be found on the [concepts page for placement](./concepts-resource-propagation.md#properties).
-
-* A list of values, which are possible values of the property.
-* An operator used to express the condition between the constraint/desired value and the observed value on the cluster. The following operators are currently supported:
-
-    * `Gt` (Greater than): a cluster's observed value of the given property must be greater than the value in the condition before it can be picked for resource placement.
-    * `Ge` (Greater than or equal to): a cluster's observed value of the given property must be greater than or equal to the value in the condition before it can be picked for resource placement.
-    * `Lt` (Less than): a cluster's observed value of the given property must be less than the value in the condition before it can be picked for resource placement.
-    * `Le` (Less than or equal to): a cluster's observed value of the given property must be less than or equal to the value in the condition before it can be picked for resource placement.
-    * `Eq` (Equal to): a cluster's observed value of the given property must be equal to the value in the condition before it can be picked for resource placement.
-    * `Ne` (Not equal to): a cluster's observed value of the given property must be not equal to the value in the condition before it can be picked for resource placement.
-
-    If you use the operator `Gt`, `Ge`, `Lt`, `Le`, `Eq`, or `Ne`, the list of values in the condition should have exactly one value.
-
-Fleet evaluates each cluster based on the properties specified in the condition. Failure to satisfy conditions listed under `requiredDuringSchedulingIgnoredDuringExecution` excludes this member cluster from resource placement.
-
-> [!NOTE]
-> If a member cluster does not possess the property expressed in the condition, it will automatically fail the condition.
-
-Here is an example placement policy to select only clusters with greater than or equal to five nodes:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterResourcePlacement
-metadata:
-  name: crp
-spec:
-  resourceSelectors:
-    - ...
-  policy:
-    placementType: PickAll
-    affinity:
-        clusterAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-                clusterSelectorTerms:
-                - propertySelector:
-                    matchExpressions:
-                    - name: "kubernetes-fleet.io/node-count"
-                      operator: Ge
-                      values:
-                      - "5"
-```
-
-You can use both label and property selectors under
-`requiredDuringSchedulingIgnoredDuringExecution` affinity term to filter the eligible member clusters on both these constraints.
-
-In this example placement policy, only clusters with the `region=east` label and a node count greater than or equal to five are selected:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
-kind: ClusterResourcePlacement
-metadata:
-  name: crp
-spec:
-  resourceSelectors:
-    - ...
-  policy:
-    placementType: PickAll
-    affinity:
-        clusterAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-                clusterSelectorTerms:
-                - labelSelector:
-                    matchLabels:
-                      region: east
-                  propertySelector:
-                    matchExpressions:
-                    - name: "kubernetes-fleet.io/node-count"
-                      operator: Ge
-                      values:
-                      - "5"
-```
-
-###### 
-
-## Ordering clusters at time of scheduling
-
 ## Example placement policies
 
 ### Placement based on higest node count
@@ -338,7 +244,7 @@ spec:
 
 ### Placement based on memory and CPU core cost
 
-Similar to the the [node count example](#placement-with-descending-proptery-sorter), this example use a property sorter. As the sorter is using an `Ascending` order, Fleet will prefer clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost would receive a weight of 20, and the cluster with the highest would receive 0. Other clusters receive proportional weights calculated using the weight calculation formula.
+Similar to the the [node count example](#placement-based-on-higest-node-count), this example use a property sorter. As the sorter is using an `Ascending` order, Fleet will prefer clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost would receive a weight of 20, and the cluster with the highest would receive 0. Other clusters receive proportional weights calculated using the weight calculation formula.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
