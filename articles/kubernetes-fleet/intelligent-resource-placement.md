@@ -71,19 +71,11 @@ Read the [resource propagation conceptual overview](./concepts-resource-propagat
 
 Repeat these steps for each member cluster you add.
 
-### [Azure portal](#tab/azure-portal)
+* Retrieve the labels, propteries and resources for your member cluster by querying the hub cluster. Output as YAML so you can read the results.
 
-    ```azurecli-interactive
-    kubectl create namespace demo-ns
-    ```
-
-### [Azure CLI](#tab/cli)
-
-* Retrieve the labels, propteries and resources for your member clusters by querying the hub cluster. Output as YAML so you can read the results.
-
-    ```azurecli-interactive
-    kubectl get membercluster $MEMBERCLUSTER01 –o yaml
-    ```
+  ```azurecli-interactive
+  kubectl get membercluster $MEMBERCLUSTER01 –o yaml
+  ```
 
   The resulting YAML file contains details (labels and properties) you can use to build placement policies. 
 
@@ -126,50 +118,67 @@ Repeat these steps for each member cluster you add.
           memory: 14195208Ki
     ```
 
----
+  Repeat this step for each member cluster so you identify the labels and properties you can use in your policy.
 
-## Define and place a workload
+## Prepare a workload for placement
 
-Now that we understand the capabilities of our member clusters we can define and place a workload using intelligent placement's capabilities.
+Next, we are going to publish a workload to our hub cluster so that we can place it onto member clusters.
 
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-  namespace: test-app
-spec:
-  selector:
-    app: nginx
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 80
-  type: LoadBalancer
-```
+* Create a namespace for our workload on the hub cluster.
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  namespace: test-app
-spec:
-  selector:
-    matchLabels:
+  ```azurecli-interactive
+  kubectl create namespace test-app 
+  ```
+
+* We can deploy our workload to the new namespace on the hub cluster. As these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources) they can be deployed 'as-is'. 
+
+  Save the following YAML into a file named `sample-workload.yaml`.
+
+  ```yaml
+  apiVersion: v1
+  kind: Service
+  metadata:
+    name: nginx-service
+    namespace: test-app
+  spec:
+    selector:
       app: nginx
-  replicas: 2
-  template:
-    metadata:
-      labels:
+    ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+    type: LoadBalancer
+  ---
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: nginx-deployment
+    namespace: test-app
+  spec:
+    selector:
+      matchLabels:
         app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.16.1 
-        ports:
-        - containerPort: 80
-```
+    replicas: 2
+    template:
+      metadata:
+        labels:
+          app: nginx
+      spec:
+        containers:
+        - name: nginx
+          image: nginx:1.16.1 
+          ports:
+          - containerPort: 80
+  ```
+
+  * Apply the workload definition to your hub cluster using the command.
+
+  ```azurecli-interactive
+  kubectl apply -f sample-workload.yaml 
+  ```
+
+Now that we understand the properties of our member cluster we can define a placement policy for a sample workload. intelligent placement's capabilities.
+
 
 ## Filter clusters at the time of scheduling
 

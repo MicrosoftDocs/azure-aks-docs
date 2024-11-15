@@ -46,7 +46,7 @@ An example is shown in the following diagram.
 
 ### Encapsulating resources
 
-`ClusterResourcePlacement` supports using ConfigMap to envelope certain Kubernetes resource types so they can be staged on the hub cluster without any unintended side effects on the hub cluster. For a list of resource types and to understand how this feature works please see our [envelope object documentation][envelope-object]
+`ClusterResourcePlacement` supports using ConfigMap to envelope certain Kubernetes resource types so they can be staged on the hub cluster without any unintended side effects on the hub cluster. For a list of resource types and to understand how this feature works see our [envelope object documentation][envelope-object]
 
 ## Placement types
 
@@ -123,7 +123,7 @@ When creating this type of placement the following cluster affinity types can be
 - **requiredDuringSchedulingIgnoredDuringExecution**: as this policy is required during scheduling, it **filters** the clusters based on the specified criteria.
 - **preferredDuringSchedulingIgnoredDuringExecution**: as this policy is preferred, but not required during scheduling, it **ranks** clusters based on specified criteria.
 
-You can set both required and preferred affinities. Required affinities prevent placement to clusters that don't match them those specified affinities, and preferred affinities allow for ordering the set of valid clusters when a placement decision is being made.
+You can set both required and preferred affinities. Required affinities prevent placement to clusters that don't match, and preferred affinities provide ordering of valid clusters.
 
 #### `PickN` with affinities
 
@@ -186,7 +186,7 @@ For more information, see the [open-source Fleet documentation topology spread c
 
 ## Placement policy options
 
-The table below summarizes the available scheduling policy fields for each placement type.
+The table summarizes the available scheduling policy fields for each placement type.
 
 |       Policy Field          | PickFixed | PickAll | PickN |
 |-----------------------------|-----------|---------|-------|
@@ -200,7 +200,7 @@ The table below summarizes the available scheduling policy fields for each place
 
 #### Available labels and properties to select clusters  
 
-When using the `PickN` and `PickAll` placement types you can use the following labels and properties as part of your policies.
+When using the `PickN` and `PickAll` placement types, you can use the following labels and properties as part of your policies.
 
 ##### Labels
 
@@ -208,8 +208,8 @@ The following labels are automatically added to all member clusters and can be u
 
 | Label | Description |
 |----------|-------------|
-| fleet.azure.com/location | Azure Region of the cluster (i.e. westus) |
-| fleet.azure.com/resource-group | Azure Resource Group of the cluster (i.e. rg_prodapps_01) |
+| fleet.azure.com/location | Azure Region of the cluster (westus) |
+| fleet.azure.com/resource-group | Azure Resource Group of the cluster (rg_prodapps_01) |
 | fleet.azure.com/subscription-id | Azure Subscription Identifier the cluster resides in. Formatted as UUID/GUID. |
 
 You can also use any custom labels you apply to your clusters.
@@ -236,7 +236,7 @@ Cost properties are decimals which represent a per-hour cost in US Dollars for t
 
 #### Specifying selection matching criteria
 
-When using cluster properties in a policy criteria you specify:
+When using cluster properties in a policy criteria, you specify:
 
 * **Name**: Name of the property, which is one the properties [listed in properties](#properties) in this article. 
 
@@ -258,7 +258,7 @@ Fleet evaluates each cluster based on the properties specified in the condition.
 > [!NOTE]
 > If a member cluster does not possess the property expressed in the condition, it will automatically fail the condition.
 
-Here is an example placement policy to select only clusters with five or more nodes.
+Here's an example placement policy to select only clusters with five or more nodes.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -349,7 +349,7 @@ In this case, the sorter computes the following weights:
 * `effect`: The effect of the toleration, such as `NoSchedule`.
 * `operator`: The operator of the toleration, such as `Exists` or `Equal`.
 
-Each toleration is used to tolerate one or more specific taint applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once it's created.
+Each toleration is used to tolerate one or more specific taint applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once created.
 
 For more information, see the [open-source Fleet documentation on tolerations][fleet-tolerations].
 
@@ -357,7 +357,7 @@ For more information, see the [open-source Fleet documentation on tolerations][f
 
 Fleet uses a rolling update strategy to control how updates are rolled out across clusters.
 
-In the folloing example, the fleet scheduler rolls out updates to each cluster sequentially, waiting at least `unavailablePeriodSeconds` between clusters. Rollout status is considered successful if all resources were correctly applied to the cluster. Rollout status checking doesn't cascade to child resources, so for example, it doesn't confirm that pods created by a deployment become ready.
+In the following example, the fleet scheduler rolls out updates to each cluster sequentially, waiting at least `unavailablePeriodSeconds` between clusters. Rollout status is considered successful if all resources were correctly applied to the cluster. Rollout status checking doesn't cascade to child resources, so for example, it doesn't confirm that pods created by a deployment become ready.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -491,7 +491,7 @@ Events:
   Normal  PlacementRolloutCompleted  3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Resources have been applied to the selected clusters
 ```
 
-## Placement changes triggers
+## Placement change triggers
 
 The Fleet scheduler prioritizes the stability of existing workload placements. This prioritization can limit the number of changes that cause a workload to be removed and rescheduled. The following scenarios can trigger placement changes:
 
@@ -499,7 +499,7 @@ The Fleet scheduler prioritizes the stability of existing workload placements. T
   * Scale out operations (increasing `numberOfClusters` with no other changes) places workloads only on new clusters and doesn't affect existing placements.
 * Cluster changes, including:
   * A new cluster becoming eligible can trigger placement if the new cluster meets the placement policy, for example, a `PickAll` policy.
-  * A cluster with a placement is removed from the fleet. Depending on the policy, the scheduler will attempt to place all affected workloads on remaining clusters without affecting existing placements.
+  * A cluster with a placement is removed from the fleet. Depending on the policy, the scheduler attempts to place all affected workloads on remaining clusters without affecting existing placements.
 
 Resource-only changes (updating the resources or updating the `ResourceSelector` in the `ClusterResourcePlacement` object) roll out gradually in existing placements but do **not** trigger rescheduling of the workload.
 
