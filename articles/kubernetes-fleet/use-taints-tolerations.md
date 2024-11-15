@@ -34,7 +34,7 @@ In this example, we add a taint to a `MemberCluster` resource, then try to propa
 2. Create a taint on the `MemberCluster` resource using the following example code:
 
     ```yml
-    apiVersion: cluster.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: MemberCluster
     metadata:
       name: kind-cluster-1
@@ -194,7 +194,7 @@ In this example, we add a toleration to a `ClusterResourcePlacement` resource to
 2. Create a taint on the `MemberCluster` resource using the following example code:
 
     ```yml
-    apiVersion: cluster.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: MemberCluster
     metadata:
       name: kind-cluster-1

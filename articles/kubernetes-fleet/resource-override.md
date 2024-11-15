@@ -173,7 +173,7 @@ This example replaces the container image in the `Deployment` with the `nginx:1.
 1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the resource overrides across the cluster infrastructure, as shown in the following example. Make sure you select the appropriate namespaces.
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp-example
@@ -251,7 +251,7 @@ This example replaces the container image in the `Deployment` with the `nginx:1.
 1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the resource overrides across the cluster infrastructure, as shown in the following example. Make sure you select the appropriate namespaces. When you're ready, select **Add**.
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp-example

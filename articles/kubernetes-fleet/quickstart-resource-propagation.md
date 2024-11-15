@@ -42,7 +42,7 @@ For more information, see [Kubernetes resource propagation from hub cluster to m
 
     ```bash
     kubectl apply -f - <<EOF
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp
@@ -83,7 +83,7 @@ For more information, see [Kubernetes resource propagation from hub cluster to m
     Namespace:    
     Labels:       <none>
     Annotations:  <none>
-    API Version:  placement.kubernetes-fleet.io/v1beta1
+    API Version:  placement.kubernetes-fleet.io/v1
     Kind:         ClusterResourcePlacement
     Metadata:
       Creation Timestamp:  2024-04-01T18:55:31Z
@@ -205,7 +205,7 @@ For more information, see [Kubernetes resource propagation from hub cluster to m
 1. Replace the placeholder values with the following YAML, and then select **Add**.
 
     ```YAML
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp
