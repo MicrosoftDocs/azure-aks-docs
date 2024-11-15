@@ -12,7 +12,7 @@ ms.custom:
 
 # Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager
 
-Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for placing the workloads based on heuristics such as cost of compute in the clusters or available resources such as memory and CPU. It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how Azure Kubernetes Fleet Manager (Fleet) allows you to address these scenarios using the intelligent Kubernetes resource placement feature.
+Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for workloads based on heuristics such as cost of compute or available resources such as memory and CPU. It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how Azure Kubernetes Fleet Manager (Fleet) allows you to address these scenarios using the intelligent Kubernetes resource placement feature.
 
 ## Overview
 
@@ -28,9 +28,9 @@ Read the [resource propagation conceptual overview](./concepts-resource-propagat
 
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
-* You must have a Fleet resource with one or more member cluster. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource with a hub cluster and then join Azure Kubernetes Service (AKS) clusters as members. 
+* You must have a Fleet resource with one or more member cluster. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource with a hub cluster, and then join Azure Kubernetes Service (AKS) clusters as members. 
 
-  **Recommendation:** Ensure you have configured your AKS member clusters so that you can test placement using the cluster properties you are interested in (location, node count, resources or cost).
+  **Recommendation:** Ensure your AKS member clusters are configured so that you can test placement using the cluster properties you're interested in (location, node count, resources, or cost).
 
 * Set the following environment variables:
 
@@ -71,7 +71,7 @@ Read the [resource propagation conceptual overview](./concepts-resource-propagat
 
 Repeat these steps for each member cluster you add.
 
-* Retrieve the labels, propteries and resources for your member cluster by querying the hub cluster. Output as YAML so you can read the results.
+* Retrieve the labels, properties, and resources for your member cluster by querying the hub cluster. Output as YAML so you can read the results.
 
   ```azurecli-interactive
   kubectl get membercluster $MEMBERCLUSTER01 –o yaml
@@ -122,7 +122,7 @@ Repeat these steps for each member cluster you add.
 
 ## Prepare a workload for placement
 
-Next, we are going to publish a workload to our hub cluster so that we can place it onto member clusters.
+Next, publish a workload to our hub cluster so that it can be placed onto member clusters.
 
 * Create a namespace for our workload on the hub cluster.
 
@@ -130,7 +130,7 @@ Next, we are going to publish a workload to our hub cluster so that we can place
   kubectl create namespace test-app 
   ```
 
-* We can deploy our workload to the new namespace on the hub cluster. As these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources) they can be deployed 'as-is'. 
+* The sample workload can be deployed to the new namespace on the hub cluster. As these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources) they can be deployed without change. 
 
   Save the following YAML into a file named `sample-workload.yaml`.
 
@@ -177,7 +177,7 @@ Next, we are going to publish a workload to our hub cluster so that we can place
   kubectl apply -f sample-workload.yaml 
   ```
 
-  With the workload defintiion deployed it is now possible to test out fleet's intelligent placement capabilities.
+  With the workload definition deployed it is now possible to test out fleet's intelligent placement capabilities.
 
 ## Test workload placement policies
 
@@ -188,7 +188,7 @@ You can use the following samples, along with the [conceptual documentation](./c
 
 ### Placement based on cluster node count
 
-This example shows a property sorter using the `Descending` order which means fleet will prefer clusters with higher node counts. 
+This example shows a property sorter using the `Descending` order which means fleet prefers clusters with higher node counts. 
 
 The cluster with the highest node count would receive a weight of 20, and the cluster with the lowest would receive 0. Other clusters receive proportional weights calculated using the [weight calculation formula](./concepts-resource-propagation.md#how-property-ranking-works).
 
@@ -251,7 +251,7 @@ spec:
 
 ### Placement based on memory and CPU core cost
 
-As the sorter in this example has an `Ascending` order, fleet will prefer clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost would receive a weight of 20, and the cluster with the highest would receive 0. Other clusters receive proportional weights calculated using the weight calculation formula.
+As the sorter in this example has an `Ascending` order, fleet prefers clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost would receive a weight of 20, and the cluster with the highest would receive 0. Other clusters receive proportional weights calculated using the weight calculation formula.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -290,7 +290,7 @@ Details on how to view a placement's progress can be found in the [propagate res
 
 ## Clean up resources
 
-Details on how to remove a cluster resource placement via the Azure portal or kubectl command can be found in the clean up resources section of the [propagate resources quickstart](./quickstart-resource-propagation.md#clean-up-resources). 
+Details on how to remove a cluster resource placement via the Azure portal or kubectl command can be found in the clean-up resources section of the [propagate resources quickstart](./quickstart-resource-propagation.md#clean-up-resources). 
 
 
 ## Next steps
