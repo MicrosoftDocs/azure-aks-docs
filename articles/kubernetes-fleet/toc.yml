@@ -48,6 +48,8 @@
       items:
         - name: Update Kubernetes and node images across multiple clusters
           href: update-orchestration.md
+        - name: Propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster
+          href: propagate-resources.md
         - name: Automate updates of Kubernetes and node images across multiple clusters
           href: update-automation.md
     - name: Multi-cluster workload placement
