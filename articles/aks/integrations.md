@@ -109,7 +109,7 @@ For more information, see [Windows AKS partner solutions][windows-aks-partner-so
 [istio]: https://istio.io/
 [istio-install]: https://istio.io/latest/docs/setup/install/
 [linkerd]: https://linkerd.io/
-[linkerd-install]: https://linkerd.io/getting-started/
+[linkerd-install]: https://linkerd.io/2.16/getting-started/
 [consul]: https://www.consul.io/
 [consul-install]: https://learn.hashicorp.com/tutorials/consul/service-mesh-deploy
 [grafana]: https://grafana.com/
