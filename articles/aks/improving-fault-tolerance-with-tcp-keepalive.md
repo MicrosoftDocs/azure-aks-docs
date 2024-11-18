@@ -15,7 +15,7 @@ In a standard TCP connection, no data flows between the peers when the connectio
 
 ## Understanding TCP keepalive
 
-Several Azure Networking services, such as Azure Load Balancer (ALB), enable you to [configure a timeout period](https://learn.microsoft.com/azure/load-balancer/load-balancer-tcp-reset) after which an idle TCP connection is terminated. When a TCP connection remains idle for longer than the timeout duration configured on the networking service, any subsequent TCP packets sent in either direction might be dropped. Alternatively, they might receive a TCP Reset (RST) packet from the network service, depending on whether TCP resets were enabled on the service.
+Several Azure Networking services, such as Azure Load Balancer (ALB), enable you to [configure a timeout period](/azure/load-balancer/load-balancer-tcp-reset) after which an idle TCP connection is terminated. When a TCP connection remains idle for longer than the timeout duration configured on the networking service, any subsequent TCP packets sent in either direction might be dropped. Alternatively, they might receive a TCP Reset (RST) packet from the network service, depending on whether TCP resets were enabled on the service.
 
 In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the following command that sets it to four minutes:
 
@@ -28,7 +28,7 @@ az aks update \
 
 The idle timeout feature in ALB is designed to terminate inactive connections from both the client and server after a specified duration, which optimizes resource utilization. This timeout applies to both ingress and egress traffic managed by the ALB. 
 
-In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases can be managed by configuring the [`kube-proxy` TCP settings](https://learn.microsoft.com/azure/aks/configure-kube-proxy). For example, the following `kube-proxy` configuration changes the default TCP timeout period of 15 minutes to 20 minutes:
+In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases can be managed by configuring the [`kube-proxy` TCP settings](configure-kube-proxy.md). For example, the following `kube-proxy` configuration changes the default TCP timeout period of 15 minutes to 20 minutes:
 
 ```json
 {
@@ -81,7 +81,7 @@ To add a node pool to an existing cluster, use the customized configuration file
 az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --kubelet-config ./linuxkubeletconfig.json
 ```
 
-You can find more detailed information about the supported configurations for both the node operating system and kubelet in our [prescriptive guidance](https://learn.microsoft.com/azure/aks/custom-node-configuration).
+You can find more detailed information about the supported configurations for both the node operating system and kubelet in our [prescriptive guidance](custom-node-configuration.md).
 
 After the cluster is ready, you can configure TCP keepalive sysctls in your desired pod by setting the security context in your pod definitions as follows:
 
