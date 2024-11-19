@@ -180,7 +180,6 @@ The following sections describe how to create an AKS cluster with the AI toolcha
     > [!NOTE]
     > Before this step is complete, the `gpu-provisioner` controller pod will remain in a crash loop status. Once the federated credential is created, the `gpu-provisioner` controller pod will reach a running state and you will be able to verify that the deployment is running in the following steps.
 
-
 ## Verify that your deployment is running
 
 1. Restart the KAITO GPU provisioner deployment on your pods using the `kubectl rollout restart` command:
