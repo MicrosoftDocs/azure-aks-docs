@@ -88,13 +88,12 @@ The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azu
 
 ### Solution architecture design
 
-The solution architecture consists of the following components and configurations:
+The following diagram shows the recommended architecture on Azure. 
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
 
-- Network configuration: Azure CNI Overlay
-- Network data plane: Cilium
-- Network policy: Cilium
+The solution architecture consists of the following components and configurations:
+
 - The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
 - The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
 - The Azure WAF Policy associated to the Listener runs OWASP rules and custom rules against the incoming requests and blocks malicious attacks.
