@@ -22,7 +22,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 ## Before you begin
 
-
+- Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The overview article also:
   - Explains the two access methods, AKS-managed ACR or BYO ACR, you can choose from in this article.
   - Describes the [current limitations][conceptual-network-isolated-limitations].
 
