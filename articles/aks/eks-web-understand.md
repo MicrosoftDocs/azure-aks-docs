@@ -46,9 +46,36 @@ Both AKS and EKS offer command-line tools to simplify the creation and managemen
 
 [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] are two popular load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
 
-[Azure Application Gateway][azure-ag] provides layer 7 load balancing, SSL/TLS termination, URL-based routing, and other advanced features. It's designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] and [Application Gateway Ingress Controller][agic] for [Azure Kubernetes Service (AKS)][aks].
+### AWS Application Load balancer
 
-[AWS Application Load Balancer][aws-alb] operates at the application layer, allowing it to intelligently distribute traffic based on application-level information. It supports features like SSL/TLS termination, URL-based routing, and session affinity.
+An [AWS Application Load Balancer (ALB)][aws-alb] is a component of Elastic Load Balancing in Amazon Web Services (AWS). It automatically distributes incoming traffic across multiple targets, such as EC2 instances, containers, and IP addresses, in one or more Availability Zones. ALB monitors the health of its registered targets and routes traffic only to the healthy targets. It also scales your load balancer as your incoming traffic changes over time. ALB supports various load balancers like Application Load Balancers, Network Load Balancers, Gateway Load Balancers, and Classic Load Balancers.
+
+An Application Load Balancer operates at the application layer (Layer 7) of the Open Systems Interconnection (OSI) model and supports SSL/TLS termination, URL-based routing, and session affinity. It evaluates listener rules and selects a target from the target group based on the content of the application traffic. Routing can be configured independently for each target group. Benefits of using an Application Load Balancer over a Classic Load Balancer include support for path and host conditions, routing based on different request fields, routing to multiple applications on a single EC2 instance, redirecting requests, returning custom HTTP responses, registering targets by IP address (even outside the VPC), registering Lambda functions as targets, authentication, support for containerized applications, independent health monitoring, access logs, and improved performance.
+
+### Azure Application Gateway 
+
+
+[Azure Application Gateway][azure-ag] is a layer 7 web traffic regional load balancer that enables customers to manage the inbound traffic to multiple downstream web applications and REST APIs. Azure Application Gateway provides a rich set of features:
+
+- [Secure Sockets Layer (SSL/TLS) termination](/azure/application-gateway/features#secure-sockets-layer-ssltls-termination)
+- [Autoscaling](/azure/application-gateway/features#autoscaling)
+- [Zone redundancy](/azure/application-gateway/features#zone-redundancy)
+- [Static VIP](/azure/application-gateway/features#static-vip)
+- [Web Application Firewall](/azure/application-gateway/features#web-application-firewall)
+- [Ingress Controller for AKS](/azure/application-gateway/features#ingress-controller-for-aks)
+- [URL-based routing](/azure/application-gateway/features#url-based-routing)
+- [Multiple-site hosting](/azure/application-gateway/features#multiple-site-hosting)
+- [Redirection](/azure/application-gateway/features#redirection)
+- [Session affinity](/azure/application-gateway/features#session-affinity)
+- [WebSocket and HTTP/2 traffic](/azure/application-gateway/features#websocket-and-http2-traffic)
+- [Connection draining](/azure/application-gateway/features#connection-draining)
+- [Custom error pages](/azure/application-gateway/features#custom-error-pages)
+- [Rewrite HTTP headers](/azure/application-gateway/features#rewrite-http-headers-and-url)
+- [Sizing](/azure/application-gateway/features#sizing)
+
+Azure Application Gateway is designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] and [Application Gateway Ingress Controller][agic] for [Azure Kubernetes Service (AKS)][aks]. It distributes incoming application traffic across multiple backend pools, which include public and private [Azure Load Balancers](/azure/load-balancer/load-balancer-overview), [Azure virtual machines (VMs)](/azure/virtual-machines/overview), [Azure Virtual Machine Scale Sets (VMSSs)](/azure/virtual-machine-scale-sets/overview), hostnames, [Azure App Service](/azure/app-service/overview), and on-premises/external servers. 
+
+### Comparison between AWS Application Load balancer and Azure Application Gateway
 
 [Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] provide a comparable feature set.  The following table provides a comparison of the solutions:
 
@@ -75,23 +102,21 @@ Both AKS and EKS offer command-line tools to simplify the creation and managemen
 
 Ensuring web application security is of paramount importance to protect against evolving cyber threats. [Azure Web Application Firewall (WAF)][azure-waf] and [AWS WAF][aws-waf] are fully managed web access firewall services that provide robust protection for web applications against threats and malicious attacks. 
 
+### AWS Web Access Firewall (WAF)
+
 [AWS WAF][aws-waf] is a web application firewall that lets you monitor the HTTP and HTTPS requests that are forwarded to your protected web application resources. You can protect multiple AWS resources, and in particular web applications exposed via the [AWS Application Load Balancer][aws-alb]. With AWS WAF, you have the ability to manage the access to your web applications. By defining specific conditions, such as the origin IP addresses or query string values, you can determine how your protected resource should respond to requests. This can include providing the requested content, returning an HTTP 403 status code (indicating Forbidden access), or even providing a customized response.
 
-AWS WAF provides the AWS Managed Rules for AWS WAF, which consists of a set of managed rulesets maintained by AWS. These rulesets include the AWS Core Rule Set (CRS) and the AWS Managed Rules for Common Vulnerabilities and Exposures (CVEs). Users can easily enable these rulesets to enhance the security of their web applications. [Learn more about AWS WAF managed OWASP rulesets](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html). 
+AWS WAF provides the AWS Managed Rules for AWS WAF, which consists of a set of managed rulesets maintained by AWS. These rulesets include the AWS Core Rule Set (CRS) and the AWS Managed Rules for Common Vulnerabilities and Exposures (CVEs). Users can easily enable these rulesets to enhance the security of their web applications. [Learn more about AWS WAF managed OWASP rulesets](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html). AWS WAF also supports custom rules, which enable users to define their own rule sets using the AWS WAF Rule Language. This allows for precise customization and protection against application-specific vulnerabilities and attack patterns. [Learn more about AWS WAF custom rules](https://docs.aws.amazon.com/waf/latest/developerguide/waf-user-created-rule-groups.html). 
 
-AWS WAF also supports custom rules, which enable users to define their own rule sets using the AWS WAF Rule Language. This allows for precise customization and protection against application-specific vulnerabilities and attack patterns. [Learn more about AWS WAF custom rules](https://docs.aws.amazon.com/waf/latest/developerguide/waf-user-created-rule-groups.html). 
-
-AWS WAF offers advanced bot control features that allow users to set rules to block or rate-limit automated bot traffic. It provides options to differentiate between good and bad bots using string matching or machine learning algorithms. [Learn more about AWS WAF bot control](https://aws.amazon.com/waf/features/bot-control/).
-
-In AWS WAF, you can create an [web access control list (web ACL)][aws-web-acl] to monitor HTTP(S) requests for one or more AWS resources. These resources can be  an [Amazon API Gateway](https://aws.amazon.com/it/api-gateway/), [AWS AppSync](https://aws.amazon.com/it/appsync/), [Amazon CloudFront](https://aws.amazon.com/it/cloudfront/), or an [Application Load Balancer](https://aws.amazon.com/it/elasticloadbalancing/application-load-balancer/).
+AWS WAF offers advanced bot control features that allow users to set rules to block or rate-limit automated bot traffic. It provides options to differentiate between good and bad bots using string matching or machine learning algorithms. [Learn more about AWS WAF bot control](https://aws.amazon.com/waf/features/bot-control/). In AWS WAF, you can create an [web access control list (web ACL)][aws-web-acl] to monitor HTTP(S) requests for one or more AWS resources. These resources can be  an [Amazon API Gateway](https://aws.amazon.com/it/api-gateway/), [AWS AppSync](https://aws.amazon.com/it/appsync/), [Amazon CloudFront](https://aws.amazon.com/it/cloudfront/), or an [Application Load Balancer](https://aws.amazon.com/it/elasticloadbalancing/application-load-balancer/).
 
 AWS WAF integrates with [Amazon CloudWatch][aws-cloudwatch], enabling users to monitor and visualize key metrics and log data related to their web applications and WAF rules. CloudWatch offers customizable dashboards, alerts, and automated actions, providing enhanced visibility into application security. [Learn more about AWS WAF monitoring](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html)
 
+### Azure Web Application Firewall (WAF)
+
 [Azure Web Application Firewall (WAF)][azure-waf] that provides centralized protection of web applications from common exploits and vulnerabilities. WAF can be deployed with [Azure Application Gateway](/azure/web-application-firewall/ag/ag-overview), [Azure Front Door](/azure/web-application-firewall/afds/afds-overview), and [Azure Content Delivery Network (CDN)](/azure/web-application-firewall/cdn/cdn-overview) service from Microsoft. 
 
-The Azure WAF comes with a preconfigured, platform-managed [OWASP (Open Web Application Security Project) ruleset](https://owasp.org/www-project-modsecurity-core-rule-set/) that provides protection against various types of attacks, including cross-site scripting and SQL injection. 
-
-As a WAF administrator, you have the option to write your own [custom rules](/azure/web-application-firewall/ag/custom-waf-rules-overview) to enhance the core rule set (CRS) rules. Azure WAF also supports a [Bot Protection ruleset](/azure/web-application-firewall/ag/bot-protection-overview) that you can use to prevent bad bots from scraping, scanning, and looking for vulnerabilities in your web application. The Azure WAF can be configured to run in the following two modes:
+The Azure WAF comes with a preconfigured, platform-managed [OWASP (Open Web Application Security Project) ruleset](https://owasp.org/www-project-modsecurity-core-rule-set/) that provides protection against various types of attacks, including cross-site scripting and SQL injection. As a WAF administrator, you have the option to write your own [custom rules](/azure/web-application-firewall/ag/custom-waf-rules-overview) to enhance the core rule set (CRS) rules. Azure WAF also supports a [Bot Protection ruleset](/azure/web-application-firewall/ag/bot-protection-overview) that you can use to prevent bad bots from scraping, scanning, and looking for vulnerabilities in your web application. The Azure WAF can be configured to run in the following two modes:
 
 - Detection mode: Monitors and logs all threat alerts. You turn on logging diagnostics for Application Gateway in the Diagnostics section. You must also make sure that the WAF log is selected and turned on. Web application firewall doesn't block incoming requests when it's operating in Detection mode.
 - Prevention mode: Blocks intrusions and attacks that the rules detect. The attacker receives a "403 unauthorized access" exception, and the connection is closed. Prevention mode records such attacks in the WAF logs.
