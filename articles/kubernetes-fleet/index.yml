@@ -67,6 +67,6 @@ landingContent:
             url: quickstart-access-fleet-kubernetes-api.md
       - linkListType: quickstart
         links:
-          - text: Propagate Kubernetes resource objects from a Fleet resource to member clusters (preview)
+          - text: Propagate Kubernetes resource objects from a Fleet resource to member clusters
             url: quickstart-resource-propagation.md
 

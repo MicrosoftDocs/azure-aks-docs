@@ -2,8 +2,8 @@
 title: "Azure Kubernetes Fleet Manager scheduler and scheduling framework"
 description: This article provides a conceptual overview of the Azure Kubernetes Fleet Manager scheduler and scheduling framework.
 ms.date: 04/01/2024
-author: schaffererin
-ms.author: schaffererin
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ---
@@ -25,7 +25,7 @@ Scheduling resources within a `ClusterResourcePlacement` involves more dependenc
 * In a `ClusterResourcePlacement`, multiple replicas of resources can't be scheduled on the same cluster.
 * The `ClusterResourcePlacement` supports different placement types within a single object.
 
-For more information, see [the upstream Fleet Scheduler documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/Scheduler/README.md).
+For more information, see [the open-source Fleet Scheduler documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/Scheduler/README.md).
 
 ## What is the scheduling framework?
 
@@ -41,9 +41,9 @@ The fleet scheduler integrates the following fundamental built-in plugins:
 * **Cluster affinity plugin**: Facilitates the affinity clause in the placement policy.
 * **Same placement affinity plugin**: Designed specifically for fleet and prevents multiple replicas from being placed within the same cluster.
 * **Cluster eligibility plugin**: Enables cluster selection based on specific status criteria.
-* **Taint & toleration plugin**: Enables cluster selection based on [taints on the cluster](./concepts-fleet.md#taints) and [tolerations on the `ClusterResourcePlacement`](./concepts-resource-propagation.md#tolerations).
+* **Taint & toleration plugin**: Enables cluster selection based on [taints on the cluster](./concepts-fleet.md#taints) and [tolerations on the `ClusterResourcePlacement`](./concepts-resource-propagation.md#using-tolerations).
 
-For more information, see the [upstream Fleet Scheduling Framework documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/Scheduling-Framework/README.md).
+For more information, see the [open-source Fleet Scheduling Framework documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/Scheduling-Framework/README.md).
 
 ## Next steps
 

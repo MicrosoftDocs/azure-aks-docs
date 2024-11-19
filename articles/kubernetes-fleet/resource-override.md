@@ -3,18 +3,16 @@ title: "Customize namespace scoped resources in Azure Kubernetes Fleet Manager w
 description: This article provides an overview of how to use the Fleet ResourceOverride API to override namespace scoped resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 05/10/2024
-author: schaffererin
-ms.author: schaffererin
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
 ---
 
-# Customize namespace scoped resources in Azure Kubernetes Fleet Manager with resource overrides (preview)
+# Customize namespace scoped resources in Azure Kubernetes Fleet Manager with resource overrides
 
 This article provides an overview of how to use the Fleet `ResourceOverride` API to override namespace scoped resources in Azure Kubernetes Fleet Manager.
-
-[!INCLUDE [preview features callout](./includes/preview/preview-callout.md)]
 
 ## Resource override overview
 
@@ -175,7 +173,7 @@ This example replaces the container image in the `Deployment` with the `nginx:1.
 1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the resource overrides across the cluster infrastructure, as shown in the following example. Make sure you select the appropriate namespaces.
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp-example
@@ -253,7 +251,7 @@ This example replaces the container image in the `Deployment` with the `nginx:1.
 1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the resource overrides across the cluster infrastructure, as shown in the following example. Make sure you select the appropriate namespaces. When you're ready, select **Add**.
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp-example
@@ -293,5 +291,5 @@ This example replaces the container image in the `Deployment` with the `nginx:1.
 
 To learn more about Fleet, see the following resources:
 
-* [Upstream Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [Open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)
