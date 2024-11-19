@@ -136,7 +136,7 @@ Before you install the NVIDIA plugins, you need to specify which multi-instance 
     ```
     
 > [!NOTE]
-> Helm installation of the NVIDIA device plugin **version 0.15.0 and above** consolidates the device plugin **and** GFD repositories. Separate helm installation of the GFD software component is not recommended in this tutorial.
+> Helm installation of the NVIDIA device plugin **[version 0.15.0](https://github.com/NVIDIA/k8s-device-plugin/releases/tag/v0.15.0) and above** consolidates the device plugin **and** GFD repositories. Separate helm installation of the GFD software component is not recommended in this tutorial.
 
 ## Confirm multi-instance GPU capability
 
