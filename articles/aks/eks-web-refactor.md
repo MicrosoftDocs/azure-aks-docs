@@ -49,12 +49,8 @@ Other contributors:
 <!-- LINKS -->
 [yelb]: https://github.com/mreferre/yelb/
 [aws-eks]: https://docs.aws.amazon.com/en_us/eks/latest/userguide/what-is-eks.html
-[aws-s3]: https://aws.amazon.com/s3
 [aws-iam]: https://aws.amazon.com/iam/
 [kubernetes-sa]: https://kubernetes.io/docs/concepts/security/service-accounts/
-[azure-blob]: /azure/storage/blobs/storage-blobs-overview
-[azure-blob-api]: /rest/api/storageservices/blob-service-rest-api
-[azure-storage-sdk]: /azure/storage/common/storage-srp-overview?tabs=dotnet
 [azure-user-assigned-managed-identity]: /entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities?pivots=identity-mi-methods-azp
 [azure-rbac]: /azure/role-based-access-control/overview
 [azure-role-assignment]: /azure/role-based-access-control/role-assignments-portal
