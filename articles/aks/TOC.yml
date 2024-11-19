@@ -626,7 +626,7 @@
               href: use-node-public-ips.md
             - name: Restrict and control cluster egress traffic 
               href: limit-egress-traffic.md
-            - name: Configure Static Egress Gateway (Preview)
+            - name: Configure Static Egress Gateway
               href: configure-static-egress-gateway.md
             - name: Network isolated clusters
               href: network-isolated.md

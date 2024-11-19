@@ -1,5 +1,5 @@
 ---
-title: Network isolated clusters
+title: Create a network isolated AKS cluster
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure an Azure Kubernetes Service (AKS) cluster with outbound and inbound network restrictions.
 ms.subservice: aks-networking
@@ -12,16 +12,19 @@ zone_pivot_groups: network-isolated-acr-type
 
 # Create a network isolated Azure Kubernetes Service (AKS) cluster (Preview)
 
-Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. One of the solutions to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and FQDNs is a cumbersome and complicated process.
+Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
 
-A network isolated AKS cluster simplifies setting up outbound restrictions for a cluster out of the box, thus reducing the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
+One solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
+
+Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. A network isolated AKS cluster reduces the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-
 ## Before you begin
 
-1. Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The conceptual overview article also captures the [current limitations][conceptual-network-isolated-limitations].
+1. Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The overview article also:
+  - Explains the two access methods, AKS-managed ACR or BYO ACR, you can choose from in this article.
+  - Describes the [current limitations][conceptual-network-isolated-limitations].
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
@@ -68,11 +71,9 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
 
-1. (Optional) Set up private connection configuration for addons based on the following guides. This step is only required when using the following add-ons:
-  - [CSI secret store (Azure keyvault secrets provider)][csisecretstore]
-  - [Azure monitor for containers (Container insights)][azuremonitoring]
-  - [Application insights][applicationinsights]
-  - [Web application routing][webapplicationrouting]
+1. (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
+  - [Azure Key Vault provider for Secrets Store CSI Driver][csisecretstore]
+  - [Azure Monitor Container Insights][azuremonitoring]
 
 ::: zone pivot="aks-managed-acr"
 
@@ -80,29 +81,35 @@ A network isolated AKS cluster simplifies setting up outbound restrictions for a
 
 AKS creates, manages, and reconciles an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster.
 
-### Create a network isolated cluster using Private link-based cluster
+### Create a network isolated cluster
+
+When creating a network isolated AKS cluster, you can choose one of the following private cluster modes - Private link or API Server Vnet Integration.
+
+Regardless of the mode you select, you set `--bootstrap-artifact-source` and  `--outbound-type` parameters.
+
+`--bootstrap-artifact-source` can be set to either `Direct` or `Cache` corresponding to using direct MCR (NOT network isolated) and private ACR (network isolated) for image pulls respectively.
+
+The `--outbound-type parameter` can be set to either `none` or `block`. If the outbound type is set to `none`, then AKS doesn't set up any outbound connections for the cluster, allowing the user to configure them on their own. If the outbound type is set to block, then all outbound connections are blocked.
+
+#### Private link
 
 Create a private link-based network isolated AKS cluster by running the [az aks create][az-aks-create] command with `--bootstrap-artifact-source`, `--enable-private-cluster`, and `--outbound-type` parameters.
-
-`--bootstrap-artifact-source` can be set to either `Direct` or `Cache` corresponding to using direct MCR (NOT network isolated) and private ACR (network isolated) for image pulls respectively
-
-The `--outbound-type` parameter can be set to either `none` or `block`. If the outbound type is set to `none`, then AKS doesn't set up any outbound connections for the cluster, allowing the user to configure them on their own. If the outbound type is set to `block`, then all outbound connections are blocked.
 
 ```azurecli-interactive
 az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME}   --kubernetes-version 1.30.3 --bootstrap-artifact-source Cache --outbound-type none  --network-plugin azure --enable-private-cluster
 ```
 
-### Create a network isolated cluster using API Server VNet integration type cluster
+#### API Server VNet integration
 
-Create a network isolated AKS cluster configured with API Server VNet Integration by running the [az aks create][az-aks-create] command with `--enable-private-cluster`, `--boostrap-registry`, `--enable-apiserver-vnet-integration`, and `--outbound-type` parameters.
+Create a network isolated AKS cluster configured with API Server VNet Integration by running the [az aks create][az-aks-create] command with `--bootstrap-artifact-source`, `--enable-private-cluster`, `--enable-apiserver-vnet-integration` and `--outbound-type` parameters.
 
 ```azurecli
-az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --kubernetes-version 1.30.3 --bootstrap-artifact-source Cache --outbound-type none --network-plugin azure --enable-apiserver-vnet-integration
+az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --kubernetes-version 1.30.3 --bootstrap-artifact-source Cache --outbound-type none --network-plugin azure --enable-private-cluster --enable-apiserver-vnet-integration
 ```
 
 ### Update an existing AKS cluster to network isolated type
 
-To enable the network isolation on an existing AKS cluster, use the [az aks update][az-aks-update] command.
+If you'd rather enable network isolation on an existing AKS cluster instead of creating a new cluster, use the [az aks update][az-aks-update] command.
 
 ```azurecli-interactive
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --outbound-type none
@@ -123,7 +130,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 ## Deploy a network isolated cluster with bring your own ACR
 
-AKS supports bringing your own (BYO) ACR. To support the BYO ACR scenario, an ACR private endpoint and a private DNS zone must also be configured before you create the AKS cluster.
+AKS supports bringing your own (BYO) ACR. To support the BYO ACR scenario, you have to configure an ACR private endpoint and a private DNS zone before you create the AKS cluster.
 
 The following steps show how to prepare these resources:
 
@@ -198,7 +205,7 @@ az network private-dns record-set a add-record --record-set-name ${REGISTRY_NAME
 
 ### Step 5: Create control plane and kubelet identities
 
-**Control plane identity:**
+#### Control plane identity
 
 ```azurecli-interactive
 az identity create --name ${CLUSTER_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP}
@@ -208,7 +215,7 @@ CLUSTER_IDENTITY_RESOURCE_ID=$(az identity show --name ${CLUSTER_IDENTITY_NAME} 
 CLUSTER_IDENTITY_PRINCIPAL_ID=$(az identity show --name ${CLUSTER_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'principalId' -o tsv)
 ```
 
-**Kubelet identity:**
+#### Kubelet identity
 
 ```azurecli-interactive
 az identity create --name ${KUBELET_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP}
@@ -218,17 +225,25 @@ KUBELET_IDENTITY_RESOURCE_ID=$(az identity show --name ${KUBELET_IDENTITY_NAME} 
 KUBELET_IDENTITY_PRINCIPAL_ID=$(az identity show --name ${KUBELET_IDENTITY_NAME} --resource-group ${RESOURCE_GROUP} --query 'principalId' -o tsv)
 ```
 
-**Grant AcrPull permissions for the Kubelet identity:**
+#### Grant AcrPull permissions for the Kubelet identity
 
 ```azurecli-interactive
 az role assignment create --role AcrPull --scope ${REGISTRY_ID} --assignee-object-id ${KUBELET_IDENTITY_PRINCIPAL_ID} --assignee-principal-type ServicePrincipal
 ```
 
-After you configure these resources, you can proceed to create the network isolated AKS cluster with BYO ACR. For private cluster type, you can either choose a private link-based cluster or an API Server VNet integration type cluster.
+After you configure these resources, you can proceed to create the network isolated AKS cluster with BYO ACR.
 
 ### Step 6: Create network isolated cluster using the BYO CR
 
-**Private link-based cluster:**
+When creating a network isolated AKS cluster, you can choose one of the following private cluster modes - Private link or API Server Vnet Integration.
+
+Regardless of the mode you select, you set `--bootstrap-artifact-source` and  `--outbound-type` parameters.
+
+`--bootstrap-artifact-source` can be set to either `Direct` or `Cache` corresponding to using direct MCR (NOT network isolated) and private ACR (network isolated) for image pulls respectively.
+
+The `--outbound-type parameter` can be set to either `none` or `block`. If the outbound type is set to `none`, then AKS doesn't set up any outbound connections for the cluster, allowing the user to configure them on their own. If the outbound type is set to block, then all outbound connections are blocked.
+
+#### Private link
 
 Create a private link-based network isolated cluster that accesses your ACR by running the [az aks create][az-aks-create] command with the required parameters.
 
@@ -236,7 +251,7 @@ Create a private link-based network isolated cluster that accesses your ACR by r
 az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --kubernetes-version 1.30.3 --vnet-subnet-id ${SUBNET_ID} --assign-identity ${CLUSTER_IDENTITY_RESOURCE_ID} --assign-kubelet-identity ${KUBELET_IDENTITY_RESOURCE_ID} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID} --outbound-type none --network-plugin azure --enable-private-cluster
 ```
 
-**Cluster with API Server VNet integration:**
+#### API Server VNet integration
 
 For a network isolated cluster with API server VNet integration, first create a subnet and assign the correct role with the following commands:
 
@@ -258,6 +273,8 @@ az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --kubernetes
 
 ### Update an existing AKS cluster
 
+If you'd rather enable network isolation on an existing AKS cluster instead of creating a new cluster, use the [az aks update][az-aks-update] command.
+
 When creating the private endpoint and private DNS zone for the BYO ACR, use the existing virtual network and subnets of the existing AKS cluster. When you assign the **AcrPull** permission to the kubelet identity, use the existing kubelet identity of the existing AKS cluster.
 
 To enable the network isolated feature on an existing AKS cluster, use the following command:
@@ -278,7 +295,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 ### Update your ACR ID
 
-You may want to update the resource ID of your own ACR. To identify the ACR resource ID, use the `az aks show` command.
+It is possible to update the private ACR used with a network isolated AKS cluster. To identify the ACR resource ID, use the `az aks show` command.
 
 ```azurecli-interactive
 az aks show --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME}
@@ -301,9 +318,9 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 ::: zone-end
 
-## Validate the network isolated cluster
+## Validate that network isolated cluster is enabled
 
-To validate the network isolated cluster feature, use the `az aks show` command.
+To validate the network isolated cluster feature is enabled, use the `[az aks show][az-aks-show] command
 
 ```azurecli-interactive
 az aks show --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME}
@@ -354,7 +371,7 @@ In this article, you learned what ports and addresses to allow if you want to re
 
 If you want to set up outbound restriction configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS](limit-egress-traffic.md).
 
-If you want to restrict how pods communicate between themselves and East-West traffic restrictions within cluster see [Secure traffic between pods using network policies in AKS][use-network-policies].
+If you want to restrict how pods communicate between themselves and East-West traffic restrictions within cluster, see [Secure traffic between pods using network policies in AKS][use-network-policies].
 
 
 <!-- LINKS - External -->
@@ -365,8 +382,6 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [container-registry-skus]: /azure/container-registry/container-registry-skus
 [csisecretstore]: /azure/key-vault/general/private-link-service?tabs=portal
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
-[applicationinsights]: /azure/azure-monitor/logs/private-link-security
-[webapplicationrouting]: /azure/cloud-adoption-framework/ready/azure-best-practices/private-link-and-dns-integration-at-scale#private-link-and-dns-integration-in-hub-and-spoke-network-architectures
 
 <!-- LINKS - Internal -->
 [conceptual-network-isolated]: ./concepts-network-isolated.md
