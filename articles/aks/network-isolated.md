@@ -22,15 +22,19 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 ## Before you begin
 
+<<<<<<< HEAD
 1. Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The overview article also:
   - Explains the two access methods, AKS-managed ACR or BYO ACR, you can choose from in this article.
   - Describes the [current limitations][conceptual-network-isolated-limitations].
+=======
+- Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The conceptual overview article also captures the [current limitations][conceptual-network-isolated-limitations].
+>>>>>>> 7af58a32f1424159b58321b17d146e8f58e7ffa1
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-1. This article requires version 2.63.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+- This article requires version 2.63.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 
-1. Install the `aks-preview` Azure CLI extension version **9.0.0b2* or later.
+- Install the `aks-preview` Azure CLI extension version *9.0.0b2* or later.
 
     - If you don't already have the `aks-preview` extension, install it using the [`az extension add`][az-extension-add] command.
 
@@ -42,10 +46,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
         ```azurecli-interactive
         az extension update --name aks-preview
-
-
-1. Register the `NetworkIsolatedClusterPreview` feature flag using the [az feature register][az-feature-register] command.
-
+- Register the `NetworkIsolatedClusterPreview` feature flag using the [az feature register][az-feature-register] command.
     ```azurecli-interactive
     az feature register --namespace Microsoft.ContainerService --name NetworkIsolatedClusterPreview
     ```
@@ -58,22 +59,29 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
     > [!NOTE]
     > If you choose to create network isolated cluster with API Server VNet Integration configured for private access of the API Server, then you need to repeat the above steps to register `EnableAPIServerVnetIntegrationPreview` feature flag too.
-
     When the status reflects *Registered*, refresh the registration of the `Microsoft.ContainerService` and `Microsoft.ContainerRegistry` resource providers by using the [az provider register][az-provider-register] command:
+    > 
+    > ```azurecli-interactive
+    >  az provider register --namespace Microsoft.ContainerService
+    >  az provider register --namespace Microsoft.ContainerRegistry
+    >  ```
 
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    az provider register --namespace Microsoft.ContainerRegistry
-    ```
-
-1. If you're choosing the Bring your own (BYO) Azure Container Registry (ACR)* option, you need to ensure the ACR meets the following requirements
+- If you're choosing the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR meets the following requirements:
     * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
 
+<<<<<<< HEAD
 1. (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
   - [Azure Key Vault provider for Secrets Store CSI Driver][csisecretstore]
   - [Azure Monitor Container Insights][azuremonitoring]
+=======
+- (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when using the following add-ons:
+  - [CSI secret store (Azure keyvault secrets provider)][csisecretstore]
+  - [Azure monitor for containers (Container insights)][azuremonitoring]
+  - [Application insights][applicationinsights]
+  - [Web application routing][webapplicationrouting]
+>>>>>>> 7af58a32f1424159b58321b17d146e8f58e7ffa1
 
 ::: zone pivot="aks-managed-acr"
 
@@ -95,6 +103,13 @@ The `--outbound-type parameter` can be set to either `none` or `block`. If the o
 
 Create a private link-based network isolated AKS cluster by running the [az aks create][az-aks-create] command with `--bootstrap-artifact-source`, `--enable-private-cluster`, and `--outbound-type` parameters.
 
+<<<<<<< HEAD
+=======
+`--bootstrap-artifact-source` can be set to either `Direct` or `Cache` corresponding to using direct MCR (NOT network isolated) and private ACR (network isolated) for image pulls respectively.
+
+The `--outbound-type` parameter can be set to either `none` or `block`. If the outbound type is set to `none`, then AKS doesn't set up any outbound connections for the cluster, allowing the user to configure them on their own. If the outbound type is set to `block`, then all outbound connections are blocked.
+
+>>>>>>> 7af58a32f1424159b58321b17d146e8f58e7ffa1
 ```azurecli-interactive
 az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME}   --kubernetes-version 1.30.3 --bootstrap-artifact-source Cache --outbound-type none  --network-plugin azure --enable-private-cluster
 ```
@@ -233,7 +248,7 @@ az role assignment create --role AcrPull --scope ${REGISTRY_ID} --assignee-objec
 
 After you configure these resources, you can proceed to create the network isolated AKS cluster with BYO ACR.
 
-### Step 6: Create network isolated cluster using the BYO CR
+### Step 6: Create network isolated cluster using the BYO ACR
 
 When creating a network isolated AKS cluster, you can choose one of the following private cluster modes - Private link or API Server Vnet Integration.
 
