@@ -83,6 +83,11 @@ Always upgrade your Kubernetes clusters to the latest version. Newer versions co
   * **Reconfigure third-party applications to make fewer calls**: If you filter by *user agents* in the ***View request rate and throttle details*** diagnostic and see that [a third-party application, such as a monitoring application, makes a large number of GET requests](/troubleshoot/azure/azure-kubernetes/429-too-many-requests-errors#analyze-and-identify-errors-by-using-aks-diagnose-and-solve-problems), you can change the settings of these applications to reduce the frequency of the GET calls. Make sure the application clients use exponential backoff when calling Azure APIs.
 * **Split your clusters into different subscriptions or regions**: If you have a large number of clusters and node pools that use Virtual Machine Scale Sets, you can split them into different subscriptions or regions within the same subscription. Most Azure API limits are shared at the subscription-region level, so you can move or scale your clusters to different subscriptions or regions to get unblocked on Azure API throttling. This option is especially helpful if you expect your clusters to have high activity. There are no generic guidelines for these limits. If you want specific guidance, you can create a support ticket.
 
+
+### Monitor the AKS Control Plane metrics 
+Azure Monitor offers comprehensive metrics on the health of the Control Plane through the Azure Managed Prometheus 
+
+
 ## Feature limitations
 
 As you scale your AKS clusters to larger scale points, keep the following feature limitations in mind:
