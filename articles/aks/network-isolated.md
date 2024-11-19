@@ -22,13 +22,9 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 ## Before you begin
 
-<<<<<<< HEAD
-1. Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The overview article also:
+
   - Explains the two access methods, AKS-managed ACR or BYO ACR, you can choose from in this article.
   - Describes the [current limitations][conceptual-network-isolated-limitations].
-=======
-- Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The conceptual overview article also captures the [current limitations][conceptual-network-isolated-limitations].
->>>>>>> 7af58a32f1424159b58321b17d146e8f58e7ffa1
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
@@ -71,17 +67,9 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
 
-<<<<<<< HEAD
-1. (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
+- (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
   - [Azure Key Vault provider for Secrets Store CSI Driver][csisecretstore]
   - [Azure Monitor Container Insights][azuremonitoring]
-=======
-- (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when using the following add-ons:
-  - [CSI secret store (Azure keyvault secrets provider)][csisecretstore]
-  - [Azure monitor for containers (Container insights)][azuremonitoring]
-  - [Application insights][applicationinsights]
-  - [Web application routing][webapplicationrouting]
->>>>>>> 7af58a32f1424159b58321b17d146e8f58e7ffa1
 
 ::: zone pivot="aks-managed-acr"
 
@@ -103,13 +91,6 @@ The `--outbound-type parameter` can be set to either `none` or `block`. If the o
 
 Create a private link-based network isolated AKS cluster by running the [az aks create][az-aks-create] command with `--bootstrap-artifact-source`, `--enable-private-cluster`, and `--outbound-type` parameters.
 
-<<<<<<< HEAD
-=======
-`--bootstrap-artifact-source` can be set to either `Direct` or `Cache` corresponding to using direct MCR (NOT network isolated) and private ACR (network isolated) for image pulls respectively.
-
-The `--outbound-type` parameter can be set to either `none` or `block`. If the outbound type is set to `none`, then AKS doesn't set up any outbound connections for the cluster, allowing the user to configure them on their own. If the outbound type is set to `block`, then all outbound connections are blocked.
-
->>>>>>> 7af58a32f1424159b58321b17d146e8f58e7ffa1
 ```azurecli-interactive
 az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME}   --kubernetes-version 1.30.3 --bootstrap-artifact-source Cache --outbound-type none  --network-plugin azure --enable-private-cluster
 ```
