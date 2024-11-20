@@ -132,7 +132,7 @@ Principal author:
 
 Other contributors:
 - [Ken Kilty](https://www.linkedin.com/in/kennethkilty/) | Principal TPM
-- Russell de Pina | Principal TPM
+- [Russell de Pina](https://www.linkedin.com/in/rdepina/) | Principal TPM
 - [Erin Schaffer](https://www.linkedin.com/in/erin-schaffer-65800215b/) | Content Developer 2
 
 <!-- LINKS -->
