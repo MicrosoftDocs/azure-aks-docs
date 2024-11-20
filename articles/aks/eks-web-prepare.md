@@ -131,7 +131,7 @@ The Application Gateway Listener and the [Kubernetes ingress][kubernetes-ingress
 - **Cookie issues**: Cookies play a crucial role in maintaining user sessions and passing information between the client and the server. When the hostname differs, cookies might not work as expected, leading to issues such as failed authentication, improper session handling, and incorrect redirection.
 - **End-to-end TLS/SSL requirements**: If end-to-end TLS/SSL is required for secure communication between the proxy and the backend service, a matching TLS certificate for the original hostname is necessary. Using the same hostname simplifies the certificate management process and ensures that secure communication is established seamlessly.
 
-You can avoid these problems by using the same hostname for the service proxy and the backend web application. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling function correctly. This technique is especially important in platform as a service (PaaS) offerings, where you can reduce the complexity of certificate management by using the managed TLS certificates provided by the PaaS service. 
+You can avoid these problems by using the same hostname for the service proxy and the backend web application. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling function correctly. 
 
 ### Message Flow
 
