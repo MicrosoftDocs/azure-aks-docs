@@ -34,22 +34,6 @@ The sample Yelb application allows users to vote on a set of alternatives (resta
 
 To help protect web applications and APIs from common web exploits, AWS offers [AWS Web Application Firewall (WAF)][aws-waf] and [AWS Firewall Manager][aws-firewall-manager]. These services allow you to monitor HTTP(S) requests and defend against DDoS attacks, bots, and common attack patterns such as SQL injection or cross-site scripting.
 
-To test an implementation of a web application firewall using [AWS Web Application Firewall (WAF)][aws-waf] to safeguard applications running on [EKS][aws-eks], you can use the following solution:
-
-1. Create an EKS cluster and deploy a sample workload.
-1. Expose the sample application using an [Application Load Balancer (ALB)][aws-alb].
-1. Create a [Kubernetes ingress][kubernetes-ingress] and associate an [AWS WAF web access control list (web ACL)][aws-web-acl] with the ALB in front of the ingress.
-
-AWS WAF provides control over the type of traffic that reaches your web applications, ensuring protection against unauthorized access attempts and unwanted traffic. It integrates with [Amazon CloudFront][aws-cloudfront], [Application Load Balancer (ALB)][aws-alb], [Amazon API Gateway][aws-api-gateway], and [AWS AppSync][aws-appsync]. When using an existing ALB as an ingress for Kubernetes-hosted applications, you can quickly add a web application firewall to your apps.
-
-For customers operating in multiple AWS accounts, [AWS Organizations][aws-organizations] and [AWS Firewall Manager][aws-firewall-manager] offer centralized control over AWS WAF rules. With Firewall Manager, you can enforce security policies across accounts to ensure compliance and adherence to best practices. It's recommended to run EKS clusters in dedicated Virtual Private Clouds (VPCs). [AWS Firewall Manager][aws-firewall-manager] ensures that WAF rules are correctly applied across accounts, regardless of where your applications run.
-
-By implementing these measures, you can effectively deploy the sample web application on [AWS EKS](https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html) and protect it using [AWS WAF][aws-waf].
-
-:::image type="content" source="media/eks-web-rearchitect/architecture-on-aws.png" alt-text="Architecture diagram of the Yelb web application in AWS.":::
-
-For more information, see [Protecting your Amazon EKS web apps with AWS WAF](https://aws.amazon.com/blogs/containers/protecting-your-amazon-eks-web-apps-with-aws-waf/).
-
 ## Map AWS services to Azure services
 
 To recreate the AWS workload in Azure with minimal changes, use an Azure equivalent for each AWS service. The following table summarizes the service mapping:
