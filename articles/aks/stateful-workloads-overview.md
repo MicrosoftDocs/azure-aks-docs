@@ -63,8 +63,8 @@ The following sections provide links to design and deployment information for st
 * [Valkey stateful workload design overview](valkey-overview.md)
 * [Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)](create-valkey-infrastructure.md)
 * [Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)](deploy-valkey-cluster.md)
-
-## Contributors
+* [Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS)](validate-valkey-cluster.md)
+ ## Contributors
 
 *Microsoft maintains this article. The following contributors originally wrote it:*
 
