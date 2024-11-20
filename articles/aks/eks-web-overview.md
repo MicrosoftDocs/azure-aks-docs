@@ -14,16 +14,16 @@ ms.custom:
 
 # Replicate an AWS web application with AWS WAF in Azure Kubernetes Service (AKS)
 
-In this article, you learn how to replicate an Amazon Elastic Kubernetes Service (EKS) web application with AWS Web Application Firewall (WAF) using [Azure Web Application Firewall (WAF)][azure-waf] and [Azure Application Gateway][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
+In this article, you will learn how to replicate an Amazon Elastic Kubernetes Service (EKS) web application with AWS Web Application Firewall (WAF) using [Azure Web Application Firewall (WAF)][azure-waf] and [Azure Application Gateway][azure-ag] in [Azure Kubernetes Service (AKS)][aks]. 
 
-This workload implements a web application firewall to protect a Yelb web-based application running in Kubernetes cluster. Applications rely on web application firewalls to block unwanted traffic and protect apps from common vulnerabilities. A centralized web application firewall helps simplify security management and helps ensure better protection against threats or intrusions.
+This workload implements a WAF to protect a [Yelb][yelb] web-based application running in a Kubernetes cluster. Applications rely on WAF's to block unwanted traffic and protect apps from common vulnerabilities. A centralized web application firewall helps simplify security management and helps ensure better protection against threats or intrusions.
 
 For a more detailed understanding of the AWS workload, see [Protecting your Amazon EKS web apps with AWS WAF][eks-aws-waf].
 
 ## Deployment process
 
-1. [**Understand the conceptual differences**](eks-web-understand.md): Start by reviewing the differences between AWS and AKS in terms of services, architecture, and deployment.
-1. [**Rearchitect the workload**](eks-web-rearchitect.md): Analyze the existing AWS workload architecture and identify the components or services that you need to redesign to fit AKS. You need to make changes to the workload infrastructure, application architecture, and deployment process.
+1. [**Understand the conceptual differences**](eks-web-understand.md): Start by reviewing the differences between EKS and AKS in terms of services, architecture, and deployment.
+1. [**Rearchitect the workload**](eks-web-rearchitect.md): Analyze the existing AWS workload architecture and identify the components or services that you need to redesign to fit AKS. You will need to make changes to the workload infrastructure, application architecture, and deployment process.
 1. [**Update the application code**](eks-web-refactor.md): Ensure your code is compatible with Azure APIs, services, and authentication models.
 1. [**Prepare for deployment**](eks-web-prepare.md): Modify the AWS deployment process to use the Azure CLI.
 1. [**Deploy the workload**](eks-web-deploy.md): Deploy the replicated workload in AKS and test the workload to ensure that it functions as expected.

@@ -14,7 +14,7 @@ ms.custom:
 
 # Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)
 
-Now that you have a better understanding of the platform differences between AWS and Azure, let's examine the web application architecture and the modifications needed to make it compatible with [Azure Kubernetes Service (AKS)][aks].
+Now that you have a better understanding of the platform differences between AWS and Azure, let's examine the web application architecture on AWS and the modifications needed to make it compatible with [Azure Kubernetes Service (AKS)][aks].
 
 ## Yelb application architecture
 
@@ -32,7 +32,7 @@ The sample Yelb application allows users to vote on a set of alternatives (resta
 
 ## Architecture on AWS
 
-To help protect web applications and APIs from common web exploits, AWS offers [AWS Web Application Firewall (WAF)][aws-waf] and [AWS Firewall Manager][aws-firewall-manager]. These services allow you to monitor HTTP(S) requests and defend against DDoS attacks, bots, and common attack patterns such as SQL injection or cross-site scripting.
+To help protect web applications and APIs from common web exploits, AWS offers [AWS Web Application Firewall (WAF)][aws-waf] and [AWS Firewall Manager][aws-firewall-manager].
 
 ## Map AWS services to Azure services
 
@@ -76,7 +76,7 @@ The following diagram shows the recommended architecture on Azure.
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
 
-The solution architecture consists of the following components and configurations:
+The solution architecture consists of the following:
 
 - The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
 - The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].

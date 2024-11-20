@@ -24,7 +24,7 @@ The [Yelb][yelb] sample web application on AWS is deployed using Bash, [AWS CLI]
 
 ## Yelb deployment on Azure
 
-In this tutorial, you learn how to deploy the Yelb sample web application on an [Azure Kubernetes Service (AKS)][aks] cluster and expose it through an ingress controller like the [NGINX ingress controller][nginx]. The ingress controller service is accessible via an [internal (or private) load balancer][azure-lb], which is used to balance traffic within the virtual network housing the AKS cluster. This load balancer frontend can also be accessed from an on-premises network in a hybrid scenario. To learn more about utilizing an internal load balancer to restrict the access to your applications in Azure Kubernetes Service (AKS), refer to the guide [Use an internal load balancer with Azure Kubernetes Service (AKS)](/azure/aks/internal-lb?tabs=set-service-annotations).
+In this tutorial, you will learn how to deploy the [Yelb][yelb] sample web application on an [Azure Kubernetes Service (AKS)][aks] cluster and expose it through an ingress controller like the [NGINX ingress controller][nginx]. The ingress controller service is accessible via an [internal (or private) load balancer][azure-lb], which is used to balance traffic within the virtual network housing the AKS cluster. This load balancer frontend can also be accessed from an on-premises network in a hybrid scenario. To learn more about utilizing an internal load balancer to restrict the access to your applications in Azure Kubernetes Service (AKS), refer to the guide [Use an internal load balancer with Azure Kubernetes Service (AKS)](/azure/aks/internal-lb?tabs=set-service-annotations).
 
 The companion [sample][azure-sample] supports installing a [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] or an unmanaged [NGINX ingress controller][nginx] using the [Helm chart][nginx-helm-chart]. The application routing add-on with NGINX ingress controller provides the following features:
 
@@ -73,7 +73,7 @@ The message flow is as follows:
 
 - The [Azure Application Gateway][azure-ag] handles TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
 - The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv] to ensure secure communication.
-- The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing malicious attacks.
+- The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing many types of malicious attacks.
 - The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTP using port 80.
 - The Application Gateway Backend Pool and Health Probe call the [NGINX ingress controller][nginx] through the AKS internal load balancer using the HTTP protocol for traffic management.
 - The [NGINX ingress controller][nginx] uses the AKS internal load balancer to ensure secure communication within the cluster.
@@ -131,7 +131,7 @@ The Application Gateway Listener and the [Kubernetes ingress][kubernetes-ingress
 - **Cookie issues**: Cookies play a crucial role in maintaining user sessions and passing information between the client and the server. When the hostname differs, cookies might not work as expected, leading to issues such as failed authentication, improper session handling, and incorrect redirection.
 - **End-to-end TLS/SSL requirements**: If end-to-end TLS/SSL is required for secure communication between the proxy and the backend service, a matching TLS certificate for the original hostname is necessary. Using the same hostname simplifies the certificate management process and ensures that secure communication is established seamlessly.
 
-You can avoid these problems by using the same hostname for the service proxy and the backend web application. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling function correctly. This technique is especially important in platform as a service (PaaS) offerings, where you can reduce the complexity of certificate management by using the managed TLS certificates provided by the PaaS service. 
+You can avoid these problems by using the same hostname for the service proxy and the backend web application. The backend application sees the same domain as the web browser, ensuring that session state, authentication, and URL handling function correctly. 
 
 ### Message Flow
 
