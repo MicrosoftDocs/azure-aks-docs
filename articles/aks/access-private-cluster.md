@@ -17,6 +17,10 @@ With the Azure CLI, you can use `command invoke` to access private clusters with
 
 With the Azure portal, you can use the `Run command` feature to run commands on your private cluster. The `Run command` feature uses the same `command invoke` functionality to run commands on your cluster.
 
+This feature is designed for human to easy access a cluster, it's not designed for programmatic access, if you have a program invoke kubernetes through AKS runCommand, there would be some disadvantage:
+- all you get is exitCode and text output, you loose have API level details.
+- one extra hop means extra failure points.
+
 ## Before you begin
 
 Before you begin, make sure you have the following resources and permissions:
@@ -27,7 +31,7 @@ Before you begin, make sure you have the following resources and permissions:
 
 ### Limitations
 
-The pod created by the `run` command provides `helm` and the latest compatible version of `kubectl` for your cluster with `kustomize`.
+The pod created by the `run` command provides `kubectl`, `helm` for operating your cluster, also `jq`, `xargs`, `grep`, `awk` is available for bash support. the pod have `200m cpu, 500Mi` memory request, and `500m cpu, 1Gi memory` limit, in some rare case where all your node is packed, the pod cannot be scheduled, then runCommand feature will stop work.
 
 `command invoke` runs the commands from your cluster, so any commands run in this manner are subject to your configured networking restrictions and any other configured restrictions. Make sure there are enough nodes and resources in your cluster to schedule this command pod.
 
@@ -116,6 +120,10 @@ You can use the following kubectl commands with the `Run command` feature:
 
 4. Select the file(s) you want to attach and then select **Attach**.
 5. Enter the command you want to run and select **Run**.
+
+## Disable Run Command
+
+`Run Command` feature can be disabled by set `.properties.apiServerAccessProfile.disableRunCommand` to true, we current don't have a CLI to control this switch.
 
 ---
 
