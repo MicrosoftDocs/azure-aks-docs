@@ -11,7 +11,7 @@ ms.date: 10/30/2024
 
 # Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
 
-In a standard TCP connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. TCP connection losses can be more prominent in distributed architectures, which are susceptible to infrastructure failures, network disruptions, or unexpected application crashes. This article illustrates the use of TCP keepalive to enhance fault tolerance in applications hosted in Azure Kubernetes Service (AKS).
+In a standard Transmission Control Protocol (TCP) connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. TCP connection losses can be more prominent in distributed architectures, which are susceptible to infrastructure failures, network disruptions, or unexpected application crashes. This article illustrates the use of TCP keepalive to enhance fault tolerance in applications hosted in Azure Kubernetes Service (AKS).
 
 ## Understanding TCP keepalive
 
@@ -19,16 +19,16 @@ Several Azure Networking services, such as Azure Load Balancer (ALB), enable you
 
 In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the following command that sets it to four minutes:
 
-```shell
+```azurecli-interactive
 az aks update \
     --resource-group myResourceGroup \
     --name myAKSCluster \
     --load-balancer-idle-timeout 4
 ```
 
-The idle timeout feature in ALB is designed to terminate inactive connections from both the client and server after a specified duration, which optimizes resource utilization. This timeout applies to both ingress and egress traffic managed by the ALB. 
+The idle timeout feature in an ALB is designed to terminate inactive connections between the client and server after a specified duration, optimizing resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications.
 
-In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases can be managed by configuring the [`kube-proxy` TCP settings](configure-kube-proxy.md). For example, the following `kube-proxy` configuration changes the default TCP timeout period of 15 minutes to 20 minutes:
+In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases can be managed by configuring the [`kube-proxy` TCP settings](configure-kube-proxy.md). For example, the following `kube-proxy` configuration changes the default TCP timeout period of 15 minutes to 20 minutes when `kube-proxy` is running in IP Virtual Server (IPVS) mode:
 
 ```json
 {
@@ -43,7 +43,12 @@ In AKS, apart from the north-south traffic (ingress and egress) that traverse th
 }
 ```
 
-For long-running operations, you might want to wait for a longer period than the configured timeout duration on the networking service. To prevent the connection from staying idle beyond the configured duration on the network service, consider using the TCP keepalive feature. This feature also ensures that the server is still available while the client waits for a response (or the other way around), so you can retry the operation rather than wait for a connection timeout.
+When `kube-proxy` operates in iptables mode, it uses the default TCP timeout settings defined in the [kube-proxy specification](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/). The default TCP timeout settings for `kube-proxy` in iptables mode are as follows:
+
+1. Network Address Translation (NAT) timeout for TCP connections in the `CLOSE_WAIT` state is 1 hour.
+2. Idle timeout for established TCP connections is 24 hours.
+
+For long-running operations, you might need a timeout longer than the networking service's configured duration, whether the client and server are both inside the AKS cluster or one of them is outside. To prevent the connection from staying idle beyond the configured duration on the network service, consider using the TCP keepalive feature. This feature also ensures that the server is still available while the client waits for a response (or the other way around), so you can retry the operation rather than wait for a connection timeout.
 
 In a TCP connection, either of the peers can request keepalives for their side of the connection. Keepalives can be configured for the client, the server, both, or neither. The keepalive mechanism follows the standard specifications defined in [RFC1122](https://datatracker.ietf.org/doc/html/rfc1122#section-4.2.3.6). A keepalive probe is either an empty segment or a segment that contains only 1 byte. It features a sequence number that is one less than the largest Acknowledgment (ACK) number that has been received from the peer so far. Since the probe packet essentially mimics a packet that has already been received, the receiving side sends another ACK packet in response to indicate to the sender that the connection is still active.
 
@@ -57,33 +62,37 @@ Keepalive probes are managed at the TCP layer. Therefore, during normal operatio
 
 ## Configuring TCP keepalive on AKS
 
-AKS allows cluster administrators to adjust the operating system of a node, and kubelet parameters, to align with the requirements of their workloads. When setting up the cluster or a new node pool, administrators can modify the related sysctls to configure the keepalive probes. To make these changes, create a file named **linuxkubeletconfig.json** with the following contents:
+AKS allows cluster administrators to adjust the operating system of a node, and kubelet parameters, to align with the requirements of their workloads. When setting up the cluster or a new node pool, administrators can enable sysctls relevant to their workloads. Kubernetes categorizes the sysctls into two groups: **safe** and **unsafe**. 
+
+Safe sysctls are those that are namespaced and properly isolated between pods on the same node. This means that configuring a safe sysctl for one pod does not affect other pods on the node, affect the node's health, or allow a pod to exceed its CPU or memory resource limits. Kubernetes enables these sysctls by default. As of Kubernetes 1.29, all TCP keepalive sysctls are considered safe:
+
+- `net.ipv4.tcp_keepalive_time` 
+- `net.ipv4.tcp_fin_timeout`
+- `net.ipv4.tcp_keepalive_intvl`
+- `net.ipv4.tcp_keepalive_probes` 
+
+Unsafe sysctls are either not namespaced or not properly isolated between pods. Modifying these parameters can potentially impact the stability and security of the node or other pods. By default, Kubernetes disables unsafe sysctls. To use them, a cluster administrator must explicitly enable specific unsafe sysctls on each node by configuring the kubelet. For example to enable modification of inter-process communication (IPC) message queue settings, create a file named **linuxkubeletconfig.json** with the following contents:
 
 ```json
 {
     "allowedUnsafeSysctls": [
-        "net.ipv4.tcp_keepalive_time",
-        "net.ipv4.tcp_keepalive_intvl",
-        "net.ipv4.tcp_keepalive_probes"
+        "kernel.msg*"
     ]
 }
 ```
 
 Next, create your cluster using the following command, ensuring that the path to the file you created is correct:
 
-```shell
-az aks create --name myAKSCluster --resource-group myResourceGroup --kubelet-config ./linuxkubeletconfig.json --generate-ssh-keys
-```
-
-To add a node pool to an existing cluster, use the customized configuration file created in the previous step to specify the kubelet configuration as follows:
-
-```shell
-az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --kubelet-config ./linuxkubeletconfig.json
+```azurecli-interactive
+az aks create --name myAKSCluster --resource-group myResourceGroup --kubelet-config ./linuxkubeletconfig.json 
 ```
 
 You can find more detailed information about the supported configurations for both the node operating system and kubelet in our [prescriptive guidance](custom-node-configuration.md).
 
-After the cluster is ready, you can configure TCP keepalive sysctls in your desired pod by setting the security context in your pod definitions as follows:
+> [!NOTE]
+> Starting with Kubernetes 1.29, TCP keepalive sysctls are considered safe and are enabled by default. You don't need to enable them explicitly in your cluster.
+
+You can configure TCP keepalive sysctls in your desired pod by setting the security context in your pod definitions as follows:
 
 ```yaml
 apiVersion: v1
@@ -110,6 +119,8 @@ Applying the specification implements the following TCP keepalive behavior:
 1. `net.ipv4.tcp_keepalive_time` configures keepalive probes to be sent out after 45 seconds of inactivity on the connection.
 2. `net.ipv4.tcp_keepalive_probes` configures the operating system to send five unacknowledged keepalive probes before deeming the connection as unusable.
 3. `net.ipv4.tcp_keepalive_intvl` sets the duration between dispatch of two keepalive probes to 45 seconds.
+
+The TCP keepalive sysctls are namespaced in the Linux kernel, which means they can be set individually for each pod on a node. This segregation allows you to configure the keepalive settings through the pod's security context, which applies to all containers in the same pod.
 
 Your pod is now ready to send and respond to keepalive probes. To verify the settings, you can execute the `sysctl` command on the pod as follows:
 
@@ -244,7 +255,7 @@ Refer to the programming language-specific examples and documentation listed in 
 
 ## Considerations
 
-While keepalive probes can improve the fault tolerance of your applications, they can also consume more bandwidth. Additionally, on mobile devices, increased network activity may impact the device's battery life. Therefore, it's important to adhere to the following best practices:
+While keepalive probes can improve the fault tolerance of your applications, they can also consume additional bandwidth, which might impact network capacity and lead to additional charges. Additionally, on mobile devices, increased network activity may affect battery life. Therefore, it's important to adhere to the following best practices:
 
 - **Customize parameters**: Adjust keepalive settings based on application requirements and network conditions.
 - **Application-Level keepalives**: For encrypted connections (for example, TLS/SSL), consider implementing keepalive mechanisms at the application layer to ensure probes are sent over secure channels.
