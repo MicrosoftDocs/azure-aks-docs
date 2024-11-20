@@ -73,7 +73,7 @@ The message flow is as follows:
 
 - The [Azure Application Gateway][azure-ag] handles TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
 - The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv] to ensure secure communication.
-- The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing malicious attacks.
+- The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing many types of malicious attacks.
 - The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTP using port 80.
 - The Application Gateway Backend Pool and Health Probe call the [NGINX ingress controller][nginx] through the AKS internal load balancer using the HTTP protocol for traffic management.
 - The [NGINX ingress controller][nginx] uses the AKS internal load balancer to ensure secure communication within the cluster.
