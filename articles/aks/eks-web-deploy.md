@@ -551,6 +551,8 @@ Principal author:
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
 
 Other contributors:
+- [Ken Kilty](https://www.linkedin.com/in/kennethkilty/) | Principal TPM
+- Russell de Pina | Principal TPM
 - [Erin Schaffer](https://www.linkedin.com/in/erin-schaffer-65800215b/) | Content Developer 2
 
 <!-- LINKS -->
