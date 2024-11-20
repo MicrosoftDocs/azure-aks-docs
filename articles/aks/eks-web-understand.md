@@ -156,7 +156,6 @@ Other contributors:
 [eksctl]: https://eksctl.io/installation/
 [aws-waf]: https://aws.amazon.com/waf/
 [aws-alb]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer
-[aws-web-acl]: https://docs.aws.amazon.com/waf/latest/developerguide/web-acl.html
 [aws-cloudformation]: https://aws.amazon.com/cloudformation/
 [aws-cloudwatch]: https://aws.amazon.com/cloudwatch/
 [aws-prometheus]: https://aws.amazon.com/prometheus/
@@ -172,7 +171,7 @@ Other contributors:
 [arm]: /azure/azure-resource-manager/management/overview
 [bicep]: /azure/azure-resource-manager/bicep/overview
 [azure-cli]: /cli/azure/install-azure-cli
-[terraform]: https://www.terraform.io/
+[terraform]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
 [keda]: https://keda.sh/
 [karpenter]: https://karpenter.sh/
 [node-autoprovisioning]: /azure/aks/node-autoprovision
