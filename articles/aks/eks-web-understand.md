@@ -18,37 +18,41 @@ This article walks through some of the key concepts for this workload and provid
 
 Both AKS and EKS provide multiple options for deploying a managed Kubernetes cluster on Azure and AWS. These options include native solutions and provisioning solutions based on third-party systems or open-source technologies.
 
+| **Deployment Options** | **EKS** | **AKS** |
+| -----------------------| --------| ------- |
+| Portal | [AWS Management Console](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html) | [Azure Portal][azure-portal] |
+| Native Infrastructure as Code | [AWS Cloud Formation][aws-cloudformation] | [Bicep][bicep] and [Azure Resource Manager (ARM)][arm] |
+| Native CLI | [AWS CLI](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) and [EKS CLI][eksctl] | [Azure CLI][azure-cli], [Azure Developer CLI][azure-developer-cli], and [PowerShell][powershell] |
+| Terraform | [EKS module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest?tab=resources) | [AzureRM Provider][azure-terraform] |
+| Pulumi | [EKS Cluster](https://www.pulumi.com/registry/packages/aws/api-docs/eks/cluster/) | [AKS ManagedCluster](https://www.pulumi.com/registry/packages/azure-native/api-docs/containerservice/managedcluster/) |
+| Crossplane | [Yes](https://aws.amazon.com/it/tutorials/deploy-serverless-application-using-crossplane-on-eks/) | [Yes](https://github.com/Azure-Samples/aks-platform-engineering)                               |
+| Cluster API | [Yes](https://cluster-api-aws.sigs.k8s.io/topics/eks/) | [Yes](https://github.com/kubernetes-sigs/cluster-api-provider-azure)                               |
 
-
-- **AKS**: To create an [AKS cluster][aks], you can use options like [Azure Resource Manager (ARM)][arm], [Bicep][bicep], [Azure CLI][azure-cli], [Terraform][terraform], [Pulumi](https://www.pulumi.com/registry/packages/azure-native/how-to-guides/azure-cs-aks/), [Crossplane](https://docs.crossplane.io/latest/getting-started/provider-azure/), and [Kubernetes Cluster API](https://capz.sigs.k8s.io/).
-- **EKS**: Similarly, for EKS deployments, you have options like [AWS CloudFormation][aws-cloudformation], [eksctl][eksctl], [Terraform][terraform], [Pulumi](https://www.pulumi.com/docs/iac/clouds/aws/guides/eks/), [Crossplane](https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/v0.37.1/resources/eks.aws.crossplane.io/Cluster/v1beta1), and [Kubernetes Cluster API](https://cluster-api-aws.sigs.k8s.io/topics/eks/).
+The [Azure CLI][azure-cli] is designed for simplicity and ease of use. You can create, upgrade, or delete a cluster with a single command. This streamlined approach reduces complexity of managing Kubernetes clusters on Azure. For more information, see [az aks](/cli/azure/aks) commands. By contrast, the EKS CLI uses a more manual approach that requires multiple steps in conjunction with using kubectl. 
 
 ### Monitoring
 
 Effective monitoring is essential for identifying and resolving issues in Kubernetes clusters. The following information outlines how AKS and EKS handle monitoring:
 
-- **AKS**: [Azure Monitor](/azure/aks/monitor-aks) provides built-in monitoring capabilities for AKS clusters. It offers metrics, logs, and alerts, giving you visibility into the performance and health of your AKS environment. AKS integrates well with commonly used monitoring tools like Prometheus and Grafana, allowing you to build custom monitoring solutions. [Azure Monitor managed service for Prometheus][azure-prometheus] is a component of [Azure Monitor Metrics](/azure/azure-monitor/essentials/data-platform-metrics) that provides more flexibility in the types of metric data that you can collect and analyze. You can use analysis tools like [Azure Monitor Metrics Explorer with PromQL][azure-metrics-explorer] and open-source tools such as [PromQL][promql] and [Azure Managed Grafana][azure-grafana] to effectively observe, analyze, and visualize Prometheus metrics.
-- **EKS**: EKS integrates with [Amazon CloudWatch][aws-cloudwatch], a comprehensive monitoring service provided by AWS. CloudWatch collects and provides insights into logs, metrics, and resource utilization for EKS clusters. EKS also supports integration with popular monitoring tools like [Amazon Managed Service for Prometheus][aws-prometheus] and [Amazon Managed Grafana][aws-grafana], empowering you to build robust monitoring solutions.
+| **Monitoring Options** | **EKS** | **AKS** |
+| -----------------------| --------| ------- |
+| Native Monitoring | [Amazon CloudWatch][aws-cloudwatch] | [Azure Monitor](/azure/aks/monitor-aks) |
+| Managed Prometheus and Grafana | [Amazon Managed Service for Prometheus][aws-prometheus] and [Amazon Managed Grafana][aws-grafana] | [Azure Monitor managed service for Prometheus][azure-prometheus] and [Azure Managed Grafana][azure-grafana] |
+| Datadog | [Yes](https://docs.datadoghq.com/integrations/amazon_eks/) | [Yes](https://docs.datadoghq.com/integrations/azure_container_service/) | 
+| Dynatrace | [Yes](https://docs.dynatrace.com/docs/ingest-from/amazon-web-services/integrate-into-aws/aws-eks) | [Yes](https://docs.dynatrace.com/docs/ingest-from/microsoft-azure-services/azure-integrations/azure-aks) |
 
 ### Support for open source projects
 
 Both AKS and EKS provide support for open-source projects, enabling you to utilize more capabilities and features. AKS provides managed capabilities for both KEDA and Karpenter as detailed below.
 
-- **AKS**: AKS supports projects like [Kubernetes Event-driven Autoscaling (KEDA)][keda] and [Karpenter][karpenter]. KEDA enables event-driven autoscaling in AKS, allowing you to scale your workloads based on event-driven metrics. Karpenter provides a framework for automated cluster autoscaling and intelligent pod bin packing within AKS. AKS supports a managed version of Karpenter called [Node Autoprovisioning][node-autoprovisioning].
-- **EKS**: EKS also supports open-source projects like KEDA and Karpenter, but they must be configured manually. These projects enable similar functionalities in EKS clusters, allowing you to dynamically scale your applications and optimize resource utilization.
-
-### Deployment tools
-
-Both AKS and EKS offer command-line tools to simplify the creation and management of Kubernetes clusters:
-
-- **AKS**: [Azure CLI][azure-cli] is the primary command-line tool for managing AKS clusters. It provides a comprehensive set of commands to create, configure, and manage AKS resources. 
-- **EKS**: Amazon provides [eksctl][eksctl], a command-line tool for managing EKS clusters.
-
-The [Azure CLI][azure-cli] is designed for simplicity and ease of use. You can create, upgrade, or delete a cluster with a single command. This streamlined approach reduces complexity of managing Kubernetes clusters on Azure. For more information, see [az aks](/cli/azure/aks) commands. By contrast, the EKS CLI uses a more manual approach that requires multiple steps in conjunction with using kubectl. 
+| **Open source projects** | **EKS** | **AKS** |
+| -------------------------| --------| ------- |
+| [Kubernetes Event-driven Autoscaling (KEDA)][keda] | [Yes](https://aws.amazon.com/it/blogs/mt/proactive-autoscaling-kubernetes-workloads-keda-metrics-ingested-into-aws-amp/) | [Yes][azure-keda] |
+| [Karpenter][karpenter] | [Yes](https://docs.aws.amazon.com/eks/latest/best-practices/karpenter.html) | [Node Autoprovisioning][node-autoprovisioning] and [AKS Karpenter Provider](https://github.com/Azure/karpenter-provider-azure) |
 
 ## Load balancing
 
-[Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] are two popular load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
+[Azure Application Gateway][azure-ag] and [AWS Application Load Balancer][aws-alb] are two popular layer 7 load balancing solutions offered by Microsoft Azure and Amazon Web Services, respectively. These services play a crucial role in distributing incoming network traffic across multiple servers to ensure high availability and improved performance for applications.
 
 ### AWS Application Load balancer
 
@@ -154,7 +158,7 @@ Other contributors:
 [eksctl]: https://eksctl.io/installation/
 [aws-waf]: https://aws.amazon.com/waf/
 [aws-alb]: https://aws.amazon.com/elasticloadbalancing/application-load-balancer
-[aws-cloudformation]: https://aws.amazon.com/cloudformation/
+[aws-cloudformation]: https://docs.aws.amazon.com/eks/latest/userguide/creating-resources-with-cloudformation.html
 [aws-cloudwatch]: https://aws.amazon.com/cloudwatch/
 [aws-prometheus]: https://aws.amazon.com/prometheus/
 [aws-grafana]: https://aws.amazon.com/grafana/
@@ -166,12 +170,15 @@ Other contributors:
 [azure-prometheus]: /azure/azure-monitor/essentials/prometheus-metrics-overview
 [azure-grafana]: /azure/managed-grafana/overview
 [agic]: /azure/application-gateway/ingress-controller-overview
-[arm]: /azure/azure-resource-manager/management/overview
-[bicep]: /azure/azure-resource-manager/bicep/overview
-[azure-cli]: /cli/azure/install-azure-cli
-[terraform]: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster
+[arm]: /azure/aks/learn/quick-kubernetes-deploy-rm-template?tabs=azure-cli
+[bicep]: /azure/aks/learn/quick-kubernetes-deploy-bicep?tabs=azure-cli
+[azure-portal]: /azure/aks/learn/quick-kubernetes-deploy-portal?tabs=azure-cli
+[azure-cli]: /azure/aks/learn/quick-kubernetes-deploy-cli
+[azure-developer-cli]: /azure/aks/learn/quick-kubernetes-deploy-azd
+[powershell]: /azure/aks/learn/quick-kubernetes-deploy-powershell
+[azure-terraform]: /azure/aks/learn/quick-kubernetes-deploy-terraform?pivots=development-environment-azure-cli
 [keda]: https://keda.sh/
+[azure-keda]: /azure/aks/keda-about
 [karpenter]: https://karpenter.sh/
 [node-autoprovisioning]: /azure/aks/node-autoprovision
 [aws-to-azure]: /azure/architecture/aws-professional/services
-[promql]: https://prometheus.io/docs/prometheus/latest/querying/basics/
