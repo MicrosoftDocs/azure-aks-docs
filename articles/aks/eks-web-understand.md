@@ -54,7 +54,6 @@ The [Azure CLI][azure-cli] is designed for simplicity and ease of use. You can c
 
 An [AWS Application Load Balancer (ALB)][aws-alb] is a component of Elastic Load Balancing in Amazon Web Services (AWS). ALB ensures traffic is routed only to healthy targets and scales with incoming traffic. It supports various load balancers, including Application, Network, Gateway, and Classic Load Balancers.
 
-An Application Load Balancer operates at the application layer (Layer 7) of the Open Systems Interconnection (OSI) model and supports SSL/TLS termination, URL-based routing, and session affinity. It evaluates listener rules and selects a target from the target group based on the content of the application traffic. Routing can be configured independently for each target group. Benefits of using an Application Load Balancer over a Classic Load Balancer include support for path and host conditions, routing based on different request fields, routing to multiple applications on a single EC2 instance, redirecting requests, returning custom HTTP responses, registering targets by IP address (even outside the VPC), registering Lambda functions as targets, authentication, support for containerized applications, independent health monitoring, access logs, and improved performance.
 
 ### Azure Application Gateway 
 
