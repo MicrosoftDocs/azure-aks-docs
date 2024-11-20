@@ -14,7 +14,7 @@ ms.custom:
 
 # Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)
 
-Now that you have a better understanding of the platform differences between AWS and Azure, let's examine the web application architecture and the modifications needed to make it compatible with [Azure Kubernetes Service (AKS)][aks].
+Now that you have a better understanding of the platform differences between AWS and Azure, let's examine the web application architecture on AWS and the modifications needed to make it compatible with [Azure Kubernetes Service (AKS)][aks].
 
 ## Yelb application architecture
 
