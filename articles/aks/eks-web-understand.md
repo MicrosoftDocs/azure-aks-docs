@@ -110,7 +110,6 @@ Ensuring web application security is crucial to protect against evolving cyber t
 
 AWS WAF is a web application firewall that monitors HTTP and HTTPS requests to your web applications. It protects multiple AWS resources, including those exposed via the AWS Application Load Balancer.
 
-AWS WAF provides the AWS Managed Rules for AWS WAF, which consists of a set of managed rulesets maintained by AWS. These rulesets include the AWS Core Rule Set (CRS) and the AWS Managed Rules for Common Vulnerabilities and Exposures (CVEs). Users can easily enable these rulesets to enhance the security of their web applications. [Learn more about AWS WAF managed OWASP rulesets](https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-list.html). AWS WAF also supports custom rules, which enable users to define their own rule sets using the AWS WAF Rule Language. This allows for precise customization and protection against application-specific vulnerabilities and attack patterns. [Learn more about AWS WAF custom rules](https://docs.aws.amazon.com/waf/latest/developerguide/waf-user-created-rule-groups.html). 
 
 
 AWS WAF integrates with [Amazon CloudWatch][aws-cloudwatch], enabling users to monitor and visualize key metrics and log data related to their web applications and WAF rules. CloudWatch offers customizable dashboards, alerts, and automated actions, providing enhanced visibility into application security. [Learn more about AWS WAF monitoring](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html)
