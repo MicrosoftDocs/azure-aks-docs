@@ -32,7 +32,7 @@ The sample Yelb application allows users to vote on a set of alternatives (resta
 
 ## Architecture on AWS
 
-To help protect web applications and APIs from common web exploits, AWS offers [AWS Web Application Firewall (WAF)][aws-waf] and [AWS Firewall Manager][aws-firewall-manager]. These services allow you to monitor HTTP(S) requests and defend against DDoS attacks, bots, and common attack patterns such as SQL injection or cross-site scripting.
+To help protect web applications and APIs from common web exploits, AWS offers [AWS Web Application Firewall (WAF)][aws-waf] and [AWS Firewall Manager][aws-firewall-manager].
 
 To test an implementation of a web application firewall using [AWS Web Application Firewall (WAF)][aws-waf] to safeguard applications running on [EKS][aws-eks], you can use the following solution:
 
