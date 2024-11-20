@@ -104,7 +104,7 @@ Azure Application Gateway is designed to optimize the delivery of web applicatio
 
 ## Web Access Firewall
 
-Ensuring web application security is of paramount importance to protect against evolving cyber threats. [Azure Web Application Firewall (WAF)][azure-waf] and [AWS WAF][aws-waf] are fully managed web access firewall services that provide robust protection for web applications against threats and malicious attacks. 
+Ensuring web application security is crucial to protect against evolving cyber threats. Fully managed web application firewall services provide robust protection for web applications against threats and malicious attacks.
 
 ### AWS Web Access Firewall (WAF)
 
