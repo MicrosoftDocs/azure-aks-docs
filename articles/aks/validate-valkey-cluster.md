@@ -134,7 +134,7 @@ The sample client application uses the [Locust load testing framework](https://d
     EOF
     ```
 
-    This python code implements a Locust User class that connects to the Valkey cluster and performs a *set and get* operation. You can expand this class to implement more complex operations.
+    This python code implements a Locust User class that connects to the Valkey cluster and performs a *set and get* operation. You can [expand this class to implement more complex operations][writing-a-locustfile].
 
 3. Build the Docker image and upload it to ACR using the [`az acr build`](/cli/azure/acr#az-acr-build) command.
 
@@ -294,3 +294,5 @@ To learn more about stateful workloads using Azure Kubernetes Service (AKS), see
 * Nelly Kiboi | Service Engineer
 * Saverio Proto | Principal Customer Experience Engineer
 
+<!-- EXTERNAL LINKS -->
+[writing-a-locustfile]: hhttps://docs.locust.io/en/stable/writing-a-locustfile.html
