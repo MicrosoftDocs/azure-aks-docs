@@ -22,7 +22,7 @@ For a more detailed understanding of the AWS workload, see [Protecting your Amaz
 
 ## Deployment process
 
-1. [**Understand the conceptual differences**](eks-web-understand.md): Start by reviewing the differences between AWS and AKS in terms of services, architecture, and deployment.
+1. [**Understand the conceptual differences**](eks-web-understand.md): Start by reviewing the differences between EKS and AKS in terms of services, architecture, and deployment.
 1. [**Rearchitect the workload**](eks-web-rearchitect.md): Analyze the existing AWS workload architecture and identify the components or services that you need to redesign to fit AKS. You will need to make changes to the workload infrastructure, application architecture, and deployment process.
 1. [**Update the application code**](eks-web-refactor.md): Ensure your code is compatible with Azure APIs, services, and authentication models.
 1. [**Prepare for deployment**](eks-web-prepare.md): Modify the AWS deployment process to use the Azure CLI.
