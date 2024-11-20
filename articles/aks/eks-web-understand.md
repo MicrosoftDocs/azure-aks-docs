@@ -42,7 +42,7 @@ Both AKS and EKS provide support for open-source projects, enabling you to utili
 Both AKS and EKS offer command-line tools to simplify the creation and management of Kubernetes clusters:
 
 - **AKS**: [Azure CLI][azure-cli] is the primary command-line tool for managing AKS clusters. It provides a comprehensive set of commands to create, configure, and manage AKS resources. 
-- **EKS**: Amazon provides [eksctl][eksctl], a command-line tool for managing EKS clusters. eksctl automates many of the cluster creation and management tasks, making it simpler for developers and operators to work with EKS.
+- **EKS**: Amazon provides [eksctl][eksctl], a command-line tool for managing EKS clusters.
 
 The [Azure CLI][azure-cli] is designed for simplicity and ease of use. You can create, upgrade, or delete a cluster with a single command. This streamlined approach reduces complexity of managing Kubernetes clusters on Azure. For more information, see [az aks](/cli/azure/aks?view=azure-cli-latest) commands. By contrast, the EKS CLI uses a more manual approach that requires multiple steps in conjunction with using kubectl. 
 
