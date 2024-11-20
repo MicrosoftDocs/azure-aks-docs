@@ -61,26 +61,7 @@ An [AWS Application Load Balancer (ALB)][aws-alb] is a component of Elastic Load
 
 ### Azure Application Gateway 
 
-
-[Azure Application Gateway][azure-ag] is a layer 7 web traffic regional load balancer that enables customers to manage the inbound traffic to multiple downstream web applications and REST APIs. Azure Application Gateway provides a rich set of features:
-
-- [Secure Sockets Layer (SSL/TLS) termination](/azure/application-gateway/features#secure-sockets-layer-ssltls-termination)
-- [Autoscaling](/azure/application-gateway/features#autoscaling)
-- [Zone redundancy](/azure/application-gateway/features#zone-redundancy)
-- [Static VIP](/azure/application-gateway/features#static-vip)
-- [Web Application Firewall](/azure/application-gateway/features#web-application-firewall)
-- [Ingress Controller for AKS](/azure/application-gateway/features#ingress-controller-for-aks)
-- [URL-based routing](/azure/application-gateway/features#url-based-routing)
-- [Multiple-site hosting](/azure/application-gateway/features#multiple-site-hosting)
-- [Redirection](/azure/application-gateway/features#redirection)
-- [Session affinity](/azure/application-gateway/features#session-affinity)
-- [WebSocket and HTTP/2 traffic](/azure/application-gateway/features#websocket-and-http2-traffic)
-- [Connection draining](/azure/application-gateway/features#connection-draining)
-- [Custom error pages](/azure/application-gateway/features#custom-error-pages)
-- [Rewrite HTTP headers](/azure/application-gateway/features#rewrite-http-headers-and-url)
-- [Sizing](/azure/application-gateway/features#sizing)
-
-Azure Application Gateway is designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] and [Application Gateway Ingress Controller][agic] for [Azure Kubernetes Service (AKS)][aks]. It distributes incoming application traffic across multiple backend pools, which include public and private [Azure Load Balancers](/azure/load-balancer/load-balancer-overview), [Azure virtual machines (VMs)](/azure/virtual-machines/overview), [Azure Virtual Machine Scale Sets (VMSSs)](/azure/virtual-machine-scale-sets/overview), hostnames, [Azure App Service](/azure/app-service/overview), and on-premises/external servers. 
+[Azure Application Gateway][azure-ag] is a layer 7 web traffic regional load balancer that enables customers to manage the inbound traffic to multiple downstream web applications and REST APIs. Azure Application Gateway is designed to optimize the delivery of web applications and provide enhanced security through features like [Azure Web Application Firewall][azure-waf] and [Application Gateway Ingress Controller][agic] for [Azure Kubernetes Service (AKS)][aks]. It distributes incoming application traffic across multiple backend pools, which include public and private [Azure Load Balancers](/azure/load-balancer/load-balancer-overview), [Azure virtual machines (VMs)](/azure/virtual-machines/overview), [Azure Virtual Machine Scale Sets (VMSSs)](/azure/virtual-machine-scale-sets/overview), hostnames, [Azure App Service](/azure/app-service/overview), and on-premises/external servers. 
 
 ### Compare Azure Application Gateway and AWS ALB
 
