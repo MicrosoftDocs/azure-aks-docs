@@ -44,7 +44,7 @@ Both AKS and EKS offer command-line tools to simplify the creation and managemen
 - **AKS**: [Azure CLI][azure-cli] is the primary command-line tool for managing AKS clusters. It provides a comprehensive set of commands to create, configure, and manage AKS resources. 
 - **EKS**: Amazon provides [eksctl][eksctl], a command-line tool for managing EKS clusters.
 
-The [Azure CLI][azure-cli] is designed for simplicity and ease of use. You can create, upgrade, or delete a cluster with a single command. This streamlined approach reduces complexity of managing Kubernetes clusters on Azure. For more information, see [az aks](/cli/azure/aks?view=azure-cli-latest) commands. By contrast, the EKS CLI uses a more manual approach that requires multiple steps in conjunction with using kubectl. 
+The [Azure CLI][azure-cli] is designed for simplicity and ease of use. You can create, upgrade, or delete a cluster with a single command. This streamlined approach reduces complexity of managing Kubernetes clusters on Azure. For more information, see [az aks](/cli/azure/aks) commands. By contrast, the EKS CLI uses a more manual approach that requires multiple steps in conjunction with using kubectl. 
 
 ## Load balancing
 
@@ -107,10 +107,7 @@ Ensuring web application security is crucial to protect against evolving cyber t
 
 ### AWS Web Access Firewall (WAF)
 
-AWS WAF is a web application firewall that monitors HTTP and HTTPS requests to your web applications. It protects multiple AWS resources, including those exposed via the AWS Application Load Balancer.
-
-
-
+[AWS Web Access Firewall (WAF)][aws-waf] is a web application firewall that monitors HTTP and HTTPS requests to your web applications. It protects multiple AWS resources, including those exposed via the AWS Application Load Balancer.
 
 ### Azure Web Application Firewall (WAF)
 
