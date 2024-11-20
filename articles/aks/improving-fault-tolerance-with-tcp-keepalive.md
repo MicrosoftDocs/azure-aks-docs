@@ -48,9 +48,9 @@ When `kube-proxy` operates in iptables mode, it uses the default TCP timeout set
 1. Network Address Translation (NAT) timeout for TCP connections in the `CLOSE_WAIT` state is 1 hour.
 2. Idle timeout for established TCP connections is 24 hours.
 
-For long-running operations, you might need a timeout longer than the networking service's configured duration, whether the client and server are both inside the AKS cluster or one of them is outside. To prevent the connection from staying idle beyond the configured duration on the network service, consider using the TCP keepalive feature. This feature also ensures that the server is still available while the client waits for a response (or the other way around), so you can retry the operation rather than wait for a connection timeout.
+For long-running operations, you might need a timeout longer than the networking service's configured duration. This applies whether the client and server are both inside the AKS cluster or if one of them is outside. To prevent the connection from staying idle beyond the configured duration on the network service, consider using the TCP keepalive feature. This feature keeps both the server and client available while waiting for responses, allowing you to retry operations instead of experiencing connection timeouts.
 
-In a TCP connection, either of the peers can request keepalives for their side of the connection. Keepalives can be configured for the client, the server, both, or neither. The keepalive mechanism follows the standard specifications defined in [RFC1122](https://datatracker.ietf.org/doc/html/rfc1122#section-4.2.3.6). A keepalive probe is either an empty segment or a segment that contains only 1 byte. It features a sequence number that is one less than the largest Acknowledgment (ACK) number that has been received from the peer so far. Since the probe packet essentially mimics a packet that has already been received, the receiving side sends another ACK packet in response to indicate to the sender that the connection is still active.
+In a TCP connection, either of the peers can request keepalives for their side of the connection. Keepalives can be configured for the client, the server, both, or neither. The keepalive mechanism follows the standard specifications defined in [RFC1122](https://datatracker.ietf.org/doc/html/rfc1122#section-4.2.3.6). A keepalive probe is either an empty segment or a segment that contains only 1 byte. It features a sequence number that is one less than the largest Acknowledgment (ACK) number received from the peer so far. The probe packet mimics a packet that was received. In response, the receiving side sends another ACK packet. This indicates to the sender that the connection is still active.
 
 The RFC1122 specification states that if either the probe or the ACK is lost, they aren't retransmitted. Therefore, if there's no response to a single keepalive probe, it doesn't necessarily mean that the connection stopped working. In this case, the sender must attempt to send the probe a few more times before terminating the connection. The idle time of the connection resets when an ACK is received for a probe, and the process is then repeated. Keepalive probes enable you to configure the following parameters to govern their behavior. In AKS, Linux-based nodes have the following default TCP keepalive settings which are the same as standard Linux Operating Systems:
 
@@ -64,7 +64,7 @@ Keepalive probes are managed at the TCP layer. Therefore, during normal operatio
 
 AKS allows cluster administrators to adjust the operating system of a node, and kubelet parameters, to align with the requirements of their workloads. When setting up the cluster or a new node pool, administrators can enable sysctls relevant to their workloads. Kubernetes categorizes the sysctls into two groups: **safe** and **unsafe**. 
 
-Safe sysctls are those that are namespaced and properly isolated between pods on the same node. This means that configuring a safe sysctl for one pod does not affect other pods on the node, affect the node's health, or allow a pod to exceed its CPU or memory resource limits. Kubernetes enables these sysctls by default. As of Kubernetes 1.29, all TCP keepalive sysctls are considered safe:
+Safe sysctls are the ones that are namespaced and properly isolated between pods on the same node. This isolation means that configuring a safe sysctl for one pod doesn't affect other pods on the node, the node's health, or allow a pod to exceed its CPU or memory resource limits. Kubernetes enables the safe sysctls by default. As of Kubernetes 1.29, all TCP keepalive sysctls are considered safe:
 
 - `net.ipv4.tcp_keepalive_time` 
 - `net.ipv4.tcp_fin_timeout`
@@ -234,7 +234,7 @@ Enabling TCP keepalive helps to maintain the connection, especially when the ser
 
 ## HTTP/2 keepalive
 
-If you use HTTP/2 based communication protocols, such as gRPC, the TCP keepalive settings do not affect your applications. HTTP/2 follows the [RFC7540 specifications](https://httpwg.org/specs/rfc7540.html), which mandates that the client sends a PING frame to the server and that the server immediately replies with a PING ACK frame. Since HTTP/2 transport is reliable as opposed to TCP, the only keepalive configuration necessary in HTTP/2 transport is timeout. If the PING ACK isn't received before the configured timeout period, the connection is disconnected.
+If you use HTTP/2 based communication protocols, such as gRPC, the TCP keepalive settings don't affect your applications. HTTP/2 follows the [RFC7540 specifications](https://httpwg.org/specs/rfc7540.html), which mandates that the client sends a PING frame to the server and that the server immediately replies with a PING ACK frame. Since HTTP/2 transport is reliable as opposed to TCP, the only keepalive configuration necessary in HTTP/2 transport is timeout. If the PING ACK isn't received before the configured timeout period, the connection is disconnected.
 
 When applications use the HTTP/2 transport, the server is responsible for supporting keepalives and defining its behavior. The client's keepalive settings must be compatible with the server's settings. For example, if the client sends the PING frame more frequently than the server allows, the server terminates the connection with an HTTP/2 GOAWAY frame response.
 
@@ -255,7 +255,7 @@ Refer to the programming language-specific examples and documentation listed in 
 
 ## Considerations
 
-While keepalive probes can improve the fault tolerance of your applications, they can also consume additional bandwidth, which might impact network capacity and lead to additional charges. Additionally, on mobile devices, increased network activity may affect battery life. Therefore, it's important to adhere to the following best practices:
+While keepalive probes can improve the fault tolerance of your applications, they can also consume more bandwidth, which might impact network capacity and lead to extra charges. Additionally, on mobile devices, increased network activity may affect battery life. Therefore, it's important to adhere to the following best practices:
 
 - **Customize parameters**: Adjust keepalive settings based on application requirements and network conditions.
 - **Application-Level keepalives**: For encrypted connections (for example, TLS/SSL), consider implementing keepalive mechanisms at the application layer to ensure probes are sent over secure channels.
