@@ -14,7 +14,7 @@ ms.custom:
 
 # Migrate AWS web application to AKS
 
-This article outlines key considerations for migrating the Yelb application from AWS to AKS. Remember that since the [Yelb][yelb] application is self-contained and doesn't rely on external services, migrating it from AWS to Azure can be done without any code changes. 
+This section outlines key considerations for migrating the Yelb application from AWS to AKS. Remember that since the [Yelb][yelb] application is self-contained and doesn't rely on external services, migrating it from AWS to Azure can be done without any code changes. 
 
 ## Migrating from AWS IAM to Azure RBAC
 
