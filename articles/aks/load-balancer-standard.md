@@ -307,7 +307,7 @@ When calculating the number of outbound ports and IPs and setting the values, ke
 * The number of outbound ports per node is fixed based on the value you set.
 * The value for outbound ports must be a multiple of 8.
 * Adding more IPs doesn't add more ports to any node, but it provides capacity for more nodes in the cluster.
-* You must account for nodes that might be added as part of upgrades, including the count of nodes specified via [maxSurge values][maxsurge].
+* You must account for nodes that might be added as part of upgrades, including the count of nodes specified via [maxCount][maxcount] and [maxSurge][maxsurge] values.
 
 The following examples show how the values you set affect the number of outbound ports and IP addresses:
 
@@ -677,6 +677,7 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [use-multiple-node-pools]: use-multiple-node-pools.md
 [troubleshoot-snat]: #troubleshooting-snat
 [service-tags]: /azure/virtual-network/network-security-groups-overview#service-tags
+[maxcount]: ./cluster-autoscaler.md#enable-the-cluster-autoscaler-on-an-existing-cluster
 [maxsurge]: ./upgrade-aks-cluster.md#customize-node-surge-upgrade
 [az-lb]: /azure/load-balancer/load-balancer-overview
 [alb-outbound-rules]: /azure/load-balancer/outbound-rules
