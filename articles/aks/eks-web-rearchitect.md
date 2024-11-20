@@ -92,7 +92,7 @@ The following diagram shows the recommended architecture on Azure.
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
 
-The solution architecture consists of the following components and configurations:
+The solution architecture consists of the following:
 
 - The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
 - The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
