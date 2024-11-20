@@ -112,7 +112,6 @@ AWS WAF is a web application firewall that monitors HTTP and HTTPS requests to y
 
 
 
-AWS WAF integrates with [Amazon CloudWatch][aws-cloudwatch], enabling users to monitor and visualize key metrics and log data related to their web applications and WAF rules. CloudWatch offers customizable dashboards, alerts, and automated actions, providing enhanced visibility into application security. [Learn more about AWS WAF monitoring](https://docs.aws.amazon.com/waf/latest/developerguide/logging.html)
 
 ### Azure Web Application Firewall (WAF)
 
