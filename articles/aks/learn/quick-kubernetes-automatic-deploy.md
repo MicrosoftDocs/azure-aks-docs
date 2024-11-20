@@ -2,7 +2,7 @@
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) Automatic cluster (preview)'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview).
 ms.topic: quickstart
-ms.custom: build-2024, devx-track-azurecli, devx-track-bicep
+ms.custom: build-2024, devx-track-azurecli, devx-track-bicep, ignite-2024
 ms.date: 05/21/2024
 author: sabbour
 ms.author: asabbour
