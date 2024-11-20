@@ -32,7 +32,7 @@ Effective monitoring is essential for identifying and resolving issues in Kubern
 
 ### Support for open source projects
 
-Both AKS and EKS provide support for open-source projects, enabling you to utilize more capabilities and features:
+Both AKS and EKS provide support for open-source projects, enabling you to utilize more capabilities and features. AKS provides managed capabilities for both KEDA and Karpenter as detailed below.
 
 - **AKS**: AKS supports projects like [Kubernetes Event-driven Autoscaling (KEDA)][keda] and [Karpenter][karpenter]. KEDA enables event-driven autoscaling in AKS, allowing you to scale your workloads based on event-driven metrics. Karpenter provides a framework for automated cluster autoscaling and intelligent pod bin packing within AKS. AKS supports a managed version of Karpenter called [Node Autoprovisioning][node-autoprovisioning].
 - **EKS**: EKS also supports open-source projects like KEDA and Karpenter, but they must be configured manually. These projects enable similar functionalities in EKS clusters, allowing you to dynamically scale your applications and optimize resource utilization.
