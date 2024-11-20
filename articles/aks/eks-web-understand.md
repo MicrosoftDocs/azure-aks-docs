@@ -101,7 +101,7 @@ Azure Application Gateway is designed to optimize the delivery of web applicatio
 | Rewrite HTTP headers and URL | [Supported](/azure/application-gateway/features?branch=main#rewrite-http-headers-and-url) | [Supported with AWS WAF](https://docs.aws.amazon.com/waf/latest/developerguide/customizing-the-incoming-request.html) |
 | Sizing | [Multiple sizes available](/azure/application-gateway/features#sizing) | [Multiple sizes available](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancer-limits.html) |
 
-## Web Access Firewall
+## Web Application Firewall
 
 Ensuring web application security is crucial to protect against evolving cyber threats. Fully managed web application firewall services provide robust protection for web applications against threats and malicious attacks.
 
