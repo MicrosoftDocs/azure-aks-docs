@@ -108,7 +108,7 @@ The Ingress Controller runs in its own pod on the customer's AKS. AGIC monitors 
 
 However, there are also some disadvantages and limitations to consider when using AGIC:
 
-1. **Single Cloud Approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach, usually focusing on Azure. It may not be the best choice for customers who require a multi-cloud architecture, where deployment across different cloud platforms like AWS and GCP is essential. In this case customers may decide to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.
+1. **Single Cloud Approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach, usually focusing on Azure. It may not be the best choice for customers who require a multi-cloud architecture, where deployment across different cloud platforms is a requirement. In this case customers may decide to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.
 2. **Container Network Interface Support**: AGIC is not supported by all Container Network Interfaces (CNI) configurations. For example, the [Azure CNI Overlay](/azure/aks/azure-cni-overlay) does not currently support AGIC. It is important to verify that the chosen CNI is compatible with AGIC before implementation.
 
 For more information, see the following resources:
@@ -176,7 +176,7 @@ You can use [ModSecurity][mod-security] with the NGINX Ingress controller to pro
 
 Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform, including [Amazon Elastic Kubernetes Service (EKS)](https://aws.amazon.com/eks/), [Azure Kubernetes Service (AKS)][aks], and [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine).
 
-The cloud-agnostic nature of this solution allows multi-cloud customers to deploy and configure their web applications consistently across different cloud platforms without significant modifications. It provides flexibility and portability, enabling you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
+The vendor neutral nature of this solution allows multi-cloud customers to deploy and configure their web applications consistently across different cloud platforms without significant modifications. It provides flexibility and portability, enabling you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
 
 
 ## Next step
