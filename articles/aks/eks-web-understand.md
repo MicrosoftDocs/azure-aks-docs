@@ -18,6 +18,8 @@ This article walks through some of the key concepts for this workload and provid
 
 Both AKS and EKS provide multiple options for deploying a managed Kubernetes cluster on Azure and AWS. These options include native solutions and provisioning solutions based on third-party systems or open-source technologies.
 
+
+
 - **AKS**: To create an [AKS cluster][aks], you can use options like [Azure Resource Manager (ARM)][arm], [Bicep][bicep], [Azure CLI][azure-cli], [Terraform][terraform], [Pulumi](https://www.pulumi.com/registry/packages/azure-native/how-to-guides/azure-cs-aks/), [Crossplane](https://docs.crossplane.io/latest/getting-started/provider-azure/), and [Kubernetes Cluster API](https://capz.sigs.k8s.io/).
 - **EKS**: Similarly, for EKS deployments, you have options like [AWS CloudFormation][aws-cloudformation], [eksctl][eksctl], [Terraform][terraform], [Pulumi](https://www.pulumi.com/docs/iac/clouds/aws/guides/eks/), [Crossplane](https://marketplace.upbound.io/providers/crossplane-contrib/provider-aws/v0.37.1/resources/eks.aws.crossplane.io/Cluster/v1beta1), and [Kubernetes Cluster API](https://cluster-api-aws.sigs.k8s.io/topics/eks/).
 
@@ -28,19 +30,21 @@ Effective monitoring is essential for identifying and resolving issues in Kubern
 - **AKS**: [Azure Monitor](/azure/aks/monitor-aks) provides built-in monitoring capabilities for AKS clusters. It offers metrics, logs, and alerts, giving you visibility into the performance and health of your AKS environment. AKS integrates well with commonly used monitoring tools like Prometheus and Grafana, allowing you to build custom monitoring solutions. [Azure Monitor managed service for Prometheus][azure-prometheus] is a component of [Azure Monitor Metrics](/azure/azure-monitor/essentials/data-platform-metrics) that provides more flexibility in the types of metric data that you can collect and analyze. You can use analysis tools like [Azure Monitor Metrics Explorer with PromQL][azure-metrics-explorer] and open-source tools such as [PromQL][promql] and [Azure Managed Grafana][azure-grafana] to effectively observe, analyze, and visualize Prometheus metrics.
 - **EKS**: EKS integrates with [Amazon CloudWatch][aws-cloudwatch], a comprehensive monitoring service provided by AWS. CloudWatch collects and provides insights into logs, metrics, and resource utilization for EKS clusters. EKS also supports integration with popular monitoring tools like [Amazon Managed Service for Prometheus][aws-prometheus] and [Amazon Managed Grafana][aws-grafana], empowering you to build robust monitoring solutions.
 
-### Support for open-Source projects
+### Support for open source projects
 
 Both AKS and EKS provide support for open-source projects, enabling you to utilize more capabilities and features:
 
 - **AKS**: AKS supports projects like [Kubernetes Event-driven Autoscaling (KEDA)][keda] and [Karpenter][karpenter]. KEDA enables event-driven autoscaling in AKS, allowing you to scale your workloads based on event-driven metrics. Karpenter provides a framework for automated cluster autoscaling and intelligent pod bin packing within AKS. AKS supports a managed version of Karpenter called [Node Autoprovisioning][node-autoprovisioning].
-- **EKS**: EKS also supports open-source projects like KEDA and Karpenter. These projects enable similar functionalities in EKS clusters, allowing you to dynamically scale your applications and optimize resource utilization.
+- **EKS**: EKS also supports open-source projects like KEDA and Karpenter, but they must be configured manually. These projects enable similar functionalities in EKS clusters, allowing you to dynamically scale your applications and optimize resource utilization.
 
 ### Deployment tools
 
 Both AKS and EKS offer command-line tools to simplify the creation and management of Kubernetes clusters:
 
-- **AKS**: [Azure CLI][azure-cli] is the primary command-line tool for managing AKS clusters. It provides a comprehensive set of commands to create, configure, and manage AKS resources.
+- **AKS**: [Azure CLI][azure-cli] is the primary command-line tool for managing AKS clusters. It provides a comprehensive set of commands to create, configure, and manage AKS resources. 
 - **EKS**: Amazon provides [eksctl][eksctl], a command-line tool for managing EKS clusters. eksctl automates many of the cluster creation and management tasks, making it simpler for developers and operators to work with EKS.
+
+The [Azure CLI][azure-cli] is designed for simplicity and ease of use. You can create, upgrade, or delete a cluster with a single command. This streamlined approach reduces complexity of managing Kubernetes clusters on Azure. For more information, see [az aks](/cli/azure/aks?view=azure-cli-latest) commands. By contrast, the EKS CLI uses a more manual approach that requires multiple steps in conjunction with using kubectl. 
 
 ## Load balancing
 
