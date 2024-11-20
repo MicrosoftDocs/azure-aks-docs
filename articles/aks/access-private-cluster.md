@@ -31,7 +31,9 @@ Before you begin, make sure you have the following resources and permissions:
 
 ### Limitations
 
-The pod created by the `run` command provides `kubectl`, `helm` for operating your cluster, also `jq`, `xargs`, `grep`, `awk` is available for bash support. the pod have `200m cpu, 500Mi` memory request, and `500m cpu, 1Gi memory` limit, in some rare case where all your node is packed, the pod cannot be scheduled, then runCommand feature will stop work.
+The pod created by the `run` command provides `kubectl`, `helm` for operating your cluster, also `jq`, `xargs`, `grep`, `awk` is available for bash support. 
+
+The pod have `200m cpu, 500Mi` memory request, and `500m cpu, 1Gi memory` limit, in some rare case where all your node is packed, the pod cannot be scheduled with in 60 seconds (ARM API limitation), the `Run Command` would fail, even with auto-scaler, it won't be action fast enough to avoid the failure.
 
 `command invoke` runs the commands from your cluster, so any commands run in this manner are subject to your configured networking restrictions and any other configured restrictions. Make sure there are enough nodes and resources in your cluster to schedule this command pod.
 
