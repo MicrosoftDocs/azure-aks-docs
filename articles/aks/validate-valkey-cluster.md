@@ -295,4 +295,4 @@ To learn more about stateful workloads using Azure Kubernetes Service (AKS), see
 * Saverio Proto | Principal Customer Experience Engineer
 
 <!-- EXTERNAL LINKS -->
-[writing-a-locustfile]: hhttps://docs.locust.io/en/stable/writing-a-locustfile.html
+[writing-a-locustfile]: https://docs.locust.io/en/stable/writing-a-locustfile.html
