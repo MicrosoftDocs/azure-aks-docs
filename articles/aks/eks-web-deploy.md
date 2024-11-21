@@ -389,6 +389,7 @@ spec:
       echo "Failed to create an A record for the $SUBDOMAIN subdomain with [$PUBLIC_IP_ADDRESS] IP address in [$DNS_ZONE_NAME] DNS zone"
   fi
   ```
+
 > [!NOTE]
 > Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It's important to note that the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) creates the Kubernetes secret containing the TLS certificate only when the `SecretProviderClass` and volume definition is included in the `deployment`. To ensure the TLS certificate is properly retrieved from Azure Key Vault and stored in the Kubernetes secret used by the `ingress` object, we need to make the following modifications to the YAML manifest of the `yelb-ui` deployment:
 >

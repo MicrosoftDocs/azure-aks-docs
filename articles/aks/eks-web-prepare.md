@@ -195,7 +195,7 @@ In a production environment, we strongly recommend deploying a [private AKS clus
 
 Alternatively, you can deploy a public AKS cluster and secure access to the API server using [authorized IP address ranges](/azure/aks/api-server-authorized-ip-ranges). For detailed information and instructions on how to deploy the infrastructure on Azure using Bicep templates, see the [companion Azure code sample][azure-sample].
 
-In a production environment, we strongly recommend deploying a [private AKS cluster](/azure/aks/private-clusters) with [Uptime SLA](/azure/aks/uptime-sla). For more information, see [private AKS cluster with a Public DNS address](/azure/aks/private-clusters#create-a-private-aks-cluster-with-a-public-dns-address). Alternatively, you can deploy a public AKS cluster and secure access to the API server using [authorized IP address ranges](/azure/aks/api-server-authorized-ip-ranges). For detailed information and instructions on how to deploy the infrastructure on Azure using Bicep templates, refer to the [companion Azure code sample][azure-sample].
+In a production environment, we strongly recommend deploying a [private AKS cluster](/azure/aks/private-clusters) with [Uptime SLA](/azure/aks/uptime-sla). For more information, see [private AKS cluster with a Public DNS address](/azure/aks/private-clusters#create-a-private-aks-cluster-with-a-public-dns-address). Alternatively, you can deploy a public AKS cluster and secure access to the API server using [authorized IP address ranges](/azure/aks/api-server-authorized-ip-ranges). For detailed information and instructions on how to deploy the infrastructure on Azure using Bicep templates, refer to the [companion Azure code sample][azure-sample]. 
 
 ## Next step
 
