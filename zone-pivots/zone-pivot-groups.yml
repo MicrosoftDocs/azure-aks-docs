@@ -50,3 +50,12 @@ groups:
     title: Workload ID
   - id: access-with-a-user-assigned-managed-identity
     title: Managed identity
+#Owner: shashankbarsin
+- id: network-isolated-acr-type
+  title: Choose Azure Container Registry (ACR) mode
+  prompt: Choose an access method
+  pivots:
+  - id: aks-managed-acr
+    title: AKS-managed Azure Container Registry
+  - id: byo-acr
+    title: Bring your own (BYO) Azure Container Registry

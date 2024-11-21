@@ -156,6 +156,14 @@
           href: concepts-network-services.md
         - name: Ingress
           href: concepts-network-ingress.md
+        - name: Egress
+          items:
+            - name: Outbound network and FQDN rules for AKS clusters
+              href: outbound-rules-control-egress.md
+              displayName: egress, firewall
+            - name: Network isolated clusters
+              href: concepts-network-isolated.md
+              displayName: outbound, egress, private
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -580,7 +588,7 @@
                       href: csi-secrets-store-identity-access.md
                     - name: 3 - Apply extra configurations or perform troubleshooting
                       href: csi-secrets-store-configuration-options.md
-    - name: Configure networking
+    - name: Networking
       items:     
         - name: CNI
           items:
@@ -616,14 +624,15 @@
               href: http-proxy.md
             - name: Use a NAT Gateway
               href: nat-gateway.md
-            - name: Outbound network and FQDN rules for AKS clusters
-              href: outbound-rules-control-egress.md
             - name: Use instance-level public IP addresses
               href: use-node-public-ips.md
             - name: Restrict and control cluster egress traffic 
               href: limit-egress-traffic.md
             - name: Configure Static Egress Gateway
               href: configure-static-egress-gateway.md
+            - name: Network isolated clusters
+              href: network-isolated.md
+              displayName: outbound, egress, private, acr
         - name: Ingress
           items:
             - name: Use application routing add-on 
