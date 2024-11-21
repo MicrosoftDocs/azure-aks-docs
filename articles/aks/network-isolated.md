@@ -14,7 +14,7 @@ zone_pivot_groups: network-isolated-acr-type
 
 Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
 
-One solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
+One solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names.
 
 Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. A network isolated AKS cluster reduces the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
 
@@ -68,9 +68,10 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 
 - (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
-  - [Azure Key Vault provider for Secrets Store CSI Driver][csisecretstore]
+  - [Azure Key Vault provider for Secrets Store CSI Driver][akv-privatelink]
   - [Azure Monitor Container Insights][azuremonitoring]
-  - 
+
+- (Optional) If you are using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in Azure Key Vault Secrets Store CSI Driver), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. This can be done for example by providing a user-defined routing table and an Azure Firewall configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
 
 ::: zone pivot="aks-managed-acr"
 
@@ -377,7 +378,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [ubuntu-security-repository]: https://security.ubuntu.com
 [register-feature-flag]: /azure/azure-resource-manager/management/preview-features?tabs=azure-cli#register-preview-feature
 [container-registry-skus]: /azure/container-registry/container-registry-skus
-[csisecretstore]: /azure/key-vault/general/private-link-service?tabs=portal
+[akv-privatelink]: /azure/key-vault/general/private-link-service?tabs=portal
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
 
 <!-- LINKS - Internal -->
@@ -401,3 +402,6 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [private-clusters]: ./private-clusters.md
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [use-network-policies]: ./use-network-policies.md
+
+[workload-identity]: ./workload-identity-deploy-cluster.md
+[csi-akv-wi]: ./csi-secrets-store-identity-access.md?pivots=access-with-a-microsoft-entra-workload-identity
