@@ -11,54 +11,46 @@ ms.date: 10/30/2024
 
 # Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
 
-In a standard Transmission Control Protocol (TCP) connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. TCP connection losses can be more prominent in distributed architectures, which are susceptible to infrastructure failures, network disruptions, or unexpected application crashes. This article illustrates the use of TCP keepalive to enhance fault tolerance in applications hosted in Azure Kubernetes Service (AKS).
+In a standard Transmission Control Protocol (TCP) connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. This article illustrates the use of TCP keepalive to enhance fault tolerance in applications hosted in Azure Kubernetes Service (AKS).
 
 ## Understanding TCP keepalive
 
 Several Azure Networking services, such as Azure Load Balancer (ALB), enable you to [configure a timeout period](/azure/load-balancer/load-balancer-tcp-reset) after which an idle TCP connection is terminated. When a TCP connection remains idle for longer than the timeout duration configured on the networking service, any subsequent TCP packets sent in either direction might be dropped. Alternatively, they might receive a TCP Reset (RST) packet from the network service, depending on whether TCP resets were enabled on the service.
 
-In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the following command that sets it to four minutes:
+In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the following command that sets it to 45 minutes:
 
 ```azurecli-interactive
 az aks update \
     --resource-group myResourceGroup \
     --name myAKSCluster \
-    --load-balancer-idle-timeout 4
+    --load-balancer-idle-timeout 45
 ```
 
-The idle timeout feature in an ALB is designed to terminate inactive connections between the client and server after a specified duration, optimizing resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications.
+The idle timeout feature in an ALB is designed to terminate inactive connections between the client and server after a specified duration, optimizing resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications. However, when adjusting the timeout settings, be sure to consider the duration carefully. Setting the timeout too short can cause long-running operations to terminate prematurely, resulting in failed requests and a poor user experience. Additionally, frequent timeouts can increase error rates, making your applications seem unreliable. On the other hand, setting the timeout too long can drain server resources by keeping idle connections open, which reduces the capacity available for handling new requests. It can also delay the detection of server issues, leading to longer downtimes and inefficient load balancing.
 
-In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases can be managed by configuring the [`kube-proxy` TCP settings](configure-kube-proxy.md). For example, the following `kube-proxy` configuration changes the default TCP timeout period of 15 minutes to 20 minutes when `kube-proxy` is running in IP Virtual Server (IPVS) mode:
-
-```json
-{
-  "enabled": true,
-  "mode": "IPVS",
-  "ipvsConfig": {
-    "scheduler": "LeastConnection",
-    "TCPTimeoutSeconds": 1200,
-    "TCPFINTimeoutSeconds": 120,
-    "UDPTimeoutSeconds": 300
-  }
-}
-```
-
-When `kube-proxy` operates in iptables mode, it uses the default TCP timeout settings defined in the [kube-proxy specification](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/). The default TCP timeout settings for `kube-proxy` in iptables mode are as follows:
+In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases is defined by the `kube-proxy` TCP settings and the pod's TCP sysctl settings. By default, `kube-proxy` runs in iptables mode and it uses the default TCP timeout settings defined in the [kube-proxy specification](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/). The default TCP timeout settings for `kube-proxy` are as follows:
 
 1. Network Address Translation (NAT) timeout for TCP connections in the `CLOSE_WAIT` state is 1 hour.
 2. Idle timeout for established TCP connections is 24 hours.
 
-For long-running operations, you might need a timeout longer than the networking service's configured duration. This applies whether the client and server are both inside the AKS cluster or if one of them is outside. To prevent the connection from staying idle beyond the configured duration on the network service, consider using the TCP keepalive feature. This feature keeps both the server and client available while waiting for responses, allowing you to retry operations instead of experiencing connection timeouts.
+For certain long-running operations, you may need a timeout longer than the duration configured for networking services like the Azure Load Balancer. This applies whether the client and server are both inside the AKS cluster or if one of them is outside. To prevent the connection from staying idle beyond the configured duration on the network service, consider using the TCP keepalive feature. This feature keeps both the server and client available while waiting for responses, allowing you to retry operations instead of experiencing connection timeouts.
 
-In a TCP connection, either of the peers can request keepalives for their side of the connection. Keepalives can be configured for the client, the server, both, or neither. The keepalive mechanism follows the standard specifications defined in [RFC1122](https://datatracker.ietf.org/doc/html/rfc1122#section-4.2.3.6). A keepalive probe is either an empty segment or a segment that contains only 1 byte. It features a sequence number that is one less than the largest Acknowledgment (ACK) number received from the peer so far. The probe packet mimics a packet that was received. In response, the receiving side sends another ACK packet. This indicates to the sender that the connection is still active.
+In a TCP connection, either of the peers can request keepalives for their side of the connection. Keepalives can be configured for the client, the server, both, or neither. The keepalive mechanism follows the standard specifications defined in [RFC1122](https://datatracker.ietf.org/doc/html/rfc1122#section-4.2.3.6). A keepalive probe is either an empty segment or a segment that contains only 1 byte. It features a sequence number that is one less than the largest acknowledgment (ACK) number received from the peer so far. The probe packet mimics a packet that was received. In response, the receiving side sends another ACK packet. This indicates to the sender that the connection is still active.
 
 The RFC1122 specification states that if either the probe or the ACK is lost, they aren't retransmitted. Therefore, if there's no response to a single keepalive probe, it doesn't necessarily mean that the connection stopped working. In this case, the sender must attempt to send the probe a few more times before terminating the connection. The idle time of the connection resets when an ACK is received for a probe, and the process is then repeated. Keepalive probes enable you to configure the following parameters to govern their behavior. In AKS, Linux-based nodes have the following default TCP keepalive settings which are the same as standard Linux Operating Systems:
 
-- **Keepalive Time (in seconds)**: The duration of inactivity after which the first keepalive probe is sent. The default duration is 2 hours.
+- **Keepalive Time (in seconds)**: The duration of inactivity after which the first keepalive probe is sent. The default duration 7200 seconds or 2 hours.
 - **Keepalive Interval  (in seconds)**: The interval between subsequent keepalive probes if no acknowledgment is received. The default interval is 75 seconds.
 - **Keepalive Probes**: The maximum number of unacknowledged probes before the connection is considered unusable. The default value is 9.
 
-Keepalive probes are managed at the TCP layer. Therefore, during normal operations, they don't affect the requestor application. However, in other cases, if the probes weren't acknowledged due to the peer rebooting or crashing, the application receives a "connection timed out" error. If the peer sends a RESET (RST) response due to a crash, the application receives a "connection reset by peer" error. In the case where the peer's host is up but unreachable from the requestor due to a network error, the application may receive a "connection timed out" or another error.
+Keepalive probes are managed at the TCP layer. When enabled, the probes can result in the following outcomes for the requestor application:
+
+- **Normal Operations**: Keepalive probes do not affect the requestor application.
+- **Peer Reboot or Crash (Probes Not Acknowledged)**: The application receives a "connection timed out" error.
+- **Peer Reboot or Crash (RESET RST Response)**: The application receives a "connection reset by peer" error.
+- **Network Issues with Peer’s Host**: The application may receive a "connection timed out" or another related error.
+
+The next section explains how to change the sysctl settings for your cluster and application pod to set up TCP keepalive.
 
 ## Configuring TCP keepalive on AKS
 
@@ -71,23 +63,7 @@ Safe sysctls are the ones that are namespaced and properly isolated between pods
 - `net.ipv4.tcp_keepalive_intvl`
 - `net.ipv4.tcp_keepalive_probes` 
 
-Unsafe sysctls are either not namespaced or not properly isolated between pods. Modifying these parameters can potentially impact the stability and security of the node or other pods. By default, Kubernetes disables unsafe sysctls. To use them, a cluster administrator must explicitly enable specific unsafe sysctls on each node by configuring the kubelet. For example to enable modification of inter-process communication (IPC) message queue settings, create a file named **linuxkubeletconfig.json** with the following contents:
-
-```json
-{
-    "allowedUnsafeSysctls": [
-        "kernel.msg*"
-    ]
-}
-```
-
-Next, create your cluster using the following command, ensuring that the path to the file you created is correct:
-
-```azurecli-interactive
-az aks create --name myAKSCluster --resource-group myResourceGroup --kubelet-config ./linuxkubeletconfig.json 
-```
-
-You can find more detailed information about the supported configurations for both the node operating system and kubelet in our [prescriptive guidance](custom-node-configuration.md).
+Unsafe sysctls are either not namespaced or not properly isolated between pods. Modifying these parameters can potentially impact the stability and security of the node or other pods. By default, Kubernetes disables unsafe sysctls. To use them, a cluster administrator must explicitly enable specific unsafe sysctls on each node by configuring the kubelet. You can find more detailed information about the supported configurations for both the node operating system and kubelet as well as how to enable unsafe sysctls in kubelet in our [prescriptive guidance](custom-node-configuration.md).
 
 > [!NOTE]
 > Starting with Kubernetes 1.29, TCP keepalive sysctls are considered safe and are enabled by default. You don't need to enable them explicitly in your cluster.
@@ -117,7 +93,7 @@ spec:
 Applying the specification implements the following TCP keepalive behavior:
 
 1. `net.ipv4.tcp_keepalive_time` configures keepalive probes to be sent out after 45 seconds of inactivity on the connection.
-2. `net.ipv4.tcp_keepalive_probes` configures the operating system to send five unacknowledged keepalive probes before deeming the connection as unusable.
+2. `net.ipv4.tcp_keepalive_probes` configures the operating system to send 5 unacknowledged keepalive probes before deeming the connection as unusable.
 3. `net.ipv4.tcp_keepalive_intvl` sets the duration between dispatch of two keepalive probes to 45 seconds.
 
 The TCP keepalive sysctls are namespaced in the Linux kernel, which means they can be set individually for each pod on a node. This segregation allows you to configure the keepalive settings through the pod's security context, which applies to all containers in the same pod.
@@ -234,7 +210,7 @@ Enabling TCP keepalive helps to maintain the connection, especially when the ser
 
 ## HTTP/2 keepalive
 
-If you use HTTP/2 based communication protocols, such as gRPC, the TCP keepalive settings don't affect your applications. HTTP/2 follows the [RFC7540 specifications](https://httpwg.org/specs/rfc7540.html), which mandates that the client sends a PING frame to the server and that the server immediately replies with a PING ACK frame. Since HTTP/2 transport is reliable as opposed to TCP, the only keepalive configuration necessary in HTTP/2 transport is timeout. If the PING ACK isn't received before the configured timeout period, the connection is disconnected.
+If you use HTTP/2 based communication protocols, such as gRPC, the TCP keepalive settings don't affect your applications. HTTP/2 follows the [RFC7540 specifications](https://httpwg.org/specs/rfc7540.html), which mandates that the client sends a PING frame to the server and that the server immediately replies with a PING ACK frame. HTTP/2 operates at layer 7 of the network stack and benefits from the data delivery guarantees provided by TCP, which operates at layer 4. Since every HTTP/2 request is guaranteed a response, the only keepalive configuration necessary for HTTP/2 transport is the timeout setting. If the PING ACK isn't received before the configured timeout period, the connection is disconnected.
 
 When applications use the HTTP/2 transport, the server is responsible for supporting keepalives and defining its behavior. The client's keepalive settings must be compatible with the server's settings. For example, if the client sends the PING frame more frequently than the server allows, the server terminates the connection with an HTTP/2 GOAWAY frame response.
 
