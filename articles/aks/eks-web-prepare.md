@@ -181,6 +181,7 @@ By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay]
 - [Azure CNI with static IP allocation](configure-azure-cni.md)
 - [Azure CNI with dynamic IP allocation](configure-azure-cni-dynamic-ip-allocation.md)
 - [Azure CNI Powered by Cilium](azure-cni-powered-by-cilium.md)
+
 Additionally, the project shows how to deploy an AKS cluster with the following extensions and features:
 
 - [Microsoft Entra Workload ID][aks-workload-id]

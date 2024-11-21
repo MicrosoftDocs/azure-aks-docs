@@ -272,7 +272,7 @@ In the remaining sections of this article, we guide you through the deployment p
 >
 > For more information, see [Set up Secrets Store CSI Driver to enable NGINX ingress controller with TLS](/azure/aks/csi-secrets-store-nginx-tls#deploy-a-secretproviderclass).
 
-1. Update the `yelb-ui` YAML manifest to include the `csi volume` definition and `volume mount` to read the certificate as a secret from Azure Key Vault.
+2. Update the `yelb-ui` YAML manifest to include the `csi volume` definition and `volume mount` to read the certificate as a secret from Azure Key Vault.
 
 ```yaml
 apiVersion: apps/v1
@@ -310,7 +310,7 @@ spec:
               secretProviderClass: yelb
 ```
 
-1. You can now deploy the application. The script uses the `yelb.yml` YAML manifest to deploy the application and the `ingress.yml` to create the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. The script performs the following steps:
+3. You can now deploy the application. The script uses the `yelb.yml` YAML manifest to deploy the application and the `ingress.yml` to create the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. The script performs the following steps:
 
    - Retrieves the public address of the Azure public IP used by the front-end IP configuration of the Application Gateway.
    - Checks if an `A` record exists for the subdomain used by the `yelb-ui` service.
