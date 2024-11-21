@@ -71,7 +71,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
   - [Azure Key Vault provider for Secrets Store CSI Driver][akv-privatelink]
   - [Azure Monitor Container Insights][azuremonitoring]
 
-- (Optional) If you are using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in [Azure Key Vault Secrets Store CSI Driver][csi-akv-wi]), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. One way to address this is by providing an [user-defined routing table and an Azure Firewall][aks-firewall] configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
+- (Optional) If you're using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in [Azure Key Vault Secrets Store CSI Driver][csi-akv-wi]), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. One way to address this is by providing an [user-defined routing table and an Azure Firewall][aks-firewall] configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
 
 ::: zone pivot="aks-managed-acr"
 
@@ -293,7 +293,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 ### Update your ACR ID
 
-It is possible to update the private ACR used with a network isolated AKS cluster. To identify the ACR resource ID, use the `az aks show` command.
+It's possible to update the private ACR used with a network isolated AKS cluster. To identify the ACR resource ID, use the `az aks show` command.
 
 ```azurecli-interactive
 az aks show --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME}
