@@ -517,18 +517,23 @@ Get-AzResource -ResourceGroupName <resource-group-name>
 
 ## Clean up resources
 
-You can delete the resource group using the following Azure CLI command when you no longer need the resources you created.
+You can use Azure CLI or Azure PowerShell to delete the resource group when you no longer need the resources you created in this tutorial.
 
-```azurecli
-az group delete --name <resource-group-name>
-```
+### [Azure CLI](#tab/azure-cli)
 
-Alternatively, you can use the following PowerShell cmdlet to delete the resource group and all the Azure resources.
+* Delete the resource group and its associated resources using the [`az group delete`][az-group-delete] command.
 
-```azurepowershell
-Remove-AzResourceGroup -Name <resource-group-name>
-## CI/CD and GitOps Considerations
-```
+    ```azurecli-interactive
+    az group delete --name <resource-group-name>
+    ```
+### [Azure PowerShell](#tab/azure-powershell)
+
+* Delete the resource group and its associated resources using the [`Remove-AzResourceGroup`][remove-azresourcegroup] cmdlet.
+
+    ```azurepowershell-interactive
+    Remove-AzResourceGroup -Name <resource-group-name>
+    ```
+---
 
 ## Next steps
 
