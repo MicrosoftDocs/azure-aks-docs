@@ -126,7 +126,7 @@ You can use the following kubectl commands with the `Run command` feature:
 
 ## Disable Run Command
 
-`Run Command` feature can be disabled by set `.properties.apiServerAccessProfile.disableRunCommand` to true, we current don't have a CLI to control this switch.
+Currently, the only way you can disable the `Run command` feature is by setting [`.properties.apiServerAccessProfile.disableRunCommand` to `true`](https://learn.microsoft.com/rest/api/aks/managed-clusters/create-or-update).
 
 ---
 
