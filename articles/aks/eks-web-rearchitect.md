@@ -66,7 +66,7 @@ For other configurations, see the following articles:
 
 - [DNS and SSL configuration](app-routing-dns-ssl.md)
 - [Application routing add-on configuration](app-routing-nginx-configuration.md)
-- [Configure internal NGINX ingress controller for Azure private DNS zone](create-nginx-ingress-private-controller.md).
+- [Configure internal NGINX ingress controller for Azure private DNS zone](create-nginx-ingress-private-controller.md)
 
 The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azure/application-gateway/overview) resource deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. You can secure access to the Yelb application using [Azure Web Application Firewall (WAF)](/azure/web-application-firewall/overview), which provides centralized protection of web applications from common exploits and vulnerabilities. 
 
