@@ -44,18 +44,20 @@ For a more detailed understanding of the AWS workload, see [Protecting your Amaz
 
 ### Download the Azure application code
 
-The **completed** application code for this workflow is available in our [GitHub repository][github-repo]. Clone the repository to a directory called `aws-to-azure-web-app-workshop` on your local machine by running the following command:
+The **completed** application code for this workflow is available in our [GitHub repository][github-repo].
 
-```bash
-git clone https://github.com/azure-samples/aks-web-application-replicate-from-aws ./aws-to-azure-web-app-workshop
-```
+1. Clone the repository to a directory called `aws-to-azure-web-app-workshop` on your local machine using the following command:
 
-After you clone the repository, navigate to the `aws-to-azure-web-app-workshop` directory and start Visual Studio Code by running the following commands:
+    ```bash
+    git clone https://github.com/azure-samples/aks-web-application-replicate-from-aws ./aws-to-azure-web-app-workshop
+    ```
 
-```bash
-cd aws-to-azure-web-app-workshop
-code .
-```
+2. After you clone the repository, navigate to the `aws-to-azure-web-app-workshop` directory and start Visual Studio Code using the following commands:
+
+    ```bash
+    cd aws-to-azure-web-app-workshop
+    code .
+    ```
 
 ## Next step
 
