@@ -100,7 +100,9 @@ The [Application Gateway Ingress Controller (AGIC)](/azure/application-gateway/i
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-ingress-controller-aks-http.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway Ingress Controller.":::
 
-The Ingress Controller runs in its own pod on the customer's AKS. AGIC monitors a subset of Kubernetes Resources for changes. The state of the AKS cluster is translated to Application Gateway specific configuration and applied to the [Azure Resource Manager (ARM)](/azure/azure-resource-manager/management/overview). For more information, see [What is Application Gateway Ingress Controller?](/azure/application-gateway/ingress-controller-overview). The Application Gateway Ingress Controller (AGIC) offers the following advantages.
+The Ingress Controller runs in its own pod on the AKS cluster. AGIC monitors a subset of Kubernetes Resources for changes, translates the state of the cluster to an Application Gateway specific configuration, and applies it to [Azure Resource Manager (ARM)](/azure/azure-resource-manager/management/overview). For more information, see [What is Application Gateway Ingress Controller?](/azure/application-gateway/ingress-controller-overview).
+
+The following table outlines advantages and disadvantages of the Application Gateway Ingress Controller (AGIC):
 
 1. **Native Integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway. This allows for seamless and efficient routing of traffic to services running on Azure Kubernetes Service (AKS).
 2. **Simplified Deployment**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods like using Helm charts. It enables a quick and easy setup of an Application Gateway and AKS cluster with AGIC enabled.
