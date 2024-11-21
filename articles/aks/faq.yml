@@ -145,7 +145,7 @@ sections:
       - question: |
           Can I spread an AKS cluster across availability zones?
         answer: |
-          Yes, you can deploy an AKS cluster across one or more [availability zones](./availability-zones.md) in [regions that support them](/azure/availability-zones/az-region).
+          Yes, you can deploy an AKS cluster across one or more [availability zones](./availability-zones.md) in [regions that support them](/azure/reliability/availability-zones-region-support).
 
       - question: |
           Can I have different VM sizes in a single cluster?
