@@ -575,3 +575,7 @@ Other contributors:
 [azure-fw-aks-1]: /azure/firewall/protect-azure-kubernetes-service
 [azure-fw-aks-2]: /azure/architecture/guide/aks/aks-firewall
 [azure-la]: /azure/azure-monitor/logs/log-analytics-workspace-overview
+[az-resource-list]: /cli/azure/resource#az-resource-list
+[az-group-delete]: /cli/azure/group#az-group-delete
+[get-azresource]: /powershell/module/az.resources/get-azresource
+[remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
