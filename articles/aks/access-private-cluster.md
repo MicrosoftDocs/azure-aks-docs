@@ -17,10 +17,7 @@ With the Azure CLI, you can use `command invoke` to access private clusters with
 
 With the Azure portal, you can use the `Run command` feature to run commands on your private cluster. The `Run command` feature uses the same `command invoke` functionality to run commands on your cluster.
 
-This feature is designed to simplify cluster access and is ***not designed for programmatic access***. If you have a program invoke Kubernetes using `Run command`, the following disadvantages apply:
-
-* You only get *exitCode* and *text output*, and you lose API level details.
-* One extra hop introduces extra failure points.
+The pod created by the `Run command` provides `kubectl` and `helm` for operating your cluster. `jq`, `xargs`, `grep`, and `awk` are available for Bash support.
 
 ## Before you begin
 
