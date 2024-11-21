@@ -96,7 +96,7 @@ Azure offers several options for deploying a web application on an AKS cluster a
 
 ### [Application Gateway Ingress Controller](#tab/agic)
 
-The [Application Gateway Ingress Controller (AGIC)](/azure/application-gateway/ingress-controller-overview) is a Kubernetes application, which makes it possible for [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/services/kubernetes-service/) customers to leverage Azure's native [Application Gateway](https://azure.microsoft.com/services/application-gateway/) L7 load-balancer to expose cloud software to the Internet. AGIC monitors the Kubernetes cluster it's hosted on and continuously updates an Application Gateway, so that selected services are exposed to the Internet.
+The [Application Gateway Ingress Controller (AGIC)](/azure/application-gateway/ingress-controller-overview) is a Kubernetes application, so you can leverage Azure's native [Application Gateway](https://azure.microsoft.com/services/application-gateway/) L7 load-balancer to expose cloud software to the Internet for your [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/services/kubernetes-service/) workloads. AGIC monitors the Kubernetes cluster it's hosted on and continuously updates an Application Gateway so that selected services are exposed to the Internet.
 
 :::image type="content" source="media/eks-web-rearchitect/application-gateway-ingress-controller-aks-http.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway Ingress Controller.":::
 
