@@ -74,7 +74,7 @@ The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azu
 
 The following diagram shows the recommended architecture on Azure:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
 
 The solution architecture consists of the following:
 
