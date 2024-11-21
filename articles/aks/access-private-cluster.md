@@ -32,7 +32,10 @@ Before you begin, make sure you have the following resources and permissions:
 
 ### Limitations
 
-The pod created by the `run` command provides `kubectl`, `helm` for operating your cluster, also `jq`, `xargs`, `grep`, `awk` is available for bash support. 
+This feature is designed to simplify cluster access and is ***not designed for programmatic access***. If you have a program invoke Kubernetes using `Run command`, the following disadvantages apply:
+
+* You only get *exitCode* and *text output*, and you lose API level details.
+* One extra hop introduces extra failure points.
 
 The pod created by the `Run command` is hard coded with a `200m CPU` and `500Mi memory` request, and a `500m CPU` and `1Gi memory` limit. In rare cases where all your node is packed, the pod can't be scheduled within the ARM API limitation of 60 seconds. This means that the `Run command` would fail, even if it's configured to autoscale.
 
