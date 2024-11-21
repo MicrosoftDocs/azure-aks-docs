@@ -20,7 +20,7 @@ Now that you have a better understanding of the platform differences between AWS
 
 The [Yelb][yelb] sample web application consists of a front-end component called `yelb-ui` and an application component called `yelb-appserver`.
 
-:::image type="content" source="media/eks-web-rearchitect/yelb-architecture.png" alt-text="Architecture diagram of the Yel web application.":::
+:::image type="content" source="media/eks-web-rearchitect/yelb-architecture.png" alt-text="Architecture diagram of the Yelb web application.":::
 
 The `yelb-ui` is responsible for serving the JavaScript code to the browser. This code is compiled from an [Angular][angular] application. The `yelb-ui` component might also include an `nginx` proxy, depending on the deployment model. The `yelb-appserver` is a [Sinatra](https://sinatrarb.com/) application that interacts with a cache server (`redis-server`) and a Postgres backend database (`yelb-db`). [Redis Cache][redis-cache] stores the number of page views, while [PostgreSQL][postgresql] persists the votes. Both services are deployed on [Kubernetes][kubernetes] without using any managed service for storing data on AWS or Azure.
 
