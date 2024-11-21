@@ -51,6 +51,14 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 * Only `NodeImage` channel of auto-upgrade for node OS images is supported for network isolated clusters
 * Windows node pools are not currently supported.
 * Outbound type `block` is currently not supported for bring your own virtual network (BYO-vnet) clusters.
+* The following AKS cluster extensions are't not supported yet on network isolated clusters:
+    * [Dapr][dapr-overview]
+    * [Azure App Configuration][app-config-overview]
+    * [Azure Machine Learning][azure-ml-overview]
+    * [Flux (GitOps)][gitops-overview]
+    * [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction
+    * [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview)
+
 
 
 ## Frequently asked questions
@@ -83,3 +91,10 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [autoupgrade-node-os]: ./auto-upgrade-node-os-image.md
 [network-isolated]: ./network-isolated.md
+
+[app-config-overview]: ./azure-app-configuration.md
+[azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[dapr-overview]: ./dapr.md
+[gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview)
