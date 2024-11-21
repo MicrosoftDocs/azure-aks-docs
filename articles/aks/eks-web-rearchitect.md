@@ -36,7 +36,7 @@ To help protect web applications and APIs from common web exploits, AWS offers [
 
 ## Map AWS services to Azure services
 
-To recreate the AWS workload in Azure with minimal changes, use an Azure equivalent for each AWS service. The following table summarizes the service mapping:
+To recreate the AWS workload in Azure with minimal changes, use an Azure equivalent for each AWS service. The following table summarizes the service mappings:
 
 | **Service mapping** | **AWS service** | **Azure service** |
 |------------------------|-------------------|--------------------|
