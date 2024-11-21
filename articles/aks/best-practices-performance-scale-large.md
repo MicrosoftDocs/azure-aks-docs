@@ -88,7 +88,7 @@ Always upgrade your Kubernetes clusters to the latest version. Newer versions co
 Monitoring control plane metrics in large AKS clusters is crucial for ensuring the stability and performance of Kubernetes workloads. These metrics provide visibility into the health and behavior of critical components like the API server, etcd, controller manager, and scheduler. In large-scale environments, where resource contention and high API call volumes are common, monitoring control plane metrics helps identify bottlenecks, detect anomalies, and optimize resource usage. By analyzing these metrics, operators can proactively address issues such as API server latency, high etcd objects, or excessive control plane resource consumption, ensuring efficient cluster operation and minimizing downtime.
 
 Azure Monitor offers comprehensive metrics and logs on the health of the control plane through [Azure Managed Prometheus](./monitor-control-plane-metrics.md#monitor-aks-control-plane-metrics-preview) and [Diagnostic settings](./monitor-control-plane-metrics.md#azure-monitor-resource-logs)
-* For list of alerts to configure for health of the control plane, please checkout  [Best practices for AKS control plane monitoring](./best-practices-monitoring-proactive#kubernetes-control-plane-alerts)
+* For list of alerts to configure for health of the control plane, please checkout  [Best practices for AKS control plane monitoring](./best-practices-monitoring-proactive.md#kubernetes-control-plane-alerts)
 * To get the list of user agents having the highest latency, you can use the Control Plane logs/Diagnostic Settings
 
 
