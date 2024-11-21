@@ -26,7 +26,7 @@ az aks update \
     --load-balancer-idle-timeout 45
 ```
 
-The idle timeout feature in an ALB is designed to terminate inactive connections between the client and server after a specified duration, optimizing resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications. However, when adjusting the timeout settings, be sure to consider the duration carefully. Setting the timeout too short can cause long-running operations to terminate prematurely, resulting in failed requests and a poor user experience. Additionally, frequent timeouts can increase error rates, making your applications seem unreliable. On the other hand, setting the timeout too long can drain server resources by keeping idle connections open, which reduces the capacity available for handling new requests. It can also delay the detection of server issues, leading to longer downtimes and inefficient load balancing.
+The idle timeout feature in an ALB is designed to terminate inactive connections between the client and server after a specified duration, optimizing resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications. However, when adjusting the timeout settings, be sure to consider the duration carefully. Setting the timeout too short can cause long-running operations to terminate prematurely, resulting in failed requests, and a poor user experience. Additionally, frequent timeouts can increase error rates, making your applications seem unreliable. On the other hand, setting the timeout too long can drain server resources by keeping idle connections open, which reduces the capacity available for handling new requests. It can also delay the detection of server issues, leading to longer downtimes and inefficient load balancing.
 
 In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases is defined by the `kube-proxy` TCP settings and the pod's TCP sysctl settings. By default, `kube-proxy` runs in iptables mode and it uses the default TCP timeout settings defined in the [kube-proxy specification](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/). The default TCP timeout settings for `kube-proxy` are as follows:
 
@@ -45,7 +45,7 @@ The RFC1122 specification states that if either the probe or the ACK is lost, th
 
 Keepalive probes are managed at the TCP layer. When enabled, the probes can result in the following outcomes for the requestor application:
 
-- **Normal Operations**: Keepalive probes do not affect the requestor application.
+- **Normal Operations**: Keepalive probes don't affect the requestor application.
 - **Peer Reboot or Crash (Probes Not Acknowledged)**: The application receives a "connection timed out" error.
 - **Peer Reboot or Crash (RESET RST Response)**: The application receives a "connection reset by peer" error.
 - **Network Issues with Peer’s Host**: The application may receive a "connection timed out" or another related error.
@@ -63,7 +63,7 @@ Safe sysctls are the ones that are namespaced and properly isolated between pods
 - `net.ipv4.tcp_keepalive_intvl`
 - `net.ipv4.tcp_keepalive_probes` 
 
-Unsafe sysctls are either not namespaced or not properly isolated between pods. Modifying these parameters can potentially impact the stability and security of the node or other pods. By default, Kubernetes disables unsafe sysctls. To use them, a cluster administrator must explicitly enable specific unsafe sysctls on each node by configuring the kubelet. You can find more detailed information about the supported configurations for both the node operating system and kubelet as well as how to enable unsafe sysctls in kubelet in our [prescriptive guidance](custom-node-configuration.md).
+Unsafe sysctls are either not namespaced or not properly isolated between pods. Modifying these parameters can potentially impact the stability and security of the node or other pods. By default, Kubernetes disables unsafe sysctls. To use them, a cluster administrator must explicitly enable specific unsafe sysctls on each node by configuring the kubelet. You can find more detailed information about the supported configurations for both the node operating system and kubelet, and how to enable unsafe sysctls in kubelet in our [prescriptive guidance](custom-node-configuration.md).
 
 > [!NOTE]
 > Starting with Kubernetes 1.29, TCP keepalive sysctls are considered safe and are enabled by default. You don't need to enable them explicitly in your cluster.
