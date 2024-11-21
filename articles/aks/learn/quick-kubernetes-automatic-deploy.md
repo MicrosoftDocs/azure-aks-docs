@@ -446,4 +446,4 @@ To learn more about AKS Automatic, continue to the introduction.
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
 [aks-entra-rbac]: /azure/aks/manage-azure-rbac
 [aks-entra-rbac-builtin-roles]: /azure/aks/manage-azure-rbac#create-role-assignments-for-users-to-access-the-cluster
-[availability-zones]: /azure/reliability/availability-zones-service-support#azure-regions-with-availability-zone-support
+[availability-zones]: /azure/reliability/availability-zones-region-support
