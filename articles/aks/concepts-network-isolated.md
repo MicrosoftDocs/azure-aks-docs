@@ -95,4 +95,4 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 [dapr-overview]: ./dapr.md
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
-[azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview)
+[azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview

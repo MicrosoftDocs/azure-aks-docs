@@ -70,6 +70,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 - (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
   - [Azure Key Vault provider for Secrets Store CSI Driver][csisecretstore]
   - [Azure Monitor Container Insights][azuremonitoring]
+  - 
 
 ::: zone pivot="aks-managed-acr"
 
