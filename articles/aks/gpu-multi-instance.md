@@ -166,7 +166,7 @@ Before you install the NVIDIA plugins, you need to specify which multi-instance 
 
 ## Schedule work
 
-The following examples are based on CUDA base image **version 12.1.1** for Ubuntu Linux **22.04**, tagged as `12.1.1-base-ubuntu22.04`.
+The following examples are based on CUDA base image **version 12.1.1** for Ubuntu **22.04**, tagged as `12.1.1-base-ubuntu22.04`.
 
 ### Single strategy
 
