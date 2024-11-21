@@ -83,6 +83,15 @@ Always upgrade your Kubernetes clusters to the latest version. Newer versions co
   * **Reconfigure third-party applications to make fewer calls**: If you filter by *user agents* in the ***View request rate and throttle details*** diagnostic and see that [a third-party application, such as a monitoring application, makes a large number of GET requests](/troubleshoot/azure/azure-kubernetes/429-too-many-requests-errors#analyze-and-identify-errors-by-using-aks-diagnose-and-solve-problems), you can change the settings of these applications to reduce the frequency of the GET calls. Make sure the application clients use exponential backoff when calling Azure APIs.
 * **Split your clusters into different subscriptions or regions**: If you have a large number of clusters and node pools that use Virtual Machine Scale Sets, you can split them into different subscriptions or regions within the same subscription. Most Azure API limits are shared at the subscription-region level, so you can move or scale your clusters to different subscriptions or regions to get unblocked on Azure API throttling. This option is especially helpful if you expect your clusters to have high activity. There are no generic guidelines for these limits. If you want specific guidance, you can create a support ticket.
 
+
+## Monitor AKS Control Plane metrics and logs
+Monitoring control plane metrics in large AKS clusters is crucial for ensuring the stability and performance of Kubernetes workloads. These metrics provide visibility into the health and behavior of critical components like the API server, etcd, controller manager, and scheduler. In large-scale environments, where resource contention and high API call volumes are common, monitoring control plane metrics helps identify bottlenecks, detect anomalies, and optimize resource usage. By analyzing these metrics, operators can proactively address issues such as API server latency, high etcd objects, or excessive control plane resource consumption, ensuring efficient cluster operation and minimizing downtime.
+
+Azure Monitor offers comprehensive metrics and logs on the health of the control plane through [Azure Managed Prometheus](./monitor-control-plane-metrics.md#monitor-aks-control-plane-metrics-preview) and [Diagnostic settings](./monitor-control-plane-metrics.md#azure-monitor-resource-logs)
+* For list of alerts to configure for health of the control plane, please checkout  [Best practices for AKS control plane monitoring](./best-practices-monitoring-proactive.md#kubernetes-control-plane-alerts)
+* To get the list of user agents having the highest latency, you can use the Control Plane logs/Diagnostic Settings
+
+
 ## Feature limitations
 
 As you scale your AKS clusters to larger scale points, keep the following feature limitations in mind:
