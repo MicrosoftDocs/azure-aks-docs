@@ -88,181 +88,181 @@ In the remaining sections of this article, we guide you through the deployment p
 
 ### Customize variables
 
-Before running any scripts, you need to customize the values of the variables in the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
+1. Before running any scripts, you need to customize the values of the variables in the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
 
-```bash
-# Azure subscription and tenant
-RESOURCE_GROUP_NAME="<aks-resource-group>"
-SUBSCRIPTION_ID="$(az account show --query id --output tsv)"
-SUBSCRIPTION_NAME="$(az account show --query name --output tsv)"
-TENANT_ID="$(az account show --query tenantId --output tsv)"
-AKS_CLUSTER_NAME="<aks-name>"
-AGW_NAME="<application-gateway-name>"
-AGW_PUBLIC_IP_NAME="<application-gateway-public-ip-name>"
-DNS_ZONE_NAME="<your-azure-dns-zone-name-eg-contoso.com>"
-DNS_ZONE_RESOURCE_GROUP_NAME="<your-azure-dns-zone-resource-group-name>"
-DNS_ZONE_SUBSCRIPTION_ID="<your-azure-dns-zone-subscription-id>"
+    ```bash
+    # Azure subscription and tenant
+    RESOURCE_GROUP_NAME="<aks-resource-group>"
+    SUBSCRIPTION_ID="$(az account show --query id --output tsv)"
+    SUBSCRIPTION_NAME="$(az account show --query name --output tsv)"
+    TENANT_ID="$(az account show --query tenantId --output tsv)"
+    AKS_CLUSTER_NAME="<aks-name>"
+    AGW_NAME="<application-gateway-name>"
+    AGW_PUBLIC_IP_NAME="<application-gateway-public-ip-name>"
+    DNS_ZONE_NAME="<your-azure-dns-zone-name-eg-contoso.com>"
+    DNS_ZONE_RESOURCE_GROUP_NAME="<your-azure-dns-zone-resource-group-name>"
+    DNS_ZONE_SUBSCRIPTION_ID="<your-azure-dns-zone-subscription-id>"
 
-# NGINX ingress controller installed via Helm
-NGINX_NAMESPACE="ingress-basic"
-NGINX_REPO_NAME="ingress-nginx"
-NGINX_REPO_URL="https://kubernetes.github.io/ingress-nginx"
-NGINX_CHART_NAME="ingress-nginx"
-NGINX_RELEASE_NAME="ingress-nginx"
-NGINX_REPLICA_COUNT=3
+    # NGINX ingress controller installed via Helm
+    NGINX_NAMESPACE="ingress-basic"
+    NGINX_REPO_NAME="ingress-nginx"
+    NGINX_REPO_URL="https://kubernetes.github.io/ingress-nginx"
+    NGINX_CHART_NAME="ingress-nginx"
+    NGINX_RELEASE_NAME="ingress-nginx"
+    NGINX_REPLICA_COUNT=3
 
-# Specify the ingress class name for the ingress controller
-# - nginx: Unmanaged NGINX ingress controller installed via Helm
-# - webapprouting.kubernetes.azure.com: Managed NGINX ingress controller installed via AKS application routing add-on
-INGRESS_CLASS_NAME="webapprouting.kubernetes.azure.com"
+    # Specify the ingress class name for the ingress controller
+    # - nginx: Unmanaged NGINX ingress controller installed via Helm
+    # - webapprouting.kubernetes.azure.com: Managed NGINX ingress controller installed via AKS application routing add-on
+    INGRESS_CLASS_NAME="webapprouting.kubernetes.azure.com"
 
-# Subdomain of the Yelb UI service
-SUBDOMAIN="<yelb-application-subdomain>"
+    # Subdomain of the Yelb UI service
+    SUBDOMAIN="<yelb-application-subdomain>"
 
-# URL of the Yelb UI service
-URL="https://$SUBDOMAIN.$DNS_ZONE_NAME"
+    # URL of the Yelb UI service
+    URL="https://$SUBDOMAIN.$DNS_ZONE_NAME"
 
-# Secret provider class
-KEY_VAULT_NAME="<key-vault-name>"
-KEY_VAULT_CERTIFICATE_NAME="<key-vault-resource-group-name>"
-KEY_VAULT_SECRET_PROVIDER_IDENTITY_CLIENT_ID="<key-vault-secret-provider-identity-client-id>"
-TLS_SECRET_NAME="yelb-tls-secret"
-NAMESPACE="yelb"
-```
+    # Secret provider class
+    KEY_VAULT_NAME="<key-vault-name>"
+    KEY_VAULT_CERTIFICATE_NAME="<key-vault-resource-group-name>"
+    KEY_VAULT_SECRET_PROVIDER_IDENTITY_CLIENT_ID="<key-vault-secret-provider-identity-client-id>"
+    TLS_SECRET_NAME="yelb-tls-secret"
+    NAMESPACE="yelb"
+    ```
 
-You can run the following [az aks show](/cli/azure/aks#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide?tabs=azure-cli#azure-built-in-roles-for-key-vault-data-plane-operations) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) used to expose the `yelb-ui` service via the [NGINX ingress controller](https://docs.nginx.com/nginx-ingress-controller/intro/overview/).
+1. You can run the following [az aks show](/cli/azure/aks#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide?tabs=azure-cli#azure-built-in-roles-for-key-vault-data-plane-operations) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) used to expose the `yelb-ui` service via the [NGINX ingress controller](https://docs.nginx.com/nginx-ingress-controller/intro/overview/).
 
-```azurecli-interactive
-az aks show \
-  --name <aks-name> \
-  --resource-group <aks-resource-group-name> \
-  --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId \
-  --output tsv \
-  --only-show-errors
-```
+    ```azurecli-interactive
+    az aks show \
+      --name <aks-name> \
+      --resource-group <aks-resource-group-name> \
+      --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId \
+      --output tsv \
+      --only-show-errors
+    ```
 
-If you deployed the Azure infrastructure using the Bicep modules provided with this sample, you can proceed to [deploy the Yelb application](#deploy-the-application). If you want to deploy the application in your AKS cluster, you can use the following scripts to configure your environment. You can use the `02-create-nginx-ingress-controller.sh` to install the [NGINX ingress controller][nginx] with the [ModSecurity](https://github.com/SpiderLabs/ModSecurity) open-source web application firewall (WAF) enabled.
+1. If you deployed the Azure infrastructure using the Bicep modules provided with this sample, you can proceed to [deploy the Yelb application](#deploy-the-application). If you want to deploy the application in your AKS cluster, you can use the following scripts to configure your environment. You can use the `02-create-nginx-ingress-controller.sh` to install the [NGINX ingress controller][nginx] with the [ModSecurity](https://github.com/SpiderLabs/ModSecurity) open-source web application firewall (WAF) enabled.
 
-```bash
-#!/bin/bash
+    ```bash
+    #!/bin/bash
 
-# Variables
-source ./00-variables.sh
+    # Variables
+    source ./00-variables.sh
 
-# Check if the NGINX ingress controller Helm chart is already installed
-result=$(helm list -n $NGINX_NAMESPACE | grep $NGINX_RELEASE_NAME | awk '{print $1}')
+    # Check if the NGINX ingress controller Helm chart is already installed
+    result=$(helm list -n $NGINX_NAMESPACE | grep $NGINX_RELEASE_NAME | awk '{print $1}')
 
-if [[ -n $result ]]; then
-  echo "[$NGINX_RELEASE_NAME] NGINX ingress controller release already exists in the [$NGINX_NAMESPACE] namespace"
-else
-  # Check if the NGINX ingress controller repository is not already added
-  result=$(helm repo list | grep $NGINX_REPO_NAME | awk '{print $1}')
+    if [[ -n $result ]]; then
+      echo "[$NGINX_RELEASE_NAME] NGINX ingress controller release already exists in the [$NGINX_NAMESPACE] namespace"
+    else
+      # Check if the NGINX ingress controller repository is not already added
+      result=$(helm repo list | grep $NGINX_REPO_NAME | awk '{print $1}')
 
-  if [[ -n $result ]]; then
-    echo "[$NGINX_REPO_NAME] Helm repo already exists"
-  else
-    # Add the NGINX ingress controller repository
-    echo "Adding [$NGINX_REPO_NAME] Helm repo..."
-    helm repo add $NGINX_REPO_NAME $NGINX_REPO_URL
-  fi
+      if [[ -n $result ]]; then
+        echo "[$NGINX_REPO_NAME] Helm repo already exists"
+      else
+        # Add the NGINX ingress controller repository
+        echo "Adding [$NGINX_REPO_NAME] Helm repo..."
+        helm repo add $NGINX_REPO_NAME $NGINX_REPO_URL
+      fi
 
-  # Update your local Helm chart repository cache
-  echo 'Updating Helm repos...'
-  helm repo update
+      # Update your local Helm chart repository cache
+      echo 'Updating Helm repos...'
+      helm repo update
 
-  # Deploy NGINX ingress controller
-  echo "Deploying [$NGINX_RELEASE_NAME] NGINX ingress controller to the [$NGINX_NAMESPACE] namespace..."
-  helm install $NGINX_RELEASE_NAME $NGINX_REPO_NAME/$nginxChartName \
-    --create-namespace \
-    --namespace $NGINX_NAMESPACE \
-    --set controller.nodeSelector."kubernetes\.io/os"=linux \
-    --set controller.replicaCount=$NGINX_REPLICA_COUNT \
-    --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux \
-    --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
-fi
+      # Deploy NGINX ingress controller
+      echo "Deploying [$NGINX_RELEASE_NAME] NGINX ingress controller to the [$NGINX_NAMESPACE] namespace..."
+      helm install $NGINX_RELEASE_NAME $NGINX_REPO_NAME/$nginxChartName \
+        --create-namespace \
+        --namespace $NGINX_NAMESPACE \
+        --set controller.nodeSelector."kubernetes\.io/os"=linux \
+        --set controller.replicaCount=$NGINX_REPLICA_COUNT \
+        --set defaultBackend.nodeSelector."kubernetes\.io/os"=linux \
+        --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz
+    fi
 
-# Get values
-helm get values $NGINX_RELEASE_NAME --namespace $NGINX_NAMESPACE
-```
+    # Get values
+    helm get values $NGINX_RELEASE_NAME --namespace $NGINX_NAMESPACE
+    ```
 
 ### Deploy the application
 
-Run the following `03-deploy-yelb.sh` script to deploy the Yelb application and a [Kubernetes Ingress][kubernetes-ingress] object to make the `yelb-ui` service accessible to the public internet.
+1. Run the following `03-deploy-yelb.sh` script to deploy the Yelb application and a [Kubernetes Ingress][kubernetes-ingress] object to make the `yelb-ui` service accessible to the public internet.
 
-```bash
-#!/bin/bash
+    ```bash
+    #!/bin/bash
 
-# Variables
-source ./00-variables.sh
+    # Variables
+    source ./00-variables.sh
 
-# Check if namespace exists in the cluster
-result=$(kubectl get namespace -o jsonpath="{.items[?(@.metadata.name=='$NAMESPACE')].metadata.name}")
+    # Check if namespace exists in the cluster
+    result=$(kubectl get namespace -o jsonpath="{.items[?(@.metadata.name=='$NAMESPACE')].metadata.name}")
 
-if [[ -n $result ]]; then
-  echo "$NAMESPACE namespace already exists in the cluster"
-else
-  echo "$NAMESPACE namespace does not exist in the cluster"
-  echo "creating $NAMESPACE namespace in the cluster..."
-  kubectl create namespace $NAMESPACE
-fi
+    if [[ -n $result ]]; then
+      echo "$NAMESPACE namespace already exists in the cluster"
+    else
+      echo "$NAMESPACE namespace does not exist in the cluster"
+      echo "creating $NAMESPACE namespace in the cluster..."
+      kubectl create namespace $NAMESPACE
+    fi
 
-# Create the Secret Provider Class object
-echo "Creating the secret provider class object..."
-cat <<EOF | kubectl apply -f -
-apiVersion: secrets-store.csi.x-k8s.io/v1
-kind: SecretProviderClass
-metadata:
-  namespace: $NAMESPACE
-  name: yelb
-spec:
-  provider: azure
-  secretObjects:
-    - secretName: $TLS_SECRET_NAME
-      type: kubernetes.io/tls
-      data: 
-        - objectName: $KEY_VAULT_CERTIFICATE_NAME
-          key: tls.key
-        - objectName: $KEY_VAULT_CERTIFICATE_NAME
-          key: tls.crt
-  parameters:
-    usePodIdentity: "false"
-    useVMManagedIdentity: "true"
-    userAssignedIdentityID: $KEY_VAULT_SECRET_PROVIDER_IDENTITY_CLIENT_ID
-    keyvaultName: $KEY_VAULT_NAME
-    objects: |
-      array:
-        - |
-          objectName: $KEY_VAULT_CERTIFICATE_NAME
-          objectType: secret
-    tenantId: $TENANT_ID
-EOF
+    # Create the Secret Provider Class object
+    echo "Creating the secret provider class object..."
+    cat <<EOF | kubectl apply -f -
+    apiVersion: secrets-store.csi.x-k8s.io/v1
+    kind: SecretProviderClass
+    metadata:
+      namespace: $NAMESPACE
+      name: yelb
+    spec:
+      provider: azure
+      secretObjects:
+        - secretName: $TLS_SECRET_NAME
+          type: kubernetes.io/tls
+          data: 
+            - objectName: $KEY_VAULT_CERTIFICATE_NAME
+              key: tls.key
+            - objectName: $KEY_VAULT_CERTIFICATE_NAME
+              key: tls.crt
+      parameters:
+        usePodIdentity: "false"
+        useVMManagedIdentity: "true"
+        userAssignedIdentityID: $KEY_VAULT_SECRET_PROVIDER_IDENTITY_CLIENT_ID
+        keyvaultName: $KEY_VAULT_NAME
+        objects: |
+          array:
+            - |
+              objectName: $KEY_VAULT_CERTIFICATE_NAME
+              objectType: secret
+        tenantId: $TENANT_ID
+    EOF
 
-# Apply the YAML configuration
-kubectl apply -f yelb.yml
+    # Apply the YAML configuration
+    kubectl apply -f yelb.yml
 
-echo "waiting for secret $TLS_SECRET_NAME in namespace $namespace..."
+    echo "waiting for secret $TLS_SECRET_NAME in namespace $namespace..."
 
-while true; do
-  if kubectl get secret -n $NAMESPACE $TLS_SECRET_NAME >/dev/null 2>&1; then
-    echo "secret $TLS_SECRET_NAME found!"
-    break
-  else
-    printf "."
-    sleep 3
-  fi
-done
+    while true; do
+      if kubectl get secret -n $NAMESPACE $TLS_SECRET_NAME >/dev/null 2>&1; then
+        echo "secret $TLS_SECRET_NAME found!"
+        break
+      else
+        printf "."
+        sleep 3
+      fi
+    done
 
-# Create chat-ingress
-cat ingress.yml |
-  yq "(.spec.ingressClassName)|="\""$INGRESS_CLASS_NAME"\" |
-  yq "(.spec.tls[0].hosts[0])|="\""$SUBDOMAIN.$DNS_ZONE_NAME"\" |
-  yq "(.spec.tls[0].secretName)|="\""$TLS_SECRET_NAME"\" |
-  yq "(.spec.rules[0].host)|="\""$SUBDOMAIN.$DNS_ZONE_NAME"\" |
-  kubectl apply -f -
+    # Create chat-ingress
+    cat ingress.yml |
+      yq "(.spec.ingressClassName)|="\""$INGRESS_CLASS_NAME"\" |
+      yq "(.spec.tls[0].hosts[0])|="\""$SUBDOMAIN.$DNS_ZONE_NAME"\" |
+      yq "(.spec.tls[0].secretName)|="\""$TLS_SECRET_NAME"\" |
+      yq "(.spec.rules[0].host)|="\""$SUBDOMAIN.$DNS_ZONE_NAME"\" |
+      kubectl apply -f -
 
-# Check the deployed resources within the yelb namespace:
-kubectl get all -n yelb
-```
+    # Check the deployed resources within the yelb namespace:
+    kubectl get all -n yelb
+    ```
 
 > [!NOTE]
 > Before deploying the Yelb application and creating the `ingress` object, the script generates a `SecretProviderClass` to retrieve the TLS certificate from Azure Key Vault and generate the Kubernetes secret for the `ingress` object. It's important to note that the [Secrets Store CSI Driver for Key Vault](/azure/aks/csi-secrets-store-identity-access) creates the Kubernetes secret containing the TLS certificate only when the `SecretProviderClass` and volume definition is included in the `deployment`. To ensure the TLS certificate is properly retrieved from Azure Key Vault and stored in the Kubernetes secret used by the `ingress` object, we need to make the following modifications to the YAML manifest of the `yelb-ui` deployment:
@@ -272,7 +272,7 @@ kubectl get all -n yelb
 >
 > For more information, see [Set up Secrets Store CSI Driver to enable NGINX ingress controller with TLS](/azure/aks/csi-secrets-store-nginx-tls#deploy-a-secretproviderclass).
 
-Update the `yelb-ui` YAML manifest to include the `csi volume` definition and `volume mount` to read the certificate as a secret from Azure Key Vault.
+1. Update the `yelb-ui` YAML manifest to include the `csi volume` definition and `volume mount` to read the certificate as a secret from Azure Key Vault.
 
 ```yaml
 apiVersion: apps/v1
@@ -310,95 +310,93 @@ spec:
               secretProviderClass: yelb
 ```
 
-You can now deploy the application. The script uses the `yelb.yml` YAML manifest to deploy the application and the `ingress.yml` to create the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service.
-
-The script performs the following steps:
+1. You can now deploy the application. The script uses the `yelb.yml` YAML manifest to deploy the application and the `ingress.yml` to create the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. The script performs the following steps:
 
    - Retrieves the public address of the Azure public IP used by the front-end IP configuration of the Application Gateway.
    - Checks if an `A` record exists for the subdomain used by the `yelb-ui` service.
    - If the `A` record doesn't exist, the script creates it.
 
-```bash
-source ./00-variables.sh
+  ```bash
+  source ./00-variables.sh
 
-# Get the address of the Application Gateway Public IP
-echo "Retrieving the address of the [$AGW_PUBLIC_IP_NAME] public IP address of the [$AGW_NAME] Application Gateway..."
-PUBLIC_IP_ADDRESS=$(az network public-ip show \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --name $AGW_PUBLIC_IP_NAME \
-    --query ipAddress \
-    --output tsv \
-    --only-show-errors)
-if [[ -n $PUBLIC_IP_ADDRESS ]]; then
-    echo "[$PUBLIC_IP_ADDRESS] public IP address successfully retrieved for the [$AGW_NAME] Application Gateway"
-else
-    echo "Failed to retrieve the public IP address of the [$AGW_NAME] Application Gateway"
-    exit
-fi
-# Check if an A record for todolist subdomain exists in the DNS Zone
-echo "Retrieving the A record for the [$SUBDOMAIN] subdomain from the [$DNS_ZONE_NAME] DNS zone..."
-IPV4_ADDRESS=$(az network dns record-set a list \
-    --zone-name $DNS_ZONE_NAME \
-    --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
-    --subscription $DNS_ZONE_SUBSCRIPTION_ID \
-    --query "[?name=='$SUBDOMAIN'].ARecords[].IPV4_ADDRESS" \
-    --output tsv \
-    --only-show-errors)
-if [[ -n $IPV4_ADDRESS ]]; then
-    echo "An A record already exists in [$DNS_ZONE_NAME] DNS zone for the [$SUBDOMAIN] subdomain with [$IPV4_ADDRESS] IP address"
-    if [[ $IPV4_ADDRESS == $PUBLIC_IP_ADDRESS ]]; then
-        echo "The [$IPV4_ADDRESS] ip address of the existing A record is equal to the ip address of the ingress"
-        echo "No additional step is required"
-        continue
-    else
-        echo "The [$IPV4_ADDRESS] ip address of the existing A record is different than the ip address of the ingress"
-    fi
-    # Retrieving name of the record set relative to the zone
-    echo "Retrieving the name of the record set relative to the [$DNS_ZONE_NAME] zone..."
-    RECORDSET_NAME=$(az network dns record-set a list \
-        --zone-name $DNS_ZONE_NAME \
-        --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
-        --subscription $DNS_ZONE_SUBSCRIPTION_ID \
-        --query "[?name=='$SUBDOMAIN'].name" \
-        --output tsv \
-        --only-show-errors 2>/dev/null)
-    if [[ -n $RECORDSET_NAME ]]; then
-        echo "[$RECORDSET_NAME] record set name successfully retrieved"
-    else
-        echo "Failed to retrieve the name of the record set relative to the [$DNS_ZONE_NAME] zone"
-        exit
-    fi
-    # Remove the A record
-    echo "Removing the A record from the record set relative to the [$DNS_ZONE_NAME] zone..."
-    az network dns record-set a remove-record \
-        --ipv4-address $IPV4_ADDRESS \
-        --record-set-name $RECORDSET_NAME \
-        --zone-name $DNS_ZONE_NAME \
-        --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
-        --subscription $DNS_ZONE_SUBSCRIPTION_ID \
-        --only-show-errors 1>/dev/null
-    if [[ $? == 0 ]]; then
-        echo "[$IPV4_ADDRESS] ip address successfully removed from the [$RECORDSET_NAME] record set"
-    else
-        echo "Failed to remove the [$IPV4_ADDRESS] ip address from the [$RECORDSET_NAME] record set"
-        exit
-    fi
-fi
-# Create the A record
-echo "Creating an A record in [$DNS_ZONE_NAME] DNS zone for the [$SUBDOMAIN] subdomain with [$PUBLIC_IP_ADDRESS] IP address..."
-az network dns record-set a add-record \
-    --zone-name $DNS_ZONE_NAME \
-    --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
-    --subscription $DNS_ZONE_SUBSCRIPTION_ID \
-    --record-set-name $SUBDOMAIN \
-    --ipv4-address $PUBLIC_IP_ADDRESS \
-    --only-show-errors 1>/dev/null
-if [[ $? == 0 ]]; then
-    echo "A record for the [$SUBDOMAIN] subdomain with [$PUBLIC_IP_ADDRESS] IP address successfully created in [$DNS_ZONE_NAME] DNS zone"
-else
-    echo "Failed to create an A record for the $SUBDOMAIN subdomain with [$PUBLIC_IP_ADDRESS] IP address in [$DNS_ZONE_NAME] DNS zone"
-fi
-```
+  # Get the address of the Application Gateway Public IP
+  echo "Retrieving the address of the [$AGW_PUBLIC_IP_NAME] public IP address of the [$AGW_NAME] Application Gateway..."
+  PUBLIC_IP_ADDRESS=$(az network public-ip show \
+      --resource-group $RESOURCE_GROUP_NAME \
+      --name $AGW_PUBLIC_IP_NAME \
+      --query ipAddress \
+      --output tsv \
+      --only-show-errors)
+  if [[ -n $PUBLIC_IP_ADDRESS ]]; then
+      echo "[$PUBLIC_IP_ADDRESS] public IP address successfully retrieved for the [$AGW_NAME] Application Gateway"
+  else
+      echo "Failed to retrieve the public IP address of the [$AGW_NAME] Application Gateway"
+      exit
+  fi
+  # Check if an A record for todolist subdomain exists in the DNS Zone
+  echo "Retrieving the A record for the [$SUBDOMAIN] subdomain from the [$DNS_ZONE_NAME] DNS zone..."
+  IPV4_ADDRESS=$(az network dns record-set a list \
+      --zone-name $DNS_ZONE_NAME \
+      --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
+      --subscription $DNS_ZONE_SUBSCRIPTION_ID \
+      --query "[?name=='$SUBDOMAIN'].ARecords[].IPV4_ADDRESS" \
+      --output tsv \
+      --only-show-errors)
+  if [[ -n $IPV4_ADDRESS ]]; then
+      echo "An A record already exists in [$DNS_ZONE_NAME] DNS zone for the [$SUBDOMAIN] subdomain with [$IPV4_ADDRESS] IP address"
+      if [[ $IPV4_ADDRESS == $PUBLIC_IP_ADDRESS ]]; then
+          echo "The [$IPV4_ADDRESS] ip address of the existing A record is equal to the ip address of the ingress"
+          echo "No additional step is required"
+          continue
+      else
+          echo "The [$IPV4_ADDRESS] ip address of the existing A record is different than the ip address of the ingress"
+      fi
+      # Retrieving name of the record set relative to the zone
+      echo "Retrieving the name of the record set relative to the [$DNS_ZONE_NAME] zone..."
+      RECORDSET_NAME=$(az network dns record-set a list \
+          --zone-name $DNS_ZONE_NAME \
+          --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
+          --subscription $DNS_ZONE_SUBSCRIPTION_ID \
+          --query "[?name=='$SUBDOMAIN'].name" \
+          --output tsv \
+          --only-show-errors 2>/dev/null)
+      if [[ -n $RECORDSET_NAME ]]; then
+          echo "[$RECORDSET_NAME] record set name successfully retrieved"
+      else
+          echo "Failed to retrieve the name of the record set relative to the [$DNS_ZONE_NAME] zone"
+          exit
+      fi
+      # Remove the A record
+      echo "Removing the A record from the record set relative to the [$DNS_ZONE_NAME] zone..."
+      az network dns record-set a remove-record \
+          --ipv4-address $IPV4_ADDRESS \
+          --record-set-name $RECORDSET_NAME \
+          --zone-name $DNS_ZONE_NAME \
+          --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
+          --subscription $DNS_ZONE_SUBSCRIPTION_ID \
+          --only-show-errors 1>/dev/null
+      if [[ $? == 0 ]]; then
+          echo "[$IPV4_ADDRESS] ip address successfully removed from the [$RECORDSET_NAME] record set"
+      else
+          echo "Failed to remove the [$IPV4_ADDRESS] ip address from the [$RECORDSET_NAME] record set"
+          exit
+      fi
+  fi
+  # Create the A record
+  echo "Creating an A record in [$DNS_ZONE_NAME] DNS zone for the [$SUBDOMAIN] subdomain with [$PUBLIC_IP_ADDRESS] IP address..."
+  az network dns record-set a add-record \
+      --zone-name $DNS_ZONE_NAME \
+      --resource-group $DNS_ZONE_RESOURCE_GROUP_NAME \
+      --subscription $DNS_ZONE_SUBSCRIPTION_ID \
+      --record-set-name $SUBDOMAIN \
+      --ipv4-address $PUBLIC_IP_ADDRESS \
+      --only-show-errors 1>/dev/null
+  if [[ $? == 0 ]]; then
+      echo "A record for the [$SUBDOMAIN] subdomain with [$PUBLIC_IP_ADDRESS] IP address successfully created in [$DNS_ZONE_NAME] DNS zone"
+  else
+      echo "Failed to create an A record for the $SUBDOMAIN subdomain with [$PUBLIC_IP_ADDRESS] IP address in [$DNS_ZONE_NAME] DNS zone"
+  fi
+  ```
 
 ## Test the application
 
