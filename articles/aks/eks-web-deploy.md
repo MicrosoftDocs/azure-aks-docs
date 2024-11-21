@@ -130,7 +130,7 @@ TLS_SECRET_NAME="yelb-tls-secret"
 NAMESPACE="yelb"
 ```
 
-You can run the following [az aks show](/cli/azure/aks?view=azure-cli-latest#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide?tabs=azure-cli#azure-built-in-roles-for-key-vault-data-plane-operations) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) used to expose the `yelb-ui` service via the [NGINX ingress controller](https://docs.nginx.com/nginx-ingress-controller/intro/overview/).
+You can run the following [az aks show](/cli/azure/aks#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide?tabs=azure-cli#azure-built-in-roles-for-key-vault-data-plane-operations) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) used to expose the `yelb-ui` service via the [NGINX ingress controller](https://docs.nginx.com/nginx-ingress-controller/intro/overview/).
 
 ```azurecli-interactive
 az aks show \
@@ -404,44 +404,43 @@ fi
 
 Use the `05-call-yelb-ui.sh` script to invoke the `yelb-ui` service, simulate SQL injection, XSS attacks, and observe how the managed rule set of ModSecurity blocks malicious requests.
 
-    ```bash
-    #!/bin/bash
-    # Variables
-    source ./00-variables.sh
-    # Call REST API
-    echo "Calling Yelb UI service at $URL..."
-    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL
-    # Simulate SQL injection
-    echo "Simulating SQL injection when calling $URL..."
-    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleSQLInjection%27%20--
-    # Simulate XSS
-    echo "Simulating XSS when calling $URL..."
-    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleXSS%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E
-    # A custom rule blocks any request with the word blockme in the querystring.
-    echo "Simulating query string manipulation with the 'blockme' word in the query string..."
-    curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users?task=blockme
-    ```
+```bash
+#!/bin/bash
+# Variables
+source ./00-variables.sh
+# Call REST API
+echo "Calling Yelb UI service at $URL..."
+curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL
+# Simulate SQL injection
+echo "Simulating SQL injection when calling $URL..."
+curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleSQLInjection%27%20--
+# Simulate XSS
+echo "Simulating XSS when calling $URL..."
+curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users=ExampleXSS%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E
+# A custom rule blocks any request with the word blockme in the querystring.
+echo "Simulating query string manipulation with the 'blockme' word in the query string..."
+curl -w 'HTTP Status: %{http_code}\n' -s -o /dev/null $URL/?users?task=blockme
+```
 
-    The Bash script should produce the following output, where the first call succeeds, while ModSecurity rules block the following two calls:
+The Bash script should produce the following output, where the first call succeeds, while ModSecurity rules block the following two calls:
 
-    ```output
-    Calling Yelb UI service at https://yelb.contoso.com...
-    HTTP Status: 200
-    Simulating SQL injection when calling https://yelb.contoso.com...
-    HTTP Status: 403
-    Simulating XSS when calling https://yelb.contoso.com...
-    HTTP Status: 403
-    Simulating query string manipulation with the 'blockme' word in the query string...
-    HTTP Status: 403
-    ```
+```output
+Calling Yelb UI service at https://yelb.contoso.com...
+HTTP Status: 200
+Simulating SQL injection when calling https://yelb.contoso.com...
+HTTP Status: 403
+Simulating XSS when calling https://yelb.contoso.com...
+HTTP Status: 403
+Simulating query string manipulation with the 'blockme' word in the query string...
+HTTP Status: 403
+```
 
 ## Monitor the application
 
 In the proposed solution, the deployment process automatically configures the [Azure Application Gateway][azure-ag] resource to collect diagnostic logs and metrics to an [Azure Log Analytics Workspace][azure-la] workspace. By enabling logs, you can gain valuable insights into the evaluations, matches, and blocks performed by the [Azure Web Application Firewall (WAF)][azure-waf] within the Application Gateway. For more information, see [Diagnostic logs for Application Gateway](/azure/application-gateway/application-gateway-diagnostics#firewall-log). You can also use Log Analytics to examine the data within the firewall logs. When you have the firewall logs in your Log Analytics workspace, you can view data, write queries, create visualizations, and add them to your portal dashboard. For detailed information on log queries, see [Overview of log queries in Azure Monitor](/azure/azure-monitor/logs/log-query-overview).
 
-### Explore data with examples
+### Explore data with Kusto queries
 
-When using the **AzureDiagnostics** table in your Log Analytics workspace, you can access the raw firewall log data with the following query:
 In the proposed solution, the deployment process automatically configures the [Azure Application Gateway][azure-ag] resource to collect diagnostic logs and metrics to an [Azure Log Analytics workspace][azure-la]. By enabling logs, you can gain insights into the evaluations, matches, and blocks performed by the [Azure Web Application Firewall (WAF)][azure-waf] within the Application Gateway. For more information, see [Diagnostic logs for Application Gateway](/azure/application-gateway/application-gateway-diagnostics#firewall-log).
 
 You can also use Log Analytics to examine the data within the firewall logs. When you have the firewall logs in your Log Analytics workspace, you can view data, write queries, create visualizations, and add them to your portal dashboard. For more information on log queries, see [Overview of log queries in Azure Monitor](/azure/azure-monitor/logs/log-query-overview).
@@ -459,7 +458,7 @@ AGWFirewallLogs
 | limit 10
 ```
 
-Once you have the data, you can delve deeper and create graphs or visualizations. Here are some additional examples of AzureDiagnostics queries that can be utilized:
+Once you have the data, you can delve deeper and create graphs or visualizations. Here are some additional examples of [KQL](/kusto/query/) queries that can be utilized:
 
 #### Matched/Blocked requests by IP
 
@@ -472,17 +471,16 @@ AzureDiagnostics
 
 #### Matched/Blocked requests by URI
 
-#### Matched/Blocked requests by URI
+```kusto
 AzureDiagnostics
 | where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
 | summarize count() by requestUri_s, bin(TimeGenerated, 1m)
 | render timechart
 ```
 
-### Top matched rules
-
 #### Top matched rules
-AzureDiagnostics
+
+```kusto
 | where ResourceProvider == "MICROSOFT.NETWORK" and Category == "ApplicationGatewayFirewallLog"
 | summarize count() by ruleId_s, bin(TimeGenerated, 1m)
 | where count_ > 10
