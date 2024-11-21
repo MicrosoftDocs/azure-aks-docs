@@ -176,13 +176,7 @@ The following steps describe the deployment process. This workflow corresponds t
 
 ## Deployment
 
-By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay](azure-cni-overlay.md) network plugin and the [Cilium](azure-cni-powered-by-cilium.md) data plane. You can also use any one of the following network plugins:
-
-- [Azure CNI with static IP allocation](configure-azure-cni.md)
-- [Azure CNI with dynamic IP allocation](configure-azure-cni-dynamic-ip-allocation.md)
-- [Azure CNI Powered by Cilium](azure-cni-powered-by-cilium.md)
-
-Additionally, the project shows how to deploy an AKS cluster with the following extensions and features:
+By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay](azure-cni-overlay.md) network plugin and the [Cilium](azure-cni-powered-by-cilium.md) data plane. You can an alternative network plugin. Additionally, the project shows how to deploy an AKS cluster with the following extensions and features:
 
 - [Microsoft Entra Workload ID][aks-workload-id]
 - [Istio-based service mesh add-on](/azure/aks/istio-about)
