@@ -71,7 +71,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
   - [Azure Key Vault provider for Secrets Store CSI Driver][akv-privatelink]
   - [Azure Monitor Container Insights][azuremonitoring]
 
-- (Optional) If you are using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in Azure Key Vault Secrets Store CSI Driver), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. This can be done for example by providing a user-defined routing table and an Azure Firewall configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
+- (Optional) If you are using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in [Azure Key Vault Secrets Store CSI Driver][csi-akv-wi]), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. One way to address this is by providing an [user-defined routing table and an Azure Firewall][aks-firewall] configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
 
 ::: zone pivot="aks-managed-acr"
 
@@ -367,7 +367,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 In this article, you learned what ports and addresses to allow if you want to restrict egress traffic for the cluster.
 
-If you want to set up outbound restriction configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS](limit-egress-traffic.md).
+If you want to set up outbound restriction configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS][aks-firewall].
 
 If you want to restrict how pods communicate between themselves and East-West traffic restrictions within cluster, see [Secure traffic between pods using network policies in AKS][use-network-policies].
 
@@ -382,6 +382,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
 
 <!-- LINKS - Internal -->
+[aks-firewall]: ./limit-egress-traffic.md
 [conceptual-network-isolated]: ./concepts-network-isolated.md
 [conceptual-network-isolated-limitations]: ./concepts-network-isolated.md#limitations
 [az-extension-add]: /cli/azure/extension#az-extension-add
