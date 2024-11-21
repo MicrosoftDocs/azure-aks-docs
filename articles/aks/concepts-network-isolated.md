@@ -56,10 +56,8 @@ When creating a network isolated AKS cluster, you can choose one of the followin
     * [Azure App Configuration][app-config-overview]
     * [Azure Machine Learning][azure-ml-overview]
     * [Flux (GitOps)][gitops-overview]
-    * [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction
-    * [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview)
-
-
+    * [Azure Container Storage][azure-container-storage]
+    * [Azure Backup for AKS][azure-backup-aks]
 
 ## Frequently asked questions
 
