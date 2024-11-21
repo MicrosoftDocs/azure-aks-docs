@@ -1,5 +1,5 @@
 ---
-title: Deploy an AWS web application to Azure
+title: Deploy an Amazon Web Services (AWS) web application to Azure
 description: Learn how to deploy an AWS web application to Azure and validate your deployment.
 author: paolosalvatori
 ms.author: paolos
@@ -12,13 +12,13 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Deploy an AWS web application to Azure
+# Deploy an Amazon Web Services (AWS) web application to Azure
 
-In this article, you deploy the [Yelb application][yelb] to the [Azure Kubernetes Service (AKS)][aks] cluster you created in the previous article.
+In this article, you deploy the [Yelb application][yelb] to the [Azure Kubernetes Service (AKS)][aks] cluster you created in the [previous article](./eks-web-prepare.md).
 
 ## Check the environment
 
-Before you deploy the application, ensure that your AKS cluster is properly configured.
+Before you deploy the application, ensure that your AKS cluster is properly configured using the following commands:
 
 1. List the namespaces in your cluster using the `kubectl get namespace` command.
 
@@ -26,7 +26,7 @@ Before you deploy the application, ensure that your AKS cluster is properly conf
     kubectl get namespace
     ```
 
-    If you installed the NGINX Ingress Controller using the application routing add-on, you should see the `app-routing-system` namespace in the output:
+    If you installed the NGINX ingress controller using the application routing add-on, you should see the `app-routing-system` namespace in the output:
 
     ```output
     NAME                 STATUS   AGE
@@ -40,7 +40,7 @@ Before you deploy the application, ensure that your AKS cluster is properly conf
     kube-system          Active   4h29m
     ```
 
-    If you installed the NGINX Ingress Controller via Helm, you should see the `ingress-basic` namespace in the output:
+    If you installed the NGINX ingress controller via Helm, you should see the `ingress-basic` namespace in the output:
 
     ```output
     NAME                STATUS   AGE
@@ -75,9 +75,9 @@ Before you deploy the application, ensure that your AKS cluster is properly conf
     nginx-ingress-ingress-nginx-controller             LoadBalancer   172.16.42.152    10.240.0.7    80:32117/TCP,443:32513/TCP   7m31s
     nginx-ingress-ingress-nginx-controller-admission   ClusterIP      172.16.78.85     <none>        443/TCP                      7m31s
     nginx-ingress-ingress-nginx-controller-metrics     ClusterIP      172.16.109.138   <none>        10254/TCP                    7m31s
-    ```#tls-termination-at-the-application-gateway-and-yelb-invocation-via-http
+    ```
 
-## Deploy the Yelb application
+## Prepare to deploy the Yelb application
 
 If you want to deploy the sample using the [TLS termination at Application Gateway and Yelb invocation via HTTP](eks-web-prepare.md#tls-termination-at-the-application-gateway-and-yelb-invocation-via-http) approach, you can find the Bash scripts and YAML templates to deploy the [Yelb][yelb] application in the `http` folder.
 
@@ -86,9 +86,7 @@ If you want to deploy the sample using the [Implementing end-to-end TLS using Az
 In the remaining sections of this article, we guide you through the deployment process of the sample application using the end-to-end TLS approach.
 
 
-### Prepare your environment
-
-#### Customize variables
+### Customize variables
 
 * Before running any scripts, you need to customize the values of the variables in the `00-variables.sh` file. This file is included in all scripts and contains the following variables:
 
@@ -105,7 +103,7 @@ In the remaining sections of this article, we guide you through the deployment p
     DNS_ZONE_RESOURCE_GROUP_NAME="<your-azure-dns-zone-resource-group-name>"
     DNS_ZONE_SUBSCRIPTION_ID="<your-azure-dns-zone-subscription-id>"
     
-    # NGINX Ingress Controller installed via Helm
+    # NGINX ingress controller installed via Helm
     NGINX_NAMESPACE="ingress-basic"
     NGINX_REPO_NAME="ingress-nginx"
     NGINX_REPO_URL="https://kubernetes.github.io/ingress-nginx"
@@ -132,9 +130,7 @@ In the remaining sections of this article, we guide you through the deployment p
     NAMESPACE="yelb"
     ```
 
-#### Retrieve values
-
-1. Retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access) using the [`az aks show`](/cli/azure/aks#az-aks-show) command. The `keyVault.bicep` module assigns the [Key Vault Administrator](/azure/key-vault/general/rbac-guide) role to the user-assigned managed identity of the add-on to let it retrieve the certificate that the [Kubernetes Ingress][kubernetes-ingress] uses to expose the `yelb-ui` service via the [NGINX ingress controller][nginx].
+### Retrieve values
 
     ```azurecli-interactive
     az aks show \
@@ -189,11 +185,11 @@ fi
 helm get values $NGINX_RELEASE_NAME --namespace $NGINX_NAMESPACE
 ```
 
-#### Deploy the application
+### Deploy the application
 
 1. Run the following `03-deploy-yelb.sh` script to deploy the Yelb application and a [Kubernetes Ingress][kubernetes-ingress] object to make the `yelb-ui` service accessible to the public internet.
 
-    ```bash
+  ```bash
     #!/bin/bash
     
     # Variables
@@ -274,7 +270,7 @@ helm get values $NGINX_RELEASE_NAME --namespace $NGINX_NAMESPACE
 > - Add `csi volume` definition using the `secrets-store.csi.k8s.io` driver, which references the `SecretProviderClass` object responsible for retrieving the TLS certificate from Azure Key Vault.
 > - Include `volume mount` to read the certificate as a secret from Azure Key Vault.
 >
-> For more information, see [Set up Secrets Store CSI Driver to enable NGINX Ingress Controller with TLS](/azure/aks/csi-secrets-store-nginx-tls#deploy-a-secretproviderclass).
+> For more information, see [Set up Secrets Store CSI Driver to enable NGINX ingress controller with TLS](/azure/aks/csi-secrets-store-nginx-tls#deploy-a-secretproviderclass).
 
 1. Update the `yelb-ui` YAML manifest to include the `csi volume` definition and `volume mount` to read the certificate as a secret from Azure Key Vault.
 
@@ -314,7 +310,7 @@ helm get values $NGINX_RELEASE_NAME --namespace $NGINX_NAMESPACE
                   secretProviderClass: yelb
     ```
 
-1. You can now deploy the application. The script uses the `yelb.yml` YAML manifest to deploy the application and the `ingress.yml` to create the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service.
+2. You can now deploy the application. The script uses the `yelb.yml` YAML manifest to deploy the application and the `ingress.yml` to create the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service.
 
     The script performs the following steps:
 
@@ -565,8 +561,6 @@ Other contributors:
 [nginx]: https://github.com/kubernetes/ingress-nginx
 [kubernetes-ingress]: https://kubernetes.io/docs/concepts/services-networking/ingress/
 [aks]: ./what-is-aks.md
-[azure-waf]: /azure/web-application-firewall/overview
-[azure-ag]: /azure/application-gateway/overview
 [azure-ddos]: /azure/ddos-protection/ddos-protection-overview
 [azure-fw]: /en-us/azure/firewall/overview
 [azure-ddos-ag]: /azure/application-gateway/tutorial-protect-application-gateway-ddos
@@ -574,8 +568,5 @@ Other contributors:
 [azure-fw-ag-2]: /azure/architecture/example-scenario/gateway/firewall-application-gateway
 [azure-fw-aks-1]: /azure/firewall/protect-azure-kubernetes-service
 [azure-fw-aks-2]: /azure/architecture/guide/aks/aks-firewall
-[azure-la]: /azure/azure-monitor/logs/log-analytics-workspace-overview
-[az-resource-list]: /cli/azure/resource#az-resource-list
 [az-group-delete]: /cli/azure/group#az-group-delete
-[get-azresource]: /powershell/module/az.resources/get-azresource
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup

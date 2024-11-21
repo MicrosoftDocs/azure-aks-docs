@@ -58,7 +58,7 @@ In this solution, the [Yelb][yelb] application is deployed to an AKS cluster and
 
 This sample supports installing a [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] or an unmanaged [NGINX ingress controller][nginx] using the [Helm chart][nginx-helm-chart]. The application routing add-on with NGINX ingress controller provides the following features:
 
-- Easy configuration of managed NGINX Ingress controllers based on [Kubernetes NGINX Ingress controller][nginx].
+- Easy configuration of managed NGINX ingress controllers based on [Kubernetes NGINX ingress controller][nginx].
 - Integration with [Azure DNS](/azure/dns/dns-overview) for public and private zone management.
 - SSL termination with certificates stored in [Azure Key Vault][azure-kv].
 
@@ -74,7 +74,7 @@ The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azu
 
 The following diagram shows the recommended architecture on Azure:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX Ingress controller.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller.":::
 
 The solution architecture consists of the following:
 
@@ -104,14 +104,9 @@ The Ingress Controller runs in its own pod on the AKS cluster. AGIC monitors a s
 
 The following table outlines advantages and disadvantages of the Application Gateway Ingress Controller (AGIC):
 
-1. **Native Integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway. This allows for seamless and efficient routing of traffic to services running on Azure Kubernetes Service (AKS).
-2. **Simplified Deployment**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods like using Helm charts. It enables a quick and easy setup of an Application Gateway and AKS cluster with AGIC enabled.
-3. **Fully Managed Service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an additional layer of support.
-
-However, there are also some disadvantages and limitations to consider when using AGIC:
-
-1. **Single Cloud Approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach, usually focusing on Azure. It may not be the best choice for customers who require a multi-cloud architecture, where deployment across different cloud platforms is a requirement. In this case customers may decide to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.
-2. **Container Network Interface Support**: AGIC is not supported by all Container Network Interfaces (CNI) configurations. For example, the [Azure CNI Overlay](/azure/aks/azure-cni-overlay) does not currently support AGIC. It is important to verify that the chosen CNI is compatible with AGIC before implementation.
+| Advantages | Disadvantages |
+|---------------|-----------------|
+| • **Native integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway, which allows for seamless and efficient routing of traffic to services running on AKS. <br> • **Simplified deployments**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods. It enables a quick and easy setup of an Application Gateway and an AKS cluster with AGIC enabled. <br> • **Fully managed service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an extra layer of support. | • **Single cloud approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach. It might not be the best choice if you require a multi-cloud architecture where deployment across different cloud platforms is a requirement. In this case, you might want to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues. <br> • **Container Network Interface (CNI) support**: Not all CNI configurations support AGIC. For example, [Azure CNI Overlay](/azure/aks/azure-cni-overlay) currently doesn't support AGIC. It's important to verify that your CNI is compatible with AGIC before implementation. |
 
 For more information, see the following resources:
 
@@ -149,15 +144,15 @@ For more information, see [Deploying an Azure Kubernetes Service (AKS) Cluster w
 
 ### [Azure Front Door](#tab/afd)
 
-[Azure Front Door][azure-fd] is global layer 7 load balancer that securely exposes and protects workloads running in AKS by using the [Azure Web Application Firewall][azure-waf, and an [Azure Private Link](/azure/private-link/private-link-service-overview) service.
+[Azure Front Door][azure-fd] is global layer 7 load balancer that securely exposes and protects workloads running in AKS using the [Azure Web Application Firewall][azure-waf] and an [Azure Private Link](/azure/private-link/private-link-service-overview) service.
 
 :::image type="content" source="media/eks-web-rearchitect/front-door-aks.png" alt-text="Architecture diagram of the solution based on Azure Front Door.":::
 
 This solution uses [Azure Front Door Premium][azure-fd], [end-to-end TLS encryption](/azure/frontdoor/end-to-end-tls), [Azure Web Application Firewall][azure-waf], and a [Private Link service](/azure/private-link/private-link-service-overview) to securely expose and protect a workload that runs in [AKS](/azure/aks/intro-kubernetes).
 
-This architecture uses the Azure Front Door TLS and Secure Sockets Layer (SSL) offload capability to terminate the TLS connection and decrypt the incoming traffic at the front door. Azure Front Door reencrypts the incoming traffic before forwarding it to the AKS-hosted web application. This practice enforces end-to-end TLS encryption for the entire request process, from the client to the origin. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link).
+Azure Front Door TLS and Secure Sockets Layer (SSL) offload capability to terminate TLS connections and decrypt incoming traffic at the front door. Azure Front Door reencrypts the incoming traffic before forwarding it to the AKS-hosted web application. This practice enforces end-to-end TLS encryption for the entire request process, from the client to the origin. For more information, see [Secure your origin with Private Link in Azure Front Door Premium](/azure/frontdoor/private-link).
 
-The [NGINX ingress controller][nginx] exposes the AKS-hosted web application. The NGINX ingress controller is configured to use a private IP address as a front-end IP configuration of the `kubernetes-internal` internal load balancer. The NGINX ingress controller uses HTTPS as the transport protocol to expose the web application. For more information, see [Create an ingress controller by using an internal IP address](/azure/aks/ingress-basic#create-an-ingress-controller-using-an-internal-ip-address).
+The [NGINX ingress controller][nginx] exposes the AKS-hosted web application. It's configured to use a private IP address as a front-end IP configuration of the `kubernetes-internal` internal load balancer, and it uses HTTPS as the transport protocol to expose the web application. For more information, see [Create an ingress controller by using an internal IP address](/azure/aks/ingress-basic#create-an-ingress-controller-using-an-internal-ip-address).
 
 We recommend this solution for scenarios where you're deploying the same web application across multiple regional AKS clusters for business continuity and disaster recovery, or even across multiple cloud platforms or on-premises installations. In this case, Front Door can forward incoming calls to one of the backends (also known as *origins*) using one of the following routing methods:
 
@@ -166,19 +161,17 @@ We recommend this solution for scenarios where you're deploying the same web app
 - [**Weighted**](/azure/frontdoor/routing-methods#weighted): You can assign a weight to your origins when you want to distribute traffic across a set of origins evenly or according to the weight coefficients. Traffic gets distributed by the weight value if the latencies of the origins are within the acceptable latency sensitivity range in the origin group.
 - [**Session affinity**](/azure/frontdoor/routing-methods#affinity): You can configure session affinity for your frontend hosts or domains to ensure requests from the same end user gets sent to the same origin.
 
-For more information, see [Use Azure Front Door to secure AKS workloads](/azure/architecture/example-scenario/aks-front-door/aks-front-door)
+For more information, see [Use Azure Front Door to secure AKS workloads](/azure/architecture/example-scenario/aks-front-door/aks-front-door).
 
-### [NGINX Ingress Controller](#tab/nginx)
+### [NGINX ingress controller](#tab/nginx)
 
 The following solution uses the [NGINX ingress controller][nginx] to expose the Yelb application and ModSecurity to block any malicious or suspicious traffic based on predefined OWASP or custom rules. [ModSecurity][mod-security] is an open-source web application firewall (WAF) that's compatible with popular web servers such as Apache, NGINX, and ISS. It provides protection from a wide range of attacks by using a powerful rule-definition language.
 
-:::image type="content" source="media/eks-web-rearchitect/nginx-modsecurity-aks.png" alt-text="Architecture diagram of the solution based on NGINX Ingress Controller and ModSecurity.":::
+:::image type="content" source="media/eks-web-rearchitect/nginx-modsecurity-aks.png" alt-text="Architecture diagram of the solution based on NGINX ingress controller and ModSecurity.":::
 
-You can use [ModSecurity][mod-security] with the NGINX Ingress controller to provide an extra layer of security to web applications exposed via Kubernetes. The NGINX Ingress controller acts as a reverse proxy, forwarding traffic to the web application, while ModSecurity inspects the incoming requests and blocks any malicious or suspicious traffic based on the defined rules.
+You can use [ModSecurity][mod-security] with the NGINX ingress controller to provide an extra layer of security to web applications exposed via Kubernetes. The NGINX ingress controller acts as a reverse proxy, forwarding traffic to the web application, while ModSecurity inspects the incoming requests and blocks any malicious or suspicious traffic based on the defined rules.
 
-Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform, including [Amazon Elastic Kubernetes Service (EKS)](https://aws.amazon.com/eks/), [Azure Kubernetes Service (AKS)][aks], and [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine).
-
-The vendor neutral nature of this solution allows multi-cloud customers to deploy and configure their web applications consistently across different cloud platforms without significant modifications. It provides flexibility and portability, enabling you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
+Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform. This solution enables you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
 
 
 ## Next step

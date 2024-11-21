@@ -1,5 +1,5 @@
 ---
-title: Migrate AWS web application to AKS
+title: Migrate Amazon Web Services (AWS) web application to Azure Kubernetes Service (AKS)
 description: Step-by-step guide on updating and migrating the AWS web application to Azure Kubernetes Service (AKS).
 author: paolosalvatori
 ms.author: paolos
@@ -12,19 +12,19 @@ ms.custom:
     - eks-to-aks
 ---
 
-# Migrate AWS web application to AKS
+# Migrate Amazon Web Services (AWS) web application to Azure Kubernetes Service (AKS)
 
-This section outlines key considerations for migrating the Yelb application from AWS to AKS. Remember that since the [Yelb][yelb] application is self-contained and doesn't rely on external services, migrating it from AWS to Azure can be done without any code changes. 
+This article outlines key considerations for migrating the Yelb application from AWS to AKS. Remember that the [Yelb][yelb] application is self-contained and doesn't rely on external services, so you can migrate it from AWS to Azure without making any code changes.
 
 ## Migrating from AWS IAM to Azure RBAC
 
-If the web application on AWS uses an [AWS Identity and Access Management (IAM)][aws-iam] role for accessing managed services, you need to assign the role to the [EKS][aws-eks] pods to grant access to AWS resources. In contrast, Azure implements [role-based access control (RBAC)][azure-rbac] differently than AWS. In Azure, you can assign a [role][azure-role-assignment] to users, groups, service principals, or managed identities at a specific scope: management group, subscription, resource group, or resource. This allows you to grant specific permissions to the workload identity on a Microsoft Entra protected resource.
+If the web application on AWS uses an [AWS Identity and Access Management (IAM)][aws-iam] role for accessing managed services, you need to assign the role to the [EKS][aws-eks] pods to grant access to AWS resources. In Azure, you can assign a [role][azure-role-assignment] to users, groups, service principals, or managed identities at a specific scope: management group, subscription, resource group, or resource. This allows you to grant specific permissions to the workload identity on a Microsoft Entra protected resource.
 
 You can configure Azure RBAC using the following steps:
 
 1. Create a [user-assigned managed identity][azure-user-assigned-managed-identity] and [Kubernetes service account][kubernetes-sa] for the workload.
 1. Assign the necessary [roles][azure-role-assignment] to the managed identity to let the AKS-hosted workload access the required Microsoft Entra protected resources.
-1. Enable the OpenID Connect (OIDC) issuer and Microsoft Entra Workload ID on your AKS cluster. For detailed instructions, see [Deploy and configure workload identity on an Azure Kubernetes Service (AKS) cluster][aks-oidc]
+1. Enable the OpenID Connect (OIDC) issuer and Microsoft Entra Workload ID on your AKS cluster. For detailed instructions, see [Deploy and configure workload identity on an Azure Kubernetes Service (AKS) cluster][aks-oidc].
 1. Create a token federation for the managed identity with the [Kubernetes service account][kubernetes-sa] used by the workload on AKS.
 
 [Microsoft Entra Workload ID][entra] uses [Service Account Token Volume Projection][token-projection], specifically a service account, to enable pods to use a Kubernetes identity. A Kubernetes token is issued and [OIDC federation][oidc-federation] enables Kubernetes applications to securely access Azure resources with Microsoft Entra ID based on annotated service accounts. 
@@ -54,7 +54,6 @@ Other contributors:
 [aws-iam]: https://aws.amazon.com/iam/
 [kubernetes-sa]: https://kubernetes.io/docs/concepts/security/service-accounts/
 [azure-user-assigned-managed-identity]: /entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities?pivots=identity-mi-methods-azp
-[azure-rbac]: /azure/role-based-access-control/overview
 [azure-role-assignment]: /azure/role-based-access-control/role-assignments-portal
 [aks-oidc]: /azure/aks/workload-identity-deploy-cluster
 [aks-workload-id]:/azure/aks/workload-identity-overview?tabs=dotnet
