@@ -17,6 +17,8 @@ With the Azure CLI, you can use `command invoke` to access private clusters with
 
 With the Azure portal, you can use the `Run command` feature to run commands on your private cluster. The `Run command` feature uses the same `command invoke` functionality to run commands on your cluster.
 
+The pod created by the `Run command` provides `kubectl` and `helm` for operating your cluster. `jq`, `xargs`, `grep`, and `awk` are available for Bash support.
+
 ## Before you begin
 
 Before you begin, make sure you have the following resources and permissions:
@@ -27,7 +29,12 @@ Before you begin, make sure you have the following resources and permissions:
 
 ### Limitations
 
-The pod created by the `run` command provides `helm` and the latest compatible version of `kubectl` for your cluster with `kustomize`.
+This feature is designed to simplify cluster access and is ***not designed for programmatic access***. If you have a program invoke Kubernetes using `Run command`, the following disadvantages apply:
+
+* You only get *exitCode* and *text output*, and you lose API level details.
+* One extra hop introduces extra failure points.
+
+The pod created by the `Run command` is hard coded with a `200m CPU` and `500Mi memory` request, and a `500m CPU` and `1Gi memory` limit. In rare cases where all your node is packed, the pod can't be scheduled within the ARM API limitation of 60 seconds. This means that the `Run command` would fail, even if it's configured to autoscale.
 
 `command invoke` runs the commands from your cluster, so any commands run in this manner are subject to your configured networking restrictions and any other configured restrictions. Make sure there are enough nodes and resources in your cluster to schedule this command pod.
 
@@ -116,6 +123,10 @@ You can use the following kubectl commands with the `Run command` feature:
 
 4. Select the file(s) you want to attach and then select **Attach**.
 5. Enter the command you want to run and select **Run**.
+
+## Disable `Run command`
+
+Currently, the only way you can disable the `Run command` feature is by setting [`.properties.apiServerAccessProfile.disableRunCommand` to `true`](/rest/api/aks/managed-clusters/create-or-update).
 
 ---
 
