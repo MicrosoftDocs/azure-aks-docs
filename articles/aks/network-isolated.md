@@ -14,7 +14,7 @@ zone_pivot_groups: network-isolated-acr-type
 
 Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
 
-One solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
+One solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names.
 
 Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. A network isolated AKS cluster reduces the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
 
@@ -68,9 +68,10 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 
 - (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
-  - [Azure Key Vault provider for Secrets Store CSI Driver][csisecretstore]
+  - [Azure Key Vault provider for Secrets Store CSI Driver][akv-privatelink]
   - [Azure Monitor Container Insights][azuremonitoring]
-  - 
+
+- (Optional) If you're using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in [Azure Key Vault Secrets Store CSI Driver][csi-akv-wi]), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. One way to address this is by providing an [user-defined routing table and an Azure Firewall][aks-firewall] configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
 
 ::: zone pivot="aks-managed-acr"
 
@@ -292,7 +293,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 ### Update your ACR ID
 
-It is possible to update the private ACR used with a network isolated AKS cluster. To identify the ACR resource ID, use the `az aks show` command.
+It's possible to update the private ACR used with a network isolated AKS cluster. To identify the ACR resource ID, use the `az aks show` command.
 
 ```azurecli-interactive
 az aks show --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME}
@@ -366,7 +367,7 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 
 In this article, you learned what ports and addresses to allow if you want to restrict egress traffic for the cluster.
 
-If you want to set up outbound restriction configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS](limit-egress-traffic.md).
+If you want to set up outbound restriction configuration using Azure Firewall, visit [Control egress traffic using Azure Firewall in AKS][aks-firewall].
 
 If you want to restrict how pods communicate between themselves and East-West traffic restrictions within cluster, see [Secure traffic between pods using network policies in AKS][use-network-policies].
 
@@ -377,10 +378,11 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [ubuntu-security-repository]: https://security.ubuntu.com
 [register-feature-flag]: /azure/azure-resource-manager/management/preview-features?tabs=azure-cli#register-preview-feature
 [container-registry-skus]: /azure/container-registry/container-registry-skus
-[csisecretstore]: /azure/key-vault/general/private-link-service?tabs=portal
+[akv-privatelink]: /azure/key-vault/general/private-link-service?tabs=portal
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
 
 <!-- LINKS - Internal -->
+[aks-firewall]: ./limit-egress-traffic.md
 [conceptual-network-isolated]: ./concepts-network-isolated.md
 [conceptual-network-isolated-limitations]: ./concepts-network-isolated.md#limitations
 [az-extension-add]: /cli/azure/extension#az-extension-add
@@ -401,3 +403,6 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [private-clusters]: ./private-clusters.md
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [use-network-policies]: ./use-network-policies.md
+
+[workload-identity]: ./workload-identity-deploy-cluster.md
+[csi-akv-wi]: ./csi-secrets-store-identity-access.md?pivots=access-with-a-microsoft-entra-workload-identity
