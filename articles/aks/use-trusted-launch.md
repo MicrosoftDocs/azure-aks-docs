@@ -34,7 +34,7 @@ Trusted launch is composed of several, coordinated infrastructure technologies t
 - Trusted launch doesn't support node pools with FIPS enabled or based on Arm64.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
-- To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see[Skip GPU driver installation][skip-gpu-driver-install].
+- To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
 - Ephemeral OS disks can be created with Trusted launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
 
 ## Deploy new cluster
