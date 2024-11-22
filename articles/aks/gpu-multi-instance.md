@@ -19,7 +19,7 @@ This article walks you through how to create a multi-instance GPU node pool usin
 * Azure CLI version 2.2.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * The Kubernetes command-line client, [kubectl](https://kubernetes.io/docs/reference/kubectl/), installed and configured. If you use Azure Cloud Shell, `kubectl` is already installed. If you want to install it locally, you can use the [`az aks install-cli`][az-aks-install-cli] command.
 * Helm v3 installed and configured. For more information, see [Installing Helm](https://helm.sh/docs/intro/install/).
-* Multi-instance GPU node pools are not supported on Azure Linux.
+* Multi-instance GPU node pools are not currently supported on Azure Linux.
 * You can't use Cluster Autoscaler with multi-instance GPU node pools.
 
 ## GPU instance profiles
