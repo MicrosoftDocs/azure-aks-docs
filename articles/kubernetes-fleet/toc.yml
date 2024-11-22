@@ -43,7 +43,7 @@
         - name: Upgrade hub cluster type
           href: upgrade-hub-cluster-type.md
         - name: Access Fleet hub cluster Kubernetes API
-          href: access-fleet-hub-cluster-kubernetes-api.md
+          href: quickstart-access-fleet-hub-cluster-kubernetes-api.md
     - name: Manage multi-cluster updates
       items:
         - name: Update Kubernetes and node images across multiple clusters
