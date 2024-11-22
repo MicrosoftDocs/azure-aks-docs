@@ -2,7 +2,7 @@
 title: Customize the node configuration for Azure Kubernetes Service (AKS) node pools
 description: Learn how to customize the configuration on Azure Kubernetes Service (AKS) cluster nodes and node pools.
 ms.custom: devx-track-azurecli, linux-related-content
-ms.topic: article
+ms.topic: how-to
 ms.date: 04/24/2023
 ms.author: jpalma
 author: palma21
@@ -136,6 +136,8 @@ az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --mes
 az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --message-of-the-day ./newMOTD.txt
 ```
 
+## Troubleshooting custom node configurations
+
 ### Confirm settings have been applied
 
 After you apply custom node configuration, you can confirm the settings have been applied to the nodes by [connecting to the host][node-access] and verifying `sysctl` or configuration changes have been made on the filesystem.
@@ -160,6 +162,7 @@ Kubelet custom configuration is supported for Linux and Windows node pools. Supp
 | `containerLogMaxSizeMB` | Size in megabytes (MB) | 50 | The maximum size (for example, 10 MB) of a container log file before it's rotated. |
 | `containerLogMaxFiles` | ≥ 2 | 5 | The maximum number of container log files that can be present for a container. |
 | `podMaxPids` | -1 to kernel PID limit | -1 (∞)| The maximum amount of process IDs that can be running in a Pod |
+| [`seccompDefault`][secure-container-access] | `Unconfined`, `RuntimeDefault` | `Unconfined` | Sets the default seccomp profile for all workloads. `RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls will fail. `Unconfined` places no restrictions on syscalls, and all system calls are allowed which reduces security. For more details, see the [containerD default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). This parameter is in preview. [Register][register-preview] the "KubeletDefaultSeccompProfilePreview" feature flag using the [`az feature register`][az-feature-register] command with --namespace "Microsoft.ContainerService".|
 
 #### Windows Kubelet custom configuration
 
@@ -252,4 +255,6 @@ The settings below can be used to tune the operation of the virtual memory (VM) 
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-provider-register]: /cli/azure/provider#az-provider-register
+[register-preview]: /azure/azure-resource-manager/management/preview-features?tabs=azure-cli#register-preview-feature
+[secure-container-access]: secure-container-access.md
 

@@ -51,7 +51,7 @@ The following example creates a resource group named *myResourceGroup* in the *e
     Location          : eastus
     ProvisioningState : Succeeded
     Tags              :
-    ResourceId        : /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup
+    ResourceId        : /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup
     ```
 
 ## Create AKS cluster
@@ -434,4 +434,3 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [azure-resource-group]: /azure/azure-resource-manager/management/overview
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-

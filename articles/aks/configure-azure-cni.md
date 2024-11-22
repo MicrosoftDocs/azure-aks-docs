@@ -7,7 +7,7 @@ ms.author: allensu
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 09/13/2023
+ms.date: 11/19/2024
 ms.custom: references_regions, devx-track-azurecli
 ---
 
@@ -87,7 +87,7 @@ New-AzAksCluster @net
 
 When you create an AKS cluster with the Azure CLI, you can also configure Azure CNI networking. 
 
-Use [`az aks create`][az-aks-create] with the `--network-plugin azure` argument to create a cluster with advanced networking:
+Use [`az aks create`][az-aks-create] with the `--network-plugin azure` argument to create a cluster with [Azure CNI Node Subnet][azure-cni-node-subnet]:
 
 ```azurecli-interactive
 az group create \
@@ -112,3 +112,4 @@ To configure Azure CNI networking with dynamic IP allocation and enhanced subnet
 [macOSUpgrade]: /powershell/azure/install-azps-macos#update-the-azure-powershell-module
 [windowsUpgrade]: /powershell/azure/install-azps-windows#update-the-az-powershell-module
 [linuxUpgrade]: /powershell/azure/install-azps-linux#update-the-az-powershell-module
+[azure-cni-node-subnet]: ./concepts-network-cni-overview.md

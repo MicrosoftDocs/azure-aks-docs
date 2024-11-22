@@ -93,8 +93,8 @@ If you're using Cloud Shell, open it with the `>_` button on the top of the Azur
     The following example output shows the single node created in the previous steps. Make sure the node status is *Ready*.
 
     ```output
-    NAME                                STATUS   ROLES   AGE       VERSION
-    aks-nodepool1-31718369-0   Ready    agent    6m44s   v1.15.10
+    NAME                       STATUS   ROLES   AGE     VERSION
+    aks-nodepool1-31718369-0   Ready    agent   6m44s   v1.15.10
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -114,8 +114,8 @@ If you're using Cloud Shell, open it with the `>_` button on the top of the Azur
     The following example output shows the single node created in the previous steps. Make sure the node status is *Ready*.
 
     ```output
-    NAME                                STATUS   ROLES   AGE       VERSION
-    aks-nodepool1-31718369-0   Ready    agent    6m44s   v1.15.10
+    NAME                       STATUS  ROLES   AGE     VERSION
+    aks-nodepool1-31718369-0   Ready   agent   6m44s   v1.15.10
     ```
 
 ---

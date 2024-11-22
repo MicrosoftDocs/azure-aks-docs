@@ -214,6 +214,52 @@ All built-in plugins are supported, so the [CoreDNS hosts][coredns hosts] plugin
      kubectl -n kube-system rollout restart deployment coredns
      ```
 
+## Invalid search domain completions for internal.cloudapp.net and reddog.microsoft.com 
+
+Azure DNS configures a default search domain of `<vnetId>.<region>.internal.cloudapp.net` in virtual networks using Azure DNS and a non-functional stub `reddog.microsoft.com` in virtual networks using custom DNS servers (see the [name resolution for resources documentation](/azure/virtual-network/virtual-networks-name-resolution-for-vms-and-role-instances) for more details). Kubernetes configures pod DNS settings with `ndots: 5` to properly support cluster service hostname resolution. These two configurations combine to result in invalid search domain completion queries that never succeed being sent to upstream name servers while the system processes through the domain search list. These invalid queries cause name resolution delays and can place extra load on upstream DNS servers.
+
+As of the v20241025 AKS release, AKS configures CoreDNS to respond with NXDOMAIN in the following two cases in order to prevent these invalid search domain completion queries from being forwarded to upstream DNS:
+
+- Any query for the root domain or a subdomain of `reddog.microsoft.com`.
+- Any query for a subdomain of `internal.cloudapp.net` that has seven or more labels in the domain name.
+  - This configuration allows virtual machine resolution by hostname to still succeed. For example, CoreDNS sends `aks12345.myvnetid.myregion.internal.cloudapp.net` (6 labels) to Azure DNS, but rejects  `mcr.microsoft.com.myvnetid.myregion.internal.cloudapp.net` (8 labels)
+
+This block is implemented in the default server block in the Corefile for the cluster. If needed, this rejection configuration can be disabled by creating custom server blocks for the appropriate domain with a forward plugin enabled:
+
+1. Create a file named `corednsms.yaml` and paste the following example configuration. Make sure to update the IP addresses and hostnames with the values for your own environment.
+
+     ```yaml
+     apiVersion: v1
+     kind: ConfigMap
+     metadata:
+       name: coredns-custom # this is the name of the configmap you can overwrite with your changes
+       namespace: kube-system
+     data:
+         override-block.server:
+            internal.cloudapp.net:53 {
+                errors
+                cache 30
+                forward . /etc/resolv.conf
+            }
+            reddog.microsoft.com:53 {
+                errors
+                cache 30
+                forward . /etc/resolv.conf
+            }
+     ```
+
+2. Create the ConfigMap using the [`kubectl apply configmap`][kubectl-apply] command and specify the name of your YAML manifest.
+
+     ```console
+     kubectl apply -f corednsms.yaml
+     ```
+
+3. To reload the ConfigMap and enable Kubernetes Scheduler to restart CoreDNS without downtime, perform a rolling restart using [`kubectl rollout restart`][kubectl-rollout].
+
+     ```console
+     kubectl -n kube-system rollout restart deployment coredns
+     ```
+
 ## Troubleshooting
 
 For general CoreDNS troubleshooting steps, such as checking the endpoints or resolution, see [Debugging DNS resolution][coredns-troubleshooting].

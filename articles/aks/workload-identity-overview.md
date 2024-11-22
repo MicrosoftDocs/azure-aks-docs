@@ -2,7 +2,7 @@
 title: Use a Microsoft Entra Workload ID on AKS
 description: Learn about Microsoft Entra Workload ID for Azure Kubernetes Service (AKS) and how to migrate your application to authenticate using this identity.  
 author: tamram
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: build-2023
 ms.date: 05/28/2024
@@ -271,7 +271,7 @@ All annotations are optional. If the annotation isn't specified, the default val
 | Annotation | Description | Default |
 |--|--|--|
 | `azure.workload.identity/service-account-token-expiration` | Represents the `expirationSeconds` field for the projected service account token. It's an optional field that you configure to prevent any downtime caused by errors during service account token refresh. Kubernetes service account token expiry isn't correlated with Microsoft Entra tokens. Microsoft Entra tokens expire in 24 hours after they're issued. <sup>1</sup> | 3600<br> Supported range is 3600-86400. |
-| `azure.workload.identity/skip-containers` | Represents a semi-colon-separated list of containers to skip adding projected service account token volume. For example, `container1;container2`. | By default, the projected service account token volume is added to all containers if the service account is labeled with `azure.workload.identity/use: true`. |
+| `azure.workload.identity/skip-containers` | Represents a semi-colon-separated list of containers to skip adding projected service account token volume. For example, `container1;container2`. | By default, the projected service account token volume is added to all containers if the pod is labeled with `azure.workload.identity/use: true`. |
 | `azure.workload.identity/inject-proxy-sidecar` | Injects a proxy init container and proxy sidecar into the pod. The proxy sidecar is used to intercept token requests to IMDS and acquire a Microsoft Entra token on behalf of the user with federated identity credential. | true |
 | `azure.workload.identity/proxy-sidecar-port` | Represents the port of the proxy sidecar. | 8000 |
 

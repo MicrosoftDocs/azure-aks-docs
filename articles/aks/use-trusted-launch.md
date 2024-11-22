@@ -1,7 +1,7 @@
 ---
 title: Trusted launch with Azure Kubernetes Service (AKS)
 description: Learn how trusted launch protects the Azure Kubernetes Cluster (AKS) nodes against boot kits, rootkits, and kernel-level malware. 
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
 ms.date: 10/09/2024
