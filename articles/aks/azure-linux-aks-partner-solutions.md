@@ -16,9 +16,9 @@ Microsoft collaborates with partners to ensure your build, test, deployment, con
 
 The third party partners featured in this article have introduction guides to help you start using their solutions with your applications running on Azure Linux Container Host on AKS.
 
-|          | DevOps | Networking | Observability | Security | Storage | Config Management | Migration |
+|          | DevOps | Networking | Observability | Security | Storage | Config Management | Migration | Monitoring|
 |----------|--------|------------|---------------|----------|---------|-------------------|-----------|
-| **Partners** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) | • [Corent](#corent) | • [Catalogic](#catalogic) |
+| **Partners** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> •[VictoriaMetrics](#VictoriaMetrics)  | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> •[VictoriaMetrics](#VictoriaMetrics)  | •[Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> •[Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> •[VictoriaMetrics](#VictoriaMetrics)  | • [Corent](#corent) | •[Catalogic](#catalogic) | •[VictoriaMetrics](#VictoriaMetrics) 
 
 ## DevOps
 
@@ -184,6 +184,24 @@ With Spot Ocean, users gain:
 </details>
 
 For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/) and [Spot By NetApp on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/netapp.spot?tab=Overview).
+
+### VictoriaMetrics
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/vm-com-hor-asset-black.svg":::
+
+| Solution | Categories |
+|----------|------------|
+|VictoriaMetrics VictoriaMetrics | DevOps <br> Observability <br> Storage <br> Monitoring |
+
+VictoriaMetrics is a high-performance, cost-effective, and scalable open source time series database and monitoring solution that lets users build a monitoring platform without scalability issues and minimal operational burden.
+
+<details> <summary> See more </summary><br>
+
+VictoriaMetrics can be used to monitor services running in AKS with Azure Linux, the applications running in AKS with Azure Linux, as well as the underlying infrastructure. In addition, the enterprise version of VictoriaMetrics provides extra features for securing your monitoring setup, such as OIDC authentication and access control.
+
+</details>
+
+For more information, see [VictoriaMetrics](https://victoriametrics.com/products/open-source/) and [VictoriaMetrics](https://victoriametrics.com/blog/monitoring-azure-aks-azure-linux-with-victoriametrics/).
 
 ## Networking
 
