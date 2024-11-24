@@ -16,3 +16,4 @@ _repo.*/
 /articles/aks/.vs/aks/v17
 /.gitignore
 /.gitignore
+*.json
