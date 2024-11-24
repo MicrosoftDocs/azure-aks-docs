@@ -187,7 +187,7 @@ For more information, see [Spot By NetApp Solutions](https://spot.io/product/oce
 
 ### VictoriaMetrics
 
-:::image type="icon" source="./media/azure-linux-aks-partner-solutions/vm-com-hor-asset-black.svg":::
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/VictoriaMetrics.svg":::
 
 | Solution | Categories |
 |----------|------------|
