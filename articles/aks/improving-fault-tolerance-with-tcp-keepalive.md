@@ -67,7 +67,7 @@ Safe sysctls are the ones that are namespaced and properly isolated between pods
 - `net.ipv4.tcp_keepalive_intvl`
 - `net.ipv4.tcp_keepalive_probes` 
 
-Unsafe sysctls are either not namespaced or not properly isolated between pods. Modifying these parameters can potentially impact the stability and security of the node or other pods. By default, Kubernetes disables unsafe sysctls. To use them, a cluster administrator must explicitly enable specific unsafe sysctls on each node by configuring the kubelet. You can find more detailed information about the supported configurations for both the node operating system and kubelet, and how to enable unsafe sysctls in kubelet in our [prescriptive guidance](custom-node-configuration.md).
+To learn more about safe and unsafe sysctls and their configuration, see [Customize node configuration for Azure Kubernetes Service (AKS) node pools](custom-node-configuration.md).
 
 > [!NOTE]
 > Starting with Kubernetes 1.29, TCP keepalive sysctls are considered safe and are enabled by default. You don't need to enable them explicitly in your cluster.
@@ -213,8 +213,6 @@ static async Task Main()
 }
 ```
 For more information, see the [ConnectCallback handler](/dotnet/api/system.net.http.socketshttphandler.connectcallback).
-
-Enabling TCP keepalive helps to maintain the connection, especially when the server is placed behind a load balancer and uses NAT for outgoing traffic. In this way, the client can promptly detect server failures and switch to another instance without waiting for a timeout.
 
 ## HTTP/2 keepalive
 
