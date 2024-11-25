@@ -72,7 +72,7 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - Azure Monitor for containers (Container Insights)
 - Virtual nodes
 - Azure policy
-- Cluster extenions: Flux (GitOps), Dapr, Azure App Configuration, Azure Machine Learning,  Azure Container Storage, Azure Backup 
+- Cluster extensions: Flux (GitOps), Dapr, Azure App Configuration, Azure Machine Learning, Azure Container Storage, Azure Backup 
 - AI toolchain operator (preview)
 - Application routing
 - HTTP application routing
