@@ -2,7 +2,7 @@
 title: Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
 titleSuffix: Azure Kubernetes Service
 description: Learn how to use TCP keepalive to enhance network fault tolerance in cloud applications hosted in Azure Kubernetes Service.
-ms.topic: article
+ms.topic: conceptual
 ms.author: rhulrai
 author: rahulrai-in
 ms.subservice: aks-networking
@@ -17,7 +17,9 @@ In a standard Transmission Control Protocol (TCP) connection, no data flows betw
 
 Several Azure Networking services, such as Azure Load Balancer (ALB), enable you to [configure a timeout period](/azure/load-balancer/load-balancer-tcp-reset) after which an idle TCP connection is terminated. When a TCP connection remains idle for longer than the timeout duration configured on the networking service, any subsequent TCP packets sent in either direction might be dropped. Alternatively, they might receive a TCP Reset (RST) packet from the network service, depending on whether TCP resets were enabled on the service.
 
-In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the following command that sets it to 45 minutes:
+The idle timeout feature in an ALB is designed optimize resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications.
+
+In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the [`az aks update`](/cli/azure/aks#az_aks_update) command. The following example sets the timeout period to 45 minutes.
 
 ```azurecli-interactive
 az aks update \
@@ -26,7 +28,9 @@ az aks update \
     --load-balancer-idle-timeout 45
 ```
 
-The idle timeout feature in an ALB is designed to terminate inactive connections between the client and server after a specified duration, optimizing resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications. However, when adjusting the timeout settings, be sure to consider the duration carefully. Setting the timeout too short can cause long-running operations to terminate prematurely, resulting in failed requests, and a poor user experience. Additionally, frequent timeouts can increase error rates, making your applications seem unreliable. On the other hand, setting the timeout too long can drain server resources by keeping idle connections open, which reduces the capacity available for handling new requests. It can also delay the detection of server issues, leading to longer downtimes and inefficient load balancing.
+Make sure you consider the timeout duration carefully before adjusting it:
+- A duration that's too short can cause long-running operations to terminate prematurely, resulting in failed requests, and a poor user experience. It can also lead to frequent timeouts that increase error rates and making your applications seem unreliable. 
+- A duration that's too long can drain server resources by keeping idle connections open, reducing the capacity available for handling new requests. It can also delay the detection of server issues, leading to longer downtimes and inefficient load balancing.
 
 In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases is defined by the `kube-proxy` TCP settings and the pod's TCP sysctl settings. By default, `kube-proxy` runs in iptables mode and it uses the default TCP timeout settings defined in the [kube-proxy specification](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/). The default TCP timeout settings for `kube-proxy` are as follows:
 
@@ -92,9 +96,9 @@ spec:
 
 Applying the specification implements the following TCP keepalive behavior:
 
-1. `net.ipv4.tcp_keepalive_time` configures keepalive probes to be sent out after 45 seconds of inactivity on the connection.
-2. `net.ipv4.tcp_keepalive_probes` configures the operating system to send 5 unacknowledged keepalive probes before deeming the connection as unusable.
-3. `net.ipv4.tcp_keepalive_intvl` sets the duration between dispatch of two keepalive probes to 45 seconds.
+- `net.ipv4.tcp_keepalive_time` configures keepalive probes to be sent out after 45 seconds of inactivity on the connection.
+- `net.ipv4.tcp_keepalive_probes` configures the operating system to send 5 unacknowledged keepalive probes before deeming the connection as unusable.
+- `net.ipv4.tcp_keepalive_intvl` sets the duration between dispatch of two keepalive probes to 45 seconds.
 
 The TCP keepalive sysctls are namespaced in the Linux kernel, which means they can be set individually for each pod on a node. This segregation allows you to configure the keepalive settings through the pod's security context, which applies to all containers in the same pod.
 
@@ -116,7 +120,7 @@ The next section covers how you can ensure that your applications have TCP keepa
 
 ## Configuring TCP keepalive in applications
 
-The TCP client application needs to ensure that TCP keepalive is enabled to ensure that it sends keepalive probes to the server. Most programming languages and frameworks provide options to enable TCP keepalive on socket connections. Following is an example using Python's `socket` library:
+The TCP client application should enable TCP keepalive so that keepalive probes are sent to the server. Most programming languages and frameworks provide options to enable TCP keepalive on socket connections. The following example uses Python's `socket` library:
 
 ```python
 import socket
@@ -153,12 +157,16 @@ finally:
     sock.close()
 ```
 
-In this example, the application enables TCP keepalive probes, which are sent to the server after 60 seconds of inactivity. If five consecutive probes fail, the connection is closed. It's important to note that socket-level TCP keepalive settings override system-level configurations set via `sysctl`. Therefore, if you configure the application's TCP keepalive settings, they take effect. To have the application adhere to the system's TCP keepalive configurations, enable the TCP keepalive option on the socket without specifying individual parameters within the application.
+In this example:
+- The application enables TCP keepalive.
+- The keepalive probes are sent after 60 seconds of inactivity.
+- The keepalive probes are sent at intervals of 10 seconds.
+- If 5 consecutive probes fail, the connection closes.
 
 > [!NOTE]
-> The application-level TCP keepalive settings in the previous code listing override those configured via the kubelet. To maintain consistent TCP keepalive behavior across your applications, set the desired parameters at the operating system level. Allow individual applications to override these defaults only when necessary.
+> Note that any system-level TCP keepalive configuration set via `sysctl` in the kubelet are overridden by an application's TCP keepalive settings. To maintain consistent keepalive behavior across your applications, set keepalive parameters at the kubelet level. Then, enable the keepalive option on the socket without specifying individual parameters within the application so the system-level keepalive parameters are used for the application. Only allow individual applications to override the system-level parameter values, like in the previous example, when absolutely necessary.
 
-If you're using .NET, the following code produces the same result:
+If you're using .NET, the following code produces the same result as the previous Python example:
 
 ```csharp
 static async Task Main()
@@ -204,7 +212,7 @@ static async Task Main()
     }
 }
 ```
-For more information, see the [`ConnectCallback` handler] (/dotnet/api/system.net.http.socketshttphandler.connectcallback).
+For more information, see the [ConnectCallback handler](/dotnet/api/system.net.http.socketshttphandler.connectcallback).
 
 Enabling TCP keepalive helps to maintain the connection, especially when the server is placed behind a load balancer and uses NAT for outgoing traffic. In this way, the client can promptly detect server failures and switch to another instance without waiting for a timeout.
 
@@ -229,7 +237,7 @@ For gRPC applications, the client and the server can customize the following kee
 
 Refer to the programming language-specific examples and documentation listed in the [gRPC specification](https://grpc.io/docs/guides/keepalive/) that demonstrate client and server applications using keepalive.
 
-## Considerations
+## Best practices
 
 While keepalive probes can improve the fault tolerance of your applications, they can also consume more bandwidth, which might impact network capacity and lead to extra charges. Additionally, on mobile devices, increased network activity may affect battery life. Therefore, it's important to adhere to the following best practices:
 
@@ -238,5 +246,4 @@ While keepalive probes can improve the fault tolerance of your applications, the
 - **Monitoring and logging**: Implement logging to monitor keepalive-induced connection closures for troubleshooting.
 - **Fallback mechanisms**: Design applications to handle disconnections gracefully, including retry logic and failover strategies.
 
-## See also
 
