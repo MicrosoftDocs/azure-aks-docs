@@ -201,7 +201,7 @@ VictoriaMetrics can be used to monitor services running in AKS with Azure Linux,
 
 </details>
 
-For more information, see [VictoriaMetrics](https://victoriametrics.com/products/open-source/) and [VictoriaMetrics](https://victoriametrics.com/blog/monitoring-azure-aks-azure-linux-with-victoriametrics/).
+For more information, see [VictoriaMetrics](https://victoriametrics.com/products/open-source/) and [VictoriaMetrics Support statement](https://victoriametrics.com/blog/monitoring-azure-aks-azure-linux-with-victoriametrics/).
 
 ## Networking
 
