@@ -76,11 +76,11 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - AI toolchain operator (preview)
 - Application routing
 - HTTP application routing
-- Cost analysis 
+- Azure cost analysis 
+
+Additionally, Windows node pools aren't currently supported with IDMS restriction.
 
 The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
-
-Windows node pools are not currently supported.
 
 > [!CAUTION]
 > Enabling IMDS restrictions for a cluster that uses unsupported add-ons results in an error.
