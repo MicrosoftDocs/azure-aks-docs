@@ -115,7 +115,6 @@ az aks create \
 ```
 
 
-
 ## Frequently asked questions
 
 - **Can I customize Cilium configuration?**
@@ -196,6 +195,8 @@ az aks create \
 ## Next steps
 
 Learn more about networking in AKS in the following articles:
+
+* [Upgrade Azure Kubernetes Service (AKS) IPAM modes and Dataplane Technology](upgrade-aks-ipam-and-dataplane.md).
 
 * [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 

@@ -448,6 +448,8 @@ az aks nodepool add \
 
 ## Next steps
 
+To learn how to upgrade existing clusters Azure CNI overlay, see [Upgrade Azure Kubernetes Service (AKS) IPAM modes and Dataplane Technology](upgrade-aks-ipam-and-dataplane.md).
+
 To learn how to utilize AKS with your own Container Network Interface (CNI) plugin, see [Bring your own Container Network Interface (CNI) plugin](use-byo-cni.md).
 
 <!-- LINKS - internal -->
