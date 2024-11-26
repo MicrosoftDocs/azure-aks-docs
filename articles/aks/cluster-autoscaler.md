@@ -1,7 +1,7 @@
 ---
 title: Use the cluster autoscaler in Azure Kubernetes Service (AKS)
 description: Learn how to use the cluster autoscaler to automatically scale your Azure Kubernetes Service (AKS) workloads to meet application demands.
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 01/11/2024
 author: schaffererin

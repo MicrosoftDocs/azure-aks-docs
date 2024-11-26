@@ -203,7 +203,7 @@ The following example increases the number of nodes to three in the Kubernetes c
     AgentPoolProfiles        : {default}
     ...
     ResourceGroupName        : myResourceGroup
-    Id                       : /subscriptions/00000000-0000-0000-0000-000000000000/resourcegroups/myResourceGroup/providers/Mic
+    Id                       : /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourcegroups/myResourceGroup/providers/Mic
                                rosoft.ContainerService/managedClusters/myAKSCluster
     Name                     : myAKSCluster
     Type                     : Microsoft.ContainerService/ManagedClusters
@@ -243,4 +243,3 @@ In the next tutorial, you learn how to upgrade Kubernetes in your AKS cluster.
 [set-azakscluster]: /powershell/module/az.aks/set-azakscluster
 [aks-tutorial-upgrade-kubernetes]: ./tutorial-kubernetes-upgrade-cluster.md
 [keda-addon]: ./keda-about.md
-

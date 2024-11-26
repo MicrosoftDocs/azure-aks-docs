@@ -642,6 +642,8 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 
 ## Contributors
 
+*Microsoft maintains this article. The following contributors originally wrote it:*
+
 * Nelly Kiboi | Service Engineer
 * Saverio Proto | Principal Customer Experience Engineer
 * Don High | Principal Customer Engineer

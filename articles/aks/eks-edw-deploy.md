@@ -299,7 +299,7 @@ For more information on developing and running applications in AKS, see the foll
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 - Ken Kilty | Principal TPM
 - Russell de Pina | Principal TPM

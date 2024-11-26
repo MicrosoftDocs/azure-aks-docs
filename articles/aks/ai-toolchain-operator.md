@@ -1,7 +1,7 @@
 ---
 title: Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)
 description: Learn how to enable the AI toolchain operator add-on on Azure Kubernetes Service (AKS) to simplify OSS AI model management and deployment.
-ms.topic: article
+ms.topic: how-to
 ms.custom: azure-kubernetes-service, devx-track-azurecli
 ms.date: 02/28/2024
 author: schaffererin
@@ -21,7 +21,7 @@ This article shows you how to enable the AI toolchain operator add-on and deploy
 
 * This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for AKS](./concepts-clusters-workloads.md).
 * For ***all hosted model inference images*** and recommended infrastructure setup, see the [KAITO GitHub repository](https://github.com/Azure/kaito).
-* The AI toolchain operator add-on currently supports KAITO version **v0.1.0**, please make a note of this in considering your choice of model from the KAITO model repository.
+* The AI toolchain operator add-on currently supports KAITO **version 0.1.0**, please make a note of this in considering your choice of model from the KAITO model repository.
 
 ## Prerequisites
 
@@ -29,7 +29,7 @@ This article shows you how to enable the AI toolchain operator add-on and deploy
   * If you have multiple Azure subscriptions, make sure you select the correct subscription in which the resources will be created and charged using the [az account set][az-account-set] command.
 
     > [!NOTE]
-    > The subscription you use must have GPU VM quota.
+    > The subscription you use must have GPU VM quota for deployment of the model that you choose.
 
 * Azure CLI version 2.47.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 * The Kubernetes command-line client, kubectl, installed and configured. For more information, see [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
@@ -103,7 +103,6 @@ The following sections describe how to create an AKS cluster with the AI toolcha
     > [!NOTE]
     > AKS creates a managed identity once you enable the AI toolchain operator add-on. The managed identity is used to create GPU node pools in the managed AKS cluster. Proper permissions need to be set for it manually following the steps introduced in the following sections.
     >
-    > AI toolchain operator enablement requires the enablement of OIDC issuer.
 
 3. On an existing AKS cluster, you can enable the AI toolchain operator add-on using the [az aks update][az-aks-update] command.
 
@@ -178,6 +177,9 @@ The following sections describe how to create an AKS cluster with the AI toolcha
         --audience api://AzureADTokenExchange
     ```
 
+    > [!NOTE]
+    > Before this step is complete, the `gpu-provisioner` controller pod will remain in a crash loop status. Once the federated credential is created, the `gpu-provisioner` controller pod will reach a running state and you will be able to verify that the deployment is running in the following steps.
+
 ## Verify that your deployment is running
 
 1. Restart the KAITO GPU provisioner deployment on your pods using the `kubectl rollout restart` command:
@@ -223,19 +225,25 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 
 ## Clean up resources
 
-If you no longer need these resources, you can delete them to avoid incurring extra Azure charges.
+If you no longer need these resources, you can delete them to avoid incurring extra Azure compute charges.
 
-* Delete the resource group and its associated resources using the [az group delete][az-group-delete] command.
+* Delete the KAITO workspace and its associated resources using the `kubectl delete workspace` command.
 
     ```azurecli-interactive
-    az group delete --name "${AZURE_RESOURCE_GROUP}" --yes --no-wait
+    kubectl delete workspace workspace-falcon-7b-instruct
     ```
 
 ## Next steps
 
-For more inference model options, see the [KAITO GitHub repository](https://github.com/Azure/kaito).
+For more model deployment options, see the upstream [KAITO GitHub repository](https://github.com/Azure/kaito).
+
+* Explore [MLOps for AI and machine learning workflows][mlops-concepts] on AKS
+* Learn about [MLOps best practices][mlops-best-practices] for your AI pipelines on AKS
+* Learn how to deploy [GPU workloads on AKS][gpus-on-aks]
+
 
 <!-- LINKS -->
+
 [az-group-create]: /cli/azure/group#az_group_create
 [az-group-delete]: /cli/azure/group#az_group_delete
 [az-aks-create]: /cli/azure/aks#az_aks_create
@@ -249,4 +257,6 @@ For more inference model options, see the [KAITO GitHub repository](https://gith
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-feature-show]: /cli/azure/feature#az_feature_show
 [az-provider-register]: /cli/azure/provider#az_provider_register
-
+[gpus-on-aks]: ../aks/gpu-cluster.md
+[mlops-concepts]: ../aks/concepts-machine-learning-ops.md
+[mlops-best-practices]: ../aks/best-practices-ml-ops.md

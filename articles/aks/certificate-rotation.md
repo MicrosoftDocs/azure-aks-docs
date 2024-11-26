@@ -4,7 +4,7 @@ description: Learn about certificate rotation in an Azure Kubernetes Service (AK
 author: tamram
 
 ms.author: tamram
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/29/2024

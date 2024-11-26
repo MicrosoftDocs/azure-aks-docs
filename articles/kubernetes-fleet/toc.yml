@@ -36,10 +36,12 @@
     href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
-  - name: Intelligent Kubernetes resource placement based on member cluster properties
+  - name: Intelligent Kubernetes resource placement
     href: intelligent-resource-placement.md
   - name: Upgrade hub cluster type
     href: upgrade-hub-cluster-type.md
+  - name: Define re-usable update strategies
+    href: update-create-update-strategy.md
   - name: Update Kubernetes and node images across multiple clusters
     href: update-orchestration.md
   - name: Automate updates of Kubernetes and node images across multiple clusters
