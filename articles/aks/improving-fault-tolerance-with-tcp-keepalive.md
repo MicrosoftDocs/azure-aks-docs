@@ -6,7 +6,7 @@ ms.topic: conceptual
 ms.author: rhulrai
 author: rahulrai-in
 ms.subservice: aks-networking
-ms.date: 10/30/2024
+ms.date: 11/30/2024
 ---
 
 # Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
