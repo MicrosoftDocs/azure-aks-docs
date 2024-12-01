@@ -87,7 +87,7 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
 1. Create the following `ClusterResourcePlacement` in a file called `crp-2.yaml`. Notice we're selecting clusters in the `eastus` region:
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: kuard-demo

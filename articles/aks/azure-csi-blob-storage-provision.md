@@ -5,7 +5,7 @@ description: Learn how to create a static or dynamic persistent volume with Azur
 author: tamram
 
 ms.author: tamram
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-storage
 ms.date: 07/08/2024
 ---

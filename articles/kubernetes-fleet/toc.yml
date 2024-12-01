@@ -58,7 +58,7 @@
           href: use-taints-tolerations.md
         - name: Customize cluster scoped resources with overrides
           href: cluster-resource-override.md
-        - name: Customise namespace scoped resources with overrides
+        - name: Customize namespace scoped resources with overrides
           href: resource-override.md
         - name: Multi-cluster Layer 4 Load Balancing
           href: l4-load-balancing.md

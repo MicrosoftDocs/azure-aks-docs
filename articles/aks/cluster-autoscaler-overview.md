@@ -60,7 +60,7 @@ It's important to note that the cluster autoscaler profile settings are cluster-
 
 For clusters that handle substantial and bursty workloads with a primary focus on performance, we recommend increasing the `scan-interval` and decreasing the `scale-down-utilization-threshold`. These settings help batch multiple scaling operations into a single call, optimizing scaling time and the utilization of compute read/write quotas. It also helps mitigate the risk of swift scale down operations on underutilized nodes, enhancing the pod scheduling efficiency. Also increase `ok-total-unready-count`and `max-total-unready-percentage`.
 
-For clusters with daemonset pods, we recommend setting `ignore-daemonset-utilization` to `true`, which effectively ignores node utilization by daemonset pods and minimizes unnecessary scale down operations. See [profile for bursty workloads](./cluster-autoscaler.md#configure-cluster-autoscaler-profile-for-bursty-workloads)
+For clusters with daemonset pods, we recommend setting `ignore-daemonsets-utilization` to `true`, which effectively ignores node utilization by daemonset pods and minimizes unnecessary scale down operations. See [profile for bursty workloads](./cluster-autoscaler.md#configure-cluster-autoscaler-profile-for-bursty-workloads)
 
 #### Example 2: Optimizing for cost
 

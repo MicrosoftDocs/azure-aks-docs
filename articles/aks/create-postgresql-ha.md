@@ -381,7 +381,7 @@ The Azure Monitor workspace for Managed Prometheus and Azure Managed Grafana are
     {
       "omsagent": {
         "config": {
-          "logAnalyticsWorkspaceResourceID": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/rg-cnpg-9vbin3p8/providers/Microsoft.OperationalInsights/workspaces/ala-cnpg-9vbin3p8",
+          "logAnalyticsWorkspaceResourceID": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/rg-cnpg-9vbin3p8/providers/Microsoft.OperationalInsights/workspaces/ala-cnpg-9vbin3p8",
           "useAADAuth": "true"
         },
         "enabled": true,
@@ -512,7 +512,7 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 * Ken Kilty | Principal TPM
 * Russell de Pina | Principal TPM

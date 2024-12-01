@@ -4,7 +4,7 @@ description: Learn how to configure the OpenID Connect (OIDC) provider for a clu
 author: tamram
 
 ms.author: tamram
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 05/13/2024
@@ -99,7 +99,7 @@ The output should resemble the following:
 
 ```output
 {
-  "issuer": "https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000/",
+  "issuer": "https://eastus.oic.prod-aks.azure.com/ffffffff-eeee-dddd-cccc-bbbbbbbbbbb0/00000000-0000-0000-0000-000000000000/",
   "jwks_uri": "https://eastus.oic.prod-aks.azure.com/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000/openid/v1/jwks",
   "response_types_supported": [
     "id_token"

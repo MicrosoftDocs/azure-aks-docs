@@ -3,9 +3,8 @@ title: Move Azure Disk persistent volumes to another AKS cluster in the same or 
 titleSuffix: Azure Kubernetes Service
 description: Learn how to move a persistent volume between Azure Kubernetes Service clusters in the same subscription or a different subscription. 
 author: tamram
-
 ms.author: tamram
-ms.topic: article
+ms.topic: how-to
 ms.date: 04/08/2024
 ---
 
@@ -114,7 +113,7 @@ To mount the moved disk volume, create a static persistent volume with the resou
       csi:
         driver: disk.csi.azure.com
         readOnly: false
-        volumeHandle: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/MC_rg_azure_aks-pvc-target_eastus/providers/Microsoft.Compute/disks/pvc-501cb814-dbf7-4f01-b4a2-dc0d5b6c7e7a
+        volumeHandle: /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/MC_rg_azure_aks-pvc-target_eastus/providers/Microsoft.Compute/disks/pvc-aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e
         volumeAttributes:
           fsType: ext4
     ```

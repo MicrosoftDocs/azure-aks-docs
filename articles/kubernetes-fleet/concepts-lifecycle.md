@@ -2,8 +2,8 @@
 title: Fleet hub cluster overview
 description: This article provides an overview on how Azure Kubernetes Fleet Manager conducts lifecycle management.
 ms.date: 10/03/2024
-author: yoobinshin
-ms.author: yoobinshin
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ---

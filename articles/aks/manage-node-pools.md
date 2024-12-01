@@ -1,7 +1,7 @@
 ---
 title: Manage node pools in Azure Kubernetes Service (AKS)
 description: Learn how to manage node pools for a cluster in Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli, build-2023
 ms.date: 07/19/2023
 author: schaffererin
@@ -186,21 +186,12 @@ AKS offers a separate feature to automatically scale node pools with a feature c
 
 For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use-the-cluster-autoscaler-on-multiple-node-pools).
 
-## Remove specific VMs in the existing node pool (Preview)
+## Remove specific VMs in the existing node pool
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+> [!NOTE]
+> When you delete a VM with this command, AKS doesn't perform cordon and drain. To minimize the disruption of rescheduling pods currently running on the VM you plan to delete, perform a cordon and drain on the VM before deleting. You can learn more about how to cordon and drain using the example scenario provided in the resizing node pools tutorial.
 
-1. Register or update the `aks-preview` extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    # Register the aks-preview extension
-    az extension add --name aks-preview
-
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-2. List the existing nodes using the `kubectl get nodes` command.
+1. List the existing nodes using the `kubectl get nodes` command.
 
     ```bash
     kubectl get nodes
@@ -215,7 +206,7 @@ For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use
     aks-mynodepool-20823458-vmss000002   Ready    agent   63m   v1.21.9
     ```
 
-3. Delete the specified VMs using the [`az aks nodepool delete-machines`][az-aks-nodepool-delete-machines] command. Make sure to replace the placeholders with your own values.
+1. Delete the specified VMs using the [`az aks nodepool delete-machines`][az-aks-nodepool-delete-machines] command. Make sure to replace the placeholders with your own values.
 
     ```azurecli-interactive
     az aks nodepool delete-machines \
@@ -225,7 +216,7 @@ For more information, see [use the cluster autoscaler](cluster-autoscaler.md#use
         --machine-names <vm-name-1> <vm-name-2>
     ```
 
-4. Verify the VMs were successfully deleted using the `kubectl get nodes` command.
+1. Verify the VMs were successfully deleted using the `kubectl get nodes` command.
 
     ```bash
     kubectl get nodes

@@ -1,7 +1,7 @@
 ---
 title: Upgrade an Azure Kubernetes Service (AKS) cluster
 description: Learn how to upgrade an Azure Kubernetes Service (AKS) cluster to get the latest features and security updates.
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-upgrade
 ms.custom: azure-kubernetes-service, devx-track-azurecli
 ms.date: 01/26/2024
@@ -137,7 +137,7 @@ During the cluster upgrade process, AKS performs the following operations:
 
 * Add a new buffer node (or as many nodes as configured in [max surge](#customize-node-surge-upgrade)) to the cluster that runs the specified Kubernetes version.
 * [Cordon and drain][kubernetes-drain] one of the old nodes to minimize disruption to running applications. If you're using max surge, it [cordons and drains][kubernetes-drain] as many nodes at the same time as the number of buffer nodes specified.
-* For long running pods, you can configure the node drain timeout, which allows for custom wait time on the eviction of pods and graceful termination per node. If not specified, the default is 30 minutes. Minimum allowed timeout value is 5 minutes.
+* For long running pods, you can configure the node drain timeout, which allows for custom wait time on the eviction of pods and graceful termination per node. If not specified, the default is 30 minutes. Minimum allowed timeout value is 5 minutes. The maximum limit for drain timeout is 24 hours.
 * When the old node is fully drained, it's reimaged to receive the new version and becomes the buffer node for the following node to be upgraded.
 * Optionally, you can set a duration of time to wait between draining a node and proceeding to reimage it and move on to the next node. A short interval allows you to complete other tasks, such as checking application health from a Grafana dashboard during the upgrade process. We recommend a short timeframe for the upgrade process, as close to 0 minutes as reasonably possible. Otherwise, a higher node soak time affects how long before you discover an issue. The minimum soak time value is 0 minutes, with a maximum of 30 minutes. If not specified, the default value is 0 minutes.
 * This process repeats until all nodes in the cluster are upgraded.
@@ -238,7 +238,7 @@ AKS accepts both integer values and a percentage value for max surge. An integer
 
 #### Set node drain timeout value
 
-At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. Minimum allowed drain timeout value is 5 minutes. 
+At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. Minimum allowed drain timeout value is 5 minutes and the maximum limit of drain timeout is 24 hours.
 
 If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade. It is also recommended for long running pods to configure the [`terminationGracePeriodSeconds`][https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/].
 
