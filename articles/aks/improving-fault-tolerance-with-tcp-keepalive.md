@@ -220,20 +220,7 @@ If you use HTTP/2 based communication protocols, such as gRPC, the TCP keepalive
 
 When applications use the HTTP/2 transport, the server is responsible for supporting keepalives and defining its behavior. The client's keepalive settings must be compatible with the server's settings. For example, if the client sends the PING frame more frequently than the server allows, the server terminates the connection with an HTTP/2 GOAWAY frame response.
 
-For gRPC applications, the client and the server can customize the following keepalive settings and default values, as described in the [gRPC specification](https://grpc.io/docs/guides/keepalive/):
-
-| Channel Argument                 | Availability      | Description                                                                                                                                              | Client Default     | Server Default     |
-| -------------------------------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------ |
-| `KEEPALIVE_TIME`                 | Client and server | The interval in milliseconds between PING frames.                                                                                                        | INT_MAX (Disabled) | 7200000 (2 hours)  |
-| `KEEPALIVE_TIMEOUT`              | Client and server | The timeout in milliseconds for a PING frame to be acknowledged. If sender doesn't receive an acknowledgment within this time, it closes the connection. | 20000 (20 seconds) | 20000 (20 seconds) |
-| `KEEPALIVE_WITHOUT_CALLS`        | Client            | Determines if it's permissible to send keepalive pings from the client without any outstanding streams.                                                  | 0 (false)          | N/A                |
-| `PERMIT_KEEPALIVE_WITHOUT_CALLS` | Server            | Determines if it's permissible to send keepalive pings from the client without any outstanding streams.                                                  | N/A                | 0 (false)          |
-| `PERMIT_KEEPALIVE_TIME`          | Server            | Minimum allowed time between a server receiving successive ping frames without sending any data/header frame.                                            | N/A                | 300000 (5 minutes) |
-| `MAX_CONNECTION_IDLE`            | Server            | Maximum time that a channel may have no outstanding rpcs, after which the server closes the connection.                                                  | N/A                | INT_MAX (Infinite) |
-| `MAX_CONNECTION_AGE`             | Server            | Maximum time that a channel may exist.                                                                                                                   | N/A                | INT_MAX (Infinite) |
-| `MAX_CONNECTION_AGE_GRACE`       | Server            | Grace period after the channel reaches its max age.                                                                                                      | N/A                | INT_MAX (Infinite) |
-
-Refer to the programming language-specific examples and documentation listed in the [gRPC specification](https://grpc.io/docs/guides/keepalive/) that demonstrate client and server applications using keepalive.
+For gRPC applications, the client and the server can customize keepalive settings and default values like the interval between PING frames, the maximum time a channel can exist, and more. For a full list of configurable options and language-specific examples demonstrating client and server applications using keepalive, see [gRPC keepalive configuration specification](https://grpc.io/docs/guides/keepalive/#keepalive-configuration-specification).
 
 ## Best practices
 
