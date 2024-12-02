@@ -225,7 +225,7 @@ For more information, see [Isovalent Solutions](https://isovalent.com/blog/post/
 
 ### Solo.io
 
-:::image type="icon" source="./media/azure-linux-aks-partner-solutions/solo.png":::
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/soloio.png":::
 
 | Solution | Categories |
 |----------|------------|
@@ -245,7 +245,7 @@ Observability pipelines let you analyze many data sources that you already have.
 
 The Solo distribution of Istio is a hardened Istio enterprise image, which maintains n-4 support for CVEs and other security fixes. The image support timeline is longer than the community Istio support timeline, which provides n-1 support with an additional six weeks of extended time to upgrade the n-2 version to n-1.
 
-For more information, see [Solo Gloo Mesh Core Solutions](https://docs.solo.io/gloo-mesh-core/main/about/overview/) and [Solo distribution of Istio Solutions](https://docs.solo.io/gloo-mesh-enterprise/main/reference/version/gloo_mesh_istio/).
+For more information, see [Solo Solutions](https://www.solo.io/) and [Solo Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/SoloGloo.gloo-saas-accelerator?tab=Overview).
 
 ### Tigera, Inc
 
