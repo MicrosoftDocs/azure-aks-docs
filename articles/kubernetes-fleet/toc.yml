@@ -26,8 +26,8 @@
           href: concepts-choosing-fleet.md
         - name: Grant access to resources with Azure RBAC
           href: concepts-rbac.md
-        - name: Scheduler and scheduling framework
-          href: concepts-scheduler-scheduling-framework.md
+    - name: Scheduler and scheduling framework
+      href: concepts-scheduler-scheduling-framework.md
     - name: Multi-cluster management
       items:
         - name: Update Kubernetes and node images across multiple member clusters
