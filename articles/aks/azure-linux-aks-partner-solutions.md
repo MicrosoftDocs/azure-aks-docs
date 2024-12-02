@@ -16,9 +16,16 @@ Microsoft collaborates with partners to ensure your build, test, deployment, con
 
 The third party partners featured in this article have introduction guides to help you start using their solutions with your applications running on Azure Linux Container Host on AKS.
 
-|          | DevOps | Networking | Observability | Security | Storage | Config Management | Migration | Monitoring |
-|----------|--------|------------|---------------|----------|---------|-------------------|-----------|------------|
-| **Partners** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [VictoriaMetrics](#victoriametrics) | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) | • [Corent](#corent) | • [Catalogic](#catalogic) | • [VictoriaMetrics](#victoriametrics) |
+|          | Partners |
+|----------|----------|
+| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [VictoriaMetrics](#victoriametrics) |
+| **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
+| **Observability** | •• [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
+| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
+| **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
+| **Config management** | • [Corent](#corent) |
+| **Migration** | • [Catalogic](#catalogic) |
+| **Monitoring** | • [VictoriaMetrics](#victoriametrics) |
 
 ## DevOps
 
