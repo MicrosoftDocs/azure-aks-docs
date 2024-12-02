@@ -7,7 +7,7 @@ author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: conceptual
 ms.custom: linux-related-content
-ms.date: 10/03/2024
+ms.date: 12/02/2024
 ---
 
 # Azure Linux AKS Container Host partner solutions
@@ -16,9 +16,9 @@ Microsoft collaborates with partners to ensure your build, test, deployment, con
 
 The third party partners featured in this article have introduction guides to help you start using their solutions with your applications running on Azure Linux Container Host on AKS.
 
-|          | DevOps | Networking | Observability | Security | Storage | Config Management | Migration |
-|----------|--------|------------|---------------|----------|---------|-------------------|-----------|
-| **Partners** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) | • [Corent](#corent) | • [Catalogic](#catalogic) |
+|          | DevOps | Networking | Observability | Security | Storage | Config Management | Migration | Monitoring |
+|----------|--------|------------|---------------|----------|---------|-------------------|-----------|------------|
+| **Partners** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [VictoriaMetrics](#victoriametrics) | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) | • [Corent](#corent) | • [Catalogic](#catalogic) | • [VictoriaMetrics](#victoriametrics) |
 
 ## DevOps
 
@@ -434,6 +434,28 @@ CloudCasa can also centrally manage Azure Backup or Velero backup installations 
 </details>
 
 For more information, see [CloudCasa by Catalogic Solutions](https://cloudcasa.io/) and [CloudCasa by Catalogic on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/catalogicsoftware1625626770507.cloudcasa-aks-app).
+
+## Monitoring
+
+Monitor your applications and infrastructure to ensure optimal performance and reliability.
+
+### VictoriaMetrics
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/victoriametrics.png":::
+
+| Solution | Categories |
+|----------|------------|
+| VictoriaMetrics | DevOps <br> Observability <br> Storage <br> Monitoring |
+
+VictoriaMetrics is a high performance, cost effective, and scalable open-source time series database and monitoring solution. This solution enables users to build a monitoring platform with minimal operational burden and without scalability issues.
+
+<details> <summary> See more </summary><br>
+
+You can use VictoriaMetrics to monitor services running in AKS with Azure Linux, the applications running in AKS with Azure Linux, and the underlying infrastructure. The enterprise version of VictoriaMetrics provides extra features for securing your monitoring setup, such as OIDC authentication and access control.
+
+</details>
+
+For more information, see [VictoriaMetrics](https://victoriametrics.com/products/open-source/) and [VictoriaMetrics Support statement](https://victoriametrics.com/blog/monitoring-azure-aks-azure-linux-with-victoriametrics/).
 
 ## Next steps
 
