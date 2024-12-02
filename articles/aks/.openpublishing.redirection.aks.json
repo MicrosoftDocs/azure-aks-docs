@@ -402,7 +402,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/servicemesh-istio-install.md",
-            "redirect_url": "/azure/aks/servicemesh-about",
+            "redirect_url": "/azure/aks/istio-deploy-addon",
             "redirect_document_id": false
         },
         {
