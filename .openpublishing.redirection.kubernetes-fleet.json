@@ -19,6 +19,11 @@
       "source_path_from_root": "/articles/kubernetes-fleet/resource-propagation.md",
       "redirect_url": "/azure/kubernetes-fleet/concepts-resource-propagation",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/kubernetes-fleet/quickstart-access-fleet-kubernetes-api.md",
+      "redirect_url": "/azure/kubernetes-fleet/quickstart-access-fleet-hub-cluster-kubernetes-api.md",
+      "redirect_document_id": false
     }
   ]
 }
