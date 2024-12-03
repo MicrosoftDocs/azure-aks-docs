@@ -151,7 +151,7 @@ The following table highlights how Virtual Machines node pools compare with stan
     az aks nodepool manual-scale add \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
-        --name myvmpool1 \
+        --name myvmpool \
         --vm-sizes "Standard_D2s_v3" \
         --node-count 2
      ```
@@ -163,13 +163,13 @@ The following table highlights how Virtual Machines node pools compare with stan
     > [!NOTE]
     > Use the `--current-vm-sizes` parameter to specify the size of the existing node pool that you want to update. You can update `--vm-sizes` and/or `--node-count`. When using other tools or REST APIs, you need to pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field when updating the node pool scale profile.
 
-    The following example updates a manual scale profile to the *myvmpool1* node pool in the *myAKSCluster* cluster. The command updates the number of nodes to five and changes the VM SKU from *Standard_D4s_v3* to *Standard_D8s_v3*:
+    The following example updates a manual scale profile to the *myvmpool* node pool in the *myAKSCluster* cluster. The command updates the number of nodes to five and changes the VM SKU from *Standard_D4s_v3* to *Standard_D8s_v3*:
 
     ```azurecli-interactive
     az aks nodepool manual-scale update \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
-        --name myvmpool1 \
+        --name myvmpool \
         --current-vm-sizes "Standard_D4s_v3" \
         --vm-sizes "Standard_D8s_v3" \
         --node-count 5
@@ -182,13 +182,13 @@ The following table highlights how Virtual Machines node pools compare with stan
     > [!NOTE]
     > The `--current-vm-sizes` parameter specifies the size of the existing node pool to be deleted. When using other tools or REST APIs to update the node pool scale profile, pass in a full `agentPoolProfiles.virtualMachinesProfile.scale` field.
 
-    The following example deletes the manual scale profile for the *Standard_D8s_v3* VM SKU in the *myvmpool1* node pool.
+    The following example deletes the manual scale profile for the *Standard_D8s_v3* VM SKU in the *myvmpool* node pool.
 
     ```azurecli-interactive
     az aks nodepool manual-scale delete \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
-        --name myvmpool1 \
+        --name myvmpool \
         --current-vm-sizes "Standard_D8s_v3"
      ```
 
