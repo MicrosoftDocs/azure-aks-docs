@@ -1,5 +1,5 @@
 ---
-title: Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
+title: Improve network fault tolerance in Azure Kubernetes Service using TCP keepalive
 titleSuffix: Azure Kubernetes Service
 description: Learn how to use TCP keepalive to enhance network fault tolerance in cloud applications hosted in Azure Kubernetes Service.
 ms.topic: conceptual
@@ -9,7 +9,7 @@ ms.subservice: aks-networking
 ms.date: 11/30/2024
 ---
 
-# Improving network fault tolerance in Azure Kubernetes Service using TCP keepalive
+# Improve network fault tolerance in Azure Kubernetes Service using TCP keepalive
 
 In a standard Transmission Control Protocol (TCP) connection, no data flows between the peers when the connection is idle. Therefore, applications or API requests that use TCP to communicate with servers handling long-running requests might have to rely on connection timeouts to become aware of the termination or loss of connection. This article illustrates the use of TCP keepalive to enhance fault tolerance in applications hosted in Azure Kubernetes Service (AKS).
 
@@ -17,7 +17,7 @@ In a standard Transmission Control Protocol (TCP) connection, no data flows betw
 
 Several Azure Networking services, such as Azure Load Balancer (ALB), enable you to [configure a timeout period](/azure/load-balancer/load-balancer-tcp-reset) after which an idle TCP connection is terminated. When a TCP connection remains idle for longer than the timeout duration configured on the networking service, any subsequent TCP packets sent in either direction might be dropped. Alternatively, they might receive a TCP Reset (RST) packet from the network service, depending on whether TCP resets were enabled on the service.
 
-The idle timeout feature in an ALB is designed optimize resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications.
+The idle timeout feature in an ALB is designed to optimize resource utilization for both client and server applications. This timeout applies to both ingress and egress traffic managed by the ALB. When the timeout occurs, the client and server applications can stop processing the request and release resources associated with the connection. These resources can then be reused for other requests, improving the overall performance of the applications.
 
 In AKS, the TCP Reset on idle is enabled on the Load Balancer by default with an idle timeout period of 30 minutes. You can adjust this timeout period with the [`az aks update`](/cli/azure/aks#az_aks_update) command. The following example sets the timeout period to 45 minutes.
 
@@ -34,8 +34,8 @@ Make sure you consider the timeout duration carefully before adjusting it:
 
 In AKS, apart from the north-south traffic (ingress and egress) that traverse the ALB, you also have the east-west traffic (pod to pod) that generally operates on the cluster network. The timeout period in such cases is defined by the `kube-proxy` TCP settings and the pod's TCP sysctl settings. By default, `kube-proxy` runs in iptables mode and it uses the default TCP timeout settings defined in the [kube-proxy specification](https://kubernetes.io/docs/reference/command-line-tools-reference/kube-proxy/). The default TCP timeout settings for `kube-proxy` are as follows:
 
-1. Network Address Translation (NAT) timeout for TCP connections in the `CLOSE_WAIT` state is 1 hour.
-2. Idle timeout for established TCP connections is 24 hours.
+- Network Address Translation (NAT) timeout for TCP connections in the `CLOSE_WAIT` state is 1 hour.
+- Idle timeout for established TCP connections is 24 hours.
 
 For certain long-running operations, where client and server are both inside the AKS cluster or if one of them is outside, you may need a timeout longer than the duration configured for networking services like the Azure Load Balancer, or Azure NAT Gateway. To prevent the connection from staying idle beyond the configured duration on the network service, consider using the TCP keepalive feature. This feature keeps both the server and client available while waiting for responses, allowing you to retry operations instead of experiencing connection timeouts.
 
@@ -164,7 +164,7 @@ In this example:
 - If 5 consecutive probes fail, the connection closes.
 
 > [!NOTE]
-> Note that any system-level TCP keepalive configuration set via `sysctl` in the kubelet are overridden by an application's TCP keepalive settings. To maintain consistent keepalive behavior across your applications, set keepalive parameters at the kubelet level. Then, enable the keepalive option on the socket without specifying individual parameters within the application so the system-level keepalive parameters are used for the application. Only allow individual applications to override the system-level parameter values, like in the previous example, when absolutely necessary.
+> Note that any system-level TCP keepalive configuration set via `sysctl` in the kubelet is overridden by an application's TCP keepalive settings. To maintain consistent keepalive behavior across your applications, set keepalive parameters at the kubelet level. Then, enable the keepalive option on the socket without specifying individual parameters within the application so the system-level keepalive parameters are used for the application. Only allow individual applications to override the system-level parameter values, like in the previous example, when absolutely necessary.
 
 If you're using .NET, the following code produces the same result as the previous Python example:
 
@@ -227,7 +227,7 @@ For gRPC applications, the client and the server can customize keepalive setting
 While keepalive probes can improve the fault tolerance of your applications, they can also consume more bandwidth, which might impact network capacity and lead to extra charges. Additionally, on mobile devices, increased network activity may affect battery life. Therefore, it's important to adhere to the following best practices:
 
 - **Customize parameters**: Adjust keepalive settings based on application requirements and network conditions.
-- **Application-Level keepalives**: For encrypted connections (for example, TLS/SSL), consider implementing keepalive mechanisms at the application layer to ensure probes are sent over secure channels.
+- **Application-level keepalives**: For encrypted connections (for example, TLS/SSL), consider implementing keepalive mechanisms at the application layer to ensure probes are sent over secure channels.
 - **Monitoring and logging**: Implement logging to monitor keepalive-induced connection closures for troubleshooting.
 - **Fallback mechanisms**: Design applications to handle disconnections gracefully, including retry logic and failover strategies.
 

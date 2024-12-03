@@ -261,7 +261,7 @@
     - name: Networking
       items:
         - name: TCP Keepalive
-          href: improving-fault-tolerance-with-tcp-keepalive.md
+          href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
     - name: Back up and recover cluster
       href: /azure/backup/azure-kubernetes-service-backup-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Windows containers
