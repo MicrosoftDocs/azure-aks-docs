@@ -109,6 +109,8 @@
       items:
         - name: Monitor AKS
           href: monitor-aks.md
+        - name: Monitor control plane metrics
+          href: control-plane-metrics-monitor.md
         - name: Container Network Observability
           href: advanced-network-observability-concepts.md
     - name: Security
