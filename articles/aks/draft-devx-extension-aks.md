@@ -84,6 +84,6 @@ In this article, you learned how to use Draft and the DevX extension for Visual 
 [aks-acr-authenticate]: ../aks/cluster-container-registry-integration.md
 [devx-extension]: https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.aks-devx-tools
 [draft]: https://github.com/Azure/draft
-[Azure Kubernetes Service (AKS) extension in Visual Studio Code]: https://learn.microsoft.com/azure/aks/aks-extension-vs-code#installation
+[Azure Kubernetes Service (AKS) extension in Visual Studio Code]: ../aks/aks-extension-vs-code.md
 [issues board at GitHub]: https://github.com/Azure/aks-devx-tools/issues
 
