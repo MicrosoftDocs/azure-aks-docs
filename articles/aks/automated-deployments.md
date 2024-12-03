@@ -61,6 +61,14 @@ Automated deployments simplify the process of setting up a GitHub Action and cre
 
 You can remove any related resources that you created when you don't need them anymore individually or by deleting the resource group to which they belong. To delete your automated deployment, navigate to the automated deployment dashboard and select **...**, then select **Delete** and confirm your action.
 
+To switch GitHub profiles in Automated deployments, you will need to revoke access for the existing user. This is done by revoking access in GitHub's developer settings.
+
+1. Go to your GitHub profile settings.
+2. Inside `Applications` select `Authorized OAuth Apps`.
+3. Select `AKS Developer Hub` and **Revoke access**.
+
+You can now select a new GitHub account to authorize with Automated deployments.
+
 ## Next steps
 
 You can modify these GitHub Actions to meet the needs of your team by opening them up in an editor like Visual Studio Code and changing them as you see fit.
