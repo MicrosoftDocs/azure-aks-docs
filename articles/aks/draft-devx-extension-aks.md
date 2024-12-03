@@ -10,7 +10,7 @@ ms.author: schaffererin
 # Use Draft and the DevX extension for Visual Studio Code with Azure Kubernetes Service (AKS)
 
 > [!NOTE]
->The Azure Kubernetes Service (AKS) team will no longer actively maintain the AKS DevX extension and plans to transition the project to an archived state on January 3rd 2025. We recommend using the [Azure Kubernetes Service (AKS) extension in Visual Studio Code](https://learn.microsoft.com/azure/aks/aks-extension-vs-code#installation) as an alternative, which provides the same functionality plus additional features. For any questions, please reach out on our [issues board at GitHub](https://github.com/Azure/aks-devx-tools/issues).
+>The Azure Kubernetes Service (AKS) team will no longer actively maintain the AKS DevX extension and plans to transition the project to an archived state on January 3rd 2025. We recommend using the [Azure Kubernetes Service (AKS) extension in Visual Studio Code] as an alternative, which provides the same functionality plus additional features. For any questions, please reach out on our [issues board at GitHub].
 
 [Draft][draft] is an open-source project that streamlines Kubernetes development. It takes a non-containerized application and generates the DockerFiles, Kubernetes manifests, Helm charts, Kustomize configurations, and other artifacts associated the application. The Azure Kubernetes Service (AKS) DevX extension for Visual Studio Code enhances non-cluster experiences, allowing you to create deployment files to deploy your applications to AKS. Draft is the available feature included in the DevX extension.
 
@@ -84,4 +84,6 @@ In this article, you learned how to use Draft and the DevX extension for Visual 
 [aks-acr-authenticate]: ../aks/cluster-container-registry-integration.md
 [devx-extension]: https://marketplace.visualstudio.com/items?itemName=ms-kubernetes-tools.aks-devx-tools
 [draft]: https://github.com/Azure/draft
+[Azure Kubernetes Service (AKS) extension in Visual Studio Code]: https://learn.microsoft.com/azure/aks/aks-extension-vs-code#installation
+[issues board at GitHub]: https://github.com/Azure/aks-devx-tools/issues
 
