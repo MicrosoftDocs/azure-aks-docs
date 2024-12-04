@@ -12,28 +12,35 @@
       href: quickstart-create-fleet-and-members-portal.md
     - name: Use the Azure CLI
       href: quickstart-create-fleet-and-members.md
-  - name: Propagate resources from a hub cluster to member clusters
-    href: quickstart-resource-propagation.md
+  - name: Manage workloads across clusters
+    items:
+      - name: Access the Kubernetes API of the fleet resource
 - name: Concepts
   items:
-    - name: Fleets and member clusters
-      href: concepts-fleet.md
-    - name: Fleet hub cluster overview
-      href: concepts-lifecycle.md
-    - name: Fleet configuration
+    - name: What's the fleet?
       items:
         - name: Choosing a fleet type
           href: concepts-choosing-fleet.md
+        - name: Fleets and member clusters
+          href: concepts-fleet.md
         - name: Grant access to resources with Azure RBAC
           href: concepts-rbac.md
-    - name: Scheduler and scheduling framework
-      href: concepts-scheduler-scheduling-framework.md
-    - name: Multi-cluster management
+    - name: Upgrade multiple clusters
       items:
-        - name: Update Kubernetes and node images across multiple member clusters
-          href: concepts-update-orchestration.md
+      - name: Update Kubernetes and node images across member clusters
+        href: concepts-update-orchestration.md
+    - name: Fleet with hub cluster
+      items:
+      - name: Fleet hub cluster overview
+        href: concepts-lifecycle.md
+      - name: Multi-cluster workloads
+        items:
         - name: Kubernetes workload orchestration
           href: concepts-resource-propagation.md
+        - name: Scheduler and scheduling framework
+          href: concepts-scheduler-scheduling-framework.md
+    - name: Multi-cluster networking
+      items:
         - name: Multi-cluster layer-4 load balancing
           href: concepts-l4-load-balancing.md
 - name: How-to guides
@@ -42,28 +49,32 @@
       items:
         - name: Upgrade hub cluster type
           href: upgrade-hub-cluster-type.md
-        - name: Access Fleet hub cluster Kubernetes API
-          href: quickstart-access-fleet-hub-cluster-kubernetes-api.md
-    - name: Manage multi-cluster updates
+    - name: Upgrade multiple clusters
       items:
         - name: Update Kubernetes and node images across multiple clusters
           href: update-orchestration.md
+        - name: Define re-usable update strategies using Azure Kubernetes Fleet Manager
         - name: Automate updates of Kubernetes and node images across multiple clusters
           href: update-automation.md
-    - name: Multi-cluster workload placement
+    - name: Manage workloads across clusters
       items:
-        - name: Intelligent Kubernetes resource placement based on member cluster properties
-          href: intelligent-resource-placement.md
-        - name: Use taints and tolerations to schedule workloads
-          href: use-taints-tolerations.md
-        - name: Customize cluster scoped resources with overrides
-          href: cluster-resource-override.md
-        - name: Customize namespace scoped resources with overrides
-          href: resource-override.md
+        - name: Access Fleet hub cluster Kubernetes API
+          href: quickstart-access-fleet-hub-cluster-kubernetes-api.md
+        - name: Multi-cluster workloads
+        - name: Multi-cluster workloads
+          items:
+          - name: Intelligent Kubernetes resource placement based on member cluster properties
+            href: intelligent-resource-placement.md
+          - name: Use taints and tolerations to schedule workloads
+            href: use-taints-tolerations.md
+          - name: Customize cluster scoped resources with overrides
+            href: cluster-resource-override.md
+          - name: Customize namespace scoped resources with overrides
+            href: resource-override.md
+          - name: Propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster
+            href: propagate-resources.md
         - name: Multi-cluster Layer 4 Load Balancing
           href: l4-load-balancing.md
-        - name: Propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster
-          href: propagate-resources.md
 - name: Resources
   items:
   - name: Pricing
