@@ -4,7 +4,7 @@ description: Learn how to monitor Azure Kubernetes Service (AKS) control plane m
 ms.date: 09/06/2024
 ms.topic: how-to
 author: schaffererin
-ms.author: schaffererin
+ms.author: aritraghosh
 ms.subservice: aks-monitoring
 ms.service: azure-kubernetes-service
 ---
@@ -110,7 +110,7 @@ All ConfigMaps should be applied to the `kube-system` namespace for any cluster.
 
 ### Customize ingestion profile
 
-For more information about `minimal-ingestion` profile metrics, see [Minimal ingestion profile for control plane metrics in managed Prometheus](control-plane-metrics-default-list.md).
+For more information about `minimal-ingestion` profile metrics, see [Minimal ingestion profile for control plane metrics in managed Prometheus](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal#minimal-ingestion-for-default-on-targets).
 
 #### Ingest only minimal metrics from default targets
 
