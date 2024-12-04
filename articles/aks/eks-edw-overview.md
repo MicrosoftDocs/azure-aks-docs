@@ -3,8 +3,9 @@ title: Replicate an AWS EDW workload with KEDA and Karpenter in Azure Kubernetes
 description: Learn how to replicate an AWS EKS event-driven workflow (EDW) workload with KEDA and Karpenter in AKS.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: JnHs
-ms.author: jenhayes
+author: schaffererin
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
 ---
 
 # Replicate an AWS event-driven workflow (EDW) workload with KEDA and Karpenter in Azure Kubernetes Service (AKS)
@@ -30,7 +31,7 @@ For a more detailed understanding of the AWS workload, see [Scalable and Cost-Ef
 - [Azure CLI][install-cli] version 2.56 or later.
 - [Azure Kubernetes Service (AKS) preview extension][aks-preview].
 - [jq][install-jq] version 1.5 or later.
-- [Python 3][install-python] or later.
+- [Python 3.12][install-python] or later.
 - [kubectl][install-kubectl] version 1.21.0 or later
 - [Helm][install-helm] version 3.0.0 or later
 - [Visual Studio Code][download-vscode] or equivalent.

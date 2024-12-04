@@ -1,25 +1,15 @@
 ---
 title: Custom certificate authority (CA) in Azure Kubernetes Service (AKS) (preview)
 description: Learn how to use a custom certificate authority (CA) in an Azure Kubernetes Service (AKS) cluster.
-author: rayoef
-ms.author: rayoflores
+author: schaffererin
+ms.author: schaffererin
 ms.topic: how-to
+ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.date: 04/25/2023
 ---
 
 # Custom certificate authority (CA) in Azure Kubernetes Service (AKS) (preview)
-
-AKS generates and uses the following certificates, Certificate Authorities (CAs), and Service Accounts (SAs):
-
-* The AKS API server creates a CA called the Cluster CA.
-* The API server has a Cluster CA, which signs certificates for one-way communication from the API server to kubelets.
-* Each kubelet also creates a Certificate Signing Request (CSR), which is signed by the Cluster CA, for communication from the kubelet to the API server.
-* The API aggregator uses the Cluster CA to issue certificates for communication with other APIs. The API aggregator can also have its own CA for issuing those certificates, but it currently uses the Cluster CA.
-* Each node uses an SA token, which is signed by the Cluster CA.
-* The `kubectl` client has a certificate for communicating with the AKS cluster.
-
-You can also create custom certificate authorities, which allow you to establish trust between your Azure Kubernetes Service (AKS) clusters and workloads, such as private registries, proxies, and firewalls. A Kubernetes secret stores the certificate authority's information, and then it's passed to all nodes in the cluster. This feature is applied per node pool, so you need to enable it on new and existing node pools.
 
 This article shows you how to create custom CAs and apply them to your AKS clusters.
 
