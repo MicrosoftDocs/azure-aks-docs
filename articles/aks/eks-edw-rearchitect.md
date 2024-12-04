@@ -22,7 +22,7 @@ The workload consists of an AWS EKS cluster to orchestrate consumers reading mes
 
 The following diagram represents the architecture of the EDW workload in AWS:
 
-:::image type="content" source="media/eks-edw-rearchitect/edw-architecture-aws.png" alt-text="Architecture diagram of the EDW workload in AWS.":::
+:::image type="content" source="media/eks-edw-rearchitect/aws-edw-architecture.png" alt-text="Architecture diagram of the EDW workload in AWS.":::
 
 ## Map AWS services to Azure services
 
@@ -41,7 +41,7 @@ The following table summarizes the service mapping:
 
 The following diagram represents the architecture of the Azure EDW workload using the [AWS to Azure service mapping](#map-aws-services-to-azure-services):
 
-:::image type="content" source="media/eks-edw-rearchitect/edw-architecture-azure.png" alt-text="Architecture diagram of the EDW workload in Azure.":::
+:::image type="content" source="media/eks-edw-rearchitect/azure-edw-architecture.png" alt-text="Architecture diagram of the EDW workload in Azure.":::
 
 ## Compute options
 
