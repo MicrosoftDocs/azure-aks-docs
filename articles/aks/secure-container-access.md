@@ -137,7 +137,7 @@ You can apply default seccomp profiles using [custom node configurations][custom
 
 #### Restrict your container's system calls with seccomp
 
-**1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying `"seccompDefualt": "RuntimeDefault"`**.
+**1. [Follow steps to apply a seccomp profile in your kubelet configuration][custom-node-configuration] by specifying `"seccompDefault": "RuntimeDefault"`**.
 
 `RuntimeDefault` uses containerd's default seccomp profile, restricting certain system calls to enhance security. Restricted syscalls will fail. For more information, see the [containerD default seccomp profile](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51). 
 
