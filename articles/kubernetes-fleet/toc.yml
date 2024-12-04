@@ -61,9 +61,8 @@
         - name: Access Fleet hub cluster Kubernetes API
           href: quickstart-access-fleet-hub-cluster-kubernetes-api.md
         - name: Multi-cluster workloads
-        - name: Multi-cluster workloads
           items:
-          - name: Intelligent Kubernetes resource placement based on member cluster properties
+          - name: Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager
             href: intelligent-resource-placement.md
           - name: Use taints and tolerations to schedule workloads
             href: use-taints-tolerations.md
