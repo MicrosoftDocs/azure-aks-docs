@@ -3,8 +3,9 @@ title: Deploy AWS event-driven workflow (EDW) workload to Azure
 description: Learn how to deploy an AWS EDW workflow to Azure and how to validate your deployment.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: JnHs
-ms.author: jenhayes
+author: schaffererin
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
 ---
 
 # Deploy an AWS event-driven workflow (EDW) workload to Azure
