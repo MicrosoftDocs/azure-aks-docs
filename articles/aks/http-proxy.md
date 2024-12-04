@@ -25,7 +25,7 @@ The following scenarios are **not** supported:
 * User/Password authentication
 * Custom certificate authorities (CAs) for API server communication
 * Configuring existing AKS clusters with an HTTP proxy is not supported; the HTTP proxy feature must be enabled at cluster creation time.
-* Windows-based clusters
+* AKS clusters with Windows node pools
 * Node pools using Virtual Machine Availability Sets (VMAS)
 * Using * as wildcard attached to a domain suffix for noProxy
 
