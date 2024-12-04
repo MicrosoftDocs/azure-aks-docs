@@ -12,9 +12,6 @@
       href: quickstart-create-fleet-and-members-portal.md
     - name: Use the Azure CLI
       href: quickstart-create-fleet-and-members.md
-  - name: Manage workloads across clusters
-    items:
-      - name: Access the Kubernetes API of the fleet resource
 - name: Concepts
   items:
     - name: What's the fleet?
