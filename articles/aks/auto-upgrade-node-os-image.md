@@ -170,10 +170,10 @@ kubectl get nodes --show-labels
 Among the returned labels, you should see a line similar to the following output:
 
 ```output
-kubernetes.azure.com/node-image-version=AKSUbuntu-2204gen2containerd-202311.07.0
+kubernetes.azure.com/node-image-version=AKSUbuntu-2204gen2containerd-202410.27.0-2024.12.01
 ```
 
-Here, the base node image version is `AKSUbuntu-2204gen2containerd`. If applicable, the security patch version typically follows. In the above example, it's `202311.07.0`.  
+Here, the base node image version is `AKSUbuntu-2204gen2containerd-202410.27.0`. If applicable, the security patch version typically follows. In the above example, it's `2024.12.01`.  
 
 The same details also be looked up in the Azure portal under the node label view:
 
