@@ -31,7 +31,7 @@ For a more detailed understanding of the AWS workload, see [Scalable and Cost-Ef
 - [Azure CLI][install-cli] version 2.56 or later.
 - [Azure Kubernetes Service (AKS) preview extension][aks-preview].
 - [jq][install-jq] version 1.5 or later.
-- [Python 3][install-python] or later.
+- [Python 3.12][install-python] or later.
 - [kubectl][install-kubectl] version 1.21.0 or later
 - [Helm][install-helm] version 3.0.0 or later
 - [Visual Studio Code][download-vscode] or equivalent.
