@@ -270,7 +270,7 @@ The `eraser-aks-xxxxx` pod deletes within 10 minutes after work completion. You 
 4. In the Azure portal, search for the workspace resource ID, then select **Logs**.
 
 5. Copy one of the following queries and paste into the query window.
-   1. Use the following query if your cluster is using the [ContainerLogV2 schema](/azure-monitor/containers/container-insights-logs-schema). If you're still using `ContainerLog`, you should upgrade to ContainerlogV2.
+   1. Use the following query if your cluster is using the [ContainerLogV2 schema](/azure/azure-monitor/containers/container-insights-logs-schema). If you're still using `ContainerLog`, you should upgrade to ContainerlogV2.
 
         ```kusto    
         ContainerLogV2
