@@ -35,7 +35,7 @@ When creating a KAITO workspace, you can either deploy the default workspace CRD
 4. Select **Deploy default workspace CRD** to deploy the model. It tracks the progress of the model and notifies you once the model successfully deploys. It also notifies you if the model was already previously unsucessfully onto your cluster.
 5. When the deployment completes, you see a **View Deployed Models** button that redirects you to the deployment management page.
 
-:::image type="content" source="./media/aks-extension/kaito/kaito-select-model.png" alt-text="Screenshot showing the model select screen." lightbox="./media/aks-extension/kaitokaito-select-model.png":::
+:::image type="content" source="./media/aks-extension/kaito/kaito-select-model.png" alt-text="Screenshot showing the model select screen." lightbox="./media/aks-extension/kaito/kaito-select-model.png":::
 
 ## Manage KAITO models
 
@@ -48,7 +48,7 @@ The **Manage KAITO models** page allows you to see all models deployed in your A
     * **Delete a model**: Select **Delete Workspace** (or **Cancel** for ongoing deployments). For failed deployments, select **Redeploy Default CRD** to remove the current deployment and restart the model deployment process from scratch.
     * **Test a model**: Select **Test**. This action brings you to a new page where you can interact with the deployed model through a chat interface.
 
-:::image type="content" source="./media/aks-extension/kaito/kaito-manage-models.png" alt-text="Screenshot showing the manage models screen." lightbox="./media/aks-extension/kaito-manage-models.png":::
+:::image type="content" source="./media/aks-extension/kaito/kaito-manage-models.png" alt-text="Screenshot showing the manage models screen." lightbox="./media/aks-extension/kaito/kaito-manage-models.png":::
 
 ## Test your model
 
@@ -62,7 +62,7 @@ The **Manage KAITO models** page allows you to see all models deployed in your A
     * **Repetition Penalty**: Penalizes the model for repeating the same phrases, words, or sequences. This is useful for avoiding repetitive or looping outputs, especially in longer generations.
     * **Max Length**: Defines the maximum number of tokens (words or subwords) in the generated output.
 
-:::image type="content" source="./media/aks-extension/kaito/kaito-test-model.png" alt-text="Screenshot showing test models screen." lightbox="./media/aks-extension/kaito-test-model.png":::
+:::image type="content" source="./media/aks-extension/kaito/kaito-test-model.png" alt-text="Screenshot showing test models screen." lightbox="./media/aks-extension/kaito/kaito-test-model.png":::
 
 For more information, see [AKS extension for Visual Studio Code features][aks-vscode-features].
 
