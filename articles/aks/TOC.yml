@@ -109,6 +109,8 @@
       items:
         - name: Monitor AKS
           href: monitor-aks.md
+        - name: Monitor control plane metrics
+          href: control-plane-metrics-monitor.md
         - name: Container Network Observability
           href: advanced-network-observability-concepts.md
     - name: Security
@@ -258,6 +260,10 @@
           href: developer-best-practices-resource-management.md
         - name: Pod security
           href: developer-best-practices-pod-security.md
+    - name: Networking
+      items:
+        - name: TCP Keepalive
+          href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
     - name: Back up and recover cluster
       href: /azure/backup/azure-kubernetes-service-backup-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Windows containers
