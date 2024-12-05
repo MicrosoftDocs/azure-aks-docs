@@ -8,7 +8,7 @@ ms.author: qpetraroia
 ms.service: azure-kubernetes-service
 ---
 
-# Learn how to deploy and test models with the AI toolchain operator (KAITO) in Visual Studio Code
+# Deploy and test models with the AI toolchain operator (KAITO) in Visual Studio Code
 
 In this article, you learn how to use the AI toolchain operator (KAITO) in the Azure Kubernetes Service (AKS) extension for Visual Studio Code. The AI toolchain operator automatically provisions the necessary GPU nodes and sets up the associated inference server as an endpoint server to your AI models allowing you to test your models with ease.
 
