@@ -25,17 +25,13 @@ In this article, you learn how to use the AI toolchain operator (KAITO) in the A
 
 ## Create a KAITO workspace
 
-You can access the screen to create a KAITO workspace via the Kubernetes view.
-
-When creating a KAITO workspace, you can choose to deploy the default workspace CRD directly into your AKS cluster, or save the CRD and customize it to your liking.
-
-### [Kubernetes view](#tab/kubernetes-view)
+When creating a KAITO workspace, you can either deploy the default workspace CRD directly into your AKS cluster or save the CRD and customize it for your needs.
     
-1. In the Kubernetes tab, under Clouds > Azure > your subscription >  Deploy a LLM with KAITO, right click on your cluster and select **Create KAITO workspace**.
-2. Find the model you wish to deploy/create and click on it.
-3. Choose to either **Deploy default workspace CRD** or **Customize workspace CRD**.
-4. Click **Deploy Default workspace CRD** to deploy the model. It will track the progress of the model and notify you once the model has been successfully deployed. It will also notify you if the model was already previously unsucessfully onto your cluster. Upon successful deployment, you will be prompted with a "View Deployed Models" button that will redirect you to the deployment management page.
----
+1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Create KAITO workspace**.
+2. Find and select the model you want to deploy.
+3. Select **Deploy default workspace CRD** or **Customize workspace CRD**.
+4. Select **Deploy default workspace CRD** to deploy the model. It tracks the progress of the model and notifies you once the model successfully deploys. It also notifies you if the model was already previously unsucessfully onto your cluster.
+5. When the deployment completes, you see a **View Deployed Models** button that redirects you to the deployment management page.
 
 ## Manage KAITO models
 
