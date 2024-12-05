@@ -14,7 +14,6 @@ In this article, you learn how to use the AI toolchain operator (KAITO) in the A
 
 ## Prerequisites
 
-Before you begin, make sure you have the following resources:
 
 * The Azure Kubernetes Service (AKS) extension for Visual Studio Code downloaded. For more information, see [Install the Azure Kubernetes Service (AKS) extension for Visual Studio Code][install-aks-vscode].
 
