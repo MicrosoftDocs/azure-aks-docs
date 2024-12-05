@@ -19,14 +19,9 @@ In this article, you learn how to use the AI toolchain operator (KAITO) in the A
 
 ## Install KAITO on your cluster
 
-You can access the screen to install KAITO via the Kubernetes view.
-
-### [Kubernetes view](#tab/kubernetes-view)
-    
-1. In the Kubernetes tab, under Clouds > Azure > your subscription > Deploy a LLM with KAITO, right click on your cluster and select **Install KAITO**.
-2. Click **Install KAITO**.
-3. Once on the page, click **Install KAITO** and the KAITO installation process will begin. Once KAITO has been successfully installed, you will be prompted with a "Generate Workspace" button that will redirect you to the model deployment page.
----
+1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Install KAITO**.
+2. Once on the page, select **Install KAITO** to start the KAITO installation process.
+3. When the installation completes, you see a **Generate Workspace** button that redirects you to the model deployment page.
 
 ## Create a KAITO workspace
 
