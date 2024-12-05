@@ -45,21 +45,15 @@ The **Manage KAITO models** page allows you to see all models deployed in your A
     * **Test a model**: Select **Test**. This action brings you to a new page where you can interact with the deployed model through a chat interface.
 ## Test your model
 
-After selecting **Test** model on the [Manage KAITO models](#manage-kaito-models) screen, a chat interface will pop up allowing you to interact and various parameters of the model.
+1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Manage KAITO models**.
+2. Select **Test**. This action brings you to a new page where you can interact with the deployed model through the **Prompt** box chat interface.
+3. You can optionally adjust the parameters:
 
-### [Kubernetes view](#tab/kubernetes-view)
-    
-1. In the Kubernetes tab, under Clouds > Azure > your subscription >  Deploy a LLM with KAITO, right click on your cluster and select **Manage KAITO models**.
-2. Select **Test**.
-3. Type into the "Prompt" box.
-4. Optional: tweak the parameters:
-
-    * **Temperature**: Controls the randomness of the model's output. A low temperature is good for tasks needing precision (e.g., math problems), while a high temperature is better for creative writing
+    * **Temperature**: Controls the randomness of the model's output. A low temperature is good for tasks needing precision, like math problems, while a high temperature is better for tasks like creative writing.
     * **Top P**: Limits the next-word choices to a dynamic subset of the vocabulary, determined by a cumulative probability threshold.
-    * **Top K**: Limits the next-word selection to the top K most probable words. Smaller K values lead to more predictable outputs, while larger values increase variability.
-    * **Repetition Penalty**: Penalizes the model for repeating the same phrases, words, or sequences. Useful for avoiding repetitive or looping outputs, especially in longer generations.
+    * **Top K**: Limits the next-word selection to the top `K` most probable words. Smaller `K` values lead to more predictable outputs, while larger values increase variability.
+    * **Repetition Penalty**: Penalizes the model for repeating the same phrases, words, or sequences. This is useful for avoiding repetitive or looping outputs, especially in longer generations.
     * **Max Length**: Defines the maximum number of tokens (words or subwords) in the generated output.
----
 
 
 For more information, see [AKS extension for Visual Studio Code features][aks-vscode-features].
