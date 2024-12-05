@@ -95,7 +95,7 @@ Control plane metrics are stored in an Azure Monitor workspace in the cluster's 
 ## Customize control plane metrics
 
 > [!WARNING] 
-> At this point (December 2024), there is an ongoing bug that prevents any kind of customization of metrics for AKS Control Plane. Any changes mnade to the configmap for control plane components will not take effet.  We are actively working to fix this and will update the article when this is fixed.
+> At this point (December 2024), there is an ongoing bug that prevents any kind of customization of metrics for AKS Control Plane. Any changes made to the configmap for control plane components will not take effet.  We are actively working to fix this and will update the article when this is fixed.
 
 
 AKS includes a preconfigured set of metrics to collect and store for each component. `API server` and `etcd` are enabled by default. You can customize this list through the [`ama-settings-configmap`](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml).
