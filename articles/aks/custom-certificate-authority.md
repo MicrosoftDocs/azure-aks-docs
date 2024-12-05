@@ -1,5 +1,5 @@
 ---
-title: Custom certificate authority (CA) in Azure Kubernetes Service (AKS) (preview)
+title: Custom certificate authority (CA) in Azure Kubernetes Service (AKS)
 description: Learn how to use a custom certificate authority (CA) in an Azure Kubernetes Service (AKS) cluster.
 author: schaffererin
 ms.author: schaffererin
@@ -9,7 +9,7 @@ ms.custom: devx-track-azurecli
 ms.date: 04/25/2023
 ---
 
-# Custom certificate authority (CA) in Azure Kubernetes Service (AKS) (preview)
+# Custom certificate authority (CA) in Azure Kubernetes Service (AKS)
 
 This article shows you how to create custom CAs and apply them to your AKS clusters.
 
@@ -22,44 +22,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 ## Limitations
 
 * This feature currently isn't supported for Windows node pools.
-
-## Install the `aks-preview` Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-## Register the `CustomCATrustPreview` feature flag
-
-1. Register the `CustomCATrustPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "CustomCATrustPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "CustomCATrustPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
+* Installing CAs after node pool creation is not supported.
 
 ## Custom CA installation on AKS node pools
 
@@ -104,34 +67,6 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
     > [!NOTE]
     > This operation triggers a model update, ensuring new nodes have the newest CAs required for correct provisioning. AKS creates additional nodes, drains existing ones, deletes them, and replaces them with nodes that have the new set of CAs installed.
-
-### Install CAs after node pool creation
-
-If your environment can be successfully provisioned without your custom CAs, you can provide the CAs by deploying a secret in the `kube-system` namespace. This approach allows for certificate rotation without the need for node recreation.
-
-* Create a [Kubernetes secret][kubernetes-secrets] YAML manifest with your base64 encoded certificate string in the `data` field.
-
-    ```yaml
-    apiVersion: v1
-    kind: Secret
-    metadata: 
-        name: custom-ca-trust-secret
-        namespace: kube-system
-    type: Opaque
-    data:
-        ca1.crt: |
-          {base64EncodedCertStringHere}
-        ca2.crt: |
-          {anotherBase64EncodedCertStringHere}
-    ```
-
-    Data from this secret is used to update CAs on all nodes. Make sure the secret is named `custom-ca-trust-secret` and is created in the `kube-system` namespace. Installing CAs using the secret in the `kube-system` namespace allows for CA rotation without the need for node recreation. To update or remove a CA, you can edit and apply the YAML manifest. The cluster polls for changes and updates the nodes accordingly. It may take a couple minutes before changes are applied.
-
-    > [!NOTE]
-    >
-    > containerd restart on the node might be required for the CAs to be picked up properly. If it appears like CAs aren't correctly added to your node's trust store, you can trigger a restart using the following command from node's shell:
-    >
-    > ```systemctl restart containerd```
 
 ## Configure a new AKS cluster to use a custom CA
 
@@ -214,16 +149,7 @@ If your environment can be successfully provisioned without your custom CAs, you
 
 ## Troubleshooting
 
-### Feature is enabled and secret with CAs is added, but operations are failing with X.509 Certificate Signed by Unknown Authority error
-
-#### Incorrectly formatted certs passed in the secret
-
-AKS requires certs passed in the user-created secret to be properly formatted and base64 encoded. Make sure the CAs you passed are properly base64 encoded and that files with CAs don't have CRLF line breaks.
-Certificates passed to ```--custom-ca-trust-certificates``` shouldn't be base64 encoded.
-
-#### containerd hasn't picked up new certs
-
-From the node's shell, run ```systemctl restart containerd```. Once containerd is restarts, the new certs are properly picked up by the container runtime.
+Troubleshooting can be found here:
 
 ## Next steps
 
