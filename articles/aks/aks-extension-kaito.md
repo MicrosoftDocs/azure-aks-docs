@@ -23,6 +23,8 @@ In this article, you learn how to use the AI toolchain operator (KAITO) in the A
 2. Once on the page, select **Install KAITO** to start the KAITO installation process.
 3. When the installation completes, you see a **Generate Workspace** button that redirects you to the model deployment page.
 
+:::image type="content" source="./media/aks-extension/kaito/kaito-install.png" alt-text="Screenshot showing the KAITO install screen." lightbox="./media/aks-extension/kaito/kaito-install.png":::
+
 ## Create a KAITO workspace
 
 When creating a KAITO workspace, you can either deploy the default workspace CRD directly into your AKS cluster or save the CRD and customize it for your needs.
@@ -32,6 +34,8 @@ When creating a KAITO workspace, you can either deploy the default workspace CRD
 3. Select **Deploy default workspace CRD** or **Customize workspace CRD**.
 4. Select **Deploy default workspace CRD** to deploy the model. It tracks the progress of the model and notifies you once the model successfully deploys. It also notifies you if the model was already previously unsucessfully onto your cluster.
 5. When the deployment completes, you see a **View Deployed Models** button that redirects you to the deployment management page.
+
+:::image type="content" source="./media/aks-extension/kaito/kaito-select-model.png" alt-text="Screenshot showing the model select screen." lightbox="./media/aks-extension/kaitokaito-select-model.png":::
 
 ## Manage KAITO models
 
@@ -43,6 +47,9 @@ The **Manage KAITO models** page allows you to see all models deployed in your A
     * **Get logs**: Select **Get Logs** to access the latest logs from the KAITO workspace pods for your deployment. This action generates a new text file containing the most recent 500 lines of logs.
     * **Delete a model**: Select **Delete Workspace** (or **Cancel** for ongoing deployments). For failed deployments, select **Redeploy Default CRD** to remove the current deployment and restart the model deployment process from scratch.
     * **Test a model**: Select **Test**. This action brings you to a new page where you can interact with the deployed model through a chat interface.
+
+:::image type="content" source="./media/aks-extension/kaito/kaito-manage-models.png" alt-text="Screenshot showing the manage models screen." lightbox="./media/aks-extension/kaito-manage-models.png":::
+
 ## Test your model
 
 1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Manage KAITO models**.
@@ -55,6 +62,7 @@ The **Manage KAITO models** page allows you to see all models deployed in your A
     * **Repetition Penalty**: Penalizes the model for repeating the same phrases, words, or sequences. This is useful for avoiding repetitive or looping outputs, especially in longer generations.
     * **Max Length**: Defines the maximum number of tokens (words or subwords) in the generated output.
 
+:::image type="content" source="./media/aks-extension/kaito/kaito-test-model.png" alt-text="Screenshot showing test models screen." lightbox="./media/aks-extension/kaito-test-model.png":::
 
 For more information, see [AKS extension for Visual Studio Code features][aks-vscode-features].
 
