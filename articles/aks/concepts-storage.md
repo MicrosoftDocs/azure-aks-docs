@@ -10,9 +10,9 @@ ms.subservice: aks-storage
 
 # Storage options for applications in Azure Kubernetes Service (AKS)
 
-Applications running in Azure Kubernetes Service (AKS) may need to store and retrieve data. While some application workloads can use local, fast storage on unneeded, emptied nodes, others require storage that persists on more regular data volumes within the Azure platform.
+Applications running in Azure Kubernetes Service (AKS) might need to store and retrieve data. While some application workloads can use local, fast storage on unneeded, emptied nodes, others require storage that persists on more regular data volumes within the Azure platform.
 
-Multiple pods may need to:
+Multiple pods might need to:
 
 * Share the same data volumes.
 * Reattach data volumes if the pod is rescheduled on a different node.
@@ -149,11 +149,11 @@ Like using a secret:
 
 Volumes defined and created as part of the pod lifecycle only exist until you delete the pod. Pods often expect their storage to remain if a pod is rescheduled on a different host during a maintenance event, especially in StatefulSets. A *persistent volume* (PV) is a storage resource created and managed by the Kubernetes API that can exist beyond the lifetime of an individual pod.
 
-You can use the following Azure Storage data services to provide the persistent volume:
+You can use the following Azure Storage services to provide the persistent volume:
 
 * [Azure Disk](azure-csi-disk-storage-provision.md)
 * [Azure Files](azure-csi-files-storage-provision.md)
-* [Azure Container Storage][azure-container-storage] (preview).
+* [Azure Container Storage][azure-container-storage]
 
  As noted in the [Volumes](#volumes) section, the choice of Azure Disks or Azure Files is often determined by the need for concurrent access to the data or the performance tier.
 
