@@ -35,22 +35,14 @@ When creating a KAITO workspace, you can either deploy the default workspace CRD
 
 ## Manage KAITO models
 
-You can access the screen to manage your KAITO models via the Kubernetes view.
+The **Manage KAITO models** page allows you to see all models deployed in your AKS cluster along with their status (*ongoing*, *successful*, or *failed*). 
 
-The manage KAITO models screen allows you to see all models deployed in your AKS cluster, alongside their status (ongoing, successful, or failed). 
+1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Manage KAITO models**.
+2. From this page, you can choose to perform one of the following actions:
 
-For your selected deployment, click **Get Logs** to  access the latest logs from the KAITO workspace pods. This action will generate a new text file containing the most recent 500 lines of logs.
-
-To delete a model, select **Delete Workspace** (or **Cancel** for ongoing deployments). For failed deployments, choose **Re-deploy Default CRD** to remove the current deployment and restart the model deployment process from scratch.
-
-To test a model, select **Test**. This will bring you to a new screen where you can interact with the deployed model through a chat interface.
-
-### [Kubernetes view](#tab/kubernetes-view)
-    
-1. In the Kubernetes tab, under Clouds > Azure > your subscription >  Deploy a LLM with KAITO, right click on your cluster and select **Manage KAITO models**.
-2. Choose to either **Delete Workspace**, **Get Logs**, or **Test** your model.
----
-
+    * **Get logs**: Select **Get Logs** to access the latest logs from the KAITO workspace pods for your deployment. This action generates a new text file containing the most recent 500 lines of logs.
+    * **Delete a model**: Select **Delete Workspace** (or **Cancel** for ongoing deployments). For failed deployments, select **Redeploy Default CRD** to remove the current deployment and restart the model deployment process from scratch.
+    * **Test a model**: Select **Test**. This action brings you to a new page where you can interact with the deployed model through a chat interface.
 ## Test your model
 
 After selecting **Test** model on the [Manage KAITO models](#manage-kaito-models) screen, a chat interface will pop up allowing you to interact and various parameters of the model.
