@@ -246,7 +246,9 @@ The `eraser-aks-xxxxx` pod deletes within 10 minutes after work completion. You 
   
 1. Ensure Azure Monitoring is enabled on your cluster. For detailed steps, see [Enable Container Insights on AKS clusters](/azure/azure-monitor/containers/container-insights-enable-aks#existing-aks-cluster).
 
-2. Get the Log Analytics resource ID using the [`az aks show`][az-aks-show] command.
+2. Logs for the containers running in `kube-system` namespace are not collected by default. Remove the `kube-system` namespace from `exclude_namespaces` in the configmap and apply the config map to enable collection of these logs. See [Configure Container insights data collection](/azure/azure-monitor/containers/container-insights-data-collection-configure#configure-data-collection-using-configmap) for details.
+
+3. Get the Log Analytics resource ID using the [`az aks show`][az-aks-show] command.
 
     ```azurecli-interactive
       az aks show --resource-group myResourceGroup --name myManagedCluster
@@ -265,31 +267,40 @@ The `eraser-aks-xxxxx` pod deletes within 10 minutes after work completion. You 
      }
      ```
 
-3. In the Azure portal, search for the workspace resource ID, then select **Logs**.
+4. In the Azure portal, search for the workspace resource ID, then select **Logs**.
 
-4. Copy the following query into the table, replacing `name` with `eraser-aks-xxxxx` (worker pod name):
+5. Copy one of the following queries and paste into the query window.
+   1. Use the following query if your cluster is using the [ContainerLogV2 schema](/azure-monitor/containers/container-insights-logs-schema). If you're still using `ContainerLog`, you should upgrade to ContainerlogV2.
 
-     ```kusto
-     let startTimestamp = ago(1h);
-     KubePodInventory
-     | where TimeGenerated > startTimestamp
-     | project ContainerID, PodName=Name, Namespace
-     | where PodName contains "name" and Namespace startswith "kube-system"
-     | distinct ContainerID, PodName
-     | join
-     (
-         ContainerLog
-         | where TimeGenerated > startTimestamp
-     )
-     on ContainerID
-     // at this point before the next pipe, columns from both tables are available to be "projected". Due to both
-     // tables having a "Name" column, we assign an alias as PodName to one column which we actually want
-     | project TimeGenerated, PodName, LogEntry, LogEntrySource
-     | summarize by TimeGenerated, LogEntry
-     | order by TimeGenerated desc
-     ```
+        ```kusto    
+        ContainerLogV2
+        | where PodName startswith "eraser-aks-" and PodNamespace == "kube-system"
+        | project TimeGenerated, PodName, LogMessage, LogSource
+        ```
 
-5. Select **Run**. Any deleted image logs appear in the **Results** area.
+    2. If you want continue to use `ContainerLog`, use the following query instead:
+
+         ```kusto
+        let startTimestamp = ago(1h);
+        KubePodInventory
+        | where TimeGenerated > startTimestamp
+        | project ContainerID, PodName=Name, Namespace
+        | where PodName startswith "eraser-aks-" and Namespace == "kube-system"
+        | distinct ContainerID, PodName
+        | join
+        (
+            ContainerLog
+            | where TimeGenerated > startTimestamp
+        )
+        on ContainerID
+        // at this point before the next pipe, columns from both tables are available to be "projected". Due to both
+        // tables having a "Name" column, we assign an alias as PodName to one column which we actually want
+        | project TimeGenerated, PodName, LogEntry, LogEntrySource
+        | summarize by TimeGenerated, LogEntry
+        | order by TimeGenerated desc
+         ```
+
+6. Select **Run**. Any deleted image logs appear in the **Results** area.
 
 <!-- LINKS -->
 
