@@ -215,7 +215,7 @@ az sql server firewall-rule create --resource-group $Env:RESOURCE_GROUP_NAME --s
 ---
 
 > [!NOTE]
-> This article disables SQL authentication disabled to illustrate security best practices. Microsoft Entra ID is used to authenticate the connection to the server. If you need to enable SQL authentication, see [`az sql server create`](/cli/azure/sql/server#az-sql-server-create).
+> This article configures SQL authentication disabled to illustrate security best practices. Microsoft Entra ID is used to authenticate the connection to the server. If you need to enable SQL authentication, see [`az sql server create`](/cli/azure/sql/server#az-sql-server-create).
 
 ## Create a service connection in AKS with Service Connector
 
