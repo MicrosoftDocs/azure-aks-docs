@@ -274,7 +274,7 @@
           href: aks-extension-draft-github-workflow.md
         - name: Use AKS plugins for GitHub Copilot for Azure
           href: aks-extension-ghcopilot-plugins.md
-        - name: Create and deploy models via KAITO in Visual Studio Code
+        - name: Deploy and test models with KAITO in Visual Studio Code
           href: aks-extension-kaito.md
     - name: Migration
       items:
