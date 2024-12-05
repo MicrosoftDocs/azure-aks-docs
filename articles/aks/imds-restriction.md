@@ -71,7 +71,7 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - Application gateway ingress controller
 - Azure Monitor for containers (Container Insights)
 - Virtual nodes
-- Azure policy
+- Azure Policy
 - Cluster extensions: Flux (GitOps), Dapr, Azure App Configuration, Azure Machine Learning, Azure Container Storage, Azure Backup 
 - AI toolchain operator (preview)
 - Application routing
