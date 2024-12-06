@@ -50,7 +50,6 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 * Network isolated clusters are supported on AKS clusters using Kubernetes version 1.30 or higher.
 * Only `NodeImage` channel of auto-upgrade for node OS images is supported for network isolated clusters
 * Windows node pools are not currently supported.
-* Outbound type `block` is currently not supported for bring your own virtual network (BYO-vnet) clusters.
 * The following AKS cluster extensions are't not supported yet on network isolated clusters:
     * [Dapr][dapr-overview]
     * [Azure App Configuration][app-config-overview]
