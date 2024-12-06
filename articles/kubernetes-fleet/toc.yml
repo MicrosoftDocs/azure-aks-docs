@@ -51,7 +51,7 @@
         - name: Access Fleet hub cluster API
           href: access-fleet-kubernetes-api.md
         - name: Using cluster resource placement for workload propagation
-          href: quickstart-resource-propagation.md
+          href: resource-propagation.md
         - name: Intelligent resource placement using cluster properties
           href: intelligent-resource-placement.md
         - name: Using envelope objects for reserved resource types

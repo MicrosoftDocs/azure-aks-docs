@@ -29,6 +29,11 @@
       "source_path_from_root": "/articles/kubernetes-fleet/propagate-resources.md",
       "redirect_url": "/azure/kubernetes-fleet/quickstart-envelope-reserved-resources.md",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/kubernetes-fleet/quickstart-resource-propagation.md",
+      "redirect_url": "/azure/kubernetes-fleet/resource-propagation.md",
+      "redirect_document_id": false
     }
   ]
 }
