@@ -48,13 +48,13 @@
     - name: Workload propagation across multiple clusters
       items:
         - name: Access Fleet hub cluster API
-          href: quickstart-access-fleet-kubernetes-api.md
+          href: access-fleet-kubernetes-api.md
         - name: Using cluster resource placement for workload propagation
           href: quickstart-resource-propagation.md
         - name: Intelligent resource placement using cluster properties
           href: intelligent-resource-placement.md
         - name: Using envelope objects for reserved resource types
-          href: propagate-resources.md
+          href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations for workload scheduling
           href: use-taints-tolerations.md
         - name: Use overrides to customize cluster-scoped resources
