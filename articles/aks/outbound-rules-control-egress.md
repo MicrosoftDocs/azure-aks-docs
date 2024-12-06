@@ -172,7 +172,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 If using network isolated clusters, the recommended approach would be to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for both Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace).
 
-If using user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
+If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
 #### Required network rules
 
