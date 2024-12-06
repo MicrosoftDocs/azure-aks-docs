@@ -150,8 +150,8 @@ For any AKS clusters created or upgraded after March 2022, Azure Kubernetes Serv
     > [!NOTE]
     > If you have any services that run on top of AKS, you might need to update their certificates.
 
-## Kubelet Serving Certificate Rotation
-Kubelet Serving Certificate Rotation allows AKS to utilize kubelet server TLS bootstrapping for both bootstrapping and rotating serving certificates signed by the cluster Certificate Authority (CA).
+## Kubelet serving certificate rotation
+Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bootstrapping for both bootstrapping and rotating serving certificates signed by the cluster Certificate Authority (CA).
 
 ### Limitations
 - This feature is only enabled in EUAP regions.
