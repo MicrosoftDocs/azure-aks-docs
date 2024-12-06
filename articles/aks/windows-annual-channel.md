@@ -19,12 +19,12 @@ Windows Annual Channel versions are based on the Kubernetes version of your node
 
 ## Supported Annual Channel releases
 
-AKS releases support for new releases of Windows Server Annual Channel for Containers in alignment with Kubernetes versions. For the latest updates, see the [AKS release notes][release-notes]. The following table provides an estimated release schedule for upcoming Annual Channel releases:
+AKS releases support for new releases of Windows Server Annual Channel for Containers in alignment with Kubernetes versions. For the latest updates, see the [AKS release notes][release-notes]. The following table provides an *estimated* release schedule for upcoming Annual Channel releases:
 
 |  K8s version | Annual Channel (host) version | Container image supported | End of support date |
 |--------------|-------------------|-------------------|-------------------|
-| 1.28 | 23H2 (preview only) | Windows Server 2022 | End of 1.30 support |
-| 1.31 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.34 support |
+| 1.28 | 23H2 (preview only) | Windows Server 2022 | End of 1.33 support |
+| 1.31 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.35 support |
 | 1.35 | 25H2 | Windows Server 2025 | End of 1.38 support |
 
 ## Windows Annual Channel vs. Long Term Servicing Channel Releases (LTSC)
