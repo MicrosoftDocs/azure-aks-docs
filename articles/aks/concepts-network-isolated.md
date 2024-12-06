@@ -10,11 +10,11 @@ ms.date: 11/10/2024
 
 # Network isolated Azure Kubernetes Service (AKS) clusters (Preview)
 
-Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
+Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
 
-One solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
+One solution to restricting outbound traffic from the cluster is to use a firewall device to restrict traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
 
-Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. A network isolated AKS cluster reduces the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
+Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. The cluster operator can then incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated AKS cluster thus reduces the risk of data exfiltration.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -24,7 +24,7 @@ The following diagram shows the network communication between dependencies for a
 
 :::image type="content" source="media/network-isolated-cluster/network-isolated-cluster-diagram.png" alt-text="Traffic diagram of network isolated AKS cluster.":::
 
-Normally, an AKS cluster pulls system images from the Microsoft Artifact Registry (MAR). A network isolated cluster attempts to pull those images from a private Azure Container Registry (ACR) instance connected to the cluster instead. If the images aren't present, the private ACR pulls them from MAR and serves them via its private endpoint, eliminating the need to enable egress from the cluster to the public MAR endpoint. Thus, a network isolated AKS cluster doesn't require access to any public endpoint.
+AKS clusters pull images required for the cluster and its features or add-ons from the Microsoft Artifact Registry (MAR). This image pull allows AKS to provide newer versions of the cluster components and to also address critical security vulnerabilities. A network isolated cluster attempts to pull those images from a private Azure Container Registry (ACR) instance connected to the cluster instead of pulling from MAR. If the images aren't present, the private ACR pulls them from MAR and serves them via its private endpoint, eliminating the need to enable egress from the cluster to the public MAR endpoint.
 
 
 The following options are supported for a private ACR with network isolated clusters:
@@ -50,7 +50,6 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 * Network isolated clusters are supported on AKS clusters using Kubernetes version 1.30 or higher.
 * Only `NodeImage` channel of auto-upgrade for node OS images is supported for network isolated clusters
 * Windows node pools are not currently supported.
-* Outbound type `block` is currently not supported for bring your own virtual network (BYO-vnet) clusters.
 * The following AKS cluster extensions are't not supported yet on network isolated clusters:
     * [Dapr][dapr-overview]
     * [Azure App Configuration][app-config-overview]
@@ -89,6 +88,7 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [autoupgrade-node-os]: ./auto-upgrade-node-os-image.md
 [network-isolated]: ./network-isolated.md
+[outbound-rules]: ./outbound-rules-control-egress.md
 
 [app-config-overview]: ./azure-app-configuration.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
