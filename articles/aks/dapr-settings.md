@@ -32,7 +32,7 @@ You can [bring in your own certificates](https://docs.dapr.io/operations/securit
 
 ### Manage Dapr-generated self-signed certificates
 
-If you haven't provided any custom certificates, Dapr automatically creates and persists self-signed certificates, valid for 1 year. In Kubernetes, the certificates are persisted to a secret that resides in the [default `dapr-system` namespace of the Dapr system pods](https://docs.dapr.io/concepts/configuration-concept/), accessible only to them.
+If you haven't provided any custom certificates, Dapr automatically creates and persists self-signed certificates, valid for 1 year. The Dapr extension installs the `dapr-trust-bundle` secret, which contains certificate information under the default `dapr-system` namespace.
  
 #### Check expiry of current Dapr-generated self-signed certificates
 
