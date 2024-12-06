@@ -16,7 +16,7 @@ If your Azure Kubernetes Fleet Manager resource was created with the hub cluster
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
-* You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI](./access-fleet-hub-cluster-kubernetes-api).
+* You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI](./access-fleet-hub-cluster-kubernetes-api.md).
 * The identity (user or service principal) you're using needs to have the Microsoft.ContainerService/fleets/listCredentials/action on the Fleet resource.
 
 ## Access Fleet hub cluster Kubernetes API

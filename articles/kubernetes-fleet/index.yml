@@ -64,7 +64,7 @@ landingContent:
       - linkListType: quickstart
         links:
           - text: Access Fleet hub cluster Kubernetes API
-            url: quickstart-access-fleet-hub-cluster-kubernetes-api.md
+            url: access-fleet-hub-cluster-kubernetes-api.md
       - linkListType: quickstart
         links:
           - text: Propagate Kubernetes resource objects from a Fleet resource to member clusters
