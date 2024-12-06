@@ -20,10 +20,11 @@ It's best to use both cluster-level [auto-upgrades][Autoupgrade] and the node OS
 
 ## Channels for node OS image upgrades
 
-The selected channel determines the timing of upgrades. When making changes to node OS auto-upgrade channels, allow up to 24 hours for the changes to take effect. Once you change from one channel to another channel, a reimage is triggered leading to rolling nodes.
+The selected channel determines the timing of upgrades. When making changes to node OS auto-upgrade channels, allow up to 24 hours for the changes to take effect.
 
 > [!NOTE]
-> Node OS image auto-upgrade won't affect the cluster's Kubernetes version. Starting with API version 2023-06-01, the default for any new cluster created is `NodeImage`. 
+> - Once you change from one channel to another channel, **a reimage is triggered leading to rolling nodes**.
+> - Node OS image auto-upgrade won't affect the cluster's Kubernetes version. Starting with API version 2023-06-01, the default for any new cluster created is `NodeImage`. 
 
 The following upgrade channels are available. You're allowed to choose one of these options:
 
