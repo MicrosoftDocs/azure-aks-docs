@@ -14,7 +14,7 @@ Organizations typically have strict security and compliance requirements to regu
 
 One solution it to use a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
 
-Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. The cluster operator can then incrementally set up allowed outbound traffic securely over a private network for each scenario they want to enable. For example, connecting to Azure Key Vault over private endpoint on the cluster's virtual network. A network isolated AKS cluster thus reduces the risk of data exfiltration.
+Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. The cluster operator can then incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated AKS cluster thus reduces the risk of data exfiltration.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
