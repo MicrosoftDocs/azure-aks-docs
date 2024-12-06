@@ -1,6 +1,6 @@
 ---
-title: Use Windows Annual Channel for Containers on Azure Kubernetes Service (AKS)
-description: Learn about Windows Annual Channel for Containers for Windows containers on Azure Kubernetes Service (AKS).
+title: Use Windows Server Annual Channel for Containers on Azure Kubernetes Service (AKS)
+description: Learn about Windows Server Annual Channel for Containers for Windows containers on Azure Kubernetes Service (AKS).
 ms.service: azure-kubernetes-service
 ms.custom: windows-related-content
 ms.author: allyford
@@ -9,11 +9,11 @@ ms.topic: how-to
 ms.date: 07/01/2024
 ---
 
-# Use Windows Annual Channel for Containers on Azure Kubernetes Service (AKS) (Preview)
+# Use Windows Server Annual Channel for Containers on Azure Kubernetes Service (AKS) (Preview)
 
 AKS supports [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) in public preview. Each channel version is released annually and is supported for *two years*. This channel is beneficial if you require increased innovation cycles and portability.
 
-Windows Annual Channel versions are based on the Kubernetes version of your node pool. To upgrade from one Annual Channel version to the next, you can [upgrade to a Kubernetes version][upgrade-aks-cluster] that supports the next Annual Channel version.
+Windows Server Annual Channel versions are based on the Kubernetes version of your node pool. To upgrade from one Annual Channel version to the next, you can [upgrade to a Kubernetes version][upgrade-aks-cluster] that supports the next Annual Channel version.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -27,19 +27,19 @@ AKS releases support for new releases of Windows Server Annual Channel for Conta
 | 1.31 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.35 support |
 | 1.35 | 25H2 | Windows Server 2025 | End of 1.38 support |
 
-## Windows Annual Channel vs. Long Term Servicing Channel Releases (LTSC)
+## Windows Server Annual Channel vs. Long Term Servicing Channel Releases (LTSC)
 
 AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2022 and Windows Server 2019. These come from a different release channel than Windows Server Annual Channel for Containers. To view our current recommendations, see the [Windows best practices documentation][windows-best-practices].
 
 > [!NOTE]
-> Windows Server 2019 will retire after Kubernetes version 1.32 reaches end of life, and Windows Server 2022 will retire after Kubernetes version 1.34 reaches end of life. For more information, see the [AKS release notes][release-notes].
+> Windows Server 2019 will retire after Kubernetes version 1.32 reaches end of life, and will not be supported in Kubernetes version 1.33 and above. Windows Server 2022 will retire after Kubernetes version 1.34 reaches end of life, and will not be supported in Kubernetes version 1.35 and above. For more information, see the [AKS release notes][release-notes].
 
-The following table compares Windows Annual Channel and Long Term Servicing Channel releases:
+The following table compares Windows Server Annual Channel and Long Term Servicing Channel releases:
 
 | Channel | Support | Upgrades |
 |---------|---------|----------|
 | Long Term Servicing Channel (LTSC) | LTSC channels are released every three years and are supported for five years. This channel is recommended for customers using Long Term Support. | To upgrade from one release to the next, you need to migrate your node pools to a new OS SKU option and rebuild your container images with the new OS version. |
-| Annual Channel for Containers | Annual Channel releases occur annually and are supported for two years. | To upgrade to the latest release, you can upgrade the Kubernetes version of your node pool. |
+| Windows Server Annual Channel for Containers | Annual Channel releases occur annually and are supported for two years. | To upgrade to the latest release, you can upgrade the Kubernetes version of your node pool. |
 
 ## Before you begin
 
@@ -47,7 +47,7 @@ The following table compares Windows Annual Channel and Long Term Servicing Chan
 
 ### Limitations
 
-* Windows Annual Channel doesn't support Azure Network Policy Manager (NPM).
+* Windows Server Annual Channel doesn't support Azure Network Policy Manager (NPM).
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -82,20 +82,20 @@ The following table compares Windows Annual Channel and Long Term Servicing Chan
     az provider register --namespace Microsoft.ContainerService
     ```
 
-## Use Windows Annual Channel for Containers on AKS
+## Use Windows Server Annual Channel for Containers on AKS
 
-To use Windows Annual Channel on AKS, specify the following parameters:
+To use Windows Server Annual Channel on AKS, specify the following parameters:
 
 * `os-type` set to `Windows`
 * `os-sku` set to `WindowsAnnual`
 
-Windows Annual Channel versions are based on the Kubernetes version of your node pool. To check which release you'll get based on the Kubernetes version of your node pool, see the [supported Annual Channel releases](#supported-annual-channel-releases).
+Windows Server Annual Channel versions are based on the Kubernetes version of your node pool. To check which release you'll get based on the Kubernetes version of your node pool, see the [supported Annual Channel releases](#supported-annual-channel-releases).
 
-### Create a new Windows Annual Channel node pool
+### Create a new Windows Server Annual Channel node pool
 
 #### [Azure CLI](#tab/azure-cli)
 
-* Create a Windows Annual Channel node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a Windows Annual Channel node pool with the 23H2 release:
+* Create a Windows Server Annual Channel node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. The following example creates a Windows Server Annual Channel node pool with the 23H2 release:
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -113,7 +113,7 @@ Windows Annual Channel versions are based on the Kubernetes version of your node
 
 #### [Azure PowerShell](#tab/azure-powershell)
 
-* Create a Windows Annual Channel node pool using the [`New-AzAksNodePool`][new-azaksnodepool] cmdlet.
+* Create a Windows Server Annual Channel node pool using the [`New-AzAksNodePool`][new-azaksnodepool] cmdlet.
 
     ```azurepowershell
     New-AzAksNodePool -ResourceGroupName $RESOURCE_GROUP_NAME `
@@ -126,15 +126,15 @@ Windows Annual Channel versions are based on the Kubernetes version of your node
 
 ---
 
-### Verify Windows Annual Channel node pool creation
+### Verify Windows Server Annual Channel node pool creation
 
-* Verify Windows Annual Channel node pool creation by checking the OS SKU of your node pool using `kubectl describe node` command.
+* Verify Windows Server Annual Channel node pool creation by checking the OS SKU of your node pool using `kubectl describe node` command.
 
     ```bash
     kubectl describe node $NODE_POOL_NAME
     ```
 
-    If you successfully created a Windows Annual Channel node pool, you should see the following output:
+    If you successfully created a Windows Server Annual Channel node pool, you should see the following output:
 
     ```output
     Name:               npwin
@@ -148,9 +148,9 @@ Windows Annual Channel versions are based on the Kubernetes version of your node
                         kubernetes.azure.com/os-sku=WindowsAnnual
     ```
 
-### Upgrade an existing node pool to Windows Annual Channel
+### Upgrade an existing node pool to Windows Server Annual Channel
 
-You can upgrade an existing node pool from an LTSC release to Windows Annual Channel by following the guidance in [Upgrade the OS version for your Azure Kubernetes Service (AKS) Windows workloads][upgrade-windows-os].
+You can upgrade an existing node pool from an LTSC release to Windows Server Annual Channel by following the guidance in [Upgrade the OS version for your Azure Kubernetes Service (AKS) Windows workloads][upgrade-windows-os].
 
 To upgrade from one Annual Channel version to the next, you can [upgrade to a Kubernetes version][upgrade-aks-cluster] that supports the next Annual Channel version.
 
