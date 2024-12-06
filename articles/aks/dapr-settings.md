@@ -75,7 +75,7 @@ Refer to Dapr's [Updating root or issuer certs using Kubectl](https://docs.dapr.
 
 ### Manage your own user-supplied x.509 certificates
 
-You can also bring your own customer certificates.  
+You can also bring your own custom certificates.
 
 #### Generate custom certificates
 
