@@ -161,7 +161,7 @@ Kubelet Serving Certificate Rotation allows AKS to utilize kubelet server TLS bo
 
 With this feature enabled, you should see the kubelet running on every one of your nodes go through the serving [TLS bootstrapping process](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/#certificate-rotation).
 
-Verify the bootstrapping process is taking place by using the [`kubectl get`][kubectl-get] command to get the current csr objects within your cluster.
+Verify the bootstrapping process is taking place by using the [`kubectl get`][kubectl-get] command to get the current CSR objects within your cluster.
 
  ```azurecli-interactive
 kubectl get csr
@@ -178,7 +178,7 @@ csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstra
     ```
 
 ### Disable kubelet serving certificate rotation
-Kubelet serving certificate rotation can be disabled by updating a nodepool with a node pool tag.
+Kubelet serving certificate rotation can be disabled by updating a node pool with a node pool tag.
 
 ## Next steps
 
