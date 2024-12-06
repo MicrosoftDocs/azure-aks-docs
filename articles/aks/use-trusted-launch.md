@@ -23,7 +23,7 @@ Trusted launch is composed of several, coordinated infrastructure technologies t
 
 ## Before you begin
 
-- The Azure CLI version 2.44.1 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- The Azure CLI version 2.66.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - Secure Boot requires signed boot loaders, OS kernels, and drivers.
 
 ## Limitations
