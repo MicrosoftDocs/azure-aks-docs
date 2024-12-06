@@ -1,5 +1,5 @@
 ---
-title: "How-to guides: Access Fleet hub cluster Kubernetes API"
+title: "Access Fleet hub cluster Kubernetes API"
 description: Learn how to access fleet hub cluster kubernetes API with Azure Kubernetes Fleet Manager.
 ms.topic: quickstart
 ms.date: 04/01/2024
@@ -8,7 +8,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-fleet-manager
 ---
 
-# How-to guides: Access Fleet hub cluster Kubernetes API
+# Access Fleet hub cluster Kubernetes API
 
 If your Azure Kubernetes Fleet Manager resource was created with the hub cluster enabled, then it can be used to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API of the hub cluster managed by the Fleet resource.
 
