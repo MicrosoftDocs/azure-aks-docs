@@ -10,9 +10,9 @@ ms.date: 11/10/2024
 
 # Network isolated Azure Kubernetes Service (AKS) clusters (Preview)
 
-Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
+Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
 
-One solution it to use a firewall device that can control outbound traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
+One solution to restricting outbound traffic from the cluster is to use a firewall device to restrict traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
 
 Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. The cluster operator can then incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated AKS cluster thus reduces the risk of data exfiltration.
 
@@ -89,6 +89,7 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [autoupgrade-node-os]: ./auto-upgrade-node-os-image.md
 [network-isolated]: ./network-isolated.md
+[outbound-rules]: ./outbound-rules-control-egress.md
 
 [app-config-overview]: ./azure-app-configuration.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
