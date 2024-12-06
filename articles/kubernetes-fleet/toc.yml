@@ -41,6 +41,7 @@
     - name: Upgrade Kubernetes and node images across multiple clusters
       items:
         - name: Define re-usable update strategies
+          href: update-create-update-strategy.md
         - name: Update Kubernetes and node images
           href: update-orchestration.md
         - name: Automate updates of Kubernetes and node images
