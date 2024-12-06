@@ -156,6 +156,9 @@ Kubelet Serving Certificate Rotation allows AKS to utilize kubelet server TLS bo
 ### Limitations
 - This feature is only enabled in EUAP regions.
 - Supported on kubernetes version 1.27 and above.
+- New node pools created on kubernetes version 1.27 and above after February 2025 will have kubelet serving certificate rotation enabled by default.
+- Existing node pools on kubernetes version 1.26 and below will have kubelet serving certificate rotation enabled by default after upgrading to kubernetes version 1.27.
+- Existing node pools on kubernetes version 1.27 and above will have kubelet serving certificate rotation enabled by default after upgrading their node pool.
 
 ### Verify kubelet goes through TLS bootstrapping process
 
