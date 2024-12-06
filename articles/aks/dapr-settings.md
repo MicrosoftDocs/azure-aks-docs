@@ -39,51 +39,43 @@ If you haven't provided any custom certificates, Dapr automatically creates and 
 You can check when the Dapr root certificate of your Kubernetes cluster expires by using [the Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/). 
 
 ```bash
-dapr status -k
+dapr mtls expiry
 ```
 
 **Expected output:**
 
 ```
-dapr status -k
-
-  NAME                   NAMESPACE    HEALTHY  STATUS   REPLICAS  VERSION   AGE  CREATED
-  dapr-sentry            dapr-system  True     Running  1         1.7.0     17d  2022-03-15 09:29.45
-  dapr-dashboard         dapr-system  True     Running  1         0.9.0     17d  2022-03-15 09:29.45
-  dapr-sidecar-injector  dapr-system  True     Running  1         1.7.0     17d  2022-03-15 09:29.45
-  dapr-operator          dapr-system  True     Running  1         1.7.0     17d  2022-03-15 09:29.45
-  dapr-placement-server  dapr-system  True     Running  1         1.7.0     17d  2022-03-15 09:29.45
-⚠  Dapr root certificate of your Kubernetes cluster expires in 2 days. Expiry date: Mon, 04 Apr 2022 15:01:03 UTC.
- Please see docs.dapr.io for certificate renewal instructions to avoid service interruptions.
+Root certificate expires in 8759 hours. Expiry date: 2025-12-06 18:14:20 +0000 UTC
 ```
 
 You can also find the expiration date for your current certificate in the Kubernetes `dapr-trust-bundle` secret data.
 
 ```bash
-kubectl edit secret dapr-trust-bundle -n dapr-system
+kubectl get secret dapr-trust-bundle -n dapr-system -o jsonpath='{.data.issuer\.crt}' | base64 -d | openssl x509 -noout -dates
 ```
- 
+
+**Expected output:**
+
+```
+notBefore=Dec  6 17:59:20 2024 GMT
+notAfter=Dec  6 18:14:20 2025 GMT
+```
+
 #### Generate a new Dapr-generated self-signed certificate 
 
-##### Via the Dapr CLI (recommended)
-
-Refer to Dapr's [Root and issuer certificate upgrade using CLI](https://docs.dapr.io/operations/security/mtls/#root-and-issuer-certificate-upgrade-using-cli-recommended) guide.
-
-##### Via `kubectl` commands
-
-Refer to Dapr's [Updating root or issuer certs using Kubectl](https://docs.dapr.io/operations/security/mtls/#updating-root-or-issuer-certs-using-kubectl) guide.
+- **Via the Dapr CLI (recommended)**  
+   Refer to Dapr's [Root and issuer certificate upgrade using CLI](https://docs.dapr.io/operations/security/mtls/#root-and-issuer-certificate-upgrade-using-cli-recommended) guide.
+- **Via `kubectl` commands**
+   Refer to Dapr's [Updating root or issuer certs using Kubectl](https://docs.dapr.io/operations/security/mtls/#updating-root-or-issuer-certs-using-kubectl) guide.
 
 ### Manage your own user-supplied x.509 certificates
 
 You can also bring your own custom certificates.
 
-#### Generate custom certificates
-
-Create your own custom certificate; for example, [an Azure Key Vault certificate](/azure/key-vault/certificates/certificate-scenarios).
-
-#### Update your custom certficate manually
-
-Follow [the instructions provided in the Dapr open source documentation to update your custom certificates manually](https://docs.dapr.io/operations/security/mtls/#custom-certificates-bring-your-own) using [Helm](https://helm.sh/docs/intro/install/) and [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
+- **Generate custom certificates**  
+   Create your own custom certificate; for example, [an Azure Key Vault certificate](/azure/key-vault/certificates/certificate-scenarios).
+- **Update your custom certficate manually**  
+   Follow [the instructions provided in the Dapr open source documentation to update your custom certificates manually](https://docs.dapr.io/operations/security/mtls/#custom-certificates-bring-your-own) using [`kubectl`](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/).
 
 ## Provision Dapr with high availability (HA) enabled
 
