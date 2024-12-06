@@ -1,7 +1,7 @@
 ---
 title: "Access Fleet hub cluster Kubernetes API"
 description: Learn how to access fleet hub cluster kubernetes API with Azure Kubernetes Fleet Manager.
-ms.topic: quickstart
+ms.topic: how-to
 ms.date: 04/01/2024
 author: schaffererin
 ms.author: schaffererin
