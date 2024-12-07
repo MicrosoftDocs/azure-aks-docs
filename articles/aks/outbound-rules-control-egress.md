@@ -169,7 +169,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 ### Azure Key Vault provider for Secrets Store CSI Driver
 
-If using network isolated clusters, the recommended approach would be to set up [private endpoint to access Azure Key Vault][akv-privatelink].
+If using network isolated clusters, it's recommended to set up [private endpoint to access Azure Key Vault][akv-privatelink].
 
 If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
@@ -182,7 +182,7 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 
 ### Azure Monitor - Managed Prometheus and Container Insights
 
-If using network isolated clusters, the recommended approach would be to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for both Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace).
+If using network isolated clusters, it's recommended to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for both Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace).
 
 If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
