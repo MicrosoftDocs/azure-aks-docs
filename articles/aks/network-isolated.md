@@ -6,7 +6,7 @@ ms.subservice: aks-networking
 author: shashankbarsin
 ms.author: shasb
 ms.topic: how-to
-ms.date: 11/10/2024
+ms.date: 12/07/2024
 zone_pivot_groups: network-isolated-acr-type
 ---
 
