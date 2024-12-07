@@ -49,7 +49,6 @@ The following network and FQDN/application rules are required for an AKS cluster
 * You might notice traffic towards "umsa*.blob.core.windows.net" endpoint. This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. You can find more details on [VM Extensions](/azure/virtual-machines/extensions/features-linux?tabs=azure-cli#network-access).
 
 
-
 ### Azure Global required network rules
 
 | Destination Endpoint                                                             | Protocol | Port    | Use  |
@@ -147,7 +146,15 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 If you choose to block/not allow these FQDNs, the nodes will only receive OS updates when you do a [node image upgrade](node-image-upgrade.md) or [cluster upgrade](upgrade-cluster.md). Keep in mind that Node Image Upgrades also come with updated packages including security fixes.
 
-## AKS addons and integrations
+## AKS features, addons, and integrations
+
+### Workload identity
+
+#### Required FQDN / application rules
+
+| Destination FQDN                                                           | Port      | Use      |
+|----------------------------------------------------------------------------|-----------|----------|
+| **`login.microsoftonline.com`** or **`login.chinacloudapi.cn`** or **`login.microsoftonline.us`** | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 
 ### Microsoft Defender for Containers
 
@@ -155,11 +162,15 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 | FQDN                                                       | Port      | Use      |
 |------------------------------------------------------------|-----------|----------|
-| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Active Directory Authentication. |
+| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra Authentication. |
 | **`*.ods.opinsights.azure.com`** <br/> **`*.ods.opinsights.azure.us`** (Azure Government) <br/> **`*.ods.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Microsoft Defender to upload security events to the cloud.|
-| **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to Authenticate with LogAnalytics workspaces.|
+| **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to authenticate with Log Analytics workspaces.|
 
-### CSI Secret Store
+### Azure Key Vault provider for Secrets Store CSI Driver
+
+If using network isolated clusters, it's recommended to set up [private endpoint to access Azure Key Vault][akv-privatelink].
+
+If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
 #### Required FQDN / application rules
 
@@ -170,7 +181,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 ### Azure Monitor - Managed Prometheus and Container Insights
 
-If using network isolated clusters, the recommended approach would be to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for both Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace).
+If using network isolated clusters, it's recommended to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for both Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace).
 
 If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
@@ -280,6 +291,15 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 >
 > For any addons that aren't explicitly stated here, the core requirements cover it.
 
+
+### Istio-based service mesh add-on
+
+In Istio=based service mesh add-on, if you are setting up istiod with a Plugin Certificate Authority (CA) or if you are setting up secure ingress gateway, Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
+
+### Application routing add-on
+
+Application routing add-on supports SSL termination at the ingress with certificates stored in Azure Key Vault. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
+
 ## Next steps
 
 In this article, you learned what ports and addresses to allow if you want to restrict egress traffic for the cluster.
@@ -291,7 +311,9 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [private-clusters]: ./private-clusters.md
 [use-network-policies]: ./use-network-policies.md
 [network-isolated-cluster]: ./concepts-network-isolated.md
+[akv-outbound]: #azure-key-vault-provider-for-secrets-store-csi-driver
 
 <!-- LINKS - external -->
 
 [azure-monitor-ingestion-private-link]: /azure/azure-monitor/containers/kubernetes-monitoring-private-link#container-insights-log-analytics-workspace
+[akv-privatelink]: /azure/key-vault/general/private-link-service?tabs=portal
