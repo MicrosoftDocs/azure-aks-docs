@@ -68,13 +68,14 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 - (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound requirements for each feature. Also, this doc enumerates the features or add-ons that support private link and private endpoint based integration for secure connection from within the cluster's virtual network. If private link integration is not available for any of these features, then the cluster can be set up with an user-defined routing table and Azure Firewall based on the network rules and application rules required for that feature.
 
-> [!NOTE] The following AKS cluster extensions aren't supported yet on network isolated clusters:
-  >   * [Dapr][dapr-overview]
-  >   * [Azure App Configuration][app-config-overview]
-  >   * [Azure Machine Learning][azure-ml-overview]
-  >   * [Flux (GitOps)][gitops-overview]
-  >   * [Azure Container Storage][azure-container-storage]
-  >   * [Azure Backup for AKS][azure-backup-aks]
+> [!NOTE] 
+> The following AKS cluster extensions aren't supported yet on network isolated clusters:
+>   * [Dapr][dapr-overview]
+>   * [Azure App Configuration][app-config-overview]
+>   * [Azure Machine Learning][azure-ml-overview]
+>   * [Flux (GitOps)][gitops-overview]
+>   * [Azure Container Storage][azure-container-storage]
+>   * [Azure Backup for AKS][azure-backup-aks]
 
 ::: zone pivot="aks-managed-acr"
 
