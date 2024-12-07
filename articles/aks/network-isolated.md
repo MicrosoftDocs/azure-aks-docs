@@ -6,7 +6,7 @@ ms.subservice: aks-networking
 author: shashankbarsin
 ms.author: shasb
 ms.topic: how-to
-ms.date: 11/10/2024
+ms.date: 12/07/2024
 zone_pivot_groups: network-isolated-acr-type
 ---
 
@@ -66,12 +66,16 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
     * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
+- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. If private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
 
-- (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
-  - [Azure Key Vault provider for Secrets Store CSI Driver][akv-privatelink]
-  - [Azure Monitor Container Insights][azuremonitoring]
-
-- (Optional) If you're using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in [Azure Key Vault Secrets Store CSI Driver][csi-akv-wi]), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. One way to address this is by providing an [user-defined routing table and an Azure Firewall][aks-firewall] configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
+> [!NOTE] 
+> The following AKS cluster extensions aren't supported yet on network isolated clusters:
+> * [Dapr][dapr-overview]
+> * [Azure App Configuration][app-config-overview]
+> * [Azure Machine Learning][azure-ml-overview]
+> * [Flux (GitOps)][gitops-overview]
+> * [Azure Container Storage][azure-container-storage]
+> * [Azure Backup for AKS][azure-backup-aks]
 
 ::: zone pivot="aks-managed-acr"
 
@@ -380,29 +384,34 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [container-registry-skus]: /azure/container-registry/container-registry-skus
 [akv-privatelink]: /azure/key-vault/general/private-link-service?tabs=portal
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
-
-<!-- LINKS - Internal -->
-[aks-firewall]: ./limit-egress-traffic.md
-[conceptual-network-isolated]: ./concepts-network-isolated.md
-[conceptual-network-isolated-limitations]: ./concepts-network-isolated.md#limitations
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-feature-show]: /cli/azure/feature#az_feature_show
 [az-provider-register]: /cli/azure/provider#az_provider_register
-[aks-control-plane-identity]: use-managed-identity.md
-[aks-private-link]: private-clusters.md
 [azure-acr-rbac-contributor]: /azure/container-registry/container-registry-roles
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-show]: /cli/azure/aks#az-aks-show
-[azure-cni-overlay]: azure-cni-overlay.md
-[outbound-rules-control-egress]: outbound-rules-control-egress.md
+[gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
+
+<!-- LINKS - Internal -->
+[aks-firewall]: ./limit-egress-traffic.md
+[conceptual-network-isolated]: ./concepts-network-isolated.md
+[conceptual-network-isolated-limitations]: ./concepts-network-isolated.md#limitations
+[aks-control-plane-identity]: ./use-managed-identity.md
+[aks-private-link]: ./private-clusters.md
+[azure-cni-overlay]: ./azure-cni-overlay.md
+[outbound-rules-control-egress]: ./outbound-rules-control-egress.md
 [anonymous-pull-access]: /azure/container-registry/anonymous-pull-access
 [private-clusters]: ./private-clusters.md
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [use-network-policies]: ./use-network-policies.md
-
 [workload-identity]: ./workload-identity-deploy-cluster.md
 [csi-akv-wi]: ./csi-secrets-store-identity-access.md?pivots=access-with-a-microsoft-entra-workload-identity
+[app-config-overview]: ./azure-app-configuration.md
+[azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[dapr-overview]: ./dapr.md
