@@ -66,12 +66,15 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
     * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
+- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound requirements for each feature. Also, this doc enumerates the features or add-ons that support private link and private endpoint based integration for secure connection from within the cluster's virtual network. If private link integration is not available for any of these features, then the cluster can be set up with an user-defined routing table and Azure Firewall based on the network rules and application rules required for that feature.
 
-- (Optional) Set up private connection configuration for add-ons based on the following guides. This step is only required when you're using the following add-ons:
-  - [Azure Key Vault provider for Secrets Store CSI Driver][akv-privatelink]
-  - [Azure Monitor Container Insights][azuremonitoring]
-
-- (Optional) If you're using [workload identity][workload-identity] in your workloads or in any of the add-ons (for example, in [Azure Key Vault Secrets Store CSI Driver][csi-akv-wi]), then outbound connections to `login.microsoftonline.com` on `HTTPS` protocol over port `443` is required from the cluster. One way to address this is by providing an [user-defined routing table and an Azure Firewall][aks-firewall] configured with application rule to allow outbound traffic to `login.microsoftonline.com` on `HTTPS` protocol over port `443`.
+> [!NOTE] The following AKS cluster extensions aren't supported yet on network isolated clusters:
+  >   * [Dapr][dapr-overview]
+  >   * [Azure App Configuration][app-config-overview]
+  >   * [Azure Machine Learning][azure-ml-overview]
+  >   * [Flux (GitOps)][gitops-overview]
+  >   * [Azure Container Storage][azure-container-storage]
+  >   * [Azure Backup for AKS][azure-backup-aks]
 
 ::: zone pivot="aks-managed-acr"
 
