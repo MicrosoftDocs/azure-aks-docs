@@ -147,7 +147,15 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 If you choose to block/not allow these FQDNs, the nodes will only receive OS updates when you do a [node image upgrade](node-image-upgrade.md) or [cluster upgrade](upgrade-cluster.md). Keep in mind that Node Image Upgrades also come with updated packages including security fixes.
 
-## AKS addons and integrations
+## AKS features, addons, and integrations
+
+### Workload identity
+
+#### Required FQDN / application rules
+
+| Destination FQDN                                                           | Port      | Use      |
+|----------------------------------------------------------------------------|-----------|----------|
+| **`login.microsoftonline.com`** or **`login.chinacloudapi.cn`** or **`login.microsoftonline.us`** | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 
 ### Microsoft Defender for Containers
 
@@ -155,11 +163,15 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 | FQDN                                                       | Port      | Use      |
 |------------------------------------------------------------|-----------|----------|
-| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Active Directory Authentication. |
+| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra Authentication. |
 | **`*.ods.opinsights.azure.com`** <br/> **`*.ods.opinsights.azure.us`** (Azure Government) <br/> **`*.ods.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Microsoft Defender to upload security events to the cloud.|
-| **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to Authenticate with LogAnalytics workspaces.|
+| **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to authenticate with Log Analytics workspaces.|
 
-### CSI Secret Store
+### Azure Key Vault provider for Secrets Store CSI Driver
+
+If using network isolated clusters, the recommended approach would be to set up [private endpoint to access Azure Key Vault][akv-privatelink].
+
+If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
 #### Required FQDN / application rules
 
@@ -295,3 +307,4 @@ If you want to restrict how pods communicate between themselves and East-West tr
 <!-- LINKS - external -->
 
 [azure-monitor-ingestion-private-link]: /azure/azure-monitor/containers/kubernetes-monitoring-private-link#container-insights-log-analytics-workspace
+[akv-privatelink]: /azure/key-vault/general/private-link-service?tabs=portal
