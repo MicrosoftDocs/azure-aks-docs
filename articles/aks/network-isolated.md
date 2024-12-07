@@ -384,36 +384,34 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [container-registry-skus]: /azure/container-registry/container-registry-skus
 [akv-privatelink]: /azure/key-vault/general/private-link-service?tabs=portal
 [azuremonitoring]: /azure/azure-monitor/logs/private-link-configure#connect-to-a-private-endpoint
-
-<!-- LINKS - Internal -->
-[aks-firewall]: ./limit-egress-traffic.md
-[conceptual-network-isolated]: ./concepts-network-isolated.md
-[conceptual-network-isolated-limitations]: ./concepts-network-isolated.md#limitations
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-feature-show]: /cli/azure/feature#az_feature_show
 [az-provider-register]: /cli/azure/provider#az_provider_register
-[aks-control-plane-identity]: use-managed-identity.md
-[aks-private-link]: private-clusters.md
 [azure-acr-rbac-contributor]: /azure/container-registry/container-registry-roles
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-show]: /cli/azure/aks#az-aks-show
-[azure-cni-overlay]: azure-cni-overlay.md
-[outbound-rules-control-egress]: outbound-rules-control-egress.md
+[gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
+
+<!-- LINKS - Internal -->
+[aks-firewall]: ./limit-egress-traffic.md
+[conceptual-network-isolated]: ./concepts-network-isolated.md
+[conceptual-network-isolated-limitations]: ./concepts-network-isolated.md#limitations
+[aks-control-plane-identity]: ./use-managed-identity.md
+[aks-private-link]: ./private-clusters.md
+[azure-cni-overlay]: ./azure-cni-overlay.md
+[outbound-rules-control-egress]: ./outbound-rules-control-egress.md
 [anonymous-pull-access]: /azure/container-registry/anonymous-pull-access
 [private-clusters]: ./private-clusters.md
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [use-network-policies]: ./use-network-policies.md
-
 [workload-identity]: ./workload-identity-deploy-cluster.md
 [csi-akv-wi]: ./csi-secrets-store-identity-access.md?pivots=access-with-a-microsoft-entra-workload-identity
-
 [app-config-overview]: ./azure-app-configuration.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
 [dapr-overview]: ./dapr.md
-[gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
-[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
-[azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
