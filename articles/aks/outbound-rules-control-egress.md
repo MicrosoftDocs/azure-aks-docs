@@ -294,12 +294,11 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 
 ### Istio-based service mesh add-on
 
-In Istio=based service mesh add-on, if you are setting up istiod with a Plugin Certificate Authority (CA) or if you are setting up secure ingress gateway, Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Follow [these steps][akv-outbound] to configure outbound network access for Azure Key Vault provider for Secrets Store CSI Driver.
+In Istio=based service mesh add-on, if you are setting up istiod with a Plugin Certificate Authority (CA) or if you are setting up secure ingress gateway, Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
 
 ### Application routing add-on
 
-Application routing add-on supports SSL termination at the ingress with certificates stored in Azure Key Vault. Follow [these steps][akv-outbound] to configure outbound network access for Azure Key Vault provider for Secrets Store CSI Driver.
-
+Application routing add-on supports SSL termination at the ingress with certificates stored in Azure Key Vault. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
 
 ## Next steps
 
