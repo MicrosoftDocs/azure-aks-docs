@@ -70,12 +70,12 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 > [!NOTE] 
 > The following AKS cluster extensions aren't supported yet on network isolated clusters:
->   * [Dapr][dapr-overview]
->   * [Azure App Configuration][app-config-overview]
->   * [Azure Machine Learning][azure-ml-overview]
->   * [Flux (GitOps)][gitops-overview]
->   * [Azure Container Storage][azure-container-storage]
->   * [Azure Backup for AKS][azure-backup-aks]
+> * [Dapr][dapr-overview]
+> * [Azure App Configuration][app-config-overview]
+> * [Azure Machine Learning][azure-ml-overview]
+> * [Flux (GitOps)][gitops-overview]
+> * [Azure Container Storage][azure-container-storage]
+> * [Azure Backup for AKS][azure-backup-aks]
 
 ::: zone pivot="aks-managed-acr"
 
@@ -410,3 +410,10 @@ If you want to restrict how pods communicate between themselves and East-West tr
 
 [workload-identity]: ./workload-identity-deploy-cluster.md
 [csi-akv-wi]: ./csi-secrets-store-identity-access.md?pivots=access-with-a-microsoft-entra-workload-identity
+
+[app-config-overview]: ./azure-app-configuration.md
+[azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
+[dapr-overview]: ./dapr.md
+[gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
