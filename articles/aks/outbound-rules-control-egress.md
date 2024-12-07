@@ -49,7 +49,6 @@ The following network and FQDN/application rules are required for an AKS cluster
 * You might notice traffic towards "umsa*.blob.core.windows.net" endpoint. This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. You can find more details on [VM Extensions](/azure/virtual-machines/extensions/features-linux?tabs=azure-cli#network-access).
 
 
-
 ### Azure Global required network rules
 
 | Destination Endpoint                                                             | Protocol | Port    | Use  |
@@ -292,6 +291,16 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 >
 > For any addons that aren't explicitly stated here, the core requirements cover it.
 
+
+### Istio-based service mesh add-on
+
+In Istio=based service mesh add-on, if you are setting up istiod with a Plugin Certificate Authority (CA) or if you are setting up secure ingress gateway, Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Follow [these steps][akv-outbound] to configure outbound network access for Azure Key Vault provider for Secrets Store CSI Driver.
+
+### Application routing add-on
+
+Application routing add-on supports SSL termination at the ingress with certificates stored in Azure Key Vault. Follow [these steps][akv-outbound] to configure outbound network access for Azure Key Vault provider for Secrets Store CSI Driver.
+
+
 ## Next steps
 
 In this article, you learned what ports and addresses to allow if you want to restrict egress traffic for the cluster.
@@ -303,6 +312,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [private-clusters]: ./private-clusters.md
 [use-network-policies]: ./use-network-policies.md
 [network-isolated-cluster]: ./concepts-network-isolated.md
+[akv-outbound]: #azure-key-vault-provider-for-secrets-store-csi-driver
 
 <!-- LINKS - external -->
 
