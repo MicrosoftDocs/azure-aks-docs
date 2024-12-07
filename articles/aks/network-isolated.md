@@ -66,7 +66,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
     * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
     * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
 
-- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound requirements for each feature. Also, this doc enumerates the features or add-ons that support private link and private endpoint based integration for secure connection from within the cluster's virtual network. If private link integration is not available for any of these features, then the cluster can be set up with an user-defined routing table and Azure Firewall based on the network rules and application rules required for that feature.
+- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. If private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
 
 > [!NOTE] 
 > The following AKS cluster extensions aren't supported yet on network isolated clusters:
