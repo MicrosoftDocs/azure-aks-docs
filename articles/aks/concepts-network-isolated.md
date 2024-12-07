@@ -50,7 +50,7 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 * Network isolated clusters are supported on AKS clusters using Kubernetes version 1.30 or higher.
 * Only `NodeImage` channel of auto-upgrade for node OS images is supported for network isolated clusters
 * Windows node pools are not currently supported.
-* The following AKS cluster extensions are't not supported yet on network isolated clusters:
+* The following AKS cluster extensions aren't supported yet on network isolated clusters:
     * [Dapr][dapr-overview]
     * [Azure App Configuration][app-config-overview]
     * [Azure Machine Learning][azure-ml-overview]
@@ -83,16 +83,18 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 - [Create a network isolated cluster][network-isolated]
 
 <!-- LINKS - Internal -->
-[container-registry-private-link]: /azure/container-registry/container-registry-private-link
+
 [private-clusters]: ./private-clusters.md
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [autoupgrade-node-os]: ./auto-upgrade-node-os-image.md
 [network-isolated]: ./network-isolated.md
 [outbound-rules]: ./outbound-rules-control-egress.md
-
 [app-config-overview]: ./azure-app-configuration.md
-[azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
 [dapr-overview]: ./dapr.md
+
+<!-- LINKS - External -->
+[container-registry-private-link]: /azure/container-registry/container-registry-private-link
+[azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
