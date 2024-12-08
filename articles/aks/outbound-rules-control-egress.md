@@ -49,7 +49,6 @@ The following network and FQDN/application rules are required for an AKS cluster
 * You might notice traffic towards "umsa*.blob.core.windows.net" endpoint. This endpoint is used to store manifests for Azure Linux VM Agent & Extensions and is regularly checked to download new versions. You can find more details on [VM Extensions](/azure/virtual-machines/extensions/features-linux?tabs=azure-cli#network-access).
 
 
-
 ### Azure Global required network rules
 
 | Destination Endpoint                                                             | Protocol | Port    | Use  |
@@ -147,7 +146,15 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 If you choose to block/not allow these FQDNs, the nodes will only receive OS updates when you do a [node image upgrade](node-image-upgrade.md) or [cluster upgrade](upgrade-cluster.md). Keep in mind that Node Image Upgrades also come with updated packages including security fixes.
 
-## AKS addons and integrations
+## AKS features, addons, and integrations
+
+### Workload identity
+
+#### Required FQDN / application rules
+
+| Destination FQDN                                                           | Port      | Use      |
+|----------------------------------------------------------------------------|-----------|----------|
+| **`login.microsoftonline.com`** or **`login.chinacloudapi.cn`** or **`login.microsoftonline.us`** | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 
 ### Microsoft Defender for Containers
 
@@ -155,11 +162,15 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 
 | FQDN                                                       | Port      | Use      |
 |------------------------------------------------------------|-----------|----------|
-| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Active Directory Authentication. |
+| **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra Authentication. |
 | **`*.ods.opinsights.azure.com`** <br/> **`*.ods.opinsights.azure.us`** (Azure Government) <br/> **`*.ods.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Microsoft Defender to upload security events to the cloud.|
-| **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to Authenticate with LogAnalytics workspaces.|
+| **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to authenticate with Log Analytics workspaces.|
 
-### CSI Secret Store
+### Azure Key Vault provider for Secrets Store CSI Driver
+
+If using network isolated clusters, it's recommended to set up [private endpoint to access Azure Key Vault][akv-privatelink].
+
+If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
 #### Required FQDN / application rules
 
@@ -168,12 +179,11 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 | **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server.|
 | **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server in Azure Government.|
 
-### Azure Monitor for containers
+### Azure Monitor - Managed Prometheus and Container Insights
 
-There are two options to provide access to Azure Monitor for containers:
+If using network isolated clusters, it's recommended to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for both Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace).
 
-- Allow the Azure Monitor [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags).
-- Provide access to the required FQDN/application rules.
+If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
 #### Required network rules
 
@@ -181,36 +191,43 @@ There are two options to provide access to Azure Monitor for containers:
 |----------------------------------------------------------------------------------|----------|---------|------|
 | [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureMonitor:443`**  | TCP           | 443      | This endpoint is used to send metrics data and logs to Azure Monitor and Log Analytics. |
 
-#### Required FQDN / application rules
+#### Azure public cloud required FQDN / application rules
 
-| FQDN                                    | Port      | Use      |
-|-----------------------------------------|-----------|----------|
-| **`dc.services.visualstudio.com`** | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
-| **`*.ods.opinsights.azure.com`**    | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for ingesting log analytics data. |
-| **`*.oms.opinsights.azure.com`** | **`HTTPS:443`** | This endpoint is used by omsagent, which is used to authenticate the log analytics service. |
-| **`*.monitoring.azure.com`** | **`HTTPS:443`** | This endpoint is used to send metrics data to Azure Monitor. |
-| **`<cluster-region-name>.ingest.monitor.azure.com`** | **`HTTPS:443`** | This endpoint is used by Azure Monitor managed service for Prometheus metrics ingestion.|
-| **`<cluster-region-name>.handler.control.monitor.azure.com`** | **`HTTPS:443`** | This endpoint is used to fetch data collection rules for a specific cluster. |
+| Endpoint| Purpose | Port |
+|:---|:---|:---|
+| **`*.ods.opinsights.azure.com`** | | 443 |
+| **`*.oms.opinsights.azure.com`** | | 443 |
+| **`dc.services.visualstudio.com`** | | 443 |
+| **`*.monitoring.azure.com`** | | 443 |
+| **`login.microsoftonline.com`** | | 443 |
+| **`global.handler.control.monitor.azure.com`** | Access control service | 443 |
+| **`*.ingest.monitor.azure.com`** | Container Insights - logs ingestion endpoint (DCE) | 443 |
+| **`*.metrics.ingest.monitor.azure.com`** | Azure monitor managed service for Prometheus - metrics ingestion endpoint (DCE) | 443 |
+| **`<cluster-region-name>.handler.control.monitor.azure.com`** | Fetch data collection rules for specific cluster | 443 |
 
-#### Microsoft Azure operated by 21Vianet required FQDN / application rules
+#### Microsoft Azure operated by 21Vianet cloud required FQDN / application rules
 
-| FQDN                                    | Port      | Use      |
-|-----------------------------------------|-----------|----------|
-| **`dc.services.visualstudio.cn`** | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
-| **`*.ods.opinsights.azure.cn`**    | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for ingesting log analytics data. |
-| **`*.oms.opinsights.azure.cn`** | **`HTTPS:443`** | This endpoint is used by omsagent, which is used to authenticate the log analytics service. |
-| **`global.handler.control.monitor.azure.cn`**    | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for accessing the control service. |
-| **`<cluster-region-name>.handler.control.monitor.azure.cn`** | **`HTTPS:443`** | This endpoint is used to fetch data collection rules for a specific cluster. |
+| Endpoint| Purpose | Port |
+|:---|:---|:---|
+| **`*.ods.opinsights.azure.cn`** | Data ingestion | 443 |
+| **`*.oms.opinsights.azure.cn`** | Azure Monitor agent (AMA) onboarding | 443 |
+| **`dc.services.visualstudio.com`** | For agent telemetry that uses Azure Public Cloud Application Insights | 443 |
+| **`global.handler.control.monitor.azure.cn`** | Access control service | 443 |
+| **`<cluster-region-name>.handler.control.monitor.azure.cn`** | Fetch data collection rules for specific cluster | 443 |
+| **`*.ingest.monitor.azure.cn`** | Container Insights - logs ingestion endpoint (DCE) | 443 |
+| **`*.metrics.ingest.monitor.azure.cn`** | Azure monitor managed service for Prometheus - metrics ingestion endpoint (DCE) | 443 |
 
-#### Azure US Government required FQDN / application rules
+#### Azure Government cloud required FQDN / application rules
 
-| FQDN                                    | Port      | Use      |
-|-----------------------------------------|-----------|----------|
-| **`dc.services.visualstudio.us`** | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for Containers Agent Telemetry. |
-| **`*.ods.opinsights.azure.us`**    | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for ingesting log analytics data. |
-| **`*.oms.opinsights.azure.us`** | **`HTTPS:443`** | This endpoint is used by omsagent, which is used to authenticate the log analytics service. |
-| **`global.handler.control.monitor.azure.us`**    | **`HTTPS:443`**    | This endpoint is used by Azure Monitor for accessing the control service. |
-| **`<cluster-region-name>.handler.control.monitor.azure.us`** | **`HTTPS:443`** | This endpoint is used to fetch data collection rules for a specific cluster. |
+| Endpoint| Purpose | Port |
+|:---|:---|:---|
+| **`*.ods.opinsights.azure.us`** | Data ingestion | 443 |
+| **`*.oms.opinsights.azure.us`** | Azure Monitor agent (AMA) onboarding | 443 |
+| **`dc.services.visualstudio.com`** | For agent telemetry that uses Azure Public Cloud Application Insights | 443 |
+| **`global.handler.control.monitor.azure.us`** | Access control service | 443 |
+| **`<cluster-region-name>.handler.control.monitor.azure.us`** | Fetch data collection rules for specific cluster | 443 |
+| **`*.ingest.monitor.azure.us`** | Container Insights - logs ingestion endpoint (DCE) | 443 |
+| **`*.metrics.ingest.monitor.azure.us`** | Azure monitor managed service for Prometheus - metrics ingestion endpoint (DCE) | 443 |
 
 ### Azure Policy
 
@@ -274,6 +291,15 @@ There are two options to provide access to Azure Monitor for containers:
 >
 > For any addons that aren't explicitly stated here, the core requirements cover it.
 
+
+### Istio-based service mesh add-on
+
+In Istio=based service mesh add-on, if you are setting up istiod with a Plugin Certificate Authority (CA) or if you are setting up secure ingress gateway, Azure Key Vault provider for Secrets Store CSI Driver is required for these features. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
+
+### Application routing add-on
+
+Application routing add-on supports SSL termination at the ingress with certificates stored in Azure Key Vault. Outbound network requirements for Azure Key Vault provider for Secrets Store CSI Driver can be found [here][akv-outbound].
+
 ## Next steps
 
 In this article, you learned what ports and addresses to allow if you want to restrict egress traffic for the cluster.
@@ -283,6 +309,11 @@ If you want to restrict how pods communicate between themselves and East-West tr
 <!-- LINKS - internal -->
 
 [private-clusters]: ./private-clusters.md
-
 [use-network-policies]: ./use-network-policies.md
 [network-isolated-cluster]: ./concepts-network-isolated.md
+[akv-outbound]: #azure-key-vault-provider-for-secrets-store-csi-driver
+
+<!-- LINKS - external -->
+
+[azure-monitor-ingestion-private-link]: /azure/azure-monitor/containers/kubernetes-monitoring-private-link#container-insights-log-analytics-workspace
+[akv-privatelink]: /azure/key-vault/general/private-link-service?tabs=portal
