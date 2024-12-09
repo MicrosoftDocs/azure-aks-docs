@@ -1,6 +1,6 @@
 ---
-title: Deploy and test models with the AI toolchain operator (KAITO) in Visual Studio Code
-description: Learn how to deploy and test models with the AI toolchain operator (KAITO) in Visual Studio Code.
+title: Deploy and test inference models with the AI toolchain operator (KAITO) in Visual Studio Code
+description: Learn how to deploy and test an inference model with the AI toolchain operator (KAITO) in Visual Studio Code.
 author: qpetraroia
 ms.topic: how-to
 ms.date: 12/04/2024
@@ -8,20 +8,20 @@ ms.author: qpetraroia
 ms.service: azure-kubernetes-service
 ---
 
-# Deploy and test models with the AI toolchain operator (KAITO) in Visual Studio Code
+# Deploy and test inference models with the AI toolchain operator (KAITO) in Visual Studio Code
 
-In this article, you learn how to use the AI toolchain operator (KAITO) in the Azure Kubernetes Service (AKS) extension for Visual Studio Code. The AI toolchain operator automatically provisions the necessary GPU nodes and sets up the associated inference server as an endpoint server to your AI models allowing you to test your models with ease.
+In this article, you learn how to use the AI toolchain operator (KAITO) add-on in the Azure Kubernetes Service (AKS) extension for Visual Studio Code. KAITO automatically provisions the right-sized GPU nodes and sets up the inference server as an endpoint server to your AI model(s), allowing you to test and experiment with AI on AKS with ease.
 
 ## Prerequisites
 
-
 * The Azure Kubernetes Service (AKS) extension for Visual Studio Code downloaded. For more information, see [Install the Azure Kubernetes Service (AKS) extension for Visual Studio Code][install-aks-vscode].
+* Verify that your Azure subscription has GPU quota for your chosen model by checking the [KAITO model workspaces](https://github.com/kaito-project/kaito/tree/main/presets).
 
 ## Install KAITO on your cluster
 
 1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Install KAITO**.
 2. Once on the page, select **Install KAITO** to start the KAITO installation process.
-3. When the installation completes, you see a **Generate Workspace** button that redirects you to the model deployment page.
+3. When the installation completes, you will see a **Generate Workspace** button that redirects you to the model deployment page.
 
 :::image type="content" source="./media/aks-extension/kaito/kaito-install.png" alt-text="Screenshot showing the KAITO install screen." lightbox="./media/aks-extension/kaito/kaito-install.png":::
 
@@ -32,7 +32,7 @@ When creating a KAITO workspace, you can either deploy the default workspace CRD
 1. In the Kubernetes tab, under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Create KAITO workspace**.
 2. Find and select the model you want to deploy.
 3. Select **Deploy default workspace CRD** or **Customize workspace CRD**.
-4. Select **Deploy default workspace CRD** to deploy the model. It tracks the progress of the model and notifies you once the model successfully deploys. It also notifies you if the model was already previously unsuccessfully onto your cluster.
+4. Select **Deploy default workspace CRD** to deploy the model. It tracks the progress of the model and notifies you once the model successfully deploys. It also notifies you if the model was already deployed unsuccessfully onto your cluster.
 5. When the deployment completes, you see a **View Deployed Models** button that redirects you to the deployment management page.
 
 :::image type="content" source="./media/aks-extension/kaito/kaito-select-model.png" alt-text="Screenshot showing the model select screen." lightbox="./media/aks-extension/kaito/kaito-select-model.png":::
@@ -65,6 +65,11 @@ The **Manage KAITO models** page allows you to see all models deployed in your A
 :::image type="content" source="./media/aks-extension/kaito/kaito-test-model.png" alt-text="Screenshot showing test models screen." lightbox="./media/aks-extension/kaito/kaito-test-model.png":::
 
 For more information, see [AKS extension for Visual Studio Code features][aks-vscode-features].
+
+## Delete your model inference deployment
+
+1. Once you've finished testing the model(s) and you want to free up the allocated GPU resources on your cluster, go to the Kubernetes tab, and under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Manage KAITO models**.
+2. For each deployed model, select **Delete Workspace** to clear all allocated resources created by the inferencing deployment.
 
 ## Product support and feedback
     
