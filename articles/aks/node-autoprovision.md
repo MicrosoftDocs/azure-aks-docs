@@ -82,6 +82,8 @@ NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and t
 - [Start Stop mode](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
 - [OutboundType](./egress-outboundtype.md) mutation. All OutboundTypes are supported, however you can't change them after creation.
+- Private cluster (and BYO private DNS)
+
 
 ## Enable node autoprovisioning
 
