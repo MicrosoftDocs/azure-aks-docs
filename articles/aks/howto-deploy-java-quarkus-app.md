@@ -156,6 +156,9 @@ The steps in this section show you how to create the following Azure resources t
 - Azure Container Registry (ACR)
 - Azure Kubernetes Service (AKS)
 
+> [!NOTE]
+> This article disables PostgreSQL authentication to illustrate security best practices. Microsoft Entra ID is used to authenticate the connection to the server. If you need to enable PostgreSQL authentication, see [Quickstart: Use Java and JDBC with Azure Database for PostgreSQL - Flexible Server](/azure/postgresql/flexible-server/connect-java) and select the **Password** tab.
+
 Some of these resources must have unique names within the scope of the Azure subscription. To ensure this uniqueness, you can use the *initials, sequence, date, suffix* pattern. To apply this pattern, name your resources by listing your initials, some sequence number, today's date, and some kind of resource specific suffix - for example, `rg` for "resource group". The following environment variables use this pattern. Replace the placeholder values `UNIQUE_VALUE`, `LOCATION`, and `DB_PASSWORD` with your own values and then run the following commands in your terminal:
 
 ```bash
