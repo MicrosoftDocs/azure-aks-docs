@@ -53,6 +53,9 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 
 LTS Versions
 
+> [!NOTE]
+> Azure Linux supports 1.27 LTS only. For more information on 1.30 LTS with Azure Linux please read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
+
 |  K8s version | Upstream release  | AKS preview  | AKS GA  | End of life | LTS End of life |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
 | 1.27 | Apr 2023 | Jun 2023 | Jul 2023 | Jul 2024 | Jul 2025|
