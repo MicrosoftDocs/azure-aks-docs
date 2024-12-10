@@ -59,9 +59,9 @@ In Azure Kubernetes Fleet Manager, hub clusters serve as the central management 
         - **Command Invocation Disabled:** Using command invocation with Azure CLI is disabled on hub clusters, preventing users from executing commands that could alter the cluster’s configuration.
         - **Local Authentication Disabled:** Access via admin kubeconfig is disabled, ensuring that authentication is exclusively handled through Microsoft Entra ID. This enhances security by centralizing access control.
 
-- **[Envelope ConfigMap:](./quickstart-envelope-reserved-resources.md)**
-    - An **[envelope ConfigMap](./quickstart-envelope-reserved-resources.md)** is utilized to manage configurations without causing side effects on the hub cluster. This approach allows for the safe propagation of settings to member clusters while maintaining the integrity of the hub cluster’s environment.
-      These configurations collectively enhance the security and stability of hub clusters, ensuring they function effectively as the backbone of Azure Kubernetes Fleet Manager.
+- **Envelope ConfigMap:**
+    - An **envelope ConfigMap** is utilized to manage configurations without causing side effects on the hub cluster. This approach allows for the safe propagation of settings to member clusters while maintaining the integrity of the hub cluster’s environment.
+      These configurations collectively enhance the security and stability of hub clusters, ensuring they function effectively as the backbone of Azure Kubernetes Fleet Manager. For more information about envelope objects, see the [documentation of Envelope Objects with ConfigMaps]((./quickstart-envelope-reserved-resources.md)).
 
 In addition to managing periodic component upgrades, the Fleet service sets the following configurations on hub clusters to harden security:
 
