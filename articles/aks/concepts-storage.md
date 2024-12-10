@@ -155,7 +155,7 @@ You can use the following Azure Storage services to provide the persistent volum
 * [Azure Files](azure-csi-files-storage-provision.md)
 * [Azure Container Storage][azure-container-storage]
 
- As noted in the [Volumes](#volumes) section, the choice of Azure Disks or Azure Files is often determined by the need for concurrent access to the data or the performance tier.
+ As noted in the [Volumes](#volumes) section, the choice of Azure Disks or Azure Files is often determined by the need for concurrent access to the data or the performance tier. 
 
 ![Diagram of persistent volumes in an Azure Kubernetes Services (AKS) cluster.](media/concepts-storage/aks-storage-persistent-volume.png)
 
@@ -163,6 +163,10 @@ A cluster administrator can *statically* create a persistent volume, or a volume
 
 > [!IMPORTANT]
 > Persistent volumes can't be shared by Windows and Linux pods due to differences in file system support between the two operating systems.
+
+If you want a fully managed solution for block-level access to data, consider using Azure Container Storage instead of CSI drivers. Azure Container Storage integrates with Kubernetes, allowing dynamic and automatic provisioning of persistent volumes. Azure Container Storage supports Azure Disks, Ephemeral Disks, and Azure Elastic SAN (preview) as backing storage, offering flexibility and scalability for stateful applications running on Kubernetes clusters.
+
+![Diagram of persistent volumes in an Azure Kubernetes Services (AKS) cluster with Azure Container Storage.](media/concepts-storage/azure-container-storage-architecture.png)
 
 ## Storage classes
 
@@ -279,9 +283,14 @@ For mounting a volume in a Windows container, specify the drive letter and path.
 
 ## Next steps
 
-For associated best practices, see [Best practices for storage and backups in AKS][operator-best-practices-storage] and [AKS Storage Considerations][azure-aks-storage-considerations].
+For associated best practices, see [Best practices for storage and backups in AKS][operator-best-practices-storage] and [AKS storage considerations][azure-aks-storage-considerations].
 
-To see how to use CSI drivers, see the following how-to articles:
+For more information on Azure Container Storage, see the following articles:
+
+* [What Is Azure Container Storage?][azure-container-storage]
+* [Use Azure Container Storage with AKS][use-azure-container-storage]
+
+For more information on using CSI drivers, see the following articles:
 
 * [Container Storage Interface (CSI) drivers for Azure Disk, Azure Files, and Azure Blob storage on Azure Kubernetes Service][csi-storage-drivers]
 * [Use Azure Disk CSI driver in Azure Kubernetes Service][azure-disk-csi]
@@ -322,3 +331,4 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 [azure-disk-customer-managed-key]: azure-disk-customer-managed-keys.md
 [azure-aks-storage-considerations]: /azure/cloud-adoption-framework/scenarios/app-platform/aks/storage
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[use-azure-container-storage]: /azure/storage/container-storage/container-storage-aks-quickstart
