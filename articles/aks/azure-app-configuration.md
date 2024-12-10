@@ -10,7 +10,7 @@ ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
 ---
 
-# Azure App Configuration Azure Kubernetes Service (ASK) extension reference
+# Azure App Configuration Azure Kubernetes Service (AKS) extension reference
 
 [Azure App Configuration](/azure/azure-app-configuration/overview) provides a service to centrally manage application settings and feature flags. [Azure App Configuration Kubernetes Provider](https://mcr.microsoft.com/en-us/product/azure-app-configuration/kubernetes-provider/about) is a Kubernetes operator that gets key-values, Key Vault references and feature flags from Azure App Configuration and builds them into Kubernetes ConfigMaps and Secrets. Azure App Configuration extension for Azure Kubernetes Service (AKS) allows you to install and manage Azure App Configuration Kubernetes Provider on your AKS cluster via Azure Resource Manager (ARM).
 

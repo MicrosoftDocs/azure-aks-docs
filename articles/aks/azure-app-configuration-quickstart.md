@@ -41,15 +41,15 @@ Create a service connection between your AKS cluster and your App Configuration 
 
 1. Select **Next: Networking** > **Next: Review + create**
 
-1. Waiting for the validation to pass, select **Create**.
+2. Wait for the validation to pass, select **Create**.
 
-1. Waiting for the service connection to be created.
+3. Wait for the service connection to be created.
 
 > [!NOTE]
-> The Azure App Configuration AKS extension is an independent component and does not have to rely on **Service Connection** to use it. You can refer to the [Azure App Configuration AKS extension reference](/azure/azure-app-configuration/reference-kubernetes-provider) to learn more about the extension.
+> The Azure App Configuration AKS extension is an independent component and does not have to rely on **Service Connection** to use it. You can refer to the [Azure App Configuration AKS extension reference](./azure-app-configuration.md) to learn more about the extension.
 >
 
-## Build ConfigMap and use it configure workload
+## Build ConfigMap and use it to configure workload
 
 Now that you created a connection between your AKS cluster and the App Configuration store, you need to use the connection to create a ConfigMap with the configuration data from the App Configuration store.
 
