@@ -61,7 +61,7 @@ In Azure Kubernetes Fleet Manager, hub clusters serve as the central management 
 
 - **Envelope ConfigMap:**
     - An **envelope ConfigMap** is utilized to manage configurations without causing side effects on the hub cluster. This approach allows for the safe propagation of settings to member clusters while maintaining the integrity of the hub cluster’s environment.
-      These configurations collectively enhance the security and stability of hub clusters, ensuring they function effectively as the backbone of Azure Kubernetes Fleet Manager. For more information about envelope objects, see the [documentation of Envelope Objects with ConfigMaps]((./quickstart-envelope-reserved-resources.md)).
+      These configurations collectively enhance the security and stability of hub clusters, ensuring they function effectively as the backbone of Azure Kubernetes Fleet Manager. For more information about envelope objects, see the [documentation of Envelope Objects with ConfigMaps](./quickstart-envelope-reserved-resources.md).
 
 In addition to managing periodic component upgrades, the Fleet service sets the following configurations on hub clusters to harden security:
 
