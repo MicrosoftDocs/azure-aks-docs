@@ -166,7 +166,9 @@ A cluster administrator can *statically* create a persistent volume, or a volume
 
 If you want a fully managed solution for block-level access to data, consider using Azure Container Storage instead of CSI drivers. Azure Container Storage integrates with Kubernetes, allowing dynamic and automatic provisioning of persistent volumes. Azure Container Storage supports Azure Disks, Ephemeral Disks, and Azure Elastic SAN (preview) as backing storage, offering flexibility and scalability for stateful applications running on Kubernetes clusters.
 
+<div style="text-align: center;">
 ![Diagram of persistent volumes in an Azure Kubernetes Services (AKS) cluster with Azure Container Storage.](media/concepts-storage/azure-container-storage-architecture.png)
+</div>
 
 ## Storage classes
 
