@@ -28,7 +28,7 @@ metadata:
     kubernetes-fleet.io/envelope-configmap: "true"
 ```
 
-## Example ConfigMap Envelope Object:
+### Example ConfigMap Envelope Object
 
 ```
 apiVersion: v1
@@ -84,11 +84,11 @@ data:
           sideEffects: None
 ```
 
-## Propagating an Envelope ConfigMap from Hub cluster to Member cluster:
+## Propagating an Envelope ConfigMap from Hub cluster to Member cluster
 
 We will now apply the example envelope object above on our hub cluster. Then we use a ClusterResourcePlacement object to propagate the resource from hub to a member cluster named kind-cluster-1.
 
-## CRP spec:
+### CRP spec
 
 ```
 spec:
@@ -106,7 +106,7 @@ spec:
         type: RollingUpdate
 ```
 
-## CRP status:
+### CRP status
 
 ```
 status:
@@ -167,9 +167,11 @@ conditions:
 
 Upon inspection of the selectedResources, it indicates that the namespace app and the configmap envelope-configmap have been successfully propagated. Users can further verify the successful propagation of resources mentioned within the envelope-configmap object by ensuring that the failedPlacements section in the placementStatus for kind-cluster-1 does not appear in the status.
 
-## Example CRP status where resource within an envelope object failed to apply:
+## Example CRP status where resource within an envelope object failed to apply
 
-## CRP status where resource within an envelope object failed to apply:
+Here is an example CRP status where resource within an envelope object failed to apply.
+
+### CRP status where resource within an envelope object failed to apply
 
 In the example below, within the placementStatus section for kind-cluster-1, the failedPlacements section provides details on resource that failed to apply along with information about the envelope object which contained the resource.
 
