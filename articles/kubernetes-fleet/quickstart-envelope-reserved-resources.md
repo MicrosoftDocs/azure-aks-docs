@@ -110,8 +110,6 @@ spec:
 
 Here is a sample status that shows the successful placement of an Enveloped Object.
 
-CRP status
-
 ```
 status:
 conditions:
@@ -171,9 +169,7 @@ conditions:
 
 Upon inspection of the selectedResources, it indicates that the namespace app and the configmap envelope-configmap have been successfully propagated. Users can further verify the successful propagation of resources mentioned within the envelope-configmap object by ensuring that the failedPlacements section in the placementStatus for kind-cluster-1 does not appear in the status.
 
-Here is a sample where the placement has failed.
-
-In the example below, within the placementStatus section for kind-cluster-1, the failedPlacements section provides details on resource that failed to apply along with information about the envelope object which contained the resource.
+Here is a sample where the placement has failed. In this example below, within the placementStatus section for kind-cluster-1, the failedPlacements section provides details on resource that failed to apply along with information about the envelope object which contained the resource.
 
 ```
 status:
