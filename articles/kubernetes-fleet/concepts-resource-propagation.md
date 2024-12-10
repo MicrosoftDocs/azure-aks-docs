@@ -505,7 +505,7 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 
 ## Next steps
 
-* [Set up Kubernetes resource propagation from hub cluster to member clusters](./resource-propagation.md).
+* [Set up Kubernetes resource propagation from hub cluster to member clusters](./quickstart-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md)
 
 <!-- LINKS - external -->
