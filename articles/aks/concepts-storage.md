@@ -170,7 +170,9 @@ To specify different tiers of storage, such as premium or standard, you can crea
 
 A storage class also defines a *reclaim policy*. When you delete the persistent volume, the reclaim policy controls the behavior of the underlying Azure Storage resource. The underlying resource can either be deleted or kept for use with a future pod.
 
-For clusters using the [Container Storage Interface (CSI) drivers][csi-storage-drivers] the following extra storage classes are created:
+For clusters using [Azure Container Storage][azure-container-storage], you'll see an additional storage class called `acstor-<storage-pool-name>`. An internal storage class is also created.
+
+For clusters using [Container Storage Interface (CSI) drivers][csi-storage-drivers], the following extra storage classes are created:
 
 | Storage class | Description |
 |---|---|
@@ -184,7 +186,7 @@ For clusters using the [Container Storage Interface (CSI) drivers][csi-storage-d
 Unless you specify a storage class for a persistent volume, the default storage class is used. Ensure volumes use the appropriate storage you need when requesting persistent volumes.
 
 > [!IMPORTANT]
-> Starting with Kubernetes version 1.21, AKS only uses CSI drivers by default and CSI migration is enabled. While existing in-tree persistent volumes continue to function, starting with version 1.26, AKS will no longer support volumes created using in-tree driver and storage provisioned for files and disk.
+> Starting with Kubernetes version 1.21, AKS uses CSI drivers by default, and CSI migration is enabled. While existing in-tree persistent volumes continue to function, starting with version 1.26, AKS will no longer support volumes created using in-tree driver and storage provisioned for files and disk.
 >
 > The `default` class will be the same as `managed-csi`.
 >
