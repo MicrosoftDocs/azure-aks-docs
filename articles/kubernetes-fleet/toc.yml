@@ -32,6 +32,8 @@
           href: concepts-resource-propagation.md
         - name: Scheduler and scheduling framework
           href: concepts-scheduler-scheduling-framework.md
+    - name: Layer 4 load balancing across multiple clusters
+      href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
     - name: Configure Kubernetes Fleet Manager
