@@ -1,5 +1,5 @@
 ---
-title: "Propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster"
+title: "Propagate reserved resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters"
 description: Learn to propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster.
 ms.topic: how-to
 ms.date: 11/22/2024
@@ -12,9 +12,9 @@ ms.custom:
 - build-2024
 ---
 
-# Propagating Resources with Envelope Objects
+# Propagate reserved resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters
 
-This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.
+This article provides an overview of how to use envelope objects to propagate reserved Kubernetes resource types from an Azure Kubernetes Fleet Manager hub cluster to member clusters.
 
 ## Envelope Object with ConfigMap
 
@@ -28,7 +28,7 @@ metadata:
     kubernetes-fleet.io/envelope-configmap: "true"
 ```
 
-### Example ConfigMap Envelope Object
+Example ConfigMap Envelope Object
 
 ```
 apiVersion: v1
@@ -84,11 +84,11 @@ data:
           sideEffects: None
 ```
 
-## Propagating an Envelope ConfigMap from Hub cluster to Member cluster
+## Propagating an Envelope ConfigMap to member clusters
 
 We will now apply the example envelope object above on our hub cluster. Then we use a ClusterResourcePlacement object to propagate the resource from hub to a member cluster named kind-cluster-1.
 
-### CRP spec
+Here is a sample ClusterResourcePlacement (CRP) specification.
 
 ```
 spec:
@@ -106,7 +106,11 @@ spec:
         type: RollingUpdate
 ```
 
-### CRP status
+## Retrieve the status of Envelope ConfigMap placement
+
+Here is a sample status that shows the successful placement of an Enveloped Object.
+
+CRP status
 
 ```
 status:
@@ -167,11 +171,7 @@ conditions:
 
 Upon inspection of the selectedResources, it indicates that the namespace app and the configmap envelope-configmap have been successfully propagated. Users can further verify the successful propagation of resources mentioned within the envelope-configmap object by ensuring that the failedPlacements section in the placementStatus for kind-cluster-1 does not appear in the status.
 
-## Example CRP status where resource within an envelope object failed to apply
-
-Here is an example CRP status where resource within an envelope object failed to apply.
-
-### CRP status where resource within an envelope object failed to apply
+Here is a sample where the placement has failed.
 
 In the example below, within the placementStatus section for kind-cluster-1, the failedPlacements section provides details on resource that failed to apply along with information about the envelope object which contained the resource.
 
