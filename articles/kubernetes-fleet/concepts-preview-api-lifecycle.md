@@ -24,9 +24,23 @@ You should perform these updates at a minimum every 6-9 months. If you fail to d
 
 Azure Kubernetes Service (AKS) API deprecations are listed on the [AKS preview API lifecycle page](/azure/aks/concepts-preview-api-life-cycle).
 
-## How to check what API versions you're using
+## Upcoming API deprecations
 
-If you're unsure what client or tool is using this API version, check the [activity logs](/azure/azure-monitor/essentials/activity-log) using the following command. Replace `API_VERSION` with the version you wish to check.
+| API version        | Announce Date     | Deprecation Date  |
+|--------------------|-------------------|-------------------|
+| 2023-08-15-preview | December 16, 2024 | April 14, 2025    |
+| 2023-06-15-preview | December 16, 2024 | April 14, 2025    |
+| 2023-03-15-preview | December 16, 2024 | April 14, 2025    |
+| 2022-09-02-preview | December 16, 2024 | April 14, 2025    |
+| 2022-07-02-preview | December 16, 2024 | April 14, 2025    |
+
+## Completed API deprecations
+
+No Azure Resource Manager (ARM) API deprecations to date.
+
+## How to check API versions in use
+
+If you're unsure what client or tool is using a specific API version, check the [activity logs](/azure/azure-monitor/essentials/activity-log) using the following command. Replace `API_VERSION` with the version you wish to check.
 
 ```azurecli-interactive
 
@@ -75,7 +89,7 @@ resource "azapi_resource" "symbolicname" {
 
 ---
 
-## How to update to a newer version of the API
+## How to update to a newer API version
 
 - For Azure SDKs: use a newer API version by updating to a [newer version of the SDK](https://azure.github.io/azure-sdk/releases/latest/index.html?search=containerservicefleet).
 - For Azure CLI: Update the CLI itself and the fleet extension to the latest version by running `az upgrade` and `az extension update --name fleet`.
@@ -83,18 +97,3 @@ resource "azapi_resource" "symbolicname" {
   check the [Terraform release notes](/azure/developer/terraform/provider-version-history-azurerm) or 
   git log [this file](https://github.com/hashicorp/terraform-provider-azurerm/blob/main/internal/services/containers/client/client.go).
 - For other tools: Update the tool to the latest version.
-
-
-## Upcoming deprecations
-
-| API version        | Announce Date     | Deprecation Date  |
-|--------------------|-------------------|-------------------|
-| 2023-08-15-preview | December 16, 2024 | April 14, 2025    |
-| 2023-06-15-preview | December 16, 2024 | April 14, 2025    |
-| 2023-03-15-preview | December 16, 2024 | April 14, 2025    |
-| 2022-09-02-preview | December 16, 2024 | April 14, 2025    |
-| 2022-07-02-preview | December 16, 2024 | April 14, 2025    |
-
-## Completed deprecations
-
-No Azure Resource Manager (ARM) API deprecations to date.
