@@ -74,8 +74,6 @@ The following are constraints with this preview of Pod Sandboxing (preview):
 
 * [Kata][kata-network-limitations] host-network isn't supported.
 
-* AKS does not support [Container Storage Interface drivers][csi-storage-driver] and [Secrets Store CSI driver][csi-secret-store driver] in this preview release.
-
 ## How it works
 
 To achieve this functionality on AKS, [Kata Containers][kata-containers-overview] running on the Azure Linux container host for AKS stack delivers hardware-enforced isolation. Pod Sandboxing extends the benefits of hardware isolation such as a separate kernel for each Kata pod. Hardware isolation allocates resources for each pod and doesn't share them with other Kata Containers or namespace containers running on the same host.
