@@ -5,7 +5,7 @@ description: Learn how to create a static or dynamic persistent volume with Azur
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
-ms.date: 06/28/2024
+ms.date: 12/11/2024
 author: tamram
 ms.author: tamram
 
@@ -34,11 +34,13 @@ For more information on Kubernetes volumes, see [Storage options for application
     kubectl get CSINode <nodename> -o yaml
     ```
 
+  If the per-node volume limit is an issue for your workload, consider using [Azure Container Storage][azure-container-storage] for persistent volumes instead of CSI drivers.
+
 ## Dynamically provision a volume
 
 This section provides guidance for cluster administrators who want to provision one or more persistent volumes that include details of Azure Disk storage for use by a workload. A persistent volume claim (PVC) uses the storage class object to dynamically provision an Azure Disk storage container.
 
-### Storage class parameters for dynamic PersistentVolumes
+### Storage class parameters for dynamic persistent volumes
 
 The following table includes parameters you can use to define a custom storage class for your PersistentVolumeClaim.
 
@@ -76,9 +78,9 @@ Each AKS cluster includes four precreated storage classes, two of them configure
     * SSD-based high-performance, low-latency disks back Premium disks. They're ideal for VMs running production workloads. When you use the Azure Disk CSI driver on AKS, you can also use the `managed-csi` storage class, which is backed by Standard SSD locally redundant storage (LRS).
 3. Effective starting with Kubernetes version 1.29, when you deploy Azure Kubernetes Service (AKS) clusters across multiple availability zones, AKS now utilizes zone-redundant storage (ZRS) to create managed disks within built-in storage classes. 
     * ZRS ensures synchronous replication of your Azure managed disks across multiple Azure availability zones in your chosen region. This redundancy strategy enhances the resilience of your applications and safeguards your data against datacenter failures.
-    * However, it's important to note that zone-redundant storage (ZRS) comes at a higher cost compared to locally redundant storage (LRS). If cost optimization is a priority, you can create a new storage class with the LRS SKU name parameter and use it in your Persistent Volume Claim (PVC).
+    * However, it's important to note that zone-redundant storage (ZRS) comes at a higher cost compared to locally redundant storage (LRS). If cost optimization is a priority, you can create a new storage class with the LRS SKU name parameter and use it in your persistent volume claim.
 
-Reducing the size of a PVC is not supported due to the risk of data loss. You can edit an existing storage class using the `kubectl edit sc` command, or you can create your own custom storage class. For example, if you want to use a disk of size 4 TiB, you must create a storage class that defines `cachingmode: None` because [disk caching isn't supported for disks 4 TiB and larger][disk-host-cache-setting]. For more information about storage classes and creating your own storage class, see [Storage options for applications in AKS][storage-class-concepts].
+Reducing the size of a PVC isn't supported due to the risk of data loss. You can edit an existing storage class using the `kubectl edit sc` command, or you can create your own custom storage class. For example, if you want to use a disk of size 4 TiB, you must create a storage class that defines `cachingmode: None` because [disk caching isn't supported for disks 4 TiB and larger][disk-host-cache-setting]. For more information about storage classes and creating your own storage class, see [Storage options for applications in AKS][storage-class-concepts].
 
 You can see the precreated storage classes using the [`kubectl get sc`][kubectl-get] command. The following example shows the precreated storage classes available within an AKS cluster:
 
@@ -99,7 +101,7 @@ managed-csi         disk.csi.azure.com         1h
 
 ### Create a persistent volume claim
 
-A persistent volume claim (PVC) automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a standard or premium Azure managed disk.
+A persistent volume claim automatically provisions storage based on a storage class. In this case, a PVC can use one of the precreated storage classes to create a standard or premium Azure managed disk.
 
 1. Create a file named `azure-pvc.yaml` and copy in the following manifest. The claim requests a disk named `azure-managed-disk` that's *5 GB* in size with *ReadWriteOnce* access. The *managed-csi* storage class is specified as the storage class.
 
@@ -421,4 +423,4 @@ kubectl delete -f azure-pvc.yaml
 [azure-disk-write-accelerator]: /azure/virtual-machines/windows/how-to-enable-write-accelerator
 [on-demand-bursting]: /azure/virtual-machines/disk-bursting
 [customer-usage-attribution]: /azure/marketplace/azure-partner-customer-usage-attribution
-
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
