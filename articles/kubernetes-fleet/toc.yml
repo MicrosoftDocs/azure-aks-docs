@@ -34,7 +34,6 @@
           href: concepts-resource-propagation.md
         - name: Scheduler and scheduling framework
           href: concepts-scheduler-scheduling-framework.md
-
     - name: Layer 4 load balancing across multiple clusters
       href: concepts-l4-load-balancing.md
 - name: How-to guides
@@ -43,6 +42,8 @@
       items:
         - name: Upgrade hub cluster types
           href: upgrade-hub-cluster-type.md
+        - name: Migrate preview instances to supported instances 
+          href: howto-migrate-preview-to-ga-fleets.md
     - name: Upgrade Kubernetes and node images across multiple clusters
       items:
         - name: Define re-usable update strategies
