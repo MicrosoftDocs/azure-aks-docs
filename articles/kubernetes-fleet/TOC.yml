@@ -24,6 +24,8 @@
           href: concepts-lifecycle.md
         - name: Use Azure RBAC to control resource access
           href: concepts-rbac.md
+        - name: Preview API lifecycle
+          href: concepts-preview-api-lifecycle.md
     - name: Upgrade Kubernetes and node images across multiple clusters
       href: concepts-update-orchestration.md
     - name: Workload propagation across multiple clusters
@@ -32,6 +34,7 @@
           href: concepts-resource-propagation.md
         - name: Scheduler and scheduling framework
           href: concepts-scheduler-scheduling-framework.md
+
     - name: Layer 4 load balancing across multiple clusters
       href: concepts-l4-load-balancing.md
 - name: How-to guides
