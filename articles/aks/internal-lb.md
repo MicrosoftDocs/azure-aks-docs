@@ -16,8 +16,8 @@ ms.date: 11/07/2024
 
 You can create and use an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS). An internal load balancer doesn't have a public IP and makes a Kubernetes service accessible only to applications that can reach the private IP. These applications can be within the same VNET or in another VNET through VNET peering. This article shows you how to create and use an internal load balancer with AKS.
 
-> [!NOTE]
-> Azure Load Balancer is available in two SKUs: *Basic* and *Standard*. The *Standard* SKU is used by default when you create an AKS cluster. When you create a *LoadBalancer* service type, you'll get the same load balancer type as when you provisioned the cluster. For more information, see [Azure Load Balancer SKU comparison][azure-lb-comparison].
+> [!IMPORTANT]
+> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you're currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. For guidance on upgrading, visit [Upgrading from Basic Load Balancer - Guidance](/azure/load-balancer/load-balancer-basic-upgrade-guidance).
 
 ## Before you begin
 

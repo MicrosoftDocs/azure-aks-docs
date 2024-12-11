@@ -6,7 +6,7 @@ ms.custom:
   - build-2024
 ms.topic: how-to
 ms.author: allensu
-ms.date: 06/13/2023
+ms.date: 12/11/2024
 author: asudbring
 #Customer intent: As an cluster operator, I want to learn the network and FQDNs rules to control egress traffic and improve security for my AKS clusters.
 ---
