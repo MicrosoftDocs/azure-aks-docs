@@ -13,7 +13,7 @@ ms.topic: how-to
 
 During the preview stage of Azure Kubernetes Fleet Manager (Kubernetes Fleet), an internal custom resource definition (CRD) API change was made that impacts a small number Kubernetes Fleet instances created during the service public preview. 
 
-Microsoft notified affected Kubernetes Fleet users who can use this article to help identify specific Kubernetes Fleet instances affected by the change and this article covers how to move to a supported instance.
+Microsoft notified affected Kubernetes Fleet users who can use this article to help identify Kubernetes Fleet instances affected by the change.
 
 The Kubernetes Fleet Custom Resource Definitions (CRDs) API change is shown in the table.
 
