@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, build-2023
 ms.date: 06/07/2023
-author: tamram
-ms.author: tamram
+author: nickomang
+ms.author: nickoman
 
 ---
 

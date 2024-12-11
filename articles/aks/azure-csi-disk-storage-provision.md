@@ -5,10 +5,9 @@ description: Learn how to create a static or dynamic persistent volume with Azur
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
-ms.date: 12/11/2024
-author: tamram
-ms.author: tamram
-
+ms.date: 06/28/2024
+author: schaffererin
+ms.author: schaffererin
 ---
 
 # Create and use a volume with Azure Disks in Azure Kubernetes Service (AKS)

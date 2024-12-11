@@ -2,8 +2,8 @@
 title: Move Azure Disk persistent volumes to another AKS cluster in the same or a different subscription
 titleSuffix: Azure Kubernetes Service
 description: Learn how to move a persistent volume between Azure Kubernetes Service clusters in the same subscription or a different subscription. 
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 ms.topic: how-to
 ms.date: 04/08/2024
 ---
