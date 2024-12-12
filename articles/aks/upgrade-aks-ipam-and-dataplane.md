@@ -10,7 +10,7 @@ ms.date: 11/26/2024
 ---
 
 # Upgrade Azure Kubernetes Service (AKS) IPAM modes and Dataplane Technology
-Since there are always new IP assignment management (IPAM) modes and dataplane technology supporting Azure Kubernetes Service (AKS), it is inevitable to go through situations that existing AKS clusters need to upgrade to newer IPAM modes and dataplane technology to access the latest features and supportability. This article is to guide how to upgrade an existing AKS cluster to Azure CNI overlay as its IPAM mode and how to upgrade an existing AKS cluster to Azure CNI powered by Cilium as its dataplane technology. 
+Since there are always new IP assignment management (IPAM) modes and dataplane technology supporting Azure Kubernetes Service (AKS), it is inevitable to go through situations that existing AKS clusters need to upgrade to newer IPAM modes and dataplane technology to access the latest features and supportability. This article provides guidance on upgrading an existing AKS cluster to use Azure CNI overlay for IPAM mode and Azure CNI powered by Cilium as its dataplane.
 
 ## Upgrade an existing cluster to Azure CNI Overlay
 
