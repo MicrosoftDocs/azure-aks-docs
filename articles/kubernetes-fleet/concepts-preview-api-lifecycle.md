@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Azure Kubernetes Fleet Manager Preview API lifecycle
 
-The Azure Kubernetes Fleet Manager (Kubernetes Fleet) preview REST Azure Resource Manager APIs (APIs that end in `-preview`) have a lifespan of approximately one year from their release date. This means that you can expect the 2023-01-02-preview API to be deprecated around January 1, 2024.
+The Azure Kubernetes Fleet Manager (Kubernetes Fleet) preview REST APIs (APIs that end in `-preview`) have a lifespan of approximately one year from their release date. This means that you can expect the 2023-01-02-preview API to be deprecated around January 1, 2024.
  
 We love when people try our preview features and give us feedback, so we encourage you to use the preview APIs and the tools built on them.
 
@@ -36,11 +36,11 @@ This article covers the Kubernetes Fleet API deprecations. See the [AKS preview 
 
 ## Completed API deprecations
 
-No Azure Resource Manager (ARM) API deprecations to date.
+No Kubernetes Fleet REST API deprecations to date.
 
 ## How to check API versions in use
 
-If you're unsure what client or tool is using a specific API version, check the [activity logs](/azure/azure-monitor/essentials/activity-log) using the following command. Replace `API_VERSION` with the version you wish to check.
+If you're unsure what client or tool is using a specific API version, check the [activity logs](/azure/azure-monitor/essentials/activity-log) using the following command. Update the `API_VERSION` with the version you want to check for.
 
 ```azurecli-interactive
 
@@ -52,7 +52,7 @@ az monitor activity-log list \
     --query "[?eventName.value == 'EndRequest' && contains(not_null(httpRequest.uri,''), '${API_VERSION}')]"
 ```
 
-## Checking templates
+## How to check API versions used in templates
 
 ### [Bicep templates](#tab/bicep-templates)
 
@@ -66,7 +66,7 @@ resource symbolicname 'Microsoft.ContainerService/fleets@2023-08-15-preview' = {
 
 ### [ARM templates](#tab/arm-templates)
 
-In ARM templates check the `apiVersion` property
+In ARM templates, check the `apiVersion` property.
 
 ```json
 {
@@ -78,7 +78,7 @@ In ARM templates check the `apiVersion` property
 
 ### [Terraform templates](#tab/terraform-templates)
 
-In terraform, check the value of the `type` property which defines the resource type and API version (`@2023-08-15-preview`).
+In Terraform, check the value of the `type` property which defines the resource type and API version (`@2023-08-15-preview`).
 
 ```json
 resource "azapi_resource" "symbolicname" {
@@ -91,7 +91,7 @@ resource "azapi_resource" "symbolicname" {
 
 ## How to update to a newer API version
 
-- For Azure SDKs: use a newer API version by updating to a [newer version of the SDK](https://azure.github.io/azure-sdk/releases/latest/index.html?search=containerservicefleet).
+- For Azure SDKs: Use a newer API version by updating to a [newer version of the SDK](https://azure.github.io/azure-sdk/releases/latest/index.html?search=containerservicefleet).
 - For Azure CLI: Update the CLI itself and the fleet extension to the latest version by running `az upgrade` and `az extension update --name fleet`.
 - For Terraform: Update to the latest version of the AzureRM Terraform module. To find out what version of the API a particular Terraform release is using,
   check the [Terraform release notes](/azure/developer/terraform/provider-version-history-azurerm) or 

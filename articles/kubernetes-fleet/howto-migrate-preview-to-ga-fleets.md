@@ -1,5 +1,5 @@
 ---
-title: "How to migrate Azure Kubernetes Fleet Manager preview instances to a supported state"
+title: Migrate Azure Kubernetes Fleet Manager preview instances to a supported state
 description: Quickly identify if an instance of Kubernetes Fleet Manager was created using preview custom resource APIs.
 ms.date: 12/12/2024
 author: sjwaight
@@ -9,7 +9,7 @@ ms.topic: how-to
 
 ---
 
-# How to migrate Azure Kubernetes Fleet Manager preview instances to a supported state 
+# Migrate Azure Kubernetes Fleet Manager preview instances to a supported state 
 
 During the preview stage of Azure Kubernetes Fleet Manager (Kubernetes Fleet), an internal custom resource definition (CRD) API change was made that impacts a small number Kubernetes Fleet instances created during the service public preview. 
 
@@ -22,7 +22,7 @@ The Kubernetes Fleet Custom Resource Definitions (CRDs) API change is shown in t
 | memberclusters.fleet.azure.com/v1alpha1 | memberclusters.cluster.kubernetes-fleet.io/v1 |
 | internalmemberclusters.fleet.azure.com/v1alpha1 | internalmemberclusters.cluster.kubernetes-fleet.io/v1 |
 
-As of March 2025 the old API definitions no longer receive support or updates and will be removed from platform deployments.
+As of March 2025, the old API definitions no longer receive support or updates and will be removed from platform deployments.
 
 Administrators with affected Kubernetes Fleet instances need to create a new Kubernetes Fleet instance and manually transfer member clusters. This is a one-time activity.
 
@@ -32,7 +32,7 @@ Administrators with affected Kubernetes Fleet instances need to create a new Kub
 
 * You need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.3.0 or later, which you can install by running the following command:
+* You need the `fleet` Azure CLI extension version 1.3.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -46,14 +46,14 @@ Administrators with affected Kubernetes Fleet instances need to create a new Kub
 
 ## Identify affected instances
 
-1. Set the correct Azure Subscription. If you received a notification, it contains one or more Subscription ID you can use.
+1. Set the correct Azure subscription. If you received a notification from Microsoft, that notification contains one or more subscription IDs you should use.
 
     ```azurecli-interactive
     az account set \
         --subscription <subscription-id>
     ```
 
-2. Find all the Kubernetes Fleet instances you have in the Subscription.
+2. Find all the Kubernetes Fleet instances you have in the subscription.
 
     ```azurecli-interactive
     az resource list \
@@ -68,7 +68,7 @@ Administrators with affected Kubernetes Fleet instances need to create a new Kub
         --query "[?contains(createdTime, '2023') || contains(createdTime, '2022')]"
     ```
 
-    If the above query returns any matching instances, you can double-check if the instances are using the retired Kubernetes CRD API as follows.
+    If the above query returns any matching instances, determine if the instances are using the retired Kubernetes CRD API as described in the next steps.
 
 3. Download Kubernetes credentials for the Kubernetes Fleet hub cluster.
 
@@ -85,7 +85,7 @@ Administrators with affected Kubernetes Fleet instances need to create a new Kub
     kubectl get crd internalmemberclusters.fleet.azure.com
     ```
 
-    If both queries return `Error from server (NotFound) customresourcedefinitions.apiextensions.k8s.io` then the selected Kubernetes Fleet instance isn't affected and no further action is required.
+    If both queries return `Error from server (NotFound) customresourcedefinitions.apiextensions.k8s.io`, then the selected Kubernetes Fleet instance isn't affected and no further action is required.
     
     If any instances are affected see the next section for remediation steps.
 
