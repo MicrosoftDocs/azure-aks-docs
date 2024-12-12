@@ -22,7 +22,7 @@ After an API version is deprecated, it will no longer function. We recommend you
 
 You should perform these updates at a minimum every 6-9 months. If you fail to do so, you'll be notified that you're using a soon-to-be deprecated API version as deprecation approaches.
 
-Azure Kubernetes Service (AKS) API deprecations are listed on the [AKS preview API lifecycle page](/azure/aks/concepts-preview-api-life-cycle).
+This article covers the Kubernetes Fleet API deprecations. See the [AKS preview API lifecycle page](/azure/aks/concepts-preview-api-life-cycle) for Azure Kubernetes Service (AKS) API deprecations.
 
 ## Upcoming API deprecations
 
