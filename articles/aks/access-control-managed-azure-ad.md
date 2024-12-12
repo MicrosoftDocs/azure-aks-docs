@@ -4,8 +4,8 @@ description: Learn how to access clusters using Conditional Access when integrat
 ms.topic: concept-article
 ms.subservice: aks-integration
 ms.date: 04/20/2023
-author: tamram
-ms.author: tamram
+author: nickomang
+ms.author: nickoman
 ms.custom: devx-track-azurecli
 ---
 

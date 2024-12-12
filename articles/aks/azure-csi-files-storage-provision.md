@@ -6,8 +6,8 @@ ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
 ms.date: 12/10/2024
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 ---
 

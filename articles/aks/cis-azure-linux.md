@@ -1,8 +1,8 @@
 ---
 title: Center for Internet Security (CIS) Azure Linux benchmark
 description: Learn how AKS applies the CIS benchmark with an Azure Linux image
-author: htaubenfeld
-ms.author: htaubenfeld
+author: schaffererin
+ms.author: schaffererin
 ms.service: microsoft-linux
 ms.custom: linux-related-content
 ms.topic: concept-article

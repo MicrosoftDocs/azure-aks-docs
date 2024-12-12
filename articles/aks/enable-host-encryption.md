@@ -4,8 +4,8 @@ description: Learn how to configure a host-based encryption in an Azure Kubernet
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 07/17/2023 
-author: tamram
-ms.author: tamram
+author: nickomang
+ms.author: nickoman
 
 ms.custom: devx-track-azurecli
 ms.devlang: azurecli
