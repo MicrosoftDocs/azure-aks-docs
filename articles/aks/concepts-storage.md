@@ -3,8 +3,8 @@ title: Concepts - Storage in Azure Kubernetes Services (AKS)
 description: Learn about storage in Azure Kubernetes Service (AKS), including volumes, persistent volumes, storage classes, and claims.
 ms.topic: conceptual
 ms.date: 05/02/2024
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 ms.subservice: aks-storage
 ---
 
@@ -155,7 +155,7 @@ You can use the following Azure Storage services to provide the persistent volum
 * [Azure Files](azure-csi-files-storage-provision.md)
 * [Azure Container Storage][azure-container-storage]
 
- As noted in the [Volumes](#volumes) section, the choice of Azure Disks or Azure Files is often determined by the need for concurrent access to the data or the performance tier.
+ As noted in the [Volumes](#volumes) section, the choice of Azure Disks or Azure Files is often determined by the need for concurrent access to the data or the performance tier. 
 
 ![Diagram of persistent volumes in an Azure Kubernetes Services (AKS) cluster.](media/concepts-storage/aks-storage-persistent-volume.png)
 
@@ -164,13 +164,17 @@ A cluster administrator can *statically* create a persistent volume, or a volume
 > [!IMPORTANT]
 > Persistent volumes can't be shared by Windows and Linux pods due to differences in file system support between the two operating systems.
 
+If you want a fully managed solution for block-level access to data, consider using [Azure Container Storage][azure-container-storage] instead of CSI drivers. Azure Container Storage integrates with Kubernetes, allowing dynamic and automatic provisioning of persistent volumes. Azure Container Storage supports Azure Disks, Ephemeral Disks, and Azure Elastic SAN (preview) as backing storage, offering flexibility and scalability for stateful applications running on Kubernetes clusters.
+
 ## Storage classes
 
 To specify different tiers of storage, such as premium or standard, you can create a *storage class*.
 
 A storage class also defines a *reclaim policy*. When you delete the persistent volume, the reclaim policy controls the behavior of the underlying Azure Storage resource. The underlying resource can either be deleted or kept for use with a future pod.
 
-For clusters using the [Container Storage Interface (CSI) drivers][csi-storage-drivers] the following extra storage classes are created:
+For clusters using [Azure Container Storage][azure-container-storage], you'll see an additional storage class called `acstor-<storage-pool-name>`. An internal storage class is also created.
+
+For clusters using [Container Storage Interface (CSI) drivers][csi-storage-drivers], the following extra storage classes are created:
 
 | Storage class | Description |
 |---|---|
@@ -184,7 +188,7 @@ For clusters using the [Container Storage Interface (CSI) drivers][csi-storage-d
 Unless you specify a storage class for a persistent volume, the default storage class is used. Ensure volumes use the appropriate storage you need when requesting persistent volumes.
 
 > [!IMPORTANT]
-> Starting with Kubernetes version 1.21, AKS only uses CSI drivers by default and CSI migration is enabled. While existing in-tree persistent volumes continue to function, starting with version 1.26, AKS will no longer support volumes created using in-tree driver and storage provisioned for files and disk.
+> Starting with Kubernetes version 1.21, AKS uses CSI drivers by default, and CSI migration is enabled. While existing in-tree persistent volumes continue to function, starting with version 1.26, AKS will no longer support volumes created using in-tree driver and storage provisioned for files and disk.
 >
 > The `default` class will be the same as `managed-csi`.
 >
@@ -277,9 +281,14 @@ For mounting a volume in a Windows container, specify the drive letter and path.
 
 ## Next steps
 
-For associated best practices, see [Best practices for storage and backups in AKS][operator-best-practices-storage] and [AKS Storage Considerations][azure-aks-storage-considerations].
+For associated best practices, see [Best practices for storage and backups in AKS][operator-best-practices-storage] and [AKS storage considerations][azure-aks-storage-considerations].
 
-To see how to use CSI drivers, see the following how-to articles:
+For more information on Azure Container Storage, see the following articles:
+
+* [What Is Azure Container Storage?][azure-container-storage]
+* [Use Azure Container Storage with AKS][use-azure-container-storage]
+
+For more information on using CSI drivers, see the following articles:
 
 * [Container Storage Interface (CSI) drivers for Azure Disk, Azure Files, and Azure Blob storage on Azure Kubernetes Service][csi-storage-drivers]
 * [Use Azure Disk CSI driver in Azure Kubernetes Service][azure-disk-csi]
@@ -320,3 +329,4 @@ For more information on core Kubernetes and AKS concepts, see the following arti
 [azure-disk-customer-managed-key]: azure-disk-customer-managed-keys.md
 [azure-aks-storage-considerations]: /azure/cloud-adoption-framework/scenarios/app-platform/aks/storage
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
+[use-azure-container-storage]: /azure/storage/container-storage/container-storage-aks-quickstart

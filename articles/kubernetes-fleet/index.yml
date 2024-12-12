@@ -54,7 +54,7 @@ landingContent:
             url: /javascript/api/overview/azure/container-service-fleet
           - text: Resource Manager template
             url: /azure/templates/microsoft.containerservice/fleets
-      
+
   - title: Get started
     linkLists:
       - linkListType: quickstart
@@ -63,10 +63,9 @@ landingContent:
             url: quickstart-create-fleet-and-members.md
       - linkListType: quickstart
         links:
-          - text: Access the Kubernetes API of the Fleet resource
-            url: quickstart-access-fleet-kubernetes-api.md
+          - text: Access Fleet hub cluster Kubernetes API
+            url: access-fleet-hub-cluster-kubernetes-api.md
       - linkListType: quickstart
         links:
           - text: Propagate Kubernetes resource objects from a Fleet resource to member clusters
             url: quickstart-resource-propagation.md
-

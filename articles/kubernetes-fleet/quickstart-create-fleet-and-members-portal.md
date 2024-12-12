@@ -59,4 +59,4 @@ Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure porta
 
 ## Next steps
 
-* [Access the Kubernetes API of the Fleet resource](./quickstart-access-fleet-kubernetes-api.md).
+* [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).

@@ -25,8 +25,6 @@
       href: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Windows container considerations
       href: windows-vs-linux-containers.md
-    - name: Optimize costs
-      href: best-practices-cost.md
 - name: Quickstarts
   expanded: true
   items:
@@ -208,6 +206,8 @@
       href: best-practices.md
     - name: Baseline architecture for an AKS cluster
       href: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Cost optimization
+      href: best-practices-cost.md
     - name: High availability disaster recovery
       items:
         - name: Overview

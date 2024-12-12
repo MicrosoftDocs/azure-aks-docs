@@ -5,8 +5,8 @@ description: Learn the cluster operator best practices for storage, data encrypt
 ms.topic: best-practice
 ms.subservice: aks-storage
 ms.date: 04/28/2023
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 
 ---

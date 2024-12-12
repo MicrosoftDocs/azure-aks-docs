@@ -7,7 +7,7 @@ ms.author: allensu
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 11/19/2024
+ms.date: 12/11/2024
 ms.custom: references_regions, devx-track-azurecli
 ---
 

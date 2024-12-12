@@ -25,6 +25,12 @@ A fleet consists of the following components:
 * **fleet-hub-agent**: A Kubernetes controller that creates and reconciles all the fleet-related custom resources (CRs) in the hub cluster.
 * **fleet-member-agent**: A Kubernetes controller that creates and reconciles all the fleet-related CRs in the member clusters. This controller pulls the latest CRs from the hub cluster and consistently reconciles the member clusters to match the desired state.
 
+## What are hub clusters?
+
+In Azure Kubernetes Fleet Manager, hub clusters play a crucial role in managing multiple member clusters, but they are optional.
+
+The hub cluster facilitates the orchestration of updates and resource management across member clusters. However, you can create a fleet without a hub cluster. This flexibility allows you to manage clusters as a single entity without the need for a dedicated hub. This would be more suitable for simpler setups or specific use cases.
+
 ## What are member clusters?
 
 The `MemberCluster` represents a cluster-scoped API established within the hub cluster, serving as a representation of a cluster within the fleet. This API offers a dependable, uniform, and automated approach for multi-cluster applications to identify registered clusters within a fleet. It also facilitates applications in querying a list of clusters managed by the fleet or in observing cluster statuses for subsequent actions.
