@@ -5,7 +5,7 @@ author: KarlErickson
 ms.author: edburns
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 07/26/2023
+ms.date: 12/12/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-quarkus, devx-track-javaee-quarkus-aks, devx-track-extended-java, devx-track-azurecli
 # external contributor: danieloh30
@@ -153,7 +153,7 @@ Press <kbd>q</kbd> to exit Quarkus dev mode.
 The steps in this section show you how to create the following Azure resources to run the Quarkus sample app:
 
 - Azure Database for PostgreSQL Flexible Server
-- Azure Container Registry (ACR)
+- Azure Container Registry
 - Azure Kubernetes Service (AKS)
 
 > [!NOTE]
@@ -219,9 +219,9 @@ It takes a few minutes to create the server, database, admin user, and firewall 
 
 ### Create an Azure Container Registry instance
 
-Because Quarkus is a cloud native technology, it has built-in support for creating containers that run in Kubernetes. Kubernetes is entirely dependent on having a container registry from which it finds the container images to run. AKS has built-in support for Azure Container Registry (ACR).
+Because Quarkus is a cloud native technology, it has built-in support for creating containers that run in Kubernetes. Kubernetes is entirely dependent on having a container registry from which it finds the container images to run. AKS has built-in support for Azure Container Registry.
 
-Use the [az acr create](/cli/azure/acr#az-acr-create) command to create the ACR instance. The following example creates an ACR instance named with the value of your environment variable `${REGISTRY_NAME}`:
+Use the [az acr create](/cli/azure/acr#az-acr-create) command to create the container registry instance. The following example creates a container registry instance named with the value of your environment variable `${REGISTRY_NAME}`:
 
 ```azurecli
 az acr create \
@@ -240,14 +240,14 @@ After a short time, you should see JSON output that contains the following lines
   "resourceGroup": "<YOUR_RESOURCE_GROUP>",
 ```
 
-### Connect your docker to the ACR instance
+### Connect your docker to the container registry instance
 
 > [!NOTE]
 > This article uses the [`az acr build`](/cli/azure/acr#az-acr-build) command to build  and push the Docker image to the Container Registry, without using `username` and `password` of the Container Registry. It's still possible to use username and password with `docker login` and `docker push`. Using username and password is less secure than passwordless authentication.
 
 
 
-Sign in to the ACR instance. Signing in lets you push an image. Use the following commands to verify the connection:
+Sign in to the container registry instance. Signing in lets you push an image. Use the following commands to verify the connection:
 
 ```azurecli
 export LOGIN_SERVER=$(az acr show \
@@ -270,11 +270,11 @@ docker login $LOGIN_SERVER -u $USER_NAME -p $PASSWORD
 
 If you're using Podman instead of Docker, make the necessary changes to the command.
 
-If you've signed into the ACR instance successfully, you should see `Login Succeeded` at the end of command output.
+If you've signed into the container registry instance successfully, you should see `Login Succeeded` at the end of command output.
 
 ### Create an AKS cluster
 
-Use the [az aks create](/cli/azure/aks#az-aks-create) command to create an AKS cluster. The following example creates a cluster named with the value of your environment variable `${CLUSTER_NAME}` with one node. The cluster is connected to the ACR instance you created in a preceding step. This command takes several minutes to complete.
+Use the [az aks create](/cli/azure/aks#az-aks-create) command to create an AKS cluster. The following example creates a cluster named with the value of your environment variable `${CLUSTER_NAME}` with one node. The cluster is connected to the container registry instance you created in a preceding step. This command takes several minutes to complete.
 
 ```azurecli
 az aks create \
@@ -452,7 +452,7 @@ As a cloud native technology, Quarkus supports generating OCI container images c
 %prod.quarkus.container-image.tag=1.0
 ```
 
-### Build the container image and push it to ACR
+### Build the container image and push it to container registry
 
 Now, use the following command to build the application itself. This command uses the Kubernetes and Jib extensions to build the container image.
 
@@ -478,7 +478,7 @@ docker images | grep todo
 <LOGIN_SERVER_VALUE>/<USER_NAME_VALUE>/todo-quarkus-aks   1.0       b13c389896b7   18 minutes ago   424MB
 ```
 
-Push the container images to ACR by using the following command:
+Push the container images to container registry by using the following command:
 
 ```bash
 export TODO_QUARKUS_TAG=$(docker images | grep todo-quarkus-aks | head -n1 | cut -d " " -f1)
@@ -499,7 +499,7 @@ d13845d85ee5: Pushed
 1.0: digest: sha256:0ffd70d6d5bb3a4621c030df0d22cf1aa13990ca1880664d08967bd5bab1f2b6 size: 1995
 ```
 
-Now that you've pushed the app to ACR, you can tell AKS to run the app.
+Now that you've pushed the app to container registry, you can tell AKS to run the app.
 
 ## Deploy the Quarkus app to AKS
 
