@@ -242,6 +242,11 @@ After a short time, you should see JSON output that contains the following lines
 
 ### Connect your docker to the ACR instance
 
+> [!NOTE]
+> This article uses the [`az acr build`](/cli/azure/acr#az-acr-build) command to build  and push the Docker image to the Container Registry, without using `username` and `password` of the Container Registry. It's still possible to use username and password with `docker login` and `docker push`. Using username and password is less secure than passwordless authentication.
+
+
+
 Sign in to the ACR instance. Signing in lets you push an image. Use the following commands to verify the connection:
 
 ```azurecli
