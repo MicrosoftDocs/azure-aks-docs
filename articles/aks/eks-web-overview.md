@@ -66,7 +66,7 @@ The **completed** application code for this workflow is available in our [GitHub
   
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it*:
 
 Principal author:
 - Dixit Arora | Senior Customer Engineer
