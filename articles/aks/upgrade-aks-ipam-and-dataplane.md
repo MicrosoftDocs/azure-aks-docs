@@ -96,5 +96,3 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
   --network-dataplane cilium
 ```
 
-> [!NOTE]
-> After enabling Azure CNI Powered by Cilium on an AKS cluster, you can't disable it. If you want to use a different network data plane, you must create a new AKS cluster.
