@@ -5,7 +5,7 @@ ms.topic: quickstart
 ms.date: 01/11/2024
 author: schaffererin
 ms.author: schaffererin
-
+ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurepowershell, mode-api
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
 ---
@@ -38,9 +38,9 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 The following example creates a resource group named *myResourceGroup* in the *eastus* location.
 
-- Create a resource group using the [New-AzResourceGroup][new-azresourcegroup] cmdlet.
+- Create a resource group using the [`New-AzResourceGroup`][new-azresourcegroup] cmdlet.
 
-    ```azurepowershell
+    ```azurepowershell-interactive
     New-AzResourceGroup -Name myResourceGroup -Location eastus
     ```
 
@@ -56,9 +56,9 @@ The following example creates a resource group named *myResourceGroup* in the *e
 
 ## Create AKS cluster
 
-To create an AKS cluster, use the [New-AzAksCluster][new-azakscluster] cmdlet. The following example creates a cluster named *myAKSCluster* with one node and enables a system-assigned managed identity.
+To create an AKS cluster, use the [`New-AzAksCluster`][new-azakscluster] cmdlet. The following example creates a cluster named *myAKSCluster* with one node and enables a system-assigned managed identity.
 
-```azurepowershell
+```azurepowershell-interactive
 New-AzAksCluster -ResourceGroupName myResourceGroup `
     -Name myAKSCluster `
     -NodeCount 1 `
@@ -69,19 +69,19 @@ New-AzAksCluster -ResourceGroupName myResourceGroup `
 After a few minutes, the command completes and returns information about the cluster.
 
 > [!NOTE]
-> When you create an AKS cluster, a second resource group is automatically created to store the AKS resources. For more information, see [Why are two resource groups created with AKS?](../faq.yml)
+> When you create an AKS cluster, a second resource group called the *node resource group* is automatically created to store the AKS resources. For more information, see [Node resource group](../core-aks-concepts.md#node-resource-group). When you [delete the resource group](#delete-resources) for the AKS cluster, the node resource group is also deleted. You also see a *NetworkWatcherRG* resource group created by default. This resource group is used by Azure Network Watcher to store monitoring data. You can safely ignore this resource group. For more information, see [Enable or disable Azure Network Watcher](/azure/network-watcher/network-watcher-create).
 
 ## Connect to the cluster
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, call the `Install-AzAksCliTool` cmdlet.
 
-1. Configure `kubectl` to connect to your Kubernetes cluster using the [Import-AzAksCredential][import-azakscredential] cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`Import-AzAksCredential`][import-azakscredential] cmdlet. This command downloads credentials and configures the Kubernetes CLI to use them.
 
     ```azurepowershell
     Import-AzAksCredential -ResourceGroupName myResourceGroup -Name myAKSCluster
     ```
 
-1. Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
     ```azurepowershell
     kubectl get nodes
@@ -398,11 +398,11 @@ When the application runs, a Kubernetes service exposes the application front en
 
     :::image type="content" source="media/quick-kubernetes-deploy-powershell/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-powershell/aks-store-application.png":::
 
-## Delete the cluster
+## Delete resources
 
-If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure charges. Remove the resource group, container service, and all related resources by calling the [Remove-AzResourceGroup][remove-azresourcegroup] cmdlet.
+If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure charges. Remove the resource group, container service, and all related resources by calling the [`Remove-AzResourceGroup`][remove-azresourcegroup] cmdlet.
 
-```azurepowershell
+```azurepowershell-interactive
 Remove-AzResourceGroup -Name myResourceGroup
 ```
 
