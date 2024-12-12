@@ -20,6 +20,9 @@ This workload implements a WAF to protect a [Yelb][yelb] web-based application r
 
 For a more detailed understanding of the AWS workload, see [Protecting your Amazon EKS web apps with AWS WAF][eks-aws-waf].
 
+[!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
+
+
 ## Deployment process
 
 1. [**Understand the conceptual differences**](eks-web-understand.md): Start by reviewing the differences between EKS and AKS in terms of services, architecture, and deployment.
