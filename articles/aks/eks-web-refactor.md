@@ -38,7 +38,7 @@ Microsoft Entra Workload ID works well with the [Azure Identity client libraries
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it*:
 
 Principal author:
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
