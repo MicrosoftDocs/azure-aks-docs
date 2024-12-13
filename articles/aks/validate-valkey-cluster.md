@@ -13,7 +13,7 @@ ms.author: schaffererin
 This article shows how to validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS).
 
 > [!NOTE]
-> This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
+> This article contains references to the term *master*, which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
 ## Build and run a sample client application for Valkey
 
