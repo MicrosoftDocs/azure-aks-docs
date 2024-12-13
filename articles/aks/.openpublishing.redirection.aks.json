@@ -546,8 +546,12 @@
             "redirect_document_id": false
         },
         {"source_path_from_root": "/articles/aks/network-observability-managed-cli.md",
-            "redirect_url": "/azure/aks/network-observability-overview.md",
+            "redirect_url": "/azure/aks/monitor-aks#network-observability.md",
             "redirect_document_id": false
-        }
+        },
+        {"source_path_from_root": "/articles/aks/network-observability-overview.md",
+        "redirect_url": "/azure/aks/monitor-aks#network-observability.md",
+        "redirect_document_id": false
+    }
      ]
 }
