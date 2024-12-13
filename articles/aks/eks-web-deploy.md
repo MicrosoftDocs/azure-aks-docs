@@ -503,17 +503,17 @@ You can use Azure CLI or Azure PowerShell to list the deployed resources in the 
 
 List the deployed resources in the resource group using the [`az resource list`][az-resource-list] command.
 
-    ```azurecli-interactive
-    az resource list --resource-group <resource-group-name>
-    ```
+```azurecli-interactive
+az resource list --resource-group <resource-group-name>
+```
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
 List the deployed resources in the resource group using the [`Get-AzResource`][get-azresource] cmdlet.
 
-    ```azurepowershell-interactive
-    Get-AzResource -ResourceGroupName <resource-group-name>
-    ```
+```azurepowershell-interactive
+Get-AzResource -ResourceGroupName <resource-group-name>
+```
 ---
 
 You can use Azure CLI or Azure PowerShell to delete the resource group when you no longer need the resources you created in this tutorial.
@@ -522,16 +522,16 @@ You can use Azure CLI or Azure PowerShell to delete the resource group when you 
 
 Delete the resource group and its associated resources using the [`az group delete`][az-group-delete] command.
 
-    ```azurecli-interactive
-    az group delete --name <resource-group-name>
-    ```
+```azurecli-interactive
+az group delete --name <resource-group-name>
+```
 ### [Azure PowerShell](#tab/azure-powershell)
 
 Delete the resource group and its associated resources using the [`Remove-AzResourceGroup`][remove-azresourcegroup] cmdlet.
 
-    ```azurepowershell-interactive
-    Remove-AzResourceGroup -Name <resource-group-name>
-    ```
+```azurepowershell-interactive
+Remove-AzResourceGroup -Name <resource-group-name>
+```
 ---
 
 ## Next steps

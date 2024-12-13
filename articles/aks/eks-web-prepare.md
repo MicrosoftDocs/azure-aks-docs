@@ -68,7 +68,7 @@ In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures 
 
 The message flow is as follows:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-http-detail.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTP.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-http-detail.png" alt-text="Diagram of the message flow of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTP.":::
 
 1. The [Azure Application Gateway][azure-ag] handles TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
 2. The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv] to ensure secure communication.
@@ -138,7 +138,7 @@ You can avoid these problems by using the same hostname for the service proxy an
 
 The following diagram shows the steps for the message flow during deployment and runtime.
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https-detail.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTPS." lightbox="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https-detail.png":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https-detail.png" alt-text="Diagram of the message flow of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTPS." lightbox="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https-detail.png":::
 
 #### Deployment workflow
 
