@@ -159,7 +159,7 @@ The steps in this section show you how to create the following Azure resources t
 > [!NOTE]
 > This article disables PostgreSQL authentication to illustrate security best practices. Microsoft Entra ID is used to authenticate the connection to the server. If you need to enable PostgreSQL authentication, see [Quickstart: Use Java and JDBC with Azure Database for PostgreSQL - Flexible Server](/azure/postgresql/flexible-server/connect-java) and select the **Password** tab.
 
-Some of these resources must have unique names within the scope of the Azure subscription. To ensure this uniqueness, you can use the *initials, sequence, date, suffix* pattern. To apply this pattern, name your resources by listing your initials, some sequence number, today's date, and some kind of resource specific suffix - for example, `rg` for "resource group". The following environment variables use this pattern. Replace the placeholder values `UNIQUE_VALUE`, `LOCATION`, and `DB_PASSWORD` with your own values and then run the following commands in your terminal:
+Some of these resources must have unique names within the scope of the Azure subscription. To ensure this uniqueness, you can use the *initials, sequence, date, suffix* pattern. To apply this pattern, name your resources by listing your initials, some sequence number, today's date, and some kind of resource specific suffix - for example, `rg` for "resource group". The following environment variables use this pattern. Replace the placeholder values `UNIQUE_VALUE` and `LOCATION` with your own values and then run the following commands in your terminal:
 
 ```bash
 export UNIQUE_VALUE=<your unique value, such as ejb010717>
@@ -168,15 +168,13 @@ export LOCATION=<your desired Azure region for deploying your resources - for ex
 export REGISTRY_NAME=${UNIQUE_VALUE}reg
 export DB_SERVER_NAME=${UNIQUE_VALUE}db
 export DB_NAME=demodb
-export DB_ADMIN=demouser
-export DB_PASSWORD='<your desired password for the database server - for example, Secret123456>'
 export CLUSTER_NAME=${UNIQUE_VALUE}aks
 export AKS_NS=${UNIQUE_VALUE}ns
 ```
 
 ### Create an Azure Database for PostgreSQL Flexible Server
 
-Azure Database for PostgreSQL Flexible Server is a fully managed database service designed to provide more granular control and flexibility over database management functions and configuration settings. This section shows you how to create an Azure Database for PostgreSQL Flexible Server instance using the Azure CLI. For more information, see [Quickstart: Create an Azure Database for PostgreSQL - Flexible Server instance using Azure CLI](/azure/postgresql/flexible-server/quickstart-create-server-cli).
+Azure Database for PostgreSQL Flexible Server is a fully managed database service designed to provide more granular control and flexibility over database management functions and configuration settings. This section shows you how to create an Azure Database for PostgreSQL Flexible Server instance using the Azure CLI.
 
 First, create a resource group to contain the database server and other resources by using the following command:
 
@@ -191,11 +189,13 @@ Next, create an Azure Database for PostgreSQL flexible server instance by using 
 ```azurecli
 az postgres flexible-server create \
     --name $DB_SERVER_NAME \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --admin-user $DB_ADMIN \
-    --admin-password $DB_PASSWORD \
     --database-name $DB_NAME \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --location $LOCATION \
     --public-access 0.0.0.0 \
+    --sku-name Standard_B1ms \
+    --tier Burstable \
+    --active-directory-auth Enabled \
     --yes
 ```
 
@@ -203,17 +203,17 @@ It takes a few minutes to create the server, database, admin user, and firewall 
 
 ```output
 {
-  "connectionString": "postgresql://<DB_ADMIN>:<DB_PASSWORD>@<DB_SERVER_NAME>.postgres.database.azure.com/<DB_NAME>?sslmode=require",
-  "databaseName": "<DB_NAME>",
-  "firewallName": "AllowAllAzureServicesAndResourcesWithinAzureIps_2024-7-5_14-39-45",
-  "host": "<DB_SERVER_NAME>.postgres.database.azure.com",
-  "id": "/subscriptions/REDACTED/resourceGroups/<RESOURCE_GROUP_NAME>/providers/Microsoft.DBforPostgreSQL/flexibleServers/<DB_SERVER_NAME>",
-  "location": "North Europe",
-  "password": "<DB_PASSWORD>",
-  "resourceGroup": "<RESOURCE_GROUP_NAME>",
-  "skuname": "Standard_D2s_v3",
-  "username": "<DB_ADMIN>",
-  "version": "13"
+  "connectionString": "postgresql://REDACTED@ejb011212qdb.postgres.database.azure.com/demodb?sslmode=require",
+  "databaseName": "demodb",
+  "firewallName": "AllowAllAzureServicesAndResourcesWithinAzureIps_2024-12-12_14-30-22",
+  "host": "ejb011212qdb.postgres.database.azure.com",
+  "id": "/subscriptions/c7844e91-b11d-4a7f-ac6f-996308fbcdb9/resourceGroups/ejb011211sfi/providers/Microsoft.DBforPostgreSQL/flexibleServers/ejb011212qdb",
+  "location": "East US 2",
+  "password": "REDACTED",
+  "resourceGroup": "ejb011211sfi",
+  "skuname": "Standard_B1ms",
+  "username": "sorrycamel2",
+  "version": "16"
 }
 ```
 
@@ -241,11 +241,6 @@ After a short time, you should see JSON output that contains the following lines
 ```
 
 ### Connect your docker to the container registry instance
-
-> [!NOTE]
-> This article uses the [`az acr build`](/cli/azure/acr#az-acr-build) command to build  and push the Docker image to the Container Registry, without using `username` and `password` of the Container Registry. It's still possible to use username and password with `docker login` and `docker push`. Using username and password is less secure than passwordless authentication.
-
-
 
 Sign in to the container registry instance. Signing in lets you push an image. Use the following commands to verify the connection:
 
@@ -283,7 +278,9 @@ az aks create \
     --name $CLUSTER_NAME \
     --attach-acr $REGISTRY_NAME \
     --node-count 1 \
-    --generate-ssh-keys
+    --generate-ssh-keys \
+    --enable-oidc-issuer \
+    --enable-workload-identity
 ```
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster, including the following output:
@@ -330,7 +327,7 @@ alias k=kubectl
 To verify the connection to your cluster, use the `kubectl get` command to return a list of the cluster nodes, as shown in the following example:
 
 ```bash
-kubectl get nodes
+k get nodes
 ```
 
 The following example output shows the single node created in the previous steps. Make sure that the status of the node is **Ready**:
@@ -353,6 +350,86 @@ The output should look like the following example:
 ```output
 namespace/<your namespace> created
 ```
+
+### Create a service connection in AKS with Service Connector
+
+In this section, you create a service connection between the AKS cluster and the Azure SQL Database using Microsoft Entra Workload ID with Service Connector. This connection allows the AKS cluster to access the Azure SQL Database without using SQL authentication.
+
+Run the following commands to create a connection between the AKS cluster and the PostgreSQL database using Microsoft Entra Workload ID with Service Connector. For more information, see [Create a service connection in AKS with Service Connector (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?tabs=azure-cli&pivots=workload-id#create-a-service-connection-in-aks-with-service-connector-preview).
+
+```azurecli
+# Register the Service Connector and Kubernetes Configuration resource providers
+az provider register --namespace Microsoft.ServiceLinker --wait
+az provider register --namespace Microsoft.KubernetesConfiguration --wait
+
+# Install the Service Connector passwordless extension
+az extension add --name serviceconnector-passwordless --upgrade --allow-preview true
+
+# Retrieve the AKS cluster and Azure SQL Server resource IDs
+export AKS_CLUSTER_RESOURCE_ID=$(az aks show \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $CLUSTER_NAME \
+    --query id \
+    --output tsv)
+export AZURE_POSTGRESQL_RESOURCE_ID=$(az postgres flexible-server show \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $DB_SERVER_NAME \
+    --query id \
+    --output tsv)
+
+# Create a user-assigned managed identity used for workload identity
+export USER_ASSIGNED_IDENTITY_NAME=workload-identity-uami
+az identity create \
+    --resource-group ${RESOURCE_GROUP_NAME} \
+    --name ${USER_ASSIGNED_IDENTITY_NAME}
+
+# Retrieve the user-assigned managed identity resource ID
+export UAMI_RESOURCE_ID=$(az identity show \
+    --resource-group ${RESOURCE_GROUP_NAME} \
+    --name ${USER_ASSIGNED_IDENTITY_NAME} \
+    --query id \
+    --output tsv)
+
+# Create a service connection between your AKS cluster and your SQL database using Microsoft Entra Workload ID
+az aks connection create postgres-flexible \
+    --connection akssqlconn \
+    --client-type java \
+    --source-id $AKS_CLUSTER_RESOURCE_ID \
+    --target-id $AZURE_POSTGRESQL_RESOURCE_ID/databases/$DB_NAME \
+    --workload-identity $UAMI_RESOURCE_ID
+```
+
+> [!NOTE]
+> We recommend using Microsoft Entra Workload ID for secure access to your Azure Database for PostgreSQL Flexible Server without using username/password authentication. If you need to use username/password authentication, ignore the previous steps in this section and use the username and password to connect to the database.
+
+### Get service account and secret created by Service Connector
+
+To authenticate to the Azure SQL Database, you need to get the service account and secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following steps:
+
+1. From the highlighted sections in the sample Kubernetes deployment YAML, copy the `serviceAccountName` and `secretRef.name` values, as shown in the following example:
+
+   ```yaml
+   serviceAccountName: <service-account-name>
+   containers:
+   - name: raw-linux
+      envFrom:
+         - secretRef:
+            name: <secret-name>
+   ```
+
+1. Use the following commands to define environment variables. Replace `<service-account-name>` and `<secret-name>` with the values you copied in the previous step.
+
+   ```bash
+   export SERVICE_ACCOUNT_NAME=<service account name>
+   export SECRET_NAME=<secret-name>
+   ```
+   
+   These values are used in the next section to deploy the Quarkus application to the AKS cluster.
+
+> [!NOTE]
+> The secret created by Service Connector contains the `DB_JDBC_URL`, which is a password free connection string to the Azure Database for PostgreSQL Flexible Server. For more information, see the sample value in the [System-assigned Managed Identity](/azure/service-connector/how-to-integrate-postgres?branch=main&tabs=java#system-assigned-managed-identity) section of [Integrate Azure Database for PostgreSQL with Service Connector](/azure/service-connector/how-to-integrate-postgres).
+
+PENDING(edburns): 2024-12-12 16:33 PST 
 
 ### Create a secret for database connection in AKS
 
