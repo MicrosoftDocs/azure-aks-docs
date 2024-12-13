@@ -73,7 +73,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Deploy the Valkey cluster
 
-1. Create a `ConfigMap` mounted as a volume in the Valkey `StatefulSet` to use to configure the Valkey cluster using the `kubectl apply` command.
+1. Create a `ConfigMap` resource to store the Valkey configuration file.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -460,7 +460,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     service/valkey-replicas created
     ```
 
-6. Create a Pod Disruption Budget (PDB) to ensure that one pod at most is unavailable at all times using the `kubectl apply` command.
+6. Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable.
 
     ```bash
     kubectl apply -f - <<EOF
