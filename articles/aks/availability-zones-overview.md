@@ -32,8 +32,7 @@ Node pools are created as a Virtual Machine Scale Set in the same Azure Subscrip
 User Node pools host your applications. There are two main ways to deploy node pools to use Availability Zones.
 
 #### One user node pool, spread across all zones
-Recommended for long-running workloads. 
-In this deployment, a single node pool is deployed across multiple availability zones. We recommend deploying at least three nodes per node pool to ensure at least one node per Availability Zone.
+In this deployment, a single node pool is deployed across multiple availability zones. We recommend deploying at least three nodes per node pool to ensure at least one node per Availability Zone. AKS will balance the number of nodes between zones automatically.
 
 #### Multiple user node pools, one per zone
 Recommended for customers using the [cluster autoscaler](./cluster-autoscaler-overview.md), a good fit for short-running or bursty workloads. In this deployment, each zone has a single node pool.
@@ -41,7 +40,8 @@ Recommended for customers using the [cluster autoscaler](./cluster-autoscaler-ov
 We recommend setting `--balance-similar-node-groups` parameter to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations.
 
 > [!NOTE]
-> * Currently, balancing happens during scale up operations only. The cluster autoscaler scales down underutilized nodes regardless of the relative sizes of the node groups.
+> * A number of nodepool options, including the type of SKU used, **cannot be changed** after the nodepool is created.
+> * Currently, autoscale balancing happens during scale up only. The cluster autoscaler scales down underutilized nodes regardless of the relative sizes of the node groups, but not below the value set by `--min-count`.
 
 Customers can also use [proximity placement groups](/azure/aks/reduce-latency-ppg) per nodepool/availability zone, to reduce latency between nodes by physically locating nodes close to each other.
 
