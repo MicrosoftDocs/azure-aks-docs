@@ -272,11 +272,11 @@ The sample client application uses the [Locust load testing framework](https://d
     1:M 05 Nov 2024 12:19:12.616 * Cluster state changed: ok
     ```
 
-    During this time window of 18 seconds, we observe that writes to the shard that belongs to the deleted Pod are failing, and the Valkey cluster is electing a new primary. The request latency spikes to 60ms during this time window.
+    During this time window of 18 seconds, we observe that writes to the shard that belongs to the deleted Pod are failing, and the Valkey cluster is electing a new primary. The request latency spikes to 60 ms during this time window.
 
-    :::image type="content" source="media/valkey-stateful-workload/percentile.png" alt-text="Screenshot of a graph showing the 95th percentile of request latencies spiking to 60ms.":::
+    :::image type="content" source="media/valkey-stateful-workload/percentile.png" alt-text="Screenshot of a graph showing the 95th percentile of request latencies spiking to 60 ms.":::
 
-    After the new primary is elected, the Valkey cluster continues to serve requests with a latency of around 2ms.
+    After the new primary is elected, the Valkey cluster continues to serve requests with a latency of around 2 ms.
 
 ## Next steps
 
