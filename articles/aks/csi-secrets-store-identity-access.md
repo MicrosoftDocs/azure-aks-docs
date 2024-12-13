@@ -16,7 +16,7 @@ The Secrets Store Container Storage Interface (CSI) Driver on Azure Kubernetes S
 
 You can use one of the following access methods:
 
-- Service Connector with Workload ID
+- Service Connector with managed identity
 - Workload ID
 - User-assigned managed identity
 
