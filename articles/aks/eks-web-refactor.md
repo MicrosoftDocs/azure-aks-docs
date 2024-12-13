@@ -14,7 +14,7 @@ ms.custom:
 
 # Migrate Amazon Web Services (AWS) web application to Azure Kubernetes Service (AKS)
 
-This article outlines key considerations for migrating the Yelb application from AWS to AKS. Remember that the [Yelb][yelb] application is self-contained and doesn't rely on external services, so you can migrate it from AWS to Azure without making any code changes.
+This article outlines the steps necessary for migrating the Yelb application from AWS EKS to AKS. Please note that the [Yelb][yelb] application is self-contained and doesn't rely on external services, so it can be migrated from AWS to Azure without code changes.
 
 ## Migrating from AWS IAM to Azure RBAC
 
@@ -38,7 +38,7 @@ Microsoft Entra Workload ID works well with the [Azure Identity client libraries
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it*:
 
 Principal author:
 - [Paolo Salvatori](https://www.linkedin.com/in/paolo-salvatori) | Principal Customer Engineer
