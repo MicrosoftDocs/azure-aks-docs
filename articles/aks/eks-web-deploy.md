@@ -304,9 +304,9 @@ spec:
 
 3. You can now deploy the application. The script uses the `yelb.yml` YAML manifest to deploy the application and the `ingress.yml` to create the ingress object. If you use an [Azure Public DNS Zone](/azure/dns/public-dns-overview) for domain name resolution, you can employ the `04-configure-dns.sh` script. This script associates the public IP address of the NGINX ingress controller with the domain used by the ingress object, which exposes the `yelb-ui` service. The script performs the following steps:
 
-   - Retrieves the public address of the Azure public IP used by the front-end IP configuration of the Application Gateway.
-   - Checks if an `A` record exists for the subdomain used by the `yelb-ui` service.
-   - If the `A` record doesn't exist, the script creates it.
+   1. Retrieves the public address of the Azure public IP used by the front-end IP configuration of the Application Gateway.
+   2. Checks if an `A` record exists for the subdomain used by the `yelb-ui` service.
+   3. If the `A` record doesn't exist, the script creates it.
 
   ```bash
   source ./00-variables.sh
@@ -501,7 +501,7 @@ You can use Azure CLI or Azure PowerShell to list the deployed resources in the 
 
 ### [Azure CLI](#tab/azure-cli)
 
-* List the deployed resources in the resource group using the [`az resource list`][az-resource-list] command.
+List the deployed resources in the resource group using the [`az resource list`][az-resource-list] command.
 
     ```azurecli-interactive
     az resource list --resource-group <resource-group-name>
@@ -509,7 +509,7 @@ You can use Azure CLI or Azure PowerShell to list the deployed resources in the 
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-* List the deployed resources in the resource group using the [`Get-AzResource`][get-azresource] cmdlet.
+List the deployed resources in the resource group using the [`Get-AzResource`][get-azresource] cmdlet.
 
     ```azurepowershell-interactive
     Get-AzResource -ResourceGroupName <resource-group-name>
@@ -520,14 +520,14 @@ You can use Azure CLI or Azure PowerShell to delete the resource group when you 
 
 ### [Azure CLI](#tab/azure-cli)
 
-* Delete the resource group and its associated resources using the [`az group delete`][az-group-delete] command.
+Delete the resource group and its associated resources using the [`az group delete`][az-group-delete] command.
 
     ```azurecli-interactive
     az group delete --name <resource-group-name>
     ```
 ### [Azure PowerShell](#tab/azure-powershell)
 
-* Delete the resource group and its associated resources using the [`Remove-AzResourceGroup`][remove-azresourcegroup] cmdlet.
+Delete the resource group and its associated resources using the [`Remove-AzResourceGroup`][remove-azresourcegroup] cmdlet.
 
     ```azurepowershell-interactive
     Remove-AzResourceGroup -Name <resource-group-name>

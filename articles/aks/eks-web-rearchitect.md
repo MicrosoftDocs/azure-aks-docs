@@ -28,11 +28,11 @@ The original Yelb application is self-contained and doesn't rely on external ser
 
 The sample Yelb application allows users to vote on a set of alternatives (restaurants) and dynamically updates pie charts based on the number of votes received. The application also keeps track of the number of page views and displays the hostname of the `yelb-appserver` instance serving the API request upon a vote or a page refresh. This feature enables you to demo the application independently or collaboratively.
 
-:::image type="content" source="media/eks-web-rearchitect/yelb-ui.png" alt-text="Screenshot of the Yelb service interface.":::
+:::image type="content" source="media/eks-web-rearchitect/yelb-user-interface.png" alt-text="Screenshot of the Yelb service interface.":::
 
 ## Architecture on AWS
 
-To help protect web applications and APIs from common web exploits, AWS offers [AWS Web Application Firewall (WAF)][aws-waf] and [AWS Firewall Manager][aws-firewall-manager].
+To help protect web applications and APIs from common web exploits, AWS offers [AWS Web Application Firewall (WAF)][aws-waf] and [AWS Firewall Manager][aws-firewall-manager]. 
 
 ## Map AWS services to Azure services
 
@@ -74,20 +74,20 @@ The [Yelb][yelb] application is secured with an [Azure Application Gateway](/azu
 
 The following diagram shows the recommended architecture on Azure:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller." lightbox="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https.png":::
 
 The solution architecture consists of the following:
 
-- The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
-- The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
-- The Azure WAF Policy associated to the Listener runs OWASP rules and custom rules against the incoming requests and blocks malicious attacks.
-- The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTPS on port 443.
-- The Application Gateway Backend Pool and Health Probe call the NGINX ingress controller through the AKS internal load balancer using HTTPS.
-- The NGINX ingress controller uses the AKS internal load balancer.
-- The AKS cluster is configured with the [Azure Key Vault provider for Secrets Store CSI Driver add-on](/azure/aks/csi-secrets-store-driver) to retrieve secrets, certificates, and keys from Azure Key Vault via a [CSI volume](https://kubernetes-csi.github.io/docs/).
-- A [SecretProviderClass](/azure/aks/hybrid/secrets-store-csi-driver) retrieves the same certificate used by the Application Gateway from Azure Key Vault.
-- An [Kubernetes ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) object employs the NGINX ingress controller to expose the application via HTTPS through the AKS internal load balancer.
-- The Yelb service is of type `ClusterIP` and is exposed via the NGINX ingress controller.
+1. The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
+2. The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
+3. The Azure WAF Policy associated to the Listener runs OWASP rules and custom rules against the incoming requests and blocks malicious attacks.
+4. The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTPS on port 443.
+5. The Application Gateway Backend Pool and Health Probe call the NGINX ingress controller through the AKS internal load balancer using HTTPS.
+6. The NGINX ingress controller uses the AKS internal load balancer.
+7. The AKS cluster is configured with the [Azure Key Vault provider for Secrets Store CSI Driver add-on](/azure/aks/csi-secrets-store-driver) to retrieve secrets, certificates, and keys from Azure Key Vault via a [CSI volume](https://kubernetes-csi.github.io/docs/).
+8. A [SecretProviderClass](/azure/aks/hybrid/secrets-store-csi-driver) retrieves the same certificate used by the Application Gateway from Azure Key Vault.
+9. An [Kubernetes ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) object employs the NGINX ingress controller to expose the application via HTTPS through the AKS internal load balancer.
+10. The Yelb service is of type `ClusterIP` and is exposed via the NGINX ingress controller.
 
 For comprehensive instructions on deploying the [Yelb application][yelb] on AKS using this architecture, see the [companion sample][azure-sample].
 
@@ -98,7 +98,7 @@ Azure offers several options for deploying a web application on an AKS cluster a
 
 The [Application Gateway Ingress Controller (AGIC)](/azure/application-gateway/ingress-controller-overview) is a Kubernetes application, so you can leverage Azure's native [Application Gateway](https://azure.microsoft.com/services/application-gateway/) L7 load-balancer to expose cloud software to the Internet for your [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/services/kubernetes-service/) workloads. AGIC monitors the Kubernetes cluster it's hosted on and continuously updates an Application Gateway so that selected services are exposed to the Internet.
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-ingress-controller-aks-http.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway Ingress Controller.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-ingress-controller-azure-kubernetes-service-http.png" alt-text="Diagram of the solution based on Azure Application Gateway Ingress Controller." lightbox="media/eks-web-rearchitect/application-gateway-ingress-controller-azure-kubernetes-service-http.png":::
 
 The Ingress Controller runs in its own pod on the AKS cluster. AGIC monitors a subset of Kubernetes Resources for changes, translates the state of the cluster to an Application Gateway specific configuration, and applies it to [Azure Resource Manager (ARM)](/azure/azure-resource-manager/management/overview). For more information, see [What is Application Gateway Ingress Controller?](/azure/application-gateway/ingress-controller-overview).
 
@@ -106,7 +106,7 @@ The following table outlines advantages and disadvantages of the Application Gat
 
 | Advantages | Disadvantages |
 |---------------|-----------------|
-| • **Native integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway, which allows for seamless and efficient routing of traffic to services running on AKS. <br> • **Simplified deployments**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods. It enables a quick and easy setup of an Application Gateway and an AKS cluster with AGIC enabled. <br> • **Fully managed service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an extra layer of support. | • **Single cloud approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach. It might not be the best choice if you require a multi-cloud architecture where deployment across different cloud platforms is a requirement. In this case, you might want to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues. <br> • **Container Network Interface (CNI) support**: Not all CNI configurations support AGIC. For example, [Azure CNI Overlay](/azure/aks/azure-cni-overlay) currently doesn't support AGIC. It's important to verify that your CNI is compatible with AGIC before implementation. |
+| • **Native integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway, which allows for seamless and efficient routing of traffic to services running on AKS. <br> • **Simplified deployments**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods. It enables a quick and easy setup of an Application Gateway and an AKS cluster with AGIC enabled. <br> • **Fully managed service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an extra layer of support. | • **Single cloud approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach. It might not be the best choice if you require a multi cloud architecture where deployment across different cloud platforms is a requirement. In this case, you might want to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues. <br> • **Container Network Interface (CNI) support**: Not all CNI configurations support AGIC. For example, [Azure CNI Overlay](/azure/aks/azure-cni-overlay) currently doesn't support AGIC. It's important to verify that your CNI is compatible with AGIC before implementation. |
 
 For more information, see the following resources:
 
@@ -117,7 +117,7 @@ For more information, see the following resources:
 
 [Azure Application Gateway for Containers][azure-agc] provides load balancing and dynamic traffic management for applications in Kubernetes clusters.
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-for-containers-aks.png" alt-text="Architecture diagram of the solution based on Azure Application Gateway for Containers.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-for-containers-azure-kubernetes-service.png" alt-text="Diagram of the solution based on Azure Application Gateway for Containers." lightbox="media/eks-web-rearchitect/application-gateway-for-containers-azure-kubernetes-service.png":::
 
 #### Key features
 
@@ -146,7 +146,7 @@ For more information, see [Deploying an Azure Kubernetes Service (AKS) Cluster w
 
 [Azure Front Door][azure-fd] is global layer 7 load balancer that securely exposes and protects workloads running in AKS using the [Azure Web Application Firewall][azure-waf] and an [Azure Private Link](/azure/private-link/private-link-service-overview) service.
 
-:::image type="content" source="media/eks-web-rearchitect/front-door-aks.png" alt-text="Architecture diagram of the solution based on Azure Front Door.":::
+:::image type="content" source="media/eks-web-rearchitect/front-door-azure-kubernetes-service.png" alt-text="Diagram of the solution based on Azure Front Door." lightbox="media/eks-web-rearchitect/front-door-azure-kubernetes-service.png":::
 
 This solution uses [Azure Front Door Premium][azure-fd], [end-to-end TLS encryption](/azure/frontdoor/end-to-end-tls), [Azure Web Application Firewall][azure-waf], and a [Private Link service](/azure/private-link/private-link-service-overview) to securely expose and protect a workload that runs in [AKS](/azure/aks/intro-kubernetes).
 
@@ -167,11 +167,11 @@ For more information, see [Use Azure Front Door to secure AKS workloads](/azure/
 
 The following solution uses the [NGINX ingress controller][nginx] to expose the Yelb application and ModSecurity to block any malicious or suspicious traffic based on predefined OWASP or custom rules. [ModSecurity][mod-security] is an open-source web application firewall (WAF) that's compatible with popular web servers such as Apache, NGINX, and ISS. It provides protection from a wide range of attacks by using a powerful rule-definition language.
 
-:::image type="content" source="media/eks-web-rearchitect/nginx-modsecurity-aks.png" alt-text="Architecture diagram of the solution based on NGINX ingress controller and ModSecurity.":::
+:::image type="content" source="media/eks-web-rearchitect/nginx-modsecurity-azure-kubernetes-service.png" alt-text="Diagram of the solution based on NGINX ingress controller and ModSecurity." lightbox="media/eks-web-rearchitect/nginx-modsecurity-azure-kubernetes-service.png":::
 
 You can use [ModSecurity][mod-security] with the NGINX ingress controller to provide an extra layer of security to web applications exposed via Kubernetes. The NGINX ingress controller acts as a reverse proxy, forwarding traffic to the web application, while ModSecurity inspects the incoming requests and blocks any malicious or suspicious traffic based on the defined rules.
 
-Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform. This solution enables you to switch between cloud providers or have a multi-cloud setup while maintaining consistent security measures.
+Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform. This solution enables you to switch between cloud providers or have a multi cloud setup while maintaining consistent security measures.
 
 
 ## Next step

@@ -20,11 +20,11 @@ This article provides a comprehensive guide on how to deploy a robust and produc
 
 The [Yelb][yelb] sample web application on AWS is deployed using Bash, [AWS CLI][aws-cli], [eksctl][eksctl], [kubectl][kubectl], and [Helm][helm]. The companion [sample][azure-sample] contains Bash scripts and YAML manifests that you can use to automate the deployment of the [Yelb][yelb] application on [AWS Elastic Kubernetes Service (EKS)][aws-eks]. This solution demonstrates how to implement a web application firewall using [AWS WAF][aws-waf] to protect a web application running on [Amazon Elastic Kubernetes Service (EKS)][aws-eks]. You can use the Bash scripts to create an EKS cluster and deploy the [Yelb][yelb] application. The [Yelb][yelb] web application is exposed to the public internet using an [Amazon Application Load Balancer (ALB)][aws-alb] and protected using [AWS WAF web access control list (web ACL)][aws-web-acl]. For detailed instructions, see [Porting a Web Application from AWS Elastic Kubernetes Service (EKS) to Azure Kubernetes Service (AKS)][azure-sample].
 
-:::image type="content" source="media/eks-web-rearchitect/yelb-ui.png" alt-text="Screenshot of the Yelb service interface.":::
+:::image type="content" source="media/eks-web-rearchitect/yelb-user-interface.png" alt-text="Screenshot of the Yelb service interface.":::
 
 ## Yelb deployment on Azure
 
-In the following sections, you learn how to deploy the [Yelb][yelb] sample web application on an [Azure Kubernetes Service (AKS)][aks] cluster and expose it through an ingress controller like the [NGINX ingress controller][nginx]. The ingress controller service is accessible via an [internal (or private) load balancer][azure-lb], which balances traffic within the virtual network housing the AKS cluster. In a hybrid scenario, the load balancer frontend can be accessed from an on-premises network. To learn more about internal load baancing, see [Use an internal load balancer with Azure Kubernetes Service (AKS)](/azure/aks/internal-lb?tabs=set-service-annotations).
+In the following sections, you learn how to deploy the [Yelb][yelb] sample web application on an [Azure Kubernetes Service (AKS)][aks] cluster and expose it through an ingress controller like the [NGINX ingress controller][nginx]. The ingress controller service is accessible via an [internal (or private) load balancer][azure-lb], which balances traffic within the virtual network housing the AKS cluster. In a hybrid scenario, the load balancer frontend can be accessed from an on-premises network. To learn more about internal load balancing, see [Use an internal load balancer with Azure Kubernetes Service (AKS)](/azure/aks/internal-lb?tabs=set-service-annotations).
 
 The companion [sample][azure-sample] supports installing a [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon] or an unmanaged [NGINX ingress controller][nginx] using the [Helm chart][nginx-helm-chart]. The application routing add-on with NGINX ingress controller provides the following features:
 
@@ -37,7 +37,7 @@ For other configurations,
 - [Application routing add-on configuration](/azure/aks/app-routing-nginx-configuration)
 - [Configure internal NGIX ingress controller for Azure private DNS zone](/azure/aks/create-nginx-ingress-private-controller).
 
-To enhance security, the [Yel][yelb] application is protected by an [Azure Application Gateway][azure-ag] resource. This resource is deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. 
+To enhance security, the [Yelb][yelb] application is protected by an [Azure Application Gateway][azure-ag] resource. This resource is deployed in a dedicated subnet within the same virtual network as the AKS cluster or in a peered virtual network. 
 The [Azure Web Application Firewall (WAF)][azure-waf] secures access to the web application hosted on [Azure Kubernetes Service (AKS)][aks] and exposed via the [Azure Application Gateway][azure-ag] against common exploits and vulnerabilities.
 
 ## Prerequisites
@@ -64,20 +64,20 @@ This sample also includes two separate Bicep parameter files and two sets of Bas
 
 In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures the security of the system by blocking malicious attacks. The [Azure Application Gateway][azure-ag] receives incoming calls from client applications, performs TLS termination, and forwards the requests to the AKS-hosted `yelb-ui` service. This communication is achieved through the internal load balancer and NGINX ingress controller using the HTTP transport protocol. The following diagram illustrates the architecture:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-http.png" alt-text="Architecture diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTP.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-http.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTP." lightbox="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-http.png":::
 
 The message flow is as follows:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-http-detail.png" alt-text="Details of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTP.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-http-detail.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTP.":::
 
-- The [Azure Application Gateway][azure-ag] handles TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
-- The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv] to ensure secure communication.
-- The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing many types of malicious attacks.
-- The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTP using port 80.
-- The Application Gateway Backend Pool and Health Probe call the [NGINX ingress controller][nginx] through the AKS internal load balancer using the HTTP protocol for traffic management.
-- The [NGINX ingress controller][nginx] uses the AKS internal load balancer to ensure secure communication within the cluster.
-- A [Kubernetes ingress][kubernetes-ingress] object uses the [NGINX ingress controller][nginx] to expose the application via HTTP through the internal load balancer.
-- The `yelb-ui` service with the `ClusterIP` type restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
+1. The [Azure Application Gateway][azure-ag] handles TLS termination and sends incoming calls to the AKS-hosted `yelb-ui` service over HTTP.
+2. The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv] to ensure secure communication.
+3. The Azure WAF Policy associated with the Listener applies OWASP rules and custom rules to incoming requests, effectively preventing many types of malicious attacks.
+4. The Application Gateway Backend HTTP Settings invoke the Yelb application via HTTP using port 80.
+5. The Application Gateway Backend Pool and Health Probe call the [NGINX ingress controller][nginx] through the AKS internal load balancer using the HTTP protocol for traffic management.
+6. The [NGINX ingress controller][nginx] uses the AKS internal load balancer to ensure secure communication within the cluster.
+7. A [Kubernetes ingress][kubernetes-ingress] object uses the [NGINX ingress controller][nginx] to expose the application via HTTP through the internal load balancer.
+8. The `yelb-ui` service with the `ClusterIP` type restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
 
 ## Implementing end-to-end TLS using Azure Application Gateway
 
@@ -99,20 +99,20 @@ For more information, see [Application Gateway end-to-end TLS encryption](/azure
 
 In this solution, the [Azure Web Application Firewall (WAF)][azure-waf] ensures the security of the system by blocking malicious attacks. The [Azure Application Gateway][azure-ag] handles incoming calls from client applications, performs TLS termination, and implements [end-to-end TLS](/azure/application-gateway/ssl-overview#end-to-end-tls-encryption) by invoking the underlying AKS-hosted `yelb-ui` service using the HTTPS transport protocol via the internal load balancer and NGINX ingress controller. The following diagram illustrates the architecture:
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https.png" alt-text="Architecture diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTPS.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTPS." lightbox="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https.png":::
 
 The message flow is as follows:
 
-- The [Azure Application Gateway][azure-ag] handles TLS termination and communicates with the backend application over HTTPS.
-- The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
-- The Azure WAF Policy associated with the Listener runs OWASP rules and custom rules against incoming requests to block malicious attacks.
-- The Application Gateway Backend HTTP Settings are configured to invoke the AKS-hosted `yelb-ui` service via HTTPS on port 443.
-- The Application Gateway Backend Pool and Health Probe call the [NGINX ingress controller][nginx] through the AKS internal load balancer using HTTPS.
-- The [NGINX ingress controller][nginx] is deployed to use the AKS internal load balancer.
-- The SAKS cluster is configured with the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] add-on to retrieve secrets, certificates, and keys from Azure Key Vault via a [CSI volume](https://kubernetes-csi.github.io/docs/).
-- A [SecretProviderClass][secret-provider-class] is used to retrieve the certificate used by the Application Gateway from Key Vault.
-- A [Kubernetes ingress][kubernetes-ingress] object uses the [NGINX ingress controller][nginx] to expose the application via HTTPS through the AKS internal load balancer.
-- The `yelb-ui` service has a `ClusterIP` type, which restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
+1. The [Azure Application Gateway][azure-ag] handles TLS termination and communicates with the backend application over HTTPS.
+2. The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
+3. The Azure WAF Policy associated with the Listener runs OWASP rules and custom rules against incoming requests to block malicious attacks.
+4. The Application Gateway Backend HTTP Settings are configured to invoke the AKS-hosted `yelb-ui` service via HTTPS on port 443.
+5. The Application Gateway Backend Pool and Health Probe call the [NGINX ingress controller][nginx] through the AKS internal load balancer using HTTPS.
+6. The [NGINX ingress controller][nginx] is deployed to use the AKS internal load balancer.
+7. The SAKS cluster is configured with the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] add-on to retrieve secrets, certificates, and keys from Azure Key Vault via a [CSI volume](https://kubernetes-csi.github.io/docs/).
+8. A [SecretProviderClass][secret-provider-class] is used to retrieve the certificate used by the Application Gateway from Key Vault.
+9. A [Kubernetes ingress][kubernetes-ingress] object uses the [NGINX ingress controller][nginx] to expose the application via HTTPS through the AKS internal load balancer.
+10. The `yelb-ui` service has a `ClusterIP` type, which restricts its invocation to within the cluster or through the [NGINX ingress controller][nginx].
 
 To help ensure the security and stability of the system, consider the following recommendations:
 
@@ -138,7 +138,7 @@ You can avoid these problems by using the same hostname for the service proxy an
 
 The following diagram shows the steps for the message flow during deployment and runtime.
 
-:::image type="content" source="media/eks-web-rearchitect/application-gateway-aks-https-detail.png" alt-text="Details of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTPS.":::
+:::image type="content" source="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https-detail.png" alt-text="Diagram of the solution based on Application Gateway WAFv2 and NGINX ingress controller via HTTPS." lightbox="media/eks-web-rearchitect/application-gateway-azure-kubernetes-service-https-detail.png":::
 
 #### Deployment workflow
 
@@ -147,13 +147,13 @@ The following steps describe the deployment process. This workflow corresponds t
 1. A security engineer generates a certificate for the custom domain that the workload uses, and saves it in an Azure key vault. You can obtain a valid certificate from a well-known [certification authority (CA)](https://en.wikipedia.org/wiki/Certificate_authority).
 2. A platform engineer specifies the necessary information in the *main.bicepparams* Bicep parameters file and deploys the Bicep templates to create the Azure resources. The necessary information includes:
    - A prefix for the Azure resources.
-   - The name and resource group of the existing Azure Key Vault that holds the TLS certificate for the workload hostname and the Azure Front Door custom domain.
+   - The name and resource group of the existing Azure Key Vault that holds the TLS certificate for the workload hostname and the Application Gateway listener custom domain.
 3. You can configure the [deployment script][azure-deployment-script] to install the following packages to your AKS cluster. For more information, check the parameters section of the Bicep module.
    - **[Prometheus][prometheus] and [Grafana][grafana] using the [Prometheus community Kubernetes Helm charts](https://prometheus-community.github.io/helm-charts/)**: By default, this sample configuration doesn't install Prometheus and Grafana to the AKS cluster. Instead, it installs [Azure Managed Prometheus][azure-prometheus] and [Azure Managed Grafana][azure-grafana].
    - [**cert-manager**](https://cert-manager.io/docs/): Certificate Manager isn't necessary in this sample, as both the Application Gateway and NGINX ingress controller use a pre-uploaded TLS certificate from Azure Key Vault.
    - **[NGINX ingress controller][nginx] via a Helm chart**: If you use the [managed NGINX ingress controller with the application routing add-on][aks-app-routing-addon], you don't need to install another instance of the NGINX ingress controller via Helm.
 4. The Application Gateway Listener retrieves the TLS certificate from Azure Key Vault.
-5. The [Kubernetes ingress][kubernetes-ingress] object usesthe certificate obtained from the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] to expose the Yelb UI service via HTTPS.
+5. The [Kubernetes ingress][kubernetes-ingress] object uses the certificate obtained from the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] to expose the Yelb UI service via HTTPS.
 4. The Application Gateway Listener retrieves the TLS certificate from Azure key Vault.
 5. The [Kubernetes ingress][kubernetes-ingress] object utilizes the certificate obtained from the [Azure Key Vault provider for Secrets Store CSI Driver][azure-kv-csi-driver] to expose the Yelb UI service via HTTPS.
 
@@ -162,10 +162,10 @@ The following steps describe the deployment process. This workflow corresponds t
 1. The client application calls the sample web application using its hostname. The DNS zone associated with the custom domain of the Application Gateway Listener uses an `A` record to resolve the DNS query with the address of the Azure public IP used by the front-end IP configuration of the Application Gateway.
 2. The request is sent to the Azure public IP used by the front-end IP configuration of the Application Gateway.
 3. The Application Gateway performs the following actions:
-   - The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
-   - The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
-   - The Azure WAF Policy associated to the Listener runs OWASP rules and custom rules against the incoming request and blocks malicious attacks.
-   - The Application Gateway Backend HTTP Settings are configured to invoke the sample web application via HTTPS on port 443.
+   1. The Application Gateway handles TLS termination and communicates with the backend application over HTTPS.
+   2. The Application Gateway Listener uses an SSL certificate obtained from [Azure Key Vault][azure-kv].
+   3. The Azure WAF Policy associated to the Listener runs OWASP rules and custom rules against the incoming request and blocks malicious attacks.
+   4. The Application Gateway Backend HTTP Settings are configured to invoke the sample web application via HTTPS on port 443.
 4. The Application Gateway Backend Pool calls the NGINX ingress controller through the AKS internal load balancer using HTTPS.
 5. The request is sent to one of the agent nodes that hosts a pod of the NGINX ingress controller.
 6. One of the NGINX ingress controller replicas handles the request and sends the request to one of the service endpoints of the `yelb-ui` service.
@@ -176,7 +176,7 @@ The following steps describe the deployment process. This workflow corresponds t
 
 ## Deployment
 
-By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay](azure-cni-overlay.md) network plugin and the [Cilium](azure-cni-powered-by-cilium.md) data plane. You can an alternative network plugin. Additionally, the project shows how to deploy an AKS cluster with the following extensions and features:
+By default, Bicep templates install the AKS cluster with the [Azure CNI Overlay](azure-cni-overlay.md) network plugin and the [Cilium](azure-cni-powered-by-cilium.md) data plane. You can use an alternative network plugin. Additionally, the project shows how to deploy an AKS cluster with the following extensions and features:
 
 - [Microsoft Entra Workload ID][aks-workload-id]
 - [Istio-based service mesh add-on](/azure/aks/istio-about)

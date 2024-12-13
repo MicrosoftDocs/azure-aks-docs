@@ -20,7 +20,7 @@ Both AKS and EKS provide multiple options for deploying a managed Kubernetes clu
 
 | **Deployment Options** | **EKS** | **AKS** |
 | -----------------------| --------| ------- |
-| Portal | [AWS Management Console](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html) | [Azure Portal][azure-portal] |
+| Portal | [AWS Management Console](https://docs.aws.amazon.com/eks/latest/userguide/getting-started-console.html) | [Azure portal][azure-portal] |
 | Native Infrastructure as Code | [AWS Cloud Formation][aws-cloudformation] | [Bicep][bicep] and [Azure Resource Manager (ARM)][arm] |
 | Native CLI | [AWS CLI](https://docs.aws.amazon.com/eks/latest/userguide/create-cluster.html) and [EKS CLI][eksctl] | [Azure CLI][azure-cli], [Azure Developer CLI][azure-developer-cli], and [PowerShell][powershell] |
 | Terraform | [EKS module](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest?tab=resources) | [AzureRM Provider][azure-terraform] |
