@@ -268,7 +268,7 @@ az aks update
 ```
 
 ## Upgrade an existing cluster that has Azure NPM or Calico installed to Azure CNI Powered by Cilium
-To upgrade an existing cluster that has Network Policy engine installed to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium)
+To upgrade an existing cluster that has Network Policy engine installed to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](upgrade-aks-ipam-and-dataplane.md)
 
 ## Verify network policy setup
 
