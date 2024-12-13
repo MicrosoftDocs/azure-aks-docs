@@ -1,7 +1,7 @@
 ---
 title: Upgrade Azure Kubernetes Service (AKS) CNI IPAM modes and Dataplane technology
 description: Learn how to upgrade existing Azure Kubernetes Service (AKS) clusters IPAM modes and dataplane technology.
-author: 
+author: msftjonw
 ms.author: jonw
 ms.subservice: aks-networking
 ms.topic: how-to
