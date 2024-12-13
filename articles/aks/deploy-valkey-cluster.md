@@ -73,7 +73,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Deploy the Valkey cluster
 
-1. Create a `ConfigMap` mounted as a volume in the Valkey `StatefulSet` to use to configure the Valkey cluster using the `kubectl apply` command.
+1. Create a `ConfigMap` resource to store the Valkey configuration file.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -148,7 +148,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
                     - ${MY_LOCATION}-2
             podAntiAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
-              - weight: 90
+              - weight: 100
                 podAffinityTerm:
                   labelSelector:
                     matchExpressions:
@@ -167,6 +167,19 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
                       - valkey
                   topologyKey: kubernetes.io/hostname
           containers:
+          - name: role-master-checker
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
+            command:
+              - "/bin/bash"
+              - "-c"
+            args:
+              [
+                "while true; do role=\$(valkey-cli --pass \$(cat /etc/valkey-password/valkey-password-file.conf | awk '{print \$2; exit}') role | awk '{print \$1; exit}');     if [ \"\$role\" = \"slave\" ]; then valkey-cli --pass \$(cat /etc/valkey-password/valkey-password-file.conf | awk '{print \$2; exit}') cluster failover; fi; sleep 30; done"
+              ]
+            volumeMounts:
+            - name: valkey-password
+              mountPath: /etc/valkey-password
+              readOnly: true
           - name: valkey
             image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
             env:
@@ -447,6 +460,29 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     service/valkey-replicas created
     ```
 
+6. Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable.
+
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: policy/v1
+    kind: PodDisruptionBudget
+    metadata:
+      name: valkey
+      namespace: valkey
+    spec:
+      maxUnavailable: 1
+      selector:
+        matchLabels:
+          app: valkey
+    EOF
+    ```
+
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    poddisruptionbudget.policy/valkey created
+    ```
+
 ## Run the Valkey cluster
 
 1. Add the Valkey primaries, in zone 1 and 2, to the cluster using the `kubectl exec` command.
@@ -635,6 +671,9 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Next steps
 
+> [!div class="nextstepaction"]
+> [Validate the resiliency of the Valkey cluster on AKS][validate-valkey-cluster]
+
 To learn more about deploying open-source software on Azure Kubernetes Service (AKS), see the following articles:
 
 * [Deploy a highly available PostgreSQL database on AKS][postgresql-aks]
@@ -655,12 +694,10 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 * Naveed Kharadi | Customer Experience Engineer
 * Erin Schaffer | Content Developer 2
 
-<!-- External links -->
-[reloader]: https://github.com/stakater/Reloader
-
 <!-- Internal links -->
 [az-keyvault-secret-set]: /cli/azure/keyvault/secret#az-keyvault-secret-set
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [az-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md
+[validate-valkey-cluster]: ./validate-valkey-cluster.md

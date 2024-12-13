@@ -84,7 +84,7 @@
     - name: 4 - Deploy containerized application
       href: tutorial-kubernetes-deploy-application.md
     - name: 5 - Use PaaS services
-      href: tutorial-kubernetes-paas-services.md        
+      href: tutorial-kubernetes-paas-services.md
     - name: 6 - Scale application
       href: tutorial-kubernetes-scale.md
     - name: 7 - Upgrade cluster
@@ -172,13 +172,13 @@
           href: concepts-fine-tune-language-models.md
         - name: Machine learning operations (MLOps)
           href: concepts-machine-learning-ops.md
-    - name: Advanced Container Networking Services 
+    - name: Advanced Container Networking Services
       items:
-        - name: Advanced Container Networking Services (ACNS) overview 
+        - name: Advanced Container Networking Services (ACNS) overview
           href: advanced-container-networking-services-overview.md
         - name: Container Network Observability overview
           href: advanced-network-observability-concepts.md
-        - name: Container Network Security overview 
+        - name: Container Network Security overview
           href: advanced-network-container-services-security-concepts.md
     - name: Storage
       href: concepts-storage.md
@@ -189,7 +189,7 @@
         - name: Node auto-repair
           href: node-auto-repair.md
         - name: Node Problem Detector (NPD)
-          href: node-problem-detector.md  
+          href: node-problem-detector.md
     - name: Service meshes
       href: servicemesh-about.md
     - name: Sustainable software engineering
@@ -327,7 +327,7 @@
            - name: Access a private cluster remotely
              href: access-private-cluster.md
         - name: Integration
-          items:      
+          items:
             - name: Integrate ACR with an AKS cluster
               href: cluster-container-registry-integration.md
             - name: Use cluster extensions
@@ -350,7 +350,7 @@
               href: scale-down-mode.md
             - name: Connect securely to cluster nodes
               href: node-access.md
-            - name: Manage SSH key 
+            - name: Manage SSH key
               href: manage-ssh-node-access.md
             - name: Deploy trusted launch on AKS
               href: use-trusted-launch.md
@@ -385,8 +385,8 @@
             - name: Use the Azure portal
               href: virtual-nodes-portal.md
     - name: Workloads
-      items:   
-        - name: Stateful workloads 
+      items:
+        - name: Stateful workloads
           items:
             - name: Overview
               href: stateful-workloads-overview.md
@@ -414,6 +414,8 @@
                   href: create-valkey-infrastructure.md
                 - name: Configure and deploy a Valkey cluster
                   href: deploy-valkey-cluster.md
+                - name: Test Valkey with Locust
+                  href: validate-valkey-cluster.md
         - name: GPU workloads
           items:
             - name: Use GPUs
@@ -513,7 +515,7 @@
             - name: Use KMS etcd encryption
               href: use-kms-etcd-encryption.md
             - name: Secure container access to resources
-              href: secure-container-access.md 
+              href: secure-container-access.md
         - name: Node security
           items:
             - name: BYOK for Azure managed disks
@@ -527,9 +529,9 @@
             - name: Use Dedicated Hosts with AKS
               href: use-azure-dedicated-hosts.md
             - name: Restrict access to IMDS
-              href: imds-restriction.md       
+              href: imds-restriction.md
         - name: Authentication and authorization
-          items: 
+          items:
             - name: Use managed identities
               href: use-managed-identity.md
             - name: Create service principal
@@ -537,7 +539,7 @@
             - name: Enable Microsoft Entra integration
               items:
                 - name: AKS-managed Microsoft Entra ID
-                  items: 
+                  items:
                     - name: Enable AKS-managed Microsoft Entra integration
                       href: enable-authentication-microsoft-entra-id.md
                     - name: Manage local accounts
@@ -596,8 +598,8 @@
                       href: csi-secrets-store-identity-access.md
                     - name: 3 - Apply extra configurations or perform troubleshooting
                       href: csi-secrets-store-configuration-options.md
-    - name: Networking
-      items:     
+    - name: Configure networking
+      items:
         - name: CNI
           items:
             - name: Use Azure CNI Overlay
@@ -634,7 +636,7 @@
               href: nat-gateway.md
             - name: Use instance-level public IP addresses
               href: use-node-public-ips.md
-            - name: Restrict and control cluster egress traffic 
+            - name: Restrict and control cluster egress traffic
               href: limit-egress-traffic.md
             - name: Configure Static Egress Gateway
               href: configure-static-egress-gateway.md
@@ -643,7 +645,7 @@
               displayName: outbound, egress, private, acr
         - name: Ingress
           items:
-            - name: Use application routing add-on 
+            - name: Use application routing add-on
               items:
                 - name: Application routing add-on overview
                   href: app-routing.md
@@ -985,7 +987,7 @@
               href: /troubleshoot/azure/azure-kubernetes/welcome-azure-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: AI and machine learning
       items:
-        - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS) 
+        - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
           href: open-ai-quickstart.md
         - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
           href: open-ai-secure-access-quickstart.md
@@ -1025,6 +1027,20 @@
           href: eks-edw-prepare.md
         - name: Deploy to Azure
           href: eks-edw-deploy.md
+      - name: Migrate EKS web application workloads
+        items:
+        - name: Overview
+          href: eks-web-overview.md
+        - name: Understand platform differences
+          href: eks-web-understand.md
+        - name: Rearchitect for AKS
+          href: eks-web-rearchitect.md
+        - name: Refactor app
+          href: eks-web-refactor.md
+        - name: Prepare for deployment
+          href: eks-web-prepare.md
+        - name: Deploy to Azure
+          href: eks-web-deploy.md
 - name: FAQ
   href: faq.yml
 - name: Reference
