@@ -45,7 +45,7 @@ groups:
   prompt: Choose an access method
   pivots:
   - id: access-with-service-connector
-    title: Service Connector with Workload ID
+    title: Service Connector with managed identity
   - id: access-with-a-microsoft-entra-workload-identity
     title: Workload ID
   - id: access-with-a-user-assigned-managed-identity
