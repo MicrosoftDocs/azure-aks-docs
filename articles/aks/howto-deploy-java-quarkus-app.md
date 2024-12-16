@@ -36,7 +36,7 @@ Use the following command to clone the sample Java project for this article. The
 ```bash
 git clone https://github.com/Azure-Samples/quarkus-azure
 cd quarkus-azure
-git checkout 2024-07-08
+git checkout 2024-12-16
 cd aks-quarkus
 ```
 
@@ -404,9 +404,9 @@ namespace/<your namespace> created
 
 ### Create a service connection in AKS with Service Connector
 
-In this section, you create a service connection between the AKS cluster and the Azure SQL Database using Microsoft Entra Workload ID with Service Connector. This connection allows the AKS cluster to access the Azure SQL Database without using SQL authentication.
+In this section, you create a service connection between the AKS cluster and the Azure Database for PostgreSQL Flexible Server using Microsoft Entra Workload ID with Service Connector. This connection allows the AKS cluster to access the Azure Database for PostgreSQL Flexible Server without using SQL authentication.
 
-Run the following commands to create a connection between the AKS cluster and the PostgreSQL database using Microsoft Entra Workload ID with Service Connector. For more information, see [Create a service connection in AKS with Service Connector (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?tabs=azure-cli&pivots=workload-id#create-a-service-connection-in-aks-with-service-connector-preview).
+Run the following commands to create a connection between the AKS cluster and the PostgreSQL database using Microsoft Entra Workload ID with Service Connector.
 
 ```azurecli
 # Register the Service Connector and Kubernetes Configuration resource providers
@@ -441,10 +441,10 @@ export UAMI_RESOURCE_ID=$(az identity show \
     --query id \
     --output tsv)
 
-# Create a service connection between your AKS cluster and your SQL database using Microsoft Entra Workload ID
+# Create a service connection between your AKS cluster and your PostgreSQL database using Microsoft Entra Workload ID
 az aks connection create postgres-flexible \
-    --connection akssqlconn \
-    --client-type java \
+    --connection akspostgresconn \
+    --kube-namespace $AKS_NS \
     --source-id $AKS_CLUSTER_RESOURCE_ID \
     --target-id $AZURE_POSTGRESQL_RESOURCE_ID/databases/$DB_NAME \
     --workload-identity $UAMI_RESOURCE_ID
@@ -455,9 +455,9 @@ az aks connection create postgres-flexible \
 
 ### Get service account and secret created by Service Connector
 
-To authenticate to the Azure SQL Database, you need to get the service account and secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following steps:
+To authenticate to the Azure Database for PostgreSQL Flexible Server, you need to get the service account and secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following steps:
 
-1. From the highlighted sections in the sample Kubernetes deployment YAML, copy the `serviceAccountName` and `secretRef.name` values, as shown in the following example:
+1. From the highlighted sections in the sample Kubernetes deployment YAML, copy the values of `serviceAccountName` and `secretRef.name`, represented as `<service-account-name>` and `<secret-name>` in the following example:
 
    ```yaml
    serviceAccountName: <service-account-name>
@@ -467,38 +467,8 @@ To authenticate to the Azure SQL Database, you need to get the service account a
          - secretRef:
             name: <secret-name>
    ```
-
-1. Use the following commands to define environment variables. Replace `<service-account-name>` and `<secret-name>` with the values you copied in the previous step.
-
-   ```bash
-   export SERVICE_ACCOUNT_NAME=<service account name>
-   export SECRET_NAME=<secret-name>
-   ```
    
    These values are used in the next section to deploy the Quarkus application to the AKS cluster.
-
-> [!NOTE]
-> The secret created by Service Connector contains the `DB_JDBC_URL`, which is a password free connection string to the Azure Database for PostgreSQL Flexible Server. For more information, see the sample value in the [System-assigned Managed Identity](/azure/service-connector/how-to-integrate-postgres?branch=main&tabs=java#system-assigned-managed-identity) section of [Integrate Azure Database for PostgreSQL with Service Connector](/azure/service-connector/how-to-integrate-postgres).
-
-PENDING(edburns): 2024-12-12 16:33 PST 
-
-### Create a secret for database connection in AKS
-
-Create secret `db-secret` in the AKS namespace to store the database connection information. Use the following command to create the secret:
-
-```bash
-kubectl create secret generic db-secret \
-    -n ${AKS_NS} \
-    --from-literal=jdbcurl=jdbc:postgresql://${DB_SERVER_NAME}.postgres.database.azure.com:5432/${DB_NAME}?sslmode=require \
-    --from-literal=dbusername=${DB_ADMIN} \
-    --from-literal=dbpassword=${DB_PASSWORD}
-```
-
-The output should look like the following example:
-
-```output
-secret/db-secret created
-```
 
 ### Customize the cloud native configuration
 
@@ -529,55 +499,57 @@ As a cloud native technology, Quarkus supports the notion of configuration profi
 
 Quarkus supports any number of named profiles, as needed.
 
-The remaining steps in this section direct you to uncomment and customize values in the *src/main/resources/application.properties* file. Ensure that all lines starting with `# %prod.` are uncommented by removing the leading `#`.
+The remaining steps in this section direct you to customize values in the *src/main/resources/application.properties* file.
 
 The `prod.` prefix indicates that these properties are active when running in the `prod` profile. For more information on configuration profiles, see the [Quarkus documentation](https://access.redhat.com/search/?q=Quarkus+Using+configuration+profiles).
 
 #### Database configuration
 
-Add the following database configuration variables. The database connection related properties `%prod.quarkus.datasource.jdbc.url`, `%prod.quarkus.datasource.username`, and `%prod.quarkus.datasource.password` read values from the environment variables `DB_JDBC_URL`, `DB_USERNAME`, and `DB_PASSWORD`, respectively. These environment variables map to secret values that store the database connection information for security reasons, which is described in the next section.
+Examine the following database configuration variables. The database connection related properties `%prod.quarkus.datasource.jdbc.url` and `%prod.quarkus.datasource.username` read values from the environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME`, respectively. These environment variables map to secret values that store the database connection information for security reasons, they are auto-generated using the Service Connector passwordless extension later in this article.
 
 ```yaml
 # Database configurations
-%prod.quarkus.datasource.db-kind=postgresql
-%prod.quarkus.datasource.jdbc.driver=org.postgresql.Driver
-%prod.quarkus.datasource.jdbc.url=${DB_JDBC_URL}
-%prod.quarkus.datasource.username=${DB_USERNAME}
-%prod.quarkus.datasource.password=${DB_PASSWORD}
+%prod.quarkus.datasource.jdbc.url=jdbc:postgresql://${AZURE_POSTGRESQL_HOST}:${AZURE_POSTGRESQL_PORT}/${AZURE_POSTGRESQL_DATABASE}?\
+authenticationPluginClassName=com.azure.identity.extensions.jdbc.postgresql.AzurePostgresqlAuthenticationPlugin\
+&sslmode=require
+%prod.quarkus.datasource.username=${AZURE_POSTGRESQL_USERNAME}
+%prod.quarkus.datasource.jdbc.acquisition-timeout=10
 %prod.quarkus.hibernate-orm.database.generation=drop-and-create
 %prod.quarkus.hibernate-orm.sql-load-script=import.sql
 ```
 
 #### Kubernetes configuration
 
-Add the following Kubernetes configuration variables. Make sure to set `service-type` to `load-balancer` to access the app externally.
+Examine the following Kubernetes configuration variables. `service-type` is set to `load-balancer` to access the app externally. Replace the values of `<service-account-name>` and `<secret-name>` with the values of the actual values you copied in the previous section.
 
 ```yaml
 # Kubernetes configurations
 %prod.quarkus.kubernetes.deployment-target=kubernetes
 %prod.quarkus.kubernetes.service-type=load-balancer
-%prod.quarkus.kubernetes.env.secrets=db-secret
-%prod.quarkus.kubernetes.env.mapping.DB_JDBC_URL.from-secret=db-secret
-%prod.quarkus.kubernetes.env.mapping.DB_JDBC_URL.with-key=jdbcurl
-%prod.quarkus.kubernetes.env.mapping.DB_USERNAME.from-secret=db-secret
-%prod.quarkus.kubernetes.env.mapping.DB_USERNAME.with-key=dbusername
-%prod.quarkus.kubernetes.env.mapping.DB_PASSWORD.from-secret=db-secret
-%prod.quarkus.kubernetes.env.mapping.DB_PASSWORD.with-key=dbpassword
+%prod.quarkus.kubernetes.labels."azure.workload.identity/use"=true
+%prod.quarkus.kubernetes.service-account=<service-account-name>
+%prod.quarkus.kubernetes.env.mapping.AZURE_CLIENT_ID.from-secret=<secret-name>
+%prod.quarkus.kubernetes.env.mapping.AZURE_CLIENT_ID.with-key=AZURE_POSTGRESQL_CLIENTID
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_HOST.from-secret=<secret-name>
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_HOST.with-key=AZURE_POSTGRESQL_HOST
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_PORT.from-secret=<secret-name>
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_PORT.with-key=AZURE_POSTGRESQL_PORT
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_DATABASE.from-secret=<secret-name>
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_DATABASE.with-key=AZURE_POSTGRESQL_DATABASE
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_USERNAME.from-secret=<secret-name>
+%prod.quarkus.kubernetes.env.mapping.AZURE_POSTGRESQL_USERNAME.with-key=AZURE_POSTGRESQL_USERNAME
 ```
 
-The other Kubernetes configurations specify the mapping of the secret values to the environment variables in the Quarkus application. The `db-secret` secret contains the database connection information. The `jdbcurl`, `dbusername`, and `dbpassword` keys in the secret map to the `DB_JDBC_URL`, `DB_USERNAME`, and `DB_PASSWORD` environment variables, respectively.
+The other Kubernetes configurations specify the mapping of the secret values to the environment variables in the Quarkus application. The `<secret-name>` secret contains the database connection information. The `AZURE_POSTGRESQL_CLIENTID`, `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` keys in the secret map to the `AZURE_CLIENT_ID`, `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` environment variables, respectively.
 
 #### Container image configuration
 
-As a cloud native technology, Quarkus supports generating OCI container images compatible with Docker. Add the following container-image variables. Replace the values of `<LOGIN_SERVER_VALUE>` and `<USER_NAME_VALUE>` with the values of the actual values of the `${LOGIN_SERVER}` and `${USER_NAME}` environment variables, respectively.
+As a cloud native technology, Quarkus supports generating OCI container images compatible with Docker. Replace the value of `<LOGIN_SERVER_VALUE>` with the value of the actual value of the `${LOGIN_SERVER}` environment variable.
 
 ```yaml
 # Container Image Build
 %prod.quarkus.container-image.build=true
-%prod.quarkus.container-image.registry=<LOGIN_SERVER_VALUE>
-%prod.quarkus.container-image.group=<USER_NAME_VALUE>
-%prod.quarkus.container-image.name=todo-quarkus-aks
-%prod.quarkus.container-image.tag=1.0
+%prod.quarkus.container-image.image=<LOGIN_SERVER_VALUE>/todo-quarkus-aks:1.0
 ```
 
 ### Build the container image and push it to container registry
@@ -602,8 +574,8 @@ target/kubernetes
 You can verify whether the container image is generated as well using `docker` command line (CLI). Output looks similar to the following example:
 
 ```output
-docker images | grep todo
-<LOGIN_SERVER_VALUE>/<USER_NAME_VALUE>/todo-quarkus-aks   1.0       b13c389896b7   18 minutes ago   424MB
+docker images | grep todo-quarkus-aks
+<LOGIN_SERVER_VALUE>/todo-quarkus-aks   1.0       b13c389896b7   18 minutes ago   422MB
 ```
 
 Push the container images to container registry by using the following command:
@@ -617,7 +589,7 @@ docker push ${TODO_QUARKUS_TAG}:1.0
 The output should look similar to the following example:
 
 ```output
-The push refers to repository [<LOGIN_SERVER_VALUE>/<USER_NAME_VALUE>/todo-quarkus-aks]
+The push refers to repository [<LOGIN_SERVER_VALUE>/todo-quarkus-aks]
 dfd615499b3a: Pushed
 56f5cf1aa271: Pushed
 4218d39b228e: Pushed
@@ -644,6 +616,7 @@ kubectl apply -f target/kubernetes/kubernetes.yml -n ${AKS_NS}
 The output should look like the following example:
 
 ```output
+service/quarkus-todo-demo-app-aks created
 deployment.apps/quarkus-todo-demo-app-aks created
 ```
 
