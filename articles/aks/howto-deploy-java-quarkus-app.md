@@ -714,33 +714,77 @@ The output should look like the following example:
 ]
 ```
 
-### Verify the database has been updated using Azure Cloud Shell
+### Verify the database has been updated
 
-Open Azure Cloud Shell in the Azure portal by selecting the **Cloud Shell** icon, as shown in the following screenshot:
+Run the following command to verify that the database has been updated correctly:
 
-:::image type="content" source="media/howto-deploy-java-quarkus-app/cloud-shell.png" alt-text="Screenshot of the Azure portal with the Cloud Shell button highlighted." lightbox="media/howto-deploy-java-quarkus-app/cloud-shell.png":::
-
-Run the following command locally and paste the result into Azure Cloud Shell:
-
-```bash
-echo psql --host=${DB_SERVER_NAME}.postgres.database.azure.com --port=5432 --username=${DB_ADMIN} --dbname=${DB_NAME}
+```azurecli
+ACCESS_TOKEN=$(az account get-access-token --resource-type oss-rdbms --output tsv --query accessToken)
+az postgres flexible-server execute \
+    --admin-user $ENTRA_ADMIN_NAME \
+    --admin-password $ACCESS_TOKEN \
+    --name $DB_SERVER_NAME \
+    --database-name $DB_NAME \
+    --querytext "select * from todo;"
 ```
 
-When asked for the password, use the value you used when you created the database.
+If you're asked to install an extension, answer <kbd>Y</kbd>.
 
-Use the following query to get all the todo items:
+The output should look similar to the following example, and should include same items in the Todo app GUI and output of `curl` command earlier:
 
-```psql
-select * from todo;
+```output
+Successfully connected to <DB_SERVER_NAME>.
+Ran Database Query: 'select * from todo;'
+Retrieving first 30 rows of query output, if applicable.
+Closed the connection to <DB_SERVER_NAME>
+[
+  {
+    "completed": false,
+    "id": 2,
+    "ordering": 1,
+    "title": "Quarkus on Azure App Service",
+    "url": "https://learn.microsoft.com/en-us/azure/developer/java/eclipse-microprofile/deploy-microprofile-quarkus-java-app-with-maven-plugin"
+  },
+  {
+    "completed": false,
+    "id": 3,
+    "ordering": 2,
+    "title": "Quarkus on Azure Container Apps",
+    "url": "https://learn.microsoft.com/en-us/training/modules/deploy-java-quarkus-azure-container-app-postgres/"
+  },
+  {
+    "completed": false,
+    "id": 4,
+    "ordering": 3,
+    "title": "Quarkus on Azure Functions",
+    "url": "https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-first-quarkus"
+  },
+  {
+    "completed": false,
+    "id": 5,
+    "ordering": 5,
+    "title": "Deployed the Todo app to AKS",
+    "url": null
+  },
+  {
+    "completed": true,
+    "id": 1,
+    "ordering": 0,
+    "title": "Introduction to Quarkus Todo App",
+    "url": null
+  }
+]
 ```
 
-The output should look similar to the following example, and should include the same items in the Todo app GUI shown previously:
+When you're finished, delete the firewall rule that allows your local IP address to access the Azure Database for PostgreSQL Flexible Server instance by using the following command:
 
-:::image type="content" source="media/howto-deploy-java-quarkus-app/query-output.png" alt-text="Screenshot of the query output as an ASCII table." lightbox="media/howto-deploy-java-quarkus-app/query-output.png":::
-
-If you see `MORE` in the output, type <kbd>q</kbd> to exit the pager.
-
-Enter *\q* to exit from the `psql` program and return to the Cloud Shell.
+```azurecli
+az postgres flexible-server firewall-rule delete \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $DB_SERVER_NAME \
+    --rule-name $DB_SERVER_NAME-database-allow-local-ip \
+    --yes
+```
 
 ## Clean up resources
 
