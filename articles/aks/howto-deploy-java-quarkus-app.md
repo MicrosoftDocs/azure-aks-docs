@@ -217,6 +217,67 @@ It takes a few minutes to create the server, database, admin user, and firewall 
 }
 ```
 
+#### Test app locally with Azure Database for PostgreSQL Flexible Server
+
+In the previous section, you tested the Quarkus app locally in development mode with a PostgreSQL database provisioned as a Docker container. Now, test the connection to the Azure Database for PostgreSQL Flexible Server instance locally.
+
+First, add the current signed-in user as Microsoft Entra Admin to the Azure Database for PostgreSQL Flexible Server instance by using the following commands:
+
+```azurecli
+ENTRA_ADMIN_NAME=$(az account show --query user.name --output tsv)
+az postgres flexible-server ad-admin create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --server-name $DB_SERVER_NAME \
+    --display-name $ENTRA_ADMIN_NAME \
+    --object-id $(az ad signed-in-user show --query id -o tsv)
+```
+
+Successful output is a JSON object including the property `"type": "Microsoft.DBforPostgreSQL/flexibleServers/administrators"`.
+
+Next, add the local IP address to the Azure Database for PostgreSQL Flexible Server instance firewall rules by following these steps:
+
+1. Get the local IP address of your machine where you run the Quarkus app locally. For example, visit https://whatismyipaddress.com to get your public IP v4 address.
+1. Define an environment variable with the local IP address you got in the previous step.
+
+   ```bash
+   AZ_LOCAL_IP_ADDRESS=<your local IP address>
+   ```
+
+1. Run the following command to add the local IP address to the Azure Database for PostgreSQL Flexible Server instance firewall rules:
+
+   ```azurecli
+   az postgres flexible-server firewall-rule create \
+       --resource-group $RESOURCE_GROUP_NAME \
+       --name $DB_SERVER_NAME \
+       --rule-name $DB_SERVER_NAME-database-allow-local-ip \
+       --start-ip-address $AZ_LOCAL_IP_ADDRESS \
+       --end-ip-address $AZ_LOCAL_IP_ADDRESS
+   ```
+
+Then, set the following environment variables in your previous terminal. These environment variables are used to connect to the Azure Database for PostgreSQL Flexible Server instance from the Quarkus app running locally:
+
+```bash
+export AZURE_POSTGRESQL_HOST=${DB_SERVER_NAME}.postgres.database.azure.com
+export AZURE_POSTGRESQL_PORT=5432
+export AZURE_POSTGRESQL_DATABASE=${DB_NAME}
+export AZURE_POSTGRESQL_USERNAME=${ENTRA_ADMIN_NAME}
+```
+
+> [!NOTE]
+> The vules of environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` are read by Database configuration properties defined in the *src/main/resources/application.properties* file introduced in the previous section. These values are automatically injected into the app at runtime using the Service Connector passwordless extension when you deploy the Quarkus app to the AKS cluster later in this article.
+
+Now, run the Quarkus app locally to test the connection to the Azure Database for PostgreSQL Flexible Server instance. Use the following command to start the app in production mode:
+
+```bash
+quarkus build
+java -jar target/quarkus-app/quarkus-run.jar
+```
+
+> [!NOTE]
+> If the app fails to start with the similar error message `ERROR [org.hib.eng.jdb.spi.SqlExceptionHelper] (JPA Startup Thread) Acquisition timeout while waiting for new connection`, it's most likely because of the network setting of your local machine. Try to **Add current client IP address** from the Azure portal again by following section [Create a firewall rule after server is created](/azure/postgresql/flexible-server/how-to-manage-firewall-portal#create-a-firewall-rule-after-server-is-created) from the documentation [Create and manage firewall rules for Azure Database for PostgreSQL - Flexible Server using the Azure portal](/azure/postgresql/flexible-server/how-to-manage-firewall-portal), and then run the app again.
+
+Open a new web browser to `http://localhost:8080` to access the Todo application. You should see the similar Todo app as you saw when you ran the app locally in development mode.
+
 ### Create an Azure Container Registry instance
 
 Because Quarkus is a cloud native technology, it has built-in support for creating containers that run in Kubernetes. Kubernetes is entirely dependent on having a container registry from which it finds the container images to run. AKS has built-in support for Azure Container Registry.
@@ -266,13 +327,11 @@ Use the [az aks create](/cli/azure/aks#az-aks-create) command to create an AKS c
 ```azurecli
 az aks create \
     --resource-group $RESOURCE_GROUP_NAME \
-    --location ${LOCATION} \
     --name $CLUSTER_NAME \
     --attach-acr $REGISTRY_NAME \
     --node-count 1 \
     --generate-ssh-keys \
-    --enable-oidc-issuer \
-    --enable-workload-identity
+    --enable-managed-identity
 ```
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster, including the following output:
