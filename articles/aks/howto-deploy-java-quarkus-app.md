@@ -46,7 +46,7 @@ If you see a message about being in *detached HEAD* state, this message is safe 
 
 The steps in this section show you how to run the app locally.
 
-Quarkus supports the automatic provisioning of unconfigured services in development and test mode. Quarkus refers to this capability as dev services. Let's say you include a Quarkus feature, such as connecting to a database service. You want to test the app, but haven't yet fully configured the connection to a real database. Quarkus automatically starts a stub version of the relevant service and connects your application to it. For more information, see [Dev Services Overview](https://quarkus.io/guides/dev-services#databases) in the Quarkus documentation.
+Quarkus supports the automatic provisioning of unconfigured services in development and test mode. Quarkus refers to this capability as dev services. Let's say you include a Quarkus feature, such as connecting to a database service. You want to test the app, but haven't yet fully configured the connection to a real database. Quarkus automatically starts a containerized stub version of the relevant service and connects your application to it. For more information, see [Dev Services Overview](https://quarkus.io/guides/dev-services#databases) in the Quarkus documentation.
 
 Make sure your container environment is running and use the following command to enter Quarkus dev mode:
 
@@ -240,7 +240,7 @@ Next, add the local IP address to the Azure Database for PostgreSQL Flexible Ser
 1. Define an environment variable with the local IP address you got in the previous step.
 
    ```bash
-   AZ_LOCAL_IP_ADDRESS=<your local IP address>
+   export AZ_LOCAL_IP_ADDRESS=<your local IP address>
    ```
 
 1. Run the following command to add the local IP address to the Azure Database for PostgreSQL Flexible Server instance firewall rules:
@@ -264,7 +264,7 @@ export AZURE_POSTGRESQL_USERNAME=${ENTRA_ADMIN_NAME}
 ```
 
 > [!NOTE]
-> The vules of environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` are read by Database configuration properties defined in the *src/main/resources/application.properties* file introduced in the previous section. These values are automatically injected into the app at runtime using the Service Connector passwordless extension when you deploy the Quarkus app to the AKS cluster later in this article.
+> The values of environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` are read by Database configuration properties defined in the *src/main/resources/application.properties* file introduced in the previous section. These values are automatically injected into the app at runtime using the Service Connector passwordless extension when you deploy the Quarkus app to the AKS cluster later in this article.
 
 Now, run the Quarkus app locally to test the connection to the Azure Database for PostgreSQL Flexible Server instance. Use the following command to start the app in production mode:
 
@@ -322,7 +322,7 @@ If you've signed into the container registry instance successfully, you should s
 
 ### Create an AKS cluster
 
-Use the [az aks create](/cli/azure/aks#az-aks-create) command to create an AKS cluster. The following example creates a cluster named with the value of your environment variable `${CLUSTER_NAME}` with one node. The cluster is connected to the container registry instance you created in a preceding step. This command takes several minutes to complete.
+Use the [az aks create](/cli/azure/aks#az-aks-create) command to create an AKS cluster. The following example creates a cluster named with the value of your environment variable `${CLUSTER_NAME}` with one node. The cluster is connected to the container registry instance you created in a preceding step. This command takes several minutes to complete. The cluster is started with managed identity enabled. This is necessary for the passwordless database connection.
 
 ```azurecli
 az aks create \
@@ -450,12 +450,19 @@ az aks connection create postgres-flexible \
     --workload-identity $UAMI_RESOURCE_ID
 ```
 
+The presence of this JSON in the output from the final command in the preceding steps indicates a successful installation of the service connector.
+
+```output
+"name": "akspostgresconn",
+"provisioningState": "Succeeded",
+```
+
 > [!NOTE]
 > We recommend using Microsoft Entra Workload ID for secure access to your Azure Database for PostgreSQL Flexible Server without using username/password authentication. If you need to use username/password authentication, ignore the previous steps in this section and use the username and password to connect to the database.
 
 ### Get service account and secret created by Service Connector
 
-To authenticate to the Azure Database for PostgreSQL Flexible Server, you need to get the service account and secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following steps:
+To authenticate to the Azure Database for PostgreSQL Flexible Server, you need to get the service account and Kubernetes secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following steps:
 
 1. From the highlighted sections in the sample Kubernetes deployment YAML, copy the values of `serviceAccountName` and `secretRef.name`, represented as `<service-account-name>` and `<secret-name>` in the following example:
 
@@ -542,6 +549,12 @@ Examine the following Kubernetes configuration variables. `service-type` is set 
 
 The other Kubernetes configurations specify the mapping of the secret values to the environment variables in the Quarkus application. The `<secret-name>` secret contains the database connection information. The `AZURE_POSTGRESQL_CLIENTID`, `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` keys in the secret map to the `AZURE_CLIENT_ID`, `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` environment variables, respectively.
 
+To examine the secrets directly with kubectl, use commands similar to the following.
+
+```bash
+kubectl -n ${AKS_NS} get secret <secret-name> -o jsonpath="{.data.AZURE_POSTGRESQL_USERNAME}" | base64 --decode
+```
+
 #### Container image configuration
 
 As a cloud native technology, Quarkus supports generating OCI container images compatible with Docker. Replace the value of `<LOGIN_SERVER_VALUE>` with the value of the actual value of the `${LOGIN_SERVER}` environment variable.
@@ -551,6 +564,8 @@ As a cloud native technology, Quarkus supports generating OCI container images c
 %prod.quarkus.container-image.build=true
 %prod.quarkus.container-image.image=<LOGIN_SERVER_VALUE>/todo-quarkus-aks:1.0
 ```
+
+As a final check, when you've completed all the necessary substitutions in `application.properties`, there must be no occurrences of the `<` character. If there are, please double check you've completed all the necessary substitutions.
 
 ### Build the container image and push it to container registry
 
@@ -794,6 +809,7 @@ To avoid Azure charges, you should clean up unneeded resources. When the cluster
 git reset --hard
 docker rmi ${TODO_QUARKUS_TAG}:1.0
 docker rmi postgres
+az identity delete --ids ${UAMI_RESOURCE_ID}
 az group delete --name $RESOURCE_GROUP_NAME --yes --no-wait
 ```
 
