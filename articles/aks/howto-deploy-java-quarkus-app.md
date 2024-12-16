@@ -5,7 +5,7 @@ author: KarlErickson
 ms.author: edburns
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 12/12/2024
+ms.date: 12/16/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-quarkus, devx-track-javaee-quarkus-aks, devx-track-extended-java, devx-track-azurecli
 # external contributor: danieloh30
@@ -21,7 +21,7 @@ This article shows you how to quickly deploy Red Hat Quarkus on Azure Kubernetes
 - Prepare a local machine with Unix-like operating system installed - for example, Ubuntu, macOS, or Windows Subsystem for Linux.
 - Install a Java SE implementation version 17 or later - for example, [Microsoft build of OpenJDK](/java/openjdk).
 - Install [Maven](https://maven.apache.org/download.cgi), version 3.9.8 or higher.
-- Install [Docker](https://docs.docker.com/get-docker/) or [Podman](https://podman.io/docs/installation) for your OS.
+- Install [Docker](https://docs.docker.com/get-docker/) for your OS.
 - Install [jq](https://jqlang.github.io/jq/download/).
 - Install [cURL](https://curl.se/download.html).
 - Install the [Quarkus CLI](https://quarkus.io/guides/cli-tooling), version 3.12.1 or higher.
@@ -48,7 +48,7 @@ The steps in this section show you how to run the app locally.
 
 Quarkus supports the automatic provisioning of unconfigured services in development and test mode. Quarkus refers to this capability as dev services. Let's say you include a Quarkus feature, such as connecting to a database service. You want to test the app, but haven't yet fully configured the connection to a real database. Quarkus automatically starts a stub version of the relevant service and connects your application to it. For more information, see [Dev Services Overview](https://quarkus.io/guides/dev-services#databases) in the Quarkus documentation.
 
-Make sure your container environment, Docker or Podman, is running and use the following command to enter Quarkus dev mode:
+Make sure your container environment is running and use the following command to enter Quarkus dev mode:
 
 ```bash
 quarkus dev
@@ -228,8 +228,7 @@ az acr create \
     --resource-group $RESOURCE_GROUP_NAME \
     --location ${LOCATION} \
     --name $REGISTRY_NAME \
-    --sku Basic \
-    --admin-enabled
+    --sku Basic
 ```
 
 After a short time, you should see JSON output that contains the following lines:
@@ -240,9 +239,7 @@ After a short time, you should see JSON output that contains the following lines
   "resourceGroup": "<YOUR_RESOURCE_GROUP>",
 ```
 
-### Connect your docker to the container registry instance
-
-Sign in to the container registry instance. Signing in lets you push an image. Use the following commands to verify the connection:
+Get the login server for the Container Registry instance by using the following command:
 
 ```azurecli
 export LOGIN_SERVER=$(az acr show \
@@ -250,20 +247,15 @@ export LOGIN_SERVER=$(az acr show \
     --query 'loginServer' \
     --output tsv)
 echo $LOGIN_SERVER
-export USER_NAME=$(az acr credential show \
-    --name $REGISTRY_NAME \
-    --query 'username' \
-    --output tsv)
-echo $USER_NAME
-export PASSWORD=$(az acr credential show \
-    --name $REGISTRY_NAME \
-    --query 'passwords[0].value' \
-    --output tsv)
-echo $PASSWORD
-docker login $LOGIN_SERVER -u $USER_NAME -p $PASSWORD
 ```
 
-If you're using Podman instead of Docker, make the necessary changes to the command.
+### Connect your docker to the container registry instance
+
+Sign in to the container registry instance. Signing in lets you push an image. Use the following command to sign in to the registry:
+
+```azurecli
+az acr login --name $REGISTRY_NAME
+```
 
 If you've signed into the container registry instance successfully, you should see `Login Succeeded` at the end of command output.
 
@@ -518,7 +510,7 @@ The other Kubernetes configurations specify the mapping of the secret values to 
 
 #### Container image configuration
 
-As a cloud native technology, Quarkus supports generating OCI container images compatible with Docker and Podman. Add the following container-image variables. Replace the values of `<LOGIN_SERVER_VALUE>` and `<USER_NAME_VALUE>` with the values of the actual values of the `${LOGIN_SERVER}` and `${USER_NAME}` environment variables, respectively.
+As a cloud native technology, Quarkus supports generating OCI container images compatible with Docker. Add the following container-image variables. Replace the values of `<LOGIN_SERVER_VALUE>` and `<USER_NAME_VALUE>` with the values of the actual values of the `${LOGIN_SERVER}` and `${USER_NAME}` environment variables, respectively.
 
 ```yaml
 # Container Image Build
@@ -548,7 +540,7 @@ target/kubernetes
 0 directories, 2 files
 ```
 
-You can verify whether the container image is generated as well using `docker` or `podman` command line (CLI). Output looks similar to the following example:
+You can verify whether the container image is generated as well using `docker` command line (CLI). Output looks similar to the following example:
 
 ```output
 docker images | grep todo
