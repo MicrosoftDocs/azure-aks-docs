@@ -495,7 +495,6 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
             app.kubernetes.io/name: hubble-ui
             app.kubernetes.io/part-of: retina
         spec:
-          serviceAccount: hibble-ui
           serviceAccountName: hubble-ui
           automountServiceAccountToken: true
           containers:
