@@ -86,7 +86,7 @@ Deploy a node pool with trusted launch enabled using the [az aks nodepool add][a
 The following example deploys a node pool with vTPM enabled on a cluster named *myAKSCluster* with three nodes:
 
 ```azurecli-interactive
-az aks nodepool add --resource-group myResourceGroup -–cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm  
+az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm  
 ```
 
 The following example deploys a node pool with vTPM and Secure Boot enabled on a cluster named *myAKSCluster* with three nodes:
