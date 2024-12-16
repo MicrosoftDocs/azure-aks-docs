@@ -1,6 +1,6 @@
 ---
-title: Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS)
-description: In this article, you learn how to connect to a Valkey cluster on Azure Kubernetes Service (AKS) using the Kubernetes stateful framework.
+title: Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS) with Locust.
+description: In this article, you learn how to test a Valkey cluster on Azure Kubernetes Service (AKS) using Locust.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
 ms.date: 10/15/2024
@@ -287,6 +287,10 @@ To learn more about stateful workloads using Azure Kubernetes Service (AKS), see
 * [Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](./mongodb-overview.md)
 * [Deploy a highly available PostgreSQL database on AKS with Azure CLI](./postgresql-ha-overview.md)
 
+
+> [!div class="nextstepaction"]
+> [Validate Valkey resiliency during an AKS node pool upgrade][upgrade-valkey-aks-nodepool]
+
 ## Contributors
 
 *Microsoft maintains this article. The following contributors originally wrote it:*
@@ -296,3 +300,4 @@ To learn more about stateful workloads using Azure Kubernetes Service (AKS), see
 
 <!-- EXTERNAL LINKS -->
 [writing-a-locustfile]: https://docs.locust.io/en/stable/writing-a-locustfile.html
+
