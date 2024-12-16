@@ -15,7 +15,7 @@ Using the same Valkey cluster on Azure Kubernetes Service (AKS) that you deploye
 
 ## Upgrade the AKS cluster
 
-1. List [the available versions for the AKS cluster][check-for-available-aks-cluster-upgrades] and identify the target version you are upgrading to.
+1. List [the available versions for the AKS cluster][check-for-available-aks-cluster-upgrades] and identify the target version you're upgrading to.
 
     ```bash
     az aks get-upgrades --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --output table
@@ -43,7 +43,7 @@ Using the same Valkey cluster on Azure Kubernetes Service (AKS) that you deploye
 
       :::image type="content" source="media/valkey-stateful-workload/aks-upgrade-impact-valkey-cluster.png" alt-text="Screenshot of a web page showing the Locust test dashboard during the AKS upgrade.":::
 
-   Locust is running with 100 users making 50 requests per second. During the upgrade process, 4 times a master Pod is evicted. You can see that the shard is not available for a few seconds, but the Valkey cluster is still able to respond to requests for the other shards.
+   Locust is running with 100 users making 50 requests per second. During the upgrade process, 4 times a master Pod is evicted. You can see that the shard isn't available for a few seconds, but the Valkey cluster is still able to respond to requests for the other shards.
 
 <!-- Internal links -->
 
