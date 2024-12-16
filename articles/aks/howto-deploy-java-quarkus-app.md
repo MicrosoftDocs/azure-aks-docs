@@ -505,7 +505,7 @@ The `prod.` prefix indicates that these properties are active when running in th
 
 #### Database configuration
 
-Examine the following database configuration variables. The database connection related properties `%prod.quarkus.datasource.jdbc.url` and `%prod.quarkus.datasource.username` read values from the environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME`, respectively. These environment variables map to secret values that store the database connection information for security reasons, they are auto-generated using the Service Connector passwordless extension later in this article.
+Examine the following database configuration variables. The database connection related properties `%prod.quarkus.datasource.jdbc.url` and `%prod.quarkus.datasource.username` read values from the environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME`, respectively. These environment variables map to secret values that store the database connection information.  For security reasons, they are auto-generated using the Service Connector passwordless extension as shown elsewhere in this article.
 
 ```yaml
 # Database configurations
