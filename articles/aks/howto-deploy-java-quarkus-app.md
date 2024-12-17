@@ -81,7 +81,7 @@ Press <kbd>w</kbd> on the terminal where Quarkus dev mode is running. The <kbd>w
 
 :::image type="content" source="media/howto-deploy-java-quarkus-app/demo.png" alt-text="Screenshot of the Todo sample app." lightbox="media/howto-deploy-java-quarkus-app/demo.png":::
 
-Try selecting a few todo items in the todo list. The UI indicates selection with a strikethrough text style. You can also add a new todo item to the todo list by typing *Verify Todo apps* and pressing <kbd>ENTER</kbd>, as shown in the following screenshot:
+Try selecting a few todo items in the todo list. The UI indicates selection with a strikethrough text style. You can also add a new todo item to the todo list by typing **Verify Todo apps** and pressing <kbd>Enter</kbd>, as shown in the following screenshot:
 
 :::image type="content" source="media/howto-deploy-java-quarkus-app/demo-local.png" alt-text="Screenshot of the Todo sample app with new items added." lightbox="media/howto-deploy-java-quarkus-app/demo-local.png":::
 
@@ -229,7 +229,7 @@ az postgres flexible-server ad-admin create \
     --resource-group $RESOURCE_GROUP_NAME \
     --server-name $DB_SERVER_NAME \
     --display-name $ENTRA_ADMIN_NAME \
-    --object-id $(az ad signed-in-user show --query id -o tsv)
+    --object-id $(az ad signed-in-user show --query id --output tsv)
 ```
 
 Successful output is a JSON object including the property `"type": "Microsoft.DBforPostgreSQL/flexibleServers/administrators"`.
@@ -264,7 +264,7 @@ export AZURE_POSTGRESQL_USERNAME=${ENTRA_ADMIN_NAME}
 ```
 
 > [!NOTE]
-> The values of environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` are read by Database configuration properties defined in the *src/main/resources/application.properties* file introduced in the previous section. These values are automatically injected into the app at runtime using the Service Connector passwordless extension when you deploy the Quarkus app to the AKS cluster later in this article.
+> The values of environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` are read by Database configuration properties defined in the **src/main/resources/application.properties** file introduced in the previous section. These values are automatically injected into the app at runtime using the Service Connector passwordless extension when you deploy the Quarkus app to the AKS cluster later in this article.
 
 Now, run the Quarkus app locally to test the connection to the Azure Database for PostgreSQL Flexible Server instance. Use the following command to start the app in production mode:
 
@@ -274,9 +274,9 @@ java -jar target/quarkus-app/quarkus-run.jar
 ```
 
 > [!NOTE]
-> If the app fails to start with the similar error message `ERROR [org.hib.eng.jdb.spi.SqlExceptionHelper] (JPA Startup Thread) Acquisition timeout while waiting for new connection`, it's most likely because of the network setting of your local machine. Try to **Add current client IP address** from the Azure portal again by following section [Create a firewall rule after server is created](/azure/postgresql/flexible-server/how-to-manage-firewall-portal#create-a-firewall-rule-after-server-is-created) from the documentation [Create and manage firewall rules for Azure Database for PostgreSQL - Flexible Server using the Azure portal](/azure/postgresql/flexible-server/how-to-manage-firewall-portal), and then run the app again.
+> If the app fails to start with an error message similar to `ERROR [org.hib.eng.jdb.spi.SqlExceptionHelper] (JPA Startup Thread) Acquisition timeout while waiting for new connection`, it's most likely because of the network setting of your local machine. Try selecting **Add current client IP address** from the Azure portal again. For more information, see the section [Create a firewall rule after server is created](/azure/postgresql/flexible-server/how-to-manage-firewall-portal#create-a-firewall-rule-after-server-is-created) in [Create and manage firewall rules for Azure Database for PostgreSQL - Flexible Server using the Azure portal](/azure/postgresql/flexible-server/how-to-manage-firewall-portal). Then, run the app again.
 
-Open a new web browser to `http://localhost:8080` to access the Todo application. You should see the similar Todo app as you saw when you ran the app locally in development mode.
+Open a new web browser to `http://localhost:8080` to access the Todo application. You should see the Todo app, looking similar to what you saw when you ran the app locally in development mode.
 
 ### Create an Azure Container Registry instance
 
@@ -378,7 +378,7 @@ alias k=kubectl
 To verify the connection to your cluster, use the `kubectl get` command to return a list of the cluster nodes, as shown in the following example:
 
 ```bash
-k get nodes
+kubectl get nodes
 ```
 
 The following example output shows the single node created in the previous steps. Make sure that the status of the node is **Ready**:
@@ -404,9 +404,9 @@ namespace/<your namespace> created
 
 ### Create a service connection in AKS with Service Connector
 
-In this section, you create a service connection between the AKS cluster and the Azure Database for PostgreSQL Flexible Server using Microsoft Entra Workload ID with Service Connector. This connection allows the AKS cluster to access the Azure Database for PostgreSQL Flexible Server without using SQL authentication.
+In this section, you create a service connection between the AKS cluster and the Azure Database for PostgreSQL Flexible Server using Microsoft Entra Workload ID with Service Connector. This connection enables allows the AKS cluster to access the Azure Database for PostgreSQL Flexible Server without using SQL authentication.
 
-Run the following commands to create a connection between the AKS cluster and the PostgreSQL database using Microsoft Entra Workload ID with Service Connector.
+Run the following commands to create a connection between the AKS cluster and the PostgreSQL database using Microsoft Entra Workload ID with Service Connector:
 
 ```azurecli
 # Register the Service Connector and Kubernetes Configuration resource providers
@@ -450,7 +450,7 @@ az aks connection create postgres-flexible \
     --workload-identity $UAMI_RESOURCE_ID
 ```
 
-The presence of this JSON in the output from the final command in the preceding steps indicates a successful installation of the service connector.
+The presence of the following JSON in the output from the final command in the preceding steps indicates a successful installation of the service connector:
 
 ```output
 "name": "akspostgresconn",
@@ -474,7 +474,7 @@ To authenticate to the Azure Database for PostgreSQL Flexible Server, you need t
          - secretRef:
             name: <secret-name>
    ```
-   
+
    These values are used in the next section to deploy the Quarkus application to the AKS cluster.
 
 ### Customize the cloud native configuration
@@ -487,7 +487,7 @@ To generate the appropriate Kubernetes resources, use the following command to a
 quarkus ext add kubernetes container-image-jib
 ```
 
-Quarkus modifies the POM to ensure these extensions are listed as `<dependencies>`. If asked to install something called `JBang`, answer *yes* and allow it to be installed.
+Quarkus modifies the POM to ensure these extensions are listed as `<dependencies>`. If asked to install something called `JBang`, answer **yes** and allow it to be installed.
 
 The output should look like the following example:
 
@@ -506,7 +506,7 @@ As a cloud native technology, Quarkus supports the notion of configuration profi
 
 Quarkus supports any number of named profiles, as needed.
 
-The remaining steps in this section direct you to customize values in the *src/main/resources/application.properties* file.
+The remaining steps in this section direct you to customize values in the **src/main/resources/application.properties** file.
 
 The `prod.` prefix indicates that these properties are active when running in the `prod` profile. For more information on configuration profiles, see the [Quarkus documentation](https://access.redhat.com/search/?q=Quarkus+Using+configuration+profiles).
 
@@ -549,7 +549,7 @@ Examine the following Kubernetes configuration variables. `service-type` is set 
 
 The other Kubernetes configurations specify the mapping of the secret values to the environment variables in the Quarkus application. The `<secret-name>` secret contains the database connection information. The `AZURE_POSTGRESQL_CLIENTID`, `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` keys in the secret map to the `AZURE_CLIENT_ID`, `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME` environment variables, respectively.
 
-To examine the secrets directly with kubectl, use commands similar to the following.
+To examine the secrets directly with kubectl, use commands similar to the following example:
 
 ```bash
 kubectl -n ${AKS_NS} get secret <secret-name> -o jsonpath="{.data.AZURE_POSTGRESQL_USERNAME}" | base64 --decode
@@ -557,7 +557,7 @@ kubectl -n ${AKS_NS} get secret <secret-name> -o jsonpath="{.data.AZURE_POSTGRES
 
 #### Container image configuration
 
-As a cloud native technology, Quarkus supports generating OCI container images compatible with Docker. Replace the value of `<LOGIN_SERVER_VALUE>` with the value of the actual value of the `${LOGIN_SERVER}` environment variable.
+As a cloud native technology, Quarkus supports generating OCI container images compatible with Docker. Replace the value of `<LOGIN_SERVER_VALUE>` with the actual value of the `${LOGIN_SERVER}` environment variable.
 
 ```yaml
 # Container Image Build
@@ -565,9 +565,9 @@ As a cloud native technology, Quarkus supports generating OCI container images c
 %prod.quarkus.container-image.image=<LOGIN_SERVER_VALUE>/todo-quarkus-aks:1.0
 ```
 
-As a final check, when you've completed all the necessary substitutions in `application.properties`, there must be no occurrences of the `<` character. If there are, please double check you've completed all the necessary substitutions.
+As a final check, when you've completed all the necessary substitutions in **application.properties**, there must be no occurrences of the `<` character. If there are, double check that you've completed all the necessary substitutions.
 
-### Build the container image and push it to container registry
+### Build the container image and push it to the container registry
 
 Now, use the following command to build the application itself. This command uses the Kubernetes and Jib extensions to build the container image.
 
@@ -575,7 +575,7 @@ Now, use the following command to build the application itself. This command use
 quarkus build --no-tests
 ```
 
-The output should end with `BUILD SUCCESS`. The Kubernetes manifest files are generated in *target/kubernetes*, as shown in the following example:
+The output should end with `BUILD SUCCESS`. The Kubernetes manifest files are generated in **target/kubernetes**, as shown in the following example:
 
 ```output
 tree target/kubernetes
@@ -586,14 +586,14 @@ target/kubernetes
 0 directories, 2 files
 ```
 
-You can verify whether the container image is generated as well using `docker` command line (CLI). Output looks similar to the following example:
+You can verify whether the container image is generated as well using `docker` command line (CLI). The output looks similar to the following example:
 
 ```output
 docker images | grep todo-quarkus-aks
 <LOGIN_SERVER_VALUE>/todo-quarkus-aks   1.0       b13c389896b7   18 minutes ago   422MB
 ```
 
-Push the container images to container registry by using the following command:
+Push the container images to the container registry by using the following command:
 
 ```bash
 export TODO_QUARKUS_TAG=$(docker images | grep todo-quarkus-aks | head -n1 | cut -d " " -f1)
@@ -614,7 +614,7 @@ d13845d85ee5: Pushed
 1.0: digest: sha256:0ffd70d6d5bb3a4621c030df0d22cf1aa13990ca1880664d08967bd5bab1f2b6 size: 1995
 ```
 
-Now that you've pushed the app to container registry, you can tell AKS to run the app.
+Now that you've pushed the app to the container registry, you can tell AKS to run the app.
 
 ## Deploy the Quarkus app to AKS
 
@@ -729,7 +729,7 @@ The output should look like the following example:
 ]
 ```
 
-### Verify the database has been updated
+### Verify that the database has been updated
 
 Run the following command to verify that the database has been updated correctly:
 
