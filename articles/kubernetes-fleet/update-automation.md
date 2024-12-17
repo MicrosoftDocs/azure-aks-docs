@@ -71,7 +71,7 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
     * **Rapid** - update clusters with patches for the latest (N) Kubernetes generally available minor version.
     * **Node image** - update node image version only.
 
-1. If you select either of the **Stable** or **Rapid** channels you can choose an options for handling **Node image** updates:
+1. If you select either of the **Stable** or **Rapid** channels you can choose how node image updates are applied:
 
     * **Latest image**: Updates every AKS cluster in the auto-upgrade profile to the latest image available for that cluster in its Azure region.
     * **Consistent image**: It's possible for an auto-upgrade to have AKS clusters across multiple Azure regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). Selecting this option ensures the auto-upgrade picks the **latest common** image across all Azure regions to achieve consistency.
