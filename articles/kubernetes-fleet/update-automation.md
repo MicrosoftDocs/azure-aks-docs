@@ -221,7 +221,7 @@ az fleet autoupgradeprofile list \
 
 ### [Azure CLI](#tab/cli)
 
-Use the You can use the [`az fleet autoupgradeprofile delete`][az-fleet-autoupgradeprofile-delete] command to delete an existing auto-upgrade profile. You're asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
+Use the [`az fleet autoupgradeprofile delete`][az-fleet-autoupgradeprofile-delete] command to delete an existing auto-upgrade profile. You're asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile delete \
