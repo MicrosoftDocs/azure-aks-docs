@@ -71,7 +71,7 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
     * **Rapid** - update clusters with patches for the latest (N) Kubernetes generally available minor version.
     * **Node image** - update node image version only.
 
-1. If you select either the **Stable** or **Rapid** channel you can choose how node image updates are applied:
+1. If you select either the **Stable** or **Rapid** channel, you can choose how node image updates are applied:
 
     * **Latest image**: Updates every AKS cluster in the auto-upgrade profile to the latest image available for that cluster in its Azure region.
     * **Consistent image**: It's possible for an auto-upgrade to have AKS clusters across multiple Azure regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). Selecting this option ensures the auto-upgrade picks the **latest common** image across all Azure regions to achieve consistency.
@@ -181,7 +181,7 @@ az fleet autoupgradeprofile create \
 
     :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for viewing available auto-upgrade profiles." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-01.png":::
  
-1. Select the desired profile to view its properties.
+1. Select the desired auto-upgrade profile to view its configuration.
 
     :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-02.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane show the configuration of a single auto-upgrade profile." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-02.png":::
 
@@ -237,7 +237,7 @@ az fleet autoupgradeprofile delete \
 
 ## Validate auto-upgrade
 
-Auto-upgrades will happen only when new Kubernetes or node images are made available. When auto-upgrade is triggered, a linked update run is created, so you can use [manage update run](./update-orchestration.md#manage-an-update-run) to see the results of the auto-upgrade.
+Auto-upgrades happen only when new Kubernetes or node images are made available. When auto-upgrade is triggered, a linked update run is created, so you can use [manage update run](./update-orchestration.md#manage-an-update-run) to see the results of the auto-upgrade.
 
 You can also check your existing versions as a baseline as follows.
 
@@ -257,7 +257,7 @@ az aks show \
   --query "agentPoolProfiles[].{name:name,mode:mode, nodeImageVersion:nodeImageVersion, osSku:osSku, osType:osType}"
 ```
 
-Once update runs have completed, you can rerun these commands and view the updated versions that are deployed.
+Once update runs finish, you can rerun these commands and view the updated versions that are deployed.
 
 ---
 
