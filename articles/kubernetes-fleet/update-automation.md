@@ -71,12 +71,15 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
     * **Rapid** - update clusters with patches for the latest (N) Kubernetes generally available minor version.
     * **Node image** - update node image version only.
 
-1. Select one of the following options for the **Node image**:
+1. If you select either the **Stable** or **Rapid** channel, you can choose how node image updates are applied:
 
     * **Latest image**: Updates every AKS cluster in the auto-upgrade profile to the latest image available for that cluster in its Azure region.
     * **Consistent image**: It's possible for an auto-upgrade to have AKS clusters across multiple Azure regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). Selecting this option ensures the auto-upgrade picks the **latest common** image across all Azure regions to achieve consistency.
 
     :::image type="content" source="./media/auto-upgrade/create-auto-upgrade-profile-02.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for creating auto-upgrade profile, defining how the update is triggered." lightbox="./media/auto-upgrade/create-auto-upgrade-profile-02.png":::
+
+    > [!NOTE]
+    > The **Node image** channel always uses **consistent image**.
 
 1. If you selected an update sequence using **Stages**, select or create a **Strategy**.
 
@@ -127,7 +130,7 @@ az fleet autoupgradeprofile create \
   --name $AUTOUPGRADEPROFILE \
   --update-strategy-id $STRATEGYID \
   --channel Stable \
-  --node-image-selection-type Consistent
+  --node-image-selection Consistent
 ```
 
 Update member clusters using an existing update strategy, using the latest available node image version for each Azure region. Member clusters may run multiple node image versions. 
@@ -139,7 +142,7 @@ az fleet autoupgradeprofile create \
   --name $AUTOUPGRADEPROFILE \
   --update-strategy-id $STRATEGYID \
   --channel Stable \
-  --node-image-selection-type Latest
+  --node-image-selection Latest
 ```
 
 #### Node image updates
@@ -178,7 +181,7 @@ az fleet autoupgradeprofile create \
 
     :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for viewing available auto-upgrade profiles." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-01.png":::
  
-1. Select the desired profile to view its properties.
+1. Select the desired auto-upgrade profile to view its configuration.
 
     :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-02.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane show the configuration of a single auto-upgrade profile." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-02.png":::
 
@@ -218,7 +221,7 @@ az fleet autoupgradeprofile list \
 
 ### [Azure CLI](#tab/cli)
 
-Use the You can use the [`az fleet autoupgradeprofile delete`][az-fleet-autoupgradeprofile-delete] command to delete an existing auto-upgrade profile. You're asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
+Use the [`az fleet autoupgradeprofile delete`][az-fleet-autoupgradeprofile-delete] command to delete an existing auto-upgrade profile. You're asked to confirm the deletion. If you wish to immediately delete the profile, include `--yes`.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile delete \
@@ -234,7 +237,7 @@ az fleet autoupgradeprofile delete \
 
 ## Validate auto-upgrade
 
-Auto-upgrades will happen only when new Kubernetes or node images are made available. When auto-upgrade is triggered, a linked update run is created, so you can use [manage update run](./update-orchestration.md#manage-an-update-run) to see the results of the auto-upgrade.
+Auto-upgrades happen only when new Kubernetes or node images are made available. When auto-upgrade is triggered, a linked update run is created, so you can use [manage update run](./update-orchestration.md#manage-an-update-run) to see the results of the auto-upgrade.
 
 You can also check your existing versions as a baseline as follows.
 
@@ -254,7 +257,7 @@ az aks show \
   --query "agentPoolProfiles[].{name:name,mode:mode, nodeImageVersion:nodeImageVersion, osSku:osSku, osType:osType}"
 ```
 
-Once update runs have completed, you can rerun these commands and view the updated versions that are deployed.
+Once update runs finish, you can rerun these commands and view the updated versions that are deployed.
 
 ---
 
