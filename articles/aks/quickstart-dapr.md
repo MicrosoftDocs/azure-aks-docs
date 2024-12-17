@@ -74,12 +74,12 @@ For this scenario, your Redis cache will use public network access. Be sure to c
 
 In `redis.yaml`, note that the component is configured to use Entra ID Authentication using workload identity enabled for AKS cluster. No access keys are required. 
 
-    ```yml
-    - name: useEntraID
-      value: "true"
-    - name: enableTLS
-      value: true
-    ```
+```yml
+- name: useEntraID
+  value: "true"
+- name: enableTLS
+  value: true
+```
 
 ### Apply the configuration
 
@@ -114,11 +114,11 @@ Before continuing, make sure your AKS cluster is set up with workload identity, 
 
 In `node.yaml`, note that the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
 
-    ```yaml
-    labels:
-      app: node
-      azure.workload.identity/use: "true"
-    ```
+```yaml
+labels:
+  app: node
+  azure.workload.identity/use: "true"
+```
 
 ### Apply the configuration
 
@@ -190,29 +190,29 @@ This section deploys the Node.js app to Kubernetes. The Dapr control plane autom
 
 In `python.yaml`, note that the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
 
-    ```yaml
-    labels:
-      app: node
-      azure.workload.identity/use: "true"
-    ```
+```yaml
+labels:
+  app: node
+  azure.workload.identity/use: "true"
+```
 
 ### Apply the configuration
 
 In the **python** directory, `app.py` is an example of a basic Python app that posts JSON messages to `localhost:3500`, which is the default listening port for Dapr. You can invoke the Node.js application's `neworder` endpoint by posting to `v1.0/invoke/nodeapp/method/neworder`. The message contains some data with an `orderId` that increments once per second:
 
-    ```python
-    n = 0
-    while True:
-        n += 1
-        message = {"data": {"orderId": n}}
+```python
+n = 0
+while True:
+    n += 1
+    message = {"data": {"orderId": n}}
 
-        try:
-            response = requests.post(dapr_url, json=message)
-        except Exception as e:
-            print(e)
+    try:
+        response = requests.post(dapr_url, json=message)
+    except Exception as e:
+        print(e)
 
-        time.sleep(1)
-    ```
+    time.sleep(1)
+```
 
 1. Deploy the Python app to your Kubernetes cluster using the `kubectl apply` command.
 
@@ -263,17 +263,17 @@ If you no longer plan to use the resources from this quickstart, you can delete 
 
 Remove the resource group, cluster, namespace, and all related resources using the [az group delete][az-group-delete] command.
 
-    ```azurecli-interactive
-    az group delete --name MyResourceGroup
-    ```
+```azurecli-interactive
+az group delete --name MyResourceGroup
+```
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
 Remove the resource group, cluster, namespace, and all related resources using the [Remove-AzResourceGroup][remove-azresourcegroup] command.
 
-    ```azurepowershell-interactive
-    Remove-AzResourceGroup -Name MyResourceGroup
-    ```
+```azurepowershell-interactive
+Remove-AzResourceGroup -Name MyResourceGroup
+```
 
 ---
 
@@ -291,10 +291,10 @@ Remove the resource group, cluster, namespace, and all related resources using t
 [az-group-delete]: /cli/azure/group#az-group-delete
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [dapr-create-extension]: ./dapr.md
-[workload-identity]: ./workload-identity-deploy-cluster#create-an-aks-cluster
-[managed-identity]: ./workload-identity-deploy-cluster#create-a-managed-identity
-[service-account]: ./workload-identity-deploy-cluster#create-a-kubernetes-service-account
-[federated-identity-cred]: ./workload-identity-deploy-cluster#create-the-federated-identity-credential
+[workload-identity]: ./workload-identity-deploy-cluster.md#create-an-aks-cluster
+[managed-identity]: ./workload-identity-deploy-cluster.md#create-a-managed-identity
+[service-account]: ./workload-identity-deploy-cluster.md#create-a-kubernetes-service-account
+[federated-identity-cred]: ./workload-identity-deploy-cluster.md#create-the-federated-identity-credential
 [azure-cache-redis]: /azure-cache-for-redis/quickstart-create-redis
 
 <!-- EXTERNAL -->
