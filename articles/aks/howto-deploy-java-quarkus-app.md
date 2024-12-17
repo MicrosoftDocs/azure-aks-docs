@@ -56,7 +56,7 @@ quarkus dev
 
 Instead of `quarkus dev`, you can accomplish the same thing with Maven by using `mvn quarkus:dev`.
 
-You may be asked if you want to send telemetry of your usage of Quarkus dev mode. If so, answer as you like.
+You might be asked if you want to send telemetry of your usage of Quarkus dev mode. If so, answer as you like.
 
 Quarkus dev mode enables live reload with background compilation. If you modify any aspect of your app source code and refresh your browser, you can see the changes. If there are any issues with compilation or deployment, an error page lets you know. Quarkus dev mode listens for a debugger on port 5005. If you want to wait for the debugger to attach before running, pass `-Dsuspend` on the command line. If you don't want the debugger at all, you can use `-Ddebug=false`.
 
@@ -318,11 +318,11 @@ Sign in to the container registry instance. Signing in lets you push an image. U
 az acr login --name $REGISTRY_NAME
 ```
 
-If you've signed into the container registry instance successfully, you should see `Login Succeeded` at the end of command output.
+If you signed into the container registry instance successfully, you should see `Login Succeeded` at the end of command output.
 
 ### Create an AKS cluster
 
-Use the [az aks create](/cli/azure/aks#az-aks-create) command to create an AKS cluster. The following example creates a cluster named with the value of your environment variable `${CLUSTER_NAME}` with one node. The cluster is connected to the container registry instance you created in a preceding step. This command takes several minutes to complete. The cluster is started with managed identity enabled. This is necessary for the passwordless database connection.
+Use the [az aks create](/cli/azure/aks#az-aks-create) command to create an AKS cluster. The following example creates a cluster named with the value of your environment variable `${CLUSTER_NAME}` with one node. The cluster is connected to the container registry instance you created in a preceding step. This command takes several minutes to complete. The cluster is started with managed identity enabled. This step is necessary for the passwordless database connection.
 
 ```azurecli
 az aks create \
@@ -404,7 +404,7 @@ namespace/<your namespace> created
 
 ### Create a service connection in AKS with Service Connector
 
-In this section, you create a service connection between the AKS cluster and the Azure Database for PostgreSQL Flexible Server using Microsoft Entra Workload ID with Service Connector. This connection enables allows the AKS cluster to access the Azure Database for PostgreSQL Flexible Server without using SQL authentication.
+In this section, you create a service connection between the AKS cluster and the Azure Database for PostgreSQL Flexible Server using Microsoft Entra Workload ID with Service Connector. This connection allows the AKS cluster to access the Azure Database for PostgreSQL Flexible Server without using SQL authentication.
 
 Run the following commands to create a connection between the AKS cluster and the PostgreSQL database using Microsoft Entra Workload ID with Service Connector:
 
@@ -479,7 +479,7 @@ To authenticate to the Azure Database for PostgreSQL Flexible Server, you need t
 
 ### Customize the cloud native configuration
 
-As a cloud native technology, Quarkus offers the ability to automatically configure resources for standard Kubernetes, Red Hat OpenShift, and Knative. For more information, see the [Quarkus Kubernetes guide](https://quarkus.io/guides/deploying-to-kubernetes#kubernetes), [Quarkus OpenShift guide](https://quarkus.io/guides/deploying-to-kubernetes#openshift) and [Quarkus Knative guide](https://quarkus.io/guides/deploying-to-kubernetes#knative). Developers can deploy the application to a target Kubernetes cluster by applying the generated manifests.
+As a cloud native technology, Quarkus offers the ability to automatically configure resources for standard Kubernetes, Red Hat OpenShift, and Knative. For more information, see the [Quarkus Kubernetes guide](https://quarkus.io/guides/deploying-to-kubernetes#kubernetes), [Quarkus OpenShift guide](https://quarkus.io/guides/deploying-to-kubernetes#openshift), and [Quarkus Knative guide](https://quarkus.io/guides/deploying-to-kubernetes#knative). Developers can deploy the application to a target Kubernetes cluster by applying the generated manifests.
 
 To generate the appropriate Kubernetes resources, use the following command to add the `quarkus-kubernetes` and `container-image-jib` extensions in your local terminal:
 
@@ -512,7 +512,7 @@ The `prod.` prefix indicates that these properties are active when running in th
 
 #### Database configuration
 
-Examine the following database configuration variables. The database connection related properties `%prod.quarkus.datasource.jdbc.url` and `%prod.quarkus.datasource.username` read values from the environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME`, respectively. These environment variables map to secret values that store the database connection information.  For security reasons, they are auto-generated using the Service Connector passwordless extension as shown elsewhere in this article.
+Examine the following database configuration variables. The database connection related properties `%prod.quarkus.datasource.jdbc.url` and `%prod.quarkus.datasource.username` read values from the environment variables `AZURE_POSTGRESQL_HOST`, `AZURE_POSTGRESQL_PORT`, `AZURE_POSTGRESQL_DATABASE`, and `AZURE_POSTGRESQL_USERNAME`, respectively. These environment variables map to secret values that store the database connection information. For security reasons, they're autogenerated using the Service Connector passwordless extension as shown elsewhere in this article.
 
 ```yaml
 # Database configurations
@@ -565,7 +565,7 @@ As a cloud native technology, Quarkus supports generating OCI container images c
 %prod.quarkus.container-image.image=<LOGIN_SERVER_VALUE>/todo-quarkus-aks:1.0
 ```
 
-As a final check, when you've completed all the necessary substitutions in **application.properties**, there must be no occurrences of the `<` character. If there are, double check that you've completed all the necessary substitutions.
+As a final check, when you complete all the necessary substitutions in **application.properties**, there must be no occurrences of the `<` character. If there are, double check that you completed all the necessary substitutions.
 
 ### Build the container image and push it to the container registry
 
@@ -614,11 +614,11 @@ d13845d85ee5: Pushed
 1.0: digest: sha256:0ffd70d6d5bb3a4621c030df0d22cf1aa13990ca1880664d08967bd5bab1f2b6 size: 1995
 ```
 
-Now that you've pushed the app to the container registry, you can tell AKS to run the app.
+Now that you pushed the app to the container registry, you can tell AKS to run the app.
 
 ## Deploy the Quarkus app to AKS
 
-The steps in this section show you how to run the Quarkus sample app on the Azure resources you've created.
+The steps in this section show you how to run the Quarkus sample app on the Azure resources you created.
 
 ### Use kubectl apply to deploy the Quarkus app to AKS
 
@@ -641,7 +641,7 @@ Verify the app is running by using the following command:
 kubectl -n $AKS_NS get pods
 ```
 
-If the value of the `STATUS` field shows anything other than `Running`, troubleshoot and resolve the problem before continuing. It may help to examine the pod logs by using the following command:
+If the value of the `STATUS` field shows anything other than `Running`, troubleshoot and resolve the problem before continuing. It might help to examine the pod logs by using the following command:
 
 ```bash
 kubectl -n $AKS_NS logs $(kubectl -n $AKS_NS get pods | grep quarkus-todo-demo-app-aks | cut -d " " -f1)
@@ -729,9 +729,9 @@ The output should look like the following example:
 ]
 ```
 
-### Verify that the database has been updated
+### Verify that the database is updated
 
-Run the following command to verify that the database has been updated correctly:
+Run the following command to verify that the database is now updated correctly:
 
 ```azurecli
 ACCESS_TOKEN=$(az account get-access-token --resource-type oss-rdbms --output tsv --query accessToken)
@@ -813,7 +813,7 @@ az identity delete --ids ${UAMI_RESOURCE_ID}
 az group delete --name $RESOURCE_GROUP_NAME --yes --no-wait
 ```
 
-You may also want to use `docker rmi` to delete the container images `postgres` and `testcontainers` generated by Quarkus dev mode.
+You might also want to use `docker rmi` to delete the container images `postgres` and `testcontainers` generated by Quarkus dev mode.
 
 ## Next steps
 
