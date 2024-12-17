@@ -462,9 +462,9 @@ The presence of the following JSON in the output from the final command in the p
 
 ### Get service account and secret created by Service Connector
 
-To authenticate to the Azure Database for PostgreSQL Flexible Server, you need to get the service account and Kubernetes secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following steps:
+To authenticate to the Azure Database for PostgreSQL Flexible Server, you need to get the service account and Kubernetes secret created by Service Connector. Follow the instructions in the [Update your container](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli#update-your-container) section of [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli). Take the option **Directly create a deployment using the YAML sample code snippet provided** and use the following step:
 
-1. From the highlighted sections in the sample Kubernetes deployment YAML, copy the values of `serviceAccountName` and `secretRef.name`, represented as `<service-account-name>` and `<secret-name>` in the following example:
+- From the highlighted sections in the sample Kubernetes deployment YAML, copy the values of `serviceAccountName` and `secretRef.name`, represented as `<service-account-name>` and `<secret-name>` in the following example:
 
    ```yaml
    serviceAccountName: <service-account-name>
