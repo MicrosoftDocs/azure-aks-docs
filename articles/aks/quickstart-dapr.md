@@ -17,10 +17,10 @@ In this quickstart, you use the [Dapr cluster extension][dapr-overview] in an AK
 - An Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
 - [Azure CLI][azure-cli-install] or [Azure PowerShell][azure-powershell-install] installed.
 - An AKS Cluster with:
-  - [Workload Identity](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster#create-an-aks-cluster) enabled.
-  - [Managed identity](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster#create-an-aks-cluster)
-  - [A Kubernetes service account](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster#create-a-kubernetes-service-account)
-  - [Federated identity credential](https://learn.microsoft.com/en-us/azure/aks/workload-identity-deploy-cluster#create-an-aks-cluster)
+  - [Workload Identity][workload-identity] enabled.
+  - [Managed identity][managed-identity]
+  - [A Kubernetes service account][service-account]
+  - [Federated identity credential][federated-identity-cred]
   - [Dapr cluster extension][dapr-overview] installed on the AKS cluster.
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed locally.
 
@@ -157,7 +157,7 @@ This section deploys the Node.js app to Kubernetes. The Dapr control plane autom
 
     **Example output**
 
-    ```
+    ```output
     {"DAPR_HTTP_PORT":"3500","DAPR_GRPC_PORT":"50001"}
     ```
 
@@ -175,7 +175,7 @@ This section deploys the Node.js app to Kubernetes. The Dapr control plane autom
 
     **Expected output**
 
-    ```
+    ```output
     { "orderId": "42" }
     ```
 
@@ -238,7 +238,7 @@ Now that both the Node.js and Python applications are deployed, you can watch me
 
     **Expected output**
 
-    ```
+    ```output
     Got a new order! Order ID: 1
     Successfully persisted state
     Got a new order! Order ID: 2
