@@ -110,7 +110,7 @@
         - name: Monitor control plane metrics
           href: control-plane-metrics-monitor.md
         - name: Container Network Observability
-          href: advanced-network-observability-concepts.md
+          href: container-network-observability-concepts.md
     - name: Security
       items:
         - name: Security concepts
@@ -177,9 +177,9 @@
         - name: Advanced Container Networking Services (ACNS) overview
           href: advanced-container-networking-services-overview.md
         - name: Container Network Observability overview
-          href: advanced-network-observability-concepts.md
+          href: container-network-observability-concepts.md
         - name: Container Network Security overview
-          href: advanced-network-container-services-security-concepts.md
+          href: container-network-security-concepts.md
     - name: Storage
       href: concepts-storage.md
     - name: Scaling
@@ -784,7 +784,7 @@
         - name: Network Observability
           items:
             - name: Container Network Observability
-              href: advanced-network-observability-cli.md
+              href: container-network-observability-how-to.md
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on
