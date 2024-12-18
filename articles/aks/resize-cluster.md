@@ -1,8 +1,8 @@
 ---
 title: Resize Azure Kubernetes Service (AKS) clusters
-description: Learn how to resize clusters in Azure Kubernetes Service (AKS).
+description: In this article, you learn about the importance of right-sizing your AKS clusters and how you can right-size them to optimize costs and performance.
 ms.topic: how-to
-ms.date: 09/16/2024
+ms.date: 12/18/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -15,21 +15,20 @@ In this article, you learn how to resize an Azure Kubernetes Service (AKS) clust
 
 ## Cluster right-sizing
 
-When you create an AKS cluster, you specify the number of nodes and the size of the nodes, which determines the capacity of the cluster. Oversized clusters can lead to unnecessary costs, while undersized clusters can lead to performance issues. You can adjust the number and size of the nodes in the cluster to right-size the cluster to meet the needs of your applications.
+When you create an AKS cluster, you specify the number of nodes and the size of the nodes, which determines the compute capacity of the cluster. Oversized clusters can lead to unnecessary costs, while undersized clusters can lead to performance issues. You can adjust the number and size of the nodes in the cluster to right-size the cluster to meet the needs of your applications.
 
-When right-sizing your cluster, consider the following factors to find the right balance between performance and cost:
+Consider the following factors when right-sizing your cluster:
 
 * **Resource requirements**: Understand the resource requirements of your applications to determine the number of nodes and the size of the nodes needed to run your workloads.
 * **Performance requirements**: Determine the performance requirements of your applications to ensure that the cluster can meet the demands of your workloads.
 * **Cost considerations**: Optimize costs by right-sizing your cluster to avoid unnecessary costs associated with oversized clusters.
 * **Application demands**: Monitor the demands of your applications to adjust the size of the cluster in response to changing demands.
-* **Infrastructure constraints**: Consider the infrastructure constraints of your environment to ensure that the cluster can be right-sized within the limits of your environment.
+* **Infrastructure constraints**: Consider the infrastructure constraints of your environment, such as capacity or reserved instance limiting to specific SKUs, to ensure that the cluster can be right-sized within the limits of your environment.
 
 ## Monitor cluster performance and cost
 
-Closely monitor the performance and cost of your clusters to ensure that they are right-sized to meet the needs of your applications, and make adjustments as needed. You can use the following resources for monitoring:
+Closely monitor the performance and cost of your clusters to ensure they're right-sized to meet the needs of your application and make adjustments as needed. You can use the following resources for monitoring:
 
-* [Manually scale the node count in an Azure Kubernetes Service (AKS) cluster][manually-scale]
 * [Identify high CPU usage in Azure Kubernetes Service (AKS) clusters][identify-high-cpu-usage]
 * [Troubleshoot memory saturation in Azure Kubernetes Service (AKS) clusters][troubleshoot-memory-saturation]
 * [Cost analysis add-on for Azure Kubernetes Service (AKS)](./cost-analysis.md)
@@ -48,7 +47,7 @@ You might want to resize a cluster in scenarios such as the following:
 
 ### Increasing cluster size
 
-You can increase the size of an AKS cluster by adding nodes to the cluster. When you add nodes to the cluster, the nodes are automatically provisioned and added to the cluster. You can add nodes to the cluster manually or configure autoscaling to automatically adjust the number of nodes in response to changing demands.
+You can increase the size of an AKS cluster by adding nodes to the cluster. You can [add nodes to the cluster manually][manually-scale] or [configure autoscaling to automatically adjust the number of nodes](#automatically-resize-an-aks-cluster) in response to changing demands.
 
 When you increase the size of a cluster, the following changes occur:
 
@@ -90,29 +89,9 @@ When you decrease the size of a cluster, the following changes occur:
 
 ## Automatically resize an AKS cluster
 
-### Cluster autoscaling
-
 Use the [cluster autoscaler](./cluster-autoscaler-overview.md) to automatically resize your node pools in response to changing demands.
 
 For more information, see the [Cluster autoscaling in Azure Kubernetes Service (AKS) overview](./cluster-autoscaler-overview.md). To configure cluster autoscaling in AKS, see [Use the cluster autoscaler in Azure Kubernetes Service (AKS)](./cluster-autoscaler.md).
-
-### Kubernetes Event-driven Autoscaling (KEDA)
-
-Use the [KEDA add-on for AKS](./keda-about.md) to automatically scale your workloads based on event-driven metrics.
-
-For more information, see the [Kubernetes Event-driven Autoscaling (KEDA) add-on overview](./keda-about.md). To configure KEDA in AKS, see [Install the Kubernetes Event-driven Autoscaling (KEDA) add-on using Azure CLI](./keda-deploy-add-on-cli.md).
-
-### Vertical pod autoscaling
-
-Use the [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) to automatically adjust the resource requests of your pods based on their usage.
-
-For more information, see the [Vertical pod autoscaling in Azure Kubernetes Service (AKS) overview](./vertical-pod-autoscaler.md). To configure VPA in AKS, see [Deploy, upgrade, or disable VPA on a cluster](./use-vertical-pod-autoscaler.md).
-
-### Horizontal pod autoscaling
-
-Use the [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autoscaler) to automatically adjust the number of pods based on resource monitoring metrics.
-
-For more information, see the [Horizontal Pod Autoscaler (HPA) overview](./concepts-scale.md#horizontal-pod-autoscaler). To configure HPA in AKS, see [Autoscale pods with the Horizontal Pod Autoscaler (HPA) in Azure Kubernetes Service (AKS)](./tutorial-kubernetes-scale.md#autoscale-pods).
 
 ## Next steps
 
