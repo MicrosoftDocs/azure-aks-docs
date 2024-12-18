@@ -53,7 +53,7 @@ Open the [Azure portal][azure-portal-cache] to start the Azure Cache for Redis c
 
 1. In the **Authentication** blade, type the name of the [Managed Identity you created as a prerequisite](#prerequisites) in the field under **Enable Microsoft Entra Authentication** checkbox. 
 
-   :::image type="content" source="./media/quickstart-dapr/add-redis-user.png" alt-text="Screenshot that shows the field where you can select a managed identity to add as a Redis user.":::
+   :::image type="content" source="media/quickstart-dapr/add-redis-user.png" alt-text="Screenshot that shows the field where you can select a managed identity to add as a Redis user.":::
 
 1. Verify your managed identity is added as a Redis User assigned Data Owner Access Policy permissions.
 
@@ -275,7 +275,7 @@ Remove-AzResourceGroup -Name MyResourceGroup
 [managed-identity]: ./workload-identity-deploy-cluster.md#create-a-managed-identity
 [service-account]: ./workload-identity-deploy-cluster.md#create-a-kubernetes-service-account
 [federated-identity-cred]: ./workload-identity-deploy-cluster.md#create-the-federated-identity-credential
-[azure-redis-cache]: /azure-cache-for-redis/quickstart-create-redis
+[azure-redis-cache]: /azure/azure-cache-for-redis/quickstart-create-redis
 
 <!-- EXTERNAL -->
 [hello-world-gh]: https://github.com/Azure-Samples/dapr-aks-extension-quickstart
