@@ -47,7 +47,7 @@ Open the [Azure portal][azure-portal-cache] to start the Azure Cache for Redis c
 1. Take note of:
     - The hostname, found in the **Essentials** section of the cache overview page. The hostname format looks similar to: `xxxxxx.redis.cache.windows.net`.
     - The SSL port, found in the cache's **Advanced Settings** blade. The default value is `6380`.
-1. Navigate to the **Authentication** blade and verify Microsoft Entra Authentication has been enabled on your resource.
+1. Navigate to the **Authentication** blade and verify Microsoft Entra Authentication is enabled on your resource.
 
 ### Add managed identity
 
@@ -55,7 +55,7 @@ Open the [Azure portal][azure-portal-cache] to start the Azure Cache for Redis c
 
    :::image type="content" source="./media/quickstart-dapr/add-redis-user.png" alt-text="Screenshot that shows the field where you can select a managed identity to add as a Redis user.":::
 
-1. Verify your managed identity has been added as a Redis User assigned Data Owner Access Policy permissions.
+1. Verify your managed identity is added as a Redis User assigned Data Owner Access Policy permissions.
 
 ### Enable public network access
 
@@ -66,22 +66,22 @@ For this scenario, your Redis cache uses public network access. Be sure to [clea
 
 ## Configure the Dapr components
 
-1. In your preferred code editor, navigate to the **deploy** directory in the sample and open `redis.yaml`.
+In `redis.yaml`, the component is configured to use Entra ID Authentication using workload identity enabled for AKS cluster. No access keys are required. 
+
+```yml
+- name: useEntraID
+  value: "true"
+- name: enableTLS
+  value: true
+```
+
+1. In your preferred code editor, navigate to the `deploy` directory in the sample and open `redis.yaml`.
 
 1. For `redisHost`, replace the placeholder `<REDIS_HOST>:<REDIS_PORT>` value with the Redis cache hostname and SSL port [you saved earlier from Azure portal](#verify-resource-information). 
 
    ```yml
    - name: redisHost
    value: <your-cache-name>.redis.cache.windows.net:6380
-   ```
-
-1. In `redis.yaml`, note that the component is configured to use Entra ID Authentication using workload identity enabled for AKS cluster. No access keys are required. 
-
-   ```yml
-   - name: useEntraID
-     value: "true"
-   - name: enableTLS
-     value: true
    ```
 
 ### Apply the configuration
@@ -108,18 +108,18 @@ For this scenario, your Redis cache uses public network access. Be sure to [clea
 
 ### Configure the Node.js app
 
-1. Navigate to the **deploy** directory and open `node.yaml`.
+In `node.yaml`, the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
+
+```yaml
+labels:
+  app: node
+  azure.workload.identity/use: "true"
+```
+
+1. Navigate to the `deploy` directory and open `node.yaml`.
 
 1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
-
-1. In `node.yaml`, note that the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
-
-   ```yaml
-   labels:
-     app: node
-     azure.workload.identity/use: "true"
-   ```
 
 ### Apply the configuration
 
@@ -163,7 +163,7 @@ For this scenario, your Redis cache uses public network access. Be sure to [clea
     curl --request POST --data "@sample.json" --header Content-Type:application/json $EXTERNAL_IP/neworder
     ```
 
-1. Confirm the order has persisted by requesting it.
+1. Confirm the order.
 
     ```bash
     curl $EXTERNAL_IP/order
@@ -179,18 +179,18 @@ For this scenario, your Redis cache uses public network access. Be sure to [clea
 
 ### Configure the Python app
 
-1. Navigate to the **deploy** directory and open `python.yaml`.
+In `python.yaml`, the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
+
+```yaml
+labels:
+  app: node
+  azure.workload.identity/use: "true"
+```
+
+1. Navigate to the `deploy` directory and open `python.yaml`.
 
 1. Replace the placeholder `<SERVICE_ACCOUNT_NAME>` value for `serviceAccountName` with [the service account name you created][service-account]. 
    - This value should be the same service account you used to create the federated identity credential.
-
-1. In `python.yaml`, note that the pod spec has [the label added to use workload identity,](./workload-identity-deploy-cluster.md#deploy-your-application):
-
-   ```yaml
-   labels:
-     app: node
-     azure.workload.identity/use: "true"
-   ```
 
 ### Apply the configuration
 
