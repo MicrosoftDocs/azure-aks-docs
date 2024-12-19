@@ -6,7 +6,7 @@ ms.subservice: aks-networking
 ms.custom:
 ms.author: allensu
 ms.topic: how-to
-ms.date: 04/29/2024
+ms.date: 12/17/2024
 #Customer intent: As a cluster operator, I want to define my own egress paths with user-defined routes. Since I define this up front I do not want AKS provided load balancer configurations.
 ---
 
@@ -53,16 +53,28 @@ If `managedNatGateway` or `userAssignedNatGateway` are selected for `outboundTyp
 
 For more information, see [using NAT gateway with AKS](nat-gateway.md).
 
-### Outbound type of `userDefinedRouting`
+### Outbound type of `none` (Preview)
 
-> [!NOTE]
-> The `userDefinedRouting` outbound type is an advanced networking scenario and requires proper network configuration.
+> [!IMPORTANT]  
+> The `none` outbound type requires careful planning to ensure the cluster operates as expected without unintended dependencies on external services. For fully isolated clusters, see [isolated cluster considerations](concepts-network-isolated.md).  
 
-If `userDefinedRouting` is set, AKS won't automatically configure egress paths. The egress setup must be done by you.
+If `none` is set, AKS will not automatically configure egress paths. This option is similar to `userDefinedRouting` but does **not** require a default route as part of validation.  
 
-You must deploy the AKS cluster into an existing virtual network with a subnet that has been previously configured. Since you're not using a standard load balancer (SLB) architecture, you must establish explicit egress. This architecture requires explicitly sending egress traffic to an appliance like a firewall, gateway, proxy or to allow NAT to be done by a public IP assigned to the standard load balancer or appliance.
+You must deploy the AKS cluster into an existing virtual network with a subnet that has been previously configured. Since AKS does not provision a standard load balancer or any egress infrastructure, you must establish explicit egress paths if needed. This can include routing traffic to a firewall, proxy, gateway, or other custom network configurations.
 
-For more information, see [configuring cluster egress via user-defined routing](egress-udr.md).
+### Outbound type of `block` (Preview)
+
+> [!IMPORTANT]  
+> The `block` outbound type requires careful planning to ensure no unintended network dependencies exist. For fully isolated clusters, see [isolated cluster considerations](concepts-network-isolated.md).  
+
+If `block` is set, AKS will configure network rules to **actively block all egress traffic** from the cluster. This option is useful for highly secure environments where outbound connectivity must be restricted.  
+
+When using `block`:
+
+- AKS ensures that no traffic can leave the cluster through network security group (NSG) rules.  
+- You must explicitly allow any required egress traffic through additional network configurations.  
+
+The `block` option provides an additional level of network isolation but requires careful planning to avoid breaking workloads or dependencies.
 
 ## Updating `outboundType` after cluster creation
 
@@ -74,7 +86,7 @@ The following tables show the supported migration paths between outbound types f
 
 Each row shows whether the outbound type can be migrated to the types listed across the top. "Supported" means migration is possible, while "Not Supported" or "N/A" means it isn’t.
 
-| From\|To    | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
+| From\|To                 | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
 |--------------------------|----------------|---------------------|--------------------------|----------------------|
 | `loadBalancer`           | N/A            | Supported           | Not Supported            | Not Supported        |
 | `managedNATGateway`      | Supported      | N/A                 | Not Supported            | Not Supported        |
@@ -82,12 +94,14 @@ Each row shows whether the outbound type can be migrated to the types listed acr
 
 ### Supported Migration Paths for BYO VNet
 
-| From\|To          | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` |
-|--------------------------|----------------|---------------------|--------------------------|----------------------|
-| `loadBalancer`           | N/A            | Not Supported       | Supported                | Supported            |
-| `managedNATGateway`      | Not Supported  | N/A                 | Not Supported            | Not Supported        |
-| `userAssignedNATGateway` | Supported      | Not Supported       | N/A                      | Supported            |
-| `userDefinedRouting`     | Supported      | Not Supported       | Supported                | N/A                  |
+| From\|To                 | `loadBalancer` | `managedNATGateway` | `userAssignedNATGateway` | `userDefinedRouting` | `none`        | `block`       |
+|--------------------------|----------------|---------------------|--------------------------|----------------------|---------------|---------------|
+| `loadBalancer`           | N/A            | Not Supported       | Supported                | Supported            | Supported     | Supported     |
+| `managedNATGateway`      | Not Supported  | N/A                 | Not Supported            | Not Supported        | Not Supported | Not Supported |
+| `userAssignedNATGateway` | Supported      | Not Supported       | N/A                      | Supported            | Supported     | Supported     |
+| `userDefinedRouting`     | Supported      | Not Supported       | Supported                | N/A                  | Supported     | Supported     |
+| `none`                   | Supported      | Not Supported       | Supported                | Supported            | N/A           | Supported     |
+| `block`                  | Supported      | Not Supported       | Supported                | Supported            | Supported     | N/A           |
 
 Migration is only supported between `loadBalancer`, `managedNATGateway` (if using a managed virtual network), `userAssignedNATGateway` and `userDefinedRouting` (if using a custom virtual network).
 
