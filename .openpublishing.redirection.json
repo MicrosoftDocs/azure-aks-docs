@@ -29,6 +29,11 @@
       "source_path_from_root": "/articles/aks/markdown-windows-faq.md",
       "redirect_url": "/azure/aks/windows-faq",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "/articles/azure-kubernetes/create-upgrade-delete/quota-exceeded-during-creation-upgrade.md",
+      "redirect_url": "/troubleshoot/azure/azure-kubernetes/create-upgrade-delete/error-code-quotaexceeded",
+      "redirect_document_id": false
     }
   ]
 }
