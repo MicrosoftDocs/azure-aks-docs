@@ -418,6 +418,14 @@
                   href: validate-valkey-cluster.md
                 - name: Test resiliency during an AKS node pool upgrade
                   href: upgrade-valkey-aks-nodepool.md
+            - name: Deploy Apache Airflow
+              items:
+                - name: Overview
+                  href: airflow-overview.md
+                - name: Create Airflow infrastructure resources
+                  href: airflow-create-infrastructure.md
+                - name: Configure and deploy Airflow
+                  href: airflow-deploy.md
         - name: GPU workloads
           items:
             - name: Use GPUs
