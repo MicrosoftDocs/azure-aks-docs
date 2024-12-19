@@ -16,7 +16,7 @@ In this article, you create the infrastructure required to run Apache Airflow on
 
 * If you haven't already, review the [Overview for deploying an Apache Airflow cluster on Azure Kubernetes Service (AKS)](./airflow-overview.md).
 * An Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-* Azure CLI version 2.61.0. To install or upgrade, see [Install Azure CLI](/azure/install-azure-cli).
+* Azure CLI version 2.61.0. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 * Helm version 3 or later. To install, see [Installing Helm](https://helm.sh/docs/intro/install/).
 * `kubectl`, which is installed in Azure Cloud Shell by default.
 * GitHub Repo to store Airflow Dags.
