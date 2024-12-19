@@ -495,7 +495,7 @@ The following best practices can help you make your **Apache Airflow on Kubernet
 
 * Ensure you have a robust setup focused on scalability, security, and reliability.
 * Use dedicated, autoscaling nodes, and select a resilient executor like **KubernetesExecutor**, **CeleryExecutor**, or **CeleryKubernetesExecutor**.
-* Use a managed, high-availability database back end like MySQL or [PostgreSQL](https://learn.microsoft.com/azure/aks/deploy-postgresql-ha).
+* Use a managed, high-availability database back end like MySQL or [PostgreSQL](./deploy-postgresql-ha.md).
 * Establish comprehensive monitoring and centralized logging to maintain performance insights.
 * Secure your environment with network policies, SSL, and Role-Based Access Control (RBAC), and configure Airflow components (Scheduler, Web Server, Workers) for high availability.
 * Implement CI/CD pipelines for smooth DAG deployment, and set up regular backups for disaster recovery.
@@ -504,9 +504,9 @@ The following best practices can help you make your **Apache Airflow on Kubernet
 
 To learn more about deploy open-source software on Azure Kubernetes Service (AKS), see the following articles:
 
-* [Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](https://learn.microsoft.com/azure/aks/mongodb-overview)
-* [Deploy a highly available PostgreSQL database on Azure Kubernetes Service (AKS)](https://learn.microsoft.com/azure/aks/postgresql-ha-overview)
-* [Deploy a Valkey cluster on Azure Kubernetes Service (AKS)](https://learn.microsoft.com/azure/aks/valkey-overview)
+* [Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](./mongodb-overview.md)
+* [Deploy a highly available PostgreSQL database on Azure Kubernetes Service (AKS)](./postgresql-ha-overview.md)
+* [Deploy a Valkey cluster on Azure Kubernetes Service (AKS)](./valkey-overview.md)
 
 ## Contributors
 
