@@ -53,6 +53,17 @@ If `managedNatGateway` or `userAssignedNatGateway` are selected for `outboundTyp
 
 For more information, see [using NAT gateway with AKS](nat-gateway.md).
 
+### Outbound type of `userDefinedRouting`
+
+> [!NOTE]
+> The `userDefinedRouting` outbound type is an advanced networking scenario and requires proper network configuration.
+
+If `userDefinedRouting` is set, AKS won't automatically configure egress paths. The egress setup must be done by you.
+
+You must deploy the AKS cluster into an existing virtual network with a subnet that has been previously configured. Since you're not using a standard load balancer (SLB) architecture, you must establish explicit egress. This architecture requires explicitly sending egress traffic to an appliance like a firewall, gateway, proxy or to allow NAT to be done by a public IP assigned to the standard load balancer or appliance.
+
+For more information, see [configuring cluster egress via user-defined routing](egress-udr.md).
+
 ### Outbound type of `none` (Preview)
 
 > [!IMPORTANT]  
