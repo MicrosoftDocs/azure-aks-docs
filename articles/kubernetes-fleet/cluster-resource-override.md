@@ -1,6 +1,6 @@
 ---
-title: "Customize cluster scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides"
-description: This article provides an overview of how to use the Fleet ClusterResourceOverride API to override cluster scoped resources in Azure Kubernetes Fleet Manager.
+title: "Customize Cluster-Scoped Resources in Azure Kubernetes Fleet Manager with Cluster Resource Overrides"
+description: This article provides an overview of how to use the Fleet ClusterResourceOverride API to override cluster-scoped resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 05/10/2024
 author: sjwaight
@@ -8,27 +8,29 @@ ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ---
 
-# Customize cluster scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides
+# Customize cluster-scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides
 
-This article provides an overview of how to use the `ClusterResourceOverride` API from the [fleet open-source project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster scoped resources in Azure Kubernetes Fleet Manager.
+This article provides an overview of how to use the `ClusterResourceOverride` API from the [Fleet open-source project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster-scoped resources in Azure Kubernetes Fleet Manager (Fleet).
 
-## Cluster resource override overview
+## Cluster resource override
 
-The cluster resource override feature allows you to modify or override specific attributes across cluster-wide resources. With `ClusterResourceOverride`, you can define rules based on cluster labels, specifying changes to be applied to various cluster-wide resources such as namespaces, cluster roles, cluster role bindings, or custom resource definitions (CRDs). These modifications might include updates to permissions, configurations, or other parameters, ensuring consistent management and enforcement of configurations across your Fleet-managed Kubernetes clusters.
+You can modify or override specific attributes across cluster-wide resources. With `ClusterResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to various cluster-wide resources. These resources include namespaces, cluster roles, cluster role bindings, or custom resource definitions.
+
+These modifications might include updates to permissions, configurations, or other parameters. Such updates help ensure consistent management and enforcement of configurations across your Fleet-managed Kubernetes clusters.
 
 ## API components
 
 The `ClusterResourceOverride` API consists of the following components:
 
-* **`clusterResourceSelectors`**: Specifies the set of cluster resources selected for overriding.
-* **`policy`**: Specifies the set of rules to apply to the selected cluster resources.
+* `clusterResourceSelectors`: Specifies the set of cluster resources selected for overriding.
+* `policy`: Specifies the set of rules to apply to the selected cluster resources.
 
 ### Cluster resource selectors
 
-A `ClusterResourceOverride` object can include one or more cluster resource selectors to specify which resources to override. The `ClusterResourceSelector` object supports the following fields:
+A `ClusterResourceOverride` object can include one or more cluster resource selectors to specify which resources to override. The `ClusterResourceSelector` object supports the following fields.
 
 > [!NOTE]
-> If you select a namespace in the `ClusterResourceSelector`, the override will apply to all resources in the namespace.
+> If you select a namespace in `ClusterResourceSelector`, the override will apply to all resources in the namespace.
 
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
@@ -243,7 +245,7 @@ rules:
           Type:                  Overridden
          ...
     ```
-    
+
     The `ClusterResourcePlacementOverridden` condition indicates whether the resource override was successfully applied to the selected resources in the clusters. Each cluster maintains its own `Applicable Cluster Resource Overrides` list, which contains the cluster resource override snapshot if relevant. Individual status messages for each cluster indicate whether the override rules were successfully applied.
 
 ### [Portal](#tab/azure-portal)
@@ -280,7 +282,6 @@ rules:
 
     This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations will be applied to the designated clusters, triggered by the selection of matching cluster role resource, `secret-reader`.
 
-
 1. Verify that the cluster resource placement is created successfully.
 
     :::image type="content" source="./media/cluster-resource-override/crp-success-inline.png" lightbox="./media/cluster-resource-override/crp-success.png" alt-text="A screenshot of the Azure portal page for cluster resource placements, showing a successfully created cluster resource placement.":::
@@ -289,9 +290,7 @@ rules:
 
 ---
 
-## Next steps
-
-To learn more about Fleet, see the following resources:
+## Related content
 
 * [Open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)

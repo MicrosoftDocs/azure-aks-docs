@@ -1,6 +1,6 @@
 ---
-title: "Propagate reserved resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters"
-description: Learn to propagate resources using ClusterResourcePlacement API without unintended side effects on the hub cluster.
+title: "Propagate Reserved Resources from an Azure Kubernetes Fleet Manager Hub Cluster to Member Clusters"
+description: Learn how to propagate resources by using the ClusterResourcePlacement API without unintended side effects on the hub cluster.
 ms.topic: how-to
 ms.date: 11/22/2024
 author: jamyct
@@ -14,11 +14,11 @@ ms.custom:
 
 # Propagate reserved resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters
 
-This article provides an overview of how to use envelope objects to propagate reserved Kubernetes resource types from an Azure Kubernetes Fleet Manager hub cluster to member clusters.
+This article provides an overview of how to use envelope objects to propagate reserved Kubernetes resource types from an Azure Kubernetes Fleet Manager (Fleet) hub cluster to member clusters.
 
-## Envelope Object with ConfigMap
+## Use a ConfigMap as an envelope object
 
-Currently, we support using a ConfigMap as an envelope object by leveraging a fleet-reserved annotation.
+You can use a ConfigMap as an envelope object via a Fleet-reserved annotation.
 
 To designate a ConfigMap as an envelope object, ensure that it contains the following annotation:
 
@@ -28,7 +28,7 @@ metadata:
     kubernetes-fleet.io/envelope-configmap: "true"
 ```
 
-Example ConfigMap Envelope Object
+Here's an example of using ConfigMap as an envelope object:
 
 ```
 apiVersion: v1
@@ -84,11 +84,11 @@ data:
           sideEffects: None
 ```
 
-## Propagating an Envelope ConfigMap to member clusters
+## Propagate an envelope ConfigMap to member clusters
 
-We now apply the example envelope object above on our hub cluster. Then we use a ClusterResourcePlacement object to propagate the resource from hub to a member cluster named kind-cluster-1.
+Apply the preceding example envelope object on your hub cluster. Then, use a `ClusterResourcePlacement` object to propagate the resource from hub to a member cluster named `kind-cluster-1`.
 
-Here's a sample ClusterResourcePlacement (CRP) specification.
+Here's a sample `ClusterResourcePlacement` specification:
 
 ```
 spec:
@@ -106,9 +106,9 @@ spec:
         type: RollingUpdate
 ```
 
-## Retrieve the status of Envelope ConfigMap placement
+## Retrieve the status of an envelope ConfigMap placement
 
-Here's a sample status that shows the successful placement of an Enveloped Object.
+Here's a sample status that shows the successful placement of an envelope object:
 
 ```
 status:
@@ -165,11 +165,11 @@ conditions:
 ```
 
 > [!NOTE]
-> In the selectedResources section, we specifically display the propagated envelope object. Please note that we do not individually list all the resources contained within the envelope object in the status.
+> The `selectedResources` section specifically displays the propagated envelope object. The status doesn't individually list all the resources that the envelope object contains.
 
-Upon inspection of the selectedResources, it indicates that the namespace app and the configmap envelope-configmap have been successfully propagated. Users can further verify the successful propagation of resources mentioned within the envelope-configmap object by ensuring that the failedPlacements section in the placementStatus for kind-cluster-1 doesn't appear in the status.
+The `selectedResources` section indicates that the namespace app and the ConfigMap named `envelope-configmap` were successfully propagated. You can further verify the successful propagation of resources mentioned within the `envelope-configmap` object by ensuring that the `failedPlacements` section in `placementStatus` for `kind-cluster-1` doesn't appear in the status.
 
-Here's a sample where the placement has failed. In this example below, within the placementStatus section for kind-cluster-1, the failedPlacements section provides details on resource that failed to apply along with information about the envelope object which contained the resource.
+Here's an example where the placement has failed. In this example, within the `placementStatus` section for `kind-cluster-1`, the `failedPlacements` section provides details on the resource that failed to apply. The `failedPlacements` section also provides information about the envelope object that contained the resource.
 
 ```
 status:
