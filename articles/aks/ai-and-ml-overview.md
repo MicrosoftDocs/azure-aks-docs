@@ -24,4 +24,18 @@ It's essential to enable easy integration with open-source software, frameworks,
 Using AKS to host your AI and ML applications enables you to leverage high-performance infrastructure, cost-efficiencies, and robust security measures while maintaining the pace of innovation. Plus, AKS is an ideal platform for deploying and managing containerized applications that require high availability, scalability, and portability through the use of open-source tools and integration with existing DevOps processes. Azure Kubernetes Service reduces the operational burden of running ML workloads that are optimized for the computational and infrastructure load induced by developing and deploying AI applications. To support this, multiple best practice guides are available to help you deploy robust AI and ML solutions using AKS. 
 
 ## Design and deploy AI and ML workloads on Azure
-1. Deploy and take Flyte with an end-to-end ML orchestration solution on AKS 
+
+* [Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)](./open-ai-quickstart.md)
+* [Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)](./ai-toolchain-operator.md)
+* [Build and deploy data and machine learning pipelines with Flyte on Azure Kubernetes Service (AKS)](./use-flyte.md)
+
+## Contributors
+
+*Microsoft maintains this article. The following contributors originally wrote it:*
+
+* Colin Mixon | Product Manager
+* Erin Schaffer | Content Developer 2
+* Brian Redmond | Principal PDM Manager
+* Ken Kilty | Principal TPM
+* Russell de Pina | Principal TPM
+
