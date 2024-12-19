@@ -1,5 +1,20 @@
-## AI/ML Workloads Overview 
-Artificial intelligence (AI) and machine learning (ML) are transforming the way we solve complex problems and deliver value to our customers. Generative AI has produced a paradigm shift that has transformed applications into data-driven, personalized experiences across a full range of applications involving text, code, images, videos, voice, music, and more. In doing so, we have also seen an increase in model size, operational complexity, and an increased need for security and cost-efficiency.  
+---
+title: AI and ML workloads in Azure Kubernetes Service (AKS)
+description: Learn about running AI and ML workloads in Azure Kubernetes Service (AKS).
+ms.topic: overview
+ms.service: azure-kubernetes-service
+ms.date: 12/19/2024
+author: schaffererin
+ms.author: colinmixon
+---
+
+# AI and ML workloads in Azure Kubernetes Service (AKS)
+
+This article provides an overview of running artificial intelligence (AI) and machine learning (ML) workloads in Azure Kubernetes Service (AKS).
+
+## AI and ML today
+
+Artificial intelligence (AI) and machine learning (ML) are transforming the way we solve complex problems and deliver value to customers. Generative AI has produced a paradigm shift that has transformed applications into data-driven, personalized experiences across a full range of applications involving text, code, images, videos, voice, music, and more. We've also seen an increase in model size, operational complexity, and an increased need for security and cost-efficiency.  
 
 To develop cutting-edge AI models, customers need to be able to allocate computing resources across diverse workloads. This includes not only model training but also serving, inference, and managing auxiliary tasks across infrastructure and workflow orchestration. 
 
