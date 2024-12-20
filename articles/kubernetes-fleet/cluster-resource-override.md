@@ -1,6 +1,6 @@
 ---
 title: "Customize Cluster-Scoped Resources in Azure Kubernetes Fleet Manager with Cluster Resource Overrides"
-description: This article provides an overview of how to use the Fleet ClusterResourceOverride API to override cluster-scoped resources in Azure Kubernetes Fleet Manager.
+description: This article provides an overview of how to use the ClusterResourceOverride API to override cluster-scoped resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 05/10/2024
 author: sjwaight
@@ -11,8 +11,6 @@ ms.service: azure-kubernetes-fleet-manager
 # Customize cluster-scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides
 
 This article provides an overview of how to use the `ClusterResourceOverride` API from the [Fleet open-source project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster-scoped resources in Azure Kubernetes Fleet Manager (Fleet).
-
-## Cluster resource override
 
 You can modify or override specific attributes across cluster-wide resources. With `ClusterResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to various cluster-wide resources. These resources include namespaces, cluster roles, cluster role bindings, or custom resource definitions.
 
@@ -118,20 +116,21 @@ You can use `jsonPatchOverrides` in the `overrideRules` object to specify the ch
   * `replace`: Replaces the value at the specified path.
 
 * `path`: The path to the field to modify. Guidance on specifying paths includes:
-  * Must start with a `/` character.
+  * Must start with a slash (`/`) character.
   * Can't be empty or contain an empty string.
   * Can't be a `TypeMeta` field (`/kind` or `/apiVersion`).
   * Can't be a `Metadata` field (`/metadata/name` or `/metadata/namespace`), except the fields `/metadata/labels` and `/metadata/annotations`.
   * Can't be any field in the status of the resource.
 
-  Examples of valid paths include:
-  
+  Examples of valid paths include:  
   * `/metadata/labels/new-label`
   * `/metadata/annotations/new-annotation`
   * `/spec/template/spec/containers/0/resources/limits/cpu`
   * `/spec/template/spec/containers/0/resources/requests/memory`
 
 * `value`: The value to add, remove, or replace. If `op` is `remove`, you can't specify `value`.
+
+`jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
 
 ### Multiple override patches
 
@@ -175,8 +174,6 @@ rules:
   verbs: ["get", "watch", "list"]
 ```
 
-`jsonPatchOverrides` fields apply a JSON patch on the selected resources, as specified in [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
-
 ## Apply the cluster resource placement
 
 ### [Azure CLI](#tab/azure-cli)
@@ -205,7 +202,7 @@ rules:
                       env: prod
     ```
 
-    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations will be applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
+    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations are applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
 
 2. Apply the `ClusterResourcePlacement` resource by using the `kubectl apply` command:
 
@@ -255,9 +252,9 @@ rules:
 
 1. Select **Create**.
 
-1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure, as shown in the following example. Make sure you select the appropriate resource. Replace the default template with the YAML example below, and select **Add**.
+1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure, as shown in the following example. Be sure to select the appropriate resource. Replace the default template with the YAML example, and then select **Add**.
 
-    :::image type="content" source="./media/cluster-resource-override/crp-create-inline.png" lightbox="./media/cluster-resource-override/crp-create.png" alt-text="A screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values.":::
+    :::image type="content" source="./media/cluster-resource-override/crp-create-inline.png" lightbox="./media/cluster-resource-override/crp-create.png" alt-text="Screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values.":::
 
     ```yaml
     apiVersion: placement.kubernetes-fleet.io/v1
@@ -281,13 +278,13 @@ rules:
                       env: prod
     ```
 
-    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations will be applied to the designated clusters, triggered by the selection of matching cluster role resource, `secret-reader`.
+    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations are applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
 
 1. Verify that the cluster resource placement is created successfully.
 
-    :::image type="content" source="./media/cluster-resource-override/crp-success-inline.png" lightbox="./media/cluster-resource-override/crp-success.png" alt-text="A screenshot of the Azure portal page for cluster resource placements, showing a successfully created cluster resource placement.":::
+    :::image type="content" source="./media/cluster-resource-override/crp-success-inline.png" lightbox="./media/cluster-resource-override/crp-success.png" alt-text="Screenshot of the Azure portal page for cluster resource placements, showing a successfully created placement.":::
 
-1. Verify the cluster resource placement applied to the selected resources by selecting the resource from the list and checking the status.
+1. Verify that the cluster resource placement was applied to the selected resources by selecting the resource from the list and checking the status.
 
 ---
 
