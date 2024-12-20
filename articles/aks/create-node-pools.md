@@ -44,7 +44,7 @@ The following limitations apply when you create AKS clusters that support multip
 ## Create an AKS cluster
 
 > [!IMPORTANT]
-> If you run a single system node pool for your AKS cluster in a production environment, we recommend you use at least three nodes for the node pool. If one node goes down, you lose control plane resources and redundancy is compromised. You can mitigate this risk by having more control plane nodes.
+> If you run a single system node pool for your AKS cluster in a production environment, we recommend you use at least three nodes for the node pool. If one node goes down, the redundancy is compromised. You can mitigate this risk by having more system node pool nodes.
 
 1. Create an Azure resource group using the [`az group create`][az-group-create] command.
 
