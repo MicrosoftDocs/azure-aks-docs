@@ -19,7 +19,7 @@ In this article, you learn how to enable cost analysis on Azure Kubernetes Servi
 
 AKS clusters rely on Azure resources, such as virtual machines (VMs), virtual disks, load balancers, and public IP addresses. Multiple applications can use these resources. The resource consumption patterns often differ for each application, so their contribution toward the total cluster resource cost might also vary. Some applications might have footprints across multiple clusters, which can pose a challenge when performing cost attribution and cost management.
 
-When you enable cost analysis on your AKS cluster, you can view detailed cost drill downs scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. The add-on is built on top of [OpenCost](https://www.opencost.io/), an open-source Cloud Native Computing Foundation Sandbox project for usage data collection. The cost analysis is reconciled with your Azure invoice data to provide a comprehensive view of your AKS cluster costs.
+When you enable cost analysis on your AKS cluster, you can view detailed cost drill downs scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. The add-on is built on top of [OpenCost](https://www.opencost.io/), an open-source Cloud Native Computing Foundation Incubating project for usage data collection. The cost analysis is reconciled with your Azure invoice data to provide a comprehensive view of your AKS cluster costs.
 
 For more information, see [Start analyzing costs in Azure](/azure/cost-management-billing/costs/quick-acm-cost-analysis).
 
@@ -36,7 +36,6 @@ For more information, see [Start analyzing costs in Azure](/azure/cost-managemen
 
 * Kubernetes cost views are only available for the *Enterprise Agreement* and *Microsoft Customer Agreement* Microsoft Azure offer types. For more information, see [Supported Microsoft Azure offers](/azure/cost-management-billing/costs/understand-cost-mgt-data#supported-microsoft-azure-offers).
 * Currently, virtual nodes aren't supported.
-* Currently, AKS Automatic isn't supported.
 
 ## Enable cost analysis on your AKS cluster
 
@@ -76,7 +75,7 @@ az aks update --name <cluster-name> --resource-group <resource-group> --disable-
 ```
 
 > [!NOTE]
-> If you want downgrade your cluster from the `Standard` or `Premium` tier to the `Free` tier while cost analysis is enabled, you must first disable cost analysis.
+> If you want to downgrade your cluster from the `Standard` or `Premium` tier to the `Free` tier while cost analysis is enabled, you must first disable cost analysis.
 
 ## View the cost data
 
@@ -96,7 +95,7 @@ In the Kubernetes namespaces and assets views, you might see any of the followin
 
 ## Troubleshooting
 
-If you're experiencing issues, such as the add-on pod getting `OOMKilled` or stuck in a `Pending` state, see [Troubleshoot AKS cost analysis add-on issues](/troubleshoot/azure/azure-kubernetes/aks-cost-analysis-add-on-issues).
+If you're experiencing issues, such as the `cost-agent` pod getting `OOMKilled` or stuck in a `Pending` state, see [Troubleshoot AKS cost analysis add-on issues](/troubleshoot/azure/azure-kubernetes/aks-cost-analysis-add-on-issues).
 
 ## Next steps
 
