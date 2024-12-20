@@ -56,16 +56,14 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
 ## Limitations:
 
-* Wildcard FQDN policies are not supported. This means that you cannot create policies that allow or deny traffic based on patterns like `*` on the field `spec.egress.toPorts.rules.dns.matchPattern`
-    - For example, this rule will work:
+* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (e.g., *.example.com), but you cannot use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
+- Supported Pattern:
 
-        `*.example.com` - This allows traffic to all subdomains under example.com.
+    `*.example.com` - This allows traffic to all subdomains under example.com.
 
-    - This rule will **not** work:
+- Unsupported Pattern
     
-        `*`  This attempts to match any domain name, which isn't supported.
-
-* - This attempts to match any domain name, which isn't supported.
+    `*` This attempts to match any domain name, which isn't supported.
 
 * FQDN filtering is currently not supported with node-local DNS.
 * Dual stack isn't supported.

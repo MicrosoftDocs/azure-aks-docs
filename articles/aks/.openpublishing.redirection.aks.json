@@ -555,7 +555,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/advanced-network-container-services-security-concepts.md",
-            "redirect_url": "/azure/aks/container-network-security-concepts.md",
+            "redirect_url": "/azure/aks/container-network-security-concepts",
             "redirect_document_id": false
         },
         {
