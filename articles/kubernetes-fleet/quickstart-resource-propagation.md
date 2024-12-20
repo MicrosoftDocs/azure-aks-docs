@@ -12,13 +12,13 @@ ms.topic: how-to
 
 # Propagate resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters
 
-This article describes how to propagate resources from an Azure Kubernetes Fleet Manager (Fleet) hub cluster to member clusters.
+This article describes how to propagate resources from an Azure Kubernetes Fleet Manager (Kubernetes Fleet) hub cluster to member clusters.
 
 ## Prerequisites
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * Read the [conceptual overview of resource propagation](./concepts-resource-propagation.md) to understand the concepts and terminology used in this article.
-* You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
+* You need a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * Member clusters must be labeled appropriately in the hub cluster to match the desired selection criteria. Example labels include region, environment, team, availability zones, node availability, or anything else that you want.
 * You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Azure Kubernetes Fleet Manager hub cluster's Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
 
@@ -26,7 +26,7 @@ This article describes how to propagate resources from an Azure Kubernetes Fleet
 
 The `ClusterResourcePlacement` API object is created in the hub cluster and is used to propagate resources to member clusters. It specifies the resources to propagate and the placement policy to use when you're selecting member clusters. This example demonstrates how to propagate a namespace to member clusters by using the `ClusterResourcePlacement` API object with a `PickAll` placement policy.
 
-For more information, see [Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-propagation.md) and the [open-source Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
+For more information, see [Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-propagation.md) and the [open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -198,7 +198,7 @@ For more information, see [Kubernetes resource placement from hub cluster to mem
 
 ### [Azure portal](#tab/azure-portal)
 
-1. In the Azure portal, go to your Fleet resource.
+1. In the Azure portal, go to your Kubernetes Fleet resource.
 1. On the service menu, under **Fleet Resources**, select **Resource placements** > **Create**.
 1. Replace the placeholder values with the following YAML, and then select **Add**.
 
@@ -256,4 +256,4 @@ If you no longer want to use your cluster resource placement, you can delete it 
 To learn more about resource propagation, see the following resources:
 
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md)
-* [Open-source Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md)
+* [Open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md)
