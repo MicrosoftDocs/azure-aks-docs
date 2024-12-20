@@ -52,7 +52,7 @@ spec:
       name: secret-reader
 ```
 
-This example selects a `ClusterRole` named `secret-reader` from the `rbac.authorization.k8s.io/v1` API group, as shown below, for overriding.
+This example selects a `ClusterRole` object named `secret-reader` from the `rbac.authorization.k8s.io/v1` API group for overriding:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -67,7 +67,7 @@ rules:
 
 ## Policy
 
-A `Policy` object consists of a set of rules, `overrideRules`, that specify the changes to apply to the selected cluster resources. Each `overrideRule` object supports the following fields:
+A `Policy` object consists of a set of rules, `overrideRules`, that specify the changes to apply to the selected cluster resources. Each `overrideRules` object supports the following fields:
 
 * `clusterSelector`: Specifies the set of clusters to which the override rule applies.
 * `jsonPatchOverrides`: Specifies the changes to apply to the selected resources.
@@ -97,11 +97,11 @@ spec:
             path: /rules/0/verbs/2
 ```
 
-This example removes the verb "list" in the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
+This example removes the verb "list" in the `ClusterRole` object named `secret-reader` on clusters with the label `env: prod`.
 
 ### Cluster selector
 
-You can use the `clusterSelector` field in the `overrideRule` object to specify the clusters to which the override rule applies. The `ClusterSelector` object supports the following field:
+You can use the `clusterSelector` field in the `overrideRules` object to specify the clusters to which the override rule applies. The `ClusterSelector` object supports the following field:
 
 * `clusterSelectorTerms`: A list of terms that specify the criteria for selecting clusters. Each term includes a `labelSelector` field that defines a set of labels to match.
 
@@ -110,31 +110,32 @@ You can use the `clusterSelector` field in the `overrideRule` object to specify 
 
 ### JSON patch overrides
 
-You can use `jsonPatchOverrides` in the `overrideRule` object to specify the changes to apply to the selected resources. The `JsonPatch` object supports the following fields:
+You can use `jsonPatchOverrides` in the `overrideRules` object to specify the changes to apply to the selected resources. The `JsonPatch` object supports the following fields:
 
-* `op`: The operation to perform.
-  * Supported operations include `add`, `remove`, and `replace`.
-    * `add`: Adds a new value to the specified path.
-    * `remove`: Removes the value at the specified path.
-    * `replace`: Replaces the value at the specified path.
-* `path`: The path to the field to modify.
-  * Guidance on specifying paths includes:
-    * Must start with a `/` character.
-    * Can't be empty or contain an empty string.
-    * Can't be a `TypeMeta` field ("/kind" or "/apiVersion").
-    * Can't be a `Metadata` field ("/metadata/name" or "/metadata/namespace") except the fields "/metadata/labels" and "/metadata/annotations".
-    * Can't be any field in the status of the resource.
-    * Examples of valid paths include:
-      * `/metadata/labels/new-label`
-      * `/metadata/annotations/new-annotation`
-      * `/spec/template/spec/containers/0/resources/limits/cpu`
-      * `/spec/template/spec/containers/0/resources/requests/memory`
-* `value`: The value to add, remove, or replace.
-  * If the `op` is `remove`, you can't specify a `value`.
+* `op`: The operation to perform. Supported operations include:
+  * `add`: Adds a new value to the specified path.
+  * `remove`: Removes the value at the specified path.
+  * `replace`: Replaces the value at the specified path.
 
-### Use multiple override patches
+* `path`: The path to the field to modify. Guidance on specifying paths includes:
+  * Must start with a `/` character.
+  * Can't be empty or contain an empty string.
+  * Can't be a `TypeMeta` field (`/kind` or `/apiVersion`).
+  * Can't be a `Metadata` field (`/metadata/name` or `/metadata/namespace`), except the fields `/metadata/labels` and `/metadata/annotations`.
+  * Can't be any field in the status of the resource.
 
-You can add multiple `jsonPatchOverrides` to an `overrideRule` to apply multiple changes to the select cluster resources, as shown in the following example:
+  Examples of valid paths include:
+  
+  * `/metadata/labels/new-label`
+  * `/metadata/annotations/new-annotation`
+  * `/spec/template/spec/containers/0/resources/limits/cpu`
+  * `/spec/template/spec/containers/0/resources/requests/memory`
+
+* `value`: The value to add, remove, or replace. If `op` is `remove`, you can't specify `value`.
+
+### Multiple override patches
+
+You can add multiple `jsonPatchOverrides` fields to an `overrideRules` object to apply multiple changes to the selected cluster resources. Here's an example:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -161,7 +162,7 @@ spec:
             path: /rules/0/verbs/1
 ```
 
-This example removes the verbs "list" and "watch" in the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`, as shown below.
+This example removes the verbs "list" and "watch" in the `ClusterRole` object named `secret-reader` on clusters with the label `env: prod`:
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -174,13 +175,13 @@ rules:
   verbs: ["get", "watch", "list"]
 ```
 
-`jsonPatchOverrides` apply a JSON patch on the selected resources following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
+`jsonPatchOverrides` fields apply a JSON patch on the selected resources, as specified in [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
 
 ## Apply the cluster resource placement
 
 ### [Azure CLI](#tab/azure-cli)
 
-1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure, as shown in the following example. Make sure you select the appropriate resource.
+1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure. The following code is an example. Be sure to select the appropriate resource.
 
     ```yaml
     apiVersion: placement.kubernetes-fleet.io/v1
@@ -204,21 +205,21 @@ rules:
                       env: prod
     ```
 
-    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations will be applied to the designated clusters, triggered by the selection of matching cluster role resource, `secret-reader`.
+    This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations will be applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
 
-2. Apply the `ClusterResourcePlacement` using the `kubectl apply` command.
+2. Apply the `ClusterResourcePlacement` resource by using the `kubectl apply` command:
 
     ```bash
     kubectl apply -f cluster-resource-placement.yaml
     ```
 
-3. Verify the `ClusterResourceOverride` object applied to the selected resources by checking the status of the `ClusterResourcePlacement` resource using the `kubectl describe` command.
+3. Verify that the `ClusterResourceOverride` object was applied to the selected resources by checking the status of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
 
     ```bash
     kubectl describe clusterresourceplacement crp
     ```
 
-    Your output should resemble the following example output:
+    Your output should resemble the following example:
 
     ```output
     Status:
@@ -246,7 +247,7 @@ rules:
          ...
     ```
 
-    The `ClusterResourcePlacementOverridden` condition indicates whether the resource override was successfully applied to the selected resources in the clusters. Each cluster maintains its own `Applicable Cluster Resource Overrides` list, which contains the cluster resource override snapshot if relevant. Individual status messages for each cluster indicate whether the override rules were successfully applied.
+    The `ClusterResourcePlacementOverridden` condition indicates whether the resource override was successfully applied to the selected resources in the clusters. Each cluster maintains its own `Applicable Cluster Resource Overrides` list. This list contains the snapshot of the cluster resource override, if relevant. Individual status messages for each cluster indicate whether the override rules were successfully applied.
 
 ### [Portal](#tab/azure-portal)
 
