@@ -20,7 +20,7 @@ This article describes how to propagate resources from an Azure Kubernetes Fleet
 * Read the [conceptual overview of resource propagation](./concepts-resource-propagation.md) to understand the concepts and terminology used in this article.
 * You need a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * Member clusters must be labeled appropriately in the hub cluster to match the desired selection criteria. Example labels include region, environment, team, availability zones, node availability, or anything else that you want.
-* You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Azure Kubernetes Fleet Manager hub cluster's Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
 
 ## Use the ClusterResourcePlacement API to propagate resources to member clusters
 

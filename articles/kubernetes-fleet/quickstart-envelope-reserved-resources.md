@@ -169,7 +169,7 @@ conditions:
 
 The `selectedResources` section indicates that the namespace app and the ConfigMap named `envelope-configmap` were successfully propagated. You can further verify the successful propagation of resources mentioned within the `envelope-configmap` object by ensuring that the `failedPlacements` section in `placementStatus` for `kind-cluster-1` doesn't appear in the status.
 
-Here's an example where the placement has failed. In this example, within the `placementStatus` section for `kind-cluster-1`, the `failedPlacements` section provides details on the resource that failed to apply. The `failedPlacements` section also provides information about the envelope object that contained the resource.
+Here's an example where the placement failed. In this example, within the `placementStatus` section for `kind-cluster-1`, the `failedPlacements` section provides details on the resource that failed to apply. The `failedPlacements` section also provides information about the envelope object that contained the resource.
 
 ```
 status:
