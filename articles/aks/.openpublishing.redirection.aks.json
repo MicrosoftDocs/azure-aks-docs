@@ -537,7 +537,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/advanced-network-observability-bring-your-own-cli.md",
-            "redirect_url": "/azure/aks//azure/aks/container-network-observability-how-to",
+            "redirect_url": "/azure/aks/container-network-observability-how-to",
             "redirect_document_id": false
         },
         {
