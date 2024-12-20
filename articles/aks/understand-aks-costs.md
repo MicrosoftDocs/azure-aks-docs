@@ -22,5 +22,16 @@ This article provides resources you can use to better understand your Azure Kube
 
 ### Cost analysis add-on for AKS
 
+The cost analysis add-on for AKS allows you to view comprehensive cost data scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. Enable it on your AKS cluster by following the steps in [Enable the Azure Kubernetes Service (AKS) cost analysis add-on](./cost-analysis.md). To learn more about viewing the cost data, see [View Kubernetes costs](/azure/cost-management-billing/costs/view-kubernetes-costs).
 
+### Azure Cost Optimization workbook
 
+The [Azure Cost Optimization workbook](/azure/advisor/advisor-workbook-cost-optimization) provides a comprehensive view of your Azure costs and recommendations for optimizing them. For more information, see [Cost Optimization workbook](/azure/advisor/advisor-workbook-cost-optimization).
+
+### Azure Orphaned Resources workbook
+
+The [Azure Orphaned Resources workbook](https://github.com/dolevshor/azure-orphan-resources) helps you identify and manage unused resources in your Azure environment. For more information, see [Orphaned Resources workbook](https://techcommunity.microsoft.com/blog/fasttrackforazureblog/azure-orphan-resources/3492198).
+
+## Next steps
+
+For more information about managing your AKS costs, see [Best practices for cost optimization in Azure Kubernetes Service (AKS)](./best-practices-cost.md).

@@ -99,7 +99,7 @@ If you're experiencing issues, such as the `cost-agent` pod getting `OOMKilled` 
 
 ## Next steps
 
-To learn more about managing AKS costs, see [Optimize costs in Azure Kubernetes Service (AKS)](./best-practices-cost.md).
+For more information, see [Understand Azure Kubernetes Service (AKS) usage and costs](./understand-aks-costs.md).
 
 <!-- LINKS -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
