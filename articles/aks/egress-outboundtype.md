@@ -71,7 +71,7 @@ For more information, see [configuring cluster egress via user-defined routing](
 
 If `none` is set, AKS will not automatically configure egress paths. This option is similar to `userDefinedRouting` but does **not** require a default route as part of validation.  
 
-The `none` outbound type is supported in both bring-your-own (BYO) virtual network scenarios and non-BYO scenarios. However, you must ensure that the AKS cluster is deployed into a network environment where explicit egress paths are defined if needed. For BYO VNet scenarios, the cluster must be deployed into an existing virtual network with a subnet that has been previously configured. Since AKS does not provision a standard load balancer or any egress infrastructure, you must establish explicit egress paths if required. This can include routing traffic to a firewall, proxy, gateway, or other custom network configurations.
+The `none` outbound type is supported in both bring-your-own (BYO) virtual network scenarios and managed VNet scenarios. However, you must ensure that the AKS cluster is deployed into a network environment where explicit egress paths are defined if needed. For BYO VNet scenarios, the cluster must be deployed into an existing virtual network with a subnet that has been previously configured. Since AKS does not provision a standard load balancer or any egress infrastructure, you must establish explicit egress paths if required. This can include routing traffic to a firewall, proxy, gateway, or other custom network configurations.
 
 ### Outbound type of `block` (Preview)
 
