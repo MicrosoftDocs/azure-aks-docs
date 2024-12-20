@@ -114,30 +114,6 @@ az aks create \
     --generate-ssh-keys
 ```
 
-## Update an existing cluster to Azure CNI Powered by Cilium
-
-> [!NOTE]
-> You can update an existing cluster to Azure CNI Powered by Cilium if the cluster meets the following criteria:
->
-> - The cluster uses either [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md). This does **not** include [Azure CNI](./configure-azure-cni.md).
-> - The cluster does not have any Windows node pools.
-> [!NOTE]
-> When enabling Cilium in a cluster with a different network policy engine (Azure NPM or Calico), the network policy engine will be uninstalled and replaced with Cilium. See [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico) for more details.
-> [!WARNING]
-> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is re-imaged.
-Cilium will begin enforcing network policies only after all nodes have been re-imaged.
-
-To perform the upgrade, you will need Azure CLI version 2.52.0 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-
-Use the following command to upgrade an existing cluster to Azure CNI Powered by Cilium. Replace the values for `<clusterName>` and `<resourceGroupName>`:
-
-```azurecli-interactive
-az aks update --name <clusterName> --resource-group <resourceGroupName> \
-  --network-dataplane cilium
-```
-
-> [!NOTE]
-> After enabling Azure CNI Powered by Cilium on an AKS cluster, you can't disable it. If you want to use a different network data plane, you must create a new AKS cluster.
 
 ## Frequently asked questions
 
@@ -219,6 +195,8 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
 ## Next steps
 
 Learn more about networking in AKS in the following articles:
+
+* [Upgrade Azure Kubernetes Service (AKS) IPAM modes and Dataplane Technology](upgrade-aks-ipam-and-dataplane.md).
 
 * [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 

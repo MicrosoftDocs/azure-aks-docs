@@ -41,9 +41,9 @@ az extension update --name aks-preview
 To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
 
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompass:
-* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-network-observability-concepts.md).
+* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./container-network-observability-concepts.md).
 
-* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-network-container-services-security-concepts.md).
+* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./container-network-security-concepts.md).
 
 #### [**Cilium**](#tab/cilium)
 
@@ -73,7 +73,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [Container Network Security](./advanced-network-container-services-security-concepts.md) feature is not available for Non-cilium clusters
+> [Container Network Security](./container-network-security-concepts.md) feature is not available for Non-cilium clusters
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -94,7 +94,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-network-observability-concepts.md) and the [Container Network Security](./advanced-network-container-services-security-concepts.md) feature.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./container-network-security-concepts.md) feature.
 
 
 > [!NOTE]
@@ -628,5 +628,5 @@ In this how-to article, you learned how to install and enable Container Network 
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
-* For more information on Container Network Security and its capabilities, see [What is Container Network Security?](advanced-network-container-services-security-concepts.md).
+* For more information on Container Network Security and its capabilities, see [What is Container Network Security?](container-network-security-concepts.md).
 
