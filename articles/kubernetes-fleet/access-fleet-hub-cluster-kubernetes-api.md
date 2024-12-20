@@ -10,17 +10,17 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Access the Azure Kubernetes Fleet Manager hub cluster's Kubernetes API
 
-If your Azure Kubernetes Fleet Manager (Fleet) resource was created with a hub cluster enabled, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API of a hub cluster that the Fleet resource manages.
+If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created with a hub cluster enabled, you can use it to centrally control scenarios like Kubernetes resource propagation. In this article, you learn how to access the Kubernetes API of a hub cluster that the Kubernetes Fleet resource manages.
 
 ## Prerequisites
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-* You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
-* The identity (user or service principal) that you're using needs to have Microsoft.ContainerService/fleets/listCredentials/action permissions on the Fleet resource.
+* You need a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
+* The identity (user or service principal) that you're using needs to have Microsoft.ContainerService/fleets/listCredentials/action permissions on the Kubernetes Fleet resource.
 
 ## Access the Kubernetes API
 
-1. Set the following environment variables for your subscription ID, resource group, and Fleet resource:
+1. Set the following environment variables for your subscription ID, resource group, and Kubernetes Fleet resource:
 
     ```azurecli-interactive
     export SUBSCRIPTION_ID=<subscription-id>
@@ -34,7 +34,7 @@ If your Azure Kubernetes Fleet Manager (Fleet) resource was created with a hub c
     az account set --subscription ${SUBSCRIPTION_ID}
     ```
 
-3. Get the kubeconfig file of the hub cluster's Fleet resource by using the [`az fleet get-credentials`][az-fleet-get-credentials] command:
+3. Get the kubeconfig file of the hub cluster's Kubernetes Fleet resource by using the [`az fleet get-credentials`][az-fleet-get-credentials] command:
 
     ```azurecli-interactive
     az fleet get-credentials --resource-group ${GROUP} --name ${FLEET}
@@ -46,13 +46,13 @@ If your Azure Kubernetes Fleet Manager (Fleet) resource was created with a hub c
     Merged "hub" as current context in /home/fleet/.kube/config
     ```
 
-4. Set the following environment variable for the ID of the hub cluster's Fleet resource:
+4. Set the following environment variable for the ID of the hub cluster's Kubernetes Fleet resource:
 
     ```azurecli-interactive
     export FLEET_ID=/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${GROUP}/providers/Microsoft.ContainerService/fleets/${FLEET}
     ```
 
-5. Authorize your identity to the Kubernetes API server for the hub cluster's Fleet resource by using the following commands.
+5. Authorize your identity to the Kubernetes API server for the hub cluster's Kubernetes Fleet resource by using the following commands.
 
    For the `ROLE` environment variable, you can use one of the following four built-in role definitions as the value:
 
@@ -103,7 +103,7 @@ If your Azure Kubernetes Fleet Manager (Fleet) resource was created with a hub c
 
 ## Related content
 
-* [Propagate resources from a Fleet hub cluster to member clusters](./quickstart-resource-propagation.md)
+* [Propagate resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters](./quickstart-resource-propagation.md)
 
 <!-- LINKS --->
 [az-fleet-get-credentials]: /cli/azure/fleet#az-fleet-get-credentials

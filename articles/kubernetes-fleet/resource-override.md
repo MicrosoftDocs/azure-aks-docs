@@ -12,11 +12,11 @@ ms.custom:
 
 # Customize namespace-scoped resources in Azure Kubernetes Fleet Manager with resource overrides
 
-This article provides an overview of how to use the `ResourceOverride` API to override namespace-scoped resources in Azure Kubernetes Fleet Manager (Fleet).
+This article provides an overview of how to use the `ResourceOverride` API to override namespace-scoped resources in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
 
 You can modify or override specific attributes of existing resources within a namespace. With `ResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to resources such as deployments, StatefulSets, ConfigMaps, or secrets.
 
-These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters. Such updates help ensure consistent management and enforcement of configurations across your Fleet-managed Kubernetes clusters.
+These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters. Such updates help ensure consistent management and enforcement of configurations across your Kubernetes clusters managed through Kubernetes Fleet.
 
 ## API components
 
@@ -247,7 +247,7 @@ This example replaces the container image in the `Deployment` object with:
 
 ### [Portal](#tab/azure-portal)
 
-1. On the Azure portal overview page for your Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
+1. On the Azure portal overview page for your Kubernetes Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
 
 1. Select **Create**.
 
@@ -290,9 +290,7 @@ This example replaces the container image in the `Deployment` object with:
 
 ---
 
-## Next steps
+## Related content
 
-To learn more about Fleet, see the following resources:
-
-* [Open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [Open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)

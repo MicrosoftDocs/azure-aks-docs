@@ -14,11 +14,11 @@ ms.custom:
 
 # Propagate reserved resources from an Azure Kubernetes Fleet Manager hub cluster to member clusters
 
-This article provides an overview of how to use envelope objects to propagate reserved Kubernetes resource types from an Azure Kubernetes Fleet Manager (Fleet) hub cluster to member clusters.
+This article provides an overview of how to use envelope objects to propagate reserved Kubernetes resource types from an Azure Kubernetes Fleet Manager (Kubernetes Fleet) hub cluster to member clusters.
 
 ## Use a ConfigMap as an envelope object
 
-You can use a ConfigMap as an envelope object via a Fleet-reserved annotation.
+You can use a ConfigMap as an envelope object via a Kubernetes Fleet reserved annotation.
 
 To designate a ConfigMap as an envelope object, ensure that it contains the following annotation:
 

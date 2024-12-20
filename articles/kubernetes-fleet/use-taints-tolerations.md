@@ -10,7 +10,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Use taints on member clusters and tolerations on cluster resource placements
 
-This article explains how to add or remove taints on `MemberCluster` resources and tolerations on `ClusterResourcePlacement` resources in Azure Kubernetes Fleet Manager (Fleet).
+This article explains how to add or remove taints on `MemberCluster` resources and tolerations on `ClusterResourcePlacement` resources in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
 
 Taints and tolerations work together to ensure that member clusters receive only specified resources during resource propagation. Taints are applied to `MemberCluster` resources to prevent resources from being propagated to the member cluster. Tolerations are applied to `ClusterResourcePlacement` resources to allow resources to be propagated to the member cluster, even if the member cluster has a taint.
 
@@ -18,8 +18,8 @@ Taints and tolerations work together to ensure that member clusters receive only
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * Read the conceptual overviews for [taints](./concepts-fleet.md#taints) and [tolerations](./concepts-resource-propagation.md#using-tolerations).
-* You must have a Fleet resource with a hub cluster and member clusters. If you don't have this resource, follow [Quickstart: Create a Fleet resource and join member clusters](quickstart-create-fleet-and-members.md).
-* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access the Fleet hub cluster's Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* You must have a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have this resource, follow [Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters](quickstart-create-fleet-and-members.md).
+* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access the Azure Kubernetes Fleet Manager hub cluster's Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
 
 ## Add a taint to a member cluster
 
@@ -113,7 +113,7 @@ In this example, you add a taint to a `MemberCluster` resource. Then you try to 
 
 ## Remove a taint from a member cluster
 
-In this example, you remove the taint that you created [earlier in this article](#add-a-taint-to-a-member-cluster). This removal should automatically trigger the Fleet scheduler to propagate the resources to the member cluster.
+In this example, you remove the taint that you created [earlier in this article](#add-a-taint-to-a-member-cluster). This removal should automatically trigger the Kubernetes Fleet scheduler to propagate the resources to the member cluster.
 
 1. Open your `MemberCluster` YAML file and remove the taint section.
 2. Apply the changes to the `MemberCluster` resource by using the `kubectl apply` command. Be sure to replace the file name with the name of your file.
@@ -302,4 +302,4 @@ In this example, you add a toleration to a `ClusterResourcePlacement` resource t
 
 ## Related content
 
-* [Open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [Open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
