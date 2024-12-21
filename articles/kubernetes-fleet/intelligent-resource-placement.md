@@ -215,7 +215,7 @@ spec:
 
 ### Placement with label selector and property sorter
 
-In this example, a cluster receives a weight only if it has the label `env=prod`. If it satisfies that label constraint, the cluster is given proportional weight based on the amount of total CPU in that member cluster.
+In this example, a cluster receives a weight only if it has the label `env=prod`. If the cluster satisfies that label constraint, it's given proportional weight based on the amount of total CPU in that member cluster.
 
 This example demonstrates how you can use both the label selector and the property sorter for `preferredDuringSchedulingIgnoredDuringExecution` affinity. A member cluster that fails the label selector doesn't receive any weight. Member clusters that satisfy the label selector receive proportional weights, as specified under the property sorter.
 
@@ -287,7 +287,7 @@ You can find details on how to view a placement's progress in [Use the ClusterRe
 
 ## Clean up resources
 
-For details on how to remove a cluster resource placement via the Azure portal or kubectl command, see [Clean up resources](./quickstart-resource-propagation.md#clean-up-resources) in the article about propagating resources.
+For details on how to remove a cluster resource placement via the Azure portal or the kubectl command, see [Clean up resources](./quickstart-resource-propagation.md#clean-up-resources) in the article about propagating resources.
 
 ## Related content
 

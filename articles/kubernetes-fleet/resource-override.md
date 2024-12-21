@@ -124,7 +124,7 @@ You can use `jsonPatchOverrides` in the `overrideRules` object to specify the ch
 
 * `value`: The value to add, remove, or replace. If `op` is `remove`, you can't specify `value`.
 
-`jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
+The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
 
 ### Multiple override rules
 
@@ -282,7 +282,7 @@ This example replaces the container image in the `Deployment` object with:
 
     :::image type="content" source="./media/quickstart-resource-propagation/create-resource-propagation-inline.png" lightbox="./media/quickstart-resource-propagation/create-resource-propagation.png" alt-text="Screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values.":::
 
-1. Verify that the cluster resource placement is created successfully.
+1. Verify that the cluster resource placement was created successfully.
 
     :::image type="content" source="./media/quickstart-resource-propagation/overview-cluster-resource-inline.png" lightbox="./media/quickstart-resource-propagation/overview-cluster-resource.png" alt-text="Screenshot of the Azure portal page for cluster resource placements, showing a successfully created placement.":::
 

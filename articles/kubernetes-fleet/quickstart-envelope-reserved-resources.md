@@ -18,9 +18,7 @@ This article provides an overview of how to use envelope objects to propagate re
 
 ## Use a ConfigMap as an envelope object
 
-You can use a ConfigMap as an envelope object via a Kubernetes Fleet reserved annotation.
-
-To designate a ConfigMap as an envelope object, ensure that it contains the following annotation:
+You can designate a ConfigMap as an envelope object by using the following Kubernetes Fleet reserved annotation:
 
 ```
 metadata:
@@ -86,7 +84,7 @@ data:
 
 ## Propagate an envelope ConfigMap to member clusters
 
-Apply the preceding example envelope object on your hub cluster. Then, use a `ClusterResourcePlacement` object to propagate the resource from hub to a member cluster named `kind-cluster-1`.
+Apply the preceding example envelope object on your hub cluster. Then, use a `ClusterResourcePlacement` object to propagate the resource from the hub cluster to a member cluster named `kind-cluster-1`.
 
 Here's a sample `ClusterResourcePlacement` specification:
 

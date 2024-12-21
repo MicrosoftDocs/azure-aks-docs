@@ -217,11 +217,11 @@ For more information, see [Kubernetes resource placement from hub cluster to mem
         placementType: PickAll
     ```
 
-1. Verify that the cluster resource placement is created successfully.
+1. Verify that the cluster resource placement was created successfully.
 
     :::image type="content" source="./media/quickstart-resource-propagation/crp-success-inline.png" lightbox="./media/quickstart-resource-propagation/crp-success.png" alt-text="Screenshot of the Azure portal pane for cluster resource placements, showing a successfully created cluster resource placement.":::
 
-1. To see more details on an individual cluster resource placement, select it from the list.
+1. To see more details on the placement of an individual cluster resource, select it from the list.
 
     :::image type="content" source="./media/quickstart-resource-propagation/crp-details-inline.png" lightbox="./media/quickstart-resource-propagation/crp-details.png" alt-text="Screenshot of the Azure portal overview pane for an individual cluster resource placement, showing events and details.":::
 

@@ -12,7 +12,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 This article provides an overview of how to use the `ClusterResourceOverride` API from the [Kubernetes Fleet open-source project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster-scoped resources in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
 
-You can modify or override specific attributes across cluster-wide resources. With `ClusterResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to various cluster-wide resources. These resources include namespaces, cluster roles, cluster role bindings, or custom resource definitions.
+You can modify or override specific attributes across cluster resources. With `ClusterResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to various cluster-wide resources. These resources include namespaces, cluster roles, cluster role bindings, or custom resource definitions.
 
 These modifications might include updates to permissions, configurations, or other parameters. Such updates help ensure consistent management and enforcement of configurations across your clusters managed through Kubernetes Fleet.
 
@@ -130,7 +130,7 @@ You can use `jsonPatchOverrides` in the `overrideRules` object to specify the ch
 
 * `value`: The value to add, remove, or replace. If `op` is `remove`, you can't specify `value`.
 
-`jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
+The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
 
 ### Multiple override patches
 
@@ -280,7 +280,7 @@ rules:
 
     This example distributes resources across all clusters labeled with `env: prod`. As the changes are implemented, the corresponding `ClusterResourceOverride` configurations are applied to the designated clusters. The selection of a matching cluster role resource, `secret-reader`, triggers the application of the configurations to the clusters.
 
-1. Verify that the cluster resource placement is created successfully.
+1. Verify that the cluster resource placement was created successfully.
 
     :::image type="content" source="./media/cluster-resource-override/crp-success-inline.png" lightbox="./media/cluster-resource-override/crp-success.png" alt-text="Screenshot of the Azure portal page for cluster resource placements, showing a successfully created placement.":::
 
