@@ -14,7 +14,7 @@ ms.custom:
 
 This article provides an overview of how to use the `ResourceOverride` API to override namespace-scoped resources in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
 
-You can modify or override specific attributes of existing resources within a namespace. With `ResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to resources such as deployments, StatefulSets, ConfigMaps, or secrets.
+You can modify or override specific attributes of existing resources within a namespace. With `ResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to resources such as Deployments, StatefulSets, ConfigMaps, or Secrets.
 
 These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters. Such updates help ensure consistent management and enforcement of configurations across your Kubernetes clusters managed through Kubernetes Fleet.
 
