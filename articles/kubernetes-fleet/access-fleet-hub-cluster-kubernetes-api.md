@@ -46,7 +46,7 @@ If your Azure Kubernetes Fleet Manager (Kubernetes Fleet) resource was created w
     Merged "hub" as current context in /home/fleet/.kube/config
     ```
 
-4. Set the following environment variable for the `FLEET ID` value of the hub cluster's Kubernetes Fleet resource:
+4. Set the following environment variable for the `FLEET_ID` value of the hub cluster's Kubernetes Fleet resource:
 
     ```azurecli-interactive
     export FLEET_ID=/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${GROUP}/providers/Microsoft.ContainerService/fleets/${FLEET}
