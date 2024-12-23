@@ -4,7 +4,7 @@ description: Shows how to quickly stand up WebLogic Server on Azure Kubernetes S
 author: KarlErickson
 ms.author: edburns
 ms.topic: how-to
-ms.date: 11/01/2024
+ms.date: 12/23/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-wls, devx-track-javaee-wls-aks, devx-track-extended-java
 ---
@@ -102,7 +102,7 @@ Use the following steps to find the WebLogic Server on AKS offer and fill out th
 
    :::image type="content" source="media/howto-deploy-java-wls-app/portal-start-experience.png" alt-text="Screenshot of the Azure portal that shows WebLogic Server on AKS." lightbox="media/howto-deploy-java-wls-app/portal-start-experience.png":::
 
-1. You must deploy the offer in an empty resource group. In the **Resource group** field, select **Create new** and then fill in a value for the resource group. Because resource groups must be unique within a subscription, pick a unique name. An easy way to have unique names is to use a combination of your initials, today's date, and some identifier - for example, `ejb0723wls`.
+1. In the **Resource group** field, select **Create new** and then fill in a value for the resource group. Because resource groups must be unique within a subscription, pick a unique name. An easy way to have unique names is to use a combination of your initials, today's date, and some identifier - for example, `ejb0723wls`.
 1. Under **Instance details**, select the region for the deployment. For a list of Azure regions where AKS is available, see [AKS region availability](https://azure.microsoft.com/global-infrastructure/services/?products=kubernetes-service).
 1. Under **Credentials for WebLogic**, leave the default value for **Username for WebLogic Administrator**.
 1. Fill in `wlsAksCluster2022` for the **Password for WebLogic Administrator**. Use the same value for the confirmation and **Password for WebLogic Model encryption** fields.
