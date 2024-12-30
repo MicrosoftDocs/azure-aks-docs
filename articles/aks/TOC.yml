@@ -101,7 +101,7 @@
       href: upgrade.md
     - name: Resource reservations
       href: node-resource-reservations.md
-    - name: Backup and recover cluster
+    - name: Back up and recover cluster
       href: /azure/backup/azure-kubernetes-service-backup-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Observability
       items:
