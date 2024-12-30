@@ -101,7 +101,7 @@
       href: aks-communication-manager.md
     - name: Resource reservations
       href: node-resource-reservations.md
-    - name: Backup and recover cluster
+    - name: Back up and recover cluster
       href: /azure/backup/azure-kubernetes-service-backup-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Observability
       items:
@@ -320,6 +320,8 @@
           href: start-stop-cluster.md
         - name: Delete an AKS cluster
           href: delete-cluster.md
+        - name: Resize an AKS cluster
+          href: resize-cluster.md
         - name: Configure private clusters
           items:
            - name: Create a private cluster
