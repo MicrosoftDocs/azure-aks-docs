@@ -9,9 +9,14 @@ ms.subservice: aks-developer
 ms.date: 10/10/2024
 ---
 
-# Build ConfigMap by Azure App Configuration extension to configure workload in Azure Kubernetes Service (AKS)
+# Quickstart: Manage ConfigMap and Secrets with Azure App Configuration
 
-Typically, ConfigMap is used to configure workloads in AKS. [Azure App Configuration](/azure/azure-app-configuration/overview) provides a service to centrally manage application settings and feature flags. Following this tutorial, you will learn how to source the configuration data from Azure App Configuration into a ConfigMap and use it to configure your workload in AKS.
+You can externalize the configurations of your Azure Kubernetes Service (AKS) workloads and manage them in [Azure App Configuration](/azure/azure-app-configuration/overview). The [Azure App Configuration Kubernetes provider](https://mcr.microsoft.com/artifact/mar/azure-app-configuration/kubernetes-provider/about) runs as container in your cluster. Key benefits include:
+
+   - **Seamless integration**: Pulls data from Azure App Configuration and Key Vault, making them accessible as ConfigMap and Secret without code changes in your workloads.
+   - **Dynamic update**: Built-in caching and refreshing capabilities for dynamic configuration, feature flagging, and automatic secret rotation.
+
+The Azure App Configuration Kubernetes provider is available as an AKS extension. By following this document, you can easily install the extension and connect your AKS cluster with an App Configuration store using the Service Connector in the Azure portal. For information on setting up the provider using Helm, see the [Quickstart for Azure App Configuration Kubernetes provider](/azure/azure-app-configuration/quickstart-azure-kubernetes-service).
 
 ## Prerequisites
 
@@ -24,7 +29,7 @@ Create a service connection between your AKS cluster and your App Configuration 
 
 1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource.
 
-1. Select **Settings** > **Service Connector (Preview)** > **Create**.
+1. Select **Settings** > **Service Connector** > **Create**.
 
 1. On the Basics tab, configure the following settings:
    
@@ -53,7 +58,7 @@ Create a service connection between your AKS cluster and your App Configuration 
 
 Now that you created a connection between your AKS cluster and the App Configuration store, you need to use the connection to create a ConfigMap with the configuration data from the App Configuration store.
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource and select **Service Connector (Preview)**.
+1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource and select **Service Connector**.
 
 1. Select the newly created connection, and then select **Yaml snippet**.
 
