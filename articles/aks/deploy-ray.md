@@ -333,9 +333,7 @@ To access the Ray Dashboard, you need to expose the Ray head service to the publ
     kubectl get service -n app-routing-system
     ```
 
-5. In the output, you should see the public IP address of the load balancer attached to the ingress controller. Copy the public IP address and paste it into a web browser. You should see the Ray Dashboard, similar to the following image:
-
-:::image type="content" source="./media/deploy-ray/ray-dashboard.png" alt-text="Screenshot showing the Ray Dashboard.":::
+5. In the output, you should see the public IP address of the load balancer attached to the ingress controller. Copy the public IP address and paste it into a web browser. You should see the Ray Dashboard.
 
 ## Clean up resources
 
