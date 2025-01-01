@@ -31,7 +31,7 @@ The following sections provide guidance on major decision points for making your
 
 ### Create zone redundant clusters and node pools
 
-AKS allows you to select multiple AZs during cluster and node pool creation. When you create a cluster in a region having multiple multiple AZs, the control plane is automatically spread across all the AZs in that region. The nodes in the node pool are spread across the selected AZs. This approach ensures that the control plane and the nodes are distributed across multiple AZs, providing resiliency in case of an AZ failure. You can configure AZs using the Azure portal, Azure CLI, or Azure Resource Manager templates.
+AKS allows you to select multiple AZs during cluster and node pool creation. When you create a cluster in a region having multiple AZs, the control plane is automatically spread across all the AZs in that region. However, the nodes in the node pool are spread across only the selected AZs. This approach ensures that the control plane and the nodes are distributed across multiple AZs, providing resiliency in case of an AZ failure. You can configure AZs using the Azure portal, Azure CLI, or Azure Resource Manager templates.
 
 The following example shows how to create a cluster with three nodes spread across three AZs using the Azure CLI:
 
