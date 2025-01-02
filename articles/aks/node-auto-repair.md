@@ -37,7 +37,7 @@ If AKS identifies an unhealthy node that remains unhealthy for at least *five* m
 AKS retries the restart, reimage, and redeploy sequence up to three times if the node remains unhealthy. The overall auto repair process can take up to an hour to complete. 
 
 ## Limitations
-AKS node auto-repair is a best effort service and we don't guarantee that the node is restored back to healthy status. If your node persists in an unhealthy state, we highly encourage that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
+AKS node auto-repair is a best effort service and we don't guarantee that the node is restored back to healthy status. If your node persists in an unhealthy state, we highly encourage that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](/troubleshoot/azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
 
 Additionally, there are cases where AKS doesn't perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure can't detect that an issue exists:
 
@@ -57,7 +57,7 @@ When AKS performs node auto-repair in your cluster, Kubernetes events are emitte
 | NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting more than 5 minutes. | This event is emitted to notify you when redeploy is about to be performed on your node. Redeploy is the last action in the node auto-repair sequence. |
 | NodeRedeployEnd | Redeploy action from node auto-repair is completed. | Emitted once redeploy is complete on the node. This event doesn't indicate the health status (healthy or unhealthy) of the node after redeploy is performed. |
 
-If any errors occur during the node auto-repair process, the following events are emitted with the verbatim error message. Learn more about [troubleshooting common node auto-repair errors](/azure/azure-kubernetes/availability-performance/node-auto-repair-errors).
+If any errors occur during the node auto-repair process, the following events are emitted with the verbatim error message. Learn more about [troubleshooting common node auto-repair errors](/troubleshoot/azure/azure-kubernetes/availability-performance/node-auto-repair-errors).
 
 | Reason | Event Message | Description |
 | --- | --- | --- |
