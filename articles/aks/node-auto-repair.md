@@ -37,9 +37,9 @@ If AKS identifies an unhealthy node that remains unhealthy for at least *five* m
 AKS retries the restart, reimage, and redeploy sequence up to three times if the node remains unhealthy. The overall auto repair process can take up to an hour to complete. 
 
 ## Limitations
-AKS node auto-repair is a best effort service and we cannot guarantee that the node will be restored back to healthy status. If your node persists in an unhealthy state, it is highly encouraged that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
+AKS node auto-repair is a best effort service and we don't guarantee that the node is restored back to healthy status. If your node persists in an unhealthy state, it's highly encouraged that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
 
-Additionally, there are cases where AKS will not perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure cannot detect that an issue exists:
+Additionally, there are cases where AKS does not perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure can't detect that an issue exists:
 
 * A node status isn't being reported due to error in network configuration.
 * A node failed to initially register as a healthy node.
@@ -51,19 +51,19 @@ When AKS performs node auto-repair in your cluster, Kubernetes events are emitte
 | Reason | Event Message | Description |
 | --- | --- | --- |
 | NodeRebootStart | Node auto-repair is initiating a reboot action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when reboot is about to be performed on your node. This action is the first in the overall node auto-repair sequence. |
-| NodeRebootEnd | Reboot action from node auto-repair has completed. | Emitted once reboot has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the reboot is performed. |
-| NodeReimageStart | Node auto-repair is initiating a reimage action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when a reimage is about to be performed on your node. |
-| NodeReimageEnd | Reimage action from node auto-repair has completed. | Emitted once reimage has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the reimage is performed. |
-| NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting more than 5 minutes. | This event is emitted to notify you when a redeploy is about to be performed on your node. This is the last action in the node auto-repair sequence. |
-| NodeRedeployEnd | Redeploy action from node auto-repair has completed. | Emitted once redeploy has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the redeploy is performed. |
+| NodeRebootEnd | Reboot action from node auto-repair is completed. | Emitted once reboot is complete on the node. This event doesn't indicate the health status (healthy or unhealthy) of the node after the reboot is performed. |
+| NodeReimageStart | Node auto-repair is initiating a reimage action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when reimage is about to be performed on your node. |
+| NodeReimageEnd | Reimage action from node auto-repair is completed. | Emitted once reimage is complete on the node. This event doesn't indicate the health status (healthy or unhealthy) of the node after the reimage is performed. |
+| NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting more than 5 minutes. | This event is emitted to notify you when redeploy is about to be performed on your node. Redeploy is the last action in the node auto-repair sequence. |
+| NodeRedeployEnd | Redeploy action from node auto-repair is completed. | Emitted once redeploy is complete on the node. This event doesn't indicate the health status (healthy or unhealthy) of the node after redeploy is performed. |
 
-If any errors occur during the node auto-repair process, the following events will be emitted with the verbatim error message. Learn more about [troubleshooting common node auto-repair errors](/azure/azure-kubernetes/availability-performance/node-auto-repair-errors).
+If any errors occur during the node auto-repair process, the following events are emitted with the verbatim error message. Learn more about [troubleshooting common node auto-repair errors](/azure/azure-kubernetes/availability-performance/node-auto-repair-errors).
 
 | Reason | Event Message | Description |
 | --- | --- | --- |
-| NodeRebootError | Node auto-repair reboot action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the reboot action. |
-| NodeReimageError | Node auto-repair reimage action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the reimage action. |
-| NodeRedeployError | Node auto-repair redeploy action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the redeploy action. |
+| NodeRebootError | Node auto-repair reboot action failed due to an operation failure. See error details here: [error message here] | Emitted when there's an error with the reboot action. |
+| NodeReimageError | Node auto-repair reimage action failed due to an operation failure. See error details here: [error message here] | Emitted when there's an error with the reimage action. |
+| NodeRedeployError | Node auto-repair redeploy action failed due to an operation failure. See error details here: [error message here] | Emitted when there's an error with the redeploy action. |
 
 ## Next steps
 By default, you can access Kubernetes events and logs on your AKS cluster from the past 1 hour. To store and query events and logs from the past 90 days, enable [Container Insights](/azure/azure-monitor/containers/container-insights-overview#access-container-insights) for deeper troubleshooting on your AKS cluster.
