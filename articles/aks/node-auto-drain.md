@@ -3,8 +3,8 @@ title: Automatically drain Azure Kubernetes Service (AKS) nodes
 description: Learn about node auto-drain functionality and how AKS protects your workloads from scheduled VM maintenance events.
 ms.topic: conceptual
 ms.date: 08/12/2024
-author: nickomang
-ms.author: nickomang
+author: nickoman
+ms.author: nickoman
 
 ---
 
