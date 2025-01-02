@@ -37,7 +37,7 @@ If AKS identifies an unhealthy node that remains unhealthy for at least *five* m
 AKS retries the restart, reimage, and redeploy sequence up to three times if the node remains unhealthy. The overall auto repair process can take up to an hour to complete. 
 
 ## Limitations
-AKS node auto-repair is a best effort service and we cannot guarantee that the node will be restored back to healthy status. If your node persists in an unhealthy state, it is highly encouraged that you perform manual investigation of the node. See [TSG Link] to learn more.
+AKS node auto-repair is a best effort service and we cannot guarantee that the node will be restored back to healthy status. If your node persists in an unhealthy state, it is highly encouraged that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
 
 Additionally, there are cases where AKS will not perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure cannot detect that an issue exists:
 
@@ -46,7 +46,7 @@ Additionally, there are cases where AKS will not perform automatic repair. Failu
 * If either of the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
 
 ## How to monitor node auto-repair
-When AKS performs node auto-repair in your cluster, Kubernetes events are emitted for visibility. The events appear on the node object and are emitted from the "aks-auto-repair" source. Learn more about how to access, store, and configure alerts on Kubernetes events [here][events].
+When AKS performs node auto-repair in your cluster, Kubernetes events are emitted for visibility. The events appear on the node object and are emitted from the "aks-auto-repair" source. Learn more about how to [access, store, and configure alerts on Kubernetes events](./events.md).
 
 | Reason | Event Message | Description |
 | --- | --- | --- |
@@ -57,10 +57,13 @@ When AKS performs node auto-repair in your cluster, Kubernetes events are emitte
 | NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting more than 5 minutes. | This event is emitted to notify you when a redeploy is about to be performed on your node. This is the last action in the node auto-repair sequence. |
 | NodeRedeployEnd | Redeploy action from node auto-repair has completed. | Emitted once redeploy has completed on the node. This event does not indicate the health status (healthy or unhealthy) of the node after the redeploy is performed. |
 
-If any errors occur during the node auto-repair process, the following events will be emitted with the verbatim error message. Learn about how to troubleshooting and resolve common errors here: [TSG Link].
+If any errors occur during the node auto-repair process, the following events will be emitted with the verbatim error message. Learn more about [troubleshooting common node auto-repair errors](/azure/azure-kubernetes/availability-performance/node-auto-repair-errors).
 
 | Reason | Event Message | Description |
 | --- | --- | --- |
 | NodeRebootError | Node auto-repair reboot action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the reboot action. |
 | NodeReimageError | Node auto-repair reimage action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the reimage action. |
 | NodeRedeployError | Node auto-repair redeploy action failed due to an operation failure. See error details here: [error message here] | Emitted when there is an error with the redeploy action. |
+
+## Next steps
+By default, you can access Kubernetes events and logs on your AKS cluster from the past 1 hour. To store and query events and logs from the past 90 days, enable [Container Insights](/azure/azure-monitor/containers/container-insights-overview#access-container-insights) for deeper troubleshooting on your AKS cluster.
