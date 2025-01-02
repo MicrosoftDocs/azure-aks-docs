@@ -5,8 +5,8 @@ ms.topic: concept-article
 ms.custom:
 ms.subservice: aks-storage
 ms.date: 04/19/2023
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 ---
 

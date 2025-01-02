@@ -23,7 +23,7 @@ Trusted launch is composed of several, coordinated infrastructure technologies t
 
 ## Before you begin
 
-- The Azure CLI version 2.44.1 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- The Azure CLI version 2.66.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - Secure Boot requires signed boot loaders, OS kernels, and drivers.
 
 ## Limitations
@@ -34,7 +34,7 @@ Trusted launch is composed of several, coordinated infrastructure technologies t
 - Trusted launch doesn't support node pools with FIPS enabled or based on Arm64.
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
-- To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see[Skip GPU driver installation][skip-gpu-driver-install].
+- To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
 - Ephemeral OS disks can be created with Trusted launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
 
 ## Deploy new cluster
@@ -86,7 +86,7 @@ Deploy a node pool with trusted launch enabled using the [az aks nodepool add][a
 The following example deploys a node pool with vTPM enabled on a cluster named *myAKSCluster* with three nodes:
 
 ```azurecli-interactive
-az aks nodepool add --resource-group myResourceGroup -–cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm  
+az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm  
 ```
 
 The following example deploys a node pool with vTPM and Secure Boot enabled on a cluster named *myAKSCluster* with three nodes:

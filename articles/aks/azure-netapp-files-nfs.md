@@ -5,8 +5,8 @@ ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
 ms.date: 05/08/2023
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 ---
 
@@ -329,7 +329,7 @@ To instruct Astra Trident about the Azure NetApp Files subscription and where it
       name: backend-tbc-anf-secret
     type: Opaque
     stringData:
-      clientID: abcde356-bf8e-fake-c111-abcde35613aa
+      clientID: 00001111-aaaa-2222-bbbb-3333cccc4444
       clientSecret: rR0rUmWXfNioN1KhtHisiSAnoTherboGuskey6pU
     ```
 
@@ -343,8 +343,8 @@ To instruct Astra Trident about the Azure NetApp Files subscription and where it
     spec:
       version: 1
       storageDriverName: azure-netapp-files
-      subscriptionID: 12abc678-4774-fake-a1b2-a7abcde39312
-      tenantID: a7abcde3-edc1-fake-b111-a7abcde356cf
+      subscriptionID: aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e
+      tenantID: aaaabbbb-0000-cccc-1111-dddd2222eeee
       location: eastus
       serviceLevel: Premium
       credentials:
@@ -589,4 +589,3 @@ Astra Trident supports many features with Azure NetApp Files. For more informati
 [install-azure-cli]: /cli/azure/install-azure-cli
 [use-tags]: use-tags.md
 [azure-ad-app-registration]: /azure/active-directory/develop/howto-create-service-principal-portal
-

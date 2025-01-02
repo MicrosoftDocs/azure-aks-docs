@@ -5,14 +5,14 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, build-2023
 ms.date: 06/07/2023
-author: tamram
-ms.author: tamram
+author: nickomang
+ms.author: nickoman
 
 ---
 
 # Pod Sandboxing (preview) with Azure Kubernetes Service (AKS)
 
-To help secure and protect your container workloads from untrusted or potentially malicious code, AKS now includes a mechanism called Pod Sandboxing (preview). Pod Sandboxing provides an isolation boundary between the container application, and the shared kernel and compute resources of the container host. For example CPU, memory, and networking. Pod Sandboxing complements other security measures or data protection controls with your overall architecture to help you meet regulatory, industry, or governance compliance requirements for securing sensitive information.
+To help secure and protect your container workloads from untrusted or potentially malicious code, AKS now includes a mechanism called Pod Sandboxing (preview). Pod Sandboxing provides an isolation boundary between the container application and the shared kernel and compute resources of the container host such as CPU, memory, and networking. Pod Sandboxing complements other security measures or data protection controls with your overall architecture to help you meet regulatory, industry, or governance compliance requirements for securing sensitive information.
 
 This article helps you understand this new feature, and how to implement it.
 
@@ -73,8 +73,6 @@ The following are constraints with this preview of Pod Sandboxing (preview):
 * [Microsoft Defender for Containers][defender-for-containers] doesn't support assessing Kata runtime pods.
 
 * [Kata][kata-network-limitations] host-network isn't supported.
-
-* AKS does not support [Container Storage Interface drivers][csi-storage-driver] and [Secrets Store CSI driver][csi-secret-store driver] in this preview release.
 
 ## How it works
 

@@ -5,9 +5,9 @@ description: Learn how to create a static or dynamic persistent volume with Azur
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
-ms.date: 07/20/2024
-author: tamram
-ms.author: tamram
+ms.date: 12/10/2024
+author: schaffererin
+ms.author: schaffererin
 
 ---
 
@@ -357,7 +357,6 @@ Kubernetes needs credentials to access the file share created in the previous st
         driver: file.csi.azure.com
         volumeHandle: "{resource-group-name}#{account-name}#{file-share-name}"  # make sure this volumeid is unique for every identical share in the cluster
         volumeAttributes:
-          resourceGroup: resourceGroupName  # optional, only set this when storage account is not in the same resource group as node
           shareName: aksshare
         nodeStageSecretRef:
           name: azure-secret

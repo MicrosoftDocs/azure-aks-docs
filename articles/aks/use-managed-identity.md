@@ -1,7 +1,7 @@
 ---
 title: Use a managed identity in Azure Kubernetes Service (AKS)
 description: Learn how to use a system-assigned or user-assigned managed identity in Azure Kubernetes Service (AKS).
-author: tamram
+author: nickomang
 
 ms.topic: how-to
 ms.subservice: aks-security
@@ -9,7 +9,7 @@ ms.custom:
   - devx-track-azurecli
   - ignite-2023
 ms.date: 06/07/2024
-ms.author: tamram
+ms.author: nickoman
 ---
 
 # Use a managed identity in Azure Kubernetes Service (AKS)
@@ -22,7 +22,7 @@ This article shows how to enable the following types of managed identity on a ne
 
 * **System-assigned managed identity.** A system-assigned managed identity is associated with a single Azure resource, such as an AKS cluster. It exists for the lifecycle of the cluster only.
 * **User-assigned managed identity.** A user-assigned managed identity is a standalone Azure resource that an AKS cluster can use to authorize access to other Azure services. It persists separately from the AKS cluster and can be used by multiple Azure resources.
-* **Pre-created kubelet managed identity.** A pre-created kubelet managed identity is an optional user-assigned identity that kubelet can use to access other resources in Azure. If you don't specify a user-assigned managed identity for kubelet, AKS creates a system-assigned kubelet identity in the node resource group.
+* **Pre-created kubelet managed identity.** A pre-created kubelet managed identity is an optional user-assigned identity that kubelet can use to access other resources in Azure. If you don't specify a user-assigned managed identity for kubelet, AKS creates a user-assigned kubelet identity in the node resource group.
 
 To learn more about managed identities, see [Managed identities for Azure resources](/entra/identity/managed-identities-azure-resources/overview).
 

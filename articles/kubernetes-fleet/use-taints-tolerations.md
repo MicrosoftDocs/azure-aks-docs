@@ -3,8 +3,8 @@ title: "Use taints on member clusters and tolerations on cluster resource placem
 description: Learn how to use taints on `MemberCluster` resources and tolerations on `ClusterResourcePlacement` resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 04/23/2024
-author: schaffererin
-ms.author: schaffererin
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ---
 
@@ -17,9 +17,9 @@ Taints and tolerations work together to ensure member clusters only receive spec
 ## Prerequisites
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-* Read the conceptual overviews for [taints](./concepts-fleet.md#taints) and [tolerations](./concepts-resource-propagation.md#tolerations).
+* Read the conceptual overviews for [taints](./concepts-fleet.md#taints) and [tolerations](./concepts-resource-propagation.md#using-tolerations).
 * You must have a Fleet resource with a hub cluster and member clusters. If you don't have this resource, follow [Quickstart: Create a Fleet resource and join member clusters](quickstart-create-fleet-and-members.md).
-* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access the Kubernetes API of the Fleet resource](./quickstart-access-fleet-kubernetes-api.md).
+* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
 
 ## Add taints to a member cluster
 
@@ -34,7 +34,7 @@ In this example, we add a taint to a `MemberCluster` resource, then try to propa
 2. Create a taint on the `MemberCluster` resource using the following example code:
 
     ```yml
-    apiVersion: cluster.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: MemberCluster
     metadata:
       name: kind-cluster-1
@@ -194,7 +194,7 @@ In this example, we add a toleration to a `ClusterResourcePlacement` resource to
 2. Create a taint on the `MemberCluster` resource using the following example code:
 
     ```yml
-    apiVersion: cluster.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: MemberCluster
     metadata:
       name: kind-cluster-1
@@ -302,4 +302,4 @@ In this example, we add a toleration to a `ClusterResourcePlacement` resource to
 
 ## Next steps
 
-For more information on Azure Kubernetes Fleet Manager, see the [upstream Fleet documentation](https://github.com/Azure/fleet/tree/main/docs).
+For more information see the [open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs).

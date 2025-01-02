@@ -4,8 +4,8 @@ description: Learn how to configure a host-based encryption in an Azure Kubernet
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 07/17/2023 
-author: tamram
-ms.author: tamram
+author: nickomang
+ms.author: nickoman
 
 ms.custom: devx-track-azurecli
 ms.devlang: azurecli
@@ -41,7 +41,7 @@ Before you begin, review the following prerequisites and limitations.
     az aks create \
         --name myAKSCluster \
         --resource-group myResourceGroup \
-        --storage-pool-sku Standard_DS2_v2 \
+        --node-vm-size Standard_DS2_v2 \
         --location westus2 \
         --enable-encryption-at-host \
         --generate-ssh-keys

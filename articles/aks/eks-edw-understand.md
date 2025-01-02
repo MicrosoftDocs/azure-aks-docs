@@ -3,8 +3,9 @@ title: Understand platform differences for the event-driven workflow (EDW) workl
 description: Learn about the key differences between the AWS and Azure platforms related to the EDW scaling workload.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: JnHs
-ms.author: jenhayes
+author: schaffererin
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
 ---
 
 # Understand platform differences for the event-driven workflow (EDW) workload

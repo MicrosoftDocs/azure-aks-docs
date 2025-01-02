@@ -195,6 +195,8 @@ After you change the key ID (including changing either the key name or the key v
 > Remember to update all secrets after key rotation. If you don't update all secrets, the secrets are inaccessible if the keys that were created earlier don't exist or no longer work.
 >
 > KMS uses 2 keys at the same time. After the first key rotation, you need to ensure both the old and new keys are valid (not expired) until the next key rotation. After the second key rotation, the oldest key can be safely removed/expired
+>
+> After rotating KMS key version with the new `keyId`, please check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
 ```azurecli-interactive
 az aks update --name myAKSCluster --resource-group MyResourceGroup  --enable-azure-keyvault-kms --azure-keyvault-kms-key-vault-network-access "Public" --azure-keyvault-kms-key-id $NEW_KEY_ID 
@@ -329,6 +331,8 @@ After you change the key ID (including the key name and the key version), you ca
 > Remember to update all secrets after key rotation. If you don't update all secrets, the secrets are inaccessible if the keys that were created earlier don't exist or no longer work.
 >
 > After you rotate the key, the previous key (key1) is still cached and shouldn't be deleted. If you want to delete the previous key (key1) immediately, you need to rotate the key twice. Then key2 and key3 are cached, and key1 can be deleted without affecting the existing cluster.
+>
+> After rotating KMS key version with the new `keyId`, please check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
 ```azurecli-interactive
 az aks update --name myAKSCluster --resource-group MyResourceGroup  --enable-azure-keyvault-kms --azure-keyvault-kms-key-id $NewKEY_ID --azure-keyvault-kms-key-vault-network-access "Private" --azure-keyvault-kms-key-vault-resource-id $KEYVAULT_RESOURCE_ID
@@ -456,6 +460,32 @@ To re-encrypt all secrets in KMS v2, use the `kubectl get secrets` command with 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 ```
+
+## KMS observability
+
+### AKS resource json
+
+You can check the KMS config in AKS resource json by:
+
+1. Using the `az aks show` command
+2. Through Azure Portal
+
+The `securityProfile.azureKeyVaultKms` section shows the KMS config, including Key vault, key, current and previous key versions.
+
+### Diagnose and solve problems
+
+Because KMS plugin is a side car of kube-apiserver Pod, you cannot access it directly. To improve the observability of KMS, you can check the KMS status by:
+
+1. Open Azure Portal page of your AKS cluster
+2. Go to `Diagnose and solve problems` and search for `KMS`
+3. In `KMS` detector, you can see the status of KMS and if it is in some known failing scenarios
+
+Take `KeyExpired: Operation encrypt is not allowed on an expired key` as an example:
+
+Because AKS KMS plugin currently only allows BYO key vault and key, it is your responsibility to manage the key lifecycle. If the key is expired, the KMS plugin will fail to decrypt the existing secrets. You need to
+
+1. Extend the key expiration date to make KMS work
+2. Rotate the key version
 
 <!-- LINKS - Internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli

@@ -3,18 +3,14 @@ title: "Customize cluster scoped resources in Azure Kubernetes Fleet Manager wit
 description: This article provides an overview of how to use the Fleet ClusterResourceOverride API to override cluster scoped resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 05/10/2024
-author: schaffererin
-ms.author: schaffererin
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - build-2024
 ---
 
-# Customize cluster scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides (preview)
+# Customize cluster scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides
 
-This article provides an overview of how to use the Fleet `ClusterResourceOverride` API to customize cluster scoped resources in Azure Kubernetes Fleet Manager.
-
-[!INCLUDE [preview features callout](./includes/preview/preview-callout.md)]
+This article provides an overview of how to use the `ClusterResourceOverride` API from the [fleet open-source project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster scoped resources in Azure Kubernetes Fleet Manager.
 
 ## Cluster resource override overview
 
@@ -185,7 +181,7 @@ rules:
 1. Create a `ClusterResourcePlacement` resource to specify the placement rules for distributing the cluster resource overrides across the cluster infrastructure, as shown in the following example. Make sure you select the appropriate resource.
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp
@@ -261,7 +257,7 @@ rules:
     :::image type="content" source="./media/cluster-resource-override/crp-create-inline.png" lightbox="./media/cluster-resource-override/crp-create.png" alt-text="A screenshot of the Azure portal page for creating a resource placement, showing the YAML template with placeholder values.":::
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: crp
@@ -297,5 +293,5 @@ rules:
 
 To learn more about Fleet, see the following resources:
 
-* [Upstream Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [Open-source Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)

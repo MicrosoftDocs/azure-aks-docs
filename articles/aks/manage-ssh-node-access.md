@@ -159,31 +159,6 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 },
 ```
 
-### Disable SSH on an existing cluster
-
-Use the [`az aks update`][az-aks-update] command to update an existing cluster, and include the `--ssh-access disabled` argument to disable SSH (preview) on all the node pools in the cluster.
-
-```azurecli-interactive
-az aks update --resource-group myResourceGroup --name myManagedCluster --ssh-access disabled
-```
-
-After a few minutes, the command completes and returns JSON-formatted information about the cluster. The following example resembles the output and the results related to disabling SSH:
-
-```output
-"securityProfile": {
-"sshAccess": "Disabled"
-},
-```
-
-For the change to take effect, you need to reimage all node pools by using the [`az aks nodepool upgrade`][az-aks-nodepool-upgrade] command.
-
-```azurecli-interactive
-az aks nodepool upgrade --cluster-name myManagedCluster --name mynodepool --resource-group myResourceGroup --node-image-only
-```
-
-> [!IMPORTANT]
-> During this operation, all Virtual Machine Scale Set instances are upgraded and reimaged to use the new SSH configuration.
-
 ### Disable SSH for a new node pool
 
 Use the [`az aks nodepool add`][az-aks-nodepool-add] command to add a node pool, and include the `--ssh-access disabled` argument to disable SSH during node pool creation.
@@ -221,6 +196,9 @@ For the change to take effect, you need to reimage the node pool by using the [`
 ```azurecli-interactive
 az aks nodepool upgrade --cluster-name myManagedCluster --name mynodepool --resource-group myResourceGroup --node-image-only
 ```
+
+> [!IMPORTANT]
+> To disable SSH on an existing cluster, you need to disable SSH for each node pool on this cluster. 
 
 ### Re-enable SSH on an existing cluster
 

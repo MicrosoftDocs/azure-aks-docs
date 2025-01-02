@@ -6,7 +6,7 @@ author: asudbring
 ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 10/04/2023
+ms.date: 12/11/2024
 
 
 #Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an internal Azure load balancer for enhanced security and without an external endpoint.
@@ -16,8 +16,8 @@ ms.date: 10/04/2023
 
 You can create and use an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS). An internal load balancer doesn't have a public IP and makes a Kubernetes service accessible only to applications that can reach the private IP. These applications can be within the same VNET or in another VNET through VNET peering. This article shows you how to create and use an internal load balancer with AKS.
 
-> [!NOTE]
-> Azure Load Balancer is available in two SKUs: *Basic* and *Standard*. The *Standard* SKU is used by default when you create an AKS cluster. When you create a *LoadBalancer* service type, you'll get the same load balancer type as when you provisioned the cluster. For more information, see [Azure Load Balancer SKU comparison][azure-lb-comparison].
+> [!IMPORTANT]
+> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you're currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. For guidance on upgrading, visit [Upgrading from Basic Load Balancer - Guidance](/azure/load-balancer/load-balancer-basic-upgrade-guidance).
 
 ## Before you begin
 
@@ -75,7 +75,7 @@ For more information on subnets, see [Add a node pool with a unique subnet][uniq
 If you want to use a specific IP address with the load balancer, you have two options: **set service annotations** or **add the *LoadBalancerIP* property to the load balancer YAML manifest**.
 
 > [!IMPORTANT]
-> Adding the *LoadBalancerIP* property to the load balancer YAML manifest is deprecating following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235). While current usage remains the same and existing services are expected to work without modification, we **highly recommend setting service annotations** instead.
+> Adding the *LoadBalancerIP* property to the load balancer YAML manifest is deprecating following [upstream Kubernetes](https://github.com/kubernetes/kubernetes/pull/107235). While current usage remains the same and existing services are expected to work without modification, we **highly recommend setting service annotations** instead. For more information about service annotations, see [Azure LoadBalancer supported annotations](https://cloud-provider-azure.sigs.k8s.io/topics/loadbalancer/#loadbalancer-annotations).
 
 ### [Set service annotations](#tab/set-service-annotations)
 
@@ -132,7 +132,7 @@ If you want to use a specific IP address with the load balancer, you have two op
     internal-app   LoadBalancer   10.0.184.168   10.240.0.25   80:30225/TCP   4m
     ```
 
-For more information on configuring your load balancer in a different subnet, see [Specify a different subnet][different-subnet]
+For more information on configuring your load balancer in a different subnet, see [Specify a different subnet][different-subnet].
 
 ## Connect Azure Private Link service to internal load balancer
 
@@ -224,20 +224,20 @@ A Private Endpoint allows you to privately connect to your Kubernetes service ob
 
 ### PLS Customizations via Annotations
 
-The following are annotations that can be used to customize the PLS resource.
+You can use the following annotations to customize the PLS resource:
 
 | Annotation | Value | Description | Required | Default |
-| ------------------------------------------------------------------------ | ---------------------------------- | ------------------------------------------------------------ |------|------|
-| `service.beta.kubernetes.io/azure-pls-create`                            | `"true"`                           | Boolean indicating whether a PLS needs to be created. | Required | |
-| `service.beta.kubernetes.io/azure-pls-name`                              | `<PLS name>`                       | String specifying the name of the PLS resource to be created. | Optional | `"pls-<LB frontend config name>"` |
-| `service.beta.kubernetes.io/azure-pls-resource-group`                    | `Resource Group name`              | String specifying the name of the Resource Group where the PLS resource will be created | Optional | `MC_ resource` |
-| `service.beta.kubernetes.io/azure-pls-ip-configuration-subnet`           |`<Subnet name>`                     | String indicating the subnet to which the PLS will be deployed. This subnet must exist in the same VNET as the backend pool. PLS NAT IPs are allocated within this subnet. | Optional | If `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`, this ILB subnet is used. Otherwise, the default subnet from config file is used. |
-| `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count` | `[1-8]`                            | Total number of private NAT IPs to allocate. | Optional | 1 |
-| `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address`       | `"10.0.0.7 ... 10.0.0.10"`         | A space separated list of static **IPv4** IPs to be allocated. (IPv6 is not supported right now.) Total number of IPs should not be greater than the ip count specified in `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count`. If there are fewer IPs specified, the rest are dynamically allocated. The first IP in the list is set as `Primary`. |  Optional | All IPs are dynamically allocated. |
-| `service.beta.kubernetes.io/azure-pls-fqdns`                             | `"fqdn1 fqdn2"`                    | A space separated list of fqdns associated with the PLS. | Optional | `[]` |
-| `service.beta.kubernetes.io/azure-pls-proxy-protocol`                    | `"true"` or `"false"`              | Boolean indicating whether the TCP PROXY protocol should be enabled on the PLS to pass through connection information, including the link ID and source IP address. Note that the backend service MUST support the PROXY protocol or the connections will fail. | Optional | `false` |
-| `service.beta.kubernetes.io/azure-pls-visibility`                        | `"sub1 sub2 sub3 … subN"` or `"*"` | A space separated list of Azure subscription ids for which the private link service is visible. Use `"*"` to expose the PLS to all subs (Least restrictive). | Optional | Empty list `[]` indicating role-based access control only: This private link service will only be available to individuals with role-based access control permissions within your directory. (Most restrictive) |
-| `service.beta.kubernetes.io/azure-pls-auto-approval`                     | `"sub1 sub2 sub3 … subN"`          | A space separated list of Azure subscription ids. This allows PE connection requests from the subscriptions listed to the PLS to be automatically approved. This only works when visibility is set to "*". |  Optional | `[]` |
+|------------|-------|-------------|----------|---------|
+| `service.beta.kubernetes.io/azure-pls-create` | `"true"` | Boolean indicating whether a PLS needs to be created. | Required | |
+| `service.beta.kubernetes.io/azure-pls-name` | `<PLS name>` | String specifying the name of the PLS resource to be created. | Optional | `"pls-<LB frontend config name>"` |
+| `service.beta.kubernetes.io/azure-pls-resource-group` | `Resource Group name` | String specifying the name of the Resource Group where the PLS resource will be created | Optional | `MC_ resource` |
+| `service.beta.kubernetes.io/azure-pls-ip-configuration-subnet` |`<Subnet name>` | String indicating the subnet to which the PLS will be deployed. This subnet must exist in the same VNET as the backend pool. PLS NAT IPs are allocated within this subnet. | Optional | If `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`, this ILB subnet is used. Otherwise, the default subnet from config file is used. |
+| `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count` | `[1-8]` | Total number of private NAT IPs to allocate. | Optional | 1 |
+| `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address` | `"10.0.0.7 ... 10.0.0.10"` | A space separated list of static **IPv4** IPs to be allocated. (IPv6 is not supported right now.) Total number of IPs should not be greater than the ip count specified in `service.beta.kubernetes.io/azure-pls-ip-configuration-ip-address-count`. If there are fewer IPs specified, the rest are dynamically allocated. The first IP in the list is set as `Primary`. |  Optional | All IPs are dynamically allocated. |
+| `service.beta.kubernetes.io/azure-pls-fqdns` | `"fqdn1 fqdn2"` | A space separated list of fqdns associated with the PLS. | Optional | `[]` |
+| `service.beta.kubernetes.io/azure-pls-proxy-protocol` | `"true"` or `"false"` | Boolean indicating whether the TCP PROXY protocol should be enabled on the PLS to pass through connection information, including the link ID and source IP address. Note that the backend service MUST support the PROXY protocol or the connections will fail. | Optional | `false` |
+| `service.beta.kubernetes.io/azure-pls-visibility` | `"sub1 sub2 sub3 … subN"` or `"*"` | A space separated list of Azure subscription ids for which the private link service is visible. Use `"*"` to expose the PLS to all subs (Least restrictive). | Optional | Empty list `[]` indicating role-based access control only: This private link service will only be available to individuals with role-based access control permissions within your directory. (Most restrictive) |
+| `service.beta.kubernetes.io/azure-pls-auto-approval` | `"sub1 sub2 sub3 … subN"` | A space separated list of Azure subscription ids. This allows PE connection requests from the subscriptions listed to the PLS to be automatically approved. This only works when visibility is set to "*". |  Optional | `[]` |
 
 ## Use private networks
 

@@ -6,7 +6,7 @@ ms.author: maanasagovi
 ms.topic: conceptual
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
-ms.date: 05/15/2023
+ms.date: 10/30/2024
 ---
 
 # Deploy an Azure Kubernetes application programmatically by using Azure CLI
