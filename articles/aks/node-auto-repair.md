@@ -37,9 +37,9 @@ If AKS identifies an unhealthy node that remains unhealthy for at least *five* m
 AKS retries the restart, reimage, and redeploy sequence up to three times if the node remains unhealthy. The overall auto repair process can take up to an hour to complete. 
 
 ## Limitations
-AKS node auto-repair is a best effort service and we don't guarantee that the node is restored back to healthy status. If your node persists in an unhealthy state, it's highly encouraged that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
+AKS node auto-repair is a best effort service and we don't guarantee that the node is restored back to healthy status. If your node persists in an unhealthy state, we highly encourage that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
 
-Additionally, there are cases where AKS does not perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure can't detect that an issue exists:
+Additionally, there are cases where AKS doesn't perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure can't detect that an issue exists:
 
 * A node status isn't being reported due to error in network configuration.
 * A node failed to initially register as a healthy node.
