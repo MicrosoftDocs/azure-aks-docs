@@ -35,6 +35,6 @@ Use [availability zones][availability-zones] to increase high availability with 
 
 <!-- LINKS - Internal -->
 [availability-zones]: ./availability-zones.md
-[vm-updates]: ../virtual-machines/maintenance-and-updates.md
-[scheduled-events]: ../virtual-machines/linux/scheduled-events.md
-[spot-node-pools]: spot-node-pool.md
+[vm-updates]: /azure/virtual-machines/updates-maintenance-overview
+[scheduled-events]: /azure/virtual-machines/linux/scheduled-events
+[spot-node-pools]: ./spot-node-pool.md
