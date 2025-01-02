@@ -5,7 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 12/30/2024
+ms.date: 01/02/2025
 ---
 
 # Optimize Azure Kubernetes Service (AKS) usage and costs
@@ -13,13 +13,12 @@ ms.date: 12/30/2024
 This article provides guidance on how to optimize your Azure Kubernetes Service (AKS) usage and costs. It covers the following topics:
 
 * [Automatic scaling](#automatic-scaling)
-* [GPU partitioning](#gpu-partitioning)
+* [GPU optimizations](#gpu-optimizations)
 * [Cluster rightsizing](#cluster-rightsizing)
 * [Multitenancy](#multitenancy)
 * [Azure discounts](#azure-discounts)
 
 ## About cost optimization
-
 
 ## Automatic scaling
 
@@ -43,36 +42,43 @@ The Vertical Pod Autoscaler (VPA) automatically sets resource requests and limit
 
 For more information, see [Vertical pod autoscaling in Azure Kubernetes Service (AKS)](./vertical-pod-autoscaler.md) and [Use the Vertical Pod Autoscaler (VPA) in Azure Kubernetes Service (AKS)](./use-vertical-pod-autoscaler.md).
 
-## GPU partitioning
+## GPU optimizations
 
+### Collect GPU metrics
 
-### Collect metrics
+### GPU partitioning and sharing
 
-
-
-### GPU partitioning strategies
-
-
+GPU partitioning helps combat underutilization by splitting up or sharing GPUs across multiple workloads. The following sections cover different ways to partition and share GPUs in AKS.
 
 #### Time-slicing
 
+The [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/overview.html) enables the **time-slicing** of GPUs in Kubernetes clusters. With time-slicing, a system administrator can define a set of *replicas* for a GPU, each of which can be handed out independently to a pod to run workloads on. You can apply cluster-wide default time-slicing configurations and node-specific configurations.
+
+:::image type="content" source="./media/optimize-aks-costs/time-slicing-gpu.png" alt-text="Screenshot of a visual chart example showing GPU time-slicing.":::
+
+For more information, see [Time-slicing GPUs in Kubernetes](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-sharing.html).
 
 #### Multi-processing service (MPS)
 
+A single process might not utilize all the memory and compute bandwidth capacity available on a GPU. The Multi-Process Service (MPS) enables logical partitioning of memory and compute resources between workloads and allows kernel and memcopy operations from different processes to overlap on the GPU. MPS helps you achieve higher GPU utilization and shorter running times.
+
+:::image type="content" source="./media/optimize-aks-costs/mps-gpu.png" alt-text="Screenshot of a visual chart example showing GPU multi-process service (MPS).":::
+
+For more information, see [Multi-Process Service (MPS)](https://docs.nvidia.com/deploy/mps/index.html#mps).
 
 #### Multi-instance GPUs (MIGs)
 
+Multi-instance GPUs (MIGs) enable you to partition GPUs based on the NVIDIA Ampere and later architectures into separate and secure GPU instances for CUDA applications.
+
+:::image type="content" source="./media/optimize-aks-costs/migs-gpu.png" alt-text="Screenshot of a visual chart example showing GPU multi-instance GPUs (MIGs).":::
+
+For more information, see [GPU Operator with MIG](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html).
 
 ## Cluster rightsizing
 
-
 ### Rightsize your cluster
 
-
-
 ### Cluster autoscaling
-
-
 
 ### Node autoprovisioning (preview)
 
@@ -82,22 +88,15 @@ For more information, see [Vertical pod autoscaling in Azure Kubernetes Service 
 
 ### Dedicated cluster
 
-
-
 ### Dedicated node pool
 
-
-
 ### Dedicated namespace
-
-
 
 ## Azure discounts
 
 * Azure Savings Plans
 * Reserved Instances
 * Azure Hybrid Benefits
-
 
 ## Next steps
 
