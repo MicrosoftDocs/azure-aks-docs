@@ -43,7 +43,7 @@ Additionally, there are cases where AKS will not perform automatic repair. Failu
 
 * A node status isn't being reported due to error in network configuration.
 * A node failed to initially register as a healthy node.
-* If the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
+* If either of the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
 
 ## How to monitor node auto-repair
 When AKS performs node auto-repair in your cluster, Kubernetes events are emitted for visibility. The events appear on the node object and are emitted from the "aks-auto-repair" source. Learn more about how to access, store, and configure alerts on Kubernetes events [here][events].
