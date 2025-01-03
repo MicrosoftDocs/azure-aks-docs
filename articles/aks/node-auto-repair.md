@@ -10,7 +10,7 @@ ms.author: nickoman
 
 # Azure Kubernetes Service (AKS) node auto-repair
 
-Azure Kubernetes Service (AKS) continuously monitors the health state of worker nodes and performs automatic node repair if they become unhealthy. The Azure virtual machine (VM) platform [performs maintenance on VMs][vm-updates] experiencing issues. AKS and Azure VMs work together to minimize service disruptions for clusters.
+Azure Kubernetes Service (AKS) continuously monitors the health state of worker nodes and performs automatic node repair if they become unhealthy. The Azure virtual machine (VM) platform [performs maintenance on VMs](vm-updates) experiencing issues. AKS and Azure VMs work together to minimize service disruptions for clusters.
 
 In this article, you learn how the automatic node repair functionality behaves for Windows and Linux nodes.
 
