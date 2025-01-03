@@ -39,14 +39,16 @@ AKS retries the restart, reimage, and redeploy sequence up to three times if the
 ## Limitations
 AKS node auto-repair is a best effort service and we don't guarantee that the node is restored back to healthy status. If your node persists in an unhealthy state, we highly encourage that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](/troubleshoot/azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
 
-Additionally, there are cases where AKS doesn't perform automatic repair. Failure to automatically repair the node may occur either by design or if Azure can't detect that an issue exists:
+There are cases where AKS doesn't perform automatic repair. Failure to automatically repair the node can occur either by design or if Azure can't detect that an issue exists. Examples of when auto-repair won't occur include:
 
 * A node status isn't being reported due to error in network configuration.
 * A node failed to initially register as a healthy node.
 * If either of the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
 
 ## How to monitor node auto-repair
-When AKS performs node auto-repair in your cluster, Kubernetes events are emitted for visibility. The events appear on the node object and are emitted from the "aks-auto-repair" source. Learn more about how to [access, store, and configure alerts on Kubernetes events](./events.md).
+When AKS performs node auto-repair on your cluster, AKS emits Kubernetes events from the aks-auto-repair source for visibility. The following events appear on a node object when auto-repair happens. 
+
+To learn more about accessing, storing, and configuring alerts on Kubernetes events, see [Use Kubernetes events for troubleshooting in Azure Kubernetes Service](./events.md).
 
 | Reason | Event Message | Description |
 | --- | --- | --- |
