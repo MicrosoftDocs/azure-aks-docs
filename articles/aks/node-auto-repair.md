@@ -61,11 +61,14 @@ To learn more about accessing, storing, and configuring alerts on Kubernetes eve
 
 If any errors occur during the node auto-repair process, the following events are emitted with the verbatim error message. Learn more about [troubleshooting common node auto-repair errors](/troubleshoot/azure/azure-kubernetes/availability-performance/node-auto-repair-errors).
 
+> [!NOTE]
+> _Error code_ in the following event messages varies depending on the error reported.
+
 | Reason | Event Message | Description |
 | --- | --- | --- |
-| NodeRebootError | Node auto-repair reboot action failed due to an operation failure. See error details here: [error message here] | Emitted when there's an error with the reboot action. |
-| NodeReimageError | Node auto-repair reimage action failed due to an operation failure. See error details here: [error message here] | Emitted when there's an error with the reimage action. |
-| NodeRedeployError | Node auto-repair redeploy action failed due to an operation failure. See error details here: [error message here] | Emitted when there's an error with the redeploy action. |
+| NodeRebootError | Node auto-repair reboot action failed due to an operation failure. See error details here: _Error code_ | Emitted when there's an error with the reboot action. |
+| NodeReimageError | Node auto-repair reimage action failed due to an operation failure. See error details here: _Error code_ | Emitted when there's an error with the reimage action. |
+| NodeRedeployError | Node auto-repair redeploy action failed due to an operation failure. See error details here: _Error code_ | Emitted when there's an error with the redeploy action. |
 
 ## Next steps
 By default, you can access Kubernetes events and logs on your AKS cluster from the past 1 hour. To store and query events and logs from the past 90 days, enable [Container Insights](/azure/azure-monitor/containers/container-insights-overview#access-container-insights) for deeper troubleshooting on your AKS cluster.
