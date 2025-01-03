@@ -9,7 +9,7 @@ ms.author: nickoman
 ---
 
 # Azure Kubernetes Service (AKS) node auto-drain
-[Scheduled events][scheduled-events] can occur on the underlying virtual machines (VMs) in any of your node pools. For [spot node pools][spot-node-pools], scheduled events may cause a *preempt* node event for the node. Certain node events, such as  *preempt*, cause AKS node auto-drain to attempt a cordon and drain of the affected node. This process enables rescheduling for any affected workloads on that node. For example, your spot node with the taint "kubernetes.azure.com/scalesetpriority: spot" may receive a taint with `"remediator.kubernetes.azure.com/unschedulable"` when a scheduled event occurs on that node.
+Node auto-drain helps you protect your node workloads from disruptions when [scheduled events][scheduled-events] occur on the underlying virtual machines (VMs) in any of your node pools. When certain node events happen, node auto-drain attempts a cordon and drain of the affected node so the workloads can be rescheduled safely. An example of when node auto-drain might occur is when scheduled events on a [spot node pool][spot-node-pools] causes a preempt node event. The spot node with the taint "kubernetes.azure.com/scalesetpriority: spot" may receive a taint with `"remediator.kubernetes.azure.com/unschedulable"` when a scheduled event occurs on that node.
 
 > [!NOTE]
 > Node auto-drain is a best effort service and can't be guaranteed to operate perfectly in all scenarios.
