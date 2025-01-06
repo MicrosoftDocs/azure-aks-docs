@@ -354,3 +354,5 @@ To learn more about AI and machine learning workloads on AKS, see the following 
 * Russell de Pina | Principal TPM
 * Ken Kilty | Principal TPM
 * Erin Schaffer | Content Developer 2
+* Adrian Joian | Principal Customer Engineer
+* Ryan Graham | Principal Technical Specialist
