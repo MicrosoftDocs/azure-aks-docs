@@ -65,7 +65,7 @@ The **completed** application code for this workflow is available in our [GitHub
 ## Next step
 
 > [!div class="nextstepaction"]
-> [Understand platform differences][eks-edw-understand]
+> [Understand platform differences][eks-web-understand]
   
 ## Contributors
 
@@ -98,7 +98,6 @@ Other contributors:
 [download-vscode]: https://code.visualstudio.com/Download
 [bicep-extension]: https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep
 [github-repo]: https://github.com/azure-samples/aks-web-application-replicate-from-aws
-[eks-edw-understand]: ./eks-edw-understand.md
+[eks-web-understand]: ./eks-web-understand.md
 [azure-kv]: /azure/key-vault/general/overview
 [azure-dns]: /azure/dns/dns-overview
-
