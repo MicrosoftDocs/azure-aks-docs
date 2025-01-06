@@ -51,3 +51,5 @@ The deployment process consists of the following steps:
 * Russell de Pina | Principal TPM
 * Ken Kilty | Principal TPM
 * Erin Schaffer | Content Developer 2
+* Adrian Joian | Principal Customer Engineer
+* Ryan Graham | Principal Technical Specialist
