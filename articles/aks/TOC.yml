@@ -1021,6 +1021,16 @@
               href: /troubleshoot/azure/azure-kubernetes/welcome-azure-kubernetes?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: AI and machine learning
       items:
+        - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS) 
+          href: open-ai-quickstart.md
+        - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
+          href: open-ai-secure-access-quickstart.md
+        - name: Deploy an AI model with the AI toolchain operator
+          href: ai-toolchain-operator.md
+        - name: Fine-tune an AI model for inferencing with the AI toolchain operator
+          href: ai-toolchain-operator-fine-tune.md
+        - name: Deploy data and ML pipelines with Flyte
+          href: use-flyte.md
         - name: Work with clusters using Copilot
           href: /azure/copilot/work-aks-clusters?toc/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: DevOps
