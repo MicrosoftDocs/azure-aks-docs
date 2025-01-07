@@ -24,7 +24,7 @@ AKS releases support for new releases of Windows Server Annual Channel for Conta
 |  K8s version | Annual Channel (host) version | Container image supported | End of support date |
 |--------------|-------------------|-------------------|-------------------|
 | 1.28 | 23H2 (preview only) | Windows Server 2022 | End of 1.33 support |
-| 1.31 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.35 support |
+| 1.32 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.35 support |
 | 1.35 | 25H2 | Windows Server 2025 | End of 1.38 support |
 
 ## Windows Server Annual Channel vs. Long Term Servicing Channel Releases (LTSC)
