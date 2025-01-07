@@ -155,9 +155,13 @@ Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bo
 
 ### Limitations
 - Supported on kubernetes version 1.27 and above.
-- New node pools created on kubernetes version 1.27 and above after February 2025 will have kubelet serving certificate rotation enabled by default.
-- Existing node pools on kubernetes version 1.26 and below will have kubelet serving certificate rotation enabled by default after upgrading to kubernetes version 1.27.
-- Existing node pools on kubernetes version 1.27 and above will have kubelet serving certificate rotation enabled by default after upgrading their node pool.
+- Any new or existing node pools will have kubelet serving certificate rotation enabled by default when they perform their first upgrade to any kubernetes version 1.27 or greater. View this upcoming release in [AKS Releases](https://github.com/Azure/AKS/releases).
+### Verify kubelet serving certificate rotation has been enabled 
+Each node with the feature enabled will automatically be given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes --show-labels` command.
+
+    ```bash
+    kubectl get nodes --show-labels
+    ```
 
 ### Verify kubelet goes through TLS bootstrapping process
 
@@ -179,9 +183,13 @@ csr-sb4wz   46m    kubernetes.io/kubelet-serving                 system:node:aks
 csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:ho7zyu      <none>              Approved,Issued
     ```
 
+### Verify kubelet is using a certificate obtained from server TLS bootstrapping
+To validate the kubelet is using a certificate obtained from server TLS bootstrapping, you can inspect the kubelet's PKI directory on the given node.
 ### Disable kubelet serving certificate rotation
-Kubelet serving certificate rotation can be disabled by updating a node pool with a node pool tag.
+Kubelet serving certificate rotation can be disabled by updating a node pool using the [az aks nodepool update][az-aks-nodepool-update] command with a node pool tag. This node pool update should occur before kubelet serving is enabled by default.
 
+```azurecli-interactive
+az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool aks-disable-kubelet-serving-certificate-rotation true
 ## Next steps
 
 This article showed you how to manually and automatically rotate your cluster certificates, CAs, and SAs. For more information, see [Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)][aks-best-practices-security-upgrades].
