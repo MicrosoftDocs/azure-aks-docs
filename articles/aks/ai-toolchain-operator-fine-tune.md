@@ -36,7 +36,7 @@ The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies th
 
 ## Export environmental variables
 
-* To simplify the configuration steps in this article, you can define environment variables using the following commands. Make sure to replace the placeholder values with your own.
+To simplify the configuration steps in this article, you can define environment variables using the following commands. Make sure to replace the placeholder values with your own.
 
     ```azurecli-interactive
     ACR_NAME="myACRname"
@@ -50,7 +50,7 @@ The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies th
 
 In this example, your KAITO fine-tuning deployment produces a containerized adapter output, and the KAITO workspace requires a new push secret as authorization to push the adapter image to your ACR.
 
-* Generate a new secret to provide the KAITO fine-tuning workspace access to push the model fine-tuning output image to your ACR using the `kubectl create secret docker-registry` command.
+Generate a new secret to provide the KAITO fine-tuning workspace access to push the model fine-tuning output image to your ACR using the `kubectl create secret docker-registry` command.
 
     ```bash
     kubectl create secret docker-registry myregistrysecret --docker-server=$ACR_NAME.azurecr.io --docker-username=$ACR_USERNAME --docker-password=$ACR_PASSWORD
@@ -198,7 +198,7 @@ inference:
 
 If you no longer need these resources, you can delete them to avoid incurring extra Azure charges. To calculate the estimated cost of your resources, you can use the [Azure pricing calculator](https://azure.microsoft.com/pricing/calculator/?service=kubernetes-service).
 
-* Delete the KAITO workspaces and their allocated resources on your AKS cluster using the `kubectl delete workspace` command.
+Delete the KAITO workspaces and their allocated resources on your AKS cluster using the `kubectl delete workspace` command.
 
     ```bash
     kubectl delete workspace workspace-tuning-phi-3-mini
