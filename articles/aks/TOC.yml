@@ -430,6 +430,8 @@
                   href: airflow-deploy.md
         - name: AI and machine learning workloads
           items:
+            - name: Overview
+              href: ai-ml-overview.md
             - name: Deploy an OpenAI application
               items:
                 - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
