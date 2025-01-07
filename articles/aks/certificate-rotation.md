@@ -156,6 +156,7 @@ Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bo
 ### Limitations
 - Supported on kubernetes version 1.27 and above.
 - Any new or existing node pools will have kubelet serving certificate rotation enabled by default when they perform their first upgrade to any kubernetes version 1.27 or greater. View this upcoming release in [AKS Releases](https://github.com/Azure/AKS/releases).
+
 ### Verify kubelet serving certificate rotation has been enabled 
 Each node with the feature enabled will automatically be given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes --show-labels` command.
 
