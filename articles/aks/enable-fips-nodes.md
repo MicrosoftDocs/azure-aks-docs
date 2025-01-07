@@ -255,6 +255,21 @@ The above command triggers a reimage of the node pool immediately to deploy the 
     np         False
     nodepool1  False  
     ```
+## Message of the Day
+
+Pass the ```--message-of-the-day``` flag with the location of the file to replace the Message of the Day on Linux nodes at cluster creation or node pool creation.
+
+Create a cluster with message of the day using the [`az aks create`][az-aks-create] command.
+
+```azurecli
+az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --message-of-the-day ./newMOTD.txt
+```
+
+Add a node pool with message of the day using the [`az aks nodepool add`][az-aks-nodepool-add] command.
+
+```azurecli
+az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --message-of-the-day ./newMOTD.txt
+```
 
 ## Next steps
 
