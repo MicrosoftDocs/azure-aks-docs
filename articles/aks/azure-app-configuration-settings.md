@@ -3,7 +3,7 @@ title: Configure the Azure App Configuration extension for your Azure Kubernetes
 description: Learn how to configure the Azure App Configuration extension specifically for your Azure Kubernetes Service (AKS).
 author: RichardChen820
 ms.author: junbchen
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 09/10/2024

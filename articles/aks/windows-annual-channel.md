@@ -65,7 +65,7 @@ The following table compares Windows Annual Channel and Long Term Servicing Chan
 1. Register the `AKSWindowsAnnualPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
     ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "WindowsAnnualPreview"
+    az feature register --namespace "Microsoft.ContainerService" --name "AKSWindowsAnnualPreview"
     ```
 
     It takes a few minutes for the status to show *Registered*.

@@ -25,8 +25,6 @@
       href: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Windows container considerations
       href: windows-vs-linux-containers.md
-    - name: Optimize costs
-      href: best-practices-cost.md
 - name: Quickstarts
   expanded: true
   items:
@@ -86,7 +84,7 @@
     - name: 4 - Deploy containerized application
       href: tutorial-kubernetes-deploy-application.md
     - name: 5 - Use PaaS services
-      href: tutorial-kubernetes-paas-services.md        
+      href: tutorial-kubernetes-paas-services.md
     - name: 6 - Scale application
       href: tutorial-kubernetes-scale.md
     - name: 7 - Upgrade cluster
@@ -99,18 +97,20 @@
       href: free-standard-pricing-tiers.md
     - name: Maintain and upgrade an AKS cluster
       href: upgrade.md
+    - name: AKS Communication Manager (Preview)
+      href: aks-communication-manager.md
     - name: Resource reservations
       href: node-resource-reservations.md
-    - name: Backup and recover cluster
+    - name: Back up and recover cluster
       href: /azure/backup/azure-kubernetes-service-backup-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Observability
       items:
         - name: Monitor AKS
           href: monitor-aks.md
-        - name: Network Observability
-          href: network-observability-overview.md
-        - name: Advanced Network Observability
-          href: advanced-network-observability-concepts.md
+        - name: Monitor control plane metrics
+          href: control-plane-metrics-monitor.md
+        - name: Container Network Observability
+          href: container-network-observability-concepts.md
     - name: Security
       items:
         - name: Security concepts
@@ -156,6 +156,14 @@
           href: concepts-network-services.md
         - name: Ingress
           href: concepts-network-ingress.md
+        - name: Egress
+          items:
+            - name: Outbound network and FQDN rules for AKS clusters
+              href: outbound-rules-control-egress.md
+              displayName: egress, firewall
+            - name: Network isolated clusters
+              href: concepts-network-isolated.md
+              displayName: outbound, egress, private
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -164,14 +172,14 @@
           href: concepts-fine-tune-language-models.md
         - name: Machine learning operations (MLOps)
           href: concepts-machine-learning-ops.md
-    - name: Advanced Container Networking Services 
+    - name: Advanced Container Networking Services
       items:
-        - name: Advanced Container Networking Services overview
+        - name: Advanced Container Networking Services (ACNS) overview
           href: advanced-container-networking-services-overview.md
-        - name: Advanced Network Observability overview
-          href: advanced-network-observability-concepts.md
-        - name: Security
-          href: advanced-network-container-services-security-concepts.md
+        - name: Container Network Observability overview
+          href: container-network-observability-concepts.md
+        - name: Container Network Security overview
+          href: container-network-security-concepts.md
     - name: Storage
       href: concepts-storage.md
     - name: Scaling
@@ -181,7 +189,7 @@
         - name: Node auto-repair
           href: node-auto-repair.md
         - name: Node Problem Detector (NPD)
-          href: node-problem-detector.md  
+          href: node-problem-detector.md
     - name: Service meshes
       href: servicemesh-about.md
     - name: Sustainable software engineering
@@ -198,6 +206,8 @@
       href: best-practices.md
     - name: Baseline architecture for an AKS cluster
       href: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Cost optimization
+      href: best-practices-cost.md
     - name: High availability disaster recovery
       items:
         - name: Overview
@@ -240,12 +250,20 @@
           href: best-practices-performance-scale.md
         - name: For large workloads
           href: best-practices-performance-scale-large.md
+    - name: Monitoring and troubleshooting
+      items:
+        - name: Proactive monitoring
+          href: best-practices-monitoring-proactive.md
     - name: Application development
       items:
         - name: Resource management
           href: developer-best-practices-resource-management.md
         - name: Pod security
           href: developer-best-practices-pod-security.md
+    - name: Networking
+      items:
+        - name: TCP Keepalive
+          href: improve-network-fault-tolerance-in-aks-using-tcp-keepalive.md
     - name: Back up and recover cluster
       href: /azure/backup/azure-kubernetes-service-backup-overview?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Windows containers
@@ -270,6 +288,8 @@
           href: aks-extension-draft-github-workflow.md
         - name: Use AKS plugins for GitHub Copilot for Azure
           href: aks-extension-ghcopilot-plugins.md
+        - name: Deploy and test inference models with the AI toolchain operator (KAITO) in Visual Studio Code
+          href: aks-extension-kaito.md
     - name: Migration
       items:
         - name: Plan and execute a migration
@@ -300,6 +320,8 @@
           href: start-stop-cluster.md
         - name: Delete an AKS cluster
           href: delete-cluster.md
+        - name: Resize an AKS cluster
+          href: resize-cluster.md
         - name: Configure private clusters
           items:
            - name: Create a private cluster
@@ -307,7 +329,7 @@
            - name: Access a private cluster remotely
              href: access-private-cluster.md
         - name: Integration
-          items:      
+          items:
             - name: Integrate ACR with an AKS cluster
               href: cluster-container-registry-integration.md
             - name: Use cluster extensions
@@ -330,7 +352,7 @@
               href: scale-down-mode.md
             - name: Connect securely to cluster nodes
               href: node-access.md
-            - name: Manage SSH key 
+            - name: Manage SSH key
               href: manage-ssh-node-access.md
             - name: Deploy trusted launch on AKS
               href: use-trusted-launch.md
@@ -365,8 +387,8 @@
             - name: Use the Azure portal
               href: virtual-nodes-portal.md
     - name: Workloads
-      items:   
-        - name: Stateful workloads 
+      items:
+        - name: Stateful workloads
           items:
             - name: Overview
               href: stateful-workloads-overview.md
@@ -394,6 +416,38 @@
                   href: create-valkey-infrastructure.md
                 - name: Configure and deploy a Valkey cluster
                   href: deploy-valkey-cluster.md
+                - name: Test Valkey with Locust
+                  href: validate-valkey-cluster.md
+                - name: Test resiliency during an AKS node pool upgrade
+                  href: upgrade-valkey-aks-nodepool.md
+            - name: Deploy Apache Airflow
+              items:
+                - name: Overview
+                  href: airflow-overview.md
+                - name: Create Airflow infrastructure resources
+                  href: airflow-create-infrastructure.md
+                - name: Configure and deploy Airflow
+                  href: airflow-deploy.md
+        - name: AI and machine learning workloads
+          items:
+            - name: Overview
+              href: ai-ml-overview.md
+            - name: Deploy an OpenAI application
+              items:
+                - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
+                  href: open-ai-quickstart.md
+                - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
+                  href: open-ai-secure-access-quickstart.md
+            - name: Deploy a Ray cluster
+              items:
+                - name: Overview
+                  href: ray-overview.md
+                - name: Configure and deploy a Ray cluster
+                  href: deploy-ray.md 
+            - name: Deploy an AI model with the AI toolchain operator
+              href: ai-toolchain-operator.md
+            - name: Deploy data and ML pipelines with Flyte
+              href: use-flyte.md
         - name: GPU workloads
           items:
             - name: Use GPUs
@@ -432,6 +486,8 @@
           href: aks-zone-resiliency.md
         - name: Propagate Kubernetes resources across multiple clusters
           href: /azure/kubernetes-fleet/resource-propagation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Deploy SpinKube to run serverless Wasm workloads
+          href: deploy-spinkube.md
     - name: Cluster management
       items:
         - name: Azure portal Kubernetes resource view
@@ -490,6 +546,8 @@
               href: use-oidc-issuer.md
             - name: Use KMS etcd encryption
               href: use-kms-etcd-encryption.md
+            - name: Secure container access to resources
+              href: secure-container-access.md
         - name: Node security
           items:
             - name: BYOK for Azure managed disks
@@ -503,9 +561,9 @@
             - name: Use Dedicated Hosts with AKS
               href: use-azure-dedicated-hosts.md
             - name: Restrict access to IMDS
-              href: imds-restriction.md       
+              href: imds-restriction.md
         - name: Authentication and authorization
-          items: 
+          items:
             - name: Use managed identities
               href: use-managed-identity.md
             - name: Create service principal
@@ -513,7 +571,7 @@
             - name: Enable Microsoft Entra integration
               items:
                 - name: AKS-managed Microsoft Entra ID
-                  items: 
+                  items:
                     - name: Enable AKS-managed Microsoft Entra integration
                       href: enable-authentication-microsoft-entra-id.md
                     - name: Manage local accounts
@@ -573,7 +631,7 @@
                     - name: 3 - Apply extra configurations or perform troubleshooting
                       href: csi-secrets-store-configuration-options.md
     - name: Configure networking
-      items:     
+      items:
         - name: CNI
           items:
             - name: Use Azure CNI Overlay
@@ -592,6 +650,8 @@
               href: configure-azure-cni.md
             - name: Bring your own CNI
               href: use-byo-cni.md
+            - name: Upgrade AKS IPAM and dataplane
+              href: upgrade-aks-ipam-and-dataplane.md
         - name: DNS
           items:
             - name: Use a static IP address and DNS label
@@ -608,17 +668,18 @@
               href: http-proxy.md
             - name: Use a NAT Gateway
               href: nat-gateway.md
-            - name: Outbound network and FQDN rules for AKS clusters
-              href: outbound-rules-control-egress.md
             - name: Use instance-level public IP addresses
               href: use-node-public-ips.md
-            - name: Restrict and control cluster egress traffic 
+            - name: Restrict and control cluster egress traffic
               href: limit-egress-traffic.md
             - name: Configure Static Egress Gateway
               href: configure-static-egress-gateway.md
+            - name: Network isolated clusters
+              href: network-isolated.md
+              displayName: outbound, egress, private, acr
         - name: Ingress
           items:
-            - name: Use application routing add-on 
+            - name: Use application routing add-on
               items:
                 - name: Application routing add-on overview
                   href: app-routing.md
@@ -654,10 +715,10 @@
               href: private-clusters.md#use-a-private-endpoint-connection
             - name: Diagnose and solve UDP packet drops
               href: troubleshoot-udp-packet-drops.md
-            - name: Network Security
+            - name: Container Network Security
               items:
-                - name: FQDN Filtering with Advanced Container Networking Services
-                  href: advanced-network-container-services-security-cli.md
+                - name: FQDN Filtering with Advanced Container Networking Services (ACNS)
+                  href: how-to-apply-fqdn-filtering-policies.md
     - name: Storage
       items:
         - name: CSI storage drivers
@@ -754,12 +815,8 @@
             href: cost-analysis.md
         - name: Network Observability
           items:
-            - name: Network Observability
-              href: network-observability-managed-cli.md
-            - name: Advanced Network Observability - Azure managed Prometheus and Grafana
-              href: advanced-network-observability-cli.md
-            - name: Advanced Network Observability - Bring Your Own Prometheus and Grafana
-              href: advanced-network-observability-bring-your-own-cli.md
+            - name: Container Network Observability
+              href: container-network-observability-how-to.md
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on
@@ -1006,6 +1063,20 @@
           href: eks-edw-prepare.md
         - name: Deploy to Azure
           href: eks-edw-deploy.md
+      - name: Migrate EKS web application workloads
+        items:
+        - name: Overview
+          href: eks-web-overview.md
+        - name: Understand platform differences
+          href: eks-web-understand.md
+        - name: Rearchitect for AKS
+          href: eks-web-rearchitect.md
+        - name: Refactor app
+          href: eks-web-refactor.md
+        - name: Prepare for deployment
+          href: eks-web-prepare.md
+        - name: Deploy to Azure
+          href: eks-web-deploy.md
 - name: FAQ
   href: faq.yml
 - name: Reference

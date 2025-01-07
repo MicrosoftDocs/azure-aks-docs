@@ -2,23 +2,30 @@
 title: Optimize costs in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Recommendations and best practices for optimizing costs in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: best-practice
+ms.service: azure-kubernetes-service
 ms.date: 02/21/2024
-author: nickomang
-ms.author: nickoman
+author: schaffererin
+ms.author: schaffererin
 ---
 
-# Optimize costs in Azure Kubernetes Service (AKS)
+# Best practices for cost optimization in Azure Kubernetes Service (AKS)
 
 Cost optimization is about maximizing the value of resources while minimizing unnecessary expenses within your cloud environment. This process involves identifying cost effective configuration options and implementing best practices to improve operational efficiency. An AKS environment can be optimized to minimize cost while taking into account performance and reliability requirements.
 
 In this article, you learn about:
 > [!div class="checklist"]
 >
+> * Holistic monitoring and FinOps practices.
 > * Strategic infrastructure selection.
 > * Dynamic rightsizing and autoscaling.
 > * Leveraging Azure discounts for substantial savings.
-> * Holistic monitoring and FinOps practices.
+
+## Embrace FinOps to build a cost saving culture
+
+[Financial operations (FinOps)](https://www.finops.org/introduction/what-is-finops/) is a discipline that combines financial accountability with cloud management and optimization. It focuses on driving alignment between finance, operations, and engineering teams to understand and control cloud costs. The FinOps foundation has several notable projects, such as the [**FinOps Framework**](https://finops.org/framework) and the [**FOCUS Specification**](https://focus.finops.org/).
+
+For more information, see [What is FinOps?](/azure/cost-management-billing/finops/)
 
 ## Prepare the application environment  
 
@@ -139,13 +146,6 @@ If you have consistent spend, but your use of disparate resources across SKUs an
 
 [Azure Hybrid Benefit for Azure Kubernetes Service (AKS)](./azure-hybrid-benefit.md) allows you to maximize your on-premises licenses at no extra cost. Use any qualifying on-premises licenses that also have an active Software Assurance (SA) or a qualifying subscription to get Windows VMs on Azure at a reduced cost.
 
-## Embrace FinOps to build a cost saving culture
-
-[Financial operations (FinOps)](https://www.finops.org/introduction/what-is-finops/) is a discipline that combines financial accountability with cloud management and optimization. It focuses on driving alignment between finance, operations, and engineering teams to understand and control cloud costs. The FinOps foundation has several notable projects, such as:
-
-* [**FinOps Framework**](https://finops.org/framework): An operating model for how to practice and implement FinOps.
-* [**FOCUS Specification**](https://focus.finops.org/): A technical specification and open standard for cloud usage, cost, and billing data across all major cloud provider services.
-
 ## Next steps
 
 Cost optimization is an ongoing and iterative effort. Learn more by reviewing the following recommendations and architecture guidance:
@@ -154,4 +154,3 @@ Cost optimization is an ongoing and iterative effort. Learn more by reviewing th
 * [Baseline architecture guide for AKS](/azure/architecture/reference-architectures/containers/aks/baseline-aks)
 * [Optimize compute costs on AKS](/training/modules/aks-optimize-compute-costs/)
 * [AKS cost optimization techniques](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/azure-kubernetes-service-aks-cost-optimization-techniques/ba-p/3652908)
-* [What is FinOps?](/azure/cost-management-billing/finops/)

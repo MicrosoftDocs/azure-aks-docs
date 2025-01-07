@@ -114,7 +114,7 @@ For each member cluster that you rejoin to the newly upgraded fleet, view the ou
 
 ## Verify functionality
 
-You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Kubernetes API of the Fleet resource with Azure Kubernetes Fleet Manager](./quickstart-access-fleet-kubernetes-api.md).
+You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
 
 To verify that your newly upgraded Kubernetes Fleet resource is functioning properly and that the member clusters joined successfully, confirm that you're able to access the hub cluster's API server using the `kubectl get memberclusters` command.
 

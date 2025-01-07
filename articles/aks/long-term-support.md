@@ -1,7 +1,7 @@
 ---
 title: Long-term support for Azure Kubernetes Service (AKS) versions
 description: Learn about Azure Kubernetes Service (AKS) long-term support for Kubernetes
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 01/24/2024
 ms.author: juda
@@ -71,7 +71,9 @@ If you want to carry out an in-place migration, the AKS service will migrate you
     ```
 
     > [!NOTE]
-    > 1.30 is the next LTS version after 1.27. You can opt into LTS from a 1.30 version cluster through the steps given above. LTS version 1.27 will go end of life (EOL) by July 2025.  
+    > 1.30 is the next LTS version after 1.27. You can opt into LTS from a 1.30 version cluster through the steps given above. LTS version 1.27 will go end of life (EOL) by July 2025. 
+    > Supported Patches in LTS today : [1.27.100] [https://github.com/aks-lts/kubernetes/blob/release-1.27-lts/CHANGELOG/CHANGELOG-1.27.md#v127100-akslts]
+    > Currently LTS only supports the two most recent patches and prior old patches get deprecated.
 
 ## Disable long-term support on an existing cluster
 

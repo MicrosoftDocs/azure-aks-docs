@@ -11,7 +11,7 @@ ms.date: 02/12/2024
 
 # Configure Azure CNI Powered by Cilium in Azure Kubernetes Service (AKS)
 
-Azure CNI Powered by Cilium combines the robust control plane of Azure CNI with the data plane of [Cilium](https://cilium.io/) to provide high-performance networking and security. 
+Azure CNI Powered by Cilium combines the robust control plane of Azure CNI with the data plane of [Cilium](https://cilium.io/) to provide high-performance networking and security.
 
 By making use of eBPF programs loaded into the Linux kernel and a more efficient API object structure, Azure CNI Powered by Cilium provides the following benefits:
 
@@ -27,7 +27,7 @@ By making use of eBPF programs loaded into the Linux kernel and a more efficient
 
 ## IP Address Management (IPAM) with Azure CNI Powered by Cilium
 
-Azure CNI Powered by Cilium can be deployed using two different methods for assigning pod IPs: 
+Azure CNI Powered by Cilium can be deployed using two different methods for assigning pod IPs:
 
 - Assign IP addresses from an overlay network (similar to Azure CNI Overlay mode)
 
@@ -46,8 +46,6 @@ Azure CNI powered by Cilium currently has the following limitations:
 * Available only for Linux and not for Windows.
 
 * Cilium L7 policy enforcement is disabled.
-
-* Hubble is disabled.
 
 * Network policies cannot use `ipBlock` to allow access to node or pod IPs. See [frequently asked questions](#frequently-asked-questions) for details and recommended workaround.
 
@@ -96,9 +94,9 @@ az group create --name <resourceGroupName> --location <location>
 
 ```azurecli-interactive
 # Create a virtual network with a subnet for nodes and a subnet for pods
-az network vnet create --resource-group <resourceGroupName> --location <location> --name <vnetName> --address-prefixes <address prefix, example: 10.0.0.0/8> -o none 
-az network vnet subnet create --resource-group <resourceGroupName> --vnet-name <vnetName> --name nodesubnet --address-prefixes <address prefix, example: 10.240.0.0/16> -o none 
-az network vnet subnet create --resource-group <resourceGroupName> --vnet-name <vnetName> --name podsubnet --address-prefixes <address prefix, example: 10.241.0.0/16> -o none 
+az network vnet create --resource-group <resourceGroupName> --location <location> --name <vnetName> --address-prefixes <address prefix, example: 10.0.0.0/8> -o none
+az network vnet subnet create --resource-group <resourceGroupName> --vnet-name <vnetName> --name nodesubnet --address-prefixes <address prefix, example: 10.240.0.0/16> -o none
+az network vnet subnet create --resource-group <resourceGroupName> --vnet-name <vnetName> --name podsubnet --address-prefixes <address prefix, example: 10.241.0.0/16> -o none
 ```
 
 Create the cluster using `--network-dataplane cilium`:
@@ -116,30 +114,6 @@ az aks create \
     --generate-ssh-keys
 ```
 
-## Update an existing cluster to Azure CNI Powered by Cilium
-
-> [!NOTE]
-> You can update an existing cluster to Azure CNI Powered by Cilium if the cluster meets the following criteria:
->
-> - The cluster uses either [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md). This does **not** include [Azure CNI](./configure-azure-cni.md).
-> - The cluster does not have any Windows node pools.  
-> [!NOTE]
-> When enabling Cilium in a cluster with a different network policy engine (Azure NPM or Calico), the network policy engine will be uninstalled and replaced with Cilium. See [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico) for more details.
-> [!WARNING]
-> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is re-imaged.
-Cilium will begin enforcing network policies only after all nodes have been re-imaged.
-
-To perform the upgrade, you will need Azure CLI version 2.52.0 or later. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
-
-Use the following command to upgrade an existing cluster to Azure CNI Powered by Cilium. Replace the values for `<clusterName>` and `<resourceGroupName>`:
-
-```azurecli-interactive
-az aks update --name <clusterName> --resource-group <resourceGroupName> \
-  --network-dataplane cilium
-```
-
-> [!NOTE]
-> After enabling Azure CNI Powered by Cilium on an AKS cluster, you can't disable it. If you want to use a different network data plane, you must create a new AKS cluster.
 
 ## Frequently asked questions
 
@@ -154,17 +128,17 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
     This `CiliumNetworkPolicy` example demonstrates a sample matching pattern for services that match the specified label.
 
     ```yaml
-    apiVersion: "cilium.io/v2" 
-    kind: CiliumNetworkPolicy 
-    metadata: 
-      name: "example-fqdn" 
-    spec: 
-      endpointSelector: 
-        matchLabels: 
-          foo: bar 
-      egress: 
-      - toFQDNs: 
-        - matchPattern: "*.example.com" 
+    apiVersion: "cilium.io/v2"
+    kind: CiliumNetworkPolicy
+    metadata:
+      name: "example-fqdn"
+    spec:
+      endpointSelector:
+        matchLabels:
+          foo: bar
+      egress:
+      - toFQDNs:
+        - matchPattern: "*.example.com"
     ```
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
@@ -221,6 +195,8 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
 ## Next steps
 
 Learn more about networking in AKS in the following articles:
+
+* [Upgrade Azure Kubernetes Service (AKS) IPAM modes and Dataplane Technology](upgrade-aks-ipam-and-dataplane.md).
 
 * [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 

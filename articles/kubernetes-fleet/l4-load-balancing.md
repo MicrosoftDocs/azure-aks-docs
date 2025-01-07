@@ -31,7 +31,7 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
   * These target clusters have to be [added as member clusters to the Fleet resource](./quickstart-create-fleet-and-members.md#join-member-clusters).
   * These target clusters should be using [Azure CNI (Container Networking Interface) networking](/azure/aks/configure-azure-cni).
 
-* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access the Kubernetes API of the Fleet resource](./quickstart-access-fleet-kubernetes-api.md).
+* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
 
 * Set the following environment variables and obtain the kubeconfigs for the fleet and all member clusters:
 
@@ -87,7 +87,7 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
 1. Create the following `ClusterResourcePlacement` in a file called `crp-2.yaml`. Notice we're selecting clusters in the `eastus` region:
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
       name: kuard-demo

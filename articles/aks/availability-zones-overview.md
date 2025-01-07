@@ -2,7 +2,7 @@
 title: Availability zones in Azure Kubernetes Service (AKS) overview
 description: Learn about using availability zones in Azure Kubernetes Service (AKS) to increase the availability of your applications.
 ms.service: azure-kubernetes-service
-ms.topic: article
+ms.topic: concept-article
 ms.date: 04/24/2024
 author: schaffererin
 ms.author: schaffererin

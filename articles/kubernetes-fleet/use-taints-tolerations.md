@@ -1,40 +1,40 @@
 ---
-title: "Use taints on member clusters and tolerations on cluster resource placements in Azure Kubernetes Fleet Manager"
+title: "Use Taints on Member Clusters and Tolerations on Cluster Resource Placements in Azure Kubernetes Fleet Manager"
 description: Learn how to use taints on `MemberCluster` resources and tolerations on `ClusterResourcePlacement` resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 04/23/2024
-author: schaffererin
-ms.author: schaffererin
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ---
 
 # Use taints on member clusters and tolerations on cluster resource placements
 
-This article explains how to add/remove taints on `MemberCluster` resources and tolerations on `ClusterResourcePlacement` resources in Azure Kubernetes Fleet Manager.
+This article explains how to add or remove taints on `MemberCluster` resources and tolerations on `ClusterResourcePlacement` resources in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
 
-Taints and tolerations work together to ensure member clusters only receive specified resources during resource propagation. Taints are applied to `MemberCluster` resources to prevent resources from being propagated to the member cluster. Tolerations are applied to `ClusterResourcePlacement` resources to allow resources to be propagated to the member cluster, even if the member cluster has a taint.
+Taints and tolerations work together to ensure that member clusters receive only specified resources during resource propagation. Taints are applied to `MemberCluster` resources to prevent resources from being propagated to the member cluster. Tolerations are applied to `ClusterResourcePlacement` resources to allow resources to be propagated to the member cluster, even if the member cluster has a taint.
 
 ## Prerequisites
 
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
-* Read the conceptual overviews for [taints](./concepts-fleet.md#taints) and [tolerations](./concepts-resource-propagation.md#tolerations).
-* You must have a Fleet resource with a hub cluster and member clusters. If you don't have this resource, follow [Quickstart: Create a Fleet resource and join member clusters](quickstart-create-fleet-and-members.md).
-* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access the Kubernetes API of the Fleet resource](./quickstart-access-fleet-kubernetes-api.md).
+* Read the conceptual overviews for [taints](./concepts-fleet.md#taints) and [tolerations](./concepts-resource-propagation.md#using-tolerations).
+* You must have a Kubernetes Fleet resource with a hub cluster and member clusters. If you don't have this resource, follow [Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters](quickstart-create-fleet-and-members.md).
+* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster](./access-fleet-hub-cluster-kubernetes-api.md).
 
-## Add taints to a member cluster
+## Add a taint to a member cluster
 
-In this example, we add a taint to a `MemberCluster` resource, then try to propagate resources to the member cluster using a `ClusterResourcePlacement` with a `PickAll` placement policy. The resources shouldn't be propagated to the member cluster because of the taint.
+In this example, you add a taint to a `MemberCluster` resource. Then you try to propagate resources to the member cluster by using `ClusterResourcePlacement` with a `PickAll` placement policy. The resources shouldn't be propagated to the member cluster because of the taint.
 
-1. Create a namespace to propagate to the member cluster using the `kubectl create ns` command.
+1. Create a namespace to propagate to the member cluster by using the `kubectl create ns` command:
 
     ```bash
     kubectl create ns test-ns
     ```
 
-2. Create a taint on the `MemberCluster` resource using the following example code:
+2. Create a taint on the `MemberCluster` resource by using the following example code:
 
     ```yml
-    apiVersion: cluster.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: MemberCluster
     metadata:
       name: kind-cluster-1
@@ -44,19 +44,19 @@ In this example, we add a taint to a `MemberCluster` resource, then try to propa
         kind: ServiceAccount
         namespace: fleet-system
         apiGroup: ""
-      taints:                    # Add taint to the member cluster
+      taints:                    # Add a taint to the member cluster
         - key: test-key1
           value: test-value1
           effect: NoSchedule
     ```
-        
-3. Apply the taint to the `MemberCluster` resource using the `kubectl apply` command. Make sure you replace the file name with the name of your file.
+
+3. Apply the taint to the `MemberCluster` resource by using the `kubectl apply` command. Be sure to replace the file name with the name of your file.
 
     ```bash
     kubectl apply -f member-cluster-taint.yml
     ```
 
-4. Create a `PickAll` placement policy on the `ClusterResourcePlacement` resource using the following example code:
+4. Create a `PickAll` placement policy on the `ClusterResourcePlacement` resource by using the following example code:
 
     ```yml
       resourceSelectors:
@@ -68,19 +68,19 @@ In this example, we add a taint to a `MemberCluster` resource, then try to propa
         placementType: PickAll
     ```
 
-5. Apply the `ClusterResourcePlacement` resource using the `kubectl apply` command. Make sure you replace the file name with the name of your file.
+5. Apply the `ClusterResourcePlacement` resource by using the `kubectl apply` command. Be sure to replace the file name with the name of your file.
 
     ```bash
     kubectl apply -f cluster-resource-placement-pick-all.yml
     ```
 
-6. Verify that the resources weren't propagated to the member cluster by checking the details of the `ClusterResourcePlacement` resource using the `kubectl describe` command.
+6. Verify that the resources weren't propagated to the member cluster by checking the details of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
 
     ```bash
     kubectl describe clusterresourceplacement test-ns
     ```
 
-    Your output should look similar to the following example output:
+    Your output should look similar to the following example:
 
     ```output
     status:
@@ -111,24 +111,24 @@ In this example, we add a taint to a `MemberCluster` resource, then try to propa
         version: v1
     ```
 
-## Remove taints from a member cluster
+## Remove a taint from a member cluster
 
-In this example, we remove the taint we created in [add taints to a member cluster](#add-taints-to-a-member-cluster). This should automatically trigger the Fleet scheduler to propagate the resources to the member cluster.
+In this example, you remove the taint that you created [earlier in this article](#add-a-taint-to-a-member-cluster). This removal should automatically trigger the Kubernetes Fleet scheduler to propagate the resources to the member cluster.
 
 1. Open your `MemberCluster` YAML file and remove the taint section.
-2. Apply the changes to the `MemberCluster` resource using the `kubectl apply` command. Make sure you replace the file name with the name of your file.
+2. Apply the changes to the `MemberCluster` resource by using the `kubectl apply` command. Be sure to replace the file name with the name of your file.
 
     ```bash
     kubectl apply -f member-cluster-taint.yml
     ```
 
-3. Verify that the resources were propagated to the member cluster by checking the details of the `ClusterResourcePlacement` resource using the `kubectl describe` command.
+3. Verify that the resources were propagated to the member cluster by checking the details of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
 
     ```bash
     kubectl describe clusterresourceplacement test-ns
     ```
 
-    Your output should look similar to the following example output:
+    Your output should look similar to the following example:
 
     ```output
     status:
@@ -181,20 +181,20 @@ In this example, we remove the taint we created in [add taints to a member clust
         version: v1
     ```
 
-## Add tolerations to a cluster resource placement
+## Add a toleration to a cluster resource placement
 
-In this example, we add a toleration to a `ClusterResourcePlacement` resource to propagate resources to a member cluster that has a taint. The toleration allows the resources to be propagated to the member cluster.
+In this example, you add a toleration to a `ClusterResourcePlacement` resource to propagate resources to a member cluster that has a taint. The toleration allows the resources to be propagated to the member cluster.
 
-1. Create a namespace to propagate to the member cluster using the `kubectl create ns` command.
+1. Create a namespace to propagate to the member cluster by using the `kubectl create ns` command:
 
     ```bash
     kubectl create ns test-ns
     ```
 
-2. Create a taint on the `MemberCluster` resource using the following example code:
+2. Create a taint on the `MemberCluster` resource by using the following example code:
 
     ```yml
-    apiVersion: cluster.kubernetes-fleet.io/v1beta1
+    apiVersion: placement.kubernetes-fleet.io/v1
     kind: MemberCluster
     metadata:
       name: kind-cluster-1
@@ -204,19 +204,19 @@ In this example, we add a toleration to a `ClusterResourcePlacement` resource to
         kind: ServiceAccount
         namespace: fleet-system
         apiGroup: ""
-      taints:                    # Add taint to the member cluster
+      taints:                    # Add a taint to the member cluster
         - key: test-key1
           value: test-value1
           effect: NoSchedule
     ```
-        
-3. Apply the taint to the `MemberCluster` resource using the `kubectl apply` command. Make sure you replace the file name with the name of your file.
+
+3. Apply the taint to the `MemberCluster` resource by using the `kubectl apply` command. Be sure to replace the file name with the name of your file.
 
     ```bash
     kubectl apply -f member-cluster-taint.yml
     ```
 
-4. Create a toleration on the `ClusterResourcePlacement` resource using the following example code:
+4. Create a toleration on the `ClusterResourcePlacement` resource by using the following example code:
 
     ```yml
     spec:
@@ -235,19 +235,19 @@ In this example, we add a toleration to a `ClusterResourcePlacement` resource to
         type: RollingUpdate
     ```
 
-5. Apply the `ClusterResourcePlacement` resource using the `kubectl apply` command. Make sure you replace the file name with the name of your file.
+5. Apply the `ClusterResourcePlacement` resource by using the `kubectl apply` command. Be sure to replace the file name with the name of your file.
 
     ```bash
     kubectl apply -f cluster-resource-placement-toleration.yml
     ```
 
-6. Verify that the resources were propagated to the member cluster by checking the details of the `ClusterResourcePlacement` resource using the `kubectl describe` command.
+6. Verify that the resources were propagated to the member cluster by checking the details of the `ClusterResourcePlacement` resource via the `kubectl describe` command:
 
     ```bash
     kubectl describe clusterresourceplacement test-ns
     ```
 
-    Your output should look similar to the following example output:
+    Your output should look similar to the following example:
 
     ```output
     status:
@@ -300,6 +300,6 @@ In this example, we add a toleration to a `ClusterResourcePlacement` resource to
           version: v1
     ```
 
-## Next steps
+## Related content
 
-For more information on Azure Kubernetes Fleet Manager, see the [upstream Fleet documentation](https://github.com/Azure/fleet/tree/main/docs).
+* [Open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)

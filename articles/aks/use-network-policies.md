@@ -2,7 +2,7 @@
 title: Secure pod traffic with network policies
 titleSuffix: Azure Kubernetes Service
 description: Learn how to secure traffic that flows in and out of pods by using Kubernetes network policies in Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 03/28/2024
 author: schaffererin
@@ -48,7 +48,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 ## Limitations of Azure Network Policy Manager
 
 > [!NOTE]
-> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium) to use Cilium as the network policy engine.
+> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./upgrade-aks-ipam-and-dataplane.md) to use Cilium as the network policy engine.
 
 Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy specifications in Linux.
 
@@ -240,7 +240,8 @@ az aks nodepool add \
 ## Install Azure Network Policy Manager or Calico in an existing cluster
 Installing Azure Network Policy Manager or Calico on existing AKS clusters is also supported.
 > [!WARNING]
-> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) where each node in a node pool is re-imaged.
+> The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately isn't supported.
+> Within each node pool, nodes are re-imaged following the same process as in a standard Kubernetes version upgrade operation whereby buffer nodes are temporarily added to minimize disruption to running applications while the node re-imaging process is ongoing. Therefore any disruptions that may occur are similar to what you would expect during a node image upgrade or [Kubernetes version upgrade](./upgrade-cluster.md) operation.
 
 Example command to install Azure Network Policy Manager:
 ```azurecli
@@ -267,7 +268,7 @@ az aks update
 ```
 
 ## Upgrade an existing cluster that has Azure NPM or Calico installed to Azure CNI Powered by Cilium
-To upgrade an existing cluster that has Network Policy engine installed to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](azure-cni-powered-by-cilium.md#update-an-existing-cluster-to-azure-cni-powered-by-cilium)
+To upgrade an existing cluster that has Network Policy engine installed to Azure CNI Powered by Cilium, see [Upgrade an existing cluster to Azure CNI Powered by Cilium](upgrade-aks-ipam-and-dataplane.md)
 
 ## Verify network policy setup
 
