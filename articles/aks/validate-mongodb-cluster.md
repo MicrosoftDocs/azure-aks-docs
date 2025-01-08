@@ -288,5 +288,5 @@ When the application runs, a Kubernetes service exposes the application to the i
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [mongo-express]: https://github.com/mongo-express/mongo-express
 [deploy-mongodb-cluster]: ./deploy-mongodb-cluster.md#verify-the-mongodb-cluster
-[create-secret]: ./deploy-mongodb-cluster.md#create-secrets
+[create-secret]: ./deploy-mongodb-cluster.md#create-secrets-resources
 [resiliency-mongodb-cluster]: ./resiliency-mongodb-cluster.md

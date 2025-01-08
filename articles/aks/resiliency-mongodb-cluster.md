@@ -260,7 +260,7 @@ In the following section, you create a MongoDB Locust client pod in your AKS clu
 
 * Access the Locust web interface by navigating to `http://localhost:8089` in your web browser. The Locust web interface allows you to configure the number of users and the spawned rate for the load test. You can also view the statistics of the load test in real-time.
 
-    :::image type="content" source="media/resiliency-mongodb-cluster/locust.png" alt-text="Screenshot of a web page showing the Locust test dashboard." lightbox="./media/resiliency-mongodb-cluster/locust.png":::
+    :::image type="content" source="media/resiliency-mongodb-cluster/locust.png" alt-text="Screenshot of a web page that shows the Locust test dashboard." lightbox="./media/resiliency-mongodb-cluster/locust.png":::
 
 ### Connect to the MongoDB shell and identify the primary member
 
@@ -457,7 +457,7 @@ While the database script continues to execute in first terminal window, in the 
 
    You should see that the member with the `PRIMARY` state changed to `SECONDARY`, and another member with the `SECONDARY` state changed to `PRIMARY`:
 
-   :::image type="content" source="media/resiliency-mongodb-cluster/locust-pod-deleted.png" alt-text="Screenshot of a web page showing the Locust test dashboard." lightbox="./media/resiliency-mongodb-cluster/locust-pod-deleted.png":::
+   :::image type="content" source="media/resiliency-mongodb-cluster/locust-pod-deleted.png" alt-text="Screenshot of a web page showing the Locust test dashboard when a pod is deleted." lightbox="./media/resiliency-mongodb-cluster/locust-pod-deleted.png":::
 
 5. Get the logs of the Percona Operator pod using the `kubectl logs` command. Make sure you replace `<percona-operator-pod>` with the name of your Percona Operator pod.
 
