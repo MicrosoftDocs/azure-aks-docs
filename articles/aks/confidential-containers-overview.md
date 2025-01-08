@@ -48,16 +48,12 @@ The following are considerations with this preview of Confidential Containers:
 
 * An increase in pod startup time compared to runc pods and kernel-isolated pods.
 * Version 1 container images aren't supported.
-* Updates to secrets and ConfigMaps aren't reflected in the guest.
-* Ephemeral containers and other troubleshooting methods like `exec` into a container,
-log outputs from containers, and `stdio` (ReadStreamRequest and WriteStreamRequest) require a policy modification and redeployment.
-* The policy generator tool doesn't support cronjob deployment types.
+* Ephemeral containers and other troubleshooting methods like `exec` into a container, log outputs from containers, and `stdio` require a policy modification and redeployment to enable ExecProcessRequest, ReadStreamRequest, WriteStreamRequest, and CloseStdinRequest.
 * Due to container image layer measurements being encoded in the security policy, we don't recommend using the `latest` tag when specifying containers.
 * Services, Load Balancers, and EndpointSlices only support the TCP protocol.
-* All containers in all pods on the clusters must be configured to `imagePullPolicy: Always`.
 * The policy generator only supports pods that use IPv4 addresses.
-* ConfigMaps and secrets values can't be changed if setting using the environment variable method after the pod is deployed. The security policy prevents it.
-* Pod termination logs aren't supported. While pods write termination logs to `/dev/termination-log` or to a custom location if specified in the pod manifest, the host/kubelet can't read those logs. Changes from guest to that file aren't reflected on the host.
+* Pod environment variables based on ConfigMaps and Secrets can't be changed after the pod is deployed.
+* Pod termination logs aren't supported. While pods write termination logs to `/dev/termination-log` or to a custom location if specified in the pod manifest, the host/kubelet can't read those logs. Changes from the pod to that file aren't reflected on the host.
 
 ## Resource allocation overview
 
