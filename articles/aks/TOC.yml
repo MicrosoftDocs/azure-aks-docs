@@ -813,6 +813,8 @@
           items:
           - name: Enable cost analysis on your cluster
             href: cost-analysis.md
+          - name: Monitor and optimize idle costs
+            href: cost-analysis-idle-costs.md
         - name: Network Observability
           items:
             - name: Container Network Observability

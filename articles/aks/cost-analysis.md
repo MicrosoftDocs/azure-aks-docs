@@ -33,25 +33,16 @@ The AKS cost analysis addon is built on top of [OpenCost](https://www.opencost.i
 ## Prerequisites and limitations
 
 * Your cluster must be either `Standard` or `Premium` tier, not the `Free` tier.
-
 * To view cost analysis information, you must have one of the following roles on the subscription hosting the cluster: Owner, Contributor, Reader, Cost management contributor, or Cost management reader.
-
 * Once you have enabled cost analysis, you can't downgrade your cluster to the `Free` tier without first disabling cost analysis.
-
 * Your cluster must be deployed with a [Microsoft Entra Workload ID](./workload-identity-overview.md) configured.
-
-* Kubernetes cost views are available only for the following Microsoft Azure Offer types. For more information on offer types, see [Supported Microsoft Azure offers](/azure/cost-management-billing/costs/understand-cost-mgt-data#supported-microsoft-azure-offers). 
-    * Enterprise Agreement
-    * Microsoft Customer Agreement
-
+* Kubernetes cost views are available only for the following Microsoft Azure Offer types. For more information on offer types, see [Supported Microsoft Azure offers](/azure/cost-management-billing/costs/understand-cost-mgt-data#supported-microsoft-azure-offers).
+  * Enterprise Agreement
+  * Microsoft Customer Agreement
 * Access to the Azure API including Azure Resource Manager (ARM) API. For a list of fully qualified domain names (FQDNs) required, see [AKS Cost Analysis required FQDN](./outbound-rules-control-egress.md#aks-cost-analysis-add-on).
-
 * Virtual nodes aren't supported at this time.
-
-* AKS Automatic is not supported at this time.
-
+* AKS Automatic isn't supported at this time.
 * If using the Azure CLI, you must have version `2.61.0` or later installed.
-
 
 ## Enable cost analysis on your AKS cluster
 
@@ -103,10 +94,10 @@ You can view cost allocation data in the Azure portal. To learn more about how t
 
 In the Kubernetes namespaces and assets views you'll see the following charges:
 
-- **Idle charges**: Represents the cost of available resource capacity that wasn't used by any workloads.
-- **Service charges**: Represents the charges associated with the service like Uptime SLA, Microsoft Defender for Containers etc.
-- **System charges**: Represents the cost of capacity reserved by AKS on each node to run system processes required by the cluster, including the kubelet and container runtime. [Learn more](./concepts-clusters-workloads.md#resource-reservations).
-- **Unallocated charges**: Represents the cost of resources that couldn't be allocated to namespaces.
+* **[Idle charges](./cost-analysis-idle-costs.md)**: Represents the cost of available resource capacity that wasn't used by any workloads.
+* **Service charges**: Represents the charges associated with the service like Uptime SLA, Microsoft Defender for Containers etc.
+* **System charges**: Represents the cost of capacity reserved by AKS on each node to run system processes required by the cluster, including the kubelet and container runtime. [Learn more](./concepts-clusters-workloads.md#resource-reservations).
+* **Unallocated charges**: Represents the cost of resources that couldn't be allocated to namespaces.
 
 > [!NOTE]
 > It might take up to one day for data to finalize. After 24 hours, any fluctuations in costs for the previous day will have stabilized.
@@ -115,10 +106,7 @@ In the Kubernetes namespaces and assets views you'll see the following charges:
 
 See the following guide to troubleshoot [AKS cost analysis add-on issues](/troubleshoot/azure/azure-kubernetes/aks-cost-analysis-add-on-issues).
 
-<!-- LINKS -->
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update
-
 ## Learn more
 
-Visibility is one element of cost management. Refer to [Optimize Costs in Azure Kubernetes Service (AKS)](./best-practices-cost.md) for other best practices on how to gain control over your kubernetes cost.
+> [!div class="nextstepaction"]
+> [Monitor and optimize idle costs in Azure Kubernetes Service (AKS)](./cost-analysis-idle-costs.md)
