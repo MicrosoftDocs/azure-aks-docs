@@ -30,7 +30,6 @@ This article helps you understand the Confidential Containers feature, and how t
 * Deploy or upgrade an AKS cluster using the Azure CLI
 * Add an annotation to your pod YAML to mark the pod as being run as a confidential container
 * Add a [security policy][confidential-containers-security-policy] to your pod YAML
-* Enable enforcement of the security policy
 * Deploy your application in confidential computing
 
 ## Supported scenarios
