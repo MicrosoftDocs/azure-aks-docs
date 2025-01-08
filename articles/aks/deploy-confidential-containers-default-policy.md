@@ -16,9 +16,8 @@ In this article, you use the Azure CLI to deploy an Azure Kubernetes Service (AK
 In general, getting started with AKS Confidential Containers involves the following steps.
 
 * Deploy or upgrade an AKS cluster using the Azure CLI
-* Add an annotation to your pod YAML manifest to mark the pod as being run as a confidential container
+* Add an annotation to your pod YAML manifest to mark the pod as using confidential containers
 * Add a security policy to your pod YAML manifest
-* Enable enforcement of the security policy
 * Deploy your application in confidential computing
 
 ## Prerequisites
