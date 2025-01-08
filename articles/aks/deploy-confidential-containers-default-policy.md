@@ -50,7 +50,7 @@ To install the aks-preview extension, run the following command:
 az extension add --name aks-preview
 ```
 
-Run the following command to update to the latest version of the extension released:
+Run the following command to update to the latest version of the extension:
 
 ```azurecli-interactive
 az extension update --name aks-preview
@@ -64,7 +64,7 @@ To install the confcom extension, run the following command:
 az extension add --name confcom
 ```
 
-Run the following command to update to the latest version of the extension released:
+Run the following command to update to the latest version of the extension:
 
 ```azurecli-interactive
 az extension update --name confcom
