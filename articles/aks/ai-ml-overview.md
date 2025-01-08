@@ -30,6 +30,7 @@ Using AKS to host your AI and ML applications enables you to leverage high-perfo
 
 * [Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)](./open-ai-quickstart.md)
 * [Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)](./ai-toolchain-operator.md)
+* [Configure and deploy a Ray cluster to accelerate ML workloads on Azure Kubernetes Service (AKS)](./deploy-ray.md)
 * [Build and deploy data and machine learning pipelines with Flyte on Azure Kubernetes Service (AKS)](./use-flyte.md)
 
 ## Contributors
