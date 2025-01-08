@@ -24,6 +24,8 @@
           href: concepts-lifecycle.md
         - name: Use Azure RBAC to control resource access
           href: concepts-rbac.md
+        - name: Preview API lifecycle
+          href: concepts-preview-api-lifecycle.md
     - name: Upgrade Kubernetes and node images across multiple clusters
       href: concepts-update-orchestration.md
     - name: Workload propagation across multiple clusters
@@ -40,6 +42,8 @@
       items:
         - name: Upgrade hub cluster types
           href: upgrade-hub-cluster-type.md
+        - name: Migrate preview instances to supported instances 
+          href: howto-migrate-preview-to-ga-fleets.md
     - name: Upgrade Kubernetes and node images across multiple clusters
       items:
         - name: Define re-usable update strategies

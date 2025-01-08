@@ -1,6 +1,6 @@
 ---
-title: FQDN filtering for Container Network Security with Advanced Container Networking Services (ACNS)
-description: An overview of Advanced Container Networking Services' Security capabilities using FQDN filtering on Azure Kubernetes Service (AKS).
+title: Container Network Security with Advanced Container Networking Services (ACNS)
+description: An overview of Advanced Container Networking Services' Security capabilities on Azure Kubernetes Service (AKS).
 author: sf-msft
 ms.author: samfoo
 ms.service: azure-kubernetes-service
@@ -56,7 +56,15 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
 ## Limitations:
 
-* Wildcard FQDN policies are not supported. This means that you cannot create policies that allow or deny traffic based on patterns like `*` on the field `spec.egress.toPorts.rules.dns.matchPattern`
+* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (e.g., *.example.com), but you cannot use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
+- Supported Pattern:
+
+    `*.example.com` - This allows traffic to all subdomains under example.com.
+
+- Unsupported Pattern
+    
+    `*` This attempts to match any domain name, which isn't supported.
+
 * FQDN filtering is currently not supported with node-local DNS.
 * Dual stack isn't supported.
 * Kubernetes service names aren't supported.
@@ -89,5 +97,5 @@ rules:
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
-* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](advanced-network-observability-concepts.md).
+* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](container-network-observability-concepts.md).
 

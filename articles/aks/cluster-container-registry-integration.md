@@ -275,6 +275,32 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
     nginx0-deployment-669dfc4d4b-xdpd6   1/1     Running   0          20s
     ```
 
+### Configure ACR with private link through Azure HTTP Proxy and AKS
+
+ACR has two endpoints:
+
+ - REST endpoint: `{REGISTRY_NAME}.azurecr.io`
+ - Data endpoint: `{REGISTRY_NAME}.{REGISTRY_LOCATION}.data.azurecr.io`
+
+1. Ensure the rest and data endpoints are added to `noProxy` under the HTTP Proxy config.
+
+  ```json
+  {
+    "httpProxy": "string",
+    "httpsProxy": "string",
+    "noProxy": [
+      "{REGISTRY_NAME}.azurecr.io",
+      "{REGISTRY_NAME}.{REGISTRY_LOCATION}.data.azurecr.io"
+    ],
+    "trustedCa": "string"
+  }
+  ```
+
+2. Verify through logs that traffic is through private link.
+
+> [!NOTE]
+> Both endpoints are needed otherwise some traffic will be over HTTP proxy rather than private link.
+
 ---
 
 ### Troubleshooting

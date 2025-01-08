@@ -55,9 +55,13 @@ For more information on networking models in AKS, see [CNI Networking in AKS][ne
 
 ## Control outbound (egress) traffic
 
-AKS clusters are deployed on a virtual network and have outbound dependencies on services outside of that virtual network. These outbound dependencies are almost entirely defined with fully qualified domain names (FQDNs). By default, AKS clusters have unrestricted outbound (egress) Internet access, which allows the nodes and services you run to access external resources as needed. If desired, you can restrict outbound traffic.
+AKS clusters are deployed on a virtual network and have outbound dependencies on services outside of that virtual network, which are almost entirely defined with fully qualified domain names (FQDNs). AKS provides several outbound configuration options which allow you to customize the way in which these external resources are accessed. 
 
-For more information, see [Control egress traffic for cluster nodes in AKS][limit-egress].
+For more information on the supported AKS cluster outbound configuration types, see [Customize cluster egress with outbound types in Azure Kubernetes Service (AKS)](./egress-outboundtype.md).
+
+By default, AKS clusters have unrestricted outbound (egress) Internet access, which allows the nodes and services you run to access external resources as needed. If desired, you can restrict outbound traffic.
+
+For more information on how to restrict outbound traffic from you cluster see [Control egress traffic for cluster nodes in AKS][limit-egress].
 
 ## Network security groups
 

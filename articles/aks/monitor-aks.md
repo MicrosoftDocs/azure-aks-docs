@@ -277,11 +277,11 @@ The following table lists some suggested alert rules for AKS. These alerts are j
 
 [!INCLUDE [horz-monitor-insights-alerts](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-insights-alerts.md)]
 
-## Network Observability
+## Network Observability add-on
 
-[Network observability](./network-observability-overview.md) is an important part of maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain insights into how your cluster is operating and identify potential problems before they cause outages or performance degradation.
+Network Observability is crucial for maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain valuable insights into your cluster's operation and identify potential issues before they lead to outages or performance degradation.
 
-When the [Network Observability](/azure/aks/network-observability-overview) add-on is enabled, it collects and converts useful metrics into Prometheus format, which can be visualized in Grafana. When enabled, the collected metrics are automatically ingested into Azure Monitor managed service for Prometheus. A Grafana dashboard is available in the Grafana public dashboard repo to visualize the network observability metrics collected by Prometheus. For more information, see [Network Observability setup](./network-observability-managed-cli.md) for detailed instructions.
+Starting with Kubernetes version 1.29, node network metrics are enabled by default for all clusters with Azure Monitor enabled. This default enablement involves installing a lightweight agent called Retina on your cluster. Retina collects and converts essential metrics into Prometheus format. These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
 
 ## Related content
 
