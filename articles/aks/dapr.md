@@ -5,7 +5,7 @@ author: greenie-msft
 ms.author: nigreenf
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 07/16/2024
+ms.date: 01/08/2025
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
 ---
@@ -358,15 +358,19 @@ If the extension fails to create or update, try suggestions and solutions in the
 
 Troubleshoot Dapr errors via the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
-## Delete the extension
+## Uninstall the extension
 
-If you need to delete the extension and remove Dapr from your AKS cluster, you can use the following command: 
+The process of uninstalling the Dapr extension from AKS does not delete the CRDs created during installation. These CRDs remain in the cluster as residual components, essential for the reconciler during the installation and uninstallation of the extension. 
+
+To clean the cluster of these CRDs, you can manually delete them **only after** the Dapr extension has been completely uninstalled from AKS.
+
+Delete the extension from your AKS cluster using the following command: 
 
 ```azurecli
 az k8s-extension delete --resource-group <myResourceGroup> --cluster-name <myAKSCluster> --cluster-type managedClusters --name dapr
 ```
 
-Or you can remove the Bicep template.
+Or, if using a Bicep template, you can delete the template.
 
 ## Next Steps
 
