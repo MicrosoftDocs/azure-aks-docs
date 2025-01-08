@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.author: schaffererin
 author: sachidesai
 ms.service: azure-kubernetes-service
-ms.date: 11/05/2024
+ms.date: 01/07/2025
 ---
 
 # Fine-tune and deploy an AI model for inferencing on Azure Kubernetes Service (AKS) with the AI toolchain operator (Preview)
@@ -38,13 +38,13 @@ The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies th
 
 To simplify the configuration steps in this article, you can define environment variables using the following commands. Make sure to replace the placeholder values with your own.
 
-    ```azurecli-interactive
-    ACR_NAME="myACRname"
-    ACR_USERNAME="myACRusername"
-    REPOSITORY="myRepository"
-    VERSION="repositoryVersion'
-    ACR_PASSWORD=$(az acr token create --name $ACR_USERNAME --registry $ACR_NAME --expiration-in-days 10 --repository $REPOSITORY content/write content/read --query "credentials.passwords[0].value" --output tsv)
-    ```
+```azurecli-interactive
+ACR_NAME="myACRname"
+ACR_USERNAME="myACRusername"
+REPOSITORY="myRepository"
+VERSION="repositoryVersion'
+ACR_PASSWORD=$(az acr token create --name $ACR_USERNAME --registry $ACR_NAME --expiration-in-days 10 --repository $REPOSITORY content/write content/read --query "credentials.passwords[0].value" --output tsv)
+```
 
 ## Create a new secret for your private registry
 
@@ -52,9 +52,9 @@ In this example, your KAITO fine-tuning deployment produces a containerized adap
 
 Generate a new secret to provide the KAITO fine-tuning workspace access to push the model fine-tuning output image to your ACR using the `kubectl create secret docker-registry` command.
 
-    ```bash
-    kubectl create secret docker-registry myregistrysecret --docker-server=$ACR_NAME.azurecr.io --docker-username=$ACR_USERNAME --docker-password=$ACR_PASSWORD
-    ```
+```bash
+kubectl create secret docker-registry myregistrysecret --docker-server=$ACR_NAME.azurecr.io --docker-username=$ACR_USERNAME --docker-password=$ACR_PASSWORD
+```
 
 ## Fine-tune an AI model
 
@@ -200,10 +200,10 @@ If you no longer need these resources, you can delete them to avoid incurring ex
 
 Delete the KAITO workspaces and their allocated resources on your AKS cluster using the `kubectl delete workspace` command.
 
-    ```bash
-    kubectl delete workspace workspace-tuning-phi-3-mini
-    kubectl delete workspace workspace-phi-3-mini-adapter
-    ```
+```bash
+kubectl delete workspace workspace-tuning-phi-3-mini
+kubectl delete workspace workspace-phi-3-mini-adapter
+```
 
 ## Next steps
 
