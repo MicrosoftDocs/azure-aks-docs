@@ -9,9 +9,9 @@ ms.author: schaffererin
 ms.custom: devx-track-azurecli, ignite-fall-2023, mode-api
 ---
 
-# Deploy an AKS cluster with Confidential Containers and a default policy
+# Deploy an AKS cluster with Confidential Containers and an automatically generated policy
 
-In this article, you use the Azure CLI to deploy an Azure Kubernetes Service (AKS) cluster and configure Confidential Containers (preview) with a default security policy. You then deploy an application as a Confidential container. To learn more, read the [overview of AKS Confidential Containers][overview-confidential-containers].
+In this article, you use the Azure CLI to deploy an Azure Kubernetes Service (AKS) cluster and configure Confidential Containers (preview) with an automatically generated security policy. You then deploy an application as a Confidential container. To learn more, read the [overview of AKS Confidential Containers][overview-confidential-containers].
 
 In general, getting started with AKS Confidential Containers involves the following steps.
 
