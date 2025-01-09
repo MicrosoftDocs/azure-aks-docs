@@ -95,35 +95,22 @@ az provider register --namespace "Microsoft.ContainerService"
 1. Create an AKS cluster using the [az aks create][az-aks-create] command and specifying the following parameters:
 
    * **--os-sku**: *AzureLinux*. Only the Azure Linux os-sku supports this feature in this preview release.
-   * **--node-vm-size**: Any Azure VM size that is a generation 2 VM and supports nested virtualization works. For example, [Standard_DC8as_cc_v5][DC8as-series] VMs.
+   * **--node-vm-size**: Any Azure VM size that supports AMD SEV-SNP protected child VMs works. For example, [Standard_DC8as_cc_v5][DC8as-series] VMs.
    * **--enable-workload-identity**: Enables creating a Microsoft Entra Workload ID enabling pods to use a Kubernetes identity.
    * **--enable-oidc-issuer**: Enables OpenID Connect (OIDC) Issuer. It allows a Microsoft Entra ID or other cloud provider identity and access management platform the ability to discover the API server's public signing keys.
-
-   The following example updates the cluster named *myAKSCluster* and creates a single system node pool in the *myResourceGroup*:
+   * **--workload-runtime**: Specify *KataCcIsolation* to enable the Confidential Containers feature on the node pool.
 
    ```azurecli-interactive
-   az aks create --resource-group myResourceGroup --name myAKSCluster --kubernetes-version <1.25.0 and above> --os-sku AzureLinux --node-vm-size Standard_DC8as_cc_v5 --node-count 1 --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys
+   az aks create --resource-group myResourceGroup --name myAKSCluster --kubernetes-version <1.25.0 and above> --os-sku AzureLinux --node-vm-size Standard_DC8as_cc_v5 --workload-runtime KataCcIsolation --node-count 1 --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys
    ```
 
-   After a few minutes, the command completes and returns JSON-formatted information about the cluster. The cluster created in the previous step has a single node pool. In the next step, we add a second node pool to the cluster.
+   After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
 2. When the cluster is ready, get the cluster credentials using the [az aks get-credentials][az-aks-get-credentials] command.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
-
-3. Add a user node pool to *myAKSCluster* with two nodes in *nodepool2* in the *myResourceGroup* using the [az aks nodepool add][az-aks-nodepool-add] command. Specify the following parameters:
-
-   * **--workload-runtime**: Specify *KataCcIsolation* to enable the Confidential Containers feature on the node pool. With this parameter, these other parameters shall satisfy the following requirements. Otherwise, the command fails and reports an issue with the corresponding parameter(s).
-   * **--os-sku**: *AzureLinux*. Only the Azure Linux os-sku supports this feature in this preview release.
-   * **--node-vm-size**: Any Azure VM size that is a generation 2 VM and supports nested virtualization works. For example, [Standard_DC8as_cc_v5][DC8as-series] VMs.
-
-    ```azurecli-interactive
-    az aks nodepool add --resource-group myResourceGroup --name nodepool2 --cluster-name myAKSCluster --node-count 2 --os-sku AzureLinux --node-vm-size Standard_DC8as_cc_v5 --workload-runtime KataCcIsolation
-    ```
-
-After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
 ## Deploy to an existing cluster
 
@@ -142,7 +129,7 @@ Use the following command to enable Confidential Containers (preview) by creatin
    * **--name**: Enter a unique name for your clusters node pool, such as *nodepool2*.
    * **--workload-runtime**: Specify *KataCcIsolation* to enable the feature on the node pool. Along with the `--workload-runtime` parameter, these other parameters shall satisfy the following requirements. Otherwise, the command fails and reports an issue with the corresponding parameter(s).
    * **--os-sku**: *AzureLinux*. Only the Azure Linux os-sku supports this feature in this preview release.
-   * **--node-vm-size**: Any Azure VM size that is a generation 2 VM and supports nested virtualization works. For example, [Standard_DC8as_cc_v5][DC8as-series] VMs.
+   * **--node-vm-size**: Any Azure VM size that supports AMD SEV-SNP protected child VMs nested virtualization works. For example, [Standard_DC8as_cc_v5][DC8as-series] VMs.
 
    The following example adds a user node pool to *myAKSCluster* with two nodes in *nodepool2* in the *myResourceGroup*:
 
