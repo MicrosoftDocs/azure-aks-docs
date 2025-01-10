@@ -358,11 +358,13 @@ If the extension fails to create or update, try suggestions and solutions in the
 
 Troubleshoot Dapr errors via the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
-## Uninstall the extension
+## Delete the Dapr extension from your cluster
 
 The process of uninstalling the Dapr extension from AKS does not delete the CRDs created during installation. These CRDs remain in the cluster as residual components, essential for the reconciler during the installation and uninstallation of the extension. 
 
-To clean the cluster of these CRDs, you can manually delete them **only after** the Dapr extension has been completely uninstalled from AKS.
+To clean the cluster of these CRDs, you can manually delete them **after** the Dapr extension has been completely uninstalled from AKS.
+
+### Uninstalling the extension
 
 Delete the extension from your AKS cluster using the following command: 
 
@@ -371,6 +373,14 @@ az k8s-extension delete --resource-group <myResourceGroup> --cluster-name <myAKS
 ```
 
 Or, if using a Bicep template, you can delete the template.
+
+### Removing the CRDs
+
+To find the CRDs related to Dapr extension you wish to remove, run the following command:
+
+```bash
+kubectl get crds | findstr dapr.io
+```
 
 ## Next Steps
 
