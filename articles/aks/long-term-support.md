@@ -26,7 +26,7 @@ AKS provides one year of *community support* and one year of *long-term support*
 |   | Community support  |Long-term support   |
 |---|---|---|
 | **When to use** | When you can keep up with upstream Kubernetes releases | When you need control over when to migrate from one version to another  |
-|  **Support versions** | Three GA minor versions | One Kubernetes version (currently *1.27*) for two years  |
+|  **Support versions** | Three GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support EOL period. |
 
 ## Enable long-term support
 
@@ -103,8 +103,8 @@ The following table provides a list of add-ons and features that aren't supporte
 
 |  Add-on / Feature | Reason it's unsupported |
 |---|---|
-| Istio |  The Istio support cycle is short (six months), and there won't be maintenance releases for Kubernetes 1.27. |
-| Keda | Unable to guarantee future version compatibility with Kubernetes 1.27. |
+| Istio |  The Istio support cycle is short (six months), and there won't be maintenance releases for supported LTS versions. |
+| Keda | Unable to guarantee future version compatibility for supported LTS versions. |
 | Calico  |  Requires Calico Enterprise agreement past community support. |
 | Key Management Service (KMS) | KMSv2 replaces KMS during this LTS cycle. |
 | Dapr | AKS extensions aren't supported. |
