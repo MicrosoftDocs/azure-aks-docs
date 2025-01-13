@@ -400,6 +400,14 @@
                   href: create-mongodb-infrastructure.md
                 - name: Deploy MongoDB cluster
                   href: deploy-mongodb-cluster.md
+                - name: Deploy Mongo Express client application
+                  href: validate-mongodb-cluster.md
+                - name: Test resiliency
+                  href: resiliency-mongodb-cluster.md
+                - name: Validate resiliency during node pool upgrade
+                  href: upgrade-mongodb-cluster.md
+                - name: Monitor with Percona Monitoring and Management
+                  href: monitor-aks-mongodb.md
             - name: Deploy a highly available PostgreSQL database
               items:
                 - name: Overview
