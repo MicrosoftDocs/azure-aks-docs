@@ -402,9 +402,11 @@
                   href: deploy-mongodb-cluster.md
                 - name: Deploy Mongo Express client application
                   href: validate-mongodb-cluster.md
-                - name: Test resiliency during node pool upgrade
+                - name: Test resiliency
                   href: resiliency-mongodb-cluster.md
-                - name: Monitor MongoDB cluster with Percona Monitoring and Management
+                - name: Validate resiliency during node pool upgrade
+                  href: upgrade-mongodb-cluster.md
+                - name: Monitor with Percona Monitoring and Management
                   href: monitor-aks-mongodb.md
             - name: Deploy a highly available PostgreSQL database
               items:
