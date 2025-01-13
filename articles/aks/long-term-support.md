@@ -26,7 +26,7 @@ AKS provides one year of *community support* and one year of *long-term support*
 |   | Community support  |Long-term support   |
 |---|---|---|
 | **When to use** | When you can keep up with upstream Kubernetes releases | When you need control over when to migrate from one version to another  |
-|  **Support versions** | Three GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support EOL period. |
+|  **Support versions** | Three GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support EOL period. Please refer to the [Community Support Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar) for more information. |
 
 ## Enable long-term support
 
