@@ -228,6 +228,12 @@ In `components/TopNav.Vue` change the `Products` nav item to `New Products`.
 
 Now, if you visit the IP of the `store-front` service in your AKS cluster, you’ll see the updated behavior, as traffic is being routed to your locally running version of the service. Your local changes are reflected in real-time and interact with other services in your AKS cluster.
 
+# Video demo of F5 debugging with Telepresence using the AI store demo app on Azure Kubernetes Service
+
+The following video provides a clear and concise walkthrough of Telepresence's F5 debugging capabilities.
+
+> [!VIDEO https://www.youtube.com/watch?v=hbQfKwFeUtE]
+
 # Where to learn more
 
 This tutorial covers how to use Telepresence with a sample application on AKS. Telepresence offers more in-depth documentation at the offical [website](https://www.telepresence.io/docs/quick-start/#gsc.tab=0). Covering topics such as FAQ, Troubleshooting, Technical reference, Core concepts, Tutorials and the links to the official community. 
