@@ -374,11 +374,11 @@ az k8s-extension delete --resource-group <myResourceGroup> --cluster-name <myAKS
 
 Or, if using a Bicep template, you can delete the template.
 
-### Removing the CRDs
+### Listing the CRDs in your cluster
 
 To find the CRDs related to Dapr extension you wish to remove, run the following command:
 
-```bash
+```powershell
 kubectl get crds | findstr dapr.io
 ```
 
