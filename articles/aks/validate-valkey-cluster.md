@@ -299,7 +299,7 @@ To learn more about stateful workloads using Azure Kubernetes Service (AKS), see
 * Saverio Proto | Principal Customer Experience Engineer
 
 <!-- Internal links -->
-[upgrade-valkey-aks-nodepool]: ./upgrade-valkey-aks-nodepool
+[upgrade-valkey-aks-nodepool]: ./upgrade-valkey-aks-nodepool.md
 
 <!-- EXTERNAL LINKS -->
 [writing-a-locustfile]: https://docs.locust.io/en/stable/writing-a-locustfile.html
