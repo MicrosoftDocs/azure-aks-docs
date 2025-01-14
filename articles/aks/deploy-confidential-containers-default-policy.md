@@ -9,16 +9,15 @@ ms.author: schaffererin
 ms.custom: devx-track-azurecli, ignite-fall-2023, mode-api
 ---
 
-# Deploy an AKS cluster with Confidential Containers and a default policy
+# Deploy an AKS cluster with Confidential Containers and an automatically generated policy
 
-In this article, you use the Azure CLI to deploy an Azure Kubernetes Service (AKS) cluster and configure Confidential Containers (preview) with a default security policy. You then deploy an application as a Confidential container. To learn more, read the [overview of AKS Confidential Containers][overview-confidential-containers].
+In this article, you use the Azure CLI to deploy an Azure Kubernetes Service (AKS) cluster and configure Confidential Containers (preview) with an automatically generated security policy. You then deploy an application as a Confidential container. To learn more, read the [overview of AKS Confidential Containers][overview-confidential-containers].
 
 In general, getting started with AKS Confidential Containers involves the following steps.
 
 * Deploy or upgrade an AKS cluster using the Azure CLI
-* Add an annotation to your pod YAML manifest to mark the pod as being run as a confidential container
+* Add an annotation to your pod YAML manifest to mark the pod as using confidential containers
 * Add a security policy to your pod YAML manifest
-* Enable enforcement of the security policy
 * Deploy your application in confidential computing
 
 ## Prerequisites
@@ -51,7 +50,7 @@ To install the aks-preview extension, run the following command:
 az extension add --name aks-preview
 ```
 
-Run the following command to update to the latest version of the extension released:
+Run the following command to update to the latest version of the extension:
 
 ```azurecli-interactive
 az extension update --name aks-preview
@@ -65,7 +64,7 @@ To install the confcom extension, run the following command:
 az extension add --name confcom
 ```
 
-Run the following command to update to the latest version of the extension released:
+Run the following command to update to the latest version of the extension:
 
 ```azurecli-interactive
 az extension update --name confcom
@@ -103,7 +102,7 @@ az provider register --namespace "Microsoft.ContainerService"
    The following example updates the cluster named *myAKSCluster* and creates a single system node pool in the *myResourceGroup*:
 
    ```azurecli-interactive
-   az aks create --resource-group myResourceGroup --name myAKSCluster --kubernetes-version <1.25.0 and above> --os-sku AzureLinux --node-vm-size Standard_DC4as_cc_v5 --node-count 1 --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys
+   az aks create --resource-group myResourceGroup --name myAKSCluster --kubernetes-version <1.25.0 and above> --os-sku AzureLinux --node-vm-size Standard_DC8as_cc_v5 --node-count 1 --enable-oidc-issuer --enable-workload-identity --generate-ssh-keys
    ```
 
    After a few minutes, the command completes and returns JSON-formatted information about the cluster. The cluster created in the previous step has a single node pool. In the next step, we add a second node pool to the cluster.
@@ -121,7 +120,7 @@ az provider register --namespace "Microsoft.ContainerService"
    * **--node-vm-size**: Any Azure VM size that is a generation 2 VM and supports nested virtualization works. For example, [Standard_DC8as_cc_v5][DC8as-series] VMs.
 
     ```azurecli-interactive
-    az aks nodepool add --resource-group myResourceGroup --name nodepool2 --cluster-name myAKSCluster --node-count 2 --os-sku AzureLinux --node-vm-size Standard_DC4as_cc_v5 --workload-runtime KataCcIsolation
+    az aks nodepool add --resource-group myResourceGroup --name nodepool2 --cluster-name myAKSCluster --node-count 2 --os-sku AzureLinux --node-vm-size Standard_DC8as_cc_v5 --workload-runtime KataCcIsolation
     ```
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
@@ -148,7 +147,7 @@ Use the following command to enable Confidential Containers (preview) by creatin
    The following example adds a user node pool to *myAKSCluster* with two nodes in *nodepool2* in the *myResourceGroup*:
 
     ```azurecli-interactive
-    az aks nodepool add --resource-group myResourceGroup --name nodepool2 –-cluster-name myAKSCluster --node-count 2 --os-sku AzureLinux --node-vm-size Standard_DC4as_cc_v5 --workload-runtime KataCcIsolation
+    az aks nodepool add --resource-group myResourceGroup --name nodepool2 –-cluster-name myAKSCluster --node-count 2 --os-sku AzureLinux --node-vm-size Standard_DC8as_cc_v5 --workload-runtime KataCcIsolation
     ```
 
     After a few minutes, the command completes and returns JSON-formatted information about the cluster.
