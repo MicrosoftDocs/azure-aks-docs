@@ -6,6 +6,8 @@ ms.custom: azure-kubernetes-service
 ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
+zone_pivot_groups: azure-cli-or-terraform
+
 ---
 
 # Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)
@@ -20,6 +22,8 @@ In this article, we create the infrastructure resources required to run a Valkey
 * Helm version 3 or later. To install, see [Installing Helm][install-helm].
 * `kubectl`, which the Azure Cloud Shell has installed by default.
 * Docker installed on your local machine. To install, see [Get Docker][install-docker].
+
+:::zone pivot="azure-cli"
 
 ## Set environment variables
 
@@ -200,6 +204,25 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
         --image valkey:latest \
         --output table
     ```
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+## Deploy the infrastructure with Terraform
+
+The repository [terraform-azurerm-avm-ptn-aks-production](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) containes a full example with the infrastructure required to run a Valkey cluster on Azure Kubernetes Service (AKS).
+
+```bash
+git clone https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production
+cd terraform-azurerm-avm-ptn-aks-production/examples/valkey
+terraform init
+terraform apply
+```
+
+:::zone-end
+
+
 
 ## Next steps
 
