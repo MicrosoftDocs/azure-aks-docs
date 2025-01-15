@@ -15,7 +15,7 @@ ms.date: 10/23/2024
 > Telepresence is an open-source CNCF project. Microsoft does **not** offer support if you run into troubles using Telepresence. If you run into issues using Telepresence, visit their official [Telepresence GitHub issue page] and open an issue.
 
 
-# How Telepresence works
+## How Telepresence works
 
 Telepresence injects Traffic Agents into the workload Pod as a sidecar which acts as proxy for all inbound and outbound traffic. This proxy reroutes network traffic from the Kubernetes cluster to your local machine, where you have your development environment set up. The process involves:
 
