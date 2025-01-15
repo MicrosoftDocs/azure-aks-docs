@@ -226,7 +226,7 @@ In `components/TopNav.Vue` change the `Products` nav item to `New Products`.
 </template>
 ```
 
-Now, if you visit the IP of the `store-front` service in your AKS cluster, you’ll see the updated behavior, as traffic is being routed to your locally running version of the service. Your local changes are reflected in real-time and interact with other services in your AKS cluster.
+Now, if you visit the public IP of the `store-front` service in your AKS cluster, you’ll see the updated behavior, as traffic is being routed to your locally running version of the service. Your local changes are reflected in real-time and interact with other services in your AKS cluster.
 
 # Video demo of F5 debugging with Telepresence using the AI store demo app on Azure Kubernetes Service
 
