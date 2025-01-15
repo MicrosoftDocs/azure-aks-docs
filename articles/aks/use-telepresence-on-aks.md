@@ -1,7 +1,7 @@
 ---
 title: Use Telepresence to debug microservices on AKS
 description: Learn how to use Telepresence to debug microservices on AKS
-ms.topic: article
+ms.topic: tutorial
 ms.custom: devx-track-azurecli
 ms.subservice: aks-devx
 ms.date: 10/23/2024
