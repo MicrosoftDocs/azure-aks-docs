@@ -9,7 +9,7 @@ ms.date: 10/23/2024
 
 # Use Telepresence to debug microservices on AKS
 
-[Telepresence] is a Cloud Native Computing Foundation Sandbox project created by the team at Ambassador Labs. It allows developers to run services locally on their development machine while still connecting to a remote Kubernetes cluster. This setup makes it easier to develop, debug, and test applications that interact with other services in the cluster without having to redeploy or rebuild the entire application in Kubernetes every time changes are made.
+[Telepresence] is a Cloud Native Computing Foundation (CNFC) Sandbox project created by the team at Ambassador Labs. Telepresence allows developers to run services locally on their development machine while connected to a remote Azure Kubernetes Service (AKS) cluster. This setup makes it easier to develop, debug, and test applications that interact with other services in the cluster without having to redeploy or rebuild the entire application in Kubernetes every time changes are made.
 
 > [!NOTE]
 > Telepresence is an open-source CNCF project. Microsoft does **not** offer support if you run into troubles using Telepresence. If you run into issues using Telepresence, visit their official [Telepresence GitHub issue page] and open an issue.
