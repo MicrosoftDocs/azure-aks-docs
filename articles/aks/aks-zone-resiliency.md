@@ -85,7 +85,7 @@ spec:
 ```
 > [!NOTE]
 >
-> In AKS, the Kubernetes Scheduler uses a `MaxSkew` value of 1 for `topology.kubernetes.io/zone`, which is for the zone spreading of pods within a deployment. This value deviates from the upstream default value of 5. This configuration improves the scoring for the scheduler and enhances fault tolerance and availability by targeting no more than a single pod difference between zones. By distributing pods more evenly across zones, AKS minimizes the risk of service disruptions due to zone specific failures, which is particularly beneficial for applications requiring high availability and resilience.
+> In AKS, the Kubernetes Scheduler is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone`, which is for the zone spreading of pods within a deployment. This value deviates from the upstream default value of 5. This configuration improves the scoring for the scheduler and enhances fault tolerance and availability by targeting no more than a single pod difference between zones. By distributing pods more evenly across zones, AKS minimizes the risk of service disruptions due to zone specific failures, which is particularly beneficial for applications requiring high availability and resilience. If your deployment has specific topology needs, setting the value of maxskew in the pod spec will override the default of the kube-scheduler.
 >
 > For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
 
