@@ -183,7 +183,7 @@ The env-file field is the path where Telepresence will create an env file contai
 
 
     ```console
-    telepresence intercept store-front --port 8080:80 --env-file store-front-service-intercept.env
+    telepresence intercept store-front --port 8080:80 --env-file .env
    Using Deployment store-front
    Intercept name         : store-front
    State                  : ACTIVE
