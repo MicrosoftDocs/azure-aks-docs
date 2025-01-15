@@ -61,6 +61,8 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
     `*.example.com` - This allows traffic to all subdomains under example.com.
 
+    `app*.example.com` - This rule is more specific and only allows traffic to subdomains that start with "app" under example.com
+
 - Unsupported Pattern
     
     `*` This attempts to match any domain name, which isn't supported.
