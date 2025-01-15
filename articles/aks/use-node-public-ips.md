@@ -121,13 +121,13 @@ If a network security group is in place on the subnet with a cluster using bring
 
 ### Host port specification format
 
-When specifying the list of ports to allow, use a comma-separate list with entries in the format of `port/protocol` or `startPort-endPort/protocol`.
+When specifying the list of ports to allow, use a space-separate list with entries in the format of `port/protocol` or `startPort-endPort/protocol`.
 
 Examples:
 
 - 80/tcp
-- 80/tcp,443/tcp
-- 53/udp,80/tcp
+- 80/tcp 443/tcp
+- 53/udp 80/tcp
 - 50000-60000/tcp
 
 ### Requirements
