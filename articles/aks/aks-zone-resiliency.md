@@ -83,8 +83,11 @@ spec:
   - name: pause
     image: registry.k8s.io/pause:3.1
 ```
->[!NOTE]
-> The Kubernetes Scheduler in Azure Kubernetes Service (AKS) uses a `MaxSkew` value of 1 for the topology key of `topology.kubernetes.io/zone` for zone spreading of pods within a deployment, deviating from the upstream default of 5. This configuration improves the scoring for the scheduler, targetting no more than a one pod difference between zones, thereby enhancing fault tolerance and availability. By distributing pods more evenly across zones, AKS minimizes the risk of service disruption due to zone-specific failures, particularly beneficial for applications requiring high availability and resilience. For more details on configuring pod distribution and understanding the implications of `MaxSkew`, refer to [Kubernetes Pod TOpology Documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
+> [!NOTE]
+>
+> In AKS, the Kubernetes Scheduler uses a `MaxSkew` value of 1 for `topology.kubernetes.io/zone`, which is for the zone spreading of pods within a deployment. This value deviates from the upstream default value of 5. This configuration improves the scoring for the scheduler and enhances fault tolerance and availability by targeting no more than a single pod difference between zones. By distributing pods more evenly across zones, AKS minimizes the risk of service disruptions due to zone specific failures, which is particularly beneficial for applications requiring high availability and resilience.
+>
+> For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
 
 ---
 
