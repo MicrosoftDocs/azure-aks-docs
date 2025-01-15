@@ -17,7 +17,7 @@ ms.date: 10/23/2024
 
 # How Telepresence works
 
-Telepresence essentially swaps out a pod in your Kubernetes cluster with a proxy pod. This proxy pod reroutes network traffic from the Kubernetes cluster to your local machine, where you have your development environment set up. The process involves:
+Telepresence injects Traffic Agents into the workload Pod as a sidecar which acts as proxy for all inbound and outbound traffic. This proxy reroutes network traffic from the Kubernetes cluster to your local machine, where you have your development environment set up. The process involves:
 
 - Connecting to your Kubernetes cluster with Telepresence.
 - Specifying the service or deployment you want to intercept.
@@ -36,6 +36,9 @@ Telepresence essentially swaps out a pod in your Kubernetes cluster with a proxy
 
 ## Connect to the cluster
 
+> [!NOTE]
+> Set the values of $MY_RESOURCE_GROUP_NAME and $MY_AKS_CLUSTER_NAME accordingly.
+
 To install Telepresence and to interact with your AKS cluster, it is important to make sure you are connected. To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`][az-aks-install-cli] command.
 
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
@@ -44,10 +47,10 @@ To install Telepresence and to interact with your AKS cluster, it is important t
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
     ```
 
-1. Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+1. Verify the connection to your cluster using the [kubectl cluster-info][kubectl cluster-info] command. This command will print out the name of the cluster to help you identity if it is the correct cluster to be working with.
 
     ```azurecli-interactive
-    kubectl get nodes
+    kubectl cluster-info
     ```
 
 ## Clone the sample app and deploy it your AKS cluster
@@ -79,14 +82,6 @@ To deploy the app, run the following command
 
     ```console
     kubectl apply -f aks-store-quickstart.yaml
-    ```
-
-## Run the app locally 
-
-As Telepresence allows developers to run services locally on their development machine while still connecting to their remote Kubernetes cluster, it is important to make sure your application is also running locally and not just in the cloud. To run the [aks-store-demo app] locally, run the following command.
-
-    ```console
-    docker compose up
     ```
 
 ## Install Telepresence
@@ -133,43 +128,7 @@ To start intercepting traffic from a service in your AKS cluster, you first need
 In the following example, we will run the command on the `store-front` service to find the appropriate port (port 80) to use in our intercepts.
 
     ```console
-     kubectl get service store-front --output yaml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      annotations:
-        kubectl.kubernetes.io/last-applied-configuration: |
-          {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"store-front","namespace":"default"},"spec":{"ports":[{"port":80,"targetPort":8080}],"selector":{"app":"store-front"},"type":"LoadBalancer"}}
-      creationTimestamp: "2024-10-23T22:38:00Z"
-      finalizers:
-      - service.kubernetes.io/load-balancer-cleanup
-      name: store-front
-      namespace: default
-      resourceVersion: "83731"
-      uid: 20b989d7-57d0-4308-b686-4f1e68ca8477
-    spec:
-      allocateLoadBalancerNodePorts: true
-      clusterIP: 10.0.190.29
-      clusterIPs:
-      - 10.0.190.29
-      externalTrafficPolicy: Cluster
-      internalTrafficPolicy: Cluster
-      ipFamilies:
-      - IPv4
-      ipFamilyPolicy: SingleStack
-      ports:
-      - nodePort: 31654
-        port: 80
-        protocol: TCP
-        targetPort: 8080
-      selector:
-        app: store-front
-      sessionAffinity: None
-      type: LoadBalancer
-    status:
-      loadBalancer:
-        ingress:
-        - ip: 135.224.138.68
+     kubectl get service store-front -ojsonpath='{.spec.ports[0].port}'
     ```
 
 To properly intercept traffic from your service in your AKS cluster, run the following command `$ telepresence intercept <service-name> --port <local-port>[:<remote-port>] --env-file <path-to-env-file>`.
@@ -183,6 +142,7 @@ The env-file field is the path where Telepresence will create an env file contai
 
 
     ```console
+    cd src/store-front
     telepresence intercept store-front --port 8080:80 --env-file .env
    Using Deployment store-front
    Intercept name         : store-front
@@ -198,14 +158,7 @@ The env-file field is the path where Telepresence will create an env file contai
 
 Now that Telepresence is set up, you can start modifying your local code. These changes will be reflected in real-time, allowing you to test and debug directly against your AKS cluster.
 
-To make changes to the sample app, cd into the store-front service.
-
-    ```console
-     cd src/store-front/
-    ```
-
 In `components/TopNav.Vue` change the `Products` nav item to `New Products`.
-
 
 ```console
 <template>
@@ -224,6 +177,13 @@ In `components/TopNav.Vue` change the `Products` nav item to `New Products`.
     </ul>
   </nav>
 </template>
+```
+
+Afer saving these changes, run the following commans to get the app running locally.
+
+```console
+npm install
+npm run serve
 ```
 
 Now, if you visit the public IP of the `store-front` service in your AKS cluster, you’ll see the updated behavior, as traffic is being routed to your locally running version of the service. Your local changes are reflected in real-time and interact with other services in your AKS cluster.
