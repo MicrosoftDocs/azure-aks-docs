@@ -39,7 +39,7 @@ The following table compares Windows Server Annual Channel and Long Term Servici
 | Channel | Support | Upgrades |
 |---------|---------|----------|
 | Long Term Servicing Channel (LTSC) | LTSC channels are released every three years and are supported for five years. This channel is recommended for customers using Long Term Support. | To upgrade from one release to the next, you need to migrate your node pools to a new OS SKU option and rebuild your container images with the new OS version. |
-| Windows Server Annual Channel for Containers | Annual Channel releases occur annually and are supported for two years. | To upgrade to the latest release, you can upgrade the Kubernetes version of your node pool. |
+| [Windows Server Annual Channel for Containers](https://techcommunity.microsoft.com/t5/windows-server-news-and-best/windows-server-annual-channel-for-containers/ba-p/3866248) | Annual Channel releases occur annually and are supported for two years. | To upgrade to the latest release, you can upgrade the Kubernetes version of your node pool. |
 
 ## Before you begin
 
@@ -47,7 +47,7 @@ The following table compares Windows Server Annual Channel and Long Term Servici
 
 ### Limitations
 
-* Windows Server Annual Channel doesn't support Azure Network Policy Manager (NPM).
+* Windows Server Annual Channel doesn't support Azure Network Policy Manager (NPM). For best practices for networking, see [Windows Best Practices](https://learn.microsoft.com/azure/aks/windows-best-practices).
 
 ### Install the `aks-preview` Azure CLI extension
 

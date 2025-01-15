@@ -20,7 +20,7 @@ When a new version of the Windows Server operating system is released, AKS is co
 
 > [!NOTE]
 > - Windows Server 2019 is being retired after Kubernetes version 1.32 reaches end of life (EOL). Windows Server 2019 will not be supported on 1.33 and above. For more information, see [AKS release notes][aks-release-notes].
-> - Windows Server 2022 is being retired after Kubernetes version 1.34 reaches its end of life (EOL). Windows Server 2022 will not be supported on 1.35 and above. For more information, see [AKS release notes][aks-release-notes].
+> - Windows Server 2022 is being retired after Kubernetes version 1.34 reaches its end of life (EOL). Windows Server 2022 will not be supported on 1.35 and above. For more information, see [AKS release notes][aks-release-notes].  For more information on end of life dates, see the [kubernetes release calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
 
 ## Limitations
 
