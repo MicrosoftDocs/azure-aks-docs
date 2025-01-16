@@ -19,7 +19,7 @@ ms.date: 10/23/2024
 
 Telepresence injects Traffic Agents into the workload pod as a sidecar. The Traffic Agents act as a proxy, rerouting inbound and outbound network traffic from the AKS cluster to your local machine. Then, you can develop and test in your local environment as though your local machine were in the AKS cluster. The process involves:
 
-- Connecting to your Kubernetes cluster with Telepresence.
+- Connecting to your AKS cluster to Telepresence.
 - Specifying the service or deployment you want to intercept.
 - Running the local version of the service, which Telepresence connects to the cluster through the proxy pod.
 
