@@ -14,6 +14,7 @@ ms.date: 01/16/2025
 > [!NOTE]
 > Telepresence is an open-source CNCF project. Microsoft doesn't offer support for problems you might have using Telepresence. If you do have problems using Telepresence, visit their [Telepresence GitHub issue page] and open an issue.
 
+In this tutorial, you connect an AKS cluster to Telepresence and then modify a sample application running locally.
 
 ## How Telepresence works
 
