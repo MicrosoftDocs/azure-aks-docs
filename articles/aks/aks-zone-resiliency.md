@@ -60,9 +60,18 @@ For more information, see [Use availability zones in Azure Kubernetes Service (A
 
 ### Ensure pods are spread across AZs
 
-You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across nodes within AZs.
+In AKS, the Kubernetes Scheduler is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone` as outlined below:
+```yml
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: "topology.kubernetes.io/zone"
+  whenUnsatisfiable: ScheduleAnyway
+```
+This configuration deviates from the upstream default, but helps improve the scoring for the scheduler, enhancing fault tolerance and availability by targeting no more than a single pod difference between zones. By distributing pods more evenly across zones, AKS minimizes the risk of service disruptions due to zone specific failures, which is particularly beneficial for applications requiring high availability and resilience. 
 
-For example, let's say you have a four-node cluster where three pods labeled `foo:bar` are located in `node1`, `node2`, and `node3` respectively. If you want an incoming pod to be evenly distributed with existing pods across zones, you can use a manifest similar to the following example:
+However, if your deployment has specific topology needs, you can override the above default values by adding your own in the pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across nodes within AZs.
+
+For example, let's say you have a four-node cluster where three pods labeled `foo:bar` are located in `node1`, `node2`, and `node3` respectively. If you want an incoming pod to be evenly distributed with existing pods across zones (strict spreading using `whenUnsatisfiable:DoNotSchedule`), you can use a manifest similar to the following example:
 
 ```yml
 kind: Pod
@@ -75,7 +84,7 @@ spec:
   topologySpreadConstraints:
   - maxSkew: 1
     topologyKey: "topology.kubernetes.io/zone"
-    whenUnsatisfiable: DoNotSchedule
+    whenUnsatisfiable: ScheduleAnyway
     labelSelector:
       matchLabels:
         foo: bar
@@ -83,15 +92,7 @@ spec:
   - name: pause
     image: registry.k8s.io/pause:3.1
 ```
-> [!NOTE]
->
-> In AKS, the Kubernetes Scheduler is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone`, which is for the zone spreading of pods within a deployment. This value deviates from the upstream default value of 5. This configuration improves the scoring for the scheduler and enhances fault tolerance and availability by targeting no more than a single pod difference between zones. By distributing pods more evenly across zones, AKS minimizes the risk of service disruptions due to zone specific failures, which is particularly beneficial for applications requiring high availability and resilience. If your deployment has specific topology needs, setting the value of maxskew in the pod spec will override the default of the kube-scheduler.
->
-> For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
-
----
-
-For more information, see [Kubernetes Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/).
+ For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
 
 ### Configure AZ-aware networking
 
