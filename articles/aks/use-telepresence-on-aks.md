@@ -21,7 +21,7 @@ Telepresence injects Traffic Agents into the workload pod as a sidecar. The Traf
 
 - Connecting to your AKS cluster to Telepresence.
 - Specifying the service or deployment you want to intercept inbound and outbound traffic for and then reroute to your local environment.
-- Running the local version of the service, which Telepresence connects to the cluster through the proxy pod.
+- Running the local version of the service. Telepresence connects the local version of the service to the cluster through the proxy pod.
 
 
 # Using Telepresence with a sample app running on an AKS cluster
