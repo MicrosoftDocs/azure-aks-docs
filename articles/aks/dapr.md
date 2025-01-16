@@ -5,7 +5,7 @@ author: greenie-msft
 ms.author: nigreenf
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 01/08/2025
+ms.date: 01/16/2025
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
 ---
@@ -376,7 +376,7 @@ Or, if using a Bicep template, you can delete the template.
 
 ### Listing the CRDs in your cluster
 
-To find the CRDs related to Dapr extension you wish to remove, run the following command:
+To find the CRDs you'd like to remove, run the following command:
 
 ```powershell
 kubectl get crds | findstr dapr.io
