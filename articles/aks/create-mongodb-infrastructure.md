@@ -6,6 +6,7 @@ ms.date: 01/07/2025
 author: fossygirl
 ms.author: carols
 ms.custom: aks-related-content
+zone_pivot_groups: azure-cli-or-terraform
 ---
 
 # Create the infrastructure for running a MongoDB cluster on Azure Kubernetes Service (AKS)
@@ -20,6 +21,8 @@ In this article, you create the required infrastructure resources to run a Mongo
 * Helm version 3 or later. To install, see [Installing Helm](https://helm.sh/docs/intro/install/).
 * `kubectl`, which Azure Cloud Shell installs by default.
 * Docker installed on your local machine. To install, see [Get Docker](https://docs.docker.com/get-docker/).
+
+:::zone pivot="azure-cli"
 
 ## Set environment variables
 
@@ -270,6 +273,22 @@ In this section, you download the Percona images from Docker Hub and upload them
         --source docker.io/percona/percona-server-mongodb-operator:1.16.1  \
         --image percona-server-mongodb-operator:1.16.1
     ```
+  :::zone-end
+
+  :::zone pivot="terraform"
+
+  ## Deploy the infrastructure with Terraform
+
+The repository [terraform-azurerm-avm-ptn-aks-production](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) containes a full example with the infrastructure required to run a MongoDB cluster on Azure Kubernetes Service (AKS).
+
+```bash
+git clone https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production
+cd terraform-azurerm-avm-ptn-aks-production/examples/MongoDB
+terraform init
+terraform apply
+```
+
+:::zone-end
 
 ## Next step
 
