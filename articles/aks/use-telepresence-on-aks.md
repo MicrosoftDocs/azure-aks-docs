@@ -48,7 +48,7 @@ Before you can install Telepresence and interact with your AKS cluster, make sur
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER_NAME
     ```
 
-1. Verify the connection to your cluster using the [kubectl cluster-info][kubectl cluster-info] command. This command will print out the name of the cluster to help you identity if it is the correct cluster to be working with.
+1. Verify the connection to your cluster using the [kubectl cluster-info](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command. This command displays the name of the cluster so you can confirm you're connected to the cluster you want to work with.
 
     ```azurecli-interactive
     kubectl cluster-info
