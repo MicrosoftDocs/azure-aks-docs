@@ -29,7 +29,7 @@ Telepresence injects Traffic Agents into the workload pod as a sidecar. The Traf
 
 ## Prerequisites
 
-- An AKS cluster. If you don't know how to create a cluster, please follow [aks-tutorial-deploy-cluster].
+- An AKS cluster. If you don't have a cluster you can use for this tutorial, create one using [Tutorial - Create an Azure Kubernetes Service (AKS) cluster](./tutorial-kubernetes-deploy-cluster.md).
 - [Kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) installed and on the path in a command-line environment of your choice
 - An application to deploy. In this tutorial we will be using the [aks-store-demo app].
 - [Telepresence] installed
