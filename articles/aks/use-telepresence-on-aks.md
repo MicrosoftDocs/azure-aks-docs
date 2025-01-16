@@ -40,7 +40,7 @@ Telepresence injects Traffic Agents into the workload pod as a sidecar. The Traf
 > [!NOTE]
 > Set the values of $MY_RESOURCE_GROUP_NAME and $MY_AKS_CLUSTER_NAME accordingly.
 
-To install Telepresence and to interact with your AKS cluster, it is important to make sure you are connected. To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`][az-aks-install-cli] command.
+Before you can install Telepresence and interact with your AKS cluster, make sure you're connected to your cluster. If you didn't install `kubectl` in the _Prerequisites_ section, do that before continuing.
 
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
