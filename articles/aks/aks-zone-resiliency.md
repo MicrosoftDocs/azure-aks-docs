@@ -91,7 +91,6 @@ spec:
 
 ---
 
-Does this meet your requirements? Let me know if you need any further adjustments!
 For more information, see [Kubernetes Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/).
 
 ### Configure AZ-aware networking
