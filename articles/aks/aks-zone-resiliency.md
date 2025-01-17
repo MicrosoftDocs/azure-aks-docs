@@ -71,27 +71,36 @@ This configuration deviates from the upstream default, but helps improve the sco
 
 However, if your deployment has specific topology needs, you can override the above default values by adding your own in the pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across nodes within AZs.
 
-For example, let's say you have a four-node cluster where three pods labeled `foo:bar` are located in `node1`, `node2`, and `node3` respectively. If you want an incoming pod to be evenly distributed with existing pods across zones (strict spreading using `whenUnsatisfiable:DoNotSchedule`), you can use a manifest similar to the following example:
+For example, let's say you have a four-node cluster where three pods labeled `app: mypod-app` are located in `node1`, `node2`, and `node3` respectively. If you want the incoming pod to be evenly distributed with existing pods across hosts, you can use a manifest similar to the following example:
 
 ```yml
-kind: Pod
 apiVersion: v1
+kind: Deployment
 metadata:
-  name: mypod
+  name: mypod-deployment
   labels:
-    foo: bar
+    app: mypod-app
 spec:
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: "topology.kubernetes.io/zone"
-    whenUnsatisfiable: ScheduleAnyway
-    labelSelector:
-      matchLabels:
-        foo: bar
-  containers:
-  - name: pause
-    image: registry.k8s.io/pause:3.1
+  replicas: 6
+  selector:
+    matchLabels:
+      app: mypod-app
+  template:
+    metadata:
+      labels:
+        app: mypod-app
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "topology.kubernetes.io/hostname"
+        whenUnsatisfiable: ScheduleAnyway
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause
 ```
+> [!NOTE]
+> If your application has strict zone spread requirements, where the expected behaviour would be to leave a pod in pending state if a suitable node is not found, you can use `whenUnsatisfiable: DoNotSchedule`. This configuration tells the scheduler to leave the pod in pending if a node in the right zone or different host doesn't exist or cannot be scaled up.
+
  For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
 
 ### Configure AZ-aware networking
