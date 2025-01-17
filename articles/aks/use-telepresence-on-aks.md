@@ -98,7 +98,7 @@ Refer to the Telepresence documentation for installation instructions.
 
 To route cloud traffic to your local machine, Telepresence uses a traffic manager. Helm is used to deploy the traffic manager into your Kubernetes cluster.
 
-    ```console
+```console
     telepresence helm install
     ```
 
