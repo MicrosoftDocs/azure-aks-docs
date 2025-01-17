@@ -159,7 +159,7 @@ The env-file field is the path where Telepresence will create an env file contai
 
 ## Modify your local code and see real-time changes
 
-Now that Telepresence is set up, you can start modifying your local code. These changes will be reflected in real-time, allowing you to test and debug directly against your AKS cluster.
+With Telepresence set up, modify your local code. The changes are reflected in real time, letting you test and debug locally while using your AKS cluster.
 
 In `components/TopNav.Vue` change the `Products` nav item to `New Products`.
 
