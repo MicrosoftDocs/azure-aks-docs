@@ -204,7 +204,7 @@ Complete the following steps to intercept traffic going to your service in the A
 
 When you go to the public IP of the `store-front` service in your AKS cluster, the updated navigation is present and traffic is being routed to your locally running version of the service. Your local changes are reflected in real-time and interact with other services in your AKS cluster.
 
-# Video demo of F5 debugging with Telepresence using the AI store demo app on Azure Kubernetes Service
+## Video demo
 
 The following video provides a clear and concise walkthrough of Telepresence's F5 debugging capabilities.
 
