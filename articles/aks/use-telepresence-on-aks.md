@@ -84,7 +84,7 @@ The [aks-store-demo app] used in this tutorial is a basic store front app includ
 ## Install Telepresence
 To intercept traffic to and from your AKS cluster, you need to install the Telepresence client on your local machine and the traffic manager to your AKS cluster.
 
-### Install the Telepresence Client
+### Install the Telepresence client
 
 Telepresence can be installed on [GNU/Linux], [Mac], or [Windows]. Click your corresponding OS to visit the Telepresence documentation for installation instructions.
 
