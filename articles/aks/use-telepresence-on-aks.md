@@ -175,6 +175,8 @@ Complete the following steps to intercept traffic going to your service in the A
 
 ## Modify your local code and see real-time changes
 
+With Telepresence configured, you can seamlessly modify your local code and see the changes reflected in real time. This allows you to test and debug locally while leveraging your AKS cluster.
+
 1. Navigate and open `components/TopNav.Vue` in the application you cloned previously.
 
 1. Change the `Products` navigation item to `New Products`, as seen in the following example, and save the changes.
