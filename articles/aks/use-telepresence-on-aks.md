@@ -175,37 +175,34 @@ Complete the following steps to intercept traffic going to your service in the A
 
 ## Modify your local code and see real-time changes
 
-With Telepresence set up, modify your local code. The changes are reflected in real time, letting you test and debug locally while using your AKS cluster.
+1. Navigate and open `components/TopNav.Vue` in the application you cloned previously.
 
-In `components/TopNav.Vue` change the `Products` nav item to `New Products`.
+1. Change the `Products` navigation item to `New Products`, as seen in the following example, and save the changes.
 
-```console
-<template>
-  <nav>
-    <div class="logo">
-      <a href="/">
-        <img src="/contoso-pet-store-logo.png" alt="Contoso Pet Store Logo">
-      </a>
-    </div>
-    <button class="hamburger" @click="toggleNav">
+    ```console
+    <template>
+      <nav>
+        <div class="logo">
+          <a href="/">
+            <img src="/contoso-pet-store-logo.png" alt="Contoso Pet Store Logo">
+          </a>
+        </div>
+        <button class="hamburger" @click="toggleNav">
       <span class="hamburger-icon"></span>
-    </button>
-    <ul class="nav-links" :class="{ 'nav-links--open': isNavOpen }">
-      <li><router-link to="/" @click="closeNav">New Products</router-link></li>
-      <li><router-link to="/cart" @click="closeNav">Cart ({{ cartItemCount }})</router-link></li>
-    </ul>
-  </nav>
-</template>
-```
+        </button>
+        <ul class="nav-links" :class="{ 'nav-links--open': isNavOpen }">
+          <li><router-link to="/" @click="closeNav">New Products</router-link></li>
+          <li><router-link to="/cart" @click="closeNav">Cart ({{ cartItemCount }})</router-link></li>
+        </ul>
+      </nav>
+    </template>
+    ```
 
-Afer saving these changes, run the following commans to get the app running locally.
+1. Run the following commands to run the app locally.
+    1. `npm install` - Installs the dependencies. 
+    1. `npm run serve` - Starts the development server. 
 
-```console
-npm install
-npm run serve
-```
-
-Now, if you visit the public IP of the `store-front` service in your AKS cluster, you’ll see the updated behavior, as traffic is being routed to your locally running version of the service. Your local changes are reflected in real-time and interact with other services in your AKS cluster.
+When you go to the public IP of the `store-front` service in your AKS cluster, the updated navigation is present and traffic is being routed to your locally running version of the service. Your local changes are reflected in real-time and interact with other services in your AKS cluster.
 
 # Video demo of F5 debugging with Telepresence using the AI store demo app on Azure Kubernetes Service
 
