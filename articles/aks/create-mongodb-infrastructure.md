@@ -273,21 +273,20 @@ In this section, you download the Percona images from Docker Hub and upload them
         --source docker.io/percona/percona-server-mongodb-operator:1.16.1  \
         --image percona-server-mongodb-operator:1.16.1
     ```
-  :::zone-end
+:::zone-end
 
-  :::zone pivot="terraform"
+:::zone pivot="terraform"
 
-  ## Deploy the infrastructure with Terraform
+## Deploy the infrastructure with Terraform
 
 The repository [terraform-azurerm-avm-ptn-aks-production](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) containes a full example with the infrastructure required to run a MongoDB cluster on Azure Kubernetes Service (AKS).
 
 ```bash
 git clone https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production
-cd terraform-azurerm-avm-ptn-aks-production/examples/MongoDB
+cd terraform-azurerm-avm-ptn-aks-production/examples/mongodb
 terraform init
 terraform apply
 ```
-
 :::zone-end
 
 ## Next step
