@@ -86,7 +86,13 @@ To intercept traffic to and from your AKS cluster, you need to install the Telep
 
 ### Install the Telepresence client
 
-Telepresence can be installed on [GNU/Linux], [Mac], or [Windows]. Click your corresponding OS to visit the Telepresence documentation for installation instructions.
+Choose the OS you're using on your local machine and install that version of Telepresence. 
+
+- [GNU/Linux]
+- [Mac]
+- [Windows]
+
+Refer to the Telepresence documentation for installation instructions. 
 
 ### Install the Telepresence traffic manager
 
