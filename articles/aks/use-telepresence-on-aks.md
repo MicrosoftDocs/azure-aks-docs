@@ -75,7 +75,7 @@ The [aks-store-demo app] used in this tutorial is a basic store front app includ
     cd aks-store-demo
     ```
 
-To deploy the app, run the following command
+3. Deploy the app to your AKS cluster.
 
     ```console
     kubectl apply -f aks-store-quickstart.yaml
