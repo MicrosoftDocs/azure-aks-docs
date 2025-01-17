@@ -208,7 +208,7 @@ When you go to the public IP of the `store-front` service in your AKS cluster, t
 
 The following video provides a clear and concise walkthrough of Telepresence's F5 debugging capabilities.
 
-> [!VIDEO https://www.youtube.com/watch?v=hbQfKwFeUtE]
+> [!VIDEO https://youtu.be/hbQfKwFeUtE?si=tpjiC2aIny3AAx-5]
 
 ## Next step
 
