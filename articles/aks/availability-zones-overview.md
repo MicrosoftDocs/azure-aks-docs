@@ -91,7 +91,7 @@ aks-nodepool1-34917322-vmss000002   eastus   eastus-3
 Kubernetes is aware of Azure Availability Zones, and balances pods across nodes in different zones. In the event a zone becomes unavailable, Kubernetes moves pods away from impacted nodes automatically.
 
 As documented in [Well-Known Labels, Annotations and Taints][kubectl-well_known_labels], Kubernetes uses the `topology.kubernetes.io/zone` label to automatically distribute pods in a replication controller or service across the different zones available.
-
+To view on which pods nodes are running, run the following command:
 
 ```bash
   kubectl describe pod | grep -e "^Name:" -e "^Node:"
@@ -182,4 +182,4 @@ The following limitations apply when using Availability Zones:
 * Learn about [System Node pool](/azure/aks/use-system-pools) 
 * Learn about [User Node pools](/azure/aks/create-node-pools)
 * Learn about [Load Balancers](/azure/aks/load-balancer-standard)
-* [Best practices for business continuity and disaster recovery in AKS][best-practices-bc-dr]
+* [Best practices for business continuity and disaster recovery in AKS](best-practices-bc-dr)
