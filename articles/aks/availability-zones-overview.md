@@ -11,7 +11,7 @@ ms.author: dabossch
 # Availability zones in Azure Kubernetes Service (AKS)
 [Availability zones](/azure/reliability/availability-zones-overview) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
 
-Using AKS with availability zones physically distributes resources across different availability zones within a single region. This improves reliability against the failure of a zone.
+Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability.
 
 
 If a zone becomes unavailable, AKS adjusts resources as required.
@@ -23,14 +23,14 @@ This article shows you how to configure AKS resources to use Availability Zones.
 
 
 ### [AKS Control Plane](/azure/aks/core-aks-concepts#control-plane)
-Microsoft hosts the Kubernetes API server and services such as `scheduler` and `etcd` as a managed service. The **Standard** pricing tier and up uses Availability Zones through the Uptime SLA feature.
+Microsoft hosts the Kubernetes API server and services such as `scheduler` and `etcd` as a managed service. The **Standard** pricing tier and up uses Availability Zones.
 
-The other resources of your cluster will be deployed in a managed resource group in your Azure subscription. By default, this resource group will be be prefixed with *MC_*, for 'Managed Cluster'.
+The other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_*, for Managed Cluster.
 
 ### Node pools
 Node pools are created as a Virtual Machine Scale Set in your Azure Subscription. 
 
-When creating an AKS cluster, one [System Node pool](/azure/aks/use-system-pools) is required and created automatically. It hosts critical system pods such as `CoreDNS` and `metrics-server`. Additional [User Node pools](/azure/aks/create-node-pools) can be added to your AKS cluster to host your applications.
+When you create an AKS cluster, one [System Node pool](/azure/aks/use-system-pools) is required and created automatically. It hosts critical system pods such as `CoreDNS` and `metrics-server`. More [User Node pools](/azure/aks/create-node-pools) can be added to your AKS cluster to host your applications.
 
 There are three ways node pools can be deployed: Zone spanning, Zone aligned, and Regional.
 
@@ -38,7 +38,7 @@ There are three ways node pools can be deployed: Zone spanning, Zone aligned, an
 
 
 #### Zone spanning (recommended)
-A zone redundant or zone spanning scale set spreads nodes across all selected zones. This can be defined by specifying the `--zones` parameter:
+A zone spanning scale set spreads nodes across all selected zones, by specifying these zones with the `--zones` parameter:
 
 ```bash
 # Create an Resource Group and pick your preferred Azure Region
@@ -48,10 +48,10 @@ az aks create --resource-group example-rg --name example-cluster --node-count 3 
 # Add one new zone spanning User Nodepool, two nodes in each
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-a  --node-count 6 --zones 1, 2, 3 
 ```
-AKS will balance the number of nodes between zones automatically. In the event of a zonal outage or connectivity issue, connectivity to nodes within the affected zone may be compromised, while nodes in other availability zones should be unaffected. You may add capacity to the nodepool during a zonal outage, and the nodepool adds more nodes to the unaffected zones.
+AKS balances the number of nodes between zones automatically. If a zonal outage or connectivity issue occurs, connectivity to nodes within the affected zone can be compromised, while nodes in other availability zones should be unaffected. You can add capacity to the node pool during a zonal outage, and the node pool adds more nodes to the unaffected zones.
 
 #### Zone aligned
-Each VM and its disks are zonal, so they are pinned to a specific zone. To create three nodepools for a region with three Availability Zones:
+Each node and its disks are zonal, so they're pinned to a specific zone. To create three node pools for a region with three Availability Zones:
 
 ```bash
 # # Add three new zone aligned User Nodepools, two nodes in each
@@ -60,17 +60,17 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-z  --node-count 2 --zones 3
 ```
 
- This configuration is primarily used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg), or more finegrained control over individual scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md). 
+ This configuration is primarily used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md). 
 
 > [!NOTE]
-> * If a single workload is deployed across nodepools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations.
+> * If a single workload is deployed across node pools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations.
 
 #### Regional (not using Availability Zones)
 Regional is used when the zone assignment isn't set in the deployment template (`"zones"=[] or "zones"=null`).
 
-In this configuration, the node pool creates Regional (not-zone pinned) instances and implicitly places instances throughout the region. There is no guarantee for balance or spread across zones, or that instances land in the same availability zone. Disk colocation is guaranteed for Ultra and Premium v2 disks, best effort for Premium v1 disks, and not guaranteed for Standard (SSD or HDD) disks.
+In this configuration, the node pool creates Regional (not-zone pinned) instances and implicitly places instances throughout the region. There's no guarantee for balance or spread across zones, or that instances land in the same availability zone. Disk colocation is guaranteed for Ultra and Premium v2 disks, best effort for Premium v1 disks, and not guaranteed for Standard disks.
 
-In the rare case of a full zonal outage, any or all instances within the node pool may be impacted.
+In the rare case of a full zonal outage, any or all instances within the node pool can be impacted.
 
 To validate node locations, run the following command:
 
@@ -150,7 +150,7 @@ parameters:
 ```
 
 ### Load Balancers
-Kubernetes deploys an Azure Standard Load Balancer by default, which will automatically balance inbound traffic across all zones in a region. If a node becomes unavailable, the load balancer reroutes traffic to healthy nodes.
+Kubernetes deploys an Azure Standard Load Balancer by default, which balances inbound traffic across all zones in a region. If a node becomes unavailable, the load balancer reroutes traffic to healthy nodes.
 
 ```yaml
 apiVersion: v1
@@ -167,14 +167,14 @@ spec:
 ```
 
 > [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the official announcement. If you're currently using Basic Load Balancer, make sure to [upgrade](/azure/load-balancer/load-balancer-basic-upgrade-guidance) to Standard Load Balancer prior to the retirement date.
+> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the official announcement. If you're currently using Basic Load Balancer, make sure to [upgrade](/azure/load-balancer/load-balancer-basic-upgrade-guidance) to Standard Load Balancer before the retirement date.
 
 ## Limitations
 
 The following limitations apply when using Availability Zones:
 
-* See [Quotas, VM size restrictions, and region availability in AKS][quotas-skus-regions].
-* The number of Availability Zones used, **cannot be changed** after the nodepool is created.
+* See [Quotas, Virtual Machine size restrictions, and region availability in AKS][quotas-skus-regions].
+* The number of Availability Zones used **cannot be changed** after the node pool is created.
 * Most regions support Availability Zones. A list can be found [here](/azure/reliability/availability-zones-region-support).
 
 ## Next steps
