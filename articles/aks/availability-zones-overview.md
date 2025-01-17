@@ -173,7 +173,7 @@ spec:
 
 The following limitations apply when using Availability Zones:
 
-* See [Quotas, Virtual Machine size restrictions, and region availability in AKS][quotas-skus-regions].
+* See [Quotas, Virtual Machine size restrictions, and region availability in AKS](quotas-skus-regions).
 * The number of Availability Zones used **cannot be changed** after the node pool is created.
 * Most regions support Availability Zones. A list can be found [here](/azure/reliability/availability-zones-region-support).
 
