@@ -102,7 +102,7 @@ To route cloud traffic to your local machine, Telepresence uses a traffic manage
 telepresence helm install
 
 
-### Intercept your services
+## Intercept traffic to your service
 
 To start using Telepresence in your AKS cluster, run the `telepresence connect` command.
 
