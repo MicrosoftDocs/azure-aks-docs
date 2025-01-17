@@ -100,7 +100,6 @@ To route cloud traffic to your local machine, Telepresence uses a traffic manage
 
 ```console
 telepresence helm install
-    ```
 
 
 ### Intercept your services
