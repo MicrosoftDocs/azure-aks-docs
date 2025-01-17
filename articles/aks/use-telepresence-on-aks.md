@@ -65,7 +65,6 @@ The [aks-store-demo app] used in this tutorial is a basic store front app includ
 * **Order service**: Places orders.
 * **Rabbit MQ**: Message queue for an order queue.
 
-### [Git](#tab/azure-cli)
 
 1. Use [git] to clone the sample application to your development environment.
 
