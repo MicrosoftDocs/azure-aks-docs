@@ -197,7 +197,7 @@ The following video provides a clear and concise walkthrough of Telepresence's F
 
 > [!VIDEO https://www.youtube.com/watch?v=hbQfKwFeUtE]
 
-# Where to learn more
+## Next step
 
 This tutorial explains how to use Telepresence with a sample application on AKS. Telepresence offers more in-depth documentation on their [website](https://www.telepresence.io/docs/quick-start/#gsc.tab=0). Their content covers FAQs, troubleshooting, technical reference, core concepts, tutorials, and links to the community.  
 
