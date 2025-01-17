@@ -102,7 +102,7 @@ To route cloud traffic to your local machine, Telepresence uses a traffic manage
 telepresence helm install
 ```
 
-### Intercept traffic to your service
+## Intercept traffic to your service
 
 Complete the following steps to intercept traffic going to your service in the AKS cluster and route it to your local machine.
 
