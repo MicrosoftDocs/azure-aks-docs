@@ -102,59 +102,75 @@ To route cloud traffic to your local machine, Telepresence uses a traffic manage
 telepresence helm install
 
 
-## Intercept traffic to your service
+### Intercept traffic to your service
 
-To start using Telepresence in your AKS cluster, run the `telepresence connect` command.
+Complete the following steps to intercept traffic going to your service in the AKS cluster and route it to your local machine.
+
+1. From the command line on your local machine, run `telepresence connect` to connect to your AKS cluster and the Kubernetes API server.
 
     ```console
     telepresence connect
     ```
 
-`telepresence connect` connects to your AKS cluster and connects to the Kubernetes API server. After running `telepresence connect` similar output should appear
+    A successful response from `telepresence connect` shows the cluster name and default namespace that Telepresence connected to, similar to the following example.
 
-    ```console
+    ```
     Connected to context myAKSCluster, namespace default (https://myAKSCluster-dns-ck7w5t5h.hcp.eastus2.azmk8s.io:443)
     ```
 
-Using the `telepresence list` command, you will be able to see all the services that can be interecepted.
+2. Use the `telepresence list` command to display a list of the services you can intercept.
 
     ```console
     telepresence list
+    ```
+
+    A successful response displays available services, similar to the following example.
+
+    ```
     order-service  : ready to intercept (traffic-agent not yet installed)
     product-service: ready to intercept (traffic-agent not yet installed)
     rabbitmq       : ready to intercept (traffic-agent not yet installed)
     store-front    : ready to intercept (traffic-agent not yet installed)
     ```
 
-To start intercepting traffic from a service in your AKS cluster, you first need to find the correct port. Running the `kubectl get service service-name --output yaml` command will help find you the port.
-
-In the following example, we will run the command on the `store-front` service to find the appropriate port (port 80) to use in our intercepts.
+3. Find the name of the port you need to intercept traffic from using `kubectl get service service-name --output yaml`. For this tutorial, enter the following command in the command line.
 
     ```console
-     kubectl get service store-front -ojsonpath='{.spec.ports[0].port}'
+    kubectl get service store-front -ojsonpath='{.spec.ports[0].port}'
     ```
 
-To properly intercept traffic from your service in your AKS cluster, run the following command `$ telepresence intercept <service-name> --port <local-port>[:<remote-port>] --env-file <path-to-env-file>`.
+    In this example, the port to intercept, 80, is returned.
 
-The port field must have the local port and the remote-port, which is the port used in your AKS cluster.
+    ```
+    80
+    ```
 
-The env-file field is the path where Telepresence will create an env file containing the appropriate environment variables needed to intercept traffic. This is **needed** to properly intercept your service's traffic to your local machine. If a file doesn't exist, telepresence will create it for you.
+4. Intercept the traffic from your service in your AKS cluster using the `telepresence intercept` command with the following format: `$ telepresence intercept <service-name> --port <local-port>[:<remote-port>] --env-file <path-to-env-file>`
 
-> [!NOTE]
-> `sshfs` is required in order for volume mounts to work correctly during intercepts for both linux and macos versions of Telepresence. If you don't have it installed, view the official [documentation](https://www.telepresence.io/docs/troubleshooting#volume-mounts-are-not-working-on-macos) for more information.
+    - `--port` specifies the local port and the remote port for your AKS cluster. 
+    - `--env-file` specifies the path where Telepresence creates an env file containing the environment variables needed to intercept traffic. This file must exist to properly intercept your service's traffic to your local machine. If a file doesn't exist, telepresence creates it for you.
 
+    > [!NOTE]
+    > `sshfs` is required in order for volume mounts to work correctly during intercepts for both Linux and macOS versions of Telepresence. If you don't have it installed, see the [Telepresence documentation](https://www.telepresence.io/docs/troubleshooting#volume-mounts-are-not-working-on-macos) for more information.
+
+    For this tutorial, enter the following command to intercept the traffic.
 
     ```console
     cd src/store-front
     telepresence intercept store-front --port 8080:80 --env-file .env
-   Using Deployment store-front
-   Intercept name         : store-front
-   State                  : ACTIVE
-   Workload kind          : Deployment
-   Destination            : 127.0.0.1:8080
-   Service Port Identifier: 80/TCP
-   Volume Mount Point     : /tmp/telfs-3392425241
-   Intercepting           : all TCP connections
+    ```
+    
+    A successful response displays which connections Telepresence is intercepting, similar to the following example.
+
+    ```
+    Using Deployment store-front
+    Intercept name         : store-front
+    State                  : ACTIVE
+    Workload kind          : Deployment
+    Destination            : 127.0.0.1:8080
+    Service Port Identifier: 80/TCP
+    Volume Mount Point     : /tmp/telfs-3392425241
+    Intercepting           : all TCP connections
     ```
 
 ## Modify your local code and see real-time changes
