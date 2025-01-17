@@ -34,6 +34,11 @@
       "source_path_from_root": "/articles/azure-kubernetes/create-upgrade-delete/quota-exceeded-during-creation-upgrade.md",
       "redirect_url": "/troubleshoot/azure/azure-kubernetes/create-upgrade-delete/error-code-quotaexceeded",
       "redirect_document_id": false
+    },
+    {
+      "source_path_from_root": "azure/aks/availability-zones.md",
+      "redirect_url": "/aks/availability-zones-overview",
+      "redirect_document_id": false
     }
   ]
 }
