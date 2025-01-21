@@ -70,7 +70,7 @@ However, it's important to note that zone-redundant storage (ZRS) comes at a hig
 ## Next steps
 
 * [Create an AKS cluster with availability zones](./availability-zones.md).
-* [Zone resiliency considerations for Azure Kubernetes Service (AKS)](./../aks-zone-resiliency.md)
+* [Zone resiliency considerations for Azure Kubernetes Service (AKS)](/articles/aks/aks-zone-resiliency.md)
 
 <!-- LINKS -->
 [standard-lb-limitations]: load-balancer-standard.md#limitations
