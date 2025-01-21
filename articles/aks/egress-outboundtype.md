@@ -67,7 +67,7 @@ For more information, see [configuring cluster egress via user-defined routing](
 ### Outbound type of `none` (Preview)
 
 > [!IMPORTANT]  
-> The `none` outbound type requires careful planning to ensure the cluster operates as expected without unintended dependencies on external services. For fully isolated clusters, see [isolated cluster considerations](concepts-network-isolated.md).  
+> The `none` outbound type is only available with [Network Isolated Cluster](concepts-network-isolated.md) and requires careful planning to ensure the cluster operates as expected without unintended dependencies on external services. For fully isolated clusters, see [isolated cluster considerations](concepts-network-isolated.md).  
 
 If `none` is set, AKS will not automatically configure egress paths. This option is similar to `userDefinedRouting` but does **not** require a default route as part of validation.  
 
@@ -76,7 +76,7 @@ The `none` outbound type is supported in both bring-your-own (BYO) virtual netwo
 ### Outbound type of `block` (Preview)
 
 > [!IMPORTANT]  
-> The `block` outbound type requires careful planning to ensure no unintended network dependencies exist. For fully isolated clusters, see [isolated cluster considerations](concepts-network-isolated.md).  
+> The `block` outbound type is only available with [Network Isolated Cluster](concepts-network-isolated.md) and requires careful planning to ensure no unintended network dependencies exist. For fully isolated clusters, see [isolated cluster considerations](concepts-network-isolated.md).  
 
 If `block` is set, AKS will configure network rules to **actively block all egress traffic** from the cluster. This option is useful for highly secure environments where outbound connectivity must be restricted.  
 
