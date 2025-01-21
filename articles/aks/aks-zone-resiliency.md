@@ -81,7 +81,7 @@ metadata:
   labels:
     app: mypod-app
 spec:
-  replicas: 6
+  replicas: 3
   selector:
     matchLabels:
       app: mypod-app
@@ -92,7 +92,7 @@ spec:
     spec:
       topologySpreadConstraints:
       - maxSkew: 1
-        topologyKey: "topology.kubernetes.io/hostname"
+        topologyKey: "kubernetes.io/hostname"
         whenUnsatisfiable: ScheduleAnyway
       containers:
       - name: pause
