@@ -188,6 +188,8 @@
       items:
         - name: Node auto-repair
           href: node-auto-repair.md
+        - name: Node auto-drain
+          href: node-auto-drain.md
         - name: Node Problem Detector (NPD)
           href: node-problem-detector.md
     - name: Service meshes
