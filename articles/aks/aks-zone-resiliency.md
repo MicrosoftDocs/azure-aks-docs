@@ -67,11 +67,11 @@ topologySpreadConstraints:
   topologyKey: "topology.kubernetes.io/zone"
   whenUnsatisfiable: ScheduleAnyway
 ```
-This configuration deviates from the upstream default, but helps improve the scoring for the scheduler, enhancing fault tolerance and availability by targeting no more than a single pod difference between zones. By distributing pods more evenly across zones, AKS minimizes the risk of service disruptions due to zone specific failures, which is particularly beneficial for applications requiring high availability and resilience. 
+"This configuration deviates from the upstream default by targeting no more than a single pod difference between zones. As a result, pods are more evenly distributed across zones, reducing the likelihood that a zonal failure results in an outage of the corresponding deployment.
 
-However, if your deployment has specific topology needs, you can override the above default values by adding your own in the pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across nodes within AZs.
+However, if your deployment has specific topology needs, you can override the above default values by adding your own in the pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across hosts within AZs.
 
-For example, let's say you have a four-node cluster where three pods labeled `app: mypod-app` are located in `node1`, `node2`, and `node3` respectively. If you want the incoming pod to be evenly distributed with existing pods across hosts, you can use a manifest similar to the following example:
+For example, let's say you have a four-node cluster where three pods labeled `app: mypod-app` are located in `node1`, `node2`, and `node3` respectively. If you want the incoming deployment to be hosted on distinct nodes as much as possible, you can use a manifest similar to the following example:
 
 ```yml
 apiVersion: v1
