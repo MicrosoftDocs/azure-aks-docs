@@ -67,7 +67,7 @@ topologySpreadConstraints:
   topologyKey: "topology.kubernetes.io/zone"
   whenUnsatisfiable: ScheduleAnyway
 ```
-"This configuration deviates from the upstream default by targeting no more than a single pod difference between zones. As a result, pods are more evenly distributed across zones, reducing the likelihood that a zonal failure results in an outage of the corresponding deployment.
+This configuration deviates from the upstream default by targeting no more than a single pod difference between zones. As a result, pods are more evenly distributed across zones, reducing the likelihood that a zonal failure results in an outage of the corresponding deployment.
 
 However, if your deployment has specific topology needs, you can override the above default values by adding your own in the pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across hosts within AZs.
 
