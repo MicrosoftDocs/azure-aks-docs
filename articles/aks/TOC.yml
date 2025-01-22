@@ -975,6 +975,8 @@
           href: kubernetes-helm.md
         - name: Use Bridge to Kubernetes with Visual Studio Code
           href: /visualstudio/bridge/bridge-to-kubernetes-vs-code?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+        - name: Use Telepresence to develop and test microservices locally
+          href: use-telepresence-aks.md
         - name: Use Bridge to Kubernetes with Visual Studio
           href: /visualstudio/bridge/bridge-to-kubernetes-vs?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Use OpenFaaS
