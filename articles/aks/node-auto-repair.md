@@ -50,6 +50,9 @@ When AKS performs node auto-repair on your cluster, AKS emits Kubernetes events 
 
 To learn more about accessing, storing, and configuring alerts on Kubernetes events, see [Use Kubernetes events for troubleshooting in Azure Kubernetes Service](./events.md).
 
+> [!NOTE]
+> We are currently monitoring the volume of the new remediation events to ensure that there are no performance degradations. As a result, your cluster may not receive these new events as they are slowly rolling out to clusters in production regions. We estimate a full rollout by March 2025.
+
 | Reason | Event Message | Description |
 | --- | --- | --- |
 | NodeRebootStart | Node auto-repair is initiating a reboot action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when reboot is about to be performed on your node. This action is the first in the overall node auto-repair sequence. |
