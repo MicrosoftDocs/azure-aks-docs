@@ -37,7 +37,7 @@
     },
     {
       "source_path_from_root": "azure/aks/availability-zones.md",
-      "redirect_url": "/aks/availability-zones-overview",
+      "redirect_url": "azure/aks/availability-zones-overview",
       "redirect_document_id": false
     }
   ]
