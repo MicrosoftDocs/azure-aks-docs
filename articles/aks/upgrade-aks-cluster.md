@@ -236,7 +236,7 @@ AKS accepts both integer values and a percentage value for max surge. An integer
     az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --max-surge 5
     ```
 
-#### Set node drain time-out value
+#### Set node drain timeout value
 
 At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain time-out that AKS will respect in the upgrade workflow. If no node drain time-out value is specified, the default is 30 minutes. Minimum allowed drain time-out value is 5 minutes and the maximum limit of drain time-out is 24 hours.
 
