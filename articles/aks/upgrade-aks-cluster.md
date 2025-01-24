@@ -149,7 +149,7 @@ During the cluster upgrade process, AKS performs the following operations:
 
 1. Upgrade your cluster using the [`az aks upgrade`][az-aks-upgrade] command.
 
-    ```azurecli-interactive
+    ```azurecli-interactive 
     az aks upgrade \
         --resource-group myResourceGroup \
         --name myAKSCluster \
