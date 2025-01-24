@@ -16,13 +16,13 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 ## Prerequisites
 
 * An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free).
-* [Azure CLI installed][azure-cli-install] (version 2.43.0 or greater).
+* The Azure CLI version 2.43.0 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * A base64 encoded certificate string or a text file with certificate.
 
 ## Limitations
 
 * This feature currently isn't supported for Windows node pools.
-* Installing CAs after node pool creation is not supported.
+* Installing different CAs on different node pools is not supported.
 
 ## Custom CA installation on AKS node pools
 
@@ -40,16 +40,15 @@ This article shows you how to create custom CAs and apply them to your AKS clust
     -----END CERTIFICATE-----
     ```
 
-#### Install CAs during node pool creation
+#### Install CAs during cluster creation
 
-* Install CAs during node pool creation using the [`az aks create`][az-aks-create] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
+* Install CAs during cluster creation using the [`az aks create`][az-aks-create] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
 
     ```azurecli-interactive
     az aks create \
         --resource-group <resource-group-name> \
         --name <cluster-name> \
         --node-count 2 \
-        --enable-custom-ca-trust \
         --custom-ca-trust-certificates pathToFileWithCAs \
         --generate-ssh-keys
     ```
