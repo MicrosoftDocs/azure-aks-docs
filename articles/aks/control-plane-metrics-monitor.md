@@ -122,7 +122,7 @@ For more information about `minimal-ingestion` profile metrics, see [Minimal ing
 
 #### Ingest all metrics from all targets
 
-1. Download the ConfigMap file [ama-metrics-settings-configmap.yaml](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Download the ConfigMap file [ama-metrics-settings-configmap.yaml](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml)) and rename it to `configmap-controlplane.yaml`.
 1. Set `minimalingestionprofile = false`.
 1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify are: `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`, `controlplane-kube-controller-manager`, and `controlplane-etcd`.
 1. Apply the ConfigMap using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command.
