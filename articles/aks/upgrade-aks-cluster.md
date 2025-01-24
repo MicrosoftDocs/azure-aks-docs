@@ -18,7 +18,7 @@ Part of the AKS cluster lifecycle involves performing periodic upgrades to the l
 
 When you upgrade a supported AKS cluster, you can't skip Kubernetes minor versions. You must perform all upgrades sequentially by major version number. For example, upgrades between *1.14.x* -> *1.15.x* or *1.15.x* -> *1.16.x* are allowed. *1.14.x* -> *1.16.x* isn't allowed. You can only skip multiple versions when upgrading from an *unsupported version* back to a *supported version*. For example, you can perform an upgrade from an unsupported *1.10.x* to a supported *1.12.x* if available.
 
-When you perform an upgrade from an *unsupported version* that skips two or more minor versions, the upgrade has no guarantee of functionality and is excluded from the service-level agreements and limited warranty. If your version is significantly out of date, we recommend you recreate your cluster instead.
+When you perform an upgrade from an *unsupported version* that skips two or more minor versions, the upgrade has no guarantee of functionality and is excluded from the service-level agreements and limited warranty. If your version is out of date, we recommend you recreate your cluster instead.
 
 ## Before you begin
 
@@ -271,7 +271,7 @@ To allow for a duration of time to wait between draining a node and proceeding t
 
 ## Upgrading through significant version drift
 
-When upgrading from an unsupported version of Kubernetes to a supported version, it is important to test your workloads on the target version.  Whilst AKS will make every effort to upgrade your control plane and data plane, where is no guarantee your workloads will continue to work if they rely on deprecated Kubernetes APIs, or the platform has introduced breaking changes or behaviours (documented in the AKS release notes).
+When upgrading from an unsupported version of Kubernetes to a supported version, it is important to test your workloads on the target version.  While AKS will make every effort to upgrade your control plane and data plane, where is no guarantee your workloads will continue to work.   If your workloads rely on deprecated Kubernetes APIs, the platform has introduced breaking changes or behaviours (documented in the AKS release notes), these need to be resolved.
 
 In these situations we recommend testing your workloads on the new version, and resolving any version issues before doing an in place upgrade of your cluster. 
 
