@@ -1,7 +1,7 @@
 ---
 title: Use GPUs on Azure Kubernetes Service (AKS)
 description: Learn how to use GPUs for high performance compute or graphics-intensive workloads on Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 04/10/2023
@@ -34,6 +34,9 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 * [NVadsA10](/azure/virtual-machines/nva10v5-series) v5-series are *not* a recommended SKU for GPU VHD.
 * Updating an existing node pool to add GPU isn't supported.
 
+> [!NOTE]
+> The AKS GPU image (preview) is retired starting on January 10, 2025. The custom header is no longer available, meaning that you can't create new GPU-enabled node pools using the AKS GPU image. We recommend migrating to or using the default GPU configuration rather than the GPU image, as the GPU image is no longer supported. For more information, see [AKS release notes](https://github.com/Azure/AKS/releases), or view this retirement announcement in our [AKS public roadmap](https://github.com/Azure/AKS/issues/4472).
+
 ## Before you begin
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
@@ -56,7 +59,7 @@ Using NVIDIA GPUs involves the installation of various NVIDIA software component
 
 ### NVIDIA device plugin installation
 
-NVIDIA device plugin installation is required when using GPUs on AKS. In some cases, the installation is handled automatically, such as when using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html) or the [AKS GPU image (preview)](#use-the-aks-gpu-image-preview). Alternatively, you can manually install the NVIDIA device plugin.
+NVIDIA device plugin installation is required when using GPUs on AKS. In some cases, the installation is handled automatically, such as when using the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html). Alternatively, you can manually install the NVIDIA device plugin.
 
 #### Manually install the NVIDIA device plugin
 
@@ -128,7 +131,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 1. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
 
     ```bash
-    kubectl create namespace gpu-resources
+    kubectl create namespace gpu-operator
     ```
 
 2. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
@@ -231,85 +234,8 @@ The NVIDIA GPU Operator automates the management of all NVIDIA software componen
 
 3. Now that you successfully installed the GPU Operator, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
-> [!WARNING]
-> We don't recommend manually installing the NVIDIA device plugin daemon set with clusters using the AKS GPU image.
-
 > [!NOTE]
 > There might be additional considerations to take when using the NVIDIA GPU Operator and deploying on SPOT instances. Please refer to <https://github.com/NVIDIA/gpu-operator/issues/577>
-
-
-### Use the AKS GPU image (preview)
-
-> [!NOTE]
-> The AKS GPU image (preview) will be retired on January 10, 2025. The custom header used below will no longer be available, meaning that you won't be able to create new GPU-enabled node pools using the AKS GPU image. We recommend migrating to or using the default GPU configuration rather than the dedicated GPU image, as the dedicated GPU image is no longer supported. For more information, see [AKS release notes](https://github.com/Azure/AKS/releases), or view this retirement announcement in our [AKS public roadmap](https://github.com/Azure/AKS/issues/4472).
-
-AKS provides a fully configured AKS image containing the [NVIDIA device plugin for Kubernetes][nvidia-github]. The AKS GPU image is currently only available on Ubuntu 18.04.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the `aks-preview` Azure CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-3. Register the `GPUDedicatedVHDPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "GPUDedicatedVHDPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-4. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "GPUDedicatedVHDPreview"
-    ```
-
-5. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
-
-    Now that you updated your cluster to use the AKS GPU image, you can add a node pool for GPU nodes to your cluster.
-
-6. Add a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command.
-
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name gpunp \
-        --node-count 1 \
-        --node-vm-size Standard_NC6s_v3 \
-        --node-taints sku=gpu:NoSchedule \
-        --aks-custom-headers UseGPUDedicatedVHD=true \
-        --enable-cluster-autoscaler \
-        --min-count 1 \
-        --max-count 3
-    ```
-
-    The previous example command adds a node pool named *gpunp* to *myAKSCluster* in *myResourceGroup* and uses parameters to configure the following node pool settings:
-
-    * `--node-vm-size`: Sets the VM size for the node in the node pool to *Standard_NC6s_v3*.
-    * `--node-taints`: Specifies a *sku=gpu:NoSchedule* taint on the node pool.
-    * `--aks-custom-headers`: Specifies a specialized AKS GPU image, *UseGPUDedicatedVHD=true*. If your GPU sku requires generation 2 VMs, use *--aks-custom-headers UseGPUDedicatedVHD=true,usegen2vm=true* instead.
-    * `--enable-cluster-autoscaler`: Enables the cluster autoscaler.
-    * `--min-count`: Configures the cluster autoscaler to maintain a minimum of one node in the node pool.
-    * `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
-
-    > [!NOTE]
-    > Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time.
-
-7. Now that you successfully created a node pool using the GPU image, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
 ## Confirm that GPUs are schedulable
 

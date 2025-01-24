@@ -182,7 +182,7 @@ Update **`host`** with the name of your DNS host, for example, **store-front.pri
       ingressClassName: nginx-internal
       rules:
       - host: store-front.private.contoso.com
-      - http:
+        http:
           paths:
           - backend:
               service:
@@ -243,7 +243,7 @@ The following example output shows the created record:
     ],
     "etag": "ecc303c5-4577-4ca2-b545-d34e160d1c2d",
     "fqdn": "store-front.private.contoso.com.",
-    "id": "/subscriptions/68ed2a89-5b8a-45e0-b2f9-65b8fa556333/resourceGroups/test-rg/providers/Microsoft.Network/privateDnsZones/private.contoso.com/A/store-front",
+    "id": "/subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/test-rg/providers/Microsoft.Network/privateDnsZones/private.contoso.com/A/store-front",
     "isAutoRegistered": false,
     "name": "store-front",
     "resourceGroup": "test-rg",
@@ -280,4 +280,3 @@ For other configuration information related to SSL encryption other advanced NGI
 [az-network-private-dns-zone-create]: /cli/azure/network/private-dns/zone?#az-network-private-dns-zone-create
 [az-network-private-dns-link-vnet-create]: /cli/azure/network/private-dns/link/vnet#az-network-private-dns-link-vnet-create
 [az-network-private-dns-record-set-a-list]: /cli/azure/network/private-dns/record-set/a#az-network-private-dns-record-set-a-list
-

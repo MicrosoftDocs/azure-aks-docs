@@ -1,7 +1,7 @@
 ---
 title: Create a multi-instance GPU node pool in Azure Kubernetes Service (AKS)
 description: Learn how to create a multi-instance GPU node pool in Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.date: 08/30/2023
 ms.author: juda
 ms.subservice: aks-nodes
@@ -9,9 +9,9 @@ ms.subservice: aks-nodes
 
 # Create a multi-instance GPU node pool in Azure Kubernetes Service (AKS)
 
-Nvidia's A100 GPU can be divided in up to seven independent instances. Each instance has its own memory and Stream Multiprocessor (SM). For more information on the Nvidia A100, see [Nvidia A100 GPU][Nvidia A100 GPU].
+NVIDIA's A100 GPU can be divided in up to seven independent instances. Each instance has its own Stream Multiprocessor (SM), which is responsible for executing instructions in parallel, and GPU memory. For more information on the NVIDIA A100, see [NVIDIA A100 GPU][NVIDIA A100 GPU].
 
-This article walks you through how to create a multi-instance GPU node pool in an Azure Kubernetes Service (AKS) cluster.
+This article walks you through how to create a multi-instance GPU node pool using a MIG-compatible VM size in an Azure Kubernetes Service (AKS) cluster.
 
 ## Prerequisites and limitations
 
@@ -19,7 +19,8 @@ This article walks you through how to create a multi-instance GPU node pool in a
 * Azure CLI version 2.2.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * The Kubernetes command-line client, [kubectl](https://kubernetes.io/docs/reference/kubectl/), installed and configured. If you use Azure Cloud Shell, `kubectl` is already installed. If you want to install it locally, you can use the [`az aks install-cli`][az-aks-install-cli] command.
 * Helm v3 installed and configured. For more information, see [Installing Helm](https://helm.sh/docs/intro/install/).
-* You can't use Cluster Autoscaler with multi-instance node pools.
+* Multi-instance GPU node pools are not currently supported on Azure Linux.
+* You can't use Cluster Autoscaler with multi-instance GPU node pools.
 
 ## GPU instance profiles
 
@@ -33,9 +34,9 @@ GPU instance profiles define how GPUs are partitioned. The following table shows
 | MIG 4g.20gb | 4/7 | 4/8 | 1 |
 | MIG 7g.40gb | 7/7 | 8/8 | 1 |
 
-As an example, the GPU instance profile of `MIG 1g.5gb` indicates that each GPU instance has 1g SM(Computing resource) and 5gb memory. In this case, the GPU is partitioned into seven instances.
+As an example, the GPU instance profile of `MIG 1g.5gb` indicates that each GPU instance has 1g SM (streaming multiprocessors) and 5gb memory. In this case, the GPU is partitioned into seven instances.
 
-The available GPU instance profiles available for this instance size include `MIG1g`, `MIG2g`, `MIG3g`, `MIG4g`, and `MIG7g`.
+The available GPU instance profiles available for this VM size include `MIG1g`, `MIG2g`, `MIG3g`, `MIG4g`, and `MIG7g`.
 
 > [!IMPORTANT]
 > You can't change the applied GPU instance profile after node pool creation.
@@ -53,9 +54,13 @@ The available GPU instance profiles available for this instance size include `MI
     ```azurecli-interactive
     az aks create \
         --resource-group myResourceGroup \
-        --name myAKSCluster\
-        --node-count 1 \
+        --name myAKSCluster \
         --generate-ssh-keys
+    ```
+3. Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
 ## Create a multi-instance GPU node pool
@@ -64,14 +69,15 @@ You can use either the Azure CLI or an HTTP request to the ARM API to create the
 
 ### [Azure CLI](#tab/azure-cli)
 
-* Create a multi-instance GPU node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and specify the GPU instance profile.
+* Create a multi-instance GPU node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and specify the GPU instance profile. The example below creates a node pool with the `Standard_ND96asr_v4` MIG-compatible GPU VM size.
 
     ```azurecli-interactive
     az aks nodepool add \
-        --name mignode \
+        --name aks-mignode \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
         --node-vm-size Standard_ND96asr_v4 \
+        --node-count 1 \
         --gpu-instance-profile MIG1g
     ```
 
@@ -94,12 +100,12 @@ You can use either the Azure CLI or an HTTP request to the ARM API to create the
 
 ## Determine multi-instance GPU (MIG) strategy
 
-Before you install the Nvidia plugins, you need to specify which multi-instance GPU (MIG) strategy to use for GPU partitioning: *Single strategy* or *Mixed strategy*. The two strategies don't affect how you execute CPU workloads, but how GPU resources are displayed.
+Before you install the NVIDIA plugins, you need to specify which multi-instance GPU (MIG) strategy to use for GPU partitioning: *Single strategy* or *Mixed strategy*. The two strategies don't affect how you execute CPU workloads, but how GPU resources are displayed.
 
 * **Single strategy**: The single strategy treats every GPU instance as a GPU. If you use this strategy, the GPU resources are displayed as `nvidia.com/gpu: 1`.
 * **Mixed strategy**: The mixed strategy exposes the GPU instances and the GPU instance profile. If you use this strategy, the GPU resource are displayed as `nvidia.com/mig1g.5gb: 1`.
 
-## Install the NVIDIA device plugin and GPU feature discovery
+## Install the NVIDIA device plugin and GPU feature discovery (GFD) components
 
 1. Set your MIG strategy as an environment variable. You can use either single or mixed strategy.
 
@@ -111,52 +117,40 @@ Before you install the Nvidia plugins, you need to specify which multi-instance 
     export MIG_STRATEGY=mixed
     ```
 
-2. Add the Nvidia device plugin and GPU feature discovery helm repos using the `helm repo add` and `helm repo update` commands.
+2. Add the NVIDIA device plugin helm repository using the `helm repo add` and `helm repo update` commands.
 
     ```azurecli-interactive
     helm repo add nvdp https://nvidia.github.io/k8s-device-plugin
-    helm repo add nvgfd https://nvidia.github.io/gpu-feature-discovery
     helm repo update
     ```
 
-3. Install the Nvidia device plugin using the `helm install` command.
+4. Install the NVIDIA device plugin using the `helm install` command.
 
     ```azurecli-interactive
-    helm install \
-    --version=0.14.0 \
+    helm install nvdp nvdp/nvidia-device-plugin \
+    --version=0.15.0 \
     --generate-name \
     --set migStrategy=${MIG_STRATEGY} \
-    nvdp/nvidia-device-plugin
+    --set gfd.enabled=true \
+    --namespace nvidia-device-plugin \
+    --create-namespace
     ```
-
-4. Install the GPU feature discovery using the `helm install` command.
-
-    ```azurecli-interactive
-    helm install \
-    --version=0.2.0 \
-    --generate-name \
-    --set migStrategy=${MIG_STRATEGY} \
-    nvgfd/gpu-feature-discovery
-    ```
+    
+> [!NOTE]
+> Helm installation of the NVIDIA device plugin **[version 0.15.0](https://github.com/NVIDIA/k8s-device-plugin/releases/tag/v0.15.0) and above** consolidates the device plugin **and** GFD repositories. Separate helm installation of the GFD software component is not recommended in this tutorial.
 
 ## Confirm multi-instance GPU capability
 
-1. Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
-    ```
-
-2. Verify the connection to your cluster using the `kubectl get` command to return a list of cluster nodes.
+1. Verify the `kubectl` connection to your cluster using the `kubectl get` command to return a list of cluster nodes.
 
     ```azurecli-interactive
     kubectl get nodes -o wide
     ```
 
-3. Confirm the node has multi-instance GPU capability using the `kubectl describe node` command. The following example command describes the node named *mignode*, which uses MIG1g as the GPU instance profile.
+2. Confirm the node has multi-instance GPU capability using the `kubectl describe node` command. The following example command describes the node named *aks-mignode*, which uses MIG1g as the GPU instance profile.
 
     ```azurecli-interactive
-    kubectl describe node mignode
+    kubectl describe node aks-mignode
     ```
 
     Your output should resemble the following example output:
@@ -173,7 +167,7 @@ Before you install the Nvidia plugins, you need to specify which multi-instance 
 
 ## Schedule work
 
-The following examples are based on cuda base image version 12.1.1 for Ubuntu22.04, tagged as `12.1.1-base-ubuntu22.04`.
+The following examples are based on CUDA base image **version 12.1.1** for Ubuntu **22.04**, tagged as `12.1.1-base-ubuntu22.04`.
 
 ### Single strategy
 
@@ -268,7 +262,11 @@ If you don't see multi-instance GPU capability after creating the node pool, con
 
 ## Next steps
 
-For more information on AKS node pools, see [Manage node pools for a cluster in AKS](./manage-node-pools.md).
+To learn more about GPUs on Azure Kubernetes Service, see:
+
+* [Create a Linux GPU-enabled node pool on AKS](./gpu-cluster.md).
+* [Create a Windows GPU-enabled node pool on AKS](./use-windows-gpu.md)
+* [Learn about use cases for GPU workloads on AKS](https://learn.microsoft.com/azure/architecture/reference-architectures/containers/aks-gpu/gpu-aks)
 
 <!-- LINKS - internal -->
 [az-group-create]: /cli/azure/group#az_group_create
@@ -279,4 +277,4 @@ For more information on AKS node pools, see [Manage node pools for a cluster in 
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 
 <!-- LINKS - external-->
-[Nvidia A100 GPU]:https://www.nvidia.com/en-us/data-center/a100/
+[NVIDIA A100 GPU]:https://www.nvidia.com/en-us/data-center/a100/

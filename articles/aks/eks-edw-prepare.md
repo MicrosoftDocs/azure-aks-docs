@@ -3,8 +3,9 @@ title: Prepare to deploy the event-driven workflow (EDW) workload to Azure
 description: Take the necessary steps so you can deploy the EDW workload in Azure.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: JnHs
-ms.author: jenhayes
+author: schaffererin
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
 ---
 
 # Prepare to deploy the event-driven workflow (EDW) workload to Azure
@@ -82,7 +83,7 @@ You can review the `environmentVariables.sh` Bash script in the `deployment` dir
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 - Ken Kilty | Principal TPM
 - Russell de Pina | Principal TPM

@@ -113,6 +113,9 @@ For more information on managed identities, see [Use managed identities](use-man
 
 ## Enable the virtual nodes addon
 
+> [!NOTE]
+> If you have an existing Azure Kubernetes Service Cluster created that uses Azure CNI for the Advanced Networking you should be able to enable virtual nodes as an add-on using the CLI.
+
 * Enable virtual nodes using the [`az aks enable-addons`][az-aks-enable-addons] command. The following example uses the subnet named *myVirtualNodeSubnet* created in a previous step.
 
     ```azurecli-interactive

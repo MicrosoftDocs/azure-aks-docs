@@ -1,6 +1,6 @@
 ---
-title: "Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager (Preview)"
-description: Learn how to use Kubernetes Fleet to intelligently place your workloads on target member clusters based on cost and resource availability.
+title: "Intelligent Cross-Cluster Kubernetes Resource Placement Using Azure Kubernetes Fleet Manager"
+description: Learn how to use Azure Kubernetes Fleet Manager to intelligently place your workloads on target member clusters based on cost and resource availability.
 ms.topic: how-to
 ms.date: 05/13/2024
 author: sjwaight
@@ -10,180 +10,196 @@ ms.custom:
   - build-2024
 ---
 
-# Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager (Preview)
+# Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager
 
-Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for placing the workloads based on heuristics such as cost of compute in the clusters or available resources such as memory and CPU. It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how Azure Kubernetes Fleet Manager (Fleet) allows you to address these scenarios using the intelligent Kubernetes resource placement feature.
+Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
 
-## Overview
+The resource placement capability of Kubernetes Fleet can make scheduling decisions based on the following cluster properties:
 
-Fleet provides resource placement capability that can make scheduling decisions based on the following properties:
-- Node count
-- Cost of compute in target member clusters
-- Resource (CPU/Memory) availability in target member clusters
+* Node count
+* Cost of compute/memory in target member clusters
+* Resource (CPU/memory) availability in target member clusters
 
-[!INCLUDE [preview-callout](./includes/preview/preview-callout.md)]
-
-This article discusses creating cluster resource placements, which can be done via Azure CLI or the Azure portal. For more, see [Propagate resources from a Fleet hub cluster to member clusters](./quickstart-resource-propagation.md).
+For more information about the concepts in this article, see [Kubernetes resource placement from hub cluster to member clusters](./concepts-resource-propagation.md).
 
 ## Prerequisites
 
-* Read the [resource propagation conceptual overview](./concepts-resource-propagation.md) to understand the concepts and terminology used in this quickstart.
-* An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-* You need a Fleet resource with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI](quickstart-create-fleet-and-members.md).
-* You need access to the Kubernetes API of the hub cluster. If you don't have access, see [Access the Kubernetes API of the Fleet resource with Azure Kubernetes Fleet Manager](./quickstart-access-fleet-kubernetes-api.md).
+* You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
+* You must have a Kubernetes Fleet resource with one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Kubernetes Fleet resource with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
-## Filter clusters at the time of scheduling based on member cluster properties
+  > [!TIP]
+  > Ensure that your AKS member clusters are configured so that you can test placement by using the cluster properties that interest you (location, node count, resources, or cost).
 
-**requiredDuringSchedulingIgnoredDuringExecution** affinity type allows for **filtering** the member clusters eligible for placement using property selectors. A property selector is an array of expression conditions against cluster properties.
+* Set the following environment variables:
 
-In each condition you specify:
-
-* **Name**: Name of the property, which should be in the following format:
-
-    ```
-    resources.kubernetes-fleet.io/<CAPACITY-TYPE>-<RESOURCE-NAME>
+    ```bash
+    export GROUP=<resource-group>
+    export FLEET=<fleet-name>
+    export MEMBERCLUSTER01=<cluster01>
+    export MEMBERCLUSTER02=<cluster02>
     ```
 
-    `<CAPACITY-TYPE>` is one of `total`, `allocatable`, or `available`, depending on which capacity (usage information) you would like to check against, and `<RESOURCE-NAME>` is the name of the resource (CPU/memory).
+* You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-    For example, if you would like to select clusters based on the available CPU capacity of a cluster, the name used in the property selector should be `resources.kubernetes-fleet.io/available-cpu`. For allocatable memory capacity, you can use `resources.kubernetes-fleet.io/allocatable-memory`.
+* If you don't have the Kubernetes CLI (kubectl) already, you can install it by using this command:
 
-* A list of values, which are possible values of the property.
-* An operator used to express the condition between the constraint/desired value and the observed value on the cluster. The following operators are currently supported:
+  ```azurecli-interactive
+  az aks install-cli
+  ```
 
-    * `Gt` (Greater than): a cluster's observed value of the given property must be greater than the value in the condition before it can be picked for resource placement.
-    * `Ge` (Greater than or equal to): a cluster's observed value of the given property must be greater than or equal to the value in the condition before it can be picked for resource placement.
-    * `Lt` (Less than): a cluster's observed value of the given property must be less than the value in the condition before it can be picked for resource placement.
-    * `Le` (Less than or equal to): a cluster's observed value of the given property must be less than or equal to the value in the condition before it can be picked for resource placement.
-    * `Eq` (Equal to): a cluster's observed value of the given property must be equal to the value in the condition before it can be picked for resource placement.
-    * `Ne` (Not equal to): a cluster's observed value of the given property must be not equal to the value in the condition before it can be picked for resource placement.
+* You need the `fleet` Azure CLI extension. You can install it by running the following command:
 
-    If you use the operator `Gt`, `Ge`, `Lt`, `Le`, `Eq`, or `Ne`, the list of values in the condition should have exactly one value.
+  ```azurecli-interactive
+  az extension add --name fleet
+  ```
 
-Fleet evaluates each cluster based on the properties specified in the condition. Failure to satisfy conditions listed under `requiredDuringSchedulingIgnoredDuringExecution` excludes this member cluster from resource placement.
+  Run the [`az extension update`][az-extension-update] command to update to the latest version of the extension:
 
+  ```azurecli-interactive
+  az extension update --name fleet
+  ```
+
+* Authorize kubectl to connect to the Kubernetes Fleet hub cluster:
+
+  ```azurecli-interactive
+  az fleet get-credentials --resource-group $GROUP --name $FLEET
+  ```
+
+## Inspect member cluster properties
+
+Retrieve the labels, properties, and resources for your member cluster by querying the hub cluster. Output as YAML so you can read the results.
+
+```azurecli-interactive
+kubectl get membercluster $MEMBERCLUSTER01 –o yaml
+```
+
+The resulting YAML file contains details (labels and properties) that you can use to build placement policies. Here's an example:
+
+```yaml
+apiVersion: cluster.kubernetes-fleet.io/v1
+kind: MemberCluster
+metadata:
+  annotations:
+    ...
+  labels:
+    fleet.azure.com/location: eastus2
+    fleet.azure.com/resource-group: resource-group
+    fleet.azure.com/subscription-id: 8xxxxxxx-dxxx-4xxx-bxxx-xxxxxxxxxxx8
+  name: cluster01
+  resourceVersion: "123456"
+  uid: 7xxxxxxx-5xxx-4xxx-bxxx-xxxxxxxxxxx4
+spec:
+  ...
+status:
+  ...
+  properties:
+    kubernetes-fleet.io/node-count:
+      observationTime: "2024-09-19T01:33:54Z"
+      value: "2"
+    kubernetes.azure.com/per-cpu-core-cost:
+      observationTime: "2024-09-19T01:33:54Z"
+      value: "0.073"
+    kubernetes.azure.com/per-gb-memory-cost:
+      observationTime: "2024-09-19T01:33:54Z"
+      value: "0.022"
+  resourceUsage:
+    allocatable:
+      cpu: 3800m
+      memory: 10320392Ki
+    available:
+      cpu: 2740m
+      memory: 8821256Ki
+    capacity:
+      cpu: "4"
+      memory: 14195208Ki
+```
+
+Repeat this step for each member cluster that you add, to identify the labels and properties that you can use in your policy.
+
+## Prepare a workload for placement
+
+Next, publish a workload to the hub cluster so that it can be placed onto member clusters:
+
+1. Create a namespace for the workload on the hub cluster:
+
+   ```azurecli-interactive
+   kubectl create namespace test-app 
+   ```
+
+1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources), you can deploy them without change.
+
+   1. Save the following YAML into a file named `sample-workload.yaml`:
+
+      ```yaml
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: nginx-service
+        namespace: test-app
+      spec:
+        selector:
+          app: nginx
+        ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+        type: LoadBalancer
+      ---
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: nginx-deployment
+        namespace: test-app
+      spec:
+        selector:
+          matchLabels:
+            app: nginx
+        replicas: 2
+        template:
+          metadata:
+            labels:
+              app: nginx
+          spec:
+            containers:
+            - name: nginx
+              image: nginx:1.16.1 
+              ports:
+              - containerPort: 80
+      ```
+
+   1. Deploy the workload definition to your hub cluster:
+
+      ```azurecli-interactive
+      kubectl apply -f sample-workload.yaml
+      ```
+
+With the workload definition deployed, it's now possible to test the intelligent placement capability of Kubernetes Fleet.
+
+## Test workload placement policies
+
+You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#introducing-clusterresourceplacement), as guides to writing your own `ClusterResourcePlacement` object.
+  
 > [!NOTE]
-> If a member cluster does not possess the property expressed in the condition, it will automatically fail the condition.
+> If you want to try out each sample policy, be sure to delete the previous `ClusterResourcePlacement` object.
 
-Example placement policy to select only clusters with greater than or equal to five nodes for resource placement:
+### Placement based on cluster node count
 
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ClusterResourcePlacement
-metadata:
-  name: crp
-spec:
-  resourceSelectors:
-    - ...
-  policy:
-    placementType: PickAll
-    affinity:
-        clusterAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-                clusterSelectorTerms:
-                - propertySelector:
-                    matchExpressions:
-                    - name: "kubernetes.azure.com/node-count"
-                      operator: Ge
-                      values:
-                      - "5"
-```
+This example shows a property sorter that uses the `Descending` order. This order means that Kubernetes Fleet prefers clusters with higher node counts.
 
-You can use both label and property selectors under
-`requiredDuringSchedulingIgnoredDuringExecution` affinity term to filter the eligible member clusters on both these constraints.
+The cluster with the highest node count receives a weight of 20, and the cluster with the lowest receives a weight of 0. Other clusters receive proportional weights calculated via the [weight calculation formula](./concepts-resource-propagation.md#how-property-ranking-works).
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
-  name: crp
+  name: crp-demo
 spec:
   resourceSelectors:
-    - ...
-  policy:
-    placementType: PickAll
-    affinity:
-        clusterAffinity:
-            requiredDuringSchedulingIgnoredDuringExecution:
-                clusterSelectorTerms:
-                - labelSelector:
-                    matchLabels:
-                      region: east
-                  propertySelector:
-                    matchExpressions:
-                    - name: "kubernetes.azure.com/node-count"
-                      operator: Ge
-                      values:
-                      - "5"
-```
-
-In this example, Kubernetes Fleet only considers a cluster for resource placement if it has the `region=east` label and a node count greater than or equal to five.
-
-## Rank order clusters at the time of scheduling based on member cluster properties
-
-When `preferredDuringSchedulingIgnoredDuringExecution` is used, a property sorter ranks all the clusters in the fleet based on their values in the ascending or descending order. The weights are calculated based on the weight value specified under `preferredDuringSchedulingIgnoredDuringExecution`.
-
-A property sorter consists of:
-
-* **Name**: Name of the property with more information of the formatting of the property covered in the previous section.
-* **Sort order**: Sort order can be either `Ascending` or `Descending`. When `Ascending` order is used, Kubernetes Fleet prefers member clusters with lower observed values. When `Descending` order is used, member clusters with higher observed value are preferred.
-
-For sort order `Descending`, the proportional weight is calculated using the formula:
-
-```
-((Observed Value - Minimum observed value) / (Maximum observed value - Minimum observed value)) * Weight
-```
-
-For example, let's say you want to rank clusters based on the property of available CPU capacity in descending order and that you have a fleet of three clusters with the following available CPU:
-
-| Cluster | Available CPU capacity |
-| -------- | ------- |
-| `bravelion` | 100 |
-| `smartfish` | 20 |
-| `jumpingcat` | 10 |
-
-In this case, the sorter computes the following weights:
-
-| Cluster | Available CPU capacity | Weight |
-| -------- | ------- | ------- | 
-| `bravelion` | 100 | (100 - 10) / (100 - 10) = 100% of the weight |
-| `smartfish` | 20 | (20 - 10) / (100 - 10) = 11.11% of the weight |
-| `jumpingcat` | 10 | (10 - 10) / (100 - 10) = 0% of the weight |
-
-
-For sort order `Ascending`, the proportional weight is calculated using the formula:
-
-```
-(1 - ((Observed Value - Minimum observed value) / (Maximum observed value - Minimum observed value))) * Weight
-```
-
-For example, let's say you want to rank clusters based on their per-CPU-core-cost in ascending order and that you have a fleet of three clusters with the following CPU core costs:
-
-| Cluster | Per-CPU core cost |
-| -------- | ------- |
-| `bravelion` | 1 |
-| `smartfish` | 0.2 |
-| `jumpingcat` | 0.1 |
-
-In this case, the sorter computes the following weights:
-
-| Cluster | Per-CPU core cost | Weight |
-| -------- | ------- | ------- | 
-| `bravelion` | 1 | 1 - ((1 - 0.1) / (1 - 0.1)) = 0% of the weight |
-| `smartfish` | 0.2 | 1 - ((0.2 - 0.1) / (1 - 0.1)) = 88.89% of the weight |
-| `jumpingcat` | 0.1 | 1 - (0.1 - 0.1) / (1 - 0.1) = 100% of the weight |
-
-The example below showcases a property sorter using the `Descending` order:
-
-```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
-kind: ClusterResourcePlacement
-metadata:
-  name: crp
-spec:
-  resourceSelectors:
-    - ...
+    - group: ""
+      kind: Namespace
+      name: test-app
+      version: v1
   policy:
     placementType: PickN
     numberOfClusters: 10
@@ -193,22 +209,27 @@ spec:
             - weight: 20
               preference:
                 metricSorter:
-                  name: kubernetes.azure.com/node-count
+                  name: kubernetes-fleet.io/node-count
                   sortOrder: Descending
 ```
 
-In this example, Fleet will prefer clusters with higher node counts. The cluster with the highest node count would receive a weight of 20, and the cluster with the lowest would receive 0. Other clusters receive proportional weights calculated using the weight calculation formula.
+### Placement with label selector and property sorter
 
-You may use both label selector and property sorter under `preferredDuringSchedulingIgnoredDuringExecution` affinity. A member cluster that fails the label selector won't receive any weight. Member clusters that satisfy the label selector receive proportional weights as specified under property sorter.
+In this example, a cluster receives a weight only if it has the label `env=prod`. If the cluster satisfies that label constraint, it's given proportional weight based on the amount of total CPU in that member cluster.
+
+This example demonstrates how you can use both the label selector and the property sorter for `preferredDuringSchedulingIgnoredDuringExecution` affinity. A member cluster that fails the label selector doesn't receive any weight. Member clusters that satisfy the label selector receive proportional weights, as specified under the property sorter.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1beta1
+apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourcePlacement
 metadata:
-  name: crp
+  name: crp-demo
 spec:
   resourceSelectors:
-    - ...
+    - group: ""
+      kind: Namespace
+      name: test-app
+      version: v1
   policy:
     placementType: PickN
     numberOfClusters: 10
@@ -225,32 +246,54 @@ spec:
                   sortOrder: Descending
 ```
 
-In this example, a cluster would only receive extra weight if it has the label `env=prod`. If it satisfies that label based constraint, then the cluster is given proportional weight based on the amount of total CPU in that member cluster.
+### Placement based on memory and CPU core cost
+
+Because the sorter in this example has an `Ascending` order, Kubernetes Fleet prefers clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost receives a weight of 20, and the cluster with the highest receives a weight of 0. Other clusters receive proportional weights calculated via the weight calculation formula.
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1
+kind: ClusterResourcePlacement
+metadata:
+  name: crp-demo
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: test-app
+      version: v1
+  policy:
+    placementType: PickN
+    numberOfClusters: 2
+    affinity:
+      clusterAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 20
+            preference:
+              propertySorter:
+                name: kubernetes.azure.com/per-gb-memory-core-cost
+                sortOrder: Ascending
+          - weight: 20
+            preference:
+              propertySorter:
+                name: kubernetes.azure.com/per-cpu-core-cost
+                sortOrder: Ascending
+```
+
+## View the status of a placement
+
+If you want to view the status of a placement, you can use either the Azure portal or the kubectl command.
+
+You can find details on how to view a placement's progress in [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-the-clusterresourceplacement-api-to-propagate-resources-to-member-clusters).
 
 ## Clean up resources
 
-### [Azure CLI](#tab/azure-cli)
+For details on how to remove a cluster resource placement via the Azure portal or the kubectl command, see [Clean up resources](./quickstart-resource-propagation.md#clean-up-resources) in the article about propagating resources.
 
-If you no longer wish to use the `ClusterResourcePlacement` object, you can delete it using the `kubectl delete` command. The following example deletes the `ClusterResourcePlacement` object named `crp`:
+## Related content
 
-```bash
-kubectl delete clusterresourceplacement crp
-```
+* To learn more about resource propagation, see the [open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
 
-### [Portal](#tab/azure-portal)
-
-If you no longer wish to use your cluster resource placement, you can delete it from the Azure portal:
-
-1. On the Azure portal overview page for your Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
-
-1. Select the cluster resource placement objects you want to delete, then select **Delete**.
-
-1. In the **Delete** tab, verify the correct objects are chosen. Once you're ready, select **Confirm delete** and **Delete**.
-
----
-
-## Next steps
-
-To learn more about resource propagation, see the following resources:
-
-* [Upstream Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md)
+<!-- LINKS -->
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-resource
+[azure-cli-install]: /cli/azure/install-azure-cli
+[az-extension-update]: /cli/azure/extension#az-extension-update

@@ -73,16 +73,6 @@ Prometheus creates PodMonitors for the CNPG instances using a set of default rec
         --kube-context=$AKS_PRIMARY_CLUSTER_NAME
     ```
 
-Verify that the pod monitor is created.
-
-```bash
-kubectl --namespace $PG_NAMESPACE \
-    --context $AKS_PRIMARY_CLUSTER_NAME \
-    get podmonitors.monitoring.coreos.com \
-    $PG_PRIMARY_CLUSTER_NAME \
-    -o yaml
-```  
-
 ## Create a federated credential
 
 In this section, you create a federated identity credential for PostgreSQL backup to allow CNPG to use AKS workload identity to authenticate to the storage account destination for backups. The CNPG operator creates a Kubernetes service account with the same name as the cluster named used in the CNPG Cluster deployment manifest.
@@ -969,7 +959,7 @@ To learn more about how you can leverage AKS for your workloads, see [What is Az
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 * Ken Kilty | Principal TPM
 * Russell de Pina | Principal TPM

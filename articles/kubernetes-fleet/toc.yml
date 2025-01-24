@@ -12,46 +12,64 @@
       href: quickstart-create-fleet-and-members-portal.md
     - name: Use the Azure CLI
       href: quickstart-create-fleet-and-members.md
-  - name: Access the Kubernetes API of the Fleet resource
-    href: quickstart-access-fleet-kubernetes-api.md
-  - name: Propagate resources from a hub cluster to member clusters
-    href: quickstart-resource-propagation.md
 - name: Concepts
   items:
-  - name: Fleets and member clusters
-    href: concepts-fleet.md
-  - name: Choosing a fleet type
-    href: concepts-choosing-fleet.md
-  - name: Fleet hub cluster lifecycle overview
-    href: concepts-lifecycle.md
-  - name: Grant access to resources with Azure RBAC
-    href: concepts-rbac.md
-  - name: Scheduler and scheduling framework
-    href: concepts-scheduler-scheduling-framework.md
-  - name: Update Kubernetes and node images across multiple member clusters
-    href: concepts-update-orchestration.md
-  - name: Kubernetes workload orchestration
-    href: concepts-resource-propagation.md
-  - name: Multi-cluster layer-4 load balancing
-    href: concepts-l4-load-balancing.md
+    - name: Kubernetes Fleet Manager fundamentals
+      items:
+        - name: Fleets and member clusters
+          href: concepts-fleet.md
+        - name: Choosing a fleet type
+          href: concepts-choosing-fleet.md
+        - name: Fleet hub cluster overview
+          href: concepts-lifecycle.md
+        - name: Use Azure RBAC to control resource access
+          href: concepts-rbac.md
+        - name: Preview API lifecycle
+          href: concepts-preview-api-lifecycle.md
+    - name: Upgrade Kubernetes and node images across multiple clusters
+      href: concepts-update-orchestration.md
+    - name: Workload propagation across multiple clusters
+      items:
+        - name: Using cluster resource placement for workload propagation
+          href: concepts-resource-propagation.md
+        - name: Scheduler and scheduling framework
+          href: concepts-scheduler-scheduling-framework.md
+    - name: Layer 4 load balancing across multiple clusters
+      href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
-  - name: Intelligent Kubernetes resource placement based on member cluster properties
-    href: intelligent-resource-placement.md
-  - name: Upgrade hub cluster type
-    href: upgrade-hub-cluster-type.md
-  - name: Update Kubernetes and node images across multiple clusters
-    href: update-orchestration.md
-  - name: Automate updates of Kubernetes and node images across multiple clusters
-    href: update-automation.md
-  - name: Multi-cluster Layer 4 Load Balancing
-    href: l4-load-balancing.md
-  - name: Use taints and tolerations to schedule workloads
-    href: use-taints-tolerations.md
-  - name: Customize cluster scoped resources with cluster resource overrides
-    href: cluster-resource-override.md
-  - name: Customize namespace scoped resources with resource overrides
-    href: resource-override.md
+    - name: Configure Kubernetes Fleet Manager
+      items:
+        - name: Upgrade hub cluster types
+          href: upgrade-hub-cluster-type.md
+        - name: Migrate preview instances to supported instances 
+          href: howto-migrate-preview-to-ga-fleets.md
+    - name: Upgrade Kubernetes and node images across multiple clusters
+      items:
+        - name: Define re-usable update strategies
+          href: update-create-update-strategy.md
+        - name: Update Kubernetes and node images
+          href: update-orchestration.md
+        - name: Automate updates of Kubernetes and node images
+          href: update-automation.md
+    - name: Workload propagation across multiple clusters
+      items:
+        - name: Access Fleet hub cluster API
+          href: access-fleet-hub-cluster-kubernetes-api.md
+        - name: Using cluster resource placement for workload propagation
+          href: quickstart-resource-propagation.md
+        - name: Intelligent resource placement using cluster properties
+          href: intelligent-resource-placement.md
+        - name: Using envelope objects for reserved resource types
+          href: quickstart-envelope-reserved-resources.md
+        - name: Use taints and tolerations for workload scheduling
+          href: use-taints-tolerations.md
+        - name: Use overrides to customize cluster-scoped resources
+          href: cluster-resource-override.md
+        - name: Use overrides to customize namespace-scope resources
+          href: resource-override.md
+    - name: Multi-cluster Layer 4 Load Balancing
+      href: l4-load-balancing.md
 - name: Resources
   items:
   - name: Pricing

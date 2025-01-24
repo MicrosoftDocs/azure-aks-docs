@@ -3,7 +3,7 @@ title: Use labels in an Azure Kubernetes Service (AKS) cluster
 description: Learn how to use labels in an Azure Kubernetes Service (AKS) cluster.
 author: rayoef
 ms.author: rayoflores
-ms.topic: article 
+ms.topic: how-to 
 ms.date: 05/09/2023
 #Customer intent: As a cluster operator, I want to learn how to use labels in an AKS cluster so that I can set scheduling rules for nodes.
 ---
@@ -118,6 +118,7 @@ The following labels are AKS reserved labels. *Virtual node usage* specifies if 
 | topology.kubernetes.io/region | \<Azure region> | westus2 | Same |
 | topology.kubernetes.io/zone | \<Azure zone> | 0 | Same |
 | kubernetes.azure.com/cluster | \<MC_RgName> | MC_aks_myAKSCluster_westus2 | Same |
+| kubernetes.azure.com/managedby | aks | aks | N/A |
 | kubernetes.azure.com/mode | \<mode> | User or system | User |
 | kubernetes.azure.com/role | agent | Agent | Same |
 | kubernetes.azure.com/scalesetpriority | \<VMSS priority> | Spot or regular | N/A |

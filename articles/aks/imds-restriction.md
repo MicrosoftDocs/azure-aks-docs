@@ -3,7 +3,7 @@ title:  Block pod access to the IMDS endpoint (preview)
 description: Learn how to enable IMDS restriction on an AKS cluster to restrict pod access to the IMDS endpoint (preview).
 author: charleswool
 
-ms.topic: article
+ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 10/23/2024
 ms.author: yuewu2
@@ -72,8 +72,13 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - Azure Monitor for containers (Container Insights)
 - Virtual nodes
 - Azure Policy
-- GitOps
+- Cluster extensions: Flux (GitOps), Dapr, Azure App Configuration, Azure Machine Learning, Azure Container Storage, Azure Backup 
 - AI toolchain operator (preview)
+- Application routing
+- HTTP application routing
+- Azure cost analysis 
+
+Additionally, Windows node pools aren't currently supported with IDMS restriction.
 
 The Azure Key Vault provider for Secrets Store Container Storage Interface (CSI) driver now supports workload identity authentication mode and therefore can work with IMDS restriction enabled.
 

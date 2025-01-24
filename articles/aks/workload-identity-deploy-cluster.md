@@ -1,13 +1,13 @@
 ---
 title: Deploy and configure an AKS cluster with workload identity
 description: In this Azure Kubernetes Service (AKS) article, you deploy an Azure Kubernetes Service cluster and configure it with a Microsoft Entra Workload ID.
-author: tamram
+author: nickomang
 
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 05/28/2024
-ms.author: tamram
+ms.author: nickoman
 ---
 
 # Deploy and configure workload identity on an Azure Kubernetes Service (AKS) cluster

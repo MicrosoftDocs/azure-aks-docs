@@ -1,8 +1,8 @@
 ---
 title: Integrate Azure Container Registry with Azure Kubernetes Service (AKS)
 description: Learn how to integrate Azure Kubernetes Service (AKS) with Azure Container Registry (ACR).
-ms.topic: article
-ms.date: 07/12/2023
+ms.topic: concept-article
+ms.date: 11/08/2024
 ms.tool: azure-cli, azure-powershell
 ms.devlang: azurecli
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
@@ -274,6 +274,32 @@ The AKS to ACR integration assigns the [**AcrPull** role][acr-pull] to the [Micr
     nginx0-deployment-669dfc4d4b-x74kr   1/1     Running   0          20s
     nginx0-deployment-669dfc4d4b-xdpd6   1/1     Running   0          20s
     ```
+
+### Configure ACR with private link through Azure HTTP Proxy and AKS
+
+ACR has two endpoints:
+
+ - REST endpoint: `{REGISTRY_NAME}.azurecr.io`
+ - Data endpoint: `{REGISTRY_NAME}.{REGISTRY_LOCATION}.data.azurecr.io`
+
+1. Ensure the rest and data endpoints are added to `noProxy` under the HTTP Proxy config.
+
+  ```json
+  {
+    "httpProxy": "string",
+    "httpsProxy": "string",
+    "noProxy": [
+      "{REGISTRY_NAME}.azurecr.io",
+      "{REGISTRY_NAME}.{REGISTRY_LOCATION}.data.azurecr.io"
+    ],
+    "trustedCa": "string"
+  }
+  ```
+
+2. Verify through logs that traffic is through private link.
+
+> [!NOTE]
+> Both endpoints are needed otherwise some traffic will be over HTTP proxy rather than private link.
 
 ---
 

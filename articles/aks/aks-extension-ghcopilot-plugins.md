@@ -45,7 +45,7 @@ You can deploy your application manifests to an AKS cluster directly from the Gi
 To deploy a manifest file to an AKS cluster you can use these prompts:
 
 * [@azure] help me deploy my manifest file
-* [@azure] can you deploy my manifest to my AKS c luster?
+* [@azure] can you deploy my manifest to my AKS cluster?
 * [@azure] can you deploy my manifest to my Kubernetes cluster?
 * [@azure] deploy my application manifest to an AKS cluster
 * [@azure] deploy manifest for AKS cluster

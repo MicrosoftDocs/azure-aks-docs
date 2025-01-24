@@ -54,7 +54,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
 
     ```azurecli-interactive
     az group create \
-        --name <private-clusterresource-group> \
+        --name <private-cluster-resource-group> \
         --location <location>
     ```
 
@@ -95,6 +95,22 @@ Private clusters are available in public regions, Azure Government, and Microsof
     ```
 
 ---
+
+## Connect to the private cluster
+
+To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, use the [`az aks install-cli`][az-aks-install-cli] command.
+
+1. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group <private-cluster-resource-group> --name <private-cluster-name>
+    ```
+
+1. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
+
+    ```bash
+    kubectl get nodes
+    ```
 
 ## Use custom domains
 
@@ -204,7 +220,7 @@ You can configure private DNS zones using the following parameters:
 
 ### Update a private cluster from a private DNS zone to public
 
-You can only update from `byo` or `system` to `none`. No other combination of update values is supported.
+You can only update from `byo` or `system` to `none`. No other combination of update values is supported. Before updating, make sure you [connect to the private cluster](#connect-to-the-private-cluster).
 
 > [!WARNING]
 > When you update a private cluster from `byo` or `system` to `none`, the agent nodes change to use a public FQDN. In an AKS cluster that uses Azure Virtual Machine Scale Sets, a [node image upgrade][node-image-upgrade] is performed to update your nodes with the public FQDN.
@@ -414,6 +430,8 @@ For associated best practices, see [Best practices for network connectivity and 
 <!-- LINKS - external -->
 [rfc1918-document]: https://tools.ietf.org/html/rfc1918
 [aks-supported-regions]: https://azure.microsoft.com/global-infrastructure/services/?products=kubernetes-service
+[kubectl]: https://kubernetes.io/docs/reference/kubectl/
+[kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 
 <!-- LINKS - internal -->
 [private-link-service]: /azure/private-link/private-link-service-overview#limitations
@@ -442,3 +460,5 @@ For associated best practices, see [Best practices for network connectivity and 
 [cloud-shell-vnet]: /azure/cloud-shell/vnet/overview
 [api-server-vnet-integration]: ./api-server-vnet-integration.md#enable-or-disable-private-cluster-mode-on-an-existing-cluster-with-api-server-vnet-integration
 [node-image-upgrade]: ./node-image-upgrade.md
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials

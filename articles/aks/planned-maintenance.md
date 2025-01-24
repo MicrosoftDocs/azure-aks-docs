@@ -433,6 +433,10 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
   
   For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
 
+* Can I configure all my clusters in a single subscription to use the same maintenance configuration?
+
+  We don't recommend using the same maintenance configuration for multiple clusters in a single subscription, as doing so can lead to ARM throttling errors causing cluster upgrades to fail. Instead, we recommend staggering the maintenance windows for each cluster to avoid these errors.
+
 ## Next steps
 
 * To get started with upgrading your AKS cluster, see [Upgrade options for AKS clusters][aks-upgrade].

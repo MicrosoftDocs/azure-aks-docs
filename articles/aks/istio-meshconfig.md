@@ -1,7 +1,7 @@
 ---
 title: Configure Istio-based service mesh add-on for Azure Kubernetes Service
 description: Configure Istio-based service mesh add-on for Azure Kubernetes Service
-ms.topic: article
+ms.topic: how-to
 ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 02/14/2024
@@ -88,7 +88,7 @@ Fields present in [open source MeshConfig reference documentation][istio-meshcon
 | proxyInboundListenPort | Allowed | - |
 | proxyHttpPort | Allowed | - |
 | connectTimeout | Allowed | Configurable in [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings) |
-| tcpKeepAlive | Allowed | Configurable in [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings) |
+| tcpKeepalive | Allowed | Configurable in [DestinationRule](https://istio.io/latest/docs/reference/config/networking/destination-rule/#ConnectionPoolSettings-TCPSettings) |
 | defaultConfig | Supported | Used to configure [ProxyConfig](https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#ProxyConfig) |
 | outboundTrafficPolicy | Supported | Also configurable in [Sidecar CR](https://istio.io/latest/docs/reference/config/networking/sidecar/#OutboundTrafficPolicy) |
 | extensionProviders | Allowed | - |
@@ -147,14 +147,14 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 
 ## Common errors and troubleshooting tips
 
-- Ensure that the MeshConfig is indented with spaces instead of tabs. 
+- Ensure that the MeshConfig is indented with spaces instead of tabs.
 - Ensure that you're only editing the revision specific shared ConfigMap (for example `istio-shared-configmap-asm-1-18`) and not trying to edit the default ConfigMap (for example `istio-asm-1-18`).
-- The ConfigMap must follow the name `istio-shared-configmap-<asm-revision>` and be in the `aks-istio-system` namespace. 
+- The ConfigMap must follow the name `istio-shared-configmap-<asm-revision>` and be in the `aks-istio-system` namespace.
 - Ensure that all MeshConfig fields are spelled correctly. If they're unrecognized or if they aren't part of the allowed list, admission control denies such configurations.
 - When performing canary upgrades, [check your revision specific ConfigMaps](#mesh-configuration-and-upgrades) to ensure configurations exist for the revisions deployed on your cluster.
 - Certain `MeshConfig` options such as accessLogging may increase Envoy's resource consumption, and disabling some of these settings may mitigate Istio data plane resource utilization. It's also advisable to use the `discoverySelectors` field in the MeshConfig to help alleviate memory consumption for Istiod and Envoy.
-- If the `concurrency` field in the MeshConfig is misconfigured and set to zero, it causes Envoy to use up all CPU cores. Instead if this field is unset, number of worker threads to run is automatically determined based on CPU requests/limits. 
-- [Pod and sidecar race conditions][istio-sidecar-race-condition] in which the application starts before Envoy can be mitigated using the `holdApplicationUntilProxyStarts` field in the MeshConfig. 
+- If the `concurrency` field in the MeshConfig is misconfigured and set to zero, it causes Envoy to use up all CPU cores. Instead if this field is unset, number of worker threads to run is automatically determined based on CPU requests/limits.
+- [Pod and sidecar race conditions][istio-sidecar-race-condition] in which the application starts before Envoy can be mitigated using the `holdApplicationUntilProxyStarts` field in the MeshConfig.
 
 
 [istio-meshconfig]: https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/

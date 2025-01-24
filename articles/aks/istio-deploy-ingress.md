@@ -239,8 +239,8 @@ The following annotations can be added to the Kubernetes service for the externa
 
 If you want to clean up the Istio external or internal ingress gateways, but leave the mesh enabled on the cluster, run the following command:
 
-```azure-cli-interactive
-az aks mesh disable-ingress-gateway --ingress-gateway-type <external/internal> --resource-group ${RESOURCE_GROUP}
+```azurecli-interactive
+az aks mesh disable-ingress-gateway --ingress-gateway-type <external/internal> --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
 ```
 
 If you want to clean up the Istio service mesh and the ingresses (leaving behind the cluster), run the following command:

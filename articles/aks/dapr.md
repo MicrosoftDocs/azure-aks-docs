@@ -4,8 +4,8 @@ description: Install and configure Dapr on your Azure Kubernetes Service (AKS) a
 author: greenie-msft
 ms.author: nigreenf
 ms.service: azure-kubernetes-service
-ms.topic: article
-ms.date: 07/16/2024
+ms.topic: how-to
+ms.date: 01/16/2025
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
 ---
@@ -358,15 +358,29 @@ If the extension fails to create or update, try suggestions and solutions in the
 
 Troubleshoot Dapr errors via the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
-## Delete the extension
+## Delete the Dapr extension from your cluster
 
-If you need to delete the extension and remove Dapr from your AKS cluster, you can use the following command: 
+The process of uninstalling the Dapr extension from AKS does not delete the CRDs created during installation. These CRDs remain in the cluster as residual components, essential for the reconciler during the installation and uninstallation of the extension. 
+
+To clean the cluster of these CRDs, you can manually delete them **after** the Dapr extension has been completely uninstalled from AKS.
+
+### Uninstalling the extension
+
+Delete the extension from your AKS cluster using the following command: 
 
 ```azurecli
 az k8s-extension delete --resource-group <myResourceGroup> --cluster-name <myAKSCluster> --cluster-type managedClusters --name dapr
 ```
 
-Or you can remove the Bicep template.
+Or, if using a Bicep template, you can delete the template.
+
+### Listing the CRDs in your cluster
+
+To find the CRDs you'd like to remove, run the following command:
+
+```powershell
+kubectl get crds | findstr dapr.io
+```
 
 ## Next Steps
 

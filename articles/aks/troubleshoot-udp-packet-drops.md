@@ -1,7 +1,7 @@
 ---
 title: Diagnose and solve UDP packet drops in Azure Kubernetes Service (AKS)
 description: Learn how to diagnose and solve UDP packet drops in Azure Kubernetes Service (AKS).
-ms.topic: how-to
+ms.topic: troubleshooting
 ms.date: 07/25/2024
 author: schaffererin
 ms.author: schaffererin
@@ -23,12 +23,15 @@ This article describes how to diagnose and solve UDP packet drop issues caused b
 
 ## Issue: UDP connections have a high packet drop rate
 
-One possible cause of UDP packet loss is that the UDP buffer size is too small to handle the incoming traffic. The UDP buffer size determines how much data can be stored in the kernel before it's processed by the application. If the buffer size is insufficient, the kernel might drop packets that exceed the buffer capacity. This setting is managed at the virtual machine (VM) level for your nodes, and the default value is set to *212992 bytes* or *0.2 MB*.
+One possible cause of UDP packet loss is that the UDP buffer size is too small to handle the incoming traffic. The UDP buffer size determines how much data can be stored in the kernel before it's processed by the application. If the buffer size is insufficient, the kernel might drop packets that exceed the buffer capacity. This setting is managed at the virtual machine (VM) level for your nodes, and the default value is set to *1048576 bytes* or *1 MB*.
+
+> [!NOTE]
+> Ubuntu versions prior to 24.10, excluding 20.04, 22.04, and 24.04, have the default UDP buffer capacity set to *212992 bytes* or *0.2 MB*.
 
 There are two different variables at the VM level that apply to buffer sizes:
 
-* `net.core.rmem_max = 212992 bytes`: The largest buffer value a socket owner can explicitly set.
-* `net.core.rmem_default = 212992 bytes`: The maximum the system can grow the buffer to if a `rmem_max` value isn't explicitly set.
+* `net.core.rmem_max = 1048576 bytes`: The largest buffer value a socket owner can explicitly set.
+* `net.core.rmem_default = 1048576 bytes`: The maximum the system can grow the buffer to if a `rmem_max` value isn't explicitly set.
 
 To allow the buffer to grow to serve high bursts of traffic, we need to update the buffer size values.
 
@@ -94,8 +97,8 @@ You can change buffer size values on a node pool level during the node pool crea
     ```json
     {
         "sysctls": {
-            "netCoreRmemMax": 1048576,
-            "netCoreRmemDefault": 1048576
+            "netCoreRmemMax": 1572864,
+            "netCoreRmemDefault": 1572864
         }
     }
     ```
@@ -134,13 +137,13 @@ Once you apply the new values, you can access your VM to ensure the new values a
 
 ## Revert to original values
 
-If you want to restore the buffer size to its default value of *0.2 MB*, you can update the `linuxosconfig.json` file with the following values:
+If you want to restore the buffer size to its default value of *1 MB*, you can update the `linuxosconfig.json` file with the following values:
 
 ```json
 {
     "sysctls": {
-        "netCoreRmemMax": 212992,
-        "netCoreRmemDefault": 212992
+        "netCoreRmemMax": 1048576,
+        "netCoreRmemDefault": 1048576
     }
 }
 ```

@@ -26,6 +26,26 @@ Learn how to connect to Azure Key Vault with the Secrets Store CSI Driver in an 
 * A basic understanding of containers and AKS. Get started by [preparing an application for AKS](/azure/aks/tutorial-kubernetes-prepare-app).
 * Before you begin, make sure you finish the steps in [Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster](../../csi-secrets-store-driver.md) to enable the Azure Key Vault Secrets Store CSI Driver in your AKS cluster.
 
+## Initial set-up
+
+1. If you're using Service Connector for the first time, start by running the command [az provider register](/cli/azure/provider#az-provider-register) to register the Service Connector and Kubernetes Configuration resource providers.
+
+   ```azurecli
+   az provider register -n Microsoft.ServiceLinker
+   ```
+   ```azurecli
+   az provider register -n Microsoft.KubernetesConfiguration
+   ```
+
+   > [!TIP]
+   > You can check if these resource providers have already been registered by running the commands `az provider show -n "Microsoft.ServiceLinker" --query registrationState` and `az provider show -n "Microsoft.KubernetesConfiguration" --query registrationState`.
+
+1. Optionally, use the Azure CLI command to get a list of supported target services for AKS cluster.
+
+   ```azurecli
+   az aks connection list-support-types --output table
+   ```
+
 ## Create Azure resources
 
 1. Create a resource group using the [`az group create`][az-group-create] command.

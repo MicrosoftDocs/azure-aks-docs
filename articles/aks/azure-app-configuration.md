@@ -4,7 +4,7 @@ description: Install and configure Azure App Configuration extension on your Azu
 author: RichardChen820
 ms.author: junbchen
 ms.service: azure-kubernetes-service
-ms.topic: article
+ms.topic: concept-article
 ms.date: 09/10/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
@@ -144,7 +144,7 @@ az k8s-extension create --cluster-type managedClusters \
     --name appconfigurationkubernetesprovider \
     --extension-type Microsoft.AppConfiguration \
     --auto-upgrade-minor-version false
-    --version 2.0.0
+    --version 2.1.0
 ```
 
 #### [Bicep](#tab/bicep)
@@ -168,7 +168,7 @@ resource appConfigExtension 'Microsoft.KubernetesConfiguration/extensions@2022-1
       'global.clusterType': 'managedclusters'
     }
     extensionType: 'microsoft.appconfiguration'
-    version: '2.0.0'
+    version: '2.1.0'
   }
 }
 ```
@@ -187,6 +187,7 @@ az deployment group create \
 ## Extension versions
 
 The Azure App Configuration extension supports the following version of Azure App Configuration Kubernetes Provider:
+- `2.1.0`
 - `2.0.0`
 
 ## Troubleshoot extension installation errors
