@@ -24,19 +24,19 @@ The Federal Information Processing Standard (FIPS) 140-2 is a US government stan
 * FIPS-enabled node pools have the following limitations:
   * FIPS-enabled node pools require Kubernetes version 1.19 and greater.
   * To update the underlying packages or modules used for FIPS, you must use [Node Image Upgrade][node-image-upgrade].
-  * Container images on the FIPS nodes haven't been assessed for FIPS compliance.
+  * Container images on the FIPS nodes aren't assessed for FIPS compliance.
   * Mounting of a CIFS share fails because FIPS disables some authentication modules. To work around this issue, see [Errors when mounting a file share on a FIPS-enabled node pool][errors-mount-file-share-fips].
 
 
 > [!IMPORTANT]
 > The FIPS-enabled Linux image is a different image than the default Linux image used for Linux-based node pools.
 >
-> FIPS-enabled node images may have different version numbers, such as kernel version, than images that aren't FIPS-enabled. The update cycle for FIPS-enabled node pools and node images may differ from node pools and images that aren't FIPS-enabled.
+> FIPS-enabled node images can have different version numbers, such as kernel version, than images that aren't FIPS-enabled. The update cycle for FIPS-enabled node pools and node images can differ from node pools and images that aren't FIPS-enabled.
 
 ## Supported OS Versions
-You can create FIPS-enabled node pools on all supported OS types, Linux and Windows. However, not all OS versions support FIPS-enabled nodepools. After a new OS version is released, there is typically a waiting period before it is FIPS compliant.
+You can create FIPS-enabled node pools on all supported OS types (Linux and Windows). However, not all OS versions support FIPS-enabled node pools. After a new OS version is released, there's typically a waiting period before it's FIPS compliant.
 
-The below table includes the supported OS versions:
+This table includes the supported OS versions:
 
 |OS Type|OS SKU|FIPS Compliance|
 |--|--|--|
@@ -45,7 +45,7 @@ The below table includes the supported OS versions:
 |Windows|Windows Server 2019| Supported|
 |Windows| Windows Server 2022| Supported|
 
-When requesting FIPS enabled Ubuntu, if the default Ubuntu version does not support FIPS, AKS will default to the most recent FIPS-supported version of Ubuntu. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 does not currently support FIPS, AKS defaults to Ubuntu 20.04 for Linux FIPS-enabled nodepools.
+When requesting FIPS enabled Ubuntu, if the default Ubuntu version doesn't support FIPS, AKS defaults to the most recent FIPS-supported version of Ubuntu. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 doesn't currently support FIPS, AKS defaults to Ubuntu 20.04 for Linux FIPS-enabled node pools.
 
 > [!NOTE]
  > Previously, you could use the GetOSOptions API to determine whether a given OS supported FIPS. The GetOSOptions API is now deprecated and it will no longer be included in new AKS API versions starting with 2024-05-01. 
@@ -148,17 +148,17 @@ FIPS-enabled node pools also have a *kubernetes.azure.com/fips_enabled=true* lab
 
 ## Update an existing node pool to enable or disable FIPS
 
-Existing Linux node pools can be updated to enable or disable FIPS. If you are planning to migrate your node pools from non-FIPS to FIPS, first validate that your application is working properly in a test environment before migrating it to a production environment. Validating your application in a test environment should prevent issues caused by the FIPS kernel blocking some weak cipher or encryption algorithm, such as an MD4 algorithm that is not FIPS compliant.
+Existing Linux node pools can be updated to enable or disable FIPS. If you're planning to migrate your node pools from non-FIPS to FIPS, first validate that your application is working properly in a test environment before migrating it to a production environment. Validating your application in a test environment should prevent issues caused by the FIPS kernel blocking some weak cipher or encryption algorithm, such as an MD4 algorithm that isn't FIPS compliant.
 
 > [!NOTE]
->   When updating an existing Linux node pool to enable or disable FIPS, the node pool update will move between the fips and non-fips image. This node pool update will trigger a reimage to complete the update. This may cause the node pool update to take a few minutes to complete.
+>   When updating an existing Linux node pool to enable or disable FIPS, the node pool update moves between the fips and non-fips image. This node pool update triggers a reimage to complete the update. This can cause the node pool update to take a few minutes to complete.
 
 ### Prerequisites
 
 * Azure CLI version 2.64.0 or later. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ### Enable FIPS on an existing node pool
-Existing Linux node pools can be updated to enable FIPS. When you update an existing node pool, the node image will change from the current image to the recommended FIPS image of the same OS SKU. 
+Existing Linux node pools can be updated to enable FIPS. When you update an existing node pool, the node image changes from the current image to the recommended FIPS image of the same OS SKU. 
 
 1. Update a node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-fips-image` parameter.
 
@@ -170,7 +170,7 @@ Existing Linux node pools can be updated to enable FIPS. When you update an exis
         --enable-fips-image
     ```
 
-The above command triggers a reimage of the node pool immediately to deploy the FIPS compliant Operating System. This reimage occurs during the node pool update. No additional steps are required.
+This command triggers a reimage of the node pool immediately to deploy the FIPS compliant Operating System. This reimage occurs during the node pool update. No extra steps are required.
 
 2. Verify that your node pool is FIPS-enabled using the [`az aks show`][az-aks-show] command and query for the *enableFIPS* value in *agentPoolProfiles*.
 
@@ -223,7 +223,7 @@ The above command triggers a reimage of the node pool immediately to deploy the 
 FIPS-enabled node pools also have a *kubernetes.azure.com/fips_enabled=true* label, which deployments can use to target those node pools.
 
 ## Disable FIPS on an existing node pool
-Existing Linux node pools can be updated to disable FIPS. When updating an existing node pool, the node image will change from the current FIPS image to the recommended non-FIPS image of the same OS SKU. The node image change will occur after a reimage.
+Existing Linux node pools can be updated to disable FIPS. When updating an existing node pool, the node image changes from the current FIPS image to the recommended non-FIPS image of the same OS SKU. The node image change will occur after a reimage.
 
 1. Update a Linux node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--disable-fips-image` parameter.
 
@@ -235,9 +235,9 @@ Existing Linux node pools can be updated to disable FIPS. When updating an exist
         --disable-fips-image
     ```
 
-The above command triggers a reimage of the node pool immediately to deploy the FIPS compliant Operating System. This reimage occurs during the node pool update. No additional steps are required.
+This command triggers a reimage of the node pool immediately to deploy the FIPS compliant Operating System. This reimage occurs during the node pool update. No extra steps are required.
 
-2. Verify that your node pool is not FIPS-enabled using the [`az aks show`][az-aks-show] command and query for the *enableFIPS* value in *agentPoolProfiles*.
+2. Verify that your node pool isn't FIPS-enabled using the [`az aks show`][az-aks-show] command and query for the *enableFIPS* value in *agentPoolProfiles*.
 
     ```azurecli-interactive
     az aks show \
@@ -247,7 +247,7 @@ The above command triggers a reimage of the node pool immediately to deploy the 
         -o table
     ```
 
-    The following example output shows that the *np* node pool is not FIPS-enabled:
+    The following example output shows that the *np* node pool isn't FIPS-enabled:
 
     ```output
     Name       enableFips
