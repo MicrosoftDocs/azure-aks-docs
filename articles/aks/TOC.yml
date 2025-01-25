@@ -374,6 +374,8 @@
               href: node-pool-snapshot.md
             - name: Add a Virtual Machines node pool
               href: virtual-machines-node-pools.md
+            - name: Availability Sets Phase Out on AKS
+              href: availability-sets-on-aks.md
             - name: Use system node pools
               href: use-system-pools.md
             - name: Resize node pools
