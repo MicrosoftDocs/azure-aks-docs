@@ -104,12 +104,12 @@ Create a Kubernetes TLS secret for the ingress gateway; use [Azure Key Vault][ak
       provider: azure
       secretObjects:
       - secretName: productpage-credential
-        type: tls
+        type: kubernetes.io/tls
         data:
         - objectName: test-productpage-bookinfo-key
-          key: key
+          key: tls.key
         - objectName: test-productpage-bookinfo-crt
-          key: cert
+          key: tls.crt
       parameters:
         useVMManagedIdentity: "true"
         userAssignedIdentityID: $CLIENT_ID 
@@ -124,6 +124,44 @@ Create a Kubernetes TLS secret for the ingress gateway; use [Azure Key Vault][ak
             - |
               objectName: test-productpage-bookinfo-crt
               objectType: secret
+              objectAlias: "test-productpage-bookinfo-crt"
+        tenantId: $TENANT_ID
+    EOF
+    ```
+
+    Alternatively, to reference a certificate object type directly from Azure Key Vault, use the following manifest to deploy SecretProviderClass. In this example, `test-productpage-bookinfo-cert-pxf` is the name of the certificate object in Azure Key Vault. Refer to [obtain certificates and keys][akv-csi-driver-obtain-cert-and-keys] section for more information. 
+    
+    ```bash
+    cat <<EOF | kubectl apply -f -
+    apiVersion: secrets-store.csi.x-k8s.io/v1
+    kind: SecretProviderClass
+    metadata:
+      name: productpage-credential-spc
+      namespace: aks-istio-ingress
+    spec:
+      provider: azure
+      secretObjects:
+      - secretName: productpage-credential
+        type: kubernetes.io/tls
+        data:
+        - objectName: test-productpage-bookinfo-key
+          key: tls.key
+        - objectName: test-productpage-bookinfo-crt
+          key: tls.crt
+      parameters:
+        useVMManagedIdentity: "true"
+        userAssignedIdentityID: $CLIENT_ID 
+        keyvaultName: $AKV_NAME
+        cloudName: ""
+        objects:  |
+          array:
+            - |
+              objectName: test-productpage-bookinfo-cert-pfx  #certificate object name from keyvault
+              objectType: secret
+              objectAlias: "test-productpage-bookinfo-key"
+            - |
+              objectName: test-productpage-bookinfo-cert-pfx #certificate object name from keyvault
+              objectType: cert
               objectAlias: "test-productpage-bookinfo-crt"
         tenantId: $TENANT_ID
     EOF
@@ -455,3 +493,4 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [akv-quickstart]: /azure/key-vault/general/quick-create-cli
 [akv-rbac-guide]: /azure/key-vault/general/rbac-guide#using-azure-rbac-secret-key-and-certificate-permissions-with-key-vault
 [akv-basic-concepts]: /azure/key-vault/general/basic-concepts
+[akv-csi-driver-obtain-cert-and-keys]: ./csi-secrets-store-identity-access.md?pivots=access-with-a-user-assigned-managed-identity#obtain-certificates-and-keys
