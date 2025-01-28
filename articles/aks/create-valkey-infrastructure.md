@@ -32,8 +32,6 @@ In this article, we create the infrastructure resources required to run a Valkey
     export MY_ACR_REGISTRY=mydnsrandomname$(echo $random)
     export MY_KEYVAULT_NAME=vault-$(echo $random)-kv
     export MY_CLUSTER_NAME=cluster-aks
-    export SERVICE_ACCOUNT_NAMESPACE=valkey
-    export TENANT_ID=$(az account show --query tenantId --output tsv)
     ```
 
 ## Create a resource group

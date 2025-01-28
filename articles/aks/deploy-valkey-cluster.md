@@ -20,7 +20,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 1. Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
 
     ```bash
-    kubectl create namespace ${SERVICE_ACCOUNT_NAMESPACE} --dry-run=client --output yaml | kubectl apply -f -
+    kubectl create namespace valkey --dry-run=client --output yaml | kubectl apply -f -
     ```
 
     Example output:
@@ -47,6 +47,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
     ```bash
+    export TENANT_ID=$(az account show --query tenantId --output tsv)
     kubectl apply -f - <<EOF
     ---
     apiVersion: secrets-store.csi.x-k8s.io/v1
