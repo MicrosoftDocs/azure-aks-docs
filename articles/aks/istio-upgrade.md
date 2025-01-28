@@ -22,9 +22,10 @@ Istio add-on allows upgrading the minor revision using [canary upgrade process][
 Available upgrades depend on whether the current Istio revision and AKS cluster version are supported:
 - Generally, an Istio add-on revision `n` can be upgraded to either of the next two revisions `n+1` or `n+2`.
 - If `n` has been unsupported for some time such that the next one or two consecutive versions are no longer supported, the only available upgrade will be the lowest supported Istio revision that is compatible with the current AKS cluster version.
-- If the cluster version and Istio revision are both unsupported, the cluster version should be upgraded before initiating an Istio upgrade. 
+- If the cluster version and Istio revision are both unsupported, the cluster version must be upgraded before initiating an Istio upgrade. 
 
-Note that upgrading from an unsupported revision can be error-prone, so it is recommended to keep your Istio revision up-to-date at all times. Refer to the [Istio add-on support calendar][istio-support-calendar] for estimated release and end-of-life dates.
+> [!NOTE]
+> Upgrading from an unsupported revision can be error-prone, so it is recommended to keep your Istio revision up-to-date at all times. Refer to the [Istio add-on support calendar][istio-support-calendar] for estimated release and end-of-life dates.
 
 The following example illustrates how to upgrade from revision `asm-1-22` to `asm-1-23` with all workloads in the `default` namespace. The steps are the same for all minor upgrades and may be used for any number of namespaces.
 
