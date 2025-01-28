@@ -177,14 +177,6 @@ In this section, we create a node pool dedicated to running the Valkey workload.
     6        1.28.9                        b7aa8e37-ff39-4ec7-bed0-cb37876416cc  False                False                  False                     False         False                 False             OS                 30         User    valkey  AKSUbuntu-2204gen2containerd-202405.27.0  1.28                   128             Managed       Ubuntu   Linux     Succeeded            myResourceGroup-rg  Delete           VirtualMachineScaleSets  Standard_D4s_v3  OCIContainer
     ```
 
-## Connect to the AKS cluster
-
-* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
-    ```
-
 ## Upload Valkey images to your Azure Container Registry
 
 In this section, we download the Valkey image from Dockerhub and upload it to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.

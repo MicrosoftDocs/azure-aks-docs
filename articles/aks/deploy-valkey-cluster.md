@@ -15,6 +15,14 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 > [!NOTE]
 > This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
+## Connect to the AKS cluster
+
+* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
+    ```
+
 ## Create a namespace
 
 1. Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
