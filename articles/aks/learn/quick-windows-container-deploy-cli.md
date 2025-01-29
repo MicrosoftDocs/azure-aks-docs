@@ -130,7 +130,7 @@ To use Windows Server 2022, specify the following parameters:
 - `os-type` set to `Windows`
 - `os-sku` set to `Windows2022`
 
-> [!NOTE]
+> [!CAUTION]
 > Windows Server 2022 requires Kubernetes version 1.23.0 or higher. Windows Server 2022 is being retired after Kubernetes version 1.34 reaches its end of life (EOL). Windows Server 2022 will not be supported in Kubernetes version 1.35 and above. For more information about this retirement, see the [AKS release notes][aks-release-notes]. For more information on end of life dates, see the [kubernetes release calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
 
 Add a Windows Server 2022 node pool using the `az aks nodepool add` command:
@@ -152,7 +152,7 @@ To use Windows Server 2019, specify the following parameters:
 - `os-type` set to `Windows`
 - `os-sku` set to `Windows2019`
 
-> [!NOTE]
+> [!CAUTION]
 > Windows Server 2019 is being retired after Kubernetes version 1.32 reaches end of life (EOL). Windows Server 2019 will not be supported in Kubernetes version 1.33 and above. For more information about this retirement, see the [AKS release notes][aks-release-notes].
 
 Add a Windows Server 2019 node pool using the `az aks nodepool add` command:
