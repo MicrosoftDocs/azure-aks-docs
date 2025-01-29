@@ -230,7 +230,7 @@ First, grant app **Azure Service Connector Resource Provider** permissions to th
 1. In **Members** tab, select **Select members**. Then, search for the **Azure Service Connector Resource Provider** app. Select the app and select **Select**. Select **Next**.
 1. Select **Review + assign**. Wait for a few seconds for the role assignment to complete.
 
-Then, run the following commands to create a connection between the AKS cluster and the SQL database using Microsoft Entra Workload ID with Service Connector.
+Then, run the following commands to create a connection between the AKS cluster and the SQL database using Microsoft Entra Workload ID with Service Connector. For more information, see [Create a service connection in AKS with Service Connector (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?tabs=azure-cli&pivots=workload-id#create-a-service-connection-in-aks-with-service-connector).
 
 ### [Bash](#tab/in-bash)
 
