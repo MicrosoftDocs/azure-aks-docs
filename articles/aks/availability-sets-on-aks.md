@@ -9,13 +9,13 @@ author: wdarko1
 #Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
-# Availability Sets deprecation - Azure Kubernetes Services (January 2025)
+# Availability Sets deprecation - Azure Kubernetes Services
 
-This article will detail how Azure Kubernetes Services (AKS) will no begin to phase out support of Virtual Machine Availability Sets (VMAS). 
-Azure Kubernetes Services will be begin shifting away from Availability Sets for Virtual Machines
+This article will detail how Azure Kubernetes Services (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS). 
+Azure Kubernetes Services is moving away from Availability Sets in favor of Virtual Machines.
 
 > [!NOTE]
-> We recommend that customers choose [Virtual Machine Node Pools(Public Preview)](/articles/aks/virtual-machines-node-pools.md) for an AKS optimized virtual machine. Virtual Machine Node Pools:
+> We recommend customers use [Virtual Machine Node Pools(Public Preview)](virtual-machines-node-pools.md) for an AKS optimized virtual machine. Virtual Machine Node Pools:
 >
 > - Allow VM instances to be centrally managed, configured, and updated.
 > - Automatically increase or decrease the number of VM instances in response to demand or a defined schedule.
@@ -36,4 +36,4 @@ Starting September 30th, we will automatically migrate remaining Availability Se
 
 ## Related Content
 
-[More information on Virtual Machine node pools](/articles/aks/virtual-machines-node-pools.md)
+[More information on Virtual Machine node pools](virtual-machines-node-pools.md)
