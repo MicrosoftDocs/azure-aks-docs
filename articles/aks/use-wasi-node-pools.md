@@ -11,10 +11,13 @@ ms.author: schaffererin
 
 # Create WebAssembly System Interface (WASI) node pools in Azure Kubernetes Service (AKS) to run your WebAssembly (Wasm) workload (preview)
 
-[WebAssembly (Wasm)][wasm] is a binary format that is optimized for fast download and maximum execution speed in a Wasm runtime. A Wasm runtime is designed to run on a target architecture and execute Wasm components in a sandbox, isolated from the host computer, at near-native performance. By default, Wasm components can't access resources on the host outside of the sandbox unless it is explicitly allowed. For example, Wasm components can't communicate over sockets, receive or send HTTP traffic, or even to access things like environment variables without explicit approval. The [WebAssembly System Interface (WASI)][wasi] standard defines an API for Wasm runtimes to provide access to Wasm components to the environment and resources outside the host using a capabilities model.
+> [!CAUTION]
+> This article references WebAssembly System Interface (WASI) node pools, a preview feature that will no longer be supported on AKS. Starting on May 5, 2025 you'll no longer be able to create new WASI node pools. If you'd like to run WebAssembly (WASM) workloads, you can [deploy SpinKube to (AKS)](deploy-spinkube.md) from Azure Marketplace. For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues/4770). 
+
+[WebAssembly (Wasm)][wasm] is a binary format that is optimized for fast download and maximum execution speed in a Wasm runtime. A Wasm runtime is designed to run on a target architecture and execute Wasm components in a sandbox, isolated from the host computer, at near-native performance. By default, Wasm components can't access resources on the host outside of the sandbox unless it's explicitly allowed. For example, Wasm components can't communicate over sockets, receive or send HTTP traffic, or even to access things like environment variables without explicit approval. The [WebAssembly System Interface (WASI)][wasi] standard defines an API for Wasm runtimes to provide access to Wasm components to the environment and resources outside the host using a capabilities model.
 
 > [!IMPORTANT]
-> WASI nodepools now use [SpinKube containerd shim][containerd-shim-spin] to run Wasm workloads. Previously, AKS used [Krustlet][krustlet] to allow Wasm modules to be run on Kubernetes. If you are still using Krustlet-based WASI nodepools, you can migrate to containerd shims by creating a new WASI nodepool and migrating your workloads to the new nodepool.
+> WASI node pools now use [SpinKube containerD shim][containerd-shim-spin] to run Wasm workloads. Previously, AKS used [Krustlet][krustlet] to allow Wasm modules to be run on Kubernetes. If you're still using Krustlet-based WASI node pools, you can migrate to containerD shims by creating a new WASI node pool and migrating your workloads to the new node pool.
 
 ## Before you begin
 
@@ -59,7 +62,7 @@ az provider register --namespace Microsoft.ContainerService
 ## Limitations
 
 * Currently, WASI node pools only support [Spin][spin] applications, which use the [Wasmtime][wasmtime] runtime and native Linux containers.
-* The SpinKube operator is not supported on Wasm/WASI node pools.
+* The SpinKube operator isn't supported on Wasm/WASI node pools.
 * The Wasm/WASI node pools can't be used for system node pool.
 * The *os-type* for Wasm/WASI node pools must be Linux.
 * You can't use the Azure portal to create Wasm/WASI node pools.
@@ -200,7 +203,7 @@ Hello world from Spin!
 ```
 
 > [!NOTE]
-> If your request times out, use `kubectl get pods` and `kubectl describe pod <POD_NAME>` to check the status of the pod. If the pod is not running, use `kubectl get rs` and `kubectl describe rs <REPLICA_SET_NAME>` to see if the replica set is having issues creating a new pod.
+> If your request times out, use `kubectl get pods` and `kubectl describe pod <POD_NAME>` to check the status of the pod. If the pod isn't running, use `kubectl get rs` and `kubectl describe rs <REPLICA_SET_NAME>` to see if the replica set is having issues creating a new pod.
 
 ## Clean up
 
