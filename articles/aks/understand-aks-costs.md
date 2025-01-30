@@ -5,7 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 12/19/2024
+ms.date: 01/30/2025
 ---
 
 # Understand Azure Kubernetes Service (AKS) usage and costs

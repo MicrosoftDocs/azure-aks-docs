@@ -19,9 +19,11 @@ In this article, you learn how to enable cost analysis on Azure Kubernetes Servi
 
 AKS clusters rely on Azure resources, such as virtual machines (VMs), virtual disks, load balancers, and public IP addresses. Multiple applications can use these resources. The resource consumption patterns often differ for each application, so their contribution toward the total cluster resource cost might also vary. Some applications might have footprints across multiple clusters, which can pose a challenge when performing cost attribution and cost management.
 
-When you enable cost analysis on your AKS cluster, you can view detailed cost drill downs scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. The add-on is built on top of [OpenCost](https://www.opencost.io/), an open-source Cloud Native Computing Foundation Incubating project for usage data collection. The cost analysis is reconciled with your Azure invoice data to provide a comprehensive view of your AKS cluster costs.
+When you enable cost analysis on your AKS cluster, you can view detailed cost allocation scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. The add-on is built on top of [OpenCost](https://www.opencost.io/), an open-source Cloud Native Computing Foundation Incubating project for usage data collection. Usage data is reconciled with your Azure invoice data to provide a comprehensive view of your AKS cluster costs directly in the Azure portal Cost Management views.
 
-For more information, see [Start analyzing costs in Azure](/azure/cost-management-billing/costs/quick-acm-cost-analysis).
+For more information on Azure Cost Management, see [Start analyzing costs in Azure](/azure/cost-management-billing/costs/quick-acm-cost-analysis).
+
+After enabling the cost analysis add-on and allowing time for data to be collected, you can use the information in [Understand AKS usage and costs](./understand-aks-costs.md) to help you understand your data.
 
 ## Prerequisites
 
@@ -63,6 +65,9 @@ Enable cost analysis on an existing cluster using the [`az aks update`][az-aks-u
 az aks update --resource-group <resource-group> --name <cluster-name> --enable-cost-analysis
 ```
 
+> [!NOTE]
+> An agent is deployed to the cluster when you enable the add-on. The agent consumes a small amount of CPU and Memory resources.
+
 > [!WARNING]
 > The AKS cost analysis add-on Memory usage is dependent on the number of containers deployed. You can roughly approximate Memory consumption using *200 MB + 0.5 MB per container*. The current Memory limit is set to *4 GB*, which supports approximately *7000 containers per cluster*. These estimates are subject to change.
 
@@ -99,7 +104,7 @@ If you're experiencing issues, such as the `cost-agent` pod getting `OOMKilled` 
 
 ## Next steps
 
-For more information, see [Understand Azure Kubernetes Service (AKS) usage and costs](./understand-aks-costs.md).
+For more information on cost in AKS, see [Understand Azure Kubernetes Service (AKS) usage and costs](./understand-aks-costs.md).
 
 <!-- LINKS -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
