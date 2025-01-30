@@ -183,16 +183,21 @@ spec:
 
 The following limitations apply when using Availability Zones:
 
-* See [Quotas, Virtual Machine size restrictions, and region availability in AKS](quotas-skus-regions).
+* See [Quotas, Virtual Machine size restrictions, and region availability in AKS][aks-vm-sizes].
 * The number of Availability Zones used **cannot be changed** after the node pool is created.
-* Most regions support Availability Zones. A list can be found [here](/azure/reliability/availability-zones-region-support).
+* Most regions support Availability Zones. A list can be found [here][zones].
 
 ## Next steps
 
 * Learn about [System Node pool](/azure/aks/use-system-pools) 
 * Learn about [User Node pools](/azure/aks/create-node-pools)
 * Learn about [Load Balancers](/azure/aks/load-balancer-standard)
-* [Best practices for business continuity and disaster recovery in AKS](best-practices-bc-dr)
+* [Best practices for business continuity and disaster recovery in AKS][best-practices-multi-region]
 
 <!-- LINKS - external -->
-[kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/>
+[kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/
+
+<!-- LINKS - internal -->
+[aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
+[zones]: /azure/reliability/availability-zones-region-support
+[best-practices-multi-region]: /azure/aks/operator-best-practices-storage.md
