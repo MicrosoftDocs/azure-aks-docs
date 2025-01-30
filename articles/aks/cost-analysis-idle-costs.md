@@ -48,15 +48,8 @@ To improve utilization, it's important to monitor these metrics and [adjust your
 | [Enable node autoprovisioning](./node-autoprovision.md) | Automatically provision the optimal VM configuration to run the workload in the most efficient and cost effective way. |
 | [Enable the Vertical Pod Autoscaler (VPA)](./use-vertical-pod-autoscaler.md) | Automatically adjust the resource requests and limits of your pods based on their actual usage. This helps ensure that your pods are using the right amount of resources and can help reduce idle costs. |
 
-## Frequently asked questions (FAQs)
-
-### If a node has no pods running and is pending cluster autoscaler scale down, will the node cost be considered idle?
-
-If there are no pods running but the node is ready, most of the node cost will be considered idle. A small amount will be considered system cost.
-
-### What percentage of the cost is due to pods not fully utilizing resources where the requests of the pods match the available requests?
-
-If pods request 100% of the node resources but don’t utilize them, you can expect no idle charge because it takes the maximum usage and request for usage.
+> [!NOTE]
+> If a node is ready but has no pods running and is pending cluster autoscaler scale down, most of the node cost will be considered idle. A small amount will be considered system cost.
 
 ## Next steps
 
