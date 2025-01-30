@@ -11,20 +11,20 @@ ms.author: dabossch
 # Availability zones in Azure Kubernetes Service (AKS)
 [Availability zones](/azure/reliability/availability-zones-overview) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
 
-Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability.
+Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability. There's no extra cost for deploying nodes in multiple zones.
 
 This article shows you how to configure AKS resources to use Availability Zones.
 
 ## AKS resources
 This diagram shows the Azure resources that are created when you create an AKS cluster:
 
-:::image type="content" source="media/availability-zones/high-level-inl.png" alt-text="Diagram that shows various AKS components and if they're hosted by Microsoft or exist in your subscription." lightbox="media/availability-zones/high-level-exp.png":::
+:::image type="content" source="media/availability-zones/high-level-inl.png" alt-text="Diagram that shows various AKS components, showing AKS components hosted by Microsoft and AKS components in your Azure subscription." lightbox="media/availability-zones/high-level-exp.png":::
 
 
 ### AKS Control Plane
-Microsoft hosts the [AKS control plane](/azure/aks/core-aks-concepts#control-plane), the Kubernetes API server and services such as `scheduler` and `etcd` as a managed service. Microsoft replicates the control plane in multiple zones.
+Microsoft hosts the [AKS control plane](/azure/aks/core-aks-concepts#control-plane), the Kubernetes API server, and services such as `scheduler` and `etcd` as a managed service. Microsoft replicates the control plane in multiple zones.
 
-Other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_*, for Managed Cluster. These include the following:
+Other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_*, for Managed Cluster and contains the following resources:
 
 ### Node pools
 Node pools are created as a Virtual Machine Scale Set in your Azure Subscription. 
@@ -38,14 +38,12 @@ There are three ways node pools can be deployed:
 
 :::image type="content" source="media/availability-zones/az-spanning-inl.png" alt-text="Diagram that shows AKS node distribution across availability zones in the different models." lightbox="media/availability-zones/az-spanning-exp.png":::
 
+For the system node pool, the number of zones used is configured when the cluster is created.
+
 #### Zone spanning
 A zone spanning scale set spreads nodes across all selected zones, by specifying these zones with the `--zones` parameter.
 
-The amount of zones 
-
 ```bash
-# Create an Resource Group and pick your preferred Azure Region
-az group create --name example-rg --region eastus
 # Create an AKS Cluster, and create a zone spanning System Nodepool in all three AZs, one node in each AZ
 az aks create --resource-group example-rg --name example-cluster --node-count 3 --zones 1, 2, 3
 # Add one new zone spanning User Nodepool, two nodes in each
@@ -103,7 +101,7 @@ To view on which pods nodes are running, run the following command:
   kubectl describe pod | grep -e "^Name:" -e "^Node:"
 ```
 
-The 'maxSkew' parameter describes the degree to which Pods may be unevenly distributed.
+The 'maxSkew' parameter describes the degree to which Pods might be unevenly distributed.
 Assuming three zones and three replicas, setting this value to 1 ensures each zone has at least one pod running:
 
 ```yaml
@@ -142,9 +140,9 @@ spec:
       storage: 5Gi
 ```
 
-For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to an LRS (Locally redundant storage) SKU. You can then use the new storage class in your Persistent Volume Claim (PVC). Volumes that use Azure managed LRS disks aren't zone-redundant resources, and attaching across zones isn't supported. 
+For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to an LRS (Locally redundant storage) disk. You can then use the new storage class in your Persistent Volume Claim (PVC). Volumes that use Azure managed LRS disks aren't zone-redundant resources, and attaching across zones isn't supported. 
 
-An example of a LRS Standard SSD storage class:
+An example of an LRS Standard SSD storage class:
 
 ```yaml
 kind: StorageClass
@@ -160,7 +158,7 @@ parameters:
 ### Load Balancers
 Kubernetes deploys an Azure Standard Load Balancer by default, which balances inbound traffic across all zones in a region. If a node becomes unavailable, the load balancer reroutes traffic to healthy nodes.
 
-An example Service that will leverage the Azure Load Balancer:
+An example Service that uses the Azure Load Balancer:
 
 ```yaml
 apiVersion: v1
