@@ -6,7 +6,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to
-ms.date: 01/08/2025
+ms.date: 01/30/2025
 ---
 
 # Understand Azure Kubernetes Service (AKS) idle costs
@@ -45,13 +45,14 @@ To improve utilization, it's important to monitor these metrics and [adjust your
 | [Enable the cluster autoscaler](./cluster-autoscaler.md) | Automatically adjust the number of nodes in your cluster based on the resource requests of your pods. This helps ensure you only pay for the resources you need. |
 | Use an [alternative VM SKU type](./best-practices-cost.md#evaluate-sku-family) | Use a compute-optimized or memory-optimized SKU based on underutilized CPU nad memory resources. |
 | Consider using [Spot VMs](/azure/virtual-machines/spot-vms) | For noncritical workloads, Spot VMs can be a cost-effective option. |
+| [Enable node autoprovisioning](./node-autoprovision.md) | Automatically provision the optimal VM configuration to run the workload in the most efficient and cost effective way. |
 | [Enable the Vertical Pod Autoscaler (VPA)](./use-vertical-pod-autoscaler.md) | Automatically adjust the resource requests and limits of your pods based on their actual usage. This helps ensure that your pods are using the right amount of resources and can help reduce idle costs. |
 
 ## Frequently asked questions (FAQs)
 
 ### If a node has no pods running and is pending cluster autoscaler scale down, will the node cost be considered idle?
 
-If there are no pods running but the node is ready, most of the node cost will be considered idle. Small amounts will be considered system cost.
+If there are no pods running but the node is ready, most of the node cost will be considered idle. A small amount will be considered system cost.
 
 ### What percentage of the cost is due to pods not fully utilizing resources where the requests of the pods match the available requests?
 
