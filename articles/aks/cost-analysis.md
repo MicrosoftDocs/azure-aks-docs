@@ -21,7 +21,7 @@ AKS clusters rely on Azure resources, such as virtual machines (VMs), virtual di
 
 When you enable cost analysis on your AKS cluster, you can view detailed cost allocation scoped to Kubernetes constructs, such as clusters and namespaces, and Azure Compute, Network, and Storage resources. The add-on is built on top of [OpenCost](https://www.opencost.io/), an open-source Cloud Native Computing Foundation Incubating project for usage data collection. Usage data is reconciled with your Azure invoice data to provide a comprehensive view of your AKS cluster costs directly in the Azure portal Cost Management views.
 
-For more information on Azure Cost Management, see [Start analyzing costs in Azure](/azure/cost-management-billing/costs/quick-acm-cost-analysis).
+For more information on Microsoft Cost Management, see [Start analyzing costs in Azure](/azure/cost-management-billing/costs/quick-acm-cost-analysis).
 
 After enabling the cost analysis add-on and allowing time for data to be collected, you can use the information in [Understand AKS usage and costs](./understand-aks-costs.md) to help you understand your data.
 
