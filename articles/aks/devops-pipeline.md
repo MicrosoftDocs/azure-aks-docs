@@ -6,7 +6,6 @@ ms.author: jukullam
 author: juliakm
 ms.date: 01/30/2025
 ms.custom: devops-pipelines-deploy, devx-track-azurepowershell
-zone_pivot_groups: pipelines-version
 ---
 
 # Build and deploy to Azure Kubernetes Service with Azure Pipelines
