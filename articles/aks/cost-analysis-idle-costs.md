@@ -43,7 +43,7 @@ To improve utilization, it's important to monitor these metrics and [adjust your
 |--------------------|-------------|
 | [Manual resizing](./resize-cluster.md) | Adjust the number of nodes in your cluster based on resource requirements. |
 | [Enable the cluster autoscaler](./cluster-autoscaler.md) | Automatically adjust the number of nodes in your cluster based on the resource requests of your pods. This helps ensure you only pay for the resources you need. |
-| Use an [alternative VM SKU type](./best-practices-cost.md#evaluate-sku-family) | Use a compute-optimized or memory-optimized SKU based on underutilized CPU nad memory resources. |
+| Use an [alternative VM SKU type](./best-practices-cost.md#evaluate-sku-family) | Use a compute-optimized or memory-optimized SKU based on underutilized CPU and memory resources. |
 | Consider using [Spot VMs](/azure/virtual-machines/spot-vms) | For noncritical workloads, Spot VMs can be a cost-effective option. |
 | [Enable node autoprovisioning](./node-autoprovision.md) | Automatically provision the optimal VM configuration to run the workload in the most efficient and cost effective way. |
 | [Enable the Vertical Pod Autoscaler (VPA)](./use-vertical-pod-autoscaler.md) | Automatically adjust the resource requests and limits of your pods based on their actual usage. This helps ensure that your pods are using the right amount of resources and can help reduce idle costs. |
