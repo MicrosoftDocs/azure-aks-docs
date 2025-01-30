@@ -5,18 +5,20 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 01/03/2025
+ms.date: 01/30/2025
 ---
 
 # Optimize Azure Kubernetes Service (AKS) usage and costs
 
-This article provides guidance on how to optimize your Azure Kubernetes Service (AKS) usage and costs. It covers the following topics:
+This article provides guidance on how to optimize your Azure Kubernetes Service (AKS) usage and costs. It covers guidance on the following topics:
 
 * [Automatic scaling](#automatic-scaling)
 * [GPU optimizations](#gpu-optimizations)
 * [Cluster right-sizing](#cluster-right-sizing)
 * [Multitenancy](#multitenancy)
 * [Azure discounts](#azure-discounts)
+
+* [Plan and architect for cost optimization on ]
 
 ## About cost optimization
 
