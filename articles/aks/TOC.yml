@@ -496,6 +496,12 @@
           href: /azure/kubernetes-fleet/resource-propagation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Deploy SpinKube to run serverless Wasm workloads
           href: deploy-spinkube.md
+    - name: Cost optimization
+      items:
+        - name: Understand AKS usage and costs
+          href: understand-aks-costs.md
+        - name: Enable cost analysis on your cluster
+          href: cost-analysis.md
     - name: Cluster management
       items:
         - name: Azure portal Kubernetes resource view
@@ -817,10 +823,6 @@
           href: monitor-apiserver.md
         - name: View the kubelet logs
           href: kubelet-logs.md
-        - name: Cost analysis
-          items:
-          - name: Enable cost analysis on your cluster
-            href: cost-analysis.md
         - name: Network Observability
           items:
             - name: Container Network Observability
