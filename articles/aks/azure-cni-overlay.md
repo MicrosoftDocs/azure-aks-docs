@@ -52,6 +52,9 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
 - **Kubernetes service address range**: The size of the service address CIDR depends on the number of cluster services you plan to create. It must be smaller than `/12`. This range shouldn't overlap with the pod CIDR range, cluster subnet range, and IP range used in peered VNets and on-premises networks.
 - **Kubernetes DNS service IP address**: This IP address is within the Kubernetes service address range that's used by cluster service discovery. Don't use the first IP address in your address range, as this address is used for the `kubernetes.default.svc.cluster.local` address.
 
+> [!IMPORTANT]
+> The private CIDR ranges available for the Pod CIDR are defined in [RFC 1918](https://tools.ietf.org/html/rfc1918). While we don't block the use of public IP ranges, they are considered out of Microsoft's support scope. We recommend using private IP ranges for pod CIDR.
+
 ## Network security groups
 
 Pod to pod traffic with Azure CNI Overlay isn't encapsulated, and subnet [network security group][nsg] rules are applied. If the subnet NSG contains deny rules that would impact the pod CIDR traffic, make sure the following rules are in place to ensure proper cluster functionality (in addition to all [AKS egress requirements][aks-egress]):

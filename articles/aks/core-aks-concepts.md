@@ -28,6 +28,9 @@ An AKS cluster is divided into two main components:
 
 ![Screenshot of Kubernetes control plane and node components](media/concepts-clusters-workloads/control-plane-and-nodes.png)
 
+> [!NOTE]
+> AKS managed components have the label "kubernetes.azure.com/managedby": "aks".
+
 ### Control plane
 
 The Azure managed control plane is comprised of several components that help manage the cluster:

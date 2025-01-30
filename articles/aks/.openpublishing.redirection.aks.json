@@ -246,6 +246,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/draft-devx-extension-aks.md",
+            "redirect_url": "/azure/aks/aks-extension-draft-dockerfile",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/kubernetes-walkthrough-portal.md",
             "redirect_url": "/azure/aks/learn/quick-kubernetes-deploy-portal",
             "redirect_document_id": false
