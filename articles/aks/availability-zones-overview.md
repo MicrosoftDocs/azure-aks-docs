@@ -13,32 +13,35 @@ ms.author: dabossch
 
 Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability.
 
-
-If a zone becomes unavailable, AKS adjusts resources as required.
 This article shows you how to configure AKS resources to use Availability Zones.
 
-## AKS Resources
+## AKS resources
+This diagram shows the Azure resources that are created when you create an AKS cluster:
 
-![Diagram that shows various AKS components and if they're hosted by Microsoft or exist in your subscription](media/availability-zones/high-level.png)
+:::image type="content" source="media/availability-zones/high-level-inl.png" alt-text="Diagram that shows various AKS components and if they're hosted by Microsoft or exist in your subscription." lightbox="media/availability-zones/high-level-exp.png":::
 
 
-### [AKS Control Plane](/azure/aks/core-aks-concepts#control-plane)
-Microsoft hosts the Kubernetes API server and services such as `scheduler` and `etcd` as a managed service. The **Standard** pricing tier and up uses Availability Zones.
+### AKS Control Plane
+Microsoft hosts the [AKS control plane](/azure/aks/core-aks-concepts#control-plane), the Kubernetes API server and services such as `scheduler` and `etcd` as a managed service. Microsoft replicates the control plane in multiple zones.
 
-The other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_*, for Managed Cluster.
+Other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_*, for Managed Cluster. These include the following:
 
 ### Node pools
 Node pools are created as a Virtual Machine Scale Set in your Azure Subscription. 
 
 When you create an AKS cluster, one [System Node pool](/azure/aks/use-system-pools) is required and created automatically. It hosts critical system pods such as `CoreDNS` and `metrics-server`. More [User Node pools](/azure/aks/create-node-pools) can be added to your AKS cluster to host your applications.
 
-There are three ways node pools can be deployed: Zone spanning, Zone aligned, and Regional.
+There are three ways node pools can be deployed: 
+- Zone spanning
+- Zone aligned
+- Regional.
 
-![Diagram that shows AKS node distribution across availability zones.](media/availability-zones/az-spanning.png)
+:::image type="content" source="media/availability-zones/az-spanning-inl.png" alt-text="Diagram that shows AKS node distribution across availability zones in the different models." lightbox="media/availability-zones/az-spanning-exp.png":::
 
+#### Zone spanning
+A zone spanning scale set spreads nodes across all selected zones, by specifying these zones with the `--zones` parameter.
 
-#### Zone spanning (recommended)
-A zone spanning scale set spreads nodes across all selected zones, by specifying these zones with the `--zones` parameter:
+The amount of zones 
 
 ```bash
 # Create an Resource Group and pick your preferred Azure Region
@@ -48,10 +51,12 @@ az aks create --resource-group example-rg --name example-cluster --node-count 3 
 # Add one new zone spanning User Nodepool, two nodes in each
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-a  --node-count 6 --zones 1, 2, 3 
 ```
-AKS balances the number of nodes between zones automatically. If a zonal outage or connectivity issue occurs, connectivity to nodes within the affected zone can be compromised, while nodes in other availability zones should be unaffected. You can add capacity to the node pool during a zonal outage, and the node pool adds more nodes to the unaffected zones.
+AKS balances the number of nodes between zones automatically.
+
+If a zonal outage occurs, nodes within the affected zone can be impacted, while nodes in other availability zones remain unaffected.
 
 #### Zone aligned
-Each node and its disks are zonal, so they're pinned to a specific zone. To create three node pools for a region with three Availability Zones:
+Each node is aligned (pinned) to a specific zone. To create three node pools for a region with three Availability Zones:
 
 ```bash
 # # Add three new zone aligned User Nodepools, two nodes in each
@@ -60,15 +65,15 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-z  --node-count 2 --zones 3
 ```
 
- This configuration is primarily used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md). 
+ This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md). 
 
 > [!NOTE]
 > * If a single workload is deployed across node pools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations.
 
 #### Regional (not using Availability Zones)
-Regional is used when the zone assignment isn't set in the deployment template (`"zones"=[] or "zones"=null`).
+Regional mode is used when the zone assignment isn't set in the deployment template (`"zones"=[] or "zones"=null`).
 
-In this configuration, the node pool creates Regional (not-zone pinned) instances and implicitly places instances throughout the region. There's no guarantee for balance or spread across zones, or that instances land in the same availability zone. Disk colocation is guaranteed for Ultra and Premium v2 disks, best effort for Premium v1 disks, and not guaranteed for Standard disks.
+In this configuration, the node pool creates Regional (not-zone pinned) instances and implicitly places instances throughout the region. There's no guarantee for balance or spread across zones, or that instances land in the same availability zone. 
 
 In the rare case of a full zonal outage, any or all instances within the node pool can be impacted.
 
@@ -88,17 +93,18 @@ aks-nodepool1-34917322-vmss000002   eastus   eastus-3
 ## Deployments
 
 ### Pods
-Kubernetes is aware of Azure Availability Zones, and balances pods across nodes in different zones. In the event a zone becomes unavailable, Kubernetes moves pods away from impacted nodes automatically.
+Kubernetes is aware of Azure Availability Zones, and can balance pods across nodes in different zones. In the event a zone becomes unavailable, Kubernetes moves pods away from impacted nodes automatically.
 
-As documented in [Well-Known Labels, Annotations and Taints][kubectl-well_known_labels], Kubernetes uses the `topology.kubernetes.io/zone` label to automatically distribute pods in a replication controller or service across the different zones available.
+As documented in [Well-Known Labels, Annotations and Taints][kubernetes-well-known-labels], Kubernetes uses the `topology.kubernetes.io/zone` label to automatically distribute pods in a replication controller or service across the different zones available.
+
 To view on which pods nodes are running, run the following command:
 
 ```bash
   kubectl describe pod | grep -e "^Name:" -e "^Node:"
 ```
 
-For smaller deployments, we recommend you modify the 'maxSkew' parameter for a deployment.
-Assuming three zones and three replicas, setting this value to one ensures each zone has at least one pod running.
+The 'maxSkew' parameter describes the degree to which Pods may be unevenly distributed.
+Assuming three zones and three replicas, setting this value to 1 ensures each zone has at least one pod running:
 
 ```yaml
 kind: Pod
@@ -117,9 +123,9 @@ spec:
 ```
 
 ### Storage and volumes
-Kubernetes 1.29 and up by default uses Azure Managed Disks using Zone-Redundant-Storage (ZRS) for persistent volume claims. These disks can be attached across zones and it's the recommended deployment method for production workloads, as it enhances the resilience of your applications and safeguards your data against datacenter failures.
+By default, Kubernetes versions 1.29 and later use Azure Managed Disks using Zone-Redundant-Storage (ZRS) for persistent volume claims. The recommended deployment method for production workloads is to attach these disks across zones in order to enhance the resilience of your applications and safeguards your data against datacenter failures.
 
-This example creates a 5GB Standard SSD ZRS disk:
+An example of a persistent volume claim that uses Standard SSD in ZRS:
 
 ```yaml
 apiVersion: v1
@@ -136,11 +142,13 @@ spec:
       storage: 5Gi
 ```
 
-For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to LRS (Locally redundant storage). You can then use the new storage class in your Persistent Volume Claim (PVC). Volumes that use Azure managed LRS disks aren't zone-redundant resources, and attaching across zones isn't supported.
+For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to an LRS (Locally redundant storage) SKU. You can then use the new storage class in your Persistent Volume Claim (PVC). Volumes that use Azure managed LRS disks aren't zone-redundant resources, and attaching across zones isn't supported. 
+
+An example of a LRS Standard SSD storage class:
 
 ```yaml
 kind: StorageClass
-apiVersion: storage.k8s.io/v1
+
 metadata:
   name: azuredisk-csi-standard-lrs
 provisioner: disk.csi.azure.com
@@ -151,6 +159,8 @@ parameters:
 
 ### Load Balancers
 Kubernetes deploys an Azure Standard Load Balancer by default, which balances inbound traffic across all zones in a region. If a node becomes unavailable, the load balancer reroutes traffic to healthy nodes.
+
+An example Service that will leverage the Azure Load Balancer:
 
 ```yaml
 apiVersion: v1
@@ -167,7 +177,7 @@ spec:
 ```
 
 > [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the official announcement. If you're currently using Basic Load Balancer, make sure to [upgrade](/azure/load-balancer/load-balancer-basic-upgrade-guidance) to Standard Load Balancer before the retirement date.
+> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you're currently using Basic Load Balancer, make sure to [upgrade](/azure/load-balancer/load-balancer-basic-upgrade-guidance) to Standard Load Balancer before the retirement date.
 
 ## Limitations
 
@@ -183,3 +193,6 @@ The following limitations apply when using Availability Zones:
 * Learn about [User Node pools](/azure/aks/create-node-pools)
 * Learn about [Load Balancers](/azure/aks/load-balancer-standard)
 * [Best practices for business continuity and disaster recovery in AKS](best-practices-bc-dr)
+
+<!-- LINKS - external -->
+[kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/>
