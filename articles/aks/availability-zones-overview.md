@@ -200,4 +200,4 @@ The following limitations apply when using Availability Zones:
 <!-- LINKS - internal -->
 [aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
 [zones]: /azure/reliability/availability-zones-region-support
-[best-practices-multi-region]: /azure/aks/operator-best-practices-storage.md
+[best-practices-multi-region]: ./operator-best-practices-storage.md
