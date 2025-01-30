@@ -89,7 +89,6 @@ The following table lists the policies that become active and the Kubernetes res
 | [Preview]: Reserved System Pool Taints | Node | Removes the `CriticalAddonsOnly` taint from a user node pool if not set. AKS uses the `CriticalAddonsOnly` taint to keep customer pods away from the system pool. This configuration ensures a clear separation between AKS components and customer pods and prevents eviction of customer pods that don't tolerate the `CriticalAddonsOnly` taint. |
 | Ensure cluster containers have readiness or liveness probes configured | Pod | N/A |
 | Kubernetes clusters should use Container Storage Interface (CSI) driver StorageClass | StorageClass | N/A|
-| [Preview]: Kubernetes cluster containers should only pull images when image pull secrets are present | Pod | N/A|
 | [Preview]: Kubernetes cluster should implement accurate Pod Disruption Budgets | Deployment, ReplicaSet, StatefulSet | Sets `maxUnavailable` in PodDisruptionBudget resource to 1.|
 | [Preview]: Kubernetes cluster services should use unique selectors | Service | N/A| 
 | [Preview]: `ReadOnlyRootFilesystem` in Pod spec is set to true | Pod | Sets `readOnlyRootFilesystem` in the Pod spec to `true` if not set. This configuration prevents containers from writing to the root filesystem. |
