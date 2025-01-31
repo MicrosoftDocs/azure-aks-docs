@@ -11,7 +11,7 @@ ms.author: dabossch
 # Availability zones in Azure Kubernetes Service (AKS)
 [Availability zones](/azure/reliability/availability-zones-overview) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
 
-Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability. There's no extra cost for deploying nodes in multiple zones.
+Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones does not incur additional costs.
 
 This article shows you how to configure AKS resources to use Availability Zones.
 
@@ -121,7 +121,9 @@ spec:
 ```
 
 ### Storage and volumes
-By default, Kubernetes versions 1.29 and later use Azure Managed Disks using Zone-Redundant-Storage (ZRS) for persistent volume claims. The recommended deployment method for production workloads is to attach these disks across zones in order to enhance the resilience of your applications and safeguards your data against datacenter failures.
+By default, Kubernetes versions 1.29 and later use Azure Managed Disks using Zone-Redundant-Storage (ZRS) for persistent volume claims.
+
+These disks are replicated between zones, in order to enhance the resilience of your applications, and safeguards your data against datacenter failures.
 
 An example of a persistent volume claim that uses Standard SSD in ZRS:
 
@@ -140,7 +142,10 @@ spec:
       storage: 5Gi
 ```
 
-For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to an LRS (Locally redundant storage) disk. You can then use the new storage class in your Persistent Volume Claim (PVC). Volumes that use Azure managed LRS disks aren't zone-redundant resources, and attaching across zones isn't supported. 
+For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to LRS (Locally Redundant Storage).
+You can then use the new storage class in your Persistent Volume Claim (PVC). 
+
+Note that while LRS disks are less expensive, they are not zone-redundant, and attaching a disk to a node in a different zone isn't supported.
 
 An example of an LRS Standard SSD storage class:
 
