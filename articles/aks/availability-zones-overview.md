@@ -34,7 +34,7 @@ When you create an AKS cluster, one [System Node pool](/azure/aks/use-system-poo
 There are three ways node pools can be deployed: 
 - Zone spanning
 - Zone aligned
-- Regional.
+- Regional
 
 :::image type="content" source="media/availability-zones/az-spanning-inl.png" alt-text="Diagram that shows AKS node distribution across availability zones in the different models." lightbox="media/availability-zones/az-spanning-exp.png":::
 
