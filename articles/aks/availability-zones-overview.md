@@ -11,7 +11,7 @@ ms.author: dabossch
 # Availability zones in Azure Kubernetes Service (AKS)
 [Availability zones](/azure/reliability/availability-zones-overview) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
 
-Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones does not incur additional costs.
+Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones doesn't incur additional costs.
 
 This article shows you how to configure AKS resources to use Availability Zones.
 
@@ -145,7 +145,7 @@ spec:
 For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to LRS (Locally Redundant Storage).
 You can then use the new storage class in your Persistent Volume Claim (PVC). 
 
-Note that while LRS disks are less expensive, they are not zone-redundant, and attaching a disk to a node in a different zone isn't supported.
+While LRS disks are less expensive, they aren't zone-redundant, and attaching a disk to a node in a different zone isn't supported.
 
 An example of an LRS Standard SSD storage class:
 
