@@ -227,6 +227,5 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
-[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-acr-import]: /cli/azure/acr#az-acr-import
 [deploy-valkey]: ./deploy-valkey-cluster.md

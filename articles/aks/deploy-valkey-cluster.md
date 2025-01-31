@@ -710,3 +710,4 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md
 [validate-valkey-cluster]: ./validate-valkey-cluster.md
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
