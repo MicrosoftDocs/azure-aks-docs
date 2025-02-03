@@ -11,7 +11,7 @@ ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell, devx-track-exte
 #Customer intent: As a developer or IT pro, I want to learn how to use Azure Container Storage with Azure Kubernetes Service (AKS) so that I can deploy persistent storage for stateful applications.
 ---
 
-# Tutorial - Create an Azure Kubernetes Service (AKS) cluster
+# Tutorial - Deploy Azure Container Storage on an AKS cluster
 
 This tutorial introduces Azure Container Storage and demonstrates how to deploy and manage persistent storage for applications running on Azure Kubernetes Service (AKS). 
 
