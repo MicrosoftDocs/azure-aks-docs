@@ -36,14 +36,14 @@ Here is a reference to properties you can set to configure an `NginxIngressContr
 
 | Property                  | Description                                                                 |
 |---------------------------|-----------------------------------------------------------------------------|
-| **ingressClassName**          | The name of the `IngressClass` that will be used for the NGINX Ingress Controller. Defaults to the name of the `NginxIngressController` if not specified. | 
+| **ingressClassName**          | The name of the `IngressClass` that is used for the NGINX Ingress Controller. Defaults to the name of the `NginxIngressController` if not specified. | 
 | **controllerNamePrefix**      | A name used to prefix the managed NGINX ingress controller resources. Defaults to `nginx`. |
 | **loadBalancerAnnotations**   | A set of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations)  |
 | **scaling**                   | Configuration options for how the NGINX Ingress Controller scales. |
 | _scaling.minReplicas_           | The lower limit for the number of Ingress Controller replicas. It defaults to 2 pods.  |
 | _scaling.maxReplicas_           | The upper limit for the number of Ingress Controller replicas. It defaults to 100 pods.  |
-| _scaling.threshold_             | Defines how quickly the NGINX Ingress Controller pods should scale based on workload. **`Rapid`** means the Ingress Controller will scale quickly and aggressively for handling sudden and significant traffic spikes. **`Steady`** prioritizes cost-effectiveness with fewer replicas handling more work. **`Balanced`** is a good mix between the two that works for most use-cases. If unspecified, this field defaults to **`Balanced`**. |
-| **defaultSSLCertificate**     |  The secret referred to by this property contains the default certificate to be used when accessing the default backend service. If this property is not provided NGINX will use a self-signed certificate. If the `tls:` section is not set on an Ingress, NGINX will provide the default certificate but will not force HTTPS redirect. | 
+| _scaling.threshold_             | Defines how quickly the NGINX Ingress Controller pods should scale based on workload. **`Rapid`** means the Ingress Controller scales quickly and aggressively for handling sudden and significant traffic spikes. **`Steady`** prioritizes cost-effectiveness with fewer replicas handling more work. **`Balanced`** is a good mix between the two that works for most use-cases. If unspecified, this field defaults to **`Balanced`**. |
+| **defaultSSLCertificate**     |  The secret referred to by this property contains the default certificate to be used when accessing the default backend service. If this property is not provided NGINX uses a self-signed certificate. If the `tls:` section is not set on an Ingress, NGINX provides the default certificate but will not force HTTPS redirect. | 
 | _defaultSSLCertificate.forceSSLRedirect_       |  Forces a redirect for Ingresses that do not specify a `tls:` section. |
 | _defaultSSLCertificate.keyVaultURI_             | The Azure Key Vault URI where the default SSL certificate can be found. The add-on needs to be [configured to use the key vault](app-routing-dns-ssl.md#enable-azure-key-vault-integration).|
 | _defaultSSLCertificate.secret_                  | Configures the name and namespace where the the default SSL secret is on the cluster.  |
@@ -380,15 +380,15 @@ spec:
         pathType: Prefix
 ```
 
-### Custom connection timeout
+### Custom connection time out
 
-You can change the timeout that the NGINX ingress controller waits to close a connection with your workload. All timeout values are unitless and in seconds. To override the default timeout, use the following annotation to set a valid 120-seconds proxy read timeout:
+You can change the time out that the NGINX ingress controller waits to close a connection with your workload. All time out values are unitless and in seconds. To override the default time out, use the following annotation to set a valid 120-seconds proxy read time out:
 
 ```yml
 nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
 ```
 
-Review [custom timeouts](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#custom-timeouts) for other configuration options.
+Review [custom time outs](https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/#custom-timeouts) for other configuration options.
 
 Here's an example ingress configuration using this annotation:
 
