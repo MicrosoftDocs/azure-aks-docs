@@ -95,6 +95,8 @@
       href: free-standard-pricing-tiers.md
     - name: Maintain and upgrade an AKS cluster
       href: upgrade.md
+    - name: Availability zones
+      href: availability-zones-overview.md
     - name: AKS Communication Manager (Preview)
       href: aks-communication-manager.md
     - name: Resource reservations
@@ -484,12 +486,6 @@
               href: cluster-autoscaler.md
         - name: Node autoprovision
           href: node-autoprovision.md
-        - name: Availability zones
-          items:
-            - name: Availability zones overview
-              href: availability-zones-overview.md
-            - name: Create a cluster with availability zones
-              href: availability-zones.md
         - name: Zone resiliency
           href: aks-zone-resiliency.md
         - name: Propagate Kubernetes resources across multiple clusters
