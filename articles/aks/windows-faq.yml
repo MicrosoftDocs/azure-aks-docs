@@ -14,16 +14,16 @@ summary: |
 sections:
   - name: General questions
     questions:
-      -question:  |
+      - question:  |
           Why can't I create new Windows Server 2019 node pools?
         answer:  |
-          Windows Server 2019 is not supported in kubernetes version 1.33 and above. Please use a supported Windows Server version such as Windows Server 2022.
+          Windows Server 2019 isn't supported in kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
 
-     -question:  |
+      - question:  |
           Why can't I upgrade my Windows Server 2019 node pools to kubernetes version 1.33?
-      answer:  |
-          Windows Server 2019 is not supported in kubernetes version 1.33 and above. Please migrate to a supported Windows Server version such as Windows Server 2022.
-          
+        answer:  |
+          Windows Server 2019 isn't supported in kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
+
       - question: |
           What kind of disks are supported for Windows?
         answer: |
@@ -32,7 +32,7 @@ sections:
       - question: |
           Does Windows support generation 2 virtual machines (VMs)?
         answer: |
-          Generation 2 VMs are supported on Windows for WS2022 and above.
+          Generation 2 VMs are supported on Windows starting with Windows Server 2022.
           
           For more information, see [Support for generation 2 VMs on Azure](/azure/virtual-machines/generation-2).
           
@@ -151,7 +151,7 @@ sections:
           To change the time zone of a running Windows Server container, connect to the running container with a PowerShell session. For example:
     
           ```azurecli
-          kubectl exec -it CONTAINER-NAME -- powershell
+          kubectl exec -it CONTAINER-NAME -- PowerShell
           ```
 
           In the running container, use [Set-TimeZone](/powershell/module/microsoft.powershell.management/set-timezone) to set the time zone of the running container. For example:
