@@ -1,28 +1,28 @@
 ---
 title: Kubernetes on Azure tutorial - Use Azure Container Storage
-description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage on an AKS cluster and create persistent volumes.
+description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage on an AKS cluster and create volumes.
 ms.topic: tutorial
 ms.date: 02/04/2025
 author: khdownie
 ms.author: kendownie
 ms.custom: mvc, devx-track-azurecli
 
-#Customer intent: As a developer or IT pro, I want to learn how to use Azure Container Storage with Azure Kubernetes Service (AKS) so that I can deploy persistent storage for stateful applications.
+#Customer intent: As a developer or IT pro, I want to learn how to use Azure Container Storage with Azure Kubernetes Service (AKS) so that I can deploy container-native storage for stateful applications.
 ---
 
 # Tutorial - Deploy Azure Container Storage on an AKS cluster
 
-This tutorial introduces Azure Container Storage and demonstrates how to deploy and manage persistent storage for applications running on Azure Kubernetes Service (AKS). 
+This tutorial introduces Azure Container Storage and demonstrates how to deploy and manage storage for applications running on Azure Kubernetes Service (AKS).
 
-Azure Container Storage simplifies the management of stateful applications in Kubernetes by offering robust, scalable, and secure storage solutions tailored to a variety of workloads, including databases, analytics platforms, and high-performance applications. 
+Azure Container Storage simplifies the management of stateful applications in Kubernetes by offering container-native storage tailored to a variety of workloads, including databases, analytics platforms, and high-performance applications.
 
-By the end of this tutorial, you will: 
+By the end of this tutorial, you will:
 
 > [!div class="checklist"]
 >
 > * Understand how Azure Container Storage supports diverse workloads in Kubernetes.
 > * Explore multiple storage backend options to tailor storage to your application's needs.
-> * Deploy Azure Container Storage on your AKS cluster.
+> * Deploy Azure Container Storage on your AKS cluster and create a generic ephemeral volume.
 > * Integrate storage with a sample application (maybe not yet? this comes in a later tutorial?)
 
 ## Before you begin
@@ -76,7 +76,7 @@ To connect to the cluster, run the following commands.
 
 ## Choose a backing storage option
 
-Azure Container Storage uses storage pools to provision and manage persistent volumes. It offers a variety of back-end storage options for your storage pools, each suited for specific workloads. Selecting the right storage type is critical for optimizing workload performance, durability, and cost efficiency. For this tutorial, we'll use Ephemeral Disk (local NVMe) as backing storage. However, we'll also explore the other options in this section.
+Azure Container Storage uses storage pools to provision and manage persistent and generic volumes. It offers a variety of back-end storage options for your storage pools, each suited for specific workloads. Selecting the right storage type is critical for optimizing workload performance, durability, and cost efficiency. For this tutorial, we'll use Ephemeral Disk (local NVMe) as backing storage to create a generic ephemeral volume. However, we'll also explore the other backing storage options.
 
 ### Azure Disks
 
@@ -88,16 +88,18 @@ Azure Disks allow for automatic provisioning of storage volumes and include buil
 
 Ephemeral Disk utilizes local storage resources on the AKS nodes (either local NVMe or temp SSD). It offers low sub-ms latency and high IOPS, but no data persistence if the VM restarts. Ephemeral Disk is best suited for applications such as Cassandra that prioritize speed over persistence, and is ideal for workloads with application-level replication.
 
+You can use Ephemeral Disk to create either generic ephemeral volumes or persistent volumes, even though the data will be lost if the VM restarts.
+
 ### Azure Elastic SAN (preview)
 
 Designed for shared storage needs and general-purpose databases requiring scalability and high availability, Azure Elastic SAN is a good fit for workloads such as CI/CD pipelines or large-scale data processing.
 
 ## Enable Azure Container Storage and create a storage pool
 
-Run the following command to install Azure Container Storage on the cluster and create a Local NVMe storage pool with persistent volumes enabled.
+Run the following command to install Azure Container Storage on the cluster and create a Local NVMe storage pool.
 
 ```azurecli-interactive
-az aks update -n myAKSCluster -g myResourceGroup --enable-azure-container-storage ephemeralDisk --storage-pool-option NVMe --ephemeral-disk-volume-type PersistentVolumeWithAnnotation
+az aks update -n myAKSCluster -g myResourceGroup --enable-azure-container-storage ephemeralDisk --storage-pool-option NVMe
 ```
 
 The deployment should take less than 15 minutes.
@@ -124,35 +126,97 @@ If the `Message` doesn't say `StoragePool is ready`, then your storage pool is s
 
 When the storage pool is ready to use, you must select a storage class to define how storage is dynamically created when creating and deploying volumes.
 
-Run `kubectl get sc` to display the available storage classes. You should see a storage class called `acstor-<storage-pool-name>`.
+Run `kubectl get sc` to display the available storage classes. You should see a storage class called `acstor-<storage-pool-name>`. Use this storage class in the next section to deploy a pod.
 
-## Deploy a pod 
+## Deploy a pod with a generic ephemeral volume
 
-Generic ephemeral, or persistent?
+Create a pod using [Fio](https://github.com/axboe/fio) (Flexible I/O Tester) for benchmarking and workload simulation, that uses a generic ephemeral volume.
 
+1. Use your favorite text editor to create a YAML manifest file such as `code acstor-pod.yaml`.
 
-## Next steps
+1. Paste in the following code and save the file.
+
+   ```yml
+   kind: Pod
+   apiVersion: v1
+   metadata:
+     name: fiopod
+   spec:
+     nodeSelector:
+       acstor.azure.com/io-engine: acstor
+     containers:
+       - name: fio
+         image: nixery.dev/shell/fio
+         args:
+           - sleep
+           - "1000000"
+         volumeMounts:
+           - mountPath: "/volume"
+             name: ephemeralvolume
+     volumes:
+       - name: ephemeralvolume
+         ephemeral:
+           volumeClaimTemplate:
+             metadata:
+               labels:
+                 type: my-ephemeral-volume
+             spec:
+               accessModes: [ "ReadWriteOnce" ]
+               storageClassName: acstor-ephemeraldisk-nvme # replace with the name of your storage class if different
+               resources:
+                 requests:
+                   storage: 1Gi
+   ```
+
+   If you change the storage size of the volume, make sure the size is less than the available capacity of a single node's ephemeral disk. See [Check node ephemeral disk capacity](#check-node-ephemeral-disk-capacity). Run `kubectl get diskpool -n acstor` to check the available capacity.
+
+1. Apply the YAML manifest file to deploy the pod.
+   
+   ```azurecli-interactive
+   kubectl apply -f acstor-pod.yaml
+   ```
+   
+   You should see output similar to the following:
+   
+   ```output
+   pod/fiopod created
+   ```
+
+1. Check that the pod is running and that the ephemeral volume claim has been bound successfully to the pod:
+
+   ```azurecli-interactive
+   kubectl describe pod fiopod
+   kubectl describe pvc fiopod-ephemeralvolume
+   ```
+
+You've now deployed a pod that's using local NVMe as its storage, and you can use it for your Kubernetes workloads.
+
+Verify the available capacity of ephemeral disks before provisioning additional volumes:
+
+```azurecli-interactive
+kubectl describe node <node-name>
+```
+
+To learn more about Azure Container Storage, including how to create persistent volumes, see [What is Azure Container Storage?][azure-container-storage]
+
+## Next step
 
 In this tutorial, you deployed Azure Container Storage on your AKS cluster. You learned how to:
 
 > [!div class="checklist"]
 >
-> * Enable Azure Container Storage and create a storage pool.
-> * Blah
-> * Blah
+> * Enable Azure Container Storage on your AKS cluster.
+> * Choose a backing storage type and create a storage pool.
+> * Deploy a pod with a generic ephemeral volume.
 
 In the next tutorial, you learn how to deploy an application to your cluster.
 
 > [!div class="nextstepaction"]
 > [Deploy an application in AKS][aks-tutorial-deploy-app]
 
-<!-- LINKS - external -->
-[kubectl]: https://kubernetes.io/docs/reference/kubectl/
-[kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
-[k8s-rbac]: https://kubernetes.io/docs/reference/access-authn-authz/rbac/
-
 <!-- LINKS - internal -->
 [aks-tutorial-deploy-app]: ./tutorial-kubernetes-deploy-application.md
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
 [aks-tutorial-deploy-cluster]: ./tutorial-kubernetes-deploy-cluster.md
 [azure-cli-install]: /cli/azure/install-azure-cli
+[azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
