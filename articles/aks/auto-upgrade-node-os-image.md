@@ -37,12 +37,12 @@ The following upgrade channels are available. You're allowed to choose one of th
 
 ## What to choose - SecurityPatch Channel or NodeImage Channel?
 
-There are two important consideration for you to choose between `SecurityPatch` or `NodeImage` channels. 
+There are two important considerations for you to choose between `SecurityPatch` or `NodeImage` channels. 
 
-|Property|NodeImage Channel|SecurityPatch Channel|Verdict|
-|---|---|---|
-| `Speed of shipping`| The typical build, test, release and rollout timelines for a new VHD can be approximately over 2 weeks factoring in Safe deployment rollout practices. Although in the event of CVEs accelerated case by case rollouts are technically possible. The exact timing when a new VHD hits a region can be monitored via [release-tracker]| SecurityPatch rollouts even with safe deployment practices as monitored via [release-tracker] turn out relatively faster than `NodeImage`. SecurityPatch has the advantage of 'Live-patching' in Linux environments, where patching leads to selective 'reimaging' and does not reimage every single time. |`SecurityPatch`|
-| `Bugfixes`| Carries bug fixes in addition to security fixes.| Strictly carries only security fixes.||`NodeImage`|
+|Property|NodeImage Channel|SecurityPatch Channel|Recommended Channel|
+|---|---|---|---|
+| `Speed of shipping`|The typical build, test, release, and rollout timelines for a new VHD can take approximately 2 weeks following safe deployment practices. Although in the event of CVEs, accelerated rollouts can occur on a case by case basis. The exact timing when a new VHD hits a region can be monitored via [release-tracker]. | SecurityPatch releases are relatively faster than `NodeImage`, even with safe deployment practices. SecurityPatch has the advantage of 'Live-patching' in Linux environments, where patching leads to selective 'reimaging' and does not reimage every time a patch gets applied. |`SecurityPatch`|
+| `Bugfixes`| Carries bug fixes in addition to security fixes.| Strictly carries only security fixes.| `NodeImage`|
 
 ## Set the node OS auto-upgrade channel on a new cluster
 
