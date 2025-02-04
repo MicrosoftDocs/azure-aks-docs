@@ -12,7 +12,7 @@ ms.custom: mvc, devx-track-azurecli
 
 # Tutorial - Deploy Azure Container Storage on an AKS cluster
 
-This tutorial introduces Azure Container Storage and demonstrates how to deploy and manage storage for applications running on Azure Kubernetes Service (AKS).
+This tutorial introduces Azure Container Storage and demonstrates how to deploy and manage container-native storage for applications running on Azure Kubernetes Service (AKS). If you don't want to deploy Azure Container Storage now, you can skip this tutorial and proceed directly to [Deploy an application in AKS][aks-tutorial-deploy-app]. You won't need Azure Container Storage for the basic storefront application in this tutorial series.
 
 Azure Container Storage simplifies the management of stateful applications in Kubernetes by offering container-native storage tailored to a variety of workloads, including databases, analytics platforms, and high-performance applications.
 
@@ -198,6 +198,28 @@ kubectl describe node <node-name>
 ```
 
 To learn more about Azure Container Storage, including how to create persistent volumes, see [What is Azure Container Storage?][azure-container-storage]
+
+## Clean up resources
+
+You won't need Azure Container Storage for the rest of this tutorial series, so we recommend deleting it now to avoid incurring unnecessary Azure charges.
+
+1. Delete the pod.
+
+   ```azurecli-interactive
+   kubectl delete pod fiopod
+   ```
+
+1. Delete the storage pool.
+
+   ```azurecli-interactive
+   kubectl delete sp -n acstor <storage-pool-name>
+   ```
+
+1. Delete the extension instance.
+
+   ```azurecli-interactive
+   az aks update -n myAKSCluster -g myResourceGroup --disable-azure-container-storage all
+   ```
 
 ## Next step
 
