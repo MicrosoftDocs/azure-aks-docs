@@ -28,11 +28,9 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     ```output
     namespace/valkey created
     ```
-
+:::zone pivot="azure-cli"
 
 ## Create secrets
-
-:::zone pivot="azure-cli"
 
 1. Generate a random password for the Valkey cluster using openssl and store it in your Azure key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
    Set the policy to allow the user-assigned identity to get the secret using the [`az keyvault set-policy`][az-keyvault-set-policy] command.
@@ -46,7 +44,11 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $userAssignedObjectID --secret-permissions get --output table
     ```
 :::zone-end
+
+
 :::zone pivot="terraform"
+
+## Create secrets
 
 1. Add the following Terraform configuration to generate a random password for the Valkey cluster and store it in your Azure key vault.
 
