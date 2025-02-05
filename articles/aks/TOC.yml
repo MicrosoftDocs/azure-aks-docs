@@ -4,7 +4,7 @@
   items:
     - name: What is AKS?
       href: what-is-aks.md
-    - name: What is AKS Automatic?
+    - name: AKS Standard versus AKS Automatic?
       href: intro-aks-automatic.md
     - name: Quotas and regional limits
       href: quotas-skus-regions.md
