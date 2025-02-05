@@ -94,8 +94,6 @@ Control plane metrics are stored in an Azure Monitor workspace in the cluster's 
 
 ## Customize control plane metrics
 
-> [!WARNING] 
-> A bug prevents customization of metrics for AKS Control Plane components. Changes to the configMap do not take effect. Follow this issue [issue](https://github.com/Azure/AKS/issues/4689) for updates.
 
 
 AKS includes a preconfigured set of metrics to collect and store for each component. `API server` and `etcd` are enabled by default. You can customize this list through the [`ama-settings-configmap`]([https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml).
@@ -184,6 +182,14 @@ Make sure the feature flag `AzureMonitorMetricsControlPlanePreview` is enabled a
 * **Isolate control plane from data plane**: Start by setting some of the [node related metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default) to `true` and verify the metrics are being forwarded to the workspace. This helps determine if the issue is specific to scraping control plane metrics.
 * **Events ingested**: Once you apply the changes, you can open metrics explorer from the **Azure Monitor overview** page or from the **Monitoring** section of the selected cluster and check for an increase or decrease in the number of events ingested per minute. It should help you determine if a specific metric is missing or if all metrics are missing.
 * **Specific metric isn't exposed**: There are cases where metrics are documented, but aren't exposed from the target and aren't forwarded to the Azure Monitor workspace. In this case, it's necessary to verify other metrics are being forwarded to the workspace.
+> [!NOTE]
+> If you are looking to collect the apiserver_request_duration_seconds or another bucket metric, you need to specify all the series in the histogram family
+>
+```yaml
+controlplane-apiserver = "apiserver_request_duration_seconds_bucket|apiserver_request_duration_seconds_sum|apiserver_request_duration_seconds_count"
+```
+
+
 * **No access to the Azure Monitor workspace**: When you enable the add-on, you might specify an existing workspace that you don't have access to. In that case, it might look like the metrics aren't being collected and forwarded. Make sure that you create a new workspace while enabling the add-on or while creating the cluster.
 
 ## Disable control plane metrics on your AKS cluster
