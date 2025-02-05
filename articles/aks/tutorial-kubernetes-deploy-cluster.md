@@ -15,7 +15,7 @@ ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell, devx-track-exte
 
 Kubernetes provides a distributed platform for containerized applications. With Azure Kubernetes Service (AKS), you can quickly create a production ready Kubernetes cluster.
 
-In this tutorial, part three of seven, you deploy a Kubernetes cluster in AKS. You learn how to:
+In this tutorial, you deploy a Kubernetes cluster in AKS. You learn how to:
 
 > [!div class="checklist"]
 >
@@ -219,10 +219,10 @@ In this tutorial, you deployed a Kubernetes cluster in AKS and configured `kubec
 > * Install the Kubernetes CLI, `kubectl`.
 > * Configure `kubectl` to connect to your AKS cluster.
 
-In the next tutorial, you learn how to deploy an application to your cluster.
+In the next tutorial, you learn how to deploy Azure Container Storage on your cluster and create a generic ephemeral volume.
 
 > [!div class="nextstepaction"]
-> [Deploy an application in AKS][aks-tutorial-deploy-app]
+> [Deploy Azure Container Storage][aks-tutorial-acstor]
 
 <!-- LINKS - external -->
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
@@ -233,6 +233,7 @@ In the next tutorial, you learn how to deploy an application to your cluster.
 [aks-tutorial-deploy-app]: ./tutorial-kubernetes-deploy-application.md
 [aks-tutorial-prepare-acr]: ./tutorial-kubernetes-prepare-acr.md
 [aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
+[aks-tutorial-acstor]: ./tutorial-kubernetes-deploy-azure-container-storage.md
 [az aks create]: /cli/azure/aks#az_aks_create
 [az aks install-cli]: /cli/azure/aks#az_aks_install_cli
 [az aks get-credentials]: /cli/azure/aks#az_aks_get_credentials

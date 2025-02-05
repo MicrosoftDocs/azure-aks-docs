@@ -11,7 +11,7 @@ ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
 
 With Kubernetes, you can use PaaS services, such as [Azure Service Bus][azure-service-bus], to develop and run your applications.
 
-In this tutorial, part five of seven, you create an Azure Service Bus namespace and queue to test your application. You learn how to:
+In this tutorial, you create an Azure Service Bus namespace and queue to test your application. You learn how to:
 
 > [!div class="checklist"]
 >

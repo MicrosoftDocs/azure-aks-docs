@@ -14,7 +14,7 @@ ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
 
 Azure Container Registry (ACR) is a private registry for container images. A private container registry allows you to securely build and deploy your applications and custom code.
 
-In this tutorial, part two of seven, you deploy an ACR instance and push a container image to it. You learn how to:
+In this tutorial, you deploy an ACR instance and push a container image to it. You learn how to:
 
 > [!div class="checklist"]
 >

@@ -2,7 +2,7 @@
 title: Kubernetes on Azure tutorial - Use Azure Container Storage
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage on an AKS cluster and create volumes.
 ms.topic: tutorial
-ms.date: 02/04/2025
+ms.date: 02/05/2025
 author: khdownie
 ms.author: kendownie
 ms.custom: mvc, devx-track-azurecli
@@ -23,7 +23,7 @@ By the end of this tutorial, you will:
 > * Understand how Azure Container Storage supports diverse workloads in Kubernetes.
 > * Explore multiple storage backend options to tailor storage to your application's needs.
 > * Deploy Azure Container Storage on your AKS cluster and create a generic ephemeral volume.
-> * Integrate storage with a sample application (maybe not yet? this comes in a later tutorial?)
+> * Integrate storage with a sample application (this might need to come in a later tutorial)
 
 ## Before you begin
 

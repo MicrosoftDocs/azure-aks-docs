@@ -14,7 +14,7 @@ ms.custom: mvc, devx-track-azurepowershell
 
 As part of the application and cluster lifecycle, you might want to upgrade to the latest available version of Kubernetes. You can upgrade your Azure Kubernetes Service (AKS) cluster using the Azure CLI, Azure PowerShell, or the Azure portal.
 
-In this tutorial, part seven of seven, you upgrade an AKS cluster. You learn how to:
+In this tutorial, you upgrade an AKS cluster. You learn how to:
 
 > [!div class="checklist"]
 >
