@@ -1,5 +1,5 @@
 ---
-title: Build ConfigMap by Azure App Configuration extension to configure workload in Azure Kubernetes Service (AKS)
+title: Quickstart Generate ConfigMap and Secrets from Azure App Configuration
 description: Learn how to configure the workload in Azure Kubernetes Service (AKS) with Azure App Configuration.
 author: RichardChen820
 ms.author: junbchen
@@ -9,9 +9,9 @@ ms.subservice: aks-developer
 ms.date: 10/10/2024
 ---
 
-# Quickstart: Manage ConfigMap and Secrets with Azure App Configuration
+# Quickstart: Generate ConfigMap and Secrets from Azure App Configuration
 
-You can externalize the configurations of your Azure Kubernetes Service (AKS) workloads and manage them in [Azure App Configuration](/azure/azure-app-configuration/overview). The [Azure App Configuration Kubernetes provider](https://mcr.microsoft.com/artifact/mar/azure-app-configuration/kubernetes-provider/about) runs as container in your cluster. Key benefits include:
+You can externalize the configurations of your Azure Kubernetes Service (AKS) workloads and manage them in [Azure App Configuration](/azure/azure-app-configuration/overview). The [Azure App Configuration Kubernetes provider](https://mcr.microsoft.com/artifact/mar/azure-app-configuration/kubernetes-provider/about) runs as a container in your cluster. Key benefits include:
 
    - **Seamless integration**: Pulls data from Azure App Configuration and Key Vault, making them accessible as ConfigMap and Secret without code changes in your workloads.
    - **Dynamic update**: Built-in caching and refreshing capabilities for dynamic configuration, feature flagging, and automatic secret rotation.
@@ -23,7 +23,7 @@ The Azure App Configuration Kubernetes provider is available as an AKS extension
 * An Azure Kubernetes Service (AKS) cluster. [Create an AKS cluster](/azure/aks/tutorial-kubernetes-deploy-cluster#create-a-kubernetes-cluster).
 * A running workload in Azure Kubernetes Service (AKS) cluster. If you don't have one, you can [create a demo application running in AKS](/azure/azure-app-configuration/quickstart-azure-kubernetes-service#create-an-application-running-in-aks).
 
-## Create a service connection to App Configuration store
+## Create a service connection to App Configuration
 
 Create a service connection between your AKS cluster and your App Configuration store using Microsoft Entra Workload Identity.
 
@@ -31,57 +31,56 @@ Create a service connection between your AKS cluster and your App Configuration 
 
 1. Select **Settings** > **Service Connector** > **Create**.
 
-1. On the Basics tab, configure the following settings:
+1. On the **Basics** tab, configure the following settings:
    
    - **Kubernetes namespace**: Specify the namespace you'd like to create ConfigMap or Secret to.
-   - **Service type**: Select `App Configuration`.
+   - **Service type**: Select **App Configuration**.
    - Check the checkbox **Enable App Configuration Extension on Kubernetes**: This will enable you use the [Azure App Configuration AKS extension](./azure-app-configuration.md) for this connection, if the Azure App Configuration AKS extension is not installed yet, it will be installed automatically.
-   - **Connection name**: Use the connection name provided by Service Connector or enter your own connection name.
+   - **Connection name**: Enter a connection name or use the default name.
    - **Subscription**: Select the subscription of your App Configuration store.
-   - **App Configuration**: Select your App Configuration store. If you don't have one, you can create a new one by clicking **Create new**.
+   - **App Configuration**: Select your App Configuration store. If you don't have one, click **Create new** to set one up.
 
     ![Screenshot showing create connection](./media/azure-app-configuration/create-connection.png)
 
-1. Select **Next: Authentication**. On the **Authentication** tab, select the authentication method you would like to use to access the App Configuration store.
+1. Select **Next: Authentication**. On the **Authentication** tab, keep the default selection of **Workload Identity**, select a **User assigned managed identity** you want to use. If you don't have one, click **Create new** to set one up.
 
-1. Select **Next: Networking** > **Next: Review + create**
+1. Select **Next: Networking** and use the default settings.
 
-2. Wait for the validation to pass, select **Create**.
+1. Select **Next: Review + create** and wait for the validation to pass.
 
-3. Wait for the service connection to be created.
+1. Select **Create** to create the service connection.
 
 > [!NOTE]
-> The Azure App Configuration AKS extension is an independent component and does not have to rely on **Service Connection** to use it. You can refer to the [Azure App Configuration AKS extension reference](./azure-app-configuration.md) to learn more about the extension.
+> The Service Connector simplifies the installation of the Azure App Configuration AKS extension from the Azure portal. You can also install it without Service Connector using Azure CLI, Bicep, or an ARM template. For more information, see [Install Azure App Configuration AKS extension](./azure-app-configuration.md).
 >
 
-## Build ConfigMap and use it to configure workload
+## Generate ConfigMap from App Configuration
 
 Now that you created a connection between your AKS cluster and the App Configuration store, you need to use the connection to create a ConfigMap with the configuration data from the App Configuration store.
 
-1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource and select **Service Connector**.
+1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource and select **Settings** > **Service Connector**.
 
-1. Select the newly created connection, and then select **Yaml snippet**.
+1. Select the newly created connection, select **Yaml snippet** in the top menu..
 
 1. On the **AzureAppConfigurationProvider** tab，configure the following settings:
    
-   - **Using configuration as**: Select how you want to use the configuration data in your workload. You can use it as a mounted file or environment variables.
-   - If you select **Mounted file**, you need to provide the file type and file name.
-   - **Selector**: Select the configuration key-value pairs to be used from the App Configuration store.
+   - **Using configuration as**: Choose to consume the configuration as a **mounted file** or **environment variables**.
+   - **Mounted file**: If selected, specify the **file type** and **file name**.
+   - **Selector**: Set the **Key filter** and **Label filter** to load data from your App Configuration store.
 
-1. An **AzureAppConfigurationProvider** YAML snippet is auto generated based on your above input. Click **Apply** to apply it to your AKS cluster. It will create a ConfigMap in your AKS cluster with the selected configuration data from the App Configuration store.
+1. A YAML is generated based on your input. Click **Apply** to add it to your AKS cluster. It will create a ConfigMap in your AKS cluster with data from your App Configuration store.
 
     ![Screenshot showing AzureAppConfigurationProvider](./media/azure-app-configuration/yaml-snippet-provider.png)
 
-1. Click **Next**，on the **Workload** tab, configure the following settings:
+1. Click **Next**. On the **Workload** tab, configure the following settings:
    
-   - If you select **Mounted file**, you need to provide the file mount path.
-   - **Kubernetes Workload**: select an existing Kubernetes workload. The snippet includes highlighted sections showing the newly generated configMap will be used as mounted file on your selected workload. Select **Apply** to update the workload.
-
-> [!TIP]
-> This tutorial just show you a basic example of how to use Azure App Configuration AKS extension to configure your workload in AKS. Refer to the [Azure App Configuration Kubernetes Provider reference](/azure/azure-app-configuration/reference-kubernetes-provider) to learn more about all supported features.
->
+   - **File mount path**: Specify the file mount path if the mounted file option was selected.
+   - **Kubernetes Workload**: Select the workload where the generated ConfigMap will be injected.
+   - Click **Apply** to update the workload.
 
 ## Next Steps
 
-* Learn more about [extra settings and preferences](./azure-app-configuration-settings.md) you can set on the Azure App Configuration extension.
-* Learn all the supported features of [Azure App Configuration extension](/azure/azure-app-configuration/reference-kubernetes-provider).
+* To learn more about installing and customizing the Azure App Configuration AKS extension, refer to the following documents:
+  * [Install Azure App Configuration AKS extension](./azure-app-configuration.md)
+  * [Configure Azure App Configuration AKS extension](./azure-app-configuration-settings.md)
+* For a complete feature rundown of the Azure App Configuration Kubernetes Provider, see [Azure App Configuration Kubernetes Provider](/azure/azure-app-configuration/reference-kubernetes-provider)
