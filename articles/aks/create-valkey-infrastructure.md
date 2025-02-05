@@ -211,15 +211,47 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
 
 ## Deploy the infrastructure with Terraform
 
-The repository [terraform-azurerm-avm-ptn-aks-production](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) containes a full example with the infrastructure required to run a Valkey cluster on Azure Kubernetes Service (AKS).
-
+The repository [terraform-azurerm-avm-ptn-aks-production](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) contains an example with the infrastructure required to run a Valkey cluster on Azure Kubernetes Service (AKS). Ensure you set the Valkey node pool configuration in the `node_pools` variable as shown below.
 ```bash
-git clone https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production
-cd terraform-azurerm-avm-ptn-aks-production/examples/valkey
-terraform init
-terraform apply
+git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
+cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads
+```
+Run the below commands to create a `valkey.tfvars`file with the node pool configuration for Valkey:
+
+```bash 
+    cat > valkey.tfvars <<EOF
+    node_pools = {
+      valkey = {
+        name       = "valkey"
+        vm_size    = "Standard_D2ds_v4"
+        node_count = 3
+        zones      = [1, 2, 3]
+        os_type    = "Linux"
+      }
+    }
+EOF
 ```
 
+Run the following Terraform commands to deploy the infrastructure:
+
+```bash
+terraform init
+terraform apply -var-file=valkey.tfvars
+```
+
+## Upload Valkey images to your Azure Container Registry
+
+In this section, we download the Valkey image from Dockerhub and upload it to the Azure Container Registry created above. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
+
+* Import the Valkey image from Dockerhub and upload it to your Azure Container Registry using the [`az acr import`][az-acr-import] command. Retrieve the Azure Container Registry name from the Terraform output.
+
+    ```azurecli-interactive
+    az acr import \
+        --name $mycontainerregistry \
+        --source docker.io/valkey/valkey:latest  \
+        --image valkey:latest \
+        --output table
+    ```
 :::zone-end
 
 

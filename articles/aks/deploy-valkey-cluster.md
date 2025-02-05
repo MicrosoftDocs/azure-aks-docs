@@ -32,6 +32,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 ## Create secrets
 
+:::zone pivot="azure-cli"
+
 1. Generate a random password for the Valkey cluster using openssl and store it in your Azure key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
    Set the policy to allow the user-assigned identity to get the secret using the [`az keyvault set-policy`][az-keyvault-set-policy] command.
 
@@ -43,6 +45,55 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     rm /tmp/valkey-password-file.conf
     az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $userAssignedObjectID --secret-permissions get --output table
     ```
+:::zone-end
+:::zone pivot="terraform"
+
+1. Add the following Terraform configuration to generate a random password for the Valkey cluster and store it in your Azure key vault.
+
+
+```hcl
+resource "random_password" "password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "local_file" "valkey_password_file" {
+  content  = <<EOF
+requirepass ${random_string.secret.result}
+primaryauth ${random_string.secret.result}
+EOF
+  filename = "/tmp/valkey-password-file.conf"
+}
+
+resource "azurerm_key_vault_secret" "valkey_password_file" {
+  name         = "valkey-password-file"
+  value        = local_file.valkey_password_file.content
+  key_vault_id = azurerm_key_vault.my_key_vault.id
+}
+
+resource "null_resource" "cleanup" {
+  provisioner "local-exec" {
+    command = "rm /tmp/valkey-password-file.conf"
+  }
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+}
+
+resource "azurerm_key_vault_access_policy" "example" {
+  key_vault_id = azurerm_key_vault.my_key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = var.user_assigned_object_id
+
+  secret_permissions = [
+    "get",
+  ]
+}
+```
+
+   
+:::zone-end
 
 2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
