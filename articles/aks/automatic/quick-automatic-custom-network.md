@@ -538,7 +538,7 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
 To deploy the application, you use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A [Kubernetes manifest file][kubernetes-deployment] defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
 
-:::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
+:::image type="content" source="../learn/media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="../learn/media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
 
 - **Store front**: Web application for customers to view products and place orders.
 - **Product service**: Shows product information.
@@ -609,7 +609,7 @@ When the application runs, a Kubernetes service exposes the application front en
 
 1. Open a web browser to the external IP address of your ingress to see the Azure Store app in action.
 
-    :::image type="content" source="media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-cli/aks-store-application.png":::
+    :::image type="content" source="../learn/media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="../learn/media/quick-kubernetes-deploy-cli/aks-store-application.png":::
 
 ## Delete the cluster
 

@@ -59,8 +59,6 @@
         items:
         - name: Public cluster
           href: automatic/quick-automatic-custom-network.md
-        - name: Private cluster
-          href: automatic/quick-automatic-custom-network-private.md
     - name: Create a Windows-based AKS Cluster
       items:
         - name: Use the Azure CLI

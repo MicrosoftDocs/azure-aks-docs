@@ -162,25 +162,25 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
 1. To create an AKS Automatic cluster, search for **Kubernetes Services**, and select **Automatic Kubernetes cluster** from the drop-down options.
 
-    :::image type="content" source="./media/quick-automatic-kubernetes-portal/browse-dropdown-options.png" alt-text="The screenshot of the entry point for creating an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/browse-dropdown-options.png" alt-text="The screenshot of the entry point for creating an AKS Automatic cluster in the Azure portal.":::
 
 2. On the **Basics** tab, fill in all the mandatory fields required to get started: 
 Subscription, Resource Group, Cluster name, and Region
 
-    :::image type="content" source="./media/quick-automatic-kubernetes-portal/create-basics.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-basics.png" alt-text="The screenshot of the Create - Basics Tab for an AKS Automatic cluster in the Azure portal.":::
 
     If the prerequisites aren't met and the subscription requires registration of the preview flags, there will be an error shown under the Subscription field: 
 
-    :::image type="content" source="./media/quick-automatic-kubernetes-portal/register.png" alt-text="The screenshot of the error shown when a  subscription doesn't have preview flags registered while creating an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/register.png" alt-text="The screenshot of the error shown when a  subscription doesn't have preview flags registered while creating an AKS Automatic cluster in the Azure portal.":::
 
 
 3. On the **Monitoring** tab, choose your monitoring configurations from Azure Monitor, Managed Prometheus, Managed Grafana, and/or configure alerts. Add tags (optional), and proceed to create the cluster. 
 
-    :::image type="content" source="./media/quick-automatic-kubernetes-portal/create-monitoring.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/create-monitoring.png" alt-text="The screenshot of the Monitoring Tab while creating an AKS Automatic cluster in the Azure portal.":::
 
 3. Get started with configuring your first application from GitHub and set up an automated deployment pipeline. 
 
-    :::image type="content" source="./media/quick-automatic-kubernetes-portal/automatic-overview.png" alt-text="The screenshot of the Get Started Tab on Overview Blade after creating an AKS Automatic cluster in the Azure portal.":::
+    :::image type="content" source="../learn/media/quick-automatic-kubernetes-portal/automatic-overview.png" alt-text="The screenshot of the Get Started Tab on Overview Blade after creating an AKS Automatic cluster in the Azure portal.":::
 
 
 ## Connect to the cluster
@@ -334,7 +334,7 @@ aks-nodepool1-13213685-vmss000002   Ready    agent   2m26s   v1.28.5
 
 To deploy the application, you use a manifest file to create all the objects required to run the [AKS Store application](https://github.com/Azure-Samples/aks-store-demo). A [Kubernetes manifest file][kubernetes-deployment] defines a cluster's desired state, such as which container images to run. The manifest includes the following Kubernetes deployments and services:
 
-:::image type="content" source="media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
+:::image type="content" source="../learn/media/quick-kubernetes-deploy-portal/aks-store-architecture.png" alt-text="Screenshot of Azure Store sample architecture." lightbox="../learn/media/quick-kubernetes-deploy-portal/aks-store-architecture.png":::
 
 - **Store front**: Web application for customers to view products and place orders.
 - **Product service**: Shows product information.
@@ -405,7 +405,7 @@ When the application runs, a Kubernetes service exposes the application front en
 
 1. Open a web browser to the external IP address of your ingress to see the Azure Store app in action.
 
-    :::image type="content" source="media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="media/quick-kubernetes-deploy-cli/aks-store-application.png":::
+    :::image type="content" source="../learn/media/quick-kubernetes-deploy-cli/aks-store-application.png" alt-text="Screenshot of AKS Store sample application." lightbox="../learn/media/quick-kubernetes-deploy-cli/aks-store-application.png":::
 
 ## Delete the cluster
 
