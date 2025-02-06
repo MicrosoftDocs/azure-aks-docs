@@ -578,7 +578,7 @@ If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up un
   az group delete --name <resource-group> --yes --no-wait
   ```
   > [!NOTE]
-  > The AKS cluster was created with a system-assigned managed identity, which is the default identity option used in this quickstart. The platform manages this identity, so you don't need to manually remove it.
+  > The AKS cluster was created with a user-assigned managed identity. If you don't need that identity anymore, you can manually remove it.
 
 ## Next steps
 
