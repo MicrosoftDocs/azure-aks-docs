@@ -179,10 +179,10 @@ kubectl get csr
 
 ```output
    NAME        AGE    SIGNERNAME                                    REQUESTOR                    REQUESTEDDURATION   CONDITION
-csr-8mx4w   113s   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:uoxr9r      <none>              Approved,Issued
-csr-bchlj   111s   kubernetes.io/kubelet-serving                 system:node:akswinp7000000   <none>              Approved,Issued
-csr-sb4wz   46m    kubernetes.io/kubelet-serving                 system:node:akswinp6000000   <none>              Approved,Issued
-csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:ho7zyu      <none>              Approved,Issued
+csr-8mx4w   113s   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:uoxr9r      none              Approved,Issued
+csr-bchlj   111s   kubernetes.io/kubelet-serving                 system:node:akswinp7000000   none              Approved,Issued
+csr-sb4wz   46m    kubernetes.io/kubelet-serving                 system:node:akswinp6000000   none              Approved,Issued
+csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:ho7zyu      none              Approved,Issued
 ```
 
 ### Verify kubelet is using a certificate obtained from server TLS bootstrapping
