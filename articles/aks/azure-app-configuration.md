@@ -16,10 +16,10 @@ ms.custom: devx-track-azurecli, references_regions
 
 ## Prerequisites 
 
-- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/free/?WT.mc_id=A261C142F)
-- Install the latest version of the [Azure CLI](/cli/azure/install-azure-cli).
-- An Azure Kubernetes Service, if you don't have one, you need to create an [AKS cluster](./tutorial-kubernetes-deploy-cluster.md).
-- Make sure you have [an Azure Kubernetes Service RBAC Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) 
+- An Azure subscription. [Create a free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- The latest version of the [Azure CLI](/cli/azure/install-azure-cli).
+- An Azure Kubernetes Service (AKS) cluster. [Create an AKS cluster](/azure/aks/tutorial-kubernetes-deploy-cluster#create-a-kubernetes-cluster).
+- Permission with the [Azure Kubernetes Service RBAC Admin](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) role.
 
 ### Set up the Azure CLI extension for cluster extensions
 

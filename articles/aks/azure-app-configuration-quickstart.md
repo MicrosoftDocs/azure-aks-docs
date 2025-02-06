@@ -52,17 +52,16 @@ Create a service connection between your AKS cluster and your App Configuration 
 
 > [!NOTE]
 > The Service Connector simplifies the installation of the Azure App Configuration AKS extension from the Azure portal. You can also install it without Service Connector using Azure CLI, Bicep, or an ARM template. For more information, see [Install Azure App Configuration AKS extension](./azure-app-configuration.md).
->
 
 ## Generate ConfigMap from App Configuration
 
-Now that you created a connection between your AKS cluster and the App Configuration store, you need to use the connection to create a ConfigMap with the configuration data from the App Configuration store.
+Update the service connection to create and deploy an `AzureAppConfigurationProvider` YAML resource in your AKS cluster. This resource generates a ConfigMap with data from your App Configuration store.
 
 1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource and select **Settings** > **Service Connector**.
 
-1. Select the newly created connection, select **Yaml snippet** in the top menu..
+1. Select the newly created connection, select **Yaml snippet** in the top menu.
 
-1. On the **AzureAppConfigurationProvider** tab，configure the following settings:
+1. On the **AzureAppConfigurationProvider** tab, configure the following settings:
    
    - **Using configuration as**: Choose to consume the configuration as a **mounted file** or **environment variables**.
    - **Mounted file**: If selected, specify the **file type** and **file name**.
@@ -80,7 +79,15 @@ Now that you created a connection between your AKS cluster and the App Configura
 
 ## Next Steps
 
-* To learn more about installing and customizing the Azure App Configuration AKS extension, refer to the following documents:
-  * [Install Azure App Configuration AKS extension](./azure-app-configuration.md)
-  * [Configure Azure App Configuration AKS extension](./azure-app-configuration-settings.md)
-* For a complete feature rundown of the Azure App Configuration Kubernetes Provider, see [Azure App Configuration Kubernetes Provider](/azure/azure-app-configuration/reference-kubernetes-provider)
+To learn more about installing and customizing the Azure App Configuration AKS extension, refer to the following documents:
+
+> [!div class="nextstepaction"]
+> [Install Azure App Configuration AKS extension](./azure-app-configuration.md)
+
+> [!div class="nextstepaction"]
+> [Configure Azure App Configuration AKS extension](./azure-app-configuration-settings.md)
+
+For a complete feature rundown of the Azure App Configuration Kubernetes Provider, see
+
+> [!div class="nextstepaction"]
+> [Azure App Configuration Kubernetes Provider](/azure/azure-app-configuration/reference-kubernetes-provider)
