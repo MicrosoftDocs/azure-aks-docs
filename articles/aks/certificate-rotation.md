@@ -161,9 +161,9 @@ Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bo
 ### Verify kubelet serving certificate rotation has been enabled 
 Each node with the feature enabled will automatically be given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes --show-labels` command.
 
-    ```bash
-    kubectl get nodes --show-labels
-    ```
+ ```bash
+ kubectl get nodes --show-labels
+ ```
 
 ### Verify kubelet goes through TLS bootstrapping process
 
@@ -171,35 +171,35 @@ With this feature enabled, you should see the kubelet running on every one of yo
 
 Verify the bootstrapping process is taking place by using the [`kubectl get`][kubectl-get] command to get the current CSR objects within your cluster.
 
-    ```azurecli-interactive
-    kubectl get csr
-    ```
+```azurecli-interactive
+kubectl get csr
+```
 
  All serving CSRs (those with signer name of kubernetes.io/kubelet-serving) should be in the `Approved,Issued` state, indicating the CSR was approved and issued a signed certificate. See example output:
 
-    ```output
+```output
    NAME        AGE    SIGNERNAME                                    REQUESTOR                    REQUESTEDDURATION   CONDITION
 csr-8mx4w   113s   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:uoxr9r      <none>              Approved,Issued
 csr-bchlj   111s   kubernetes.io/kubelet-serving                 system:node:akswinp7000000   <none>              Approved,Issued
 csr-sb4wz   46m    kubernetes.io/kubelet-serving                 system:node:akswinp6000000   <none>              Approved,Issued
 csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:ho7zyu      <none>              Approved,Issued
-    ```
+```
 
 ### Verify kubelet is using a certificate obtained from server TLS bootstrapping
 To validate the kubelet is using a certificate obtained from server TLS bootstrapping, you can inspect the kubelet's PKI directory on the given node by using the [`kubectl debug`][kubectl-debug] command. To confirm if the node's kubelet is using a serving certificate signed by the cluster CA, examine the contents of the kubelet's PKI directory.
 
-    ```azurecli-interactive
-    kubectl debug
-    ```
+```azurecli-interactive
+kubectl debug
+```
 
 If there exists a `kubelet-server-current.pem` symlink, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and thus should be signed by the cluster CA.
 
 ### Disable kubelet serving certificate rotation
 Kubelet serving certificate rotation can be disabled by updating a node pool using the [az aks nodepool update][az-aks-nodepool-update] command with a node pool tag. This node pool update should occur before kubelet serving is enabled by default.
 
-    ```azurecli-interactive
-    az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --tags aks-disable-kubelet-serving-certificate-rotation=true
-    ```
+```azurecli-interactive
+az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --tags aks-disable-kubelet-serving-certificate-rotation=true
+```
 
 ## Next steps
 
