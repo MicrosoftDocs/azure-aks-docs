@@ -5,7 +5,7 @@ ms.topic: quickstart
 ms.date: 02/05/2025
 author: sabbour
 ms.author: asabbour
-zone_pivot_groups: bicep-azure-cli-portal
+zone_pivot_groups: bicep-azure-cli
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network
