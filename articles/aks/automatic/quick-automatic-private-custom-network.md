@@ -216,7 +216,7 @@ This Bicep file defines a virtual network.
 
 :::code language="bicep" source="scripts/custom-network/private/bicep/virtualNetwork.bicep":::
 
-Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/private/bicep/virtualNetwork.bicep) to your local computer.
+Save the Bicep file **virtualNetwork.bicep** to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to  *aksAutomaticVnet*, the `addressPrefix` param to *172.19.0.0/16*, the `apiServerSubnetPrefix` param to *172.19.0.0/28*, and the `apiServerSubnetPrefix` param to *172.19.1.0/24*. If you want to use different values, make sure to update the strings to your preferred values.
@@ -240,7 +240,7 @@ This Bicep file defines a user assigned managed identity.
 
 :::code language="bicep" source="scripts/custom-network/private/bicep/uami.bicep":::
 
-Save the Bicep file [**uami.bicep**](scripts/custom-network/private/bicep/uami.bicep) to your local computer.
+Save the Bicep file **uami.bicep** to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `uamiName` param to the *aksAutomaticUAMI*. If you want to use a different identity name, make sure to update the string to your preferred name.
@@ -257,7 +257,7 @@ This Bicep file defines role assignments over the virtual network.
 
 :::code language="bicep" source="scripts/custom-network/private/bicep/roleAssignments.bicep":::
 
-Save the Bicep file [**roleAssignments.bicep**](scripts/custom-network/private/bicep/roleAssignments.bicep) to your local computer.
+Save the Bicep file **roleAssignments.bicep** to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to *aksAutomaticVnet*. If you used a different virtual network name, make sure to update the string to your preferred virtual network name.
@@ -275,7 +275,7 @@ This Bicep file defines the AKS Automatic cluster.
 
 :::code language="bicep" source="scripts/custom-network/private/bicep/aks.bicep" highlight="29,33,34,36,37,38,40,41,42,43,44,45":::
 
-Save the Bicep file [**aks.bicep**](scripts/custom-network/private/bicep/aks.bicep) to your local computer.
+Save the Bicep file **aks.bicep** to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
