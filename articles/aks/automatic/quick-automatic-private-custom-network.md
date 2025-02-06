@@ -455,4 +455,4 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
-[connect-private-cluster]: ../private-clusters#options-for-connecting-to-the-private-cluster
+[connect-private-cluster]: ../private-clusters.md#options-for-connecting-to-the-private-cluster
