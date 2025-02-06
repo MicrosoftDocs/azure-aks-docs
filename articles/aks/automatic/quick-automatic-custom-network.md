@@ -27,8 +27,8 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-- This article requires version **TODO_REPLACE.xx.xx** or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-- This article requires the `aks-preview` Azure CLI extension version **TODO_REPLACE.xx.xx** or later.
+- This article requires version **2.68** or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+- This article requires the `aks-preview` Azure CLI extension version **13.0.0b3** or later.
 - If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command.
 - Register the `AutomaticSKUPreview` feature in your Azure subscription.
 - The identity creating the cluster should also have the [following permissions on the resource group][Azure-Policy-RBAC-permissions]:
