@@ -141,7 +141,7 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 
 To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command. 
 
-:::code language="azurecli" source="scripts/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash" highlight="5,6,7:::
+:::code language="azurecli" source="scripts/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash" highlight="5,6,7":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 

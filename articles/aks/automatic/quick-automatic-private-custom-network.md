@@ -148,8 +148,6 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 
 ## Connect to the cluster
 
-https://learn.microsoft.com/en-us/azure/aks/private-clusters?#options-for-connecting-to-the-private-cluster
-
 When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
