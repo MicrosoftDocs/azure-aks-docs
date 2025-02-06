@@ -91,18 +91,9 @@ az provider register --namespace Microsoft.ContainerService
 
 ## Define variables
 
-:::code source="scripts/custom-network/create-automatic-custom-network.sh" interactive="cloudshell-bash":::
+Define the following variables that will be used in the subsequent steps.
 
-Define the following variables that will be used in the subsequent steps. The steps are also available as a [downloadable script](scripts/custom-network/create-automatic-custom-network.sh).
-
-```azurecli-interactive
-RG_NAME=automatic-rg
-VNET_NAME=automatic-vnet
-CLUSTER_NAME=automatic
-IDENTITY_NAME=automatic-uami
-LOCATION=eastus
-SUBSCRIPTION_ID=$(az account show --query id -o tsv)
-```
+:::code language="azurecli" source="scripts/custom-network/sh/define-vars.sh" interactive="cloudshell-bash":::
 
 ## Create a resource group
 
@@ -110,9 +101,7 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 Create a resource group using the [az group create][az-group-create] command.
 
-```azurecli-interactive
-az group create -n ${RG_NAME} -l ${LOCATION}
-```
+:::code language="azurecli" source="scripts/custom-network/sh/create-rg.sh" interactive="cloudshell-bash":::
 
 The following sample output resembles successful creation of the resource group:
 
@@ -131,33 +120,9 @@ The following sample output resembles successful creation of the resource group:
 
 ## Create a virtual network
 
-Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command.
+Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command. The API subnet needs a delegation to `Microsoft.ContainerService/managedClusters`.
 
-```azurecli-interactive
-az network vnet create --name ${VNET_NAME} \
---resource-group ${RG_NAME} \
---location ${LOCATION} \
---address-prefixes 172.19.0.0/16
-```
-
-Create an API server subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command. The API subnet needs a delegation to `Microsoft.ContainerService/managedClusters`.
-
-```azurecli-interactive
-az network vnet subnet create --resource-group ${RG_NAME} \
---vnet-name ${VNET_NAME} \
---name apiServerSubnet \
---delegations Microsoft.ContainerService/managedClusters \
---address-prefixes 172.19.0.0/28
-```
-
-Create a cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
-
-```azurecli-interactive
-az network vnet subnet create --resource-group ${RG_NAME} \
---vnet-name ${VNET_NAME} \
---name clusterSubnet \
---address-prefixes 172.19.1.0/24
-```
+:::code language="azurecli" source="scripts/custom-network/sh/create-vnet.sh" interactive="cloudshell-bash":::
 
 All traffic within the virtual network is allowed by default. But if you  added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
@@ -168,37 +133,15 @@ All traffic within the virtual network is allowed by default. But if you  added 
 
 ## Create a managed identity and give it permissions on the virtual network
 
-Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the client ID.
+Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the client ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
-```azurecli-interactive
-az identity create --resource-group ${RG_NAME} --name ${IDENTITY_NAME} --location ${LOCATION}
-IDENTITY_CLIENT_ID=$(az identity show --resource-group ${RG_NAME} --name ${IDENTITY_NAME} --query clientId -o tsv)
-```
-
-Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
-
-```azurecli-interactive
-az role assignment create \
---scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}" \
---role "Network Contributor" \
---assignee ${IDENTITY_CLIENT_ID}
-```
+:::code language="azurecli" source="scripts/custom-network/sh/create-uami.sh" interactive="cloudshell-bash":::
 
 ## Create an AKS Automatic cluster in a custom virtual network
 
 To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command. 
 
-```azurecli-interactive
-az aks create \
---resource-group ${RG_NAME} \
---name ${CLUSTER_NAME} \
---location ${LOCATION} \
---apiserver-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/apiServerSubnet" \
---vnet-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/clusterSubnet" \
---assign-identity "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${RG_NAME}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${IDENTITY_NAME}" \
---sku automatic \
---no-ssh-key
-```
+:::code language="azurecli" source="scripts/custom-network/sh/create-aks.sh" interactive="cloudshell-bash":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
@@ -267,6 +210,8 @@ The following sample output resembles successful creation of the resource group:
 ## Create a virtual network
 
 This Bicep file defines a virtual network.
+
+:::code language="bicep" source="scripts/custom-network/bicep/virtualNetwork.bicep":::
 
 ```bicep
 @description('The location of the managed cluster resource.')
