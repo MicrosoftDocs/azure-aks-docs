@@ -1,6 +1,6 @@
 ---
-title: Quickstart Generate ConfigMap and Secrets from Azure App Configuration
-description: Learn how to configure the workload in Azure Kubernetes Service (AKS) with Azure App Configuration.
+title: Quickstart Generate ConfigMap from Azure App Configuration
+description: Learn how to configure the workload in Azure Kubernetes Service (AKS) with ConfigMap that is generated from Azure App Configuration.
 author: RichardChen820
 ms.author: junbchen
 ms.topic: article
@@ -9,7 +9,7 @@ ms.subservice: aks-developer
 ms.date: 10/10/2024
 ---
 
-# Quickstart: Generate ConfigMap and Secrets from Azure App Configuration
+# Quickstart: Generate ConfigMap from Azure App Configuration
 
 You can externalize the configurations of your Azure Kubernetes Service (AKS) workloads and manage them in [Azure App Configuration](/azure/azure-app-configuration/overview). The [Azure App Configuration Kubernetes provider](https://mcr.microsoft.com/artifact/mar/azure-app-configuration/kubernetes-provider/about) runs as a container in your cluster. Key benefits include:
 
