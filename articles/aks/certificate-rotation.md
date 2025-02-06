@@ -190,6 +190,8 @@ To validate the kubelet is using a certificate obtained from server TLS bootstra
  ```azurecli-interactive
 kubectl debug
 
+If there exists a `kubelet-server-current.pem` symlink, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and thus should be signed by the cluster CA.
+
 ### Disable kubelet serving certificate rotation
 Kubelet serving certificate rotation can be disabled by updating a node pool using the [az aks nodepool update][az-aks-nodepool-update] command with a node pool tag. This node pool update should occur before kubelet serving is enabled by default.
 
