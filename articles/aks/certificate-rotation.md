@@ -151,15 +151,15 @@ For any AKS clusters created or upgraded after March 2022, Azure Kubernetes Serv
     > If you have any services that run on top of AKS, you might need to update their certificates.
 
 ## Kubelet serving certificate rotation
-Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bootstrapping for both bootstrapping and rotating serving certificates signed by the cluster Certificate Authority (CA).
+Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bootstrapping for both bootstrapping and rotating serving certificates signed by the Cluster CA.
 
 ### Limitations
-- Supported on kubernetes version 1.27 and above.
+- Supported on Kubernetes version 1.27 and above.
 - Not supported when node pool snapshot is enabled.
 - Existing node pools will have kubelet serving certificate rotation enabled by default when they perform their first upgrade to any kubernetes version 1.27 or greater. New node pools on kubernetes version 1.27 or greater will have kubelet serving certificate rotation enabled by default. View this upcoming release in [AKS Releases](https://github.com/Azure/AKS/releases).
 
 ### Verify kubelet serving certificate rotation has been enabled 
-Each node with the feature enabled will automatically be given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes --show-labels` command.
+Each node with the feature enabled is automatically given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes --show-labels` command.
 
  ```bash
  kubectl get nodes --show-labels
@@ -167,7 +167,7 @@ Each node with the feature enabled will automatically be given the label `kubern
 
 ### Verify kubelet goes through TLS bootstrapping process
 
-With this feature enabled, you should see the kubelet running on every one of your nodes go through the serving [TLS bootstrapping process](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/#certificate-rotation).
+With this feature enabled, each kubelet running your nodes should go through the serving [TLS bootstrapping process](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/#certificate-rotation).
 
 Verify the bootstrapping process is taking place by using the [`kubectl get`][kubectl-get] command to get the current CSR objects within your cluster.
 
@@ -175,7 +175,7 @@ Verify the bootstrapping process is taking place by using the [`kubectl get`][ku
 kubectl get csr
 ```
 
- All serving CSRs (those with signer name of kubernetes.io/kubelet-serving) should be in the `Approved,Issued` state, indicating the CSR was approved and issued a signed certificate. See example output:
+All serving CSRs should be in the `Approved,Issued` state, which indicates the CSR was approved and issued a signed certificate. Serving CSRs have a signer name of `kubernetes.io/kublet-serving`. 
 
 ```output
    NAME        AGE    SIGNERNAME                                    REQUESTOR                    REQUESTEDDURATION   CONDITION
@@ -192,7 +192,7 @@ To validate the kubelet is using a certificate obtained from server TLS bootstra
 kubectl debug
 ```
 
-If there exists a `kubelet-server-current.pem` symlink, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and thus should be signed by the cluster CA.
+If a `kubelet-server-current.pem` symlink exists, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and is signed by the cluster CA.
 
 ### Disable kubelet serving certificate rotation
 Kubelet serving certificate rotation can be disabled by updating a node pool using the [az aks nodepool update][az-aks-nodepool-update] command with a node pool tag. This node pool update should occur before kubelet serving is enabled by default.
