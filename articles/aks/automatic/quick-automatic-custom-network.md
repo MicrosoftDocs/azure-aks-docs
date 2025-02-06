@@ -91,6 +91,8 @@ az provider register --namespace Microsoft.ContainerService
 
 ## Define variables
 
+:::code source="scripts/custom-network/create-automatic-custom-network.sh" interactive="cloudshell-bash":::
+
 Define the following variables that will be used in the subsequent steps. The steps are also available as a [downloadable script](scripts/custom-network/create-automatic-custom-network.sh).
 
 ```azurecli-interactive
