@@ -93,7 +93,7 @@ az provider register --namespace Microsoft.ContainerService
 
 Define the following variables that will be used in the subsequent steps.
 
-:::code language="azurecli" source="scripts/custom-network/sh/define-vars.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/public/sh/define-vars.sh" interactive="cloudshell-bash":::
 
 ## Create a resource group
 
@@ -101,7 +101,7 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 Create a resource group using the [az group create][az-group-create] command.
 
-:::code language="azurecli" source="scripts/custom-network/sh/create-rg.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/public/sh/create-rg.sh" interactive="cloudshell-bash":::
 
 The following sample output resembles successful creation of the resource group:
 
@@ -122,7 +122,7 @@ The following sample output resembles successful creation of the resource group:
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command. The API subnet needs a delegation to `Microsoft.ContainerService/managedClusters`.
 
-:::code language="azurecli" source="scripts/custom-network/sh/create-vnet.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/public/sh/create-vnet.sh" interactive="cloudshell-bash":::
 
 All traffic within the virtual network is allowed by default. But if you  added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
@@ -135,13 +135,13 @@ All traffic within the virtual network is allowed by default. But if you  added 
 
 Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the client ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
-:::code language="azurecli" source="scripts/custom-network/sh/create-uami.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/public/sh/create-uami.sh" interactive="cloudshell-bash":::
 
 ## Create an AKS Automatic cluster in a custom virtual network
 
 To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command. 
 
-:::code language="azurecli" source="scripts/custom-network/sh/create-aks.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
@@ -211,9 +211,9 @@ The following sample output resembles successful creation of the resource group:
 
 This Bicep file defines a virtual network.
 
-:::code language="bicep" source="scripts/custom-network/bicep/virtualNetwork.bicep":::
+:::code language="bicep" source="scripts/custom-network/public/bicep/virtualNetwork.bicep":::
 
-Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/bicep/virtualNetwork.bicep) to your local computer.
+Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/public/bicep/virtualNetwork.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to  *aksAutomaticVnet*, the `addressPrefix` param to *172.19.0.0/16*, the `apiServerSubnetPrefix` param to *172.19.0.0/28*, and the `apiServerSubnetPrefix` param to *172.19.1.0/24*. If you want to use different values, make sure to update the strings to your preferred values.
@@ -235,9 +235,9 @@ All traffic within the virtual network is allowed by default. But if you added N
 
 This Bicep file defines a user assigned managed identity.
 
-:::code language="bicep" source="scripts/custom-network/bicep/uami.bicep":::
+:::code language="bicep" source="scripts/custom-network/public/bicep/uami.bicep":::
 
-Save the Bicep file [**uami.bicep**](scripts/custom-network/bicep/uami.bicep) to your local computer.
+Save the Bicep file [**uami.bicep**](scripts/custom-network/public/bicep/uami.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `uamiName` param to the *aksAutomaticUAMI*. If you want to use a different identity name, make sure to update the string to your preferred name.
@@ -252,9 +252,9 @@ az deployment group create --resource-group <resource-group> --template-file uam
 
 This Bicep file defines role assignments over the virtual network.
 
-:::code language="bicep" source="scripts/custom-network/bicep/roleAssignments.bicep":::
+:::code language="bicep" source="scripts/custom-network/public/bicep/roleAssignments.bicep":::
 
-Save the Bicep file [**roleAssignments.bicep**](scripts/custom-network/bicep/roleAssignments.bicep) to your local computer.
+Save the Bicep file [**roleAssignments.bicep**](scripts/custom-network/public/bicep/roleAssignments.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to *aksAutomaticVnet*. If you used a different virtual network name, make sure to update the string to your preferred virtual network name.
@@ -270,9 +270,9 @@ az deployment group create --resource-group <resource-group> --template-file uam
 
 This Bicep file defines the AKS Automatic cluster.
 
-:::code language="bicep" source="scripts/custom-network/bicep/aks.bicep":::
+:::code language="bicep" source="scripts/custom-network/public/bicep/aks.bicep":::
 
-Save the Bicep file [**aks.bicep**](scripts/custom-network/bicep/aks.bicep) to your local computer.
+Save the Bicep file [**aks.bicep**](scripts/custom-network/public/bicep/aks.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
