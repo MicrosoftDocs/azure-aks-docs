@@ -13,7 +13,7 @@ param clusterSubnetId string
 @description('The resource ID of the user assigned managed identity.')
 param uamiId string
 
-/// Create the AKS Automatic cluster using the custom virtual network and user assigned managed identity
+/// Create the private AKS Automatic cluster using the custom virtual network and user assigned managed identity
 resource aks 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
   name: clusterName
   location: location  
@@ -31,6 +31,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
     ]
     apiServerAccessProfile: {
         subnetId: apiServerSubnetId
+        enablePrivateCluster: true
     }
     networkProfile: {
       outboundType: 'loadBalancer'

@@ -1,6 +1,6 @@
 ---
-title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
-description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview) in a custom virtual network.
+title: 'Quickstart: Deploy a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
+description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview) in a custom virtual network.
 ms.topic: quickstart
 ms.date: 02/05/2025
 author: sabbour
@@ -8,7 +8,7 @@ ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli
 ---
 
-# Quickstart: Deploy an Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network
+# Quickstart: Deploy a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network
 
 **Applies to:** :heavy_check_mark: AKS Automatic (preview)
 
@@ -18,7 +18,8 @@ In this quickstart, you learn to:
 
 - Create a virtual network.
 - Create a managed identity with permissions over the virtual network.
-- Deploy an AKS Automatic cluster in the virtual network.
+- Deploy a private AKS Automatic cluster in the virtual network.
+- Connect to the private cluster.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
 ## Before you begin
@@ -93,7 +94,7 @@ az provider register --namespace Microsoft.ContainerService
 
 Define the following variables that will be used in the subsequent steps.
 
-:::code language="azurecli" source="scripts/custom-network/public/sh/define-vars.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/private/sh/define-vars.sh" interactive="cloudshell-bash":::
 
 ## Create a resource group
 
@@ -101,7 +102,7 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 Create a resource group using the [az group create][az-group-create] command.
 
-:::code language="azurecli" source="scripts/custom-network/public/sh/create-rg.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/private/sh/create-rg.sh" interactive="cloudshell-bash":::
 
 The following sample output resembles successful creation of the resource group:
 
@@ -122,7 +123,7 @@ The following sample output resembles successful creation of the resource group:
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command. The API subnet needs a delegation to `Microsoft.ContainerService/managedClusters`.
 
-:::code language="azurecli" source="scripts/custom-network/public/sh/create-vnet.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/private/sh/create-vnet.sh" interactive="cloudshell-bash":::
 
 All traffic within the virtual network is allowed by default. But if you  added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
@@ -135,17 +136,21 @@ All traffic within the virtual network is allowed by default. But if you  added 
 
 Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the client ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
-:::code language="azurecli" source="scripts/custom-network/public/sh/create-uami.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="scripts/custom-network/private/sh/create-uami.sh" interactive="cloudshell-bash":::
 
-## Create an AKS Automatic cluster in a custom virtual network
+## Create a private AKS Automatic cluster in a custom virtual network
 
-To create an AKS Automatic cluster, use the [az aks create][az-aks-create] command. 
+To create a private AKS Automatic cluster, use the [az aks create][az-aks-create] command. Note the use of the `--enable-private-cluster` flag.
 
-:::code language="azurecli" source="scripts/custom-network/public/sh/create-aks.sh" interactive="cloudshell-bash" highlight="5,6,7:::
+:::code language="azurecli" source="scripts/custom-network/private/sh/create-aks.sh" highlight="5,6,7,9" interactive="cloudshell-bash":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
 ## Connect to the cluster
+
+https://learn.microsoft.com/en-us/azure/aks/private-clusters?#options-for-connecting-to-the-private-cluster
+
+When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -211,9 +216,9 @@ The following sample output resembles successful creation of the resource group:
 
 This Bicep file defines a virtual network.
 
-:::code language="bicep" source="scripts/custom-network/public/bicep/virtualNetwork.bicep":::
+:::code language="bicep" source="scripts/custom-network/private/bicep/virtualNetwork.bicep":::
 
-Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/public/bicep/virtualNetwork.bicep) to your local computer.
+Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/private/bicep/virtualNetwork.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to  *aksAutomaticVnet*, the `addressPrefix` param to *172.19.0.0/16*, the `apiServerSubnetPrefix` param to *172.19.0.0/28*, and the `apiServerSubnetPrefix` param to *172.19.1.0/24*. If you want to use different values, make sure to update the strings to your preferred values.
@@ -235,9 +240,9 @@ All traffic within the virtual network is allowed by default. But if you added N
 
 This Bicep file defines a user assigned managed identity.
 
-:::code language="bicep" source="scripts/custom-network/public/bicep/uami.bicep":::
+:::code language="bicep" source="scripts/custom-network/private/bicep/uami.bicep":::
 
-Save the Bicep file [**uami.bicep**](scripts/custom-network/public/bicep/uami.bicep) to your local computer.
+Save the Bicep file [**uami.bicep**](scripts/custom-network/private/bicep/uami.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `uamiName` param to the *aksAutomaticUAMI*. If you want to use a different identity name, make sure to update the string to your preferred name.
@@ -252,9 +257,9 @@ az deployment group create --resource-group <resource-group> --template-file uam
 
 This Bicep file defines role assignments over the virtual network.
 
-:::code language="bicep" source="scripts/custom-network/public/bicep/roleAssignments.bicep":::
+:::code language="bicep" source="scripts/custom-network/private/bicep/roleAssignments.bicep":::
 
-Save the Bicep file [**roleAssignments.bicep**](scripts/custom-network/public/bicep/roleAssignments.bicep) to your local computer.
+Save the Bicep file [**roleAssignments.bicep**](scripts/custom-network/private/bicep/roleAssignments.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to *aksAutomaticVnet*. If you used a different virtual network name, make sure to update the string to your preferred virtual network name.
@@ -266,13 +271,13 @@ az deployment group create --resource-group <resource-group> --template-file rol
 --parameters uamiPrincipalId=<user assigned identity prinicipal id>
 ```
 
-## Create an AKS Automatic cluster in a custom virtual network
+## Create a private AKS Automatic cluster in a custom virtual network
 
 This Bicep file defines the AKS Automatic cluster.
 
-:::code language="bicep" source="scripts/custom-network/public/bicep/aks.bicep" highlight="29,32,33,34,36,37,38,40,41,42,43,44,45":::
+:::code language="bicep" source="scripts/custom-network/private/bicep/aks.bicep" highlight="29,33,34,36,37,38,40,41,42,43,44,45":::
 
-Save the Bicep file [**aks.bicep**](scripts/custom-network/public/bicep/aks.bicep) to your local computer.
+Save the Bicep file [**aks.bicep**](scripts/custom-network/private/bicep/aks.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
@@ -287,6 +292,8 @@ az deployment group create --resource-group <resource-group> --template-file aks
 ```
 
 ## Connect to the cluster
+
+When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -450,3 +457,4 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[connect-private-cluster]: ../private-clusters#options-for-connecting-to-the-private-cluster
