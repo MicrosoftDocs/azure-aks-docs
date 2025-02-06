@@ -213,58 +213,7 @@ This Bicep file defines a virtual network.
 
 :::code language="bicep" source="scripts/custom-network/bicep/virtualNetwork.bicep":::
 
-```bicep
-@description('The location of the managed cluster resource.')
-param location string = resourceGroup().location
-
-@description('The name of the virtual network.')
-param vnetName string = 'aksAutomaticVnet'
-
-@description('The address prefix of the virtual network.')
-param addressPrefix string = '172.19.0.0/16'
-
-@description('The name of the API server subnet.')
-param apiServerSubnetName string = 'apiServerSubnet'
-
-@description('The subnet prefix of the API server subnet.')
-param apiServerSubnetPrefix string = '172.19.0.0/28'
-
-@description('The name of the cluster subnet.')
-param clusterSubnetName string = 'clusterSubnet'
-
-@description('The subnet prefix of the cluster subnet.')
-param clusterSubnetPrefix string = '172.19.1.0/24'
-
-// Virtual network with an API server subnet and a cluster subnet
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-09-01' = {
-    name: vnetName
-    location: location
-    properties: {
-        addressSpace: {
-            addressPrefixes: [ addressPrefix ]
-        }
-        subnets: [
-            {
-                name: apiServerSubnetName
-                properties: {
-                    addressPrefix: apiServerSubnetPrefix
-                }
-            }
-            {
-                name: clusterSubnetName
-                properties: {
-                    addressPrefix: clusterSubnetPrefix
-                }
-            }
-        ]
-    }
-}
-
-output apiServerSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, apiServerSubnetName)
-output clusterSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, clusterSubnetName)
-```
-
-Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/virtualNetwork.bicep) to your local computer.
+Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/bicep/virtualNetwork.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to  *aksAutomaticVnet*, the `addressPrefix` param to *172.19.0.0/16*, the `apiServerSubnetPrefix` param to *172.19.0.0/28*, and the `apiServerSubnetPrefix` param to *172.19.1.0/24*. If you want to use different values, make sure to update the strings to your preferred values.
@@ -286,21 +235,9 @@ All traffic within the virtual network is allowed by default. But if you added N
 
 This Bicep file defines a user assigned managed identity.
 
-```bicep
-param location string = resourceGroup().location
-param uamiName string = 'aksAutomaticUAMI'
+:::code language="bicep" source="scripts/custom-network/bicep/uami.bicep":::
 
-resource userAssignedManagedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
-  name: uamiName
-  location: location
-}
-
-output uamiId string = userAssignedManagedIdentity.id
-output uamiPrincipalId string = userAssignedManagedIdentity.properties.principalId
-output uamiClientId string = userAssignedManagedIdentity.properties.clientId
-```
-
-Save the Bicep file [**uami.bicep**](scripts/custom-network/uami.bicep) to your local computer.
+Save the Bicep file [**uami.bicep**](scripts/custom-network/bicep/uami.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `uamiName` param to the *aksAutomaticUAMI*. If you want to use a different identity name, make sure to update the string to your preferred name.
@@ -315,32 +252,9 @@ az deployment group create --resource-group <resource-group> --template-file uam
 
 This Bicep file defines role assignments over the virtual network.
 
-```bicep
-@description('The name of the virtual network.')
-param vnetName string = 'aksAutomaticVnet'
+:::code language="bicep" source="scripts/custom-network/bicep/roleAssignments.bicep":::
 
-@description('The principal ID of the user assigned managed identity.')
-param uamiPrincipalId string
-
-// Get a reference to the virtual network
-resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-09-01' existing ={
-  name: vnetName
-}
-
-// Assign the Network Contributor role to the user assigned managed identity on the virtual network
-// '4d97b98b-1d4f-4787-a291-c67834d212e7' is the built-in Network Contributor role definition
-// See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/networking#network-contributor
-resource networkContributorRoleAssignmentToVirtualNetwork 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(uamiPrincipalId, '4d97b98b-1d4f-4787-a291-c67834d212e7', resourceGroup().id, virtualNetwork.name)
-  scope: virtualNetwork
-  properties: {
-      roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7')
-      principalId: uamiPrincipalId
-  }
-}
-```
-
-Save the Bicep file [**uami.bicep**](scripts/custom-network/roleAssignments.bicep) to your local computer.
+Save the Bicep file [**roleAssignments.bicep**](scripts/custom-network/bicep/roleAssignments.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `vnetName` param to *aksAutomaticVnet*. If you used a different virtual network name, make sure to update the string to your preferred virtual network name.
@@ -356,55 +270,9 @@ az deployment group create --resource-group <resource-group> --template-file uam
 
 This Bicep file defines the AKS Automatic cluster.
 
-```bicep
-@description('The name of the managed cluster resource.')
-param clusterName string = 'aksAutomaticCluster'
+:::code language="bicep" source="scripts/custom-network/bicep/aks.bicep":::
 
-@description('The location of the managed cluster resource.')
-param location string = resourceGroup().location
-
-@description('The resource ID of the API server subnet.')
-param apiServerSubnetId string
-
-@description('The resource ID of the cluster subnet.')
-param clusterSubnetId string
-
-@description('The resource ID of the user assigned managed identity.')
-param uamiId string
-
-/// Create the AKS Automatic cluster using the custom virtual network and user assigned managed identity
-resource aks 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
-  name: clusterName
-  location: location  
-  sku: {
-	name: 'Automatic'
-  }
-  properties: {
-    agentPoolProfiles: [
-      {
-        name: 'systempool'
-        mode: 'System'
-	    count: 3
-        vnetSubnetID: clusterSubnetId
-      }
-    ]
-    apiServerAccessProfile: {
-        subnetId: apiServerSubnetId
-    }
-    networkProfile: {
-      outboundType: 'loadBalancer'
-    }
-  }
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${uamiId}': {}
-    }
-  }
-}
-```
-
-Save the Bicep file [**aks.bicep**](scripts/custom-network/aks.bicep) to your local computer.
+Save the Bicep file [**aks.bicep**](scripts/custom-network/bicep/aks.bicep) to your local computer.
 
 > [!IMPORTANT]
 > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
