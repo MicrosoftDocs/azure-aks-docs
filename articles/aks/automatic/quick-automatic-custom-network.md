@@ -16,8 +16,8 @@ zone_pivot_groups: bicep-azure-cli
 
 In this quickstart, you learn to:
 
-- Create a virtual network
-- Create a managed identity with permissions over the virtual network- 
+- Create a virtual network.
+- Create a managed identity with permissions over the virtual network.
 - Deploy an AKS Automatic cluster in the virtual network.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
