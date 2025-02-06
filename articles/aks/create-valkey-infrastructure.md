@@ -154,7 +154,12 @@ In this step, we create an AKS cluster. We enable the Azure KeyVault Secret Prov
 
 ## Create a node pool for the Valkey workload
 
-In this section, we create a node pool dedicated to running the Valkey workload. This node pool has autoscaling disabled and is created with six nodes across two availability zones, because we want to have one secondary per primary in a different zone.
+In this section, we create a node pool dedicated to running the Valkey workload. This node pool has autoscaling disabled and is created with six nodes across two availability zones, because we want to have one secondary per primary in a different zone. 
+
+There are 2 options when creating a node pool. Later when we [configure and deploy our Valkey cluster][deploy-valkey-cluster], you will use some form of persistent storage to store data relevant to the Valkey database. Since Valkey is commonly used for caching or other high performance purposes, we recommend using the Azure Container Storage extension on your cluster which lets you use the local storage available on your nodes. There are two types of local storage Azure Container Storage supports: Temp SSD and Local NVMe. Depending on which option you choose, replace the $MY_NODE_SKU field in the node pool creation script with the correct SKU for the storage type of your choice.
+
+* Temp SSD: Temp SSD is a great price performant storage option if you are only planning to use your Valkey cluster as a quick sandbox option. There are no additional resiliency features to safeguard your data, thus making it only suitable for test environments. Make sure you choose a VM type with temp SSD, such as a Ev3 and Esv3-series VM. A good general purpose VM type to start with is Standard_E8_v3. 
+* Local NVMe: Azure Container Storage supports replication capabilities when using the Local NVMe disk on your nodes, bolstering the resiliency of your Valkey database. For production workloads, this is the recommended storage option. Local NVMe Disk is only available in certain types of VMs, for example, Storage optimized VM SKUs or GPU accelerated VM SKUs. If you plan to use local NVMe, choose one of these VM SKUs. A good SKU to start with is the Standard_L8s_v3.
 
 * Create a new node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
@@ -165,7 +170,7 @@ In this section, we create a node pool dedicated to running the Valkey workload.
         --resource-group $MY_RESOURCE_GROUP_NAME \
         --cluster-name  $MY_CLUSTER_NAME \
         --name valkey \
-        --node-vm-size Standard_D4s_v3 \
+        --node-vm-size $MY_NODE_SKU \
         --node-count 6 \
         --zones 1 2 3 \
         --output table
@@ -176,7 +181,7 @@ In this section, we create a node pool dedicated to running the Valkey workload.
     ```output
     Count    CurrentOrchestratorVersion    ETag                                  EnableAutoScaling    EnableCustomCaTrust    EnableEncryptionAtHost    EnableFips    EnableNodePublicIp    EnableUltraSsd    KubeletDiskType    MaxPods    Mode    Name    NodeImageVersion                          OrchestratorVersion    OsDiskSizeGb    OsDiskType    OsSku    OsType    ProvisioningState    ResourceGroup       ScaleDownMode    TypePropertiesType       VmSize           WorkloadRuntime
     -------  ----------------------------  ------------------------------------  -------------------  ---------------------  ------------------------  ------------  --------------------  ----------------  -----------------  ---------  ------  ------  ----------------------------------------  ---------------------  --------------  ------------  -------  --------  -------------------  ------------------  ---------------  -----------------------  ---------------  -----------------
-    6        1.28.9                        b7aa8e37-ff39-4ec7-bed0-cb37876416cc  False                False                  False                     False         False                 False             OS                 30         User    valkey  AKSUbuntu-2204gen2containerd-202405.27.0  1.28                   128             Managed       Ubuntu   Linux     Succeeded            myResourceGroup-rg  Delete           VirtualMachineScaleSets  Standard_D4s_v3  OCIContainer
+    6        1.28.9                        b7aa8e37-ff39-4ec7-bed0-cb37876416cc  False                False                  False                     False         False                 False             OS                 30         User    valkey  AKSUbuntu-2204gen2containerd-202405.27.0  1.28                   128             Managed       Ubuntu   Linux     Succeeded            myResourceGroup-rg  Delete           VirtualMachineScaleSets  Standard_L8s_v3  OCIContainer
     ```
 
 ## Connect to the AKS cluster
