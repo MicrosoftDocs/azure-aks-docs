@@ -159,18 +159,10 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 az identity create --resource-group <resource-group> --name <managed-identity-name> --location <location>
 ```
 
-Assign the **Network Contributor** role to the API server subnet using the [`az role assignment create`][az-role-assignment-create] command.
+Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
 ```azurecli-interactive
-az role assignment create --scope <apiserver-subnet-resource-id> \
---role "Network Contributor" \
---assignee <managed-identity-client-id>
-```
-
-Assign the **Network Contributor** role to the cluster subnet using the [`az role assignment create`][az-role-assignment-create] command.
-
-```azurecli<resource-group>
-az role assignment create --scope <cluster-subnet-resource-id> \
+az role assignment create --scope <vnet-resource-id> \
 --role "Network Contributor" \
 --assignee <managed-identity-client-id>
 ```
@@ -357,19 +349,13 @@ output uamiClientId string = userAssignedManagedIdentity.properties.clientId
     az deployment group create --resource-group <resource-group> --template-file uami.bicep
     ```
 
-## Assign the Network Contributor role over the subnets
+## Assign the Network Contributor role over the virtual network
 
-This Bicep file defines role assignments over the API server subnet and the cluster subnet.
+This Bicep file defines role assignments over the virtual network.
 
 ```bicep
 @description('The name of the virtual network.')
 param vnetName string = 'aksAutomaticVnet'
-
-@description('The name of the API server subnet.')
-param apiServerSubnetName string = 'apiServerSubnet'
-
-@description('The name of the cluster subnet.')
-param clusterSubnetName string = 'clusterSubnet'
 
 @description('The principal ID of the user assigned managed identity.')
 param uamiPrincipalId string
@@ -379,43 +365,16 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-09-01' existing 
   name: vnetName
 }
 
-// Get a reference to the API server subnet to do a role assignment
-resource existingApiServerSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' existing = {
-    name: apiServerSubnetName
-    parent: virtualNetwork
-}
-
-// Get a reference to the cluster subnet to do a role assignment
-resource existingClusterSubnet 'Microsoft.Network/virtualNetworks/subnets@2024-05-01' existing = {
-    name: clusterSubnetName
-    parent: virtualNetwork
-}
-
-// This is the built-in Network Contributor role definition
+// Assign the Network Contributor role to the user assigned managed identity on the virtual network
+// '4d97b98b-1d4f-4787-a291-c67834d212e7' is the built-in Network Contributor role definition
 // See: https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles/networking#network-contributor
-resource networkContributorRoleDefinition  'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
-    name: '4d97b98b-1d4f-4787-a291-c67834d212e7'
-}
-
-// Assign the Network Contributor role to the user assigned managed identity on the API Server subnet
-resource networkContributorRoleAssignmentToAPIServerSubnet 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-    name: guid(uamiPrincipalId, networkContributorRoleDefinition.id, resourceGroup().id, existingApiServerSubnet.name)
-    scope: existingApiServerSubnet
-    properties: {
-        roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', networkContributorRoleDefinition.name)
-        principalId: uamiPrincipalId
-    }
-}
-
-// Assign the Network Contributor role to the user assigned managed identity on the cluster subnet
-resource networkContributorRoleAssignmentToClusterSubnet 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-    name: guid(uamiPrincipalId, networkContributorRoleDefinition.id, resourceGroup().id, existingClusterSubnet.name)
-    scope: existingClusterSubnet
-    properties: {
-        roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', networkContributorRoleDefinition.name)
-        principalId: uamiPrincipalId
-        principalType: 'ServicePrincipal'
-    }
+resource networkContributorRoleAssignmentToVirtualNetwork 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(uamiPrincipalId, '4d97b98b-1d4f-4787-a291-c67834d212e7', resourceGroup().id, virtualNetwork.name)
+  scope: virtualNetwork
+  properties: {
+      roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '4d97b98b-1d4f-4787-a291-c67834d212e7')
+      principalId: uamiPrincipalId
+  }
 }
 ```
 
