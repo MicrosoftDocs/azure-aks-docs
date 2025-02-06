@@ -185,7 +185,10 @@ csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstra
     ```
 
 ### Verify kubelet is using a certificate obtained from server TLS bootstrapping
-To validate the kubelet is using a certificate obtained from server TLS bootstrapping, you can inspect the kubelet's PKI directory on the given node.
+To validate the kubelet is using a certificate obtained from server TLS bootstrapping, you can inspect the kubelet's PKI directory on the given node by using the [`kubectl debug`][kubectl-debug] command. To confirm if the node's kubelet is using a serving certificate signed by the cluster CA, examine the contents of the kubelet's PKI directory.
+
+ ```azurecli-interactive
+kubectl debug
 
 ### Disable kubelet serving certificate rotation
 Kubelet serving certificate rotation can be disabled by updating a node pool using the [az aks nodepool update][az-aks-nodepool-update] command with a node pool tag. This node pool update should occur before kubelet serving is enabled by default.
