@@ -43,7 +43,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
 
-The cluster identity needs permissions to both the API server subnet and the node subnet. Lack of permissions at the API server subnet can cause a provisioning failure.
+The cluster identity needs **Network Contributor** permissions on the virtual network. Lack of permissions at the API server subnet can cause a provisioning failure. Lack of permissions at the virtual network can cause Node Auto Provisioning scaling failure.
 
 > [!WARNING]
 > An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
@@ -57,13 +57,13 @@ The cluster identity needs permissions to both the API server subnet and the nod
 
 To install the aks-preview extension, run the following command:
 
-```azurecli
+```azurecli-interactive
 az extension add --name aks-preview
 ```
 
 Run the following command to update to the latest version of the extension released:
 
-```azurecli
+```azurecli-interactive
 az extension update --name aks-preview
 ```
 
@@ -89,6 +89,19 @@ az provider register --namespace Microsoft.ContainerService
 
 :::zone target="docs" pivot="azure-cli"
 
+## Define variables
+
+Define the following variables that will be used in the subsequent steps. The steps are also available as a [downloadable script](scripts/custom-network/create-automatic-custom-network.sh).
+
+```azurecli-interactive
+RG_NAME=automatic-rg
+VNET_NAME=automatic-vnet
+CLUSTER_NAME=automatic
+IDENTITY_NAME=automatic-uami
+LOCATION=eastus
+SUBSCRIPTION_ID=$(az account show --query id -o tsv)
+```
+
 ## Create a resource group
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed.
@@ -96,17 +109,17 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 Create a resource group using the [az group create][az-group-create] command.
 
 ```azurecli-interactive
-az group create --name <resource-group> --location <location>
+az group create -n ${RG_NAME} -l ${LOCATION}
 ```
 
 The following sample output resembles successful creation of the resource group:
 
 ```output
 {
-  "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
+  "id": "/subscriptions/<guid>/resourceGroups/automatic-rg",
   "location": "eastus",
   "managedBy": null,
-  "name": "myResourceGroup",
+  "name": "automatic-rg",
   "properties": {
     "provisioningState": "Succeeded"
   },
@@ -119,17 +132,17 @@ The following sample output resembles successful creation of the resource group:
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command.
 
 ```azurecli-interactive
-az network vnet create --name <vnet-name> \
---resource-group <resource-group> \
---location <location> \
+az network vnet create --name ${VNET_NAME} \
+--resource-group ${RG_NAME} \
+--location ${LOCATION} \
 --address-prefixes 172.19.0.0/16
 ```
 
-Create an API server subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
+Create an API server subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command. The API subnet needs a delegation to `Microsoft.ContainerService/managedClusters`.
 
 ```azurecli-interactive
-az network vnet subnet create --resource-group <resource-group> \
---vnet-name <vnet-name> \
+az network vnet subnet create --resource-group ${RG_NAME} \
+--vnet-name ${VNET_NAME} \
 --name apiServerSubnet \
 --delegations Microsoft.ContainerService/managedClusters \
 --address-prefixes 172.19.0.0/28
@@ -138,8 +151,8 @@ az network vnet subnet create --resource-group <resource-group> \
 Create a cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
 ```azurecli-interactive
-az network vnet subnet create --resource-group <resource-group> \
---vnet-name <vnet-name> \
+az network vnet subnet create --resource-group ${RG_NAME} \
+--vnet-name ${VNET_NAME} \
 --name clusterSubnet \
 --address-prefixes 172.19.1.0/24
 ```
@@ -153,18 +166,20 @@ All traffic within the virtual network is allowed by default. But if you  added 
 
 ## Create a managed identity and give it permissions on the virtual network
 
-Create a managed identity using the [`az identity create`][az-identity-create] command.
+Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the client ID.
 
 ```azurecli-interactive
-az identity create --resource-group <resource-group> --name <managed-identity-name> --location <location>
+az identity create --resource-group ${RG_NAME} --name ${IDENTITY_NAME} --location ${LOCATION}
+IDENTITY_CLIENT_ID=$(az identity show --resource-group ${RG_NAME} --name ${IDENTITY_NAME} --query clientId -o tsv)
 ```
 
 Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
 ```azurecli-interactive
-az role assignment create --scope <vnet-resource-id> \
+az role assignment create \
+--scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}" \
 --role "Network Contributor" \
---assignee <managed-identity-client-id>
+--assignee ${IDENTITY_CLIENT_ID}
 ```
 
 ## Create an AKS Automatic cluster in a custom virtual network
@@ -173,13 +188,14 @@ To create an AKS Automatic cluster, use the [az aks create][az-aks-create] comma
 
 ```azurecli-interactive
 az aks create \
---resource-group <resource-group> \
---name <cluster-name> \
---location <location> \
---vnet-subnet-id <cluster-subnet-resource-id> \
---apiserver-subnet-id <apiserver-subnet-resource-id> \
---assign-identity <managed-identity-resource-id> \
---sku automatic
+--resource-group ${RG_NAME} \
+--name ${CLUSTER_NAME} \
+--location ${LOCATION} \
+--apiserver-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/apiServerSubnet" \
+--vnet-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/clusterSubnet" \
+--assign-identity "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${RG_NAME}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${IDENTITY_NAME}" \
+--sku automatic \
+--no-ssh-key
 ```
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
@@ -192,8 +208,8 @@ When you create a cluster using the Azure CLI, your user is [assigned built-in r
 
 Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-```azurecli
-az aks get-credentials --resource-group <resource-group> --name <cluster-name>
+```azurecli-interactive
+az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME}
 ```
 
 Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
@@ -227,7 +243,7 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 
 Create a resource group using the [az group create][az-group-create] command.
 
-```azurecli
+```azurecli-interactive
 az group create --name <resource-group> --location <location>
 ```
 
@@ -245,8 +261,6 @@ The following sample output resembles successful creation of the resource group:
   "tags": null
 }
 ```
-
-
 
 ## Create a virtual network
 
@@ -303,16 +317,17 @@ output apiServerSubnetId string = resourceId('Microsoft.Network/virtualNetworks/
 output clusterSubnetId string = resourceId('Microsoft.Network/virtualNetworks/subnets', vnetName, clusterSubnetName)
 ```
 
-1. Save the Bicep file as **virtualNetwork.bicep** to your local computer.
+Save the Bicep file [**virtualNetwork.bicep**](scripts/custom-network/virtualNetwork.bicep) to your local computer.
 
-    > [!IMPORTANT]
-    > The Bicep file sets the `vnetName` param to  *aksAutomaticVnet*, the `addressPrefix` param to *172.19.0.0/16*, the `apiServerSubnetPrefix` param to *172.19.0.0/28*, and the `apiServerSubnetPrefix` param to *172.19.1.0/24*. If you want to use different values, make sure to update the strings to your preferred values before saving the file to your computer.
+> [!IMPORTANT]
+> The Bicep file sets the `vnetName` param to  *aksAutomaticVnet*, the `addressPrefix` param to *172.19.0.0/16*, the `apiServerSubnetPrefix` param to *172.19.0.0/28*, and the `apiServerSubnetPrefix` param to *172.19.1.0/24*. If you want to use different values, make sure to update the strings to your preferred values.
 
-1. Deploy the Bicep file using the Azure CLI.
+Deploy the Bicep file using the Azure CLI.
 
-      ```azurecli
-    az deployment group create --resource-group <resource-group> --template-file virtualNetwork.bicep
-    ```
+```azurecli-interactive
+az deployment group create --resource-group <resource-group> --template-file virtualNetwork.bicep
+```
+
 All traffic within the virtual network is allowed by default. But if you added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
 | Destination | Source | Protocol | Port | Use |
@@ -338,16 +353,16 @@ output uamiPrincipalId string = userAssignedManagedIdentity.properties.principal
 output uamiClientId string = userAssignedManagedIdentity.properties.clientId
 ```
 
-1. Save the Bicep file as **uami.bicep** to your local computer.
+Save the Bicep file [**uami.bicep**](scripts/custom-network/uami.bicep) to your local computer.
 
-    > [!IMPORTANT]
-    > The Bicep file sets the `uamiName` param to the *aksAutomaticUAMI*. If you want to use a different identity name, make sure to update the string to your preferred name before saving the file to your computer.
+> [!IMPORTANT]
+> The Bicep file sets the `uamiName` param to the *aksAutomaticUAMI*. If you want to use a different identity name, make sure to update the string to your preferred name.
 
-1. Deploy the Bicep file using the Azure CLI.
+Deploy the Bicep file using the Azure CLI.
 
-      ```azurecli
-    az deployment group create --resource-group <resource-group> --template-file uami.bicep
-    ```
+```azurecli-interactive
+az deployment group create --resource-group <resource-group> --template-file uami.bicep
+```
 
 ## Assign the Network Contributor role over the virtual network
 
@@ -378,17 +393,17 @@ resource networkContributorRoleAssignmentToVirtualNetwork 'Microsoft.Authorizati
 }
 ```
 
-1. Save the Bicep file as **roleAssignments.bicep** to your local computer.
+Save the Bicep file [**uami.bicep**](scripts/custom-network/roleAssignments.bicep) to your local computer.
 
-    > [!IMPORTANT]
-    > The Bicep file sets the `vnetName` param to *aksAutomaticVnet*. If you used a different virtual network name, make sure to update the string to your preferred virtual network name before saving the file to your computer.
+> [!IMPORTANT]
+> The Bicep file sets the `vnetName` param to *aksAutomaticVnet*. If you used a different virtual network name, make sure to update the string to your preferred virtual network name.
 
-1. Deploy the Bicep file using the Azure CLI. You need to provide the user assigned identity principal ID.
+Deploy the Bicep file using the Azure CLI. You need to provide the user assigned identity principal ID.
 
-      ```azurecli
-    az deployment group create --resource-group <resource-group> --template-file uami.bicep \
-    --parameters uamiPrincipalId=<user assigned identity prinicipal id>
-    ```
+```azurecli-interactive
+az deployment group create --resource-group <resource-group> --template-file uami.bicep \
+--parameters uamiPrincipalId=<user assigned identity prinicipal id>
+```
 
 ## Create an AKS Automatic cluster in a custom virtual network
 
@@ -442,19 +457,19 @@ resource aks 'Microsoft.ContainerService/managedClusters@2024-03-02-preview' = {
 }
 ```
 
-1. Save the Bicep file as **aks.bicep** to your local computer.
+Save the Bicep file [**aks.bicep**](scripts/custom-network/aks.bicep) to your local computer.
 
-    > [!IMPORTANT]
-    > The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name before saving the file to your computer.
+> [!IMPORTANT]
+> The Bicep file sets the `clusterName` param to *aksAutomaticCluster*. If you want a different cluster name, make sure to update the string to your preferred cluster name.
 
-1. Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned identity principal ID.
+Deploy the Bicep file using the Azure CLI. You need to provide the API server subnet resource ID, the cluster subnet resource ID, and user assigned identity principal ID.
 
-      ```azurecli
-    az deployment group create --resource-group <resource-group> --template-file aks.bicep \
-    --parameters apiServerSubnetId=<API server subnet resource id> \
-    --parameters clusterSubnetId=<cluster subnet resource id> \
-    --parameters uamiPrincipalId=<user assigned identity prinicipal id>
-    ```
+```azurecli-interactive
+az deployment group create --resource-group <resource-group> --template-file aks.bicep \
+--parameters apiServerSubnetId=<API server subnet resource id> \
+--parameters clusterSubnetId=<cluster subnet resource id> \
+--parameters uamiPrincipalId=<user assigned identity prinicipal id>
+```
 
 ## Connect to the cluster
 
@@ -465,7 +480,7 @@ To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl
 
 Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-```azurecli
+```azurecli-interactive
 az aks get-credentials --resource-group <resource-group> --name <cluster-name>
 ```
 
@@ -574,11 +589,11 @@ When the application runs, a Kubernetes service exposes the application front en
 
 If you don't plan on going through the [AKS tutorial][aks-tutorial], clean up unnecessary resources to avoid Azure charges. Run the [az group delete][az-group-delete] command to remove the resource group, container service, and all related resources.
 
-  ```azurecli
-  az group delete --name <resource-group> --yes --no-wait
-  ```
-  > [!NOTE]
-  > The AKS cluster was created with a user-assigned managed identity. If you don't need that identity anymore, you can manually remove it.
+```azurecli-interactive
+az group delete --name <resource-group> --yes --no-wait
+```
+> [!NOTE]
+> The AKS cluster was created with a user-assigned managed identity. If you don't need that identity anymore, you can manually remove it.
 
 ## Next steps
 
