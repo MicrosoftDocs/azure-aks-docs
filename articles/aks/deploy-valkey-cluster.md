@@ -70,7 +70,81 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
         tenantId: "${TENANT_ID}" # the tenant ID of the AKV instance
     EOF
     ```
+## Set up your storage pool
+1. Update your cluster to have the Azure Container Storage extension.
 
+   ```bash
+   az aks update \
+    --resource-group ${RG_NAME} \
+    --name ${AKS_NAME} \
+    --enable-azure-container-storage ephemeralDisk \
+    --azure-container-storage-nodepools ${ACSTOR_NODEPOOL_NAME} \
+    --storage-pool-option NVMe \
+    --ephemeral-disk-volume-type PersistentVolumeWithAnnotation
+   ```
+   
+2. Create a storage pool using the existing nodepool you created in the [Create Valkey infrastructure resources][create-valkey-infrastructure] section. The storage pool *name* value can be whatever you would like. If you are using local NVMe disks for storage, use the first code block. If you are using temp SSD for storage, use the second code block below.
+
+   Local NVMe
+   ```bash
+   kubectl apply -f - <<EOF
+   apiVersion: containerstorage.azure.com/v1
+   kind: StoragePool
+   metadata:
+     name: ephemeraldisk-nvme
+     namespace: acstor
+   spec:
+    poolType:
+      ephemeralDisk:
+        diskType: nvme
+        replicas: 3
+   EOF
+   ```
+   Temp SSD
+   ```bash
+   kubectl apply -f - <<EOF
+   apiVersion: containerstorage.azure.com/v1
+   kind: StoragePool
+   metadata:
+     name: ephemeraldisk-temp
+     namespace: acstor
+   spec:
+     poolType:
+     ephemeralDisk:
+       diskType: temp
+   EOF
+   ```
+   
+   When storage pool creation is complete, you'll see a message like:
+
+   ```output
+   storagepool.containerstorage.azure.com/ephemeraldisk-nvme created
+   ```
+
+    You can also run this command to check the status of the storage pool. Replace <storage-pool-name> with your storage pool name value. For this example, the value would be ephemeraldisk-nvme.
+
+    ```azurecli-interactive
+    kubectl describe sp <storage-pool-name> -n acstor
+    ```
+    
+    When the storage pool is created, Azure Container Storage will create a storage class on your behalf, using the naming convention acstor-<storage-pool-name>.
+   
+4. Display the available storage classes
+
+    When the storage pool is ready to use, you must select a storage class to define how storage is dynamically created when creating and deploying volumes.
+
+    Run `kubectl get sc` to display the available storage classes. You should see a storage class called `acstor-<storage-pool-name>`.
+
+    ```output
+    $ kubectl get sc | grep "^acstor-"
+    acstor-azuredisk-internal   disk.csi.azure.com               Retain          WaitForFirstConsumer   true                   65m
+    acstor-ephemeraldisk-nvme        containerstorage.csi.azure.com   Delete          WaitForFirstConsumer   true                   2m27s
+    ```
+
+> [!IMPORTANT]
+> Don't use the storage class that's marked **internal**. It's an internal storage class that's needed for Azure Container Storage to work.
+
+   
 ## Deploy the Valkey cluster
 
 1. Create a `ConfigMap` resource to store the Valkey configuration file.
@@ -101,7 +175,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     configmap/valkey-cluster created
     ```
 
-2. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command.
+2. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command. Replace the *storageClassName* field with the storage class that corresponds with the storage pool you provisioned. It should be formatted `acstor-<storage-pool-name>`.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -232,7 +306,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
           name: data
         spec:
           accessModes: [ "ReadWriteOnce" ]
-          storageClassName: managed-csi-premium
+          storageClassName: acstor-<$STORAGE-POOL-NAME>
           resources:
             requests:
               storage: 20Gi
@@ -245,7 +319,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     statefulset.apps/valkey-masters created
     ```
 
-3. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
+3. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command. Replace the *storageClassName* field with the storage class that corresponds with the storage pool you provisioned. It should be formatted `acstor-<storage-pool-name>`.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -345,7 +419,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
           name: data
         spec:
           accessModes: [ "ReadWriteOnce" ]
-          storageClassName: managed-csi-premium
+          storageClassName: acstor-<$STORAGE-POOL-NAME>
           resources:
             requests:
               storage: 20Gi
