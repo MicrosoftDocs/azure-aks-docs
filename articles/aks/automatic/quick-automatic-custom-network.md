@@ -93,7 +93,7 @@ az provider register --namespace Microsoft.ContainerService
 
 Define the following variables that will be used in the subsequent steps.
 
-:::code language="azurecli" source="scripts/custom-network/public/sh/define-vars.sh" interactive="cloudshell-bash":::
+:::code language="azurecli" source="~/../aks-samples/automatic/custom-network/public/sh/define-vars.sh" interactive="cloudshell-bash":::
 
 ## Create a resource group
 
