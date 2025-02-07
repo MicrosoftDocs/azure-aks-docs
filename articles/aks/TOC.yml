@@ -4,7 +4,7 @@
   items:
     - name: What is AKS?
       href: what-is-aks.md
-    - name: What is AKS Automatic?
+    - name: AKS Standard versus AKS Automatic?
       href: intro-aks-automatic.md
     - name: Quotas and regional limits
       href: quotas-skus-regions.md
@@ -31,8 +31,6 @@
     - name: Create a Linux-based AKS Cluster
       expanded: true
       items:
-        - name: Use AKS Automatic
-          href: learn/quick-kubernetes-automatic-deploy.md
         - name: Use the Azure CLI
           href: learn/quick-kubernetes-deploy-cli.md
         - name: Use the Azure Developer CLI
@@ -52,6 +50,17 @@
           href: learn/quick-kubernetes-deploy-rm-template.md
         - name: Use Terraform
           href: learn/quick-kubernetes-deploy-terraform.md
+    - name: Create a Linux-based AKS Automatic Cluster
+      items:
+      - name: With a managed virtual network
+        href: automatic/quick-automatic-managed-network.md
+      - name: With a custom virtual network
+        expanded: true
+        items:
+        - name: Public cluster
+          href: automatic/quick-automatic-custom-network.md
+        - name: Private cluster
+          href: automatic/quick-automatic-private-custom-network.md
     - name: Create a Windows-based AKS Cluster
       items:
         - name: Use the Azure CLI
