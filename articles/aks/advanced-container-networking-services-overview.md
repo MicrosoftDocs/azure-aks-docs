@@ -131,6 +131,8 @@ az aks create \
 
 The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./container-network-security-concepts.md) feature.
 
+> [!WARNING]
+> For non-Cilium customers updating to Cilium, simultaneous updates of Cilium and Advanced Container Networking Services may cause extended initialization of the Cilium agent. To avoid issues, update Cilium first, and then enable Advanced Container Networking Services.
 
 > [!NOTE]
 > Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services.
