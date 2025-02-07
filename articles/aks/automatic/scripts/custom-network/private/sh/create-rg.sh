@@ -1,1 +1,0 @@
-az group create -n ${RG_NAME} -l ${LOCATION}
