@@ -70,6 +70,7 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`login.microsoftonline.com`**  | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 | **`packages.microsoft.com`**     | **`HTTPS:443`** | This address is the Microsoft packages repository used for cached *apt-get* operations.  Example packages include Moby, PowerShell, and Azure CLI. |
 | **`acs-mirror.azureedge.net`**   | **`HTTPS:443`** | This address is for the repository required to download and install required binaries like kubenet and Azure CNI. |
+| **`packages.aks.azure.com`**     | **`HTTPS:443`** | This address will be replacing `acs-mirror.azureedge.net` in the future and will be used to download and install required Kubernetes and Azure CNI binaries. |
 
 ### Microsoft Azure operated by 21Vianet required network rules
 
@@ -117,6 +118,7 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`login.microsoftonline.us`**                          | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 | **`packages.microsoft.com`**                            | **`HTTPS:443`** | This address is the Microsoft packages repository used for cached *apt-get* operations.  Example packages include Moby, PowerShell, and Azure CLI. |
 | **`acs-mirror.azureedge.net`**                          | **`HTTPS:443`** | This address is for the repository required to install required binaries like kubenet and Azure CNI. |
+| **`packages.aks.azure.com`**                            | **`HTTPS:443`** | This address will be replacing `acs-mirror.azureedge.net` in the future and will be used to download and install required Kubernetes and Azure CNI binaries. |
 
 ## Optional recommended FQDN / application rules for AKS clusters
 
