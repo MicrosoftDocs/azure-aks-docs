@@ -11,6 +11,8 @@ ms.author: schaffererin
 
 # Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)
 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303212)
+
 The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the experience of running OSS AI models on your AKS clusters. The AI toolchain operator automatically provisions the necessary GPU nodes and sets up the associated inference server as an endpoint server to your AI models. Using this add-on reduces your onboarding time and enables you to focus on AI model usage and development rather than infrastructure setup.
 
 This article shows you how to enable the AI toolchain operator add-on and deploy an AI model on AKS.

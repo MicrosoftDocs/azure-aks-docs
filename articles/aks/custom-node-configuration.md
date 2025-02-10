@@ -118,24 +118,6 @@ az aks nodepool add --name mynp1 --cluster-name myAKSCluster --resource-group my
 
 ---
 
-### Other configurations
-
-The following settings can be used to modify other operating system settings:
-
-#### Message of the Day
-
-Pass the ```--message-of-the-day``` flag with the location of the file to replace the Message of the Day on Linux nodes at cluster creation or node pool creation.
-
-```azurecli
-az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --message-of-the-day ./newMOTD.txt
-```
-
-##### Nodepool creation
-
-```azurecli
-az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --message-of-the-day ./newMOTD.txt
-```
-
 ## Troubleshooting custom node configurations
 
 ### Confirm settings have been applied

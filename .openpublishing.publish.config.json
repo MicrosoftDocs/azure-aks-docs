@@ -61,6 +61,12 @@
       "url": "https://github.com/Azure/terraform",
       "branch": "master",
       "branch_mapping": {}
+    },
+    {
+      "path_to_root": "aks-samples",
+      "url": "https://github.com/Azure-Samples/aks-samples",
+      "branch": "master",
+      "branch_mapping": {}
     }
   ],
   "branch_target_mapping": {},

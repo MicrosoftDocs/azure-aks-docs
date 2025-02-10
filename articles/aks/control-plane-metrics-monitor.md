@@ -94,11 +94,9 @@ Control plane metrics are stored in an Azure Monitor workspace in the cluster's 
 
 ## Customize control plane metrics
 
-> [!WARNING] 
-> A bug prevents customization of metrics for AKS Control Plane components. Changes to the configMap do not take effect. Follow this issue [issue](https://github.com/Azure/AKS/issues/4689) for updates.
 
 
-AKS includes a preconfigured set of metrics to collect and store for each component. `API server` and `etcd` are enabled by default. You can customize this list through the [`ama-settings-configmap`](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml).
+AKS includes a preconfigured set of metrics to collect and store for each component. `API server` and `etcd` are enabled by default. You can customize this list through the [`ama-settings-configmap`](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml).
 
 The default targets include the following values:
 
@@ -122,7 +120,7 @@ For more information about `minimal-ingestion` profile metrics, see [Minimal ing
 
 #### Ingest all metrics from all targets
 
-1. Download the ConfigMap file [ama-metrics-settings-configmap.yaml](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Download the ConfigMap file [ama-metrics-settings-configmap.yaml](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
 1. Set `minimalingestionprofile = false`.
 1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify are: `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`, `controlplane-kube-controller-manager`, and `controlplane-etcd`.
 1. Apply the ConfigMap using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command.
@@ -137,7 +135,7 @@ For more information about `minimal-ingestion` profile metrics, see [Minimal ing
 
 The `minimal ingestion profile` setting helps reduce the ingestion volume of metrics, as it only collects metrics used by default dashboards, default recording rules, and default alerts are collected.
 
-1. Download the ConfigMap file [ama-metrics-settings-configmap](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Download the ConfigMap file [ama-metrics-settings-configmap](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
 1. Set `minimalingestionprofile = true`.
 1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify are: `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`, `controlplane-kube-controller-manager`, and `controlplane-etcd`.
 1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets. For example:
@@ -156,7 +154,7 @@ The `minimal ingestion profile` setting helps reduce the ingestion volume of met
 
 #### Ingest only specific metrics from some targets
 
-1. Download the ConfigMap file [ama-metrics-settings-configmap](https://github.com/Azure/prometheus-collector/blob/89e865a73601c0798410016e9beb323f1ecba335/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Download the ConfigMap file [ama-metrics-settings-configmap]((https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
 1. Set `minimalingestionprofile = false`.
 1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify here are `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`,`controlplane-kube-controller-manager`, and `controlplane-etcd`.
 1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets. For example:
@@ -184,6 +182,14 @@ Make sure the feature flag `AzureMonitorMetricsControlPlanePreview` is enabled a
 * **Isolate control plane from data plane**: Start by setting some of the [node related metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default) to `true` and verify the metrics are being forwarded to the workspace. This helps determine if the issue is specific to scraping control plane metrics.
 * **Events ingested**: Once you apply the changes, you can open metrics explorer from the **Azure Monitor overview** page or from the **Monitoring** section of the selected cluster and check for an increase or decrease in the number of events ingested per minute. It should help you determine if a specific metric is missing or if all metrics are missing.
 * **Specific metric isn't exposed**: There are cases where metrics are documented, but aren't exposed from the target and aren't forwarded to the Azure Monitor workspace. In this case, it's necessary to verify other metrics are being forwarded to the workspace.
+> [!NOTE]
+> If you are looking to collect the apiserver_request_duration_seconds or another bucket metric, you need to specify all the series in the histogram family
+>
+```yaml
+controlplane-apiserver = "apiserver_request_duration_seconds_bucket|apiserver_request_duration_seconds_sum|apiserver_request_duration_seconds_count"
+```
+
+
 * **No access to the Azure Monitor workspace**: When you enable the add-on, you might specify an existing workspace that you don't have access to. In that case, it might look like the metrics aren't being collected and forwarded. Make sure that you create a new workspace while enabling the add-on or while creating the cluster.
 
 ## Disable control plane metrics on your AKS cluster

@@ -19,7 +19,13 @@ Announcements about the releases of new minor revisions or patches to the Istio-
 
 Istio add-on allows upgrading the minor revision using [canary upgrade process][istio-canary-upstream]. When an upgrade is initiated, the control plane of the new (canary) revision is deployed alongside the initial (stable) revision's control plane. You can then manually roll over data plane workloads while using monitoring tools to track the health of workloads during this process. If you don't observe any issues with the health of your workloads, you can complete the upgrade so that only the new revision remains on the cluster. Else, you can roll back to the previous revision of Istio.
 
-If the cluster is currently using a supported minor revision of Istio, upgrades are only allowed one minor revision at a time. If the cluster is using an unsupported revision of Istio, you must upgrade to the lowest supported minor revision of Istio for that Kubernetes version. After that, upgrades can again be done one minor revision at a time.
+Available upgrades depend on whether the current Istio revision and AKS cluster version are supported:
+- You can upgrade to the **next supported revision (`n+1`)** or skip one and upgrade to **`n+2`**, as long as both are supported and compatible with the cluster version.  
+- If both your current revision (`n`) and the next revision (`n+1`) are unsupported, you can only upgrade to the **nearest supported revision (`n+2` or higher)**, but not beyond it.  
+- If the cluster version and Istio revision are both unsupported, the cluster version must be upgraded before an Istio upgrade can be initiated.  
+
+> [!NOTE]
+> Upgrading from an unsupported revision can be error-prone, so it is recommended to keep your Istio revision up-to-date at all times. Refer to the [Istio add-on support calendar][istio-support-calendar] for estimated release and end-of-life dates and the [upstream Istio release notes][upstream-release-notes] for the new revision for notable changes.
 
 The following example illustrates how to upgrade from revision `asm-1-22` to `asm-1-23` with all workloads in the `default` namespace. The steps are the same for all minor upgrades and may be used for any number of namespaces.
 
@@ -257,9 +263,11 @@ If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or 
 [istio-canary-upstream]: https://istio.io/latest/docs/setup/upgrade/canary/
 [istio-revision-tags]: https://istio.io/latest/docs/setup/upgrade/canary/#stable-revision-labels
 [install-istioctl]: https://istio.io/latest/docs/ops/diagnostic-tools/istioctl/
+[upstream-release-notes]: https://istio.io/latest/news/releases/
 
 <!-- LINKS - Internal -->
 [istio-support]: ./istio-support-policy.md#versioning-and-support-policy
+[istio-support-calendar]: ./istio-support-policy.md#service-mesh-add-on-release-calendar
 [meshconfig]: ./istio-meshconfig.md
 [meshconfig-canary-upgrade]: ./istio-meshconfig.md#mesh-configuration-and-upgrades
 [upgrade-istio-service-mesh-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-minor-revision-upgrade
