@@ -197,7 +197,7 @@ In the following steps, you create an AKS cluster with a workload identity and O
     az aks nodepool add \
     --resource-group $MY_RESOURCE_GROUP_NAME \
     --cluster-name $MY_CLUSTER_NAME \
-    --name userpool \
+    --name mongodbpool \
     --node-vm-size Standard_DS4_v2 \
     --node-count 3 \
     --zones 1 2 3 \
@@ -282,10 +282,41 @@ In this section, you download the Percona images from Docker Hub and upload them
 The repository [terraform-azurerm-avm-ptn-aks-production](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) containes a full example with the infrastructure required to run a MongoDB cluster on Azure Kubernetes Service (AKS).
 
 ```bash
-git clone https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production
-cd terraform-azurerm-avm-ptn-aks-production/examples/mongodb
+git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
+cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads
+```
+Run the below commands to create a `mongodb.tfvars` file with the following configuration for MongoDB:
+```bash
+cat > mongodb.tfvars <<EOF
+    stateful_workload_type = "mongodb"
+    
+    node_pools = {
+      mongodbserver = {
+        name       = "mongodbpool"
+        vm_size    = "Standard_DS4_v2"
+        node_count = 3
+        zones      = [1, 2, 3]
+        os_type    = "Linux"
+      }
+    }
+    
+    acr_task_content = <<-EOF
+    version: v1.1.0
+    steps:
+      - cmd: az login --identity
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb:7.0.8-5 --image percona-server-mongodb:7.0.8-5
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/pmm-client:2.41.2 --image pmm-client:2.41.2
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-backup-mongodb:2.4.1 --image percona-backup-mongodb:2.4.1
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb-operator:1.16.1 --image percona-server-mongodb-operator:1.16.1
+    EOF
+
+EOF
+```
+Run the following Terraform commands to deploy the infrastructure:
+
+```bash
 terraform init
-terraform apply
+terraform apply -var-file=mongodb.tfvars
 ```
 :::zone-end
 
