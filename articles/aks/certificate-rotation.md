@@ -195,7 +195,7 @@ kubectl debug
 If a `kubelet-server-current.pem` symlink exists, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and is signed by the cluster CA.
 
 ### Disable kubelet serving certificate rotation
-Kubelet serving certificate rotation can be disabled by updating a node pool using the [az aks nodepool update][az-aks-nodepool-update] command with a node pool tag. This node pool update should occur before kubelet serving is enabled by default.
+You can disable kubelet serving certificate rotation by updating the node pool using the [az aks nodepool update][az-aks-nodepool-update] command to specify the tag `aks-disable-kubelet-serving-certificate-rotation=true` and reimaging your nodes. A node reimage can be done via a node image upgrade or by scaling the pool to 0 instances and back up to the desired value.
 
 ```azurecli-interactive
 az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --tags aks-disable-kubelet-serving-certificate-rotation=true
