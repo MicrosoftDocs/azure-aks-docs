@@ -151,14 +151,17 @@ For any AKS clusters created or upgraded after March 2022, Azure Kubernetes Serv
     > If you have any services that run on top of AKS, you might need to update their certificates.
 
 ## Kubelet serving certificate rotation
+
 Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bootstrapping for both bootstrapping and rotating serving certificates signed by the Cluster CA.
 
 ### Limitations
+
 - Supported on Kubernetes version 1.27 and above.
 - Not supported when the node pool is provisioned based on a snapshot.
 - This feature can't be manually enabled. Existing node pools will have kubelet serving certificate rotation enabled by default when they perform their first upgrade to any kubernetes version 1.27 or greater. New node pools on kubernetes version 1.27 or greater will have kubelet serving certificate rotation enabled by default. To see if kubelet serving certificate rotation has been enabled in your region, see [AKS Releases](https://github.com/Azure/AKS/releases).
 
 ### Verify kubelet serving certificate rotation has been enabled 
+
 Each node with the feature enabled is automatically given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes -L kubernetes.azure.com/kubelet-serving-ca` command.
 
  ```bash
@@ -186,6 +189,7 @@ csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstra
 ```
 
 ### Verify kubelet is using a certificate obtained from server TLS bootstrapping
+
 To confirm whether the node's kubelet is using a serving certificate signed by the cluster CA, use  [`kubectl debug`][kubectl-debug] to examine the contents of the kubelet's PKI directory.
 
 ```azurecli-interactive
@@ -195,6 +199,7 @@ kubectl debug
 If a `kubelet-server-current.pem` symlink exists, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and is signed by the cluster CA.
 
 ### Disable kubelet serving certificate rotation
+
 You can disable kubelet serving certificate rotation by updating the node pool using the [az aks nodepool update][az-aks-nodepool-update] command to specify the tag `aks-disable-kubelet-serving-certificate-rotation=true` and reimaging your nodes. A node reimage can be done via a node image upgrade or by scaling the pool to 0 instances and back up to the desired value.
 
 ```azurecli-interactive
