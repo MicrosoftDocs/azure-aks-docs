@@ -155,14 +155,14 @@ Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bo
 
 ### Limitations
 - Supported on Kubernetes version 1.27 and above.
-- Not supported when node pool snapshot is enabled.
+- Not supported when the node pool is provisioned based on a snapshot.
 - Existing node pools will have kubelet serving certificate rotation enabled by default when they perform their first upgrade to any kubernetes version 1.27 or greater. New node pools on kubernetes version 1.27 or greater will have kubelet serving certificate rotation enabled by default. To see if kubelet serving certificate rotation has been enabled in your region, see [AKS Releases](https://github.com/Azure/AKS/releases).
 
 ### Verify kubelet serving certificate rotation has been enabled 
-Each node with the feature enabled is automatically given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes --show-labels` command.
+Each node with the feature enabled is automatically given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes -L kubernetes.azure.com/kubelet-serving-ca` command.
 
  ```bash
- kubectl get nodes --show-labels
+kubectl get nodes -L kubernetes.azure.com/kubelet-serving-ca
  ```
 
 ### Verify kubelet goes through TLS bootstrapping process
@@ -172,10 +172,10 @@ With this feature enabled, each kubelet running your nodes should go through the
 Verify the bootstrapping process is taking place by using the [`kubectl get`][kubectl-get] command to get the current CSR objects within your cluster.
 
 ```azurecli-interactive
-kubectl get csr
+kubectl get csr --field-selector=spec.signerName=kubernetes.io/kubelet-serving
 ```
 
-All serving CSRs should be in the `Approved,Issued` state, which indicates the CSR was approved and issued a signed certificate. Serving CSRs have a signer name of `kubernetes.io/kublet-serving`. 
+All serving CSRs should be in the `Approved,Issued` state, which indicates the CSR was approved and issued a signed certificate. Serving CSRs have a signer name of `kubernetes.io/kubelet-serving`. 
 
 ```output
    NAME        AGE    SIGNERNAME                                    REQUESTOR                    REQUESTEDDURATION   CONDITION
