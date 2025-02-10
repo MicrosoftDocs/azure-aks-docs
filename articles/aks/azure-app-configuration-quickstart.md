@@ -40,7 +40,7 @@ Create a service connection between your AKS cluster and your App Configuration 
    - **Subscription**: Select the subscription of your App Configuration store.
    - **App Configuration**: Select your App Configuration store. If you don't have one, click **Create new** to set one up.
 
-    ![Screenshot showing create connection](./media/azure-app-configuration/create-connection.png)
+    ![Screenshot showing create connection.](./media/azure-app-configuration/create-connection.png)
 
 1. Select **Next: Authentication**. On the **Authentication** tab, keep the default selection of **Workload Identity**, select a **User assigned managed identity** you want to use. If you don't have one, click **Create new** to set one up.
 
@@ -69,7 +69,7 @@ Update the service connection to create and deploy an `AzureAppConfigurationProv
 
 1. A YAML is generated based on your input. Click **Apply** to add it to your AKS cluster. It will create a ConfigMap in your AKS cluster with data from your App Configuration store.
 
-    ![Screenshot showing AzureAppConfigurationProvider](./media/azure-app-configuration/yaml-snippet-provider.png)
+    ![Screenshot showing AzureAppConfigurationProvider.](./media/azure-app-configuration/yaml-snippet-provider.png)
 
 1. Click **Next**. On the **Workload** tab, configure the following settings:
    
