@@ -18,8 +18,6 @@ This article provides guidance on how to optimize your Azure Kubernetes Service 
 * [Multitenancy](#multitenancy)
 * [Azure discounts](#azure-discounts)
 
-## About cost optimization
-
 ## Automatic scaling
 
 ### Horizontal pod autoscaling
