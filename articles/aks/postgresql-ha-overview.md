@@ -5,7 +5,7 @@ ms.topic: overview
 ms.date: 06/07/2024
 author: kenkilty
 ms.author: kkilty
-ms.custom: innovation-engine, aks-related-content
+ms.custom: aks-related-content
 #Customer intent: As a developer or cluster operator, I want to deploy a highly available PostgreSQL database on AKS so I can see how to run a stateful database workload using the managed Kubernetes service in Azure.
 ---
 # Deploy a highly available PostgreSQL database on AKS with Azure CLI
