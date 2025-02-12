@@ -52,7 +52,7 @@
           href: learn/quick-kubernetes-deploy-terraform.md
     - name: Create a Linux-based AKS Automatic Cluster
       items:
-      - name: From a code repository using Automated Deployments
+      - name: From a code repository
         href: automatic/quick-automatic-from-code.md
       - name: Inside a managed virtual network
         href: automatic/quick-automatic-managed-network.md
