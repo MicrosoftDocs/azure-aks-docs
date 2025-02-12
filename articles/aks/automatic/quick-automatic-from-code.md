@@ -38,7 +38,7 @@ In this quickstart, you learn to:
 
 To deploy an application from a code repository, start at the [Azure portal][azure-portal] home page.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-create-button.png" alt-text="Select 'Deploy application' on the Kubernetes services create menu" lightbox="../media/automatic/from-code/automatic-from-app-create-button.png" :::
+:::image type="content" source="../media/automatic/from-code/automatic-from-app-create-button.png" alt-text="Screenshot showing select 'Deploy application' on the Kubernetes services create menu." lightbox="../media/automatic/from-code/automatic-from-app-create-button.png" :::
 
 1. Search for **Kubernetes services** in the top search bar.
 1. Select [**Kubernetes services**][portal-kubernetes-services] in the search results.
@@ -149,7 +149,7 @@ If you have a cluster, you can use it to deploy the application.
 
 Review the configuration for the cluster, application, and Kubernetes manifests, then select **Deploy**. Creating a cluster takes a few minutes, don't navigate away from deployment page.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-deploy.png" alt-text="Deploying the application" lightbox="../media/automatic/from-code/automatic-from-app-deploy.png" :::
+:::image type="content" source="../media/automatic/from-code/automatic-from-app-deploy.png" alt-text="Screenshot showing Deploying the application." lightbox="../media/automatic/from-code/automatic-from-app-deploy.png" :::
 
 1. A new AKS Automatic cluster is created or an existing one is configured.
 1. A container registry is created or an existing one is configured with the cluster.
@@ -160,25 +160,25 @@ Review the configuration for the cluster, application, and Kubernetes manifests,
 
 When the deployment succeeds, select the **View pull request** button to view the details of the generated pull request on your code repository.
 
- :::image type="content" source="../media/automatic/from-code/automatic-from-app-pull-request.png" alt-text="Pull request on GitHub." lightbox="../media/automatic/from-code/automatic-from-app-pull-request.png" :::
+ :::image type="content" source="../media/automatic/from-code/automatic-from-app-pull-request.png" alt-text="Screenshot of pull request on GitHub." lightbox="../media/automatic/from-code/automatic-from-app-pull-request.png" :::
 
 1. Review the changes under **Files changed** and make any desired edits.
 1. Select **Merge pull request** to merge the changes into your code repository.
 
 Merging the change runs the GitHub Actions workflow that builds your application into a container image, store it in Azure Container Registry, and deploy it to the cluster.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-workflow-build.png" alt-text="GitHub Actions workflow in progress." lightbox="../media/automatic/from-code/automatic-from-app-workflow-build.png" :::
+:::image type="content" source="../media/automatic/from-code/automatic-from-app-workflow-build.png" alt-text="Screenshot showing GitHub Actions workflow in progress." lightbox="../media/automatic/from-code/automatic-from-app-workflow-build.png" :::
 
 
 ### Check the deployed resources
 
 After the pipeline is completed, you can review the created Kubernetes `Service` on the Azure portal by selecting **Services and ingresses** under **Kubernetes resources** service menu.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-services.png" alt-text="Services and ingresses pane" lightbox="../media/automatic/from-code/automatic-from-app-services.png" :::
+:::image type="content" source="../media/automatic/from-code/automatic-from-app-services.png" alt-text="Screenshot of the Services and ingresses pane." lightbox="../media/automatic/from-code/automatic-from-app-services.png" :::
 
 Selecting the **External IP** should open up a new browser page with the running application.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-running.png" alt-text="Contoso Air application running" lightbox="../media/automatic/from-code/automatic-from-app-running.png" :::
+:::image type="content" source="../media/automatic/from-code/automatic-from-app-running.png" alt-text="Screenshot showing the Contoso Air application running." lightbox="../media/automatic/from-code/automatic-from-app-running.png" :::
 
 ## Delete resources
 
