@@ -412,7 +412,7 @@ az group delete --name <resource-group> --yes --no-wait
 
 ## Next steps
 
-In this quickstart, you deployed a Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] in a customer virtual network and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
+In this quickstart, you deployed a Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] inside a custom virtual network and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
 
 To learn more about AKS Automatic, continue to the introduction.
 
