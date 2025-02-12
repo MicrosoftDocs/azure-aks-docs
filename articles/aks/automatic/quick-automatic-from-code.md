@@ -149,7 +149,7 @@ If you have a cluster, you can use it to deploy the application.
 
 Review the configuration for the cluster, application, and Kubernetes manifests, then select **Deploy**. Creating a cluster takes a few minutes, don't navigate away from deployment page.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-deploy.png" alt-text="" lightbox="../media/automatic/from-code/automatic-from-app-deploy.png" :::
+:::image type="content" source="../media/automatic/from-code/automatic-from-app-deploy.png" alt-text="Deploying the application" lightbox="../media/automatic/from-code/automatic-from-app-deploy.png" :::
 
 1. A new AKS Automatic cluster is created or an existing one is configured.
 1. A container registry is created or an existing one is configured with the cluster.
@@ -204,10 +204,10 @@ To learn more about AKS Automatic, continue to the introduction.
 [automated-deployments]: ../automated-deployments.md
 [azure-portal]: https://portal.azure.com
 [portal-kubernetes-services]: https://portal.azure.com/#browse/Microsoft.ContainerService%2FmanagedClusters
-[aks-identities]: ../use-managed-identity#summary-of-managed-identities-used-by-aks
+[aks-identities]: ../use-managed-identity.md#summary-of-managed-identities-used-by-aks
 [kubernetes-documentation]: https://kubernetes.io/docs/concepts/workloads/
-[deployment-safeguards]: ../deployment-safeguards
-[seccomp-profile]: ../secure-container-access#secure-computing-seccomp
+[deployment-safeguards]: ../deployment-safeguards.md
+[seccomp-profile]: ../secure-container-access#secure-computing-seccomp.md
 [kubernetes-probes]: https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/
 [kubernetes-pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [pod-anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
