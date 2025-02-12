@@ -12,7 +12,7 @@ ms.author: asabbour
 
 **Applies to:** :heavy_check_mark: AKS Automatic (preview)
 
-Use [automated deployments][automated-deployments] to build and deploy an application from a code repository to a new or existing AKS Automatic cluster. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make kicks off the pipeline. Automated deployments build on [draft.sh](https://draft.sh). When you create a new deployment workflow, you can use an existing Dockerfile, generate a Dockerfile, use existing Kubernetes manifests, or generate Kubernetes manifests. The generated manifests are created with security and resiliency best practices in mind, including liveness and readiness probes, pod anti-affinity and topology spread constraints to distribute the deployment across availability zones, and a hardened security context.
+Use [automated deployments][automated-deployments] to build and deploy an application from a code repository to a new or existing AKS Automatic cluster. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make kicks off the pipeline. Automated deployments build on [draft.sh](https://draft.sh). When you create a new deployment workflow, you can use an existing Dockerfile, generate a Dockerfile, use existing Kubernetes manifests, or generate Kubernetes manifests. The generated manifests are created with security and resiliency best practices in mind.
 
 In this quickstart, you learn to:
 
@@ -56,17 +56,17 @@ Create and automated deployment workflow and authorize it to connect to the desi
 
 ### Choose the container image configuration
 
-To get an application ready for Kubernetes, you need to have it built into a container image and stored into a container registry. You use a Dockerfile to provide instructions on how to build the container image. If your source code repository doesn't already have a Dockerfile, Automated Deployments can generate one for you, otherwise, you can utilize an existing Dockerfile.
+To get an application ready for Kubernetes, you need to build it into a container image and stored into a container registry. You use a Dockerfile to provide instructions on how to build the container image. If your source code repository doesn't already have a Dockerfile, Automated Deployments can generate one for you, otherwise, you can utilize an existing Dockerfile.
 
 #### [Without an existing Dockerfile](#tab/generate-dockerfile)
 
-Use Automated Deployments to generate a Dockerfile for a number of languages and frameworks such as Go, C#, Node.js, Python, Java, Gradle, Clojure, PHP, Ruby, Erlang, Swift, and Rust. The language support is built on what's available in [draft.sh](https://draft.sh).
+Use Automated Deployments to generate a Dockerfile for many languages and frameworks such as Go, C#, Node.js, Python, Java, Gradle, Clojure, PHP, Ruby, Erlang, Swift, and Rust. The language support is built on what's available in [draft.sh](https://draft.sh).
 
 1. Select **Auto-containerize (generate Dockerfile)** for the container configuration.
 1. Select the **location of where to save the generated Dockerfile** in the repository.
 1. Choose the **application environment** from the list of supported languages and frameworks.
 1. Enter the **application port**.
-1. Select an existing **Azure Container Registry** or create a new one. This registry will be used to store the built application image. The [kubelet identity][aks-identities] of the AKS Automatic cluster will be given `AcrPull` permissions on that registry.
+1. Select an existing **Azure Container Registry** or create a new one. This registry is used to store the built application image. The [kubelet identity][aks-identities] of the AKS Automatic cluster is given `AcrPull` permissions on that registry.
 
 #### [With an existing Dockerfile](#tab/use-existing-dockerfile)
 
@@ -74,14 +74,14 @@ If your code repository already has a Dockerfile, you can select it to be used t
 
 1. Select **Existing Dockerfile** for the container configuration.
 1. Select the **Dockerfile** from your repository.
-1. Enter the **Dockerfile build context** to pass the set of files and directories to the build process. These files are used to build the image, and they are included in the final image, unless they're ignored by a `.dockerignore` file.
-1. Select an existing **Azure Container Registry** or create a new one. This registry will be used to store the built application image. The [kubelet identity][aks-identities] of the AKS Automatic cluster will be given `AcrPull` permissions on that registry.
+1. Enter the **Dockerfile build context** to pass the set of files and directories to the build process. These files are used to build the image, and they're included in the final image, unless they're ignored by a `.dockerignore` file.
+1. Select an existing **Azure Container Registry** or create a new one. This registry is used to store the built application image. The [kubelet identity][aks-identities] of the AKS Automatic cluster is given `AcrPull` permissions on that registry.
 
 ---
 
 ### Choose the Kubernetes manifest configuration
 
-An application running on Kubenretes consists of a number of Kubernetes primitive components that describe what container image to use, how many replicas to run, if there's a public IP required to expose the application, etc. For more information, see the official [Kubernetes documentation][kubernetes-documentation]. If your source code repository doesn't already have the basic Kubernetes manifests to deploy, Automated Deployments can generate them for you, otherwise, you can utilize a set of existing manifests. You can also choose an existing Helm chart.
+An application running on Kubernetes consists of many Kubernetes primitive components. These components describe what container image to use, how many replicas to run, if there's a public IP required to expose the application, etc. For more information, see the official [Kubernetes documentation][kubernetes-documentation]. If your source code repository doesn't already have the basic Kubernetes manifests to deploy, Automated Deployments can generate them for you, otherwise, you can utilize a set of existing manifests. You can also choose an existing Helm chart.
 
 #### [Without existing Kubernetes manifests](#tab/generate-kubernetes-manifests)
 
@@ -92,12 +92,12 @@ The generated manifests are designed to apply recommendations of [deployment saf
 - Automatically generating [liveness, readiness, and startup probes][kubernetes-probes].
 - Preferring [pod anti-affinity][pod-anti-affinity] and [topology spread constraints][topology-spread-constraints] that spread replicas onto different nodes for improved resiliency.
 - Enforcing the `RuntimeDefault` [secure computing profile][seccomp-profile] which establishes an extra layer of protection against common system call vulnerabilities exploited by malicious actors.
-- Dropping all Linux capabilties and only allowing a limited set following the baseline [Kubernetes Pod Security Standards][kubernetes-pod-security-standards].
+- Dropping all Linux capabilities and only allowing a limited set following the baseline [Kubernetes Pod Security Standards][kubernetes-pod-security-standards].
 
 To generate Kubernetes manifests:
 
 1. Select **Generate application deployment files** for the deployment options.
-1. Enter the **application port**. This will be the public port used on the generated `Service`.
+1. Enter the **application port**. This port is used on the generated `Service`.
 1. Select the **location of where to save the generated Kubernetes manifests** in the repository.
 1. Select the **Next** button.
 
@@ -130,7 +130,7 @@ If you don't have a cluster already, you can create a new AKS Automatic cluster 
 1. Select **Create Automatic Kubernetes cluster** for the cluster configuration.
 1. Enter a **cluster name**.
 1. Choose the **automatic upgrade maintenance schedule** or leave the default selected.
-1. Enter the **Kubernetes namespace** where the application will be deployed.
+1. Enter the **Kubernetes namespace** where the application is deployed.
 1. Choose the **monitoring and logging level** or leave the default selected.
 1. Select the **Next** button.
 
@@ -140,14 +140,14 @@ If you have a cluster, you can use it to deploy the application.
 
 1. Select **Existing AKS cluster** for the cluster configuration.
 1. Select the **Subscription**, **Resource Group**, and **Cluster**.
-1. Enter the **Kubernetes namespace** where the application will be deployed.
+1. Enter the **Kubernetes namespace** where the application is deployed.
 1. Select the **Next** button.
 
 ---
 
 ## Review configuration and deploy
 
-Review the configuration for the cluster, application, and Kubernetes manifests, then select **Deploy**. Creating a cluster will take a few minutes, don't navigate away from deployment page.
+Review the configuration for the cluster, application, and Kubernetes manifests, then select **Deploy**. Creating a cluster takes a few minutes, don't navigate away from deployment page.
 
 :::image type="content" source="../media/automatic/from-code/automatic-from-app-deploy.png" alt-text="" lightbox="../media/automatic/from-code/automatic-from-app-deploy.png" :::
 
@@ -165,14 +165,14 @@ When the deployment succeeds, select the **View pull request** button to view th
 1. Review the changes under **Files changed** and make any desired edits.
 1. Select **Merge pull request** to merge the changes into your code repository.
 
-Merging the change run the GitHub Actions workflow that will build your application into a container image, store it in Azure Container Registry, and deploy it to the cluster.
+Merging the change runs the GitHub Actions workflow that builds your application into a container image, store it in Azure Container Registry, and deploy it to the cluster.
 
 :::image type="content" source="../media/automatic/from-code/automatic-from-app-workflow-build.png" alt-text="GitHub Actions workflow in progress." lightbox="../media/automatic/from-code/automatic-from-app-workflow-build.png" :::
 
 
 ### Check the deployed resources
 
-After the pipeline is completed, you can review the created Kubernete `Service` on the Azure portal by selecting **Services and ingresses** under **Kubernetes resources** service menu.
+After the pipeline is completed, you can review the created Kubernetes `Service` on the Azure portal by selecting **Services and ingresses** under **Kubernetes resources** service menu.
 
 :::image type="content" source="../media/automatic/from-code/automatic-from-app-services.png" alt-text="Services and ingresses pane" lightbox="../media/automatic/from-code/automatic-from-app-services.png" :::
 
@@ -191,7 +191,7 @@ Once you're done with your cluster, can delete it to avoid incurring Azure charg
 
 ## Next steps
 
-In this quickstart, you deployed an application to a Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] and setup a continuous integration/continious deployment (CI/CD) pipeline from a code repository.
+In this quickstart, you deployed an application to a Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] and set up a continuous integration/continious deployment (CI/CD) pipeline from a code repository.
 
 To learn more about AKS Automatic, continue to the introduction.
 
