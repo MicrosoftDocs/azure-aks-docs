@@ -83,7 +83,7 @@ If your code repository already has a Dockerfile, you can select it to be used t
 
 An application running on Kubernetes consists of many Kubernetes primitive components. These components describe what container image to use, how many replicas to run, if there's a public IP required to expose the application, etc. For more information, see the official [Kubernetes documentation][kubernetes-documentation]. If your source code repository doesn't already have the basic Kubernetes manifests to deploy, Automated Deployments can generate them for you, otherwise, you can utilize a set of existing manifests. You can also choose an existing Helm chart.
 
-#### [Without existing Kubernetes manifests](#tab/generate-kubernetes-manifests)
+#### [Generate manifests](#tab/generate-kubernetes-manifests)
 
 Use Automated Deployments to generate a set of basic Kubernetes manifest files to have your application up and running. At the moment, Automated Deployments creates a `Deployment`, a `Service`, and a `ConfigMap`.
 
