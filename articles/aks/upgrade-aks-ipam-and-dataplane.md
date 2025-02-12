@@ -95,4 +95,3 @@ Use the following command to upgrade an existing cluster to Azure CNI Powered by
 az aks update --name <clusterName> --resource-group <resourceGroupName> \
   --network-dataplane cilium
 ```
-
