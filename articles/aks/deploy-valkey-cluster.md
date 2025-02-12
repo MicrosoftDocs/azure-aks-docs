@@ -15,12 +15,20 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 > [!NOTE]
 > This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
+## Connect to the AKS cluster
+
+* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
+    ```
+
 ## Create a namespace
 
 1. Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
 
     ```bash
-    kubectl create namespace ${SERVICE_ACCOUNT_NAMESPACE} --dry-run=client --output yaml | kubectl apply -f -
+    kubectl create namespace valkey --dry-run=client --output yaml | kubectl apply -f -
     ```
 
     Example output:
@@ -47,6 +55,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
     ```bash
+    export TENANT_ID=$(az account show --query tenantId --output tsv)
     kubectl apply -f - <<EOF
     ---
     apiVersion: secrets-store.csi.x-k8s.io/v1
@@ -701,3 +710,4 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md
 [validate-valkey-cluster]: ./validate-valkey-cluster.md
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
