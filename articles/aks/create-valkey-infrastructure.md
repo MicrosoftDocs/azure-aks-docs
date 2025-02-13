@@ -201,36 +201,29 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
 
 ## Deploy the infrastructure with Terraform
 
-The repository [terraform-azurerm-avm-ptn-aks-production](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) contains an example with the infrastructure required to run a Valkey cluster on Azure Kubernetes Service (AKS). Ensure you set the Valkey node pool configuration in the `node_pools` variable as shown below.
-```bash
-git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
-cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads
-```
-Run the below commands to create a `valkey.tfvars`file with the node pool configuration for Valkey:
+To deploy the infrastructure using terraform we are going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
 
-```bash 
-    cat > valkey.tfvars <<EOF
-    node_pools = {
-      valkey = {
-        name       = "valkey"
-        vm_size    = "Standard_D2ds_v4"
-        node_count = 3
-        zones      = [1, 2, 3]
-        os_type    = "Linux"
-      }
-    }
-EOF
-```
+> [!NOTE]
+> If you're planning to run this in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This comes coupled with best practice recommendations.
 
-Run the following Terraform commands to deploy the infrastructure:
+1. Clone the git repository with the terraform module.
 
-```bash
-terraform init
-terraform apply -var-file=valkey.tfvars
-```
+    ```bash
+    git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
+    cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads-valkey
+    ```
+
+2. Run the Terraform commands to deploy the infrastructure. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) in this step:
+
+    ```bash
+    terraform init
+    terraform apply 
+    ```
+
+> [!NOTE]
+> In some cases, the container registry tasks that import Valkey images to the container registry might fail. This is a well-known issue. Please refer to [container-registry-task] for more information. In most cases, retrying resolves the problem.
+
 :::zone-end
-
-
 
 ## Next steps
 
@@ -255,6 +248,7 @@ terraform apply -var-file=valkey.tfvars
 <!-- External links -->
 [install-helm]: https://helm.sh/docs/intro/install/
 [install-docker]: https://docs.docker.com/get-docker/
+[github-azure]: https://github.com/Azure/
 
 <!-- Internal links -->
 [valkey-solution-overview]: ./valkey-overview.md
@@ -270,3 +264,4 @@ terraform apply -var-file=valkey.tfvars
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-acr-import]: /cli/azure/acr#az-acr-import
 [deploy-valkey]: ./deploy-valkey-cluster.md
+[container-registry-task]:/container-registry/container-registry-faq#run-error-message-troubleshooting

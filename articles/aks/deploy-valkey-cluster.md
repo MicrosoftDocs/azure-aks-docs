@@ -18,6 +18,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 > This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
 ## Connect to the AKS cluster
+> [!NOTE]
+> Ensure that if you're using Terraform, you've replaced the placeholders in the code with the actual outputs from the terraform commands.
 
 * Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
@@ -58,51 +60,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 :::zone pivot="terraform"
 
-1. Add the following Terraform configuration to generate a random password for the Valkey cluster and store it in your Azure key vault.
+For Terraform, the Valkey secrets were created as part of the first step in [create Valkey infrastructure][create-valkey-cluster].
 
-
-```hcl
-resource "random_password" "password" {
-  length           = 16
-  special          = true
-  override_special = "!#$%&*()-_=+[]{}<>:?"
-}
-
-resource "local_file" "valkey_password_file" {
-  content  = <<EOF
-requirepass ${random_string.secret.result}
-primaryauth ${random_string.secret.result}
-EOF
-  filename = "/tmp/valkey-password-file.conf"
-}
-
-resource "azurerm_key_vault_secret" "valkey_password_file" {
-  name         = "valkey-password-file"
-  value        = local_file.valkey_password_file.content
-  key_vault_id = azurerm_key_vault.my_key_vault.id
-}
-
-resource "null_resource" "cleanup" {
-  provisioner "local-exec" {
-    command = "rm /tmp/valkey-password-file.conf"
-  }
-  triggers = {
-    always_run = "${timestamp()}"
-  }
-}
-
-resource "azurerm_key_vault_access_policy" "example" {
-  key_vault_id = azurerm_key_vault.my_key_vault.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.user_assigned_object_id
-
-  secret_permissions = [
-    "get",
-  ]
-}
-```
-
-   
 :::zone-end
 
 2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
@@ -763,4 +722,5 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md
 [validate-valkey-cluster]: ./validate-valkey-cluster.md
+[create-valkey-cluster]: ./create-valkey-infrastructure.md
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
