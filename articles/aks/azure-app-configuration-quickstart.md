@@ -35,7 +35,7 @@ Create a service connection between your AKS cluster and your App Configuration 
    
    - **Kubernetes namespace**: Specify the namespace you'd like to create ConfigMap or Secret to.
    - **Service type**: Select **App Configuration**.
-   - **Enable App Configuration Extension on Kubernetes**: Check the box to use the [Azure App Configuration AKS extension](./azure-app-configuration.md) for this connection. Azure App Configuration AKS extension will be installed to current cluster if it's not yet.
+   - **Use App Configuration Extension on Kubernetes**: Check the box to use the [Azure App Configuration AKS extension](./azure-app-configuration.md) for this connection. Azure App Configuration AKS extension will be installed to current cluster if it's not yet.
    - **Connection name**: Enter a connection name or use the default name.
    - **Subscription**: Select the subscription of your App Configuration store.
    - **App Configuration**: Select your App Configuration store. If you don't have one, click **Create new** to set one up.
