@@ -33,7 +33,7 @@ Azure CNI Powered by Cilium can be deployed using two different methods for assi
 
 - Assign IP addresses from a virtual network (similar to existing Azure CNI with Dynamic Pod IP Assignment)
 
-If you aren't sure which option to select, read ["Choosing a network model to use"](./azure-cni-overlay.md#choosing-a-network-model-to-use).
+If you aren't sure which option to select, read ["Choosing a network model to use."](./azure-cni-overlay.md#choosing-a-network-model-to-use)
 
 ## Network Policy Enforcement
 
@@ -47,13 +47,13 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * Cilium L7 policy enforcement is disabled.
 
-* Network policies cannot use `ipBlock` to allow access to node or pod IPs. See [frequently asked questions](#frequently-asked-questions) for details and recommended workaround.
+* Network policies can't use `ipBlock` to allow access to node or pod IPs. See [frequently asked questions](#frequently-asked-questions) for details and recommended workaround.
 
 * Multiple Kubernetes services can't use the same host port with different protocols (for example, TCP or UDP) ([Cilium issue #14287](https://github.com/cilium/cilium/issues/14287)).
 
 * Network policies may be enforced on reply packets when a pod connects to itself via service cluster IP ([Cilium issue #19406](https://github.com/cilium/cilium/issues/19406)).
 
-* Network policies are not applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
+* Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 
 ## Prerequisites
 
@@ -174,7 +174,7 @@ az aks create \
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
-    A limitation of Azure CNI Powered by Cilium is that a `NetworkPolicy`'s `ipBlock` cannot select pod or node IPs.
+    A limitation of Azure CNI Powered by Cilium is that a `NetworkPolicy`'s `ipBlock` can't select pod or node IPs.
 
     For example, this `NetworkPolicy` has an `ipBlock` that allows all egress to `0.0.0.0/0`:
     ```yaml
@@ -192,9 +192,9 @@ az aks create \
               cidr: 0.0.0.0/0 # This will still block pod and node IPs.
     ```
 
-    However, when this `NetworkPolicy` is applied, Cilium will block egress to pod and node IPs even though the IPs are within the `ipBlock` CIDR.
+    However, when this `NetworkPolicy` is applied, Cilium blocks egress to pod and node IPs even though the IPs are within the `ipBlock` CIDR.
 
-    As a workaround, you can add `namespaceSelector` and `podSelector` to select pods. The example below selects all pods in all namespaces:
+    As a workaround, you can add `namespaceSelector` and `podSelector` to select pods. This example selects all pods in all namespaces:
     ```yaml
     apiVersion: networking.k8s.io/v1
     kind: NetworkPolicy
@@ -213,7 +213,7 @@ az aks create \
     ```
 
     > [!NOTE]
-    > It is not currently possible to specify a `NetworkPolicy` with an `ipBlock` to allow traffic to node IPs.
+    > It isn't currently possible to specify a `NetworkPolicy` with an `ipBlock` to allow traffic to node IPs.
 - **Does AKS configure CPU or memory limits on the Cilium `daemonset`?**
 
     No, AKS doesn't configure CPU or memory limits on the Cilium `daemonset` because Cilium is a critical system component for pod networking and network policy enforcement.
