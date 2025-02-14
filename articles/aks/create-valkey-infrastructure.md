@@ -213,10 +213,12 @@ To deploy the infrastructure using terraform we are going to use the [Azure Veri
     cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads-valkey
     ```
 
-2. Run the Terraform commands to deploy the infrastructure. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) in this step:
+2. Run the Terraform commands to deploy the infrastructure. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) in this step. In this step we have set the secrets that will be used when deploying Valkey in the next step:
 
     ```bash
     terraform init
+    SECRET=$(openssl rand -base64 32)
+    export TF_VAR_valkey_password=${SECRET}
     terraform apply 
     ```
 

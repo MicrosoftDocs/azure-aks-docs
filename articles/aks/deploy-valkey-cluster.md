@@ -60,11 +60,18 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
 :::zone pivot="terraform"
 
-For Terraform, the Valkey secrets were created as part of the first step in [create Valkey infrastructure][create-valkey-cluster].
+1. For Terraform, the Valkey secrets were created when [deploying the infrastucture][create-valkey-cluster]. Replace the placeholders in the steps below with the actual outputs from the terraform commands. 
 
+2. Get the Identity ID and the Object ID created by the Azure KeyVault Secret Provider Addon, using the [`az aks show`][az-aks-show] command.
+
+    ```azurecli-interactive
+    export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
+    export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
+
+    ```
 :::zone-end
 
-2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
+3. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
     ```bash
     export TENANT_ID=$(az account show --query tenantId --output tsv)
