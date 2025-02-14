@@ -56,7 +56,7 @@ Metrics play an important role in cluster monitoring, identifying issues, and op
 
 - [List of default Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default)
 
-AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md).
+AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts. 
 
 <a name="integrations"></a>
 [!INCLUDE [horz-monitor-custom-metrics](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-non-monitor-metrics.md)]
@@ -71,7 +71,7 @@ The following Azure services and features of Azure Monitor can be used for extra
 
 ### Monitor AKS control plane metrics (preview)
 
-AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./control-plane-metrics-monitor.md).
+AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./control-plane-metrics-monitor.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts.
 
 [!INCLUDE [horz-monitor-resource-logs](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-resource-logs.md)]
 
