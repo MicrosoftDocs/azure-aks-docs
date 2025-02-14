@@ -13,7 +13,7 @@ ms.service: azure-kubernetes-service
 
 In this article, you learn how to monitor the Azure Kubernetes Service (AKS) control plane using control plane metrics. 
 
-AKS supports a subset of control plane metrics for free through [Azure Monitor platform metrics](./monitor-aks.md#monitoring-data). The control plane metrics (Preview) feature provides more visibility into the availability and performance of the control plane components, such as the API server, ETCD, Scheduler, Autoscaler, and controller manager. The feature is also fully compatible with Prometheus and Grafana. You can use these metrics to maximize overall observability and maintain operational excellence for your AKS cluster.
+AKS supports a subset of control plane metrics for free through [Azure Monitor platform metrics](./monitor-aks.md#monitoring-data). The control plane metrics (Preview) feature provides more visibility into the availability and performance of critical control plane components, including the API server, ETCD, Scheduler, Autoscaler, and controller manager. The feature is also fully compatible with Prometheus and Grafana. You can use these metrics to maximize overall observability and maintain operational excellence for your AKS cluster.
 
 ## Control plane platform metrics
 AKS supports some free control plane metrics for monitoring the API server and ETCD. These metrics are automatically collected for all AKS clusters at no cost. You can analyze these metrics through the [metrics explorer](/azure/azure-monitor/essentials/analyze-metrics) in the Azure Portal and create metrics-based alerts.
@@ -68,7 +68,7 @@ View the full list of supported [control plane platform metrics](./monitor-aks-r
 You can enable control plane metrics with the Azure Monitor managed service for Prometheus add-on when creating a new cluster or updating an existing cluster.
 
 > [!NOTE]
-> Unlike the metrics collected from cluster nodes, control plane metrics are collected by a component that isn't part of the **ama-metrics** add-on. Enabling the `AzureMonitorMetricsControlPlanePreview` feature flag and the managed Prometheus add-on ensures control plane metrics are collected. After enabling metric collection, it can take several minutes for the data to appear in the workspace.
+> Unlike the metrics collected from cluster nodes, control plane metrics are collected by a component that isn't part of the **ama-metrics** add-on. Enabling the `AzureMonitorMetricsControlPlanePreview` feature flag and the managed Prometheus add-on ensures control plane metrics are collected. After you enable metric collection, it can take several minutes for the data to appear in the workspace.
 
 ### Enable control plane metrics on a new AKS cluster
 
@@ -134,7 +134,7 @@ For more information about `minimal-ingestion` profile metrics, see [Minimal ing
     kubectl apply -f configmap-controlplane.yaml
     ```
 
-    After applying the configuration, it takes several minutes for the metrics from the specified targets scraped from the control plane to appear in the Azure Monitor workspace.
+    After you apply the configuration, it takes several minutes for the metrics from the specified targets scraped from the control plane to appear in the Azure Monitor workspace.
 
 #### Ingest a few other metrics in addition to minimal metrics
 
@@ -155,7 +155,7 @@ The `minimal ingestion profile` setting helps reduce the ingestion volume of met
     kubectl apply -f configmap-controlplane.yaml
     ```
 
-    After applying the configuration, it takes several minutes for the metrics from the specified targets scraped from the control plane to appear in the Azure Monitor workspace.
+    After you apply the configuration, it takes several minutes for the metrics from the specified targets scraped from the control plane to appear in the Azure Monitor workspace.
 
 #### Ingest only specific metrics from some targets
 
@@ -174,7 +174,7 @@ The `minimal ingestion profile` setting helps reduce the ingestion volume of met
     kubectl apply -f configmap-controlplane.yaml
     ```
 
-    After applying the configuration, it takes several minutes for the metrics from the specified targets scraped from the control plane to appear in the Azure Monitor workspace.
+    After you apply the configuration, it takes several minutes for the metrics from the specified targets scraped from the control plane to appear in the Azure Monitor workspace.
 
 ## Troubleshoot control plane metrics issues
 
