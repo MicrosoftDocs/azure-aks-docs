@@ -266,4 +266,4 @@ To deploy the infrastructure using terraform we are going to use the [Azure Veri
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-acr-import]: /cli/azure/acr#az-acr-import
 [deploy-valkey]: ./deploy-valkey-cluster.md
-[container-registry-task]:./container-registry/container-registry-faq#run-error-message-troubleshooting
+[container-registry-task]:/azure/container-registry/container-registry-faq#run-error-message-troubleshooting
