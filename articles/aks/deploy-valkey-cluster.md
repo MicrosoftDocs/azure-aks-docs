@@ -731,3 +731,4 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 [validate-valkey-cluster]: ./validate-valkey-cluster.md
 [create-valkey-cluster]: ./create-valkey-infrastructure.md
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show
