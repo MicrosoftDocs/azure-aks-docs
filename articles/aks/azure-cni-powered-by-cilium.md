@@ -134,7 +134,7 @@ az aks create \
     ```azurecli-interactive
     az feature show --namespace "Microsoft.ContainerService" --name "EnableCiliumNodeSubnet"
     ```
-3. Create a cluster using [node subnet](concepts-network-legacy-cni#azure-cni-node-subnet) with a Cilium dataplane:
+3. Create a cluster using [node subnet](concepts-network-legacy-cni.md#azure-cni-node-subnet) with a Cilium dataplane:
 
     ```azurecli-interactive
     az aks create \
