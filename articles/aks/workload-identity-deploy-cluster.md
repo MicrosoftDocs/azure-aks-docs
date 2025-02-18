@@ -40,7 +40,7 @@ Create a resource group by calling the [az group create][az-group-create] comman
 ```azurecli-interactive
 export RANDOM_ID="$(openssl rand -hex 3)"
 export RESOURCE_GROUP="myResourceGroup$RANDOM_ID"
-export LOCATION="centralindia"
+export LOCATION="eastus"
 az group create --name "${RESOURCE_GROUP}" --location "${LOCATION}"
 ```
 
@@ -126,7 +126,7 @@ Results:
 {
   "clientId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
   "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroupxxxxxx/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentityxxxxxx",
-  "location": "centralindia",
+  "location": "eastus",
   "name": "myIdentityxxxxxx",
   "principalId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
   "resourceGroup": "myResourceGroupxxxxxx",
