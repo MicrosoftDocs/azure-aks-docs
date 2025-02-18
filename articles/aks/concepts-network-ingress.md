@@ -32,7 +32,7 @@ The following table lists the feature differences between the different ingress 
 | **Scaling**                                       | Autoscaling               | Autoscaling                              | Autoscaling                                 |
 | **Load balancing**                                | Internal/External         | External                                 | Internal/External                           |
 | **SSL termination**                               | In-cluster                | Yes: Offloading and E2E SSL              | In-cluster                                  |
-| **mTLS**                                          | N/A                       | Yes to backend                           | N/A                                         |
+| **mTLS**                                          | N/A                       | Yes: frontend and backend                | N/A                                         |
 | **Static IP Address**                             | N/A                       | FQDN                                     | N/A                                         |
 | **Azure Key Vault stored SSL certificates**       | Yes                       | Yes                                      | N/A                                         |
 | **Azure DNS integration for DNS zone management** | Yes                       | Yes                                      | N/A                                         |
