@@ -2,10 +2,9 @@
 title: Deploy and configure an AKS cluster with workload identity
 description: In this Azure Kubernetes Service (AKS) article, you deploy an Azure Kubernetes Service cluster and configure it with a Microsoft Entra Workload ID.
 author: nickomang
-
 ms.topic: how-to
 ms.subservice: aks-security
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 05/28/2024
 ms.author: nickoman
 ---
@@ -32,32 +31,6 @@ This article assumes you have a basic understanding of Kubernetes concepts. For 
 > [!NOTE]
 > You can use _Service Connector_ to help you configure some steps automatically. See also: [Tutorial: Connect to Azure storage account in Azure Kubernetes Service (AKS) with Service Connector using workload identity][tutorial-python-aks-storage-workload-identity].
 
-## Set the active subscription
-
-First, set your subscription as the current active subscription by calling the [az account set][az-account-set] command and passing in your subscription ID.
-
-```azurecli-interactive
-az account set --subscription <subscription-id>
-```
-
-## Export environment variables
-
-To help simplify steps to configure the identities required, the steps below define environment variables that are referenced in the examples in this article. Remember to replace the values shown with your own values:
-
-  ```azurecli-interactive
-  export RESOURCE_GROUP="myResourceGroup"
-  export LOCATION="eastus"
-  export CLUSTER_NAME="myAKSCluster"
-  export SERVICE_ACCOUNT_NAMESPACE="default"
-  export SERVICE_ACCOUNT_NAME="workload-identity-sa"
-  export SUBSCRIPTION="$(az account show --query id --output tsv)"
-  export USER_ASSIGNED_IDENTITY_NAME="myIdentity"
-  export FEDERATED_IDENTITY_CREDENTIAL_NAME="myFedIdentity"
-  # Include these variables to access key vault secrets from a pod in the cluster.
-  export KEYVAULT_NAME="keyvault-workload-id"
-  export KEYVAULT_SECRET_NAME="my-secret"
-  ```
-
 ## Create a resource group
 
 An [Azure resource group][azure-resource-group] is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
@@ -65,11 +38,16 @@ An [Azure resource group][azure-resource-group] is a logical group in which Azur
 Create a resource group by calling the [az group create][az-group-create] command:
 
 ```azurecli-interactive
+export RANDOM_ID="$(openssl rand -hex 3)"
+export RESOURCE_GROUP="myResourceGroup$RANDOM_ID"
+export LOCATION="centralindia"
 az group create --name "${RESOURCE_GROUP}" --location "${LOCATION}"
 ```
 
 The following output example shows successful creation of a resource group:
 
+Results:
+<!-- expected_similarity=0.3 -->
 ```json
 {
   "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
@@ -79,7 +57,8 @@ The following output example shows successful creation of a resource group:
   "properties": {
     "provisioningState": "Succeeded"
   },
-  "tags": null
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
 }
 ```
 
@@ -88,6 +67,7 @@ The following output example shows successful creation of a resource group:
 Create an AKS cluster using the [az aks create][az-aks-create] command with the `--enable-oidc-issuer` parameter to enable the OIDC issuer. The following example creates a cluster with a single node:
 
 ```azurecli-interactive
+export CLUSTER_NAME="myAKSCluster$RANDOM_ID"
 az aks create \
     --resource-group "${RESOURCE_GROUP}" \
     --name "${CLUSTER_NAME}" \
@@ -103,15 +83,7 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 
 ## Update an existing AKS cluster
 
-You can update an AKS cluster to use the OIDC issuer and enable workload identity by calling the [az aks update][az aks update] command with the `--enable-oidc-issuer` and the `--enable-workload-identity` parameters. The following example updates an existing cluster:
-
-```azurecli-interactive
-az aks update \
-    --resource-group "${RESOURCE_GROUP}" \
-    --name "${CLUSTER_NAME}" \
-    --enable-oidc-issuer \
-    --enable-workload-identity
-```
+You can update an AKS cluster to use the OIDC issuer and enable workload identity by calling the [az aks update][az aks update] command with the `--enable-oidc-issuer` and the `--enable-workload-identity` parameters. 
 
 ## Retrieve the OIDC issuer URL
 
@@ -137,11 +109,32 @@ By default, the issuer is set to use the base URL `https://{region}.oic.prod-aks
 Call the [az identity create][az-identity-create] command to create a managed identity.
 
 ```azurecli-interactive
+export SUBSCRIPTION="$(az account show --query id --output tsv)"
+export USER_ASSIGNED_IDENTITY_NAME="myIdentity$RANDOM_ID"
 az identity create \
     --name "${USER_ASSIGNED_IDENTITY_NAME}" \
     --resource-group "${RESOURCE_GROUP}" \
     --location "${LOCATION}" \
     --subscription "${SUBSCRIPTION}"
+```
+
+The following output example shows successful creation of a managed identity:
+
+Results:
+<!-- expected_similarity=0.3 -->
+```output
+{
+  "clientId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myResourceGroupxxxxxx/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentityxxxxxx",
+  "location": "centralindia",
+  "name": "myIdentityxxxxxx",
+  "principalId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "resourceGroup": "myResourceGroupxxxxxx",
+  "systemData": null,
+  "tags": {},
+  "tenantId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+}
 ```
 
 Next, create a variable for the managed identity's client ID.
@@ -165,6 +158,8 @@ az aks get-credentials --name "${CLUSTER_NAME}" --resource-group "${RESOURCE_GRO
 Copy and paste the following multi-line input in the Azure CLI.
 
 ```azurecli-interactive
+export SERVICE_ACCOUNT_NAMESPACE="default"
+export SERVICE_ACCOUNT_NAME="workload-identity-sa$RANDOM_ID"
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: ServiceAccount
@@ -187,6 +182,7 @@ serviceaccount/workload-identity-sa created
 Call the [az identity federated-credential create][az-identity-federated-credential-create] command to create the federated identity credential between the managed identity, the service account issuer, and the subject. For more information about federated identity credentials in Microsoft Entra, see [Overview of federated identity credentials in Microsoft Entra ID][federated-identity-credential].
 
 ```azurecli-interactive
+export FEDERATED_IDENTITY_CREDENTIAL_NAME="myFedIdentity$RANDOM_ID"
 az identity federated-credential create \
     --name ${FEDERATED_IDENTITY_CREDENTIAL_NAME} \
     --identity-name "${USER_ASSIGNED_IDENTITY_NAME}" \
@@ -203,20 +199,37 @@ az identity federated-credential create \
 
 When you deploy your application pods, the manifest should reference the service account created in the **Create Kubernetes service account** step. The following manifest shows how to reference the account, specifically the _metadata\namespace_ and _spec\serviceAccountName_ properties. Make sure to specify an image for `<image>` and a container name for `<containerName>`:
 
-```yml
+```bash
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Pod
 metadata:
   name: sample-workload-identity
-  namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+  namespace: ${SERVICE_ACCOUNT_NAMESPACE}  # Replace with your namespace
   labels:
     azure.workload.identity/use: "true"  # Required. Only pods with this label can use workload identity.
 spec:
-  serviceAccountName: ${SERVICE_ACCOUNT_NAME}
+  serviceAccountName: ${SERVICE_ACCOUNT_NAME}  # Replace with your service account name
   containers:
-    - image: <image>
-      name: <containerName>
+    - name: rabbitmq  # Replace with your container name
+      image: mcr.microsoft.com/mirror/docker/library/rabbitmq:3.10-management-alpine  # Replace with your Docker image
+      ports:
+        - containerPort: 5672
+          name: rabbitmq-amqp
+        - containerPort: 15672
+          name: rabbitmq-http
+      env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: "username"
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "password"
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          cpu: 250m
+          memory: 256Mi
 EOF
 ```
 
@@ -232,15 +245,17 @@ The following example shows how to use the Azure role-based access control (Azur
 1. Create a key vault with purge protection and RBAC authorization enabled. You can also use an existing key vault if it is configured for both purge protection and RBAC authorization:
 
     ```azurecli-interactive
-    export KEYVAULT_RESOURCE_GROUP="myResourceGroup"
-    export KEYVAULT_NAME="myKeyVault"
-
+    export KEYVAULT_NAME="keyvault-workload-id$RANDOM_ID"
+    # Ensure the key vault name is between 3-24 characters
+    if [ ${#KEYVAULT_NAME} -gt 24 ]; then
+        KEYVAULT_NAME="${KEYVAULT_NAME:0:24}"
+    fi
     az keyvault create \
         --name "${KEYVAULT_NAME}" \
-        --resource-group "${KEYVAULT_RESOURCE_GROUP}" \
+        --resource-group "${RESOURCE_GROUP}" \
         --location "${LOCATION}" \
         --enable-purge-protection \
-        --enable-rbac-authorization
+        --enable-rbac-authorization 
     ```
 
 1. Assign yourself the RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
@@ -251,7 +266,9 @@ The following example shows how to use the Azure role-based access control (Azur
         --query id \
         --output tsv)
 
-    az role assignment create --assignee "\<user-email\>" \
+    export CALLER_OBJECT_ID=$(az ad signed-in-user show --query id -o tsv)
+
+    az role assignment create --assignee "${CALLER_OBJECT_ID}" \
         --role "Key Vault Secrets Officer" \
         --scope "${KEYVAULT_RESOURCE_ID}"
     ```
@@ -259,8 +276,7 @@ The following example shows how to use the Azure role-based access control (Azur
 1. Create a secret in the key vault:
 
     ```azurecli-interactive
-    export KEYVAULT_SECRET_NAME="my-secret"
-
+    export KEYVAULT_SECRET_NAME="my-secret$RANDOM_ID"
     az keyvault secret set \
         --vault-name "${KEYVAULT_NAME}" \
         --name "${KEYVAULT_SECRET_NAME}" \
@@ -287,7 +303,7 @@ The following example shows how to use the Azure role-based access control (Azur
 
     ```azurecli-interactive
     export KEYVAULT_URL="$(az keyvault show \
-        --resource-group ${KEYVAULT_RESOURCE_GROUP} \
+        --resource-group ${RESOURCE_GROUP} \
         --name ${KEYVAULT_NAME} \
         --query properties.vaultUri \
         --output tsv)"
@@ -295,31 +311,35 @@ The following example shows how to use the Azure role-based access control (Azur
 
 1. Deploy a pod that references the service account and key vault URL:
 
-    ```yml
-    cat <<EOF | kubectl apply -f -
+    ```bash
+    kubectl apply -f - <<EOF
     apiVersion: v1
     kind: Pod
     metadata:
-      name: sample-workload-identity-key-vault
-      namespace: ${SERVICE_ACCOUNT_NAMESPACE}
-      labels:
-        azure.workload.identity/use: "true"
+        name: sample-workload-identity-key-vault
+        namespace: ${SERVICE_ACCOUNT_NAMESPACE}
+        labels:
+            azure.workload.identity/use: "true"
     spec:
-      serviceAccountName: ${SERVICE_ACCOUNT_NAME}
-      containers:
-        - image: ghcr.io/azure/azure-workload-identity/msal-go
-          name: oidc
-          env:
-          - name: KEYVAULT_URL
-            value: ${KEYVAULT_URL}
-          - name: SECRET_NAME
-            value: ${KEYVAULT_SECRET_NAME}
-      nodeSelector:
-        kubernetes.io/os: linux
+        serviceAccountName: ${SERVICE_ACCOUNT_NAME}
+        containers:
+          - image: ghcr.io/azure/azure-workload-identity/msal-go
+            name: oidc
+            env:
+              - name: KEYVAULT_URL
+                value: ${KEYVAULT_URL}
+              - name: SECRET_NAME
+                value: ${KEYVAULT_SECRET_NAME}
+        nodeSelector:
+            kubernetes.io/os: linux
     EOF
     ```
 
 To check whether all properties are injected properly by the webhook, use the [kubectl describe][kubectl-describe] command:
+
+```azurecli-interactive
+kubectl wait --namespace ${SERVICE_ACCOUNT_NAMESPACE} --for=condition=Ready pod/sample-workload-identity-key-vault --timeout=120s
+```
 
 ```azurecli-interactive
 kubectl describe pod sample-workload-identity-key-vault | grep "SECRET_NAME:"
@@ -327,7 +347,7 @@ kubectl describe pod sample-workload-identity-key-vault | grep "SECRET_NAME:"
 
 If successful, the output should be similar to the following:
 
-```bash
+```output
       SECRET_NAME:                 ${KEYVAULT_SECRET_NAME}
 ```
 
@@ -339,7 +359,7 @@ kubectl logs sample-workload-identity-key-vault
 
 If successful, the output should be similar to the following:
 
-```bash
+```output
 I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hello\\!"
 ```
 
@@ -348,14 +368,7 @@ I0114 10:35:09.795900       1 main.go:63] "successfully got secret" secret="Hell
 
 ## Disable workload identity
 
-To disable the Microsoft Entra Workload ID on the AKS cluster where it's been enabled and configured, you can run the following command:
-
-```azurecli-interactive
-az aks update \
-    --resource-group "${RESOURCE_GROUP}" \
-    --name "${CLUSTER_NAME}" \
-    --disable-workload-identity
-```
+To disable the Microsoft Entra Workload ID on the AKS cluster where it's been enabled and configured, update the AKS cluster by setting the `--disable-workload-identity` parameter using the `az aks update` command.
 
 ## Next steps
 
