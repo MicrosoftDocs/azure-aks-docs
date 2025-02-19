@@ -118,7 +118,7 @@ az aks create \
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-> ![NOTE]
+> [!NOTE]
 > Azure CLI version 2.69.0 or later is required. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 1. Register the feature:
