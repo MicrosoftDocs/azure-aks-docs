@@ -25,7 +25,7 @@ ms.subservice: aks-monitoring
 
 Azure Monitor Container insights collect custom metrics for nodes, pods, containers, and persistent volumes. For more information, see [Metrics collected by Container insights](/azure/azure-monitor/containers/container-insights-custom-metrics).
 
-[Azure Monitor Application Insights](/azure/azure-monitor/app/app-insights-overview) is used for application performance monitoring (APM). To enable Application Insights with code changes, see [Enable Azure Monitor OpenTelemetry](/azure/azure-monitor/app/opentelemetry-overview). To enable Application Insights without code changes, see [AKS autoinstrumentation](/azure/azure-monitor/app/kubernetes-codeless). For more details on instrumentation, see [data collection basics](/azure/azure-monitor/app/opentelemetry-overview).
+[Azure Monitor Application Insights](/azure/azure-monitor/app/app-insights-overview) is used for application performance monitoring (APM). To enable Application Insights with code changes, see [Enable Azure Monitor OpenTelemetry](/azure/azure-monitor/app/opentelemetry-overview). To enable Application Insights without code changes, see [AKS autoinstrumentation](/azure/azure-monitor/app/kubernetes-codeless). For more information on instrumentation, see [data collection basics](/azure/azure-monitor/app/opentelemetry-overview).
 
 ## Monitoring data
 
@@ -56,7 +56,7 @@ Metrics play an important role in cluster monitoring, identifying issues, and op
 
 - [List of default Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default)
 
-AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md).
+AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts. 
 
 <a name="integrations"></a>
 [!INCLUDE [horz-monitor-custom-metrics](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-non-monitor-metrics.md)]
@@ -71,7 +71,7 @@ The following Azure services and features of Azure Monitor can be used for extra
 
 ### Monitor AKS control plane metrics (preview)
 
-AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./control-plane-metrics-monitor.md).
+AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./control-plane-metrics-monitor.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts.
 
 [!INCLUDE [horz-monitor-resource-logs](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-resource-logs.md)]
 
