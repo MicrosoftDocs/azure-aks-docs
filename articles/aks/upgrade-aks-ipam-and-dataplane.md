@@ -96,3 +96,5 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
   --network-dataplane cilium
 ```
 
+<!-- LINKS - Internal -->
+[az-aks-update]: /cli/azure/aks#az_aks_update
