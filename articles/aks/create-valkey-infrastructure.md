@@ -20,7 +20,7 @@ In this article, we create the infrastructure resources required to run a Valkey
 * An Azure subscription. If you don't have one, create a [free account][azure-free-account].
 * Azure CLI version 2.61.0. To install or upgrade, see [Install Azure CLI][install-azure-cli].
 * Helm version 3 or later. To install, see [Installing Helm][install-helm].
-* `kubectl`, which the Azure Cloud Shell has installed by default.
+* `kubectl`, which the Azure Cloud Shell installs by default.
 * Docker installed on your local machine. To install, see [Get Docker][install-docker].
 
 :::zone pivot="azure-cli"
