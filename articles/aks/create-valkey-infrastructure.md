@@ -244,7 +244,7 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
     terraform init
     SECRET=$(openssl rand -base64 32)
     export TF_VAR_valkey_password=${SECRET}
-    terraform apply 
+    terraform apply -var-file="valkey.tfvars"
     ```
 
 > [!NOTE]
