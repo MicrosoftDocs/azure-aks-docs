@@ -201,7 +201,7 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
 
 ## Deploy the infrastructure with Terraform
 
-To deploy the infrastructure using terraform we are going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
+To deploy the infrastructure using Terraform we are going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
 
 > [!NOTE]
 > If you're planning to run this in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This comes coupled with best practice recommendations.
