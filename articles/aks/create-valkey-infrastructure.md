@@ -183,7 +183,7 @@ In this section, we create a node pool dedicated to running the Valkey workload.
 
 ## Upload Valkey images to your Azure Container Registry
 
-In this section, we download the Valkey image from Dockerhub and upload it to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
+In this section, we download the Valkey image from Docker Hub and upload it to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
 
 * Import the Valkey image from Dockerhub and upload it to your Azure Container Registry using the [`az acr import`][az-acr-import] command.
 
