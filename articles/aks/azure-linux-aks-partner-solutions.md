@@ -105,7 +105,7 @@ For more information, see [Anchore solutions](https://anchore.com/).
 
 ### Hashicorp
 
-:::image type="icon" source="./media/azure-linux-aks-partner-solutions/Hashicorp-Horizontal_onLight.svg":::
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/Hashicorp-Horizontal_onDark.png" border="gray":::
 
 | Solution | Categories |
 |----------|------------|
