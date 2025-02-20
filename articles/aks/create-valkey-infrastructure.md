@@ -223,7 +223,7 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
     ```
 
 > [!NOTE]
-> In some cases, the container registry tasks that import Valkey images to the container registry might fail. This is a well-known issue. Please refer to [container-registry-task] for more information. In most cases, retrying resolves the problem.
+> In some cases, the container registry tasks that import Valkey images to the container registry might fail. This is a well-known issue. Refer to [container-registry-task] for more information. In most cases, retrying resolves the problem.
 
 :::zone-end
 
