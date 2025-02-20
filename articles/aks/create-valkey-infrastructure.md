@@ -213,7 +213,32 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
     cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads-valkey
     ```
 
-2. Run the Terraform commands to deploy the infrastructure. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step. In this step, we have set the secrets that will be used when deploying Valkey in the next step.
+2. Set Valkey variables by creating a `valkey.tfvars` file with the following contents.You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
+
+    ```terraform
+        acr_task_content = <<-EOF
+        version: v1.1.0
+        steps:
+          - cmd: bash echo Waiting 10 seconds the propagation of the Container Registry Data Importer and Data Reader role
+          - cmd: bash sleep 10
+          - cmd: az login --identity
+          - cmd: az acr import --name $RegistryName --source docker.io/valkey/valkey:latest --image valkey:latest
+        EOF
+        
+        valkey_enabled = true
+        node_pools = {
+          valkey = {
+            name       = "valkey"
+            vm_size    = "Standard_D2ds_v4"
+            node_count = 3
+            zones      = [1, 2, 3]
+            os_type    = "Linux"
+          }
+        }
+    ```
+    
+
+3. Run the Terraform commands to deploy the infrastructure. In this step, we have set the secrets that will be used when deploying Valkey in the next step.
 
     ```bash
     terraform init
