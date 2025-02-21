@@ -26,9 +26,9 @@ When creating a new cluster or node pool, AKS sets a default operating system (O
 
 | OS Type | Default OS | Default node image |
 |--|--|--|
-| Not Specified | Ubuntu Linux | Ubuntu with containerd|
-| Linux | Ubuntu Linux | Ubuntu with containerd |
-| Windows | Windows Server | Windows Server Long Term Servicing Channel (LTSC) with containerd |
+| Not Specified | Ubuntu Linux | Ubuntu with containerd and gen 2|
+| Linux | Ubuntu Linux | Ubuntu with containerd and gen 2 |
+| Windows | Windows Server | Windows Server Long Term Servicing Channel (LTSC) with containerd and gen 1 |
 
 > [!NOTE]
 > You can't specify the Windows OS Type during cluster creation since the first node pool in every cluster must be Linux.
