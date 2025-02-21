@@ -31,7 +31,7 @@ When creating a new cluster or node pool, AKS sets a default operating system (O
 | Windows | Windows Server | Windows Server Long Term Servicing Channel (LTSC) with containerd and gen 1 |
 
 > [!NOTE]
-> You can't specify the Windows OS Type during cluster creation since the first node pool in every cluster must be Linux.
+> You can't specify the Windows OS Type during cluster creation since the system node pool in every cluster must be Linux.
 
 ### Supported OS versions
 
@@ -58,7 +58,7 @@ Each node image corresponds to an OS version which you can specify using OS SKU.
 
 ### Factors that might impact default node images
 
-The following factors might impact the default images:
+The following factors might impact the default image AKS chooses for your node pool:
 
 - **OS SKU**: If `--os-sku` is specified, then your default OS will change. For example, if you specify Azure Linux as the OS SKU, then your node image will be Azure Linux with containerd.
 - **Virtual machine (VM) size**: 
