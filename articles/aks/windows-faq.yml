@@ -17,12 +17,12 @@ sections:
       - question:  |
           Why can't I create new Windows Server 2019 node pools?
         answer:  |
-          Windows Server 2019 isn't supported in kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
+          Windows Server 2019 isn't supported in Kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
 
       - question:  |
-          Why can't I upgrade my Windows Server 2019 node pools to kubernetes version 1.33?
+          Why can't I upgrade my Windows Server 2019 node pools to Kubernetes version 1.33?
         answer:  |
-          Windows Server 2019 isn't supported in kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
+          Windows Server 2019 isn't supported in Kubernetes version 1.33 and above. Use a supported Windows Server version such as Windows Server 2022.
 
       - question: |
           What kind of disks are supported for Windows?

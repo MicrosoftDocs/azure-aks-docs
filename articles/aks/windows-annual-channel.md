@@ -24,15 +24,15 @@ AKS releases support for new releases of Windows Server Annual Channel for Conta
 |  K8s version | Annual Channel (host) version | Container image supported | End of support date |
 |--------------|-------------------|-------------------|-------------------|
 | 1.28 | 23H2 (preview only) | Windows Server 2022 | End of 1.33 support |
-| 1.31 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.35 support |
-| 1.35 | 25H2 | Windows Server 2025 | End of 1.38 support |
+| 1.34 | 24H2 | Windows Server 2022 & Windows Server 2025 | End of 1.35 support |
+| 1.36 | 25H2 | Windows Server 2025 | End of 1.38 support |
 
 ## Windows Server Annual Channel vs. Long Term Servicing Channel Releases (LTSC)
 
 AKS supports Long Term Servicing Channel Releases (LTSC), including Windows Server 2022 and Windows Server 2019. These come from a different release channel than Windows Server Annual Channel for Containers. To view our current recommendations, see the [Windows best practices documentation][windows-best-practices].
 
 > [!NOTE]
-> Windows Server 2019 will retire after Kubernetes version 1.32 reaches end of life, and will not be supported in Kubernetes version 1.33 and above. Windows Server 2022 will retire after Kubernetes version 1.34 reaches end of life, and will not be supported in Kubernetes version 1.35 and above. For more information, see the [AKS release notes][release-notes].
+> Windows Server 2019 will retire after Kubernetes version 1.32 reaches end of support, and will not be supported in Kubernetes version 1.33 and above. Windows Server 2022 will retire after Kubernetes version 1.34 reaches end of support, and will not be supported in Kubernetes version 1.35 and above. For more information, see the [AKS release notes][release-notes].
 
 The following table compares Windows Server Annual Channel and Long Term Servicing Channel releases:
 
@@ -47,7 +47,7 @@ The following table compares Windows Server Annual Channel and Long Term Servici
 
 ### Limitations
 
-* Windows Server Annual Channel doesn't support Azure Network Policy Manager (NPM).
+* Windows Server Annual Channel doesn't support Azure Network Policy Manager.
 
 ### Install the `aks-preview` Azure CLI extension
 
