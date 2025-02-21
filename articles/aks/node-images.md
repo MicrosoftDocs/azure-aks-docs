@@ -33,6 +33,30 @@ When creating a new cluster or node pool, AKS will set a default Operating Syste
 > [!NOTE]
 > Windows OS Type cannot be specified during cluster creation since the first node pool in every cluster must be Linux.
 
+### Supported OS versions
+
+Each node image corresponds to an OS version which can be specified by using OS SKU.
+
+> **Best practice guidance**
+>
+> The default OS version is the most recent validated version. 
+>   - For Ubuntu, we recommend creating cluster and node pools while specifying: --os-type Linux and --os-sku Ubuntu. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
+>   - For Azure Linux, we recommend creating cluster and node pools while specifying: --os-type Linux and --os-sku AzureLinux. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
+>   - For Windows, we recommend creating node pools while specifying --os-type Windows and --os-sku Windows2022. You will need to manually update node pools to the next os version when it is released.
+
+Review the following parameters which are reflected in the table:
+
+   * **--os-type**: Operating System (OS) type including Linux or Windows.
+   * **--os-sku**: Used to specify OS version or OS variant.
+   * **--kubernetes-version**: Version of kubernetes to use for creating the node pool or cluster.
+
+| OS Type | OS SKU | Supported Kubernetes versions | Default versioning |
+|--|--|--|--|
+| Linux | Ubuntu | This OS SKU is supported in all kubernetes versions. | OS version for this OS SKU changes based on your kubernetes version. Ubuntu 22.04 is default for k8s version X to 1.25+. |
+| Linux | Azure Linux | This OS SKU is supported in all kubernetes versions. | OS version for this OS SKU changes based on your kubernetes version. Azure Linux 2.0 is default for k8s version 1.X to 1.31. Azure Linux 3.0 is default for k8s version 1.32+. |
+| Windows | Windows2019 | X-1.32 | Default for Windows OS Type in k8s version 1.X to 1.24.
+| Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in k8s version 1.25 to 1.33. |
+
 ### Factors that may impact default node images
 
 Factors that may impact your default node image:
@@ -51,51 +75,60 @@ Factors that may impact your default node image:
 > [!NOTE]
 > Many of the above features can't be combined in a single node pool. Follow links to feature documentation to see limitations. 
 
-## Available node images
-
-AKS supports the following node images per OS for your clusters:
-
-| OS | Node images |
-|---------|------------|
-| [Ubuntu Linux](#ubuntu-linux) | [Ubuntu with containerd](#ubuntu-node-images) |
-| [Azure Linux](#azure-linux) | [Azure Linux with containerd](#azure-linux-node-images) |
-| [Windows](#windows-server) | • [Windows Server Long Term Servicing Channel (LTSC) with containerd](#windows-server-node-images) <br> • [Windows Server Annual Channel for Containers (preview) with containerd](#windows-server-node-images) |
-
-> [!NOTE]
-> containerd is the default and only supported container runtime for AKS node pools.
-
-## Ubuntu Linux
-
-The Ubuntu node images are fully validated by AKS and supported by Microsoft, Canonical, and the Ubuntu community. AKS won't retire an Ubuntu version before the end of Canonical's support lifecycle.
+## Available Linux node images
 
 ### Ubuntu node images
 
+The Ubuntu node images are fully validated by AKS and supported by Microsoft, Canonical, and the Ubuntu community. AKS won't retire an Ubuntu version before the end of Canonical's support lifecycle.
+
 | Node image | Use case | Limitations |
 |--|--|--|
-
-
-* **Ubuntu with containerd**: Ubuntu 22.04 is currently supported and is the default version for new Linux clusters on AKS.
-
-## Azure Linux
-
-The Azure Linux node images are fully validated by AKS and built from source, using a native AKS image.
+| **Ubuntu with containerd and Gen 1** | This is the standard node image for Ubuntu node pools using a vm size that only supports Generation 1. | N/A |
+| **Ubuntu with containerd and Gen 2** | This is the standard node image for Ubuntu node pools using a vm size that supports Generation 2. If a vm size supports both Generation 1 and Generation 2, this will be the selected node image. | N/A |
+| **Ubuntu with containerd and FIPS** | This is a variant of the default node image for customers that enable Federal Information Processing Standards (FIPS). These images support both Generation 1 and Generation 2. | Not yet supported for Ubuntu 22.04+. Can't be combined with ARM64, Trusted Launch, or CVM. |
+| **Ubuntu with containerd and ARM64** | This is a variant of the default node image for customers that use a vm size that supports ARM64. These images support Generation 2 only. |  Can't be combined with FIPS, CVM, or Trusted Launch.|
+| **Ubuntu with containerd and CVM** | This is a variant of the default node image for customers that use a Confidential VM size. These images support Generation 2 only. | Not yet supported for Ubuntu 22.04+. Cannot be combined with FIPS, ARM64, or Trusted Launch. |
+| **Ubuntu with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable Trusted Launch. These images support Generation 2 only. | Can't be combined with FIPS, ARM64, or CVM. |
 
 ### Azure Linux node images
 
-* **Azure Linux with containerd**: Azure Linux 2.0 is currently supported for Linux clusters on AKS.
+The Azure Linux node images are fully validated by AKS and built from source, using a native AKS image.
 
-## Windows Server
+| Node image | Use case | Limitations |
+|--|--|--|
+| **Azure Linux with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a vm size that only supports Generation 1. | N/A |
+| **Azure Linux with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a vm size that supports Generation 2. If a vm size supports both Generation 1 and Generation 2, this will be the selected node image. | N/A |
+| **Azure Linux with containerd and FIPS** | This is a variant of the default node image for customers that enable Federal Information Processing Standards (FIPS). These images support both Generation 1 and Generation 2. | Can't be combined with ARM64, Trusted Launch, or Pod Sandboxing. |
+| **Azure Linux with containerd and ARM64** | This is a variant of the default node image for customers that use a vm size that supports ARM64. These images support Generation 2 only. |  Can't be combined with FIPS, Trusted Launch, or Pod Sandboxing.|
+| **Azure Linux with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable Trusted Launch. These images support Generation 2 only. | Can't be combined with FIPS, ARM64, or Pod Sandboxing. |
+| **Azure Linux with containerd and Pod Sandboxing** | This is a variant of the default node image for customers that enable Pod Sandboxing. These images support Generation 2 only. | Can't be combined with FIPS, ARM64, or Trusted Launch. |
+
+## Available Windows Server node images
 
 The Windows Server node images are fully validated by AKS and supported by Microsoft.
 
-### Windows Server node images
+### Windows Server Long Term Servicing Channel (LTSC) node images
 
-* **Windows Server Long Term Servicing Channel (LTSC) with containerd**: Windows Server 2022 and Windows Server 2019 are the currently supported versions for Windows clusters on AKS. Windows Server 2022 is the default version for new Windows clusters.
-* **Windows Server Annual Channel for Containers (preview) with containerd**: Windows Server 2022 is the currently supported version for Windows clusters on AKS.
+| Node image | Use case | Limitations |
+|--|--|--|
+| **Windows Server with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a vm size that only supports Generation 1. | N/A |
+| **Windows Server with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a vm size that supports Generation 2. If a vm size supports both Generation 1 and Generation 2, this will be the selected node image. | N/A |
 
-## Node image options
+### Windows Server Annual Channel for Containers (preview) node images
 
-* ARM64
-* FIPS-enabled
-* Generation 1 and Generation 2
-* Trusted Launch
+| Node image | Use case | Limitations |
+|--|--|--|
+| **Windows Server with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a vm size that only supports Generation 1. | N/A |
+| **Windows Server with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a vm size that supports Generation 2. If a vm size supports both Generation 1 and Generation 2, this will be the selected node image. | N/A |
+
+## Next steps
+
+To learn more about Windows containers on AKS, see the following resources:
+
+<!-- LINKS - internal -->
+[upgrade-aks-node-images]: ./node-image-upgrade.md
+[use-windows-annual]: ./windows-annual-channel.md
+
+<!-- LINKS - external -->
+[aks-release-notes]: https://github.com/Azure/AKS/releases
+[aks-release-tracker]: https://releases.aks.azure.com/
