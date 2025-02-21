@@ -60,21 +60,6 @@ az aks create \
 > [!NOTE]
 > [Container Network Security](./container-network-security-concepts.md) feature is not available for Non-cilium clusters
 
-```azurecli-interactive
-# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
-export CLUSTER_NAME="<aks-cluster-name>"
-
-# Create an AKS cluster
-az aks create \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --generate-ssh-keys \
-    --network-plugin azure \
-    --network-plugin-mode overlay \
-    --pod-cidr 192.168.0.0/16 \
-    --enable-acns
-```
-
 ---
 
 ### Enable Advanced Container Networking Services on an existing cluster

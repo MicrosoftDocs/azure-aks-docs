@@ -48,17 +48,6 @@ Container Network Security features within Advanced Container Networking Service
 
 * The minimum version of Azure CLI required for the steps in this article is 2.61.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-### Install the aks-preview Azure CLI extension
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-
-# Update the extension to make sure you have the latest version installed
-az extension update --name aks-preview
-```
-
 ### Create a resource group
 
 A resource group is a logical container into which Azure resources are deployed and managed. Create a resource group using the [`az group create`](/cli/azure/group#az_group_create) command.
@@ -130,9 +119,6 @@ az aks create \
 ### Enable Advanced Container Networking Services on an existing cluster
 
 The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./container-network-security-concepts.md) feature.
-
-> [!WARNING]
-> For non-Cilium customers updating to Cilium, simultaneous updates of Cilium and Advanced Container Networking Services may cause extended initialization of the Cilium agent. To avoid issues, update Cilium first, and then enable Advanced Container Networking Services.
 
 > [!NOTE]
 > Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services.
