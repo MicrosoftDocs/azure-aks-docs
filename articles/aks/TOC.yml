@@ -199,7 +199,6 @@
       items:
         - name: Node images
           href: node-images.md
-      href: concepts-scale.md
     - name: Node health
       items:
         - name: Node auto-repair
