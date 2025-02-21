@@ -281,7 +281,50 @@ The following table lists some suggested alert rules for AKS. These alerts are j
 
 Node Network Metrics are crucial for maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain valuable insights into your cluster's operation and identify potential issues before they lead to outages or performance degradation.
 
-Starting with Kubernetes version 1.29, node network metrics are enabled by default for all clusters with Azure Monitor enabled. This default enablement installs a lightweight agent  called Retina on your cluster. Retina agent collects and converts essential metrics into Prometheus format. These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
+Starting with Kubernetes version 1.29, node network metrics are enabled by default for all clusters with Azure Monitor enabled. This default enablement installs a lightweight agent  called Retina on your cluster. Retina agent collects and converts essential metrics into Prometheus format.
+
+The following node network metrics are enabled by default and are aggregated per node. All metrics include the labels cluster and instance (node name). These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
+
+### Node-Level Metrics
+
+The following metrics are aggregated per node. All metrics include labels:
+
+* `cluster`
+* `instance` (Node name)
+
+#### [**Cilium**](#tab/cilium)
+
+For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux, Windows is currently not supported.
+Cilium exposes several metrics including the following used by Container Network Observability.
+
+| Metric Name                    | Description                  | Extra Labels          |Linux | Windows |
+|--------------------------------|------------------------------|-----------------------|-------|---------|
+| **cilium_forward_count_total** | Total forwarded packet count | `direction`           | ✅ | ❌ |
+| **cilium_forward_bytes_total** | Total forwarded byte count   | `direction`           | ✅ | ❌ |
+| **cilium_drop_count_total**    | Total dropped packet count   | `direction`, `reason` | ✅ | ❌ |
+| **cilium_drop_bytes_total**    | Total dropped byte count     | `direction`, `reason` | ✅ | ❌ |
+
+#### [**Non-Cilium**](#tab/non-cilium)
+
+For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
+The table below outlines the different metrics generated.
+
+| Metric Name                                    | Description | Extra Labels | Linux | Windows |
+|------------------------------------------------|-------------|--------------|-------|---------|
+| **networkobservability_forward_count**         | Total forwarded packet count | `direction` | ✅ | ✅ |
+| **networkobservability_forward_bytes**         | Total forwarded byte count | `direction` | ✅ | ✅ |
+| **networkobservability_drop_count**            | Total dropped packet count | `direction`, `reason` | ✅ | ✅ |
+| **networkobservability_drop_bytes**            | Total dropped byte count | `direction`, `reason` | ✅ | ✅ |
+| **networkobservability_tcp_state**             | TCP currently active socket count by TCP state. | `state` | ✅ | ✅ |
+| **networkobservability_tcp_connection_remote** | TCP currently active socket count by remote IP/port. | `address` (IP), `port` | ✅ | ❌ |
+| **networkobservability_tcp_connection_stats**  | TCP connection statistics. (ex: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | `statistic` | ✅ | ✅ |
+| **networkobservability_tcp_flag_counters**     | TCP packets count by flag. | `flag` | ❌ | ✅ |
+| **networkobservability_ip_connection_stats**   | IP connection statistics. | `statistic` | ✅ | ❌ |
+| **networkobservability_udp_connection_stats**  | UDP connection statistics. | `statistic` | ✅ | ❌ |
+| **networkobservability_udp_active_sockets**    | UDP currently active socket count |  | ✅ | ❌ |
+| **networkobservability_interface_stats**       | Interface statistics. | InterfaceName, `statistic` | ✅ | ✅ |
+
+---
 
 ## Related content
 
