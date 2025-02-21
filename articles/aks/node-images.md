@@ -12,6 +12,14 @@ ms.author: schaffererin
 
 This article describes the node images available for Azure Kubernetes Service (AKS) nodes.
 
+## Node image releases
+
+Azure Kubernetes Service (AKS) regularly provides new node images, so it's beneficial to upgrade your node images frequently to use the latest AKS features. Linux node images are updated weekly, and Windows node images are updated monthly. 
+
+New node images are included in the [AKS release notes](https://github.com/Azure/AKS/releases). Detailed summaries of each node image version can be found in the [AKS vhd notes](https://github.com/Azure/AKS/tree/2025-01-06/vhd-notes).
+
+When new node images are released, it can take up to a week for these updates to be rolled out across all regions. The [AKS Release Tracker](https://learn.microsoft.com/azure/aks/release-tracker) shows the current latest node image version and three previously available node image versions for each region. It also shows the node image update order by region. Once the node image has rolled out to your region, you can perform a [node image upgrade manually](https://learn.microsoft.com/azure/aks/node-image-upgrade). Alternatively, you can [perform node image upgrades automatically](https://learn.microsoft.com/azure/aks/auto-upgrade-node-os-image?tabs=azure-cli) and schedule them using planned maintenance.
+
 ## Default node images
 
 When creating a new cluster or node pool, AKS will set a default Operating System (OS) and node image. OS Type can be used to filter between Linux or Windows. 
@@ -25,7 +33,7 @@ When creating a new cluster or node pool, AKS will set a default Operating Syste
 > [!NOTE]
 > Windows OS Type cannot be specified during cluster creation since the first node pool in every cluster must be Linux.
 
-### Other factors that may impact default node images
+### Factors that may impact default node images
 
 Factors that may impact your default node image:
 - OS SKU: If --os-sku is specified, then your default OS will change. For example, if you specify Azure Linux as the OS SKU, then your node image will be the Azure Linux with containerd.
@@ -54,12 +62,17 @@ AKS supports the following node images per OS for your clusters:
 | [Windows](#windows-server) | • [Windows Server Long Term Servicing Channel (LTSC) with containerd](#windows-server-node-images) <br> • [Windows Server Annual Channel for Containers (preview) with containerd](#windows-server-node-images) |
 
 > [!NOTE]
-> containerd is the default and only supported container runtime for AKS clusters.
+> containerd is the default and only supported container runtime for AKS node pools.
+
 ## Ubuntu Linux
 
 The Ubuntu node images are fully validated by AKS and supported by Microsoft, Canonical, and the Ubuntu community. AKS won't retire an Ubuntu version before the end of Canonical's support lifecycle.
 
 ### Ubuntu node images
+
+| Node image | Use case | Limitations |
+|--|--|--|
+
 
 * **Ubuntu with containerd**: Ubuntu 22.04 is currently supported and is the default version for new Linux clusters on AKS.
 
