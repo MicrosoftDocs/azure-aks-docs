@@ -35,27 +35,26 @@ When creating a new cluster or node pool, AKS sets a default operating system (O
 
 ### Supported OS versions
 
-Each node image corresponds to an OS version which can be specified by using OS SKU.
+Each node image corresponds to an OS version which you can specify using OS SKU. You specify the following parameters when creating clusters and node pools:
+
+* **--os-type**: OS type, including Linux or Windows.
+* **--os-sku**: Used to specify OS version or OS variant.
+* **--kubernetes-version**: Version of Kubernetes to use for creating the node pool or cluster.
 
 > **Best practice guidance**
 >
-> The default OS version is the most recent validated version. 
->   - For Ubuntu, we recommend creating cluster and node pools while specifying: --os-type Linux and --os-sku Ubuntu. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
->   - For Azure Linux, we recommend creating cluster and node pools while specifying: --os-type Linux and --os-sku AzureLinux. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
->   - For Windows, we recommend creating node pools while specifying --os-type Windows and --os-sku Windows2022. You will need to manually update node pools to the next os version when it is released.
-
-Review the following parameters which are reflected in the table:
-
-   * **--os-type**: Operating System (OS) type including Linux or Windows.
-   * **--os-sku**: Used to specify OS version or OS variant.
-   * **--kubernetes-version**: Version of kubernetes to use for creating the node pool or cluster.
+> The default OS version is the most recent validated version.
+>
+>   - For Ubuntu, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku Ubuntu`. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
+>   - For Azure Linux, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureLinux`. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
+>   - For Windows, we recommend creating node pools while specifying `--os-type Windows` and `--os-sku Windows2022`. You will need to manually update node pools to the next OS version when it's released.
 
 | OS Type | OS SKU | Supported Kubernetes versions | Default versioning |
 |--|--|--|--|
-| Linux | Ubuntu | This OS SKU is supported in all kubernetes versions. | OS version for this OS SKU changes based on your kubernetes version. Ubuntu 22.04 is default for k8s version X to 1.25+. |
-| Linux | Azure Linux | This OS SKU is supported in all kubernetes versions. | OS version for this OS SKU changes based on your kubernetes version. Azure Linux 2.0 is default for k8s version 1.X to 1.31. Azure Linux 3.0 is default for k8s version 1.32+. |
-| Windows | Windows2019 | X-1.32 | Default for Windows OS Type in k8s version 1.X to 1.24.
-| Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in k8s version 1.25 to 1.33. |
+| Linux | Ubuntu | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes version X to 1.25+. |
+| Linux | Azure Linux | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Azure Linux 2.0 is default for Kubernetes version 1.X to 1.31. Azure Linux 3.0 is default for Kubernetes version 1.32+. |
+| Windows | Windows2019 | X-1.32 | Default for Windows OS Type in Kubernetes version 1.X to 1.24. |
+| Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.33. |
 
 ### Factors that might impact default node images
 
