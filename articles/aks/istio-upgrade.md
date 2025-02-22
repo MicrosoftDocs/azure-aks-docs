@@ -25,7 +25,7 @@ Available upgrades depend on whether the current Istio revision and AKS cluster 
 - If the cluster version and Istio revision are both unsupported, the cluster version must be upgraded before an Istio upgrade can be initiated.
 
 > [!NOTE]
-> Once an AKS version or mesh revision falls outside the support window, upgrading either version becomes error-prone. While such upgrades are **allowed** to recover to a supported version, **both the upgrade process and the out-of-support versions themselves are not supported by Microsoft**. We strongly recommend keeping both AKS and mesh revisions up to date to avoid running into unsupported scenarios. Refer to the [Istio add-on support calendar][istio-support-calendar] for estimated release and end-of-life dates and the [upstream Istio release notes][upstream-release-notes] for the new revision for notable changes.
+> Once an AKS version or mesh revision falls outside the support window, upgrading either version becomes error-prone. While such upgrades are **allowed** to recover to a supported version, **the upgrade process and the out-of-support versions themselves are both not supported by Microsoft**. We strongly recommend keeping AKS version and mesh revision up to date to avoid running into unsupported scenarios. Refer to the [Istio add-on support calendar][istio-support-calendar] for estimated release and end-of-life dates and the [upstream Istio release notes][upstream-release-notes] for the new revision for notable changes.
 
 The following example illustrates how to upgrade from revision `asm-1-22` to `asm-1-23` with all workloads in the `default` namespace. The steps are the same for all minor upgrades and may be used for any number of namespaces.
 
