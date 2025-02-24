@@ -281,7 +281,7 @@ The following table lists some suggested alert rules for AKS. These alerts are j
 
 Node Network Metrics are crucial for maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain valuable insights into your cluster's operation and identify potential issues before they lead to outages or performance degradation.
 
-Starting with Kubernetes version 1.29, node network metrics are enabled by default for all clusters with Azure Monitor enabled. This default enablement installs a lightweight agent  called Retina on your cluster. Retina agent collects and converts essential metrics into Prometheus format.
+Starting with Kubernetes version 1.29, node network metrics are enabled by default for all clusters with Azure Monitor enabled.
 
 The following node network metrics are enabled by default and are aggregated per node. All metrics include the labels cluster and instance (node name). These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
 
@@ -325,6 +325,8 @@ The table below outlines the different metrics generated.
 | **networkobservability_interface_stats**       | Interface statistics. | InterfaceName, `statistic` | ✅ | ✅ |
 
 ---
+
+For detailed Pod-level and DNS metrics, explore our [Advanced Container Networking services](advanced-container-networking-services-overview.md) offering.
 
 ## Related content
 
