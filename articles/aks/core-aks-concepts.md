@@ -30,7 +30,8 @@ An AKS cluster is divided into two main components:
 
 > [!NOTE]
 > AKS managed components have the label "kubernetes.azure.com/managedby": "aks".
-> AKS manages the Helm Charts with the prefix *aks-managed*, continuously increasing revisions on these charts are expected and safe.
+> 
+> AKS manages the Helm Charts with the prefix **aks-managed**, continuously increasing revisions on these charts are expected and safe.
 
 ### Control plane
 
