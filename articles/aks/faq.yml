@@ -131,9 +131,9 @@ sections:
           > In the past, the tag name "Owner" was reserved for AKS to manage the public IP that is assigned on front end IP of the load balancer. Now, services follow use the `aks-managed` prefix. For legacy resources, don't use Azure policies to apply the "Owner" tag name. Otherwise, all resources on your AKS cluster deployment and update operations will break. This doesn't apply to newly created resources.
       
       - question: |
-          Should I be concerned that the revision count of aks-managed prefixed Helm charts are continuously increasing?
+          Why do I have aks-managed prefixed Helm releases on my cluster and why do their revision count keep increasing?
         answer: |
-          No. AKS uses Helm to deliver components to your cluster, you can safely ignore **aks-managed** prefixed Helm charts and continuously increasing revisions on these charts are expected and safe.
+          AKS uses Helm to deliver components to your cluster, you can safely ignore **aks-managed** prefixed Helm releases and continuously increasing revisions on these Helm releases are expected and safe.
      
   - name: Quotas, limits, and region availability
     questions:
