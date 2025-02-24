@@ -51,9 +51,9 @@ Each node image corresponds to an OS version which you can specify using OS SKU.
 
 | OS Type | OS SKU | Supported Kubernetes versions | Default versioning |
 |--|--|--|--|
-| Linux | Ubuntu | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes version X to 1.25+. |
-| Linux | Azure Linux | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Azure Linux 2.0 is default for Kubernetes version 1.X to 1.31. Azure Linux 3.0 is default for Kubernetes version 1.32+. |
-| Windows | Windows2019 | X-1.32 | Default for Windows OS Type in Kubernetes version 1.X to 1.24. |
+| Linux | Ubuntu | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes version 1.25 to 1.32. |
+| Linux | Azure Linux | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Azure Linux 2.0 is default for Kubernetes version 1.27 to 1.31. Azure Linux 3.0 is default for Kubernetes version 1.32+. |
+| Windows | Windows2019 | 1.14-1.32 | Default for Windows OS Type in Kubernetes version 1.14 to 1.24. |
 | Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.33. |
 
 ### Factors that might impact default node images
