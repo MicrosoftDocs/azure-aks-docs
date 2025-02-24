@@ -877,7 +877,7 @@
             - name: Telemetry API for Istio service mesh
               href: istio-telemetry.md
             - name: Collect Istio metrics in Azure Managed Prometheus
-              href: istio-metrics-managed-Prometheus.md
+              href: istio-metrics-managed-prometheus.md
         - name: Open Service Mesh AKS add-on
           items:
             - name: About Open Service Mesh
