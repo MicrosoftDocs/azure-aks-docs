@@ -73,7 +73,7 @@ The following factors might impact the default image AKS chooses for your node p
     - [Trusted Launch](./use-trusted-launch.md) changes the default node image for all Linux node pools.
 
 > [!NOTE]
-> Many of the above features can't be combined in a single node pool. Follow links to feature documentation to see limitations. 
+> Certain features can't be combined in a single node pool. Follow links to the feature documentation to review the limitations.
 
 ## Available Linux node images
 
