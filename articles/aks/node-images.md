@@ -14,11 +14,12 @@ This article describes the node images available for Azure Kubernetes Service (A
 
 ## Node image releases
 
-Azure Kubernetes Service (AKS) regularly provides new node images, so it's beneficial to upgrade your node images frequently to access the latest AKS features, component updates, etc. Linux node images are released weekly, and Windows node images are released monthly.
+Azure Kubernetes Service (AKS) regularly provides new node images, so it's beneficial to upgrade your node images frequently to access the latest AKS features, component updates, and security fixes. You can find detailed summaries of each node image version in the [AKS VHD notes](https://github.com/Azure/AKS/tree/master/vhd-notes). 
 
-New node images are included in the [AKS release notes](https://github.com/Azure/AKS/releases). You can find detailed summaries of each node image version in the [AKS VHD notes](https://github.com/Azure/AKS/tree/master/vhd-notes).
+Linux node images are released weekly, and Windows node images are released monthly. New node images are included in the [AKS release notes](https://github.com/Azure/AKS/releases).
 
-When new node images are released, it can take up to a week for the updates to be rolled out across all regions. The [AKS Release Tracker](https://learn.microsoft.com/azure/aks/release-tracker) shows the current latest node image version, three previously available node image versions for each region, and the node image update order by region. Once the node image is available in your region, you can perform a [manual node image upgrade](./node-image-upgrade.md) or configure [automatic node image upgrades](./auto-upgrade-node-os-image.md) and schedule them using [planned maintenance](./planned-maintenance.md).
+
+When new node images are released, it can take up to two weeks for the updates to be rolled out across all regions. The [AKS Release Tracker](https://learn.microsoft.com/azure/aks/release-tracker) shows the current latest node image version, three previously available node image versions for each region, and the node image update order by region. Once the node image is available in your region, you can perform a [manual node image upgrade](./node-image-upgrade.md) or configure [automatic node image upgrades](./auto-upgrade-node-os-image.md) and schedule them using [planned maintenance](./planned-maintenance.md).
 
 ## Default node images
 
@@ -62,9 +63,9 @@ The following factors might impact the default image AKS chooses for your node p
 
 - **OS SKU**: If `--os-sku` is specified, then your default OS changes. For example, if you specify Azure Linux as the OS SKU, then your node image is Azure Linux with containerd.
 - **Virtual machine (VM) size**: 
-    - Confidential virtual machines (CVM)
-    - AMR64 virtual machines
-- **Hypervisor Generation**: Each VM size supports Generation 1, Generation 2, or both.
+    - [Confidential virtual machines (CVM)](./use-cvm.md)
+    - [AMR64 virtual machines](./create-node-pools.md)
+- **Hypervisor Generation**: Each VM size supports Generation 1, [Generation 2](./generation-2-vm.md), or both.
     - If a Generation 2 is supported, AKS defaults to using the Generation 2 node image.
     - If only Generation 1 is supported, AKS defaults to using the Generation 1 node image.
 - **Feature enablement**: There are some features embedded into the node image. If you choose to use any of these features, your default node image changes.
@@ -85,10 +86,10 @@ The Ubuntu node images are fully validated by AKS and supported by Microsoft, Ca
 |--|--|--|
 | **Ubuntu with containerd and Gen 1** | This is the standard node image for Ubuntu node pools using a VM size that only supports Generation 1. | N/A |
 | **Ubuntu with containerd and Gen 2** | This is the standard node image for Ubuntu node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, this node image is selected. | N/A |
-| **Ubuntu with containerd and FIPS** | This is a variant of the default node image for customers that enable Federal Information Processing Standards (FIPS). These images support both Generation 1 and Generation 2. | Not yet supported for Ubuntu 22.04+. Can't be combined with Arm64, Trusted Launch, or CVM. |
-| **Ubuntu with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports Arm4. These images support Generation 2 only. | Can't be combined with FIPS, CVM, or Trusted Launch. |
-| **Ubuntu with containerd and CVM** | This is a variant of the default node image for customers that use a Confidential VM size. These images support Generation 2 only. | Not yet supported for Ubuntu 22.04+. Can't be combined with FIPS, Arm64, or Trusted Launch. |
-| **Ubuntu with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable Trusted Launch. These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or CVM. |
+| **Ubuntu with containerd and FIPS** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md). These images support both Generation 1 and Generation 2. | Not yet supported for Ubuntu 22.04+. Can't be combined with Arm64, Trusted Launch, or CVM. |
+| **Ubuntu with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./create-node-pools.md). These images support Generation 2 only. | Can't be combined with FIPS, CVM, or Trusted Launch. |
+| **Ubuntu with containerd and CVM** | This is a variant of the default node image for customers that use a [Confidential VM](./use-cvm.md) size. These images support Generation 2 only. | Not yet supported for Ubuntu 22.04+. Can't be combined with FIPS, Arm64, or Trusted Launch. |
+| **Ubuntu with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable [Trusted Launch](./use-trusted-launch.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or CVM. |
 
 ### Azure Linux node images
 
@@ -98,10 +99,10 @@ The Azure Linux node images are fully validated by AKS and built from source, us
 |--|--|--|
 | **Azure Linux with containerd and Gen 1** | This is the standard node image for Azure Linux node pools using a VM size that only supports Generation 1. | N/A |
 | **Azure Linux with containerd and Gen 2** | This is the standard node image for Azure Linux node pools using a VM size that supports Generation 2. If a VM size supports both Generation 1 and Generation 2, node image is selected. | N/A |
-| **Azure Linux with containerd and FIPS** | This is a variant of the default node image for customers that enable Federal Information Processing Standards (FIPS). These images support both Generation 1 and Generation 2. | Can't be combined with Arm64, Trusted Launch, or Pod Sandboxing. |
-| **Azure Linux with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports Arm64. These images support Generation 2 only. | Can't be combined with FIPS, Trusted Launch, or Pod Sandboxing. |
-| **Azure Linux with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable Trusted Launch. These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Pod Sandboxing. |
-| **Azure Linux with containerd and Pod Sandboxing** | This is a variant of the default node image for customers that enable Pod Sandboxing. These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Trusted Launch. |
+| **Azure Linux with containerd and FIPS** | This is a variant of the default node image for customers that enable [Federal Information Processing Standards (FIPS)](./enable-fips-nodes.md). These images support both Generation 1 and Generation 2. | Can't be combined with Arm64, Trusted Launch, or Pod Sandboxing. |
+| **Azure Linux with containerd and Arm64** | This is a variant of the default node image for customers that use a VM size that supports [Arm64](./create-node-pools.md). These images support Generation 2 only. | Can't be combined with FIPS, Trusted Launch, or Pod Sandboxing. |
+| **Azure Linux with containerd and Trusted Launch** | This is a variant of the default node image for customers that enable [Trusted Launch](./use-trusted-launch.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Pod Sandboxing. |
+| **Azure Linux with containerd and Pod Sandboxing** | This is a variant of the default node image for customers that enable [Pod Sandboxing](./use-pod-sandboxing.md). These images support Generation 2 only. | Can't be combined with FIPS, Arm64, or Trusted Launch. |
 
 ## Available Windows Server node images
 
@@ -135,6 +136,8 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [use-windows-annual]: ./windows-annual-channel.md
 [aks-core-concepts]: ./core-aks-concepts.md
 [custom-node-configuration]: ./custom-node-configuration.md
+[use-cvm]: ./use-cvm.md
+[create-node-pools]: ./create-node-pools.md
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases
