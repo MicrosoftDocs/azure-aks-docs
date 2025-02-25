@@ -195,10 +195,8 @@
       href: concepts-storage.md
     - name: Scaling
       href: concepts-scale.md
-    - name: Node Configuration
-      items:
-        - name: Node images
-          href: node-images.md
+    - name: Node images
+      href: node-images.md
     - name: Node health
       items:
         - name: Node auto-repair
