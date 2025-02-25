@@ -18,6 +18,9 @@ Azure Kubernetes Service (AKS) regularly provides new node images, so it's benef
 
 Linux node images are released weekly, and Windows node images are released monthly. New node images are included in the [AKS release notes](https://github.com/Azure/AKS/releases).
 
+> **Best practice guidance**
+>
+> Configure [automatic node image upgrades](./auto-upgrade-node-os-image.md) and schedule them using [planned maintenance](./planned-maintenance.md). This will ensure that your node images are always up to date without requiring manual upgrades.
 
 When new node images are released, it can take up to two weeks for the updates to be rolled out across all regions. The [AKS Release Tracker](https://learn.microsoft.com/azure/aks/release-tracker) shows the current latest node image version, three previously available node image versions for each region, and the node image update order by region. Once the node image is available in your region, you can perform a [manual node image upgrade](./node-image-upgrade.md) or configure [automatic node image upgrades](./auto-upgrade-node-os-image.md) and schedule them using [planned maintenance](./planned-maintenance.md).
 
@@ -126,6 +129,7 @@ The Windows Server node images are fully validated by AKS and supported by Micro
 
 To learn more about node images, node pool upgrades, and node configurations on AKS, see the following resources:
 - To learn about nodes and node configurations, see [AKS core concepts][aks-core-concepts].
+- Configure [automatic node image upgrades](./auto-upgrade-node-os-image.md) and schedule them using [planned maintenance](./planned-maintenance.md).
 - Apply [custom node configurations][custom-node-configuration] to modify OS or kubelet settings.
 - For information about the latest node images, see the [AKS release notes](https://github.com/Azure/AKS/releases).
 - [Automatically apply cluster and node pool upgrades with GitHub Actions][github-schedule].
