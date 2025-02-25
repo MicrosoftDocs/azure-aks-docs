@@ -30,7 +30,7 @@ This article introduces the core concepts that provide storage to your applicati
 
 ## Default OS disk sizing
 ### Ephemeral OS disks
-By default, if you have selected a VM SKU which supports Ephemeral OS disks but have not specified an OS disk, AKS will provision an Ephemeral OS disk with a size that scales according to the total temp storage of the VM SKU. 
+By default, if you have selected a VM SKU which supports Ephemeral OS disks but have not specified an OS disk size, AKS will provision an Ephemeral OS disk with a size that scales according to the total temp storage of the VM SKU. 
 
 `Ex. a Standard_D8ds_v5 SKU, with a temp disk size of 300GiB, will receive a 300GiB Ephemeral OS disk by default if the disk parameters are unspecified.` 
 
