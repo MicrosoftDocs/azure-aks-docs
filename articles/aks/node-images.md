@@ -1,5 +1,5 @@
 ---
-title: Node images in Azure Kubernetes Service (AKS)
+title: Node Images in Azure Kubernetes Service (AKS)
 description: Learn about the different node images available in Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
