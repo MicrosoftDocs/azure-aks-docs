@@ -65,7 +65,7 @@ In AKS, the **VM image** for your cluster's nodes is based on Ubuntu Linux, [Azu
 
 ### OS disks
 
-Default OS disk sizing is only used on new clusters or node pools when Ephemeral OS disks aren't supported and a default OS disk size isn't specified. For more information, see [Default OS disk sizing][default-os-disk] and [Ephemeral OS disks][ephemeral-os-disks].
+Default OS disk sizing is only used on new clusters or node pools when a default OS disk size isn't specified. This applies to both Managed and Ephemeral OS disks. For more information, see [Default OS disk sizing][default-os-disk].
 
 ### Resource reservations
 
