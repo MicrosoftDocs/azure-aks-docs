@@ -16,7 +16,7 @@ This article describes the node images available for Azure Kubernetes Service (A
 
 Azure Kubernetes Service (AKS) regularly provides new node images, so it's beneficial to upgrade your node images frequently to access the latest AKS features, component updates, etc. Linux node images are released weekly, and Windows node images are released monthly.
 
-New node images are included in the [AKS release notes](https://github.com/Azure/AKS/releases). You can find detailed summaries of each node image version in the [AKS vhd notes](https://github.com/Azure/AKS/tree/2025-01-06/vhd-notes).
+New node images are included in the [AKS release notes](https://github.com/Azure/AKS/releases). You can find detailed summaries of each node image version in the [AKS VHD notes](https://github.com/Azure/AKS/tree/master/vhd-notes).
 
 When new node images are released, it can take up to a week for the updates to be rolled out across all regions. The [AKS Release Tracker](https://learn.microsoft.com/azure/aks/release-tracker) shows the current latest node image version, three previously available node image versions for each region, and the node image update order by region. Once the node image is available in your region, you can perform a [manual node image upgrade](./node-image-upgrade.md) or configure [automatic node image upgrades](./auto-upgrade-node-os-image.md) and schedule them using [planned maintenance](./planned-maintenance.md).
 
