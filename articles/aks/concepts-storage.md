@@ -29,7 +29,17 @@ This article introduces the core concepts that provide storage to your applicati
 ![Diagram of storage options for applications in an Azure Kubernetes Services (AKS) cluster.](media/concepts-storage/aks-storage-concept.png)
 
 ## Default OS disk sizing
+### Ephemeral OS disks
+By default, if you have selected a VM SKU which supports Ephemeral OS disks but have not specified an OS disk, AKS will provision an Ephemeral OS disk with a size that scales according to the total temp storage of the VM SKU. 
 
+`Ex. a Standard_D8ds_v5 SKU, with a temp disk size of 300GiB, will receive a 300GiB Ephemeral OS disk by default if the disk parameters are unspecified.` 
+
+If you are looking to utilize the temp storage of the VM SKU, you will need to specify the OS disk size during deployment, otherwise it will be consumed by default.
+
+> [!IMPORTANT]
+> Default Ephemeral OS disk sizing is only used on new clusters or node pools where Ephemeral OS disks are supported and a default OS disk size isn't specified. The default OS disk size might impact the performance or cost of your cluster. You can't change the OS disk size after cluster or node pool creation. This default Ephemeral sizing affects clusters or node pools created in March 2025 or later.
+> 
+### Managed OS disks
 When you create a new cluster or add a new node pool to an existing cluster, the number for vCPUs by default determines the OS disk size. The number of vCPUs is based on the VM SKU. The following table lists the default OS disk size for each VM SKU:
 
 |VM SKU Cores (vCPUs)| Default OS Disk Tier | Provisioned IOPS | Provisioned Throughput (Mbps) |
@@ -40,7 +50,7 @@ When you create a new cluster or add a new node pool to an existing cluster, the
 | 64+ | P30/1024G | 5000 | 200 |
 
 > [!IMPORTANT]
-> Default OS disk sizing is only used on new clusters or node pools when Ephemeral OS disks aren't supported and a default OS disk size isn't specified. The default OS disk size might impact the performance or cost of your cluster. You can't change the OS disk size after cluster or node pool creation. This default disk sizing affects clusters or node pools created on July 2022 or later.
+> Default Managed OS disk sizing is only used on new clusters or node pools when Ephemeral OS disks aren't supported and a default OS disk size isn't specified. The default OS disk size might impact the performance or cost of your cluster. You can't change the OS disk size after cluster or node pool creation. This default Managed sizing affects clusters or node pools created in July 2022 or later.
 
 ## Ephemeral OS disk
 
