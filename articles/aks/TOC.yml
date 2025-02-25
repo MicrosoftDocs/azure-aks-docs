@@ -451,6 +451,16 @@
                   href: airflow-create-infrastructure.md
                 - name: Configure and deploy Airflow
                   href: airflow-deploy.md
+            - name: Deploy Apache Kafka using Strimzi 
+              items:
+                - name: Overview
+                  href: kafka-overview.md
+                - name: Create AKS infrastructure resources for Kafka
+                  href: kafka-infrastructure.md
+                - name: Configure and deploy Strimzi and Kafka resources
+                  href: kafka-deploy.md
+                - name: Monitoring and testing Kafka
+                  href: kafka-testing.md
         - name: AI and machine learning workloads
           items:
             - name: Overview
