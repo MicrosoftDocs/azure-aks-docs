@@ -30,11 +30,9 @@ This article introduces the core concepts that provide storage to your applicati
 
 ## Default OS disk sizing
 ### Ephemeral OS disks
-By default, if you have selected a VM SKU which supports Ephemeral OS disks but have not specified an OS disk size, AKS will provision an Ephemeral OS disk with a size that scales according to the total temp storage of the VM SKU, so long as the temp is at least 128GiB. 
+If you select a VM SKU that supports Ephemeral OS disks but don't specify an OS disk size, AKS by default provisions an Ephemeral OS disk with a size that scales according to the total temp storage of the VM SKU so long as the temp is *at least 128GiB*. For example, the `Standard_D8ds_v5` SKU with a temp disk size of 300GiB will receive a 300GiB Ephemeral OS disk by default if the disk parameters are unspecified.
 
-`Ex. a Standard_D8ds_v5 SKU, with a temp disk size of 300GiB, will receive a 300GiB Ephemeral OS disk by default if the disk parameters are unspecified.` 
-
-If you are looking to utilize the temp storage of the VM SKU, you will need to specify the OS disk size during deployment, otherwise it will be consumed by default.
+If you want to use the temp storage of the VM SKU, you need to specify the OS disk size during deployment, otherwise it's consumed by default.
 
 > [!IMPORTANT]
 > Default Ephemeral OS disk sizing is only used on new clusters or node pools where Ephemeral OS disks are supported and a default OS disk size isn't specified. The default OS disk size might impact the performance or cost of your cluster. You can't change the OS disk size after cluster or node pool creation. This default Ephemeral sizing affects clusters or node pools created in March 2025 or later.
