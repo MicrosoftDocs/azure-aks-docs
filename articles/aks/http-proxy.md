@@ -65,7 +65,7 @@ The schema for the config file looks like this:
 
 * `httpProxy`: A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be `http`.
 * `httpsProxy`: A proxy URL to use for creating HTTPS connections outside the cluster. If not specified, then `httpProxy` is used for both HTTP and HTTPS connections.
-* `noProxy`: A list of destination domain names, domains, IP addresses, or other network CIDRs to exclude proxying. Maybe you may want to add this to test in a proxy-less environment: "localhost", "127.0.0.1", "hcp.YOURCLUSTERREGION.azmk8s.io", "mcr.microsoft.com" to test the deployment. 
+* `noProxy`: A list of destination domain names, domains, IP addresses, or other network CIDRs to exclude proxying. Maybe you may want to add this to test in a proxy-less environment: "localhost", "127.0.0.1", "hcp.YOURCLUSTERREGION.azmk8s.io", "microsoft.com" to test the deployment. 
 * `trustedCa`: A string containing the `base64 encoded` alternative CA certificate content. Currently only the `PEM` format is supported.
 
 > [!IMPORTANT]
