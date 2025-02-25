@@ -305,6 +305,9 @@ When you create an Azure disk for use with AKS, you can create the disk resource
           fsType: ext4
     ```
 
+  > [!NOTE]
+  > If the `volumeHandle` references an Azure Disk that is *NOT* in the AKS cluster's managed resource group, you shall need to provide the managed identity of the AKS cluster with "Contributor" permissions to the Azure Disk.
+
 2. Create a *pvc-azuredisk.yaml* file with a *PersistentVolumeClaim* that uses the *PersistentVolume*.
 
     ```yaml
