@@ -133,7 +133,7 @@ sections:
       - question: |
           Why do I have aks-managed prefixed Helm releases on my cluster and why does their revision count keep increasing?
         answer: |
-          AKS uses Helm to deliver components to your cluster, you can safely ignore **aks-managed** prefixed Helm releases.Continuously increasing revisions on these Helm releases are expected and safe.
+          AKS uses Helm to deliver components to your cluster, you can safely ignore **aks-managed** prefixed Helm releases. Continuously increasing revisions on these Helm releases are expected and safe.
      
   - name: Quotas, limits, and region availability
     questions:
