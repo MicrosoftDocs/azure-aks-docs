@@ -44,7 +44,7 @@ There are cases where AKS doesn't perform automatic repair. Failure to automatic
 * A node status isn't being reported due to error in network configuration.
 * A node failed to initially register as a healthy node.
 * If either of the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
-* A node is in the process of being upgraded, resulting in the following annotation on the node `"cluster-autoscaler.kubernetes.io/scale-down-disabled": "true"`
+* A node is in the process of being upgraded, resulting in the following annotation on the node `"cluster-autoscaler.kubernetes.io/scale-down-disabled": "true"` and `"kubernetes.azure.com/azure-cluster-autoscaler-scale-down-disabled-reason": "upgrade"`
 
 ## Monitor node auto-repair using Kubernetes events
 When AKS performs node auto-repair on your cluster, AKS emits Kubernetes events from the aks-auto-repair source for visibility. The following events appear on a node object when auto-repair happens. 
