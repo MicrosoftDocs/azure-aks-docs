@@ -234,6 +234,9 @@ The following annotations can be added to the Kubernetes service for the externa
 - `service.beta.kubernetes.io/azure-load-balancer-ipv4`: for configuring a static IPv4 address.
 - `service.beta.kubernetes.io/azure-load-balancer-resource-group`: for specifying the resource group of a public IP in a different resource group from the cluster.
 - `service.beta.kubernetes.io/azure-pip-name`: for specifying the name of a public IP address.
+- `external-dns.alpha.kubernetes.io/hostname`: for specifying the domain for resource's DNS records. See [external-dns][external-dns] for more information.
+
+The add-on supports health probe annotations for ports 80 and 443. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
 
 ## Delete resources
 
@@ -269,3 +272,5 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [istio-ingress-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-ingress-gateway
 [azure-nsg-docs]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
 [azure-service-tags]: /azure/virtual-network/service-tags-overview
+[external-dns]: https://kubernetes-sigs.github.io/external-dns/latest/docs/annotations/annotations/#external-dnsalphakubernetesiohostname
+[azure-load-balancer-annotations-for-ports]: /azure/aks/load-balancer-standard#customize-the-load-balancer-health-probe
