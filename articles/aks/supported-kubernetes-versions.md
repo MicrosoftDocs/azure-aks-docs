@@ -38,7 +38,7 @@ Aim to run the latest patch release of the minor version you're running. For exa
 View the upcoming version releases on the AKS Kubernetes release calendar. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
 
 > [!NOTE]
-> AKS follows 12 months of support for a generally available (GA) Kubernetes version. To read more about our support policy for Kubernetes versioning, please read our [FAQ](./supported-kubernetes-versions.md#faq).
+> AKS follows 12 months of support for a generally available (GA) Kubernetes version. To read more about our support policy for Kubernetes versioning, read our [FAQ](./supported-kubernetes-versions.md#faq).
 
 For the past release history, see [Kubernetes history](https://github.com/kubernetes/kubernetes/releases).
 
@@ -54,7 +54,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 LTS Versions
 
 > [!NOTE]
-> Azure Linux supports 1.27 LTS only. For more information on 1.30 LTS with Azure Linux please read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
+> Azure Linux supports 1.27 LTS only. For more information on 1.30 LTS with Azure Linux, read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
 
 |  K8s version | Upstream release  | AKS preview  | AKS GA  | End of life | LTS End of life |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
@@ -99,9 +99,9 @@ Note the following important changes before you upgrade to any of the available 
 ## Alias minor version
 
 > [!NOTE]
-> Alias minor version requires Azure CLI version 2.37 or above as well as API version 20220401 or above. Use `az upgrade` to install the latest version of the CLI.
+> Alias minor version requires Azure CLI version 2.37 or above and API version 20220401 or above. Use `az upgrade` to install the latest version of the CLI.
 
-AKS allows you to create a cluster without specifying the exact patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. For example, if you create a cluster with **`1.29`** and **`1.29.2`** is the latest GA'd patch available, your cluster will be created with **`1.29.2`**. If you want to upgrade your patch version in the same minor version, please use [auto-upgrade](./auto-upgrade-cluster.md).
+AKS allows you to create a cluster without specifying the exact patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. For example, if you create a cluster with **`1.29`** and **`1.29.2`** is the latest GA'd patch available, your cluster is created with **`1.29.2`**. If you want to upgrade your patch version in the same minor version, use [auto-upgrade](./auto-upgrade-cluster.md).
 
 To see what patch you're on, run the `az aks show --resource-group myResourceGroup --name myAKSCluster` command. The `currentKubernetesVersion` property shows the whole Kubernetes version.
 
@@ -121,7 +121,7 @@ AKS defines a generally available (GA) version as a version available in all reg
 
 * The latest GA minor version released in AKS (which we refer to as *N*).
 * Two previous minor versions.
-  * Each supported minor version can support any number of patches at a given time. AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, please refer to version release notes and visit the [AKS release status webpage][aks-tracker].
+  * Each supported minor version can support any number of patches at a given time. AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, refer to version release notes and visit the [AKS release status webpage][aks-tracker].
 
 AKS might also support preview versions, which are explicitly labeled and subject to [preview terms and conditions][preview-terms].
 
@@ -183,7 +183,7 @@ This table outlines support guidelines for Community Support compared to Platfor
 | Node image upgrade| Supported | Supported|
 
  > [!NOTE]
-  > The above table is subject to change and outlines common support scenarios. Any scenarios related to Kubernetes functionality and components aren't supported for N-3. For further support, see [Support and troubleshooting for AKS](./aks-support-help.md).
+  > The table is subject to change and outlines common support scenarios. Any scenarios related to Kubernetes functionality and components aren't supported for N-3. For further support, see [Support and troubleshooting for AKS](./aks-support-help.md).
 
 ### Supported `kubectl` versions
 
@@ -317,24 +317,24 @@ When you upgrade a supported AKS cluster, Kubernetes minor versions can't be ski
 * *1.27.x* -> *1.28.x*: allowed.
 * *1.27.x* -> *1.29.x*: not allowed.
 
-Please note that for control plane version upgrades, you can go upto 3 minor versions for community supported versions in sequential fashion. 
+Note that for control plane version upgrades, you can go upto 3 minor versions for community supported versions in sequential fashion. 
 
 To upgrade from *1.27.x* -> *1.29.x*:
 
 1. Upgrade from *1.27.x* -> *1.28.x*.
 2. Upgrade from *1.28.x* -> *1.29.x*.
 
-Note starting from 1.28 version onwards, agentpool versions can be upto 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). When your version is much behind the minimum supported version, you may have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. You may have to upgrade sequentially 4 times from *1.23.x* in order to get to *1.27.x*. Also note that Agent pool versions can be upgraded to the control plane minor version. This means in the above example you can upgrade agentpool version twice i.e once from *1.23.x* to *1.25.x*, when the control plane version is at *1.25.x*. And subsequently from *1.25.x* to *1.27.x* , when control plane version is at *1.27.x*. When upgrading in-place i.e control plane and agent pool together the same rules applicable to control plane upgrade written above applies. 
+Note starting from 1.28 version onwards, agentpool versions can be upto 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). When your version is much behind the minimum supported version, you may have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. You may have to upgrade sequentially 4 times from *1.23.x* in order to get to *1.27.x*. Also note that Agent pool versions can be upgraded to the control plane minor version. This means in the above example you can upgrade agentpool version twice (i.e once from *1.23.x* to *1.25.x*) when the control plane version is at *1.25.x*. And then from *1.25.x* to *1.27.x* , when control plane version is at *1.27.x*. When upgrading in-place (i.e control plane and agent pool together), the same rules applicable to control plane upgrade written above applies. 
 
 When performing an upgrade from an _unsupported version_ - the upgrade is performed without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported version_ has the flexibility of decoupling control plane upgrades with node pool upgrades. However if your version is significantly out of date, we recommend that you re-create the cluster.
 
 ### Can I create a new 1.xx.x cluster during the platform support window?
 
-No, Creation of new clusters are not possible during Platform Support period.
+No, Creation of new clusters is not possible during Platform Support period.
 
 ### I'm on a freshly deprecated version that is out of platform support, can I still add new node pools? Or will I have to upgrade?
 
-Yes, you can add agent pools as long as they are compatible with the control plane version. 
+Yes, you can add agent pools as long as they're compatible with the control plane version. 
 
 ## Next steps
 
