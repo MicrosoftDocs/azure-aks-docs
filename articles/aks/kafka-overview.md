@@ -37,4 +37,8 @@ Once deployed, the Strimzi Operator allows you to begin deploying the desired Ka
 
 ### Cruise Control
 
-### 
+### Drain Cleaner
+
+Strimzi Drain Cleaner is a utility designed to help manage Apache Kafka pods deployed by Strimzi during Kubernetes node draining. When a Kubernetes node is drained for maintenance or upgrades, pods running on that node need to be moved. Strimzi Drain Cleaner ensures that this process is handled smoothly by the Strimzi operator rather than Kubernetes itself.
+
+The main advantage of using Strimzi Drain Cleaner is that it prevents Kafka partition replicas from becoming under-replicated during the node draining process. It uses Kubernetes Admission Control features and Validating Webhooks to detect when an eviction request is made for Kafka broker pods. When such a request is detected, the Drain Cleaner annotates the pods to signal the Strimzi Cluster Operator to handle the restart, ensuring that the Kafka cluster remains in a healthy state.
