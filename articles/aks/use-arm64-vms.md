@@ -1,6 +1,6 @@
 ---
-title: Use Arm64 Virtual Machines in Azure Kubernetes Service (AKS)
-description: Learn how to create node pools using Arm64 Virtual Machines with Azure Kubernetes Service (AKS)
+title: Use Arm64 Virtual Machines in Azure Kubernetes Service (AKS) for cost effectiveness
+description: Learn how to create node pools using Arm64 Virtual Machines with Azure Kubernetes Service (AKS) for cost effectiveness
 ms.topic: how-to
 ms.date: 02/25/2025
 author: allyford
@@ -8,9 +8,9 @@ ms.author: allyford
 
 ---
 
-# Use Ampere Altra Arm-based processors (Arm64) Virtual Machines (VMs) in an Azure Kubernetes Service (AKS) cluster
+# Use Arm-based processor (Arm64) Virtual Machines (VMs) in an Azure Kubernetes Service (AKS) cluster for cost effectiveness
 
-[Ampere Altra Arm-based processors (Arm64)](https://azure.microsoft.com/blog/now-in-preview-azure-virtual-machines-with-ampere-altra-armbased-processors/) are power-efficient and cost effective but don't compromise on performance. These Arm64 VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads.
+[Arm-based processors (Arm64)](https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/cobalt-overview) are power-efficient and cost effective but don't compromise on performance. These Arm64 VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads.
 
 ## Use Cases
 Arm64 VMs are best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more.
@@ -29,7 +29,7 @@ Before you begin, make sure you have:
 ## Limitations
 - Arm64 VMs aren't supported for Windows node pools.
 - Existing node pools can't be updated to use an Arm64 VM.
-- FIPS-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
+-  Federal Information Processing Standard (FIPS)-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
 - Arm64 node pools aren't supported on Defender-enabled clusters with Kubernetes version 1.29.0 or lower.
 
 ## Create node pools with Arm64 VMs
