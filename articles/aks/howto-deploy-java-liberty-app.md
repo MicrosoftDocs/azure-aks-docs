@@ -3,7 +3,8 @@ title: Deploy a Java application with Open Liberty/WebSphere Liberty on an Azure
 recommendations: false
 description: Deploy a Java application with Open Liberty or WebSphere Liberty on an AKS cluster by using the Azure Marketplace offer, which automatically provisions resources.
 author: KarlErickson
-ms.author: edburns
+ms.author: karler
+ms.reviewer: edburns
 ms.topic: how-to
 ms.date: 11/14/2024
 ms.subservice: aks-developer
