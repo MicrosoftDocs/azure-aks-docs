@@ -509,6 +509,8 @@
       items:
         - name: Understand AKS usage and costs
           href: understand-aks-costs.md
+        - name: Optimize AKS usage and costs
+          href: optimize-aks-costs.md
         - name: Enable cost analysis on your cluster
           href: cost-analysis.md
     - name: Cluster management
