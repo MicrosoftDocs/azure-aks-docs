@@ -10,7 +10,7 @@ ms.author: allyford
 
 # Use Arm-based processor (Arm64) Virtual Machines (VMs) in an Azure Kubernetes Service (AKS) cluster for cost effectiveness
 
-[Arm-based processors (Arm64)](https://learn.microsoft.com/en-us/azure/virtual-machines/sizes/cobalt-overview) are power-efficient and cost effective but don't compromise on performance. These Arm64 VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads.
+[Arm-based processors (Arm64)](https://learn.microsoft.com/azure/virtual-machines/sizes/cobalt-overview) are power-efficient and cost effective but don't compromise on performance. These Arm64 VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads.
 
 ## Use Cases
 Arm64 VMs are best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more.
@@ -29,7 +29,7 @@ Before you begin, make sure you have:
 ## Limitations
 - Arm64 VMs aren't supported for Windows node pools.
 - Existing node pools can't be updated to use an Arm64 VM.
--  Federal Information Processing Standard (FIPS)-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
+-  Federal Information Process Standard (FIPS)-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
 - Arm64 node pools aren't supported on Defender-enabled clusters with Kubernetes version 1.29.0 or lower.
 
 ## Create node pools with Arm64 VMs
@@ -92,7 +92,7 @@ Verify a node pool uses Arm64 using the [`az aks nodepool show`][az-aks-nodepool
 
 In this article, you learned how to add a node pool with an Arm64 VM to an AKS cluster. 
 - For more recommendations for cost savings, see [Best practices for cost optimization in Azure Kubernetes Service (AKS)](./best-practices-cost.md).
-- For more information about Arm64, see [Ampere Altra Arm-based processors (Arm64)](https://azure.microsoft.com/blog/now-in-preview-azure-virtual-machines-with-ampere-altra-armbased-processors/).
+- For more information about Arm64, see [Cobalt Arm-based processors (Arm64)](https://learn.microsoft.com/azure/virtual-machines/sizes/cobalt-overview).
 - For more information on verifying FIPS enablement and disabling FIPS, see [Enable FIPS node pools](./enable-fips-nodes.md).
 - For Azure Linux 3.0 enablement and support details, see [Enable Azure Linux 3.0](https://learn.microsoft.com/en-us/azure/azure-linux/how-to-enable-azure-linux-3).
 
