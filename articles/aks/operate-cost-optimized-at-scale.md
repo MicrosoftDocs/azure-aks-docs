@@ -15,6 +15,9 @@ This article provides guidance on how to operate cost optimized Azure Kubernetes
 - [Operate cost optimized Azure Kubernetes Service (AKS) at scale](#operate-cost-optimized-azure-kubernetes-service-aks-at-scale)
   - [Azure Kubernetes Fleet Manager (Kubernetes Fleet)](#azure-kubernetes-fleet-manager-kubernetes-fleet)
     - [Resource propagation](#resource-propagation)
+    - [Intelligent resource placement](#intelligent-resource-placement)
+  - [AKS Automatic](#aks-automatic)
+  - [Next steps](#next-steps)
 
 ## Azure Kubernetes Fleet Manager (Kubernetes Fleet)
 
@@ -22,7 +25,7 @@ This article provides guidance on how to operate cost optimized Azure Kubernetes
 
 :::image type="content" source="./media/operate-cost-optimized-at-scale/kubernetes-fleet-manager.png" alt-text="Screenshot of a diagram representing Azure Kubernetes Fleet Manager.":::
 
-For more information, see the [Azure Kubernetes Fleet Manager documentation](/azure/kubernetes-fleet/).
+Kubernetes Fleet can help you reduce the management overhead cost of operating multiple clusters by providing a single entry point for managing multiple clusters. For more information, see the [Azure Kubernetes Fleet Manager documentation](/azure/kubernetes-fleet/).
 
 ### Resource propagation
 
@@ -31,3 +34,23 @@ Kubernetes Fleet provides *resource propagation* to enable at-scale management o
 :::image type="content" source="./media/operate-cost-optimized-at-scale/kubernetes-resource-propagation.png" alt-text="Screenshot of a diagram representing Azure kubernetes Fleet Manager resource propagation.":::
 
 For more information, see [Kubernetes Fleet resource placement from hub cluster to member clusters](/azure/kubernetes-fleet/concepts-resource-propagation).
+
+### Intelligent resource placement
+
+Kubernetes Fleet provides *intelligent resource placement*, which can make scheduling decisions based on node count, cost of compute/memory in target member clusters, and resource availability in target member clusters. This allows you to place workloads in the most cost-effective member cluster based on your workload requirements.
+
+For more information, see [Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/intelligent-resource-placement).
+
+## AKS Automatic
+
+[AKS Automatic (preview)](./intro-aks-automatic.md) clusters dynamically allocate compute resources based on your specific workload requirements and are tuned for running production applications. AKS Automatic clusters are designed to help reduce management overhead costs of creating cluster templates, managing the cluster lifecycle, guardrails, updates, and scaling.
+
+For more information, see [What is Azure Kubernetes (AKS) Automatic (preview)?](./intro-aks-automatic.md)
+
+## Next steps
+
+To learn more about cost optimization in Azure Kubernetes Service (AKS), see the following articles:
+
+- [Best practices for cost optimization in Azure Kubernetes Service (AKS)](./best-practices-cost.md)
+- [Understand Azure Kubernetes Service (AKS) usage and costs](./understand-aks-costs.md)
+- [Azure Kubernetes Service (AKS) cost analysis](./cost-analysis.md)
