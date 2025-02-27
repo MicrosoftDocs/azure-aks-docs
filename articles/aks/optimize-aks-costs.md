@@ -5,7 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 02/06/2025
+ms.date: 02/27/2025
 ---
 
 # Optimize Azure Kubernetes Service (AKS) usage and costs
@@ -88,7 +88,7 @@ For more information, see [Multi-Process Service (MPS)](https://docs.nvidia.com/
 
 :::image type="content" source="./media/optimize-aks-costs/gpu-migs.png" alt-text="Screenshot of a visual chart example showing GPU multi-instance GPUs (MIGs).":::
 
-For more information, see [GPU Operator with MIG](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html).
+For more information, see [GPU Operator with MIG](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html) and [Create a multi-instance GPU node pool in Azure Kubernetes Service (AKS)](./gpu-multi-instance.md).
 
 ## Multitenancy
 
@@ -137,6 +137,8 @@ The following table outlines pros and cons of using a dedicated namespace:
 | • Higher pod density <br> • Best binpacking <br> • Sharing infrastructure to maximize resource utilization | • Unsafe for hostile environments by default <br> • Requires extra security measures in place if all tenants can't be trusted |
 
 ## Azure discounts
+
+To take savings one step further, take advantage of Azure discounts such as Azure Savings Plans, Reserved Instances, and Azure Hybrid Benefits.
 
 | Azure discount type | Details |
 |---------------------|---------|
