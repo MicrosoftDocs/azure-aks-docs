@@ -511,6 +511,8 @@
           href: understand-aks-costs.md
         - name: Enable cost analysis on your cluster
           href: cost-analysis.md
+        - name: Operate cost-optimized AKS at scale
+          href: operate-cost-optimized-at-scale.md
     - name: Cluster management
       items:
         - name: Azure portal Kubernetes resource view

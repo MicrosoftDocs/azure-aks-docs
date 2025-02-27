@@ -8,11 +8,11 @@ ms.topic: how-to
 ms.date: 02/27/2025
 ---
 
-# Operate cost optimized Azure Kubernetes Service (AKS) at scale
+# Operate cost-optimized Azure Kubernetes Service (AKS) at scale
 
 This article provides guidance on how to operate cost optimized Azure Kubernetes Service (AKS) at scale. It covers the following topics:
 
-- [Operate cost optimized Azure Kubernetes Service (AKS) at scale](#operate-cost-optimized-azure-kubernetes-service-aks-at-scale)
+- [Operate cost-optimized Azure Kubernetes Service (AKS) at scale](#operate-cost-optimized-azure-kubernetes-service-aks-at-scale)
   - [Azure Kubernetes Fleet Manager (Kubernetes Fleet)](#azure-kubernetes-fleet-manager-kubernetes-fleet)
     - [Resource propagation](#resource-propagation)
     - [Intelligent resource placement](#intelligent-resource-placement)
