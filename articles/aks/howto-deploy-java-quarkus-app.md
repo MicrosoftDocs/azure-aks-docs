@@ -2,7 +2,8 @@
 title: "Deploy Quarkus on Azure Kubernetes Service"
 description: Shows how to quickly stand up Quarkus on Azure Kubernetes Service.
 author: KarlErickson
-ms.author: edburns
+ms.author: karler
+ms.reviewer: edburns
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 12/16/2024
