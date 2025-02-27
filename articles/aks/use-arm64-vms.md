@@ -10,14 +10,14 @@ ms.author: allyford
 
 # Use Arm-based processor (Arm64) Virtual Machines (VMs) in an Azure Kubernetes Service (AKS) cluster for cost effectiveness
 
-[Arm-based processors (Arm64)](https://learn.microsoft.com/azure/virtual-machines/sizes/cobalt-overview) are power-efficient and cost effective but don't compromise on performance. These Arm64 VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads.
+[Arm-based processors (Arm64)](https://learn.microsoft.com/azure/virtual-machines/sizes/cobalt-overview) are power-efficient and cost-effective, but don't compromise on performance. These Arm64 VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads.
 
-## Use Cases
-Arm64 VMs are best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more.
+Because of their ability to scale workloads efficiently, Arm64 VMs are particularly well-suited for web or application servers, open-source databases, cloud-native applications, gaming servers, and other high traffic applications.
 
-> **Best practice guidance**
->
-> While a combination of CPU, memory, and networking capacity configurations heavily influences the cost effectiveness of a SKU, Arm64 vm types are recommended for [cost optimization](./best-practices-cost).
+>[!NOTE]
+>While a combination of CPU, memory, and networking capacity configurations heavily influences the cost effectiveness of a SKU, Arm64 VM types are recommended for cost optimization.
+
+In this article, you'll learn how to add a Arm64 VM to an existing node pool.
 
 ## Prerequisites
 
@@ -38,7 +38,9 @@ The Arm64 processor provides low power compute for your Kubernetes workloads. Ar
 
 ### Add a node pool with an Arm64 VM
 
-Add a node pool with an Arm64 VM into your existing cluster using the [`az aks nodepool add`][az-aks-nodepool-add].
+Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm64 VM to an existing cluster. Alternatively, if you'r using [Azure Linux 3.0+](https://learn.microsoft.com/en-us/azure/azure-linux/how-to-enable-azure-linux-3), you can add a node pool with an Arm64 VM and [FIPS](./enable-fips-nodes.md) enabled.
+
+- Add a node pool with an Arm64 VM
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -48,9 +50,13 @@ Add a node pool with an Arm64 VM into your existing cluster using the [`az aks n
         --node-count 3 \
         --node-vm-size Standard_D2pds_v5
     ```
+- Add a FIPS-enabled node pool with an Arm64 VM
 
-#### Add a FIPS-enabled node pool with an Arm64 VM
-You can enable [FIPS](./enable-fips-nodes.md) on Arm64 node pools when using [Azure Linux 3.0+](https://learn.microsoft.com/en-us/azure/azure-linux/how-to-enable-azure-linux-3). You can modify the [`az aks nodepool add`][az-aks-nodepool-add] to include `--enable-fips-image` and `--os-sku` parameters.
+Limitations: 
+- Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) enabled are not supported with Ubuntu OS.
+- Node pools wth Arm64 VMs and [FIPS](./enable-fips-nodes.md) require a minimum of kubernetes version 1.32.
+
+Use the [`az aks nodepool add`][az-aks-nodepool-add] with `--enable-fips-image` and `--os-sku` parameters.
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -59,6 +65,7 @@ You can enable [FIPS](./enable-fips-nodes.md) on Arm64 node pools when using [Az
         --name $ARM_NODE_POOL_NAME \
         --os-sku AzureLinux
         --enable-fips-image
+        --kubernetes-version 1.32
         --node-count 3 \
         --node-vm-size Standard_D2pds_v5
     ```
@@ -79,12 +86,6 @@ Verify a node pool uses Arm64 using the [`az aks nodepool show`][az-aks-nodepool
     The following example output shows the node pool uses Arm64:
 
     ```output
-    az aks nodepool show \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name mynodepool \
-        --query 'vmSize'
-
     "Standard_D2pds_v5"
     ```
 
