@@ -19,18 +19,18 @@ Arm64 VMs are best for web or application servers, open-source databases, cloud-
 >
 > While a combination of CPU, memory, and networking capacity configurations heavily influences the cost effectiveness of a SKU, Arm64 vm types are recommended for [cost optimization](./best-practices-cost).
 
-## Before you begin
+## Prerequisites
 
 Before you begin, make sure you have:
 
 - An existing AKS cluster.
-- The [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2] or [Epsv5][arm-sku-vm3] series SKUs available for your subscription.
+- The [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2], or [Epsv5][arm-sku-vm3] series SKUs available for your subscription.
 
 ## Limitations
-- Arm64 virtual machines aren't supported for Windows node pools
-- Existing node pools can't be updated to use an Arm64 virtual machine.
+- Arm64 VMs aren't supported for Windows node pools.
+- Existing node pools can't be updated to use an Arm64 VM.
 - FIPS-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
-- Arm64 node pools aren't supported on Defender-enabled clusters with Kubernetes version less than 1.29.0.
+- Arm64 node pools aren't supported on Defender-enabled clusters with Kubernetes version 1.29.0 or lower.
 
 ## Create node pools with Arm64 VMs
 
@@ -38,7 +38,7 @@ The Arm64 processor provides low power compute for your Kubernetes workloads. Ar
 
 ### Add a node pool with an Arm64 VM
 
-* Add a node pool with an Arm64 VM into your existing cluster using the [`az aks nodepool add`][az-aks-nodepool-add].
+Add a node pool with an Arm64 VM into your existing cluster using the [`az aks nodepool add`][az-aks-nodepool-add].
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -66,17 +66,17 @@ For more information on verifying FIPS enablement and disabling FIPS, see [Enabl
 
 ## Verify the node pool uses Arm64
 
-- Verify a node pool uses Arm64 using the [`az aks nodepool show`][az-aks-nodepool-show] command and verify the `vmSize` is a [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2] or [Epsv5][arm-sku-vm3] series.
+Verify a node pool uses Arm64 using the [`az aks nodepool show`][az-aks-nodepool-show] command and verify the `vmSize` is a [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2], or [Epsv5][arm-sku-vm3] series.
 
     ```azurecli-interactive
     az aks nodepool show \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
         --name mynodepool \
-        --query 'vmSize'
+        --query vmSize
     ```
 
-    The following example command and output shows the node pool uses Arm64:
+    The following example output shows the node pool uses Arm64:
 
     ```output
     az aks nodepool show \
@@ -91,7 +91,7 @@ For more information on verifying FIPS enablement and disabling FIPS, see [Enabl
 ## Next steps
 
 In this article, you learned how to add a node pool with an Arm64 VM to an AKS cluster. 
-- For more recommendations for cost savings, see [cost optimisation best practices](./best-practices-cost.md).
+- For more recommendations for cost savings, see [Best practices for cost optimization in Azure Kubernetes Service (AKS)](./best-practices-cost.md).
 - For more information about Arm64, see [Ampere Altra Arm-based processors (Arm64)](https://azure.microsoft.com/blog/now-in-preview-azure-virtual-machines-with-ampere-altra-armbased-processors/).
 - For more information on verifying FIPS enablement and disabling FIPS, see [Enable FIPS node pools](./enable-fips-nodes.md).
 - For Azure Linux 3.0 enablement and support details, see [Enable Azure Linux 3.0](https://learn.microsoft.com/en-us/azure/azure-linux/how-to-enable-azure-linux-3).
