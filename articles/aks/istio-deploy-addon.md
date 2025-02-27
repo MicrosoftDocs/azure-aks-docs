@@ -245,6 +245,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
 * [Scale istiod and ingress gateway HPA][istio-scaling-guide]
+* [Collect metrics for Istio service mesh add-on workloads in Azure Managed Prometheus][istio-metrics-managed-prometheus]
 
 <!--- External Links --->
 [install-aks-cluster-istio-bicep]: https://github.com/Azure-Samples/aks-istio-addon-bicep
@@ -261,3 +262,4 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [az-aks-mesh-get-revisions]: /cli/azure/aks/mesh#az-aks-mesh-get-revisions(aks-preview)
 [bicep-aks-resource-definition]: /azure/templates/microsoft.containerservice/managedclusters
 [istio-scaling-guide]: istio-scale.md#scaling
+[istio-metrics-managed-prometheus]: istio-metrics-managed-prometheus.md

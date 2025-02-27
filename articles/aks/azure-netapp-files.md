@@ -121,7 +121,7 @@ Astra Trident supports many features with Azure NetApp Files. For more informati
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
 [kubectl-exec]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec
-[astra-control-service]: https://cloud.netapp.com/astra-control
+[astra-control-service]: https://docs.netapp.com/us-en/astra-control-service/get-started/intro.html
 [kubernetes-csi-driver]: https://kubernetes-csi.github.io/docs/
 [trident-install-guide]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html
 [trident-helm-chart]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html

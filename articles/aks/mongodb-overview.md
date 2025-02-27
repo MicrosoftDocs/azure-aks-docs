@@ -2,7 +2,7 @@
 title: 'Solution overview for deploying a MongoDB cluster on Azure Kubernetes Service (AKS)'
 description: This article provides an overview for deploying a MongoDB cluster on AKS.
 ms.topic: overview
-ms.date: 09/05/2024
+ms.date: 01/07/2025
 author: fossygirl
 ms.author: carols
 ms.custom: aks-related-content

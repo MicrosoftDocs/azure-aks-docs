@@ -12,6 +12,8 @@ ms.author: nickoman
 
 # Migrate from pod managed-identity to workload identity
 
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303216)
+
 This article focuses on migrating from a pod-managed identity to Microsoft Entra Workload ID for your Azure Kubernetes Service (AKS) cluster. It also provides guidance depending on the version of the [Azure Identity][azure-identity-supported-versions] client library used by your container-based application.
 
 If you aren't familiar with Microsoft Entra Workload ID, see the following [Overview][workload-identity-overview] article.
