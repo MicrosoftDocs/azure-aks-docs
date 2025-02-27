@@ -21,9 +21,6 @@ See [Monitor Azure Kubernetes Service (AKS)](monitor-aks.md) for details on the 
 
 The following table lists the metrics available for the Microsoft.ContainerService/managedClusters resource type.
 
-> [!NOTE]
-> Control plane platform metrics are currently in the process of rolling out. You can expect to see the metrics appear for your AKS cluster by the end of March 2025.
-
 [!INCLUDE [horz-monitor-ref-metrics-tableheader](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-ref-metrics-tableheader.md)]
 
 [!INCLUDE [Microsoft.ContainerService/managedClusters](~/reusable-content/ce-skilling/azure/includes/azure-monitor/reference/metrics/microsoft-containerservice-managedclusters-metrics-include.md)]
