@@ -5,7 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 01/06/2025
+ms.date: 02/27/2025
 ---
 
 # Operate cost optimized Azure Kubernetes Service (AKS) at scale
