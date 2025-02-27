@@ -75,7 +75,7 @@ For more information on verifying FIPS enablement and disabling FIPS, see [Enabl
 
 Limitations: 
 - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) enabled aren't supported with Ubuntu OS.
-- Node pools wth Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
+- Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
 
 Use [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-fips-image` parameter to enable FIPS on an existing node pool.
 
