@@ -53,11 +53,11 @@ The add-on requires Azure CLI version 2.57.0 or later installed. You can run `az
     ```bash
     OBJECT_ID=$(az aks show --resource-group $RESOURCE_GROUP --name $CLUSTER --query 'addonProfiles.azureKeyvaultSecretsProvider.identity.objectId' -o tsv)
 
-    az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get list
+    az keyvault set-policy --name $AKV_NAME --object-id $OBJECT_ID --secret-permissions get
     ```
 
     > [!NOTE]
-    > If you created your Key Vault with Azure RBAC Authorization for your permission model instead of Vault Access Policy, follow the instructions [here][akv-rbac-guide] to create permissions for the managed identity. Add an Azure role assignment for `Key Vault Reader` for the add-on's user-assigned managed identity. 
+    > If you created your Key Vault with Azure RBAC Authorization for your permission model instead of Vault Access Policy, follow the instructions [here][akv-rbac-guide] to create permissions for the managed identity. Add an Azure role assignment for `Key Vault Secrets User` for the add-on's user-assigned managed identity. 
 
 ## Set up Istio-based service mesh addon with plug-in CA certificates
 
@@ -167,21 +167,7 @@ You may need to periodically rotate the certificate authorities for security or 
     -----END CERTIFICATE-----
     ```
 
-    The add-on includes a `CronJob` running every ten minutes on the cluster to check for updates to root certificate. If it detects an update, it restarts the Istio control plane (`istiod` deployment) to pick up the updates. You can check its logs to confirm that the root certificate update was detected and that the Istio control plane was restarted:
-
-    ```bash
-    kubectl logs -n aks-istio-system $(kubectl get pods -n aks-istio-system | grep 'istio-cert-validator-cronjob-' | sort -k8 | tail -n 1 | awk '{print $1}')
-    ```
-
-    Expected output:
-
-    ```bash
-    Root certificate update detected. Restarting deployment...
-    deployment.apps/istiod-asm-1-17 restarted
-    Deployment istiod-asm-1-17 restarted.
-    ```
-
-    After `istiod` was restarted, it should indicate that two certificates were added to the trust domain:
+    Check `istiod` logs, once the certificates have been synchronized to the cluster.
 
     ```bash
     kubectl logs deploy/istiod-asm-1-17 -c discovery -n aks-istio-system 
@@ -190,13 +176,12 @@ You may need to periodically rotate the certificate authorities for security or 
     Expected output:
 
     ```bash
-    2023-11-07T06:42:00.287916Z     info    Using istiod file format for signing ca files
-    2023-11-07T06:42:00.287928Z     info    Use plugged-in cert at etc/cacerts/ca-key.pem
-    2023-11-07T06:42:00.288254Z     info    x509 cert - Issuer: "CN=Intermediate CA - A2,O=Istio,L=cluster-A2", Subject: "", SN: 286451ca8ff7bf9e6696f56bef829d42, NotBefore: "2023-11-07T06:40:00Z", NotAfter: "2033-11-04T06:42:00Z"
-    2023-11-07T06:42:00.288279Z     info    x509 cert - Issuer: "CN=Root A,O=Istio", Subject: "CN=Intermediate CA - A2,O=Istio,L=cluster-A2", SN: 17f36ace6496ac2df88e15878610a0725bcf8ae9, NotBefore: "2023-11-04T01:40:22Z", NotAfter: "2033-11-01T01:40:22Z"
-    2023-11-07T06:42:00.288298Z     info    x509 cert - Issuer: "CN=Root A,O=Istio", Subject: "CN=Root A,O=Istio", SN: 18e2ee4089c5a7363ec306627d21d9bb212bed3e, NotBefore: "2023-11-04T01:38:27Z", NotAfter: "2033-11-01T01:38:27Z"
+    2023-11-07T06:42:00.287916Z     info    Updating new ROOT-CA
+    2023-11-07T06:42:00.287928Z     info    update root cert and generate new dns certs
+    2023-11-07T06:42:00.288254Z     info    Update trust anchor with new root cert
+    2023-11-07T06:42:00.288279Z     info    trustBundle     updating Source IstioCA with certs
+    2023-11-07T06:42:00.288298Z     info    Istiod has detected the newly added intermediate CA and updated its key and certs accordingly
     2023-11-07T06:42:00.288303Z     info    Istiod certificates are reloaded
-    2023-11-07T06:42:00.288365Z     info    spiffe  Added 2 certs to trust domain cluster.local in peer cert verifier
     ```
 
 1. You need to either wait for 24 hours (the default time for leaf certificate validity) or force a restart of all the workloads. This way, all workloads recognize both the old and the new certificate authorities for [mTLS verification][istio-mtls-reference].
@@ -214,22 +199,7 @@ You may need to periodically rotate the certificate authorities for security or 
     az keyvault secret set --vault-name $AKV_NAME --name cert-chain --file <path/cert-chain.pem>
     ```
 
-    Check the logs of the `CronJob` to confirm detection of root certificate update and the restart of `istiod`:
-
-
-    ```bash
-    kubectl logs -n aks-istio-system $(kubectl get pods -n aks-istio-system | grep 'istio-cert-validator-cronjob-' | sort -k8 | tail -n 1 | awk '{print $1}')
-    ```
-
-    Expected output:
-
-    ```bash
-    Root certificate update detected. Restarting deployment...
-    deployment.apps/istiod-asm-1-17 restarted
-    Deployment istiod-asm-1-17 restarted.
-    ```
-
-    After `istiod` was updated, it should only confirm the usage of new root CA:
+    Check `istiod` logs, once the certificates have been synchronized to the cluster.
 
     ```bash
     kubectl logs deploy/istiod-asm-1-17 -c discovery -n aks-istio-system | grep -v validationController

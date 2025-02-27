@@ -58,7 +58,7 @@ You can also [select and deploy Kubernetes applications available through Market
 <!-- LINKS -->
 <!-- INTERNAL -->
 [arc-k8s-extensions]: /azure/azure-arc/kubernetes/conceptual-extensions
-[app-config-overview]: ./azure-app-configuration.md
+[app-config-overview]: ./azure-app-configuration-quickstart.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
 [dapr-overview]: ./dapr.md
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2

@@ -2,7 +2,7 @@
 title: Automatically repair Azure Kubernetes Service (AKS) nodes 
 description: Learn about node auto-repair functionality and how AKS fixes broken worker nodes.
 ms.topic: conceptual
-ms.date: 05/30/2023
+ms.date: 01/03/2025
 author: nickomang
 ms.author: nickoman
 
@@ -10,7 +10,7 @@ ms.author: nickoman
 
 # Azure Kubernetes Service (AKS) node auto-repair
 
-Azure Kubernetes Service (AKS) continuously monitors the health state of worker nodes and performs automatic node repair if they become unhealthy. The Azure virtual machine (VM) platform [performs maintenance on VMs][vm-updates] experiencing issues. AKS and Azure VMs work together to minimize service disruptions for clusters.
+Azure Kubernetes Service (AKS) continuously monitors the health state of worker nodes and performs automatic node repair if they become unhealthy. The Azure virtual machine (VM) platform [performs maintenance on VMs](/azure/virtual-machines/maintenance-and-updates) experiencing issues. AKS and Azure VMs work together to minimize service disruptions for clusters.
 
 In this article, you learn how the automatic node repair functionality behaves for Windows and Linux nodes.
 
@@ -28,48 +28,51 @@ You can manually check the health state of your nodes with the `kubectl get node
 > [!NOTE]
 > AKS initiates repair operations with the user account **aks-remediator**.
 
-If AKS identifies an unhealthy node that remains unhealthy for *five* minutes, AKS performs the following actions:
+If AKS identifies an unhealthy node that remains unhealthy for at least *five* minutes, AKS performs the following actions:
 
-1. Attempts to restart the node.
-2. If the node restart is unsuccessful, AKS reimages the node.
-3. If the reimage is unsuccessful and it's a Linux node, AKS redeploys the node.
+1. AKS reboots the node.
+2. If the node remains unhealthy after reboot, AKS reimages the node.
+3. If the node remains unhealthy after reimage and it's a Linux node, AKS redeploys the node.
 
-AKS engineers investigate alternative remediations if auto-repair is unsuccessful.
-
-> [!NOTE]
-> Auto-repair is not triggered if the following taints are present on the node:` node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
-> 
-> The overall auto repair process can take up to an hour to complete. AKS retries for a max of 3 times for each step. 
-
-## Node auto-drain
-
-[Scheduled events][scheduled-events] can occur on the underlying VMs in any of your node pools. For [spot node pools][spot-node-pools], scheduled events may cause a *preempt* node event for the node. Certain node events, such as  *preempt*, cause AKS node auto-drain to attempt a cordon and drain of the affected node. This process enables rescheduling for any affected workloads on that node. You might notice the node receives a taint with `"remediator.kubernetes.azure.com/unschedulable"`, because of `"kubernetes.azure.com/scalesetpriority: spot"`.
-
-The following table shows the node events and actions they cause for AKS node auto-drain:
-
-| Event | Description |   Action   |
-| --- | --- | --- |
-| Freeze | The VM is scheduled to pause for a few seconds. CPU and network connectivity may be suspended, but there's no impact on memory or open files.  | No action. |
-| Reboot | The VM is scheduled for reboot. The VM's non-persistent memory is lost. | No action. |
-| Redeploy | The VM is scheduled to move to another node. The VM's ephemeral disks are lost. | Cordon and drain. |
-| Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain |
-| Terminate | The VM is scheduled for deletion.| Cordon and drain. |
+AKS retries the restart, reimage, and redeploy sequence up to three times if the node remains unhealthy. The overall auto repair process can take up to an hour to complete. 
 
 ## Limitations
+AKS node auto-repair is a best effort service and we don't guarantee that the node is restored back to healthy status. If your node persists in an unhealthy state, we highly encourage that you perform manual investigation of the node. Learn more about [troubleshooting node NotReady status](/troubleshoot/azure/azure-kubernetes/availability-performance/node-not-ready-basic-troubleshooting).
 
-In many cases, AKS can determine if a node is unhealthy and attempt to repair the issue. However, there are cases where AKS either can't repair the issue or detect that an issue exists. For example, AKS can't detect issues in the following example scenarios:
+There are cases where AKS doesn't perform automatic repair. Failure to automatically repair the node can occur either by design or if Azure can't detect that an issue exists. Examples of when auto-repair isn't performed include:
 
 * A node status isn't being reported due to error in network configuration.
 * A node failed to initially register as a healthy node.
+* If either of the following taints are present on the node: `node.cloudprovider.kubernetes.io/shutdown`, `ToBeDeletedByClusterAutoscaler`.
+* A node is in the process of being upgraded, resulting in the following annotation on the node `"cluster-autoscaler.kubernetes.io/scale-down-disabled": "true"` and `"kubernetes.azure.com/azure-cluster-autoscaler-scale-down-disabled-reason": "upgrade"`
 
-Node Autodrain is a best effort service and cannot be guaranteed to operate perfectly in all scenarios
+## Monitor node auto-repair using Kubernetes events
+When AKS performs node auto-repair on your cluster, AKS emits Kubernetes events from the aks-auto-repair source for visibility. The following events appear on a node object when auto-repair happens. 
+
+To learn more about accessing, storing, and configuring alerts on Kubernetes events, see [Use Kubernetes events for troubleshooting in Azure Kubernetes Service](./events.md).
+
+> [!NOTE]
+> We're currently monitoring the volume of the new remediation events to ensure that there are no performance degradations. As a result, your cluster may not receive these new events as they are slowly rolling out to clusters in production regions. We estimate a full rollout by March 2025.
+
+| Reason | Event Message | Description |
+| --- | --- | --- |
+| NodeRebootStart | Node auto-repair is initiating a reboot action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when reboot is about to be performed on your node. This action is the first in the overall node auto-repair sequence. |
+| NodeRebootEnd | Reboot action from node auto-repair is completed. | Emitted once reboot is complete on the node. This event doesn't indicate the health status (healthy or unhealthy) of the node after the reboot is performed. |
+| NodeReimageStart | Node auto-repair is initiating a reimage action due to NotReady status persisting for more than 5 minutes. | This event is emitted to notify you when reimage is about to be performed on your node. |
+| NodeReimageEnd | Reimage action from node auto-repair is completed. | Emitted once reimage is complete on the node. This event doesn't indicate the health status (healthy or unhealthy) of the node after the reimage is performed. |
+| NodeRedeployStart | Node auto-repair is initiating a redeploy action due to NotReady status persisting more than 5 minutes. | This event is emitted to notify you when redeploy is about to be performed on your node. Redeploy is the last action in the node auto-repair sequence. |
+| NodeRedeployEnd | Redeploy action from node auto-repair is completed. | Emitted once redeploy is complete on the node. This event doesn't indicate the health status (healthy or unhealthy) of the node after redeploy is performed. |
+
+If any errors occur during the node auto-repair process, the following events are emitted with the verbatim error message. Learn more about [troubleshooting common node auto-repair errors](/troubleshoot/azure/azure-kubernetes/availability-performance/node-auto-repair-errors).
+
+> [!NOTE]
+> _Error code_ in the following event messages varies depending on the error reported.
+
+| Reason | Event Message | Description |
+| --- | --- | --- |
+| NodeRebootError | Node auto-repair reboot action failed due to an operation failure. See error details here: _Error code_ | Emitted when there's an error with the reboot action. |
+| NodeReimageError | Node auto-repair reimage action failed due to an operation failure. See error details here: _Error code_ | Emitted when there's an error with the reimage action. |
+| NodeRedeployError | Node auto-repair redeploy action failed due to an operation failure. See error details here: _Error code_ | Emitted when there's an error with the redeploy action. |
+
 ## Next steps
-
-Use [availability zones][availability-zones] to increase high availability with your AKS cluster workloads.
-
-<!-- LINKS - Internal -->
-[availability-zones]: ./availability-zones.md
-[vm-updates]: /azure/virtual-machines/maintenance-and-updates
-[scheduled-events]: /azure/virtual-machines/linux/scheduled-events
-[spot-node-pools]: spot-node-pool.md
-
+By default, you can access Kubernetes events and logs on your AKS cluster from the past 1 hour. To store and query events and logs from the past 90 days, enable [Container Insights](/azure/azure-monitor/containers/container-insights-overview#access-container-insights) for deeper troubleshooting on your AKS cluster.

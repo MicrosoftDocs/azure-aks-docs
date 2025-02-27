@@ -65,7 +65,7 @@ sections:
         answer: |
           No, you can't restore your cluster after deleting it. When you delete your cluster, the node resource group and all its resources are also deleted.
 
-          If you want to keep any of your resources, move them to another resource group before deleting your cluster. If you want to protect against accidental deletes, you can lock the AKS managed resource group hosting your cluster resources using [Node resource group lockdown](./cluster-configuration.md#create-an-aks-cluster-with-node-resource-group-lockdown).
+          If you want to keep any of your resources, move them to another resource group before deleting your cluster. If you want to protect against accidental deletes, you can lock the AKS managed resource group hosting your cluster resources using [Node resource group lockdown](./node-resource-group-lockdown.md).
       
       - question: |
           Can I scale my AKS cluster to zero?
@@ -129,7 +129,12 @@ sections:
 
           > [!NOTE]
           > In the past, the tag name "Owner" was reserved for AKS to manage the public IP that is assigned on front end IP of the load balancer. Now, services follow use the `aks-managed` prefix. For legacy resources, don't use Azure policies to apply the "Owner" tag name. Otherwise, all resources on your AKS cluster deployment and update operations will break. This doesn't apply to newly created resources.
-
+      
+      - question: |
+          Why do I have aks-managed prefixed Helm releases on my cluster and why does their revision count keep increasing?
+        answer: |
+          AKS uses Helm to deliver components to your cluster, you can safely ignore **aks-managed** prefixed Helm releases. Continuously increasing revisions on these Helm releases are expected and safe.
+     
   - name: Quotas, limits, and region availability
     questions:
       - question: |

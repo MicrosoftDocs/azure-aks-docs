@@ -88,16 +88,22 @@ kubectl get nodes --show-labels=true
 
 The blocked nodes are unscheduled for pods and marked with the label `"kubernetes.azure.com/upgrade-status: Quarantined"`. The maximum number of nodes that can be left blocked can't be more than the `Max-Surge` value.
 
-### How do I remove the blocked nodes?
+### What action can i do from here on?
 
-First resolve the issue causing the drain. The following example removes the responsible PDB:
+First resolve the underlying issue causing the drain. The following example removes the responsible PDB:
 
 ```bash
 kubectl delete pdb nginx-pdb
 poddisruptionbudget.policy "nginx-pdb" deleted.
 ```
+If you are confident the issue is now resolved , then you can go ahead and remove the label `"kubernetes.azure.com/upgrade-status: Quarantined"` placed on undrainable nodes. This can be done as follows:
 
-Then delete the blocked node using the `az aks nodepool delete-machines` command. This command is useful if you intend to reduce the node pool footprint by removing nodes left behind in older versions.
+```bash
+kubectl label nodes <node-name> <label-key>-
+```
+Any subsequent 'PUT' operation will attempt to reconcile the 'failed provisioning status' on the cluster to 'success' first. The quarantined nodes shall not be considered for any subsequent put or reconcile. You have to explicitly remove the labels as mentioned previously for any blocked nodes to be considered. 
+
+You can also delete the blocked node using the `az aks nodepool delete-machines` command. This command is useful if you intend to reduce the node pool footprint by removing nodes left behind in older versions.
 
  ```azurecli-interactive
 az aks nodepool delete-machines --cluster-name MyCluster --machine-names aks-nodepool1-test123-vmss000000 --name nodepool1 --resource-group TestRG
