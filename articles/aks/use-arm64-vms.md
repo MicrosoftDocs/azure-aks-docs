@@ -38,7 +38,7 @@ The Arm64 processor provides low power compute for your Kubernetes workloads. Ar
 
 ### Add a node pool with an Arm64 VM
 
-Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm64 VM to an existing cluster. Alternatively, if you'r using [Azure Linux 3.0+][azure-linux-3.0], you can add a node pool with an Arm64 VM and [FIPS](./enable-fips-nodes.md) enabled.
+Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm64 VM to an existing cluster. Alternatively, if you're using [Azure Linux 3.0+][azure-linux-3.0], you can add a node pool with an Arm64 VM and [FIPS](./enable-fips-nodes.md) enabled.
 
 - Add a node pool with an Arm64 VM
 
@@ -54,7 +54,7 @@ Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm6
 
 Limitations: 
 - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) enabled aren't supported with Ubuntu OS.
-- Node pools wth Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
+- Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
 
 Use the [`az aks nodepool add`][az-aks-nodepool-add] with `--enable-fips-image` and `--os-sku` parameters.
 
