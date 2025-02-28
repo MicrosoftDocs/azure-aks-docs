@@ -1,6 +1,6 @@
 ---
 title: Enhancing Concurrency Control in AKS with eTags (Entity Tags)
-description: Learn how to leverage eTags (Entity Tags) to enable concurrency control and avoid racing conditions or overwritting scenarios. 
+description: Learn how to leverage eTags (Entity Tags) to enable concurrency control and avoid racing conditions or overwriting scenarios. 
 ms.topic: how-to
 ms.date: 02/28/2025
 ms.author: reginalin
@@ -35,9 +35,9 @@ az aks delete -g MyResourceGroup -n MyManagedCluster --if-match "yvjvt"
 az aks create -g MyResourceGroup -n MyManagedCluster --if-none-match "*"
 ```
 
-### Configurations and Expected Behaviour
+### Configurations and Expected Behavior
 
-The table below outlines the expected behavior of HTTP operations (PUT, PATCH, and DELETE) based on different eTag configurations and resource existence. They show how the presence of `--if-match` or `--iff-none-match` headers affects the response status codes, ensuring concurrency control and preventing unintended modifications.
+The table below outlines the expected behavior of HTTP operations (PUT, PATCH, and DELETE) based on different eTag configurations and resource existence. They show how the presence of `--if-match` or `--if-none-match` headers affects the response status codes, ensuring concurrency control and preventing unintended modifications.
 
 
 **PUT** | **Resource does not exist** | **Resource exists**
@@ -71,10 +71,10 @@ This will fail the pre-validation checks. The `--if-none-match` header can only 
 
 This will fail the pre-validation checks. Both headers cannot be used at the same time. 
 
-### **Scenario 3**: `PreConditionFailed` - `--if-none-match` is `*` and the given resource already exists.
+### **Scenario 3**: `PreConditionFailed` - `--if-none-match` is `*` and the given resource already exists
 
 The request is rejected if a  `*` (wildcard of any) value is passed into `--if-none-match` header and the resource already exists. 
 
-### **Scenario 4**: `PreConditionFailed`  - The value of `--if-match` header does not match the latest eTag value of the resource.
+### **Scenario 4**: `PreConditionFailed`  - The value of `--if-match` header does not match the latest eTag value of the resource
 
 The request is rejected if the header provided does not match with the eTag value. A new GET operation is needed to get the latest eTag on the resource and update the header value in the request. 
