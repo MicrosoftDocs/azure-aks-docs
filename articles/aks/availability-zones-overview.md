@@ -53,6 +53,19 @@ AKS balances the number of nodes between zones automatically.
 
 If a zonal outage occurs, nodes within the affected zone can be impacted, while nodes in other availability zones remain unaffected.
 
+To validate node locations, run the following command:
+
+```bash
+kubectl get nodes -o custom-columns='NAME:metadata.name, REGION:metadata.labels.topology\.kubernetes\.io/region, ZONE:metadata.labels.topology\.kubernetes\.io/zone'
+```
+
+```output
+NAME                                REGION   ZONE
+aks-nodepool1-34917322-vmss000000   eastus   eastus-1
+aks-nodepool1-34917322-vmss000001   eastus   eastus-2
+aks-nodepool1-34917322-vmss000002   eastus   eastus-3
+```
+
 #### Zone aligned
 Each node is aligned (pinned) to a specific zone. To create three node pools for a region with three Availability Zones:
 
@@ -78,14 +91,14 @@ In the rare case of a full zonal outage, any or all instances within the node po
 To validate node locations, run the following command:
 
 ```bash
-kubectl describe nodes | grep -e "Name:" -e "topology.kubernetes.io/zone"
+kubectl get nodes -o custom-columns='NAME:metadata.name, REGION:metadata.labels.topology\.kubernetes\.io/region, ZONE:metadata.labels.topology\.kubernetes\.io/zone'
 ```
 
 ```output
 NAME                                REGION   ZONE
-aks-nodepool1-34917322-vmss000000   eastus   eastus-1
-aks-nodepool1-34917322-vmss000001   eastus   eastus-2
-aks-nodepool1-34917322-vmss000002   eastus   eastus-3
+aks-nodepool1-34917322-vmss000000   eastus   0
+aks-nodepool1-34917322-vmss000001   eastus   0
+aks-nodepool1-34917322-vmss000002   eastus   0
 ```
 
 ## Deployments

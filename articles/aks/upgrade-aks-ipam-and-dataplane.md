@@ -79,7 +79,7 @@ Since the cluster is already using a private CIDR for pods which doesn't overlap
 > [!NOTE]
 > You can update an existing cluster to Azure CNI Powered by Cilium if the cluster meets the following criteria:
 >
-> - The cluster uses either [Azure CNI Overlay](./azure-cni-overlay.md) or [Azure CNI with dynamic IP allocation](./configure-azure-cni-dynamic-ip-allocation.md). This does **not** include [Azure CNI](./configure-azure-cni.md).
+> - This does **not** support [Azure CNI](./configure-azure-cni.md).
 > - The cluster does not have any Windows node pools.
 > [!NOTE]
 > When enabling Cilium in a cluster with a different network policy engine (Azure NPM or Calico), the network policy engine will be uninstalled and replaced with Cilium. See [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico) for more details.
@@ -96,3 +96,5 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> \
   --network-dataplane cilium
 ```
 
+<!-- LINKS - Internal -->
+[az-aks-update]: /cli/azure/aks#az_aks_update
