@@ -277,57 +277,82 @@ In this section, you download the Percona images from Docker Hub and upload them
 
 ## Deploy the infrastructure with Terraform
 
-The repository [terraform-azurerm-avm-res-containerservice-managedcluster](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster) containes a full example with the infrastructure required to run a MongoDB cluster on Azure Kubernetes Service (AKS).
+To deploy the infrastructure using Terraform, we're going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/) for AKS. The repository [terraform-azurerm-avm-res-containerservice-managedcluster](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git) containes a full example with the infrastructure required to run a MongoDB cluster on Azure Kubernetes Service (AKS).
 
-```bash
-git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
-cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads
-```
-Run the below commands to create a `mongodb.tfvars` file with the following configuration for MongoDB:
-```bash
-cat > mongodb.tfvars <<EOL
-location = "$MY_LOCATION"
-resource_group_name = "$MY_RESOURCE_GROUP_NAME"
-acr_registry_name = "$MY_ACR_REGISTRY"
-cluster_name = "$MY_CLUSTER_NAME"
-identity_name = "$MY_IDENTITY_NAME"
-keyvault_name = "$MY_KEYVAULT_NAME"
-aks_mongodb_backup_storage_account_name = "$AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME"
-aks_mongodb_backup_storage_container_name = "$AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME"
-mongodb_enabled = true
-mongodb_namespace = "$AKS_MONGODB_NAMESPACE"
-service_account_name = "$SERVICE_ACCOUNT_NAME"
+> [!NOTE]
+> If you're planning to run this in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This comes coupled with best practice recommendations.
 
-acr_task_content = <<-EOF
-version: v1.1.0
-steps:
-  - cmd: bash echo Waiting 10 seconds the propagation of the Container Registry Data Importer and Data Reader role
-  - cmd: bash sleep 10
-  - cmd: az login --identity
-  - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb:7.0.8-5 --image percona-server-mongodb:7.0.8-5
-  - cmd: az acr import --name $RegistryName --source docker.io/percona/pmm-client:2.41.2 --image pmm-client:2.41.2
-  - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-backup-mongodb:2.4.1 --image percona-backup-mongodb:2.4.1
-  - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb-operator:1.16.1 --image percona-server-mongodb-operator:1.16.1
-EOF
+1. Clone the git repository with the terraform module:
 
-node_pools = {
-  mongodbserver = {
-    name       = "mongodbpool"
-    vm_size    = "Standard_D2ds_v4"
-    node_count = 3
-    zones      = [1, 2, 3]
-    os_type    = "Linux"
-  }
-}
-EOL
-```
-Run the following Terraform commands to deploy the infrastructure:
+    ```bash
+    git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
+    cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads
+    ```
+2. Create a `mongodb.tfvars` file to define variables using the following command:
 
-```bash
-terraform init
-terraform apply -var-file="mongodb.tfvars"
-```
+    ```bash
+    cat > mongodb.tfvars <<EOL
+    location = "$MY_LOCATION"
+    resource_group_name = "$MY_RESOURCE_GROUP_NAME"
+    acr_registry_name = "$MY_ACR_REGISTRY"
+    cluster_name = "$MY_CLUSTER_NAME"
+    identity_name = "$MY_IDENTITY_NAME"
+    keyvault_name = "$MY_KEYVAULT_NAME"
+    aks_mongodb_backup_storage_account_name = "$AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME"
+    aks_mongodb_backup_storage_container_name = "$AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME"
+    mongodb_enabled = true
+    mongodb_namespace = "$AKS_MONGODB_NAMESPACE"
+    service_account_name = "$SERVICE_ACCOUNT_NAME"
+    
+    acr_task_content = <<-EOF
+    version: v1.1.0
+    steps:
+      - cmd: bash echo Waiting 10 seconds the propagation of the Container Registry Data Importer and Data Reader role
+      - cmd: bash sleep 10
+      - cmd: az login --identity
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb:7.0.8-5 --image percona-server-mongodb:7.0.8-5
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/pmm-client:2.41.2 --image pmm-client:2.41.2
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-backup-mongodb:2.4.1 --image percona-backup-mongodb:2.4.1
+      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb-operator:1.16.1 --image percona-server-mongodb-operator:1.16.1
+    EOF
+    
+    node_pools = {
+      mongodbserver = {
+        name       = "mongodbpool"
+        vm_size    = "Standard_D2ds_v4"
+        node_count = 3
+        zones      = [1, 2, 3]
+        os_type    = "Linux"
+      }
+    }
+    EOL
+    ```
+    
+3. Run the following Terraform commands to deploy the infrastructure:
+    ```bash
+    terraform init
+    terraform apply -var-file="mongodb.tfvars"
+    ```
+4. Run the following command to export the Terraform output values as environment variables in the terminal to use them in the next steps:
+    ```bash
+    export MY_ACR_REGISTRY_ID=$(terraform output -raw acr_registry_id)
+    export MY_ACR_REGISTRY=$(terraform output -raw acr_registry_name)
+    export MY_CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+    export KUBELET_IDENTITY=$(terraform output -raw aks_kubelet_identity_id)
+    export OIDC_URL=$(terraform output -raw aks_oidc_issuer_url)
+    export identity_name=$(terraform output -raw identity_name)
+    export MY_IDENTITY_NAME_ID=$(terraform output -raw identity_name_id)
+    export MY_IDENTITY_NAME_PRINCIPAL_ID=$(terraform output -raw identity_name_principal_id)
+    export MY_IDENTITY_NAME_CLIENT_ID=$(terraform output -raw identity_name_client_id)
+    export KEYVAULTID=$(terraform output -raw key_vault_id)
+    export KEYVAULTURL=$(terraform output -raw key_vault_uri)
+    export AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_KEY=$(terraform output -raw storage_account_key)
+    export STORAGE_ACCOUNT_NAME=$(terraform output -raw storage_account_name)
+    export TENANT_ID=$(terraform output -raw identity_name_tenant_id)
+    ```
 :::zone-end
+
+
 
 ## Next step
 
