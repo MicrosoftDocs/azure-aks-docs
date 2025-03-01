@@ -331,6 +331,7 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
 3. Run the following Terraform commands to deploy the infrastructure:
     ```bash
     terraform init
+    terraform fmt
     terraform apply -var-file="mongodb.tfvars"
     ```
 4. Run the following command to export the Terraform output values as environment variables in the terminal to use them in the next steps:
