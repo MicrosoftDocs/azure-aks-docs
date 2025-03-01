@@ -22,8 +22,6 @@ In this article, you create the required infrastructure resources to run a Mongo
 * `kubectl`, which Azure Cloud Shell installs by default.
 * Docker installed on your local machine. To install, see [Get Docker](https://docs.docker.com/get-docker/).
 
-:::zone pivot="azure-cli"
-
 ## Set environment variables
 
 Set the required environment variables for use throughout this guide:
@@ -46,7 +44,7 @@ export AKS_AZURE_SECRETS_NAME=cluster-aks-azure-secrets
 export AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME=mongodbsa$(echo $random)
 export AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME=backups
 ```
-
+:::zone pivot="azure-cli"
 ## Create a resource group
 
 * Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.
@@ -287,36 +285,47 @@ cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workl
 ```
 Run the below commands to create a `mongodb.tfvars` file with the following configuration for MongoDB:
 ```bash
-cat > mongodb.tfvars <<EOF
-    stateful_workload_type = "mongodb"
-    
-    node_pools = {
-      mongodbserver = {
-        name       = "mongodbpool"
-        vm_size    = "Standard_DS4_v2"
-        node_count = 3
-        zones      = [1, 2, 3]
-        os_type    = "Linux"
-      }
-    }
-    
-    acr_task_content = <<-EOF
-    version: v1.1.0
-    steps:
-      - cmd: az login --identity
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb:7.0.8-5 --image percona-server-mongodb:7.0.8-5
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/pmm-client:2.41.2 --image pmm-client:2.41.2
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-backup-mongodb:2.4.1 --image percona-backup-mongodb:2.4.1
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb-operator:1.16.1 --image percona-server-mongodb-operator:1.16.1
-    EOF
+cat > mongodb.tfvars <<EOL
+location = "$MY_LOCATION"
+resource_group_name = "$MY_RESOURCE_GROUP_NAME"
+acr_registry_name = "$MY_ACR_REGISTRY"
+cluster_name = "$MY_CLUSTER_NAME"
+identity_name = "$MY_IDENTITY_NAME"
+keyvault_name = "$MY_KEYVAULT_NAME"
+aks_mongodb_backup_storage_account_name = "$AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME"
+aks_mongodb_backup_storage_container_name = "$AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME"
+mongodb_enabled = true
+mongodb_namespace = "$AKS_MONGODB_NAMESPACE"
+service_account_name = "$SERVICE_ACCOUNT_NAME"
 
+acr_task_content = <<-EOF
+version: v1.1.0
+steps:
+  - cmd: bash echo Waiting 10 seconds the propagation of the Container Registry Data Importer and Data Reader role
+  - cmd: bash sleep 10
+  - cmd: az login --identity
+  - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb:7.0.8-5 --image percona-server-mongodb:7.0.8-5
+  - cmd: az acr import --name $RegistryName --source docker.io/percona/pmm-client:2.41.2 --image pmm-client:2.41.2
+  - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-backup-mongodb:2.4.1 --image percona-backup-mongodb:2.4.1
+  - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb-operator:1.16.1 --image percona-server-mongodb-operator:1.16.1
 EOF
+
+node_pools = {
+  mongodbserver = {
+    name       = "mongodbpool"
+    vm_size    = "Standard_D2ds_v4"
+    node_count = 3
+    zones      = [1, 2, 3]
+    os_type    = "Linux"
+  }
+}
+EOL
 ```
 Run the following Terraform commands to deploy the infrastructure:
 
 ```bash
 terraform init
-terraform apply -var-file=mongodb.tfvars
+terraform apply -var-file="mongodb.tfvars"
 ```
 :::zone-end
 
