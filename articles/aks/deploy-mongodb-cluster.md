@@ -186,6 +186,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
 2. Apply the terraform configuration to the target resource.
 
    ```bash
+   terraform fmt
    terraform apply -var-file="mongodb.tfvars" -target module.mongodb[0].azurerm_key_vault_secret.this
    ```
 :::zone-end
@@ -319,6 +320,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     externalsecret.external-secrets.io/cluster-aks-azure-secrets created
     ```
 :::zone pivot="azure-cli"
+
 4. Create a federated credential using the [`az identity federated-credential create`](/cli/azure/identity/federated-credential#az-identity-federated-credential-create) command.
 
     ```azurecli-interactive
@@ -357,6 +359,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
 :::zone-end
 
 :::zone pivot="terraform"
+
 4. Add the following terraform configuration in `module/main.tf` to create a federated credential.
 
     ```hcl
@@ -387,6 +390,8 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     ```
 6. Apply the terraform configuraion.
    ```bash
+       terraform fmt
+   
        terraform apply -var-file="mongodb.tfvars" \
       -target=module.mongodb[0].azurerm_federated_identity_credential.this \
       -target=module.mongodb[0].azurerm_key_vault_access_policy.this
