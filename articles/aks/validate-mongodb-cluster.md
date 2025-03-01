@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
+zone_pivot_groups: azure-cli-or-terraform
 ---
 
 # Deploy a client application to connect to a MongoDB cluster on Azure Kubernetes Service (AKS)
@@ -71,22 +72,40 @@ To deploy the `mongo-express` client app, you first need to create secrets speci
 
 1. Create a `mongo-express` basic-auth username and password secret to use to log in to the client app using the following script and [`az keyvault secret set`](/cli/azure/keyvault/secret#az-keyvault-secret-set) commands:
 
-   ```azurecli-interactive
-   #This function generates secrets of 32 characters using only alphanumeric characters
-   
+   ```bash
+   #This function generates secrets of 32 characters using only alphanumeric characters   
    generateRandomPasswordString() {
     cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
    }
+   ```
+:::zone pivot="azure-cli"
    
+   ```azurecli-interactive
    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGOEXPRESS-CONFIG-BASICAUTH-USERNAME --value MONGOEXPRESSADMINUSER  --output table
    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGOEXPRESS-CONFIG-BASICAUTH-PASSWORD --value $(generateRandomPasswordString) --output table   
    ```
-
 2. Create a secret for the `mongo-express` config server details using the [`az keyvault secret set`](/cli/azure/keyvault/secret#az-keyvault-secret-set) command.
 
    ```azurecli-interactive
    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CONFIG-SERVER --value ${MY_CLUSTER_NAME}-${AKS_MONGODB_NAMESPACE}-mongos.mongodb.svc.cluster.local --output table
    ```
+:::zone-end
+
+:::zone pivot="terraform"
+1. Run the following command to update the `mongodb.tfvars` file created earlier with the following configuration:
+    ```bash
+    sed -i '/mongodb_kv_secrets = {/,/^ *}/s/^ *}/  MONGOEXPRESS-CONFIG-BASICAUTH-USERNAME = "'"$(generateRandomPasswordString)"'"\
+   MONGOEXPRESS-CONFIG-BASICAUTH-PASSWORD = "'"$(generateRandomPasswordString)"'"\
+   MONGODB-CONFIG-SERVER = "'"$MY_CLUSTER_NAME-$AKS_MONGODB_NAMESPACE-mongos.mongodb.svc.cluster.local"'"\
+   }/' mongodb.tfvars
+    ```
+2. Apply the terraform configuration to the target resource.
+
+   ```bash
+   terraform fmt
+   terraform apply -var-file="mongodb.tfvars" -target module.mongodb[0].azurerm_key_vault_secret.this
+   ```
+:::zone-end
 
 3. Update the secrets in the secret store you created in the [previous tutorial][create-secret] using the `kubectl apply` command.
 
