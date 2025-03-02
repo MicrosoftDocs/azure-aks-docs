@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
+zone_pivot_groups: azure-cli-or-terraform
 ---
 
 # Monitoring for MongoDB cluster on Azure Kubernetes Service (AKS)
@@ -47,20 +48,48 @@ PMM operates as a client/server application, consisting of a [PMM Server][PMM-Se
 
 ### Create a node pool for PMM server
 
-* Create a dedicated node pool for the PMM server using the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command.
+:::zone pivot="azure-cli"
+
+Create a dedicated node pool for the PMM server using the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command.
 
     ```azurecli-interactive
     az aks nodepool add \
     --resource-group $MY_RESOURCE_GROUP_NAME \
     --cluster-name $MY_CLUSTER_NAME \
-    --name pmmserver \
+    --name pmmsrvpool \
     --node-vm-size Standard_DS4_v2 \
     --node-count 3 \
     --zones 1 2 3 \
     --mode User \
     --output table
     ```
+:::zone-end
 
+:::zone pivot="terraform"
+
+Create a dedicated node pool for the PMM server using terraform.
+
+1. Run the following command to update the `mongodb.tfvars` file created earlier with the following configuration:
+
+      ```bash
+      sed -i '/mongodbserver = {/,/}/s/^\( *}\)/  }, \
+      pmmserver = {\
+        name       = "pmmsrvpool" \
+        vm_size    = "Standard_D2ds_v4" \
+        node_count = 3 \
+        zones      = [1, 2, 3] \
+        os_type    = "Linux" \
+      }/' mongodb.tfvars
+      ```
+
+2. Apply the terraform configuration to the target resource.
+
+       ```bash
+       terraform fmt
+       terraform apply -var-file="mongodb.tfvars" -target module.default
+       ```
+
+:::zone-end
 ## Install PMM server
 
 1. Add and update the Percona Helm repository using the `helm repo add` and `helm repo update` commands.
@@ -74,7 +103,7 @@ PMM operates as a client/server application, consisting of a [PMM Server][PMM-Se
 
     ```bash
     helm install pmm --namespace mongodb \
-      --set nodeSelector."kubernetes\.azure\.com/agentpool"="pmmserver" \
+      --set nodeSelector."kubernetes\.azure\.com/agentpool"="pmmsrvpool" \
       --set service.type="LoadBalancer" \
       percona/pmm
     ```
@@ -118,15 +147,35 @@ PMM operates as a client/server application, consisting of a [PMM Server][PMM-Se
    :::image type="content" source="media/monitor-aks-mongodb/pmm-api-key-generated.png" alt-text="Screenshot of a web page showing the PMM Mongodb dashboard with API key generated.":::
 
 5. Select **Add**.
-6. Copy your key from the *API Key Created window* and keep it secure.
+6. Copy your key from the *API Key Created window* and export it to the environment variable as shown below.
 
-### Set API key as secret and refresh it
+   ```bash
+   export API_KEY="Paste your API Key here"
+   ```
 
-1. Set the API key as a secret in Azure Key Vault using the [`az keyvault secret set`](/cli/azure/keyvault/secret#az-keyvault-secret-set) command. Make sure you replace `$MY_KEYVAULT_NAME` and `$API_KEY` with your values.
+### Set API key as secret and refresh ExternalSecret resource with the new secret
+
+:::zone pivot="azure-cli"
+1. Set the API key as a secret in Azure Key Vault using the following command.  
 
     ```azurecli-interactive
     az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name PMM-SERVER-API-KEY --value $API_KEY --output table
     ```
+    
+:::zone-end
+
+:::zone pivot="terraform"
+
+1. Run the following command to update the `mongodb.tfvars` file created earlier and apply the terraform configuration to the target resource with the following commands:
+    ```bash
+    sed -i "/mongodb_kv_secrets = {/,/^ *}/s/\(PMM-SERVER-API-KEY *= *\"\)[^\"]*\"/\1$API_KEY\"/" mongodb.tfvars
+
+    terraform fmt
+    
+    terraform apply -var-file="mongodb.tfvars" -target module.mongodb[0].azurerm_key_vault_secret.this
+    ```  
+:::zone-end
+
 
 2. Refresh the secret in the ExternalSecret resource with the new secret key using the `kubectl annotate` command.
 
