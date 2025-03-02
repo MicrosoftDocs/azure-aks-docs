@@ -52,17 +52,17 @@ PMM operates as a client/server application, consisting of a [PMM Server][PMM-Se
 
 Create a dedicated node pool for the PMM server using the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-    --resource-group $MY_RESOURCE_GROUP_NAME \
-    --cluster-name $MY_CLUSTER_NAME \
-    --name pmmsrvpool \
-    --node-vm-size Standard_DS4_v2 \
-    --node-count 3 \
-    --zones 1 2 3 \
-    --mode User \
-    --output table
-    ```
+```azurecli-interactive
+az aks nodepool add \
+--resource-group $MY_RESOURCE_GROUP_NAME \
+--cluster-name $MY_CLUSTER_NAME \
+--name pmmsrvpool \
+--node-vm-size Standard_DS4_v2 \
+--node-count 3 \
+--zones 1 2 3 \
+--mode User \
+--output table
+```
 :::zone-end
 
 :::zone pivot="terraform"
@@ -83,11 +83,10 @@ Create a dedicated node pool for the PMM server using terraform.
       ```
 
 2. Apply the terraform configuration to the target resource.
-
-       ```bash
-       terraform fmt
-       terraform apply -var-file="mongodb.tfvars" -target module.default
-       ```
+    ```bash
+    terraform fmt
+    terraform apply -var-file="mongodb.tfvars" -target module.default
+    ```
 
 :::zone-end
 ## Install PMM server
