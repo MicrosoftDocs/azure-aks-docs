@@ -236,14 +236,6 @@ In the following steps, you create an AKS cluster with a workload identity and O
     bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-07-01T12:23:20.749750+00:00  8247e9bb-bc6b-414f-98a6-4768dbb961ad  9686a88e-25bc-4b4c-b611-d1057a26acdc  0b40421c-343b-4986-b691-980d6154429e  ServicePrincipal  myResourceGroup-rg-australiaeast  /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d  AcrPull               /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup-rg-australiaeast/providers/Microsoft.ContainerRegistry/registries/mydnsrandomnamecjcfc  bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-07-01T12:23:20.749750+00:00
     ```
 
-## Connect to the AKS cluster
-
-* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
-    ```
-
 ## Upload Percona images to Azure Container Registry
 
 In this section, you download the Percona images from Docker Hub and upload them to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
@@ -352,6 +344,14 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
     export TENANT_ID=$(terraform output -raw identity_name_tenant_id)
     ```
 :::zone-end
+
+## Connect to the AKS cluster
+
+* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
+    ```
 
 
 
