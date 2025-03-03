@@ -370,7 +370,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
       audience            = ["api://AzureADTokenExchange"]
       issuer              = var.oidc_issuer_url
       parent_id           = azurerm_user_assigned_identity.this.id
-      subject             = concat("system:serviceaccount:",var.mongodb_namespace,":",var.service_account_name)
+      subject             = "system:serviceaccount:${var.mongodb_namespace}:${var.service_account_name}"
     }
     ```
 
