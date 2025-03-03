@@ -134,7 +134,7 @@ All traffic within the virtual network is allowed by default. But if you  added 
 
 ## Create a managed identity and give it permissions on the virtual network
 
-Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the client ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
+Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the principal ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-uami.sh" interactive="cloudshell-bash":::
 
