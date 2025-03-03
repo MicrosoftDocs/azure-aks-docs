@@ -286,7 +286,7 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
 
     ```bash
     git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
-    cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads
+    cd examples/stateful-workloads
     ```
 2. Create a `mongodb.tfvars` file to define variables using the following command:
 
@@ -310,10 +310,10 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
       - cmd: bash echo Waiting 10 seconds the propagation of the Container Registry Data Importer and Data Reader role
       - cmd: bash sleep 10
       - cmd: az login --identity
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb:7.0.8-5 --image percona-server-mongodb:7.0.8-5
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/pmm-client:2.41.2 --image pmm-client:2.41.2
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-backup-mongodb:2.4.1 --image percona-backup-mongodb:2.4.1
-      - cmd: az acr import --name $RegistryName --source docker.io/percona/percona-server-mongodb-operator:1.16.1 --image percona-server-mongodb-operator:1.16.1
+      - cmd: az acr import --name \$RegistryName --source docker.io/percona/percona-server-mongodb:7.0.8-5 --image percona-server-mongodb:7.0.8-5
+      - cmd: az acr import --name \$RegistryName --source docker.io/percona/pmm-client:2.41.2 --image pmm-client:2.41.2
+      - cmd: az acr import --name \$RegistryName --source docker.io/percona/percona-backup-mongodb:2.4.1 --image percona-backup-mongodb:2.4.1
+      - cmd: az acr import --name \$RegistryName --source docker.io/percona/percona-server-mongodb-operator:1.16.1 --image percona-server-mongodb-operator:1.16.1
     EOF
     
     node_pools = {
