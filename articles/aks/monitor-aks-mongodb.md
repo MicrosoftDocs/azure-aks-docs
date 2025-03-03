@@ -102,9 +102,10 @@ Create a dedicated node pool for the PMM server using terraform.
 
     ```bash
     helm install pmm --namespace mongodb \
-      --set nodeSelector."kubernetes\.azure\.com/agentpool"="pmmsrvpool" \
-      --set service.type="LoadBalancer" \
-      percona/pmm
+    --set nodeSelector."kubernetes\.azure\.com/agentpool"="pmmsrvpool" \
+    --set service.type="LoadBalancer" \
+    --version 1.3.13 \
+    percona/pmm
     ```
 
 3. Get the external IP address of the PMM server using the `kubectl get svc` command.
@@ -140,7 +141,7 @@ Create a dedicated node pool for the PMM server using terraform.
 4. Enter the following information:
 
     * Key name (you can give any desired name)
-    * Select the Role from the drop-down
+    * Select the Admin role from the drop-down
     * Enter a value in the Time to live text box (hover on the tooltip for more information)
 
    :::image type="content" source="media/monitor-aks-mongodb/pmm-api-key-generated.png" alt-text="Screenshot of a web page showing the PMM Mongodb dashboard with API key generated.":::
