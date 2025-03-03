@@ -1,12 +1,13 @@
 ---
-title: Use wasmCloud on Azure Kubernetes Service (AKS)
-description: Learn how to deploy and use wasmCloud on an Azure Kubernetes Service (AKS) cluster to deploy distributed Web Assembly applications.
+title: Deploy wasmCloud to Azure Kubernetes Service (AKS) to run distributed WebAssembly (Wasm) workloads
+description: Learn how to deploy and use wasmCloud on an Azure Kubernetes Service (AKS) cluster to deploy distributed WebAssembly applications.
 author: protochron
 ms.topic: article
 ms.date: 11/07/2024
 ---
 
 # Use wasmCloud on Azure Kubernetes Service (AKS)
+[WebAssembly](https://webassembly.org/) components are a new way to build and deploy applications. They are designed to be a portable compilation target for programming languages and can run in a variety of environments. WebAssembly components are sandboxed by design and expose their functionality using defined interfaces. Components differ from containers in that they single binaries that are much smaller and faster to start. The full description of the model and what a component is can be found in the [specification](https://github.com/WebAssembly/component-model).
 
 [wasmCloud][wasmcloud] is a CNCF project designed to fast-track the development, deployment and orchestration of WebAssembly components. This document details instructions on how to deploy wasmCloud on an Azure Kubernetes Service (AKS) cluster.
 
@@ -15,7 +16,11 @@ ms.date: 11/07/2024
 * This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)](./concepts-clusters-workloads.md).
 * You need an active Azure subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/) before you begin.
 * You need an AKS cluster. If you don't have an existing cluster, you can create one using the [Azure CLI](./learn/quick-kubernetes-deploy-cli.md), [Azure PowerShell](./learn/quick-kubernetes-deploy-powershell.md), or [Azure portal](./learn/quick-kubernetes-deploy-portal.md).
-* You need to install the wasmCloud CLI (wash). For installation options, see [wasmcloud-cli][wasmcloud-cli].
+* You need to install the wasmCloud CLI (wash) at version 0.39.0 or later. For installation options, see [wasmcloud-cli][wasmcloud-cli].
+
+## Prerequisites
+
+* You can't use the Azure portal to deploy wasmCloud to an AKS cluster.
 
 ## Deploy wasmCloud
 
@@ -38,7 +43,7 @@ We recommend deploying wasmCloud into a dedicated Kubernetes namespace.
      helm upgrade --install \
           wasmcloud-platform \
           --values https://raw.githubusercontent.com/wasmCloud/wasmcloud/main/charts/wasmcloud-platform/values.yaml \
-          oci://ghcr.io/wasmcloud/charts/wasmcloud-platform \
+          oci://ghcr.io/wasmcloud/charts/wasmcloud-platform:0.1.2 \
           --dependency-update
     ```
     The output from this command should look similar to the following:
@@ -112,7 +117,7 @@ wasmcloud-host-f9d67b8cf-lvsq6   2/2     Running   0          84s
 
 ## Deploy a wasmCloud application
 
-Now that you have wasmCloud running on your AKS cluster, you can deploy a wasmCloud application. A wasmCloud application is a collection of WebAssembly modules that are orchestrated by the wasmCloud Application Manager (wadm).
+Now that you have wasmCloud running on your AKS cluster, you can deploy a wasmCloud application. A wasmCloud application is a collection of WebAssembly components that are orchestrated by the wasmCloud Application Manager (wadm).
 
 1. Create a wasmCloud application manifest file. This file describes compoents that comprise your application. Save the following yaml file as `hello-world.yaml`.
 
@@ -205,9 +210,18 @@ Now that you have wasmCloud running on your AKS cluster, you can deploy a wasmCl
     ```output
     Hello from Rust!
     ```
+5. Clean up the installed resources
+
+    To clean up the resources you created, run the following commands:
+
+    ```azurecli-interactive
+    kubectl delete namespace wasmcloud
+    ```
+
+    This removes the wasmCloud components from your AKS cluster.
 
 ## Next steps
-You can continue to learn by following the [wasmCloud Quickstart Guide][wasmcloud-quickstart], which walks you though creating a Web Assembly component from scratch, using using different wasmCloud capabilities and scaling your application.
+You can continue to learn by following the [wasmCloud Quickstart Guide][wasmcloud-quickstart], which walks you though creating a WebAssembly component from scratch, using using different wasmCloud capabilities and scaling your application.
 
 <!--- LINKS - external --->
 [wasmcloud]: https://wasmcloud.com/
