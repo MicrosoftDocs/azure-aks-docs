@@ -2,7 +2,7 @@
 title: 'Quickstart: Deploy an Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview) in a custom virtual network.
 ms.topic: quickstart
-ms.date: 02/05/2025
+ms.date: 03/03/2025
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli
