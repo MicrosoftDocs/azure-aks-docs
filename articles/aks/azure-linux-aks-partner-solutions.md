@@ -396,9 +396,9 @@ Storage enables standardized and seamless storage interactions, ensuring high ap
 |----------|------------|
 | Kasten K10 by Veeam | Storage |
 
-Kasten K10 by Veeam is the #1 Kubernetes data management product, providing an easy-to-use, scalable, and secure system for backup and restore, mobility, and DR.
+Veeam Kasten is the #1 Kubernetes data management product, providing an easy-to-use, scalable, and secure system for backup and restore, mobility, DR, and ransomware protection.
 
-For more information, see [Veeam Solutions](https://www.kasten.io/partner-microsoft) and [Veeam on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/veeam.kasten_k10_by_veeam_byol?tab=overview).
+For more information, see [Veeam Solutions](https://www.veeam.com/solutions/alliance-partners/kubernetes.html) and [Veeam on Azure Marketplace](https://azuremarketplace.microsoft.com/en-US/marketplace/apps/veeam.kasten_k10_by_veeam_byol?tab=overview).
 
 ## Config management
 
