@@ -48,7 +48,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 ## Limitations of Azure Network Policy Manager
 
 > [!NOTE]
-> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./upgrade-aks-ipam-and-dataplane.md) to use Cilium as the network policy engine.
+> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./upgrade-azure-cni-ipam-and-dataplane.md) to use Cilium as the network policy engine.
 
 Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy specifications in Linux.
 
