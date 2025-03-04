@@ -587,7 +587,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/upgrade-aks-ipam-and-dataplane.md",
-            "redirect_url": "/azure/aks/upgrade-azure-ipam-and-dataplane",
+            "redirect_url": "/azure/aks/upgrade-azure-cni",
             "redirect_document_id": false
         }
      ]
