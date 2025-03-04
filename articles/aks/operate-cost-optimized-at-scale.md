@@ -5,7 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 02/27/2025
+ms.date: 03/04/2025
 ---
 
 # Operate cost-optimized Azure Kubernetes Service (AKS) at scale
@@ -31,6 +31,8 @@ For more information, see [Kubernetes Fleet resource placement from hub cluster 
 ### Intelligent resource placement
 
 Kubernetes Fleet provides *intelligent resource placement*, which can make scheduling decisions based on node count, cost of compute/memory in target member clusters, and resource availability in target member clusters. This allows you to place workloads in the most cost-effective member cluster based on your workload requirements.
+
+:::image type="content" source="./media/operate-cost-optimized-at-scale/intelligent-resource-placement.png" alt-text="Screenshot of a diagram showing how intelligent resource placement works.":::
 
 For more information, see [Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/intelligent-resource-placement).
 
