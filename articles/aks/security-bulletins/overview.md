@@ -91,7 +91,7 @@ For security bulletins from previous years, see:
 
 
 <!-- LINKS - internal -->
-[node-image-upgrade]: node-image-upgrade.md
-[auto-upgrade-node-image]: auto-upgrade-node-image.md
-[upgrade-cluster]: upgrade-aks-cluster.md
+[node-image-upgrade]: ../node-image-upgrade.md
+[auto-upgrade-node-image]: ../auto-upgrade-node-image.md
+[upgrade-cluster]: ../upgrade-aks-cluster.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
