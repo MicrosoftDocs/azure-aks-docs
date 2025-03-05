@@ -16,8 +16,6 @@ In this article, you learn how to monitor the Azure Kubernetes Service (AKS) con
 AKS supports a subset of control plane metrics for free through [Azure Monitor platform metrics](./monitor-aks.md#monitoring-data). The control plane metrics (Preview) feature provides more visibility into the availability and performance of critical control plane components, including the API server, ETCD, Scheduler, Autoscaler, and controller manager. The feature is also fully compatible with Prometheus and Grafana. You can use these metrics to maximize overall observability and maintain operational excellence for your AKS cluster.
 
 ## Control plane platform metrics
-> [!NOTE]
-> Control plane platform metrics are currently in the process of rolling out. You can expect to see the metrics appear for your AKS cluster by the end of March 2025.
 
 AKS supports some free control plane metrics for monitoring the API server and ETCD. These metrics are automatically collected for all AKS clusters at no cost. You can analyze these metrics through the [metrics explorer](/azure/azure-monitor/essentials/analyze-metrics) in the Azure Portal and create metrics-based alerts.
 

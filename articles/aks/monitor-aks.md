@@ -56,9 +56,6 @@ Metrics play an important role in cluster monitoring, identifying issues, and op
 
 - [List of default Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default)
 
-> [!NOTE]
-> Azure Monitor platform metrics for the control plane are currently in the process of rolling out. You can expect to see the metrics appear for your AKS cluster by the end of March 2025.
-
 AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts. 
 
 <a name="integrations"></a>

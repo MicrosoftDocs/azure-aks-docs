@@ -44,7 +44,10 @@ az aks update --enable-azure-monitor-metrics --name $CLUSTER --resource-group $R
 ```
 
 ### Customize scraping of Prometheus metrics in Azure Monitor managed service
-Save the scrape config in a file named `prometheus-config`. This configuration enables pod annotation-based scraping, which allows Prometheus to automatically discover and scrape metrics from pods with specific annotations.
+Create a scrape config in a file named `prometheus-config`, similar to the sample provided below. This configuration enables pod annotation-based scraping, which allows Prometheus to automatically discover and scrape metrics from pods with specific annotations.
+
+> [!IMPORTANT]
+> The scrape config below is just an example. We **highly** recommend customizing it based on your needs. If not adjusted, it could lead to unexpected costs from frequent metric collection and increased data storage.
 
 ```bash
 global: 
