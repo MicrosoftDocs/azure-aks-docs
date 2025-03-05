@@ -354,9 +354,15 @@ properties: {
 
 If the extension fails to create or update, try suggestions and solutions in the [Dapr extension troubleshooting guide](./dapr-troubleshooting.md).
 
-### Troubleshooting Dapr
+If you're experiencing Dapr runtime security risks and regressions while using the extension, open an issue with the [Dapr open source project](https://github.com/dapr/dapr/issues/new/choose).
 
-Troubleshoot Dapr errors via the [common Dapr issues and solutions guide][dapr-troubleshooting].
+You could also start a discussion in the Dapr project Discord:
+- [Dapr runtime](https://discord.com/channels/778680217417809931/778684372475707416)
+- [Dapr components](https://discord.com/channels/778680217417809931/781589820128493598)
+
+### Troubleshooting Dapr open source
+
+Troubleshoot Dapr open source errors unrelated to the extension via the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
 ## Delete the Dapr extension from your cluster
 
