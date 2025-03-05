@@ -350,19 +350,26 @@ properties: {
 
 ---
 
-## Troubleshooting extension errors
+## Troubleshooting 
+
+### Troubleshooting extension errors
 
 If the extension fails to create or update, try suggestions and solutions in the [Dapr extension troubleshooting guide](./dapr-troubleshooting.md).
+
+### Troubleshooting open source errors
+
+Troubleshoot Dapr open source errors unrelated to the extension via the [common Dapr issues and solutions guide][dapr-troubleshooting].
+
+## Support
+
+> [!NOTE]
+> Learn more about [how Microsoft handles issues raised for the Dapr extension](./dapr-overview.md#issue-handling).
 
 If you're experiencing Dapr runtime security risks and regressions while using the extension, open an issue with the [Dapr open source project](https://github.com/dapr/dapr/issues/new/choose).
 
 You could also start a discussion in the Dapr project Discord:
 - [Dapr runtime](https://discord.com/channels/778680217417809931/778684372475707416)
 - [Dapr components](https://discord.com/channels/778680217417809931/781589820128493598)
-
-### Troubleshooting Dapr open source
-
-Troubleshoot Dapr open source errors unrelated to the extension via the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
 ## Delete the Dapr extension from your cluster
 
