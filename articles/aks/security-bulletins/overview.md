@@ -78,3 +78,20 @@ For security bulletins from previous years, see:
 
 - [2024](2024.md)
 - [2023](2023.md)
+
+---
+
+## Next Steps
+
+- For information about the latest node images, see the [AKS release notes](https://github.com/Azure/AKS/releases).
+- Learn how to upgrade the AKS node image with [Upgrade Azure Kubernetes Service (AKS) node images][node-image-upgrade].
+- Learn how to automatically upgrade node images with [Automatically upgrade node images][auto-upgrade-node-image].
+- Learn how to upgrade the Kubernetes version with [Upgrade an AKS cluster][upgrade-cluster].
+- Learn about upgrading best practices with [AKS patch and upgrade guidance][upgrade-operators-guide].
+
+
+<!-- LINKS - internal -->
+[node-image-upgrade]: node-image-upgrade.md
+[auto-upgrade-node-image]: auto-upgrade-node-image.md
+[upgrade-cluster]: upgrade-aks-cluster.md
+[upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
