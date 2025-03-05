@@ -31,6 +31,8 @@ The Strimzi Operator is a Kubernetes Operator designed to manage Apache Kafka cl
 
 ### Strimzi Operator
 
+It consists of the Topic Operator, which automates the creation, configuration, and deletion of Kafka topics, and the User Operator, which manages Kafka users and their ACLs (Access Control Lists). Together, these operators ensure that Kafka resources are consistently managed according to the desired state defined in Kubernetes custom resources.
+
 ### Kafka Cluster
 
 Once deployed, the Strimzi Operator allows you to begin deploying the desired Kafka cluster architecture
