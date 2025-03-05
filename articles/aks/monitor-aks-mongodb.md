@@ -118,8 +118,7 @@ Create a dedicated node pool for the PMM server using terraform.
 4. Get the password for the admin user using the `kubectl get secret` command.
 
     ```bash
-      export ADMIN_PASS=$(kubectl get secret pmm-secret --namespace mongodb -o jsonpath='{.data.PMM_ADMIN_PASSWORD}' | base64 --decode)
-      echo $ADMIN_PASS
+      export ADMIN_PASS=$(kubectl get secret pmm-secret --namespace mongodb -o jsonpath='{.data.PMM_ADMIN_PASSWORD}' | base64 --decode)      
     ```
 
 5. You can now access the PMM server by using the external IP address and the "admin" user password. You can also access the PMM server on your local machine using the `kubectl port-forward` command.
@@ -159,7 +158,7 @@ Create a dedicated node pool for the PMM server using terraform.
 1. Set the API key as a secret in Azure Key Vault using the following command.  
 
     ```azurecli-interactive
-    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name PMM-SERVER-API-KEY --value $API_KEY --output table
+    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name PMM-SERVER-API-KEY --value $API_KEY --output none
     ```
     
 :::zone-end

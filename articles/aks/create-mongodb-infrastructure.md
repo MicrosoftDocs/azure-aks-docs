@@ -69,21 +69,11 @@ In this step, you create a user-assigned managed identity that External Secrets 
 * Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command.
 
     ```azurecli-interactive
-    az identity create --name $MY_IDENTITY_NAME --resource-group $MY_RESOURCE_GROUP_NAME --output table
+    az identity create --name $MY_IDENTITY_NAME --resource-group $MY_RESOURCE_GROUP_NAME --output none
     export MY_IDENTITY_NAME_ID=$(az identity show --name $MY_IDENTITY_NAME -g $MY_RESOURCE_GROUP_NAME --query id -o tsv)
     export MY_IDENTITY_NAME_PRINCIPAL_ID=$(az identity show --name $MY_IDENTITY_NAME -g $MY_RESOURCE_GROUP_NAME --query principalId -o tsv)
     export MY_IDENTITY_NAME_CLIENT_ID=$(az identity show --name $MY_IDENTITY_NAME -g $MY_RESOURCE_GROUP_NAME --query clientId -o tsv)
     ```
-
-    Example output:
-
-    <!-- expected_similarity=0.8 -->
-    ```output
-    ClientId                              Location       Name             PrincipalId                           ResourceGroup                     TenantId
-    ------------------------------------  -------------  ---------------  ------------------------------------  --------------------------------  ------------------------------------
-    00001111-aaaa-2222-bbbb-3333cccc4444  australiaeast  ua-identity-123  aaaaaaaa-bbbb-cccc-1111-222222222222  myResourceGroup-rg-australiaeast  aaaabbbb-0000-cccc-1111-dddd2222eeee
-    ```
-
 ## Create an Azure Key Vault instance
 
 * Create an Azure Key Vault instance using the [`az keyvault create`](/cli/azure/keyvault#az-keyvault-create) command.
@@ -135,7 +125,7 @@ In this step, you create a user-assigned managed identity that External Secrets 
     az storage account create --name $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --resource-group $MY_RESOURCE_GROUP_NAME --location $MY_LOCATION --sku Standard_ZRS --output table
     az storage container create --name $AKS_MONGODB_BACKUP_STORAGE_CONTAINER_NAME --account-name $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --output table
     export AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_KEY=$(az storage account keys list --account-name $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_NAME --query "[0].value" -o tsv)
-    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name AZURE-STORAGE-ACCOUNT-KEY --value $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_KEY
+    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name AZURE-STORAGE-ACCOUNT-KEY --value $AKS_MONGODB_BACKUP_STORAGE_ACCOUNT_KEY --output none
     ```
 
     Example output:
@@ -149,9 +139,6 @@ In this step, you create a user-assigned managed identity that External Secrets 
     Created
     ---------
     True
-    Name                       Value
-    -------------------------  ----------------------------------------------------------------------------------------
-    AZURE-STORAGE-ACCOUNT-KEY  xxx4tE3xxxxxxxxxxxxxxxxxxxxxxxxxxxx...
     ```
 
 ## Create an AKS cluster
@@ -178,15 +165,7 @@ In the following steps, you create an AKS cluster with a workload identity and O
     --enable-workload-identity \
     --zones 1 2 3 \
     --generate-ssh-keys \
-    --output table
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.5 -->
-    ```output
-    AzurePortalFqdn                                                                 CurrentKubernetesVersion    DisableLocalAccounts    DnsPrefix                           EnableRbac    Fqdn                                                                     KubernetesVersion    Location       MaxAgentPools    Name         NodeResourceGroup                                              ProvisioningState    ResourceGroup                     ResourceUid               SupportPlan
-    ------------------------------------------------------------------------------  --------------------------  ----------------------  ----------------------------------  ------------  -----------------------------------------------------------------------  -------------------  -------------  ---------------  -----------  -------------------------------------------------------------  -------------------  --------------------------------  ------------------------  ------------------
-    cluster-ak-myresourcegroup--83a15f-46qdeqrv.portal.hcp.australiaeast.azmk8s.io  1.28.9                      False                   cluster-ak-myResourceGroup--83a15f  True          cluster-ak-myresourcegroup--83a15f-46qdeqrv.hcp.australiaeast.azmk8s.io  1.28                 australiaeast  100              cluster-aks  MC_myResourceGroup-rg-australiaeast_cluster-aks_australiaeast  Succeeded            myResourceGroup-rg-australiaeast  a0a0a0a0-bbbb-cccc-dddd-e1e1e1e1e1e1  KubernetesOfficial
+    --output none
     ```
 
 2. Add a user node pool to the AKSc luster using the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. This node pool is where the MongoDB pods run.
@@ -225,15 +204,7 @@ In the following steps, you create an AKS cluster with a workload identity and O
     --assignee ${KUBELET_IDENTITY} \
     --role "AcrPull" \
     --scope ${MY_ACR_REGISTRY_ID} \
-    --output table
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    CreatedBy                             CreatedOn                         Name                                  PrincipalId                           PrincipalName                         PrincipalType     ResourceGroup                     RoleDefinitionId                                                                                                                            RoleDefinitionName    Scope                                                                                                                                                                      UpdatedBy                             UpdatedOn
-    ------------------------------------  --------------------------------  ------------------------------------  ------------------------------------  ------------------------------------  ----------------  --------------------------------  ------------------------------------------------------------------------------------------------------------------------------------------  --------------------  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------  ------------------------------------  --------------------------------
-    bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-07-01T12:23:20.749750+00:00  8247e9bb-bc6b-414f-98a6-4768dbb961ad  9686a88e-25bc-4b4c-b611-d1057a26acdc  0b40421c-343b-4986-b691-980d6154429e  ServicePrincipal  myResourceGroup-rg-australiaeast  /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/providers/Microsoft.Authorization/roleDefinitions/7f951dda-4ed3-4680-a7ca-43fe172d538d  AcrPull               /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup-rg-australiaeast/providers/Microsoft.ContainerRegistry/registries/mydnsrandomnamecjcfc  bbbb1b1b-cc2c-dd3d-ee4e-ffffff5f5f5f  2024-07-01T12:23:20.749750+00:00
+    --output none
     ```
 
 ## Upload Percona images to Azure Container Registry

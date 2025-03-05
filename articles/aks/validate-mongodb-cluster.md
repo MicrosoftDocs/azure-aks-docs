@@ -17,16 +17,16 @@ After deploying the MongoDB cluster on AKS, you can deploy a sample client appli
 
 In this section, you connect to the MongoDB shell. Once you're connected, you create a database and collection, insert data, and run queries.
 
-1. Create a pod named `percona-client` in the `${AKS_MONGODB_NAMESPACE}` namespace in your cluster using the `kubectl run` command.
+1. Create a pod named `percona-client` in the `${AKS_MONGODB_NAMESPACE}` namespace in your cluster using the `kubectl run` command. Make sure you are passing correct `$connectionString` environment variable exported from the step 3 of the [previous tutorial][deploy-mongodb-cluster].
 
     ```bash
-    kubectl -n "${AKS_MONGODB_NAMESPACE}" run -i --rm --tty percona-client --image=${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5 --restart=Never -- bash -il
+    kubectl -n "${AKS_MONGODB_NAMESPACE}" run -i --rm --tty percona-client --image=${MY_ACR_REGISTRY}.azurecr.io/percona-server-mongodb:7.0.8-5 --restart=Never -- env CONN_STR=$connectionString 
     ```
 
-2. Connect to the MongoDB shell using the following command. Make sure to replace `databaseAdmin`, `databaseAdminPassword`, and `AKS_MONGODB_CLUSTER_NAME` with the actual values you obtained from the [previous tutorial][deploy-mongodb-cluster].
+2. Connect to the MongoDB shell using the following command.
 
     ```bash
-    mongosh "mongodb://${databaseAdmin}:${databaseAdminPassword}@${AKS_MONGODB_CLUSTER_NAME}-mongos.mongodb.svc.cluster.local/admin?replicaSet=rs0&ssl=false&directConnection=true"
+    mongosh $CONN_STR
     ```
 
 3. In the MongoDB shell, create the database and collection using the following script:
@@ -81,13 +81,13 @@ To deploy the `mongo-express` client app, you first need to create secrets speci
 :::zone pivot="azure-cli"
    
    ```azurecli-interactive
-   az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGOEXPRESS-CONFIG-BASICAUTH-USERNAME --value MONGOEXPRESSADMINUSER  --output table
-   az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGOEXPRESS-CONFIG-BASICAUTH-PASSWORD --value $(generateRandomPasswordString) --output table   
+   az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGOEXPRESS-CONFIG-BASICAUTH-USERNAME --value MONGOEXPRESSADMINUSER  --output none
+   az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGOEXPRESS-CONFIG-BASICAUTH-PASSWORD --value $(generateRandomPasswordString) --output none   
    ```
 2. Create a secret for the `mongo-express` config server details using the [`az keyvault secret set`](/cli/azure/keyvault/secret#az-keyvault-secret-set) command.
 
    ```azurecli-interactive
-   az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CONFIG-SERVER --value ${MY_CLUSTER_NAME}-${AKS_MONGODB_NAMESPACE}-mongos.mongodb.svc.cluster.local --output table
+   az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CONFIG-SERVER --value ${MY_CLUSTER_NAME}-${AKS_MONGODB_NAMESPACE}-mongos.mongodb.svc.cluster.local --output none
    ```
 :::zone-end
 
@@ -287,13 +287,8 @@ When the application runs, a Kubernetes service exposes the application to the i
 3. When prompted, enter the `username` and `password` set in the deployment configuration. If you need to retrieve the username and password, you can do so using the following commands:
 
     ```bash
-      #username
-      export Username=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGOEXPRESS_CONFIG_BASICAUTH_USERNAME}" | base64 --decode)
-      #echo $Username
-    
-      #password
+      export Username=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGOEXPRESS_CONFIG_BASICAUTH_USERNAME}" | base64 --decode) 
       export Password=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGOEXPRESS_CONFIG_BASICAUTH_PASSWORD}" | base64 --decode)
-      #echo $Password
     ```
 
     :::image type="content" source="./media/validate-mongodb-cluster/mongo-express-web-client.png" alt-text="Screenshot of mongo-express sample application." lightbox="./media/validate-mongodb-cluster/mongo-express-web-client.png":::
@@ -306,6 +301,6 @@ When the application runs, a Kubernetes service exposes the application to the i
 <!-- LINKS - external -->
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [mongo-express]: https://github.com/mongo-express/mongo-express
-[deploy-mongodb-cluster]: ./deploy-mongodb-cluster.md#verify-the-mongodb-cluster
+[deploy-mongodb-cluster]: ./deploy-mongodb-cluster.md#connect-to-the-percona-server
 [create-secret]: ./deploy-mongodb-cluster.md#create-secrets-resources
 [resiliency-mongodb-cluster]: ./resiliency-mongodb-cluster.md
