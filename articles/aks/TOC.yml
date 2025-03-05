@@ -667,9 +667,6 @@
                       href: csi-secrets-store-configuration-options.md
         - name: Security Bulletins
           href: security-bulletins/overview.md
-          items:
-            - name: Mitigated CVEs in AKS releases
-              href: security-bulletins/mitigated-cves.md
     - name: Configure networking
       items:
         - name: CNI
