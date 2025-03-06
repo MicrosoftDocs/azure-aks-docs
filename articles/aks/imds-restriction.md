@@ -76,6 +76,7 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - AI toolchain operator (preview)
 - Application routing
 - HTTP application routing
+- Web application routing
 - Azure cost analysis 
 
 Additionally, Windows node pools aren't currently supported with IDMS restriction.
