@@ -352,11 +352,11 @@ properties: {
 
 ## Troubleshooting 
 
-### Troubleshooting extension errors
+### Troubleshooting extension management errors
 
 If the extension fails to create or update, try suggestions and solutions in the [Dapr extension troubleshooting guide](./dapr-troubleshooting.md).
 
-### Troubleshooting open source errors
+### Troubleshooting Dapr functional errors
 
 Troubleshoot Dapr open source errors unrelated to the extension via the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
