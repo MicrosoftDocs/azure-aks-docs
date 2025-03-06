@@ -3,7 +3,7 @@ title: Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kuberne
 description: Learn more about using Dapr on your Azure Kubernetes Service (AKS) cluster to develop applications.
 ms.author: nickoman
 ms.topic: overview
-ms.date: 09/05/2024
+ms.date: 03/06/2025
 ---
 
 # Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
@@ -66,18 +66,6 @@ Microsoft provides best-effort support for [the latest version of Dapr and two p
 You can run Azure CLI commands to retrieve a list of available versions in [a cluster](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-cluster) or [a location](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-location).
 
 [Learn how to view and target the latest stable Dapr versions available to your managed AKS cluster.](./dapr.md#viewing-the-latest-stable-dapr-versions-available)
-
-### Runtime support
-
-The Dapr extension support varies depending on how you manage the runtime.
-
-#### Self-managed 
-Self-managed runtime requires manual upgrade to remain in the support window. To upgrade Dapr via the extension, follow the [Update extension instance](deploy-extensions-az-cli.md#update-extension-instance) instructions.
-
-After a Dapr runtime version reaches end of Microsoft support, your applications continue to run unchanged. However, Microsoft can no longer provide security patches or related customer support for that runtime version. If your application encounters any problems past the end-of-support date for that version, we recommend upgrading to a supported version to receive the latest security patches and features.
-
-#### Auto-upgrade  
-[Enabling auto-upgrade](./dapr.md#configuring-automatic-updates-to-dapr-control-plane) requires careful consideration. While auto-upgrade keeps your Dapr extension updated to the latest minor version, you may experience breaking changes between updates. Microsoft isn't responsible for any downtime caused due to breaking changes between auto-updates.
 
 ### Components and APIs
 
