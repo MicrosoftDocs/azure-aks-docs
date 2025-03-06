@@ -1,5 +1,5 @@
 ---
-title: Enhancing Concurrency Control in AKS with eTags (Entity Tags)
+title: Enhancing Concurrency Control with Entity Tags (eTags) in Azure Kubernetes Service (preview)
 description: Learn how to leverage eTags (Entity Tags) to enable concurrency control and avoid racing conditions or overwriting scenarios. 
 ms.topic: how-to
 ms.date: 02/28/2025
@@ -21,6 +21,23 @@ There are two options for applying eTags through headers:
 **`–-if-match`** Header: Ensures that the operation is performed only if the existing eTag matches the value provided in this header.
 
 **`–-if-none-match`** Header: Ensures that the operation is performed only if none of the eTags match the value provided in this header. This header type can only be empty or a `*`. 
+
+### Install the aks-preview Azure CLI extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+
+1. Install the aks-preview extension using the [`az extension add`][az extension add] command:
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+2. Update to the latest version of the aks-preview extension using the [`az extension update`][az extension update] command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
 
 ### Getting Started using ETags
 Headers are completely optional to use, below are two examples on how we can use `–-if-match` and `–if-none-match` headers. 
