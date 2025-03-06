@@ -51,7 +51,7 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
     az group create --name myResourceGroup --location eastus
     ```
 
-2. Create an ACR instance using the [`az acr create`][az-acr-create] command and provide your own unique registry name. The registry name must be unique within Azure and contain 5-50 alphanumeric characters. The rest of this tutorial uses an environment variable, `$ACRNAME`, as a placeholder for the container registry name. You can set this environment variable to your unique ACR name to use in future commands. The *Basic* SKU is a cost-optimized entry point for development purposes that provides a balance of storage and throughput.
+2. Create an ACR instance using the [`az acr create`][az-acr-create] command and provide your own unique registry name. The registry name must be unique within Azure and contain 5-50 lowercase alphanumeric characters. This tutorial series uses an environment variable, `$ACRNAME`, as a placeholder for the container registry name. You can set this environment variable to your unique ACR name to use in future commands. The *Basic* SKU is a cost-optimized entry point for development purposes that provides a balance of storage and throughput.
 
     ```azurecli-interactive
     az acr create --resource-group myResourceGroup --name $ACRNAME --sku Basic

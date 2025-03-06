@@ -41,11 +41,11 @@ To learn more about AKS and Kubernetes RBAC, see [Control access to cluster reso
 
 ### [Azure CLI](#tab/azure-cli)
 
-This tutorial requires Azure CLI version 2.35.0 or later. Check your version with `az --version`. To install or upgrade, see [Install Azure CLI][azure-cli-install].
+This tutorial requires Azure CLI version 2.35.0 or later. Check your version with `az --version`. To install or upgrade, see [Install Azure CLI][azure-cli-install]. If you're using the Bash environment in Azure Cloud Shell, the latest version is already installed. 
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-This tutorial requires Azure PowerShell version 5.9.0 or later. Check your version with `Get-InstalledModule -Name Az`. To install or upgrade, see [Install Azure PowerShell][azure-powershell-install].
+This tutorial requires Azure PowerShell version 5.9.0 or later. Check your version with `Get-InstalledModule -Name Az`. To install or upgrade, see [Install Azure PowerShell][azure-powershell-install]. If you're using Azure Cloud Shell, the latest version is already installed. 
 
 ### [Azure Developer CLI](#tab/azure-azd)
 

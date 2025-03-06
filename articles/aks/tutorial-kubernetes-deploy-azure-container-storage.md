@@ -2,7 +2,7 @@
 title: Kubernetes on Azure tutorial - Use Azure Container Storage
 description: In this Azure Kubernetes Service (AKS) tutorial, you learn how to deploy Azure Container Storage on an AKS cluster and create volumes.
 ms.topic: tutorial
-ms.date: 02/05/2025
+ms.date: 03/05/2025
 author: khdownie
 ms.author: kendownie
 ms.custom: mvc, devx-track-azurecli
@@ -29,9 +29,9 @@ By the end of this tutorial, you will:
 
 In previous tutorials, you created a container image, uploaded it to an ACR instance, and created an AKS cluster. Start with [Tutorial 1 - Prepare application for AKS][aks-tutorial-prepare-app] to follow along.
 
-* This tutorial requires using the Azure CLI version 2.35.0 or later. Portal and PowerShell aren't currently supported for Azure Container Storage. Check your version with `az --version`. To install or upgrade, see [Install Azure CLI][azure-cli-install].
+* This tutorial requires using the Azure CLI version 2.35.0 or later. Portal and PowerShell aren't currently supported for Azure Container Storage. Check your version with `az --version`. To install or upgrade, see [Install Azure CLI][azure-cli-install]. If you're using the Bash environment in Azure Cloud Shell, the latest version is already installed. 
 * You must have an existing Linux-based AKS cluster with at least 3 nodes with [Storage optimized VM SKUs](/azure/virtual-machines/sizes/overview#storage-optimized) or [GPU accelerated VM SKUs](/azure/virtual-machines/sizes/overview#gpu-accelerated). See [Tutorial 3 - Create an AKS cluster][aks-tutorial-deploy-cluster].
-* You must have `kubectl` installed.
+* You'll need the Kubernetes command-line client, `kubectl`. It's already installed if you're using Azure Cloud Shell, or you can install it locally by running the `az aks install-cli` command.
 
 ## Install the Kubernetes extension
 
