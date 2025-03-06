@@ -342,8 +342,5 @@ For more information, see the [conceptual overview on the update run states and 
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-fleet-updaterun-create]: /cli/azure/fleet/updaterun#az-fleet-updaterun-create
 [az-fleet-updaterun-start]: /cli/azure/fleet/updaterun#az-fleet-updaterun-start
-[az-fleet-member-create]: /cli/azure/fleet/member#az-fleet-member-create
-[az-fleet-member-update]: /cli/azure/fleet/member#az-fleet-member-update
-[az-fleet-updatestrategy-create]: /cli/azure/fleet/updatestrategy#az-fleet-updatestrategy-create
 [az-fleet-updaterun-stop]: /cli/azure/fleet/updaterun#az-fleet-updaterun-stop
 [az-fleet-updaterun-skip]: /cli/azure/fleet/updaterun#az-fleet-updaterun-skip
