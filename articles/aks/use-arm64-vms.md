@@ -29,12 +29,12 @@ Before you begin, make sure you have:
 ## Limitations
 - Arm64 VMs aren't supported for Windows node pools.
 - Existing node pools can't be updated to use an Arm64 VM.
--  Federal Information Process Standard (FIPS)-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
+- Federal Information Process Standard (FIPS)-enabled node pools are only supported with Arm64 SKUs when using Azure Linux 3.0+.
 - Arm64 node pools aren't supported on Defender-enabled clusters with Kubernetes version 1.29.0 or lower.
 
 ## Create node pools with Arm64 VMs
 
-The Arm64 processor provides low power compute for your Kubernetes workloads. Arm64 virtual machines can be added to existing clusters even mixing Intel and Arm architecture node pools within a cluster. To create an Arm64 node pool, you need to choose a [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2] or [Epsv5][arm-sku-vm3] series Virtual Machine.
+The Arm64 processor provides low power compute for your Kubernetes workloads. Arm64 virtual machines can be added to existing clusters even mixing Intel and Arm architecture node pools within a cluster. To create an Arm64 node pool, you need to choose a [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2], or [Epsv5][arm-sku-vm3] series virtual machine.
 
 ### Add a node pool with an Arm64 VM
 
@@ -103,7 +103,7 @@ Verify a node pool uses Arm64 using the [`az aks nodepool show`][az-aks-nodepool
      --query vmSize
 ```
 
-    The following example output shows the node pool uses Arm64:
+The following example output shows the node pool uses Arm64:
 
 ```output
  "Standard_D2pds_v5"
