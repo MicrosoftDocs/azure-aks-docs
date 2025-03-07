@@ -1,6 +1,6 @@
 ---
-title: "Configure monitoring and alerting of Update Runs for Azure Kubernetes Fleet Manager"
-description: See how to setup alerts for Azure Kubernetes Fleet Manager Update Runs using Azure Monitor.
+title: "Configure alerting of Update Runs for Azure Kubernetes Fleet Manager"
+description: See how to setup alerts for Azure Kubernetes Fleet Manager Update Runs using Azure Resource Graph and Azure Monitor.
 ms.topic: how-to
 ms.date: 03/05/2025
 author: sjwaight
@@ -10,23 +10,72 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Configure monitoring and alerting of Update Runs for Azure Kubernetes Fleet Manager
 
-Fleet administrators can determine the status of long-running update runs within their fleet by using Fleet Manager telemetry and Azure Monitor. Azure Kubernetes Fleet Manager emits telemetry for Update Runs to the [Azure Resource Graph][resource-graph], enabling the use of Azure Monitor and Log Analytics for the purpose of alerting or automation. 
+Fleet administrators can monitor the status of long-running update runs by configuring alerts in Azure Monitor. Fleet update run resource changes are ingested into [Azure Resource Graph][resource-graph], allowing administrators to configure alerts and automations via Azure Monitor and Log Analytics.
 
 Data about manual or auto-upgrade update runs are stored in Azure Resource Graph, giving adminstrators the opportunity to query based on Fleet name, [update run status][rest-api-statuses], update stages and cluster name.
  
-Regardless of which Azure Subcription or Region your fleet's member clusters are in, update run data is always held in the Azure Resource Group in the Azure Subscription in which your Fleet Manager resource resides.
+Regardless of which Azure Subcription or Region your fleet's member clusters are located in, the update run data is always in the Azure Resource Graph of the Azure Subscription of the Fleet Manager resource.
 
-In order to query your update run data, you will need to use queries written using the Kusto Query Language (KQL).
+In order to query your update run data, you will need to use queries written using the [Kusto Query Language (KQL)][kusto-query-docs].
 
-## Inspect update run properties
+## Understand Azure Resource Graph data
 
-For the purpose of understanding how to work with Azure Resource Graph and Fleet update run data, let's work with update run data for a Fleet Manager resource named `contoso-fleet-01` that is using an update run strategy named `safedeployment` to update just node images.
+For the purpose of understanding how to work with Azure Resource Graph and Fleet update run data, let's use the Azure Resource Group Explorer to query update run data.
 
-* Start by opening the Azure Monitor Logs blade in the Azure Portal.
+* Start by opening the [Azure Resource Group Explorer](https://ms.portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure Portal.
 
-* When prompted to select a scope, choose the Azure Subscription that contains your Fleet Manager resource.
+* Select **Table** and then expand **aksresources**. You will see Fleet's resources with the prefix of `microsoft.containerservice/fleets`.
 
-* In the query box you can query update run data and explore the results. The following sample will list all update runs for the fleet and strategy provided.
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-arg-explorer.png" alt-text="A view of the Azure Resource Group Explorer with the aksresources Table expanded." lightbox="./media/monitor-update-runs/monitor-update-run-arg-explorer.png":::
+
+* In the **Table** pane select **aksresources** to add it to the explorer query box.
+
+* Now select **microsoft.containerservices/fleets/updateruns**. You explorer query box should look like the following KQL sample.
+
+    ```kusto
+    aksresources
+    | where type == "microsoft.containerservice/fleets/updateruns"
+    ```
+
+* Run the query and you will recieve back all update run data held in the Azure Resource Group for the current Azure Subscription. Update run data is held as a JSON object in the `properties` field of the result. You can view a sample of this object [later in this article](#sample-update-run-json-properties-result).
+
+### Filtering update run data
+
+Now that you have queried the basic update run data you can begin to filter the results to show only update runs for specific fleets or statuses.
+
+* Update your query by expanding the `microsoft.containerservice/fleets/updateruns` node, followed by `status` and `status`. 
+
+* Select `state` so that the property is added to your explorer query.
+
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png" alt-text="Selecting a field in an update run in Azure Resource Group Explorer to add it to the query." lightbox="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png":::
+
+    Your query window should contain the following query.
+
+    ```kusto
+    aksresources
+    | where type == "microsoft.containerservice/fleets/updateruns"
+    | where properties['status']['status']['state'] == "INSERT_VALUE_HERE"
+    ```
+
+* Replace the `INSERT_VALUE_HERE` placeholder with an appropriate [update run status][rest-api-statuses] value. For example, to receive only failed update runs set this value to `Failed`.
+   
+* Run the query and you will receive only update runs that have a status that matches what you specified.
+
+### Filter to a Fleet Manager instance
+
+When you build a Kusto query against Azure Resource Graph you can use the following sample query as a guide on how to select only update runs associated with a particular Fleet Manager resource.
+
+Replace the `your-fleet-name` placeholder with the name of your Fleet Manager to only view results associated with it.
+
+    ```kusto
+    aksresources
+    | where type == "microsoft.containerservice/fleets/updateruns"
+    | where id contains ('Microsoft.ContainerService/fleets/your-fleet-name')
+    ```
+
+## Building alerts 
+
+Now that you have explored the data available you can use Azure Monitor Alerts to trigger based on Azure Resource Graph queries.
 
 ```kusto
 arg("").aksresources
@@ -36,6 +85,10 @@ arg("").aksresources
 ```
 
 If an update run that matches the supplied criteria has been created, even if it is yet to run, you will receive the data back in the query results. Each entry will be simliar to the following sample JSON.
+
+## Sample update run JSON properties result 
+
+The following sample represents the `properties` payload held in Azure Resource Graph for each update run. You can use this structure to inform how you build you alerting queries or dashboards.
 
 ```json
 {
@@ -194,3 +247,4 @@ If an update run that matches the supplied criteria has been created, even if it
 [resource-graph]: /azure/governance/resource-graph/overview
 [rest-api-statuses]: /rest/api/fleet/update-runs/get#updatestate
 [fleet-update-strategy]: ./update-create-update-strategy
+[kusto-query-docs]: /kusto/query
