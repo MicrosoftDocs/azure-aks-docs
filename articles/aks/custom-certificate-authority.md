@@ -1,17 +1,19 @@
 ---
 title: Custom certificate authority (CA) in Azure Kubernetes Service (AKS)
-description: Learn how to use a custom certificate authority (CA) in an Azure Kubernetes Service (AKS) cluster.
-author: schaffererin
-ms.author: schaffererin
+description: Learn how to use a custom certificate authority (CA) to add certificates to your nodes in an Azure Kubernetes Service (AKS) cluster.
+author: allyford
+ms.author: allyford
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
-ms.date: 04/25/2023
+ms.date: 03/07/2025
 ---
 
 # Custom certificate authority (CA) in Azure Kubernetes Service (AKS)
 
-This article shows you how to create custom CAs and apply them to your AKS clusters.
+Custom Certificate Authority allows you to add up to 10 base64 encoded certificates to your node's trust store. This is often needed when CAs are required to be present on the node, for example when connecting to a private registry.  
+
+This article shows you how to create custom CAs and apply them to your AKS clusters. 
 
 ## Prerequisites
 
@@ -24,11 +26,13 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 * This feature currently isn't supported for Windows node pools.
 * Installing different CAs on different node pools is not supported.
 
-## Custom CA installation on AKS node pools
+## Install CAs on you node's trust store
 
-### Install CAs on AKS node pools
+1. Create a file containing CAs
 
-* If your environment requires your custom CAs to be added to node trust store for correct provisioning, you need to pass a text file containing up to 10 blank line separated certificates during [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] operations. Example text file:
+Create a text file containing up to 10 blank line separated certificates. When this file is passed to your cluster, these certificates will be installed in you node's trust stores.
+
+Example text file: "FileWithCAs"
 
     ```txt
     -----BEGIN CERTIFICATE-----
@@ -40,7 +44,9 @@ This article shows you how to create custom CAs and apply them to your AKS clust
     -----END CERTIFICATE-----
     ```
 
-#### Install CAs during cluster creation
+2. Pass certificates to your cluster
+
+You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] to pass certificates to your cluster. Once the operation completes, the certificates will be installed in your node's trust stores.
 
 * Install CAs during cluster creation using the [`az aks create`][az-aks-create] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
 
@@ -49,102 +55,20 @@ This article shows you how to create custom CAs and apply them to your AKS clust
         --resource-group <resource-group-name> \
         --name <cluster-name> \
         --node-count 2 \
-        --custom-ca-trust-certificates pathToFileWithCAs \
+        --custom-ca-trust-certificates FileWithCAs \
         --generate-ssh-keys
     ```
 
-#### CA rotation for availability during node pool boot up
-
-* Update CAs passed to your cluster during boot up using the [`az aks update`][az-aks-update] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
+* Install CAs during cluster update using the [`az aks update`][az-aks-update]command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
 
     ```azurecli-interactive
     az aks update \
         --resource-group <resource-group-name> \
         --name <cluster-name> \
-        --custom-ca-trust-certificates pathToFileWithCAs
+        --custom-ca-trust-certificates FileWithCAs
     ```
-
-    > [!NOTE]
-    > This operation triggers a model update, ensuring new nodes have the newest CAs required for correct provisioning. AKS creates additional nodes, drains existing ones, deletes them, and replaces them with nodes that have the new set of CAs installed.
-
-## Configure a new AKS cluster to use a custom CA
-
-* Configure a new AKS cluster to use a custom CA using the [`az aks create`][az-aks-create] command with the `--enable-custom-ca-trust` parameter.
-
-    ```azurecli-interactive
-    az aks create \
-        --resource-group <resource-group-name> \
-        --name <cluster-name> \
-        --node-count 2 \
-        --enable-custom-ca-trust \
-        --generate-ssh-keys
-    ```
-
-## Configure a new AKS cluster to use a custom CA with CAs installed before node boots up
-
-* Configure a new AKS cluster to use custom CA with CAs installed before the node boots up using the [`az aks create`][az-aks-create] command with the `--enable-custom-ca-trust` and `--custom-ca-trust-certificates` parameters.
-
-    ```azurecli-interactive
-    az aks create \
-        --resource-group <resource-group-name> \
-        --name <cluster-name> \
-        --node-count 2 \
-        --enable-custom-ca-trust \
-        --custom-ca-trust-certificates pathToFileWithCAs \
-        --generate-ssh-keys
-    ```
-
-## Configure an existing AKS cluster to have custom CAs installed before node boots up
-
-* Configure an existing AKS cluster to have your custom CAs added to node's trust store before it boots up using the [`az aks update`][az-aks-update] command with the `--custom-ca-trust-certificates` parameter.
-
-    ```azurecli-interactive
-    az aks update \
-        --resource-group <resource-group-name> \
-        --name <cluster-name> \
-        --custom-ca-trust-certificates pathToFileWithCAs
-    ```
-
-## Configure a new node pool to use a custom CA
-
-* Configure a new node pool to use a custom CA using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--enable-custom-ca-trust` parameter.
-
-    ```azurecli-interactive
-    az aks nodepool add \
-        --cluster-name <cluster-name> \
-        --resource-group <resource-group-name> \
-        --name <node-pool-name> \
-        --enable-custom-ca-trust \
-        --os-type Linux
-    ```
-
-    If no other node pools with the feature enabled exist, the cluster has to reconcile its settings for the changes to take effect. This operation happens automatically as a part of AKS's reconcile loop. Before the operation, the daemon set and pods don't appear on the cluster. You can trigger an immediate reconcile operation using the [`az aks update`][az-aks-update] command. The daemon set and pods appear after the update completes.
-
-## Configure an existing node pool to use a custom CA
-
-* Configure an existing node pool to use a custom CA using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-custom-ca-trust` parameter.
-
-    ```azurecli-interactive
-    az aks nodepool update \
-        --resource-group <resource-group-name> \
-        --cluster-name <cluster-name> \
-        --name <node-pool-name> \
-        --enable-custom-ca-trust
-    ```
-
-    If no other node pools with the feature enabled exist, the cluster has to reconcile its settings for the changes to take effect. This operation happens automatically as a part of AKS's reconcile loop. Before the operation, the daemon set and pods don't appear on the cluster. You can trigger an immediate reconcile operation using the [`az aks update`][az-aks-update] command. The daemon set and pods appear after the update completes.
-
-## Disable custom CA on a node pool
-
-* Disable the custom CA feature on an existing node pool using the [`az aks nodepool update`][az-aks-nodepool-update] command with the `--disable-custom-ca-trust` parameter.
-
-    ```azurecli-interactive
-    az aks nodepool update \
-        --resource-group <resource-group-name> \
-        --cluster-name <cluster-name> \
-        --name <node-pool-name> \
-        --disable-custom-ca-trust
-    ```
+ > [!NOTE]
+ > This operation triggers a model update to ensure all existing nodes have the same CAs installed for correct provisioning. AKS creates additional nodes, drains existing nodes, deletes existing nodes, and replaces them with nodes that have the new set of CAs installed.
 
 ## Troubleshooting
 
