@@ -221,3 +221,4 @@ This article showed you how to manually and automatically rotate your cluster ce
 
 <!-- LINKS - external -->
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[kubelet-debug]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_debug/
