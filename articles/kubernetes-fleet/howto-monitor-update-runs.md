@@ -18,7 +18,7 @@ Regardless of which Azure Subcription or Region your fleet's member clusters are
 
 In order to query your update run data, you will need to use queries written using the [Kusto Query Language (KQL)][kusto-query-docs].
 
-## Understand Azure Resource Graph data
+## Understand update run data in Azure Resource Graph
 
 For the purpose of understanding how to work with Azure Resource Graph and Fleet update run data, let's use the Azure Resource Group Explorer to query update run data.
 
@@ -39,39 +39,46 @@ For the purpose of understanding how to work with Azure Resource Graph and Fleet
 
 * Run the query and you will recieve back all update run data held in the Azure Resource Group for the current Azure Subscription. Update run data is held as a JSON object in the `properties` field of the result. You can view a sample of this object [later in this article](#sample-update-run-json-properties-result).
 
-### Filtering update run data
-
-Now that you have queried the basic update run data you can begin to filter the results to show only update runs for specific fleets or statuses.
-
-* Update your query by expanding the `microsoft.containerservice/fleets/updateruns` node, followed by `status` and `status`. 
-
-* Select `state` so that the property is added to your explorer query.
-
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png" alt-text="Selecting a field in an update run in Azure Resource Group Explorer to add it to the query." lightbox="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png":::
-
-    Your query window should contain the following query.
-
-    ```kusto
-    aksresources
-    | where type == "microsoft.containerservice/fleets/updateruns"
-    | where properties['status']['status']['state'] == "INSERT_VALUE_HERE"
-    ```
-
-* Replace the `INSERT_VALUE_HERE` placeholder with an appropriate [update run status][rest-api-statuses] value. For example, to receive only failed update runs set this value to `Failed`.
-   
-* Run the query and you will receive only update runs that have a status that matches what you specified.
-
 ### Filter to a Fleet Manager instance
 
 When you build a Kusto query against Azure Resource Graph you can use the following sample query as a guide on how to select only update runs associated with a particular Fleet Manager resource.
 
-Replace the `your-fleet-name` placeholder with the name of your Fleet Manager to only view results associated with it.
+You can add a manual filter to your explorer query to select your Fleet Manager instance as follows.
+
+* In the explorer query manually add the additional where clause, replacing the `your-fleet-name` placeholder with the name of your Fleet Manager.
 
     ```kusto
     aksresources
     | where type == "microsoft.containerservice/fleets/updateruns"
     | where id contains ('Microsoft.ContainerService/fleets/your-fleet-name')
     ```
+
+* Run the query to see the result set only includes update runs for the specified Fleet Manager.
+
+### Filter by update run status
+
+Now that you know how to find update runs associated with your Fleet Manager you can add further filters so results are based on the state of the update run.
+
+* Update your explorer query by expanding the `microsoft.containerservice/fleets/updateruns` node, followed by `status` and `status`. 
+
+* Select `state` so that the property is added to your explorer query.
+
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png" alt-text="Selecting a field in an update run in Azure Resource Group Explorer to add it to the query." lightbox="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png":::
+
+    Your explorer query should contain the following.
+
+    ```kusto
+    aksresources
+    | where type == "microsoft.containerservice/fleets/updateruns"
+    | where id contains ('Microsoft.ContainerService/fleets/your-fleet-name')
+    | where properties['status']['status']['state'] == "INSERT_VALUE_HERE"
+    ```
+
+* Replace the `INSERT_VALUE_HERE` placeholder with an appropriate [update run status][rest-api-statuses] value. For example, to receive only failed update runs set this value to `Failed`.
+   
+* Run the query and you will receive only update runs for your Fleet Manager that have a matching status.
+
+
 
 ## Building alerts 
 

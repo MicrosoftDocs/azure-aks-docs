@@ -44,7 +44,17 @@ You should choose `Latest` to use fresher image versions and minimize security r
 
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
 
-Within an update run (for both [One by one](./update-orchestration.md#update-all-clusters-one-by-one) or [Stages](./update-orchestration.md#update-clusters-using-groups-and-stages) type update runs), update run prioritizes upgrading the clusters in the following order: 
+AKS clusters support two distinct maintenance windows - one for Kubernetes (control plane) upgrades and one for node image upgrades.
+
+Fleet Manager update runs will honor AKS maintenance windows as follows:
+
+| Fleet Manager Channel |  AKS maintenance window setting     |
+|-----------------------|-------------------------------------|
+| Kubernetes Control Plane | AKSManagedAutoUpgradeSchedule    |
+| Kubernetes + Node Image |  AKSManagedAutoUpgradeSchedule    |
+| Node Image Only       | AKSManagedNodeOSAutoUpgradeSchedule | 
+
+Update run prioritizes upgrading clusters based on planned maintenance in the following order: 
   1. Member with an open ongoing maintenance window.
   2. Member with maintenance window opening in the next four hours.
   3. Member with no maintenance window.
