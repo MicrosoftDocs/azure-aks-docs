@@ -59,7 +59,7 @@ You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-upd
         --generate-ssh-keys
     ```
 
-* Install CAs during cluster update using the [`az aks update`][az-aks-update]command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
+* Install CAs during cluster update using the [`az aks update`][az-aks-update] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
 
     ```azurecli-interactive
     az aks update \
@@ -69,6 +69,22 @@ You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-upd
     ```
  > [!NOTE]
  > This operation triggers a model update to ensure all existing nodes have the same CAs installed for correct provisioning. AKS creates new nodes, drains existing nodes, deletes existing nodes, and replaces them with nodes that have the new set of CAs installed.
+
+ 3. Check that CAs have been installed
+ Use the [`az aks show`][az-aks-show] command to check that CAs have been installed. 
+
+```azurecli-interactive
+az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME | grep securityProfile -A 4
+```
+The securityProfile output should include your Custom CA Trust Certificates.
+
+output
+```
+  "securityProfile": {
+    "azureKeyVaultKms": null,
+    "customCaTrustCertificates": [
+        "values"
+```
 
 ## Troubleshooting
 
@@ -88,6 +104,7 @@ For more information on AKS security best practices, see [Best practices for clu
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-show]: /cli/azure/feature#az-feature-show
+[az-aks-show]: /cli/azure/aks#az-aks-show
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [kubernetes-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
