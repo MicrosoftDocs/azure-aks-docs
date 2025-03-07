@@ -15,7 +15,7 @@ ms.date: 03/06/2025
 - Observability
 - Secret management 
 
-Dapr is incrementally adoptable. You can use any of the API building blocks as needed. [Learn the support level Microsoft offers for each Dapr API and component.](#currently-supported)
+Dapr is incrementally adoptable. You can use any of the API building blocks as needed. [Learn the support level Microsoft offers for the Dapr extension.](#issue-handling)
 
 ## Capabilities and features
 
