@@ -1,6 +1,6 @@
 ---
-title: Solution overview for deploying the Strimzi Operator and highly available Kafka cluster on Azure Kubernetes Service (AKS)
-description: In this article, we provide an overview of deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.
+title: Deploy and configure Strimzi and Kafka components on Azure Kubernetes Service (AKS)
+description: In this article, we provide guidance for deploying the Strimzi Operator and a Kafka cluster on Azure Kubernetes Service (AKS). 
 ms.topic: overview
 ms.custom: azure-kubernetes-service
 ms.date: 08/15/2024
@@ -14,11 +14,19 @@ In this article, you deploy the Strimzi Cluster Operator and a highly available 
 
 ## Strimzi Deployment
 
-The Strimzi Cluster Operator is deployed to its own namespace, *Strimzi Operator*, and is configured to watch the namespace, *Kafka*, where the Kafka cluster components are deployed to. To ensure high availability, the operator is deployed with multiple replicas and with leader election enabled to allow for multiple replicas to run concurrently. One replica is chosen as the active leader to manage the deployed resources, while the others remain on standby. If the leader stops functioning or fails, a standby replica is elected to take over and manage the resources. To ensure availability if a zonal outage occurs, three replicas are required, one per availability zone. A pod anti-affinity rule is configured to prevent replicas from being created in the same availability zone. A pod disruption budget is created by the Cluster Operator deployment and ensures that at minimum of one replica is always available. 
+The Strimzi Cluster Operator is deployed in its own namespace, `strimzi-operator**`, and configured to watch the `kafka` namespace where Kafka cluster components are deployed. For high availability, the operator uses:
+
+* **Multiple replicas with leader election**: One replica serves as the active leader managing deployed resources, while others remain on standby. If the leader fails, a standby replica takes over.
+
+* **Zonal distribution**: Three replicas (one per availability zone) provide resilience against zonal outages. Pod anti-affinity rules prevent multiple replicas from being scheduled in the same zone.
+
+* **Pod Disruption Budget**: Created automatically by the Operator deployment to ensure at least one replica remains available during voluntary disruptions.
+
+This architecture ensures the Strimzi Cluster Operator remains highly available even during infrastructure maintenance or partial outages.
 
 ### Install Cluster Operator using Helm
 
-A Helm chart is available to deploy the Strimzi Cluster Operator. 
+A Helm chart is available to deploy the Strimzi Cluster Operator
 
 1. Create the namespaces for the Cluster Operator and Kafka cluster
 
@@ -50,7 +58,7 @@ A Helm chart is available to deploy the Strimzi Cluster Operator.
             topologyKey: topology.kubernetes.io/zone
     EOF
     ```
-     
+ 
 1. Install the Strimzi Cluster Operator using [`helm install`][helm-install]
 
     ```bash
@@ -74,7 +82,7 @@ A Helm chart is available to deploy the Strimzi Cluster Operator.
 
 ### Install Strimzi Drain Cleaner using Helm
 
-Strimzi Drain Cleaner ensures smooth node draining by preventing Kafka partition replicas from becoming under-replicated, maintaining cluster health and reliability. Drainer Cleaner can also be deployed with multiple replicas and pod disruption budgets to ensure availability in case of a zonal outage or cluster upgrade
+Strimzi Drain Cleaner ensures smooth kubernetes node draining by intercepting drain requests for broker pods. This prevents Kafka partition replicas from becoming under-replicated, maintaining kafka cluster health and reliability. Drainer Cleaner should also be deployed with multiple replicas and pod disruption budgets to ensure availability in case of a zonal outage or cluster upgrade.
 
 A Helm chart is available for the installation of Strimzi Drain Cleaner:
 
@@ -105,7 +113,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
             topologyKey: topology.kubernetes.io/zone
     EOF
     ```
-     
+
 1. Install the Strimzi Drain Cleaner using [`helm install`][helm-install]
 
     ```bash
@@ -127,20 +135,84 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     strimzi-drain-cleaner-6d694bd55b-wj6xx   1/1     Running   0          1d22h
     ```
 
-## Kafka Cluster Deployment
+## Kafka Cluster Architecture and Considerations
 
+The Strimzi Cluster Operator enables declarative Kafka deployment on AKS using custom resource definitions. Starting with Strimzi 0.46, Kafka clusters use KRaft instead of ZooKeeper, with dedicated components:
 
-The Strimzi Cluster Operator allows us to declaratively define a Kafka Cluster on AKS using custom resource definitions. Beginning with Strimzi 0.46, Kafka clusters no longer require ZooKeeper. Instead, Kafka clusters are configured with KRaft. A KRaft Kafka Cluster consists of Kafka brokers, which handle data storage and processing, and Kafka controllers, which manage metadata using the Raft consensus protocol, eliminating the need for ZooKeeper. Strimzi uses a KafkaNodePool customer resource to create the brokers and controllers that will make up the Kafka cluster. KafkaNodePools must be assigned a specific role: broker, controller, or both. For the desired architecture, two KafkaNodePools are defined for broker and controllers, respectively, with a minimum of three (3) replicas. This setup simplifies the architecture, improves scalability, and enhances fault tolerance. Each broker and controller exists as its own respective set of pods within AKS to ensure performance and can be scaled or changed independently to meet workload requirements. 
+* **Kafka brokers**: Handle data storage and processing
+* **Kafka controllers**: Manage metadata using the Raft consensus protocol
 
-<---INSERT Possible Diagram>
+Strimzi implements this architecture using the KafkaNodePool custom resource, where each pool is assigned a specific role (broker, controller, or both). For optimal high availability, the deployment uses:
 
-The KafkaNodePools are configured with Topology Spread Constraints so that the resulting pods are evenly distributed across availability zones and AKS nodes. This ensures resiliency in case of an availability zone outage or a node outage. A pod affinity rule with a *preferredDuringScheduling* rule is also configured between broker pods and controller pods. This ensures optimal use of node resources within a given availability zone if cluster autoscaler is enabled.  Otherwise, if a new node is added, there could be a scenario that a broker pod runs on an existing node and the controller pod on the scaled node. 
+* Separate KafkaNodePools for brokers and controllers, each with three replicas
+* Topology Spread Constraints that distribute pods across availability zones and nodes
+* Node affinity rules that optimize resource utilization with specific node pools
+* Persistent volumes from Azure Container Storage with separate volumes for broker messages and metadata
 
-Persistent volume claims are established using the Storage Class generated by Azure Container Storage. Adjustments to the volume sizes should be made to fit your workload needs. The broker KafkaNodePool leverages two volumes, one for messages and the other for metadata. This ensures that the metadata operations do not impact any messaging operations. 
+This architecture improves scalability and fault tolerance while allowing brokers and controllers to be independently scaled to meet workload requirements.
 
-### Deploy Kafka Node Pools
+### JVM Configuration for Production Kafka Clusters
 
-1. Create two (2) Kafka Node Pools, one for brokers and controllers, respectively
+Tuning the Java Virtual Machine (JVM) is critical for optimal Kafka performance, especially in production environments. Properly configured JVM settings help maximize throughput, minimize latency, and ensure stability under heavy load for each broker.
+
+LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka on Java for one of LinkedIn's busiest clusters: [Apache Kafka Java Configuration](https://kafka.apache.org/documentation/#java). We will use this configuration as a baseline for the configuration of the Kafka brokers. Changes can be made to meet your specific workloads requirements.
+
+```yaml
+jvmOptions:
+  # Sets maximum heap size to 6GB - critical for memory-intensive Kafka operations
+  # Reasoning: 6GB provides enough RAM for message caching, request processing, and
+  # in-memory data structures without excessive GC overhead or memory waste
+  -Xmx6g
+  
+  # Sets initial heap size equal to max to prevent resizing pauses
+  # Reasoning: Equal sizing eliminates runtime heap resizing which causes latency spikes
+  # that could disrupt Kafka's real-time message processing
+  -Xms6g
+  
+  # Initial metaspace size (class metadata storage area) at 96MB
+  # Reasoning: Provides adequate initial space for Kafka's classes and reduces early
+  # collection/expansion cycles which would impact startup performance
+  -XX:MetaspaceSize=96m
+  
+  # Enables the Garbage-First (G1) garbage collector, optimized for large heaps
+  # Reasoning: G1GC provides better predictability and lower pause times than
+  # traditional collectors, crucial for Kafka's throughput-sensitive workloads
+  -XX:+UseG1GC
+  
+  # Targets maximum GC pause time of 20ms - keeps latency predictable
+  # Reasoning: Keeps collection pauses brief to maintain consistent throughput
+  # and prevent backpressure in message streams
+  -XX:MaxGCPauseMillis=20
+  
+  # Starts concurrent GC cycle when heap is 35% full - balances CPU overhead and frequency
+  # Reasoning: At 35%, collections start early enough to avoid emergency collections
+  # while not wasting CPU on too-frequent collections
+  -XX:InitiatingHeapOccupancyPercent=35
+  
+  # Sets G1 heap region size to 16MB - affects collection efficiency and pause times
+  # Reasoning: 16MB regions provide a good balance between collection granularity
+  # and overhead for typical Kafka workloads with variable message sizes
+  -XX:G1HeapRegionSize=16M
+  
+  # Keeps at least 50% free space after metaspace GC - prevents frequent resizing
+  # Reasoning: Higher free ratio prevents oscillation between growth and collection
+  # cycles that could impact performance during broker operation
+  -XX:MinMetaspaceFreeRatio=50
+  
+  # Limits expansion to allow up to 80% free space in metaspace after GC
+  # Reasoning: Caps excessive growth while still allowing enough headroom to
+  # accommodate dynamic class loading during operation
+  -XX:MaxMetaspaceFreeRatio=80
+  
+  # Makes explicit System.gc() calls run concurrently instead of stopping all threads
+  # Reasoning: Prevents full stop-the-world pauses if applications using the
+  # Kafka client explicitly call System.gc(), maintaining broker responsiveness
+  -XX:+ExplicitGCInvokesConcurrent
+```
+
+## Deploy Kafka Node Pools
+
+1. Create two (2) Kafka Node Pools, one for brokers and controllers, respectively:
 
     ```bash
     kubectl apply -n kafka -f - <<EOF
@@ -155,6 +227,11 @@ Persistent volume claims are established using the Storage Class generated by Az
       replicas: 3
       roles:
         - controller
+      resources:
+        requests:
+          memory: 3Gi
+        limits:
+          memory: 4Gi
       template:
         pod:
           metadata:
@@ -195,10 +272,21 @@ Persistent volume claims are established using the Storage Class generated by Az
         volumes:
           - id: 0
             type: persistent-claim
-            size: 2Gi  #adjust to fit workload needs
+            size: 2Gi
             kraftMetadata: shared
             deleteClaim: false
             class: acstor-azuredisk-zr
+      jvmOptions:
+          -Xmx3g
+          -Xms3g
+          -XX:MetaspaceSize=96m
+          -XX:+UseG1GC
+          -XX:MaxGCPauseMillis=20
+          -XX:InitiatingHeapOccupancyPercent=35
+          -XX:G1HeapRegionSize=16M
+          -XX:MinMetaspaceFreeRatio=50
+          -XX:MaxMetaspaceFreeRatio=80
+          -XX:+ExplicitGCInvokesConcurrent 
     ---
     apiVersion: kafka.strimzi.io/v1beta2
     kind: KafkaNodePool
@@ -210,11 +298,21 @@ Persistent volume claims are established using the Storage Class generated by Az
       replicas: 3
       roles:
         - broker
+      resources:
+        requests:
+          memory: 8Gi
+        limits:
+          memory: 10Gi
       template:
         pod:
           metadata:
             labels:
               kafkaRole: broker
+          tolerations:
+            - key: "app"
+              operator: "Equal"
+              value: "kafka"
+              effect: "NoSchedule"
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -244,29 +342,40 @@ Persistent volume claims are established using the Storage Class generated by Az
                   kafkaRole: broker
               maxSkew: 1
               topologyKey: kubernetes.io/hostname
-              whenUnsatisfiable: ScheduleAnyway
+              whenUnsatisfiable: ScheduleAnyway 
       storage:
         type: jbod
         volumes:
           - id: 0
             type: persistent-claim
-            size: 2Gi #adjust to fit workload needs
+            size: 50Gi
             deleteClaim: false
             class: acstor-azuredisk-zr
           - id: 1
             type: persistent-claim
-            size: 2Gi #adjust to fit workload needs
+            size: 50Gi
             kraftMetadata: shared
             deleteClaim: false
             class: acstor-azuredisk-zr
+      jvmOptions:
+        -Xmx6g
+        -Xms6g
+        -XX:MetaspaceSize=96m
+        -XX:+UseG1GC
+        -XX:MaxGCPauseMillis=20
+        -XX:InitiatingHeapOccupancyPercent=35
+        -XX:G1HeapRegionSize=16M
+        -XX:MinMetaspaceFreeRatio=50
+        -XX:MaxMetaspaceFreeRatio=80
+        -XX:+ExplicitGCInvokesConcurrent  
     EOF
     ```
 
-Once the KafkaNodePools are defined, a Kafka Cluster custom resource is created that is associated to the KafkaNodePools. A Kafka Cluster custom resource is where the Cruise Control, jmxPrometheusExporter, listeners, and Kafka specific configurations are declared. 
+After creating KafkaNodePools, the next step is to define a Kafka Cluster custom resource that binds these pools into a functioning Kafka ecosystem. This architecture follows Strimzi's separation of concerns pattern, where node pools manage the infrastructure aspects while the Kafka Cluster resource handles application-level configurations. The Kafka Cluster custom resource defines critical components including:
 
-### Deploy Kafka Cluster
+## Deploy Kafka Cluster
 
-1. Before creating the Kafka cluster, create a ConfigMap for the Kafka cluster's jmxPrometheusExporter configuration to enable metrics to be exposed for Prometheus.
+1. Before creating the Kafka cluster, create a ConfigMap that contains the JMX Prometheus Exporter configuration. This ConfigMap defines how Kafka's internal JMX metrics are transformed and exposed in Prometheus format, enabling comprehensive monitoring of your Kafka ecosystem. The patterns defined in this configuration map JMX metric paths to properly formatted Prometheus metrics with appropriate types and labels:
 
     ```bash
     kubectl apply -n kafka -f - <<EOF
@@ -458,15 +567,23 @@ Once the KafkaNodePools are defined, a Kafka Cluster custom resource is created 
     EOF
     ```
 
-1. Deploy the Kafka Cluster definition. This is where Cruise Control and the Entity Operator (Topic and User Operator) are also defined and deployed. 
+1. Deploy the Kafka Cluster definition, which connects the previously created KafkaNodePools into a complete Kafka ecosystem. This custom resource configures several critical components:
 
-    ```bash
+* **Kafka core configuration**: Defines replication factors, listener settings, and other Kafka-specific parameters
+* **Cruise Control**: Provides automated cluster balancing and monitoring capabilities
+* **Entity Operator**: Deploys the Topic and User Operators that manage Kafka topics and users declaratively through Kubernetes resources
+* **JMX metrics**: Configures metrics exposure using the previously defined ConfigMaps
+
+The Kafka custom resource acts as the central definition that ties all components together into a functioning Kafka cluster.
+
+  ```bash
+    
     kubectl apply -n kafka -f - <<EOF
     ---
     apiVersion: kafka.strimzi.io/v1beta2
     kind: Kafka
     metadata:
-      name: kafka-cluster 
+      name: kafka-aks-cluster
       annotations:
         strimzi.io/node-pools: enabled
         strimzi.io/kraft: enabled
@@ -480,43 +597,57 @@ Once the KafkaNodePools are defined, a Kafka Cluster custom resource is created 
           podDisruptionBudget:
             maxUnavailable: 2
         listeners:
-          - name: int
+          - name: extilbpe
             port: 9092
-            type: internal
+            type: loadbalancer
             tls: true
+            configuration:
+              brokers:
+                - broker: 0
+                  annotations:
+                    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+                - broker: 1
+                  annotations:
+                    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+                - broker: 2
+                  annotations:
+                    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
         config:
           offsets.topic.replication.factor: 3
           transaction.state.log.replication.factor: 3
           transaction.state.log.min.isr: 2
           default.replication.factor: 3
           min.insync.replicas: 2
+          log.segment.bytes: 1073741824  # 1GB
+          log.retention.hours: 168  # 7 days
+          log.retention.check.interval.ms: 300000 # 5 minutes       
         metricsConfig:
           type: jmxPrometheusExporter
           valueFrom:
             configMapKeyRef:
               name: kafka-metrics
-              key: kafka-metrics-config.yaml
+              key: kafka-metrics-config.yml
       cruiseControl:
         metricsConfig:
           type: jmxPrometheusExporter
           valueFrom:
             configMapKeyRef:
               name: cruise-control-metrics
-              key: metrics-config.yaml
+              key: metrics-config.yml
       entityOperator:
         topicOperator: {}
         userOperator: {}
     EOF
-    ```
 
-1. Once deployed, review your AKS cluster to ensure your KafkaNodePools and Kafka Cluster and their correlating pods are deployed and running
+  ```
+
+1. Once deployed, verify your Kafka deployment by checking that all KafkaNodePools, Kafka cluster resources, and their corresponding pods are created and in a running state:
 
     ```bash
     kubectl get pods, kafkanodepool, kafka -n kafka
     ```
 
     ```output
-
     NAME                                                     READY   STATUS    RESTARTS   AGE
     pod/kafka-aks-cluster-broker-0                           1/1     Running   0          7d22h
     pod/kafka-aks-cluster-broker-1                           1/1     Running   0          7d22h
@@ -533,16 +664,14 @@ Once the KafkaNodePools are defined, a Kafka Cluster custom resource is created 
 
     NAME                                       DESIRED KAFKA REPLICAS   DESIRED ZK REPLICAS   READY   METADATA STATE   WARNINGS
     kafka.kafka.strimzi.io/kafka-aks-cluster 
-
     ```
 
-### Create a Kafka User and Topic 
+## Create a Kafka User and Topic
 
-The Strimzi Entity Operator is a component created by the Strimzi Cluster Operator, designed to simplify the management of Kafka topics and users in Kubernetes environments. It allows you to declaratively create and manage Kafka Topics and Users. 
+The Strimzi Entity Operator extends Kubernetes' declarative resource management to Kafka topics and users. This component, deployed automatically by the Strimzi Cluster Operator, translates Kubernetes custom resources (`KafkaTopic` and `KafkaUser`) into actual Kafka resources, enabling GitOps workflows and consistent configuration management.
 
 > [!Note] 
-> Creating Kafka Topics and Users declaratively using the Entity Operator is optional. Topics and  can also be created using imperative commands. 
->
+> Creating Kafka Topics and Users declaratively using the Entity Operator is optional. Topics and users can also be created using traditional Kafka CLI tools or APIs. However, the declarative approach offers benefits such as version control, audit trails, and consistent management across environments.
 
 1. Create a Kafka Topic using the Topic Operator:
 
@@ -562,16 +691,18 @@ The Strimzi Entity Operator is a component created by the Strimzi Cluster Operat
         segment.bytes: 1073741824
     EOF
     ```
+
 1. Review that the Kafka Topic was created
 
     ```bash
     kubectl get kafkatopic -n kafka
     ```
+
     ```output
     NAME         CLUSTER             PARTITIONS   REPLICATION FACTOR   READY
     test-topic   kafka-aks-cluster   4            3                    True
     ```
-    
+
 1. Create a Kafka User using the User Operator
 
     ```bash
@@ -614,29 +745,34 @@ The Strimzi Entity Operator is a component created by the Strimzi Cluster Operat
             host: "*"
     EOF
     ```
-    
-    
-    
 
-## Configure Kafka Cluster Monitoring with Azure Managed Prometheus and Grafana 
+## Configure Kafka Cluster Monitoring with Azure Managed Prometheus and Grafana
 
-Strimzi integrates with Prometheus by using the Prometheus JMX Exporter to expose Kafka metrics, which Prometheus then scrapes. This setup allows for monitoring and alerting on Kafka clusters, with pre-configured Grafana dashboards available for visualization.
+Comprehensive monitoring is critical for maintaining reliable Kafka clusters. Strimzi implements monitoring by exposing JMX metrics through Prometheus JMX Exporter, which transforms Kafka's internal performance data into a format that Prometheus can collect and analyze. This monitoring pipeline enables real-time visibility into:
 
-Additionally, Azure Managed Prometheus can be leveraged to simplify the deployment and management of Prometheus in Azure Kubernetes Service (AKS). It provides a fully managed, scalable environment with high availability and integrates seamlessly with Azure Managed Grafana for comprehensive monitoring. 
+* Broker health and performance metrics
+* Producer and consumer throughput
+* Partition leadership distribution
+* Replication lag and potential data loss risks
+* Resource utilization patterns
+
+Azure Managed Prometheus offers significant advantages for AKS-hosted Kafka clusters by providing a fully managed, scalable monitoring backend without the operational overhead of managing your own Prometheus instances. When paired with Azure Managed Grafana, you gain access to comprehensive visualization capabilities with pre-built dashboards specifically designed for Kafka monitoring.
 
 ### Create Pod Monitor
 
-A PodMonitor is needed to ensure that Prometheus can effectively scrape metrics from the Kafka pods. The Kafka Cluster is should already be configured with the JMX Exporter. Review the steps to deploy a Kafka Cluster if not. 
+PodMonitors are Kubernetes custom resources that instruct Prometheus on which pods to collect metrics from and how to collect them. For Kafka monitoring, you'll need to define PodMonitors that target various Strimzi components.
 
-1. Create the PodMonitor
+Before proceeding, ensure your Kafka Cluster has been deployed with JMX Exporter configuration as described in the earlier sections. Without this configuration, metrics will not be available for collection.
+
+1. Create the PodMonitor resources:
 
 > [!Note] 
-> The pod monitors apiVersion must be set to azmonitoring.coreos.com/v1 when using Azure Managed Prometheus
->
->The pod monitors here also assume that the namespace where the kafka workload is deployed in 'kafka'. Update it accordingly if the workloads are deployed in another namespace.
->
+> When using Azure Managed Prometheus:
+> - The PodMonitor apiVersion must be `azmonitoring.coreos.com/v1` instead of the standard `monitoring.coreos.com/v1`
+> - The namespace selector in the examples below assumes your Kafka workloads are deployed in the `kafka` namespace - modify accordingly if you've used a different namespace
 
-    ```bash
+  ```bash
+
     kubectl apply -f - <<EOF
     ---
     apiVersion: azmonitoring.coreos.com/v1
@@ -738,18 +874,29 @@ A PodMonitor is needed to ensure that Prometheus can effectively scrape metrics 
           replacement: $1
           action: replace
     EOF
-    ```
+  ```
+
 ### Upload Grafana Dashboards
 
-Pre-created Grafana dashboards are readily available in the strimzi github repository for metrics exposed by strimzi: [grafana-dashboards-for-strimzi](https://github.com/strimzi/strimzi-kafka-operator/tree/main/examples/metrics/grafana-dashboards) 
+Strimzi provides ready-to-use Grafana dashboards designed specifically for monitoring Kafka clusters in the [strimzi/strimzi-kafka-operator](https://github.com/strimzi/strimzi-kafka-operator/tree/main/examples/metrics/grafana-dashboards) GitHub repository. These dashboards visualize the metrics exposed by the JMX Prometheus Exporter configured earlier.
 
-Upload the dashboards that best suit your observability requirements. 
+To implement Kafka monitoring with Grafana:
+
+1. Select dashboards based on your specific monitoring needs
+1. Download the JSON dashboard files from the repository
+1. Import them into your Azure Managed Grafana instance through the Grafana UI (+ > Import)
 
 ### Kafka Exporter
 
-The Kafka Exporter is an open-source tool used to enhance the monitoring of Apache Kafka clusters managed by Strimzi. It extracts additional metrics related to Kafka brokers, consumer groups, consumer lag, and topics, which are not available through the standard JMX metrics. These metrics are then exposed in a format that Prometheus can scrape, providing deeper insights into the performance and health of the Kafka cluster. 
+While the JMX Prometheus Exporter provides internal Kafka metrics, the Kafka Exporter complements this by focusing specifically on consumer lag monitoring and topic-level insights. This exporter:
 
-A Helm chart is available to deploy the Kafka Exporter.
+* Tracks consumer group offsets and calculates lag metrics
+* Monitors topic status including under-replicated partitions
+* Provides metrics for topic message counts and sizes
+
+These additional metrics are critical for production environments where monitoring consumer performance and ensuring data processing SLAs are essential.
+
+A Helm chart is available to deploy the Kafka Exporter alongside your existing monitoring pipeline.
 
 1. Create a namespace to deploy the Kafka Exporter or use an existing namespace
 
@@ -786,138 +933,144 @@ A Helm chart is available to deploy the Kafka Exporter.
          --values values.yaml
     ```
 
-1. Upload the [Kafka Exporter Dashboard](https://grafana.com/grafana/dashboards/7589-kafka-exporter-overview/) to Grafana 
+1. Upload the [Kafka Exporter Dashboard](https://grafana.com/grafana/dashboards/7589-kafka-exporter-overview/) to Grafana
 
- [!Note] 
-> This Grafana dashboard uses the AngularJS plugin that will be deprecated in future versions of Grafana: [Angular support deprecation](https://grafana.com/docs/grafana/latest/developers/angular_deprecation/). Kafka Exporter metrics will still be available but users may need to create their own dashboards once the deprecation occurs. 
+ [!Note]
+> This Grafana dashboard uses the AngularJS plugin that will be deprecated in future versions of Grafana: [Angular support deprecation](https://grafana.com/docs/grafana/latest/developers/angular_deprecation/). Kafka Exporter metrics will still be available but users may need to create their own dashboards once the deprecation occurs.
 >
-    
+
 ## Accessing the Kafka Cluster
 
-In a Strimzi Kafka Cluster, a listener is a configuration component that defines how Kafka clients and brokers communicate within the cluster. It supports various listener types like plain, TLS, and SASL, catering to different security needs. To know more about listeners, review the Strimzi documentation for [configuring listeners for client access](https://strimzi.io/docs/operators/latest/configuring.html#type-GenericKafkaListener-reference). 
+Strimzi offers flexible options for exposing your Kafka cluster to clients through *listeners*. Each listener defines how clients connect to your Kafka brokers with specific protocols, authentication methods, and network exposure patterns.
 
-You can configure listeners to expose Kafka clusters over different Kubernetes service types such as ClusterIP or LoadBalancer. Multiple listeners can be created, with each listener having a unique name. The listener configurations also allows for annotations to be declared and will be passed to the underlying kubernetes service configuration that is created.. 
+### Understanding Kafka Listeners
 
-### Expose with ClusterIP
+A listener configuration defines:
 
-The Kafka cluster that was deployed in the previous steps creates a ClusterIP service with TLS enabled and with port 9092 exposed. The *internal* listener type instructs the Strimzi Cluster Operator to create a ClusterIP service to expose the Kafka cluster within the AKS cluster.
+* Which network interface and port Kafka accepts connections on
+* The security protocol (Plain, TLS, SASL)
+* How the connection endpoint is exposed (Kubernetes service type)
+
+Strimzi allows you to configure multiple listeners simultaneously, each with unique settings to support different client access patterns. For comprehensive details, see the [Strimzi documentation on configuring client access](https://strimzi.io/docs/operators/latest/configuring.html#type-GenericKafkaListener-reference).
+
+### Option 1: Internal Cluster Access (ClusterIP)
+
+For applications running within the same Kubernetes cluster as the Kafka cluster, expose Kafka via ClusterIP:
 
   ```yaml
-  apiVersion: kafka.strimzi.io/v1beta2
-  kind: Kafka
-  metadata:
-    name: kafka-aks-cluster
-    annotations:
-      strimzi.io/node-pools: enabled
-      strimzi.io/kraft: enabled
-  spec:
-    kafka:
-    ...
-      listeners:
-      - name: int
-        port: 9092
-        type: internal
-        tls: true
-    ...
+  listeners:
+    - name: internal
+      port: 9092
+      type: internal
+      tls: true
   ```
 
-### Expose via External Load Balancer
+This creates a ClusterIP service accessible only within the Kubernetes network.
 
-When deploying a Strimzi Kafka cluster on AKS using the LoadBalancer listener type, Strimzi creates a Kubernetes Service of type `LoadBalancer` for each Kafka broker. As a result, Azure provisions a new public IP address frontend on the Azure Load Balancer per broker and for the external bootstrap service. It's best practice to use the bootstrap entry created by Strimzi for client connections instead of the public IP of each broker, as this simplifies configuration and ensures better load balancing and failover management. This setup ensures seamless traffic routing across all brokers. To learn more about how the `LoadBalancer` listener type works review the [Strimzi documentation on load balancers](https://strimzi.io/blog/2019/05/13/accessing-kafka-part-4/).
+### Option 2: External Access via Public Load Balancer
+
+For external clients, the `loadbalancer` listener type creates an Azure Load Balancer configuration with public IP addresses:
 
   ```yaml
-  apiVersion: kafka.strimzi.io/v1beta2
-  kind: Kafka
-  metadata:
-    name: kafka-aks-cluster
-    annotations:
-      strimzi.io/node-pools: enabled
-      strimzi.io/kraft: enabled
-  spec:
-    kafka:
-    ...
-      listeners:
-      - name: extelb
-        port: 9092
-        type: loadbalancer
-        tls: false
-    ...
+  listeners:
+    - name: external
+      port: 9092
+      type: loadbalancer
+      tls: false
   ```
 
-To avoid having each broker publicly accessible via a public IP, you can update individual broker listener configurations and use annotations to use a private load balancer for each broker. After you specify these annotations, they'll be passed by Strimzi to the Kubernetes services, and the load balancers will be created accordingly. Doing so associates a private IP to each broker. 
+When using this configuration:
+
+* A Kubernetes LoadBalancer service is created for each broker and the bootstrap service
+* Azure provisions public IP addresses for each service
+* Clients should connect using the bootstrap service address for optimal load balancing
+
+To avoid having each broker publicly accessible via a public IP, you can update individual broker listener configurations and use annotations to use a private load balancer for each broker. After you specify these annotations, they'll be passed by Strimzi to the Kubernetes services, and the load balancer will be configured accordingly. Doing so associates a private IP to each broker.
 
   ```yaml
-  apiVersion: kafka.strimzi.io/v1beta2
-  kind: Kafka
-  metadata:
-    name: kafka-aks-cluster
-    annotations:
-      strimzi.io/node-pools: enabled
-      strimzi.io/kraft: enabled
-  spec:
-    kafka:
-    ...
-      listeners:
-      - name: extelb
-        port: 9092
-        type: loadbalancer
-        tls: false
-        configuration: 
-          brokers:
-            - broker: 0
-              annotations:
-                service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-            - broker: 1
-              annotations:
-                service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-            - broker: 2
-              annotations:
-                service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-    ...
+  listeners:
+  - name: extelb
+    port: 9092
+    type: loadbalancer
+    tls: false
+    configuration: 
+      brokers:
+        - broker: 0
+          annotations:
+            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        - broker: 1
+          annotations:
+            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+        - broker: 2
+          annotations:
+            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
   ```
->[!NOTE]
-> If brokers are added to the cluster, the listener configuration for each new broker has to be added to `listener.configuration.brokers[]`. Otherwise, a public IP will be associated to each new broker.
->
 
-### Expose via Private Load Balancer and Private Endpoint
+> [!IMPORTANT]
+> When adding new brokers to your cluster, you must update the listener configuration with corresponding annotations for each new broker. Otherwise, those brokers will be exposed with public IP addresses
 
-To deploy an internal Azure load balancer and configure private endpoints for a Strimzi Kafka cluster, you can use annotations in the the listener configuration. After you specify these annotations, they'll be passed by Strimzi to the Kubernetes services, and the load balancer and private link service (pls) will be created accordingly. 
+For details on this approach, see [Strimzi documentation on load balancer access](https://strimzi.io/blog/2019/05/13/accessing-kafka-part-4/).
+
+### Option 3: External Access via Private Load Balancer
+
+If you wish to access the Kafka cluster outside of the AKS cluster but within an Azure Virtual network, you can expose brokers through an internal load balancer with private IP addresses:
 
   ```yaml
-  apiVersion: kafka.strimzi.io/v1beta2
-  kind: Kafka
-  metadata:
-    name: kafka-aks-cluster
-    annotations:
-      strimzi.io/node-pools: enabled
-      strimzi.io/kraft: enabled
-  spec:
-    kafka:
-    ...
-      listeners:
-      - name: extilbpe
-        port: 9095
-        type: loadbalancer
-        tls: true
-        configuration:
-          bootstrap:
+  listeners:
+    - name: private-lb
+      port: 9092
+      type: loadbalancer
+      tls: false
+      configuration: 
+        brokers:
+          - broker: 0
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-              service.beta.kubernetes.io/azure-pls-create: "true"
-              service.beta.kubernetes.io/azure-pls-name: "pls-kafka-ilb"
-          brokers:
-            - broker: 0
-              annotations:
-                service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-            - broker: 1
-              annotations:
-                service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-            - broker: 2
-              annotations:
-                service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-    ...
+          - broker: 1
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+          - broker: 2
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
   ```
 
-This configuration will expose both the bootstrap service and brokers with private IPs. Only the bootstrap service will have a private link service associated to it. If you wish to expose a specific broker via private endpoint, add the `service.beta.kubernetes.io/azure-pls-create: "true"` annotation to the individual broker configuration.
+> [!IMPORTANT]
+> When adding new brokers to your cluster, you must update the listener configuration with corresponding annotations for each new broker. Otherwise, those brokers will be exposed with public IP addresses.
 
-Once the private link service is created, follow the steps for [creating a private endpoint to the Azure Load Balancer Private Link Service](internal-lb?tabs=set-service-annotations#create-a-private-endpoint-to-the-private-link-service).
+### Option 4: External Access via Private Link Service
+
+For secure enterprise networking, you can expose your Kafka cluster through Azure Private Link Services:
+
+  ```yaml
+  listeners:
+    - name: private-link
+      port: 9095
+      type: loadbalancer
+      tls: true
+      configuration:
+        bootstrap:
+          annotations:
+            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+            service.beta.kubernetes.io/azure-pls-create: "true"
+            service.beta.kubernetes.io/azure-pls-name: "pls-kafka-bootstrap"
+        brokers:
+          - broker: 0
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+          - broker: 1
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+          - broker: 2
+            annotations:
+              service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  ```
+
+This configuration:
+
+* Creates internal load balancer services with private IPs for all components
+* Establishes a Private Link Service for the bootstrap service
+* Enables connection via Private Endpoints from other virtual networks
+
+To expose individual brokers through Private Link Services, add the `service.beta.kubernetes.io/azure-pls-create: "true"` annotation to the specific broker configuration.
+
+After deploying this configuration, follow the steps for [creating a private endpoint to the Azure Load Balancer Private Link Service.](internal-lb?tabs=set-service-annotations#create-a-private-endpoint-to-the-private-link-service)
