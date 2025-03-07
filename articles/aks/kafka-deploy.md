@@ -159,36 +159,34 @@ LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka 
 
 ```yaml
 jvmOptions:
-  # Sets maximum heap size to 6GB - critical for memory-intensive Kafka operations
-  -Xmx6g
-  
-  # Sets initial heap size equal to max to prevent resizing pauses
-  -Xms6g
-  
-  # Initial metaspace size (class metadata storage area) at 96MB
-  -XX:MetaspaceSize=96m
-  
-  # Enables the Garbage-First (G1) garbage collector, optimized for better predictability and lower pause times than
-  # traditional collectors
-  -XX:+UseG1GC
-  
-  # Targets maximum GC pause time of 20ms - keeps latency predictable
-  -XX:MaxGCPauseMillis=20
-  
-  # Starts concurrent GC cycle when heap is 35% full - balances CPU overhead and frequency
-  -XX:InitiatingHeapOccupancyPercent=35
-  
-  # Sets G1 heap region size to 16MB - affects collection efficiency and pause times
-  -XX:G1HeapRegionSize=16M
-  
-  # Keeps at least 50% free space after metaspace GC - prevents frequent resizing
-  -XX:MinMetaspaceFreeRatio=50
-  
-  # Limits expansion to allow up to 80% free space in metaspace after GC
-  -XX:MaxMetaspaceFreeRatio=80
-  
-  # Makes explicit System.gc() calls run concurrently instead of stopping all threads
-  -XX:+ExplicitGCInvokesConcurrent
+  # Sets initial and maximum heap size to 6GB - critical for memory-intensive Kafka operations
+  # Equal sizing prevents resizing pauses
+  "-Xms": "6g"
+  "-Xmx": "6g"
+  "-XX":
+    # Initial metaspace size (class metadata storage area) at 96MB
+    "MetaspaceSize": "96m"
+    
+    # Enables the Garbage-First (G1) garbage collector, optimized for better predictability and lower pause times
+    "UseG1GC": "true"
+    
+    # Targets maximum GC pause time of 20ms - keeps latency predictable
+    "MaxGCPauseMillis": "20"
+    
+    # Starts concurrent GC cycle when heap is 35% full - balances CPU overhead and frequency
+    "InitiatingHeapOccupancyPercent": "35"
+    
+    # Sets G1 heap region size to 16MB - affects collection efficiency and pause times
+    "G1HeapRegionSize": "16M"
+    
+    # Keeps at least 50% free space after metaspace GC - prevents frequent resizing
+    "MinMetaspaceFreeRatio": "50"
+    
+    # Limits expansion to allow up to 80% free space in metaspace after GC
+    "MaxMetaspaceFreeRatio": "80"
+    
+    # Makes explicit System.gc() calls run concurrently instead of stopping all threads
+    "ExplicitGCInvokesConcurrent": "true"
 ```
 
 ## Deploy Kafka Node Pools
@@ -258,16 +256,17 @@ jvmOptions:
             deleteClaim: false
             class: acstor-azuredisk-zr
       jvmOptions:
-          -Xmx3g
-          -Xms3g
-          -XX:MetaspaceSize=96m
-          -XX:+UseG1GC
-          -XX:MaxGCPauseMillis=20
-          -XX:InitiatingHeapOccupancyPercent=35
-          -XX:G1HeapRegionSize=16M
-          -XX:MinMetaspaceFreeRatio=50
-          -XX:MaxMetaspaceFreeRatio=80
-          -XX:+ExplicitGCInvokesConcurrent 
+        "-Xms": "3g"
+        "-Xmx": "3g"
+        "-XX":
+          "MetaspaceSize": "96m"
+          "UseG1GC": "true"
+          "MaxGCPauseMillis": "20"
+          "InitiatingHeapOccupancyPercent": "35"
+          "G1HeapRegionSize": "16M"
+          "MinMetaspaceFreeRatio": "50"
+          "MaxMetaspaceFreeRatio": "80"
+          "ExplicitGCInvokesConcurrent": "true" 
     ---
     apiVersion: kafka.strimzi.io/v1beta2
     kind: KafkaNodePool
@@ -289,11 +288,6 @@ jvmOptions:
           metadata:
             labels:
               kafkaRole: broker
-          tolerations:
-            - key: "app"
-              operator: "Equal"
-              value: "kafka"
-              effect: "NoSchedule"
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -339,16 +333,17 @@ jvmOptions:
             deleteClaim: false
             class: acstor-azuredisk-zr
       jvmOptions:
-        -Xmx6g
-        -Xms6g
-        -XX:MetaspaceSize=96m
-        -XX:+UseG1GC
-        -XX:MaxGCPauseMillis=20
-        -XX:InitiatingHeapOccupancyPercent=35
-        -XX:G1HeapRegionSize=16M
-        -XX:MinMetaspaceFreeRatio=50
-        -XX:MaxMetaspaceFreeRatio=80
-        -XX:+ExplicitGCInvokesConcurrent  
+        "-Xms": "6g"
+        "-Xmx": "6g"
+        "-XX":
+          "MetaspaceSize": "96m"
+          "UseG1GC": "true"
+          "MaxGCPauseMillis": "20"
+          "InitiatingHeapOccupancyPercent": "35"
+          "G1HeapRegionSize": "16M"
+          "MinMetaspaceFreeRatio": "50"
+          "MaxMetaspaceFreeRatio": "80"
+          "ExplicitGCInvokesConcurrent": "true" 
     EOF
     ```
 
@@ -749,8 +744,8 @@ Before proceeding, ensure your Kafka Cluster has been deployed with JMX Exporter
 
 > [!NOTE] 
 > When using Azure Managed Prometheus:
-> - The PodMonitor apiVersion must be `azmonitoring.coreos.com/v1` instead of the standard `monitoring.coreos.com/v1`
-> - The namespace selector in the examples below assumes your Kafka workloads are deployed in the `kafka` namespace - modify accordingly if you've used a different namespace
+> * The PodMonitor apiVersion must be `azmonitoring.coreos.com/v1` instead of the standard `monitoring.coreos.com/v1`
+> * The namespace selector in the examples below assumes your Kafka workloads are deployed in the `kafka` namespace - modify accordingly if you've used a different namespace
 
   ```bash
 
@@ -926,11 +921,18 @@ Strimzi offers flexible options for exposing your Kafka cluster to clients throu
 
 A listener configuration defines:
 
-* Which network interface and port Kafka accepts connections on
+* Which port Kafka accepts connections on
 * The security protocol (Plain, TLS, SASL)
 * How the connection endpoint is exposed (Kubernetes service type)
 
-Strimzi allows you to configure multiple listeners simultaneously, each with unique settings to support different client access patterns. For comprehensive details, see the [Strimzi documentation on configuring client access](https://strimzi.io/docs/operators/latest/configuring.html#type-GenericKafkaListener-reference).
+Kafka uses a two-phase connection process that influences how you should configure networking. When configuring listeners for your Strimzi Kafka deployment on AKS, it's essential to understand this process:
+
+1. **Phase 1**: Client connects to bootstrap service, which then connects to any of the brokers to retrieve metadata. The metadata contains the information about the topics, their partitions and brokers which host these partitions.
+1. **Phase 2**: Client then establishes a brand new connection directly to an individual broker using the advertised address it obtained from the metadata.
+
+This means your network architecture must account for both the bootstrap service and individual broker connectivity.
+
+ For comprehensive details, see the [Strimzi documentation on configuring client access](https://strimzi.io/blog/2019/04/17/accessing-kafka-part-1/).
 
 ### Option 1: Internal Cluster Access (ClusterIP)
 
@@ -944,7 +946,7 @@ For applications running within the same Kubernetes cluster as the Kafka cluster
       tls: true
   ```
 
-This creates a ClusterIP service accessible only within the Kubernetes network.
+This creates a ClusterIP for the bootstrap service and brokers accessible only within the Kubernetes network.
 
 ### Option 2: External Access via Public Load Balancer
 
@@ -955,52 +957,29 @@ For external clients, the `loadbalancer` listener type creates an Azure Load Bal
     - name: external
       port: 9092
       type: loadbalancer
-      tls: true
+      tls: false
   ```
 
 When using this configuration:
 
 * A Kubernetes LoadBalancer service is created for each broker and the bootstrap service
 * Azure provisions public IP addresses for each service
-* Clients should connect using the bootstrap service address for optimal load balancing
-
-To avoid having each broker publicly accessible via a public IP, you can update individual broker listener configurations and use annotations to use a private load balancer for each broker. After you specify these annotations, they'll be passed by Strimzi to the Kubernetes services, and the load balancer will be configured accordingly. Doing so associates a private IP to each broker.
-
-  ```yaml
-  listeners:
-  - name: extelb
-    port: 9092
-    type: loadbalancer
-    tls: true
-    configuration: 
-      brokers:
-        - broker: 0
-          annotations:
-            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-        - broker: 1
-          annotations:
-            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-        - broker: 2
-          annotations:
-            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-  ```
-
-> [!IMPORTANT]
-> When adding new brokers to your cluster, you must update the listener configuration with corresponding annotations for each new broker. Otherwise, those brokers will be exposed with public IP addresses
-
-For details on this approach, see [Strimzi documentation on load balancer access](https://strimzi.io/blog/2019/05/13/accessing-kafka-part-4/).
+* Clients should connect using the bootstrap service address for initial requests
 
 ### Option 3: External Access via Private Load Balancer
 
-If you wish to access the Kafka cluster outside of the AKS cluster but within an Azure Virtual network, you can expose brokers through an internal load balancer with private IP addresses:
+If you wish to access the Kafka cluster outside of the AKS cluster but within an Azure Virtual network, you can expose the bootstrap service and brokers through an internal load balancer with private IP addresses:
 
   ```yaml
   listeners:
     - name: private-lb
-      port: 9092
+      port: 9094
       type: loadbalancer
-      tls: true
+      tls: false
       configuration: 
+        bootstrap:
+          annotations:
+            service.beta.kubernetes.io/azure-load-balancer-internal: "true"
         brokers:
           - broker: 0
             annotations:
@@ -1018,7 +997,7 @@ If you wish to access the Kafka cluster outside of the AKS cluster but within an
 
 ### Option 4: External Access via Private Link Service
 
-For secure enterprise networking, you can expose your Kafka cluster through Azure Private Link Services:
+For more secure internal networking or accessing across non-peered Azure virtual networks, you can expose your Kafka cluster through Azure Private Link Services:
 
   ```yaml
   listeners:
@@ -1031,25 +1010,38 @@ For secure enterprise networking, you can expose your Kafka cluster through Azur
           annotations:
             service.beta.kubernetes.io/azure-load-balancer-internal: "true"
             service.beta.kubernetes.io/azure-pls-create: "true"
-            service.beta.kubernetes.io/azure-pls-name: "pls-kafka-bootstrap"
+            service.beta.kubernetes.io/azure-pls-name: "pls-kafka-bootstrap" 
         brokers:
           - broker: 0
+            advertisedHost: kafka-broker-0.<privatedomain>.com
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+              service.beta.kubernetes.io/azure-pls-create: "true"
+              service.beta.kubernetes.io/azure-pls-name: "pls-kafka-broker-0"
           - broker: 1
+            advertisedHost: kafka-broker-1.<privatedomain>.com   
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+              service.beta.kubernetes.io/azure-pls-create: "true"
+              service.beta.kubernetes.io/azure-pls-name: "pls-kafka-broker-1"
           - broker: 2
+            advertisedHost: kafka-broker-2.<privatedomain>.com
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+              service.beta.kubernetes.io/azure-pls-create: "true"
+              service.beta.kubernetes.io/azure-pls-name: "pls-kafka-broker-2"
   ```
 
 This configuration:
 
 * Creates internal load balancer services with private IPs for all components
-* Establishes a Private Link Service for the bootstrap service
+* Establishes a Private Link Service for the bootstrap service and the individual brokers, respectively
 * Enables connection via Private Endpoints from other virtual networks
+* Configures the `advertisedHost`. This is required to ensure Kafka advertises the private DNS entry of the private endpoint backing each broker. It also adds it to the broker certificate so that it can be used for TLS hostname verification
 
-To expose individual brokers through Private Link Services, add the `service.beta.kubernetes.io/azure-pls-create: "true"` annotation to the specific broker configuration.
+> [!IMPORTANT]
+> When adding new brokers to your cluster, you must update the listener configuration with corresponding annotations for each new broker. Otherwise, those brokers will be exposed with public IP addresses.
+> 
+> The `service.beta.kubernetes.io/azure-pls-name:` can be changed to any name you decide
 
 After deploying this configuration, follow the steps for [creating a private endpoint to the Azure Load Balancer Private Link Service.](internal-lb?tabs=set-service-annotations#create-a-private-endpoint-to-the-private-link-service)

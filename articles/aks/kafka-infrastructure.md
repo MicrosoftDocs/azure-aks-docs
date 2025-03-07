@@ -43,7 +43,7 @@ Kafka is typically more memory-intensive than CPU-intensive. This is primarily d
 
 Considering Strimzi's Kubernetes-native architecture where each Kafka broker runs as an individual pod, your VM selection strategy should optimize for horizontal scaling rather than single-node vertical scaling. Proper node pool configuration ensures efficient resource utilization while maintaining the performance isolation that Kafka components require to operate reliably.
 
-Kafka runs using a Java Virtual Machines (JVM). Tuning the JVM is critical for optimal Kafka performance, especially in production environments. LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka on Java for one of LinkedIn's busiest clusters: [Apache Kafka Java Configuration](https://kafka.apache.org/documentation/#java). A memory heap of 6GB will be used as a baseline, with an additional 2GB allocated to accommodate off-heap memory usage.
+Kafka runs using a Java Virtual Machines (JVM). Tuning the JVM is critical for optimal Kafka performance, especially in production environments. LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka on Java for one of LinkedIn's busiest clusters: [Apache Kafka Java Configuration](https://kafka.apache.org/documentation/#java). A memory heap of 6GB will be used as a baseline for brokers, with an additional 2GB allocated to accommodate off-heap memory usage, and 3GB will be used as a baseline for controllers, with an additional 1GB as overhead. 
 
 When sizing VMs for your Kafka deployment, consider these workload-specific factors:
 
@@ -66,7 +66,7 @@ Before finalizing your production environment:
 Remember that Kafka performance scales horizontally—adding more broker nodes often provides better results than using larger VM SKUs. Start with the recommended baseline VMs and scale based on your application's specific requirements and performance metrics.
 
 > [!IMPORTANT]
-> The following recommendations serve as baseline guidance only. Your optimal VM SKU selection should be tailored to your specific Kafka workload characteristics, data patterns, and performance requirements. Each broker pod is estimated to have ~8GB of reserved memory. Your JVM and off-heap memory requirements may be larger and smaller.
+> The following recommendations serve as baseline guidance only. Your optimal VM SKU selection should be tailored to your specific Kafka workload characteristics, data patterns, and performance requirements. Each broker pod is estimated to have ~8GB of reserved memory. Each controller pod is estimated to have ~4GB of reserved memory. Your JVM and off-heap memory requirements may be larger and smaller.
 
 ### Small-Medium Sized Kafka Clusters
 
