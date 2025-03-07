@@ -200,7 +200,7 @@ If a `kubelet-server-current.pem` symlink exists, then the kubelet has bootstrap
 
 ### Disable kubelet serving certificate rotation
 
-You can disable kubelet serving certificate rotation by updating the node pool using the [az aks nodepool update][az-aks-nodepool-update] command to specify the tag `aks-disable-kubelet-serving-certificate-rotation=true` and reimaging your nodes. A node reimage can be done via a node image upgrade or by scaling the pool to 0 instances and back up to the desired value.
+You can disable kubelet serving certificate rotation by updating the node pool using the [az aks nodepool update][az-aks-nodepool-update] command to specify the tag `aks-disable-kubelet-serving-certificate-rotation=true` and then reimaging your nodes. A node reimage can be done via a [node image upgrade][node-image-upgrade] or by scaling the pool to 0 instances and then back up to the desired value.
 
 ```azurecli-interactive
 az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --tags aks-disable-kubelet-serving-certificate-rotation=true
@@ -217,6 +217,7 @@ This article showed you how to manually and automatically rotate your cluster ce
 [aks-best-practices-security-upgrades]: operator-best-practices-cluster-security.md
 [aks-node-access]: ./node-access.md
 [az-aks-rotate-certs]: /cli/azure/aks#az_aks_rotate_certs
+[node-image-upgrade]: node-image-upgrade.md
 
 <!-- LINKS - external -->
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
