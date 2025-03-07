@@ -1,14 +1,14 @@
 ---
-title: 'Quickstart: Deploy a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
+title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
 description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview) in a custom virtual network.
 ms.topic: quickstart
-ms.date: 02/05/2025
+ms.date: 03/03/2025
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli
 ---
 
-# Quickstart: Deploy a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network
+# Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network
 
 **Applies to:** :heavy_check_mark: AKS Automatic (preview)
 
@@ -134,7 +134,7 @@ All traffic within the virtual network is allowed by default. But if you  added 
 
 ## Create a managed identity and give it permissions on the virtual network
 
-Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the client ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
+Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the principal ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-uami.sh" interactive="cloudshell-bash":::
 
