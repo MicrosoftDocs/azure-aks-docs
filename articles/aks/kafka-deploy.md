@@ -569,10 +569,10 @@ After creating KafkaNodePools, the next step is to define a Kafka Cluster custom
 
 1. Deploy the Kafka Cluster definition, which connects the previously created KafkaNodePools into a complete Kafka ecosystem. This custom resource configures several critical components:
 
-* **Kafka core configuration**: Defines replication factors, listener settings, and other Kafka-specific parameters
-* **Cruise Control**: Provides automated cluster balancing and monitoring capabilities
-* **Entity Operator**: Deploys the Topic and User Operators that manage Kafka topics and users declaratively through Kubernetes resources
-* **JMX metrics**: Configures metrics exposure using the previously defined ConfigMaps
+    * **Kafka core configuration**: Defines replication factors, listener settings, and other Kafka-specific parameters
+    * **Cruise Control**: Provides automated cluster balancing and monitoring capabilities
+    * **Entity Operator**: Deploys the Topic and User Operators that manage Kafka topics and users declaratively through Kubernetes resources
+    * **JMX metrics**: Configures metrics exposure using the previously defined ConfigMaps
 
 The Kafka custom resource acts as the central definition that ties all components together into a functioning Kafka cluster.
 
@@ -670,7 +670,7 @@ The Kafka custom resource acts as the central definition that ties all component
 
 The Strimzi Entity Operator extends Kubernetes' declarative resource management to Kafka topics and users. This component, deployed automatically by the Strimzi Cluster Operator, translates Kubernetes custom resources (`KafkaTopic` and `KafkaUser`) into actual Kafka resources, enabling GitOps workflows and consistent configuration management.
 
-> [!Note] 
+> [!NOTE] 
 > Creating Kafka Topics and Users declaratively using the Entity Operator is optional. Topics and users can also be created using traditional Kafka CLI tools or APIs. However, the declarative approach offers benefits such as version control, audit trails, and consistent management across environments.
 
 1. Create a Kafka Topic using the Topic Operator:
@@ -766,7 +766,7 @@ Before proceeding, ensure your Kafka Cluster has been deployed with JMX Exporter
 
 1. Create the PodMonitor resources:
 
-> [!Note] 
+> [!NOTE] 
 > When using Azure Managed Prometheus:
 > - The PodMonitor apiVersion must be `azmonitoring.coreos.com/v1` instead of the standard `monitoring.coreos.com/v1`
 > - The namespace selector in the examples below assumes your Kafka workloads are deployed in the `kafka` namespace - modify accordingly if you've used a different namespace
@@ -935,15 +935,13 @@ A Helm chart is available to deploy the Kafka Exporter alongside your existing m
 
 1. Upload the [Kafka Exporter Dashboard](https://grafana.com/grafana/dashboards/7589-kafka-exporter-overview/) to Grafana
 
- [!Note]
+ [!NOTE]
 > This Grafana dashboard uses the AngularJS plugin that will be deprecated in future versions of Grafana: [Angular support deprecation](https://grafana.com/docs/grafana/latest/developers/angular_deprecation/). Kafka Exporter metrics will still be available but users may need to create their own dashboards once the deprecation occurs.
 >
 
 ## Accessing the Kafka Cluster
 
 Strimzi offers flexible options for exposing your Kafka cluster to clients through *listeners*. Each listener defines how clients connect to your Kafka brokers with specific protocols, authentication methods, and network exposure patterns.
-
-### Understanding Kafka Listeners
 
 A listener configuration defines:
 
