@@ -34,7 +34,7 @@ Create a text file containing up to 10 blank line separated certificates. When t
 
 Example text file: "FileWithCAs"
 
-    ```txt
+```txt
     -----BEGIN CERTIFICATE-----
     cert1
     -----END CERTIFICATE-----
@@ -42,7 +42,7 @@ Example text file: "FileWithCAs"
     -----BEGIN CERTIFICATE-----
     cert2
     -----END CERTIFICATE-----
-    ```
+ ```
 
 2. Pass certificates to your cluster
 
