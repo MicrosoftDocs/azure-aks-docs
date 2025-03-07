@@ -3,7 +3,7 @@ title: Deploy and configure Strimzi and Kafka components on Azure Kubernetes Ser
 description: In this article, we provide guidance for deploying the Strimzi Operator and a Kafka cluster on Azure Kubernetes Service (AKS). 
 ms.topic: overview
 ms.custom: azure-kubernetes-service
-ms.date: 08/15/2024
+ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
 ---
@@ -160,53 +160,34 @@ LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka 
 ```yaml
 jvmOptions:
   # Sets maximum heap size to 6GB - critical for memory-intensive Kafka operations
-  # Reasoning: 6GB provides enough RAM for message caching, request processing, and
-  # in-memory data structures without excessive GC overhead or memory waste
   -Xmx6g
   
   # Sets initial heap size equal to max to prevent resizing pauses
-  # Reasoning: Equal sizing eliminates runtime heap resizing which causes latency spikes
-  # that could disrupt Kafka's real-time message processing
   -Xms6g
   
   # Initial metaspace size (class metadata storage area) at 96MB
-  # Reasoning: Provides adequate initial space for Kafka's classes and reduces early
-  # collection/expansion cycles which would impact startup performance
   -XX:MetaspaceSize=96m
   
-  # Enables the Garbage-First (G1) garbage collector, optimized for large heaps
-  # Reasoning: G1GC provides better predictability and lower pause times than
-  # traditional collectors, crucial for Kafka's throughput-sensitive workloads
+  # Enables the Garbage-First (G1) garbage collector, optimized for better predictability and lower pause times than
+  # traditional collectors
   -XX:+UseG1GC
   
   # Targets maximum GC pause time of 20ms - keeps latency predictable
-  # Reasoning: Keeps collection pauses brief to maintain consistent throughput
-  # and prevent backpressure in message streams
   -XX:MaxGCPauseMillis=20
   
   # Starts concurrent GC cycle when heap is 35% full - balances CPU overhead and frequency
-  # Reasoning: At 35%, collections start early enough to avoid emergency collections
-  # while not wasting CPU on too-frequent collections
   -XX:InitiatingHeapOccupancyPercent=35
   
   # Sets G1 heap region size to 16MB - affects collection efficiency and pause times
-  # Reasoning: 16MB regions provide a good balance between collection granularity
-  # and overhead for typical Kafka workloads with variable message sizes
   -XX:G1HeapRegionSize=16M
   
   # Keeps at least 50% free space after metaspace GC - prevents frequent resizing
-  # Reasoning: Higher free ratio prevents oscillation between growth and collection
-  # cycles that could impact performance during broker operation
   -XX:MinMetaspaceFreeRatio=50
   
   # Limits expansion to allow up to 80% free space in metaspace after GC
-  # Reasoning: Caps excessive growth while still allowing enough headroom to
-  # accommodate dynamic class loading during operation
   -XX:MaxMetaspaceFreeRatio=80
   
   # Makes explicit System.gc() calls run concurrently instead of stopping all threads
-  # Reasoning: Prevents full stop-the-world pauses if applications using the
-  # Kafka client explicitly call System.gc(), maintaining broker responsiveness
   -XX:+ExplicitGCInvokesConcurrent
 ```
 
@@ -272,7 +253,7 @@ jvmOptions:
         volumes:
           - id: 0
             type: persistent-claim
-            size: 2Gi
+            size: 25Gi
             kraftMetadata: shared
             deleteClaim: false
             class: acstor-azuredisk-zr
@@ -353,7 +334,7 @@ jvmOptions:
             class: acstor-azuredisk-zr
           - id: 1
             type: persistent-claim
-            size: 50Gi
+            size: 25Gi
             kraftMetadata: shared
             deleteClaim: false
             class: acstor-azuredisk-zr
@@ -371,7 +352,7 @@ jvmOptions:
     EOF
     ```
 
-After creating KafkaNodePools, the next step is to define a Kafka Cluster custom resource that binds these pools into a functioning Kafka ecosystem. This architecture follows Strimzi's separation of concerns pattern, where node pools manage the infrastructure aspects while the Kafka Cluster resource handles application-level configurations. 
+After creating KafkaNodePools, the next step is to define a Kafka Cluster custom resource that binds these pools into a functioning Kafka ecosystem. This architecture follows a separation of concerns pattern, where Kafka Node Pools manage the infrastructure aspects while the Kafka Cluster resource handles application-level configurations. 
 
 ## Deploy Kafka Cluster
 
@@ -974,7 +955,7 @@ For external clients, the `loadbalancer` listener type creates an Azure Load Bal
     - name: external
       port: 9092
       type: loadbalancer
-      tls: false
+      tls: true
   ```
 
 When using this configuration:
@@ -990,7 +971,7 @@ To avoid having each broker publicly accessible via a public IP, you can update 
   - name: extelb
     port: 9092
     type: loadbalancer
-    tls: false
+    tls: true
     configuration: 
       brokers:
         - broker: 0
@@ -1018,7 +999,7 @@ If you wish to access the Kafka cluster outside of the AKS cluster but within an
     - name: private-lb
       port: 9092
       type: loadbalancer
-      tls: false
+      tls: true
       configuration: 
         brokers:
           - broker: 0

@@ -459,7 +459,7 @@
                   href: kafka-overview.md
                 - name: Create AKS infrastructure resources for Kafka
                   href: kafka-infrastructure.md
-                - name: Configure and deploy Strimzi and Kafka resources
+                - name: Deploy Strimzi and Kafka resources on AKS
                   href: kafka-deploy.md
                 - name: Monitoring and testing Kafka
                   href: kafka-testing.md
