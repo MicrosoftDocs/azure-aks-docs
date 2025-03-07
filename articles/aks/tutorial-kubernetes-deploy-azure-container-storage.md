@@ -41,54 +41,46 @@ Add or upgrade to the latest version of `k8s-extension` by running the following
 az extension add --upgrade --name k8s-extension
 ```
 
-## Set your Azure subscription context
-
-Set your Azure subscription context using the `az account set` command. You can view the subscription IDs for all the subscriptions you have access to by running the `az account list --output table` command. Remember to replace `<subscription-id>` with your Azure subscription ID.
-
-```azurecli-interactive
-az account set --subscription <subscription-id>
-```
-
 ## Connect to the cluster and check node status
 
-To connect to the cluster, run the following commands.
+If you're not already connected to your cluster from the previous tutorial, run the following commands. If you're already connected, you can skip this section.
 
-1. If you're not already connected to your cluster from the previous tutorial, run the following command to connect.
+1.  Run the following command to connect to the cluster.
 
     ```azurecli-interactive
     az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
     ```
 
-2. Verify the connection to your cluster using the `kubectl get` command. This command returns a list of the cluster nodes.
+1. Verify the connection to your cluster using the `kubectl get` command. This command returns a list of the cluster nodes.
 
     ```azurecli-interactive
     kubectl get nodes
     ```
 
-3. The following output example shows the nodes in your cluster. Make sure the status for all nodes shows *Ready*:
+1. The following output example shows the nodes in your cluster. Make sure the status for all nodes shows *Ready*:
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
-    aks-nodepool1-34832848-vmss000000   Ready    agent   80m   v1.25.6
-    aks-nodepool1-34832848-vmss000001   Ready    agent   80m   v1.25.6
-    aks-nodepool1-34832848-vmss000002   Ready    agent   80m   v1.25.6
+    aks-nodepool1-34832848-vmss000000   Ready    agent   80m   v1.30.9
+    aks-nodepool1-34832848-vmss000001   Ready    agent   80m   v1.30.9
+    aks-nodepool1-34832848-vmss000002   Ready    agent   80m   v1.30.9
     ```
 
 ## Choose a backing storage option
 
-Azure Container Storage uses storage pools to provision and manage persistent and generic volumes. It offers a variety of back-end storage options for your storage pools, each suited for specific workloads. Selecting the right storage type is critical for optimizing workload performance, durability, and cost efficiency. For this tutorial, we'll use Ephemeral Disk (local NVMe) as backing storage to create a generic ephemeral volume. However, we'll also explore the other backing storage options.
+Azure Container Storage uses storage pools to provision and manage persistent and generic volumes. It offers a variety of back-end storage options for your storage pools, each suited for specific workloads. Selecting the right storage type is critical for optimizing workload performance, durability, and cost efficiency. For this tutorial, we'll use Ephemeral Disk with local NVMe as backing storage to create a generic ephemeral volume. However, we'll also explore the other backing storage options that allow you to create persistent volumes.
+
+### Ephemeral Disk
+
+Ephemeral Disk utilizes local storage resources on the AKS nodes (either local NVMe or temp SSD). It offers low sub-ms latency and high IOPS, but no data persistence if the VM restarts. Ephemeral Disk is best suited for applications such as Cassandra that prioritize speed over persistence, and is ideal for workloads with their own application-level replication.
+
+You can use Ephemeral Disk to create either generic ephemeral volumes or persistent volumes, even though the data will be lost if the VM restarts.
 
 ### Azure Disks
 
 Ideal for databases like PostgreSQL and MongoDB, Azure Disks offer durability, scalability, and multi-tiered performance options, including Premium SSD and Ultra SSD.
 
 Azure Disks allow for automatic provisioning of storage volumes and include built-in redundancy and high availability.
-
-### Ephemeral Disk
-
-Ephemeral Disk utilizes local storage resources on the AKS nodes (either local NVMe or temp SSD). It offers low sub-ms latency and high IOPS, but no data persistence if the VM restarts. Ephemeral Disk is best suited for applications such as Cassandra that prioritize speed over persistence, and is ideal for workloads with application-level replication.
-
-You can use Ephemeral Disk to create either generic ephemeral volumes or persistent volumes, even though the data will be lost if the VM restarts.
 
 ### Azure Elastic SAN (preview)
 

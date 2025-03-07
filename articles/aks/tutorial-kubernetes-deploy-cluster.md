@@ -91,14 +91,14 @@ AKS clusters can use [Kubernetes role-based access control (Kubernetes RBAC)][k8
 
 For information about AKS resource limits and region availability, see [Quotas, virtual machine size restrictions, and region availability in AKS][quotas-skus-regions].
 
-> [!NOTE]
-> This tutorial creates a three-node cluster. To ensure your cluster operates reliably, you should run at least two nodes. A minimum of three nodes is required to use Azure Container Storage.
+> [!IMPORTANT]
+> This tutorial creates a three-node cluster. To ensure your cluster operates reliably, you should run at least two nodes. A minimum of three nodes is required to use Azure Container Storage. If you get an error message when trying to create the cluster, then you might need to request a quota increase for your Azure subscription or try a different Azure region. Alternatively, you can omit the node VM size parameter to use the default VM size.
 
 ### [Azure CLI](#tab/azure-cli)
 
-To allow an AKS cluster to interact with other Azure resources, the Azure platform automatically creates a cluster identity. In this example, the cluster identity is [granted the right to pull images][container-registry-integration] from the ACR instance you created in the previous tutorial. To execute the command successfully, you need to have an **Owner** or **Azure account administrator** role in your Azure subscription.
+To allow an AKS cluster to interact with other Azure resources, the Azure platform automatically creates a cluster identity. In this example, the cluster identity is [granted the right to pull images][container-registry-integration] from the ACR instance you created in the previous tutorial. To execute the command successfully, you must have an **Owner** or **Azure account administrator** role in your Azure subscription.
 
-* Create an AKS cluster using the [`az aks create`][az aks create] command. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup*. This resource group was created in the [previous tutorial][aks-tutorial-prepare-acr] in the *eastus* region. We will continue to use the environment variable, `$ACRNAME`, that we set in the [previous tutorial][aks-tutorial-prepare-acr]. If you don't have this environment variable set, set it now to the same value you used previously.
+* Create an AKS cluster using the [`az aks create`][az aks create] command. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup*. This resource group was created in the [previous tutorial][aks-tutorial-prepare-acr] in the *eastus* region. We'll continue to use the environment variable, `$ACRNAME`, that we set in the [previous tutorial][aks-tutorial-prepare-acr]. If you don't have this environment variable set, set it now to the same value you used previously.
 
     ```azurecli-interactive
     az aks create \
@@ -156,9 +156,9 @@ To avoid needing an **Owner** or **Azure account administrator** role, you can a
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
-    aks-nodepool1-19366578-vmss000000   Ready    agent   47h   v1.28.9
-    aks-nodepool1-19366578-vmss000001   Ready    agent   47h   v1.28.9
-    aks-nodepool1-19366578-vmss000002   Ready    agent   47h   v1.28.9
+    aks-nodepool1-19366578-vmss000000   Ready    agent   47h   v1.30.9
+    aks-nodepool1-19366578-vmss000001   Ready    agent   47h   v1.30.9
+    aks-nodepool1-19366578-vmss000002   Ready    agent   47h   v1.30.9
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -179,9 +179,9 @@ To avoid needing an **Owner** or **Azure account administrator** role, you can a
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
-    aks-nodepool1-19366578-vmss000000   Ready    agent   47h   v1.28.9
-    aks-nodepool1-19366578-vmss000001   Ready    agent   47h   v1.28.9
-    aks-nodepool1-19366578-vmss000002   Ready    agent   47h   v1.28.9
+    aks-nodepool1-19366578-vmss000000   Ready    agent   47h   v1.30.9
+    aks-nodepool1-19366578-vmss000001   Ready    agent   47h   v1.30.9
+    aks-nodepool1-19366578-vmss000002   Ready    agent   47h   v1.30.9
     ```
 
 ### [Azure Developer CLI](#tab/azure-azd)
@@ -204,9 +204,9 @@ To avoid needing an **Owner** or **Azure account administrator** role, you can a
 
     ```output
     NAME                                STATUS   ROLES   AGE   VERSION
-    aks-nodepool1-19366578-vmss000000   Ready    agent   47h   v1.28.9
-    aks-nodepool1-19366578-vmss000001   Ready    agent   47h   v1.28.9
-    aks-nodepool1-19366578-vmss000002   Ready    agent   47h   v1.28.9
+    aks-nodepool1-19366578-vmss000000   Ready    agent   47h   v1.30.9
+    aks-nodepool1-19366578-vmss000001   Ready    agent   47h   v1.30.9
+    aks-nodepool1-19366578-vmss000002   Ready    agent   47h   v1.30.9
     ```
 
 [!INCLUDE [azd-login-ts](./includes/azd/azd-login-ts.md)]
@@ -223,7 +223,7 @@ In this tutorial, you deployed a Kubernetes cluster in AKS and configured `kubec
 > * Install the Kubernetes CLI, `kubectl`.
 > * Configure `kubectl` to connect to your AKS cluster.
 
-In the next tutorial, you learn how to deploy Azure Container Storage on your cluster and create a generic ephemeral volume. If you're using Azure Developer CLI, proceed directly to the [Deploy containerized application](tutorial-kubernetes-deploy-application.md) tutorial.
+In the next tutorial, you learn how to deploy Azure Container Storage on your cluster and create a generic ephemeral volume. If you're using Azure Developer CLI, or if you weren't able to use a storage optimized VM type due to quota issues, proceed directly to the [Deploy containerized application](tutorial-kubernetes-deploy-application.md) tutorial.
 
 > [!div class="nextstepaction"]
 > [Deploy Azure Container Storage][aks-tutorial-acstor]
