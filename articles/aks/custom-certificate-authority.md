@@ -11,7 +11,7 @@ ms.date: 03/07/2025
 
 # Custom certificate authority (CA) in Azure Kubernetes Service (AKS)
 
-Custom Certificate Authority allows you to add up to 10 base64 encoded certificates to your node's trust store. This is often needed when CAs are required to be present on the node, for example when connecting to a private registry.  
+Custom Certificate Authority (CA) allows you to add up to 10 base64 encoded certificates to your node's trust store. This feature is often needed when CAs are required to be present on the node, for example when connecting to a private registry.  
 
 This article shows you how to create custom CAs and apply them to your AKS clusters. 
 
@@ -23,14 +23,14 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 ## Limitations
 
-* This feature currently isn't supported for Windows node pools.
-* Installing different CAs on different node pools is not supported.
+* Windows node pools aren't supported.
+* Installing different CAs on different node pools isn't supported.
 
-## Install CAs on you node's trust store
+## Install CAs on your node's trust store
 
 1. Create a file containing CAs
 
-Create a text file containing up to 10 blank line separated certificates. When this file is passed to your cluster, these certificates will be installed in you node's trust stores.
+Create a text file containing up to 10 blank line separated certificates. When this file is passed to your cluster, these certificates are installed in your node's trust stores.
 
 Example text file: "FileWithCAs"
 
@@ -46,7 +46,7 @@ Example text file: "FileWithCAs"
 
 2. Pass certificates to your cluster
 
-You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] to pass certificates to your cluster. Once the operation completes, the certificates will be installed in your node's trust stores.
+You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] to pass certificates to your cluster. Once the operation completes, the certificates are installed in your node's trust stores.
 
 * Install CAs during cluster creation using the [`az aks create`][az-aks-create] command and specifying your text file for the `--custom-ca-trust-certificates` parameter.
 
@@ -68,7 +68,7 @@ You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-upd
         --custom-ca-trust-certificates FileWithCAs
     ```
  > [!NOTE]
- > This operation triggers a model update to ensure all existing nodes have the same CAs installed for correct provisioning. AKS creates additional nodes, drains existing nodes, deletes existing nodes, and replaces them with nodes that have the new set of CAs installed.
+ > This operation triggers a model update to ensure all existing nodes have the same CAs installed for correct provisioning. AKS creates new nodes, drains existing nodes, deletes existing nodes, and replaces them with nodes that have the new set of CAs installed.
 
 ## Troubleshooting
 
