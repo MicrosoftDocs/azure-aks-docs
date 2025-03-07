@@ -78,8 +78,8 @@ az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME | grep securityProfile -A 4
 ```
 The securityProfile output should include your Custom CA Trust Certificates.
 
-output
-```
+
+```output
   "securityProfile": {
     "azureKeyVaultKms": null,
     "customCaTrustCertificates": [
