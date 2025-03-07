@@ -14,7 +14,7 @@ In this article, you deploy the Strimzi Cluster Operator and a highly available 
 
 ## Strimzi Deployment
 
-The Strimzi Cluster Operator is deployed in its own namespace, `strimzi-operator**`, and configured to watch the `kafka` namespace where Kafka cluster components are deployed. For high availability, the operator uses:
+The Strimzi Cluster Operator is deployed in its own namespace, `strimzi-operator`, and configured to watch the `kafka` namespace where Kafka cluster components are deployed. For high availability, the operator uses:
 
 * **Multiple replicas with leader election**: One replica serves as the active leader managing deployed resources, while others remain on standby. If the leader fails, a standby replica takes over.
 
@@ -371,7 +371,7 @@ jvmOptions:
     EOF
     ```
 
-After creating KafkaNodePools, the next step is to define a Kafka Cluster custom resource that binds these pools into a functioning Kafka ecosystem. This architecture follows Strimzi's separation of concerns pattern, where node pools manage the infrastructure aspects while the Kafka Cluster resource handles application-level configurations. The Kafka Cluster custom resource defines critical components including:
+After creating KafkaNodePools, the next step is to define a Kafka Cluster custom resource that binds these pools into a functioning Kafka ecosystem. This architecture follows Strimzi's separation of concerns pattern, where node pools manage the infrastructure aspects while the Kafka Cluster resource handles application-level configurations. 
 
 ## Deploy Kafka Cluster
 
