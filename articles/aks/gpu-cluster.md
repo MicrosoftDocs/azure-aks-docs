@@ -13,7 +13,7 @@ ms.author: schaffererin
 
 # Use GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS)
 
-Graphical processing units (GPUs) are often used for compute-intensive workloads, such as graphics and visualization workloads. AKS supports GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads. 
+Graphical processing units (GPUs) are often used for compute-intensive workloads, such as graphics and visualization workloads. AKS supports GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads.
 
 This article helps you provision nodes with schedulable GPUs on new and existing AKS clusters.
 
@@ -93,7 +93,7 @@ To use the default OS SKU, you create the node pool without specifying an OS SKU
     * `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
 
     > [!NOTE]
-    > Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time. 
+    > Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time.
 
 ##### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
 
@@ -354,7 +354,7 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 
     ```console
     2019-05-16 16:08:31.258328: I tensorflow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 FMA
-    2019-05-16 16:08:31.396846: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1030] Found device 0 with properties: 
+    2019-05-16 16:08:31.396846: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1030] Found device 0 with properties:
     name: Tesla K80 major: 3 minor: 7 memoryClockRate(GHz): 0.8235
     pciBusID: 2fd7:00:00.0
     totalMemory: 11.17GiB freeMemory: 11.10GiB
@@ -436,8 +436,6 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 [nvidia-github]: https://github.com/NVIDIA/k8s-device-plugin/blob/4b3d6b0a6613a3672f71ea4719fd8633eaafb4f3/deployments/static/nvidia-device-plugin.yml
 
 <!-- LINKS - internal -->
-[az-aks-create]: /cli/azure/aks#az_aks_create
-[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az_aks_nodepool_update
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
@@ -451,10 +449,6 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 [azureml-triton]: /azure/machine-learning/how-to-deploy-with-triton
 [aks-container-insights]: monitor-aks.md#integrations
 [advanced-scheduler-aks]: operator-best-practices-advanced-scheduler.md
-[az-provider-register]: /cli/azure/provider#az-provider-register
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
-[NVadsA10]: /azure/virtual-machines/nva10v5-series
 
