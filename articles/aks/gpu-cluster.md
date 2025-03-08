@@ -128,13 +128,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 ---
 
-1. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
-
-    ```bash
-    kubectl create namespace gpu-operator
-    ```
-
-2. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
+1. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
 
     ```yaml
     apiVersion: apps/v1
@@ -182,13 +176,13 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
               path: /var/lib/kubelet/device-plugins
     ```
 
-3. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
+2. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
     kubectl apply -f nvidia-device-plugin-ds.yaml
     ```
 
-4. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
+3. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
 
 ### Skip GPU driver installation (preview)
@@ -430,7 +424,6 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
 [kubectl-logs]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs
 [kubectl delete]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete
-[kubectl-create]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create
 [azure-pricing]: https://azure.microsoft.com/pricing/
 [azure-availability]: https://azure.microsoft.com/global-infrastructure/services/
 [nvidia-github]: https://github.com/NVIDIA/k8s-device-plugin/blob/4b3d6b0a6613a3672f71ea4719fd8633eaafb4f3/deployments/static/nvidia-device-plugin.yml
