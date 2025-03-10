@@ -1,5 +1,5 @@
 ---
-title: 'Quickstart: Create an application to a new Azure Kubernetes Service (AKS) Automatic cluster (preview) from a code repository using Automated Deployments'
+title: 'Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS) Automatic cluster (preview) from a code repository using Automated Deployments'
 description: Learn how to quickly deploy an application from source code to a new Azure Kubernetes Service (AKS) Automatic (preview) cluster.
 ms.topic: quickstart
 ms.custom: devx-track-azurecli, devx-track-bicepW
@@ -8,7 +8,7 @@ author: sabbour
 ms.author: asabbour
 ---
 
-# Quickstart: Create an application to a new Azure Kubernetes Service (AKS) Automatic cluster (preview) from a code repository
+# Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS) Automatic cluster (preview) from a code repository
 
 **Applies to:** :heavy_check_mark: AKS Automatic (preview)
 
