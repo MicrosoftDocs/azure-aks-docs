@@ -1,7 +1,7 @@
 ---
-title: Configure dual-stack kubenet networking in Azure Kubernetes Service (AKS)
+title: Configure dual-stack networking in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
-description: Learn how to configure dual-stack kubenet networking in Azure Kubernetes Service (AKS).
+description: Learn how to configure dual-stack networking in Azure Kubernetes Service (AKS).
 author: asudbring
 ms.author: allensu
 ms.subservice: aks-networking
@@ -12,27 +12,18 @@ ms.custom: devx-track-azurecli, build-2023
 
 # Use dual-stack kubenet networking in Azure Kubernetes Service (AKS)
 
-You can deploy your AKS clusters in a dual-stack mode when using [kubenet][kubenet] networking and a dual-stack Azure virtual network. In this configuration, nodes receive both an IPv4 and IPv6 address from the Azure virtual network subnet. Pods receive both an IPv4 and IPv6 address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so that the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address of the same family (IPv4 to IPv4 and IPv6 to IPv6).
+You can deploy your AKS clusters in a dual-stack mode when using a dual-stack Azure virtual network. In this configuration, nodes receive both an IPv4 and IPv6 address from the Azure virtual network subnet. Pods receive both an IPv4 and IPv6 address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so that the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address of the same family (IPv4 to IPv4 and IPv6 to IPv6).
 
 This article shows you how to use dual-stack networking with an AKS cluster. For more information on network options and considerations, see [Network concepts for Kubernetes and AKS][aks-network-concepts].
 
 ## Limitations
 
-* Azure route tables have a **hard limit of 400 routes per table**.
-  * Each node in a dual-stack cluster requires two routes, one for each IP address family, so **dual-stack clusters are limited to 200 nodes**.
 * In Azure Linux node pools, service objects are only supported with `externalTrafficPolicy: Local`.
 * Dual-stack networking is required for the Azure virtual network and the pod CIDR.
   * Single stack IPv6-only isn't supported for node or pod IP addresses. Services can be provisioned on IPv4 or IPv6.
-* The following features are **not supported on dual-stack kubenet**:
-  * [Azure network policies](use-network-policies.md#create-an-aks-cluster-and-enable-network-policy)
-  * [Calico network policies](use-network-policies.md#create-an-aks-cluster-and-enable-network-policy)
-  * [NAT Gateway][nat-gateway]
-  * [Virtual nodes add-on](virtual-nodes.md#network-requirements)
-  * [Windows node pools](./windows-faq.yml)
 
 ## Prerequisites
 
-* All prerequisites from [configure kubenet networking](configure-kubenet.md) apply.
 * AKS dual-stack clusters require Kubernetes version v1.21.2 or greater. v1.22.2 or greater is recommended.
 * If using Azure Resource Manager templates, schema version 2021-10-01 is required.
 
