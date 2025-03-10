@@ -30,7 +30,7 @@ To learn how to work with Azure Resource Graph and Fleet update run data, let's 
 
 * In the **Table** pane, select **aksresources** to add it to the explorer query box.
 
-* Now select **microsoft.containerservices/fleets/updateruns**. You explorer query box should look like the following KQL sample.
+* Now select **microsoft.containerservices/fleets/updateruns**. Your explorer query box should look like the following KQL sample.
 
     ```kusto
     aksresources
