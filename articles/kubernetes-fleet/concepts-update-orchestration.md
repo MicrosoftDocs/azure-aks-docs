@@ -48,11 +48,11 @@ AKS clusters support two distinct maintenance windows - one for Kubernetes (cont
 
 Fleet Manager update runs will honor AKS maintenance windows as follows:
 
-| Fleet Manager update channel | AKS upgrade option | AKS maintenance window setting     |
-|-----------------------|---| ----------------------------------|
-| Kubernetes Control Plane | Kubernetes Version | AKSManagedAutoUpgradeSchedule    |
-| Kubernetes + Node Image | Kubernetes Version | AKSManagedAutoUpgradeSchedule    |
-| Node Image Only       | Node Image |  AKSManagedNodeOSAutoUpgradeSchedule | 
+| Fleet Manager update channel | AKS upgrade option | AKS maintenance window setting       |
+|------------------------------|--------------------| -------------------------------------|
+| Kubernetes Control Plane     | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
+| Kubernetes + Node Image      | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
+| Node Image Only              | Node Image         |  AKSManagedNodeOSAutoUpgradeSchedule | 
 
 Update run prioritizes upgrading clusters based on planned maintenance in the following order: 
   1. Member with an open ongoing maintenance window.
