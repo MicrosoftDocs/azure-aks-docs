@@ -314,5 +314,5 @@ The following sample represents the `properties` payload held in Azure Resource 
 [kusto-query-docs]: /kusto/query
 [kusto-mv-expand]: /kusto/query/mv-expand-operator
 [kusto-json-parse]: /kusto/query/parse-json-function
-[monitor-log-search]: /azure-monitor/alerts/alerts-create-log-alert-rule
-[monitor-setup-action-group]: /azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
+[monitor-log-search]: /azure/azure-monitor/alerts/alerts-create-log-alert-rule
+[monitor-setup-action-group]: /azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
