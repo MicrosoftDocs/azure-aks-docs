@@ -111,7 +111,7 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [istio-deploy-ingress]: istio-deploy-ingress.md
 [managed-nat-gateway]: nat-gateway.md#create-an-aks-cluster-with-a-managed-nat-gateway
 [userassigned-nat-gateway]: nat-gateway.md#create-an-aks-cluster-with-a-user-assigned-nat-gateway
-[udr]: egress-outboundtyp.mde#outbound-type-of-userdefinedrouting
+[udr]: egress-outboundtyp.md#outbound-type-of-userdefinedrouting
 [egress-load-balancer]: egress-outboundtype.md#outbound-type-of-loadbalancer
 [istio-mesh]: istio-about.md
 [automated-deployments]: automated-deployments.md
