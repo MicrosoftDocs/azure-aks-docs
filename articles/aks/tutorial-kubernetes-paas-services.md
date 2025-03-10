@@ -40,7 +40,7 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
 * Create the following environment variables to use for the commands in this tutorial:
 
     ```azurecli-interactive
-    LOC_NAME=eastus
+    LOC_NAME=westus2
     RAND=$RANDOM
     RG_NAME=myResourceGroup
     AKS_NAME=myAKSCluster
@@ -52,7 +52,7 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
 * Create the following environment variables to use for the commands in this tutorial:
 
     ```azurepowershell-interactive
-    $LOC_NAME="eastus"
+    $LOC_NAME="westus2"
     $rand=New-Object System.Random
     $RAND=$rand.Next()
     $RG_NAME="myResourceGroup"

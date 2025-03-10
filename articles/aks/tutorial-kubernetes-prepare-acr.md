@@ -48,7 +48,7 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
 1. Create a resource group using the [`az group create`][az-group-create] command.
 
     ```azurecli-interactive
-    az group create --name myResourceGroup --location eastus
+    az group create --name myResourceGroup --location westus2
     ```
 
 2. Create an ACR instance using the [`az acr create`][az-acr-create] command and provide your own unique registry name. The registry name must be unique within Azure and contain 5-50 lowercase alphanumeric characters. This tutorial series uses an environment variable, `$ACRNAME`, as a placeholder for the container registry name. You can set this environment variable to your unique ACR name to use in future commands. The *Basic* SKU is a cost-optimized entry point for development purposes that provides a balance of storage and throughput.
@@ -62,7 +62,7 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
 1. Create a resource group using the [`New-AzResourceGroup`][new-azresourcegroup] cmdlet.
 
     ```azurepowershell-interactive
-    New-AzResourceGroup -Name myResourceGroup -Location eastus
+    New-AzResourceGroup -Name myResourceGroup -Location westus2
     ```
 
 2. Create an ACR instance using the [`New-AzContainerRegistry`][new-azcontainerregistry] cmdlet and provide your own unique registry name. The registry name must be unique within Azure and contain 5-50 lowercase alphanumeric characters. The rest of this tutorial uses an environment variable, `$ACRNAME`, as a placeholder for the container registry name. You can set this environment variable to your unique ACR name to use in future commands. The *Basic* SKU is a cost-optimized entry point for development purposes that provides a balance of storage and throughput.
@@ -71,7 +71,7 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
     $rand=New-Object System.Random
     $RAND=$rand.Next()
     $ACRNAME="myregistry$RAND" # Or replace with your own name
-    New-AzContainerRegistry -ResourceGroupName myResourceGroup -Name $ACRNAME -Location eastus -Sku Basic
+    New-AzContainerRegistry -ResourceGroupName myResourceGroup -Name $ACRNAME -Location westus2 -Sku Basic
     ```
 
 ---

@@ -98,7 +98,7 @@ For information about AKS resource limits and region availability, see [Quotas, 
 
 To allow an AKS cluster to interact with other Azure resources, the Azure platform automatically creates a cluster identity. In this example, the cluster identity is [granted the right to pull images][container-registry-integration] from the ACR instance you created in the previous tutorial. To execute the command successfully, you must have an **Owner** or **Azure account administrator** role in your Azure subscription.
 
-* Create an AKS cluster using the [`az aks create`][az aks create] command. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup*. This resource group was created in the [previous tutorial][aks-tutorial-prepare-acr] in the *eastus* region. We'll continue to use the environment variable, `$ACRNAME`, that we set in the [previous tutorial][aks-tutorial-prepare-acr]. If you don't have this environment variable set, set it now to the same value you used previously.
+* Create an AKS cluster using the [`az aks create`][az aks create] command. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup*. This resource group was created in the [previous tutorial][aks-tutorial-prepare-acr] in the *westus2* region. We'll continue to use the environment variable, `$ACRNAME`, that we set in the [previous tutorial][aks-tutorial-prepare-acr]. If you don't have this environment variable set, set it now to the same value you used previously.
 
     ```azurecli-interactive
     az aks create \
@@ -119,7 +119,7 @@ To avoid needing an **Owner** or **Azure account administrator** role, you can a
 
 To allow an AKS cluster to interact with other Azure resources, the Azure platform automatically creates a cluster identity. In this example, the cluster identity is [granted the right to pull images][container-registry-integration] from the ACR instance you created in the previous tutorial. To execute the command successfully, you need to have an **Owner** or **Azure account administrator** role in your Azure subscription.
 
-* Create an AKS cluster using the [`New-AzAksCluster`][new-azakscluster] cmdlet. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup*. This resource group was created in the [previous tutorial][aks-tutorial-prepare-acr] in the *eastus* region.
+* Create an AKS cluster using the [`New-AzAksCluster`][new-azakscluster] cmdlet. The following example creates a cluster named *myAKSCluster* in the resource group named *myResourceGroup*. This resource group was created in the [previous tutorial][aks-tutorial-prepare-acr] in the *westus2* region.
 
     ```azurepowershell-interactive
     New-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSCluster -NodeCount 3 -NodeVmSize standard_l8s_v3 -GenerateSshKey -AcrNameToAttach $ACRNAME
