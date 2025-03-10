@@ -45,9 +45,9 @@ A zone spanning scale set spreads nodes across all selected zones, by specifying
 
 ```bash
 # Create an AKS Cluster, and create a zone spanning System Nodepool in all three AZs, one node in each AZ
-az aks create --resource-group example-rg --name example-cluster --node-count 3 --zones 1, 2, 3
+az aks create --resource-group example-rg --name example-cluster --node-count 3 --zones 1 2 3
 # Add one new zone spanning User Nodepool, two nodes in each
-az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-a  --node-count 6 --zones 1, 2, 3 
+az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-a  --node-count 6 --zones 1 2 3 
 ```
 AKS balances the number of nodes between zones automatically.
 
