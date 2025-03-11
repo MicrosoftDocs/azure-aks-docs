@@ -92,8 +92,6 @@ Azure CNI offers two IP addressing options for pods: The traditional configurati
 
 Azure CNI Overlay has the following limitations:
 
-- You can't use Application Gateway as an Ingress Controller (AGIC) for an Overlay cluster.
-- You can't use Application Gateway for Containers for an Overlay cluster.
 - Virtual Machine Availability Sets (VMAS) aren't supported for Overlay.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet Confidential Computing requirements, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
 - In case you are using your own subnet to deploy the cluster, the names of the subnet, VNET and resource group which contains the VNET, must be 63 characters or less. This comes from the fact that these names will be used as labels in AKS worker nodes, and are therefore subjected to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).  

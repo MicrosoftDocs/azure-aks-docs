@@ -86,7 +86,7 @@ You might also want to compare the features of each CNI plugin. The following ta
 | On-premises access via VPN/Express Route | Pod initiated | Both ways | Both ways | Pod initiated |
 | Access to service endpoints | Supported | Supported | Supported | Supported |
 | Expose services using load balancer | Supported | Supported | Supported | Supported |
-| Expose services using App Gateway | Currently not supported | Supported | Supported | Supported |
+| Expose services using App Gateway | Supported | Supported | Supported | Supported |
 | Expose services using ingress controller | Supported | Supported | Supported | Supported |
 | Windows node pools | Supported | Supported | Supported | Not supported |
 | Default Azure DNS and Private Zones | Supported | Supported | Supported | Supported |
