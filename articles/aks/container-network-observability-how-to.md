@@ -184,7 +184,7 @@ Skip this step if using BYO Grafana
 > Because of this, the *Pods Flows* dashboards have panels with missing data. To enable this metric and populate the missing data, you need to modify the ama-metrics-settings-configmap. Specifically, update the default-targets-metrics-keep-list section. Follow the below steps to update the configmap :
 > 1. Get the latest ama-metrics-settings-configmap.(https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml)  
 > 1. Locate the networkobservabilityHubble = "" 
-> 1. Change it to networkobservabilityHubble = "hubble_*"
+> 1. Change it to networkobservabilityHubble = "hubble.*"
 > 1. Now the Pod flow metrics should populate.
 > 
 > To learn more about what minimal ingestion, see the [Minimal Ingestion Doumentation](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
