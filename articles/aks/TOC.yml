@@ -859,35 +859,7 @@
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on
-          items:
-<<<<<<< HEAD
-            - name: About Istio
-              href: istio-about.md
-            - name: Deploy Istio service mesh add-on
-              href: istio-deploy-addon.md
-            - name: Enable native sidecar mode (Preview)
-              href: istio-native-sidecar.md
-            - name: Configure Istio service mesh add-on
-              href: istio-meshconfig.md
-            - name: Deploy external or internal Istio Ingress
-              href: istio-deploy-ingress.md
-            - name: Deploy secure Istio ingress gateway
-              href: istio-secure-gateway.md
-            - name: Plug-in CA certificates for Istio
-              href: istio-plugin-ca.md
-            - name: Upgrade Istio service mesh add-on
-              href: istio-upgrade.md
-            - name: Istio service mesh add-on support policy
-              href: istio-support-policy.md
-            - name: Istio service mesh add-on performance
-              href: istio-scale.md
-            - name: Latency comparison for Istio
-              href: istio-latency.md
-            - name: Telemetry API for Istio service mesh
-              href: istio-telemetry.md
-            - name: Collect Istio metrics in Azure Managed Prometheus
-              href: istio-metrics-managed-prometheus.md
-=======
+          items:            
             - name: General - Istio Add-On Deployment and Configuration
               items:
                 - name: About Istio
@@ -924,7 +896,8 @@
               items:
                 - name: Telemetry API for Istio service mesh
                   href: istio-telemetry.md
->>>>>>> a89125c6a (update TOC)
+                - name: Collect Istio metrics in Azure Managed Prometheus
+                  href: istio-metrics-managed-prometheus.md
         - name: Open Service Mesh AKS add-on
           items:
             - name: About Open Service Mesh
