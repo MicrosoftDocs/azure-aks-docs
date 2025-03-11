@@ -224,7 +224,9 @@ Confirm that the sample application's product page is accessible. The expected o
 <title>Simple Bookstore App</title>
 ```
 
-## Ingress gateway service annotation customization
+## Ingress gateway service customizations
+
+### Annotations
 
 The following annotations can be added to the Kubernetes service for the external and internal ingress gateways:
 
@@ -237,6 +239,17 @@ The following annotations can be added to the Kubernetes service for the externa
 - `external-dns.alpha.kubernetes.io/hostname`: for specifying the domain for resource's DNS records. For more information, see [external-dns][external-dns].
 
 The add-on supports health probe annotations for ports 80 and 443. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
+
+### External Traffic Policy
+
+The Istio add-on supports customization of `spec.externalTrafficPolicy` in the Kubernetes service for the ingress gateway. Setting the `externalTrafficPolicy` to `Local` preserves the client source IP preservation at the Istio ingress gateway and avoid a second hop in the traffic path to the backend ingress gateway pods.
+
+```bash
+kubectl patch service aks-istio-ingressgateway-external -n aks-istio-ingress --type merge --patch '{"spec": {"externalTrafficPolicy": "Local"}}'
+```
+
+> [!NOTE]
+> While modifying the `spec.externalTrafficPolicy` to `Local` preserves the client source IP and avoids a second hop for the LoadBalancer service, it risks potentially imbalanced traffic spreading. Read the [Kubernetes docs][kubernetes-docs-load-balancer] to understand the tradeoffs between the different `externalTrafficPolicy` settings. 
 
 ## Delete resources
 
@@ -274,3 +287,4 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [azure-service-tags]: /azure/virtual-network/service-tags-overview
 [external-dns]: https://kubernetes-sigs.github.io/external-dns/latest/docs/annotations/annotations/#external-dnsalphakubernetesiohostname
 [azure-load-balancer-annotations-for-ports]: /azure/aks/load-balancer-standard#customize-the-load-balancer-health-probe
+[kubernetes-docs-load-balancer]: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
