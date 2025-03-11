@@ -26,7 +26,7 @@ This article provides step-by-step instructions to set up a Static Egress Gatewa
 - The gateway node pool isn't intended for general-purpose workloads and should be used for egress traffic only.
 - Windows node pools can't be used as gateway node pools.
 - hostNetwork pods **cannot** be annotated to use the gateway node pool.
-- You can only designate pods to use a gateway node pool in the same namespace as the `StaticGatewayConfiguration` resource.
+- Pods can only use a gateway node pool if they are in the same namespace as the `StaticGatewayConfiguration` resource.
 
 ## Before you begin
 
