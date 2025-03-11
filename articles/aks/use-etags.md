@@ -38,8 +38,16 @@ There are two options for applying eTags through headers:
     ```azurecli-interactive
     az extension update --name aks-preview
     ```
+### Find existing ETags
 
-### Getting Started using ETags
+You can do either a `LIST` or a `GET` call to your cluster or node pool to see the existing ETag. An ETag will look something like the example below:
+```
+"agentPoolProfiles": [
+    {"eTag": "5e5ffdce-356b-431b-b050-81b45eef2a12"}
+]
+```
+
+### Include ETags in Operation Headers
 Headers are completely optional to use, below are two examples on how we can use `–-if-match` and `-–if-none-match` headers. 
 
 **Example 1**: The CLI command below will delete an existing cluster `MyManagedCluster` if the eTag matches with `yvjvt`
