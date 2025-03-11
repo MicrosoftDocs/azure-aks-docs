@@ -146,7 +146,9 @@ spec:
     protocol: TCP
   location: MESH_EXTERNAL
 ```
-Create a file and provide values for `PROXY_IP` and `PROXY_PORT`. You can deploy the Service Entry using 
+1. Create a file and provide values for `PROXY_IP` and `PROXY_PORT`. 
+
+2. You can deploy the Service Entry using:
 
 ```bash
 kubectl apply -f service_proxy.yaml
@@ -157,19 +159,16 @@ kubectl apply -f service_proxy.yaml
 > [!NOTE]
 > If switching to a new proxy, the new proxy must already exist for the update to be successful. After the upgrade is completed, you can delete the old proxy.
 
-You can update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command with the `--http-proxy-config` parameter set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values. Pods must be rotated for the apps to pick it up, because the environment variable values are injected by a mutating admission webhook. For components under Kubernetes, like containerd and the node itself, this doesn't take effect until a node image upgrade is performed.
+You can update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command with the `--http-proxy-config` parameter set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values. 
+
+> [!CAUTION]
+> AKS will automatically reimage all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command.
 
 For example, let's say you created a new file with the base64 encoded string of the new CA cert called *aks-proxy-config-2.json*. You can update the proxy configuration on your cluster with the following command:
 
 ```azurecli-interactive
 az aks update --name $clusterName --resource-group $resourceGroup --http-proxy-config aks-proxy-config-2.json
 ```
-
-## Upgrade AKS node images
-
-After configuring the proxy, you must upgrade the node image to apply the changes. The node image upgrade process is the only way to update the OS files required for proxy configuration updates. The node image upgrade process is a rolling upgrade that updates the OS image on each node in the node pool. The AKS control plane handles the upgrade process, which is nondisruptive to running applications.
-
-To upgrade AKS node images, see [Upgrade Azure Kubernetes Service (AKS) node images](./node-image-upgrade.md).
 
 ## Monitoring add-on configuration
 
