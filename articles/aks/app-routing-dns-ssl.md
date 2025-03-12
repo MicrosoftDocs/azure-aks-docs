@@ -27,7 +27,6 @@ The application routing add-on with nginx delivers the following:
 - Azure Key Vault if you want to configure SSL termination and store certificates in the vault hosted in Azure.
 - Azure DNS if you want to configure global and private zone management and host them in Azure.
 - To attach an Azure Key Vault or Azure DNS Zone, you need the [Owner][rbac-owner], [Azure account administrator][rbac-classic], or [Azure co-administrator][rbac-classic] role on your Azure subscription.
-- All public DNS Zones must be in the same subscription and Resource Group.
 
 ## Connect to your AKS cluster
 
@@ -109,9 +108,13 @@ az aks approuting update --resource-group <ResourceGroupName> --name <ClusterNam
 
 ## Enable Azure DNS integration
 
-To enable support for DNS zones, review the following prerequisite:
+The app routing add-on can be configured to automatically create records on one or more Azure global and private DNS zones for hosts defined on Ingress resources. To enable support for DNS zones, review the following prerequisites:
 
-* The app routing add-on can be configured to automatically create records on one or more Azure global and private DNS zones for hosts defined on Ingress resources. All global Azure DNS zones need to be in the same resource group, and all private Azure DNS zones need to be in the same resource group. If you don't have an Azure DNS zone, you can [create one][create-an-azure-dns-zone].
+*  All global Azure DNS zones need to be in the same resource group, which could be different from the cluster's resource group.
+*  All private Azure DNS zones need to be in the same resource group, which could be different from the cluster's resource group.
+*  The resource group doesn't need to be in the same subscription as the cluster.
+
+If you don't have an Azure DNS zone, you can [create one][create-an-azure-dns-zone].
 
 
 ### Create a public Azure DNS zone

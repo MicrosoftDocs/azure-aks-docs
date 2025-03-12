@@ -90,13 +90,15 @@
       href: tutorial-kubernetes-prepare-acr.md
     - name: 3 - Create Kubernetes cluster
       href: tutorial-kubernetes-deploy-cluster.md
-    - name: 4 - Deploy containerized application
+    - name: 4 - Deploy Azure Container Storage
+      href: tutorial-kubernetes-deploy-azure-container-storage.md      
+    - name: 5 - Deploy containerized application
       href: tutorial-kubernetes-deploy-application.md
-    - name: 5 - Use PaaS services
+    - name: 6 - Use PaaS services
       href: tutorial-kubernetes-paas-services.md
-    - name: 6 - Scale application
+    - name: 7 - Scale application
       href: tutorial-kubernetes-scale.md
-    - name: 7 - Upgrade cluster
+    - name: 8 - Upgrade cluster
       href: tutorial-kubernetes-upgrade-cluster.md
 - name: Concepts
   items:
