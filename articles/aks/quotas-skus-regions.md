@@ -23,7 +23,7 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttling algorithm to limit certain AKS [resource provider](/azure/azure-resource-manager/management/resource-providers-and-types) APIs. This ensures the performance of the service and promotes fair usage of the service for all customers.
 
-The buckets have a fixed size and refill over time at a fixed rate. Each throttling limit is in effect at the regional level for the specified resource in that region.
+The buckets have a fixed size (also known as a burst rate) and refill over time at a fixed rate (also konwn as a sustained rate). Each throttling limit is in effect at the regional level for the specified resource in that region. For example, in the below table, a Subscription can call ListManagedClusters a maximum of 60 times (burst rate) at once for each ResourceGroup, but can continue to make 1 call every second thereafter (sustained rate).
 
 | API request | Bucket size | Refill rate | Resource |
 |---|---|---|---|
