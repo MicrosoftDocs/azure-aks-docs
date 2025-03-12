@@ -31,14 +31,14 @@ The buckets have a fixed size (also known as a burst rate) and refill over time 
 | LIST ManagedClusters | 60 requests | 1 request / 1 second | ResourceGroup |
 | PUT AgentPool | 20 requests | 1 request / 1 minute | AgentPool |
 | PUT ManagedCluster | 20 requests | 1 request / 1 minute | ManagedCluster |
-| GET ManagedCluster | 60 requests | 1 request / 1 second | ManagedCluster |
+| GET ManagedCluster | 60 requests | 1 request 1 second | Managed Cluster |
 | GET Operation Status | 200 requests | 2 requests / 1 second | Subscription |
 | All Other APIs | 60 requests | 1 request / 1 second | Subscription |
 
 > [!NOTE]
 > The ManagedClusters and AgentPools buckets are counted separately for the same AKS cluster.
 
-If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. 
+If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. Clients that use a bursty API call pattern should ensure that the Retry-After can be handled appropriately.
 
 ## Provisioned infrastructure
 
