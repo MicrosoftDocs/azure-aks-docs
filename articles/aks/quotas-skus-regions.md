@@ -31,7 +31,7 @@ The buckets have a fixed size (also known as a burst rate) and refill over time 
 | LIST ManagedClusters | 60 requests | 1 request / 1 second | ResourceGroup |
 | PUT AgentPool | 20 requests | 1 request / 1 minute | AgentPool |
 | PUT ManagedCluster | 20 requests | 1 request / 1 minute | ManagedCluster |
-| GET ManagedCluster | 60 requests | 1 request 1 second | Managed Cluster |
+| GET ManagedCluster | 60 requests | 1 request / 1 second | Managed Cluster |
 | GET Operation Status | 200 requests | 2 requests / 1 second | Subscription |
 | All Other APIs | 60 requests | 1 request / 1 second | Subscription |
 
