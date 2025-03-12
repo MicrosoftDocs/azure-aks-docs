@@ -85,18 +85,18 @@ When you create a cluster using the Azure portal, you can choose a preset config
 
 |                              | Production Standard |Dev/Test|Production Economy|Production Enterprise|
 |------------------------------|---------|--------|--------|--------|
-|**System node pool node size**|Standard_D8ds_v5 |Standard_DS2_v2|Standard_D8ds_v5|Standard_D16ds_v5|
-|**System node pool autoscaling range**|2-5 nodes|2-100 nodes|2-5 nodes|2-5 nodes|
+|**System node pool node size**|Standard_D8ds_v5|Standard_D4ds_v5|Standard_D8ds_v5|Standard_D16ds_v5|
+|**System node pool autoscaling range**|2-5 nodes|2-5 nodes|2-5 nodes|2-5 nodes|
 |**User node pool node size**|Standard_D8ds_v5|-|Standard_D8as_v4|Standard_D8ds_v5|
-|**User node pool autoscaling range**|2-100 nodes|-|-|2-100 nodes|
+|**User node pool autoscaling range**|2-100 nodes|-|0-25 nodes|2-100 nodes|
 |**Private cluster**|-|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Availability zones**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Azure Policy**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Azure Monitor**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Secrets store CSI driver**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
-|**Network configuration**|Azure CNI|Kubenet|Azure CNI|Azure CNI|
-|**Network configuration**|Calico|Calico|Calico|Calico|
-|**Authentication and Authorization**|Local accounts with Kubernetes RBAC|Local accounts with Kubernetes RBAC|Azure AD Authentication with Azure RBAC|Azure AD authentication with Azure RBAC|
+|**Network configuration**|Azure CNI Overlay|Azure CNI Overlay|Azure CNI Overlay|Azure CNI Overlay|
+|**Network configuration**|None|None|None|None|
+|**Authentication and Authorization**|Local accounts with Kubernetes RBAC|Local accounts with Kubernetes RBAC|Microsoft Entra ID Authentication with Azure RBAC|Microsoft Entra ID authentication with Azure RBAC|
 
 
 ## Next steps
