@@ -91,7 +91,7 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
         --rights Send
     ```
 
-4. Get the Azure Service Bus credentials for later use using the [`az servicebus namespace show`][az-servicebus-namespace-show] and [`az servicebus queue authorization-rule keys list`][az-servicebus-queue-authorization-rule-keys-list] commands.
+4. Get the Azure Service Bus credentials for later use by using the [`az servicebus namespace show`][az-servicebus-namespace-show] and [`az servicebus queue authorization-rule keys list`][az-servicebus-queue-authorization-rule-keys-list] commands.
 
     ```azurecli-interactive
     az servicebus namespace show --name $SB_NS --resource-group $RG_NAME --query name -o tsv
@@ -123,7 +123,7 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
         -Rights Send
     ```
 
-4. Get the Azure Service Bus credentials for later use using the [`Get-AzServiceBusNamespace`][get-az-service-bus-namespace] and [`Get-AzServiceBusKey`][get-az-service-bus-key] cmdlets.
+4. Get the Azure Service Bus credentials for later use by using the [`Get-AzServiceBusNamespace`][get-az-service-bus-namespace] and [`Get-AzServiceBusKey`][get-az-service-bus-key] cmdlets.
 
     ```azurepowershell-interactive
     (Get-AzServiceBusNamespace -Name $SB_NS -ResourceGroupName $RG_NAME).Name 
