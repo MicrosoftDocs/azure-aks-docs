@@ -90,9 +90,12 @@ Control plane metrics are stored in an Azure Monitor workspace in the cluster's 
 1. In the [Azure portal](https://portal.azure.com), navigate to your AKS cluster resource.
 2. From the service menu, click on *Monitor*, select **Monitor Settings**.
 
-    :::image type="content" source="media/monitor-control-plane-metrics/insights-azmon.png" alt-text="Screenshot of the Azure Monitor workspace." lightbox="media/monitor-control-plane-metrics/insights-azmon.png":::
+    :::image type="content" source="media/monitor-control-plane-metrics/azmon-settings.png" alt-text="Screenshot of the Azure Monitor workspace." lightbox="media/monitor-control-plane-metrics/azmon-settings.png":::
 3. Navigate to the Azure monitor workspace  linked to the cluster.
+    :::image type="content" source="media/monitor-control-plane-metrics/monitor-workspace.png" alt-text="Screenshot of the linked  Azure monitor workspace " lightbox="media/monitor-control-plane-metrics/monitor-workspace.png":::
+    
 4. You can query the metrics from the Prometheus Explorer under *Managed Prometheus* of the Azure Monitor Workspace
+    :::image type="content" source="media/monitor-control-plane-metrics/workspace-promexplorer.png" alt-text="Screenshot of the Prometheues Explorer experience" lightbox="media/monitor-control-plane-metrics/workspace-promexplorer.png":::
 
 > [!NOTE]
 > AKS provides dashboard templates to help you view and analyze your control plane telemetry data in real time. If you're using Azure managed Grafana to visualize the data, you can import the following dashboards:
