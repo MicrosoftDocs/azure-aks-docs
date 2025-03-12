@@ -27,9 +27,13 @@ The buckets have a fixed size and refill over time at a fixed rate. Each throttl
 
 | API request | Bucket size | Refill rate | Resource |
 |---|---|---|---|
-| LIST | 500 requests | 1 requests / 1 second | Subscription |
-| PUT | 20 requests | 1 request / 1 minute | AgentPools |
-| PUT | 20 requests | 1 request / 1 minute | ManagedClusters |
+| LIST ManagedClusters | 500 requests | 1 requests / 1 second | Subscription |
+| LIST ManagedClusters | 60 requests | 1 request / 1 second | ResourceGroup |
+| PUT | 20 requests | 1 request / 1 minute | AgentPool |
+| PUT | 20 requests | 1 request / 1 minute | ManagedCluster |
+| GET | 60 requests | 1 request / 1 second | ManagedCluster |
+| GET | 200 requests | 2 requests / 1 second | Subscription |
+| ALL OTHER APIS | 60 requests | 1 request / 1 second | Subscription |
 
 > [!NOTE]
 > The ManagedClusters and AgentPools buckets are counted separately for the same AKS cluster.
