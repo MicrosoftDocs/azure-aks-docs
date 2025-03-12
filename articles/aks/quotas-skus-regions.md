@@ -32,7 +32,7 @@ The buckets have a fixed size and refill over time at a fixed rate. Each throttl
 | PUT | 20 requests | 1 request / 1 minute | AgentPool |
 | PUT | 20 requests | 1 request / 1 minute | ManagedCluster |
 | GET | 60 requests | 1 request / 1 second | ManagedCluster |
-| GET | 200 requests | 2 requests / 1 second | Subscription |
+| GET Operation Status | 200 requests | 2 requests / 1 second | Subscription |
 | All Other APIs | 60 requests | 1 request / 1 second | Subscription |
 
 > [!NOTE]
