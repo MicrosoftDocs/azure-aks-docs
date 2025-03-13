@@ -25,7 +25,7 @@ AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttli
 
 The buckets have a fixed size (also known as a burst rate) and refill over time at a fixed rate (also konwn as a sustained rate). Each throttling limit is in effect at the regional level for the specified resource in that region. For example, in the below table, a Subscription can call ListManagedClusters a maximum of 60 times (burst rate) at once for each ResourceGroup, but can continue to make 1 call every second thereafter (sustained rate).
 
-| API request | Bucket size | Refill rate | Resource |
+| API request | Bucket size | Refill rate | Scope |
 |---|---|---|---|
 | LIST ManagedClusters | 500 requests | 1 requests / 1 second | Subscription |
 | LIST ManagedClusters | 60 requests | 1 request / 1 second | ResourceGroup |
