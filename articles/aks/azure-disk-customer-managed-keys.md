@@ -57,7 +57,7 @@ az keyvault create --name myKeyVaultName --resource-group myResourceGroup --loca
 Replace *myKeyVaultName* with the name of your key vault. You also need a *key* stored in Azure Key Vault to complete the following steps. Either store your existing Key in the Key Vault you created on the previous steps, or [generate a new key][key-vault-generate] and replace *myKeyName* with the name of your key.
 
 > [!NOTE]
-> For cross-account access support for customer-managed encryption keys, you will need to create the DiskEncryptionSet for cross-tenant customer-managed keys as detailed in [this guide](https://learn.microsoft.com/en-us/azure/virtual-machines/disks-cross-tenant-customer-managed-keys?tabs=azure-cli#create-a-disk-encryption-set). The remaining storage class configuration is the same as normal customer managed keys.
+> For cross-account access support for customer-managed encryption keys, you will need to create the DiskEncryptionSet for cross-tenant customer-managed keys as detailed in [this guide](/azure/virtual-machines/disks-cross-tenant-customer-managed-keys?tabs=azure-cli#create-a-disk-encryption-set). The remaining storage class configuration is the same as normal customer managed keys.
 
 ```azurecli-interactive
 # Retrieve the Key Vault Id and store it in a variable
@@ -120,7 +120,7 @@ az aks nodepool add --cluster-name $CLUSTER_NAME --resource-group $RG_NAME --nam
 ```
 
 > [!IMPORTANT]
-> The DiskEncryptionSet we previously applied to the storage class will only encrypt new PVCs. Encrypting existing PVCs will require first detaching before using the Azure Disks API/CLI to update the underlying disks, as shown in [this related guide](https://learn.microsoft.com/en-us/azure/virtual-machines/linux/disks-enable-customer-managed-keys-cli#encrypt-existing-managed-disks).
+> The DiskEncryptionSet we previously applied to the storage class will only encrypt new PVCs. Encrypting existing PVCs will require first detaching before using the Azure Disks API/CLI to update the underlying disks, as shown in [this related guide](/azure/virtual-machines/linux/disks-enable-customer-managed-keys-cli#encrypt-existing-managed-disks).
 
 ## Encrypt your AKS cluster data disk
 
