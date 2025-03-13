@@ -52,7 +52,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     SECRET=$(openssl rand -base64 32)
     echo requirepass $SECRET > /tmp/valkey-password-file.conf
     echo primaryauth $SECRET >> /tmp/valkey-password-file.conf
-    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name valkey-password-file --file /tmp/valkey-password-file.conf --output table
+    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name valkey-password-file --file /tmp/valkey-password-file.conf --output none
     rm /tmp/valkey-password-file.conf
     az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $userAssignedObjectID --secret-permissions get --output table
     ```
@@ -68,7 +68,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
     export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
 
-    ```
+    ```clear
 :::zone-end
 
 3. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.

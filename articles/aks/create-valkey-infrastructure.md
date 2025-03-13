@@ -229,7 +229,7 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
         node_pools = {
           valkey = {
             name       = "valkey"
-            vm_size    = "Standard_D2ds_v4"
+            vm_size    = "Standard_DS4_v2"
             node_count = 3
             zones      = [1, 2, 3]
             os_type    = "Linux"
@@ -238,17 +238,27 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
     ```
     
 
-3. Run the Terraform commands to deploy the infrastructure. In this step, we have set the secrets that will be used when deploying Valkey in the next step.
+3. Run the Terraform commands to deploy the infrastructure. In this step, we have set required variables that will be used when deploying Valkey in the next step.
 
     ```bash
     terraform init
+    export MY_RESOURCE_GROUP_NAME=myResourceGroup-rg
+    export MY_LOCATION=centralus
     SECRET=$(openssl rand -base64 32)
     export TF_VAR_valkey_password=${SECRET}
+    export TF_VAR_location=${MY_LOCATION}
+    export TF_VAR_resource_group_name=${MY_RESOURCE_GROUP_NAME}
     terraform apply -var-file="valkey.tfvars"
     ```
 
 > [!NOTE]
 > In some cases, the container registry tasks that import Valkey images to the container registry might fail. This is a well-known issue. Refer to [container-registry-task] for more information. In most cases, retrying resolves the problem.
+
+4. Run the following command to export the Terraform output values as environment variables in the terminal to use them in the next steps:
+    ```bash
+    export MY_ACR_REGISTRY=$(terraform output -raw acr_registry_name)
+    export MY_CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+    ```
 
 :::zone-end
 
