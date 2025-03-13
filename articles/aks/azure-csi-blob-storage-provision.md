@@ -7,7 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.topic: concept-article
 ms.subservice: aks-storage
-ms.date: 01/10/2025
+ms.date: 03/13/2025
 ---
 
 # Create and use a volume with Azure Blob storage in Azure Kubernetes Service (AKS)
@@ -266,7 +266,7 @@ The following table includes parameters you can use to define a persistent volum
 |--- | **Following parameters are only for NFS VNet setting** | --- | --- | --- |
 |vnetResourceGroup | Specify VNet resource group hosting virtual network. | myResourceGroup | No | If empty, driver uses the `vnetResourceGroup` value specified in the Azure cloud config file.|
 |vnetName | Specify the virtual network name. | aksVNet | No | If empty, driver uses the `vnetName` value specified in the Azure cloud config file.|
-|subnetName | Specify the existing subnet name of the agent node. | aksSubnet | No | If empty, driver uses the `subnetName` value in Azure cloud config file. |
+|subnetName | Specify the existing subnet name of the agent node. | aksSubnet | No | if empty, driver will update all the subnets under the cluster virtual network. |
 |--- | **Following parameters are only for feature: blobfuse<br> [Managed Identity and Service Principal Name authentication](https://github.com/Azure/azure-storage-fuse#environment-variables)** | --- | --- |--- |
 |volumeAttributes.AzureStorageAuthType | Specify the authentication type. | `Key`, `SAS`, `MSI`, `SPN` | No | `Key`|
 |volumeAttributes.AzureStorageIdentityClientID | Specify the Identity Client ID. |  | No ||
