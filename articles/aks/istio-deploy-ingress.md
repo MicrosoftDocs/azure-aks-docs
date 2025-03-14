@@ -138,7 +138,7 @@ NAME                                TYPE           CLUSTER-IP    EXTERNAL-IP    
 aks-istio-ingressgateway-internal   LoadBalancer   10.0.182.240  <IP>      15021:30764/TCP,80:32186/TCP,443:31713/TCP   87s
 ```
 
-After enabling the ingress gateway, applications need to be exposed through the gateway and routing rules need to be configured accordingly. Use the following manifest to map the sample deployment's ingress to the Istio ingress gateway:
+After enabling the ingress gateway, applications need to be exposed through the gateway, and routing rules need to be configured accordingly. Use the following manifest to map the sample deployment's ingress to the Istio ingress gateway:
 
 ```bash
 kubectl apply -f - <<EOF
@@ -271,10 +271,10 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 ## Next steps
 
 > [!NOTE]
-> If there are issues encountered with deploying the Istio ingress gateway or configuring ingress traffic routing, refer to [article on troubleshooting Istio add-on ingress gateways][istio-ingress-tsg]
+> If there are any issues encountered with deploying the Istio ingress gateway or configuring ingress traffic routing, refer to [article on troubleshooting Istio add-on ingress gateways][istio-ingress-tsg]
 
 * [Secure ingress gateway for Istio service mesh add-on][istio-secure-gateway]
-* [Scale ingress gateway Horizontal Pod Autoscaler][istio-scaling-guide]
+* [Configure ingress gateway Horizontal Pod Autoscaler (HPA)][istio-scaling-guide]
 
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-secure-gateway]: istio-secure-gateway.md
