@@ -10,6 +10,8 @@ ms.service: azure-kubernetes-service
 
 # Enable the Kubernetes Event-driven Autoscaling (KEDA) add-on on an existing AKS cluster using the Azure portal
 
+[!INCLUDE [change value callout](./includes/keda/change-value-callout.md)]
+
 This article shows you how to enable the Kubernetes Event-driven Autoscaling (KEDA) add-on on an existing Azure Kubernetes Service (AKS) cluster using the Azure portal.
 
 [!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]
