@@ -7,4 +7,4 @@ ms.author: qpetraroia
 ---
 
 > [!IMPORTANT]
-> The KEDA add-on for AKS does not currently support modifying the CPU requests or limits for the Metrics Server or Operator. Please keep this limitation in mind when using the add-on. If you have any questions, feel free to reach out [here](https://github.com/Azure/AKS/issues).
+> The KEDA add-on for AKS does not currently support modifying the CPU requests or limits for the Metrics Server or Operator. Keep this limitation in mind when using the add-on. If you have any questions, feel free to reach out [here](https://github.com/Azure/AKS/issues).
