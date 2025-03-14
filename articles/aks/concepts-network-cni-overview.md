@@ -34,7 +34,6 @@ In overlay networks, pods can communicate with each other directly. Traffic leav
 Azure Kubernetes Service provides the following CNI plugins for overlay networking:
 
 - [Azure CNI Overlay][azure-cni-overlay], the recommended CNI plugin for most scenarios.
-- [kubenet][kubenet], the legacy overlay model CNI.
 
 ### Flat networks
 
