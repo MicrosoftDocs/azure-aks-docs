@@ -8,9 +8,9 @@ ms.date: 08/07/2023
 ms.author: shasb
 ---
 
-# Azure Kubernetes Service (AKS) external or internal ingresses for Istio service mesh add-on deployment
+# Deploy ingress gateways for Istio service mesh add-on for Azure Kubernetes Service (AKS)
 
-This article shows you how to deploy external or internal ingresses for Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
+This article shows you how to deploy external or internal ingresses for the Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
 > [!NOTE]
 > When performing a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-the-ingress-gateway) of the Istio add-on, another deployment for the external / internal gateways will be created for the new control plane revision.
@@ -39,9 +39,6 @@ Observe from the output that the external IP address of the service is a publicl
 NAME                                TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                                      AGE
 aks-istio-ingressgateway-external   LoadBalancer   10.0.10.249   <EXTERNAL_IP>   15021:30705/TCP,80:32444/TCP,443:31728/TCP   4m21s
 ```
-
-> [!NOTE]
-> Customizations to IP address on internal and external gateways aren't supported yet. IP address customizations on the ingress specifications are reverted back by the Istio add-on.It's planned to allow these customizations in the Gateway API implementation for the Istio add-on in future.
 
 Applications aren't accessible from outside the cluster by default after enabling the ingress gateway. To make an application accessible, map the sample deployment's ingress to the Istio ingress gateway using the following manifest:
 
@@ -242,14 +239,14 @@ The add-on supports health probe annotations for ports 80 and 443. Learn more ab
 
 ### External Traffic Policy
 
-The Istio add-on supports customization of `spec.externalTrafficPolicy` in the Kubernetes service for the ingress gateway. Setting the `externalTrafficPolicy` to `Local` preserves the client source IP preservation at the Istio ingress gateway and avoid a second hop in the traffic path to the backend ingress gateway pods.
+The add-on supports customization of `spec.externalTrafficPolicy` in the Kubernetes service for the ingress gateway. Setting the `externalTrafficPolicy` to `Local` preserves the client source IP at the Istio ingress gateway and avoids a second hop in the traffic path to the backend ingress gateway pods.
 
 ```bash
 kubectl patch service aks-istio-ingressgateway-external -n aks-istio-ingress --type merge --patch '{"spec": {"externalTrafficPolicy": "Local"}}'
 ```
 
 > [!NOTE]
-> While modifying the `spec.externalTrafficPolicy` to `Local` preserves the client source IP and avoids a second hop for the LoadBalancer service, it risks potentially imbalanced traffic spreading. Read the [Kubernetes docs][kubernetes-docs-load-balancer] to understand the tradeoffs between the different `externalTrafficPolicy` settings. 
+> Modifying the `spec.externalTrafficPolicy` to `Local` risks potentially imbalanced traffic spreading. Before applying this change, it is recommended to read the [Kubernetes docs][kubernetes-docs-load-balancer] to understand the tradeoffs between the different `externalTrafficPolicy` settings.
 
 ## Delete resources
 

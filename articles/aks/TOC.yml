@@ -860,7 +860,7 @@
       items:
         - name: Istio service mesh AKS add-on
           items:            
-            - name: General - Istio Add-On Deployment and Configuration
+            - name: Deployment and Configuration
               items:
                 - name: About Istio
                   href: istio-about.md
@@ -870,15 +870,15 @@
                   href: istio-native-sidecar.md
                 - name: Configure Istio service mesh add-on
                   href: istio-meshconfig.md
-                - name: Istio service mesh add-on support policy
-                  href: istio-support-policy.md
                 - name: Upgrade Istio service mesh add-on
                   href: istio-upgrade.md
+                - name: Istio service mesh add-on support policy
+                  href: istio-support-policy.md
             - name: Traffic Management
               items:
                 - name: Ingress
                   items:
-                    - name: Deploy external or internal Istio Ingress
+                    - name: Deploy external or internal Istio ingress
                       href: istio-deploy-ingress.md
                     - name: Deploy secure Istio ingress gateway
                       href: istio-secure-gateway.md
