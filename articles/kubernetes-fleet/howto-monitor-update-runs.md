@@ -142,7 +142,7 @@ Now that you understand the Azure Resource Graph data available you can use [Azu
 
     :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-05.png" alt-text="Screenshot showing how to set the Alert logic to Greater than 0 with a check every 5 minutes." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-05.png":::
 
-1. Select **Next: Actions >** or the **Actions** tab to define the actions to take when the alert logic is matched. You can select a range of channels and integration options which are covered in detail in the [Azure Monitor action group documentation][monitor-set-up-action-group].
+1. Select **Next: Actions >** or the **Actions** tab to define the actions to take when the alert logic is matched. You can select a range of channels and integration options which are covered in detail in the [Azure Monitor action groups documentation][monitor-set-up-action-group].
 
 1. To save the alert rule, select the **Details** tab and choose an appropriate Azure Subscription and resources group. Set the details for the alert rule by choosing a **Severity**, providing an **alert rule name**, optional description, and then select the **Azure Region** to save the alert to. Finally, set the **Identity** you wish to use to run the log query.
 
