@@ -123,7 +123,7 @@ Now that you understand the Azure Resource Graph data available you can use [Azu
 1. In the **Logs** blade, enter the Resource Graph query you wish to use to trigger an alert. For our sample we alert on any failed update run and include the update run start time.
 
     > [!NOTE]
-    > For Azure Monitor log search queries you must prefix the `aksresources` table with `arg("").`. The remaining syntax is unchanged.
+    > For Azure Monitor log search queries you must prefix the `aksresources` table with `arg("").`. The remaining syntax is unchanged from the queries used earlier in this article.
 
     ```kusto
     arg("").aksresources
