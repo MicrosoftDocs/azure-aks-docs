@@ -24,7 +24,7 @@ This guide covers how to configure and manually execute update runs.
 
 * Read the [conceptual overview of this feature](./concepts-update-orchestration.md), which provides an explanation of update strategies, runs, stages, and groups referenced in this guide.
 
-* You must have a Fleet resource with one or more member cluster. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
+* You must have a Fleet resource with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
 
 * Set the following environment variables:
 

@@ -1,6 +1,6 @@
 ---
 title: "Configure alerting of Update Runs for Azure Kubernetes Fleet Manager"
-description: See how to setup alerts for Azure Kubernetes Fleet Manager Update Runs using Azure Resource Graph and Azure Monitor.
+description: See how to set up alerts for Azure Kubernetes Fleet Manager Update Runs using Azure Resource Graph and Azure Monitor.
 ms.topic: how-to
 ms.date: 03/05/2025
 author: sjwaight
@@ -22,22 +22,22 @@ In order to query your update run data, you need to use queries written using th
 
 To learn how to work with Azure Resource Graph and Fleet update run data, let's use the Azure Resource Graph Explorer to query update run data.
 
-* Start by opening the [Azure Resource Graph Explorer](https://ms.portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure portal.
+1. Start by opening the [Azure Resource Graph Explorer](https://ms.portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure portal.
 
-* Select **Table** and then expand **aksresources**. Fleet Manager's resources have the prefix `microsoft.containerservice/fleets`.
+1. Select **Table** and then expand **aksresources**. Fleet Manager's resources have the prefix `microsoft.containerservice/fleets`.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-arg-explorer.png" alt-text="A view of the Azure Resource Graph Explorer with the aksresources Table expanded." lightbox="./media/monitor-update-runs/monitor-update-run-arg-explorer.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-azure-resource-graph-explorer.png" alt-text="Screenshot of the Azure Resource Graph Explorer with the aksresources Table expanded." lightbox="./media/monitor-update-runs/monitor-update-run-azure-resource-graph-explorer.png":::
 
-* In the **Table** pane, select **aksresources** to add it to the explorer query box.
+1. In the **Table** pane, select **aksresources** to add it to the explorer query box.
 
-* Now select **microsoft.containerservices/fleets/updateruns**. Your explorer query box should look like the following KQL sample.
+1. Now select **microsoft.containerservices/fleets/updateruns**. Your explorer query box should look like the following KQL sample.
 
     ```kusto
     aksresources
     | where type == "microsoft.containerservice/fleets/updateruns"
     ```
 
-* Run the query to retrieve all update run data held in the Azure Resource Graph for the current Azure Subscription. Update run data is held as a JSON object in the `properties` field of the result. You can view a sample of this object [later in this article](#sample-update-run-json-properties-result).
+1. Run the query to retrieve all update run data held in the Azure Resource Graph for the current Azure Subscription. Update run data is held as a JSON object in the `properties` field of the result. You can view a sample of this object [later in this article](#sample-update-run-json-properties-result).
 
 ### Filter to a Fleet Manager instance
 
@@ -45,7 +45,7 @@ When you build a Kusto query against Azure Resource Graph, you can use the follo
 
 You can add a manual filter to your explorer query to select your Fleet Manager instance as follows.
 
-* In the explorer query add the additional where clause manually, replacing the `your-fleet-name` placeholder with the name of your Fleet Manager.
+1. In the explorer query add the additional where clause manually, replacing the `your-fleet-name` placeholder with the name of your Fleet Manager.
 
     ```kusto
     aksresources
@@ -53,17 +53,17 @@ You can add a manual filter to your explorer query to select your Fleet Manager 
     | where id contains ('Microsoft.ContainerService/fleets/your-fleet-name')
     ```
 
-* Run the query to see the result set only includes update runs for the specified Fleet Manager.
+1. Run the query to see the result set only includes update runs for the specified Fleet Manager.
 
 ### Filter by update run status
 
 Now that you know how to find update runs associated with your Fleet Manager you can add further filters so results are based on the state of the update run.
 
-* Update your explorer query by expanding the `microsoft.containerservice/fleets/updateruns` node, followed by `status` and `status`. 
+1. Update your explorer query by expanding the `microsoft.containerservice/fleets/updateruns` node, followed by `status` and `status`. 
 
-* Select `state` so that the property is added to your explorer query.
+1. Select `state` so that the property is added to your explorer query.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png" alt-text="Selecting a field in an update run in Azure Resource Graph Explorer to add it to the query." lightbox="./media/monitor-update-runs/monitor-update-run-arg-explorer-add-filter.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-query-add-filter.png" alt-text="Screenshot of selecting a field in an update run in Azure Resource Graph Explorer to add it to the query." lightbox="./media/monitor-update-runs/monitor-update-run-query-add-filter.png":::
 
     Your explorer query should be similar to the following sample.
 
@@ -74,9 +74,9 @@ Now that you know how to find update runs associated with your Fleet Manager you
     | where properties['status']['status']['state'] == "INSERT_VALUE_HERE"
     ```
 
-* Replace the `INSERT_VALUE_HERE` placeholder with an appropriate [update run status][rest-api-statuses] value. For example, to receive only failed update runs set this value to `Failed`.
+1. Replace the `INSERT_VALUE_HERE` placeholder with an appropriate [update run status][rest-api-statuses] value. For example, to receive only failed update runs set this value to `Failed`.
    
-* Run the query and you receive only update runs for your Fleet Manager that have a matching status.
+1. Run the query and you receive only update runs for your Fleet Manager that have a matching status.
 
 ## Advanced filtering
 
@@ -104,21 +104,21 @@ aksresources
 
 ## Building alerts 
 
-Now that you understand the Azure Resource Graph data available you can use [Azure Monitor alert rules][monitor-log-search] with log search to define when you wish to recieve alerts.
+Now that you understand the Azure Resource Graph data available you can use [Azure Monitor alert rules][monitor-log-search] with log search to define when you wish to receive alerts.
 
 1. Start by opening the [Azure Monitor blade](https://portal.azure.com/#view/Microsoft_Azure_Monitoring/AzureMonitoringBrowseBlade/~/overview) in the Azure portal.
 
 1. Select **Alerts** in the left navigation, followed by **+ Create**, then **Alert rule**.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-01.png" alt-text="The Alert rule option is highlighted in the Create menu for Azure Monitor Alerts." lightbox="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-01.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-01.png" alt-text="Screenshot of the Alert rule option highlighted in the Create menu for Azure Monitor Alerts." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-01.png":::
 
 1. On the **Create an alert rule** screen, select **+ Select scope** and in the **Select a resource** blade, navigate to your Fleet Manager resource by selecting the Azure Subscription and resource group it resides in.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-02.png" alt-text="Selecting the scope to create a new alert rule." lightbox="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-02.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-02.png" alt-text="Screenshot showing the selecting of the scope to create a new alert rule." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-02.png":::
 
 1. Select the **Condition** tab and in the **Signal name** select list, choose **Custom log search**. The **Logs** blade loads on the right of the screen.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-03.png" alt-text="The Condition tab is loaded and custom log search is selected in the signal name drop-down." lightbox="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-03.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-03.png" alt-text="Screenshot showing the Condition tab loaded and custom log search selected in the signal name drop-down." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-03.png":::
 
 1. In the **Logs** blade, enter the Resource Graph query you wish to use to trigger an alert. For our sample we alert on any failed update run and include the update run start time.
 
@@ -136,17 +136,17 @@ Now that you understand the Azure Resource Graph data available you can use [Azu
 
 1. Once you're happy with the results being returned by the query, select **Continue Editing Alert** to close the **Logs** blade. The query is automatically inserted into the **Search query** box. You can continue to edit it here if you wish.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-04.png" alt-text="The query text is automatically inserted into the Search query box for the Create alert rule screen." lightbox="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-04.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-04.png" alt-text="Screenshot showing how the query text is automatically inserted into the Search query box for the Create alert rule screen." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-04.png":::
 
 1. Scroll down until you see **Alert logic**, using the form field to define the criteria you wish to trigger the alert. It's recommended you use a **Static** Threshold, setting the value to **0**, and the **Operator** to **Greater than**. Adjust the frequency to suit your preferred time period.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-05.png" alt-text="Set the Alert logic to Greater than 0 with a check every 5 minutes." lightbox="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-05.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-05.png" alt-text="Screenshot showing how to set the Alert logic to Greater than 0 with a check every 5 minutes." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-05.png":::
 
-1. Select **Next: Actions >** or the **Actions** tab to define the actions to take when the alert logic is matched. You can select a range of channels and integration options which are covered in detail in the [Azure Monitor setup action group documentation][monitor-setup-action-group].
+1. Select **Next: Actions >** or the **Actions** tab to define the actions to take when the alert logic is matched. You can select a range of channels and integration options which are covered in detail in the [Azure Monitor action group documentation][monitor-set-up-action-group].
 
 1. To save the alert rule, select the **Details** tab and choose an appropriate Azure Subscription and resources group. Set the details for the alert rule by choosing a **Severity**, providing an **alert rule name**, optional description, and then select the **Azure Region** to save the alert to. Finally, set the **Identity** you wish to use to run the log query.
 
-    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-06.png" alt-text="Saving the alert rule to a resource group while setting its alert level and name." lightbox="./media/monitor-update-runs/monitor-update-run-setup-alert-rule-06.png":::
+    :::image type="content" source="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-06.png" alt-text="Screenshot showing how to save an Alert rule to a resource group while setting its alert level and name." lightbox="./media/monitor-update-runs/monitor-update-run-set-up-alert-rule-06.png":::
 
 1. Select the **Tags** tab to add any tags you wish, before selecting **Review + create** to create the new alert rule.
 
@@ -315,4 +315,4 @@ The following sample represents the `properties` payload held in Azure Resource 
 [kusto-mv-expand]: /kusto/query/mv-expand-operator
 [kusto-json-parse]: /kusto/query/parse-json-function
 [monitor-log-search]: /azure/azure-monitor/alerts/alerts-create-log-alert-rule
-[monitor-setup-action-group]: /azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
+[monitor-set-up-action-group]: /azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal
