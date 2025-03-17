@@ -8,7 +8,7 @@ ms.date: 08/07/2023
 ms.author: shasb
 ---
 
-# Deploy ingress gateways for Istio service mesh add-on for Azure Kubernetes Service (AKS)
+# Deploy ingress gateways for Istio service mesh add-on for Azure Kubernetes Service
 
 This article shows you how to deploy external or internal ingresses for the Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
