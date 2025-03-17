@@ -23,6 +23,12 @@ For more information on Istio and the service mesh add-on, see [Istio-based serv
     ```azurecli-interactive
     az aks mesh get-revisions --location <location> -o table
     ```
+* Istio CRDs are not automatically cleaned up on uninstall. Ensure Istio CRDs from any previous installations have been deleted:
+
+    ```bash
+    kubectl delete crd $(kubectl get crd -A | grep "istio.io" | awk '{print $1}')
+    ```
+
 * Note that if you choose to use any `istioctl` CLI commands, you will need to include a flag to point to the add-on installation of Istio: `--istioNamespace aks-istio-system`
 
 ### Set environment variables
