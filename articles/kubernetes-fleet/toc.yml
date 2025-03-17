@@ -52,7 +52,7 @@
           href: update-orchestration.md
         - name: Automate updates of Kubernetes and node images
           href: update-automation.md
-        - name: Monitor and alerting for update runs
+        - name: Configure monitoring and alerting of update runs
           href: howto-monitor-update-runs.md
     - name: Workload propagation across multiple clusters
       items:
