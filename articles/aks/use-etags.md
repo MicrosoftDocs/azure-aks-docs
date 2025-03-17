@@ -1,5 +1,5 @@
 ---
-title: Enhancing Concurrency Control with Entity Tags (eTags) in Azure Kubernetes Service (preview)
+title: Enhancing Concurrency Control with Entity Tags (eTags) in Azure Kubernetes Service (Preview)
 description: Learn how to leverage eTags (Entity Tags) to enable concurrency control and avoid racing conditions or overwriting scenarios. 
 ms.topic: how-to
 ms.date: 02/28/2025
