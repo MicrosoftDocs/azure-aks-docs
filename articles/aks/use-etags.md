@@ -40,7 +40,7 @@ There are two options for applying eTags through headers:
     ```
 ### Find existing ETags
 
-You can do either a `LIST` or a `GET` call to your cluster or node pool to see the existing ETag. An ETag will look something like the example below:
+You can do either a `LIST` or a `GET` call to your cluster or node pool to see the existing ETag. An ETag will look something like the following example:
 ```
 "agentPoolProfiles": [
     {"eTag": "5e5ffdce-356b-431b-b050-81b45eef2a12"}
