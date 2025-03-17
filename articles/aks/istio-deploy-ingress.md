@@ -239,14 +239,14 @@ The add-on supports health probe annotations for ports 80 and 443. Learn more ab
 
 ### External Traffic Policy
 
-The add-on supports customization of `spec.externalTrafficPolicy` in the Kubernetes service for the ingress gateway. Setting the `externalTrafficPolicy` to `Local` preserves the client source IP at the Istio ingress gateway and avoids a second hop in the traffic path to the backend ingress gateway pods.
+The add-on supports customization of `.spec.externalTrafficPolicy` in the Kubernetes service for the ingress gateway. Setting `.spec.externalTrafficPolicy` to `Local` preserves the client source IP at the Istio ingress gateway and avoids a second hop in the traffic path to the backend ingress gateway pods.
 
 ```bash
 kubectl patch service aks-istio-ingressgateway-external -n aks-istio-ingress --type merge --patch '{"spec": {"externalTrafficPolicy": "Local"}}'
 ```
 
 > [!NOTE]
-> Modifying the `spec.externalTrafficPolicy` to `Local` risks potentially imbalanced traffic spreading. Before applying this change, it is recommended to read the [Kubernetes docs][kubernetes-docs-load-balancer] to understand the tradeoffs between the different `externalTrafficPolicy` settings.
+> Modifying the `.spec.externalTrafficPolicy` to `Local` risks potentially imbalanced traffic spreading. Before applying this change, it is recommended to read the [Kubernetes docs][kubernetes-docs-load-balancer] to understand the tradeoffs between the different `externalTrafficPolicy` settings.
 
 ## Delete resources
 
