@@ -237,7 +237,7 @@ The following annotations can be added to the Kubernetes service for the externa
 
 The add-on supports health probe annotations for ports 80 and 443. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
 
-### External Traffic Policy
+### External traffic policy
 
 The add-on supports customization of `.spec.externalTrafficPolicy` in the Kubernetes service for the ingress gateway. Setting `.spec.externalTrafficPolicy` to `Local` preserves the client source IP at the Istio ingress gateway and avoids a second hop in the traffic path to the backend ingress gateway pods.
 
