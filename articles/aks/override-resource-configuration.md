@@ -22,7 +22,7 @@ AKS updates the add-on pod request/limit values to a reasonable ratio (1:2) and 
 
 ## Prerequisites
 
-* Review the [supported AKS managed add-ons](./addon-autoscaling.md#supported-aks-managed-add-ons) and [limitations](./addon-autoscaling.md#limitations) for this feature.
+* Review the [supported AKS managed add-ons](./addon-autoscaling.md#supported-aks-add-ons) and [limitations](./addon-autoscaling.md) for this feature.
 * You need an AKS cluster enabled with the add-on autoscaling feature. If you don't have one, see [Enable add-on autoscaling on your AKS cluster (Preview)](./addon-autoscaling.md).
 
 ## Override resource annotations
@@ -137,7 +137,7 @@ spec:
 
 ## Troubleshooting
 
-1. Make sure the AKS managed add-on supports the add-on autoscaling feature. For more information, see [Supported AKS managed add-ons](./addon-autoscaling.md#supported-aks-managed-add-ons).
+1. Make sure the AKS managed add-on supports the add-on autoscaling feature. For more information, see [Supported AKS managed add-ons](./addon-autoscaling.md#supported-aks-add-ons).
 2. Verify that the `kubernetes.azure.com/override-requests-limits` annotation in the Deployment or DaemonSet is set to "enabled".
 3. Verify that the `kubernetes.azure.com/override-min-max` annotation in the VPA custom resource is set to "enabled".
 4. Verify that the `kubernetes.azure.com/override-update-mode` annotation in the VPA custom resource is set to "enabled".

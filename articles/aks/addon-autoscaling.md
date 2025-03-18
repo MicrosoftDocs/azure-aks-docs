@@ -5,12 +5,12 @@ ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 03/14/2025
+ms.date: 03/18/2025
 ---
 
 # Enable cost optimized add-on autoscaling on your Azure Kubernetes Service (AKS) cluster (Preview)
 
-This article provides an overview of cost optimized add-on autoscaling in Azure Kubernetes Service (AKS). With add-on autoscaling, you can easily manage workloads requiring CPU and memory settings different than the default values by overriding the resource configuration. This feature ensures that resources aren't overly allocated to add-on pods, increasing cost savings and cluster efficiency.
+This article provides an overview of cost optimized add-on autoscaling in Azure Kubernetes Service (AKS). With add-on autoscaling, you can easily manage workloads with CPU and memory requirements different from the default values by overriding the resource configuration. This feature ensures that resources aren't overly allocated to add-on pods, increasing cost savings and cluster efficiency.
 
 ## Overview
 
@@ -46,7 +46,7 @@ The following AKS managed add-ons support the add-on autoscaling feature:
 * The Azure CLI version 2.60.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) and [register the add-on autoscaling preview feature](#register-the-add-on-autoscaling-preview-feature).
 
-[!INCLUDE [preview features callout]((~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md))]
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -87,6 +87,9 @@ The following AKS managed add-ons support the add-on autoscaling feature:
 ## Enable add-on autoscaling on an AKS cluster
 
 When enabling the add-on, the AKS cluster automatically installs the [VPA add-on](./vertical-pod-autoscaler.md). The [AKS add-ons that support the add-on autoscaling feature](#supported-aks-add-ons) have different enablement behavior.
+
+> [!NOTE]
+> If you're using Bicep, ARM templates, or Terraform, set `VerticalPodAutoscaler` to `"True"` and `AddonAutoscaling` to `"enabled"`.
 
 ### Enable add-on autoscaling on a new cluster
 
