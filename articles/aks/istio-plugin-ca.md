@@ -199,13 +199,6 @@ You may need to periodically rotate the certificate authorities for security or 
 
     From the example outputs shown in this article, you can observe that we moved from Root A (used when enabling the addon) to Root B.
 
-
-1. You can either again wait for 24 hours or force a restart of all the workloads. Forcing a restart makes the workloads obtain new leaf certificates from the new root CA immediately.
-
-    ```bash
-    kubectl rollout restart deployment <deployment name> -n <deployment namespace>
-    ```
-
 [akv-quickstart]: /azure/key-vault/general/quick-create-cli
 [akv-addon]: ./csi-secrets-store-driver.md
 [akv-rbac-guide]: /azure/key-vault/general/rbac-guide
