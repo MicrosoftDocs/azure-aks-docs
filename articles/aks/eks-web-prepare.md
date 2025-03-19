@@ -6,10 +6,6 @@ ms.author: paolos
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
-ms.custom: 
-    - migration
-    - aws-to-azure
-    - eks-to-aks
 ---
 
 # Prepare to deploy Amazon Web Services (AWS) web application workload to Azure
