@@ -52,17 +52,17 @@
           href: learn/quick-kubernetes-deploy-terraform.md
     - name: Create a Linux-based AKS Automatic Cluster
       items:
-      - name: From a code repository
-        href: automatic/quick-automatic-from-code.md
-      - name: Inside a managed virtual network
-        href: automatic/quick-automatic-managed-network.md
-      - name: Inside a custom virtual network
-        expanded: true
-        items:
-        - name: Public cluster
-          href: automatic/quick-automatic-custom-network.md
-        - name: Private cluster
-          href: automatic/quick-automatic-private-custom-network.md
+        - name: From a code repository
+          href: automatic/quick-automatic-from-code.md
+        - name: Inside a managed virtual network
+          href: automatic/quick-automatic-managed-network.md
+        - name: Inside a custom virtual network
+          expanded: true
+          items:
+            - name: Public cluster
+              href: automatic/quick-automatic-custom-network.md
+            - name: Private cluster
+              href: automatic/quick-automatic-private-custom-network.md
     - name: Create a Windows-based AKS Cluster
       items:
         - name: Use the Azure CLI
@@ -91,7 +91,7 @@
     - name: 3 - Create Kubernetes cluster
       href: tutorial-kubernetes-deploy-cluster.md
     - name: 4 - Deploy Azure Container Storage
-      href: tutorial-kubernetes-deploy-azure-container-storage.md      
+      href: tutorial-kubernetes-deploy-azure-container-storage.md
     - name: 5 - Deploy containerized application
       href: tutorial-kubernetes-deploy-application.md
     - name: 6 - Use PaaS services
@@ -341,10 +341,10 @@
           href: resize-cluster.md
         - name: Configure private clusters
           items:
-           - name: Create a private cluster
-             href: private-clusters.md
-           - name: Access a private cluster remotely
-             href: access-private-cluster.md
+            - name: Create a private cluster
+              href: private-clusters.md
+            - name: Access a private cluster remotely
+              href: access-private-cluster.md
         - name: Integration
           items:
             - name: Integrate ACR with an AKS cluster
@@ -470,7 +470,7 @@
                 - name: Overview
                   href: ray-overview.md
                 - name: Configure and deploy a Ray cluster
-                  href: deploy-ray.md 
+                  href: deploy-ray.md
             - name: Deploy an AI model with the AI toolchain operator
               href: ai-toolchain-operator.md
             - name: Deploy data and ML pipelines with Flyte
@@ -766,32 +766,32 @@
               href: csi-migrate-in-tree-volumes.md
         - name: Block storage
           items:
-              - name: Azure Disks
-                items:
-                    - name: Provision Azure Disk storage
-                      href: azure-csi-disk-storage-provision.md
-                    - name: Azure Disks CSI driver
-                      href: azure-disk-csi.md
-                    - name: Use Azure Premium SSD v2 disks
-                      href: use-premium-v2-disks.md
-                    - name: Use Azure ultra disks
-                      href: use-ultra-disks.md
-                    - name: Bring your own keys for disks
-                      href: azure-disk-customer-managed-keys.md
-                    - name: Move a persistent volume between clusters
-                      href: csi-disk-move-subscriptions.md
-                    - name: Use Azure Container Storage with Azure Disks
-                      href: /azure/storage/container-storage/use-container-storage-with-managed-disks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-              - name: Azure Elastic SAN
-                items:
-                    - name: Use Azure Container Storage with Elastic SAN
-                      href: /azure/storage/container-storage/use-container-storage-with-elastic-san?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-                    - name: Use Kubernetes iSCSI CSI driver
-                      href: /azure/storage/elastic-san/elastic-san-connect-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-              - name: Ephemeral Disk
-                items:
-                    - name: Use Azure Container Storage with Ephemeral Disk
-                      href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Azure Disks
+              items:
+                - name: Provision Azure Disk storage
+                  href: azure-csi-disk-storage-provision.md
+                - name: Azure Disks CSI driver
+                  href: azure-disk-csi.md
+                - name: Use Azure Premium SSD v2 disks
+                  href: use-premium-v2-disks.md
+                - name: Use Azure ultra disks
+                  href: use-ultra-disks.md
+                - name: Bring your own keys for disks
+                  href: azure-disk-customer-managed-keys.md
+                - name: Move a persistent volume between clusters
+                  href: csi-disk-move-subscriptions.md
+                - name: Use Azure Container Storage with Azure Disks
+                  href: /azure/storage/container-storage/use-container-storage-with-managed-disks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Azure Elastic SAN
+              items:
+                - name: Use Azure Container Storage with Elastic SAN
+                  href: /azure/storage/container-storage/use-container-storage-with-elastic-san?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+                - name: Use Kubernetes iSCSI CSI driver
+                  href: /azure/storage/elastic-san/elastic-san-connect-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Ephemeral Disk
+              items:
+                - name: Use Azure Container Storage with Ephemeral Disk
+                  href: /azure/storage/container-storage/use-container-storage-with-local-disk?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
         - name: Shared file storage
           items:
             - name: Azure Files storage
@@ -802,16 +802,16 @@
                   href: azure-csi-files-storage-provision.md
             - name: Azure NetApp Files for AKS
               items:
-              - name: Configure Azure NetApp Files for AKS
-                href: azure-netapp-files.md
-              - name: Provision Azure NetApp Files NFS volumes for AKS
-                href: azure-netapp-files-nfs.md
-              - name: Provision Azure NetApp Files SMB volumes for AKS
-                href: azure-netapp-files-smb.md
-              - name: Provision Azure NetApp Files dual-protocol volumes for AKS
-                href: azure-netapp-files-dual-protocol.md
-              - name: Azure Files and Azure NetApp Files comparison
-                href: /azure/storage/files/storage-files-netapp-comparison?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+                - name: Configure Azure NetApp Files for AKS
+                  href: azure-netapp-files.md
+                - name: Provision Azure NetApp Files NFS volumes for AKS
+                  href: azure-netapp-files-nfs.md
+                - name: Provision Azure NetApp Files SMB volumes for AKS
+                  href: azure-netapp-files-smb.md
+                - name: Provision Azure NetApp Files dual-protocol volumes for AKS
+                  href: azure-netapp-files-dual-protocol.md
+                - name: Azure Files and Azure NetApp Files comparison
+                  href: /azure/storage/files/storage-files-netapp-comparison?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
             - name: Azure Blob storage
               items:
                 - name: Azure Blob CSI driver
@@ -848,10 +848,10 @@
           href: kubelet-logs.md
         - name: Cost analysis
           items:
-          - name: Enable cost analysis on your cluster
-            href: cost-analysis.md
-          - name: Monitor and optimize idle costs
-            href: cost-analysis-idle-costs.md
+            - name: Enable cost analysis on your cluster
+              href: cost-analysis.md
+            - name: Monitor and optimize idle costs
+              href: cost-analysis-idle-costs.md
         - name: Network Observability
           items:
             - name: Container Network Observability
@@ -859,7 +859,7 @@
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on
-          items:            
+          items:
             - name: Deployment and Configuration
               items:
                 - name: About Istio
@@ -960,16 +960,16 @@
           href: upgrade-cluster.md
         - name: Perform manual upgrades
           items:
-          - name: Upgrade an AKS cluster
-            href: upgrade-aks-cluster.md
-          - name: Orchestrate upgrade across multiple clusters
-            href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-          - name: Upgrade node OS images
-            href: node-image-upgrade.md
-          - name: Customize node surge upgrade
-            href: upgrade-aks-cluster.md#customize-node-surge-upgrade
-          - name: Process node OS updates
-            href: node-updates-kured.md
+            - name: Upgrade an AKS cluster
+              href: upgrade-aks-cluster.md
+            - name: Orchestrate upgrade across multiple clusters
+              href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Upgrade node OS images
+              href: node-image-upgrade.md
+            - name: Customize node surge upgrade
+              href: upgrade-aks-cluster.md#customize-node-surge-upgrade
+            - name: Process node OS updates
+              href: node-updates-kured.md
         - name: Configure automatic upgrades
           items:
             - name: Automatically upgrade an AKS cluster
@@ -1064,7 +1064,7 @@
           href: /azure/azure-arc/kubernetes/tutorial-use-gitops-flux2?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: AI and machine learning
       items:
-        - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS) 
+        - name: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
           href: open-ai-quickstart.md
         - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
           href: open-ai-secure-access-quickstart.md
@@ -1092,34 +1092,34 @@
           href: /azure/developer/ansible/aks-configure-clusters?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: AKS for Amazon EKS professionals
       items:
-      - name: Migrate EKS event-driven workloads
-        items:
-        - name: Overview
-          href: eks-edw-overview.md
-        - name: Understand platform differences
-          href: eks-edw-understand.md
-        - name: Rearchitect for AKS
-          href: eks-edw-rearchitect.md
-        - name: Refactor app
-          href: eks-edw-refactor.md
-        - name: Prepare for deployment
-          href: eks-edw-prepare.md
-        - name: Deploy to Azure
-          href: eks-edw-deploy.md
-      - name: Migrate EKS web application workloads
-        items:
-        - name: Overview
-          href: eks-web-overview.md
-        - name: Understand platform differences
-          href: eks-web-understand.md
-        - name: Rearchitect for AKS
-          href: eks-web-rearchitect.md
-        - name: Refactor app
-          href: eks-web-refactor.md
-        - name: Prepare for deployment
-          href: eks-web-prepare.md
-        - name: Deploy to Azure
-          href: eks-web-deploy.md
+        - name: Migrate EKS event-driven workloads
+          items:
+            - name: Overview
+              href: eks-edw-overview.md
+            - name: Understand platform differences
+              href: eks-edw-understand.md
+            - name: Rearchitect for AKS
+              href: eks-edw-rearchitect.md
+            - name: Refactor app
+              href: eks-edw-refactor.md
+            - name: Prepare for deployment
+              href: eks-edw-prepare.md
+            - name: Deploy to Azure
+              href: eks-edw-deploy.md
+        - name: Migrate EKS web application workloads
+          items:
+            - name: Overview
+              href: eks-web-overview.md
+            - name: Understand platform differences
+              href: eks-web-understand.md
+            - name: Rearchitect for AKS
+              href: eks-web-rearchitect.md
+            - name: Refactor app
+              href: eks-web-refactor.md
+            - name: Prepare for deployment
+              href: eks-web-prepare.md
+            - name: Deploy to Azure
+              href: eks-web-deploy.md
 - name: FAQ
   href: faq.yml
 - name: Reference
