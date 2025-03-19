@@ -89,7 +89,7 @@ We recommend deploying wasmCloud into a dedicated Kubernetes namespace.
 
     ```output
     NAME                             READY   STATUS    RESTARTS   AGE
-wasmcloud-host-f9d67b8cf-lvsq6   2/2     Running   0          84s
+    wasmcloud-host-f9d67b8cf-lvsq6   2/2     Running   0          84s
     ```
 
 6. Verify that you can connect to the wasmCloud host using `wash`:
@@ -112,7 +112,7 @@ wasmcloud-host-f9d67b8cf-lvsq6   2/2     Running   0          84s
 
     ```output
       Host ID                                                      Friendly name           Uptime (seconds)
-  ND2G4FRXLBCV3YL52OD4NRSS66Z5YOR3JOSL3Q7T5I6ZJM4EII3Y73CZ     frosty-resonance-6227   312
+      ND2G4FRXLBCV3YL52OD4NRSS66Z5YOR3JOSL3Q7T5I6ZJM4EII3Y73CZ     frosty-resonance-6227   312
     ```
 
 ## Deploy a wasmCloud application
