@@ -32,7 +32,7 @@ To proceed, you must have an AKS cluster with [Advanced Container Networking Ser
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompass:
 * **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./container-network-observability-concepts.md).
 
-* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./container-network-security-concepts.md).
+* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 #### [**Cilium**](#tab/cilium)
 
@@ -62,7 +62,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [Container Network Security](./container-network-security-concepts.md) feature is not available for Non-cilium clusters
+> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature is not available for Non-cilium clusters
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -83,7 +83,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./container-network-security-concepts.md) feature.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
 
 
 > [!NOTE]
