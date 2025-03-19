@@ -767,7 +767,7 @@
                 - name: FQDN Filtering with Advanced Container Networking Services (ACNS)
                   href: how-to-apply-fqdn-filtering-policies.md
                 - name: L7 Policy with Advanced Container Networking Services (ACNS)
-                  href: how-to-apply-l7-policy.md
+                  href: how-to-apply-l7-policies.md
     - name: Storage
       items:
         - name: CSI storage drivers

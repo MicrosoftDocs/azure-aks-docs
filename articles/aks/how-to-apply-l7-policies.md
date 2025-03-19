@@ -12,7 +12,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 
 # Set up L7 Polices with Advanced Container Networking Services (Public Preview)
 
-This article shows you how to set up Advanced Container Networking Services with Container Network Security feature in AKS clusters.
+This article shows you how to set up L7 policy with Advanced Container Networking Services in AKS clusters.
 
 ## Prerequisites
 
@@ -33,17 +33,17 @@ az extension add --name aks-preview
 az extension update --name aks-preview
 ```
 
-### Register the `AdvancedNetworkingPreview` feature flag
+### Register the `AdvancedNetworkingL7PolicyPreview` feature flag
 
-Register the `AdvancedNetworkingPreview` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
+Register the `AdvancedNetworkingL7PolicyPreview` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
 
 ```azurecli-interactive 
-az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"
+az feature register --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
 ```
 Verify successful registration using the [`az feature show`](/cli/azure/feature#az_feature_show) command. It takes a few minutes for the registration to complete.
 
 ```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingPreview"
+az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetworkingL7PolicyPreview"
 ```
 
 Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
