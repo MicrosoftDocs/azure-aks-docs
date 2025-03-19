@@ -120,8 +120,8 @@ The `PickN` placement type is the most flexible option and allows for placement 
 
 When creating this type of placement the following cluster affinity types can be specified:
 
-- **requiredDuringSchedulingIgnoredDuringExecution**: as this policy is required during scheduling, it **filters** the clusters based on the specified criteria.
-- **preferredDuringSchedulingIgnoredDuringExecution**: as this policy is preferred, but not required during scheduling, it **ranks** clusters based on specified criteria.
+* **requiredDuringSchedulingIgnoredDuringExecution**: as this policy is required during scheduling, it **filters** the clusters based on the specified criteria.
+* **preferredDuringSchedulingIgnoredDuringExecution**: as this policy is preferred, but not required during scheduling, it **ranks** clusters based on specified criteria.
 
 You can set both required and preferred affinities. Required affinities prevent placement to clusters that don't match, and preferred affinities provide ordering of valid clusters.
 
@@ -379,7 +379,6 @@ spec:
 
 For more information, see the [open-source Fleet documentation on rollout strategy][fleet-rollout].
 
-
 ## Determine placement status
 
 The Fleet scheduler updates details and status on placement decisions onto the `ClusterResourcePlacement` object. The output includes the following information:
@@ -391,11 +390,11 @@ The following example shows a `ClusterResourcePlacement` that deployed the `test
 
  You can view this information using the `kubectl describe crp <name>` command.
 
-```azurecli-interactive
+```bash
 kubectl describe crp crp-1
 ```
 
-```
+```output
 Name:         crp-1
 Namespace:
 Labels:       <none>
@@ -505,12 +504,14 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 
 ## Next steps
 
-* [Set up Kubernetes resource propagation from hub cluster to member clusters](./quickstart-resource-propagation.md).
-* [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md)
+* [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+* [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
+* [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
+* [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
 
 <!-- LINKS - external -->
 [fleet-github]: https://github.com/Azure/fleet
 [envelope-object]: https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md#envelope-object
 [crp-topo]: https://github.com/Azure/fleet/blob/main/docs/howtos/topology-spread-constraints.md
-[fleet-rollout]: https://github.com/Azure/fleet/blob/main/docs/howtos/crp.md#rollout-strategy
-[fleet-tolerations]: https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md#tolerations
+[fleet-rollout]: ./concepts-rollout-strategy.md
+[fleet-tolerations]: ./use-taints-tolerations.md
