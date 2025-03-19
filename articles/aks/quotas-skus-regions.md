@@ -23,18 +23,22 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttling algorithm to limit certain AKS [resource provider](/azure/azure-resource-manager/management/resource-providers-and-types) APIs. This ensures the performance of the service and promotes fair usage of the service for all customers.
 
-The buckets have a fixed size and refill over time at a fixed rate. Each throttling limit is in effect at the regional level for the specified resource in that region.
+The buckets have a fixed size (also known as a burst rate) and refill over time at a fixed rate (also konwn as a sustained rate). Each throttling limit is in effect at the regional level for the specified resource in that region. For example, in the below table, a Subscription can call ListManagedClusters a maximum of 60 times (burst rate) at once for each ResourceGroup, but can continue to make 1 call every second thereafter (sustained rate).
 
-| API request | Bucket size | Refill rate | Resource |
+| API request | Bucket size | Refill rate | Scope |
 |---|---|---|---|
-| LIST | 500 requests | 1 requests / 1 second | Subscription |
-| PUT | 20 requests | 1 request / 1 minute | AgentPools |
-| PUT | 20 requests | 1 request / 1 minute | ManagedClusters |
+| LIST ManagedClusters | 500 requests | 1 requests / 1 second | Subscription |
+| LIST ManagedClusters | 60 requests | 1 request / 1 second | ResourceGroup |
+| PUT AgentPool | 20 requests | 1 request / 1 minute | AgentPool |
+| PUT ManagedCluster | 20 requests | 1 request / 1 minute | ManagedCluster |
+| GET ManagedCluster | 60 requests | 1 request / 1 second | Managed Cluster |
+| GET Operation Status | 200 requests | 2 requests / 1 second | Subscription |
+| All Other APIs | 60 requests | 1 request / 1 second | Subscription |
 
 > [!NOTE]
 > The ManagedClusters and AgentPools buckets are counted separately for the same AKS cluster.
 
-If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. 
+If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. Clients that use a bursty API call pattern should ensure that the Retry-After can be handled appropriately. To learn more about Retry-After, please see the [following article](https://developer.mozilla.org/docs/Web/HTTP/Headers/Retry-After). Specifically, AKS will use ```delay-seconds``` to specify the retry.
 
 ## Provisioned infrastructure
 

@@ -20,12 +20,12 @@ Announcements about the releases of new minor revisions or patches to the Istio-
 Istio add-on allows upgrading the minor revision using [canary upgrade process][istio-canary-upstream]. When an upgrade is initiated, the control plane of the new (canary) revision is deployed alongside the initial (stable) revision's control plane. You can then manually roll over data plane workloads while using monitoring tools to track the health of workloads during this process. If you don't observe any issues with the health of your workloads, you can complete the upgrade so that only the new revision remains on the cluster. Else, you can roll back to the previous revision of Istio.
 
 Available upgrades depend on whether the current Istio revision and AKS cluster version are supported:
-- You can upgrade to the **next supported revision (`n+1`)** or skip one and upgrade to **`n+2`**, as long as both are supported and compatible with the cluster version.  
-- If both your current revision (`n`) and the next revision (`n+1`) are unsupported, you can only upgrade to the **nearest supported revision (`n+2` or higher)**, but not beyond it.  
-- If the cluster version and Istio revision are both unsupported, the cluster version must be upgraded before an Istio upgrade can be initiated.  
+- You can upgrade to the **next supported revision (`n+1`)** or skip one and upgrade to **`n+2`**, as long as both are supported and compatible with the cluster version.
+- If both your current revision (`n`) and the next revision (`n+1`) are unsupported, you can only upgrade to the **nearest supported revision (`n+2` or higher)**, but not beyond it.
+- If the cluster version and Istio revision are both unsupported, the cluster version must be upgraded before an Istio upgrade can be initiated.
 
 > [!NOTE]
-> Upgrading from an unsupported revision can be error-prone, so it is recommended to keep your Istio revision up-to-date at all times. Refer to the [Istio add-on support calendar][istio-support-calendar] for estimated release and end-of-life dates and the [upstream Istio release notes][upstream-release-notes] for the new revision for notable changes.
+> Once an AKS version or mesh revision falls outside the support window, upgrading either version becomes error-prone. While such upgrades are **allowed** to recover to a supported version, **the upgrade process and the out-of-support versions themselves are both not supported by Microsoft**. We strongly recommend keeping AKS version and mesh revision up to date to avoid running into unsupported scenarios. Refer to the [Istio add-on support calendar][istio-support-calendar] for estimated release and end-of-life dates and the [upstream Istio release notes][upstream-release-notes] for the new revision for notable changes.
 
 The following example illustrates how to upgrade from revision `asm-1-22` to `asm-1-23` with all workloads in the `default` namespace. The steps are the same for all minor upgrades and may be used for any number of namespaces.
 
@@ -47,14 +47,14 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
     A canary upgrade means the 1.23 control plane is deployed alongside the 1.22 control plane. They continue to coexist until you either complete or roll back the upgrade.
 
-1. Optionally, revision tags may be used to roll over the data plane to the new revision without needing to manually relabel each namespace. Manually relabeling namespaces when moving them to a new revision can be tedious and error-prone. [Revision tags][istio-revision-tags] solve this problem by serving as stable identifiers that point to revisions. 
-    
+1. Optionally, revision tags may be used to roll over the data plane to the new revision without needing to manually relabel each namespace. Manually relabeling namespaces when moving them to a new revision can be tedious and error-prone. [Revision tags][istio-revision-tags] solve this problem by serving as stable identifiers that point to revisions.
+
    Rather than relabeling each namespace, a cluster operator can change the tag to point to a new revision. All namespaces labeled with that tag are updated at the same time. However, you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.
 
    To use revision tags during an upgrade:
 
     1. [Install istioctl CLI][install-istioctl]
-    
+
     1. Create a revision tag for the initial revision. In this example, we name it `prod-stable`:
        ```bash
        istioctl tag set prod-stable --revision asm-1-22 --istioNamespace aks-istio-system
@@ -118,9 +118,9 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
     1. If using revision tags, overwrite the `prod-stable` tag itself to change its mapping:
        ```bash
-       istioctl tag set prod-stable --revision asm-1-23 --istioNamespace aks-istio-system --overwrite 
+       istioctl tag set prod-stable --revision asm-1-23 --istioNamespace aks-istio-system --overwrite
        ```
-    
+
        Verify the tag-to-revision mappings:
        ```bash
        istioctl tag list
@@ -183,14 +183,14 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
     The `prod-canary` revision tag can be removed:
     ```bash
-    istioctl tag remove prod-canary --istioNamespace aks-istio-system 
+    istioctl tag remove prod-canary --istioNamespace aks-istio-system
     ```
 
 1. If [mesh configuration][meshconfig] was previously set up for the revisions, you can now delete the ConfigMap for the revision that was removed from the cluster during complete/rollback.
 
 ### Minor revision upgrades with the ingress gateway
 
-If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways remains unchanged throughout the course of an upgrade. 
+If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways remains unchanged throughout the course of an upgrade.
 
 Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, the ingress gateway pods of both revisions serve incoming traffic.
 
@@ -198,8 +198,8 @@ Thus, during the canary upgrade, when two revisions exist simultaneously on the 
 
 If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or the ingress gateways][istio-scale-hpa], note the following behavior for how HPA settings are applied across both revisions to maintain consistency during a canary upgrade:
 
-- If you update the HPA spec before initiating an upgrade, the settings from the existing (stable) revision will be applied to the HPAs of the canary revision when the new control plane is installed. 
-- If you update the HPA spec while a canary upgrade is in progress, the HPA spec of the stable revision will take precedence and be applied to the HPA of the canary revision. 
+- If you update the HPA spec before initiating an upgrade, the settings from the existing (stable) revision will be applied to the HPAs of the canary revision when the new control plane is installed.
+- If you update the HPA spec while a canary upgrade is in progress, the HPA spec of the stable revision will take precedence and be applied to the HPA of the canary revision.
   - If you update the HPA of the stable revision during an upgrade, the HPA spec of the canary revision will be updated to reflect the new settings applied to the stable revision.
   - If you update the HPA of the canary revision during an upgrade, the HPA spec of the canary revision will be reverted to the HPA spec of the stable revision.
 

@@ -54,6 +54,7 @@ The following are considerations with this preview of Confidential Containers:
 * The policy generator only supports pods that use IPv4 addresses.
 * Pod environment variables based on ConfigMaps and Secrets can't be changed after the pod is deployed.
 * Pod termination logs aren't supported. While pods write termination logs to `/dev/termination-log` or to a custom location if specified in the pod manifest, the host/kubelet can't read those logs. Changes from the pod to that file aren't reflected on the host.
+* Confidential Containers currently only supports Azure Linux.
 
 ## Resource allocation overview
 

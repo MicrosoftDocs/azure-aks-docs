@@ -52,7 +52,7 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
   ```
 
 > [!NOTE]
-> Auto-upgrade triggered update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance) which explains how update runs handle member clusters that have been configured with planned maintenance windows.
+> Auto-upgrade triggered update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the AKS cluster level. For more information, see [planned maintenance across multiple member clusters](./concepts-update-orchestration.md#planned-maintenance) which explains how update runs handle member clusters with configured planned maintenance windows.
 
 ## Create auto-upgrade profiles  
 
@@ -94,7 +94,7 @@ Use the [`az fleet autoupgradeprofile create`][az-fleet-autoupgradeprofile-creat
 You can create a disabled auto-upgrade profile by passing the `--disabled` argument when using the `create` command. In order to enable the auto-upgrade profile, you must reissue the entire `create` command and omit the `--disabled` argument.
 
 > [!NOTE]
-> Disabling an auto-upgrade profile that has an in-progress update run will not affect the existing update run which will continue, however no further update runs will be generated until the profile is re-enabled.
+> Disabling an auto-upgrade profile that has an in-progress update run won't affect the existing update run which continues, however no further update runs are generated until the profile is re-enabled.
 
 #### Stable channel Kubernetes updates
 
@@ -181,7 +181,7 @@ az fleet autoupgradeprofile create \
 
     :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane for viewing available auto-upgrade profiles." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-01.png":::
  
-1. Select the desired auto-upgrade profile to view its configuration.
+1. To view its configuration, select the desired auto-upgrade profile.
 
     :::image type="content" source="./media/auto-upgrade/view-auto-upgrade-profile-02.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal pane show the configuration of a single auto-upgrade profile." lightbox="./media/auto-upgrade/view-auto-upgrade-profile-02.png":::
 
@@ -233,7 +233,7 @@ az fleet autoupgradeprofile delete \
 ---
 
 > [!NOTE]
-> Deleting an auto-upgrade profile for an in-progress update run will not affect the existing update run which will continue.
+> Deleting an auto-upgrade profile for an in-progress update run won't affect the existing update run which continues.
 
 ## Validate auto-upgrade
 
@@ -260,6 +260,10 @@ az aks show \
 Once update runs finish, you can rerun these commands and view the updated versions that are deployed.
 
 ---
+
+## Next steps
+
+* [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
 
 <!-- INTERNAL LINKS -->
 [az-fleet-autoupgradeprofile-create]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-create
