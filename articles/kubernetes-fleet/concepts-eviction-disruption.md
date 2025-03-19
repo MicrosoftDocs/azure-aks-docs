@@ -62,7 +62,7 @@ After applying this CRP, we can [inspect the placement status][placement-status]
 
 Let's say the placement picked two clusters named `member-cluster-01` and `member-cluster-02`, and we determine we didn't want the resources deployed on `member-cluster-02` and wish to remove it.
 
-1. Create a `NoSchedule` taint to ensure the member cluster isn't picked again by placement requests. You can read more about using taints on the [taints documentation][fleet-taints].
+1. Create a `NoSchedule` taint to block placement requests for the member cluster. You can read more about using taints on the [taints documentation][fleet-taints].
 
     ```yaml
     apiVersion: placement.kubernetes-fleet.io/v1
@@ -93,20 +93,20 @@ Let's say the placement picked two clusters named `member-cluster-01` and `membe
       clusterName: member-cluster-02
     ```
 
-1. The specified resources are removed from `member-cluster-02` cluster. You can check that the removal succeed as follows:
+1. Check the specified resources are removed from `member-cluster-02` cluster:
 
     ```bash
     kubectl get crpe eviction-sample
     ```
     
-    Which results in the following output.
+    Which results in the following output, with `EXECUTED` showing `True`.
     
     ```output
     NAME            VALID   EXECUTED
     test-eviction   True    True 
     ```
     
-Now you understand how to force removal of placed resources from clusters, let's see how you can protect key resources from eviction.
+Now you understand how to force the removal of placed resources from clusters, let's see how you can protect key resources from eviction.
 
 ## Protect against eviction (preview)
 
@@ -158,7 +158,7 @@ NAME            VALID   EXECUTED
 test-eviction   True    False
 ```
 
-To confirm that the eviction is blocked by the disruption budget, isse the same `kubectl` command and add `-o yaml`. The message in the response shows the eviction is blocked by the configured `ClusterResourcePlacementDisruptionBudget`.
+To confirm the disruption budget blocked the eviction, issue the same `kubectl` command and add `-o yaml`. The `message` value shows the disruption budget blocked the eviction.
 
 ```yaml
 status:
