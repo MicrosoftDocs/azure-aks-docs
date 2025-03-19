@@ -683,8 +683,8 @@
               href: azure-cni-powered-by-cilium.md
             - name: Use kubenet
               href: configure-kubenet.md
-            - name: Use kubenet with dual-stack networking
-              href: configure-kubenet-dual-stack.md
+            - name: Use AKS with dual-stack networking
+              href: configure-dual-stack.md
             - name: Use Azure CNI
               href: configure-azure-cni.md
             - name: Bring your own CNI
