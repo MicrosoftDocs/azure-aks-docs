@@ -517,6 +517,8 @@
           href: optimize-aks-costs.md
         - name: Enable cost analysis on your cluster
           href: cost-analysis.md
+        - name: Operate cost-optimized AKS at scale
+          href: operate-cost-optimized-scale.md
     - name: Cluster management
       items:
         - name: Azure portal Kubernetes resource view
@@ -681,8 +683,8 @@
               href: azure-cni-powered-by-cilium.md
             - name: Use kubenet
               href: configure-kubenet.md
-            - name: Use kubenet with dual-stack networking
-              href: configure-kubenet-dual-stack.md
+            - name: Use AKS with dual-stack networking
+              href: configure-dual-stack.md
             - name: Use Azure CNI
               href: configure-azure-cni.md
             - name: Bring your own CNI
