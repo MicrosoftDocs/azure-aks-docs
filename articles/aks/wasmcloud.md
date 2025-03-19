@@ -7,9 +7,9 @@ ms.date: 11/07/2024
 ---
 
 # Use wasmCloud on Azure Kubernetes Service (AKS)
-[WebAssembly](https://webassembly.org/) components are a new way to build and deploy applications. They are designed to be a portable compilation target for programming languages and can run in a variety of environments. WebAssembly components are sandboxed by design and expose their functionality using defined interfaces. Components differ from containers in that they single binaries that are much smaller and faster to start. The full description of the model and what a component is can be found in the [specification](https://github.com/WebAssembly/component-model).
+[WebAssembly](https://webassembly.org/) components are a new way to build and deploy applications. They're designed to be a portable compilation target for programming languages and can run in various environments. WebAssembly components are sandboxed by design and expose their functionality using defined interfaces. Components differ from containers in that they single binaries that are much smaller and faster to start. Find the full description of the model and what a component in the [specification](https://github.com/WebAssembly/component-model).
 
-[wasmCloud][wasmcloud] is a CNCF project designed to fast-track the development, deployment and orchestration of WebAssembly components. This document details instructions on how to deploy wasmCloud on an Azure Kubernetes Service (AKS) cluster.
+[wasmCloud][wasmcloud] is a Cloud Native Computing Foundation (CNCF) project designed to fast-track the development, deployment, and orchestration of WebAssembly components. This document details instructions on how to deploy wasmCloud on an Azure Kubernetes Service (AKS) cluster.
 
 ## Before you begin
 
@@ -24,10 +24,10 @@ ms.date: 11/07/2024
 
 ## Deploy wasmCloud
 
-To deploy wasmCloud on an AKS cluster, you will need to install the all in one Helm chart into your cluster. This installs the following services into a single namespace:
+To deploy wasmCloud on an AKS cluster, you need to install the all in one Helm chart into your cluster. This installs the following services into a single namespace:
 * [NATS]: NATS provides the backbone for all communication between components in wasmCloud.
-* [wadm] -- the wasmCloud Application Manager, otherwise known as wadm is the orchestrator for managing applications running on top of wasmCloud.
-* [the wasmCloud Operator][wasmcloud-operator] -- the wasmCloud Operator is a Kubernetes operator that manages the lifecycle of wasmCloud hosts.
+* [wadm]: the wasmCloud Application Manager, otherwise known as wadm is the orchestrator for managing applications running on top of wasmCloud.
+* [the wasmCloud Operator][wasmcloud-operator]: the wasmCloud Operator is a Kubernetes operator that manages the lifecycle of wasmCloud hosts.
 
 We recommend deploying wasmCloud into a dedicated Kubernetes namespace.
 
@@ -100,7 +100,7 @@ wasmcloud-host-f9d67b8cf-lvsq6   2/2     Running   0          84s
     ```azurecli-interactive
     kubectl port-forward nats-0 4222
     ```
-    This forwards all traffic on port 4222 locally to the NATS pod running in your cluster. You must have this port forwarded in order to connect to wasmCloud using `wash`.
+    This command forwards all traffic on port 4222 locally to the NATS pod running in your cluster. You must have this port forwarded in order to connect to wasmCloud using `wash`.
 
     In your original shell, run the following command with `wash` to verify that your wasmCloud host is running:
 
@@ -117,9 +117,9 @@ wasmcloud-host-f9d67b8cf-lvsq6   2/2     Running   0          84s
 
 ## Deploy a wasmCloud application
 
-Now that you have wasmCloud running on your AKS cluster, you can deploy a wasmCloud application. A wasmCloud application is a collection of WebAssembly components that are orchestrated by the wasmCloud Application Manager (wadm).
+Now that wasmCloud is running on your AKS cluster, you can deploy a wasmCloud application. A wasmCloud application is a collection of WebAssembly components that are orchestrated by the wasmCloud Application Manager (wadm).
 
-1. Create a wasmCloud application manifest file. This file describes compoents that comprise your application. Save the following yaml file as `hello-world.yaml`.
+1. Create a wasmCloud application manifest file. This file describes components that comprise your application. Save the following yaml file as `hello-world.yaml`.
 
     ```yaml
     apiVersion: core.oam.dev/v1beta1
@@ -197,7 +197,7 @@ Now that you have wasmCloud running on your AKS cluster, you can deploy a wasmCl
     kubectl port-forward port-forward deployment/wasmcloud-host 8080
     ```
 
-    This forwards all traffic on port 8080 locally to the wasmCloud host running in your cluster. You must have this port forwarded in order to connect to wasmCloud using `curl`.
+    This command forwards all traffic on port 8080 locally to the wasmCloud host running in your cluster. You must have this port forwarded in order to connect to wasmCloud using `curl`.
 
     In your original shell, run the following command to invoke the http component:
 
@@ -218,10 +218,10 @@ Now that you have wasmCloud running on your AKS cluster, you can deploy a wasmCl
     kubectl delete namespace wasmcloud
     ```
 
-    This removes the wasmCloud components from your AKS cluster.
+    This command removes the wasmCloud components from your AKS cluster.
 
 ## Next steps
-You can continue to learn by following the [wasmCloud Quickstart Guide][wasmcloud-quickstart], which walks you though creating a WebAssembly component from scratch, using using different wasmCloud capabilities and scaling your application.
+You can continue to learn by following the [wasmCloud Quickstart Guide][wasmcloud-quickstart], which walks you though creating a WebAssembly component from scratch, using different wasmCloud capabilities and scaling your application.
 
 <!--- LINKS - external --->
 [wasmcloud]: https://wasmcloud.com/
