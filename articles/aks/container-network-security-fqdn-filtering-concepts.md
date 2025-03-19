@@ -1,5 +1,5 @@
 ---
-title: Container Network Security with Advanced Container Networking Services (ACNS)
+title: Fqdn filtering with Advanced Container Networking Services (ACNS)
 description: An overview of Advanced Container Networking Services' Security capabilities on Azure Kubernetes Service (AKS).
 author: sf-msft
 ms.author: samfoo
@@ -9,15 +9,8 @@ ms.topic: conceptual
 ms.date: 07/30/2024
 ---
 
-# What is Container Network Security?
 
-Container Network Security is an offering of [Advanced Container Networking Services](advanced-container-networking-services-overview.md) that provides enhanced control over network traffic across containers. Container Network Security leverages Cilium-based policies, offering a more granular and user-friendly approach to managing network security compared to traditional IP-based methods.
-
-## Features of Container Network Security
-
-As of today, the first feature available within Container Network Security is FQDN filtering. This allows you to define network security policies based on domain names, providing a more granular and user-friendly approach to managing network traffic.
-
-## Overview of FQDN filtering
+# Overview of FQDN filtering
 
 Containerized environments present unique security challenges. Traditional network security methods, often reliant on IP-based filtering, can become cumbersome and less effective as IP addresses frequently change. Additionally, understanding network traffic patterns and identifying potential threats can be complex.
 
@@ -40,7 +33,7 @@ When FQDN Filtering is enabled, DNS requests are first evaluated to determine if
 
 The ACNS Security Agent then decides whether to forward a DNS request to the DNS server based on the policy criteria. If permitted, the request is sent to the DNS server, and upon receiving the response, the ACNS Security Agent updates the Cilium Agent with FQDN mappings. This allows the Cilium Agent to update the network policy within the policy engine. The following image illustrates the high-level flow of FQDN Filtering.
 
-[![Screenshot showing how ACNS Security Agent works in FQDN filtering.](./media/how-dns-proxy-works.png)](./media/how-dns-proxy-works.png#lightbox)
+[![Screenshot showing how ACNS Security Agent works in FQDN filtering.](./media/advanced-container-networking-services/how-dns-proxy-works.png)](./media/advanced-container-networking-services/how-dns-proxy-works.png#lightbox)
 
 ## Key benefits
 
@@ -68,9 +61,7 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
     `*` This attempts to match any domain name, which isn't supported.
 
 * FQDN filtering is currently not supported with node-local DNS.
-* Dual stack isn't supported.
 * Kubernetes service names aren't supported.
-* Other L7 policies aren't supported.
 * FQDN pods may exhibit performance degradation when handling more than 1000 requests per second.
 * Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
@@ -93,11 +84,10 @@ rules:
 
 ## Next steps
 
-* Learn how to enable [Container Network Security](how-to-apply-fqdn-filtering-policies.md) on AKS.
+* Learn how to apply [fqdn filtering policies](how-to-apply-fqdn-filtering-policies.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
 * Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](container-network-observability-concepts.md).
-

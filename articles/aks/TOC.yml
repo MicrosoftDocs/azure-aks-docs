@@ -149,6 +149,12 @@
               href: cis-azure-linux.md
             - name: CIS Windows Server benchmark
               href: cis-windows.md
+        - name: Container Network Security
+          items:
+            - name: FQDN based Filtering
+              href: container-network-security-fqdn-filtering-concepts.md
+            - name: L7 Policy
+              href: container-network-security-l7-policy-concepts.md
     - name: Networking
       items:
         - name: Networking concepts
@@ -177,6 +183,16 @@
             - name: Network isolated clusters
               href: concepts-network-isolated.md
               displayName: outbound, egress, private
+        - name: Advanced Container Networking Services
+          items:
+            - name: Advanced Container Networking Services (ACNS) overview
+              href: advanced-container-networking-services-overview.md
+            - name: Container Network Observability overview
+              href: container-network-observability-concepts.md
+            - name: FQDN based Filtering
+              href: container-network-security-fqdn-filtering-concepts.md
+            - name: L7 Policy
+              href: container-network-security-l7-policy-concepts.md
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -185,14 +201,6 @@
           href: concepts-fine-tune-language-models.md
         - name: Machine learning operations (MLOps)
           href: concepts-machine-learning-ops.md
-    - name: Advanced Container Networking Services
-      items:
-        - name: Advanced Container Networking Services (ACNS) overview
-          href: advanced-container-networking-services-overview.md
-        - name: Container Network Observability overview
-          href: container-network-observability-concepts.md
-        - name: Container Network Security overview
-          href: container-network-security-concepts.md
     - name: Storage
       href: concepts-storage.md
     - name: Scaling
@@ -758,6 +766,8 @@
               items:
                 - name: FQDN Filtering with Advanced Container Networking Services (ACNS)
                   href: how-to-apply-fqdn-filtering-policies.md
+                - name: L7 Policy with Advanced Container Networking Services (ACNS)
+                  href: how-to-apply-l7-policy.md
     - name: Storage
       items:
         - name: CSI storage drivers

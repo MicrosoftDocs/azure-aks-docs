@@ -577,6 +577,11 @@
             "source_path_from_root": "/articles/aks/learn/quick-kubernetes-automatic-deploy.md",
             "redirect_url": "/azure/aks/automatic/quick-automatic-managed-network",
             "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/container-network-security-concepts.md",
+            "redirect_url": "/azure/aks/automatic/advanced-network-observability-concepts.md#container-network-security-concepts",
+            "redirect_document_id": false
         }
      ]
 }

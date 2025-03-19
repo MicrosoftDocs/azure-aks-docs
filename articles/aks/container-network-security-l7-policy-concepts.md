@@ -1,0 +1,63 @@
+---
+title: L7 Policy with Advanced Container Networking Services (ACNS)
+description: An overview of Advanced Container Networking Services' L7 Policy capabilities on Azure Kubernetes Service (AKS).
+author: Khushbu-Parekh
+ms.author: kparekh
+ms.service: azure-kubernetes-service
+ms.subservice: aks-networking
+ms.topic: conceptual
+ms.date:  03/14/2024
+---
+
+# Overview of Layer 7 (L7) policy (Public Preview) 
+
+Network policies are essential for securing Kubernetes clusters by defining and controlling pod communication. They mitigate unauthorized access and potential security breaches by regulating traffic flow. Advanced Container Networking Services strengthens security with FQDN-based network policies. Expanding on this foundation, Advanced Container Networking Services now provides L7 policy support, enabling detailed inspection and management of application-level traffic. This advancement enhances both the security and efficiency of network communications within AKS clusters. The offering includes comprehensive support for widely adopted protocols, including HTTP, gRPC, and Kafka.
+
+## Components of L7 Policy
+
+**Envoy Proxy**: Envoy acts as the enforcement point for L7 policies. A TPROXY inspects application traffic, comparing it against the defined L7 policies. To enhance scalability and resource management, Envoy is deployed as a separate DaemonSet, decoupled from the Cilium Agent.
+
+## How L7 Policy works
+
+When L7 policy enforcement is enabled for an application or pod, outgoing network traffic is first 
+evaluated to determine compliance with the configured application-level rules. The eBPF probe attached 
+to the source pod’s network interface marks the packets, which are then redirected to a local Cilium 
+proxy (Envoy). This redirection occurs only for pods enforcing L7 policies, ensuring that policy 
+enforcement is applied selectively.
+
+When L7 policy enforcement is enabled, outgoing network traffic is first 
+evaluated to determine compliance with the configured application-level rules.
+The eBPF probe attached to the source pod’s network interface marks the packets, which are then redirected to a node-local Envoy Proxy.This redirection occurs only for pods enforcing L7 policies, ensuring that policy enforcement is applied selectively.
+
+The Envoy proxy, augmented with Cilium Network Filters, then decides whether to forward the traffic to the destination pod based on policy criteria. If permitted, the traffic proceeds; if not, Envoy returns an appropriate error code to the originating pod. Upon successful authorization, the Envoy proxy facilitates the traffic flow, providing application-level visibility and control. This allows the Cilium Agent to enforce detailed network policies within the policy engine. The following diagram illustrates the high-level flow of L7 policy enforcement.
+
+[![Screenshot showing how L7 policies work](./media/advanced-container-networking-services/how-l7-policy-works.png)](./media/advanced-container-networking-services/how-l7-policy-works.png#lightbox)
+
+## Key benefits
+
+**Granular Application-Level Control**: L7 policies allow for fine-grained control over network traffic based on application-specific attributes, such as HTTP methods, gRPC paths, and Kafka topics. This extends beyond the basic IP address and port-based control of traditional network policies.
+
+**Enhanced Security**: By inspecting application-level traffic, L7 policies can prevent attacks that exploit vulnerabilities at the application layer. This includes blocking unauthorized access to specific APIs or services. Furthermore, L7 policies are an important component of a Zero Trust security strategy, enabling the enforcement of the principle of least privilege at the application layer.
+
+**Graceful Error Handling**: Unlike L3/L4 policies that typically drop unauthorized traffic silently, L7 policies can return application-level error codes (e.g., HTTP 403, Kafka authorization failures), allowing applications to handle errors more gracefully.
+
+**Observability**: With observability enabled for Advanced Container Networking Services and L7 policies applied to your AKS cluster, you can monitor traffic and policy effectiveness using Grafana dashboards.
+
+## Limitations:
+
+TO-DO 
+  
+
+## Pricing
+> [!IMPORTANT]
+> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
+
+## Next steps
+
+* Learn how to apply L7 policies(how-to-apply-l7-policies-policies.md) on AKS.
+
+* Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
+
+* For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
+
+* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](container-network-observability-concepts.md).
