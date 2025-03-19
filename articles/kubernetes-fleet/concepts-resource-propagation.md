@@ -1,12 +1,10 @@
 ---
 title: "Kubernetes resource placement from hub cluster to member clusters"
 description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
-ms.date: 03/04/2024
+ms.date: 03/19/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - build-2024
 ms.topic: conceptual
 ---
 
