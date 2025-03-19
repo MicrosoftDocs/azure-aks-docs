@@ -5,8 +5,8 @@ ms.topic: quickstart
 ms.date: 03/19/2025
 ms.custom: devx-track-terraform
 ms.service: azure-kubernetes-service
-author: tbd
-ms.author: v-tbd
+author: Nickomang
+ms.author: nickoman
 #customer intent: As a Terraform user, I want to learn how to create an Azure Kubernetes Service cluster with a specific configuration and deploy it in an Azure Extended Zone.
 content_well_notification: 
   - AI-contribution
