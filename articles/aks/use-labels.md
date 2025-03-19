@@ -118,6 +118,7 @@ The following labels are AKS reserved labels. *Virtual node usage* specifies if 
 | topology.kubernetes.io/region | \<Azure region> | westus2 | Same |
 | topology.kubernetes.io/zone | \<Azure zone> | 0 | Same |
 | kubernetes.azure.com/cluster | \<MC_RgName> | MC_aks_myAKSCluster_westus2 | Same |
+| kubernetes.azure.com/managedby | aks | aks | N/A |
 | kubernetes.azure.com/mode | \<mode> | User or system | User |
 | kubernetes.azure.com/role | agent | Agent | Same |
 | kubernetes.azure.com/scalesetpriority | \<VMSS priority> | Spot or regular | N/A |

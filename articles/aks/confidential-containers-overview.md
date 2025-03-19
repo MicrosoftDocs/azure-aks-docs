@@ -30,7 +30,6 @@ This article helps you understand the Confidential Containers feature, and how t
 * Deploy or upgrade an AKS cluster using the Azure CLI
 * Add an annotation to your pod YAML to mark the pod as being run as a confidential container
 * Add a [security policy][confidential-containers-security-policy] to your pod YAML
-* Enable enforcement of the security policy
 * Deploy your application in confidential computing
 
 ## Supported scenarios
@@ -49,16 +48,13 @@ The following are considerations with this preview of Confidential Containers:
 
 * An increase in pod startup time compared to runc pods and kernel-isolated pods.
 * Version 1 container images aren't supported.
-* Updates to secrets and ConfigMaps aren't reflected in the guest.
-* Ephemeral containers and other troubleshooting methods like `exec` into a container,
-log outputs from containers, and `stdio` (ReadStreamRequest and WriteStreamRequest) require a policy modification and redeployment.
-* The policy generator tool doesn't support cronjob deployment types.
+* Ephemeral containers and other troubleshooting methods like `exec` into a container, log outputs from containers, and `stdio` require a policy modification and redeployment to enable ExecProcessRequest, ReadStreamRequest, WriteStreamRequest, and CloseStdinRequest.
 * Due to container image layer measurements being encoded in the security policy, we don't recommend using the `latest` tag when specifying containers.
 * Services, Load Balancers, and EndpointSlices only support the TCP protocol.
-* All containers in all pods on the clusters must be configured to `imagePullPolicy: Always`.
 * The policy generator only supports pods that use IPv4 addresses.
-* ConfigMaps and secrets values can't be changed if setting using the environment variable method after the pod is deployed. The security policy prevents it.
-* Pod termination logs aren't supported. While pods write termination logs to `/dev/termination-log` or to a custom location if specified in the pod manifest, the host/kubelet can't read those logs. Changes from guest to that file aren't reflected on the host.
+* Pod environment variables based on ConfigMaps and Secrets can't be changed after the pod is deployed.
+* Pod termination logs aren't supported. While pods write termination logs to `/dev/termination-log` or to a custom location if specified in the pod manifest, the host/kubelet can't read those logs. Changes from the pod to that file aren't reflected on the host.
+* Confidential Containers currently only supports Azure Linux.
 
 ## Resource allocation overview
 
@@ -67,14 +63,14 @@ It's important you understand the memory and processor resource allocation behav
 * CPU: The shim assigns one vCPU to the base OS inside the pod. If no resource `limits` are specified, the workloads don't have separate CPU shares assigned, the vCPU is then shared with that workload. If CPU limits are specified, CPU shares are explicitly allocated for workloads.
 * Memory: The Kata-CC handler uses 2 GB memory for the UVM OS and X MB additional memory where X is the resource `limits` if specified in the YAML manifest (resulting in a 2-GB VM when no limit is given, without implicit memory for containers). The [Kata][kata-technical-documentation] handler uses 256 MB base memory for the UVM OS and X MB additional memory when resource `limits` are specified in the YAML manifest. If limits are unspecified, an implicit limit of 1,792 MB is added resulting in a 2 GB VM and 1,792 MB implicit memory for containers.
 
-In this release, specifying resource requests in the pod manifests aren't supported. The Kata container ignores resource requests from pod YAML manifest, and as a result, containerd doesn't pass the requests to the shim. Use resource `limit` instead of resource `requests` to allocate memory or CPU resources for workloads or containers.
+In this release, specifying resource requests in the pod manifests isn't supported. containerd doesn't pass the requests to the Kata Shim, and as a result, reserving resources based on the pod manifest resource requests is not implemented. Use resource `limits` instead of resource `requests` to allocate memory or CPU resources for workloads or containers.
 
 With the local container filesystem backed by VM memory, writing to the container filesystem (including logging) can fill up the available memory provided to the pod. This condition can result in potential pod crashes.
 
 ## Next steps
 
 * See the overview of [Confidential Containers security policy][confidential-containers-security-policy] to learn about how workloads and their data in a pod is protected.
-* [Deploy Confidential Containers on AKS][deploy-confidential-containers-default-aks] with a default security policy.
+* [Deploy Confidential Containers on AKS][deploy-confidential-containers-default-aks] with an automatically generated security policy.
 * Learn more about [Azure Dedicated hosts][azure-dedicated-hosts] for nodes with your AKS cluster to use hardware isolation and control over Azure platform maintenance events.
 
 <!-- EXTERNAL LINKS -->

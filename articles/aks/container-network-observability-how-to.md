@@ -25,17 +25,6 @@ Container Network Observability is one of the features of Advanced Container Net
 
 * The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-### Install the aks-preview Azure CLI extension
-Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
-
-```azurecli-interactive
-# Install the aks-preview extension
-az extension add --name aks-preview
-
-# Update the extension to make sure you have the latest version installed
-az extension update --name aks-preview
-```
-
 ### Enable Advanced Container Networking Services
 
 To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
@@ -192,8 +181,16 @@ Skip this step if using BYO Grafana
 
 > [!NOTE]
 > The `hubble_flows_processed_total` metric isn't scraped by default due to high metric cardinality in large scale clusters. 
-> Because of this, the *Pods Flows* dashboards have panels with missing data. To change this, you can modify the ama metrics settings to include `hubble_flows_processed_total` in the metric keep list. To learn how to do this, see the [Minimal Ingestion Doumentation](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
+> Because of this, the *Pods Flows* dashboards have panels with missing data. To enable this metric and populate the missing data, you need to modify the ama-metrics-settings-configmap. Specifically, update the default-targets-metrics-keep-list section. Follow the below steps to update the configmap :
+> 1. Get the latest ama-metrics-settings-configmap.(https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml)  
+> 1. Locate the networkobservabilityHubble = "" 
+> 1. Change it to networkobservabilityHubble = "hubble.*"
+> 1. Now the Pod flow metrics should populate.
 > 
+> To learn more about what minimal ingestion, see the [Minimal Ingestion Doumentation](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
+> 
+
+--- 
 
 1. Make sure the Azure Monitor pods are running using the `kubectl get pods` command.
 

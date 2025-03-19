@@ -52,6 +52,9 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
 - **Kubernetes service address range**: The size of the service address CIDR depends on the number of cluster services you plan to create. It must be smaller than `/12`. This range shouldn't overlap with the pod CIDR range, cluster subnet range, and IP range used in peered VNets and on-premises networks.
 - **Kubernetes DNS service IP address**: This IP address is within the Kubernetes service address range that's used by cluster service discovery. Don't use the first IP address in your address range, as this address is used for the `kubernetes.default.svc.cluster.local` address.
 
+> [!IMPORTANT]
+> The private CIDR ranges available for the Pod CIDR are defined in [RFC 1918](https://tools.ietf.org/html/rfc1918). While we don't block the use of public IP ranges, they are considered out of Microsoft's support scope. We recommend using private IP ranges for pod CIDR.
+
 ## Network security groups
 
 Pod to pod traffic with Azure CNI Overlay isn't encapsulated, and subnet [network security group][nsg] rules are applied. If the subnet NSG contains deny rules that would impact the pod CIDR traffic, make sure the following rules are in place to ensure proper cluster functionality (in addition to all [AKS egress requirements][aks-egress]):
@@ -303,52 +306,13 @@ The application routing addon is the recommended way for ingress in an AKS clust
 
 ---
 
-## Dual-stack networking with Azure CNI Powered by Cilium - (Preview)
+## Dual-stack networking with Azure CNI Powered by Cilium
 
 You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
 ### Prerequisites
 
-* You must have the latest version of the AKS preview extension.
 * You must have Kubernetes version 1.29 or greater. 
-
-### Install the aks-preview Azure CLI extension
-
-* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli
-    az extension add --name aks-preview
-    ```
-
-* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli
-    az extension update --name aks-preview
-    ```
-
-### Register the 'AzureOverlayDualStackPreview' feature flag
-
-1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ### Set up Overlay clusters with Azure CNI Powered by Cilium
 
@@ -367,7 +331,7 @@ az aks create \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
     --ip-families ipv4,ipv6 \
-    --generate-ssh-keys\
+    --generate-ssh-keys
 ```
 
 For more information on Azure CNI Powered by Cilium, see [Azure CNI Powered by Cilium][azure-cni-powered-by-cilium].
@@ -430,7 +394,7 @@ az aks create \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --ip-families ipv4,ipv6 \
-    --generate-ssh-keys\
+    --generate-ssh-keys
 ```
 
 ### Add a Windows nodepool to the cluster

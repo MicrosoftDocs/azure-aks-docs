@@ -70,9 +70,9 @@ AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay
 
 | Option                    | AKS Automatic   	| AKS Standard  	|
 |---	                    |---	            |---	            |
-| Virtual network	        | **Pre-configured:** [Managed Virtual Network using Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium] combines the robust control plane of Azure CNI with the data plane of Cilium to provide high-performance networking and security. | **Default:** [Managed Virtual Network with kubenet][kubenet] <br/> **Optional:** <ul><li>[Azure CNI][azure-cni]</li><li>[Azure CNI Overlay][azure-cni-overlay]</li><li>[Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium]</li><li>[Bring your own CNI][use-byo-cni]</li></ul> |
+| Virtual network	        | **Default:** [Managed Virtual Network using Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium] combines the robust control plane of Azure CNI with the data plane of Cilium to provide high-performance networking and security. <br/> **Optional:** <ul><li>[Custom virtual network][automatic-custom-network]</li><li>[Custom virtual network][automatic-private-custom-network] with private cluster.</li></ul> | **Default:** [Managed Virtual Network with kubenet][kubenet] <br/> **Optional:** <ul><li>[Azure CNI][azure-cni]</li><li>[Azure CNI Overlay][azure-cni-overlay]</li><li>[Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium]</li><li>[Bring your own CNI][use-byo-cni]</li></ul> |
 | Ingress	        | **Pre-configured:** [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault. <br/> **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> | **Optional:** <ul><li>[Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault.</li><li>[Azure Service Mesh (Istio)][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> |
-| Egress	        | **Pre-configured:** [AKS managed NAT gateway][managed-nat-gateway] for a scalable outbound connection flows| **Default:** [Azure Load Balancer][egress-load-balancer] <br/> **Optional:** <ul><li>[User-assigned NAT gateway][managed-nat-gateway]</li><li>[AKS managed NAT gateway][userassigned-nat-gateway]</li></ul> |
+| Egress	        | **Pre-configured:** [AKS managed NAT gateway][managed-nat-gateway] for a scalable outbound connection flows when used with managed virtual network <br/> **Optional (with custom virtual network):** <ul><li> [Azure Load Balancer][egress-load-balancer]</li><li>[User-assigned NAT gateway][managed-nat-gateway]</li><li>[User-defined routing (UDR)][udr]</li> | **Default:** [Azure Load Balancer][egress-load-balancer] <br/> **Optional:** <ul><li>[User-assigned NAT gateway][managed-nat-gateway]</li><li>[AKS managed NAT gateway][userassigned-nat-gateway]</li><li>[User-defined routing (UDR)][udr]</li></ul> |
 | Service mesh	        | **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-mesh]</li><li>Bring your own service mesh.</li></ul> | **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-mesh]</li><li>Bring your own service mesh.</li></ul> |
 
 ## Next steps
@@ -111,6 +111,7 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [istio-deploy-ingress]: istio-deploy-ingress.md
 [managed-nat-gateway]: nat-gateway.md#create-an-aks-cluster-with-a-managed-nat-gateway
 [userassigned-nat-gateway]: nat-gateway.md#create-an-aks-cluster-with-a-user-assigned-nat-gateway
+[udr]: egress-outboundtype.md#outbound-type-of-userdefinedrouting
 [egress-load-balancer]: egress-outboundtype.md#outbound-type-of-loadbalancer
 [istio-mesh]: istio-about.md
 [automated-deployments]: automated-deployments.md
@@ -121,3 +122,5 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 [uptime-sla]: free-standard-pricing-tiers.md#uptime-sla-terms-and-conditions
 [long-term-support]: long-term-support.md
 [quickstart-aks-automatic]: ./learn/quick-kubernetes-automatic-deploy.md
+[automatic-custom-network]: ./automatic/quick-automatic-custom-network.md
+[automatic-private-custom-network]: ./automatic/quick-automatic-private-custom-network.md

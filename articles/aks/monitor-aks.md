@@ -25,7 +25,7 @@ ms.subservice: aks-monitoring
 
 Azure Monitor Container insights collect custom metrics for nodes, pods, containers, and persistent volumes. For more information, see [Metrics collected by Container insights](/azure/azure-monitor/containers/container-insights-custom-metrics).
 
-[Azure Monitor Application Insights](/azure/azure-monitor/app/app-insights-overview) is used for application performance monitoring (APM). To enable Application Insights with code changes, see [Enable Azure Monitor OpenTelemetry](/azure/azure-monitor/app/opentelemetry-overview). To enable Application Insights without code changes, see [AKS autoinstrumentation](/azure/azure-monitor/app/kubernetes-codeless). For more details on instrumentation, see [data collection basics](/azure/azure-monitor/app/opentelemetry-overview).
+[Azure Monitor Application Insights](/azure/azure-monitor/app/app-insights-overview) is used for application performance monitoring (APM). To enable Application Insights with code changes, see [Enable Azure Monitor OpenTelemetry](/azure/azure-monitor/app/opentelemetry-overview). To enable Application Insights without code changes, see [AKS autoinstrumentation](/azure/azure-monitor/app/kubernetes-codeless). For more information on instrumentation, see [data collection basics](/azure/azure-monitor/app/opentelemetry-overview).
 
 ## Monitoring data
 
@@ -56,7 +56,7 @@ Metrics play an important role in cluster monitoring, identifying issues, and op
 
 - [List of default Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default)
 
-AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md).
+AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts. 
 
 <a name="integrations"></a>
 [!INCLUDE [horz-monitor-custom-metrics](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-non-monitor-metrics.md)]
@@ -71,7 +71,7 @@ The following Azure services and features of Azure Monitor can be used for extra
 
 ### Monitor AKS control plane metrics (preview)
 
-AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./control-plane-metrics-monitor.md).
+AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./control-plane-metrics-monitor.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts.
 
 [!INCLUDE [horz-monitor-resource-logs](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-resource-logs.md)]
 
@@ -277,11 +277,56 @@ The following table lists some suggested alert rules for AKS. These alerts are j
 
 [!INCLUDE [horz-monitor-insights-alerts](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-insights-alerts.md)]
 
-## Network Observability add-on
+## Node Network Metrics
 
-Network Observability is crucial for maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain valuable insights into your cluster's operation and identify potential issues before they lead to outages or performance degradation.
+Node Network Metrics are crucial for maintaining a healthy and performant Kubernetes cluster. By collecting and analyzing data about network traffic, you can gain valuable insights into your cluster's operation and identify potential issues before they lead to outages or performance degradation.
 
-Starting with Kubernetes version 1.29, node network metrics are enabled by default for all clusters with Azure Monitor enabled. This default enablement involves installing a lightweight agent called Retina on your cluster. Retina collects and converts essential metrics into Prometheus format. These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
+Starting with Kubernetes version 1.29, node network metrics are enabled by default for all clusters with Azure Monitor enabled.
+
+The following node network metrics are enabled by default and are aggregated per node. All metrics include the labels cluster and instance (node name). These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
+
+### Node-Level Metrics
+
+The following metrics are aggregated per node. All metrics include labels:
+
+* `cluster`
+* `instance` (Node name)
+
+#### [**Cilium**](#tab/cilium)
+
+For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux, Windows is currently not supported.
+Cilium exposes several metrics including the following used by Container Network Observability.
+
+| Metric Name                    | Description                  | Extra Labels          |Linux | Windows |
+|--------------------------------|------------------------------|-----------------------|-------|---------|
+| **cilium_forward_count_total** | Total forwarded packet count | `direction`           | ✅ | ❌ |
+| **cilium_forward_bytes_total** | Total forwarded byte count   | `direction`           | ✅ | ❌ |
+| **cilium_drop_count_total**    | Total dropped packet count   | `direction`, `reason` | ✅ | ❌ |
+| **cilium_drop_bytes_total**    | Total dropped byte count     | `direction`, `reason` | ✅ | ❌ |
+
+#### [**Non-Cilium**](#tab/non-cilium)
+
+For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
+The table below outlines the different metrics generated.
+
+| Metric Name                                    | Description | Extra Labels | Linux | Windows |
+|------------------------------------------------|-------------|--------------|-------|---------|
+| **networkobservability_forward_count**         | Total forwarded packet count | `direction` | ✅ | ✅ |
+| **networkobservability_forward_bytes**         | Total forwarded byte count | `direction` | ✅ | ✅ |
+| **networkobservability_drop_count**            | Total dropped packet count | `direction`, `reason` | ✅ | ✅ |
+| **networkobservability_drop_bytes**            | Total dropped byte count | `direction`, `reason` | ✅ | ✅ |
+| **networkobservability_tcp_state**             | TCP currently active socket count by TCP state. | `state` | ✅ | ✅ |
+| **networkobservability_tcp_connection_remote** | TCP currently active socket count by remote IP/port. | `address` (IP), `port` | ✅ | ❌ |
+| **networkobservability_tcp_connection_stats**  | TCP connection statistics. (ex: Delayed ACKs, TCPKeepAlive, TCPSackFailures) | `statistic` | ✅ | ✅ |
+| **networkobservability_tcp_flag_counters**     | TCP packets count by flag. | `flag` | ❌ | ✅ |
+| **networkobservability_ip_connection_stats**   | IP connection statistics. | `statistic` | ✅ | ❌ |
+| **networkobservability_udp_connection_stats**  | UDP connection statistics. | `statistic` | ✅ | ❌ |
+| **networkobservability_udp_active_sockets**    | UDP currently active socket count |  | ✅ | ❌ |
+| **networkobservability_interface_stats**       | Interface statistics. | InterfaceName, `statistic` | ✅ | ✅ |
+
+---
+
+For detailed Pod-level and DNS metrics, explore our [Advanced Container Networking services](advanced-container-networking-services-overview.md) offering.
 
 ## Related content
 

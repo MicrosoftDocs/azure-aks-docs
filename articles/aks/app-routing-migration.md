@@ -63,8 +63,8 @@ In this article, you learn how to migrate your Azure Kubernetes Service (AKS) cl
     spec:
       ingressClassName: webapprouting.kubernetes.azure.com # Set the ingress class property to refer to the application routing add-on ingress class
       rules:
-      - http:
-        host: aks-helloworld.<CLUSTER_SPECIFIC_DNS_ZONE> # Replace with your own hostname
+      - host: aks-helloworld.<CLUSTER_SPECIFIC_DNS_ZONE> # Replace with your own hostname
+        http: 
           paths:
           - path: /
             pathType: Prefix

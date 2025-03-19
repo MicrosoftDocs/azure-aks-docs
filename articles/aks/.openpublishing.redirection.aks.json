@@ -246,6 +246,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/draft-devx-extension-aks.md",
+            "redirect_url": "/azure/aks/aks-extension-draft-dockerfile",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/kubernetes-walkthrough-portal.md",
             "redirect_url": "/azure/aks/learn/quick-kubernetes-deploy-portal",
             "redirect_document_id": false
@@ -566,6 +571,16 @@
         {
             "source_path_from_root": "/articles/aks/advanced-network-observability-cli.md",
             "redirect_url": "/azure/aks/container-network-observability-how-to",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/learn/quick-kubernetes-automatic-deploy.md",
+            "redirect_url": "/azure/aks/automatic/quick-automatic-managed-network",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/configure-kubenet-dual-stack.md",
+            "redirect_url": "/azure/aks/configure-dual-stack",
             "redirect_document_id": false
         }
      ]

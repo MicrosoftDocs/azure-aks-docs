@@ -3,7 +3,8 @@ title: Deploy a Java application with Open Liberty/WebSphere Liberty on an Azure
 recommendations: false
 description: Deploy a Java application with Open Liberty or WebSphere Liberty on an AKS cluster by using the Azure Marketplace offer, which automatically provisions resources.
 author: KarlErickson
-ms.author: edburns
+ms.author: karler
+ms.reviewer: edburns
 ms.topic: how-to
 ms.date: 11/14/2024
 ms.subservice: aks-developer
@@ -230,7 +231,7 @@ First, grant app **Azure Service Connector Resource Provider** permissions to th
 1. In **Members** tab, select **Select members**. Then, search for the **Azure Service Connector Resource Provider** app. Select the app and select **Select**. Select **Next**.
 1. Select **Review + assign**. Wait for a few seconds for the role assignment to complete.
 
-Then, run the following commands to create a connection between the AKS cluster and the SQL database using Microsoft Entra Workload ID with Service Connector. For more information, see [Create a service connection in AKS with Service Connector (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?tabs=azure-cli&pivots=workload-id#create-a-service-connection-in-aks-with-service-connector-preview).
+Then, run the following commands to create a connection between the AKS cluster and the SQL database using Microsoft Entra Workload ID with Service Connector. For more information, see [Create a service connection in AKS with Service Connector (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?tabs=azure-cli&pivots=workload-id#create-a-service-connection-in-aks-with-service-connector).
 
 ### [Bash](#tab/in-bash)
 
@@ -240,7 +241,7 @@ az provider register --namespace Microsoft.ServiceLinker --wait
 az provider register --namespace Microsoft.KubernetesConfiguration --wait
 
 # Install the Service Connector passwordless extension
-az extension add --name serviceconnector-passwordless --upgrade --allow-preview true
+az extension add --name serviceconnector-passwordless
 
 # Retrieve the AKS cluster and Azure SQL Server resource IDs
 export AKS_CLUSTER_RESOURCE_ID=$(az aks show \
@@ -284,7 +285,7 @@ az provider register --namespace Microsoft.ServiceLinker --wait
 az provider register --namespace Microsoft.KubernetesConfiguration --wait
 
 # Install the Service Connector passwordless extension
-az extension add --name serviceconnector-passwordless --upgrade --allow-preview true
+az extension add --name serviceconnector-passwordless
 
 # Retrieve the AKS cluster and Azure SQL Server resource IDs
 $Env:AKS_CLUSTER_RESOURCE_ID = $(az aks show --resource-group $Env:RESOURCE_GROUP_NAME --name $Env:CLUSTER_NAME --query id --output tsv)
@@ -630,7 +631,7 @@ az group delete --name $Env:RESOURCE_GROUP_NAME --yes --no-wait
 You can learn more from the following references:
 
 * [Azure Kubernetes Service](https://azure.microsoft.com/free/services/kubernetes-service/)
-* [Tutorial: Connect an AKS app to Azure SQL Database (preview)](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli)
+* [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli)
 * [Integrate Azure SQL Database with Service Connector](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java%2Csql-secret-java)
 * [Connect using Microsoft Entra authentication](/sql/connect/jdbc/connecting-using-azure-active-directory-authentication?view=azuresqldb-current&preserve-view=true)
 * [Open Liberty](https://openliberty.io/)
@@ -638,6 +639,6 @@ You can learn more from the following references:
 * [Open Liberty server configuration](https://openliberty.io/docs/ref/config/)
 * [Liberty Maven Plugin](https://github.com/OpenLiberty/ci.maven#liberty-maven-plugin)
 * [Open Liberty Container Images](https://github.com/OpenLiberty/ci.docker)
-* [WebSphere Liberty Container Images](https://github.com/WASdev/ci.docker)
+* [WebSphere Liberty Container Images](https://www.ibm.com/docs/was-liberty/base?topic=images-liberty-container#cntr_r_images__wlicr__title__1)
 
 For more information about deploying the IBM WebSphere family on Azure, see [What are solutions to run the WebSphere family of products on Azure?](/azure/developer/java/ee/websphere-family).
