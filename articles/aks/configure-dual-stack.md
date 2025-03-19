@@ -10,7 +10,7 @@ ms.date: 12/07/2023
 ms.custom: devx-track-azurecli, build-2023
 ---
 
-# Use dual-stack kubenet networking in Azure Kubernetes Service (AKS)
+# Use dual-stack networking in Azure Kubernetes Service (AKS)
 
 You can deploy your AKS clusters in a dual-stack mode when using a dual-stack Azure virtual network. In this configuration, nodes receive both an IPv4 and IPv6 address from the Azure virtual network subnet. Pods receive both an IPv4 and IPv6 address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so that the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address of the same family (IPv4 to IPv4 and IPv6 to IPv6).
 
