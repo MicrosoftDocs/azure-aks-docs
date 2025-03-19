@@ -12,11 +12,7 @@ ms.date: 05/22/2024
 
 # Use kubenet networking with your own IP address ranges in Azure Kubernetes Service (AKS)
 
-> [!IMPORTANT] 
-> kubenet networking for Azure Kubernetes Service (AKS) will be retired on **31 March 2028**, 
-> 
-> To avoid service disruptions, **you'll need to** [upgrade to Azure Container Networking Interface (CNI) overlay](https://learn.microsoft.com/en-us/azure/aks/upgrade-aks-ipam-and-dataplane#upgrade-an-existing-cluster-to-azure-cni-overlay) **before that date**, when workloads
-running on kubenet for AKS will no longer be supported.
+[!INCLUDE [kubenet retirement](/reusable-content/blob/main/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
 AKS clusters use kubenet and create an Azure virtual network and subnet for you by default. With kubenet, nodes get an IP address from the Azure virtual network subnet. Pods receive an IP address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address. This approach greatly reduces the number of IP addresses you need to reserve in your network space for pods to use.
 

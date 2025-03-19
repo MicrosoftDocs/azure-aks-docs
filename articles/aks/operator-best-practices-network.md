@@ -6,11 +6,11 @@ ms.topic: best-practice
 ms.date: 03/18/2024
 author: schaffererin
 ms.author: schaffererin
-
-
 ---
 
 # Best practices for network connectivity and security in Azure Kubernetes Service (AKS)
+
+[!INCLUDE [kubenet retirement](/reusable-content/blob/main/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
 As you create and manage clusters in Azure Kubernetes Service (AKS), you provide network connectivity for your nodes and applications. These network resources include IP address ranges, load balancers, and ingress controllers.
 
