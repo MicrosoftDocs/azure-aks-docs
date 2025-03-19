@@ -120,7 +120,7 @@ az aks nodepool add --cluster-name $CLUSTER_NAME --resource-group $RG_NAME --nam
 ```
 
 > [!IMPORTANT]
-> The DiskEncryptionSet we previously applied to the storage class will only encrypt new PVCs. Encrypting existing PVCs will require first detaching before using the Azure Disks API/CLI to update the underlying disks, as shown in [this related guide](/azure/virtual-machines/linux/disks-enable-customer-managed-keys-cli#encrypt-existing-managed-disks).
+> The DiskEncryptionSet we previously applied to the storage class only encrypts new PVCs. Encrypting existing PVCs requires detaching first before using the Azure Disks API/CLI to update the underlying disks, as shown in [this related guide](/azure/virtual-machines/linux/disks-enable-customer-managed-keys-cli#encrypt-existing-managed-disks).
 
 ## Encrypt your AKS cluster data disk
 
