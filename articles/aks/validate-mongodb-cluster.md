@@ -78,7 +78,7 @@ To deploy the `mongo-express` client app, you first need to create secrets speci
     cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
    }
    ```
-   :::zone pivot="azure-cli"
+    :::zone pivot="azure-cli"
    
    ```azurecli-interactive
    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGOEXPRESS-CONFIG-BASICAUTH-USERNAME --value MONGOEXPRESSADMINUSER  --output none
@@ -89,7 +89,7 @@ To deploy the `mongo-express` client app, you first need to create secrets speci
    ```azurecli-interactive
    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name MONGODB-CONFIG-SERVER --value ${MY_CLUSTER_NAME}-${AKS_MONGODB_NAMESPACE}-mongos.mongodb.svc.cluster.local --output none
    ```
-:::zone-end
+    :::zone-end
 
 :::zone pivot="terraform"
 
