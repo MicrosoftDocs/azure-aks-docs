@@ -701,8 +701,8 @@
               href: configure-azure-cni.md
             - name: Bring your own CNI
               href: use-byo-cni.md
-            - name: Upgrade AKS IPAM and dataplane
-              href: upgrade-aks-ipam-and-dataplane.md
+            - name: Upgrade Azure CNI IPAM modes and Dataplane Technology
+              href: upgrade-azure-cni.md
         - name: DNS
           items:
             - name: Use a static IP address and DNS label
