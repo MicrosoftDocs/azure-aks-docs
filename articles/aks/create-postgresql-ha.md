@@ -262,18 +262,6 @@ In this section, you create a multizone AKS cluster with a system node pool. The
 
 You also add a user node pool to the AKS cluster to host the PostgreSQL cluster. Using a separate node pool allows for control over the Azure VM SKUs used for PostgreSQL and enables the AKS system pool to optimize performance and costs. You apply a label to the user node pool that you can reference for node selection when deploying the CNPG operator later in this guide. This section might take some time to complete.
 
-### Storage considerations
-
-The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
-
-| Storage type                      | Compatible driver                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| --------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Premium SSD                       | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                                                                                                                     |
-| Premium SSD v2                    | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations].                                                                                              |
-| Local NVMe or temp SSD (Ephemeral Disks) | Azure Container Storage only                      | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. |
-
-### [Premium SSD](#tab/pv1)
-
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
     ```bash
@@ -326,32 +314,83 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
         --output table
     ```
 
-### [Premium SSD v2](#tab/pv2)
+### Storage considerations
 
-1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
+The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
+
+| Storage type                      | Compatible driver                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Premium SSD                       | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Premium SSD v2                    | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations].                                                                                              |
+| Local NVMe or temp SSD (Ephemeral Disks) | Azure Container Storage only                      | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. |
+
+### [Premium SSD](#tab/pv1)
+
+1. Use the default azuredisk CSI driver storage class
 
     ```bash
-    <replace>
+    export POSTGRES_STORAGE_CLASS="managed-csi-premium"
     ```
 
-2. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
+### [Premium SSD v2](#tab/pv2)
+
+1. Create azuredisk CSI driver storage class using Premium SSD V2
 
     ```bash
-    <replace>
+    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
+    apiVersion: storage.k8s.io/v1
+     kind: StorageClass
+     metadata:
+       name: premium2-disk-sc
+     parameters:
+       cachingMode: None
+       skuName: PremiumV2_LRS
+       DiskIOPSReadWrite: "4000"
+       DiskMBpsReadWrite: "1000"
+     provisioner: disk.csi.azure.com
+     reclaimPolicy: Delete
+     volumeBindingMode: Immediate
+     allowVolumeExpansion: true
+    EOF
+
+    export POSTGRES_STORAGE_CLASS="premium2-disk-sc"
     ```
 
 ### [Local NVMe](#tab/acstor)
 
-1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
+1. Update AKS cluster to install Azure Container Storage on user nodepool
 
     ```bash
-    <replace>
+    az aks update \
+        --name $AKS_PRIMARY_CLUSTER_NAME \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --enable-azure-container-storage ephemeralDisk \
+        --storage-pool-option NVMe \
+        --ephemeral-disk-volume-type PersistentVolumeWithAnnotation \
+        --azure-container-storage-nodepools $USER_NODE_POOL_NAME
     ```
 
-2. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
+2. Use customized storage class for database workloads by copying Azure Container Storage storage class and adding      `enableDBProfile` parameter
 
     ```bash
-    <replace>
+    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
+    apiVersion: storage.k8s.io/v1
+     kind: StorageClass
+     metadata:
+       name: acstor-ephemeraldisk-nvme-db
+     parameters:
+       acstor.azure.com/storagepool: ephemeraldisk-nvme
+       hyperconverged: "true"
+       ioTimeout: "60"
+       proto: nvmf
+       repl: "1"
+       enableDBProfile: "true"
+     provisioner: containerstorage.csi.azure.com
+     reclaimPolicy: Delete
+     volumeBindingMode: WaitForFirstConsumer
+    EOF
+
+    export POSTGRES_STORAGE_CLASS="acstor-ephemeraldisk-nvme-db"
     ```
 
 > [!NOTE]

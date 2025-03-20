@@ -132,6 +132,7 @@ The following table outlines the key properties set in the YAML deployment manif
       inheritedMetadata:
         annotations:
           service.beta.kubernetes.io/azure-dns-label-name: $AKS_PRIMARY_CLUSTER_PG_DNSPREFIX
+          acstor.azure.com/accept-ephemeral-storage: "true"
         labels:
           azure.workload.identity/use: "true"
 
@@ -181,7 +182,7 @@ The following table outlines the key properties set in the YAML deployment manif
           resources:
             requests:
               storage: 2Gi
-          storageClassName: managed-csi-premium
+          storageClassName: $POSTGRES_STORAGE_CLASS
 
       walStorage:
         size: 2Gi
@@ -191,30 +192,27 @@ The following table outlines the key properties set in the YAML deployment manif
           resources:
             requests:
               storage: 2Gi
-          storageClassName: managed-csi-premium
+          storageClassName: $POSTGRES_STORAGE_CLASS
 
       monitoring:
         enablePodMonitor: true
 
       postgresql:
         parameters:
-          archive_timeout: '5min'
-          auto_explain.log_min_duration: '10s'
           checkpoint_completion_target: '0.9'
           checkpoint_timeout: '15min'
-          shared_buffers: '256MB'
+          shared_buffers: '16GB'
           effective_cache_size: '512MB'
           pg_stat_statements.max: '1000'
           pg_stat_statements.track: 'all'
-          max_connections: '400'
-          max_prepared_transactions: '400'
-          max_parallel_workers: '32'
-          max_parallel_maintenance_workers: '8'
-          max_parallel_workers_per_gather: '8'
-          max_replication_slots: '32'
-          max_worker_processes: '32'
           wal_keep_size: '512MB'
-          max_wal_size: '1GB'
+          min_wal_size: '1GB'
+          max_wal_size: '4GB'
+          wal_compression: 'lz4'
+          checkpoint_flush_after: '2MB'
+          maintenance_work_mem: '8GB'
+          work_mem: '512MB'
+          effective_io_concurrency: '200'
         pg_hba:
           - host all all all scram-sha-256
 
@@ -250,12 +248,12 @@ The following table outlines the key properties set in the YAML deployment manif
     ```
 
 > [!IMPORTANT]  
-> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it will enter a `CrashLoopBackOff` state. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
+> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it will enter a `CrashLoopBackOff` state because a new replica has been created on the new node without any data and CNPG cannot find the pgdata directory. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
 >  
 > ```bash  
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
 > ```  
->  
+> 
 > Improvements to NVMe persistence and recovery are planned for release later in 2025.
 
 ### Validate the Prometheus PodMonitor is running
