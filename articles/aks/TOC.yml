@@ -515,8 +515,12 @@
           href: aks-zone-resiliency.md
         - name: Propagate Kubernetes resources across multiple clusters
           href: /azure/kubernetes-fleet/resource-propagation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Deploy SpinKube to run serverless Wasm workloads
-          href: deploy-spinkube.md
+        - name: WebAssembly workloads
+          items:        
+            - name: Deploy SpinKube to run serverless Wasm workloads
+              href: deploy-spinkube.md
+            - name: Deploy wasmCloud to AKS to run distributed Wasm workloads
+              href: wasmcloud.md
     - name: Cost optimization
       items:
         - name: Understand AKS usage and costs
