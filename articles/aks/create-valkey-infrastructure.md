@@ -201,10 +201,10 @@ In this section, we download the Valkey image from Docker Hub and upload it to A
 
 ## Deploy the infrastructure with Terraform
 
-To deploy the infrastructure using Terraform we are going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
+To deploy the infrastructure using Terraform, we're going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
 
 > [!NOTE]
-> If you're planning to run this in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This comes coupled with best practice recommendations.
+> If you're planning to run this deployment in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This module comes coupled with best practice recommendations.
 
 1. Clone the git repository with the terraform module.
 
@@ -238,7 +238,7 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
     ```
     
 
-3. Run the Terraform commands to deploy the infrastructure. In this step, we have set required variables that will be used when deploying Valkey in the next step.
+3. To deploy the infrastructure, run the Terraform commands.In this step, we set the required variables that will be used when deploying Valkey in the next step.
 
     ```bash
     terraform init
@@ -252,7 +252,7 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
     ```
 
 > [!NOTE]
-> In some cases, the container registry tasks that import Valkey images to the container registry might fail. This is a well-known issue. Refer to [container-registry-task] for more information. In most cases, retrying resolves the problem.
+> In some cases, the container registry tasks that import Valkey images to the container registry might fail. For more information, see [container-registry-task]. In most cases, retrying resolves the problem.
 
 4. Run the following command to export the Terraform output values as environment variables in the terminal to use them in the next steps:
     ```bash
