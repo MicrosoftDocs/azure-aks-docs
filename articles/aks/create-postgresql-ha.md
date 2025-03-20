@@ -162,7 +162,7 @@ The CNPG operator automatically generates a service account called *postgres* th
         --resource-group $RESOURCE_GROUP_NAME \
         --query "id" \
         --output tsv)
-    
+
     az role assignment list --scope $STORAGE_ACCOUNT_PRIMARY_RESOURCE_ID --output table
 
     az role assignment create \
@@ -187,7 +187,7 @@ To enable backups, the PostgreSQL cluster needs to read and write to an object s
         --output tsv)
 
     echo $STORAGE_ACCOUNT_PRIMARY_RESOURCE_ID
-    ````
+    ```
 
 1. Assign the "Storage Blob Data Contributor" Azure built-in role to the object ID with the storage account resource ID scope for the UAMI associated with the managed identity for each AKS cluster using the [`az role assignment create`][az-role-assignment-create] command.
 
@@ -266,13 +266,13 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
 
 The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
 
-| Storage type                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Premium SSD                       | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                        |
-| Premium SSD v2                    | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations]. |
-| Ephemeral Disk (NVMe or temp SSD) | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM.                                    |
+| Storage type                      | Compatible driver                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Premium SSD                       | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Premium SSD v2                    | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations].                                                                                              |
+| Local NVMe or temp SSD (Ephemeral Disks) | Azure Container Storage only                      | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. |
 
-### Using Premium SSD
+### [Premium SSD](#tab/pv1)
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
@@ -280,7 +280,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
     export SYSTEM_NODE_POOL_VMSKU="standard_d2s_v3"
     export USER_NODE_POOL_NAME="postgres"
     export USER_NODE_POOL_VMSKU="standard_d4s_v3"
-    
+
     az aks create \
         --name $AKS_PRIMARY_CLUSTER_NAME \
         --tags $TAGS \
@@ -326,7 +326,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
         --output table
     ```
 
-### Using Premium SSD v2
+### [Premium SSD v2](#tab/pv2)
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
@@ -340,7 +340,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
     <replace>
     ```
 
-### Using Azure Container Storage
+### [Local NVMe](#tab/acstor)
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
@@ -368,7 +368,7 @@ In this section, you get the AKS cluster credentials, which serve as the keys th
         --resource-group $RESOURCE_GROUP_NAME \
         --name $AKS_PRIMARY_CLUSTER_NAME \
         --output none
-     ```
+    ```
 
 2. Create the namespace for the CNPG controller manager services, the PostgreSQL cluster, and its related services by using the [`kubectl create namespace`][kubectl-create-namespace] command.
 

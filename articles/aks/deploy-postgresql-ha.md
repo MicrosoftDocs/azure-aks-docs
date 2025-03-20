@@ -119,17 +119,6 @@ The following table outlines the key properties set in the YAML deployment manif
 | `serviceAccountTemplate` | Contains the template needed to generate the service accounts and maps the AKS federated identity credential to the UAMI to enable AKS workload identity authentication from the pods hosting the PostgreSQL instances to external Azure resources. |
 | `barmanObjectStore` | Specific to the CNPG operator. Configures the barman-cloud tool suite using AKS workload identity for authentication to the Azure Blob Storage object store. |
 
-### Storage considerations
-
-The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
-
-| Storage type                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Premium SSD                       | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                        |
-| Premium SSD v2                    | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations]. |
-| Ephemeral Disk (NVMe or temp SSD) | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM.                                    |
-
-### Using Premium SSD
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
@@ -145,6 +134,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
           service.beta.kubernetes.io/azure-dns-label-name: $AKS_PRIMARY_CLUSTER_PG_DNSPREFIX
         labels:
           azure.workload.identity/use: "true"
+
       instances: 3
       startDelay: 30
       stopDelay: 30
@@ -154,6 +144,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
         highAvailability:
           enabled: true
         updateInterval: 30
+
       topologySpreadConstraints:
       - maxSkew: 1
         topologyKey: topology.kubernetes.io/zone
@@ -161,9 +152,11 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
         labelSelector:
           matchLabels:
             cnpg.io/cluster: $PG_PRIMARY_CLUSTER_NAME
+            
       affinity:
         nodeSelector:
           workload: postgres
+
       resources:
         requests:
           memory: '8Gi'
@@ -171,6 +164,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
         limits:
           memory: '8Gi'
           cpu: 2
+
       bootstrap:
         initdb:
           database: appdb
@@ -178,6 +172,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
           secret:
             name: db-user-pass
           dataChecksums: true
+
       storage:
         size: 2Gi
         pvcTemplate:
@@ -187,6 +182,7 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
             requests:
               storage: 2Gi
           storageClassName: managed-csi-premium
+
       walStorage:
         size: 2Gi
         pvcTemplate:
@@ -196,8 +192,10 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
             requests:
               storage: 2Gi
           storageClassName: managed-csi-premium
+
       monitoring:
         enablePodMonitor: true
+
       postgresql:
         parameters:
           archive_timeout: '5min'
@@ -219,12 +217,14 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
           max_wal_size: '1GB'
         pg_hba:
           - host all all all scram-sha-256
+
       serviceAccountTemplate:
         metadata:
           annotations:
             azure.workload.identity/client-id: "$AKS_UAMI_WORKLOAD_CLIENTID"
           labels:
             azure.workload.identity/use: "true"
+
       backup:
         barmanObjectStore:
           destinationPath: "https://${PG_PRIMARY_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/backups"
@@ -249,81 +249,6 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
     pg-primary-cnpg-r8c7unrw-3   1/1     Running   0          2m49s
     ```
 
-### Deploy with Premium SSD v2
-
-1. Because the Azure Disks CSI driver does not automatically install a Premium SSD v2 disk-based storage class by default, you need to first to define a custom storage class for dynamic provisioning. In this example, you create a storage class that references Premium SSD v2 disks. Create a file named azure-pv2-disk-sc.yaml, and copy in the following manifest.
-
-    ```yaml
-    apiVersion: storage.k8s.io/v1
-    kind: StorageClass
-    metadata:
-      name: premium2-disk-sc
-    parameters:
-      cachingMode: None
-      skuName: PremiumV2_LRS
-      DiskIOPSReadWrite: "4000"
-      DiskMBpsReadWrite: "1000"
-    provisioner: disk.csi.azure.com
-    reclaimPolicy: Delete
-    volumeBindingMode: Immediate
-    allowVolumeExpansion: true
-    ```
-
-1. Create the storage class with the kubectl apply command and specify your azure-pv2-disk-sc.yaml file:
-
-    ```bash
-    kubectl apply -f azure-pv2-disk-sc.yaml
-    ```
-
-1. Ensure the storage class was successfully created:
-
-    ```console
-    storageclass.storage.k8s.io/premium2-disk-sc created
-    ```
-
-1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
-
-    ```bash
-    <replace>
-    ```
-
-1. Validate that the primary PostgreSQL cluster was successfully created using the [`kubectl get`][kubectl-get] command. The CNPG Cluster CRD specified three instances, which can be validated by viewing running pods once each instance is brought up and joined for replication. Be patient as it can take some time for all three instances to come online and join the cluster.
-
-    ```bash
-    kubectl get pods --context $AKS_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE -l cnpg.io/cluster=$PG_PRIMARY_CLUSTER_NAME
-    ```
-
-    Example output
-
-    ```output
-    NAME                         READY   STATUS    RESTARTS   AGE
-    pg-primary-cnpg-r8c7unrw-1   1/1     Running   0          4m25s
-    pg-primary-cnpg-r8c7unrw-2   1/1     Running   0          3m33s
-    pg-primary-cnpg-r8c7unrw-3   1/1     Running   0          2m49s
-    ```
-
-### Deploy with local NVMe using Azure Container Storage
-
-1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
-
-    ```bash
-    <replace>
-    ```
-
-1. Validate that the primary PostgreSQL cluster was successfully created using the [`kubectl get`][kubectl-get] command. The CNPG Cluster CRD specified three instances, which can be validated by viewing running pods once each instance is brought up and joined for replication. Be patient as it can take some time for all three instances to come online and join the cluster.
-
-    ```bash
-    kubectl get pods --context $AKS_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE -l cnpg.io/cluster=$PG_PRIMARY_CLUSTER_NAME
-    ```
-
-    Example output
-
-    ```output
-    NAME                         READY   STATUS    RESTARTS   AGE
-    pg-primary-cnpg-r8c7unrw-1   1/1     Running   0          4m25s
-    pg-primary-cnpg-r8c7unrw-2   1/1     Running   0          3m33s
-    pg-primary-cnpg-r8c7unrw-3   1/1     Running   0          2m49s
-    ```
 
 ### Validate the Prometheus PodMonitor is running
 
@@ -407,14 +332,12 @@ Click the Save button to add the panel to your dashboard. You can add other pane
 
 Click the Save icon to save your dashboard.
 
+---
+
 ## Next steps
 
-In this how-to guide, you learned how to:
-
-* Use Azure CLI to create a multi-zone AKS cluster.
-* Deploy a highly available PostgreSQL cluster and database using the CNPG operator.
-
-To learn more about how you can leverage AKS for your workloads, see [What is Azure Kubernetes Service (AKS)?][what-is-aks]
+> [!div class="nextstepaction"]
+> [Test and validate PostgreSQL database on AKS][validate-postgresql]
 
 ## Contributors
 
@@ -434,12 +357,11 @@ To learn more about how you can leverage AKS for your workloads, see [What is Az
 
 [helm-upgrade]: https://helm.sh/docs/helm/helm_upgrade/
 [create-infrastructure]: ./create-postgresql-ha.md
+[validate-postgresql]: ./validate-postgresql-ha.md
 [kubectl-create-secret]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_create/kubectl_create_secret/
 [kubectl-get]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_get/
 [kubectl-apply]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_apply/
-[pv2-limitations]: https://learn.microsoft.com/en-us/azure/virtual-machines/disks-types#premium-ssd-v2-limitations
 [helm-repo-add]: https://helm.sh/docs/helm/helm_repo_add/
 [az-aks-show]: /cli/azure/aks#az_aks_show
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
 [cluster-crd]: https://cloudnative-pg.io/documentation/1.23/cloudnative-pg.v1/#postgresql-cnpg-io-v1-ClusterSpec
-[what-is-aks]: ./what-is-aks.md

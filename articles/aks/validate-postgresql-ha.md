@@ -12,7 +12,7 @@ ms.custom: innovation-engine, aks-related-content
 
 In this article, you will learn how to set up monitoring for PostgreSQL using Prometheus and Grafana, deploy a sample dataset, upgrade both PostgreSQL and an AKS cluster, simulate a cluster interruption with a PostgreSQL replica failover, and perform a backup and restore of the database.
 
--   If you haven't already created the required infrastructure for this deployment, follow the steps in [Create infrastructure for deploying a highly available PostgreSQL database on AKS][deploy-postgresql-ha] to get set up, and then you can return to this article.
+* If you haven't already created the required infrastructure for this deployment, follow the steps in [Create infrastructure for deploying a highly available PostgreSQL database on AKS][deploy-postgresql-ha] to get set up, and then you can return to this article.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
@@ -633,11 +633,13 @@ In this section, you trigger a sudden failure by deleting the pod running the pr
 
 In this how-to guide, you learned how to:
 
--   Set up monitoring for PostgreSQL using Prometheus and Grafana.
--   Deploy a sample dataset to the PostgreSQL database.
--   Perform PostgreSQL and AKS cluster upgrades.
--   Simulate a cluster interruption and PostgreSQL replica failover.
--   Perform a backup and restore of the PostgreSQL database.
+* Use Azure CLI to create a multi-zone AKS cluster.
+* Deploy a highly available PostgreSQL cluster and database using the CNPG operator.
+* Set up monitoring for PostgreSQL using Prometheus and Grafana.
+* Deploy a sample dataset to the PostgreSQL database.
+* Perform PostgreSQL and AKS cluster upgrades.
+* Simulate a cluster interruption and PostgreSQL replica failover.
+* Perform a backup and restore of the PostgreSQL database.
 
 To learn more about how you can leverage AKS for your workloads, see [What is Azure Kubernetes Service (AKS)?][what-is-aks]
 
@@ -645,13 +647,13 @@ To learn more about how you can leverage AKS for your workloads, see [What is Az
 
 _Microsoft maintains this article. The following contributors originally wrote it:_
 
--   Ken Kilty | Principal TPM
--   Russell de Pina | Principal TPM
--   Adrian Joian | Senior Customer Engineer
--   Jenny Hayes | Senior Content Developer
--   Carol Smith | Senior Content Developer
--   Erin Schaffer | Content Developer 2
--   Adam Sharif | Customer Engineer 2
+* Ken Kilty | Principal TPM
+* Russell de Pina | Principal TPM
+* Adrian Joian | Senior Customer Engineer
+* Jenny Hayes | Senior Content Developer
+* Carol Smith | Senior Content Developer
+* Erin Schaffer | Content Developer 2
+* Adam Sharif | Customer Engineer 2
 
 <!-- LINKS -->
 
