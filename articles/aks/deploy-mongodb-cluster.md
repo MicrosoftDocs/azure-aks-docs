@@ -351,7 +351,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
 
 :::zone pivot="terraform"
 
-4. Add the following terraform configuration in `module/main.tf` to create a federated credential.
+4. Add the following terraform configuration in `mongodb/main.tf` to create a federated credential.
 
     ```hcl
     ## Section to create the federated identity credential for external secret operator
@@ -365,7 +365,7 @@ In this section, you use Helm to install External Secrets Operator. External Sec
     }
     ```
 
-5. Add the following terraform configuration in `module/main.tf` to give permission to the user-assigned identity to access the secret.
+5. Add the following terraform configuration in `mongodb/main.tf` to give permission to the user-assigned identity to access the secret.
 
     ```hcl
     ## Section to assign permission to the user-assigned identity to access the secret
