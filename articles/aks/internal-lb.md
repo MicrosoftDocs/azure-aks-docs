@@ -14,8 +14,6 @@ ms.date: 12/11/2024
 
 # Use an internal load balancer with Azure Kubernetes Service (AKS)
 
-[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
-
 You can create and use an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS). An internal load balancer doesn't have a public IP and makes a Kubernetes service accessible only to applications that can reach the private IP. These applications can be within the same VNET or in another VNET through VNET peering. This article shows you how to create and use an internal load balancer with AKS.
 
 > [!IMPORTANT]
@@ -25,7 +23,7 @@ You can create and use an internal load balancer to restrict access to your appl
 
 * This article assumes that you have an existing AKS cluster. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * You need the Azure CLI version 2.0.59 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Use kubenet networking with your own IP address ranges in AKS][use-kubenet] or [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has read access to that subnet.
+* If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has read access to that subnet.
   * For more information on permissions, see [Delegate AKS access to other Azure resources][aks-sp].
 
 ## Create an internal load balancer
