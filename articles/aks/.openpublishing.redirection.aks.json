@@ -550,13 +550,15 @@
             "redirect_url": "/azure/aks/how-to-apply-fqdn-filtering-policies",
             "redirect_document_id": false
         },
-        {"source_path_from_root": "/articles/aks/network-observability-managed-cli.md",
+        {
+            "source_path_from_root": "/articles/aks/network-observability-managed-cli.md",
             "redirect_url": "/azure/aks/monitor-aks#network-observability",
             "redirect_document_id": false
         },
-        {"source_path_from_root": "/articles/aks/network-observability-overview.md",
-        "redirect_url": "/azure/aks/monitor-aks#network-observability",
-        "redirect_document_id": false
+        {
+            "source_path_from_root": "/articles/aks/network-observability-overview.md",
+            "redirect_url": "/azure/aks/monitor-aks#network-observability",
+            "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/advanced-network-container-services-security-concepts.md",
@@ -581,6 +583,11 @@
         {
             "source_path_from_root": "/articles/aks/configure-kubenet-dual-stack.md",
             "redirect_url": "/azure/aks/configure-dual-stack",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade-aks-ipam-and-dataplane.md",
+            "redirect_url": "/azure/aks/upgrade-azure-cni",
             "redirect_document_id": false
         }
      ]
