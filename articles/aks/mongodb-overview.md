@@ -63,6 +63,9 @@ The MongoDB deployment strategy consists of the following components:
 
 *Microsoft maintains this article. The following contributors originally wrote it:*
 
+
+* Ketan Chawda | Senior Customer Engineer
+* Naveed Kharadi | Customer Experience Engineer
 * Nelly Kiboi | Service Engineer
 * Saverio Proto | Principal Customer Experience Engineer
 * Don High | Principal Customer Engineer
@@ -70,8 +73,6 @@ The MongoDB deployment strategy consists of the following components:
 * Ken Kilty | Principal TPM
 * Russell de Pina | Principal TPM
 * Colin Mixon | Product Manager
-* Ketan Chawda | Senior Customer Engineer
-* Naveed Kharadi | Customer Experience Engineer
 * Erin Schaffer | Content Developer 2
 * Carol Smith | Senior Content Developer
 
