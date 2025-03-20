@@ -577,6 +577,11 @@
             "source_path_from_root": "/articles/aks/learn/quick-kubernetes-automatic-deploy.md",
             "redirect_url": "/azure/aks/automatic/quick-automatic-managed-network",
             "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/configure-kubenet-dual-stack.md",
+            "redirect_url": "/azure/aks/configure-dual-stack",
+            "redirect_document_id": false
         }
      ]
 }
