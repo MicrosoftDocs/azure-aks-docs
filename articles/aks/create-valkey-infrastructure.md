@@ -213,7 +213,7 @@ To deploy the infrastructure using Terraform we are going to use the [Azure Veri
     cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads-valkey
     ```
 
-2. Set Valkey variables by creating a `valkey.tfvars` file with the following contents.You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
+2. Set Valkey variables by creating a `valkey.tfvars` file with the following contents. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
 
     ```terraform
         acr_task_content = <<-EOF
