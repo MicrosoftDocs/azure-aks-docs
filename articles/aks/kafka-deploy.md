@@ -145,7 +145,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
 
 ## Kafka Cluster Architecture and Considerations
 
-The Strimzi Cluster Operator enables declarative Kafka deployment on AKS using custom resource definitions. Beginning with Strimzi 0.46, Kafka clusters use [KRaft] (https://strimzi.io/blog/2024/03/21/kraft-migration/) directly within Kafka instead of ZooKeeper. 
+The Strimzi Cluster Operator enables declarative Kafka deployment on AKS using custom resource definitions. Beginning with Strimzi 0.46, Kafka clusters use [KRaft](https://strimzi.io/blog/2024/03/21/kraft-migration/) directly within Kafka instead of ZooKeeper. 
 
 Strimzi uses the KafkaNodePool custom resource, where each pool is assigned a specific role (broker, controller, or both):
 

@@ -616,26 +616,26 @@ In this section, you deploy the following infrastructure resources using Terrafo
 
 After the cluster is deployed and connectivity has been validated, apply the multi-zone storage configuration using the `kubectl apply` command.  
 
-    ```bash  
-    kubectl apply -f - << EOF  
+    ```bash
+    kubectl apply -f - <<EOF
     ---  
     apiVersion: containerstorage.azure.com/v1  
     kind: StoragePool  
     metadata:  
-    name: azuredisk-zr  
-    namespace: acstor  
+      name: azuredisk-zr  
+      namespace: acstor  
     spec:  
-    zones: ["1","2","3"]  
-    poolType:  
+      zones: ["1","2","3"]  
+      poolType:  
         azureDisk:  
-        skuName: PremiumV2_LRS  
-        iopsReadWrite: 5000  
-        mbpsReadWrite: 200  
-    resources:  
+          skuName: PremiumV2_LRS  
+          iopsReadWrite: 5000  
+          mbpsReadWrite: 200  
+      resources:  
         requests:  
-        storage: 100Gi  
+          storage: 100Gi      
     EOF  
-    ```  
+    ```
 
 > [!IMPORTANT]  
 > The storage configuration above represents a starting point. For production deployments, adjust the `iopsReadWrite`, `mbpsReadWrite`, and `storage` values based on your expected Kafka cluster size and workload as discussed in the [Azure Container Storage section](add-link-to-section).  
