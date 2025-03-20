@@ -1,6 +1,6 @@
 ---
-title: Configure monitoring and networking for a Kafka cluster on AKS using Strimzi.
-description: In this article, we provide guidance for configuring monitoring and networking for Kafka cluster on Azure Kubernetes Service (AKS) deployed using Strimzi. 
+title: Configure monitoring and networking for a Kafka cluster on AKS using Strimzi  
+description: In this article, we provide guidance for configuring monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS) deployed using Strimzi. 
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
 ms.date: 03/31/2025
@@ -8,7 +8,11 @@ author: senavar
 ms.author: senavar
 ---
 
-## Configure monitoring with Azure Managed Prometheus and Grafana  
+# Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)  
+
+In this article, we configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS).  
+
+## Monitoring with Azure Managed Prometheus and Grafana  
 
 Strimzi implements monitoring by exposing JMX metrics through Prometheus JMX Exporter, which transforms Kafka's internal performance data into a format that Prometheus can collect and analyze. This monitoring pipeline enables real-time visibility into:  
 
@@ -36,7 +40,6 @@ Before proceeding, ensure your Kafka cluster was deployed with the [JMX Exporter
     >  
 
   ```bash  
-
     kubectl apply -f - <<EOF
     ---
     apiVersion: azmonitoring.coreos.com/v1
@@ -139,7 +142,6 @@ Before proceeding, ensure your Kafka cluster was deployed with the [JMX Exporter
           action: replace
     EOF
   ```
-
 ### Upload Grafana dashboards for Kafka monitoring
 
 Strimzi provides ready-to-use Grafana dashboards designed specifically for monitoring Kafka clusters in the [strimzi/strimzi-kafka-operator GitHub repository](https://github.com/strimzi/strimzi-kafka-operator/tree/main/examples/metrics/grafana-dashboards). These dashboards visualize the metrics exposed by the JMX Prometheus Exporter configured earlier.  
@@ -148,9 +150,9 @@ To implement Kafka monitoring with Grafana:
 
 1. Select dashboards from the GitHub repository based on your specific monitoring needs.  
 1. Download the JSON dashboard files from the repository.  
-1. [Import the dashboards](https://learn.microsoft.com/azure/managed-grafana/how-to-create-dashboard?tabs=azure-portal#import-a-grafana-dashboard) into your Azure Managed Grafana instance through the Grafana UI.
+1. [Import the dashboards](/azure/managed-grafana/how-to-create-dashboard?tabs=azure-portal#import-a-grafana-dashboard) into your Azure Managed Grafana instance through the Grafana UI.  
 
-### Configure Kafka Exporter to enable enhanced prometheus metrics 
+### Configure Kafka Exporter to enable enhanced Prometheus metrics 
 
 While the JMX Prometheus Exporter provides internal Kafka metrics, the Kafka Exporter complements this by focusing specifically on consumer lag monitoring and topic-level insights. This exporter:  
 
@@ -276,11 +278,9 @@ If you wish to use custom DNS names, you must configure the `advertisedHost` for
             advertisedHost: kafka-broker-0.example.com
   ```
 
-
 ### Option 3: External access via Private Load Balancer
 
 If you want to access the Kafka cluster outside of the AKS cluster but within an Azure virtual network, you can expose the bootstrap service and brokers through an internal load balancer with private IP addresses:  
-
 
   ```yaml
   listeners:

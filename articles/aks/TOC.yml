@@ -459,12 +459,12 @@
               items:
                 - name: Overview
                   href: kafka-overview.md
-                - name: Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
-                  href: kafka-infrastructure.md
-                - name: Deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)
-                  href: kafka-deploy.md
-                - name: Configure monitoring and networking for a Kafka cluster on AKS using Strimzi
-                  href: kafka-configure.md
+                - name: Prepare Kafka infrastructure  
+                  href: kafka-infrastructure.md  
+                - name: Deploy Strimzi and Kafka components  
+                  href: kafka-deploy.md  
+                - name: Configure monitoring and networking for the Kafka cluster  
+                  href: kafka-configure.md  
         - name: AI and machine learning workloads
           items:
             - name: Overview

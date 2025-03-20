@@ -35,9 +35,9 @@ The Strimzi Cluster Operator is the central component that manages the entire Ka
 
 Together, these operators create a fully declarative management system where your Kafka infrastructure is defined as Kubernetes resources that you can version control, audit, and consistently deploy across environments.  
 
-### Kafka Cluster
+### Kafka cluster  
 
- The Strimzi Cluster Operator manages Kafka clusters through specialized custom resources:
+The Strimzi Cluster Operator manages Kafka clusters through specialized custom resources:  
 
 * **KafkaNodePools**: Define groups of Kafka nodes with specific roles (broker, controller, or both).  
 * **Kafka**: The main custom resource that ties everything together, defining cluster-wide configurations.  
@@ -47,8 +47,6 @@ A typical deployment of `KafkaNodePools` and `Kafka` includes:
 * Dedicated broker nodes that handle client traffic and data storage.
 * Dedicated controller nodes that manage cluster metadata and coordination.
 * Multiple replicas of each component distributed across availability zones.  
-
-Together, these components create a fully declarative management system where your Kafka infrastructure is defined as Kubernetes resources that you can version control, audit, and consistently deploy across environments.
 
 ### Cruise Control 
 
@@ -149,7 +147,7 @@ Effective monitoring of Kafka clusters includes:
 * Integration with Azure Managed Prometheus and Azure Managed Grafana.  
 * Alerting on key performance indicators and health metrics.  
 
-## When to use kafka on AKS  
+## When to use Kafka on AKS  
 
 Consider running Kafka on AKS when:  
 
