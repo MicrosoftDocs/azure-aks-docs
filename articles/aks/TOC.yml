@@ -507,8 +507,12 @@
           href: aks-zone-resiliency.md
         - name: Propagate Kubernetes resources across multiple clusters
           href: /azure/kubernetes-fleet/resource-propagation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Deploy SpinKube to run serverless Wasm workloads
-          href: deploy-spinkube.md
+        - name: WebAssembly workloads
+          items:        
+            - name: Deploy SpinKube to run serverless Wasm workloads
+              href: deploy-spinkube.md
+            - name: Deploy wasmCloud to AKS to run distributed Wasm workloads
+              href: wasmcloud.md
     - name: Cost optimization
       items:
         - name: Understand AKS usage and costs
@@ -683,8 +687,8 @@
               href: azure-cni-powered-by-cilium.md
             - name: Use kubenet
               href: configure-kubenet.md
-            - name: Use kubenet with dual-stack networking
-              href: configure-kubenet-dual-stack.md
+            - name: Use AKS with dual-stack networking
+              href: configure-dual-stack.md
             - name: Use Azure CNI
               href: configure-azure-cni.md
             - name: Bring your own CNI
