@@ -11,7 +11,7 @@ ms.date: 03/07/2025
 
 # Custom certificate authority (CA) in Azure Kubernetes Service (AKS)
 
-Custom Certificate Authority (CA) allows you to add up to 10 base64 encoded certificates to your node's trust store. This feature is often needed when CAs are required to be present on the node, for example when connecting to a private registry.  
+Custom Certificate Authority (CA) allows you to add up to 10 base64-encoded certificates to your node's trust store. This feature is often needed when CAs are required to be present on the node, for example when connecting to a private registry.  
 
 This article shows you how to create custom CAs and apply them to your AKS clusters. 
 
@@ -28,7 +28,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 ## Install CAs on your node's trust store
 
-1. Create a file containing CAs
+1. Create a file containing CAs.
 
 Create a text file containing up to 10 blank line separated certificates. When this file is passed to your cluster, these certificates are installed in your node's trust stores.
 
@@ -44,7 +44,7 @@ Example text file: "FileWithCAs"
     -----END CERTIFICATE-----
  ```
 
-2. Pass certificates to your cluster
+2. Pass certificates to your cluster.
 
 You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] to pass certificates to your cluster. Once the operation completes, the certificates are installed in your node's trust stores.
 
@@ -65,16 +65,16 @@ You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-upd
     az aks update \
         --resource-group <resource-group-name> \
         --name <cluster-name> \
-        --custom-ca-trust-certificates FileWithCAs
+        --custom-ca-trust-certificates <path-to-ca-file>
     ```
  > [!NOTE]
  > This operation triggers a model update to ensure all existing nodes have the same CAs installed for correct provisioning. AKS creates new nodes, drains existing nodes, deletes existing nodes, and replaces them with nodes that have the new set of CAs installed.
 
- 3. Check that CAs have been installed
+3. Check that CAs have been installed.
  Use the [`az aks show`][az-aks-show] command to check that CAs have been installed. 
 
 ```azurecli-interactive
-az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME | grep securityProfile -A 4
+az aks show -g <resource-group-name> -n <cluster-name> | grep securityProfile -A 4
 ```
 The securityProfile output should include your Custom CA Trust Certificates.
 
