@@ -72,12 +72,12 @@ To deploy the `mongo-express` client app, you first need to create secrets speci
 
 1. Generate a random password using the below function:
 
-  ```bash
-   #This function generates secrets of 32 characters using only alphanumeric characters   
-   generateRandomPasswordString() {
-    cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
-   }
-   ```
+    ```bash
+    #This function generates secrets of 32 characters using only alphanumeric characters   
+    generateRandomPasswordString() {
+      cat /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1
+    }
+    ```
 :::zone pivot="azure-cli"
 
 2. Create a `mongo-express` basic-auth username and password secret to use to log in to the client app using the [`az keyvault secret set`](/cli/azure/keyvault/secret#az-keyvault-secret-set) commands:
