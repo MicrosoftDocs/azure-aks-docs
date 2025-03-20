@@ -105,6 +105,7 @@ For more information on AKS security best practices, see [Best practices for clu
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-aks-show]: /cli/azure/aks#az-aks-show
+[install-azure-cli]:  /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [kubernetes-secrets]: https://kubernetes.io/docs/concepts/configuration/secret/
