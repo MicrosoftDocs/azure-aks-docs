@@ -249,6 +249,14 @@ The following table outlines the key properties set in the YAML deployment manif
     pg-primary-cnpg-r8c7unrw-3   1/1     Running   0          2m49s
     ```
 
+> [!IMPORTANT]  
+> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it will enter a `CrashLoopBackOff` state. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
+>  
+> ```bash  
+> kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
+> ```  
+>  
+> Improvements to NVMe persistence and recovery are planned for release later in 2025.
 
 ### Validate the Prometheus PodMonitor is running
 
