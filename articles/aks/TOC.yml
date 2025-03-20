@@ -433,8 +433,10 @@
                   href: postgresql-ha-overview.md
                 - name: Create infrastructure resources
                   href: create-postgresql-ha.md
-                - name: Deploy and test PostgreSQL
+                - name: Deploy PostgreSQL
                   href: deploy-postgresql-ha.md
+                - name: Test PostgreSQL
+                  href: validate-postgresql-ha.md
             - name: Deploy a Valkey cluster
               items:
                 - name: Overview

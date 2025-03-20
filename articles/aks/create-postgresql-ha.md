@@ -262,6 +262,18 @@ In this section, you create a multizone AKS cluster with a system node pool. The
 
 You also add a user node pool to the AKS cluster to host the PostgreSQL cluster. Using a separate node pool allows for control over the Azure VM SKUs used for PostgreSQL and enables the AKS system pool to optimize performance and costs. You apply a label to the user node pool that you can reference for node selection when deploying the CNPG operator later in this guide. This section might take some time to complete.
 
+### Storage considerations
+
+The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
+
+| Storage type                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Premium SSD                       | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                        |
+| Premium SSD v2                    | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations]. |
+| Ephemeral Disk (NVMe or temp SSD) | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM.                                    |
+
+### Using Premium SSD
+
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
     ```bash
@@ -312,6 +324,34 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
         --zones 1 2 3 \
         --labels workload=postgres \
         --output table
+    ```
+
+### Using Premium SSD v2
+
+1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
+
+    ```bash
+    <replace>
+    ```
+
+2. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
+
+    ```bash
+    <replace>
+    ```
+
+### Using Azure Container Storage
+
+1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
+
+    ```bash
+    <replace>
+    ```
+
+2. Add a user node pool to the AKS cluster using the [`az aks nodepool add`][az-aks-node-pool-add] command.
+
+    ```bash
+    <replace>
     ```
 
 > [!NOTE]
