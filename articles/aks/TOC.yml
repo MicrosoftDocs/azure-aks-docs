@@ -690,7 +690,7 @@
             - name: Bring your own CNI
               href: use-byo-cni.md
             - name: Upgrade Azure CNI IPAM modes and Dataplane Technology
-              href: upgrade-azure-cni-ipam-and-dataplane.md
+              href: upgrade-azure-cni.md
         - name: DNS
           items:
             - name: Use a static IP address and DNS label
