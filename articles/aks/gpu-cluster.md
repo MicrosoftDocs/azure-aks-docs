@@ -31,8 +31,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 > [!NOTE]
 > For AKS API version 2023-06-01 or later, the default channel for node OS upgrade is *NodeImage*. For previous versions, the default channel is *None*. To learn more, see [auto-upgrade](./auto-upgrade-node-image.md).
 
-* [NVadsA10](/azure/virtual-machines/nva10v5-series) v5-series are *not* a recommended SKU for GPU VHD.
-* Updating an existing node pool to add GPU isn't supported.
+* Updating an existing node pool to add GPU VM size is not supported on AKS.
 
 > [!NOTE]
 > The AKS GPU image (preview) is retired starting on January 10, 2025. The custom header is no longer available, meaning that you can't create new GPU-enabled node pools using the AKS GPU image. We recommend migrating to or using the default GPU configuration rather than the GPU image, as the GPU image is no longer supported. For more information, see [AKS release notes](https://github.com/Azure/AKS/releases), or view this retirement announcement in our [AKS public roadmap](https://github.com/Azure/AKS/issues/4472).
@@ -393,17 +392,6 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
     [...]
     Adding run metadata for 499
     ```
-
-## Use Container Insights to monitor GPU usage
-
-[Container Insights with AKS][aks-container-insights] monitors the following GPU usage metrics:
-
-| Metric name | Metric dimension (tags) | Description |
-|-------------|-------------------------|-------------|
-| containerGpuLimits | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName` | Each container can specify limits as one or more GPUs. It is not possible to request or limit a fraction of a GPU. |
-| containerGpuRequests | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName` | Each container can request one or more GPUs. It is not possible to request or limit a fraction of a GPU. |
-| nodeGpuAllocatable | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `gpuVendor` | Number of GPUs in a node that can be used by Kubernetes. |
-| nodeGpuCapacity | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `gpuVendor` | Total Number of GPUs in a node. |
 
 ## Clean up resources
 
