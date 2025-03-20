@@ -637,7 +637,6 @@ In this how-to guide, you learned how to:
 * Deploy a highly available PostgreSQL cluster and database using the CNPG operator.
 * Set up monitoring for PostgreSQL using Prometheus and Grafana.
 * Deploy a sample dataset to the PostgreSQL database.
-* Perform PostgreSQL and AKS cluster upgrades.
 * Simulate a cluster interruption and PostgreSQL replica failover.
 * Perform a backup and restore of the PostgreSQL database.
 
@@ -666,3 +665,4 @@ _Microsoft maintains this article. The following contributors originally wrote i
 [kubectl-delete]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_delete/
 [az-group-delete]: /cli/azure/group#az_group_delete
 [what-is-aks]: ./what-is-aks.md
+[deploy-postgresql-ha]: ./deploy-postgresql-ha.md

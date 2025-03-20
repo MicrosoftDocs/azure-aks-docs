@@ -356,8 +356,6 @@ Click the Save icon to save your dashboard.
 * Carol Smith | Senior Content Developer
 * Erin Schaffer | Content Developer 2
 * Adam Sharif | Customer Engineer 2
-* Eric Cheng | Product Manager
-* Connor Bradshaw | Software Engineer
 
 <!-- LINKS -->
 
