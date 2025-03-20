@@ -739,15 +739,6 @@ Review the Strimzi documentation to learn more about [using the Topic Operator t
     ```
 Review the Strimzi documentation to learn more about [using the User Operator to manage Kafka users](https://strimzi.io/docs/operators/latest/deploying#assembly-using-the-user-operator-str).
 
-
-
-
-
-
-
-
-
-
 ## Next step  
 
 > [!div class="nextstepaction"]  

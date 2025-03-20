@@ -204,6 +204,10 @@ A Helm chart is available to deploy the Kafka Exporter alongside your existing m
 > This Grafana dashboard uses the AngularJS plugin that will be deprecated in future versions of Grafana. For more information, see [Angular support deprecation](https://grafana.com/docs/grafana/latest/developers/angular_deprecation/). Kafka Exporter metrics will still be available, but you might need to create your own dashboards once the deprecation occurs.  
 >  
 
+### Monitoring Azure Container Storage performance using Prometheus
+
+ Prometheus metrics are automatically enabled for Azure Container Storage. However, these metrics are only available when using Azure Managed Prometheus. For detailed information about available metrics and collection methods, see [Collecting Azure Container Storage Prometheus metrics](https://learn.microsoft.com/azure/storage/container-storage/enable-monitoring#collect-azure-container-storage-prometheus-metrics).
+
 ## Ingress for Kafka cluster  
 
 Strimzi offers flexible options for exposing your Kafka cluster to clients through *listeners*. Each listener defines how clients connect to your Kafka brokers with specific protocols, authentication methods, and network exposure patterns.  
