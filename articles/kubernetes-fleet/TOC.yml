@@ -36,6 +36,8 @@
           href: concepts-rollout-strategy.md
         - name: Controlling eviction and disruption of placed resources
           href: concepts-eviction-disruption.md
+        - name: Placement strategy and resource snapshots
+          href: concepts-placement-snapshots.md
         - name: Scheduler and scheduling framework
           href: concepts-scheduler-scheduling-framework.md
     - name: Layer 4 load balancing across multiple clusters
