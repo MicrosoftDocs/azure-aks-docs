@@ -33,6 +33,18 @@ The Envoy proxy, augmented with Cilium Network Filters, then decides whether to 
 
 [![Screenshot showing how L7 policies work](./media/advanced-container-networking-services/how-l7-policy-works.png)](./media/advanced-container-networking-services/how-l7-policy-works.png#lightbox)
 
+## Monitoring L7 Traffic with Hubble and Grafana
+
+To gain insights into Layer 7 (L7) traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages Hubble, which is enabled by default. Hubble provides detailed flow-level metrics.
+
+To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder. Examples include **"Kubernetes / Networking / L7 (Namespace)"** and **"Kubernetes / Networking / L7 (Workload)"**.
+
+These dashboards offer granular visibility into L7 flow data at the cluster, namespace, and workload levels.
+
+> [!NOTE]
+> These dashboards will only display data if you have this feature enabled on your cluster and have relevant policies applied.
+>
+
 ## Key benefits
 
 **Granular Application-Level Control**: L7 policies allow for fine-grained control over network traffic based on application-specific attributes, such as HTTP methods, gRPC paths, and Kafka topics. This extends beyond the basic IP address and port-based control of traditional network policies.

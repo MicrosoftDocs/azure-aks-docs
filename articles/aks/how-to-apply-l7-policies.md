@@ -63,7 +63,8 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 
 ```azurecli-interactive
-# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
+# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value. For this demo you will need --acns-advanced-network policies to at least have L7 enabled.
+
 export CLUSTER_NAME="<aks-cluster-name>"
 
 # Create an AKS cluster
@@ -79,7 +80,8 @@ az aks create \
     --node-count 2 \
     --pod-cidr 192.168.0.0/16 \
     --kubernetes-version 1.29 \
-    --enable-acns
+    --enable-acns \
+    --acns-advanced-networkpolicies <L7/FQDN/None>
 ```
 
 #### [**Non-Cilium**](#tab/non-cilium)
@@ -95,13 +97,14 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Co
 
 
 > [!NOTE]
-> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services.
+> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services. For this demo you will need --acns-advanced-network policies to at least have L7 enabled.
 
 ```azurecli-interactive
 az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
-    --enable-acns
+    --enable-acns \
+    --acns-advanced-networkpolicies <L7/FQDN/None>
 ```
 
 ---    
