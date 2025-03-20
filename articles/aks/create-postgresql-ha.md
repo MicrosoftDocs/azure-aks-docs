@@ -358,6 +358,9 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
 
 ### [Local NVMe](#tab/acstor)
 
+> [!IMPORTANT]  
+> Choose a VM SKU that supports local NVMe disks, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
+
 1. Update AKS cluster to install Azure Container Storage on user nodepool
 
     ```bash
@@ -630,3 +633,5 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 [deploy-postgresql]: ./deploy-postgresql-ha.md
 [install-krew]: https://krew.sigs.k8s.io/
 [cnpg-plugin]: https://cloudnative-pg.io/documentation/current/kubectl-plugin/#using-krew
+[storage-optimized-vms]: /azure/virtual-machines/sizes/overview#storage-optimized
+[gpu-vms]: /azure/virtual-machines/sizes/overview#gpu-accelerated
