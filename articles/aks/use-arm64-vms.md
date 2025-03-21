@@ -1,6 +1,6 @@
 ---
 title: Use Arm64 Virtual Machines in Azure Kubernetes Service (AKS) for cost effectiveness
-description: Learn how to create node pools using Arm64 Virtual Machines with Azure Kubernetes Service (AKS) for cost effectiveness
+description: Learn how to create node pools using Arm64 Virtual Machines with Azure Kubernetes Service (AKS) for cost effectiveness.
 ms.topic: how-to
 ms.date: 02/25/2025
 author: allyford
