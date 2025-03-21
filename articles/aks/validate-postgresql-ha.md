@@ -1,6 +1,6 @@
 ---
 title: "Test and validate a highly available PostgreSQL database on AKS with Azure CLI"
-description: In this article, you deploy a highly available PostgreSQL database on AKS using the CloudNativePG operator.
+description: Inspect your newly created PostgreSQL database on AKS and learn how to conduct various day-2 operations
 ms.topic: how-to
 ms.date: 06/07/2024
 author: kenkilty
