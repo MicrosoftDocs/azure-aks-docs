@@ -1,6 +1,6 @@
 ---
 title: Azure Kubernetes Service (AKS) for Extended Zones (preview)
-description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Extended Zone cluster
+description: Learn how to deploy an Azure Kubernetes Service (AKS) for Azure Extended Zone cluster.
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
@@ -8,7 +8,7 @@ ms.topic: how-to
 ms.date: 03/20/2025
 ---
 
-# Azure Kubernetes Service for Extended Zones (preview)
+# Azure Kubernetes Service (AKS) for Extended Zones (preview)
 
 Azure Kubernetes Service (AKS) for Extended Zones provides an extensive and sophisticated set of capabilities that make it simpler to deploy and operate a fully managed Kubernetes cluster in an Extended Zone scenario.
 
