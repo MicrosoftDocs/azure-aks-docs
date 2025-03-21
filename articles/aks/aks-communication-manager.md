@@ -18,6 +18,9 @@ The AKS Communication Manager streamlines notifications for all your AKS mainten
 
 - Create [Planned maintenance window][planned-maintenance] as mentioned here for your auto upgrade configuration. 
 
+> [!NOTE]
+> Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation. 
+
 ## How to set up communication manager
 
 1. Create an Azure "Logic App" resource. It's used to send auto upgrade event notices to your email.

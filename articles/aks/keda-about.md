@@ -9,6 +9,8 @@ ms.author: tomkerkhove
 
 # Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on
 
+[!INCLUDE [change value callout](./includes/keda/change-value-callout.md)]
+
 Kubernetes Event-driven Autoscaling (KEDA) is a single-purpose and lightweight component that strives to make application autoscaling simple and is a CNCF Graduate project.
 
 It applies event-driven autoscaling to scale your application to meet demand in a sustainable and cost-efficient manner with scale-to-zero.

@@ -90,13 +90,15 @@
       href: tutorial-kubernetes-prepare-acr.md
     - name: 3 - Create Kubernetes cluster
       href: tutorial-kubernetes-deploy-cluster.md
-    - name: 4 - Deploy containerized application
+    - name: 4 - Deploy Azure Container Storage
+      href: tutorial-kubernetes-deploy-azure-container-storage.md      
+    - name: 5 - Deploy containerized application
       href: tutorial-kubernetes-deploy-application.md
-    - name: 5 - Use PaaS services
+    - name: 6 - Use PaaS services
       href: tutorial-kubernetes-paas-services.md
-    - name: 6 - Scale application
+    - name: 7 - Scale application
       href: tutorial-kubernetes-scale.md
-    - name: 7 - Upgrade cluster
+    - name: 8 - Upgrade cluster
       href: tutorial-kubernetes-upgrade-cluster.md
 - name: Concepts
   items:
@@ -195,6 +197,8 @@
       href: concepts-storage.md
     - name: Scaling
       href: concepts-scale.md
+    - name: Node images
+      href: node-images.md
     - name: Node health
       items:
         - name: Node auto-repair
@@ -369,6 +373,8 @@
               href: manage-ssh-node-access.md
             - name: Deploy trusted launch on AKS
               href: use-trusted-launch.md
+            - name: Use eTags for Concurrency Control
+              href: use-etags.md
         - name: Node pools
           items:
             - name: Create node pools
@@ -501,12 +507,18 @@
           href: aks-zone-resiliency.md
         - name: Propagate Kubernetes resources across multiple clusters
           href: /azure/kubernetes-fleet/resource-propagation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Deploy SpinKube to run serverless Wasm workloads
-          href: deploy-spinkube.md
+        - name: WebAssembly workloads
+          items:        
+            - name: Deploy SpinKube to run serverless Wasm workloads
+              href: deploy-spinkube.md
+            - name: Deploy wasmCloud to AKS to run distributed Wasm workloads
+              href: wasmcloud.md
     - name: Cost optimization
       items:
         - name: Understand AKS usage and costs
           href: understand-aks-costs.md
+        - name: Optimize AKS usage and costs
+          href: optimize-aks-costs.md
         - name: Enable cost analysis on your cluster
           href: cost-analysis.md
         - name: Use Arm64 VMs for cost effectiveness
@@ -675,14 +687,14 @@
               href: azure-cni-powered-by-cilium.md
             - name: Use kubenet
               href: configure-kubenet.md
-            - name: Use kubenet with dual-stack networking
-              href: configure-kubenet-dual-stack.md
+            - name: Use AKS with dual-stack networking
+              href: configure-dual-stack.md
             - name: Use Azure CNI
               href: configure-azure-cni.md
             - name: Bring your own CNI
               href: use-byo-cni.md
-            - name: Upgrade AKS IPAM and dataplane
-              href: upgrade-aks-ipam-and-dataplane.md
+            - name: Upgrade Azure CNI IPAM modes and Dataplane Technology
+              href: upgrade-azure-cni.md
         - name: DNS
           items:
             - name: Use a static IP address and DNS label
@@ -853,33 +865,45 @@
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on
-          items:
-            - name: About Istio
-              href: istio-about.md
-            - name: Deploy Istio service mesh add-on
-              href: istio-deploy-addon.md
-            - name: Enable native sidecar mode (Preview)
-              href: istio-native-sidecar.md
-            - name: Configure Istio service mesh add-on
-              href: istio-meshconfig.md
-            - name: Deploy external or internal Istio Ingress
-              href: istio-deploy-ingress.md
-            - name: Deploy secure Istio ingress gateway
-              href: istio-secure-gateway.md
-            - name: Plug-in CA certificates for Istio
-              href: istio-plugin-ca.md
-            - name: Upgrade Istio service mesh add-on
-              href: istio-upgrade.md
-            - name: Istio service mesh add-on support policy
-              href: istio-support-policy.md
-            - name: Istio service mesh add-on performance
-              href: istio-scale.md
-            - name: Latency comparison for Istio
-              href: istio-latency.md
-            - name: Telemetry API for Istio service mesh
-              href: istio-telemetry.md
-            - name: Collect Istio metrics in Azure Managed Prometheus
-              href: istio-metrics-managed-prometheus.md
+          items:            
+            - name: Deployment and Configuration
+              items:
+                - name: About Istio
+                  href: istio-about.md
+                - name: Getting started
+                  href: istio-deploy-addon.md
+                - name: Native sidecar mode (Preview)
+                  href: istio-native-sidecar.md
+                - name: Mesh configuration
+                  href: istio-meshconfig.md
+                - name: Upgrades
+                  href: istio-upgrade.md
+                - name: Support policy
+                  href: istio-support-policy.md
+            - name: Traffic Management
+              items:
+                - name: Ingress
+                  items:
+                    - name: Deploy ingress gateways
+                      href: istio-deploy-ingress.md
+                    - name: Secure ingress gateways
+                      href: istio-secure-gateway.md
+            - name: Security
+              items:
+                - name: Plug-in CA certificates
+                  href: istio-plugin-ca.md
+            - name: Performance
+              items:
+                - name: Performance
+                  href: istio-scale.md
+                - name: Latency comparison
+                  href: istio-latency.md
+            - name: Observability
+              items:
+                - name: Telemetry API
+                  href: istio-telemetry.md
+                - name: Collect metrics in Azure Managed Prometheus
+                  href: istio-metrics-managed-prometheus.md
         - name: Open Service Mesh AKS add-on
           items:
             - name: About Open Service Mesh

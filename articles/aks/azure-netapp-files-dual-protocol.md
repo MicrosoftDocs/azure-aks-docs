@@ -451,7 +451,7 @@ You must install a Container Storage Interface (CSI) driver to create a Kubernet
 
 ## Next steps
 
-Astra Trident supports many features with Azure NetApp Files. For more information, see:
+Trident supports many features with Azure NetApp Files. For more information, see:
 
 * [Expanding volumes][expand-trident-volumes]
 * [On-demand volume snapshots][on-demand-trident-volume-snapshots]

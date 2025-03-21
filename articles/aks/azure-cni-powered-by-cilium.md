@@ -35,6 +35,19 @@ Azure CNI Powered by Cilium can be deployed using two different methods for assi
 
 If you aren't sure which option to select, read ["Choosing a network model to use."](./azure-cni-overlay.md#choosing-a-network-model-to-use)
 
+## Versions
+
+| Kubernetes Version | Cilium Version |
+|--------------------|----------------|
+| 1.27 (LTS) | 1.13.18 |
+| 1.28 (End of Life) | 1.13.18 |
+| 1.29 | 1.14.19 |
+| 1.30 (LTS) | 1.14.19 |
+| 1.31 | 1.16.6 |
+| 1.32 | 1.17.0 |
+
+See [Supported Kubernetes Versions](./supported-kubernetes-versions.md) for more information on AKS versioning and release timelines.
+
 ## Network Policy Enforcement
 
 Cilium enforces [network policies to allow or deny traffic between pods](./operator-best-practices-network.md#control-traffic-flow-with-network-policies). With Cilium, you don't need to install a separate network policy engine such as Azure Network Policy Manager or Calico.
@@ -227,7 +240,7 @@ az aks create \
 
 Learn more about networking in AKS in the following articles:
 
-* [Upgrade Azure Kubernetes Service (AKS) IPAM modes and Dataplane Technology](upgrade-aks-ipam-and-dataplane.md).
+* [Upgrade Azure CNI IPAM modes and Dataplane Technology](upgrade-azure-cni.md).
 
 * [Use a static IP address with the Azure Kubernetes Service (AKS) load balancer](static-ip.md)
 
