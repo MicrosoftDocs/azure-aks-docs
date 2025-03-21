@@ -13,7 +13,7 @@ ms.author: schaffererin
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303212)
 
-The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the experience of running open-source AI models on your AKS clusters. KAITO reduces the time to onboard models or provision resources, and enables you to focus on AI model prototyping and development rather than infrastructure management.
+The AI toolchain operator (KAITO) is a managed add-on that simplifies the experience of running open-source and private AI models on your AKS cluster. KAITO reduces the time to onboard models and provision resources, enabling faster AI model prototyping and development rather than infrastructure management.
 
 This article shows you how to enable the AI toolchain operator add-on and deploy an AI model for inferencing on AKS.
 
