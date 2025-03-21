@@ -167,7 +167,7 @@ az aks create \
 
 - **Can I use `CiliumNetworkPolicy` custom resources instead of Kubernetes `NetworkPolicy` resources?**
 
-    `CiliumNetworkPolicy` custom resources are partially supported. Customers may use FQDN filtering as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
+    `CiliumNetworkPolicy` is supported through FQDN filtering as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle. L3/L4 policies are not supported.
 
     This `CiliumNetworkPolicy` example demonstrates a sample matching pattern for services that match the specified label.
 
@@ -184,6 +184,10 @@ az aks create \
       - toFQDNs:
         - matchPattern: "*.example.com"
     ```
+
+- **Can I use `ClusterwideCiliumNetworkPolicy`?**
+
+    `ClusterwideCiliumNetworkPolicy` is not supported.
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
