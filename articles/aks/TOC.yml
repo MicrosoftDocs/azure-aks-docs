@@ -976,6 +976,8 @@
             href: upgrade-aks-cluster.md#customize-node-surge-upgrade
           - name: Process node OS updates
             href: node-updates-kured.md
+          - name: Upgrade OS version
+            href: upgrade-os-version.md
         - name: Configure automatic upgrades
           items:
             - name: Automatically upgrade an AKS cluster

@@ -75,7 +75,7 @@ AKS uses node resources to help the nodes function as part of the cluster. This 
 
 ### OS
 
-AKS supports Ubuntu 22.04 and Azure Linux 2.0 as the node OS for Linux node pools. For Windows node pools, AKS supports Windows Server 2022 as the default OS. Windows Server 2019 is being retired after Kubernetes version 1.32 reaches end of life and isn't supported in future releases. If you need to upgrade your Windows OS version, see [Upgrade from Windows Server 2019 to Windows Server 2022][upgrade-2019-2022]. For more information on using Windows Server on AKS, see [Windows container considerations in Azure Kubernetes Service (AKS)][windows-considerations].
+AKS supports two linux distros: Ubuntu and Azure Linux. Ubuntu is the default Linux distro on AKS. Windows node pools are also supported on AKS with the Long Term Servicing Channel (LTSC) as the default channel on AKS. For more information on default OS versions, see documentation on [node images](node-images.md).
 
 ### Container runtime
 
@@ -180,3 +180,4 @@ For information on more core concepts for AKS, see the following resources:
 [aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
 [windows-considerations]: ./windows-vs-linux-containers.md
 [upgrade-2019-2022]: ./upgrade-windows-os.md
+[node-images]: ./node-images.md
