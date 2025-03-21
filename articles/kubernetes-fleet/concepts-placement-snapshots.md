@@ -10,7 +10,7 @@ ms.topic: conceptual
 
 # Understanding snapshots for Azure Kubernetes Fleet Manager cluster resource placement
 
-Fleet Manager keeps a history of the 10 most recently used placement scheduling policies, along with resource versions the placement has selected. These are held as `ClusterSchedulingPolicySnapshot` and `ClusterResourceSnapshot` objects respectively.
+Fleet Manager keeps a history of the 10 most recently used placement scheduling policies, along with resource versions the placement selected. These policy and resource versions are held as `ClusterSchedulingPolicySnapshot` and `ClusterResourceSnapshot` objects respectively.
 
 In this article, we explore these objects so you can understand them should you wish to work with them.
 
@@ -21,13 +21,13 @@ In this article, we explore these objects so you can understand them should you 
 
 You can view the resource snapshots held by Fleet Manager using the following steps when connected to the [Fleet Manager hub cluster][fleet-hub-cluster].
 
-For our sample we have a ConfigMap resource that we have modified.
+For this sample we use a ConfigMap resource that we have modified, leading to two snapshots.
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
 ```
 
-We see there is two snapshots, with the most recent marked as the latest (`kubernetes-fleet.io/is-latest-snapshot=true`), with a resource-index of 1 (`kubernetes-fleet.io/resource-index=1`).
+We see two snapshots, with the most recent one marked as the latest (`kubernetes-fleet.io/is-latest-snapshot=true`), with a resource-index of 1 (`kubernetes-fleet.io/resource-index=1`).
 
 ```output
 NAME                           GEN   AGE    LABELS
@@ -74,7 +74,7 @@ spec:
 
 ## Using resource snapshots
 
-Snapshots can be used as part of [CRP staged rollouts](./concepts-rollout-strategy.md#staged-update-strategy-preview) managed via update runs as a rollback mechanism
+Snapshots can be used as part of [CRP staged rollouts][crp-staged-rollouts] managed via update runs as a rollback mechanism
 
 ## Modifying the snapshot history limit
 
@@ -119,3 +119,4 @@ spec:
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-propagation.md
 [fleet-hub-cluster]: ./access-fleet-hub-cluster-kubernetes-api.md
+[crp-staged-rollouts]: ./concepts-rollout-strategy.md#staged-update-strategy-preview

@@ -145,9 +145,9 @@ spec:
         type: External
     ```
 
-1. Create a `ClusterStagedUpdateStrategy` (as shown earlier), and submit the Fleet hub cluster.
+1. Create a `ClusterStagedUpdateStrategy` (as shown earlier), and apply against the Fleet Manager hub cluster.
 
-1. Create a `ClusterStagedUpdateRun`, ensuring to reference both the CRP and strategy to use.
+1. Next, create a `ClusterStagedUpdateRun`, ensuring to reference both the CRP and strategy to use. You will also need to supply a `ClusterResourceSnapshot` reference. Learn how to select a snapshot by reading the documentation on [placement snapshots][placement-snapshots].
 
     ```yaml
     apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -156,16 +156,15 @@ spec:
       name: example-staged-update-run
     spec:
       placementName: crp-staged-update-sample
+      resourceSnapshotIndex: "1"
       stagedRolloutStrategyName: example-staged-strategy
     ```
 
-1. Submit the `ClusterStagedUpdateRun` by using `kubectl apply` on the Fleet Manager hub cluster.
+1. Use `kubectl` to apply the `ClusterStagedUpdateRun` on the Fleet Manager hub cluster.
  
-1. The placement is started and you can observe the rollout occur. 
-
 ### Check the status of a staged rollout
 
-Use the following approach to determine the current status of a staged rollout, including time remaining on a `TimedWait` or if any approvals are pending.
+Use the following steps to determine the status of a staged rollout, including time remaining on a `TimedWait` or if any approvals are pending.
 
 ```bash
 kubectl get clusterStagedUpdateRun example-staged-update-run
@@ -380,3 +379,4 @@ Approval payloads are a JSON object using the following format.
 
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-propagation.md
+[placement-snapshots]: ./concepts-placement-snapshots.md
