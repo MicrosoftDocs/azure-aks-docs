@@ -5,7 +5,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 04/04/2023
+ms.date: 03/20/2025
 ---
 
 # Azure Kubernetes Service for Extended Zones (preview)
@@ -235,6 +235,38 @@ az aks create \
 ```
 
 After deploying an AKS for Extended Zones cluster, you can check the status and monitor the cluster's metrics using the Azure portal or the Azure CLI.
+
+### [Terraform](#tab/terraform)
+
+The following code creates a resource group and a Kubernetes cluster in Azure, with auto-scaling enabled and specific network settings, using Terraform.
+
+> [!NOTE]
+> The sample code for this article is located in the [Azure Terraform GitHub repo](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-extended-zones). You can view the log file containing the [test results from current and previous versions of Terraform](https://github.com/Azure/terraform/tree/master/quickstart/101-aks-extended-zones/TestRecord.md).
+>
+> See more [articles and sample code showing how to use Terraform to manage Azure resources](/azure/terraform)
+
+1. Create a directory in which to test and run the sample Terraform code, and make it the current directory.
+
+1. Create a file named `main.tf`, and insert the following code:
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-extended-zones/main.tf":::
+
+1. Create a file named `outputs.tf`, and insert the following code:
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-extended-zones/outputs.tf":::
+
+1. Create a file named `providers.tf`, and insert the following code:
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-extended-zones/providers.tf":::
+
+1. Create a file named `variables.tf`, and insert the following code:
+    :::code language="Terraform" source="~/terraform_samples/quickstart/101-aks-extended-zones/variables.tf":::
+
+1. Initialize Terraform.
+    [!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
+
+1. Create a Terraform execution plan.
+    [!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
+
+1. Apply a Terraform execution plan.
+    [!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
 
 ---
 
