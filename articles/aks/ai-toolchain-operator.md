@@ -236,7 +236,7 @@ If you no longer need these resources, you can delete them to avoid incurring ex
     ```
 
 * The GPU node pools provisioned by the KAITO deployment will need to be deleted manually. 
-Use on the node label created by [Falcon-7b instruct workspace](https://github.com/kaito-project/kaito/blob/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml) to get the node pool name (in this example the label is "kaito.sh/workspace": "workspace-falcon-7b-instruct").
+Use the node label created by [Falcon-7b instruct workspace](https://github.com/kaito-project/kaito/blob/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml) to get the node pool name. In this example the node label is "kaito.sh/workspace": "workspace-falcon-7b-instruct".
 
     ```azurecli-interactive     
     az aks nodepool list --resource-group $AZURE_RESOURCE_GROUP --cluster-name $CLUSTER_NAME
