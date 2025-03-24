@@ -244,6 +244,20 @@ Use the node label created by [Falcon-7b instruct workspace](https://github.com/
 
 * [Delete the node pool][delete-node-pool] with this name from your AKS cluster, and repeat the steps in this section for each KAITO workspace that will be removed.
 
+## Common troubleshooting scenarios
+
+After applying the KAITO model inference workspace, your resource readiness and workspace conditions may not update to `True` for the following reasons:
+
+- You may not have sufficient permissions to operate on the AKS cluster. Ensure that the `ai-toolchain-operator-$CLUSTER_NAME` identity has been assigned `Contributor` role to your Azure resource group. Run the following command and confirm that the result is non-empty:
+
+    ```azurecli-interactive   
+    az role assignment list --scope /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$AZURE_RESOURCE_GROUP
+    ```
+
+- Your Azure subscription does not have quota for the minimum GPU instance type specified in your KAITO workspace. You will need to [request a quota increase](https://learn.microsoft.com/azure/quotas/quickstart-increase-quota-portal) for the GPU VM family in your Azure subscription.
+
+- The GPU instance type is not available in your AKS region. Confirm the [GPU instance availability in your specific region](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?regions=&products=virtual-machines), and switch the Azure region if your GPU VM family is not available.
+
 ## Next steps
 
 Learn more about [KAITO model deployment options](https://github.com/Azure/kaito) below:
