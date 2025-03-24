@@ -44,11 +44,11 @@ Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm6
 
     ```azurecli-interactive
         az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $ARM_NODE_POOL_NAME \
-        --node-count 3 \
-        --node-vm-size Standard_D2pds_v5
+            --resource-group $RESOURCE_GROUP_NAME \
+            --cluster-name $CLUSTER_NAME \
+            --name $ARM_NODE_POOL_NAME \
+            --node-count 3 \
+            --node-vm-size Standard_D2pds_v5
     ```
 - Add a FIPS-enabled node pool with an Arm64 VM
 
@@ -57,20 +57,20 @@ Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm6
     - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) enabled aren't supported with Ubuntu OS.
     - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
 
-Use the [`az aks nodepool add`][az-aks-nodepool-add] with `--enable-fips-image` and `--os-sku` parameters.
+   Use the [`az aks nodepool add`][az-aks-nodepool-add] with `--enable-fips-image` and `--os-sku` parameters.
 
- ```azurecli-interactive
-     az aks nodepool add \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --cluster-name $CLUSTER_NAME \
-    --name $ARM_NODE_POOL_NAME \
-    --os-sku AzureLinux
-    --enable-fips-image
-    --kubernetes-version 1.32
-    --node-count 3 \
-    --node-vm-size Standard_D2pds_v5
-```
-For more information on verifying FIPS enablement and disabling FIPS, see [Enable FIPS node pools](./enable-fips-nodes.md).
+    ```azurecli-interactive
+        az aks nodepool add \
+           --resource-group $RESOURCE_GROUP_NAME \
+           --cluster-name $CLUSTER_NAME \
+           --name $ARM_NODE_POOL_NAME \
+           --os-sku AzureLinux
+           --enable-fips-image
+           --kubernetes-version 1.32
+           --node-count 3 \
+           --node-vm-size Standard_D2pds_v5
+    ```
+   For more information on verifying FIPS enablement and disabling FIPS, see [Enable FIPS node pools](./enable-fips-nodes.md).
 
 - Update a node pool with an Arm64 VM to enable FIPS
 
@@ -79,17 +79,17 @@ For more information on verifying FIPS enablement and disabling FIPS, see [Enabl
     - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) enabled aren't supported with Ubuntu OS.
     - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
 
-Use [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-fips-image` parameter to enable FIPS on an existing node pool.
+   Use [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-fips-image` parameter to enable FIPS on an existing node pool.
 
- ```azurecli-interactive
-     az aks nodepool update \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
-    --name np \
-    --enable-fips-image
-```
+    ```azurecli-interactive
+        az aks nodepool update \
+           --resource-group myResourceGroup \
+           --cluster-name myAKSCluster \
+           --name np \
+           --enable-fips-image
+    ```
 
-This command triggers a reimage of the node pool immediately to deploy the FIPS compliant Operating System. This reimage occurs during the node pool update. No extra steps are required.
+   This command triggers a reimage of the node pool immediately to deploy the FIPS compliant Operating System. This reimage occurs during the node pool update. No extra steps are required.
 
 For more information on verifying FIPS enablement and disabling FIPS, see [Enable FIPS node pools](./enable-fips-nodes.md).
 
@@ -99,10 +99,10 @@ Verify a node pool uses Arm64 using the [`az aks nodepool show`][az-aks-nodepool
 
  ```azurecli-interactive
      az aks nodepool show \
-     --resource-group myResourceGroup \
-     --cluster-name myAKSCluster \
-     --name mynodepool \
-     --query vmSize
+         --resource-group myResourceGroup \
+         --cluster-name myAKSCluster \
+         --name mynodepool \
+         --query vmSize
 ```
 
 The following example output shows the node pool uses Arm64:
