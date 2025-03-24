@@ -28,7 +28,7 @@ Azure Managed Prometheus provides a fully managed, scalable monitoring backend w
 
 PodMonitors are Kubernetes custom resources that instruct Prometheus on which pods to collect metrics from and how to collect them. For Kafka monitoring, you need to define PodMonitors that target various Strimzi components.  
 
-Before proceeding, ensure your Kafka cluster was deployed with the [JMX Exporter configuration](./kafka-deploy.md#deploy-kafka-cluster). Without this configuration, metrics won't be available for collection.  
+Before proceeding, ensure your Kafka cluster was deployed with the [JMX Exporter configuration](./kafka-deploy.md#deploy-the-kafka-cluster). Without this configuration, metrics won't be available for collection.  
 
 1. Create the PodMonitor resources using the `kubectl apply` command.  
 
@@ -39,7 +39,7 @@ Before proceeding, ensure your Kafka cluster was deployed with the [JMX Exporter
     > * The namespace selector in the following examples assumes your Kafka workloads are deployed in the `kafka` namespace. Modify accordingly if using a different namespace.  
     >  
 
-  ```bash  
+    ```bash  
     kubectl apply -f - <<EOF
     ---
     apiVersion: azmonitoring.coreos.com/v1
@@ -141,7 +141,8 @@ Before proceeding, ensure your Kafka cluster was deployed with the [JMX Exporter
           replacement: $1
           action: replace
     EOF
-  ```
+    ```
+
 ### Upload Grafana dashboards for Kafka monitoring
 
 Strimzi provides ready-to-use Grafana dashboards designed specifically for monitoring Kafka clusters in the [strimzi/strimzi-kafka-operator GitHub repository](https://github.com/strimzi/strimzi-kafka-operator/tree/main/examples/metrics/grafana-dashboards). These dashboards visualize the metrics exposed by the JMX Prometheus Exporter configured earlier.  
@@ -208,7 +209,8 @@ A Helm chart is available to deploy the Kafka Exporter alongside your existing m
 
 ### Monitoring Azure Container Storage performance using Prometheus
 
- Prometheus metrics are automatically enabled for Azure Container Storage. However, these metrics are only available when using Azure Managed Prometheus. For detailed information about available metrics and collection methods, see [Collecting Azure Container Storage Prometheus metrics](https://learn.microsoft.com/azure/storage/container-storage/enable-monitoring#collect-azure-container-storage-prometheus-metrics).
+  Prometheus metrics are automatically enabled for Azure Container Storage. However, these metrics are only available when using Azure Managed Prometheus. For detailed information about available metrics and collection methods, see [Collecting Azure Container Storage Prometheus metrics](/azure/storage/container-storage/enable-monitoring#collect-azure-container-storage-prometheus-metrics).  
+ 
 
 ## Ingress for Kafka cluster  
 
@@ -216,9 +218,9 @@ Strimzi offers flexible options for exposing your Kafka cluster to clients throu
 
 A listener configuration defines:  
 
-* Which port Kafka accepts connections on  
-* The security protocol (Plain, TLS, SASL)  
-* How the connection endpoint is exposed (Kubernetes service type)  
+* Which port Kafka accepts connections on.  
+* The security protocol (Plain, TLS, SASL).  
+* How the connection endpoint is exposed (Kubernetes service type).
 
 Kafka uses a two-phase connection process that influences how you should configure networking. When configuring listeners for your Strimzi Kafka deployment on AKS, it's essential to understand the following process:  
 
@@ -259,9 +261,8 @@ When using this configuration:
 
 * A Kubernetes LoadBalancer service is created for each broker and the bootstrap service.  
 * Azure provisions public IP addresses for each service.  
-* Clients should connect using the bootstrap service address for initial requests. 
 
-If you wish to use custom DNS names, you must configure the `advertisedHost` for each broker and the `alternativeNames` for the bootstrap service. This is required to ensure Kafka properly advertises the custom hostname backing each broker back to a client. It also adds the information to the respective broker or bootstrap certificate so that it can be used for TLS hostname verification.
+If you wish to use custom DNS names, you must configure the [`advertisedHost`](https://strimzi.io/docs/operators/latest/full/configuring.html#type-GenericKafkaListenerConfigurationBroker-reference) for each broker and the [`alternativeNames`](https://strimzi.io/docs/operators/latest/full/configuring.html#property-listener-config-altnames-reference) for the bootstrap service. This is required to ensure Kafka properly advertises the custom hostname backing each broker back to a client. It also adds the information to the respective broker or bootstrap certificate so that it can be used for TLS hostname verification.
 
   ```yaml
   listeners:
@@ -307,7 +308,7 @@ If you want to access the Kafka cluster outside of the AKS cluster but within an
 > [!IMPORTANT]
 > When adding new brokers to your cluster, you must update the listener configuration with corresponding annotations for each new broker. Otherwise, those brokers will be exposed with public IP addresses.
 
-If you wish to use custom DNS names, you must configure the `advertisedHost` for each broker and the `alternativeNames` for the bootstrap service. This is required to ensure Kafka properly advertises the custom hostname backing each broker back to a client. It also adds the information to the respective broker or bootstrap certificate so that it can be used for TLS hostname verification.
+If you wish to use custom DNS names, you must configure the [`advertisedHost`](https://strimzi.io/docs/operators/latest/full/configuring.html#type-GenericKafkaListenerConfigurationBroker-reference) for each broker and the [`alternativeNames`](https://strimzi.io/docs/operators/latest/full/configuring.html#property-listener-config-altnames-reference) for the bootstrap service. This is required to ensure Kafka properly advertises the custom hostname backing each broker back to a client. It also adds the information to the respective broker or bootstrap certificate so that it can be used for TLS hostname verification.
 
 ```yaml
   listeners:
@@ -341,26 +342,26 @@ For more secure internal networking or accessing across non-peered Azure virtual
       configuration:
         bootstrap:
           alternativeNames: 
-          - kafka-bootstrap.<privatedomain>.com
+          - kafka-bootstrap.<privatedomain-pe>.com
           annotations:
             service.beta.kubernetes.io/azure-load-balancer-internal: "true"
             service.beta.kubernetes.io/azure-pls-create: "true"
             service.beta.kubernetes.io/azure-pls-name: "pls-kafka-bootstrap" 
         brokers:
           - broker: 0
-            advertisedHost: kafka-broker-0.<privatedomain>.com
+            advertisedHost: kafka-broker-0.<privatedomain-pe>.com
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
               service.beta.kubernetes.io/azure-pls-create: "true"
               service.beta.kubernetes.io/azure-pls-name: "pls-kafka-broker-0"
           - broker: 1
-            advertisedHost: kafka-broker-1.<privatedomain>.com   
+            advertisedHost: kafka-broker-1.<privatedomain-pe>.com   
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
               service.beta.kubernetes.io/azure-pls-create: "true"
               service.beta.kubernetes.io/azure-pls-name: "pls-kafka-broker-1"
           - broker: 2
-            advertisedHost: kafka-broker-2.<privatedomain>.com
+            advertisedHost: kafka-broker-2.<privatedomain-pe>.com
             annotations:
               service.beta.kubernetes.io/azure-load-balancer-internal: "true"
               service.beta.kubernetes.io/azure-pls-create: "true"
@@ -370,10 +371,9 @@ For more secure internal networking or accessing across non-peered Azure virtual
 This configuration:
 
 * Creates internal load balancer services with private IPs for all components.  
-* Establishes a Private Link Service for the bootstrap service and the individual brokers, respectively.  
-* Enables connection via Private Endpoints from other virtual networks. 
-* Configures the `alternativeNames`. This is required to ensure Strimzi adds the names to the TLS certificate so that they can be used for TLS hostname verification.  
-* Configures the `advertisedHost`. This is required to ensure Kafka advertises the private DNS entry of the private endpoint backing each broker. The `advertisedHost` is also added to the broker certificate so that it can be used for TLS hostname verification.  
+* Establishes a Private Link Service for the bootstrap service and the individual brokers, respectively. This enables connection via Private Endpoints from other virtual networks. 
+* Configures the [`alternativeNames`](https://strimzi.io/docs/operators/latest/full/configuring.html#property-listener-config-altnames-reference). This is required to ensure Strimzi adds the alternative bootstrap service names to the TLS certificate so that they can be used for TLS hostname verification.  
+* Configures the [`advertisedHost`](https://strimzi.io/docs/operators/latest/full/configuring.html#type-GenericKafkaListenerConfigurationBroker-reference). This is required to ensure Kafka advertises the private DNS entry of the private endpoint configured for each broker. The `advertisedHost` is also added to the broker certificate so that it can be used for TLS hostname verification.  
 
 > [!IMPORTANT]
 > When adding new brokers to your cluster, you must update the listener configuration with corresponding annotations for each new broker. Otherwise, those brokers will be exposed with public IP addresses.
@@ -381,11 +381,6 @@ This configuration:
 > You can change the `service.beta.kubernetes.io/azure-pls-name:` to any name you prefer.  
 
 After deploying this configuration, follow the steps for [creating a private endpoint to the Azure Load Balancer Private Link Service](./internal-lb.md#create-a-private-endpoint-to-the-private-link-service)  
-
-## Next step  
-
-> [!div class="nextstepaction"]  
-> [Title of next article](add-link-to-article)  
 
 ## Contributors  
 

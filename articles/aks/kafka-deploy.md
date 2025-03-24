@@ -201,7 +201,7 @@ jvmOptions:
 
 In this section, we create two Kafka node pools: one for brokers and one for controllers.  
 
-1. Apply the YAML manifest to create the two Kafka node pools using the `kubectl apply` command.  
+* Apply the YAML manifest to create the two Kafka node pools using the `kubectl apply` command.  
 
     ```bash
     kubectl apply -n kafka -f - <<EOF
@@ -581,20 +581,9 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
             maxUnavailable: 2
         listeners:
           - name: extilbpe
-            port: 9092
+            port: 9094
             type: loadbalancer
             tls: true
-            configuration:
-              brokers:
-                - broker: 0
-                  annotations:
-                    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-                - broker: 1
-                  annotations:
-                    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-                - broker: 2
-                  annotations:
-                    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
         config:
           offsets.topic.replication.factor: 3
           transaction.state.log.replication.factor: 3
@@ -621,7 +610,6 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
         topicOperator: {}
         userOperator: {}
     EOF
-
   ```
 
 1. Once deployed, verify your Kafka deployment by checking that all KafkaNodePools, Kafka cluster resources, and their corresponding pods are created and in a running state using the `kubectl get` command.  

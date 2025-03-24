@@ -1,6 +1,6 @@
 ---
 title: Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
-description: In this article, we provide an overview of deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.
+description: In this article, you prepare the infrastructure for deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.  
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
 ms.date: 03/31/2025
@@ -9,9 +9,13 @@ ms.author: senavar
 zone_pivot_groups: azure-cli-or-terraform
 ---
 
-## Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
+# Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
 
-The target AKS architecture for Kafka deployment prioritizes high availability through a comprehensive zone-redundant design. This architecture utilizes a zone-redundant AKS cluster where control plane components are automatically distributed across availability zones. To prevent resource contention and ensure predictable performance, dedicated node pools for Kafka workloads are strongly recommended. The design requires three node pools—one per availability zone—to maintain workload distribution and storage alignment. This zonal configuration is critical because persistent volumes in this architecture have zonal affinity, ensuring that when cluster autoscaler activates during node failures, new nodes are provisioned in the appropriate zones. Without this zonal specificity, pods with zone-bound persistent volumes would remain in a pending state. This architecture enables multiple replicas of the Strimzi Cluster Operator and Kafka broker instances to be distributed across zones, providing resilience against both node and entire zone failures within the target region.
+In this article, you prepare the infrastructure for deploying a Kafka cluster on Azure Kubernetes Service (AKS).  
+
+## Architecture overview
+
+The target AKS architecture for Kafka deployment prioritizes high availability through a comprehensive zone-redundant design. The design requires three node pools—one per availability zone—to maintain workload distribution and storage alignment. This zonal configuration is critical because persistent volumes in this architecture have zonal affinity. Any new nodes that are provisioned with cluster autoscaler must be created in the appropriate zone. Without this zonal specificity, pods with zone-bound persistent volumes would remain in a pending state. Multiple replicas of the Strimzi Cluster Operator and Kafka broker instances are defined and distributed across zones, providing resilience against both node and entire zone failures within the target region. To prevent resource contention and ensure predictable performance, dedicated node pools for Kafka workloads are strongly recommended. 
 
 ## Prerequisites  
 
@@ -24,17 +28,18 @@ The target AKS architecture for Kafka deployment prioritizes high availability t
 
 The following steps guide you through deploying the AKS infrastructure needed for your Kafka deployment. 
 
-::: zone pivot="azure-cli"
-
 > [!TIP]  
 > **If you have an existing AKS cluster**: You can skip the full deployment steps, but ensure your cluster meets the following requirements:  
 >  
 > * [Azure Container Storage installed](https://learn.microsoft.com/azure/storage/container-storage/container-storage-aks-quickstart#install-azure-container-storage-and-create-a-storage-pool) on the AKS cluster.  
 > * Node pool per availability zone (1, 2, and 3).  
-> * Dedicated node pools for Kafka with [appropriate VM sizes](./kafka-overview.md#compute---aks-node-pools).  
+> * Dedicated node pools for Kafka with [appropriate VM sizes](./kafka-overview.md#compute---aks-node-pools) based on your workload's requirements.  
 > * Azure Managed Prometheus and Azure Managed Grafana configured.
 
-In this section, you deploy the following infrastructure resources using Azure CLI: 
+::: zone pivot="azure-cli"  
+
+In this section, you deploy the following infrastructure resources using Azure CLI:  
+
 * An AKS cluster with a node pool per availability zone.  
 * Virtual network and subnet configurations.  
 * NAT gateway for outbound connectivity.  
@@ -302,7 +307,7 @@ In this section, you deploy the following infrastructure resources using Terrafo
 * Dedicated node pools for Kafka workloads with appropriate labels.  
 * Azure Container Storage extension for persistent volumes. 
 
-1. Copy the `variables.tf` to your Terraform directory
+1. Copy the `variables.tf` to your Terraform directory.
 
     ```tf
     variable "azure_subscription_id" {
@@ -361,7 +366,7 @@ In this section, you deploy the following infrastructure resources using Terrafo
     ]
     ```  
 
-1. Copy the `main.tf` to your Terraform directory
+1. Copy the `main.tf` to your Terraform directory.
     
     ```tf 
     terraform {
@@ -614,10 +619,10 @@ In this section, you deploy the following infrastructure resources using Terrafo
 
 ## Create Azure Container Storage storage pool
 
-After the cluster is deployed and connectivity has been validated, apply the multi-zone storage configuration using the `kubectl apply` command.  
+* After deploying the cluster and validating connectivity, apply the multi-zone storage configuration using the `kubectl apply` command.  
 
-    ```bash
-    kubectl apply -f - <<EOF
+    ```bash  
+    kubectl apply -f - <<EOF  
     ---  
     apiVersion: containerstorage.azure.com/v1  
     kind: StoragePool  
@@ -635,12 +640,13 @@ After the cluster is deployed and connectivity has been validated, apply the mul
         requests:  
           storage: 100Gi      
     EOF  
-    ```
+    ```  
+
 
 > [!IMPORTANT]  
-> The storage configuration above represents a starting point. For production deployments, adjust the `iopsReadWrite`, `mbpsReadWrite`, and `storage` values based on your expected Kafka cluster size and workload as discussed in the [Azure Container Storage section](add-link-to-section).  
+> The storage configuration above represents a starting point. For production deployments, adjust the `iopsReadWrite`, `mbpsReadWrite`, and `storage` values based on your expected Kafka cluster size and workload as discussed in the [Azure Container Storage section](./kafka-overview.md#azure-container-storage).  
 >  
-> Currently, you can't configure Azure Container Storage with a toleration to handle nodes with taints.  
+> Currently, you can't configure Azure Container Storage with a toleration to handle nodes with taints. Adding taints to nodes will block the deployment of Azure Container Storage. 
 
 ## Next step  
 
