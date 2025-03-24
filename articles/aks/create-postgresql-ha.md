@@ -324,6 +324,8 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
 | Premium SSD v2                    | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations].                                                                                              |
 | Local NVMe or temp SSD (Ephemeral Disks) | Azure Container Storage only                      | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. |
 
+We will now define an environment variable which we will later reference when deploying PostgreSQL.
+
 ### [Premium SSD](#tab/pv1)
 
 1. Use the default azuredisk CSI driver storage class
@@ -398,6 +400,8 @@ The type of storage you use can have large effects on PostgreSQL performance. Yo
 
 > [!NOTE]
 > If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, please wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
+
+---
 
 ## Connect to the AKS cluster and create namespaces
 
