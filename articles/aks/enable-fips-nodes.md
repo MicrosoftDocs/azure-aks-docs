@@ -32,6 +32,7 @@ The Federal Information Processing Standard (FIPS) 140-2 is a US government stan
   * To update the underlying packages or modules used for FIPS, you must use [Node Image Upgrade][node-image-upgrade].
   * Container images on the FIPS nodes aren't assessed for FIPS compliance.
   * Mounting of a CIFS share fails because FIPS disables some authentication modules. To work around this issue, see [Errors when mounting a file share on a FIPS-enabled node pool][errors-mount-file-share-fips].
+  * FIPS-enabled node pools with [Arm64 VMs](./use-arm64-vms.md) are only supported with Azure Linux 3.0+.
 
 
 > [!IMPORTANT]

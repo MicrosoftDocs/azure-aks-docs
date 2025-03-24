@@ -62,9 +62,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
     >  az provider register --namespace Microsoft.ContainerRegistry
     >  ```
 
-- If you're choosing the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR meets the following requirements:
-    * [Anonymous pull access][anonymous-pull-access] must be enabled for the ACR.
-    * The ACR needs to be of the [Premium SKU service tier][container-registry-skus]
+- If you're choosing the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR needs to be of the [Premium SKU service tier][container-registry-skus].
 
 - (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. If private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
 
@@ -159,12 +157,12 @@ az network vnet subnet create --name ${ACR_SUBNET_NAME} --vnet-name ${VNET_NAME}
 
 ### Step 2: Create the ACR and enable artifact cache
 
-1. Create the ACR with the private link and anonymous pull access.
+1. Create the ACR with the private link.
 
     ```azurecli-interactive
     az acr create --resource-group ${RESOURCE_GROUP} --name ${REGISTRY_NAME} --sku Premium --public-network-enabled false
 
-    az acr update --resource-group ${RESOURCE_GROUP} --name ${REGISTRY_NAME} --anonymous-pull-enabled true
+    az acr update --resource-group ${RESOURCE_GROUP} --name ${REGISTRY_NAME}
 
     REGISTRY_ID=$(az acr show --name ${REGISTRY_NAME} -g ${RESOURCE_GROUP}  --query 'id' --output tsv)
     ```
@@ -172,7 +170,7 @@ az network vnet subnet create --name ${ACR_SUBNET_NAME} --vnet-name ${VNET_NAME}
 1. Create an ACR cache rule to allow users to cache MCR container images in the new ACR.
 
     ```azurecli-interactive
-    az acr cache create -n acr-cache-rule -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "*"
+    az acr cache create -n acr-cache-rule -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
     ```
 
 ### Step 3: Create a private endpoint for the ACR
@@ -406,7 +404,6 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [aks-private-link]: ./private-clusters.md
 [azure-cni-overlay]: ./azure-cni-overlay.md
 [outbound-rules-control-egress]: ./outbound-rules-control-egress.md
-[anonymous-pull-access]: /azure/container-registry/anonymous-pull-access
 [private-clusters]: ./private-clusters.md
 [api-server-vnet-integration]: ./api-server-vnet-integration.md
 [use-network-policies]: ./use-network-policies.md
