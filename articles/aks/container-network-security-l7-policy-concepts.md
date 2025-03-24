@@ -20,14 +20,7 @@ Network policies are essential for securing Kubernetes clusters by defining and 
 ## How L7 Policy works
 
 When L7 policy enforcement is enabled for an application or pod, outgoing network traffic is first 
-evaluated to determine compliance with the configured application-level rules. The eBPF probe attached 
-to the source pod’s network interface marks the packets, which are then redirected to a local Cilium 
-proxy (Envoy). This redirection occurs only for pods enforcing L7 policies, ensuring that policy 
-enforcement is applied selectively.
-
-When L7 policy enforcement is enabled, outgoing network traffic is first 
-evaluated to determine compliance with the configured application-level rules.
-The eBPF probe attached to the source pod’s network interface marks the packets, which are then redirected to a node-local Envoy Proxy.This redirection occurs only for pods enforcing L7 policies, ensuring that policy enforcement is applied selectively.
+evaluated to determine compliance with the configured application-level rules. The eBPF probe attached to the source pod’s network interface marks the packets, which are then redirected to a node-local Envoy Proxy. This redirection occurs only for pods enforcing L7 policies, ensuring that policy enforcement is applied selectively.
 
 The Envoy proxy, augmented with Cilium Network Filters, then decides whether to forward the traffic to the destination pod based on policy criteria. If permitted, the traffic proceeds; if not, Envoy returns an appropriate error code to the originating pod. Upon successful authorization, the Envoy proxy facilitates the traffic flow, providing application-level visibility and control. This allows the Cilium Agent to enforce detailed network policies within the policy engine. The following diagram illustrates the high-level flow of L7 policy enforcement.
 
@@ -37,7 +30,7 @@ The Envoy proxy, augmented with Cilium Network Filters, then decides whether to 
 
 To gain insights into Layer 7 (L7) traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages Hubble, which is enabled by default. Hubble provides detailed flow-level metrics.
 
-To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder. Examples include **"Kubernetes / Networking / L7 (Namespace)"** and **"Kubernetes / Networking / L7 (Workload)"**.
+To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**.
 
 These dashboards offer granular visibility into L7 flow data at the cluster, namespace, and workload levels.
 
