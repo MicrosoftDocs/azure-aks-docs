@@ -521,6 +521,8 @@
           href: optimize-aks-costs.md
         - name: Enable cost analysis on your cluster
           href: cost-analysis.md
+        - name: Operate cost-optimized AKS at scale
+          href: operate-cost-optimized-scale.md
         - name: Use Arm64 VMs for cost effectiveness
           href: use-arm64-vms.md
     - name: Cluster management
