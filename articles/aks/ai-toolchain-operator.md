@@ -187,7 +187,7 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 1. Restart the KAITO GPU provisioner deployment on your pods using the `kubectl rollout restart` command:
 
     ```azurecli-interactive
-    kubectl rollout restart deployment/gpu-provisioner -n kube-system
+    kubectl rollout restart deployment/kaito-gpu-provisioner -n kube-system
     ```
 
 2. Verify that the GPU provisioner deployment is running using the `kubectl get` command:
