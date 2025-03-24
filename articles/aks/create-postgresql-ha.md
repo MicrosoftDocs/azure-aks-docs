@@ -398,10 +398,10 @@ We will now define an environment variable which we will later reference when de
     export POSTGRES_STORAGE_CLASS="acstor-ephemeraldisk-nvme-db"
     ```
 
+---
+
 > [!NOTE]
 > If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, please wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
-
----
 
 ## Connect to the AKS cluster and create namespaces
 
