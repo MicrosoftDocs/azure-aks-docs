@@ -172,7 +172,7 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
 2. Create an ACR cache rule following the below command to allow users to cache MCR container images in the new ACR, note the cache rule name must be `aks-managed-mcr`.
 
     ```azurecli-interactive
-    az acr cache create -n acr-cache-rule -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
+    az acr cache create -n aks-managed-mcr -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
     ```
 
 ### Step 4: Create a private endpoint for the ACR
