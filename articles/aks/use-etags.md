@@ -47,6 +47,10 @@ You can do either a `LIST` or a `GET` call to your cluster or node pool to see t
 ]
 ```
 
+### What would modify existing ETags
+ETags can exist at both the cluster and agent pool levels. Depending on the scope of the operations you are performing, you can pass in the corresponding eTag. When you perform a cluster-level operation, both the cluster-level eTag and agent pool eTag will be updated. When you perform an agent pool operation, only the agent pool eTag will be updated.
+
+
 ### Include ETags in operation headers
 
 Headers are completely optional to use. The following examples show how to use `–-if-match` and `-–if-none-match` headers. 
