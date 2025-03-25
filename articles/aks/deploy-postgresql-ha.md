@@ -120,6 +120,25 @@ The following table outlines the key properties set in the YAML deployment manif
 | `barmanObjectStore` | Specific to the CNPG operator. Configures the barman-cloud tool suite using AKS workload identity for authentication to the Azure Blob Storage object store. |
 
 
+>[!TIP]
+> PostgreSQL's configuration heavily relies on your cluster configuration and the resources that your cluster provides. Here are the suggested calculations for populating the postgres parameters inside your CNPG cluster:
+> | Property | Recommended Value | Definition |
+> | --------- | ------------ | -------------------- |
+> | `wal_compression` | lz4 | Compresses full-page writes written in WAL file with specified method |
+> | `max_wal_size` | 6GB | Sets the WAL size that triggers a checkpoint |
+> | `checkpoint_timeout` | 15min | Sets the maximum time between automatic WAL checkpoints |
+> | `checkpoint_flush_after` | 2MB | Number of pages after which previously performed writes are flushed to disk |
+> | `wal_writer_flush_after` | 2MB | Amount of WAL written out by WAL writer that triggers a flush |
+> | `min_wal_size` | 4GB | Sets the minimum size to shrink the WAL to |
+> | `shared_buffers` | 25% of node memory | Sets the number of shared memory buffers used by the server |
+> | `effective_cache_size` | 75% of node memory | Sets the planner's assumption about the total size of the data caches |
+> | `work_mem` | 1/256th of node memory | Sets the maximum memory to be used for query workspaces |
+> | `maintenance_work_mem` | 6.25% of node memory | Sets the maximum memory to be used for maintenance operations |
+> | `autovacuum_vacuum_cost_limit` | 2400 | Vacuum cost amount available before napping, for autovacuum |
+> | `random_page_cost` | 1.1 | Sets the planner's estimate of the cost of a nonsequentially fetched disk page |
+> | `effective_io_concurrency` | 64 | Number of simultaneous requests that can be handled efficiently by the disk subsystem |
+> | `maintenance_io_concurrency` | 64 | A variant of "effective_io_concurrency" that is used for maintenance work |
+
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
@@ -175,23 +194,23 @@ The following table outlines the key properties set in the YAML deployment manif
           dataChecksums: true
 
       storage:
-        size: 2Gi
+        size: 32Gi
         pvcTemplate:
           accessModes:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 2Gi
+              storage: 32Gi
           storageClassName: $POSTGRES_STORAGE_CLASS
 
       walStorage:
-        size: 2Gi
+        size: 32Gi
         pvcTemplate:
           accessModes:
             - ReadWriteOnce
           resources:
             requests:
-              storage: 2Gi
+              storage: 32Gi
           storageClassName: $POSTGRES_STORAGE_CLASS
 
       monitoring:
@@ -199,20 +218,20 @@ The following table outlines the key properties set in the YAML deployment manif
 
       postgresql:
         parameters:
-          checkpoint_completion_target: '0.9'
-          checkpoint_timeout: '15min'
-          shared_buffers: '16GB'
-          effective_cache_size: '512MB'
-          pg_stat_statements.max: '1000'
-          pg_stat_statements.track: 'all'
-          wal_keep_size: '512MB'
-          min_wal_size: '1GB'
-          max_wal_size: '4GB'
-          wal_compression: 'lz4'
-          checkpoint_flush_after: '2MB'
-          maintenance_work_mem: '8GB'
-          work_mem: '512MB'
-          effective_io_concurrency: '200'
+          wal_compression: lz4
+          max_wal_size: 6GB
+          checkpoint_timeout: 15min
+          checkpoint_flush_after: 2MB
+          wal_writer_flush_after: 2MB
+          min_wal_size: 4GB
+          shared_buffers: 4GB
+          effective_cache_size: 12GB
+          work_mem: 62MB
+          maintenance_work_mem: 1GB
+          autovacuum_vacuum_cost_limit: 2400
+          random_page_cost: 1.1
+          effective_io_concurrency: 64
+          maintenance_io_concurrency: 64
         pg_hba:
           - host all all all scram-sha-256
 
