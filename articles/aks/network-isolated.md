@@ -164,12 +164,10 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
     ```azurecli-interactive
     az acr create --resource-group ${RESOURCE_GROUP} --name ${REGISTRY_NAME} --sku Premium --public-network-enabled false
 
-    az acr update --resource-group ${RESOURCE_GROUP} --name ${REGISTRY_NAME}
-
     REGISTRY_ID=$(az acr show --name ${REGISTRY_NAME} -g ${RESOURCE_GROUP}  --query 'id' --output tsv)
     ```
 
-2. Create an ACR cache rule following the below command to allow users to cache MCR container images in the new ACR, note the cache rule name must be `aks-managed-mcr`.
+2. Create an ACR cache rule following the below command to allow users to cache MCR container images in the new ACR, note the cache rule name and repo names must be strict aligned with the guidance.
 
     ```azurecli-interactive
     az acr cache create -n aks-managed-mcr -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
@@ -397,7 +395,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
-[vnet-disable-outbound-access]: https://learn.microsoft.com/en-us/azure/virtual-network/ip-services/default-outbound-access#how-can-i-transition-to-an-explicit-method-of-public-connectivity-and-disable-default-outbound-access
+[vnet-disable-outbound-access]: articles/virtual-network/ip-services/default-outbound-access
 
 <!-- LINKS - Internal -->
 [aks-firewall]: ./limit-egress-traffic.md
