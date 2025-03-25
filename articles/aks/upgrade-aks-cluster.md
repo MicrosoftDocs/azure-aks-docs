@@ -220,9 +220,9 @@ You can set an auto-upgrade channel on your cluster. For more information, see [
 
 AKS configures upgrades to surge with one extra node by default. A default value of *one* for the max surge settings enables AKS to minimize workload disruption by creating an extra node before the cordon/drain of existing applications to replace an older versioned node. You can customize the max surge value per node pool. When you increase the max surge value, the upgrade process completes faster, and you might experience disruptions during the upgrade process. 
 
-For example, a max surge value of *100%* provides the fastest possible upgrade process, but also causes all nodes in the node pool to be drained simultaneously. You might want to use a higher value such as this for testing environments. For production node pools, we recommend a `max_surge` setting of *33%*.
+For example, a max surge value of `100%` provides the fastest possible upgrade process but also causes all nodes in the node pool to be drained simultaneously. You might want to use a higher value like this for testing environments. For production node pools, we recommend a `max_surge` setting of `33%`.
 
-AKS accepts both integer values and a percentage value for max surge. An integer such as *5* indicates five extra nodes to surge. A value of *50%* indicates a surge value of half the current node count in the pool. Max surge percent values can be a minimum of *1%* and a maximum of *100%*. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. During an upgrade, the max surge value can be a minimum of *1* and a maximum value equal to the number of nodes in your node pool. You can set larger values, but you can't set the maximum number of nodes used for max surge higher than the number of nodes in the pool at the time of upgrade.
+AKS accepts both integer values and a percentage value for max surge. For example, an integer value of `5` indicates five extra nodes to surge. A percentage value of `50%` indicates a surge value of half the current node count in the pool. Max surge percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. During an upgrade, the max surge value can be a minimum of `0` and a maximum value equal to the number of nodes in your node pool. You can set larger values, but you can't set the maximum number of nodes used for max surge higher than the number of nodes in the pool at the time of upgrade.
 
 #### Set max surge value
 
@@ -236,7 +236,33 @@ AKS accepts both integer values and a percentage value for max surge. An integer
     az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --max-surge 5
     ```
 
-#### Set node drain timeout value
+### Customize unavailable nodes during upgrade (Preview)
+
+> [!IMPORTANT]
+>
+> * `maxSurge` must be set to `0` for `maxUnavailable` to be set. The two values can't both be active at the same time.
+> * `maxUnavailable` won't create surge nodes during the upgrade process. Instead, AKS cordons *n* `maxUnavailable` nodes at a time and evict the pods to other nodes in the agent pool. This might cause workload disruptions if the pods can't be scheduled.
+> * `maxUnavailable` might cause more failures due to unsatisfied PodDisruptionBudgets (PDBs) since there will be fewer resources for pods to be scheduled on. Please see the [troubleshooting for PodDisruptionBudgets][pdb-troubleshooting] for mitigation suggestions if you are faced with failures while using this feature.
+> * You can't set `maxUnavailable` on System node pools.
+
+AKS can also configure upgrades to not use a surge node and upgrade the nodes in place. The `maxUnavailable` value can be used to determine how many nodes can be cordoned and drained from the existing node pool nodes.
+
+AKS accepts both integer values and a percentage value for `maxUnavailable`. For example, an integer value of `5` indicates five nodes will be cordoned from the existing nodes on the node pool. A percentage value of `50%` indicates a `maxUnavailable` value of half the current node count in the pool. `maxUnavailable` percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. During an upgrade, the `maxUnavailable` value can be a minimum of `0` and a maximum value equal to the number of nodes in your node pool.
+
+#### Set maxUnavailable value
+
+* Set `maxUnvailable` values for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command.
+
+    ```azurecli-interactive
+    # Set maxUnavailable for a new node pool
+    az aks nodepool add --name mynodepool --resource-group myResourceGroup --cluster-name myManagedCluster --max-surge 0 --max-unavailable 5
+    # Update maxUnavailable for an existing node pool 
+    az aks nodepool update --name mynodepool --resource-group myResourceGroup --cluster-name myManagedCluster --max-surge 0 --max-unavailable 5
+    # Set maxUnavailable at upgrade time for an existing node pool
+    az aks nodepool upgrade --name mynodepool --resource-group myResourceGroup --cluster-name myManagedCluster --max-surge 0 --max-unavailable 5
+    ```
+
+### Set node drain timeout value
 
 At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain time-out that AKS will respect in the upgrade workflow. If no node drain time-out value is specified, the default is 30 minutes. Minimum allowed drain time-out value is 5 minutes and the maximum limit of drain time-out is 24 hours.
 
@@ -252,7 +278,7 @@ If the drain time-out value elapses and pods are still running, then the upgrade
     az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --drain-time-out 45
     ```
 
-#### Set node soak time value
+### Set node soak time value
 
 To allow for a duration of time to wait between draining a node and proceeding to reimage it and move on to the next node, you can set the soak time to a value between 0 and 30 minutes. If no node soak time value is specified, the default is 0 minutes.
 
@@ -321,7 +347,7 @@ For a detailed discussion of upgrade best practices and other considerations, se
 [configure-automatic-aks-upgrades]: ./upgrade-cluster.md#configure-automatic-upgrades
 [release-tracker]: release-tracker.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
+[pdb-troubleshooting]: /troubleshoot/azure/azure-kubernetes/create-upgrade-delete/error-code-poddrainfailure
 
 <!-- LINKS - external -->
 [kubernetes-drain]: https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
-

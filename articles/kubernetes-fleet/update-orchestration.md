@@ -24,7 +24,7 @@ This guide covers how to configure and manually execute update runs.
 
 * Read the [conceptual overview of this feature](./concepts-update-orchestration.md), which provides an explanation of update strategies, runs, stages, and groups referenced in this guide.
 
-* You must have a Fleet resource with one or more member cluster. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
+* You must have a Fleet resource with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
 
 * Set the following environment variables:
 
@@ -335,6 +335,7 @@ For more information, see the [conceptual overview on the update run states and 
 ## Next steps
 
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
+* [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
@@ -342,8 +343,5 @@ For more information, see the [conceptual overview on the update run states and 
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-fleet-updaterun-create]: /cli/azure/fleet/updaterun#az-fleet-updaterun-create
 [az-fleet-updaterun-start]: /cli/azure/fleet/updaterun#az-fleet-updaterun-start
-[az-fleet-member-create]: /cli/azure/fleet/member#az-fleet-member-create
-[az-fleet-member-update]: /cli/azure/fleet/member#az-fleet-member-update
-[az-fleet-updatestrategy-create]: /cli/azure/fleet/updatestrategy#az-fleet-updatestrategy-create
 [az-fleet-updaterun-stop]: /cli/azure/fleet/updaterun#az-fleet-updaterun-stop
 [az-fleet-updaterun-skip]: /cli/azure/fleet/updaterun#az-fleet-updaterun-skip

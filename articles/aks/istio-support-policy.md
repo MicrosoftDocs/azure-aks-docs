@@ -20,8 +20,6 @@ The Istio-based service mesh add-on release calendar indicates each revision's A
 
 New minor revisions and patches are rolled out as part of AKS releases. Announcements about the releases of new minor revisions or patches to the Istio-based service mesh add-on are published in the [AKS release notes][aks-release-notes]. To see real-time updates of regional release status and AKS release notes containing updates about Istio revision support, visit the [AKS release status webpage][aks-release-status].
 
-To learn more about support and compatibility for service mesh add-on revisions, read the [versioning and support policy](./istio-support-policy.md#versioning-and-support-policy).
-
 |  Service mesh revision | Upstream release  | AKS release  | End of life | Compatible AKS versions |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
 | asm-1-17 | Feb 2023 | Apr 2023 | Jan 2024 | 1.23, 1.24, 1.25, 1.26, 1.27, 1.28 |
@@ -30,7 +28,8 @@ To learn more about support and compatibility for service mesh add-on revisions,
 | asm-1-20 | Nov 2023 | Feb 2024 | Sept 2024 | 1.25, 1.26, 1.27, 1.28, 1.29 |
 | asm-1-21 | Mar 2024 | Apr 2024 | Oct 2024 | 1.26, 1.27, 1.28, 1.29, 1.30 |
 | asm-1-22 | May 2024 | Jul 2024 | ~Feb 2025 (expected) | 1.27, 1.28, 1.29, 1.30 |
-| asm-1-23 | Aug 2024 | Sept 2024 | ~June 2025 (expected) | 1.27, 1.28, 1.29, 1.30, 1.31 |
+| asm-1-23 | Aug 2024 | Sept 2024 | ~June 2025 (expected) | 1.27, 1.28, 1.29, 1.30, 1.31, 1.32 |
+| asm-1-24 | Nov 2024 | Feb 2025 | ~Sep 2025 (expected) | 1.28, 1.29, 1.30, 1.31, 1.32 |
 
 ### Supported revisions
 - **Minor revision**:

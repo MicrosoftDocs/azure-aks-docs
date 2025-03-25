@@ -23,6 +23,13 @@ For more information on Istio and the service mesh add-on, see [Istio-based serv
     ```azurecli-interactive
     az aks mesh get-revisions --location <location> -o table
     ```
+* In some cases, Istio CRDs from previous installations may not be automatically cleaned up on uninstall. Ensure existing Istio CRDs are deleted:
+
+    ```bash
+    kubectl delete crd $(kubectl get crd -A | grep "istio.io" | awk '{print $1}')
+    ```
+    It is recommend to also clean up other resources from self-managed installations of Istio such as ClusterRoles, MutatingWebhookConfigurations and ValidatingWebhookConfigurations.
+
 * Note that if you choose to use any `istioctl` CLI commands, you will need to include a flag to point to the add-on installation of Istio: `--istioNamespace aks-istio-system`
 
 ### Set environment variables
@@ -245,6 +252,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
 * [Scale istiod and ingress gateway HPA][istio-scaling-guide]
+* [Collect metrics for Istio service mesh add-on workloads in Azure Managed Prometheus][istio-metrics-managed-prometheus]
 
 <!--- External Links --->
 [install-aks-cluster-istio-bicep]: https://github.com/Azure-Samples/aks-istio-addon-bicep
@@ -261,3 +269,4 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [az-aks-mesh-get-revisions]: /cli/azure/aks/mesh#az-aks-mesh-get-revisions(aks-preview)
 [bicep-aks-resource-definition]: /azure/templates/microsoft.containerservice/managedclusters
 [istio-scaling-guide]: istio-scale.md#scaling
+[istio-metrics-managed-prometheus]: istio-metrics-managed-prometheus.md

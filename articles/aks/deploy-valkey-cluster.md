@@ -6,6 +6,8 @@ ms.custom: azure-kubernetes-service
 ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
+zone_pivot_groups: azure-cli-or-terraform
+
 ---
 
 # Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)
@@ -15,12 +17,22 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 > [!NOTE]
 > This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
+## Connect to the AKS cluster
+> [!NOTE]
+> Ensure that if you're using Terraform, you've replaced the placeholders in the code with the actual outputs from the terraform commands that was deployed in the previous step [deploying the infrastructure][create-valkey-cluster]. 
+
+* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
+    ```
+
 ## Create a namespace
 
 1. Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
 
     ```bash
-    kubectl create namespace ${SERVICE_ACCOUNT_NAMESPACE} --dry-run=client --output yaml | kubectl apply -f -
+    kubectl create namespace valkey --dry-run=client --output yaml | kubectl apply -f -
     ```
 
     Example output:
@@ -29,8 +41,9 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     namespace/valkey created
     ```
 
-
 ## Create secrets
+
+:::zone pivot="azure-cli"
 
 1. Generate a random password for the Valkey cluster using openssl and store it in your Azure key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
    Set the policy to allow the user-assigned identity to get the secret using the [`az keyvault set-policy`][az-keyvault-set-policy] command.
@@ -39,14 +52,27 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     SECRET=$(openssl rand -base64 32)
     echo requirepass $SECRET > /tmp/valkey-password-file.conf
     echo primaryauth $SECRET >> /tmp/valkey-password-file.conf
-    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name valkey-password-file --file /tmp/valkey-password-file.conf --output table
+    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name valkey-password-file --file /tmp/valkey-password-file.conf --output none
     rm /tmp/valkey-password-file.conf
     az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $userAssignedObjectID --secret-permissions get --output table
     ```
+:::zone-end
+
+:::zone pivot="terraform"
+
+1. Get the Identity ID and the Object ID created by the Azure KeyVault Secret Provider Addon, using the [`az aks show`][az-aks-show] command.
+
+    ```azurecli-interactive
+    export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
+    export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
+
+    ```
+:::zone-end
 
 2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
     ```bash
+    export TENANT_ID=$(az account show --query tenantId --output tsv)
     kubectl apply -f - <<EOF
     ---
     apiVersion: secrets-store.csi.x-k8s.io/v1
@@ -701,3 +727,6 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md
 [validate-valkey-cluster]: ./validate-valkey-cluster.md
+[create-valkey-cluster]: ./create-valkey-infrastructure.md
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show

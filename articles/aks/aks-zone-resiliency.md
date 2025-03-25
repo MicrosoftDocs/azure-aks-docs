@@ -31,7 +31,7 @@ The following sections provide guidance on major decision points for making your
 
 ### Create zone redundant clusters and node pools
 
-AKS allows you to select multiple AZs during cluster and node pool creation. When you create a cluster with multiple AZs, the control plane is spread across the selected AZs. The nodes in the node pool are also spread across the selected AZs. This approach ensures that the control plane and the nodes are distributed across multiple AZs, providing resiliency in case of an AZ failure. You can configure AZs using the Azure portal, Azure CLI, or Azure Resource Manager templates.
+AKS allows you to select multiple AZs during cluster and node pool creation. When you create a cluster in a region that has multiple AZs, the control plane is automatically spread across all the AZs in that region. However, the nodes in the node pool are spread across only the selected AZs. This approach ensures that the control plane and the nodes are distributed across multiple AZs, providing resiliency in case of an AZ failure. You can configure AZs by using the Azure portal, Azure CLI, or Azure Resource Manager templates.
 
 The following example shows how to create a cluster with three nodes spread across three AZs using the Azure CLI:
 
@@ -60,31 +60,48 @@ For more information, see [Use availability zones in Azure Kubernetes Service (A
 
 ### Ensure pods are spread across AZs
 
-You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across nodes within AZs.
+In AKS, the Kubernetes Scheduler is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone` as outlined below:
+```yml
+topologySpreadConstraints:
+- maxSkew: 1
+  topologyKey: "topology.kubernetes.io/zone"
+  whenUnsatisfiable: ScheduleAnyway
+```
+This configuration deviates from the upstream default by targeting no more than a single pod difference between zones. As a result, pods are more evenly distributed across zones, reducing the likelihood that a zonal failure results in an outage of the corresponding deployment.
 
-For example, let's say you have a four-node cluster where three pods labeled `foo:bar` are located in `node1`, `node2`, and `node3` respectively. If you want an incoming pod to be evenly distributed with existing pods across zones, you can use a manifest similar to the following example:
+However, if your deployment has specific topology needs, you can override the above default values by adding your own in the pod spec. You can use pod topology spread constraints based on the `zone` and `hostname` labels to spread pods across AZs within a region and across hosts within AZs.
+
+For example, let's say you have a four-node cluster where three pods labeled `app: mypod-app` are located in `node1`, `node2`, and `node3` respectively. If you want the incoming deployment to be hosted on distinct nodes as much as possible, you can use a manifest similar to the following example:
 
 ```yml
-kind: Pod
 apiVersion: v1
+kind: Deployment
 metadata:
-  name: mypod
+  name: mypod-deployment
   labels:
-    foo: bar
+    app: mypod-app
 spec:
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: "topology.kubernetes.io/zone"
-    whenUnsatisfiable: DoNotSchedule
-    labelSelector:
-      matchLabels:
-        foo: bar
-  containers:
-  - name: pause
-    image: registry.k8s.io/pause:3.1
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mypod-app
+  template:
+    metadata:
+      labels:
+        app: mypod-app
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: "kubernetes.io/hostname"
+        whenUnsatisfiable: ScheduleAnyway
+      containers:
+      - name: pause
+        image: registry.k8s.io/pause
 ```
+> [!NOTE]
+> If your application has strict zone spread requirements, where the expected behavior would be to leave a pod in pending state if a suitable node isn't found, you can use `whenUnsatisfiable: DoNotSchedule`. This configuration tells the scheduler to leave the pod in pending if a node in the right zone or different host doesn't exist or can't be scaled up.
 
-For more information, see [Kubernetes Pod Topology Spread Constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/).
+For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
 
 ### Configure AZ-aware networking
 

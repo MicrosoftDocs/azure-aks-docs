@@ -10,6 +10,8 @@ ms.author: nickoman
 
 # Install the Kubernetes Event-driven Autoscaling (KEDA) add-on using an ARM template
 
+[!INCLUDE [change value callout](./includes/keda/change-value-callout.md)]
+
 This article shows you how to deploy the Kubernetes Event-driven Autoscaling (KEDA) add-on to Azure Kubernetes Service (AKS) using an [ARM template](/azure/azure-resource-manager/templates/).
 
 [!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]

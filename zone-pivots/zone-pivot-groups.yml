@@ -19,6 +19,15 @@ groups:
     title: macOS
   - id: client-operating-system-windows
     title: Windows
+# Owner: asabbour
+- id: bicep-azure-cli
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: bicep
+    title: Bicep
 - id: bicep-azure-cli-portal
   title: Interaction type
   prompt: Select how you want to interact with Azure
@@ -29,6 +38,14 @@ groups:
     title: Azure CLI
   - id: bicep
     title: Bicep
+- id: azure-cli-or-terraform
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: terraform
+    title: Terraform
 # Owner: ruslany
 - id: aks-azure-developer-cli
   title: Azure command line interfaces
