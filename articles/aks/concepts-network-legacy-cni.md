@@ -11,7 +11,9 @@ ms.custom: fasttrack-edit
 
 # AKS Legacy Container Networking Interfaces (CNI)
 
-In Azure Kubernetes Service (AKS), while [Azure CNI Overlay][azure-cni-overlay] and [Azure CNI Pod Subnet][azure-cni-pod-subnet] are recommended for most scenarios, Azure CNI Node Subnet is still available and supported. The legacy model offers a different approach to pod IP address management and networking. This article provides an overview of the legacy networking option, detailing its prerequisites, deployment parameters, and key characteristics to help you understand their roles and how they can be used effectively within your AKS clusters.
+[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
+
+In Azure Kubernetes Service (AKS), while [Azure CNI Overlay][azure-cni-overlay] and [Azure CNI Pod Subnet][azure-cni-pod-subnet] are recommended for most scenarios, legacy networking models such as Azure CNI Node Subnet and kubenet are still available and supported. These legacy models offer different approaches to pod IP address management and networking, each with its own set of capabilities and considerations. This article provides an overview of these legacy networking options, detailing their prerequisites, deployment parameters, and key characteristics to help you understand their roles and how they can be used effectively within your AKS clusters.
 
 ## Prerequisites
 
