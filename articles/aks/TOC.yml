@@ -1053,7 +1053,7 @@
             - name: Fine-tune an AI model for inferencing
               href: ai-toolchain-operator-fine-tune.md
             - name: Onboard custom models for inference
-              href: kaito-acr-inference-model.md
+              href: kaito-custom-inference-model.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
         - name: Work with clusters using Copilot
