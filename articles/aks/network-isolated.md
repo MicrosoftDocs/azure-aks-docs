@@ -395,7 +395,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
-[vnet-disable-outbound-access]: articles/virtual-network/ip-services/default-outbound-access
+[vnet-disable-outbound-access]: /azure/virtual-network/ip-services/default-outbound-access#how-can-i-transition-to-an-explicit-method-of-public-connectivity-and-disable-default-outbound-access
 
 <!-- LINKS - Internal -->
 [aks-firewall]: ./limit-egress-traffic.md
