@@ -103,6 +103,8 @@ In this section, you create a federated identity credential for PostgreSQL backu
 
 In this section, you deploy a highly available PostgreSQL cluster using the [CNPG Cluster custom resource definition (CRD)][cluster-crd].
 
+### Cluster CRD parameters
+
 The following table outlines the key properties set in the YAML deployment manifest for the Cluster CRD:
 
 | Property | Definition |
@@ -119,7 +121,9 @@ The following table outlines the key properties set in the YAML deployment manif
 | `serviceAccountTemplate` | Contains the template needed to generate the service accounts and maps the AKS federated identity credential to the UAMI to enable AKS workload identity authentication from the pods hosting the PostgreSQL instances to external Azure resources. |
 | `barmanObjectStore` | Specific to the CNPG operator. Configures the barman-cloud tool suite using AKS workload identity for authentication to the Azure Blob Storage object store. |
 
-PostgreSQL's performance heavily relies on your cluster configuration and the resources that your cluster provides. Here are the suggested calculations for populating the postgres parameters inside your CNPG cluster:
+### PostgreSQL performance parameters
+
+PostgreSQL performance heavily depends on your cluster's underlying resources. The following table provides some suggestions on how to calculate key parameters for high performance:
 
 | Property | Recommended value | Definition |
 | --------- | ------------ | -------------------- |
@@ -137,6 +141,8 @@ PostgreSQL's performance heavily relies on your cluster configuration and the re
 | `random_page_cost` | 1.1 | Sets the planner's estimate of the cost of a nonsequentially fetched disk page |
 | `effective_io_concurrency` | 64 | Number of simultaneous requests that can be handled efficiently by the disk subsystem |
 | `maintenance_io_concurrency` | 64 | A variant of "effective_io_concurrency" that is used for maintenance work |
+
+### Deploying PostgreSQL
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
