@@ -328,11 +328,11 @@ We will now define an environment variable which we will later reference when de
 
 ### [Premium SSD](#tab/pv1)
 
-1. Use the default azuredisk CSI driver storage class
+Use the default azuredisk CSI driver storage class
 
-    ```bash
-    export POSTGRES_STORAGE_CLASS="managed-csi-premium"
-    ```
+```bash
+export POSTGRES_STORAGE_CLASS="managed-csi-premium"
+```
 
 ### [Premium SSD v2](#tab/pv2)
 

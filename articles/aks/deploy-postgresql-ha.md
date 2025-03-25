@@ -119,25 +119,24 @@ The following table outlines the key properties set in the YAML deployment manif
 | `serviceAccountTemplate` | Contains the template needed to generate the service accounts and maps the AKS federated identity credential to the UAMI to enable AKS workload identity authentication from the pods hosting the PostgreSQL instances to external Azure resources. |
 | `barmanObjectStore` | Specific to the CNPG operator. Configures the barman-cloud tool suite using AKS workload identity for authentication to the Azure Blob Storage object store. |
 
+PostgreSQL's performance heavily relies on your cluster configuration and the resources that your cluster provides. Here are the suggested calculations for populating the postgres parameters inside your CNPG cluster:
 
->[!TIP]
-> PostgreSQL's configuration heavily relies on your cluster configuration and the resources that your cluster provides. Here are the suggested calculations for populating the postgres parameters inside your CNPG cluster:
-> | Property | Recommended Value | Definition |
-> | --------- | ------------ | -------------------- |
-> | `wal_compression` | lz4 | Compresses full-page writes written in WAL file with specified method |
-> | `max_wal_size` | 6GB | Sets the WAL size that triggers a checkpoint |
-> | `checkpoint_timeout` | 15min | Sets the maximum time between automatic WAL checkpoints |
-> | `checkpoint_flush_after` | 2MB | Number of pages after which previously performed writes are flushed to disk |
-> | `wal_writer_flush_after` | 2MB | Amount of WAL written out by WAL writer that triggers a flush |
-> | `min_wal_size` | 4GB | Sets the minimum size to shrink the WAL to |
-> | `shared_buffers` | 25% of node memory | Sets the number of shared memory buffers used by the server |
-> | `effective_cache_size` | 75% of node memory | Sets the planner's assumption about the total size of the data caches |
-> | `work_mem` | 1/256th of node memory | Sets the maximum memory to be used for query workspaces |
-> | `maintenance_work_mem` | 6.25% of node memory | Sets the maximum memory to be used for maintenance operations |
-> | `autovacuum_vacuum_cost_limit` | 2400 | Vacuum cost amount available before napping, for autovacuum |
-> | `random_page_cost` | 1.1 | Sets the planner's estimate of the cost of a nonsequentially fetched disk page |
-> | `effective_io_concurrency` | 64 | Number of simultaneous requests that can be handled efficiently by the disk subsystem |
-> | `maintenance_io_concurrency` | 64 | A variant of "effective_io_concurrency" that is used for maintenance work |
+| Property | Recommended value | Definition |
+| --------- | ------------ | -------------------- |
+| `wal_compression` | lz4 | Compresses full-page writes written in WAL file with specified method |
+| `max_wal_size` | 6GB | Sets the WAL size that triggers a checkpoint |
+| `checkpoint_timeout` | 15min | Sets the maximum time between automatic WAL checkpoints |
+| `checkpoint_flush_after` | 2MB | Number of pages after which previously performed writes are flushed to disk |
+| `wal_writer_flush_after` | 2MB | Amount of WAL written out by WAL writer that triggers a flush |
+| `min_wal_size` | 4GB | Sets the minimum size to shrink the WAL to |
+| `shared_buffers` | 25% of node memory | Sets the number of shared memory buffers used by the server |
+| `effective_cache_size` | 75% of node memory | Sets the planner's assumption about the total size of the data caches |
+| `work_mem` | 1/256th of node memory | Sets the maximum memory to be used for query workspaces |
+| `maintenance_work_mem` | 6.25% of node memory | Sets the maximum memory to be used for maintenance operations |
+| `autovacuum_vacuum_cost_limit` | 2400 | Vacuum cost amount available before napping, for autovacuum |
+| `random_page_cost` | 1.1 | Sets the planner's estimate of the cost of a nonsequentially fetched disk page |
+| `effective_io_concurrency` | 64 | Number of simultaneous requests that can be handled efficiently by the disk subsystem |
+| `maintenance_io_concurrency` | 64 | A variant of "effective_io_concurrency" that is used for maintenance work |
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
@@ -272,8 +271,6 @@ The following table outlines the key properties set in the YAML deployment manif
 > ```bash  
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
 > ```  
-> 
-> Improvements to NVMe persistence and recovery are planned for release later in 2025.
 
 ### Validate the Prometheus PodMonitor is running
 
