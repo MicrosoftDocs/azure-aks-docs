@@ -63,11 +63,11 @@ There are two important considerations for you to choose between `SecurityPatch`
 1. In the Azure portal, select **Create a resource** > **Containers** > **Azure Kubernetes Service (AKS)**.
 2. In the **Basics** tab, under **Cluster details**, select the desired channel type from the **Node security channel type** dropdown.
 
-    :::image type="content" source="./media/autoupgrade-node-os-image/set-nodeimage-channel-portal.png" alt-text="A screenshot of the Azure portal showing the node security channel type option in the Basics tab of the AKS cluster creation page.":::
+    :::image type="content" source="./media/auto-upgrade-node-os-image/set-nodeimage-channel-portal.png" alt-text="A screenshot of the Azure portal showing the node security channel type option in the Basics tab of the AKS cluster creation page.":::
 
 3. Select **Security channel scheduler** and choose the desired maintenance window using the [Planned Maintenance feature](./planned-maintenance.md). We recommend selecting the default option **Every week on Sunday (recommended)**.
 
-    :::image type="content" source="./media/autoupgrade-node-os-image/set-nodeimage-maintenance-window-portal.png" alt-text="A screenshot of the Azure portal showing the security channel scheduler option in the Basics tab of the AKS cluster creation page.":::
+    :::image type="content" source="./media/auto-upgrade-node-os-image/set-nodeimage-maintenance-window-portal.png" alt-text="A screenshot of the Azure portal showing the security channel scheduler option in the Basics tab of the AKS cluster creation page.":::
 
 4. Complete the remaining steps to create the cluster.
 
@@ -89,7 +89,7 @@ There are two important considerations for you to choose between `SecurityPatch`
 2. In the **Settings** section, select **Cluster configuration**.
 3. Under **Security updates**, select the desired channel type from the **Node security channel type** dropdown.
 
-    :::image type="content" source="./media/autoupgrade-node-os-image/set-nodeimage-channel-portal-existing.png" alt-text="A screenshot of the Azure portal showing the node security channel type option in the Cluster configuration page of an existing AKS cluster.":::
+    :::image type="content" source="./media/auto-upgrade-node-os-image/set-nodeimage-channel-portal-existing.png" alt-text="A screenshot of the Azure portal showing the node security channel type option in the Cluster configuration page of an existing AKS cluster.":::
 
 4. For **Security channel scheduler**, select **Add schedule**.
 5. On the **Add maintenance schedule** page, configure the following maintenance window settings using the [Planned Maintenance feature](./planned-maintenance.md):
@@ -100,7 +100,7 @@ There are two important considerations for you to choose between `SecurityPatch`
     * **Maintenance start time**: Select the desired start time for the maintenance window.
     * **UTC offset**: Select the desired UTC offset for the maintenance window. If not set, the default is **+00:00**.
 
-    :::image type="content" source="./media/autoupgrade-node-os-image/set-nodeimage-maintenance-window-portal-existing.png" alt-text="A screenshot of the Azure portal showing the maintenance schedule configuration options in the Add maintenance schedule page of an existing AKS cluster.":::
+    :::image type="content" source="./media/auto-upgrade-node-os-image/set-nodeimage-maintenance-window-portal-existing.png" alt-text="A screenshot of the Azure portal showing the maintenance schedule configuration options in the Add maintenance schedule page of an existing AKS cluster.":::
 
 6. Select **Save** > **Apply**.
 
@@ -187,7 +187,7 @@ Here, the base node image version is `AKSUbuntu-2204gen2containerd-202410.27.0`.
 
 The same details also be looked up in the Azure portal under the node label view:
 
-:::image type="content" source="./media/autoupgrade-node-os-image/nodeimage-securitypatch-inline.png" alt-text="A screenshot of the nodes page for an AKS cluster in the Azure portal. The label for node image version clearly shows the base node image and the latest applied security patch date." lightbox="./media/autoupgrade-node-os-image/nodeimage-securitypatch.png":::
+:::image type="content" source="./media/auto-upgrade-node-os-image/nodeimage-securitypatch-inline.png" alt-text="A screenshot of the nodes page for an AKS cluster in the Azure portal. The label for node image version clearly shows the base node image and the latest applied security patch date." lightbox="./media/auto-upgrade-node-os-image/nodeimage-securitypatch.png":::
 
 ## Next steps
 
@@ -202,7 +202,7 @@ For a detailed discussion of upgrade best practices and other considerations, se
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [upgrade-aks-cluster]: upgrade-cluster.md
 [unattended-upgrades]: https://help.ubuntu.com/community/AutomaticSecurityUpdates
-[Autoupgrade]: autoupgrade-cluster.md
+[Autoupgrade]: auto-upgrade-cluster.md
 [kured]: node-updates-kured.md
 [supported]: ./support-policies.md
 [monitor-aks]: ./monitor-aks-reference.md
