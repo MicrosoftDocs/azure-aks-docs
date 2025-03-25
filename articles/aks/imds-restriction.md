@@ -76,7 +76,9 @@ Certain add-ons that need to access the IMDS endpoint aren't supported with IMDS
 - AI toolchain operator (preview)
 - Application routing
 - HTTP application routing
-- Azure cost analysis 
+- Web application routing
+- Azure cost analysis
+- Azure Key Vault provider for Secrets Store CSI Driver
 
 Additionally, Windows node pools aren't currently supported with IDMS restriction.
 
@@ -98,8 +100,8 @@ To enable IMDS restriction on a new cluster and block all traffic from non host 
 
 ```azurecli-interactive
 az aks create \
-    –-resource-group myResourceGroup \
-    -–name myAKSCluster \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
     --enable-imds-restriction
 ```
 
@@ -109,8 +111,8 @@ To enable IMDS restriction on an existing cluster and block all traffic from non
 
 ```azurecli-interactive
 az aks update \
-    -–resource-group myResourceGroup \
-    -–name myAKSCluster \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
     --enable-imds-restriction
 ```
 
@@ -196,8 +198,8 @@ To disable IMDS restriction on an existing cluster and allow all traffic from an
 
 ```azurecli-interactive
 az aks update \
-    –-resource-group myResourceGroup \
-    –-name myAKSCluster \
+    --resource-group myResourceGroup \
+    --name myAKSCluster \
     --disable-imds-restriction
 ```
 

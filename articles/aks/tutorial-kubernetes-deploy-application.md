@@ -11,7 +11,7 @@ ms.custom: mvc, devx-track-extended-azdevcli
 
 Kubernetes provides a distributed platform for containerized applications. You build and deploy your own applications and services into a Kubernetes cluster and let the cluster manage the availability and connectivity.
 
-In this tutorial, part four of seven, you deploy a sample application into a Kubernetes cluster. You learn how to:
+In this tutorial, you deploy a sample application into a Kubernetes cluster. You learn how to:
 
 > [!div class="checklist"]
 >

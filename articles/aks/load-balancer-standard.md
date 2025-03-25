@@ -625,6 +625,7 @@ The following limitations apply when you create and manage AKS clusters that sup
 * Defining the load balancer SKU can only be done when you create an AKS cluster. You can't change the load balancer SKU after an AKS cluster has been created.
 * You can only use one type of load balancer SKU (*Basic* or *Standard*) in a single cluster.
 * *Standard* SKU load balancers only support *Standard* SKU IP addresses.
+* Private Link Service is not supported when load balancer backend pool type is set to nodeIP.
 
 ## Next steps
 

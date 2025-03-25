@@ -5,7 +5,7 @@ description: Learn how to create a static or dynamic persistent volume with Azur
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
-ms.date: 12/10/2024
+ms.date: 3/13/2025
 author: schaffererin
 ms.author: schaffererin
 
@@ -72,8 +72,10 @@ The following table includes parameters you can use to define a custom storage c
 |--- | **Following parameters are only for VNet setting. For example, NFS, private end point** | --- | --- |
 |fsGroupChangePolicy | Indicates how the driver changes volume's ownership. Pod `securityContext.fsGroupChangePolicy` is ignored. | `OnRootMismatch` (default), `Always`, `None` | No | `OnRootMismatch`|
 |subnetName | Subnet name | Existing subnet name of the agent node. | No | If empty, driver uses the `subnetName` value in Azure cloud config file. |
-|vnetName | Virtual network name | Existing virtual network name. | No | If empty, driver uses the `vnetName` value in Azure cloud config file. |
+|vnetName | Virtual network name | Existing virtual network name. | No | if empty, driver will update all the subnets under the cluster virtual network. |
 |vnetResourceGroup | Specify VNet resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
+
+<sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account.
 
 ### Create a storage class
 
@@ -522,4 +524,5 @@ For associated best practices, see [Best practices for storage and backups in AK
 [tag-resources]: /azure/azure-resource-manager/management/tag-resources
 [azure-files-usage]: /azure/storage/files/understand-performance#choosing-a-performance-tier-based-on-usage-patterns
 [az-storage-account-create]: /cli/azure/storage/account#az-storage-account-create
+[storage-account-private-endpoint]: /azure/storage/common/storage-private-endpoints
 

@@ -10,6 +10,8 @@ ms.custom: template-how-to, devx-track-azurecli
 
 # Install the Kubernetes Event-driven Autoscaling (KEDA) add-on using the Azure CLI
 
+[!INCLUDE [change value callout](./includes/keda/change-value-callout.md)]
+
 This article shows you how to install the Kubernetes Event-driven Autoscaling (KEDA) add-on to Azure Kubernetes Service (AKS) using the Azure CLI.
 
 [!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]
