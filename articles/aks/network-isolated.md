@@ -365,6 +365,20 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you disable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
+## Known issues
+### Cluster image pull failed
+Network Isolated Cluster leverage ACR cache rule for image pull, when seeing image pull fail error:
+
+If you are using BYO ACR, check your private ACR resources including cache rule and private endpoint to see if they are configed according to the doc guidance. You can also try to connect the ACR from node.
+
+If you are using AKS Managed ACR, only MCR images are supported by default. Thus, if the image pull failure is on images from other registries, then you need go to the private ACR to create additional cache rule for those images. If the image pull failure is on MCR images, please proceed to check if the associated ACR and private endpoint resource named with keyword `bootstrap` exists. If doesn't exist, please reconcile the cluster.
+
+### Cluster image pull fails after updating the existed cluster to network isolated cluster or updating the private ACR resource ID
+This by designed behavior, you need to reimage the node to update the kubelet configuration in cse following the update actions mentioned.
+
+### ACR or associated cache rule, private endpoint and private DNS zone are deleted by accident
+If the cache rule is deleted from the managed ACR by accident, the mitigation is to delete the ACR and then reconcile the cluster. If the ACR itself or private endpoint or private DNS zone is deleted by accident, the mitigation is just to reconcile the cluster.
+
 ## Next steps
 
 In this article, you learned what ports and addresses to allow if you want to restrict egress traffic for the cluster.
