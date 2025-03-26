@@ -332,7 +332,7 @@ For more information on configuring auto-upgrade profiles, see [automate upgrade
 
 ## Generate an update run from an auto-upgrade profile 
 
-When you create an auto-upgrade profile your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be days or weeks before a new version release triggers an update run.
+When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new version triggers an update run.
 
 Auto-upgrade allows you to generate a new update run using using the [`az fleet autoupgradeprofile generate-update-run`][az-fleet-updaterun-generate] command. The resulting update run is based on the current AKS-published Kubernetes or node image version. 
 
