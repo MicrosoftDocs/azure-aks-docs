@@ -2,7 +2,7 @@
 title: "Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 11/06/2023
+ms.date: 03/26/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -322,15 +322,13 @@ The following sections explain how to manage an update run using the Azure porta
 
     For more information, see [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
 
+---
+
 ## Automate update runs using auto-upgrade profiles
 
 Auto-upgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available. 
 
 For more information on configuring auto-upgrade profiles, see [automate upgrades of Kubernetes and node images using Azure Kubernetes Fleet Manager](./update-automation.md).
-
----
-
-For more information, see the [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
 
 ## Next steps
 

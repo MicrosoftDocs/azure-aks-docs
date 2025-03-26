@@ -2,13 +2,13 @@
 title: "Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to configure automated upgrades of Kubernetes and node images across multiple clusters by using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 09/16/2024
+ms.date: 03/26/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ---
 
-# Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager (preview)
+# Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager
 
 Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs.
 
@@ -16,11 +16,9 @@ Update runs consist of stages, groups, and strategies and can be applied either 
 
 This article covers how to use auto-upgrade profiles to automatically trigger update runs when new Kubernetes or node image versions are made available. 
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
-
 ## Prerequisites
 
-* Read the [conceptual overview of auto-upgrade profiles](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles-preview), which provides an explanation of configurations referenced in this guide.
+* Read the [conceptual overview of auto-upgrade profiles](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles), which provides an explanation of configurations referenced in this guide.
 
 * You must have a Fleet resource with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
 
