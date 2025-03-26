@@ -48,7 +48,7 @@ This guide covers how to configure and manually execute update runs.
   az extension update --name fleet
   ```
 
-## Creating update runs
+## Defining the cluster upgrade sequence
 
 Update run supports two options for the cluster upgrade sequence:
 
@@ -329,6 +329,21 @@ The following sections explain how to manage an update run using the Azure porta
 Auto-upgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available. 
 
 For more information on configuring auto-upgrade profiles, see [automate upgrades of Kubernetes and node images using Azure Kubernetes Fleet Manager](./update-automation.md).
+
+## Generate an update run from an auto-upgrade profile 
+
+When you create an auto-upgrade profile your clusters can be on various versions of either Kubernetes or node image. Depending on the selected auto-upgrade channel it may be a number of days or weeks before a new version release triggers a new update run.
+
+Auto-upgrade provides you with the ability to generate a new update run using the `generate-update-run` command. The resulting update run will be based on the current AKS-published Kubernetes or node image version depending on the channel you have configured in the profile. 
+
+```azurecli-interactive
+az fleet autoupgradeprofile generate-update-run \ 
+    --resource-group $GROUP \ 
+    --fleet-name $FLEET \ 
+    --name $AUTOUPGRADEPROFILE
+```
+
+The generated update run is not automatically started, allowing you to review the target versions to be applied. If you are happy with the selected versions you can manually start the update run.
 
 ## Next steps
 
