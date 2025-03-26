@@ -165,25 +165,9 @@ az aks create \
 
     No, AKS manages the Cilium configuration and it can't be modified. We recommend that customers who require more control use [AKS BYO CNI](./use-byo-cni.md) and install Cilium manually.
 
-- **Can I use `CiliumNetworkPolicy` custom resources instead of Kubernetes `NetworkPolicy` resources?**
+- **Can I use `ClusterwideCiliumNetworkPolicy`?**
 
-    `CiliumNetworkPolicy` custom resources are partially supported. Customers may use FQDN filtering as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
-
-    This `CiliumNetworkPolicy` example demonstrates a sample matching pattern for services that match the specified label.
-
-    ```yaml
-    apiVersion: "cilium.io/v2"
-    kind: CiliumNetworkPolicy
-    metadata:
-      name: "example-fqdn"
-    spec:
-      endpointSelector:
-        matchLabels:
-          foo: bar
-      egress:
-      - toFQDNs:
-        - matchPattern: "*.example.com"
-    ```
+    `ClusterwideCiliumNetworkPolicy` is not supported.
 
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
