@@ -96,11 +96,11 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 	    kubectl get servicemonitor prometheus-kaito-monitor -n kube-system
     ```
 
-6.	Confirm that vLLM metrics are successfully collected in Azure Managed Prometheus on your Azure Portal by navigating to the "Prometheus explorer" page under “Managed Prometheus” in your Azure Monitor Workspace.
-    - Navigate to the “Grid” tab and search for your metrics item associated with the job name `workspace-qwen-2-5-coder-7b-instruct`.
+6. Confirm that vLLM metrics are successfully collected in Azure Managed Prometheus on your Azure Portal by navigating to the "Prometheus explorer" page under “Managed Prometheus” in your Azure Monitor Workspace.
+7. Select the “Grid” tab and confirm that there is a metrics item associated with the job name `workspace-qwen-2-5-coder-7b-instruct`.
 
-    > [!NOTE]
-    > The `up` value of this item should be 1, indicating that Prometheus metrics are successfully being scraped from your AI inference service endpoint.
+   > [!NOTE]    
+   > The `up` value of this item should be 1, indicating that Prometheus metrics are successfully being scraped from your AI inference service endpoint.
 
 
 ## Visualize KAITO inference metrics in Azure Managed Grafana
