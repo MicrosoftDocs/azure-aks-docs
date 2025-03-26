@@ -260,7 +260,7 @@ After applying the KAITO model inference workspace, your resource readiness and 
     az role assignment list --scope /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$AZURE_RESOURCE_GROUP
     ```
 
-- Your Azure subscription does not have quota for the minimum GPU instance type specified in your KAITO workspace. You will need to [request a quota increase](https://learn.microsoft.com/azure/quotas/quickstart-increase-quota-portal) for the GPU VM family in your Azure subscription.
+- Your Azure subscription does not have quota for the minimum GPU instance type specified in your KAITO workspace. You will need to [request a quota increase](/azure/quotas/quickstart-increase-quota-portal) for the GPU VM family in your Azure subscription.
 
 - The GPU instance type is not available in your AKS region. Confirm the [GPU instance availability in your specific region](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?regions=&products=virtual-machines), and switch the Azure region if your GPU VM family is not available.
 
