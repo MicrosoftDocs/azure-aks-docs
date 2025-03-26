@@ -92,7 +92,7 @@ Use the [`az fleet autoupgradeprofile create`][az-fleet-autoupgradeprofile-creat
 You can create a disabled auto-upgrade profile by passing the `--disabled` argument when using the `create` command. In order to enable the auto-upgrade profile, you must reissue the entire `create` command and omit the `--disabled` argument.
 
 > [!NOTE]
-> Disabling an auto-upgrade profile that has an in-progress update run won't affect the existing update run which continues, however no further update runs are generated until the profile is re-enabled.
+> Disabling an auto-upgrade profile that has an in-progress update run doesn't affect the existing update run which continues, however no further update runs are generated until the profile is re-enabled.
 
 #### Stable channel Kubernetes updates
 
@@ -259,21 +259,11 @@ Once update runs finish, you can rerun these commands and view the updated versi
 
 ---
 
-## Generate an update run from an auto-upgrade profile 
+## Use an auto-upgrade profile to generate an update run  
 
-When you create an auto-upgrade profile your clusters can be on various versions of either Kubernetes or node image. Depending on the selected auto-upgrade channel it may be a number of days or weeks before a new version release triggers a new update run.
+When you create an auto-upgrade profile your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be days or weeks before a new version release triggers an update run.
 
-Auto-upgrade provides you with the ability to generate a new update run using the `generate-update-run` command. The resulting update run will be based on the current AKS-published Kubernetes or node image version depending on the channel you have configured in the profile. 
-
-```azurecli-interactive
-az fleet autoupgradeprofile generate-update-run \ 
-    --resource-group $GROUP \ 
-    --fleet-name $FLEET \ 
-    --name $AUTOUPGRADEPROFILE
-```
-
-The generated update run is not automatically started, allowing you to review the target versions to be applied. If you are happy with the selected versions you can manually start the update run either from the CLI or Azure portal.
-
+For more information on creating an on-demand update run from an auto-upgrade profile, see [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile).
 
 ## Next steps
 

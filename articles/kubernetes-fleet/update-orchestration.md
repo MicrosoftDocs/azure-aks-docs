@@ -332,9 +332,9 @@ For more information on configuring auto-upgrade profiles, see [automate upgrade
 
 ## Generate an update run from an auto-upgrade profile 
 
-When you create an auto-upgrade profile your clusters can be on various versions of either Kubernetes or node image. Depending on the selected auto-upgrade channel it may be a number of days or weeks before a new version release triggers a new update run.
+When you create an auto-upgrade profile your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be days or weeks before a new version release triggers an update run.
 
-Auto-upgrade provides you with the ability to generate a new update run using the `generate-update-run` command. The resulting update run will be based on the current AKS-published Kubernetes or node image version depending on the channel you have configured in the profile. 
+Auto-upgrade allows you to generate a new update run using using the [`az fleet autoupgradeprofile generate-update-run`][az-fleet-updaterun-generate] command. The resulting update run is based on the current AKS-published Kubernetes or node image version. 
 
 ```azurecli-interactive
 az fleet autoupgradeprofile generate-update-run \ 
@@ -343,7 +343,7 @@ az fleet autoupgradeprofile generate-update-run \
     --name $AUTOUPGRADEPROFILE
 ```
 
-The generated update run is not automatically started, allowing you to review the target versions to be applied. If you are happy with the selected versions you can manually start the update run.
+The generated update run is not automatically started, allowing review of the update run. If you are satisfied the update run, you can manually start it.
 
 ## Next steps
 
@@ -358,3 +358,4 @@ The generated update run is not automatically started, allowing you to review th
 [az-fleet-updaterun-start]: /cli/azure/fleet/updaterun#az-fleet-updaterun-start
 [az-fleet-updaterun-stop]: /cli/azure/fleet/updaterun#az-fleet-updaterun-stop
 [az-fleet-updaterun-skip]: /cli/azure/fleet/updaterun#az-fleet-updaterun-skip
+[az-fleet-updaterun-generate]: /cli/azure/fleet/updaterun#az-fleet-updaterun-generate-update-run
