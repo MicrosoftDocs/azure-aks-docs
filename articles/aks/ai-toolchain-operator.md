@@ -269,7 +269,7 @@ After applying the KAITO model inference workspace, your resource readiness and 
 Learn more about [KAITO model deployment options](https://github.com/Azure/kaito) below:
 
 * [Fine tune a model][kaito-fine-tune] with the AI toolchain operator add-on on AKS.
-* [Monitor KAITO inference metrics](./ai-toolchain-operator-monitoring.md) with Azure Managed Prometheus and Grafana on AKS
+* Learn about [MLOps best practices][mlops-best-practices] for your AI pipelines on AKS
 * Onboard a [custom model for KAITO inference](https://github.com/kaito-project/kaito/blob/main/docs/custom-model-integration/custom-model-integration-guide.md) on AKS.
 
 <!-- LINKS -->
