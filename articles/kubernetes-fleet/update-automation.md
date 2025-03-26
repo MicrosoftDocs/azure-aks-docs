@@ -261,7 +261,7 @@ Once update runs finish, you can rerun these commands and view the updated versi
 
 ## Use an auto-upgrade profile to generate an update run  
 
-When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new version triggers an update run.
+When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new version release triggers auto-upgrade to create and execute an update run. Auto-upgrade allows you to generate a new update run at any time using the current AKS-published Kubernetes or node image version.
 
 For more information on creating an on-demand update run from an auto-upgrade profile, see [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile).
 
