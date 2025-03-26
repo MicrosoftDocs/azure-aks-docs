@@ -219,7 +219,7 @@ The following sections describe how to create an AKS cluster with the AI toolcha
     export SERVICE_IP=$(kubectl get svc workspace-falcon-7b-instruct -o jsonpath='{.spec.clusterIP}')
     ```
 
-4. Run the Falcon 7B-instruct inference service with a sample input of your choice using the following `curl` command:
+4. Test the Falcon 7B-instruct inference service with a sample input of your choice using the [OpenAI chat completions API format](https://platform.openai.com/docs/api-reference/chat):
 
     ```azurecli-interactive
     kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/v1/completions \
