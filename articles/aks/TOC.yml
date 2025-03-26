@@ -124,6 +124,8 @@
           href: control-plane-metrics-monitor.md
         - name: Container Network Observability
           href: container-network-observability-concepts.md
+        - name: Monitor your AI inference service with the AI toolchain operator
+          href: ai-toolchain-operator-monitoring.md
     - name: Security
       items:
         - name: Security concepts
@@ -1076,6 +1078,8 @@
           href: open-ai-secure-access-quickstart.md
         - name: Deploy an AI model with the AI toolchain operator
           href: ai-toolchain-operator.md
+        - name: Monitor your inference service with the AI toolchain operator
+          href: ai-toolchain-operator-monitoring.md
         - name: Fine-tune an AI model for inferencing with the AI toolchain operator
           href: ai-toolchain-operator-fine-tune.md
         - name: Deploy data and ML pipelines with Flyte
