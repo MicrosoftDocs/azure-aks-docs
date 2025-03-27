@@ -58,7 +58,8 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 
 ## Surface KAITO inference metrics to Azure Managed Prometheus
 
-1. Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](https://github.com/kaito-project/kaito/blob/main/docs/inference/Monitoring.md#prometheus-metrics).
+Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](https://github.com/kaito-project/kaito/blob/main/docs/inference/Monitoring.md#prometheus-metrics).
+
 
 2. Add the following label to your KAITO inference service so that it can be detected by a Kubernetes `ServiceMonitor` deployment:
 
