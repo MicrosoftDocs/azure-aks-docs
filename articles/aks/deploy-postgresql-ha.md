@@ -233,10 +233,10 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
           effective_cache_size: 12GB
           work_mem: 62MB
           maintenance_work_mem: 1GB
-          autovacuum_vacuum_cost_limit: 2400
-          random_page_cost: 1.1
-          effective_io_concurrency: 64
-          maintenance_io_concurrency: 64
+          autovacuum_vacuum_cost_limit: "2400"
+          random_page_cost: "1.1"
+          effective_io_concurrency: "64"
+          maintenance_io_concurrency: "64"
         pg_hba:
           - host all all all scram-sha-256
 
