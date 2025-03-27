@@ -2,7 +2,7 @@
 title: "Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to orchestrate updates across multiple clusters using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 11/06/2023
+ms.date: 03/26/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -48,7 +48,7 @@ This guide covers how to configure and manually execute update runs.
   az extension update --name fleet
   ```
 
-## Creating update runs
+## Defining the cluster upgrade sequence
 
 Update run supports two options for the cluster upgrade sequence:
 
@@ -322,15 +322,28 @@ The following sections explain how to manage an update run using the Azure porta
 
     For more information, see [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
 
+---
+
 ## Automate update runs using auto-upgrade profiles
 
 Auto-upgrade profiles are used to automatically execute update runs across member clusters when new Kubernetes or node image versions are made available. 
 
 For more information on configuring auto-upgrade profiles, see [automate upgrades of Kubernetes and node images using Azure Kubernetes Fleet Manager](./update-automation.md).
 
----
+## Generate an update run from an auto-upgrade profile 
 
-For more information, see the [conceptual overview on the update run states and skip behavior](concepts-update-orchestration.md#update-run-states) on runs/stages/groups.
+When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new version release triggers auto-upgrade to create and execute an update run.
+
+Auto-upgrade allows you to generate a new update run at any time using the [`az fleet autoupgradeprofile generate-update-run`][az-fleet-updaterun-generate] command. The resulting update run is based on the current AKS-published Kubernetes or node image version. 
+
+```azurecli-interactive
+az fleet autoupgradeprofile generate-update-run \ 
+    --resource-group $GROUP \ 
+    --fleet-name $FLEET \ 
+    --name $AUTOUPGRADEPROFILE
+```
+
+The generated update run is not automatically started, allowing you to review it. If you are satisfied with the generated update run, you can start and manage it by following the steps in [manage an update run](#manage-an-update-run).
 
 ## Next steps
 
@@ -345,3 +358,4 @@ For more information, see the [conceptual overview on the update run states and 
 [az-fleet-updaterun-start]: /cli/azure/fleet/updaterun#az-fleet-updaterun-start
 [az-fleet-updaterun-stop]: /cli/azure/fleet/updaterun#az-fleet-updaterun-stop
 [az-fleet-updaterun-skip]: /cli/azure/fleet/updaterun#az-fleet-updaterun-skip
+[az-fleet-updaterun-generate]: /cli/azure/fleet/autoupgradeprofile#az-fleet-autoupgradeprofile-generate-update-ru
