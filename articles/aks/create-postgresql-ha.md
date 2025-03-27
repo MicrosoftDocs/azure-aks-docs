@@ -352,8 +352,8 @@ To use Premium SSD v2, you can create a custom storage class.
      parameters:
        cachingMode: None
        skuName: PremiumV2_LRS
-       DiskIOPSReadWrite: "4000"
-       DiskMBpsReadWrite: "1000"
+       DiskIOPSReadWrite: "3500"
+       DiskMBpsReadWrite: "125"
      provisioner: disk.csi.azure.com
      reclaimPolicy: Delete
      volumeBindingMode: Immediate
