@@ -143,7 +143,7 @@ Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you ne
     kubectl get podmonitor -n kube-system
     ```
 
-4. In the [Azure Portal](https://portal.azure.com), navigate to the **Managed Prometheus** > **Prometheus explorer** section of your Azure Monitor workspace. Select the **Grid** tab and search for an example DCGM GPU metric in the **PromQL** box. For example `DCGM_FI_DEV_SM_CLOCK`:
+4. In the [Azure portal](https://portal.azure.com), navigate to the **Managed Prometheus** > **Prometheus explorer** section of your Azure Monitor workspace. Select the **Grid** tab and search for an example DCGM GPU metric in the **PromQL** box. For example `DCGM_FI_DEV_SM_CLOCK`:
 
     :::image type="content" source="./media/monitor-gpu-metrics/dcgm-azure-monitor.png" alt-text="Screenshot of the Metrics section of an Azure Monitor workspace in the Azure portal.":::
 
