@@ -127,10 +127,11 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 
 6. In a few moments, the metrics for your KAITO inference service will populate in the vLLM Grafana dashboard. 
 
-:::image type="content" source="./media/ai-toolchain-operator/example-grafana-dashboard.png" alt-text="Screenshot of vLLM Grafana dashboard for example inference service deployment." lightbox="./media/ai-toolchain-operator/example-grafana-dashboard.png":::
+    :::image type="content" source="./media/ai-toolchain-operator/example-grafana-dashboard.png" alt-text="Screenshot of vLLM Grafana dashboard for example inference service deployment." lightbox="./media/ai-toolchain-operator/example-grafana-dashboard.png":::
 
-   > [!NOTE]
-   > The value of these inference metrics will remain 0 until the requests are submitted to the model inference server.
+    > [!NOTE]
+    > The value of these inference metrics will remain 0 until the requests are submitted to the model inference server.
+
 
 
 ## Next steps
