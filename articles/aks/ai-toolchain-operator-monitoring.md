@@ -63,8 +63,9 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 2. Add the following label to your KAITO inference service so that it can be detected by a Kubernetes `ServiceMonitor` deployment:
 
     ```azurecli-interactive
-        kubectl label svc workspace-qwen-2-5-coder-7b-instruct App=qwen-2-5-coder 
+    kubectl label svc workspace-qwen-2-5-coder-7b-instruct App=qwen-2-5-coder 
     ```
+
 
 3. Create a `ServiceMonitor` resource to define the inference service endpoints and configurations needed to scrape the vLLM Prometheus metrics. Export these metrics to Azure Managed Prometheus by deploying the following `ServiceMonitor` YAML manifest in the `kube-system` namespace :
 
