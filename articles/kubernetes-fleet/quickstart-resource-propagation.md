@@ -50,7 +50,8 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
     policy:
       placementType: PickAll
   ```
-    Apply this to the Kubernetes Fleet hub cluster by issuing `kubectl apply -f distribute-my-namespace.yaml`, using the name of the file you created in place of `distribute-my-namespace.yaml`.
+
+  Apply this to the Kubernetes Fleet hub cluster by issuing `kubectl apply -f distribute-my-namespace.yaml`, using the name of the file you created in place of `distribute-my-namespace.yaml`.
 
 3. Check the progress of the resource propagation:
 
@@ -58,7 +59,7 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
   kubectl get clusterresourceplacement distribute-my-namespace
   ```
 
-    Your output should look similar to the following example:
+  Your output should look similar to the following example:
 
   ```output
   NAME                       GEN   SCHEDULED   SCHEDULEDGEN   APPLIED   APPLIEDGEN   AGE
@@ -71,7 +72,7 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
   kubectl describe clusterresourceplacement distribute-my-namespace
   ```
 
-    Your output should look similar to the following example:
+  Your output should look similar to the following example:
 
   ```output
   Name:         distribute-my-namespace
