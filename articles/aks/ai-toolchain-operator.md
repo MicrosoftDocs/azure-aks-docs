@@ -235,7 +235,7 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 
 If you no longer need these resources, you can delete them to avoid incurring extra Azure compute charges.
 
-* Delete the KAITO workspace using the `kubectl delete workspace` command.
+1. Delete the KAITO workspace using the `kubectl delete workspace` command.
 
     ```azurecli-interactive
     kubectl delete workspace workspace-falcon-7b-instruct
