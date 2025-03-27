@@ -35,8 +35,9 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 1. In this example, you collect metrics for the [Qwen-2.5-coder-7B-instruct language model](https://github.com/kaito-project/kaito/blob/main/examples/inference/kaito_workspace_qwen_2.5_coder_7b-instruct.yaml). Start by applying the following KAITO workspace CRD on your cluster:
 
     ```azurecli-interactive
-        kubectl apply -f https://raw.githubusercontent.com/Azure/kaito/main/examples/inference/kaito_workspace_qwen_2.5_coder_7b-instruct.yaml
+    kubectl apply -f https://raw.githubusercontent.com/Azure/kaito/main/examples/inference/kaito_workspace_qwen_2.5_coder_7b-instruct.yaml
     ```
+
 
 2. Track the live resource changes in your KAITO workspace using the `kubectl get` command.
 
