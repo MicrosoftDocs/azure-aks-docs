@@ -137,7 +137,7 @@ The combination of [Planned Maintenance Window][planned-maintenance], [Max Surge
 When you initiate an upgrade operation through API, Azure CLI, or Azure portal, Azure Kubernetes Service (AKS) performs a series of pre-upgrade validations before starting the upgrade. These validations ensure the cluster is in a healthy state and can upgrade successfully.
 - **API Breaking Changes**: Identifies if there are any deprecated APIs in use that may impact workloads.
 - **Kubernetes Upgrade Version**: Ensures the target version is valid (e.g., no jumps greater than three minor versions, no downgrades, and compatibility with the control plane).
-- **Incorrect PDB Configuration Validation**: Checks for misconfigured Pod Disruption Budgets (PDBs) such as `maxUnavailable = 0` which does not allow any nodes to be disrupted 
+- **Incorrect PDB Configuration Validation**: Checks for misconfigured Pod Disruption Budgets (PDBs) such as `maxUnavailable = 0` which does not allow any nodes to be disrupted. 
 - **Quota**: Confirms there is sufficient quota for surging nodes required during the upgrade process.
 - **Subnet**: Verifies if there are enough allocable IP addresses for the upgrade or if subnet size adjustments are needed.
 - **Certificates/Service Principals**: Detects expired certificates or service principals that could impact the upgrade process.
