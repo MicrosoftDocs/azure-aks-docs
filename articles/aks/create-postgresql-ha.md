@@ -263,7 +263,7 @@ In this section, you create a multizone AKS cluster with a system node pool. The
 You also add a user node pool to the AKS cluster to host the PostgreSQL cluster. Using a separate node pool allows for control over the Azure VM SKUs used for PostgreSQL and enables the AKS system pool to optimize performance and costs. You apply a label to the user node pool that you can reference for node selection when deploying the CNPG operator later in this guide. This section might take some time to complete.
 
 > [!IMPORTANT]  
-> If you opt to use local NVMe as your PostgreSQL storage in the later parts of this guide, you need to choose a VM SKU that supports local NVMe disks, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
+> If you opt to use local NVMe as your PostgreSQL storage in the later parts of this guide, you need to choose a VM SKU that supports local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. Update `$USER_NODE_POOL_VMSKU` below accordingly.
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
@@ -341,7 +341,7 @@ export POSTGRES_STORAGE_CLASS="managed-csi-premium"
 
 To use Premium SSD v2, you can create a custom storage class.
 
-1. Define a new CSI driver storage class using Premium SSD V2:
+1. Define a new CSI driver storage class:
 
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
@@ -366,7 +366,7 @@ To use Premium SSD v2, you can create a custom storage class.
 ### [Local NVMe](#tab/acstor)
 
 > [!IMPORTANT]  
-> Choose a VM SKU that supports local NVMe disks, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
+> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
 
 1. Update AKS cluster to install Azure Container Storage on user nodepool
 
@@ -380,7 +380,7 @@ To use Premium SSD v2, you can create a custom storage class.
         --azure-container-storage-nodepools $USER_NODE_POOL_NAME
     ```
 
-2. Use the ACStor storage class
+2. Use the provided Azure Container Storage storage class
 
     ```bash
     export POSTGRES_STORAGE_CLASS="acstor-ephemeraldisk-nvme"
