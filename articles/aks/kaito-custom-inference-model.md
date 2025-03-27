@@ -3,7 +3,7 @@ title: Onboard custom models for inferencing with the AI toolchain operator (KAI
 description: Learn how to onboard custom models for inferencing with the AI toolchain operator (KAITO) on AKS.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service
-ms.date: 03/25/2025
+ms.date: 03/27/2025
 author: schaffererin
 ms.author: schaffererin
 ---
@@ -22,7 +22,7 @@ In this article, you learn how to onboard a sample HuggingFace model for inferen
 
 ## Choose an open-source language model from HuggingFace
 
-In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigscience/bloom-1b7) small language model. You can choose from the thousands of text-generation models supported on [HuggingFace](https://huggingface.co/models?pipeline_tag=text-generation).
+In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigscience/bloom-1b7) small language model. Alternatively, you can choose from thousands of text-generation models supported on [HuggingFace](https://huggingface.co/models?pipeline_tag=text-generation).
 
 1. Connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.
 
@@ -36,7 +36,7 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
     git clone https://github.com/kaito-project/kaito.git
     ```
 
-3. Confirm that your `kaito-gpu-provisioner` pod is running successfully using the `kubectl get` command.
+3. Confirm that your `kaito-gpu-provisioner` pod is running successfully using the `kubectl get deployment` command.
 
     ```bash
     kubectl get deployment -n kube-system | grep kaito
@@ -81,7 +81,7 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
               - "--trust_remote_code"
               - "--allow_remote_files"
               - "--pretrained_model_name_or_path"
-              - "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
+              - "bigscience/bloom-1b7"
               - "--torch_dtype"
               - "bfloat16"
             volumeMounts:
@@ -93,21 +93,14 @@ In this example, we use the [BigScience Bloom-1B7](https://huggingface.co/bigsci
               medium: Memory
     ```
 
-2. Connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group <resource-group-name> --name <aks-cluster-name>
-    ```
-
+2. Save these changes to your `docs/custom-model-integration/reference_image_deployment.yaml` file.
 3. Run the deployment in your AKS cluster using the `kubectl apply` command.
 
     ```bash
-    kubectl apply -f custom-model-deployment.yaml
+    kubectl apply -f docs/custom-model-integration/reference_image_deployment.yaml
     ```
 
 ## Test your custom model inferencing service
-
-Monitor and test your model inferencing workload deployment using the following commands:
 
 1. Track the live resource changes in your KAITO workspace using the `kubectl get workspace` command.
 
@@ -124,10 +117,16 @@ Monitor and test your model inferencing workload deployment using the following 
     export SERVICE_IP=$(kubectl get svc workspace-custom-llm -o jsonpath='{.spec.clusterIP}')
     ```
 
-3. Test your custom model inference service with a sample input of your choice using the following `curl` command:
+3. Test your custom model inference service with a sample input of your choice using the [OpenAI API format](https://platform.openai.com/docs/api-reference/chat):
 
     ```bash
-    kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/chat -H "accept: application/json" -H "Content-Type: application/json" -d "{"prompt":"YOUR QUESTION HERE"}"
+       kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/v1/completions \
+      -H "Content-Type: application/json" \
+      -d '{
+        "model": "bloom-1b7",
+        "prompt": "What sport should I play in rainy weather?",
+        "max_tokens": 20
+      }'
     ```
 
 ## Clean up resources
@@ -140,7 +139,7 @@ If you no longer need these resources, you can delete them to avoid incurring ex
     kubectl delete workspace workspace-custom-llm
     ```
 
-2. Delete the GPU node pool created by KAITO in the same namespace as `kaito-gpu-provisioner`.
+2. Delete the GPU node pool created by KAITO in the same namespace as the `kaito-gpu-provisioner` deployment.
 
 ## Next steps
 
