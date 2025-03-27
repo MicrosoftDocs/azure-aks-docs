@@ -63,7 +63,7 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
   ```output
   NAME                       GEN   SCHEDULED   SCHEDULEDGEN   APPLIED   APPLIEDGEN   AGE
   distribute-my-namespace    2     True        2              True      2            10s
-    ```
+  ```
 
 4. View the details of the placement object:
 
@@ -216,15 +216,15 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
 
 1. Verify that the cluster resource placement was created successfully.
 
-  :::image type="content" source="./media/quickstart-resource-propagation/crp-success-inline.png" lightbox="./media/quickstart-resource-propagation/crp-success.png" alt-text="Screenshot of the Azure portal pane for cluster resource placements, showing a successfully created cluster resource placement.":::
+    :::image type="content" source="./media/quickstart-resource-propagation/crp-success-inline.png" lightbox="./media/quickstart-resource-propagation/crp-success.png" alt-text="Screenshot of the Azure portal pane for cluster resource placements, showing a successfully created cluster resource placement.":::
 
 1. To see more details on the placement of an individual cluster resource, select it from the list.
 
-  :::image type="content" source="./media/quickstart-resource-propagation/crp-details-inline.png" lightbox="./media/quickstart-resource-propagation/crp-details.png" alt-text="Screenshot of the Azure portal overview pane for an individual cluster resource placement, showing events and details.":::
+    :::image type="content" source="./media/quickstart-resource-propagation/crp-details-inline.png" lightbox="./media/quickstart-resource-propagation/crp-details.png" alt-text="Screenshot of the Azure portal overview pane for an individual cluster resource placement, showing events and details.":::
 
 1. You can view additional details on the cluster resource placement's snapshots, bindings, works, and scheduling policy snapshots by using the individual tabs. For example, select the **Cluster Resources Snapshots** tab.
 
-  :::image type="content" source="./media/quickstart-resource-propagation/crp-snapshot-inline.png" lightbox="./media/quickstart-resource-propagation/crp-snapshot.png" alt-text="Screenshot of the Azure portal page for a cluster resource placement, with the Cluster Resources Snapshots tab selected.":::
+    :::image type="content" source="./media/quickstart-resource-propagation/crp-snapshot-inline.png" lightbox="./media/quickstart-resource-propagation/crp-snapshot.png" alt-text="Screenshot of the Azure portal page for a cluster resource placement, with the Cluster Resources Snapshots tab selected.":::
 
 ---
 
