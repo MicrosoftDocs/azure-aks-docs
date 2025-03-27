@@ -52,7 +52,10 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 *	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka .
 *	In preview, the maximum supported cluster size is up to 1000 nodes or 40,000 pods, whichever is greater.
-*	Users may experience noticeable latency degradation beyond 3000 requests per second.
+*    Users may experience noticeable latency degradation beyond 3000 requests per second.
+*    During a Cilium upgrade or rollout, existing sessions can be gracefully closed. Applications are 
+expected to handle these interruptions gracefully—typically by implementing retry mechanisms at the 
+connection or request level. New connections initiated during the rollout are not impacted.
 *	L7 policy through Advanced Container Networking Services (ACNS) is not compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios. 
 
 | Feature/Component                                | Supported |
@@ -69,7 +72,7 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 ## Next steps
 
-* Learn how to apply L7 policies(how-to-apply-l7-policies-policies.md) on AKS.
+* Learn how to apply [L7 policies](how-to-apply-l7-policies-policies.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 
