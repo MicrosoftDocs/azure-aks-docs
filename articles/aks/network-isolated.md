@@ -141,39 +141,39 @@ The following steps show how to prepare these resources:
 
 ### Step 1: Create the virtual network and subnets
 
-The default outbound access for the AKS subnet must be false.
-
 ```azurecli-interactive
 az group create --name ${RESOURCE_GROUP} --location ${LOCATION}
 
 az network vnet create  --resource-group ${RESOURCE_GROUP} --name ${VNET_NAME} --address-prefixes 192.168.0.0/16
 
-az network vnet subnet create --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.1.0/24 --default-outbound-access false
+az network vnet subnet create --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.1.0/24 
 
 SUBNET_ID=$(az network vnet subnet show --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --query 'id' --output tsv)
 
 az network vnet subnet create --name ${ACR_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.2.0/24 --private-endpoint-network-policies Disabled
 ```
 
-### Step 2: Create the ACR and enable artifact cache
+### Step 2: Disable virtual network outbound connectivity
+
+There are multiple ways to [disable the virtual network outbound connectivity][vnet-disable-outbound-access], for example you can choose to use private subnet.
+
+### Step 3: Create the ACR and enable artifact cache
 
 1. Create the ACR with the private link.
 
     ```azurecli-interactive
     az acr create --resource-group ${RESOURCE_GROUP} --name ${REGISTRY_NAME} --sku Premium --public-network-enabled false
 
-    az acr update --resource-group ${RESOURCE_GROUP} --name ${REGISTRY_NAME}
-
     REGISTRY_ID=$(az acr show --name ${REGISTRY_NAME} -g ${RESOURCE_GROUP}  --query 'id' --output tsv)
     ```
 
-1. Create an ACR cache rule to allow users to cache MCR container images in the new ACR.
+2. Create an ACR cache rule following the below command to allow users to cache MCR container images in the new ACR, note the cache rule name and repo names must be strict aligned with the guidance.
 
     ```azurecli-interactive
-    az acr cache create -n acr-cache-rule -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
+    az acr cache create -n aks-managed-mcr -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
     ```
 
-### Step 3: Create a private endpoint for the ACR
+### Step 4: Create a private endpoint for the ACR
 
 ```azurecli-interactive
 az network private-endpoint create --name myPrivateEndpoint --resource-group ${RESOURCE_GROUP} --vnet-name ${VNET_NAME} --subnet ${ACR_SUBNET_NAME} --private-connection-resource-id ${REGISTRY_ID} --group-id registry --connection-name myConnection
@@ -185,7 +185,7 @@ REGISTRY_PRIVATE_IP=$(az network nic show --ids ${NETWORK_INTERFACE_ID} --query 
 DATA_ENDPOINT_PRIVATE_IP=$(az network nic show --ids ${NETWORK_INTERFACE_ID} --query "ipConfigurations[?privateLinkConnectionProperties.requiredMemberName=='registry_data_$LOCATION'].privateIPAddress" --output tsv)
 ```
 
-### Step 4: Create a private DNS zone and add records
+### Step 5: Create a private DNS zone and add records
 
 Create a private DNS zone named `privatelink.azurecr.io`. Add the records for the registry REST endpoint `{REGISTRY_NAME}.azurecr.io`, and the registry data endpoint `{REGISTRY_NAME}.{REGISTRY_LOCATION}.data.azurecr.io`.
 
@@ -203,7 +203,7 @@ az network private-dns record-set a create --name ${REGISTRY_NAME}.${LOCATION}.d
 az network private-dns record-set a add-record --record-set-name ${REGISTRY_NAME}.${LOCATION}.data --zone-name "privatelink.azurecr.io" --resource-group ${RESOURCE_GROUP} --ipv4-address ${DATA_ENDPOINT_PRIVATE_IP}
 ```
 
-### Step 5: Create control plane and kubelet identities
+### Step 6: Create control plane and kubelet identities
 
 #### Control plane identity
 
@@ -233,7 +233,7 @@ az role assignment create --role AcrPull --scope ${REGISTRY_ID} --assignee-objec
 
 After you configure these resources, you can proceed to create the network isolated AKS cluster with BYO ACR.
 
-### Step 6: Create network isolated cluster using the BYO ACR
+### Step 7: Create network isolated cluster using the BYO ACR
 
 When creating a network isolated AKS cluster, you can choose one of the following private cluster modes - Private link or API Server Vnet Integration.
 
@@ -395,6 +395,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
+[vnet-disable-outbound-access]: /azure/virtual-network/ip-services/default-outbound-access#how-can-i-transition-to-an-explicit-method-of-public-connectivity-and-disable-default-outbound-access
 
 <!-- LINKS - Internal -->
 [aks-firewall]: ./limit-egress-traffic.md

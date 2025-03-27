@@ -162,7 +162,7 @@ The CNPG operator automatically generates a service account called *postgres* th
         --resource-group $RESOURCE_GROUP_NAME \
         --query "id" \
         --output tsv)
-    
+
     az role assignment list --scope $STORAGE_ACCOUNT_PRIMARY_RESOURCE_ID --output table
 
     az role assignment create \
@@ -187,7 +187,7 @@ To enable backups, the PostgreSQL cluster needs to read and write to an object s
         --output tsv)
 
     echo $STORAGE_ACCOUNT_PRIMARY_RESOURCE_ID
-    ````
+    ```
 
 1. Assign the "Storage Blob Data Contributor" Azure built-in role to the object ID with the storage account resource ID scope for the UAMI associated with the managed identity for each AKS cluster using the [`az role assignment create`][az-role-assignment-create] command.
 
@@ -268,7 +268,7 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
     export SYSTEM_NODE_POOL_VMSKU="standard_d2s_v3"
     export USER_NODE_POOL_NAME="postgres"
     export USER_NODE_POOL_VMSKU="standard_d4s_v3"
-    
+
     az aks create \
         --name $AKS_PRIMARY_CLUSTER_NAME \
         --tags $TAGS \
@@ -314,6 +314,92 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
         --output table
     ```
 
+### Storage considerations
+
+The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
+
+| Storage type                      | Compatible driver                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| --------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Premium SSD                       | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                                                                                                                     |
+| Premium SSD v2                    | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations].                                                                                              |
+| Local NVMe or temp SSD (Ephemeral Disks) | Azure Container Storage only                      | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VM hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your VM. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. |
+
+We will now define an environment variable which we will later reference when deploying PostgreSQL.
+
+### [Premium SSD](#tab/pv1)
+
+Use the default azuredisk CSI driver storage class
+
+```bash
+export POSTGRES_STORAGE_CLASS="managed-csi-premium"
+```
+
+### [Premium SSD v2](#tab/pv2)
+
+1. Create azuredisk CSI driver storage class using Premium SSD V2
+
+    ```bash
+    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
+    apiVersion: storage.k8s.io/v1
+     kind: StorageClass
+     metadata:
+       name: premium2-disk-sc
+     parameters:
+       cachingMode: None
+       skuName: PremiumV2_LRS
+       DiskIOPSReadWrite: "4000"
+       DiskMBpsReadWrite: "1000"
+     provisioner: disk.csi.azure.com
+     reclaimPolicy: Delete
+     volumeBindingMode: Immediate
+     allowVolumeExpansion: true
+    EOF
+
+    export POSTGRES_STORAGE_CLASS="premium2-disk-sc"
+    ```
+
+### [Local NVMe](#tab/acstor)
+
+> [!IMPORTANT]  
+> Choose a VM SKU that supports local NVMe disks, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
+
+1. Update AKS cluster to install Azure Container Storage on user nodepool
+
+    ```bash
+    az aks update \
+        --name $AKS_PRIMARY_CLUSTER_NAME \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --enable-azure-container-storage ephemeralDisk \
+        --storage-pool-option NVMe \
+        --ephemeral-disk-volume-type PersistentVolumeWithAnnotation \
+        --azure-container-storage-nodepools $USER_NODE_POOL_NAME
+    ```
+
+2. Use customized storage class for database workloads by copying Azure Container Storage storage class and adding      `enableDBProfile` parameter
+
+    ```bash
+    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
+    apiVersion: storage.k8s.io/v1
+     kind: StorageClass
+     metadata:
+       name: acstor-ephemeraldisk-nvme-db
+     parameters:
+       acstor.azure.com/storagepool: ephemeraldisk-nvme
+       hyperconverged: "true"
+       ioTimeout: "60"
+       proto: nvmf
+       repl: "1"
+       enableDBProfile: "true"
+     provisioner: containerstorage.csi.azure.com
+     reclaimPolicy: Delete
+     volumeBindingMode: WaitForFirstConsumer
+    EOF
+
+    export POSTGRES_STORAGE_CLASS="acstor-ephemeraldisk-nvme-db"
+    ```
+
+---
+
 > [!NOTE]
 > If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, please wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
 
@@ -328,7 +414,7 @@ In this section, you get the AKS cluster credentials, which serve as the keys th
         --resource-group $RESOURCE_GROUP_NAME \
         --name $AKS_PRIMARY_CLUSTER_NAME \
         --output none
-     ```
+    ```
 
 2. Create the namespace for the CNPG controller manager services, the PostgreSQL cluster, and its related services by using the [`kubectl create namespace`][kubectl-create-namespace] command.
 
@@ -551,3 +637,5 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 [deploy-postgresql]: ./deploy-postgresql-ha.md
 [install-krew]: https://krew.sigs.k8s.io/
 [cnpg-plugin]: https://cloudnative-pg.io/documentation/current/kubectl-plugin/#using-krew
+[storage-optimized-vms]: /azure/virtual-machines/sizes/overview#storage-optimized
+[gpu-vms]: /azure/virtual-machines/sizes/overview#gpu-accelerated
