@@ -37,7 +37,7 @@ If you aren't sure which option to select, read ["Choosing a network model to us
 
 ## Versions
 
-| Kubernetes Version | Cilium Version |
+| Kubernetes Version |  Minimum Cilium Version |
 |--------------------|----------------|
 | 1.27 (LTS) | 1.13.18 |
 | 1.28 (End of Life) | 1.13.18 |
