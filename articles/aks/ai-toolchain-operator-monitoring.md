@@ -106,7 +106,8 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 
 4. Confirm that vLLM metrics are successfully collected in Azure Managed Prometheus on your Azure Portal by navigating to the **Prometheus explorer** page under **Managed Prometheus** in your Azure Monitor Workspace.
 
-6. Select the **Grid** tab and confirm that there's a metrics item associated with the job named `workspace-qwen-2-5-coder-7b-instruct`.
+5. Select the **Grid** tab and confirm that there's a metrics item associated with the job named `workspace-qwen-2-5-coder-7b-instruct`.
+
 
 
    > [!NOTE]    
