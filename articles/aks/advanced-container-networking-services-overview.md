@@ -38,7 +38,7 @@ Securing your containerized applications is essential in today's dynamic cloud e
 Enhance egress control with Azure CNI Powered by Cilium's DNS-based policies. Simplify configuration by using domain names (FQDNs) instead of managing dynamic IP addresses.
 To learn more, see [FQDN Based Filtering Overview](./container-network-security-fqdn-filtering-concepts.md) documentation 
 
-### L7 Policy
+### Layer 7 (L7) Policy
 
 Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see [L7 Policy Overview](./container-network-security-l7-policy-concepts.md) documentation 
 
@@ -58,9 +58,6 @@ Gain granular control over application-level traffic. Implement policies based o
 
 ### Install the `aks-preview` Azure CLI extension
 
-[!Note]
-> Skip this step if you are on a non-Cilium cluster.
->
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
 
 ```azurecli-interactive
@@ -71,9 +68,11 @@ az extension update --name aks-preview
 ```
 
 ### Register the `AdvancedNetworkingL7PolicyPreview` feature flag
+
 [!Note]
-> Skip this step if you are on a non-Cilium cluster.
+> Container Network Security features only supported on Azure CNI powered by Cilium based clusters.
 > 
+
 Register the `AdvancedNetworkingL7PolicyPreview` feature flag using the [`az feature register`](/cli/azure/feature#az_feature_register) command.
 
 ```azurecli-interactive 

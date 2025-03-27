@@ -72,7 +72,7 @@ connection or request level. New connections initiated during the rollout are no
 
 ## Next steps
 
-* Learn how to apply [L7 policies](how-to-apply-l7-policies-policies.md) on AKS.
+* Learn how to apply [L7 policies](how-to-apply-l7-policies.md) on AKS.
 
 * Explore how the open source community builds [Cilium Network Policies](https://docs.cilium.io/en/latest/security/policy/).
 
