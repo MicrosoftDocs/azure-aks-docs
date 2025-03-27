@@ -156,37 +156,6 @@ spec:
 
 For more information, see [Container lifecycle hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks) and [Termination of Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination).
 
-
-### Graceful Termination for Pods
-
-> **Best practice guidance**
->
-> Utilize pre-stop hooks or custom terminationGracePeriodSeconds where applicable to ensure pods are terminated gracefully.
-
-A `PreStop` hook is called immediately before a container is terminated due to an API request or management event, such as preemption, resource contention, or a liveness/startup probe failure. A call to the `PreStop` hook fails if the container is already in a terminated or completed state, and the hook must complete before the TERM signal to stop the container is sent. The pod's termination grace period countdown begins before the `PreStop` hook is executed, so the container eventually terminates within the termination grace period.
-
-The following example pod definition file shows how to use a `PreStop` hook to ensure graceful termination of a container:
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: lifecycle-demo
-spec:
-  containers:
-  - name: lifecycle-demo-container
-    image: nginx
-    lifecycle:
-      postStart:
-        exec:
-          command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
-      preStop:
-        exec:
-          command: ["/bin/sh","-c","nginx -s quit; while killall -0 nginx; do sleep 1; done"]
-```
-
-For more information, see [Container lifecycle hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks) and [Termination of Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination).
-
 ### maxUnavailable
 
 > **Best practice guidance**
