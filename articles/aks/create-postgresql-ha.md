@@ -375,7 +375,7 @@ export POSTGRES_STORAGE_CLASS="managed-csi-premium"
         --azure-container-storage-nodepools $USER_NODE_POOL_NAME
     ```
 
-2. Use customized storage class for database workloads by copying Azure Container Storage storage class and adding      `enableDBProfile` parameter
+2. Use customized storage class for database workloads by copying Azure Container Storage storage class
 
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
@@ -389,7 +389,6 @@ export POSTGRES_STORAGE_CLASS="managed-csi-premium"
        ioTimeout: "60"
        proto: nvmf
        repl: "1"
-       enableDBProfile: "true"
      provisioner: containerstorage.csi.azure.com
      reclaimPolicy: Delete
      volumeBindingMode: WaitForFirstConsumer
@@ -639,3 +638,4 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 [cnpg-plugin]: https://cloudnative-pg.io/documentation/current/kubectl-plugin/#using-krew
 [storage-optimized-vms]: /azure/virtual-machines/sizes/overview#storage-optimized
 [gpu-vms]: /azure/virtual-machines/sizes/overview#gpu-accelerated
+[pv2-limitations]: /azure/virtual-machines/disks-types#premium-ssd-v2-limitations
