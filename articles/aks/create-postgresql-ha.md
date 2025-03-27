@@ -262,6 +262,9 @@ In this section, you create a multizone AKS cluster with a system node pool. The
 
 You also add a user node pool to the AKS cluster to host the PostgreSQL cluster. Using a separate node pool allows for control over the Azure VM SKUs used for PostgreSQL and enables the AKS system pool to optimize performance and costs. You apply a label to the user node pool that you can reference for node selection when deploying the CNPG operator later in this guide. This section might take some time to complete.
 
+> [!IMPORTANT]  
+> If you opt to use local NVMe as your PostgreSQL storage in the later parts of this guide, you need to choose a VM SKU that supports local NVMe disks, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
+
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
     ```bash
@@ -318,17 +321,17 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
 
 The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
 
-| Storage type                      | Compatible driver                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| --------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Premium SSD][pv1]                       | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels.                                                                                                                                                                                                                                                                                                                                                                                                     |
-| [Premium SSD v2][pv2]                    | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations].                                                                                              |
-| [Local NVMe or temp SSD (Ephemeral Disks)][ephemeral-disks] | Azure Container Storage only                      | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VMs hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your cluster. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. |
+| Storage type | Compatible driver | Description  |
+|-|-|-|
+| [Premium SSD][pv1] | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD delivers high-performance and low-latency. Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels. |
+| [Premium SSD v2][pv2] | Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you need to be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations]. |
+| [Local NVMe or temp SSD (Ephemeral Disks)][ephemeral-disks] | Azure Container Storage only | Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VMs hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your cluster. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. |
 
-We will now define an environment variable which we will later reference when deploying PostgreSQL.
+We will define another environment variable which we will later reference when deploying PostgreSQL.
 
 ### [Premium SSD](#tab/pv1)
 
-Use the default azuredisk CSI driver storage class
+You can reference the default pre-installed Premium SSD Azure Disks CSI driver storage class:
 
 ```bash
 export POSTGRES_STORAGE_CLASS="managed-csi-premium"
@@ -336,7 +339,9 @@ export POSTGRES_STORAGE_CLASS="managed-csi-premium"
 
 ### [Premium SSD v2](#tab/pv2)
 
-1. Create azuredisk CSI driver storage class using Premium SSD V2
+To use Premium SSD v2, you can create a custom storage class.
+
+1. Define a new CSI driver storage class using Premium SSD V2:
 
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
