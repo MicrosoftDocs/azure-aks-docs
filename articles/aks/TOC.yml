@@ -1078,10 +1078,14 @@
           href: open-ai-quickstart.md
         - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
           href: open-ai-secure-access-quickstart.md
-        - name: Deploy an AI model with the AI toolchain operator
-          href: ai-toolchain-operator.md
-        - name: Fine-tune an AI model for inferencing with the AI toolchain operator
-          href: ai-toolchain-operator-fine-tune.md
+        - name: Use the AI toolchain operator (KAITO)
+          items:
+            - name: Deploy an AI model
+              href: ai-toolchain-operator.md
+            - name: Fine-tune an AI model for inferencing
+              href: ai-toolchain-operator-fine-tune.md
+            - name: Onboard custom models for inference
+              href: kaito-custom-inference-model.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
         - name: Work with clusters using Copilot
