@@ -10,7 +10,7 @@ ms.date: 03/14/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up L7 Polices with Advanced Container Networking Services (Public Preview)
+# Set up Layer 7(L7) Polices with Advanced Container Networking Services (Public Preview)
 
 This article shows you how to set up L7 policy with Advanced Container Networking Services in AKS clusters.
 

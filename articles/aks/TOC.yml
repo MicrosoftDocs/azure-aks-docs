@@ -153,7 +153,7 @@
           items:
             - name: FQDN based Filtering
               href: container-network-security-fqdn-filtering-concepts.md
-            - name: L7 Policy
+            - name: Layer 7 Policy
               href: container-network-security-l7-policy-concepts.md
     - name: Networking
       items:
@@ -191,7 +191,7 @@
               href: container-network-observability-concepts.md
             - name: FQDN based Filtering
               href: container-network-security-fqdn-filtering-concepts.md
-            - name: L7 Policy
+            - name: Layer 7 Policy
               href: container-network-security-l7-policy-concepts.md
     - name: AI and machine learning
       items:

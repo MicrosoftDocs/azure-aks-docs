@@ -48,9 +48,19 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 **Observability**: With observability enabled for Advanced Container Networking Services and L7 policies applied to your AKS cluster, you can monitor traffic and policy effectiveness using Grafana dashboards.
 
-## Limitations:
+## Limitations and Considerations:
 
-TO-DO 
+*	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka .
+*	In preview, the maximum supported cluster size is up to 1000 nodes or 40,000 pods, whichever is greater.
+*	Users may experience noticeable latency degradation beyond 3000 requests per second.
+*	L7 policy through Advanced Container Networking Services (ACNS) is not compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios. 
+
+| Feature/Component                                | Supported |
+|---------------------------------------------------|-----------|
+| L7 Policies using AKS, Istio - Managed Addon       | Supported |
+| K8s Network Policies by Azure CNI by Cilium (ACPC) | Supported |
+| L4 (FQDN) Policies by ACPC and ACNS                | Supported |
+| L7 (HTTP(s)/GRPC/Kafka) Policies by ACPC and ACNS  | Not Supported |
   
 
 ## Pricing
