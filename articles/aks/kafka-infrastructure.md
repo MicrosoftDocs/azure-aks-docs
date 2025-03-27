@@ -67,7 +67,7 @@ Before running any CLI commands, set the environment variables that will be used
  
 ### Pre-cluster deployments 
 
-Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources that will support the deployment of the AKS cluster: 
+Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources that support the AKS cluster deployment:  
 
 * A resource group for all resources to be deployed to. 
 * Virtual network and subnet configurations.  
@@ -76,9 +76,9 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
 * User-assigned managed identity for AKS.  
 * Azure Monitor workspace for Prometheus metrics.  
 * Azure Managed Grafana dashboard with Prometheus integration.  
-* Log analytics workspace
+* Log analytics workspace.  
 
-    ```bash
+    ```azurecli-interactive  
     #bin/bash
 
     # Create resource group
@@ -164,12 +164,9 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
 
 ### AKS cluster deployment
 
-In this section, you deploy the required AKS cluster using Azure CLI:  
+* Deploy the AKS cluster with dedicated node pools for Kafka per availability zone and Azure Container Storage enabled using Azure CLI:  
 
-* An AKS cluster with dedicated node pools for Kafka per availability zone.  
-* Azure Container Storage enabled
-
-    ```bash
+    ```azurecli-interactive  
     #bin/bash
 
     # Assign Network Contributor role to User Assigned Identity on Resource Group
@@ -247,9 +244,10 @@ In this section, you deploy the required AKS cluster using Azure CLI:
     --metrics '[{"category": "AllMetrics", "enabled": true}]' 
     ```
 
-### Post AKS cluster deployment 
+### Validate deployment and connect to cluster  
 
-Once the AKS cluster has been deployed, follow the steps to validate and gain access to the AKS Api-server. 
+After deploying your AKS cluster, use the following steps to validate the deployment and gain access to the AKS API Server:  
+
 
 1. Verify the deployment of the AKS cluster using the [`az aks show`](/cli/azure/aks#az-aks-show) command.  
 

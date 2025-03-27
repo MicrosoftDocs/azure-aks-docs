@@ -20,7 +20,7 @@ In this guide, we review the prerequisites, architecture considerations, and key
 
 The Strimzi operators follow the Kubernetes operator pattern to automate Kafka operations. It continuously reconciles the declared state of Kafka components with their actual state, handling complex operational tasks automatically.
 
-//<insert diagram>//
+:::image type="content" source="media/kafka/kafka-architecture.png" alt-text="Architecture diagram for running a Kafka cluster on AKS with Strimzi.":::
 
 To learn more about Strimzi, review the [Strimzi documentation](https://strimzi.io/documentation/).  
 
