@@ -119,7 +119,8 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/latest/getting_started/examples/prometheus_grafana.html#import-dashboard) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/latest/getting_started/examples/prometheus_grafana.html#import-dashboard) and copy the entire contents of the `grafana.json` file. 
 
 
-:::image type="content" source="./media/ai-toolchain-operator/vllm-grafana-config.png" alt-text="Screenshot of vLLM Grafana dashboard configuration." lightbox="./media/ai-toolchain-operator/vllm-grafana-config.png":::
+    :::image type="content" source="./media/ai-toolchain-operator/vllm-grafana-config.png" alt-text="Screenshot of vLLM Grafana dashboard configuration." lightbox="./media/ai-toolchain-operator/vllm-grafana-config.png":::
+
 
 2. Follow [these steps](/azure/managed-grafana/how-to-create-dashboard#import-a-json-dashboard) to import the Grafana configurations into a new dashboard in Azure Managed Grafana.
 3. Navigate to your Managed Grafana endpoint, view the available dashboards. and select the new dashboard named `vLLM`.
