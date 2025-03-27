@@ -97,7 +97,8 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
     servicemonitor.azmonitoring.coreos.com/prometheus-kaito-monitor created
     ```
 
-4. Confirm that your `ServiceMonitor` deployment is running successfully using the `kubectl get` command`.
+3. Confirm that your `ServiceMonitor` deployment is running successfully using the `kubectl get` command`.
+
 
     ```azurecli-interactive
     kubectl get servicemonitor prometheus-kaito-monitor -n kube-system
