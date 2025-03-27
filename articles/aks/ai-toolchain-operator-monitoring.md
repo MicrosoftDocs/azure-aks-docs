@@ -115,7 +115,8 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 :::image type="content" source="./media/ai-toolchain-operator/vllm-grafana-config.png" alt-text="Screenshot of vLLM Grafana dashboard configuration." lightbox="./media/ai-toolchain-operator/vllm-grafana-config.png":::
 
 2. Follow [these steps](/azure/managed-grafana/how-to-create-dashboard#import-a-json-dashboard) to import the Grafana configurations into a new dashboard in Azure Managed Grafana.
-3. Navigate to your Managed Grafana endpoint, view the available dashboards and select the new dashboard named `vLLM`.
+3. Navigate to your Managed Grafana endpoint, view the available dashboards. and select the new dashboard named `vLLM`.
+
 
     :::image type="content" source="./media/ai-toolchain-operator/available-grafana-dashboards.png" alt-text="Screenshot of available dashboards in Azure Managed Grafana." lightbox="./media/ai-toolchain-operator/available-grafana-dashboards.png":::
 
