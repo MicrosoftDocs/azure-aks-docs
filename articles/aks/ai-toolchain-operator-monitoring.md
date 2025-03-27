@@ -70,22 +70,23 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 3. Create a `ServiceMonitor` resource to define the inference service endpoints and configurations needed to scrape the vLLM Prometheus metrics. Export these metrics to Azure Managed Prometheus by deploying the following `ServiceMonitor` YAML manifest in the `kube-system` namespace :
 
     ```azurecli-interactive
-        cat <<EOF | kubectl apply -n kube-system -f 
-        apiVersion: azmonitoring.coreos.com/v1
-        kind: ServiceMonitor
-        metadata:
-          name: prometheus-kaito-monitor
-        spec:
-          selector:
-            matchLabels:
-              App: qwen-2-5-coder
-          endpoints:
-          - port: http
-            interval: 30s
-            path: /metrics
-            scheme: http
-        EOF 
+    cat <<EOF | kubectl apply -n kube-system -f 
+    apiVersion: azmonitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      name: prometheus-kaito-monitor
+    spec:
+      selector:
+        matchLabels:
+          App: qwen-2-5-coder
+      endpoints:
+      - port: http
+        interval: 30s
+        path: /metrics
+        scheme: http
+    EOF
     ```
+
 
 4. You should see the following message once the `ServiceMonitor` is created:
 
