@@ -284,20 +284,6 @@ After creating your cluster, confirm that GPUs are schedulable in Kubernetes.
     [...]
     ```
 
-## Use Container Insights to monitor GPU usage
-
-[Container Insights with AKS][aks-container-insights] monitors the following GPU usage metrics:
-
-| Metric name | Metric dimension (tags) | Description |
-|-------------|-------------------------|-------------|
-| containerGpuDutyCycle | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName`, `gpuId`, `gpuModel`, `gpuVendor`| Percentage of time over the past sample period (60 seconds) during which GPU was busy/actively processing for a container. Duty cycle is a number between 1 and 100. |
-| containerGpuLimits | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName` | Each container can specify limits as one or more GPUs. It's not possible to request or limit a fraction of a GPU. |
-| containerGpuRequests | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName` | Each container can request one or more GPUs. It's not possible to request or limit a fraction of a GPU. |
-| containerGpumemoryTotalBytes | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName`, `gpuId`, `gpuModel`, `gpuVendor` | Amount of GPU Memory in bytes available to use for a specific container. |
-| containerGpumemoryUsedBytes | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName`, `gpuId`, `gpuModel`, `gpuVendor` | Amount of GPU Memory in bytes used by a specific container. |
-| nodeGpuAllocatable | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `gpuVendor` | Number of GPUs in a node that Kubernetes can use.|
-| nodeGpuCapacity | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `gpuVendor` | Total Number of GPUs in a node. |
-
 ## Clean up resources
 
 * Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`][kubectl delete] command.
