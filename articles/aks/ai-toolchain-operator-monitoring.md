@@ -117,7 +117,8 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 2. Follow [these steps](/azure/managed-grafana/how-to-create-dashboard#import-a-json-dashboard) to import the Grafana configurations into a new dashboard in Azure Managed Grafana.
 3. Navigate to your Managed Grafana endpoint, view the available dashboards and select the new dashboard named `vLLM`.
 
-:::image type="content" source="./media/ai-toolchain-operator/available-grafana-dashboards.png" alt-text="Screenshot of available dashboards in Azure Managed Grafana" lightbox="./media/ai-toolchain-operator/available-grafana-dashboards.png":::
+    :::image type="content" source="./media/ai-toolchain-operator/available-grafana-dashboards.png" alt-text="Screenshot of available dashboards in Azure Managed Grafana." lightbox="./media/ai-toolchain-operator/available-grafana-dashboards.png":::
+
 
 4. To begin collecting data for your selected model deployment, confirm that the `datasource` shown at the top left of the Grafana dashboard is your Azure Managed Prometheus instance created for this example. 
 
