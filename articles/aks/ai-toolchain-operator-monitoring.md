@@ -88,21 +88,20 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
     ```
 
 
-4. You should see the following message once the `ServiceMonitor` is created:
+    You should see the following output once the `ServiceMonitor` is created:
 
-    ```bash
-	    servicemonitor.azmonitoring.coreos.com/prometheus-kaito-monitor created
+    ```output
+    servicemonitor.azmonitoring.coreos.com/prometheus-kaito-monitor created
     ```
 
-5. Confirm that your `ServiceMonitor` deployment is running successfully:
+4. Confirm that your `ServiceMonitor` deployment is running successfully using the `kubectl get` command`.
 
     ```azurecli-interactive
-	    kubectl get servicemonitor prometheus-kaito-monitor -n kube-system
+    kubectl get servicemonitor prometheus-kaito-monitor -n kube-system
     ```
 
-6. Confirm that vLLM metrics are successfully collected in Azure Managed Prometheus on your Azure Portal by navigating to the "Prometheus explorer" page under “Managed Prometheus” in your Azure Monitor Workspace.
-7. Select the “Grid” tab and confirm that there is a metrics item associated with the job name `workspace-qwen-2-5-coder-7b-instruct`.
-
+5. Confirm that vLLM metrics are successfully collected in Azure Managed Prometheus on your Azure Portal by navigating to the **Prometheus explorer** page under **Managed Prometheus** in your Azure Monitor Workspace.
+6. Select the **Grid** tab and confirm that there's a metrics item associated with the job named `workspace-qwen-2-5-coder-7b-instruct`.
 
 
    > [!NOTE]    
