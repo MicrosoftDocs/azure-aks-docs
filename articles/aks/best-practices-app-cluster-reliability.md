@@ -107,11 +107,61 @@ spec:
 
 For more information, see [Assign CPU Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/) and [Assign Memory Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/).
 
-### Pre-stop hooks
+### Graceful Termination for Pods
 
 > **Best practice guidance**
 >
-> When applicable, use pre-stop hooks to ensure graceful termination of a container.
+> Utilize `PreStop` hooks and configure an appropriate `terminationGracePeriodSeconds` value to ensure pods are terminated gracefully.
+
+Graceful termination ensures that pods are given enough time to clean up resources, complete ongoing tasks, or notify dependent services before being terminated. This is particularly important for stateful applications or services that require proper shutdown procedures.
+
+#### Using `PreStop` Hooks
+
+A `PreStop` hook is called immediately before a container is terminated due to an API request or management event, such as preemption, resource contention, or a liveness/startup probe failure. The `PreStop` hook allows you to define custom commands or scripts to execute before the container is stopped. For example, you can use it to flush logs, close database connections, or notify other services of the shutdown.
+
+The following example pod definition file shows how to use a `PreStop` hook to ensure graceful termination of a container:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lifecycle-demo
+spec:
+  containers:
+  - name: lifecycle-demo-container
+    image: nginx
+    lifecycle:
+      preStop:
+        exec:
+          command: ["/bin/sh", "-c", "nginx -s quit; while killall -0 nginx; do sleep 1; done"]
+```
+
+#### Configuring `terminationGracePeriodSeconds`
+
+The `terminationGracePeriodSeconds` field specifies the amount of time Kubernetes waits before forcefully terminating a pod. This period includes the time taken to execute the `PreStop` hook. If the `PreStop` hook doesn't complete within the grace period, the pod is forcefully terminated.
+
+For example, the following pod definition sets a termination grace period of 30 seconds:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  terminationGracePeriodSeconds: 30
+  containers:
+  - name: example-container
+    image: nginx
+```
+
+For more information, see [Container lifecycle hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks) and [Termination of Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination).
+
+
+### Graceful Termination for Pods
+
+> **Best practice guidance**
+>
+> Utilize pre-stop hooks or custom terminationGracePeriodSeconds where applicable to ensure pods are terminated gracefully.
 
 A `PreStop` hook is called immediately before a container is terminated due to an API request or management event, such as preemption, resource contention, or a liveness/startup probe failure. A call to the `PreStop` hook fails if the container is already in a terminated or completed state, and the hook must complete before the TERM signal to stop the container is sent. The pod's termination grace period countdown begins before the `PreStop` hook is executed, so the container eventually terminates within the termination grace period.
 
