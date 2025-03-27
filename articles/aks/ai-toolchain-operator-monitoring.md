@@ -1,6 +1,7 @@
 ---
-title: Monitor your AI inference service with the AI toolchain operator
-description: Learn how to collect and visualize inference service metrics with Azure Managed Prometheus and Azure Managed Grafana
+title: Monitor your AI inference service with the AI toolchain operator in Azure Kubernetes Service (AKS)
+description: Learn how to collect and visualize inference service metrics with Azure Managed Prometheus and Azure Managed Grafana.
+
 ms.topic: how-to
 author: sachidesai
 ms.service: azure-kubernetes-service
