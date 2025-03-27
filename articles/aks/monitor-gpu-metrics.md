@@ -3,7 +3,7 @@ title: Monitor GPU metrics in Azure Kubernetes Service (AKS)
 description: Learn how to monitor GPU metrics in Azure Kubernetes Service (AKS) using Azure Managed Prometheus and Grafana and the DCGM Exporter.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 03/21/2025
+ms.date: 03/27/2025
 author: schaffererin
 ms.author: schaffererin
 ---
@@ -137,7 +137,12 @@ Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you ne
     ```
 
 4. In the [Azure portal](https://portal.azure.com), navigate to the **Metrics** section of your Azure Monitor workspace.
+
+    :::image type="content" source="./media/monitor-gpu-metrics/dcgm-azure-monitor.png" alt-text="Screenshot of the Metrics section of an Azure Monitor workspace in the Azure portal.":::
+
 5. Import the [dcgm-exporter-dashboard.json](https://github.com/NVIDIA/dcgm-exporter/blob/main/grafana/dcgm-exporter-dashboard.json) into your Managed Grafana instance using the steps in [Create a dashboard in Azure Managed Grafana](/azure/managed-grafana/how-to-create-dashboard). After importing the JSON, the dashboard displaying GPU metrics should be visible in your Grafana instance.
+
+    :::image type="content" source="./media/monitor-gpu-metrics/dcgm-dashboard.png" alt-text="Screenshot of the NVIDIA DCGM Exporter dashboard.":::
 
 ## Next steps
 
