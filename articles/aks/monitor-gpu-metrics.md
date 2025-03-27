@@ -1,6 +1,6 @@
 ---
 title: Monitor GPU metrics in Azure Kubernetes Service (AKS)
-description: Learn how to monitor GPU metrics in Azure Kubernetes Service (AKS) using Azure Managed Prometheus and Grafana and the DCGM Exporter.
+description: Learn how to monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Managed Grafana on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.date: 03/27/2025
@@ -8,14 +8,13 @@ author: schaffererin
 ms.author: schaffererin
 ---
 
-# Monitor GPU metrics in Azure Kubernetes Service (AKS) with Azure Managed Prometheus and Grafana and the DCGM Exporter
+# Monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Managed Grafana on Azure Kubernetes Service (AKS)
 
-In this article, you learn how to monitor GPU metrics in Azure Kubernetes Service (AKS) using Azure Managed Prometheus and Grafana, along with the NVIDIA Data Center GPU Manager (DCGM) Exporter.
+In this article, you learn how to monitor GPU metrics collected by the NVIDIA Data Center GPU Manager (DCGM) exporter in Azure Kubernetes Service (AKS) using Azure Managed Prometheus and Azure Managed Grafana.
 
 ## Prerequisites
 
-- [An AKS cluster with GPU-enabled node pool(s)](./gpu-cluster.md).
-- [NVIDIA Kubernetes device plugin installed on your GPU node pool](./gpu-cluster.md#options-for-using-nvidia-gpus).
+- An AKS cluster with [NVIDIA GPU-enabled node pool(s)](./gpu-cluster.md) and ensure that the [GPUs are schedulable](./gpu-cluster.md#confirm-that-gpus-are-schedulable).
 - A [sample GPU workload](./gpu-cluster.md#run-a-gpu-enabled-workload) deployed to your node pool.
 - [Azure Managed Prometheus and Grafana enabled on your AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable).
 - [An Azure Container Registry (ACR) integrated with your AKS cluster](./cluster-container-registry-integration.md).
@@ -27,9 +26,7 @@ NVIDIA DCGM Exporter collects and exports GPU metrics. It runs as a pod on your 
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
-Follow the steps in [Quickstart on Kubernetes](https://github.com/NVIDIA/dcgm-exporter?tab=readme-ov-file#quickstart-on-kubernetes) to install the DCGM Exporter using Helm. You might need to update the default configurations of NVIDIA DCGM Exporter to use the Azure Managed Prometheus custom resource definition (CRD) using the steps in [Update default configurations for the DCGM Exporter](#update-default-configurations-for-the-dcgm-exporter).
-
-### Update default configurations for the DCGM Exporter
+### Update default configurations of the NVIDIA DCGM Exporter
 
 1. Clone the [NVIDIA/dcgm-exporter GitHub repository](https://github.com/NVIDIA/dcgm-exporter).
 
@@ -37,32 +34,42 @@ Follow the steps in [Quickstart on Kubernetes](https://github.com/NVIDIA/dcgm-ex
     git clone https://github.com/NVIDIA/dcgm-exporter.git
     ```
 
-2. Navigate to the [`templates` folder](https://github.com/NVIDIA/dcgm-exporter/tree/main/deployment/templates) in the cloned repository.
+2. Navigate to the new `dcgm-exporter` directory.
 
     ```bash
-    cd dcgm-exporter/deployment/templates
+    cd dcgm-exporter
     ```
 
-3. Open the `service-monitor.yaml` and update the `apiVersion` key to `azmonitoring.coreos.com/v1`. This change allows the DCGM Exporter to use the Azure Managed Prometheus CRD.
+3. Open the `service-monitor.yaml` and update the `apiVersion` key to `azmonitoring.coreos.com/v1`. This change allows the NVIDIA DCGM exporter to surface metrics in Azure Managed Prometheus.
 
     ```yml
     apiVersion: azmonitoring.coreos.com/v1
+    ...
+    ...
     ```
 
-4. Open the `values.yaml` and update the tolerations and node selector tags using the following code snippet:
+4. Navigate to the `deployment` directory and open the `values.yaml` file. Update the following fields in this YAML manifest:
 
     ```yml
+    ...
+    ...
+    serviceMonitor:
+        apiVersion: "azmonitoring.coreos.com/v1"
+    ...
+    ...
     nodeSelector:
-      accelerator: nvidia
+        accelerator: "nvidia"
 
     tolerations:
-    - key: "sku"
-      operator: "Equal"
-      value: "gpu"
-      effect: "NoSchedule"
+   - key: "sku"
+        operator: "Equal"
+        value: "gpu"
+        effect: "NoSchedule"
+    ...
+    ...
     ```
 
-## Push the Helm chart to your ACR
+## Push the NVIDIA DCGM exporter Helm chart to your Azure Container Registry
 
 1. Navigate to the `deployment` folder of the cloned repository, and then package the Helm chart using the `helm package` command.
 
@@ -76,34 +83,34 @@ Follow the steps in [Quickstart on Kubernetes](https://github.com/NVIDIA/dcgm-ex
     helm registry login <acr_url> --username <user_name> --password <password>
     ```
 
-3. Push the Helm chart to your ACR using the `helm push` command. Replace `<acr_url>` with your ACR URL.
+3. Push the Helm chart to your ACR using the `helm push` command. Replace `<dcgm_exporter_version>` with the version noted in the output of `helm package` command and `<acr_url>` with your ACR URL.
 
     ```bash
-    helm push dcgm-exporter-3.4.2.tgz oci://<acr_url>/helm
+    helm push dcgm-exporter-<dcgm_exporter_version>.tgz oci://<acr_url>/helm
     ```
 
-4. Install the Helm chart on your AKS cluster using the `helm install` command. Replace `<acr_url>` with your ACR URL.
+4. Install the Helm chart on your AKS cluster using the `helm install` command, in the **same namespace as your GPU-enabled node pool**. Replace `<acr_url>` with your ACR URL.
 
     ```bash
-    helm install dcgm-nvidia oci://<acr_url>/helm/dcgm-exporter -n gpu-resources
+    helm install dcgm-nvidia oci://<acr_url>/helm/dcgm-exporter -n <gpu_namespace>
     ```
 
 5. Check the installation on your AKS cluster using the `helm list` command.
 
     ```bash
-    helm list -n gpu-resources
+    helm list -n <gpu_namespace>
     ```
 
-6. Verify the DCGM Exporter is running on your GPU node pool using the `kubectl get pods` and `kubectl get ds` commands.
+6. Verify the NVIDIA DCGM Exporter is running on your GPU node pool using the `kubectl get pods` and `kubectl get ds` commands.
 
     ```bash
-    kubectl get pods -n gpu-resources
-    kubectl get ds -n gpu-resources
+    kubectl get pods -n <gpu_namespace>
+    kubectl get ds -n <gpu_namespace>
     ```
 
-## Export GPU metrics and configure Grafana dashboard
+## Export GPU Prometheus metrics and configure the NVIDIA Grafana dashboard
 
-Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you need to export the GPU metrics generated by the workload to Azure Managed Prometheus by deploying a PodMonitor resource.
+Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you need to export the default enabled GPU metrics to Azure Managed Prometheus by deploying a Kubernetes `PodMonitor` resource.
 
 1. Create a file named `pod-monitor.yaml` and add the following configuration to it:
 
@@ -124,19 +131,19 @@ Once NVIDIA DCGM Exporter is successfully deployed to your GPU node pool, you ne
       podTargetLabels:
     ```
 
-2. Apply the PodMonitor configuration to your AKS cluster using the `kubectl apply` command.
+2. Apply this PodMonitor configuration to your AKS cluster using the `kubectl apply` command **in the `kube-system` namespace**.
 
     ```bash
-    kubectl apply -f pod-monitor.yaml -n gpu-resources
+    kubectl apply -f pod-monitor.yaml -n kube-system
     ```
 
 3. Verify the PodMonitor was successfully created using the `kubectl get podmonitor` command.
 
     ```bash
-    kubectl get podmonitor -n gpu-resources
+    kubectl get podmonitor -n kube-system
     ```
 
-4. In the [Azure portal](https://portal.azure.com), navigate to the **Metrics** section of your Azure Monitor workspace.
+4. In the [Azure Portal](https://portal.azure.com), navigate to the **Managed Prometheus** > **Prometheus explorer** section of your Azure Monitor workspace. Select the **Grid** tab and search for an example DCGM GPU metric in the **PromQL** box. For example `DCGM_FI_DEV_SM_CLOCK`:
 
     :::image type="content" source="./media/monitor-gpu-metrics/dcgm-azure-monitor.png" alt-text="Screenshot of the Metrics section of an Azure Monitor workspace in the Azure portal.":::
 
