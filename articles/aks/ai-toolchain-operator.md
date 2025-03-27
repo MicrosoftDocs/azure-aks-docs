@@ -241,28 +241,26 @@ If you no longer need these resources, you can delete them to avoid incurring ex
     kubectl delete workspace workspace-falcon-7b-instruct
     ```
 
-* The GPU node pools provisioned by the KAITO deployment will need to be deleted manually. 
-Use the node label created by [Falcon-7b instruct workspace](https://github.com/kaito-project/kaito/blob/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml) to get the node pool name. In this example the node label is "kaito.sh/workspace": "workspace-falcon-7b-instruct".
+2. You need to manually delete the GPU node pools provisioned by the KAITO deployment. Use the node label created by [Falcon-7b instruct workspace](https://github.com/kaito-project/kaito/blob/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml) to get the node pool name using the [`az aks nodepool list`](/cli/azure/aks#az-aks-nodepool-list) command. In this example, the node label is "kaito.sh/workspace": "workspace-falcon-7b-instruct".
 
     ```azurecli-interactive     
     az aks nodepool list --resource-group $AZURE_RESOURCE_GROUP --cluster-name $CLUSTER_NAME
     ```
 
-* [Delete the node pool][delete-node-pool] with this name from your AKS cluster, and repeat the steps in this section for each KAITO workspace that will be removed.
+3. [Delete the node pool][delete-node-pool] with this name from your AKS cluster and repeat the steps in this section for each KAITO workspace that will be removed.
 
 ## Common troubleshooting scenarios
 
-After applying the KAITO model inference workspace, your resource readiness and workspace conditions may not update to `True` for the following reasons:
+After applying the KAITO model inference workspace, your resource readiness and workspace conditions might not update to `True` for the following reasons:
 
-- You may not have sufficient permissions to operate on the AKS cluster. Ensure that the `ai-toolchain-operator-$CLUSTER_NAME` identity has been assigned `Contributor` role to your Azure resource group. Run the following command and confirm that the result is non-empty:
+* You might not have sufficient permissions to operate on the AKS cluster. Ensure that the `ai-toolchain-operator-$CLUSTER_NAME` identity has been assigned `Contributor` role to your Azure resource group. Run the [`az role assignment list`](/cli/azure/role/assignment#az-role-assignment-list) command and confirm that the result is non-empty:
 
     ```azurecli-interactive   
     az role assignment list --scope /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$AZURE_RESOURCE_GROUP
     ```
 
-- Your Azure subscription does not have quota for the minimum GPU instance type specified in your KAITO workspace. You will need to [request a quota increase](/azure/quotas/quickstart-increase-quota-portal) for the GPU VM family in your Azure subscription.
-
-- The GPU instance type is not available in your AKS region. Confirm the [GPU instance availability in your specific region](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?regions=&products=virtual-machines), and switch the Azure region if your GPU VM family is not available.
+* Your Azure subscription doesn't have quota for the minimum GPU instance type specified in your KAITO workspace. You'll need to [request a quota increase](/azure/quotas/quickstart-increase-quota-portal) for the GPU VM family in your Azure subscription.
+* The GPU instance type isn't available in your AKS region. Confirm the [GPU instance availability in your specific region](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?regions=&products=virtual-machines) and switch the Azure region if your GPU VM family isn't available.
 
 ## Next steps
 
