@@ -10,9 +10,9 @@ ms.custom: innovation-engine, aks-related-content
 
 # Test and validate PostgreSQL database on AKS
 
-In this article, you will learn how to set up monitoring for PostgreSQL using Prometheus and Grafana, deploy a sample dataset, upgrade both PostgreSQL and an AKS cluster, simulate a cluster interruption with a PostgreSQL replica failover, and perform a backup and restore of the database.
+In this article, you will perform various testing and validation steps on your newly deployed PostgreSQL database.
 
-* If you haven't already created the required infrastructure for this deployment, follow the steps in [Create infrastructure for deploying a highly available PostgreSQL database on AKS][deploy-postgresql-ha] to get set up, and then you can return to this article.
+* If you haven't already deployed PostgreSQL, follow the steps in [Deploy a highly available PostgreSQL database on AKS with Azure CLI][deploy-postgresql-ha] to get set up, and then you can return to this article.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
