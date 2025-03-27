@@ -133,6 +133,16 @@ The combination of [Planned Maintenance Window][planned-maintenance], [Max Surge
 * [Node drain timeout][drain-timeout] on the node pool allows you to configure the wait duration for eviction of pods and graceful termination per node during an upgrade. This option is useful when dealing with long running workloads. When the node drain timeout is specified (in minutes), AKS respects waiting on pod disruption budgets. If not specified, the default timeout is 30 minutes.
 * [Node soak time][soak-time] helps stagger node upgrades in a controlled manner and can minimize application downtime during an upgrade. You can specify a wait time, preferably as reasonably close to 0 minutes as possible, to check application readiness between node upgrades. If not specified, the default value is 0 minutes. Node soak time works together with the max surge and node drain timeout properties available in the node pool to deliver the right outcomes in terms of upgrade speed and application availability.
 
+## Validations used in the upgrade process today
+When you initiate an upgrade operation through API, Azure CLI, or Azure portal, Azure Kubernetes Service (AKS) performs a series of pre-upgrade validations before starting the upgrade. These validations ensure the cluster is in a healthy state and can upgrade successfully.
+- **API Breaking Changes**: Identifies if there are any deprecated APIs in use that may impact workloads.
+- **Kubernetes Upgrade Version**: Ensures the target version is valid (e.g., no jumps greater than three minor versions, no downgrades, and compatibility with the control plane).
+- **Incorrect PDB Configuration Validation**: Checks for misconfigured Pod Disruption Budgets (PDBs) such as `maxUnavailable = 0` which does not allow any nodes to be disrupted 
+- **Quota**: Confirms there is sufficient quota for surging nodes required during the upgrade process.
+- **Subnet**: Verifies if there are enough allocable IP addresses for the upgrade or if subnet size adjustments are needed.
+- **Certificates/Service Principals**: Detects expired certificates or service principals that could impact the upgrade process.
+
+These checks help minimize upgrade failures and provide users with early visibility into potential issues that need resolution before proceeding.
 ## Next steps
 
 This article listed different upgrade options for AKS clusters. For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
