@@ -69,7 +69,8 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
     ```
 
 
-3. Create a `ServiceMonitor` resource to define the inference service endpoints and configurations needed to scrape the vLLM Prometheus metrics. Export these metrics to Azure Managed Prometheus by deploying the following `ServiceMonitor` YAML manifest in the `kube-system` namespace :
+2. Create a `ServiceMonitor` resource to define the inference service endpoints and configurations needed to scrape the vLLM Prometheus metrics. Export these metrics to Azure Managed Prometheus by deploying the following `ServiceMonitor` YAML manifest in the `kube-system` namespace :
+
 
     ```azurecli-interactive
     cat <<EOF | kubectl apply -n kube-system -f 
