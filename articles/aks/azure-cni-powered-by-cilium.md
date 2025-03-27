@@ -127,37 +127,22 @@ az aks create \
     --generate-ssh-keys
 ```
 
-### Option 3: Assign IP addresses from the Node Subnet (Preview)
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+### Option 3: Assign IP addresses from the Node Subnet
 
 > [!NOTE]
 > Azure CLI version 2.69.0 or later is required. Run `az --version` to see the currently installed version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-1. Register the feature:
+Create a cluster using [node subnet](concepts-network-legacy-cni.md#azure-cni-node-subnet) with a Cilium dataplane:
 
-    ```azurecli-interactive
-    az feature register --name EnableCiliumNodeSubnet --namespace Microsoft.ContainerService
-    az provider register -n Microsoft.ContainerService
-    ```
-    It may take a few minutes for the status to show as *Registered*.
-
-2. Verify the feature is registered:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "EnableCiliumNodeSubnet"
-    ```
-3. Create a cluster using [node subnet](concepts-network-legacy-cni.md#azure-cni-node-subnet) with a Cilium dataplane:
-
-    ```azurecli-interactive
-    az aks create \
-        --name <clusterName> \
-        --resource-group <resourceGroupName> \
-        --location <location> \
-        --network-plugin azure \
-        --network-dataplane cilium \
-        --generate-ssh-keys
-    ```
+```azurecli-interactive
+az aks create \
+    --name <clusterName> \
+    --resource-group <resourceGroupName> \
+    --location <location> \
+    --network-plugin azure \
+    --network-dataplane cilium \
+    --generate-ssh-keys
+```
 
 ## Frequently asked questions
 
