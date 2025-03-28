@@ -195,7 +195,7 @@ For security bulletins from previous years, see:
 
 ## Next Steps
 
-- For information about the latest node images, see the [AKS release notes][aks-release-notes].
+- Get updates about the latest node images, see the [AKS release notes][aks-release-notes].
 - Learn how to upgrade the AKS node image with [Upgrade Azure Kubernetes Service (AKS) node images][node-image-upgrade].
 - Learn how to automatically upgrade node images with [Automatically upgrade node images][auto-upgrade-node-image].
 - Learn how to upgrade the Kubernetes version with [Upgrade an AKS cluster][upgrade-cluster].
