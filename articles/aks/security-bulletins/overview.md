@@ -24,7 +24,7 @@ These updates cover security information related to the following AKS components
 
 ---
 
-## AKS-2025-005 Important Security Update for Kubernetes Nginx Ingress Controller
+## AKS-2025-006 Important Security Update for Kubernetes Nginx Ingress Controller
 
 **Published Date**: March 24, 2025
 
@@ -60,7 +60,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 ---
 
-## AKS-2025-004 Important Security Update for Calico v3.26 Users
+## AKS-2025-005 Important Security Update for Calico v3.26 Users
 
 **Published Date**: March 24, 2025
 
@@ -87,7 +87,7 @@ Upgrade AKS cluster version to 1.30 or later that uses Calico version 3.28
 
 ---
 
-## AKS-2025-003 Issue in ancillary function driver for WinSock in Windows
+## AKS-2025-004 Issue in ancillary function driver for WinSock in Windows
 
 **Published Date**: February 11, 2025
 
@@ -119,7 +119,7 @@ Upgrade Windows node image version to:
 
 ---
 
-## AKS-2025-002 Elevation of Privilege in Windows Storage
+## AKS-2025-003 Elevation of Privilege in Windows Storage
 
 **Published Date**: February 11, 2025
 
@@ -152,7 +152,7 @@ Upgrade Windows node image version to:
 
 ---
 
-## AKS-2025-001 NTLM Hash Disclosure Spoofing
+## AKS-2025-002 NTLM Hash Disclosure Spoofing
 
 **Published Date**: February 11, 2025
 
@@ -187,7 +187,7 @@ Upgrade Windows node image version to:
 
 ---
 
-## AKS-2025-000 ServerConfig.PublicKeyCallback Issue in golang/crypto
+## AKS-2025-001 ServerConfig.PublicKeyCallback Issue in golang/crypto
 
 **Published Date**: December 11, 2024
 
