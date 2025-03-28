@@ -50,7 +50,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 - If you are using the [Managed NGINX ingress with the application routing add-on](https://learn.microsoft.com/en-us/azure/aks/app-routing) on AKS, the patches are getting rolled out to all regions with the AKS 0316 release. **No action is required**. You can check the release status from [AKS release tracker][aks-release-tracker].
 
-- If you are running your own Kubernetes NGINX Ingress Controller, please review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
+- If you are running your own Kubernetes NGINX Ingress Controller, review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
 
 ---
 
@@ -195,7 +195,7 @@ For security bulletins from previous years, see:
 
 ## Next Steps
 
-- Get updates about the latest node images, see the [AKS release notes][aks-release-notes].
+- Get updates about the latest node images with [AKS release notes][aks-release-notes].
 - Learn how to upgrade the AKS node image with [Upgrade Azure Kubernetes Service (AKS) node images][node-image-upgrade].
 - Learn how to automatically upgrade node images with [Automatically upgrade node images][auto-upgrade-node-image].
 - Learn how to upgrade the Kubernetes version with [Upgrade an AKS cluster][upgrade-cluster].
