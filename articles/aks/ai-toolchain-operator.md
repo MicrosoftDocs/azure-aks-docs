@@ -222,13 +222,12 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 4. Test the Falcon 7B-instruct inference service with a sample input of your choice using the [OpenAI chat completions API format](https://platform.openai.com/docs/api-reference/chat):
 
     ```azurecli-interactive
-    kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/v1/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "falcon-7b-instruct",
-    "prompt": "What is Kubernetes?",
-    "max_tokens": 10
-  }'
+    kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/v1/completions -H "Content-Type: application/json" \
+      -d '{
+            "model": "falcon-7b-instruct",
+            "prompt": "What is Kubernetes?",
+            "max_tokens": 10
+           }'
     ```
 
 ## Clean up resources
