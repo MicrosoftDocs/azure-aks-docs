@@ -531,6 +531,8 @@
           href: operate-cost-optimized-scale.md
         - name: Use Arm64 VMs for cost effectiveness
           href: use-arm64-vms.md
+        - name: Get AKS cost recommendations in Azure Advisor
+          href: cost-advisors.md
     - name: Cluster management
       items:
         - name: Azure portal Kubernetes resource view
