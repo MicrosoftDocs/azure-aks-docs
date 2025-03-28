@@ -200,20 +200,20 @@ For more information, see [resource placement using Azure Kubernetes Fleet Manag
 1. On the service menu, under **Fleet Resources**, select **Resource placements** > **Create**.
 1. Replace the placeholder values with the following YAML, and then select **Add**.
 
-  ```YAML
-  apiVersion: placement.kubernetes-fleet.io/v1
-  kind: ClusterResourcePlacement
-  metadata:
-    name: distribute-my-namespace
-  spec:
-    resourceSelectors:
-      - group: ""
-        kind: Namespace
-        version: v1          
-        name: my-namespace
-    policy:
-      placementType: PickAll
-  ```
+    ```YAML
+    apiVersion: placement.kubernetes-fleet.io/v1
+    kind: ClusterResourcePlacement
+    metadata:
+      name: distribute-my-namespace
+    spec:
+      resourceSelectors:
+        - group: ""
+          kind: Namespace
+          version: v1          
+          name: my-namespace
+      policy:
+        placementType: PickAll
+    ```
 
 1. Verify that the cluster resource placement was created successfully.
 
