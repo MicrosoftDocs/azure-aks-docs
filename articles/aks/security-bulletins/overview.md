@@ -210,7 +210,7 @@ AKS is aware of the vulnerability. However, this CVE is not exploitable for kube
 
 **Resolutions**
 
-Fix** will be available** in AKS cluster version 1.33
+Fix **will be available** in AKS cluster version 1.33
 
 ---
 
