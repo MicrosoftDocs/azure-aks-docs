@@ -28,7 +28,7 @@ The AKS Communication Manager streamlines notifications for all your AKS mainten
 2. The Condition for the  alert should be a Custom log search.
 
 
- :::image type="content" source="./media/auto-upgrade-cluster/custom_log_search.jpg" alt-text="The screenshot of the custom log search in the alert rule blade.":::
+     :::image type="content" source="./media/auto-upgrade-cluster/custom-log-search.jpg" alt-text="The screenshot of the custom log search in the alert rule blade.":::
 
 3. In the opened "Search query" box, paste one of the following custom queries and click "Review+Create" button.
 
