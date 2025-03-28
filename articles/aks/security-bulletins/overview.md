@@ -48,7 +48,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 **Resolutions**
 
-- If you are using the [Managed NGINX ingress with the application routing add-on](../app-routing.md) on AKS, the patches are getting rolled out to all regions with the AKS 2050316 release. **No action is required**. You can check the release status from [AKS release tracker][aks-release-tracker].
+- If you are using the [Managed NGINX ingress with the application routing add-on](../app-routing.md) on AKS, the patches are getting rolled out to all regions with the AKS v2050316 release. **No action is required**. You can check the release status from [AKS release tracker][aks-release-tracker].
 
 - If you are running your own Kubernetes NGINX Ingress Controller, review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
 
