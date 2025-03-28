@@ -10,7 +10,13 @@ ms.subservice: aks-security
 
 # Security bulletins for Azure Kubernetes Service (AKS)
 
-This page describes the security / vulnerability / Common Vulnerabilities and Exposures (CVE) updates information about the components used in Azure Kubernetes Service (AKS):
+This page provides up-to-date information on security vulnerabilities affecting Azure Kubernetes Service(AKS) and its components. This includes details on:
+
+- Critical Security Advisories – High-impact security vulnerabilities, including zero-day vulnerabilities and other critical CVEs requiring immediate attention, along with mitigation guidance.
+- Ongoing Security Investigations – Security issues under review, including CVEs where a patch is not yet available or further assessment is needed.
+- False Positives & Non-Exploitable CVEs – Cases where a reported CVE does not impact AKS due to specific configurations, mitigations, or lack of exploitability.
+
+These updates cover security information related to the following AKS components:
 
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
@@ -56,7 +62,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 ## AKS-2025-004 Important Security Update for Calico v3.26 Users
 
-**Published Date**: March 31, 2025
+**Published Date**: March 24, 2025
 
 ### Description
 
@@ -83,7 +89,7 @@ Upgrade AKS cluster version to 1.30 or later that uses Calico version 3.28
 
 ## AKS-2025-003 Issue in ancillary function driver for WinSock in Windows
 
-**Published Date**: March 31, 2025
+**Published Date**: February 11, 2025
 
 ### Description
 
@@ -94,7 +100,7 @@ A security issue was discovered in the ancillary function driver for WinSock in 
 
 ### Affected Components
 
-#### [**AKS Cluster**](#tab/aks-cluster)
+#### [**AKS Node Image**](#tab/aks-node-image)
 
 **Affected Versions**
 
@@ -115,7 +121,7 @@ Upgrade Windows node image version to:
 
 ## AKS-2025-002 Elevation of Privilege in Windows Storage
 
-**Published Date**: March 31, 2025
+**Published Date**: February 11, 2025
 
 ### Description
 
@@ -148,7 +154,7 @@ Upgrade Windows node image version to:
 
 ## AKS-2025-001 NTLM Hash Disclosure Spoofing
 
-**Published Date**: March 31, 2025
+**Published Date**: February 11, 2025
 
 ### Description
 
@@ -180,6 +186,34 @@ Upgrade Windows node image version to:
 - or later
 
 ---
+
+## AKS-2025-000 ServerConfig.PublicKeyCallback Issue in golang/crypto
+
+**Published Date**: December 11, 2024
+
+### Description
+
+A security issue was discovered in the ServerConfig.PublicKeyCallback callback, which may be susceptible to an authorization bypass. This vulnerability arises when applications and libraries misuse the connection.serverAuthenticate method. Specifically, the SSH protocol allows clients to inquire about whether a public key is acceptable before proving control of the corresponding private key. This can lead to incorrect authorization decisions based on keys that the attacker does not actually control
+
+AKS is aware of the vulnerability. However, this CVE is not exploitable for kubernetes. The vulnerability only affects those who are using the PublicKeyCallback API. Since golang does not use this API in the Kubernetes setup, and the only use of the entire package is within a test suite golang.org/x/crypto is not vulnerable. The vulnerability will be patched in the upcoming Kubernetes release 1.33. 
+
+### References
+- [CVE-2024-45337](https://nvd.nist.gov/vuln/detail/CVE-2024-45337)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- AKS version 1.32 and earlier
+
+**Resolutions**
+
+Fix** will be available** in AKS cluster version 1.33
+
+---
+
 
 <!--- enable this section when we are approaching the end of 2025
 ---
