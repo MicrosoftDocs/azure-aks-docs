@@ -1,7 +1,7 @@
 ---
 title: Security bulletins for Azure Kubernetes Service (AKS)
 description: This article provides security/vulnerability related updates and troubleshooting guides for Azure Kubernetes Services (AKS).
-ms.date: 02/03/2025
+ms.date: 03/27/2025
 author: bahe
 ms.author: bahe
 ms.topic: conceptual
@@ -18,18 +18,111 @@ This page describes the security / vulnerability updates information about the c
 
 ---
 
-## AKS-2025-002 Nvidia Container Toolkit Issues
+## AKS-2025-005 Important Security Update for Kubernetes Nginx Ingress Controller
 
-**Published Date**: 02/03/2025
+**Published Date**: 03/24/2025
 
 ### Description
-
-NVIDIA Container Toolkit 1.16.1 or earlier contains a Time-of-check Time-of-Use (TOCTOU) vulnerability when used with default configuration where a specifically crafted container image may gain access to the host file system. This does not impact use cases where CDI is used. A successful exploit of this vulnerability may lead to code execution, denial of service, escalation of privileges, information disclosure, and data tampering.
+Several security vulnerabilities affecting the Kubernetes nginx ingress controller were disclosed on March 24, 2025: CVE-2025-1098 (High), CVE-2025-1974 (Critical), CVE-2025-1097 (High), CVE-2025-24514 (High), and CVE-2025-24513 (Medium).
+The CVEs impact ingress-nginx. (If you do not have ingress-nginx installed on your cluster, you are not affected.)
+You can check for ingress-nginx by running `kubectl get pods --all-namespaces --selector app.kubernetes.io/name=ingress-nginx`
 
 ### References
 
-- [CVE-2024-0132](https://nvd.nist.gov/vuln/detail/cve-2024-0132)
-- [CVE-2024-0133](https://nvd.nist.gov/vuln/detail/cve-2024-0133)
+- [CVE-2025-1098](https://github.com/kubernetes/kubernetes/issues/131008)
+- [CVE-2025-1974](https://github.com/kubernetes/kubernetes/issues/131009) 
+- [CVE-2025-1097](https://github.com/kubernetes/kubernetes/issues/131007)
+- [CVE-2025-24514](https://github.com/kubernetes/kubernetes/issues/131006)
+- [CVE-2025-24513](https://github.com/kubernetes/kubernetes/issues/131005)
+
+### Affected Components
+
+#### [**ingess-nginx**](#tab/ingress-nginx)
+
+**Affected Versions**
+
+- < v1.11.0
+- v1.11.0 - 1.11.4
+- v1.12.0
+
+
+**Resolutions**
+
+- If you are using the [Managed NGINX ingress with the application routing add-on](https://learn.microsoft.com/en-us/azure/aks/app-routing) on AKS, the patches are getting rolled out to all regions and should be completed in a few days. **No action is required**.
+
+- If you are running your own Kubernetes NGINX Ingress Controller, please review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
+
+---
+
+## AKS-2025-004 Important Security Update for Calico v3.26 Users
+
+**Published Date**: 03/31/2025
+
+### Description
+
+Multiple security issues have been discovered in Calico version 3.26, which is now end of life and no longer receives security fixes. If you are using Calico version 3.26 on AKS Cluster version 1.29.x or earlier, you will no longer receive security patches for Calico.
+
+### References
+
+- [Calico End of Life](https://endoflife.date/calico)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- AKS version 1.29 and earlier
+
+
+**Resolutions**
+
+Upgrade AKS cluster version to 1.30 or later that uses Calico version 3.28
+
+---
+
+## AKS-2025-003 Issue in ancillary function driver for WinSock in Windows
+
+**Published Date**: 03/31/2025
+
+### Description
+
+A security issue was discovered in the ancillary function driver for WinSock in Windows. This vulnerability allows attackers to exploit network communication flaws, potentially leading to elevation of privilege
+
+### References
+- [CVE-2025-21418](https://nvd.nist.gov/vuln/detail/CVE-2025-21418)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- Windows version 17763.6775.250117
+- Windows version 20348.3091.250117
+- Windows version 25398.1369.250117
+
+
+**Resolutions**
+
+Upgrade Windows node image version to:
+- 17763.6775.250214
+- 20348.3091.250214
+- 25398.1369.250214
+- or later
+
+---
+
+## AKS-2025-002 Elevation of Privilege in Windows Storage
+
+**Published Date**: 03/31/2025
+
+### Description
+
+A security issue was discovered in Windows Storage that allows attackers with low-level access to exploit system flaws and gain higher privileges. This vulnerability can potentially lead to the execution of arbitrary code or access to sensitive data
+
+### References
+- [CVE-2025-21391](https://nvd.nist.gov/vuln/detail/CVE-2025-21391)
 
 ### Affected Components
 
@@ -37,51 +130,68 @@ NVIDIA Container Toolkit 1.16.1 or earlier contains a Time-of-check Time-of-Use 
 
 **Affected Versions**
 
-- Azure Linux 202409.30.0
-- Ubuntu 202409.30.0
+- Windows version 17763.6775.250117
+- Windows version 20348.3091.250117
+- Windows version 25398.1369.250117
+
 
 **Resolutions**
 
-Upgrade AKS node image to 202410.09.0 or later.
+Upgrade Windows node image version to:
+
+- 17763.6775.250214
+- 20348.3091.250214
+- 25398.1369.250214
+- or later
 
 ---
 
+## AKS-2025-001 NTLM Hash Disclosure Spoofing
 
-## AKS-2025-001 Incorrect permissions on Windows containers logs
-
-**Published Date**: 01/03/2025
+**Published Date**: 03/31/2025
 
 ### Description
 
-A security issue was discovered in Kubernetes clusters with Windows nodes where `BUILTIN\Users` may be able to read container logs and `NT AUTHORITY\Authenticated Users` may be able to modify container logs.
+A security issue was discovered that exposes Windows users' NTLM hashes. This type of vulnerability can lead to pass-the-hash attacks, where a remote attacker captures and later uses a hash to impersonate a user without needing the plain-text passwor
 
 ### References
 
-- [CVE-2024-5321](https://nvd.nist.gov/vuln/detail/cve-2024-5321)
-- [kubernetes/kubernetes #126161](https://github.com/kubernetes/kubernetes/issues/126161)
+- [CVE-2025-21377](https://nvd.nist.gov/vuln/detail/CVE-2025-21377)
+
 
 ### Affected Components
 
-#### [**AKS**](#tab/aks)
+#### [**AKS Node Image**](#tab/aks-node-image)
 
 **Affected Versions**
 
-- Kubernetes: <= 1.27.15 / <= 1.28.11 / <= 1.29.6 / <= 1.30.2
+- Windows version 17763.6775.250117
+- Windows version 20348.3091.250117
+- Windows version 25398.1369.250117
+
 
 **Resolutions**
 
-Upgrade AKS cluster Kubernetes version to 1.27.16 / 1.28.12 / 1.29.7 / 1.30.3 or later.
+Upgrade Windows node image version to:
 
+- 17763.6775.250214
+- 20348.3091.250214
+- 25398.1369.250214
+- or later
+
+---
+
+<!---
 ---
 
 ## Archived bulletins
 
 For security bulletins from previous years, see:
 
-- [2024](2024.md)
-- [2023](2023.md)
+- [2025](2025.md)
 
 ---
+-->
 
 ## Next Steps
 
