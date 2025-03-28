@@ -485,6 +485,8 @@
               href: use-windows-gpu.md
             - name: Multi-instance GPU node pool
               href: gpu-multi-instance.md
+            - name: Monitor GPU metrics
+              href: monitor-gpu-metrics.md
         - name: Vertical Pod Autoscaler
           items:
             - name: Vertical Pod Autoscaler overview
