@@ -20,7 +20,7 @@ These updates cover security information related to the following AKS components
 
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
-- Azure Kubernetes Service Addons (AKS Addons)
+- Azure Kubernetes Service Addons (AKS add-ons)
 
 ---
 
