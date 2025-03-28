@@ -10,7 +10,7 @@ ms.subservice: aks-security
 
 # Security bulletins for Azure Kubernetes Service (AKS)
 
-This page describes the security / vulnerability updates information about the components used in Azure Kubernetes Service (AKS):
+This page describes the security / vulnerability / Common Vulnerabilities and Exposures (CVE) updates information about the components used in Azure Kubernetes Service (AKS):
 
 - Azure Kubernetes Service (AKS)
 - Azure Kubernetes Service Node Image (AKS Node Image)
