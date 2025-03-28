@@ -25,7 +25,7 @@ This page describes the security / vulnerability updates information about the c
 ### Description
 Several security vulnerabilities affecting the Kubernetes nginx ingress controller were disclosed on March 24, 2025: CVE-2025-1098 (High), CVE-2025-1974 (Critical), CVE-2025-1097 (High), CVE-2025-24514 (High), and CVE-2025-24513 (Medium).
 The CVEs impact ingress-nginx. (If you do not have ingress-nginx installed on your cluster, you are not affected.)
-You can check for ingress-nginx by running `kubectl get pods --all-namespaces --selector app.kubernetes.io/name=ingress-nginx`
+You can check for ingress-nginx by running `kubectl get pods --all-namespaces --selector app.kubernetes.io/name=ingress-nginx` .
 
 ### References
 
@@ -37,7 +37,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 ### Affected Components
 
-#### [**ingess-nginx**](#tab/ingress-nginx)
+#### [**Ingess-Nginx**](#tab/ingress-nginx)
 
 **Affected Versions**
 
@@ -48,7 +48,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 **Resolutions**
 
-- If you are using the [Managed NGINX ingress with the application routing add-on](https://learn.microsoft.com/en-us/azure/aks/app-routing) on AKS, the patches are getting rolled out to all regions and should be completed in a few days. **No action is required**.
+- If you are using the [Managed NGINX ingress with the application routing add-on](https://learn.microsoft.com/en-us/azure/aks/app-routing) on AKS, the patches are getting rolled out to all regions with the AKS 0316 release. **No action is required**. You can check the release status from [AKS release tracker][aks-release-tracker].
 
 - If you are running your own Kubernetes NGINX Ingress Controller, please review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
 
@@ -87,7 +87,7 @@ Upgrade AKS cluster version to 1.30 or later that uses Calico version 3.28
 
 ### Description
 
-A security issue was discovered in the ancillary function driver for WinSock in Windows. This vulnerability allows attackers to exploit network communication flaws, potentially leading to elevation of privilege
+A security issue was discovered in the ancillary function driver for WinSock in Windows. This vulnerability allows attackers to exploit network communication flaws, potentially leading to elevation of privilege.
 
 ### References
 - [CVE-2025-21418](https://nvd.nist.gov/vuln/detail/CVE-2025-21418)
@@ -119,7 +119,7 @@ Upgrade Windows node image version to:
 
 ### Description
 
-A security issue was discovered in Windows Storage that allows attackers with low-level access to exploit system flaws and gain higher privileges. This vulnerability can potentially lead to the execution of arbitrary code or access to sensitive data
+A security issue was discovered in Windows Storage that allows attackers with low-level access to exploit system flaws and gain higher privileges. This vulnerability can potentially lead to the execution of arbitrary code or access to sensitive data.
 
 ### References
 - [CVE-2025-21391](https://nvd.nist.gov/vuln/detail/CVE-2025-21391)
@@ -181,7 +181,7 @@ Upgrade Windows node image version to:
 
 ---
 
-<!---
+<!--- enable this section when we are approaching the end of 2025
 ---
 
 ## Archived bulletins
@@ -195,7 +195,7 @@ For security bulletins from previous years, see:
 
 ## Next Steps
 
-- For information about the latest node images, see the [AKS release notes](https://github.com/Azure/AKS/releases).
+- For information about the latest node images, see the [AKS release notes][aks-release-notes].
 - Learn how to upgrade the AKS node image with [Upgrade Azure Kubernetes Service (AKS) node images][node-image-upgrade].
 - Learn how to automatically upgrade node images with [Automatically upgrade node images][auto-upgrade-node-image].
 - Learn how to upgrade the Kubernetes version with [Upgrade an AKS cluster][upgrade-cluster].
@@ -207,3 +207,7 @@ For security bulletins from previous years, see:
 [auto-upgrade-node-image]: ../auto-upgrade-node-image.md
 [upgrade-cluster]: ../upgrade-aks-cluster.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
+
+<!-- LINKS - external -->
+[aks-release-notes]: https://github.com/Azure/AKS/releases
+[aks-release-tracker]: https://releases.aks.azure.com/https://github.com/Azure/AKS/releases
