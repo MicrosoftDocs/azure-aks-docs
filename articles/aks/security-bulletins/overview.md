@@ -20,7 +20,7 @@ This page describes the security / vulnerability updates information about the c
 
 ## AKS-2025-005 Important Security Update for Kubernetes Nginx Ingress Controller
 
-**Published Date**: 03/24/2025
+**Published Date**: March 24, 2025
 
 ### Description
 Several security vulnerabilities affecting the Kubernetes nginx ingress controller were disclosed on March 24, 2025: CVE-2025-1098 (High), CVE-2025-1974 (Critical), CVE-2025-1097 (High), CVE-2025-24514 (High), and CVE-2025-24513 (Medium).
@@ -56,7 +56,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 ## AKS-2025-004 Important Security Update for Calico v3.26 Users
 
-**Published Date**: 03/31/2025
+**Published Date**: March 31, 2025
 
 ### Description
 
@@ -83,7 +83,7 @@ Upgrade AKS cluster version to 1.30 or later that uses Calico version 3.28
 
 ## AKS-2025-003 Issue in ancillary function driver for WinSock in Windows
 
-**Published Date**: 03/31/2025
+**Published Date**: March 31, 2025
 
 ### Description
 
@@ -115,7 +115,7 @@ Upgrade Windows node image version to:
 
 ## AKS-2025-002 Elevation of Privilege in Windows Storage
 
-**Published Date**: 03/31/2025
+**Published Date**: March 31, 2025
 
 ### Description
 
@@ -148,7 +148,7 @@ Upgrade Windows node image version to:
 
 ## AKS-2025-001 NTLM Hash Disclosure Spoofing
 
-**Published Date**: 03/31/2025
+**Published Date**: March 31, 2025
 
 ### Description
 
