@@ -683,6 +683,8 @@
                       href: csi-secrets-store-identity-access.md
                     - name: 3 - Apply extra configurations or perform troubleshooting
                       href: csi-secrets-store-configuration-options.md
+        - name: Security Bulletins
+          href: security-bulletins/overview.md
     - name: Configure networking
       items:
         - name: CNI
