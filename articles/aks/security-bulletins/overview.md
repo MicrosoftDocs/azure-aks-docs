@@ -10,11 +10,11 @@ ms.subservice: aks-security
 
 # Security bulletins for Azure Kubernetes Service (AKS)
 
-This page provides up-to-date information on security vulnerabilities affecting Azure Kubernetes Service(AKS) and its components. This includes details on:
+This page provides up-to-date information on security vulnerabilities affecting Azure Kubernetes Service(AKS) and its components. This information includes details on:
 
 - Critical Security Advisories – High-impact security vulnerabilities, including zero-day vulnerabilities and other critical CVEs requiring immediate attention, along with mitigation guidance.
-- Ongoing Security Investigations – Security issues under review, including CVEs where a patch is not yet available or further assessment is needed.
-- False Positives & Non-Exploitable CVEs – Cases where a reported CVE does not impact AKS due to specific configurations, mitigations, or lack of exploitability.
+- Ongoing Security Investigations – Security issues under review, including CVEs where a patch isn't yet available or further assessment is needed.
+- False Positives & Non-Exploitable CVEs – Cases where a reported CVE doesn't impact AKS due to specific configurations, mitigations, or lack of exploitability.
 
 These updates cover security information related to the following AKS components:
 
@@ -30,7 +30,7 @@ These updates cover security information related to the following AKS components
 
 ### Description
 Several security vulnerabilities affecting the Kubernetes nginx ingress controller were disclosed on March 24, 2025: CVE-2025-1098 (High), CVE-2025-1974 (Critical), CVE-2025-1097 (High), CVE-2025-24514 (High), and CVE-2025-24513 (Medium).
-The CVEs impact ingress-nginx. (If you do not have ingress-nginx installed on your cluster, you are not affected.)
+The CVEs impact ingress-nginx. (If you don't have ingress-nginx installed on your cluster, you aren't affected.)
 You can check for ingress-nginx by running `kubectl get pods --all-namespaces --selector app.kubernetes.io/name=ingress-nginx` .
 
 ### References
@@ -54,9 +54,9 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 **Resolutions**
 
-- If you are using the [Managed NGINX ingress with the application routing add-on](../app-routing.md) on AKS, the patches are getting rolled out to all regions with the AKS v2050316 release. **No action is required**. You can check the release status from [AKS release tracker][aks-release-tracker].
+- If you're using the [Managed NGINX ingress with the application routing add-on](../app-routing.md) on AKS, the patches are getting rolled out to all regions with the AKS v2050316 release. **No action is required**. You can check the release status from [AKS release tracker][aks-release-tracker].
 
-- If you are running your own Kubernetes NGINX Ingress Controller, review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
+- If you're running your own Kubernetes NGINX Ingress Controller, review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
 
 ---
 
@@ -66,7 +66,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 ### Description
 
-Multiple security issues have been discovered in Calico version 3.26, which is now end of life and no longer receives security fixes. If you are using Calico version 3.26 on AKS Cluster version 1.29.x or earlier, you will no longer receive security patches for Calico.
+Multiple security issues exist in Calico version 3.26, which is now end of life and no longer receives security fixes. If you're using Calico version 3.26 on AKS Cluster version 1.29.x or earlier, you'll no longer receive security patches for Calico.
 
 ### References
 
@@ -112,9 +112,9 @@ A security issue was discovered in the ancillary function driver for WinSock in 
 **Resolutions**
 
 Upgrade Windows node image version to:
-- 17763.6775.250214
-- 20348.3091.250214
-- 25398.1369.250214
+- Windows version 17763.6775.250214
+- Windows version 20348.3091.250214
+- Windows version 25398.1369.250214
 - or later
 
 ---
@@ -145,9 +145,9 @@ A security issue was discovered in Windows Storage that allows attackers with lo
 
 Upgrade Windows node image version to:
 
-- 17763.6775.250214
-- 20348.3091.250214
-- 25398.1369.250214
+- Windows version 17763.6775.250214
+- Windows version 20348.3091.250214
+- Windows version 25398.1369.250214
 - or later
 
 ---
@@ -180,9 +180,9 @@ A security issue was discovered that exposes Windows users' NTLM hashes. This ty
 
 Upgrade Windows node image version to:
 
-- 17763.6775.250214
-- 20348.3091.250214
-- 25398.1369.250214
+- Windows version 17763.6775.250214
+- Windows version 20348.3091.250214
+- Windows version 25398.1369.250214
 - or later
 
 ---
@@ -193,9 +193,9 @@ Upgrade Windows node image version to:
 
 ### Description
 
-A security issue was discovered in the ServerConfig.PublicKeyCallback callback, which may be susceptible to an authorization bypass. This vulnerability arises when applications and libraries misuse the connection.serverAuthenticate method. Specifically, the SSH protocol allows clients to inquire about whether a public key is acceptable before proving control of the corresponding private key. This can lead to incorrect authorization decisions based on keys that the attacker does not actually control
+A security issue was discovered in the ServerConfig.PublicKeyCallback callback, which may be susceptible to an authorization bypass. This vulnerability arises when applications and libraries misuse the connection.serverAuthenticate method. Specifically, the SSH protocol allows clients to inquire about whether a public key is acceptable before proving control of the corresponding private key. This issue can lead to incorrect authorization decisions based on keys that the attacker doesn't actually control
 
-AKS is aware of the vulnerability. However, this CVE is not exploitable for kubernetes. The vulnerability only affects those who are using the PublicKeyCallback API. Since golang does not use this API in the Kubernetes setup, and the only use of the entire package is within a test suite golang.org/x/crypto is not vulnerable. The vulnerability will be patched in the upcoming Kubernetes release 1.33. 
+AKS is aware of the vulnerability. However, this CVE isn't exploitable for kubernetes. The vulnerability only affects those users who are using the PublicKeyCallback API. Since golang doesn't use this API in the Kubernetes setup, and the only use of the entire package is within a test suite golang.org/x/crypto isn't vulnerable. The vulnerability is patched in the upcoming Kubernetes release 1.33. 
 
 ### References
 - [CVE-2024-45337](https://nvd.nist.gov/vuln/detail/CVE-2024-45337)
