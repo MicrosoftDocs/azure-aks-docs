@@ -37,7 +37,7 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 ### Affected Components
 
-#### [**Ingess-Nginx**](#tab/ingress-nginx)
+#### [**AKS Addons**](#tab/aks-addons)
 
 **Affected Versions**
 
