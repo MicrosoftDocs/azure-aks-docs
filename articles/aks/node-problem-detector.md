@@ -36,10 +36,10 @@ Node conditions indicate a permanent problem that makes the node unavailable. AK
 
 NPD emits events with relevant information to help you diagnose underlying issues.
 
-|Problem Daemon type| Reason  |
-|---|---|
-|CustomPluginMonitor|EgressBlocked|
-|CustomPluginMonitor|FilesystemCorruptionDetected|
+|Problem Daemon type| Reason  |  Frequency  |  Description | Action |
+|---|---| ---| --| --|
+|CustomPluginMonitor|EgressBlocked|   30 min | This event checks for connectivity to external endpoints* from the node | Check the firewall/NSG blocking the connectivity |
+|CustomPluginMonitor|FilesystemCorruptionDetected| 5min | This check for filesystem corruption surfaced by docker | |
 |CustomPluginMonitor|KubeletIsDown|
 |CustomPluginMonitor|ContainerRuntimeIsDown|
 |CustomPluginMonitor|FreezeScheduled|
