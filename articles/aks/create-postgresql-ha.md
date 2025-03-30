@@ -29,7 +29,7 @@ export SUFFIX=$(cat /dev/urandom | LC_ALL=C tr -dc 'a-z0-9' | fold -w 8 | head -
 export LOCAL_NAME="cnpg"
 export TAGS="owner=user"
 export RESOURCE_GROUP_NAME="rg-${LOCAL_NAME}-${SUFFIX}"
-export PRIMARY_CLUSTER_REGION="westus3"
+export PRIMARY_CLUSTER_REGION="eastus2"
 export AKS_PRIMARY_CLUSTER_NAME="aks-primary-${LOCAL_NAME}-${SUFFIX}"
 export AKS_PRIMARY_MANAGED_RG_NAME="rg-${LOCAL_NAME}-primary-aksmanaged-${SUFFIX}"
 export AKS_PRIMARY_CLUSTER_FED_CREDENTIAL_NAME="pg-primary-fedcred1-${LOCAL_NAME}-${SUFFIX}"
@@ -317,6 +317,29 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
         --output table
     ```
 
+> [!NOTE]
+> If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, please wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
+
+## Connect to the AKS cluster and create namespaces
+
+In this section, you get the AKS cluster credentials, which serve as the keys that allow you to authenticate and interact with the cluster. Once connected, you create two namespaces: one for the CNPG controller manager services and one for the PostgreSQL cluster and its related services.
+
+1. Get the AKS cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```bash
+    az aks get-credentials \
+        --resource-group $RESOURCE_GROUP_NAME \
+        --name $AKS_PRIMARY_CLUSTER_NAME \
+        --output none
+    ```
+
+2. Create the namespace for the CNPG controller manager services, the PostgreSQL cluster, and its related services by using the [`kubectl create namespace`][kubectl-create-namespace] command.
+
+    ```bash
+    kubectl create namespace $PG_NAMESPACE --context $AKS_PRIMARY_CLUSTER_NAME
+    kubectl create namespace $PG_SYSTEM_NAMESPACE --context $AKS_PRIMARY_CLUSTER_NAME
+    ```
+
 ### Storage considerations
 
 The type of storage you use can have large effects on PostgreSQL performance. You can select the option that is best suited for your goals and performance needs.
@@ -346,18 +369,18 @@ To use Premium SSD v2, you can create a custom storage class.
     ```bash
     cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
     apiVersion: storage.k8s.io/v1
-     kind: StorageClass
-     metadata:
-       name: premium2-disk-sc
-     parameters:
-       cachingMode: None
-       skuName: PremiumV2_LRS
-       DiskIOPSReadWrite: "4000"
-       DiskMBpsReadWrite: "1000"
-     provisioner: disk.csi.azure.com
-     reclaimPolicy: Delete
-     volumeBindingMode: Immediate
-     allowVolumeExpansion: true
+    kind: StorageClass
+    metadata:
+      name: premium2-disk-sc
+    parameters:
+      cachingMode: None
+      skuName: PremiumV2_LRS
+      DiskIOPSReadWrite: "3500"
+      DiskMBpsReadWrite: "125"
+    provisioner: disk.csi.azure.com
+    reclaimPolicy: Delete
+    volumeBindingMode: WaitForFirstConsumer
+    allowVolumeExpansion: true
     EOF
 
     export POSTGRES_STORAGE_CLASS="premium2-disk-sc"
@@ -387,29 +410,6 @@ To use Premium SSD v2, you can create a custom storage class.
     ```
 
 ---
-
-> [!NOTE]
-> If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, please wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
-
-## Connect to the AKS cluster and create namespaces
-
-In this section, you get the AKS cluster credentials, which serve as the keys that allow you to authenticate and interact with the cluster. Once connected, you create two namespaces: one for the CNPG controller manager services and one for the PostgreSQL cluster and its related services.
-
-1. Get the AKS cluster credentials using the [`az aks get-credentials`][az-aks-get-credentials] command.
-
-    ```bash
-    az aks get-credentials \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --name $AKS_PRIMARY_CLUSTER_NAME \
-        --output none
-    ```
-
-2. Create the namespace for the CNPG controller manager services, the PostgreSQL cluster, and its related services by using the [`kubectl create namespace`][kubectl-create-namespace] command.
-
-    ```bash
-    kubectl create namespace $PG_NAMESPACE --context $AKS_PRIMARY_CLUSTER_NAME
-    kubectl create namespace $PG_SYSTEM_NAMESPACE --context $AKS_PRIMARY_CLUSTER_NAME
-    ```
 
 ## Update the monitoring infrastructure
 
