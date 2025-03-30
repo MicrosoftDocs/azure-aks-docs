@@ -172,6 +172,9 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
     ```azurecli-interactive
     az acr cache create -n aks-managed-mcr -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
     ```
+[!NOTE]
+    >It is your responsbility to ensure the ACR cache rule is created correctly. AKS is not responsible to reconcile the cache rule.
+    
 
 ### Step 4: Create a private endpoint for the ACR
 
