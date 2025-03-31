@@ -110,6 +110,8 @@
       href: upgrade.md
     - name: Availability zones
       href: availability-zones-overview.md
+    - name: Reliability in AKS
+      href: /azure/reliability/reliability-aks
     - name: AKS Communication Manager (Preview)
       href: aks-communication-manager.md
     - name: Resource reservations
@@ -124,6 +126,8 @@
           href: control-plane-metrics-monitor.md
         - name: Container Network Observability
           href: container-network-observability-concepts.md
+        - name: Monitor your AI inference service with the AI toolchain operator
+          href: ai-toolchain-operator-monitoring.md
     - name: Security
       items:
         - name: Security concepts
@@ -485,6 +489,8 @@
               href: use-windows-gpu.md
             - name: Multi-instance GPU node pool
               href: gpu-multi-instance.md
+            - name: Monitor GPU metrics
+              href: monitor-gpu-metrics.md
         - name: Vertical Pod Autoscaler
           items:
             - name: Vertical Pod Autoscaler overview
@@ -677,6 +683,8 @@
                       href: csi-secrets-store-identity-access.md
                     - name: 3 - Apply extra configurations or perform troubleshooting
                       href: csi-secrets-store-configuration-options.md
+        - name: Security Bulletins
+          href: security-bulletins/overview.md
     - name: Configure networking
       items:
         - name: CNI
@@ -1078,10 +1086,16 @@
           href: open-ai-quickstart.md
         - name: Secure access to Azure OpenAI from Azure Kubernetes Service (AKS)
           href: open-ai-secure-access-quickstart.md
-        - name: Deploy an AI model with the AI toolchain operator
-          href: ai-toolchain-operator.md
-        - name: Fine-tune an AI model for inferencing with the AI toolchain operator
-          href: ai-toolchain-operator-fine-tune.md
+        - name: Use the AI toolchain operator (KAITO)
+          items:
+            - name: Deploy an AI model
+              href: ai-toolchain-operator.md
+            - name: Fine-tune an AI model for inferencing
+              href: ai-toolchain-operator-fine-tune.md
+            - name: Monitor your inference service with the AI toolchain operator
+              href: ai-toolchain-operator-monitoring.md
+            - name: Onboard custom models for inference
+              href: kaito-custom-inference-model.md
         - name: Deploy data and ML pipelines with Flyte
           href: use-flyte.md
         - name: Work with clusters using Copilot
