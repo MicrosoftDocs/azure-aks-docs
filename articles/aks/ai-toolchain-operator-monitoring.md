@@ -29,6 +29,7 @@ In this article, you'll learn how to monitor and visualize vLLM inference metric
 * Enable the [AI toolchain operator add-on](./ai-toolchain-operator.md) on your AKS cluster.
    * If you already have the AI toolchain operator add-on enabled, update your AKS cluster to the latest version to run **KAITO v0.4.4 or above**.
 * Enable [Azure Managed Prometheus and Azure Managed Grafana](/azure/azure-monitor/containers/kubernetes-monitoring-enable) on your AKS cluster.
+* Sufficient permission to [create and/or update Grafana instances](/azure/managed-grafana/how-to-manage-access-permissions-users-identities) in your Azure subscription.
 
 ## Deploy a KAITO inference service
 
@@ -73,7 +74,7 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 
 
     ```azurecli-interactive
-    cat <<EOF | kubectl apply -n kube-system -f 
+    cat <<EOF | kubectl apply -n kube-system -f -
     apiVersion: azmonitoring.coreos.com/v1
     kind: ServiceMonitor
     metadata:
