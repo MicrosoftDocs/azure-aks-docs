@@ -35,7 +35,6 @@ AKS cost recommendations include the following:
 * Enable Vertical Pod Autoscaler recommendation mode to rightsize resource requests and limits.
 * Use Azure Kubernetes Service Cost Analysis.
 * Fine-tune the cluster autoscaler profile for rapid scale down and cost savings.
-* Consider Spot nodes for workloads that can handle interruptions.
 
 Learn more at [Cost recommendations](https://learn.microsoft.com/azure/advisor/advisor-reference-cost-recommendations#azure-kubernetes-service).
 
@@ -63,19 +62,11 @@ The cluster autoscaler profile is a set of parameters that control the behavior 
 Learn more at: [Use the cluster autoscaler in Azure Kubernetes Service (AKS)](https://learn.microsoft.com/azure/aks/cluster-autoscaler?tabs=azure-cli#configure-cluster-autoscaler-profile-for-aggressive-scale-down).
 
 
-### Consider Spot nodes for workloads that can handle interruptions.
-
-Spot instances in Azure offer significant cost savings by utilizing unused Azure capacity at deeply discounted rates—up to 90% less than standard pay as you go pricing. These instances are ideal for fault-tolerant workloads like batch processing, development, and testing environments. While spot instances can be evicted when Azure needs the capacity back, their cost-effectiveness makes them a great option for workloads that can handle interruptions. Using Spot on AKS enables you to optimize your cloud expenses and achieve substantial savings.
-
-Learn more at: [Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster](https://learn.microsoft.com/en-us/azure/aks/spot-node-pool)
-
 
 ## View the Advisor dashboard
 
 You can view recommendations on the Advisor dashboard in Azure portal. See [Azure Advisor portal basics](https://learn.microsoft.com/azure/advisor/advisor-get-started). 
 
-<!-- TODO: If you only want to look at the recommendations in the cluster context you can do so by navigating to the _Advisor recommendation_ tab in the left-side navigation.  -->
-<!-- TODO: add a screenshot of the advisors entry point from cluster page. -->
 
 
 ## Next steps
