@@ -110,6 +110,8 @@
       href: upgrade.md
     - name: Availability zones
       href: availability-zones-overview.md
+    - name: Reliability in AKS
+      href: /azure/reliability/reliability-aks
     - name: AKS Communication Manager (Preview)
       href: aks-communication-manager.md
     - name: Resource reservations
@@ -124,6 +126,8 @@
           href: control-plane-metrics-monitor.md
         - name: Container Network Observability
           href: container-network-observability-concepts.md
+        - name: Monitor your AI inference service with the AI toolchain operator
+          href: ai-toolchain-operator-monitoring.md
     - name: Security
       items:
         - name: Security concepts
@@ -687,6 +691,8 @@
                       href: csi-secrets-store-identity-access.md
                     - name: 3 - Apply extra configurations or perform troubleshooting
                       href: csi-secrets-store-configuration-options.md
+        - name: Security Bulletins
+          href: security-bulletins/overview.md
     - name: Configure networking
       items:
         - name: CNI
@@ -1096,6 +1102,8 @@
               href: ai-toolchain-operator.md
             - name: Fine-tune an AI model for inferencing
               href: ai-toolchain-operator-fine-tune.md
+            - name: Monitor your inference service with the AI toolchain operator
+              href: ai-toolchain-operator-monitoring.md
             - name: Onboard custom models for inference
               href: kaito-custom-inference-model.md
         - name: Deploy data and ML pipelines with Flyte

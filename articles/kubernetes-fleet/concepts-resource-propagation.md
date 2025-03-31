@@ -1,12 +1,10 @@
 ---
 title: "Kubernetes resource placement from hub cluster to member clusters"
 description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
-ms.date: 03/04/2024
+ms.date: 03/20/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - build-2024
 ms.topic: conceptual
 ---
 
@@ -120,8 +118,8 @@ The `PickN` placement type is the most flexible option and allows for placement 
 
 When creating this type of placement the following cluster affinity types can be specified:
 
-- **requiredDuringSchedulingIgnoredDuringExecution**: as this policy is required during scheduling, it **filters** the clusters based on the specified criteria.
-- **preferredDuringSchedulingIgnoredDuringExecution**: as this policy is preferred, but not required during scheduling, it **ranks** clusters based on specified criteria.
+* **requiredDuringSchedulingIgnoredDuringExecution**: as this policy is required during scheduling, it **filters** the clusters based on the specified criteria.
+* **preferredDuringSchedulingIgnoredDuringExecution**: as this policy is preferred, but not required during scheduling, it **ranks** clusters based on specified criteria.
 
 You can set both required and preferred affinities. Required affinities prevent placement to clusters that don't match, and preferred affinities provide ordering of valid clusters.
 
@@ -339,6 +337,13 @@ In this case, the sorter computes the following weights:
 | `cluster-b` | 0.2 | 1 - ((0.2 - 0.1) / (1 - 0.1)) | 88.89% |
 | `cluster-c` | 0.1 | 1 - (0.1 - 0.1) / (1 - 0.1) | 100% |
 
+## Resource snapshots
+
+Fleet Manager keeps a history of the 10 most recently used placement scheduling policies, along with resource versions the placement has selected.
+
+These snapshots can be used with [staged rollout strategies][fleet-staged-rollout] to control the version deployed.
+
+For more information, see the [documentation on snapshots][fleet-snapshots].
 
 ## Using Tolerations
 
@@ -351,7 +356,7 @@ In this case, the sorter computes the following weights:
 
 Each toleration is used to tolerate one or more specific taint applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once created.
 
-For more information, see the [open-source Fleet documentation on tolerations][fleet-tolerations].
+For more information, see the [documentation on tolerations][fleet-tolerations].
 
 ## Configuring rollout strategy
 
@@ -377,8 +382,7 @@ spec:
       unavailablePeriodSeconds: 60
 ```
 
-For more information, see the [open-source Fleet documentation on rollout strategy][fleet-rollout].
-
+For more information, see the [documentation on rollout strategies][fleet-rollout].
 
 ## Determine placement status
 
@@ -391,11 +395,11 @@ The following example shows a `ClusterResourcePlacement` that deployed the `test
 
  You can view this information using the `kubectl describe crp <name>` command.
 
-```azurecli-interactive
+```bash
 kubectl describe crp crp-1
 ```
 
-```
+```output
 Name:         crp-1
 Namespace:
 Labels:       <none>
@@ -505,12 +509,16 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 
 ## Next steps
 
-* [Set up Kubernetes resource propagation from hub cluster to member clusters](./quickstart-resource-propagation.md).
-* [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md)
+* [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
+* [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
+* [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
+* [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
 
 <!-- LINKS - external -->
 [fleet-github]: https://github.com/Azure/fleet
 [envelope-object]: https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md#envelope-object
 [crp-topo]: https://github.com/Azure/fleet/blob/main/docs/howtos/topology-spread-constraints.md
-[fleet-rollout]: https://github.com/Azure/fleet/blob/main/docs/howtos/crp.md#rollout-strategy
-[fleet-tolerations]: https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md#tolerations
+[fleet-rollout]: ./concepts-rollout-strategy.md
+[fleet-staged-rollout]: ./concepts-rollout-strategy.md#staged-update-strategy-preview
+[fleet-tolerations]: ./use-taints-tolerations.md
+[fleet-snapshots]: ./concepts-placement-snapshots.md

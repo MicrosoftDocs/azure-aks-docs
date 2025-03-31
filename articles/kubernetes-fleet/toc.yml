@@ -32,6 +32,12 @@
       items:
         - name: Using cluster resource placement for workload propagation
           href: concepts-resource-propagation.md
+        - name: Defining a rollout strategy for cluster resource placement
+          href: concepts-rollout-strategy.md
+        - name: Controlling eviction and disruption of placed resources
+          href: concepts-eviction-disruption.md
+        - name: Placement strategy and resource snapshots
+          href: concepts-placement-snapshots.md
         - name: Scheduler and scheduling framework
           href: concepts-scheduler-scheduling-framework.md
     - name: Layer 4 load balancing across multiple clusters
@@ -46,7 +52,7 @@
           href: howto-migrate-preview-to-ga-fleets.md
     - name: Upgrade Kubernetes and node images across multiple clusters
       items:
-        - name: Define re-usable update strategies
+        - name: Define reusable update strategies
           href: update-create-update-strategy.md
         - name: Update Kubernetes and node images
           href: update-orchestration.md
@@ -58,9 +64,9 @@
       items:
         - name: Access Fleet hub cluster API
           href: access-fleet-hub-cluster-kubernetes-api.md
-        - name: Using cluster resource placement for workload propagation
+        - name: Multi-cluster resource placement using cluster resource placement
           href: quickstart-resource-propagation.md
-        - name: Intelligent resource placement using cluster properties
+        - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
         - name: Using envelope objects for reserved resource types
           href: quickstart-envelope-reserved-resources.md
@@ -77,7 +83,7 @@
   - name: Pricing
     href: https://azure.microsoft.com/pricing/details/kubernetes-fleet-manager/#pricing
   - name: Fleet Manager roadmap
-    href: https://aka.ms/fleet/roadmap
+    href: https://aka.ms/kubernetes-fleet/roadmap
 - name: Reference
   items:
   - name: Azure CLI

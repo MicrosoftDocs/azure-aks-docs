@@ -144,6 +144,8 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
 
 ### Deploying PostgreSQL
 
+### [Azure Disk (Premium SSD/Premium SSD v2)](#tab/azuredisk)
+
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
@@ -156,7 +158,6 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
       inheritedMetadata:
         annotations:
           service.beta.kubernetes.io/azure-dns-label-name: $AKS_PRIMARY_CLUSTER_PG_DNSPREFIX
-          acstor.azure.com/accept-ephemeral-storage: "true"
         labels:
           azure.workload.identity/use: "true"
 
@@ -233,10 +234,114 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
           effective_cache_size: 12GB
           work_mem: 62MB
           maintenance_work_mem: 1GB
-          autovacuum_vacuum_cost_limit: 2400
-          random_page_cost: 1.1
-          effective_io_concurrency: 64
-          maintenance_io_concurrency: 64
+          autovacuum_vacuum_cost_limit: "2400"
+          random_page_cost: "1.1"
+          effective_io_concurrency: "64"
+          maintenance_io_concurrency: "64"
+        pg_hba:
+          - host all all all scram-sha-256
+
+      serviceAccountTemplate:
+        metadata:
+          annotations:
+            azure.workload.identity/client-id: "$AKS_UAMI_WORKLOAD_CLIENTID"
+          labels:
+            azure.workload.identity/use: "true"
+
+      backup:
+        barmanObjectStore:
+          destinationPath: "https://${PG_PRIMARY_STORAGE_ACCOUNT_NAME}.blob.core.windows.net/backups"
+          azureCredentials:
+            inheritFromAzureAD: true
+        retentionPolicy: '7d'
+    EOF
+    ```
+  
+### [Azure Container Storage (local NVMe)](#tab/acstor)
+
+1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
+
+    ```bash
+    cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME -n $PG_NAMESPACE -v 9 -f -
+    apiVersion: postgresql.cnpg.io/v1
+    kind: Cluster
+    metadata:
+      name: $PG_PRIMARY_CLUSTER_NAME
+    spec:
+      inheritedMetadata:
+        annotations:
+          service.beta.kubernetes.io/azure-dns-label-name: $AKS_PRIMARY_CLUSTER_PG_DNSPREFIX
+          acstor.azure.com/accept-ephemeral-storage: "true"
+        labels:
+          azure.workload.identity/use: "true"
+
+      instances: 3
+      startDelay: 30
+      stopDelay: 30
+      minSyncReplicas: 1
+      maxSyncReplicas: 1
+      replicationSlots:
+        highAvailability:
+          enabled: true
+        updateInterval: 30
+
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            cnpg.io/cluster: $PG_PRIMARY_CLUSTER_NAME
+            
+      affinity:
+        nodeSelector:
+          workload: postgres
+
+      resources:
+        requests:
+          memory: '8Gi'
+          cpu: 2
+        limits:
+          memory: '8Gi'
+          cpu: 2
+
+      bootstrap:
+        initdb:
+          database: appdb
+          owner: app
+          secret:
+            name: db-user-pass
+          dataChecksums: true
+
+      storage:
+        size: 32Gi
+        pvcTemplate:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 32Gi
+          storageClassName: $POSTGRES_STORAGE_CLASS
+
+      monitoring:
+        enablePodMonitor: true
+
+      postgresql:
+        parameters:
+          wal_compression: lz4
+          max_wal_size: 6GB
+          checkpoint_timeout: 15min
+          checkpoint_flush_after: 2MB
+          wal_writer_flush_after: 2MB
+          min_wal_size: 4GB
+          shared_buffers: 4GB
+          effective_cache_size: 12GB
+          work_mem: 62MB
+          maintenance_work_mem: 1GB
+          autovacuum_vacuum_cost_limit: "2400"
+          random_page_cost: "1.1"
+          effective_io_concurrency: "64"
+          maintenance_io_concurrency: "64"
         pg_hba:
           - host all all all scram-sha-256
 
@@ -256,7 +361,9 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
     EOF
     ```
 
-1. Validate that the primary PostgreSQL cluster was successfully created using the [`kubectl get`][kubectl-get] command. The CNPG Cluster CRD specified three instances, which can be validated by viewing running pods once each instance is brought up and joined for replication. Be patient as it can take some time for all three instances to come online and join the cluster.
+---
+
+2. Validate that the primary PostgreSQL cluster was successfully created using the [`kubectl get`][kubectl-get] command. The CNPG Cluster CRD specified three instances, which can be validated by viewing running pods once each instance is brought up and joined for replication. Be patient as it can take some time for all three instances to come online and join the cluster.
 
     ```bash
     kubectl get pods --context $AKS_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE -l cnpg.io/cluster=$PG_PRIMARY_CLUSTER_NAME
@@ -276,7 +383,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
 >  
 > ```bash  
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
-> ```  
+> ```
 
 ### Validate the Prometheus PodMonitor is running
 
