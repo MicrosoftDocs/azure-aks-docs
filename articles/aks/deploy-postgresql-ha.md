@@ -144,7 +144,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
 
 ### Deploying PostgreSQL
 
-### [AzureDisk](#tab/azuredisk)
+### [Azure Disk (Premium SSD/Premium SSD v2)](#tab/azuredisk)
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
@@ -257,7 +257,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
     EOF
     ```
   
-### [Azure Container Storage(Local NVMe)](#tab/acstor)
+### [Azure Container Storage (local NVMe)](#tab/acstor)
 
 1. Deploy the PostgreSQL cluster with the Cluster CRD using the [`kubectl apply`][kubectl-apply] command.
 
