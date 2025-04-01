@@ -126,7 +126,7 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 ## Create a cluster with Windows enabled and a Windows Virtual Machine node pool
 
-Virtual Machine node pools are available in Windows enabled clusters. The following example creates a cluster named *myAKSCluster* with a Virtual Machines. This will create a linux system pool at first.
+Virtual Machine node pools are available in Windows enabled clusters. The following example creates a cluster named *myAKSCluster* with a Virtual Machines node pool. These steps create a Linux system pool at first.
 1. Create a username to use as administrator credentials for the Windows Server nodes on your cluster. The following commands prompt you for a username and set it to *WINDOWS_USERNAME* for use in a later command.
 
     ```azurecli
