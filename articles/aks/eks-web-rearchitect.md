@@ -106,7 +106,7 @@ The following table outlines advantages and disadvantages of the Application Gat
 
 | Advantages | Disadvantages |
 |---------------|-----------------|
-| • **Native integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway, which allows for seamless and efficient routing of traffic to services running on AKS. <br> • **Simplified deployments**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods. It enables a quick and easy setup of an Application Gateway and an AKS cluster with AGIC enabled. <br> • **Fully managed service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an extra layer of support. | • **Single cloud approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach. It might not be the best choice if you require a multi cloud architecture where deployment across different cloud platforms is a requirement. In this case, you might want to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.|
+| • **Native integration**: AGIC provides native integration with Azure services, specifically Azure Application Gateway, which allows for seamless and efficient routing of traffic to services running on AKS. <br> • **Simplified deployments**: Deploying AGIC as an AKS add-on is straightforward and simpler compared to other methods. It enables a quick and easy setup of an Application Gateway and an AKS cluster with AGIC enabled. <br> • **Fully managed service**: AGIC as an add-on is a fully managed service, providing benefits such as automatic updates and increased support from Microsoft. It ensures the Ingress Controller remains up-to-date and adds an extra layer of support. | • **Single cloud approach**: AGIC is primarily adopted by customers who adopt a single-cloud approach. It might not be the best choice if you require a multicloud architecture where deployment across different cloud platforms is a requirement. In this case, you might want to use a cloud-agnostic ingress controller such as NGINX, Traefik, or HAProxy to avoid vendo-lockin issues.|
 
 For more information, see the following resources:
 
@@ -171,7 +171,7 @@ The following solution uses the [NGINX ingress controller][nginx] to expose the 
 
 You can use [ModSecurity][mod-security] with the NGINX ingress controller to provide an extra layer of security to web applications exposed via Kubernetes. The NGINX ingress controller acts as a reverse proxy, forwarding traffic to the web application, while ModSecurity inspects the incoming requests and blocks any malicious or suspicious traffic based on the defined rules.
 
-Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform. This solution enables you to switch between cloud providers or have a multi cloud setup while maintaining consistent security measures.
+Using ModSecurity with NGINX Ingress controllers in Kubernetes provides a cloud-agnostic solution that you can deploy to any managed Kubernetes cluster on any cloud platform. This solution enables you to switch between cloud providers or have a multicloud setup while maintaining consistent security measures.
 
 
 ## Next step
