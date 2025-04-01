@@ -139,7 +139,7 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
     echo "Please enter the password to use as administrator credentials for Windows Server nodes on your cluster: " && read WINDOWS_PASSWORD
     ```
 
-3. Create an AKS cluster with Windows enabled, and Virtual Machines type node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
+3. Create an AKS cluster with Windows enabled and Virtual Machines type node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
 
     ```azurecli-interactive
     az aks create \ 
@@ -150,7 +150,7 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
        --generate-ssh-keys \
        --windows-admin-username $WINDOWS_USERNAME \
        --windows-admin-password $WINDOWS_PASSWORD \
-       --vm-set-type VirtualMachines \
+       --vm-set-type "VirtualMachines" \
        --network-plugin azure
     ```
 
