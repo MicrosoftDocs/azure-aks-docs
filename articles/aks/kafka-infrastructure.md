@@ -50,12 +50,18 @@ Before running any CLI commands, set the environment variables that will be used
     export VNET_NAME="vnet-aks-kafka"  
     export SUBNET_NAME="node-subnet"  
     export AKS_CLUSTER_NAME="aks-kafka-cluster"  
+    export AKS_TIER=standard
     export NAT_GATEWAY_NAME="nat-kafka"  
     export ADDRESS_SPACE="10.31.0.0/20"  
     export SUBNET_PREFIX="10.31.0.0/21"  
-    export KAFKA_NODE_VM_SIZE="Standard_D8ds_v5"  
-    export KAFKA_NODE_COUNT=3  
-    export LOG_ANALYTICS_WORKSPACE_NAME="myLogAnalyticsWorkspace"  
+    export SYSTEM_NODE_COUNT_MIN=3
+    export SYSTEM_NODE_COUNT_MAX=6
+    export SYSTEM_NODE_VM_SIZE="Standard_D4ds_v5"   
+    export KAFKA_NODE_COUNT_MIN=1  
+    export KAFKA_NODE_COUNT_MAX=3 
+    export KAFKA_NODE_COUNT=1
+    export KAFKA_NODE_VM_SIZE="Standard_D16ds_v5"  
+    export LOG_ANALYTICS_WORKSPACE_NAME="law-monitoring"  
     export DIAGNOSTIC_SETTINGS_NAME="aks-diagnostic-settings"  
     export ACR_NAME="myACR"  
     export ACR_SKU="Premium"  
@@ -145,6 +151,7 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --sku $ACR_SKU \
     --location $LOCATION \
     --admin-enabled false
+    --zone-redundancy Enabled
     ```
 
 * Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command. 
@@ -171,12 +178,14 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --resource-group $RESOURCE_GROUP_NAME \
     --name $GRAFANA_NAME \
     --location $LOCATION \
-    --api-key-enabled true \
-    --deterministic-outbound-ip-enabled true \
-    --public-network-access "Enabled" \
-    --grafana-major-version 10 \
-    --identity-type "SystemAssigned"
+    --api-key Enabled \
+    --deterministic-outbound-ip Enabled \
+    --public-network-access Enabled \
+    --grafana-major-version 10 
     ```
+    >[!NOTE]
+    > Azure Managed Grafana has zone redundancy available in [select regions](/azure/managed-grafana/high-availability#supported-regions). If your target region has zone redundancy, use the `--zone-redundancy Enabled` argument. 
+
 
 * Assign RBAC permissions to the managed identity of the Grafana instance using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
     
@@ -193,71 +202,70 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
 * First, assign the network contributor role to the user-assigned managed identity for AKS using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
 
     ```azurecli-interactive  
-    # Assign Network Contributor role to User Assigned Identity on Resource Group
-    az role assignment create --assignee $(az identity show --resource-group $RESOURCE_GROUP_NAME --name $USER_ASSIGNED_IDENTITY_NAME --query principalId -o tsv) --role "Network Contributor" --scope $(az group show --name $RESOURCE_GROUP_NAME --query id -o tsv)
+    az role assignment create \
+    --assignee $(az identity show --resource-group $RESOURCE_GROUP_NAME --name $USER_ASSIGNED_IDENTITY_NAME --query principalId -o tsv) \
+    --role "Network Contributor" \
+    --scope $(az group show --name $RESOURCE_GROUP_NAME --query id -o tsv)
     ```
 
 * Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
 
     ```azurecli-interactive
     az aks create \
-    --name $AKS_CLUSTER_NAME
+    --name $AKS_CLUSTER_NAME \
     --aad-admin-group-object-ids $AAD_ADMIN_GROUP_OBJECT_IDS \
-    --aad-tenant-id $(az identity show --resource-group $RESOURCE_GROUP_NAME --name $USER_ASSIGNED_IDENTITY_NAME --query id -o tsv) \
-    --assign-identity $USER_ASSIGNED_IDENTITY_ID \
+    --aad-tenant-id $AAD_TENANT_ID \
+    --assign-identity $(az identity show --resource-group $RESOURCE_GROUP_NAME --name $USER_ASSIGNED_IDENTITY_NAME --query id -o tsv) \
     --attach-acr $(az acr show --resource-group $RESOURCE_GROUP_NAME --name $ACR_NAME --query id -o tsv) \
     --auto-upgrade-channel patch \
-    --azure-monitor-workspace-resource-id $(az monitor account show --resource-group $RESOURCE_GROUP_NAME --name $PROMETHEUS_WORKSPACE_NAME --query id -o tsv) \
     --enable-aad \
     --enable-addons monitoring \
-    --enable-azure-container-storage azureDisk \
     --enable-azure-monitor-metrics \
-    --enable-azure-policy \
     --enable-cluster-autoscaler \
     --enable-managed-identity \
     --enable-oidc-issuer \
-    --enable-private-cluster false \
     --enable-workload-identity \
-    --grafana-resource-id $GRAFANA_ID \
     --kubernetes-version $KUBERNETES_VERSION \
     --load-balancer-sku standard \
     --location $LOCATION \
-    --max-count 5 \
+    --max-count $SYSTEM_NODE_COUNT_MAX \
     --max-pods 110 \
-    --min-count 3 \
+    --min-count $SYSTEM_NODE_COUNT_MIN \
     --network-dataplane cilium \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --network-policy cilium \
-    --node-count $NODE_COUNT \
     --node-osdisk-type Ephemeral \
     --node-os-upgrade-channel NodeImage \
-    --node-vm-size $NODE_VM_SIZE \
+    --node-vm-size $SYSTEM_NODE_VM_SIZE \
     --nodepool-labels "role=system" \
     --nodepool-name systempool \
     --nodepool-tags "env=production" \
-    --nodepool-zones "1" "2" "3" \
+    --os-sku AzureLinux \
     --outbound-type userAssignedNATGateway \
     --pod-cidr 10.244.0.0/16 \
     --resource-group $RESOURCE_GROUP_NAME \
     --tags "env=production" \
+    --tier $AKS_TIER
     --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
-    --workspace-resource-id $(az monitor log-analytics workspace show --resource-group $RESOURCE_GROUP_NAME --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME --query id -o tsv) 
+    --workspace-resource-id $(az monitor log-analytics workspace show --resource-group $RESOURCE_GROUP_NAME --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME --query id -o tsv) \
+    --zones 1 2 3 
     ```
 
-* Create an additional node pool per zone using a for loop and the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. 
+* Create an additional node pool per availability zone using a for loop and the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. 
 
     ```azurecli-interactive
     for zone in 1 2 3; do
       az aks nodepool add \
       --cluster-name $AKS_CLUSTER_NAME \
       --enable-cluster-autoscaler \
-      --labels "app=kafka,acstor.azure.com/io-engine=acstor" \
-      --max-count 5 \
-      --min-count 1 \
-      --mode User \
-      --name "kafka-$zone" \
+      --labels app=kafka acstor.azure.com/io-engine=acstor \
+      --max-count $KAFKA_NODE_COUNT_MAX \
+      --max-surge 10% \
+      --min-count $KAFKA_NODE_COUNT_MIN \
       --node-count $KAFKA_NODE_COUNT \
+      --mode User \
+      --name "kafka$zone" \
       --node-osdisk-type Ephemeral \
       --node-vm-size $KAFKA_NODE_VM_SIZE \
       --os-sku AzureLinux \
@@ -265,6 +273,26 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
       --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
       --zones $zone
     done
+    ```
+
+* Enable [Azure Container Storage](/azure/storage/container-storage/container-storage-aks-quickstart) with azureDisk on the AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
+  
+    ```azurecli-interactive
+    az aks update \
+    --name $AKS_CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --enable-azure-container-storage azureDisk
+    ```
+
+* Enable Azure Managed Prometheus and Grafana integration using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
+
+    ```azurecli-interactive
+    az aks update \
+    --name $AKS_CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --enable-azure-monitor-metrics \
+    --azure-monitor-workspace-resource-id $(az monitor account show --resource-group $RESOURCE_GROUP_NAME --name $PROMETHEUS_WORKSPACE_NAME --query id -o tsv) \
+    --grafana-resource-id $(az grafana show --resource-group $RESOURCE_GROUP_NAME --name $GRAFANA_NAME --query id -o tsv)
     ```
 
 * (Optional) Configure diagnostic setting for the AKS cluster using the [`az monitor diagnostic-settings create`](/cli/azure/monitor/diagnostic-settings#az-monitor-diagnostic-settings-create) command.
@@ -632,7 +660,16 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
 
 ## Create Azure Container Storage storage pool
 
-* After deploying the cluster and validating connectivity, apply the multi-zone storage configuration using the `kubectl apply` command.  
+* Verify that Azure Container Storage is running on you AKS cluster using the `kubectl get` command.
+
+    ```bash
+    kubectl get deploy,ds -n acstor
+    ```
+
+Currently, you can't configure Azure Container Storage with a toleration to handle nodes with taints. Adding taints to nodes will block the deployment of Azure Container Storage.
+
+
+* After deploying the cluster and validating that Azure Container Storage is running, apply the multi-zone `StoragePool` configuration using the `kubectl apply` command.  
 
     ```bash  
     kubectl apply -f - <<EOF  
@@ -655,11 +692,8 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     EOF  
     ```  
 
-
 > [!IMPORTANT]  
 > The storage configuration above represents a starting point. For production deployments, adjust the `iopsReadWrite`, `mbpsReadWrite`, and `storage` values based on your expected Kafka cluster size and workload as discussed in the [Azure Container Storage section](./kafka-overview.md#azure-container-storage).  
->  
-> Currently, you can't configure Azure Container Storage with a toleration to handle nodes with taints. Adding taints to nodes will block the deployment of Azure Container Storage. 
 
 ## Next step  
 

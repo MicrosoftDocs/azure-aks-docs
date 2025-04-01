@@ -61,9 +61,9 @@ This architecture ensures the Strimzi Cluster Operator remains highly available 
 1. Install the Strimzi Cluster Operator using the `helm install` command.  
 
     ```bash  
-    helm install strimzi-cluster-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator \  
-        --namespace strimzi-operator \  
-        --values values.yaml  
+    helm install strimzi-cluster-operator oci://quay.io/strimzi-helm/strimzi-kafka-operator \
+    --namespace strimzi-operator \
+    --values values.yaml
     ```  
 
 1. Verify that the Strimzi Cluster Operator successfully deployed and that all pods are a running state using the `kubectl get` command.  
@@ -120,9 +120,9 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
 1. Install the Strimzi Drain Cleaner using the `helm install` command.  
 
     ```bash  
-    helm install strimzi-drain-cleaner oci://quay.io/strimzi-helm/strimzi-drain-cleaner \  
-        --namespace strimzi-drain-cleaner \  
-        --values values.yaml  
+    helm install strimzi-drain-cleaner oci://quay.io/strimzi-helm/strimzi-drain-cleaner \
+    --namespace strimzi-drain-cleaner \
+    --values values.yaml
     ```  
 
 1. Verify the Strimzi Drain Cleaner successfully deployed and that all pods are a running state using the `kubectl get` command.  
@@ -218,9 +218,9 @@ In this section, we create two Kafka node pools: one for brokers and one for con
         - controller
       resources:
         requests:
-          memory: 3Gi
-        limits:
           memory: 4Gi
+        limits:
+          memory: 6Gi
       template:
         pod:
           metadata:
@@ -560,7 +560,7 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
     * **Entity Operator**: Deploys the Topic and User Operators that manage Kafka topics and users declaratively through Kubernetes resources.  
     * **JMX metrics**: Configures metrics exposure using the previously defined ConfigMaps.  
 
-  ```bash
+    ```bash
     kubectl apply -n kafka -f - <<EOF
     ---
     apiVersion: kafka.strimzi.io/v1beta2
@@ -580,9 +580,9 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
           podDisruptionBudget:
             maxUnavailable: 2
         listeners:
-          - name: extilbpe
-            port: 9094
-            type: loadbalancer
+          - name: internal
+            port: 9092
+            type: internal
             tls: true
         config:
           offsets.topic.replication.factor: 3
@@ -590,9 +590,9 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
           transaction.state.log.min.isr: 2
           default.replication.factor: 3
           min.insync.replicas: 2
-          log.segment.bytes: 1073741824  # 1GB
-          log.retention.hours: 168  # 7 days
-          log.retention.check.interval.ms: 300000 # 5 minutes       
+          log.segment.bytes: 1073741824  
+          log.retention.hours: 168  
+          log.retention.check.interval.ms: 300000 
         metricsConfig:
           type: jmxPrometheusExporter
           valueFrom:
@@ -610,26 +610,26 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
         topicOperator: {}
         userOperator: {}
     EOF
-  ```
+    ```
 
 1. Once deployed, verify your Kafka deployment by checking that all KafkaNodePools, Kafka cluster resources, and their corresponding pods are created and in a running state using the `kubectl get` command.  
 
     ```bash
-    kubectl get pods, kafkanodepool, kafka -n kafka
+    kubectl get pods,kafkanodepool,kafka -n kafka
     ```
 
     Your output should look similar to the following example output:  
 
     ```output
     NAME                                                     READY   STATUS    RESTARTS   AGE
-    pod/kafka-aks-cluster-broker-0                           1/1     Running   0          7d22h
-    pod/kafka-aks-cluster-broker-1                           1/1     Running   0          7d22h
-    pod/kafka-aks-cluster-broker-2                           1/1     Running   0          7d22h
-    pod/kafka-aks-cluster-controller-3                       1/1     Running   0          7d22h
-    pod/kafka-aks-cluster-controller-4                       1/1     Running   0          7d22h
-    pod/kafka-aks-cluster-controller-5                       1/1     Running   0          7d22h
-    pod/kafka-aks-cluster-cruise-control-844b69848-87rf6     1/1     Running   0          7d22h
-    pod/kafka-aks-cluster-entity-operator-6f949f6774-t8wql   2/2     Running   0          7d22h
+    pod/kafka-aks-cluster-broker-0                           1/1     Running   0          1d22h
+    pod/kafka-aks-cluster-broker-1                           1/1     Running   0          1d22h
+    pod/kafka-aks-cluster-broker-2                           1/1     Running   0          1d22h
+    pod/kafka-aks-cluster-controller-3                       1/1     Running   0          1d22h
+    pod/kafka-aks-cluster-controller-4                       1/1     Running   0          1d22h
+    pod/kafka-aks-cluster-controller-5                       1/1     Running   0          1d22h
+    pod/kafka-aks-cluster-cruise-control-844b69848-87rf6     1/1     Running   0          1d22h
+    pod/kafka-aks-cluster-entity-operator-6f949f6774-t8wql   2/2     Running   0          1d22h
 
     NAME                                        DESIRED REPLICAS   ROLES            NODEIDS
     kafkanodepool.kafka.strimzi.io/broker       3                  ["broker"]       [0,1,2]

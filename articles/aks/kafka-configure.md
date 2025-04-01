@@ -195,10 +195,10 @@ A Helm chart is available to deploy the Kafka Exporter alongside your existing m
 1. Install the Strimzi Cluster Operator using the `helm install` command.  
 
     ```bash  
-    helm install azmon-kafka-exporter prometheus-community/prometheus-kafka-exporter \  
-         --version 2.11.0 \  
-         --namespace azmon-kafka-exporter \  
-         --values values.yaml  
+    helm install azmon-kafka-exporter prometheus-community/prometheus-kafka-exporter \
+    --version 2.11.0 \
+    --namespace azmon-kafka-exporter \
+    --values values.yaml
     ```  
 
 1. Upload the [Kafka Exporter Dashboard](https://grafana.com/grafana/dashboards/7589-kafka-exporter-overview/) to Grafana.  
@@ -212,7 +212,7 @@ A Helm chart is available to deploy the Kafka Exporter alongside your existing m
   Prometheus metrics are automatically enabled for Azure Container Storage. However, these metrics are only available when using Azure Managed Prometheus. For detailed information about available metrics and collection methods, see [Collecting Azure Container Storage Prometheus metrics](/azure/storage/container-storage/enable-monitoring#collect-azure-container-storage-prometheus-metrics).  
  
 
-## Ingress for Kafka cluster  
+## Client connectivity to Kafka cluster  
 
 Strimzi offers flexible options for exposing your Kafka cluster to clients through *listeners*. Each listener defines how clients connect to your Kafka brokers with specific protocols, authentication methods, and network exposure patterns.  
 
