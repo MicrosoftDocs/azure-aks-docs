@@ -47,7 +47,7 @@ By default, Windows uses the Generation 1 node image.
 If you'd like to use a Generation 2 node image, create a Windows node pool with a Generation 2 VM using the [`az aks nodepool add`][az-aks-nodepool-add] command. To specify that you want to use Generation 2, add a custom header `--aks-custom-headers UseWindowsGen2VM=true`. Generation 2 VM also requires Windows Server 2022.
 
 ```azurecli-interactive
-az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
+az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --node-vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
 ```
 
 ---
@@ -56,10 +56,10 @@ az aks nodepool add --resource-group <resource-group-name> --cluster-name <clust
 
 ### [Linux node pool](#tab/linux-node-pool)
 
-If you're using a VM size that only supports Generation 1, you can update your node pool to a vm size that supports Generation 2 using the [`az aks nodepool update`][az-aks-nodepool-update] command. This update changes your node image from Generation 1 to Generation 2.
+If you're using a VM size that only supports Generation 1, you can update your node pool to a VM size that supports Generation 2 using the [`az aks nodepool update`][az-aks-nodepool-update] command. This update changes your node image from Generation 1 to Generation 2.
 
 ```azurecli-interactive
-az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --vm-size <supported-generation-2-vm-size> --os-type Linux
+az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --node-vm-size <supported-generation-2-vm-size> --os-type Linux
 ```
 
 ### [Windows node pool](#tab/windows-node-pool)
@@ -67,8 +67,9 @@ az aks nodepool update --resource-group <resource-group-name> --cluster-name <cl
 If you're using a Generation 1 image, you can update your node pool to use Generation 2 by selecting a VM size that supports Generation 2 using the [`az aks nodepool update`][az-aks-nodepool-update] command. To specify that you want to use Generation 2, add a custom header `--aks-custom-headers UseWindowsGen2VM=true`. Generation 2 VM also requires Windows Server 2022. This update changes your node image from Generation 1 to Generation 2.
 
 ```azurecli-interactive
-az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
+az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --node-vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
 ```
+
 ---
 
 ## Check if you're using a Generation 2 node image

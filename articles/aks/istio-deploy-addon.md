@@ -127,7 +127,9 @@ kubectl label namespace default istio.io/rev=asm-X-Y
 ```
 
 > [!IMPORTANT]
-> The default `istio-injection=enabled` labeling doesn't work. Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-18`) is required.
+> Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-18`) is required.
+> 
+> The default `istio-injection=enabled` label will not work and will **cause the sidecar injection to skip the namespace** for the add-on.
 
 For manual injection of sidecar using `istioctl kube-inject`, you need to specify extra parameters for `istioNamespace` (`-i`) and `revision` (`-r`). For example:
 
@@ -218,35 +220,6 @@ reviews-v3-7dbcdcbc56-m8dph       2/2     Running   0          2m41s
 Confirm that all the pods have status of `Running` with two containers in the `READY` column. The second container (`istio-proxy`) added to each pod is the Envoy sidecar injected by Istio, and the other is the application container.
 
 To test this sample application against ingress, check out [next-steps](#next-steps).
-
-## Delete resources
-
-Use `kubectl delete` to delete the sample application:
-
-```bash
-kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-1.18/samples/bookinfo/platform/kube/bookinfo.yaml
-```
-
-If you don't intend to enable Istio ingress on your cluster and want to disable the Istio add-on, run the following command:
-
-```azurecli-interactive
-az aks mesh disable --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
-```
-
-> [!CAUTION]
-> Disabling the service mesh addon will completely remove the Istio control plane from the cluster.
-
-Istio `CustomResourceDefintion`s (CRDs) aren't be deleted by default. To clean them up, use:
-
-```bash
-kubectl delete crd $(kubectl get crd -A | grep "istio.io" | awk '{print $1}')
-```
-
-Use `az group delete` to delete your cluster and the associated resources:
-
-```azurecli-interactive
-az group delete --name ${RESOURCE_GROUP} --yes --no-wait
-```
 
 ## Next steps
 
