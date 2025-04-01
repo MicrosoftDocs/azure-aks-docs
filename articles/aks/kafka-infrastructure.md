@@ -46,7 +46,7 @@ Before running any CLI commands, set the environment variables that will be used
 
     ```bash 
     export RESOURCE_GROUP_NAME="rg-kafka"  
-    export LOCATION="eastus"  
+    export LOCATION="canadacentral"  
     export VNET_NAME="vnet-aks-kafka"  
     export SUBNET_NAME="node-subnet"  
     export AKS_CLUSTER_NAME="aks-kafka-cluster"  
@@ -63,7 +63,7 @@ Before running any CLI commands, set the environment variables that will be used
     export KAFKA_NODE_VM_SIZE="Standard_D16ds_v5"  
     export LOG_ANALYTICS_WORKSPACE_NAME="law-monitoring"  
     export DIAGNOSTIC_SETTINGS_NAME="aks-diagnostic-settings"  
-    export ACR_NAME="myACR"  
+    export ACR_NAME="aksacr123"  
     export ACR_SKU="Premium"  
     export USER_ASSIGNED_IDENTITY_NAME="uami-aks"  
     export KUBERNETES_VERSION="1.30.0"  
@@ -246,7 +246,7 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
     --pod-cidr 10.244.0.0/16 \
     --resource-group $RESOURCE_GROUP_NAME \
     --tags "env=production" \
-    --tier $AKS_TIER
+    --tier $AKS_TIER \
     --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
     --workspace-resource-id $(az monitor log-analytics workspace show --resource-group $RESOURCE_GROUP_NAME --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME --query id -o tsv) \
     --zones 1 2 3 
