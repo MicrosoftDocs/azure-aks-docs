@@ -46,9 +46,9 @@ If you don't want VPA to automatically adjust the values and want additional con
 
 For more information, see [Vertical pod autoscaling in Azure Kubernetes Service (AKS)](./vertical-pod-autoscaler.md#vpa-overview).
 
-### Use Azure Kubernetes Service Cost Analysis
+### Use Azure Kubernetes Service cost analysis
 
-AKS cost analysis add-on provides detailed insights into the cost of resources used by your AKS cluster. View costs broken down by Kubernetes constructs like clusters and namespaces. This features helps you identify cost drivers, track historical trends, identify anomalies and clusters or workloads with optimization opportunities. Having cost monitoring in place is an easy way to get visibility into cluster spend and take action to achieve significant cost savings. 
+AKS cost analysis add-on provides detailed insights into the cost of resources used by your AKS cluster. View costs broken down by Kubernetes constructs like clusters and namespaces. This feature helps you identify cost drivers, track historical trends, identify anomalies and clusters or workloads with optimization opportunities. Having cost monitoring in place is an easy way to get visibility into cluster spend and take action to achieve significant cost savings. 
 
 > [!NOTE]
 > This recommendation is only available for public cloud clusters running in Enterprise or MCA type subscriptions.
