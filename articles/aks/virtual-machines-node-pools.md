@@ -154,9 +154,7 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
        --network-plugin azure
     ```
 
-4. Add a Virtual Machines node pool to an existing Windows enabled cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
-
-    The following example adds a Virtual Machines node pool named *npwin* to the *myAKSCluster* cluster
+4. Add a Virtual Machines node pool to an existing Windows enabled cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`. The following example adds a Virtual Machines node pool named *npwin* to the *myAKSCluster* cluster:
   
     ```azurecli-interactive
    az aks nodepool add
@@ -168,8 +166,6 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
        --node-count 1
        --vm-set-type "VirtualMachines"
     ```
-    
-    
 ## Add a Virtual Machines node pool to an existing cluster
 
 - Add a Virtual Machines node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
