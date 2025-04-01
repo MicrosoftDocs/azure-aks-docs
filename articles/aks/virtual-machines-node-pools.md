@@ -50,7 +50,6 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 - [Cluster autoscaler][cluster autoscaler] is currently not supported.
 - [InifiniBand][InifiniBand] isn't available.
-- Windows node pools aren't supported.
 - This feature isn't available in Azure portal. [Azure CLI][azure cli] or REST APIs must be used to perform CRUD operations or manage the pool.
 - [Node pool snapshot][node pool snapshot] isn't supported.
 - All VM sizes selected in a node pool need to be from a similar virtual machine family. For example, you can't mix an N-Series virtual machine type with a D-Series virtual machine type in the same node pool.
@@ -125,6 +124,48 @@ The following table highlights how Virtual Machines node pools compare with stan
         --kubernetes-version 1.28.5
     ```
 
+## Create a cluster with Windows enabled and a Windows Virtual Machine node pool
+
+Virtual Machine node pools are available in Windows enabled clusters. The following example creates a cluster named *myAKSCluster* with a Virtual Machines node pool. These steps create a Linux system pool at first.
+1. Create a username to use as administrator credentials for the Windows Server nodes on your cluster. The following commands prompt you for a username and sets it to *WINDOWS_USERNAME* for use in a later command.
+
+    ```bash
+    echo "Please enter the username to use as administrator credentials for Windows Server nodes on your cluster: " && read WINDOWS_USERNAME
+    ```
+
+2. Create a password for the administrator username you created in the previous step. The password must be a minimum of 14 characters and meet the [Windows Server password complexity requirements][windows-server-password].
+
+    ```bash
+    echo "Please enter the password to use as administrator credentials for Windows Server nodes on your cluster: " && read WINDOWS_PASSWORD
+    ```
+
+3. Create an AKS cluster with Windows enabled and Virtual Machines type node pools using the [`az aks create`][az aks create] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
+
+    ```azurecli-interactive
+    az aks create \ 
+       --resource-group myResourceGroup \
+       --name myAKSCluster \
+       --node-count 2 \
+       --enable-addons monitoring \
+       --generate-ssh-keys \
+       --windows-admin-username $WINDOWS_USERNAME \
+       --windows-admin-password $WINDOWS_PASSWORD \
+       --vm-set-type "VirtualMachines" \
+       --network-plugin azure
+    ```
+
+4. Add a Virtual Machines node pool to an existing Windows enabled cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`. The following example adds a Virtual Machines node pool named *npwin* to the *myAKSCluster* cluster:
+  
+    ```azurecli-interactive
+   az aks nodepool add
+       --resource-group myResourceGroup \
+       --cluster-name myAKSCluster \
+       --os-type Windows \
+       --name npwin \
+       --vm-sizes "Standard_D2s_V3" \
+       --node-count 1
+       --vm-set-type "VirtualMachines"
+    ```
 ## Add a Virtual Machines node pool to an existing cluster
 
 - Add a Virtual Machines node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
