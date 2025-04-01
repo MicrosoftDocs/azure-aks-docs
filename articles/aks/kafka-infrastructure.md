@@ -40,29 +40,31 @@ The following steps guide you through deploying the AKS cluster and supporting i
 
 ::: zone pivot="azure-cli"  
 
+### Set environment variables
+
 Before running any CLI commands, set the environment variables that will be used throughout this guide with values that meet your requirements.
 
-    ```bash  
-    RESOURCE_GROUP_NAME="myResourceGroup"  
-    LOCATION="eastus"  
-    VNET_NAME="vnet-aks-lab"  
-    SUBNET_NAME="nodecidr"  
-    AKS_CLUSTER_NAME="myAKSCluster"  
-    NAT_GATEWAY_NAME="myNatGateway"  
-    ADDRESS_SPACE="10.31.0.0/16"  
-    SUBNET_PREFIX="10.31.0.0/17"  
-    KAFKA_NODE_VM_SIZE="Standard_D8ds_v5"  
-    KAFKA_NODE_COUNT=3  
-    LOG_ANALYTICS_WORKSPACE_NAME="myLogAnalyticsWorkspace"  
-    DIAGNOSTIC_SETTINGS_NAME="aks-diagnostic-settings"  
-    ACR_NAME="myACR"  
-    ACR_SKU="Premium"  
-    USER_ASSIGNED_IDENTITY_NAME="uami-aks"  
-    KUBERNETES_VERSION="1.30.0"  
-    AAD_ADMIN_GROUP_OBJECT_IDS="<your-admin-group-object-id>"    
-    AAD_TENANT_ID="<your-tenant-id>"  
-    GRAFANA_NAME="grafana-kafka-aks"  
-    PROMETHEUS_WORKSPACE_NAME="prometheus-aks"
+    ```bash 
+    export RESOURCE_GROUP_NAME="rg-kafka"  
+    export LOCATION="eastus"  
+    export VNET_NAME="vnet-aks-kafka"  
+    export SUBNET_NAME="node-subnet"  
+    export AKS_CLUSTER_NAME="aks-kafka-cluster"  
+    export NAT_GATEWAY_NAME="nat-kafka"  
+    export ADDRESS_SPACE="10.31.0.0/20"  
+    export SUBNET_PREFIX="10.31.0.0/21"  
+    export KAFKA_NODE_VM_SIZE="Standard_D8ds_v5"  
+    export KAFKA_NODE_COUNT=3  
+    export LOG_ANALYTICS_WORKSPACE_NAME="myLogAnalyticsWorkspace"  
+    export DIAGNOSTIC_SETTINGS_NAME="aks-diagnostic-settings"  
+    export ACR_NAME="myACR"  
+    export ACR_SKU="Premium"  
+    export USER_ASSIGNED_IDENTITY_NAME="uami-aks"  
+    export KUBERNETES_VERSION="1.30.0"  
+    export AAD_ADMIN_GROUP_OBJECT_IDS="<your-admin-group-object-id>"    
+    export AAD_TENANT_ID="<your-tenant-id>"  
+    export GRAFANA_NAME="grafana-kafka-aks"  
+    export PROMETHEUS_WORKSPACE_NAME="prometheus-aks"
     ```  
  
 ### Pre-cluster deployments 
@@ -78,74 +80,105 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
 * Azure Managed Grafana dashboard with Prometheus integration.  
 * Log analytics workspace.  
 
-    ```azurecli-interactive  
-    #bin/bash
 
+* Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.
+
+    ```azurecli-interactive    
     # Create resource group
     az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
+    ```
 
+* Create a virtual network using the [`az network vnet create`](/cli/azure/network/vnet#az-network-vnet-create) command. 
+
+    ```azurecli-interactive 
     # Create virtual network
     az network vnet create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $VNET_NAME \
     --address-prefix $ADDRESS_SPACE \
     --location $LOCATION
+    ```
 
-    # Create subnet
+* Create a subnet using the [`az network vnet subnet create`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-create) command.
+    
+    ```azurecli-interactive
     az network vnet subnet create \
     --resource-group $RESOURCE_GROUP_NAME \
     --vnet-name $VNET_NAME \
     --name $SUBNET_NAME \
     --address-prefix $SUBNET_PREFIX
+    ```
 
-    # Create public IP for NAT gateway
+* Create a public IP for the NAT Gateway using the [`az network public-ip create`](/cli/azure/network/public-ip#az-network-public-ip-create) command. 
+
+    ```azurecli-interactive
     az network public-ip create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name ${NAT_GATEWAY_NAME}-public-ip \
     --sku Standard \
     --location $LOCATION
+    ```
 
-    # Create NAT gateway
+* Create a NAT Gateway using the [`az network nat gateway create`](/cli/azure/network/nat/gateway#az-network-nat-gateway-create) command. 
+
+    ```azurecli-interactive
     az network nat gateway create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $NAT_GATEWAY_NAME \
     --public-ip-addresses ${NAT_GATEWAY_NAME}-public-ip \
     --location $LOCATION
+    ```
 
-    # Associate NAT gateway with subnet
+* Associate the NAT Gateway to the node subnet using [`az network vnet subnet update`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-update) command.
+
+    ```azurecli-interactive
     az network vnet subnet update \
     --resource-group $RESOURCE_GROUP_NAME \
     --vnet-name $VNET_NAME \
     --name $SUBNET_NAME \
     --nat-gateway $NAT_GATEWAY_NAME
+    ```
 
-    # Create Log Analytics workspace
+* Create a log analytics workspace using the [`az monitor log-analytics workspace create`](/cli/azure/monitor/log-analytics/workspace#az-monitor-log-analytics-workspace-create) command.
+
+    ```azurecli-interactive
     az monitor log-analytics workspace create \
     --resource-group $RESOURCE_GROUP_NAME \
     --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME \
     --location $LOCATION  
+    ```
 
-    # Create Azure Container Registry (ACR)
+* Create an Azure container registry using the [`az acr create`](/cli/azure/acr#az-acr-create) command.
+
+    ```azurecli-interactive
     az acr create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $ACR_NAME \
     --sku $ACR_SKU \
     --location $LOCATION \
     --admin-enabled false
+    ```
 
-    # Create User Assigned Identity
+* Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command. 
+
+    ```azurecli-interactive
     az identity create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $USER_ASSIGNED_IDENTITY_NAME \
     --location $LOCATION
+    ```
+* Create an Azure monitor workspace for Prometheus using the [`az monitor account create`](/cli/azure/monitor/account#az-monitor-account-create) command.
 
-    # Create Azure Monitor Workspace for Prometheus
-    az monitor workspace create \
+    ```azurecli-interactive
+    az monitor account create \
     --resource-group $RESOURCE_GROUP_NAME \
-    --workspace-name $PROMETHEUS_WORKSPACE_NAME \
+    --name $PROMETHEUS_WORKSPACE_NAME \
     --location $LOCATION
+    ```
 
-    # Create Grafana Dashboard
+* Create an Azure managed Grafana instance using the [`az grafana create`](/cli/azure/grafana#az-grafana-create) command. 
+
+    ```azurecli-interactive
     az grafana create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $GRAFANA_NAME \
@@ -155,8 +188,11 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --public-network-access "Enabled" \
     --grafana-major-version 10 \
     --identity-type "SystemAssigned"
+    ```
 
-    # Assign Monitoring Reader Role to Grafana
+* Assign RBAC permissions to the managed identity of the Grafana instance using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
+    
+    ```azurecli-interactive
     az role assignment create \
     --assignee $(az grafana show --resource-group $RESOURCE_GROUP_NAME --name $GRAFANA_NAME --query identity.principalId -o tsv) \
     --role "Monitoring Reader" --scope $(az group show --name $RESOURCE_GROUP_NAME --query id -o tsv)
@@ -164,15 +200,18 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
 
 ### AKS cluster deployment
 
-* Deploy the AKS cluster with dedicated node pools for Kafka per availability zone and Azure Container Storage enabled using Azure CLI:  
+Deploy the AKS cluster with dedicated node pools for Kafka per availability zone and Azure Container Storage enabled using Azure CLI:  
+
+* First, assign the network contributor role to the user-assigned managed identity for AKS using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
 
     ```azurecli-interactive  
-    #bin/bash
-
     # Assign Network Contributor role to User Assigned Identity on Resource Group
     az role assignment create --assignee $(az identity show --resource-group $RESOURCE_GROUP_NAME --name $USER_ASSIGNED_IDENTITY_NAME --query principalId -o tsv) --role "Network Contributor" --scope $(az group show --name $RESOURCE_GROUP_NAME --query id -o tsv)
-  
-    # Create AKS cluster
+    ```
+
+* Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
+
+    ```azurecli-interactive
     az aks create \
     --name $AKS_CLUSTER_NAME
     --aad-admin-group-object-ids $AAD_ADMIN_GROUP_OBJECT_IDS \
@@ -180,7 +219,7 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --assign-identity $USER_ASSIGNED_IDENTITY_ID \
     --attach-acr $(az acr show --resource-group $RESOURCE_GROUP_NAME --name $ACR_NAME --query id -o tsv) \
     --auto-upgrade-channel patch \
-    --azure-monitor-workspace-resource-id $(az monitor workspace show --resource-group $RESOURCE_GROUP_NAME --workspace-name $PROMETHEUS_WORKSPACE_NAME --query id -o tsv) \
+    --azure-monitor-workspace-resource-id $(az monitor account show --resource-group $RESOURCE_GROUP_NAME --name $PROMETHEUS_WORKSPACE_NAME --query id -o tsv) \
     --enable-aad \
     --enable-addons monitoring \
     --enable-azure-container-storage azureDisk \
@@ -216,8 +255,11 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --tags "env=production" \
     --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
     --workspace-resource-id $(az monitor log-analytics workspace show --resource-group $RESOURCE_GROUP_NAME --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME --query id -o tsv) 
+    ```
 
-    # Create additional node pools per zone
+* Create an additional node pool per zone using a for loop and the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. 
+
+    ```azurecli-interactive
     for zone in 1 2 3; do
       az aks nodepool add \
       --cluster-name $AKS_CLUSTER_NAME \
@@ -235,7 +277,11 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
       --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
       --zones $zone
     done
+    ```
 
+* (Optional) Configure diagnostic setting for the AKS cluster using the [`az monitor diagnostic-settings create`](/cli/azure/monitor/diagnostic-settings#az-monitor-diagnostic-settings-create) command.
+    
+    ```azurecli-interactive
     az monitor diagnostic-settings create \
     --resource $(az aks show --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME --query id -o tsv) \
     --name $DIAGNOSTIC_SETTINGS_NAME \
@@ -272,7 +318,7 @@ After deploying your AKS cluster, use the following steps to validate the deploy
 
 In this section, you deploy an AKS cluster and supporting infrastructure resources using Terraform:  
 
-* An AKS cluster with a node pool per availability zone using the Azure Verified Module (AVM).  
+* A private AKS cluster with a node pool per availability zone using the Azure Verified Module (AVM).  
 * Virtual network and subnet configurations.  
 * NAT gateway for outbound connectivity.  
 * Azure Container Registry with private endpoint.  
@@ -281,6 +327,10 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
 * Azure Managed Grafana dashboard with Prometheus integration.  
 * Dedicated node pools for Kafka workloads with appropriate labels.  
 * Azure Container Storage extension for persistent volumes. 
+
+> [!NOTE]  
+> This Terraform deployment uses the [Azure Verified Module](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) for a production AKS cluster. As a result, the cluster is deployed as a private cluster. Appropriate connectivity must be in place to run the subsequent kubectl commands.  
+
 
 1. Copy the `variables.tf` to your Terraform directory.
 

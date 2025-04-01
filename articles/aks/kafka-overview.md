@@ -83,7 +83,7 @@ The following table provides starting points for Premium SSD v2 disk configurati
 | **Medium**<br>(10-19 brokers) | 2 TB | 10,000 | 500 MB/s |
 | **Large**<br>(20+ brokers) | 4 TB | 20,000 | 1,000 MB/s |
 
-The required IOPS, bandwidth, and disk size varies based on your specific Kafka workload characteristics. These properties can evolve over time as your application's throughput and retention requirements change.  
+The actual required IOPS, bandwidth, and disk size varies based on your specific Kafka workload characteristics. These properties can evolve over time as your application's throughput and retention requirements change.  
 
 ### Node pools
 
