@@ -71,27 +71,15 @@ Before running any CLI commands, set the environment variables that will be used
 
 Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources that support the AKS cluster deployment:  
 
-* A resource group for all resources to be deployed to. 
-* Virtual network and subnet configurations.  
-* Public IP and NAT gateway for outbound connectivity.  
-* Azure Container Registry with private endpoint.  
-* User-assigned managed identity for AKS.  
-* Azure Monitor workspace for Prometheus metrics.  
-* Azure Managed Grafana dashboard with Prometheus integration.  
-* Log analytics workspace.  
-
-
 * Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.
 
     ```azurecli-interactive    
-    # Create resource group
     az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
     ```
 
 * Create a virtual network using the [`az network vnet create`](/cli/azure/network/vnet#az-network-vnet-create) command. 
 
     ```azurecli-interactive 
-    # Create virtual network
     az network vnet create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $VNET_NAME \
