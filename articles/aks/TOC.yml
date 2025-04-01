@@ -894,6 +894,8 @@
                   href: istio-upgrade.md
                 - name: Support policy
                   href: istio-support-policy.md
+                - name: Uninstall
+                  href: istio-uninstall-addon.md
             - name: Traffic Management
               items:
                 - name: Ingress

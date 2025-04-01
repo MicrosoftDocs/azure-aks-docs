@@ -51,7 +51,7 @@ If you enable the add-on without specifying a revision, a default supported revi
 To specify a revision, perform the following steps.
 
 1. Use the [`az aks mesh get-revisions`][az-aks-mesh-get-revisions] command to check which revisions are available for different AKS cluster versions in a region.
-1. Based on the available revisions, you can include the `--revision asm-X-Y` (ex: `--revision asm-1-20`) flag in the enable command you use for mesh installation.
+1. Based on the available revisions, you can include the `--revision asm-X-Y` (ex: `--revision asm-1-24`) flag in the enable command you use for mesh installation.
 
 ### Install mesh during cluster creation
 
@@ -106,8 +106,8 @@ Confirm the `istiod` pod has a status of `Running`. For example:
 
 ```
 NAME                               READY   STATUS    RESTARTS   AGE
-istiod-asm-1-18-74f7f7c46c-xfdtl   1/1     Running   0          2m
-istiod-asm-1-18-74f7f7c46c-4nt2v   1/1     Running   0          2m
+istiod-asm-1-24-74f7f7c46c-xfdtl   1/1     Running   0          2m
+istiod-asm-1-24-74f7f7c46c-4nt2v   1/1     Running   0          2m
 ```
 
 ## Enable sidecar injection
@@ -127,7 +127,7 @@ kubectl label namespace default istio.io/rev=asm-X-Y
 ```
 
 > [!IMPORTANT]
-> Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-18`) is required.
+> Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-24`) is required.
 > 
 > The default `istio-injection=enabled` label will not work and will **cause the sidecar injection to skip the namespace** for the add-on.
 
@@ -162,7 +162,7 @@ The `istio-proxy` container is the Envoy sidecar. Your application is now part o
 Use `kubectl apply` to deploy the sample application on the cluster:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.18/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 > [!NOTE]
 > Clusters using an HTTP proxy for outbound internet access will need to set up a Service Entry. For setup instructions see [HTTP proxy support in Azure Kubernetes Service](./http-proxy.md#istio-add-on-http-proxy-for-external-services)
