@@ -17,7 +17,7 @@ In Azure Kubernetes Service (AKS), while [Azure CNI Overlay][azure-cni-overlay] 
 
 ## Prerequisites
 
-The following prerequisites are required for Azure CNI Node Subnet and kubenet:
+The following prerequisites are required for Azure CNI Node Subnet:
 
 * The virtual network for the AKS cluster must allow outbound internet connectivity.
 * AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range.
@@ -29,9 +29,6 @@ The following prerequisites are required for Azure CNI Node Subnet and kubenet:
 
 * The subnet assigned to the AKS node pool can't be a [delegated subnet](/azure/virtual-network/subnet-delegation-overview).
 - AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, make sure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
-
-> [!NOTE]
-> Kubenet isn't available for Windows Server containers. To use Windows Server node pools, you need to use Azure CNI. 
 
 ## Azure CNI Node Subnet
 
@@ -60,47 +57,6 @@ While it's possible to specify a service address range within the same virtual n
 
 **Kubernetes DNS service IP address**:  The IP address for the cluster's DNS service. This address must be within the *Kubernetes service address range*. Don't use the first IP address in your address range. The first address in your subnet range is used for the *kubernetes.default.svc.cluster.local* address.
 
-## Kubenet
-
-AKS clusters use kubenet and create an Azure virtual network and subnet for you by default. With kubenet, nodes get an IP address from the Azure virtual network subnet. Pods receive an IP address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address. This approach greatly reduces the number of IP addresses you need to reserve in your network space for pods to use.
-
-You can configure the maximum pods deployable to a node at cluster creation time or when creating new node pools. If you don't specify `maxPods` when creating new node pools, you receive a default value of _110_ for kubenet.
-
-## Overview of kubenet networking with your own subnet
-
-In many environments, you have defined virtual networks and subnets with allocated IP address ranges, and you use these resources to support multiple services and applications. To provide network connectivity, AKS clusters can use _kubenet_ (basic networking) or Azure CNI (_advanced networking_).
-
-With _kubenet_, only the nodes receive an IP address in the virtual network subnet. Pods can't communicate directly with each other. Instead, User Defined Routing (UDR) and IP forwarding handle connectivity between pods across nodes. UDRs and IP forwarding configuration is created and maintained by the AKS service by default, but you can bring your own route table for custom route management if you want. You can also deploy pods behind a service that receives an assigned IP address and load balances traffic for the application. The following diagram shows how the AKS nodes receive an IP address in the virtual network subnet, but not the pods:
-
-:::image type="content" source="media/use-kubenet/kubenet-overview.png" alt-text="A diagram showing two nodes with three pods each running in an Overlay network. Pod traffic to endpoints outside the cluster is routed via NAT.":::
-
-Azure supports a maximum of _400_ routes in a UDR, so you can't have an AKS cluster larger than 400 nodes. AKS [virtual nodes][virtual-nodes] and Azure Network Policies aren't supported with _kubenet_. [Calico Network Policies][calico-network-policies] are supported.
-
-### Limitations & considerations for kubenet
-
-- An additional hop is required in the design of kubenet, which adds minor latency to pod communication.
-- Route tables and user-defined routes are required for using kubenet, which adds complexity to operations.
-  - For more information, see [Customize cluster egress with a user-defined routing table in AKS](./egress-udr.md) and [Customize cluster egress with outbound types in AKS](./egress-outboundtype.md).
-- Direct pod addressing isn't supported for kubenet due to kubenet design.
-- Unlike Azure CNI clusters, multiple kubenet clusters can't share a subnet.
-- AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic between the node and pod CIDR. For more details, see [Network security groups][aks-network-nsg].
-- Features **not supported on kubenet** include:
-  - [Azure network policies](use-network-policies.md#create-an-aks-cluster-and-enable-network-policy)
-  - [Windows node pools](./windows-faq.yml)
-  - [Virtual nodes add-on](virtual-nodes.md#network-requirements)
-
-> [!NOTE]
-> Some of the system pods such as **konnectivity** within the cluster use the host node IP address rather than an IP from the overlay address space. The system pods will only use the node IP and not an IP address from the virtual network.
-
-## IP address availability and exhaustion
-
-A common issue with _Azure CNI_ is that the assigned IP address range is too small to then add more nodes when you scale or upgrade a cluster. The network team also might not be able to issue a large enough IP address range to support your expected application demands. As a compromise, you can create an AKS cluster that uses _kubenet_ and connect to an existing virtual network subnet. This approach lets the nodes receive defined IP addresses without the need to reserve a large number of IP addresses up front for any potential pods that could run in the cluster.
-
-With kubenet, you can use a much smaller IP address range and support large clusters and application demands. For example, with a */27* IP address range on your subnet, you can run a 20-25 node cluster with enough room to scale or upgrade. This cluster size can support up to *2,200-2,750* pods (with a default maximum of 110 pods per node). The maximum number of pods per node that you can configure with kubenet in AKS is 250.
-
-The following basic calculations compare the difference in network models:
-
-- **kubenet**: A simple _/24_ IP address range can support up to _251_ nodes in the cluster. Each Azure virtual network subnet reserves the first three IP addresses for management operations. This node count can support up to _27,610_ pods, with a default maximum of 110 pods per node.
 - **Azure CNI**: That same basic _/24_ subnet range can only support a maximum of _8_ nodes in the cluster. This node count can only support up to _240_ pods, with a default maximum of 30 pods per node.
 
 > [!NOTE]
@@ -108,7 +64,7 @@ The following basic calculations compare the difference in network models:
 
 ## Virtual network peering and ExpressRoute connections
 
-You can use [Azure virtual network peering][vnet-peering] or [ExpressRoute connections][express-route] with _Azure CNI_ and _kubenet_ to provide on-premises connectivity. Make sure you plan your IP addresses carefully to prevent overlap and incorrect traffic routing. For example, many on-premises networks use a *10.0.0.0/8* address range that's advertised over the ExpressRoute connection. We recommend creating your AKS clusters in Azure virtual network subnets outside of this address range, such as *172.16.0.0/16*.
+You can use [Azure virtual network peering][vnet-peering] or [ExpressRoute connections][express-route] with _Azure CNI_ to provide on-premises connectivity. Make sure you plan your IP addresses carefully to prevent overlap and incorrect traffic routing. For example, many on-premises networks use a *10.0.0.0/8* address range that's advertised over the ExpressRoute connection. We recommend creating your AKS clusters in Azure virtual network subnets outside of this address range, such as *172.16.0.0/16*.
 
 For more information, see [Compare network models and their support scopes][network-comparisons].
 
@@ -128,8 +84,6 @@ For more information, see [Compare network models and their support scopes][netw
   Yes, Kubernetes network policy is available in AKS. To get started, see [Secure traffic between pods by using network policies in AKS][network-policy].
 
 - **Is the maximum number of pods deployable to a node configurable?**
-
-    By default, AKS clusters use [kubenet][kubenet] and create a virtual network and subnet. With _kubenet_, nodes get an IP address from a virtual network subnet. Network address translation (NAT) is then configured on the nodes, and pods receive an IP address "hidden" behind the node IP. This approach reduces the number of IP addresses that you need to reserve in your network space for pods to use.
 
   With [Azure Container Networking Interface (CNI)][cni-networking], every pod gets an IP address from the subnet and can be accessed directly. Systems in the same virtual network as the AKS cluster see the pod IP as the source address for any traffic from the pod. Systems outside the AKS cluster virtual network see the node IP as the source address for any traffic from the pod. These IP addresses must be unique across your network space and must be planned in advance. Each node has a configuration parameter for the maximum number of pods that it supports. The equivalent number of IP addresses per node are then reserved up front for that node. This approach requires more planning, and often leads to IP address exhaustion or the need to rebuild clusters in a larger subnet as your application demands grow.  
 
@@ -154,7 +108,6 @@ For more information, see [Compare network models and their support scopes][netw
 
 <!-- LINKS - External -->
 [cni-networking]: https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
-[kubenet]: https://kubernetes.io/docs/concepts/cluster-administration/network-plugins/#kubenet
 [Calico-network-policies]: https://docs.projectcalico.org/v3.9/security/calico-network-policy
 [github-azure-container-networking]: https://github.com/Azure/azure-container-networking
 [ip-masq-agent]: https://kubernetes.io/docs/tasks/administer-cluster/ip-masq-agent/
