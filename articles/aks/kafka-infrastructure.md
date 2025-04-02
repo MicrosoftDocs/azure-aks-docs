@@ -447,6 +447,7 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
       name                = var.kubernetes_cluster_name
       resource_group_name = var.resource_group_name
       location = var.location 
+      default_node_pool_vm_sku = "Standard_D8ds_v5"
       network = {
         name                = module.avm_res_network_virtualnetwork.name
         resource_group_name = var.resource_group_name
@@ -470,7 +471,7 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
       node_pools = {
         kafka = {
           name                 = "kafka"
-          vm_size              = "Standard_D8ds_v5"
+          vm_size              = "Standard_D16ds_v5"
           orchestrator_version = "1.30"
           max_count            = 3
           min_count            = 1
