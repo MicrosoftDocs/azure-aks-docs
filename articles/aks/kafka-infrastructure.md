@@ -345,8 +345,9 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
 * Azure Container Storage extension for persistent volumes. 
 
 > [!NOTE]  
-> This Terraform deployment uses the [Azure Verified Module](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) for a production AKS cluster. As a result, the cluster is deployed as a private cluster. Appropriate connectivity must be in place to run the subsequent kubectl commands.  
-
+> This Terraform deployment uses the [Azure Verified Module](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production) for a production AKS cluster. As a result, the cluster is deployed as a private cluster and with opinionated configurations. Appropriate connectivity must be in place to run the subsequent kubectl commands.  
+>
+> To customize the module configuration to meet your needs, fork or clone the repo and update your module source reference.
 
 1. Copy the `variables.tf` to your Terraform directory.
 
@@ -441,7 +442,7 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     data "azurerm_client_config" "current" {}
     
     module "avm-ptn-aks-production" {
-      source  = "Azure/avm-ptn-aks-production/azurerm"
+      source = "github.com/Azure/terraform-azurerm-avm-ptn-aks-production"
       kubernetes_version  = "1.30"
       enable_telemetry    = var.enable_telemetry 
       name                = var.kubernetes_cluster_name
