@@ -23,104 +23,100 @@ The AKS Communication Manager streamlines notifications for all your AKS mainten
 
 ## How to set up communication manager
 
-1. Create an Azure "Logic App" resource. It's used to send auto upgrade event notices to your email.
+1. Go to the resource, then choose Monitoring and select Alerts and then click into Alert Rules. 
 
- :::image type="content" source="./media/auto-upgrade-cluster/logic-apps.jpg" alt-text="The screenshot of the created blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
+2. The Condition for the  alert should be a Custom log search.
 
-2. Open the created Logic App and click "Logic app designer," then click "Add a trigger" button.
 
- :::image type="content" source="./media/auto-upgrade-cluster/logic-app-1.jpeg" alt-text="The screenshot shows how to add a trigger.":::
- 
-3. In the opened "Add a trigger" box, type "http" in the search box, and then select "When an HTTP request is received" trigger.
+     :::image type="content" source="./media/auto-upgrade-cluster/custom-log-search.jpg" alt-text="The screenshot of the custom log search in the alert rule blade.":::
 
-  :::image type="content" source="./media/auto-upgrade-cluster/trigger-1.jpeg" alt-text="The screenshot shows HTTP request is received.":::
+3. In the opened "Search query" box, paste one of the following custom queries and click "Review+Create" button.
 
-4. In the opened "When an HTTP request is received," click "Use sample payload to generate schema".
+Query for cluster auto upgrade notifications:
 
-  :::image type="content" source="./media/auto-upgrade-cluster/trigger-2.jpeg" alt-text="The screenshot shows Sample Payload is used.":::
-
-5. In the opened "Enter or paste a sample JSON payload" box, paste the following JSON data and click "Done" button.
-
- ```[
-  {
-    "id": "11112222-bbbb-3333-cccc-4444dddd5555",
-    "topic": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000",
-    "subject": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/55556666-ffff-7777-aaaa-8888bbbb9999",
-    "data": {
-      "resourceInfo": {
-        "id": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/55556666-ffff-7777-aaaa-8888bbbb9999",
-        "name": "55556666-ffff-7777-aaaa-8888bbbb9999",
-        "type": "Microsoft.ContainerService/managedClusters/scheduledEvents",
-        "location": "westus2",
-        "properties": {
-          "description": "ScheduledEvents",
-          "eventId": "22223333-cccc-4444-dddd-5555eeee6666",
-          "eventSource": "AutoUprader",
-          "eventStatus": "Started",
-          "eventDetails": "Start to upgrade security vhd",
-          "scheduledTime": "2024-04-16T22:17:12.103268606Z",
-          "startTime": "0001-01-01T00:00:00.0000000Z",
-          "lastUpdateTime": "0001-01-01T00:00:00.0000000Z",
-          "resources": [
-            "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp"
-          ],
-          "resourceType": "ManagedCluster"
-        }
-      },
-      "operationalInfo": {
-        "resourceEventTime": "2024-04-16T22:17:12.1032748"
-      },
-      "apiVersion": "2023-11-02-preview"
-    },
-    "eventType": "Microsoft.ResourceNotifications.MaintenanceResources.ScheduledEventEmitted",
-    "dataVersion": "1",
-    "metadataVersion": "1",
-    "eventTime": "2024-04-16T22:17:12.1032748Z",
-    "EventProcessedUtcTime": "2024-04-16T22:36:09.9073134Z",
-    "PartitionId": 0,
-    "EventEnqueuedUtcTime": "2024-04-16T22:17:13.1700000Z"
-  }
- ]
+ ```arg("").containerserviceeventresources
+| where type == "microsoft.containerservice/managedclusters/scheduledevents"
+| where id contains "/subscriptions/subid/resourcegroups/rgname/providers/Microsoft.ContainerService/managedClusters/clustername"
+| where properties has "eventStatus"
+| extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+| extend status = substring(status, 0, indexof(status, ",") - 1)
+| where status != ""
+| where properties has "eventDetails"
+| extend upgradeType = case(
+                           properties has "K8sVersionUpgrade",
+                           "K8sVersionUpgrade",
+                           properties has "NodeOSUpgrade",
+                           "NodeOSUpgrade",
+                           status == "Completed" or status == "Failed",
+                           case(
+    properties has '"type":1',
+    "K8sVersionUpgrade",
+    properties has '"type":2',
+    "NodeOSUpgrade",
+    ""
+),
+                           ""
+                       )
+| where properties has "lastUpdateTime"
+| extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+| extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+| extend eventTime = todatetime(tostring(eventTime))
+| where eventTime >= ago(2h)
+| where upgradeType == "K8sVersionUpgrade"
+| project
+    eventTime,
+    upgradeType,
+    status,
+    properties
+| order by eventTime asc
  ```
-6. Click the "+" button and "Add an action". Then sign into your preferred email account in outlook.com with password.
+Query for Node OS auto upgrade notifications:
 
-   :::image type="content" source="./media/auto-upgrade-cluster/add-action.jpeg" alt-text="The screenshot shows how to add an action.":::
+ ```arg("").containerserviceeventresources
+| where type == "microsoft.containerservice/managedclusters/scheduledevents"
+| where id contains "/subscriptions/subid/resourcegroups/rgname/providers/Microsoft.ContainerService/managedClusters/clustername"
+| where properties has "eventStatus"
+| extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+| extend status = substring(status, 0, indexof(status, ",") - 1)
+| where status != ""
+| where properties has "eventDetails"
+| extend upgradeType = case(
+                           properties has "K8sVersionUpgrade",
+                           "K8sVersionUpgrade",
+                           properties has "NodeOSUpgrade",
+                           "NodeOSUpgrade",
+                           status == "Completed" or status == "Failed",
+                           case(
+    properties has '"type":1',
+    "K8sVersionUpgrade",
+    properties has '"type":2',
+    "NodeOSUpgrade",
+    ""
+),
+                           ""
+                       )
+| where properties has "lastUpdateTime"
+| extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+| extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+| extend eventTime = todatetime(tostring(eventTime))
+| where eventTime >= ago(2h)
+| where upgradeType == "K8sVersionUpgrade"
+| project
+    eventTime,
+    upgradeType,
+    status,
+    properties
+| order by eventTime asc
+ ```
+6. The interval should be 30 minutes, and the threshold should be 1.
 
-7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
+7. Check an action group with the correct email address exists, to receive the notifications.
 
- :::image type="content" source="./media/auto-upgrade-cluster/add-action-2.jpg" alt-text="The screenshot shows how to send an email.":::
+8. Make sure to give the Read role to the resource group and to the subscription to the MSI of the log search alert rule.
 
-8. Customize by providing recipient email. Click the Subject and Body fields, and there's a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
+    Go to alert rule, Settings -> Identity -> System assigned managed identity -> Azure role assignments -> Add role assignment
 
- :::image type="content" source="./media/auto-upgrade-cluster/customize-email.jpg" alt-text="The screenshot shows how to customize email.":::
-
-9. Click the "Save" button.
-
- :::image type="content" source="./media/auto-upgrade-cluster/save.png" alt-text="The screenshot shows how to save.":::
-
-10. Click the "When a HTTP request is received" button and copy the URL in the "HTTP POST URL" field. This URL is used shortly to configure event subscription web hook.
-
- :::image type="content" source="./media/auto-upgrade-cluster/http-post.png" alt-text="The screenshot shows how to copy Http post URL.":::
-
-## Create ARN system topic and event subscription.
-
-Click "Event Subscription" to create an event subscription of the system topic.
-
-:::image type="content" source="./media/auto-upgrade-cluster/event-sub-1.jpg" alt-text="The screenshot shows how to create an event subscription.":::
-
-Then fill in the event subscription information, in the "EndPoint Type," choose "Web hook," and configure it using the URL when configure "When a HTTP request is received" trigger.
-
-:::image type="content" source="./media/auto-upgrade-cluster/event-sub-2.jpg" alt-text="The screenshot shows how to configure endpoint.":::
-
-You can also do it via CLI as shown here
-
-```azurecli-interactive
-    az eventgrid system-topic create --name arnSystemTopic --resource-group testrg --source /subscriptions/TestSub --topic-type microsoft.resourcenotifications.containerserviceeventresources --location global 
-```
-
-Configure receive notifications for resources in a resource group, enable subject filtering with the resource group URI.
-
-:::image type="content" source="./media/auto-upgrade-cluster/endpoint-type.jpg" alt-text="The screenshot shows how to configure endpoint type.":::
+    Choose the role Reader and assign it to the resource group, repeat "Add role assignment" for the subscription.
 
 ### Verification
 
