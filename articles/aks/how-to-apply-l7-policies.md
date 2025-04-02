@@ -10,7 +10,7 @@ ms.date: 03/14/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Layer 7(L7) Polices with Advanced Container Networking Services (Public Preview)
+# Set up Layer 7(L7) polices with Advanced Container Networking Services (Public Preview)
 
 This article shows you how to set up L7 policy with Advanced Container Networking Services in AKS clusters.
 
@@ -117,7 +117,7 @@ Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
-## Setup Test application on your AKS Cluster
+## Setup test application on your AKS Cluster
 
 Follow steps on [AKS tutorial](./tutorial-kubernetes-deploy-application.md) to run an application on your cluster.
 

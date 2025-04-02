@@ -15,14 +15,14 @@ Network policies are essential for securing Kubernetes clusters by defining and 
 
 ## Components of L7 policy
 
-**Envoy Proxy**: Envoy acts as the enforcement point for L7 policies. A TPROXY inspects application traffic, comparing it against the defined L7 policies. To enhance scalability and resource management, Envoy is deployed as a separate DaemonSet, decoupled from the Cilium Agent.
+**Envoy proxy**: Envoy acts as the enforcement point for L7 policies. A TPROXY inspects application traffic, comparing it against the defined L7 policies. To enhance scalability and resource management, Envoy is deployed as a separate DaemonSet, decoupled from the Cilium agent.
 
 ## How L7 Policy works
 
 When L7 policy enforcement is enabled for an application or pod, outgoing network traffic is first 
 evaluated to determine compliance with the configured application-level rules. The eBPF probe attached to the source pod’s network interface marks the packets, which are then redirected to a node-local Envoy Proxy. This redirection occurs only for pods enforcing L7 policies, ensuring that policy enforcement is applied selectively.
 
-The Envoy proxy, augmented with Cilium Network Filters, then decides whether to forward the traffic to the destination pod based on policy criteria. If permitted, the traffic proceeds; if not, Envoy returns an appropriate error code to the originating pod. Upon successful authorization, the Envoy proxy facilitates the traffic flow, providing application-level visibility and control. This allows the Cilium Agent to enforce detailed network policies within the policy engine. The following diagram illustrates the high-level flow of L7 policy enforcement.
+The Envoy proxy, augmented with Cilium network filters, then decides whether to forward the traffic to the destination pod based on policy criteria. If permitted, the traffic proceeds; if not, Envoy returns an appropriate error code to the originating pod. Upon successful authorization, the Envoy proxy facilitates the traffic flow, providing application-level visibility and control. This allows the Cilium agent to enforce detailed network policies within the policy engine. The following diagram illustrates the high-level flow of L7 policy enforcement.
 
 [![Screenshot showing how L7 policies work](./media/advanced-container-networking-services/how-l7-policy-works.png)](./media/advanced-container-networking-services/how-l7-policy-works.png#lightbox)
 
@@ -60,8 +60,8 @@ connection or request level. New connections initiated during the rollout are no
 
 | Feature/Component                                | Supported |
 |---------------------------------------------------|-----------|
-| L7 Policies using AKS, Istio - Managed Addon       | Supported |
-| K8s Network Policies by Azure CNI by Cilium (ACPC) | Supported |
+| L7 Policies using AKS, Istio - Managed addon       | Supported |
+| K8s network policies by Azure CNI by Cilium (ACPC) | Supported |
 | L4 (FQDN) Policies by ACPC and ACNS                | Supported |
 | L7 (HTTP(s)/GRPC/Kafka) Policies by ACPC and ACNS  | Not Supported |
   
