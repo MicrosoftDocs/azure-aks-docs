@@ -42,7 +42,7 @@ The following steps guide you through deploying the AKS cluster and supporting i
 
 ### Set environment variables
 
-Before running any CLI commands, set the environment variables that will be used throughout this guide with values that meet your requirements.
+* Before running any CLI commands, set the following environment variables to use throughout this guide with values that meet your requirements:  
 
     ```azurecli-interactive
     export RESOURCE_GROUP_NAME="rg-kafka"  
@@ -73,27 +73,27 @@ Before running any CLI commands, set the environment variables that will be used
     export PROMETHEUS_WORKSPACE_NAME="prometheus-aks"
     ```  
  
-### Pre-cluster deployments 
+### Pre-cluster network deployments 
 
-Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources that support the AKS cluster deployment:  
+Before deploying the AKS cluster for Kakfa, deploy the prerequisite network resources that support the AKS cluster deployment:  
 
-* Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.
+1. Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.  
 
     ```azurecli-interactive    
     az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
-    ```
+    ```  
 
-* Create a virtual network using the [`az network vnet create`](/cli/azure/network/vnet#az-network-vnet-create) command. 
+2. Create a virtual network using the [`az network vnet create`](/cli/azure/network/vnet#az-network-vnet-create) command. 
 
-    ```azurecli-interactive 
+    ```azurecli-interactive
     az network vnet create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $VNET_NAME \
     --address-prefix $ADDRESS_SPACE \
     --location $LOCATION
-    ```
+    ```  
 
-* Create a subnet using the [`az network vnet subnet create`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-create) command.
+3. Create a subnet using the [`az network vnet subnet create`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-create) command.  
     
     ```azurecli-interactive
     az network vnet subnet create \
@@ -101,19 +101,19 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --vnet-name $VNET_NAME \
     --name $SUBNET_NAME \
     --address-prefix $SUBNET_PREFIX
-    ```
+    ```  
 
-* Create a public IP for the NAT Gateway using the [`az network public-ip create`](/cli/azure/network/public-ip#az-network-public-ip-create) command. 
+4. Create a public IP for the NAT Gateway using the [`az network public-ip create`](/cli/azure/network/public-ip#az-network-public-ip-create) command. 
 
-    ```azurecli-interactive
+    ```azurecli-interactive  
     az network public-ip create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name ${NAT_GATEWAY_NAME}-public-ip \
     --sku Standard \
     --location $LOCATION
-    ```
+    ```  
 
-* Create a NAT Gateway using the [`az network nat gateway create`](/cli/azure/network/nat/gateway#az-network-nat-gateway-create) command. 
+5. Create a NAT Gateway using the [`az network nat gateway create`](/cli/azure/network/nat/gateway#az-network-nat-gateway-create) command. 
 
     ```azurecli-interactive
     az network nat gateway create \
@@ -121,9 +121,9 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --name $NAT_GATEWAY_NAME \
     --public-ip-addresses ${NAT_GATEWAY_NAME}-public-ip \
     --location $LOCATION
-    ```
+    ```  
 
-* Associate the NAT Gateway to the node subnet using [`az network vnet subnet update`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-update) command.
+6. Associate the NAT Gateway to the node subnet using [`az network vnet subnet update`](/cli/azure/network/vnet/subnet#az-network-vnet-subnet-update) command.  
 
     ```azurecli-interactive
     az network vnet subnet update \
@@ -131,47 +131,31 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --vnet-name $VNET_NAME \
     --name $SUBNET_NAME \
     --nat-gateway $NAT_GATEWAY_NAME
-    ```
+    ```  
 
-* Create a log analytics workspace using the [`az monitor log-analytics workspace create`](/cli/azure/monitor/log-analytics/workspace#az-monitor-log-analytics-workspace-create) command.
+### Pre-cluster monitoring and governance deployments 
+
+Before deploying the AKS cluster for Kakfa, deploy the prerequisite monitoring and governance resources that support the AKS cluster deployment:  
+
+1. Create a log analytics workspace using the [`az monitor log-analytics workspace create`](/cli/azure/monitor/log-analytics/workspace#az-monitor-log-analytics-workspace-create) command.  
 
     ```azurecli-interactive
     az monitor log-analytics workspace create \
     --resource-group $RESOURCE_GROUP_NAME \
     --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME \
-    --location $LOCATION  
-    ```
-
-* Create an Azure container registry using the [`az acr create`](/cli/azure/acr#az-acr-create) command.
-
-    ```azurecli-interactive
-    az acr create \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --name $ACR_NAME \
-    --sku $ACR_SKU \
-    --location $LOCATION \
-    --admin-enabled false
-    --zone-redundancy Enabled
-    ```
-
-* Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command. 
-
-    ```azurecli-interactive
-    az identity create \
-    --resource-group $RESOURCE_GROUP_NAME \
-    --name $USER_ASSIGNED_IDENTITY_NAME \
     --location $LOCATION
-    ```
-* Create an Azure monitor workspace for Prometheus using the [`az monitor account create`](/cli/azure/monitor/account#az-monitor-account-create) command.
+    ```  
+
+2. Create an Azure monitor workspace for Prometheus using the [`az monitor account create`](/cli/azure/monitor/account#az-monitor-account-create) command.  
 
     ```azurecli-interactive
     az monitor account create \
     --resource-group $RESOURCE_GROUP_NAME \
     --name $PROMETHEUS_WORKSPACE_NAME \
     --location $LOCATION
-    ```
+    ```  
 
-* Create an Azure managed Grafana instance using the [`az grafana create`](/cli/azure/grafana#az-grafana-create) command. 
+3. Create an Azure managed Grafana instance using the [`az grafana create`](/cli/azure/grafana#az-grafana-create) command. 
 
     ```azurecli-interactive
     az grafana create \
@@ -182,33 +166,54 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --deterministic-outbound-ip Enabled \
     --public-network-access Enabled \
     --grafana-major-version 11
-    ```
+    ```  
 
-    >[!NOTE]
-    > Azure Managed Grafana has zone redundancy available in [select regions](/azure/managed-grafana/high-availability#supported-regions). If your target region has zone redundancy, use the `--zone-redundancy Enabled` argument. 
+    > [!NOTE]
+    > Azure Managed Grafana has zone redundancy available in [select regions](/azure/managed-grafana/high-availability#supported-regions). If your target region has zone redundancy, use the `--zone-redundancy Enabled` argument.
 
-* Assign RBAC permissions to the managed identity of the Grafana instance using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
+4. Create an Azure container registry using the [`az acr create`](/cli/azure/acr#az-acr-create) command.  
+
+    ```azurecli-interactive
+    az acr create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $ACR_NAME \
+    --sku $ACR_SKU \
+    --location $LOCATION \
+    --admin-enabled false \
+    --zone-redundancy Enabled
+    ```  
+
+5. Create a user-assigned managed identity using the [`az identity create`](/cli/azure/identity#az-identity-create) command. 
+
+    ```azurecli-interactive
+    az identity create \
+    --resource-group $RESOURCE_GROUP_NAME \
+    --name $USER_ASSIGNED_IDENTITY_NAME \
+    --location $LOCATION
+    ```  
+
+6. Assign RBAC permissions to the managed identity of the Grafana instance using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
     
     ```azurecli-interactive
     az role assignment create \
     --assignee $(az grafana show --resource-group $RESOURCE_GROUP_NAME --name $GRAFANA_NAME --query identity.principalId -o tsv) \
     --role "Monitoring Reader" --scope $(az group show --name $RESOURCE_GROUP_NAME --query id -o tsv)
-    ```
+    ```  
 
 ### AKS cluster deployment
 
 Deploy the AKS cluster with dedicated node pools for Kafka per availability zone and Azure Container Storage enabled using Azure CLI:  
 
-* First, assign the network contributor role to the user-assigned managed identity for AKS using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
+1. First, assign the network contributor role to the user-assigned managed identity for AKS using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command.
 
-    ```azurecli-interactive  
+    ```azurecli-interactive
     az role assignment create \
     --assignee $(az identity show --resource-group $RESOURCE_GROUP_NAME --name $USER_ASSIGNED_IDENTITY_NAME --query principalId -o tsv) \
     --role "Network Contributor" \
     --scope $(az group show --name $RESOURCE_GROUP_NAME --query id -o tsv)
-    ```
+    ```  
 
-* Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
+2. Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
 
     ```azurecli-interactive
     az aks create \
@@ -249,10 +254,10 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
     --tier $AKS_TIER \
     --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
     --workspace-resource-id $(az monitor log-analytics workspace show --resource-group $RESOURCE_GROUP_NAME --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME --query id -o tsv) \
-    --zones 1 2 3 
-    ```
+    --zones 1 2 3
+    ```  
 
-* Create an additional node pool per availability zone using a for loop and the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. 
+3. Create an additional node pool per availability zone using a for loop and the [`az aks nodepool add`](/cli/azure/aks/nodepool#az-aks-nodepool-add) command. 
 
     ```azurecli-interactive
     for zone in 1 2 3; do
@@ -273,61 +278,39 @@ Deploy the AKS cluster with dedicated node pools for Kafka per availability zone
       --vnet-subnet-id $(az network vnet subnet show --resource-group $RESOURCE_GROUP_NAME --vnet-name $VNET_NAME --name $SUBNET_NAME --query id -o tsv) \
       --zones $zone
     done
-    ```
+    ```  
 
-* Enable [Azure Container Storage](/azure/storage/container-storage/container-storage-aks-quickstart) with azureDisk on the AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
+4. Enable [Azure Container Storage](/azure/storage/container-storage/container-storage-aks-quickstart) with azureDisk on the AKS cluster using the [`az aks update`](/cli/azure/aks#az-aks-update) command.  
   
-    ```azurecli-interactive
+    ```azurecli-interactive  
     az aks update \
     --name $AKS_CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP_NAME \
     --enable-azure-container-storage azureDisk
-    ```
+    ```  
 
-* Enable Azure Managed Prometheus and Grafana integration using the [`az aks update`](/cli/azure/aks#az-aks-update) command.
+5. Enable Azure Managed Prometheus and Grafana integration using the [`az aks update`](/cli/azure/aks#az-aks-update) command.  
 
-    ```azurecli-interactive
+    ```azurecli-interactive  
     az aks update \
     --name $AKS_CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP_NAME \
     --enable-azure-monitor-metrics \
     --azure-monitor-workspace-resource-id $(az monitor account show --resource-group $RESOURCE_GROUP_NAME --name $PROMETHEUS_WORKSPACE_NAME --query id -o tsv) \
     --grafana-resource-id $(az grafana show --resource-group $RESOURCE_GROUP_NAME --name $GRAFANA_NAME --query id -o tsv)
-    ```
+    ```  
 
-* (Optional) Configure diagnostic setting for the AKS cluster using the [`az monitor diagnostic-settings create`](/cli/azure/monitor/diagnostic-settings#az-monitor-diagnostic-settings-create) command.
+6. **Optional**: Configure diagnostic setting for the AKS cluster using the [`az monitor diagnostic-settings create`](/cli/azure/monitor/diagnostic-settings#az-monitor-diagnostic-settings-create) command.  
     
-    ```azurecli-interactive
+    ```azurecli-interactive  
     az monitor diagnostic-settings create \
     --resource $(az aks show --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME --query id -o tsv) \
     --name $DIAGNOSTIC_SETTINGS_NAME \
     --workspace $(az monitor log-analytics workspace show --resource-group $RESOURCE_GROUP_NAME --workspace-name $LOG_ANALYTICS_WORKSPACE_NAME --query id -o tsv) \
     --logs '[{"category": "kube-apiserver", "enabled": true}, {"category": "kube-audit", "enabled": true}, {"category": "kube-audit-admin", "enabled": true}, {"category": "kube-controller-manager", "enabled": true}, {"category": "kube-scheduler", "enabled": true}, {"category": "cluster-autoscaler", "enabled": true}, {"category": "cloud-controller-manager", "enabled": true}, {"category": "guard", "enabled": true}, {"category": "csi-azuredisk-controller", "enabled": true}, {"category": "csi-azurefile-controller", "enabled": true}, {"category": "csi-snapshot-controller", "enabled": true}]' \
-    --metrics '[{"category": "AllMetrics", "enabled": true}]' 
-    ```
-
-### Validate deployment and connect to cluster  
-
-After deploying your AKS cluster, use the following steps to validate the deployment and gain access to the AKS API Server:  
-
-
-1. Verify the deployment of the AKS cluster using the [`az aks show`](/cli/azure/aks#az-aks-show) command.  
-
-    ```azurecli-interactive  
-    az aks show --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME --output table  
+    --metrics '[{"category": "AllMetrics", "enabled": true}]'
     ```  
 
-1. After verifying the deployment, connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.  
-
-    ```azurecli-interactive  
-    az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME  
-    ```  
-        
-1. Verify connectivity by listing nodes using the `kubectl get` command.  
-
-    ```bash  
-    kubectl get nodes  
-    ```  
 ::: zone-end
 
 ::: zone pivot="terraform"
@@ -391,7 +374,7 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     }
     ```
 
-1. Review the variables and create a `kafka.tfvars` as needed. Update with values that meet your requirements:  
+2. Review the variables and create a `kafka.tfvars` as needed. Update with values that meet your requirements:  
 
     ```tf  
     # Replace placeholder values with your actual configuration
@@ -408,7 +391,7 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     ]
     ```  
 
-1. Copy the `main.tf` to your Terraform directory.
+3. Copy the `main.tf` to your Terraform directory.
     
     ```tf 
     terraform {
@@ -622,56 +605,59 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
     }
     ```
 
-1. Initialize Terraform using the `terraform init` command.  
+4. Initialize Terraform using the `terraform init` command.  
 
     ```bash  
     terraform init  
     ```  
 
-1. Create a deployment plan using the `terraform plan` command.  
+5. Create a deployment plan using the `terraform plan` command.  
 
     ```bash  
     terraform plan -var-file="kafka.tfvars"
     ```  
 
-1. Apply the configuration using the `terraform apply` command.  
+6. Apply the configuration using the `terraform apply` command.  
 
     ```bash  
     terraform apply -var-file="kafka.tfvars" 
     ```  
+::: zone-end
 
- 1. Verify the deployment using the [`az aks show`](/cli/azure/aks#az-aks-show) command.  
+## Validate deployment and connect to cluster  
+
+After deploying your AKS cluster, use the following steps to validate the deployment and gain access to the AKS API Server:  
+
+1. Verify the deployment of the AKS cluster using the [`az aks show`](/cli/azure/aks#az-aks-show) command.  
 
     ```azurecli-interactive  
     az aks show --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME --output table  
     ```  
 
-1. After verifying the deployment, connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.  
+2. After verifying the deployment, connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.  
 
     ```azurecli-interactive  
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $AKS_CLUSTER_NAME  
     ```  
         
-1. Verify connectivity by listing nodes using the `kubectl get` command.  
+3. Verify connectivity by listing nodes using the `kubectl get` command.  
 
     ```bash  
     kubectl get nodes  
     ```  
 
-::: zone-end
-
 ## Create Azure Container Storage storage pool
 
-* Verify that Azure Container Storage is running on you AKS cluster using the `kubectl get` command.
+1. Verify that Azure Container Storage is running on you AKS cluster using the `kubectl get` command.  
 
-    ```bash
+    ```bash  
     kubectl get deploy,ds -n acstor
-    ```
+    ```  
 
-Currently, you can't configure Azure Container Storage with a toleration to handle nodes with taints. Adding taints to nodes will block the deployment of Azure Container Storage.
+    Currently, you can't configure Azure Container Storage with a toleration to handle nodes with taints. Adding taints to nodes will block the deployment of Azure Container Storage.
 
 
-* After deploying the cluster and validating that Azure Container Storage is running, apply the multi-zone `StoragePool` configuration using the `kubectl apply` command.  
+2. After deploying the cluster and validating that Azure Container Storage is running, apply the multi-zone `StoragePool` configuration using the `kubectl apply` command.  
 
     ```bash  
     kubectl apply -f - <<EOF  
