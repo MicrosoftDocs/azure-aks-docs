@@ -54,7 +54,7 @@ In this scenario, you upgrade the AKS cluster to a newer version. Upgrading the 
     Name        OsType    KubernetesVersion    VmSize           Count    MaxPods    ProvisioningState    Mode
     ----------  --------  -------------------  ---------------  -------  ---------  -------------------  ------
     systempool  Linux     1.30                 Standard_DS4_v2  1        30         Succeeded            System
-    userpool    Linux     1.30                 Standard_DS4_v2  3        30         Succeeded            User
+    mongodbpool Linux     1.30                 Standard_DS4_v2  3        30         Succeeded            User
     ```
 
 4. Once you decide your target Kubernetes version, you need to first upgrade the AKS control plane using the [`az aks upgrade`](/cli/azure/aks#az-aks-upgrade) command. In this example, we upgrade to Kubernetes version 1.31.1.
@@ -65,10 +65,10 @@ In this scenario, you upgrade the AKS cluster to a newer version. Upgrading the 
 
     :::image type="content" source="media/upgrade-mongodb-cluster/locust-upgrade-control-plane.png" alt-text="Screenshot of a web page showing the Locust test dashboard when upgrading control plane." lightbox="./media/upgrade-mongodb-cluster/locust-upgrade-control-plane.png":::
 
-5. Upgrade the `userpool` node pool to the newer version using the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command. Make sure that Locust from the previous article is still running so you can validate the resiliency of the MongoDB cluster during the AKS node pool upgrade.
+5. Upgrade the `mongodbpool` node pool to the newer version using the [`az aks nodepool upgrade`](/cli/azure/aks/nodepool#az-aks-nodepool-upgrade) command. Make sure that Locust from the previous article is still running so you can validate the resiliency of the MongoDB cluster during the AKS node pool upgrade.
 
     ```azurecli-interactive
-    az aks nodepool upgrade --resource-group $MY_RESOURCE_GROUP_NAME --cluster-name $MY_CLUSTER_NAME --name userpool --kubernetes-version 1.31.1 --yes
+    az aks nodepool upgrade --resource-group $MY_RESOURCE_GROUP_NAME --cluster-name $MY_CLUSTER_NAME --name mongodbpool --kubernetes-version 1.31.1 --yes
     ```
 
     This command takes some time to complete. During this time, nodes of the AKS cluster become unavailable as they are upgraded to the newer version. However, the MongoDB cluster continues to serve the requests without any interruption.
@@ -77,7 +77,7 @@ In this scenario, you upgrade the AKS cluster to a newer version. Upgrading the 
 
     :::image type="content" source="media/upgrade-mongodb-cluster/locust-upgrade-continued.png" alt-text="Screenshot of a web page showing the Locust test dashboard when cluster is being upgraded." lightbox="./media/upgrade-mongodb-cluster/locust-upgrade-continued.png":::
 
-7. After the upgrade is complete, you can verify the Kubernetes version of the `userpool` node pool using the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command.
+7. After the upgrade is complete, you can verify the Kubernetes version of the `mongodbpool` node pool using the [`az aks nodepool list`](/cli/azure/aks/nodepool#az-aks-nodepool-list) command.
 
     ```azurecli-interactive
     az aks nodepool list --resource-group $MY_RESOURCE_GROUP_NAME --cluster-name $MY_CLUSTER_NAME --output table
@@ -89,7 +89,7 @@ In this scenario, you upgrade the AKS cluster to a newer version. Upgrading the 
     Name        OsType    KubernetesVersion    VmSize           Count    MaxPods    ProvisioningState    Mode
     ----------  --------  -------------------  ---------------  -------  ---------  -------------------  ------
     systempool  Linux     1.30                 Standard_DS4_v2  1        30         Succeeded            System
-    userpool    Linux     1.31.1               Standard_DS4_v2  3        30         Succeeded            User
+    mongodbpool Linux     1.31.1               Standard_DS4_v2  3        30         Succeeded            User
     ```
 
 ## Next step
