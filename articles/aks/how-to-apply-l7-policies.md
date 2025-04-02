@@ -1,5 +1,5 @@
 ---
-title: "Set up L7 Policies with Advanced Container Networking Services (ACNS)"
+title: "Set up L7 policies with Advanced Container Networking Services (ACNS)"
 description: Get started with L7 Feature for Advanced Container Networking Services (ACNS) for your AKS cluster using Azure managed Cilium Network Policies.
 author: Khushbu-Parekh
 ms.author: kparekh
@@ -10,7 +10,7 @@ ms.date: 03/14/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Layer 7(L7) Polices with Advanced Container Networking Services (Public Preview)
+# Set up Layer 7(L7) polices with Advanced Container Networking Services (Public Preview)
 
 This article demonstrates how to set up L7 policies with Advanced Container Networking Services in AKS clusters. Please continue only after you have reviewed the limitations and considerations listed on the [Layer 7 Policy Overview](./container-network-security-l7-policy-concepts.md) page.
 
@@ -115,7 +115,7 @@ Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
-## Setup Test application on your AKS Cluster
+## Setup test application on your AKS Cluster
 
 Follow steps on [AKS tutorial](./tutorial-kubernetes-deploy-application.md) to run an application on your cluster.
 

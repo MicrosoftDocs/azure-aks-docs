@@ -155,7 +155,7 @@
               href: cis-windows.md
         - name: Container Network Security
           items:
-            - name: FQDN based Filtering
+            - name: FQDN based filtering
               href: container-network-security-fqdn-filtering-concepts.md
             - name: Layer 7 Policy
               href: container-network-security-l7-policy-concepts.md
