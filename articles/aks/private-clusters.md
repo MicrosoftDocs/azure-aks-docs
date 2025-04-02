@@ -323,7 +323,7 @@ When deploying an AKS cluster into such a networking environment, there are some
 
 * When a private cluster is provisioned, a private endpoint (1) and a private DNS zone (2) are created in the cluster-managed resource group by default. The cluster uses an `A` record in the private zone to resolve the IP of the private endpoint for communication to the API server.
 * The private DNS zone is linked only to the VNet that the cluster nodes are attached to (3). This means that the private endpoint can only be resolved by hosts in that linked VNet. In scenarios where no custom DNS is configured on the VNet (default), this works without issue as hosts point at *168.63.129.16* for DNS that can resolve records in the private DNS zone because of the link.
-* If your cluster’s VNet uses custom DNS settings, AKS fails the deployment unless it can link the private DNS zone to that VNet. Even if you’ve already linked the zone to a hub VNet with custom DNS resolvers, AKS still attempts—by design—to link it to the cluster’s VNet during provisioning. If the cluster’s managed identity doesn’t have Contributor permissions on the full VNet, the deployment will fail. This link may be redundant in hub-and-spoke setups, but AKS currently requires it.
+* If using the default private DNS zone behavior, AKS attempts to link the zone directly to the cluster's VNet—even if it's already linked to a hub VNet. This can cause deployment failures in VNets with custom DNS settings if the cluster's managed identity lacks **Network Contributor** permissions on the full VNet. To avoid this, you can provide a pre-created zone or set the DNS option to `none`.
 
 > [!NOTE]
 > Conditional forwarding doesn't support subdomains.
