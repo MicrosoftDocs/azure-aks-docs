@@ -12,7 +12,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 
 # Set up Layer 7(L7) Polices with Advanced Container Networking Services (Public Preview)
 
-This article shows you how to set up L7 policy with Advanced Container Networking Services in AKS clusters.
+This article demonstrates how to set up L7 policies with Advanced Container Networking Services in AKS clusters. Please continue only after you have reviewed the limitations and considerations listed on the [Layer 7 Policy Overview](./container-network-security-l7-policy-concepts.md) page.
 
 ## Prerequisites
 
@@ -72,8 +72,6 @@ az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
     --generate-ssh-keys \
-    --location eastus \
-    --max-pods 250 \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --network-dataplane cilium \

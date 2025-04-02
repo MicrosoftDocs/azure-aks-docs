@@ -118,14 +118,9 @@ export CLUSTER_NAME="<aks-cluster-name>"
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
-    --generate-ssh-keys \
-    --location eastus \
-    --max-pods 250 \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
-    --node-count 2 \
-    --pod-cidr 192.168.0.0/16 \
     --kubernetes-version 1.29 \
     --enable-acns \
     --acns-advanced-networkpolicies <L7/FQDN/None>
@@ -144,10 +139,8 @@ export CLUSTER_NAME="<aks-cluster-name>"
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
-    --generate-ssh-keys \
     --network-plugin azure \
     --network-plugin-mode overlay \
-    --pod-cidr 192.168.0.0/16 \
     --enable-acns
 ```
 

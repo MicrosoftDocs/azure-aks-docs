@@ -15,7 +15,7 @@ Network policies are essential for securing Kubernetes clusters by defining and 
 
 ## Components of L7 Policy
 
-**Envoy Proxy**: Envoy acts as the enforcement point for L7 policies. A TPROXY inspects application traffic, comparing it against the defined L7 policies. To enhance scalability and resource management, Envoy is deployed as a separate DaemonSet, decoupled from the Cilium Agent.
+**Envoy Proxy**: Envoy, part of ACNS security agent acts as the enforcement point for L7 policies. A TPROXY inspects application traffic, comparing it against the defined L7 policies. To enhance scalability and resource management, Envoy is deployed as a separate DaemonSet, decoupled from the Cilium Agent.
 
 ## How L7 Policy works
 
@@ -36,6 +36,7 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 > [!NOTE]
 > These dashboards will only display data if you have this feature enabled on your cluster and have relevant policies applied.
+> Additionally, the monitoring metrics are **not** required to flow through Envoy, a component of the ACNS security agent. Rather, these metrics are collected by the Hubble agent, which is installed on your cluster as part of the Advanced Container Networking Service's observability feature.
 >
 
 ## Key benefits
