@@ -47,6 +47,8 @@ The following example illustrates how to upgrade from revision `asm-1-22` to `as
 
     A canary upgrade means the 1.23 control plane is deployed alongside the 1.22 control plane. They continue to coexist until you either complete or roll back the upgrade.
 
+    While a canary upgrade is in progress, the higher revision is the default revision used for validation of Istio resources.
+
 1. Optionally, revision tags may be used to roll over the data plane to the new revision without needing to manually relabel each namespace. Manually relabeling namespaces when moving them to a new revision can be tedious and error-prone. [Revision tags][istio-revision-tags] solve this problem by serving as stable identifiers that point to revisions.
 
    Rather than relabeling each namespace, a cluster operator can change the tag to point to a new revision. All namespaces labeled with that tag are updated at the same time. However, you still need to restart the workloads to make sure the correct version of `istio-proxy` sidecars are injected.

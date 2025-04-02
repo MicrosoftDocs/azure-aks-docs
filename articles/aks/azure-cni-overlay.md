@@ -27,7 +27,7 @@ Communication with endpoints outside the cluster, such as on-premises and peered
 
 You can provide outbound (egress) connectivity to the internet for Overlay pods using a [Standard SKU Load Balancer](./egress-outboundtype.md#outbound-type-of-loadbalancer) or [Managed NAT Gateway](./nat-gateway.md). You can also control egress traffic by directing it to a firewall using [User Defined Routes on the cluster subnet](./egress-outboundtype.md#outbound-type-of-userdefinedrouting).
 
-You can configure ingress connectivity to the cluster using an ingress controller, such as Nginx or [HTTP application routing](./http-application-routing.md). You cannot configure ingress connectivity using Azure App Gateway. For details see [Limitations with Azure CNI Overlay](#limitations-with-azure-cni-overlay).
+You can configure ingress connectivity to the cluster using an ingress controller, such as Application Gateway for Containers, NGINX, or Application Routing Add-on.
 
 ## Differences between Kubenet and Azure CNI Overlay
 
@@ -92,8 +92,6 @@ Azure CNI offers two IP addressing options for pods: The traditional configurati
 
 Azure CNI Overlay has the following limitations:
 
-- You can't use Application Gateway as an Ingress Controller (AGIC) for an Overlay cluster.
-- You can't use Application Gateway for Containers for an Overlay cluster.
 - Virtual Machine Availability Sets (VMAS) aren't supported for Overlay.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet Confidential Computing requirements, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
 - In case you are using your own subnet to deploy the cluster, the names of the subnet, VNET and resource group which contains the VNET, must be 63 characters or less. This comes from the fact that these names will be used as labels in AKS worker nodes, and are therefore subjected to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).  
@@ -412,7 +410,7 @@ az aks nodepool add \
 
 ## Next steps
 
-To learn how to upgrade existing clusters to Azure CNI overlay, see [Upgrade Azure Kubernetes Service (AKS) IPAM modes and Dataplane Technology](upgrade-aks-ipam-and-dataplane.md).
+To learn how to upgrade existing clusters to Azure CNI overlay, see [Upgrade Azure CNI IPAM modes and Dataplane Technology](upgrade-azure-cni.md).
 
 To learn how to utilize AKS with your own Container Network Interface (CNI) plugin, see [Bring your own Container Network Interface (CNI) plugin](use-byo-cni.md).
 
