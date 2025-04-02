@@ -181,7 +181,7 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --api-key Enabled \
     --deterministic-outbound-ip Enabled \
     --public-network-access Enabled \
-    --grafana-major-version 10 
+    --grafana-major-version 11
     ```
     >[!NOTE]
     > Azure Managed Grafana has zone redundancy available in [select regions](/azure/managed-grafana/high-availability#supported-regions). If your target region has zone redundancy, use the `--zone-redundancy Enabled` argument. 
@@ -587,7 +587,7 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
       api_key_enabled                   = true
       deterministic_outbound_ip_enabled = true
       public_network_access_enabled     = true
-      grafana_major_version             = 10
+      grafana_major_version             = 11
     
       azure_monitor_workspace_integrations {
         resource_id = azurerm_monitor_workspace.this.id
@@ -688,7 +688,7 @@ Currently, you can't configure Azure Container Storage with a toleration to hand
           mbpsReadWrite: 200  
       resources:  
         requests:  
-          storage: 100Gi      
+          storage: 1Ti    
     EOF  
     ```  
 

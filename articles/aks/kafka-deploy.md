@@ -364,7 +364,7 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
 1. Before creating the Kafka cluster, create a ConfigMap that contains the JMX Prometheus Exporter configuration using the `kubectl apply` command. This ConfigMap defines how Kafka's internal JMX metrics are transformed and exposed in Prometheus format, enabling comprehensive monitoring of your Kafka ecosystem. The patterns defined in this configuration map JMX metric paths to properly formatted Prometheus metrics with appropriate types and labels.  
 
     ```bash
-    kubectl apply -n kafka -f - <<EOF
+    kubectl apply -n kafka -f - <<'EOF'
     ---
     apiVersion: v1
     kind: ConfigMap
@@ -598,14 +598,14 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
           valueFrom:
             configMapKeyRef:
               name: kafka-metrics
-              key: kafka-metrics-config.yml
+              key: kafka-metrics-config.yaml
       cruiseControl:
         metricsConfig:
           type: jmxPrometheusExporter
           valueFrom:
             configMapKeyRef:
               name: cruise-control-metrics
-              key: metrics-config.yml
+              key: metrics-config.yaml
       entityOperator:
         topicOperator: {}
         userOperator: {}
