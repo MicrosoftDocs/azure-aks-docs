@@ -71,7 +71,7 @@ If you want to carry out an in-place migration, the AKS service migrates your co
     ```
 
     > [!NOTE]
-    > 1.30 is the next LTS version after 1.27. You can opt into LTS from a 1.30 version cluster through the steps mentioned. LTS version 1.27 goes end of life (EOL) by July 2025. 
+    > Every version starting with 1.28 kubernetes version shall be long term support compatible. Please check [supported version calendar][supported] for more details on timelines.
     > Supported Patches in LTS today : [1.27.100] [https://github.com/aks-lts/kubernetes/blob/release-1.27-lts/CHANGELOG/CHANGELOG-1.27.md#v127100-akslts]
     > Currently LTS only supports the two most recent patches and prior old patches get deprecated.
 
@@ -152,3 +152,4 @@ This is expected. If there was no defined autoUpgradeChannel for the AKS cluster
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
+[supported]:/articles/aks/supported-kubernetes-versions.md#aks-kubernetes-release-calendar
