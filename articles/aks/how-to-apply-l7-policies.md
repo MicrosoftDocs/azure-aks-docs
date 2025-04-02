@@ -1,5 +1,5 @@
 ---
-title: "Set up L7 Policies with Advanced Container Networking Services (ACNS)"
+title: "Set up L7 policies with Advanced Container Networking Services (ACNS)"
 description: Get started with L7 Feature for Advanced Container Networking Services (ACNS) for your AKS cluster using Azure managed Cilium Network Policies.
 author: Khushbu-Parekh
 ms.author: kparekh
