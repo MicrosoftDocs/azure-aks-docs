@@ -44,7 +44,7 @@ The following steps guide you through deploying the AKS cluster and supporting i
 
 Before running any CLI commands, set the environment variables that will be used throughout this guide with values that meet your requirements.
 
-    ```bash 
+    ```azurecli-interactive
     export RESOURCE_GROUP_NAME="rg-kafka"  
     export LOCATION="canadacentral"  
     export VNET_NAME="vnet-aks-kafka"  
@@ -183,9 +183,9 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite resources th
     --public-network-access Enabled \
     --grafana-major-version 11
     ```
+
     >[!NOTE]
     > Azure Managed Grafana has zone redundancy available in [select regions](/azure/managed-grafana/high-availability#supported-regions). If your target region has zone redundancy, use the `--zone-redundancy Enabled` argument. 
-
 
 * Assign RBAC permissions to the managed identity of the Grafana instance using the [`az role assignment create`](/cli/azure/role/assignment#az-role-assignment-create) command. 
     
