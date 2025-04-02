@@ -489,7 +489,6 @@ In this section, you deploy an AKS cluster and supporting infrastructure resourc
       sku                 = "Standard"
     }
     
-    # Associate NAT Gateway with Public IP
     resource "azurerm_nat_gateway_public_ip_association" "this" {
       nat_gateway_id       = azurerm_nat_gateway.this.id
       public_ip_address_id = azurerm_public_ip.this.id  
