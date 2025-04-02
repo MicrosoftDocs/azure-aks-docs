@@ -71,7 +71,7 @@ If you want to carry out an in-place migration, the AKS service migrates your co
     ```
 
     > [!NOTE]
-    > Every version starting with 1.28 kubernetes version shall be long term support compatible. Please check [supported version calendar][supported] for more details on timelines.
+    > Starting with kubernetes version 1.28, every kubernetes version is long term support compatible. Please check [supported version calendar][supported] for more details on timelines.
     > Supported Patches in LTS today : [1.27.100] [https://github.com/aks-lts/kubernetes/blob/release-1.27-lts/CHANGELOG/CHANGELOG-1.27.md#v127100-akslts]
     > Currently LTS only supports the two most recent patches and prior old patches get deprecated.
 
