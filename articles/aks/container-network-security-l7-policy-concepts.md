@@ -48,7 +48,7 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 **Observability**: With observability enabled for Advanced Container Networking Services and L7 policies applied to your AKS cluster, you can monitor traffic and policy effectiveness using Grafana dashboards.
 
-## Limitations and Considerations:
+## Limitations and considerations:
 
 *	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka .
 *	In preview, the maximum supported cluster size is up to 1000 nodes or 40,000 pods, whichever is greater.
