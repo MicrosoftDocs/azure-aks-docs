@@ -127,7 +127,9 @@ kubectl label namespace default istio.io/rev=asm-X-Y
 ```
 
 > [!IMPORTANT]
-> The default `istio-injection=enabled` labeling doesn't work. Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-18`) is required.
+> Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-18`) is required.
+> 
+> The default `istio-injection=enabled` label will not work and will **cause the sidecar injection to skip the namespace** for the add-on.
 
 For manual injection of sidecar using `istioctl kube-inject`, you need to specify extra parameters for `istioNamespace` (`-i`) and `revision` (`-r`). For example:
 
