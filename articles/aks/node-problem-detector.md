@@ -40,7 +40,7 @@ NPD emits events with relevant information to help you diagnose underlying issue
 |---|---| ---| --| --|
 |CustomPluginMonitor|EgressBlocked|   30 min | This event checks for connectivity to external [endpoints](#egressblocked) from the node | Check the firewall/NSG blocking the connectivity |
 |CustomPluginMonitor|FilesystemCorruptionDetected| 5min | This checks for filesystem corruption surfaced by docker | |
-|CustomPluginMonitor|KubeletIsDown| 30s | This checks is kubelet service is running and healthy | |
+|CustomPluginMonitor|KubeletIsDown| 30s | This checks if kubelet service is running and healthy | |
 |CustomPluginMonitor|ContainerRuntimeIsDown| 30s | This checks if the container runtime eg: containerd is running and healthy | |
 |CustomPluginMonitor|FreezeScheduled| 1min |  This checks if a Freeze Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information ||
 |CustomPluginMonitor|RebootScheduled| 1 min|  This checks if a Reboot Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
