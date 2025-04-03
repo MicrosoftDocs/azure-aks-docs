@@ -13,7 +13,7 @@ ms.author: nickoman
 [Node Problem Detector (NPD)](https://github.com/kubernetes/node-problem-detector) is an open source Kubernetes component that detects node-related problems and reports on them. It runs as a systemd serviced on each node in the cluster and collects various metrics and system information, such as CPU usage, disk usage, and network connectivity. When it detects a problem, it generates *events and/or node conditions*. Azure Kubernetes Service (AKS) uses NPD to monitor and manage nodes in a Kubernetes cluster running on the Azure cloud platform. The AKS Linux extension enables NPD by default.
 
 > [!NOTE]
-> Upgrades to NPD is independent of the node image and Kubernetes version upgrade processes. If a nodepool is unhealthy (i.e. in a failed state), new NPD versions will not be installed.
+> Upgrades to NPD is independent of the node image and Kubernetes version upgrade processes. If a nodepool is unhealthy (that is, in a failed state), new NPD versions will not be installed.
 
 ## Node conditions
 
@@ -38,15 +38,15 @@ NPD emits events with relevant information to help you diagnose underlying issue
 
 |Problem Daemon type| Reason  |  Frequency  |  Description | Action |
 |---|---| ---| --| --|
-|CustomPluginMonitor|EgressBlocked|   30 min | This event checks for connectivity to external [endpoints](#egressblocked) from the node | Check the firewall/NSG blocking the connectivity |
-|CustomPluginMonitor|FilesystemCorruptionDetected| 5min | This checks for filesystem corruption surfaced by docker | |
-|CustomPluginMonitor|KubeletIsDown| 30s | This checks if kubelet service is running and healthy | |
+|CustomPluginMonitor|EgressBlocked|30 min| This event checks for connectivity to external [endpoints](#egressblocked) from the node | Check the firewall/NSG blocking the connectivity |
+|CustomPluginMonitor|FilesystemCorruptionDetected|5min| This checks for filesystem corruption surfaced by docker | |
+|CustomPluginMonitor|KubeletIsDown|30s| This checks if kubelet service is running and healthy | |
 |CustomPluginMonitor|ContainerRuntimeIsDown| 30s | This checks if the container runtime eg: containerd is running and healthy | |
-|CustomPluginMonitor|FreezeScheduled| 1min |  This checks if a Freeze Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information ||
-|CustomPluginMonitor|RebootScheduled| 1 min|  This checks if a Reboot Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
-|CustomPluginMonitor|RedeployScheduled| 1min |  This checks if a Redeploy Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
-|CustomPluginMonitor|TerminateScheduled| 1min|  This checks if a Terminate Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
-|CustomPluginMonitor|PreemptScheduled| 2s |  This checks if a Preempt Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
+|CustomPluginMonitor|FreezeScheduled|1min|  This checks if a Freeze Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information ||
+|CustomPluginMonitor|RebootScheduled|1min|  This checks if a Reboot Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
+|CustomPluginMonitor|RedeployScheduled|1min|  This checks if a Redeploy Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
+|CustomPluginMonitor|TerminateScheduled|1min|  This checks if a Terminate Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
+|CustomPluginMonitor|PreemptScheduled|2s|  This checks if a Preempt Event is scheduled on the VM. Check [https://aka.ms/aks/scheduledevents](https://aka.ms/aks/scheduledevents) for more information || 
 |CustomPluginMonitor|DNSProblem|
 |SystemLogMonitor|OOMKilling|
 |SystemLogMonitor|TaskHung|
@@ -61,17 +61,17 @@ NPD emits events with relevant information to help you diagnose underlying issue
 |SystemLogMonitor|DockerStart|
 |SystemLogMonitor|ContainerdStart|
 
-In certain instances, AKS automatically cordons and drains the node to minimize disruption to workloads. For more information about the events and actions, see [Node auto-drain](/azure/aks/node-auto-repair#node-auto-drain).
+In certain instances, AKS automatically cordons and drains the node to minimize disruption to workloads. For more information about the events and actions, see [Node autodrain](/azure/aks/node-auto-repair#node-auto-drain).
 
 
 ### EgressBlocked
 The list of endpoints checked by the EgressBlocked are listed below
 
 > [!NOTE]
-> The actual endpoints will depend on the type of the cluster and the location where it is hosted (Public cloud vs Airgapped clouds). Please review the documentation for outbound access [here](/azure/aks/outbound-rules-control-egress). The documentation below is for public clouds
+> The actual endpoints will depend on the type of the cluster and the location where it is hosted (Public cloud vs Airgapped clouds). Review the documentation for outbound access [here](/azure/aks/outbound-rules-control-egress). The documentationis for public clouds
 
 Type | Example | Note
-|---|---| --- |
+|---|---|---|
 |MCR | https://mcr.microsoft.com | |
 |AAD |  https://login.microsoftonline.com" ||
 |Resource Manager | https://management.azure.com||
