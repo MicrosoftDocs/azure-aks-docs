@@ -553,7 +553,7 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
     EOF
     ```
 
-1. Deploy the Kafka cluster resource, which connects the previously created node pools into a complete Kafka ecosystem, using the `kubectl apply` command. This custom resource configures several critical components:  
+2. Deploy the Kafka cluster resource, which connects the previously created node pools into a complete Kafka ecosystem, using the `kubectl apply` command. This custom resource configures several critical components:  
 
     * **Kafka core configuration**: Defines replication factors, listener settings, and other Kafka-specific parameters.  
     * **Cruise Control**: Provides automated cluster balancing and monitoring capabilities.  
@@ -612,7 +612,7 @@ After creating the Kafka node pools, the next step is to define a Kafka cluster 
     EOF
     ```
 
-1. Once deployed, verify your Kafka deployment by checking that all KafkaNodePools, Kafka cluster resources, and their corresponding pods are created and in a running state using the `kubectl get` command.  
+3. Once deployed, verify your Kafka deployment by checking that all KafkaNodePools, Kafka cluster resources, and their corresponding pods are created and in a running state using the `kubectl get` command.  
 
     ```bash
     kubectl get pods,kafkanodepool,kafka -n kafka
@@ -665,7 +665,7 @@ The Strimzi Entity Operator, deployed with the Kafka cluster custom resource, tr
     EOF  
     ```  
 
-1. Verify the Kafka Topic was successfully created using the `kubectl get` command.  
+2. Verify the Kafka Topic was successfully created using the `kubectl get` command.  
 
     ```bash  
     kubectl get kafkatopic -n kafka  
@@ -680,7 +680,7 @@ The Strimzi Entity Operator, deployed with the Kafka cluster custom resource, tr
 
 For more information, see [using the Topic Operator to manage Kafka topics](https://strimzi.io/docs/operators/latest/deploying#using-the-topic-operator-str).  
 
-1. Create a Kafka User with the User Operator using the `kubectl apply` command.  
+3. Create a Kafka User with the User Operator using the `kubectl apply` command.  
 
     ```bash  
     kubectl apply -f - <<EOF  

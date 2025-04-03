@@ -16,7 +16,7 @@ In this guide, we review the prerequisites, architecture considerations, and key
 
 ## What is Strimzi?
 
-[Strimzi][strimzi] is an open-source project that simplifies the deployment, management, and operation of Apache Kafka on Kubernetes. It provides a set of Kubernetes Operators and container images that automate complex Kafka operational tasks through declarative configuration.
+[Strimzi](https://strimzi.io) is an open-source project that simplifies the deployment, management, and operation of Apache Kafka on Kubernetes. It provides a set of Kubernetes Operators and container images that automate complex Kafka operational tasks through declarative configuration.
 
 The Strimzi operators follow the Kubernetes operator pattern to automate Kafka operations. It continuously reconciles the declared state of Kafka components with their actual state, handling complex operational tasks automatically.
 
@@ -93,7 +93,7 @@ Considering Strimzi's Kubernetes-native architecture where each Kafka broker run
 
 Kafka runs using a Java Virtual Machines (JVM). Tuning the JVM is critical for optimal Kafka performance, especially in production environments. LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka on Java for one of LinkedIn's busiest clusters: [Kafka Java Configuration](https://kafka.apache.org/documentation/#java). 
 
-For this guide, a memory heap of 6GB will be used as a baseline for brokers, with an additional 2GB allocated to accommodate off-heap memory usage. For controllers, a 3GB memory heap will be used as a baseline , with an additional 1GB as overhead. 
+For this guide, a memory heap of 6GB will be used as a baseline for brokers, with an additional 2GB allocated to accommodate off-heap memory usage. For controllers, a 3GB memory heap will be used as a baseline, with an additional 1GB as overhead.
 
 When sizing VMs for your Kafka deployment, consider these workload-specific factors:  
 
@@ -103,7 +103,7 @@ When sizing VMs for your Kafka deployment, consider these workload-specific fact
 | **Message size** | Message sizing has an impact on CPU, network, and disk requirements.  | - Small messages (≤1KB) are more CPU-bound. <br> - Large messages (>1MB) are more network-bound. <br> - Very large messages might require specialized tuning. |  
 | **Retention period** | Longer retention increases storage requirements. | - Calculate total storage needs based on throughput × retention. |  
 | **Consumer count** | More consumers increase CPU and network load. | - Each consumer group adds overhead. <br> - High fan-out patterns require additional resources. |  
-| **Topic partitioning** | partition counts impact memory utilization. | - Each partition consumes memory resources. <br> - Over-partitioning can degrade performance. |  
+| **Topic partitioning** | Partition counts impact memory utilization. | - Each partition consumes memory resources. <br> - Over-partitioning can degrade performance. |  
 | **Infrastructure overhead** | Additional system components impact available resources for Kafka. | - Azure Container Storage requires a minimum of 1 vCPU per node. <br> - Monitoring agents, logging components, network policies, and security tools add extra overhead. <br> - Reserve an overhead for system components. |  
 
 > [!IMPORTANT]

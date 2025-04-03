@@ -73,9 +73,9 @@ The following steps guide you through deploying the AKS cluster and supporting i
     export PROMETHEUS_WORKSPACE_NAME="prometheus-aks"
     ```  
  
-### Pre-cluster network deployments 
+### Precluster network deployments 
 
-Before deploying the AKS cluster for Kakfa, deploy the prerequisite network resources that support the AKS cluster deployment:  
+Before deploying the AKS cluster for Kafka, deploy the prerequisite network resources that support the AKS cluster deployment:  
 
 1. Create a resource group using the [`az group create`](/cli/azure/group#az-group-create) command.  
 
@@ -135,7 +135,7 @@ Before deploying the AKS cluster for Kakfa, deploy the prerequisite network reso
 
 ### Pre-cluster monitoring and governance deployments 
 
-Before deploying the AKS cluster for Kakfa, deploy the prerequisite monitoring and governance resources that support the AKS cluster deployment:  
+Before deploying the AKS cluster for Kafka, deploy the prerequisite monitoring and governance resources that support the AKS cluster deployment:  
 
 1. Create a log analytics workspace using the [`az monitor log-analytics workspace create`](/cli/azure/monitor/log-analytics/workspace#az-monitor-log-analytics-workspace-create) command.  
 

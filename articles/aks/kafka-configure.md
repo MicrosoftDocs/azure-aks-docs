@@ -24,7 +24,7 @@ Strimzi implements monitoring by exposing JMX metrics through Prometheus JMX Exp
 
 Azure Managed Prometheus provides a fully managed, scalable monitoring backend without the operational overhead of managing your own Prometheus instances. When paired with Azure Managed Grafana, you gain access to comprehensive visualization capabilities with pre-built dashboards specifically designed for Kafka monitoring.
 
-### Create Pod Monitor  
+### Create PodMonitor  
 
 PodMonitors are Kubernetes custom resources that instruct Prometheus on which pods to collect metrics from and how to collect them. For Kafka monitoring, you need to define PodMonitors that target various Strimzi components.  
 
@@ -380,7 +380,7 @@ This configuration:
 > 
 > You can change the `service.beta.kubernetes.io/azure-pls-name:` to any name you prefer.  
 
-After deploying this configuration, follow the steps for [creating a private endpoint to the Azure Load Balancer Private Link Service](./internal-lb.md#create-a-private-endpoint-to-the-private-link-service)  
+After deploying this configuration, follow the steps for [creating a private endpoint to the Azure Load Balancer Private Link Service](./internal-lb.md#create-a-private-endpoint-to-the-private-link-service).  
 
 ## Contributors  
 
