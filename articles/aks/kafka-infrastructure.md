@@ -647,7 +647,7 @@ After deploying your AKS cluster, use the following steps to validate the deploy
 
 ## Create Azure Container Storage storage pool
 
-1. Verify that Azure Container Storage is running on you AKS cluster using the `kubectl get` command.  
+1. Verify that Azure Container Storage is running on your AKS cluster using the `kubectl get` command.  
 
     ```bash  
     kubectl get deploy,ds -n acstor
