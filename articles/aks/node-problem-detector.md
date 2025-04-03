@@ -13,7 +13,7 @@ ms.author: nickoman
 [Node Problem Detector (NPD)](https://github.com/kubernetes/node-problem-detector) is an open source Kubernetes component that detects node-related problems and reports on them. It runs as a systemd serviced on each node in the cluster and collects various metrics and system information, such as CPU usage, disk usage, and network connectivity. When it detects a problem, it generates *events and/or node conditions*. Azure Kubernetes Service (AKS) uses NPD to monitor and manage nodes in a Kubernetes cluster running on the Azure cloud platform. The AKS Linux extension enables NPD by default.
 
 > [!NOTE]
-> Upgrades to NPD is independent of the node image and Kubernetes version upgrade processes. If a nodepool is unhealthy (that is, in a failed state), new NPD versions will not be installed.
+> Upgrades to NPD are independent of the node image and Kubernetes version upgrade processes. If a nodepool is unhealthy (that is, in a failed state), new NPD versions won't be installed.
 
 ## Node conditions
 
@@ -68,7 +68,7 @@ In certain instances, AKS automatically cordons and drains the node to minimize 
 The list of endpoints checked by the EgressBlocked are listed below
 
 > [!NOTE]
-> The actual endpoints will depend on the type of the cluster and the location where it is hosted (Public cloud vs Airgapped clouds). Review the documentation for outbound access [here](/azure/aks/outbound-rules-control-egress). The documentationis for public clouds
+> The actual endpoints will depend on the type of the cluster and the location where it's hosted (Public cloud vs Airgapped clouds). Review the documentation for outbound access [here](/azure/aks/outbound-rules-control-egress). The documentation is for public clouds
 
 Type | Example | Note
 |---|---|---|
