@@ -38,7 +38,7 @@ NPD emits events with relevant information to help you diagnose underlying issue
 
 |Problem Daemon type| Reason  |  Frequency  |  Description | Action |
 |---|---| ---| --| --|
-|CustomPluginMonitor|EgressBlocked|30 min| This event checks for connectivity to external [endpoints](#egressblocked) | Check the firewall/NSG blocking the connectivity |
+|CustomPluginMonitor|EgressBlocked|30 min| This event checks for connectivity to external [endpoints](#egressblocked) | Check if a firewall or NSG blocking the connectivity to the endpoint getting flagged|
 |CustomPluginMonitor|FilesystemCorruptionDetected|5min| This checks for filesystem corruption surfaced by docker | |
 |CustomPluginMonitor|KubeletIsDown|30s| This checks if kubelet service is running and healthy | |
 |CustomPluginMonitor|ContainerRuntimeIsDown| 30s | This event checks if the container runtime eg: containerd is running and healthy | |
