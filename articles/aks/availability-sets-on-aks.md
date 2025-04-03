@@ -18,9 +18,8 @@ Azure Kubernetes Services is moving away from Availability Sets in favor of Virt
 > We recommend customers use [Virtual Machine Node Pools(Public Preview)](virtual-machines-node-pools.md) for an AKS optimized virtual machine. Virtual Machine Node Pools:
 >
 > - Allow virtual machine instances to be centrally managed, configured, and updated.
-> - Automatically increase or decrease the number of VM instances in response to demand or a defined schedule.
->
-> Availability sets offer only high availability.
+> - Allow an increase or decrease the number of VM instances in response to demand or a defined schedule.
+> - Allow single node-level controls, specifying and same-family mixing of nodes of different sizes to lift restrictions from a single model and improve consistency
 
 # Availability Sets Overview
 Availability sets are logical groupings of virtual machines that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
