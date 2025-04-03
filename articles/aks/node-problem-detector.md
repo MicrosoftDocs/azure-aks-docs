@@ -68,7 +68,7 @@ In certain instances, AKS automatically cordons and drains the node to minimize 
 The list of endpoints checked by the EgressBlocked are
 
 > [!NOTE]
-> The actual endpoint will depend on the type of the cluster and the location where it is hosted (Public cloud vs Airgapped clouds). The documentation below is for public clouds
+> The actual endpoints will depend on the type of the cluster and the location where it is hosted (Public cloud vs Airgapped clouds). The documentation below is for public clouds
 
 Type | Example | Note
 |---|---| --- |
