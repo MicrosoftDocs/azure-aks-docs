@@ -45,7 +45,7 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 * With KMS turned on, you can't change the associated key vault mode (public versus private). To [update a key vault mode][update-a-key-vault-mode], you must first turn off KMS, and then turn it on again.
 * If a cluster has KMS turned on and has a private key vault, it must use the [API Server VNet Integration (preview)][api-server-vnet-integration] tunnel. Konnectivity isn't supported.
 * Using the Virtual Machine Scale Sets API to scale the nodes in the cluster down to zero deallocates the nodes. The cluster then goes down and becomes unrecoverable.
-* After you turn off KMS, you can't destroy the keys. Destroying the keys causes the API server to stop working.
+* After you turn off KMS, you can't delete or expire the keys. Such behaviors would cause the API server to stop working.
 
 KMS supports a [public key vault][turn-on-kms-for-a-public-key-vault] or a [private key vault][turn-on-kms-for-a-private-key-vault].
 
@@ -364,6 +364,8 @@ Use the following command to update all secrets. If you don't run this command, 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 ```
+
+Notice: After turning off KMS, the encryption key vault key is still needed. You cannot delete or expire it.
 
 ### Change the key vault mode
 
