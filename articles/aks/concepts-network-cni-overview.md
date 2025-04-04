@@ -34,7 +34,6 @@ In overlay networks, pods can communicate with each other directly. Traffic leav
 Azure Kubernetes Service provides the following CNI plugins for overlay networking:
 
 - [Azure CNI Overlay][azure-cni-overlay], the recommended CNI plugin for most scenarios.
-- [kubenet][kubenet], the legacy overlay model CNI.
 
 ### Flat networks
 
@@ -86,8 +85,8 @@ You might also want to compare the features of each CNI plugin. The following ta
 | On-premises access via VPN/Express Route | Pod initiated | Both ways | Both ways | Pod initiated |
 | Access to service endpoints | Supported | Supported | Supported | Supported |
 | Expose services using load balancer | Supported | Supported | Supported | Supported |
-| Expose services using App Gateway | Currently not supported | Supported | Supported | Supported |
-| Expose services using ingress controller | Supported | Supported | Supported | Supported |
+| Expose services using App Gateway Ingress Controller | Supported | Supported | Supported | Supported |
+| Expose services using App Gateway for Containers | Supported | Supported | Supported | Not Supported |
 | Windows node pools | Supported | Supported | Supported | Not supported |
 | Default Azure DNS and Private Zones | Supported | Supported | Supported | Supported |
 | VNet Subnet sharing across multiple clusters | Supported | Supported | Supported | Not supported |

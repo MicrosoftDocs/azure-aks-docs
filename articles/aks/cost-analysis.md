@@ -79,6 +79,8 @@ Disable cost analysis using the [`az aks update`][az-aks-update] command with th
 az aks update --name <cluster-name> --resource-group <resource-group> --disable-cost-analysis
 ```
 
+Disabling cost analysis shouldn't affect your existing cluster or workloads. Any existing data collected by the add-on remains in the Azure portal.
+
 > [!NOTE]
 > If you want to downgrade your cluster from the `Standard` or `Premium` tier to the `Free` tier while cost analysis is enabled, you must first disable cost analysis.
 

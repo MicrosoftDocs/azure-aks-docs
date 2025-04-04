@@ -36,7 +36,7 @@ KEDA leverages the following scalers for Azure services:
 - [Azure Service Bus](https://keda.sh/docs/latest/scalers/azure-service-bus/)
 - [Azure Storage Queue](https://keda.sh/docs/latest/scalers/azure-storage-queue/)
 
-As of KEDA version `2.10`, the [Prometheus scaler][prometheus-scaler] supports Azure managed service for Prometheus.
+As of KEDA version `2.10`, the [Prometheus scaler][prometheus-scaler] supports Azure managed service for Prometheus. You can also use self-hosted Prometheus but this falls outside support scope.
 
 You can also install external scalers to autoscale on other Azure services:
 - [Azure Cosmos DB (Change feed)](https://github.com/kedacore/external-scaler-azure-cosmos-db)

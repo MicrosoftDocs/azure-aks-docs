@@ -12,6 +12,12 @@ ms.custom: template-how-to, linux-related-content
 
 The Federal Information Processing Standard (FIPS) 140-2 is a US government standard that defines minimum security requirements for cryptographic modules in information technology products and systems. Azure Kubernetes Service (AKS) allows you to create Linux and Windows node pools with FIPS 140-2 enabled. Deployments running on FIPS-enabled node pools can use those cryptographic modules to provide increased security and help meet security controls as part of FedRAMP compliance. For more information on FIPS 140-2, see [Federal Information Processing Standard (FIPS) 140][fips].
 
+> [!CAUTION]
+> In this article, there are references to a feature that may be using Ubuntu OS versions that are being deprecated for AKS.
+>- Starting on 17 June 2025, AKS will no longer support Ubuntu 18.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to a supported kubernetes version to migrate to a supported Ubuntu version.
+>- Starting on 17 March 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+ to migrate to a supported Ubuntu version.
+>For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues)
+
 ## Prerequisites
 
 * Azure CLI version 2.32.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install-azure-cli].
@@ -26,6 +32,7 @@ The Federal Information Processing Standard (FIPS) 140-2 is a US government stan
   * To update the underlying packages or modules used for FIPS, you must use [Node Image Upgrade][node-image-upgrade].
   * Container images on the FIPS nodes aren't assessed for FIPS compliance.
   * Mounting of a CIFS share fails because FIPS disables some authentication modules. To work around this issue, see [Errors when mounting a file share on a FIPS-enabled node pool][errors-mount-file-share-fips].
+  * FIPS-enabled node pools with [Arm64 VMs](./use-arm64-vms.md) are only supported with Azure Linux 3.0+.
 
 
 > [!IMPORTANT]

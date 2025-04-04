@@ -57,7 +57,7 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`*:9000`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:9000`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:9000`** <br/> *Or* <br/> **`APIServerPublicIP:9000`** `(only known after cluster creation)`  | TCP           | 9000      | For tunneled secure communication between the nodes and the control plane. This isn't required for [private clusters][private-clusters], or for clusters with the *konnectivity-agent* enabled. |
 | **`*:123`** or **`ntp.ubuntu.com:123`** (if using Azure Firewall network rules)  | UDP      | 123     | Required for Network Time Protocol (NTP) time synchronization on Linux nodes. This isn't required for nodes provisioned after March 2021.                 |
 | **`CustomDNSIP:53`** `(if using custom DNS servers)`                             | UDP      | 53      | If you're using custom DNS servers, you must ensure they're accessible by the cluster nodes. |
-| **`APIServerPublicIP:443`** `(if running pods/deployments that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server, those pods/deployments would use the API IP. This port isn't required for [private clusters][private-clusters]. |
+| **`APIServerPublicIP:443`** `(if running pods/deployments, like Ingress Controller, that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server (like Ingress Controller), those pods/deployments would use the API IP. This port isn't required for [private clusters][private-clusters]. |
 
 ### Azure Global required FQDN / application rules
 
@@ -82,7 +82,7 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`*:22`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:22`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:22`** <br/> *Or* <br/> **`APIServerPublicIP:22`** `(only known after cluster creation)`  | TCP           | 22      | For tunneled secure communication between the nodes and the control plane. |
 | **`*:123`** or **`ntp.ubuntu.com:123`** (if using Azure Firewall network rules)  | UDP      | 123     | Required for Network Time Protocol (NTP) time synchronization on Linux nodes.                 |
 | **`CustomDNSIP:53`** `(if using custom DNS servers)`                             | UDP      | 53      | If you're using custom DNS servers, you must ensure they're accessible by the cluster nodes. |
-| **`APIServerPublicIP:443`** `(if running pods/deployments that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server, those pod/deployments would use the API IP.  |
+| **`APIServerPublicIP:443`** `(if running pods/deployments, like Ingress Controller, that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server (like Ingress Controller), those pod/deployments would use the API IP.  |
 
 ### Microsoft Azure operated by 21Vianet required FQDN / application rules
 
@@ -90,8 +90,8 @@ The following network and FQDN/application rules are required for an AKS cluster
 |------------------------------------------------|-----------------|----------|
 | **`*.hcp.<location>.cx.prod.service.azk8s.cn`**| **`HTTPS:443`** | Required for Node <-> API server communication. Replace *\<location\>* with the region where your AKS cluster is deployed. |
 | **`*.tun.<location>.cx.prod.service.azk8s.cn`**| **`HTTPS:443`** | Required for Node <-> API server communication. Replace *\<location\>* with the region where your AKS cluster is deployed. |
-| **`mcr.microsoft.com`,`mcr.azure.cn`**                        | **`HTTPS:443`** | Required to access images in Microsoft Container Registry (MCR). This registry contains first-party images/charts (for example, coreDNS, etc.). These images are required for the correct creation and functioning of the cluster, including scale and upgrade operations. |
-| **`.data.mcr.microsoft.com`,`.data.mcr.azure.cn`**                  | **`HTTPS:443`** | Required for MCR storage backed by the Azure Content Delivery Network (CDN). |
+| **`mcr.microsoft.com`**                        | **`HTTPS:443`** | Required to access images in Microsoft Container Registry (MCR). This registry contains first-party images/charts (for example, coreDNS, etc.). These images are required for the correct creation and functioning of the cluster, including scale and upgrade operations. |
+| **`.data.mcr.microsoft.com`**                  | **`HTTPS:443`** | Required for MCR storage backed by the Azure Content Delivery Network (CDN). |
 | **`management.chinacloudapi.cn`**              | **`HTTPS:443`** | Required for Kubernetes operations against the Azure API. |
 | **`login.chinacloudapi.cn`**                   | **`HTTPS:443`** | Required for Microsoft Entra authentication. |
 | **`packages.microsoft.com`**                   | **`HTTPS:443`** | This address is the Microsoft packages repository used for cached *apt-get* operations.  Example packages include Moby, PowerShell, and Azure CLI. |
@@ -105,7 +105,7 @@ The following network and FQDN/application rules are required for an AKS cluster
 | **`*:9000`** <br/> *Or* <br/> [ServiceTag](/azure/virtual-network/service-tags-overview#available-service-tags) - **`AzureCloud.<Region>:9000`** <br/> *Or* <br/> [Regional CIDRs](/azure/virtual-network/service-tags-overview#discover-service-tags-by-using-downloadable-json-files) - **`RegionCIDRs:9000`** <br/> *Or* <br/> **`APIServerPublicIP:9000`** `(only known after cluster creation)`  | TCP           | 9000      | For tunneled secure communication between the nodes and the control plane. |
 | **`*:123`** or **`ntp.ubuntu.com:123`** (if using Azure Firewall network rules)  | UDP      | 123     | Required for Network Time Protocol (NTP) time synchronization on Linux nodes.                 |
 | **`CustomDNSIP:53`** `(if using custom DNS servers)`                             | UDP      | 53      | If you're using custom DNS servers, you must ensure they're accessible by the cluster nodes. |
-| **`APIServerPublicIP:443`** `(if running pods/deployments that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server, those pods/deployments would use the API IP.  |
+| **`APIServerPublicIP:443`** `(if running pods/deployments, like Ingress Controller, that access the API Server)` | TCP      | 443     | Required if running pods/deployments that access the API Server (like Ingress Controller), those pods/deployments would use the API IP.  |
 
 ### Azure US Government required FQDN / application rules
 
