@@ -3,7 +3,7 @@ title: Solution overview for deploying a Kafka cluster on Azure Kubernetes Servi
 description: In this article, we provide an overview of deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.
 ms.topic: overview
 ms.custom: azure-kubernetes-service
-ms.date: 03/31/2025
+ms.date: 04/04/2025
 author: senavar
 ms.author: senavar
 ---
@@ -14,7 +14,8 @@ In this guide, we review the prerequisites, architecture considerations, and key
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
-## What is Strimzi?
+## What is Apache Kafka and Strimzi?
+[Apache Kafka](https://kafka.apache.org/) is an open-source distributed event streaming platform designed to handle high-volume, high-throughput, and real-time streaming data. As a result, it is used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications. However, managing and scaling Kafka clusters can be challenging and often time-consuming.
 
 [Strimzi](https://strimzi.io) is an open-source project that simplifies the deployment, management, and operation of Apache Kafka on Kubernetes. It provides a set of Kubernetes Operators and container images that automate complex Kafka operational tasks through declarative configuration.
 
@@ -62,6 +63,18 @@ Cruise Control helps maintain optimal performance as your workload changes over 
 ### Drain Cleaner
 
 [Strimzi Drain Cleaner](https://strimzi.io/blog/2021/09/24/drain-cleaner/) is a utility designed to help manage Kafka broker pods deployed by Strimzi during Kubernetes node draining. Strimzi Drain Cleaner intercepts Kubernetes node drain operations through its admission webhook to coordinate graceful maintenance of Kafka clusters. When an eviction request is made for Kafka broker pods, the request is detected and the Drain Cleaner annotates the pods to signal the Strimzi Cluster Operator to handle the restart, ensuring that the Kafka cluster remains in a healthy state. This process maintains cluster health and data reliability during routine maintenance operations or unexpected node failures.
+
+## When to use Kafka on AKS  
+
+Consider running Kafka on AKS when:  
+
+* You need complete control over Kafka configuration and operations.  
+* Your use case requires specific Kafka features not available in managed offerings.  
+* You want to integrate Kafka with other containerized applications running on AKS.  
+* You need to deploy in regions where managed Kafka services aren't available.  
+* Your organization has existing expertise in Kubernetes and container orchestration.  
+
+For simpler use cases or when operational overhead is a concern, consider fully managed services like [Azure Event Hubs](/azure/event-hubs/event-hubs-about). 
 
 ## Key considerations for Kafka on AKS  
 
@@ -147,18 +160,6 @@ Effective monitoring of Kafka clusters includes:
 * Consumer lag monitoring with Kafka Exporter.  
 * Integration with Azure Managed Prometheus and Azure Managed Grafana.  
 * Alerting on key performance indicators and health metrics.  
-
-## When to use Kafka on AKS  
-
-Consider running Kafka on AKS when:  
-
-* You need complete control over Kafka configuration and operations.  
-* Your use case requires specific Kafka features not available in managed offerings.  
-* You want to integrate Kafka with other containerized applications running on AKS.  
-* You need to deploy in regions where managed Kafka services aren't available.  
-* Your organization has existing expertise in Kubernetes and container orchestration.  
-
-For simpler use cases or when operational overhead is a concern, consider fully managed services like [Azure Event Hubs](/azure/event-hubs/event-hubs-about). 
 
 ## Next step  
 
