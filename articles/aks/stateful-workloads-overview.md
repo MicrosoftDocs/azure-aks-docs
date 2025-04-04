@@ -82,7 +82,7 @@ The following sections provide links to design and deployment information for st
 * [Deploy a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi overview](kafka-overview.md)
 * [Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)](kafka-infrastructure.md)
 * [Configure and deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)](kafka-deploy.md)
-* [Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)](kafka-monitoring.md)
+* [Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)](kafka-configure.md)
 
 ## Contributors
 
