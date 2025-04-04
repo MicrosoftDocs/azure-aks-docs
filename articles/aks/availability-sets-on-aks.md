@@ -18,20 +18,20 @@ Azure Kubernetes Services is moving away from Availability Sets in favor of Virt
 > We recommend customers use [Virtual Machine Node Pools(Public Preview)](virtual-machines-node-pools.md) for an AKS optimized virtual machine. Virtual Machine Node Pools:
 >
 > - Allow virtual machine instances to be centrally managed, configured, and updated.
-> - Allow an increase or decrease the number of VM instances in response to demand or a defined schedule.
-> - Allow single node-level controls, specifying and same-family mixing of nodes of different sizes to lift restrictions from a single model and improve consistency
+> - Allow an increase or decrease of the number of virtual machine instances in response to demand or a defined schedule.
+> - Allow single node-level controls, and same-family mixing of different sized nodes to lift restrictions from a single model and improve consistency
 
 ## Availability Sets Overview
 Availability sets are logical groupings of virtual machines that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
 
-### Phase out of Availablity Sets
-As of 2019, we're no longer adding other features to Availability Sets in Azure Kubernetes Services. Any features introduced since 2019, such as AKS Backup, are not supported in Availability Set node pools.
+### Phase out of Availability Sets
+As of 2019, we're no longer adding other features to Availability Sets in Azure Kubernetes Services. Any features introduced since 2019, such as AKS Backup, aren't supported in Availability Set node pools.
 
-### When will VMAS be fully deprecated?
+### When will Availability Sets be fully deprecated?
 Availability Sets support will be fully deprecated by September 30, 2025. We recommend all workloads currently on VMAS be migrated to Virtual Machine Node Pools. 
 
 ### Automatic migration
-Starting September 30th, we'll automatically migrate remaining Availability Set node pools to Virtual Machines node pools. 
+Starting September 30 2025, we'll automatically migrate remaining Availability Set node pools to Virtual Machines node pools. 
 
 ### Related Content
 
