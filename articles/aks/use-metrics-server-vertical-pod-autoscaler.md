@@ -61,7 +61,7 @@ To update the coefficient values, create a ConfigMap in the overlay *kube-system
 3. Restart the Metrics Server pods. There are two Metrics server pods, and the following command deletes all of them.
 
     ```bash
-    kubectl -n kube-system delete po -l k8s-app=metrics-server
+    kubectl rollout restart -n kube-system deploy metrics-server
     ```
 
 4. To verify the updated resources took effect, run the following command to review the Metrics Server VPA log.
@@ -126,7 +126,7 @@ If you would like to bypass VPA for Metrics Server and manually control its reso
 3. Restart the Metrics Server pods. There are two Metrics server pods, and the following command deletes all of them.
 
     ```bash
-    kubectl -n kube-system delete po -l k8s-app=metrics-server
+    kubectl rollout restart -n kube-system deploy metrics-server
     ```
 
 4. To verify the updated resources took effect, run the following command to review the Metrics Server VPA log.
