@@ -6,10 +6,10 @@ ms.author: dixitaro
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
-ms.custom: 
-    - migration
-    - aws-to-azure
-    - eks-to-aks
+ms.collection: 
+ - migration
+ - aws-to-azure
+ - gcp-to-azure
 ---
 
 # Replicate an Amazon Web Services (AWS) web application with AWS WAF in Azure Kubernetes Service (AKS)

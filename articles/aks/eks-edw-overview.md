@@ -6,6 +6,10 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+ms.collection: 
+ - migration
+ - aws-to-azure
+ - gcp-to-azure
 ---
 
 # Replicate an AWS event-driven workflow (EDW) workload with KEDA and Karpenter in Azure Kubernetes Service (AKS)

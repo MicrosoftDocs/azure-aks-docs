@@ -6,6 +6,10 @@ ms.service: azure-kubernetes-service
 ms.date: 01/17/2025
 author: schaffererin
 ms.author: schaffererin
+ms.collection: 
+ - migration
+ - aws-to-azure
+ - gcp-to-azure
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)
