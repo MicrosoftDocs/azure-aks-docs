@@ -42,6 +42,10 @@ For more information, see [Intelligent cross-cluster Kubernetes resource placeme
 
 AKS Automatic clusters are designed to help reduce management overhead costs of creating cluster templates, managing the cluster lifecycle, guardrails, and updates. Scaling is seamless and dynamic. Nodes are created based on workload requests using [node autoprovisioning (NAP)](./node-autoprovision.md) and workloads are automatically scaled with features like Horizontal Pod Autoscaler (HPA), [Kubernetes Event Driven Autoscaling (KEDA)](./keda-about.md), and [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md).
 
+## Azure Advisor cost recommendations
+
+AKS cost recommendations in Azure Advisor provide recommendations to help you achieve cost-efficiency without sacrificing reliability. Advisor analyzes your resource configurations and recommends optimization solutions. For more information, see [Get Azure Kubernetes Service (AKS) cost recommendations in Azure Advisor](./cost-advisors.md).
+
 ## Next steps
 
 To learn more about cost optimization in Azure Kubernetes Service (AKS), see the following articles:
