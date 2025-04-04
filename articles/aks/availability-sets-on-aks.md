@@ -6,13 +6,13 @@ ms.custom: devx-track-azurecli
 ms.date: 01/24/2025
 ms.author: wilsondarko
 author: wdarko1
-#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
+Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
 # Availability Sets deprecation - Azure Kubernetes Services
 
 This article details how Azure Kubernetes Services (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS). 
-Azure Kubernetes Services is moving away from Availability Sets in favor of Virtual Machines.
+Azure Kubernetes Services is moving away from Availability Sets in favor of Virtual Machines (VMs).
 
 > [!NOTE]
 > We recommend customers use [Virtual Machine Node Pools(Public Preview)](virtual-machines-node-pools.md) for an AKS optimized virtual machine. Virtual Machine Node Pools:
@@ -21,18 +21,18 @@ Azure Kubernetes Services is moving away from Availability Sets in favor of Virt
 > - Allow an increase or decrease the number of VM instances in response to demand or a defined schedule.
 > - Allow single node-level controls, specifying and same-family mixing of nodes of different sizes to lift restrictions from a single model and improve consistency
 
-# Availability Sets Overview
+## Availability Sets Overview
 Availability sets are logical groupings of virtual machines that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
 
-# Phase out of Availablity Sets
-As of 2019, we're no longer adding other features to Availability Sets in Azure Kubernetes Services. Any features introduced since 2019, such as AKS Backup, are not available in Availability Set node pools.
+### Phase out of Availablity Sets
+As of 2019, we're no longer adding other features to Availability Sets in Azure Kubernetes Services. Any features introduced since 2019, such as AKS Backup, are not supported in Availability Set node pools.
 
-# When will VMAS be fully deprecated?
+### When will VMAS be fully deprecated?
 Availability Sets support will be fully deprecated by September 30, 2025. We recommend all workloads currently on VMAS be migrated to Virtual Machine Node Pools. 
 
 ### Automatic migration
 Starting September 30th, we'll automatically migrate remaining Availability Set node pools to Virtual Machines node pools. 
 
-## Related Content
+### Related Content
 
 [More information on Virtual Machine node pools](virtual-machines-node-pools.md)
