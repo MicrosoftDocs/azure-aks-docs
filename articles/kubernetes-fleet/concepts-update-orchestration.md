@@ -1,12 +1,10 @@
 ---
 title: "Update Kubernetes and node images across multiple member clusters"
 description: This article describes the concept of update orchestration across multiple clusters.
-ms.date: 03/04/2024
+ms.date: 03/26/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - build-2024
 ms.topic: conceptual
 ---
 
@@ -46,7 +44,17 @@ You should choose `Latest` to use fresher image versions and minimize security r
 
 Update runs honor [planned maintenance windows](/azure/aks/planned-maintenance) that you set at the Azure Kubernetes Service (AKS) cluster level.
 
-Within an update run (for both [One by one](./update-orchestration.md#update-all-clusters-one-by-one) or [Stages](./update-orchestration.md#update-clusters-using-groups-and-stages) type update runs), update run prioritizes upgrading the clusters in the following order: 
+AKS clusters support two distinct maintenance windows - one for Kubernetes (control plane) upgrades and one for node image upgrades.
+
+Fleet Manager update runs will honor AKS maintenance windows as follows:
+
+| Fleet Manager update channel | AKS upgrade option | AKS maintenance window setting       |
+|------------------------------|--------------------| -------------------------------------|
+| Kubernetes Control Plane     | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
+| Kubernetes + Node Image      | Kubernetes Version | AKSManagedAutoUpgradeSchedule        |
+| Node Image Only              | Node Image         |  AKSManagedNodeOSAutoUpgradeSchedule | 
+
+Update run prioritizes upgrading clusters based on planned maintenance in the following order: 
   1. Member with an open ongoing maintenance window.
   2. Member with maintenance window opening in the next four hours.
   3. Member with no maintenance window.
@@ -56,46 +64,45 @@ Within an update run (for both [One by one](./update-orchestration.md#update-all
 
 An update run can be in one of the following states:
 
-- **NotStarted**: Update run hasn't started.
-- **Running**: Upgrade is in progress for at least one of the member clusters in the update run.
+- **Not Started**: Update run hasn't started.
+- **Running**: Update run is in progress for at least one member cluster.
 - **Pending**: 
-  - **Member cluster**: A member cluster can be in the pending state for any of the following reasons which can be viewed in the message field.
+  - **Member cluster**: A member cluster can be in the `Pending` state for any of the following reasons which can be viewed in the message field.
     - Maintenance window isn't open. Message indicates next opening time.
-    - Target Kubernetes version isn't yet available in the Azure region of the member. Message links to the release tracker so that you can check status of the release across regions.
-    - Target node image version isn't yet available in the Azure region of the member. Message links to the release tracker so that you can check status of the release across regions.
-  - **Group**: A group is in `Pending` state if all members in the group are in `Pending` state or not started. When a member moves to `Pending`, the update run will attempt to upgrade the next member in the group. If all members are `Pending`, the group moves to `Pending` state. If a group is in `Pending` state, the update run waits for the group to complete before moving on to the next stage for execution.
-  - **Stage**: A stage is in `Pending` state if all groups under that stage are in `Pending` state or not started.
-  - **Run**: A run is in `Pending` state if the current stage that should be running is in `Pending` state.
+    - Target Kubernetes version isn't yet available in the member's Azure region. Message links to the AKS release tracker so you can check status of the release across regions.
+    - Target node image version isn't yet available in the member's Azure region. Message links to the AKS release tracker.
+  - **Update group**: A group is `Pending` if all members in the group are `Pending` or not started. When a member moves to `Pending`, the update run will attempt to upgrade the next member in the group. If all members are `Pending`, the group moves to `Pending` state. If a group is `Pending`, the update run waits for the group to complete before moving on to the next update stage.
+  - **Update stage**: A stage is `Pending` if all update groups in the stage are `Pending` or not started.
+  - **Run**: A run is in `Pending` state if the current stage is in `Pending` state.
 - **Skipped**: All levels of an update run can be skipped. Skipping can be system or user-initiated.
-  - **Member**:
-    - You skipped upgrade for a member, group, or stage.
+  - **Member cluster**:
+    - User skipped update for the member, group, or stage.
     - Member cluster is already at the target Kubernetes version (if update run mode is `Full` or `ControlPlaneOnly`).
     - Member cluster is already at the target Kubernetes version and all node pools are at the target node image version.
-    - When consistent node image is chosen for an upgrade run, if it's not possible to find the target image version for one of the node pools, then the upgrade is skipped for that cluster. As an example, this can occur when a new node pool with a new Virtual Machine (VM) SKU is added after an update run has started.
-  - **Group**:
+    - When consistent node image is chosen for an update run, if it's not possible to find the target image version for one of the node pools, then the upgrade is skipped for that cluster. As an example, this can occur when a new node pool with a new Virtual Machine (VM) SKU is added after an update run has started.
+  - **Update group**:
+    - User skipped update for the group.
     - All member clusters were detected as `Skipped` by the system.
-    - You initiated a skip at the group level.
-  - **Stage**:
-    - All groups in the stage were detected as `Skipped` by the system.
-    - You initiated a skip at the stage level.
-  - **Run**:
+  - **Update stage**:
+    - User skipped update for the stage.
+    - All update groups in the stage were detected as `Skipped` by the system.
+  - **Update run**:
     - All stages were detected as `Skipped` by the system.
 - **Stopped**: All levels of an update run can be stopped. There are two possibilities for entering a stopped state:
-  - You stop the update run, at which point update run stops tracking all operations. If an operation was already initiated by update run (for example, a cluster upgrade is in progress), then that operation isn't aborted for that individual cluster.
+  - User stopped the update run, at which point update run stopped tracking all operations. If an operation was already initiated by update run (for example, a cluster upgrade is in progress), then that operation isn't aborted for that individual cluster.
   - If a failure is encountered during the update run (for example upgrades failed on one of the clusters), the entire update run enters into a stopped state. Operations are not attempted for any subsequent cluster in the update run.
 - **Failed**: A failure to upgrade a cluster results in the following actions:
   - Marks the `MemberUpdateStatus` as `Failed` on the member cluster.
   - Marks all parents (group -> stage -> run) as `Failed` with a summary error message.
   - Stops the update run from progressing any further.
+- **Completed**: The update run has been successfully finished.
 
 > [!NOTE]
 > You can re-run an update run at any time in order to re-apply upgrades that may have been skipped or failed.
 
-## Understanding auto-upgrade profiles (preview)
+## Understanding auto-upgrade profiles
 
 Auto-upgrade profiles are used to automatically trigger update runs when new Kubernetes or node image versions are made available for AKS. 
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 In an auto-upgrade profile you can configure:
 
@@ -109,8 +116,8 @@ The Stable channel is always the latest AKS-supported Kubernetes patch release o
 
 Examples: 
 
-- The latest supported minor Kubernetes version is *1.30*. Any patch releases in the *1.29* minor range would be considered for Stable channel updates.
-- A new minor Kubernetes version of *1.31* is published. Any patch release in the *1.30* minor range would be considered for Stable channel updates. Any cluster previously receiving updates from *1.29* would be updated to the most recent patch for *1.30*.
+* The latest supported minor Kubernetes version is *1.30*. Any patch releases in the *1.29* minor range would be considered for Stable channel updates.
+* A new minor Kubernetes version of *1.31* is published. Any patch release in the *1.30* minor range would be considered for Stable channel updates. Any cluster previously receiving updates from *1.29* would be updated to the most recent patch for *1.30*.
 
 ### Rapid channel
 
@@ -118,8 +125,8 @@ The Rapid channel is always the most recent AKS-supported Kubernetes minor relea
 
 Examples: 
 
-- The latest supported minor version is *1.30*. Any patch release in the *1.30* minor range would be considered for Rapid channel updates.
-- A new minor Kubernetes version of *1.31* is published. *1.30* shifts to the Stable channel. Any cluster previously receiving updates from *1.30* would be updated to the most recent patch for *1.31* which is now the Rapid channel.
+* The latest supported minor version is *1.30*. Any patch release in the *1.30* minor range would be considered for Rapid channel updates.
+* A new minor Kubernetes version of *1.31* is published. *1.30* shifts to the Stable channel. Any cluster previously receiving updates from *1.30* would be updated to the most recent patch for *1.31* which is now the Rapid channel.
 
 ### NodeImage channel
 
@@ -131,7 +138,7 @@ Nodes on different operating systems will be updated in accordance with the node
 
 Example:
 
-- A cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*. A new NodeImage version *20348.2582.240916* is released and the cluster nodes are automatically upgraded to version *20348.2582.240916*.
+* A cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*. A new NodeImage version *20348.2582.240916* is released and the cluster nodes are automatically upgraded to version *20348.2582.240916*.
 
 ### Minor version skipping behavior
 
@@ -159,6 +166,7 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
+* [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
 
 <!-- INTERNAL LINKS -->
 [supported-kubernetes-versions]: /azure/aks/supported-kubernetes-versions

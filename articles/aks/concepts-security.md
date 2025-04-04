@@ -1,12 +1,11 @@
 ---
 title: Concepts - Security in Azure Kubernetes Services (AKS)
 description: Learn about security in Azure Kubernetes Service (AKS), including master and node communication, network policies, and Kubernetes secrets.
-author: miwithro
+author: shashankbarsin
 ms.topic: conceptual
 ms.subservice: aks-security
-ms.custom: build-2023
-ms.date: 03/18/2024
-ms.author: miwithro
+ms.date: 04/03/2025
+ms.author: shasb
 ---
 
 # Security concepts for applications and clusters in Azure Kubernetes Service (AKS)
@@ -123,7 +122,7 @@ Using Secrets reduces the sensitive information defined in the pod or service YA
 > [!NOTE]
 > The raw secret manifest files contain the secret data in base64 format. For more information, see the [official documentation][secret-risks]. Treat these files as sensitive information, and never commit them to source control.
 
-Kubernetes secrets are stored in *etcd*, a distributed key-value store. AKS fully manages the *etcd* store and [data is encrypted at rest within the Azure platform][encryption-atrest].
+Kubernetes secrets are stored in *etcd*, a distributed key-value store. AKS allows [encryption at rest of secrets in etcd using customer managed keys][etcd-encryption-cmk].
 
 ## Next steps
 
@@ -141,7 +140,7 @@ For more information on core Kubernetes and AKS concepts, see:
 
 <!-- LINKS - External -->
 [secret-risks]: https://kubernetes.io/docs/concepts/configuration/secret/#risks
-[encryption-atrest]: /azure/security/fundamentals/encryption-atrest
+
 
 <!-- LINKS - Internal -->
 [microsoft-defender-for-containers]: /azure/defender-for-cloud/defender-for-containers-introduction
@@ -171,3 +170,4 @@ For more information on core Kubernetes and AKS concepts, see:
 [custom-node-configuration]: /azure/aks/custom-node-configuration
 [security-best-practices]: /azure/aks/operator-best-practices-cluster-security
 [security-container-access]: secure-container-access.md
+[etcd-encryption-cmk]: use-kms-etcd-encryption.md

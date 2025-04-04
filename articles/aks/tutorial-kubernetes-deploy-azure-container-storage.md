@@ -23,7 +23,6 @@ By the end of this tutorial, you will:
 > * Understand how Azure Container Storage supports diverse workloads in Kubernetes.
 > * Explore multiple storage backend options to tailor storage to your application's needs.
 > * Deploy Azure Container Storage on your AKS cluster and create a generic ephemeral volume.
-> * Integrate storage with a sample application (this might need to come in a later tutorial)
 
 ## Before you begin
 

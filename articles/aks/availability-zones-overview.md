@@ -27,11 +27,11 @@ Microsoft hosts the [AKS control plane](/azure/aks/core-aks-concepts#control-pla
 Other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_*, for Managed Cluster and contains the following resources:
 
 ### Node pools
-Node pools are created as a Virtual Machine Scale Set in your Azure Subscription. 
+Node pools are created as a Virtual Machine Scale Set in your Azure Subscription.
 
 When you create an AKS cluster, one [System Node pool](/azure/aks/use-system-pools) is required and created automatically. It hosts critical system pods such as `CoreDNS` and `metrics-server`. More [User Node pools](/azure/aks/create-node-pools) can be added to your AKS cluster to host your applications.
 
-There are three ways node pools can be deployed: 
+There are three ways node pools can be deployed:
 - Zone spanning
 - Zone aligned
 - Regional
@@ -47,7 +47,7 @@ A zone spanning scale set spreads nodes across all selected zones, by specifying
 # Create an AKS Cluster, and create a zone spanning System Nodepool in all three AZs, one node in each AZ
 az aks create --resource-group example-rg --name example-cluster --node-count 3 --zones 1 2 3
 # Add one new zone spanning User Nodepool, two nodes in each
-az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-a  --node-count 6 --zones 1 2 3 
+az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-a  --node-count 6 --zones 1 2 3
 ```
 AKS balances the number of nodes between zones automatically.
 
@@ -76,7 +76,7 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-z  --node-count 2 --zones 3
 ```
 
- This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md). 
+ This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md).
 
 > [!NOTE]
 > * If a single workload is deployed across node pools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale up operations.
@@ -84,7 +84,7 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 #### Regional (not using Availability Zones)
 Regional mode is used when the zone assignment isn't set in the deployment template (`"zones"=[] or "zones"=null`).
 
-In this configuration, the node pool creates Regional (not-zone pinned) instances and implicitly places instances throughout the region. There's no guarantee for balance or spread across zones, or that instances land in the same availability zone. 
+In this configuration, the node pool creates Regional (not-zone pinned) instances and implicitly places instances throughout the region. There's no guarantee for balance or spread across zones, or that instances land in the same availability zone.
 
 In the rare case of a full zonal outage, any or all instances within the node pool can be impacted.
 
@@ -118,19 +118,29 @@ The 'maxSkew' parameter describes the degree to which Pods might be unevenly dis
 Assuming three zones and three replicas, setting this value to 1 ensures each zone has at least one pod running:
 
 ```yaml
-kind: Pod
-apiVersion: v1
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: myapp
+  name: my-deployment
 spec:
-  replicas: 3
-  topologySpreadConstraints:
-  - maxSkew: 1
-    topologyKey: "topology.kubernetes.io/zone"
-    whenUnsatisfiable: DoNotSchedule # or ScheduleAnyway
-  containers:
-  - name: pause
-    image: registry.k8s.io/pause:3.1
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app: my-app
+      containers:
+      - name: my-container
+        image: my-image
 ```
 
 ### Storage and volumes
@@ -156,7 +166,7 @@ spec:
 ```
 
 For zone aligned deployments, you can create a new storage class with the `skuname` parameter set to LRS (Locally Redundant Storage).
-You can then use the new storage class in your Persistent Volume Claim (PVC). 
+You can then use the new storage class in your Persistent Volume Claim (PVC).
 
 While LRS disks are less expensive, they aren't zone-redundant, and attaching a disk to a node in a different zone isn't supported.
 
@@ -205,12 +215,14 @@ The following limitations apply when using Availability Zones:
 
 ## Next steps
 
-* Learn about [System Node pool](/azure/aks/use-system-pools) 
+<!-- LINKS -->
+* [Create an AKS cluster with availability zones](./availability-zones.md).
+* [Zone resiliency considerations for Azure Kubernetes Service (AKS)](./aks-zone-resiliency.md
+* Learn about [System Node pool](/azure/aks/use-system-pools)
 * Learn about [User Node pools](/azure/aks/create-node-pools)
 * Learn about [Load Balancers](/azure/aks/load-balancer-standard)
 * [Best practices for business continuity and disaster recovery in AKS][best-practices-multi-region]
 
-<!-- LINKS - external -->
 [kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/
 
 <!-- LINKS - internal -->

@@ -46,7 +46,7 @@ The following table provides the **minimum** package version required for each l
 | Node.js | [@azure/identity](/javascript/api/overview/azure/identity-readme) | 3.2.0 |
 | Python | [azure-identity](/python/api/overview/azure/identity-readme) | 1.13.0 |
 
-In the following code samples, `DefaultAzureCredential` is used. This credential type uses the environment variables injected by the Azure Workload Identity mutating webhook to authenticate with Azure Key Vault.
+In the following code samples, `DefaultAzureCredential` is used. This credential type uses the environment variables injected by the Azure Workload Identity mutating webhook to authenticate with Azure Key Vault. To see samples using one of the other approaches, refer to the Ecosystem-specific client library links above.
 
 ## [.NET](#tab/dotnet)
 
