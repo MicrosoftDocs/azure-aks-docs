@@ -29,7 +29,7 @@ After enabling the cost analysis add-on and allowing time for data to be collect
 
 * Your cluster must use the `Standard` or `Premium` tier, not the `Free` tier.
 * To view cost analysis information, you must have one of the following roles on the subscription hosting the cluster: `Owner`, `Contributor`, `Reader`, `Cost Management Contributor`, or `Cost Management Reader`.
-* [Microsoft Entra Workload ID](./workload-identity-overview.md) configured on your cluster.
+* [Managed identity](./use-managed-identity.md) configured on your cluster.
 * If using the Azure CLI, you need version `2.61.0` or later installed.
 * Once you have enabled cost analysis, you can't downgrade your cluster to the `Free` tier without first disabling cost analysis.
 * Access to the Azure API including Azure Resource Manager (ARM) API. For a list of fully qualified domain names (FQDNs) required, see [AKS Cost Analysis required FQDN](./outbound-rules-control-egress.md#aks-cost-analysis-add-on).
