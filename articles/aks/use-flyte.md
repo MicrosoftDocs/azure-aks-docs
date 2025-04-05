@@ -159,6 +159,6 @@ To start building and deploying data and machine learning pipelines, see the fol
 [install-helm]: https://helm.sh/docs/intro/install/
 [install-kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 [get-docker]: https://docs.docker.com/get-docker/
-[flyte-install]: https://flyte-next.readthedocs.io/en/latest/introduction.html#installation
+[flyte-install]: https://www.union.ai/docs/flyte/user-guide/getting-started/local-setup/
 [flyte-eda]: https://docs.flyte.org/en/latest/flytesnacks/examples/exploratory_data_analysis/index.html
 [flyte-pipelines]: https://docs.flyte.org/en/latest/flytesnacks/examples/house_price_prediction/index.html
