@@ -164,7 +164,7 @@ We uncover patterns that create overspending on infrastructure and help teams pr
 
 </details>
 
-For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [IBM Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/ibm-usa-ny-armonk-hq-6275750-ibmcloud-asperia.ibm_kubecost_enterprise?tab=Overview).
+For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [IBM Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/ibm-usa-ny-armonk-hq-6275750-ibmcloud-asperia.ibm_kubecost_enterprise?tab=Overview).
 
 ### NetApp
 
