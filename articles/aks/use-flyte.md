@@ -26,7 +26,7 @@ Flyte can be used for a variety of use cases, including:
 * Process petabytes of data to efficiently conduct 3D mapping of new areas.
 * Quickly rollback to previous versions and minimize impact of bugs in your pipelines.
 
-For more information, see [Core Flyte use cases](https://docs.flyte.org/en/latest/core_use_cases/index.html).
+For more information, see [Flyte tutorials](https://www.union.ai/docs/flyte/tutorials/).
 
 ## Prerequisites
 
@@ -153,12 +153,12 @@ To start building and deploying data and machine learning pipelines, see the fol
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[flyte]: https://docs.flyte.org/en/latest/introduction.html
+[flyte]: https://www.union.ai/docs/flyte/user-guide/
 [azure-free]: https://azure.microsoft.com/free
 [install-azure-cli]: /cli/azure/install-azure-cli
 [install-helm]: https://helm.sh/docs/intro/install/
 [install-kubectl]: https://kubernetes.io/docs/tasks/tools/install-kubectl/
 [get-docker]: https://docs.docker.com/get-docker/
 [flyte-install]: https://www.union.ai/docs/flyte/user-guide/getting-started/local-setup/
-[flyte-eda]: https://docs.flyte.org/en/latest/flytesnacks/examples/exploratory_data_analysis/index.html
-[flyte-pipelines]: https://docs.flyte.org/en/latest/flytesnacks/examples/house_price_prediction/index.html
+[flyte-eda]: https://www.union.ai/docs/flyte/tutorials/feature-engineering/exploratory-data-analysis/
+[flyte-pipelines]: https://www.union.ai/docs/flyte/tutorials/model-training/house-price-prediction/
