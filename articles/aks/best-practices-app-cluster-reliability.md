@@ -16,7 +16,7 @@ The best practices in this article are organized into the following categories:
 
 | Category | Best practices |
 | -------- | -------------- |
-| [Deployment level best practices](#deployment-level-best-practices) | • [Pod CPU and memory limits](#pod-cpu-and-memory-limits) <br/> • [Pod Disruption Budgets (PDBs)](#pod-disruption-budgets-pdbs) <br/> • [Pre-stop hooks](#pre-stop-hooks) <br/>  • [High Availability during Upgrades](#High-Availability-during-Upgrades) <br/>• [Pod topology spread constraints](#pod-topology-spread-constraints) <br/> • [Readiness, liveness, and startup probes](#readiness-liveness-and-startup-probes) <br/> • [Multi-replica applications](#multi-replica-applications) |
+| [Deployment level best practices](#deployment-level-best-practices) | • [Pod CPU and memory limits](#pod-cpu-and-memory-limits) <br/> • [Vertical Pod Autoscaler (VPA)](#vertical-pod-autoscaler-vpa) <br/> • [Pod Disruption Budgets (PDBs)](#pod-disruption-budgets-pdbs) <br/> • [Pre-stop hooks](#pre-stop-hooks) <br/>  • [High Availability during Upgrades](#High-Availability-during-Upgrades) <br/>• [Pod topology spread constraints](#pod-topology-spread-constraints) <br/> • [Readiness, liveness, and startup probes](#readiness-liveness-and-startup-probes) <br/> • [Multi-replica applications](#multi-replica-applications) |
 | [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Upgrade Configurations for Node Pools](#Upgrade-Configuration-for-Node-Pools) <br/>  • [Accelerated Networking](#accelerated-networking) <br/> • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Premium Disks](#premium-disks) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
 
 ## Deployment level best practices
@@ -80,6 +80,39 @@ spec:
 > ```
 
 For more information, see [Assign CPU Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/) and [Assign Memory Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/).
+
+### Vertical Pod Autoscaler (VPA)
+
+> **Best practice guidance**
+>
+> Use Vertical Pod Autoscaler (VPA) to automatically adjust CPU and memory requests for your pods based on their actual usage.
+
+While not directly implemented through the pod yaml, The Vertical Pod Autoscaler (VPA) helps optimize resource allocation by automatically adjusting the CPU and memory requests for your pods. This ensures that your applications have the resources they need to run efficiently without over-provisioning or under-provisioning.
+
+VPA operates in three modes:
+- **Off**: Only provides recommendations without applying changes.
+- **Auto**: Automatically updates pod resource requests during pod restarts.
+- **Initial**: Sets resource requests only during pod creation.
+
+The following example shows how to configure a VPA resource in Kubernetes:
+
+```yaml
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: my-vpa
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: my-deployment
+  updatePolicy:
+    updateMode: "Auto" # Options: Off, Auto, Initial
+```
+
+For more information, see [Vertical Pod Autoscaler documentation](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler).
+
+---
 
 ### Pod Disruption Budgets (PDBs)
 
