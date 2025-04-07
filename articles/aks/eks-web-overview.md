@@ -9,7 +9,6 @@ ms.service: azure-kubernetes-service
 ms.collection: 
  - migration
  - aws-to-azure
- - gcp-to-azure
 ---
 
 # Replicate an Amazon Web Services (AWS) web application with AWS WAF in Azure Kubernetes Service (AKS)
