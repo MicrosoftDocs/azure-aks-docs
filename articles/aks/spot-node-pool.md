@@ -2,11 +2,10 @@
 title: Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster
 description: Learn how to add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
-ms.date: 03/29/2023
+ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-nodes
-#Customer intent: As a cluster operator or developer, I want to learn how to add an Azure Spot node pool to an AKS Cluster.
 ---
 
 # Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster
@@ -44,19 +43,21 @@ When adding a Spot node pool to an existing cluster, it must be a cluster with m
 
 * Create a node pool with a `priority` of `Spot` using the [`az aks nodepool add`][az-aks-nodepool-add] command.
 
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group myResourceGroup \
-        --cluster-name myAKSCluster \
-        --name spotnodepool \
-        --priority Spot \
-        --eviction-policy Delete \
-        --spot-max-price -1 \
-        --enable-cluster-autoscaler \
-        --min-count 1 \
-        --max-count 3 \
-        --no-wait
-    ```
+```azurecli-interactive
+export SPOT_NODEPOOL="spotnodepool"
+
+az aks nodepool add \
+    --resource-group $RESOURCE_GROUP \
+    --cluster-name $AKS_CLUSTER \
+    --name $SPOT_NODEPOOL \
+    --priority Spot \
+    --eviction-policy Delete \
+    --spot-max-price -1 \
+    --enable-cluster-autoscaler \
+    --min-count 1 \
+    --max-count 3 \
+    --no-wait
+```
 
 In the previous command, the `priority` of `Spot` makes the node pool a Spot node pool. The `eviction-policy` parameter is set to `Delete`, which is the default value. When you set the [eviction policy][eviction-policy] to `Delete`, nodes in the underlying scale set of the node pool are deleted when they're evicted.
 
@@ -71,9 +72,98 @@ The previous command also enables the [cluster autoscaler][cluster-autoscaler], 
 
 * Verify your node pool was added using the [`az aks nodepool show`][az-aks-nodepool-show] command and confirming the `scaleSetPriority` is `Spot`.
 
-    ```azurecli-interactive
-    az aks nodepool show --resource-group myResourceGroup --cluster-name myAKSCluster --name spotnodepool
-    ```
+```azurecli-interactive
+az aks nodepool show --resource-group $RESOURCE_GROUP --cluster-name $AKS_CLUSTER --name $SPOT_NODEPOOL
+```
+
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```JSON
+{
+  "artifactStreamingProfile": null,
+  "availabilityZones": null,
+  "capacityReservationGroupId": null,
+  "count": 3,
+  "creationData": null,
+  "currentOrchestratorVersion": "1.30.10",
+  "eTag": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+  "enableAutoScaling": true,
+  "enableCustomCaTrust": false,
+  "enableEncryptionAtHost": false,
+  "enableFips": false,
+  "enableNodePublicIp": false,
+  "enableUltraSsd": false,
+  "gatewayProfile": null,
+  "gpuInstanceProfile": null,
+  "gpuProfile": null,
+  "hostGroupId": null,
+  "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/xxxxxxxxxxxxxxxx/providers/Microsoft.ContainerService/managedClusters/xxxxxxxxxxxxxxxx/agentPools/xxxxxxxxxxxx",
+  "kubeletConfig": null,
+  "kubeletDiskType": "OS",
+  "linuxOsConfig": null,
+  "maxCount": 3,
+  "maxPods": 30,
+  "messageOfTheDay": null,
+  "minCount": 1,
+  "mode": "User",
+  "name": "xxxxxxxxxxxx",
+  "networkProfile": {
+    "allowedHostPorts": null,
+    "applicationSecurityGroups": null,
+    "nodePublicIpTags": null
+  },
+  "nodeImageVersion": "AKSUbuntu-2204gen2containerd-xxxxxxxx.xx.x",
+  "nodeInitializationTaints": null,
+  "nodeLabels": {
+    "kubernetes.azure.com/scalesetpriority": "spot"
+  },
+  "nodePublicIpPrefixId": null,
+  "nodeTaints": [
+    "kubernetes.azure.com/scalesetpriority=spot:NoSchedule"
+  ],
+  "orchestratorVersion": "x.xx.xx",
+  "osDiskSizeGb": 128,
+  "osDiskType": "Managed",
+  "osSku": "Ubuntu",
+  "osType": "Linux",
+  "podIpAllocationMode": null,
+  "podSubnetId": null,
+  "powerState": {
+    "code": "Running"
+  },
+  "provisioningState": "Creating",
+  "proximityPlacementGroupId": null,
+  "resourceGroup": "xxxxxxxxxxxxxxxx",
+  "scaleDownMode": "Delete",
+  "scaleSetEvictionPolicy": "Delete",
+  "scaleSetPriority": "Spot",
+  "securityProfile": {
+    "enableSecureBoot": false,
+    "enableVtpm": false,
+    "sshAccess": "LocalUser"
+  },
+  "spotMaxPrice": -1.0,
+  "status": null,
+  "tags": null,
+  "type": "Microsoft.ContainerService/managedClusters/agentPools",
+  "typePropertiesType": "VirtualMachineScaleSets",
+  "upgradeSettings": {
+    "drainTimeoutInMinutes": null,
+    "maxSurge": null,
+    "maxUnavailable": null,
+    "nodeSoakDurationInMinutes": null,
+    "undrainableNodeBehavior": null
+  },
+  "virtualMachineNodesStatus": null,
+  "virtualMachinesProfile": null,
+  "vmSize": "Standard_DS2_v2",
+  "vnetSubnetId": null,
+  "windowsProfile": null,
+  "workloadRuntime": "OCIContainer"
+}
+```
 
 ## Schedule a pod to run on the Spot node
 
@@ -148,4 +238,3 @@ In this article, you learned how to add a Spot node pool to an AKS cluster. For 
 [use-multiple-node-pools]: create-node-pools.md
 [vmss-spot]: /azure/virtual-machine-scale-sets/use-spot
 [upgrade-cluster]: upgrade-cluster.md
-
