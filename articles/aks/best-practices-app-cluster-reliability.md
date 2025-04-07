@@ -193,7 +193,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 3 # Maximum number of additional pods created during the update
+      maxSurge: 33% # Maximum number of additional pods created during the update
 ```
 
 By setting `maxSurge` to 3, this configuration ensures that up to three additional pods can be created during the rolling update, speeding up the deployment process while maintaining availability of your application.
