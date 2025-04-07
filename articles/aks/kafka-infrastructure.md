@@ -72,8 +72,8 @@ The following steps guide you through deploying the AKS cluster and supporting i
     export GRAFANA_NAME="grafana-kafka-aks"  
     export PROMETHEUS_WORKSPACE_NAME="prometheus-aks"
     ```  
- 
-### Precluster network deployments 
+
+### Pre-cluster network deployments
 
 Before deploying the AKS cluster for Kafka, deploy the prerequisite network resources that support the AKS cluster deployment:  
 

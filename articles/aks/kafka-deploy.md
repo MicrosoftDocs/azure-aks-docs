@@ -83,9 +83,9 @@ This architecture ensures the Strimzi Cluster Operator remains highly available 
 
 ### Install Strimzi Drain Cleaner using Helm
 
-Strimzi Drain Cleaner ensures smooth Kubernetes node draining by intercepting drain requests for broker pods. This prevents Kafka partition replicas from becoming under-replicated, maintaining Kafka cluster health and reliability. Drainer Cleaner should also be deployed with multiple replicas and pod disruption budgets to ensure availability in case of a zonal outage or cluster upgrade.  
+Strimzi Drain Cleaner ensures smooth Kubernetes node draining by intercepting drain requests for broker pods. This prevents Kafka partition replicas from becoming under-replicated, maintaining Kafka cluster health and reliability.  
 
-For high availability, Drain Cleaner can be deployed with multiple replicas across availability zones and configured with pod disruption budgets, ensuring it remains functional during zonal outages or cluster upgrades.
+For high availability, you should deploy Drain Cleaner with multiple replicas across availability zones and configure it with pod disruption budgets, ensuring it remains functional during zonal outages or cluster upgrades.
 
 A Helm chart is available for the installation of Strimzi Drain Cleaner:
 
@@ -95,7 +95,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     kubectl create namespace strimzi-drain-cleaner  
     ```  
 
-1. Create a `values.yaml` file to override specific configurations for the Helm chart using the following script:  
+2. Create a `values.yaml` file to override specific configurations for the Helm chart using the following script:  
 
     ```bash  
     cat <<EOF > values.yaml  
@@ -117,7 +117,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     EOF  
     ```  
 
-1. Install the Strimzi Drain Cleaner using the `helm install` command.  
+3. Install the Strimzi Drain Cleaner using the `helm install` command.  
 
     ```bash  
     helm install strimzi-drain-cleaner oci://quay.io/strimzi-helm/strimzi-drain-cleaner \
@@ -125,7 +125,7 @@ A Helm chart is available for the installation of Strimzi Drain Cleaner:
     --values values.yaml
     ```  
 
-1. Verify the Strimzi Drain Cleaner successfully deployed and that all pods are a running state using the `kubectl get` command.  
+4. Verify the Strimzi Drain Cleaner successfully deployed and that all pods are a running state using the `kubectl get` command.  
 
     ```bash  
     kubectl get pods -n strimzi-drain-cleaner  
