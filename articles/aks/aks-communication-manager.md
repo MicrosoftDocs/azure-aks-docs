@@ -1,5 +1,5 @@
 ---
-title: AKS Communication Manager (Preview)
+title: AKS Communication Manager 
 description: Start here to learn how to set up and receive notices in Azure Resource Notification for AKS Maintenance events. 
 ms.date: 10/16/2024
 ms.custom: aks communication manager
@@ -9,8 +9,8 @@ ms.author: kaarthis
 ms.subservice: aks-upgrade
 ---
 
-# Azure Kubernetes Service Communication Manager(Preview)
-The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. Currently in preview, you can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
+# Azure Kubernetes Service Communication Manager
+The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. You can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
 
 ## Prerequisites
 
