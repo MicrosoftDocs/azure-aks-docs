@@ -215,14 +215,12 @@ The following limitations apply when using Availability Zones:
 
 ## Next steps
 
-<!-- LINKS -->
-* [Create an AKS cluster with availability zones](./availability-zones.md).
-* [Zone resiliency considerations for Azure Kubernetes Service (AKS)](./aks-zone-resiliency.md
 * Learn about [System Node pool](/azure/aks/use-system-pools)
 * Learn about [User Node pools](/azure/aks/create-node-pools)
 * Learn about [Load Balancers](/azure/aks/load-balancer-standard)
 * [Best practices for business continuity and disaster recovery in AKS][best-practices-multi-region]
 
+<!-- LINKS - external -->
 [kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/
 
 <!-- LINKS - internal -->
