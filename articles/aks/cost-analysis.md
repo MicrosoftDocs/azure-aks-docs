@@ -6,9 +6,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to
-ms.date: 06/17/2024
-
-#CustomerIntent: As a cluster operator, I want to obtain cost management information, perform cost attribution, and improve my cluster footprint
+ms.date: 04/06/2025
 ---
 
 # Azure Kubernetes Service (AKS) cost analysis
@@ -53,8 +51,27 @@ You can enable the cost analysis with the `--enable-cost-analysis` flag during o
 
 Enable cost analysis on a new cluster using the [`az aks create`][az-aks-create] command with the `--enable-cost-analysis` flag. The following example creates a new AKS cluster in the `Standard` tier with cost analysis enabled:
 
-```azurecli-interactive
-az aks create --resource-group <resource-group> --name <cluster-name> --location <location> --enable-managed-identity --generate-ssh-keys --tier standard --enable-cost-analysis
+```text
+export RANDOM_SUFFIX=$(openssl rand -hex 3)
+export RESOURCE_GROUP="AKSCostRG$RANDOM_SUFFIX"
+export CLUSTER_NAME="AKSCostCluster$RANDOM_SUFFIX"
+export LOCATION="WestUS2"
+az aks create --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --location $LOCATION --enable-managed-identity --generate-ssh-keys --tier standard --enable-cost-analysis
+```
+
+Results: 
+
+```JSON
+{
+    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx",
+    "location": "WestUS2",
+    "name": "AKSCostClusterxxxx",
+    "properties": {
+        "provisioningState": "Succeeded"
+    },
+    "tags": null,
+    "type": "Microsoft.ContainerService/managedClusters"
+}
 ```
 
 ### Enable cost analysis on an existing cluster
@@ -62,7 +79,21 @@ az aks create --resource-group <resource-group> --name <cluster-name> --location
 Enable cost analysis on an existing cluster using the [`az aks update`][az-aks-update] command with the `--enable-cost-analysis` flag. The following example updates an existing AKS cluster in the `Standard` tier to enable cost analysis:
 
 ```azurecli-interactive
-az aks update --resource-group <resource-group> --name <cluster-name> --enable-cost-analysis
+az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --enable-cost-analysis
+```
+
+Results: 
+
+<!-- expected_similarity=0.3 -->
+
+```JSON
+{
+    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx",
+    "name": "AKSCostClusterxxxx",
+    "properties": {
+        "provisioningState": "Succeeded"
+    }
+}
 ```
 
 > [!NOTE]
@@ -75,11 +106,21 @@ az aks update --resource-group <resource-group> --name <cluster-name> --enable-c
 
 Disable cost analysis using the [`az aks update`][az-aks-update] command with the `--disable-cost-analysis` flag.
 
-```azurecli-interactive
-az aks update --name <cluster-name> --resource-group <resource-group> --disable-cost-analysis
+```text
+az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP --disable-cost-analysis
 ```
 
-Disabling cost analysis shouldn't affect your existing cluster or workloads. Any existing data collected by the add-on remains in the Azure portal.
+Results: 
+
+```JSON
+{
+    "id": "/subscriptions/xxxxx/resourceGroups/AKSCostRGxxxx",
+    "name": "AKSCostClusterxxxx",
+    "properties": {
+        "provisioningState": "Succeeded"
+    }
+}
+```
 
 > [!NOTE]
 > If you want to downgrade your cluster from the `Standard` or `Premium` tier to the `Free` tier while cost analysis is enabled, you must first disable cost analysis.
