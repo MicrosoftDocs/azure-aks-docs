@@ -70,15 +70,15 @@ Who should manage network policies? This often depends on an organization’s st
 
 * Visibility tools: Use Cilium Hubble to observe how pods communicate.
 
-![alt text](media/advanced-container-networking-services/hubble-ui.png)
+    ![alt text](media/advanced-container-networking-services/hubble-ui.png)
 
-- Mapping Connectivity:
+- Mapping connectivity:
 
-|Source	 | Destination |	Protocol | Port |
-|--------|-------------|----------|------|
-|Frontend| Backend     |	TCP | 8080 |
-|Backend | Database    |	TCP | 5432 |
-|Backend | External Payment Gateway   |	TCP | 443 |
+    |Source	 | Destination |	Protocol | Port |
+    |--------|-------------|----------|------|
+    |Frontend| Backend     |	TCP | 8080 |
+    |Backend | Database    |	TCP | 5432 |
+    |Backend | External Payment Gateway   |	TCP | 443 |
 
 **Step 2: Applying Labels for Policy Enforcement**
 
