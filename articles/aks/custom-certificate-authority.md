@@ -32,7 +32,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 
 Create a text file containing up to 10 blank line separated certificates. When this file is passed to your cluster, these certificates are installed in your node's trust stores.
 
-Example text file: "FileWithCAs"
+Example text file:
 
 ```txt
     -----BEGIN CERTIFICATE-----
