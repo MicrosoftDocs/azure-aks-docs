@@ -246,4 +246,3 @@ For security bulletins from previous years, see:
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases
 [aks-release-tracker]: https://releases.aks.azure.com/
-[cve-status]:https://releases.aks.azure.com/webpage/index.html
