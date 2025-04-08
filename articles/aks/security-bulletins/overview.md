@@ -229,7 +229,7 @@ For security bulletins from previous years, see:
 
 ## Next Steps
 
-- Get updates about the CVE mitigation status with [CVE Status][cve-status].
+- Get updates about the CVE mitigation status with [CVE Status][aks-release-tracker].
 - Get updates about the latest node images with [AKS release notes][aks-release-notes].
 - Learn how to upgrade the AKS node image with [Upgrade Azure Kubernetes Service (AKS) node images][node-image-upgrade].
 - Learn how to automatically upgrade node images with [Automatically upgrade node images][auto-upgrade-node-image].
