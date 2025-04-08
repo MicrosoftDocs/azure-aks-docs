@@ -34,7 +34,7 @@ Network Policies are defined at the namespace level, meaning each policy applies
 
 Building effective network policies in Kubernetes isn't just about writing YAML configurations—it requires a deep understanding of your application architecture, traffic patterns, and security requirements. Without a clear picture of how workloads communicate, enforcing security policies can lead to unintended disruptions or gaps in protection. The following sections cover how to systematically approach network policy design.
 
-### Understanding Your Workload Connectivity
+### Understanding your workload connectivity
 
 Before implementing network policies, you need visibility into how workloads communicate with each other and external services. This step ensures that policies don’t inadvertently block critical traffic while effectively limiting unnecessary exposure.
 
