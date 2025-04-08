@@ -64,11 +64,11 @@ Who should manage network policies? This often depends on an organization’s st
 - **Developer autonomy with guardrails**: Application teams should be able to define service-specific network policies within their namespaces, enabling security while maintaining agility.
 - **Policy lifecycle management**: Regularly reviewing and updating policies ensures that security remains aligned with evolving application architectures. Observability tools can help detect policy misconfigurations and missing rules.
 
-### Example: Securing a Multi-Tier Web Application with Network Policies
+#### Example: Securing a multi-tier web application with Network Policies
 
-**Step 1: Understanding Workload Connectivity**
+**Step 1: Understanding workload connectivity**
 
-- Visibility Tools: Use Cilium Hubble to observe how pods communicate.
+* Visibility tools: Use Cilium Hubble to observe how pods communicate.
 
 ![alt text](media/advanced-container-networking-services/hubble-ui.png)
 
