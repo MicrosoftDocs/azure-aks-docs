@@ -245,7 +245,7 @@ az aks update \
   --name $CLUSTER_NAME \
   --enable-acns
 
-**Example:** allows only GET requests to /api from the frontend pod to the backend service on port 8080
+#### Example: Allow only GET requests to /api from the frontend pod to the backend service on port 8080
 
 ```yaml
 apiVersion: "cilium.io/v2"
