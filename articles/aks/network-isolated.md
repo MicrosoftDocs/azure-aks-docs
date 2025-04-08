@@ -64,7 +64,7 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 - If you're choosing the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR needs to be of the [Premium SKU service tier][container-registry-skus].
 
-- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. If private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
+- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound network requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. It is recommended to set up private endpoint to access these features. For example, you can set up [private endpoint based ingestion][azmontoring-private-link] to use Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace) in network isolated clusters. If private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
 
 > [!NOTE] 
 > The following AKS cluster extensions aren't supported yet on network isolated clusters:
@@ -173,7 +173,7 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
     az acr cache create -n aks-managed-mcr -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
     ```
 [!NOTE]
-    >It is your responsbility to ensure the ACR cache rule is created correctly. AKS is not responsible to reconcile the cache rule.
+    >It is your responsibility to ensure the ACR cache rule is created correctly. AKS is not responsible to reconcile the cache rule.
     
 
 ### Step 4: Create a private endpoint for the ACR
@@ -368,19 +368,6 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you disable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
-## Known issues
-### Cluster image pull failed
-Network Isolated Cluster leverage ACR cache rule for image pull, when seeing image pull fail error:
-
-If you are using BYO ACR, check your private ACR resources including cache rule and private endpoint to see if they are configed according to the doc guidance. You can also try to connect the ACR from node.
-
-If you are using AKS Managed ACR, only MCR images are supported by default. Thus, if the image pull failure is on images from other registries, then you need go to the private ACR to create additional cache rule for those images. If the image pull failure is on MCR images, please proceed to check if the associated ACR and private endpoint resource named with keyword `bootstrap` exists. If doesn't exist, please reconcile the cluster.
-
-### Cluster image pull fails after updating the existed cluster to network isolated cluster or updating the private ACR resource ID
-This by designed behavior, you need to reimage the node to update the kubelet configuration in cse following the update actions mentioned.
-
-### ACR or associated cache rule, private endpoint and private DNS zone are deleted by accident
-If the cache rule is deleted from the managed ACR by accident, the mitigation is to delete the ACR and then reconcile the cluster. If the ACR itself or private endpoint or private DNS zone is deleted by accident, the mitigation is just to reconcile the cluster.
 
 ## Next steps
 
@@ -413,6 +400,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
 [vnet-disable-outbound-access]: /azure/virtual-network/ip-services/default-outbound-access#how-can-i-transition-to-an-explicit-method-of-public-connectivity-and-disable-default-outbound-access
+[azmontoring-private-link]: /azure/azure-monitor/containers/kubernetes-monitoring-private-link
 
 <!-- LINKS - Internal -->
 [aks-firewall]: ./limit-egress-traffic.md
