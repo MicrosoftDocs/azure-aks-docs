@@ -98,7 +98,7 @@ In this example, we use two layers of network policies: an L3/L4 basic policy to
 
 **Step 4: Managing and maintaining policies**
 
--Security and platform teams enforce baseline deny rules.
+- Security and platform teams enforce baseline deny rules.
 
     | Baseline policy             | Platform policy               | Security                                                                 |
     |-----------------------------|-------------------------------|--------------------------------------------------------------------------|
