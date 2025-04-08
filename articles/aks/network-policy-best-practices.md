@@ -187,14 +187,13 @@ Implementing FQDN filtering in AKS clusters requires enabling ACNS and configuri
 
 To enable Advanced Container Networking Services (ACNS) in Azure Kubernetes Service (AKS), use the flag --enable-acns
 
-**Example:** Enable Advanced Container Networking Services on an existing cluster
+#### Example: Enable Advanced Container Networking Services on an existing cluster
 
-```bash
+```azurecli-interactive
 az aks update \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
   --enable-acns
-```
 
 **Example:** build  a network policy allow traffic to “bing.com”
 
