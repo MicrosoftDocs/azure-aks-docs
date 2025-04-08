@@ -195,7 +195,7 @@ az aks update \
   --name $CLUSTER_NAME \
   --enable-acns
 
-**Example:** build  a network policy allow traffic to “bing.com”
+#### Example: Build a network policy that allows traffic to “bing.com”
 
 ```yaml
 apiVersion: "cilium.io/v2"
