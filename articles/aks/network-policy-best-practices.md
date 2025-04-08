@@ -88,11 +88,11 @@ By labeling workloads correctly, policies can remain stable even if pod IPs chan
 - `app: backend` for API pods.
 - `app: database` for DB pods.
 
-**Step 3: Implementing Application-level Network Policies**
+**Step 3: Implementing application-level Network Policies**
 
-In this example we will user two layer of network policies. We will use L3/L4 basic policy to control traffic between microservices and Fully Qualified Domain Name (FQDN) policy to control egress traffic with external payment gateway 
+In this example, we use two layers of network policies: an L3/L4 basic policy to control traffic between microservices and a fully qualified domain name (FQDN) policy to control egress traffic with external payment gateway.
 
-| Allow Frontend to Communicate with Backend | Allow Backend to Access the Database | Allow Backend to Reach External Payment API |
+| Allow frontend to communicate with backend | Allow backend to access the database | Allow backend to reach external payment API |
 |-------------------------------------------|--------------------------------------|-------------------------------------------|
 | **Policy 1: Frontend egress**<br> `to:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: backend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 8080`<br><br> **Policy 2: Backend ingress**<br> `from:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: frontend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 8080` | **Policy 1: Backend egress**<br> `to:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: database`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 5432`<br><br> **Policy 2: Database ingress**<br> `from:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: backend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 5432` | **Policy 1: Backend**<br> `spec:`<br> `  endpointSelector:`<br> `    matchLabels:`<br> `      app: backend`<br> `  egress:`<br> `    - toFQDNs:`<br> `        - matchName: payments.example.com`<br> `      ports:`<br> `        - protocol: TCP`<br> `          port: 443` |
 
