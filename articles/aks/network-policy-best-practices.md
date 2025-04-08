@@ -222,21 +222,20 @@ spec:
         - matchPattern: "*.bing.com"
 ```
 
-### Protection and Security for APIs with L7 Policies
+### Protection and security for APIs with L7 policies
 
 As modern applications increasingly rely on APIs for communication, securing these interactions at the network layer alone is no longer sufficient. Standard network policies operate at Layer 3 (IP) and Layer 4 (TCP/UDP), controlling which pods can communicate, but they lack visibility into the actual API requests being made.
 
-Layer 7 (L7) policies provide deeper, application-aware security, allowing organizations to enforce fine-grained access control, filter requests, and inspect application traffic to protect against threats.
+Layer 7 (L7) policies provide the following benefits and features:
 
-Why L7 Policies Matter
-- Granular API Security – Enforce policies based on HTTP, gRPC, or Kafka request data, rather than just IP addresses and ports.
-- Reduced Attack Surface – Prevent unauthorized access and mitigate API-based attacks by filtering traffic at the application layer.
-- Compliance & Auditing – Ensure adherence to security standards by logging and controlling specific API interactions.
-- Simplified Policy Management – Avoid the operational burden of additional sidecar proxies by leveraging built-in Cilium-powered L7 controls.
+- **Granular API security**: Enforce policies based on HTTP, gRPC, or Kafka request data, rather than just IP addresses and ports.
+- **Reduced attack surface**: Prevent unauthorized access and mitigate API-based attacks by filtering traffic at the application layer.
+- **Compliance and auditing**: Ensure adherence to security standards by logging and controlling specific API interactions.
+- **Simplified policy management**: Avoid the operational burden of additional sidecar proxies by leveraging built-in Cilium-powered L7 controls.
 
-L7 policies in Azure Kubernetes Service (AKS) are enabled through Advanced Container Networking Services (ACNS) and are available to customers using Azure CNI powered by Cilium. These policies support HTTP, gRPC, and Kafka protocols.
+L7 policies AKS are enabled through ACNS and are available to customers using Azure CNI powered by Cilium. These policies support HTTP, gRPC, and Kafka protocols.
 
-To enforce L7 policies, customers define CiliumNetworkPolicy (CNP) resources, specifying rules for application-layer traffic control. 
+To enforce L7 policies, customers define `CiliumNetworkPolicy` resources, specifying rules for application-layer traffic control. 
 
 **Example:** Enable Advanced Container Networking Services on an existing cluster
 
