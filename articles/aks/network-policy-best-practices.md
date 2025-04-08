@@ -80,12 +80,13 @@ Who should manage network policies? This often depends on an organization’s st
     |Backend | Database    |	TCP | 5432 |
     |Backend | External Payment Gateway   |	TCP | 443 |
 
-**Step 2: Applying Labels for Policy Enforcement**
+**Step 2: Applying labels for policy enforcement**
 
 By labeling workloads correctly, policies can remain stable even if pod IPs change.
-app: frontend for UI pods
-app: backend for API pods
-app: database for DB pods
+
+- `app: frontend` for UI pods.
+- `app: backend` for API pods.
+- `app: database` for DB pods.
 
 **Step 3: Implementing Application-level Network Policies**
 
