@@ -237,14 +237,13 @@ L7 policies AKS are enabled through ACNS and are available to customers using Az
 
 To enforce L7 policies, customers define `CiliumNetworkPolicy` resources, specifying rules for application-layer traffic control. 
 
-**Example:** Enable Advanced Container Networking Services on an existing cluster
+#### Example: Enable ACNS on an existing cluster
 
-```bash
+```azurecli-interactive
 az aks update \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
   --enable-acns
-```
 
 **Example:** allows only GET requests to /api from the frontend pod to the backend service on port 8080
 
