@@ -275,7 +275,7 @@ spec:
 
 Securing Kubernetes workloads requires a thoughtful approach to defining and enforcing network policies. A well-designed strategy ensures that applications communicate only as intended, reducing the risk of unauthorized access, lateral movement, and potential breaches. The following sections cover key strategies for implementing effective Kubernetes Network Policies.
 
-### Adopt a Zero-Trust Model
+### Adopt a Zero-Trust model
 
 By default, Kubernetes allows unrestricted communication between all pods in a cluster. A Zero-Trust approach dictates that no traffic should be trusted by default, and only explicitly allowed communication paths should be permitted. Implementing a default deny-all network policy ensures that only necessary traffic flows between workloads.
 
@@ -292,8 +292,6 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-```
-This prevents all ingress and egress traffic unless additional policies explicitly allow communication.
 
 ### Namespace and Multi-Tenancy Segmentation
 
