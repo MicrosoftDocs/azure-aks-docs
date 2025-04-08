@@ -96,13 +96,13 @@ In this example, we use two layers of network policies: an L3/L4 basic policy to
 |-------------------------------------------|--------------------------------------|-------------------------------------------|
 | **Policy 1: Frontend egress**<br> `to:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: backend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 8080`<br><br> **Policy 2: Backend ingress**<br> `from:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: frontend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 8080` | **Policy 1: Backend egress**<br> `to:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: database`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 5432`<br><br> **Policy 2: Database ingress**<br> `from:`<br> `  - podSelector:`<br> `      matchLabels:`<br> `        app: backend`<br> `    ports:`<br> `      - protocol: TCP`<br> `        port: 5432` | **Policy 1: Backend**<br> `spec:`<br> `  endpointSelector:`<br> `    matchLabels:`<br> `      app: backend`<br> `  egress:`<br> `    - toFQDNs:`<br> `        - matchName: payments.example.com`<br> `      ports:`<br> `        - protocol: TCP`<br> `          port: 443` |
 
-**Step 4: Managing and Maintaining Policies**
+**Step 4: Managing and maintaining policies**
 
--	Security and platform teams enforce baseline deny rules.
+-Security and platform teams enforce baseline deny rules.
 
-| Baseline Policy             | Platform Policy               | Security                                                                 |
-|-----------------------------|-------------------------------|--------------------------------------------------------------------------|
-| - Default deny all traffic  | - Allow DNS <br> - Allow Logs | - Block traffic <br> to known <br> malicious IPs <br> and domains        |
+    | Baseline policy             | Platform policy               | Security                                                                 |
+    |-----------------------------|-------------------------------|--------------------------------------------------------------------------|
+    | - Default deny all traffic  | - Allow DNS <br> - Allow Logs | - Block traffic <br> to known <br> malicious IPs <br> and domains        |
 
 -	Ensuring that the application's network policies comply with platform and security requirements while avoiding any policy violations.
 
