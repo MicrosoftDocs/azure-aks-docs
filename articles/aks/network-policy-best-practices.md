@@ -293,9 +293,9 @@ spec:
     - Ingress
     - Egress
 
-### Namespace and Multi-Tenancy Segmentation
+### Namespace and multi-tenancy segmentation
 
-In multi-tenant environments, namespaces help isolate workloads, different teams typically manage their applications within dedicated namespaces, ensuring logical isolation between workloads. This separation is critical when multiple applications run alongside each other. Applying network policies at the namespace scope is often the first step in securing workloads, as it prevents unrestricted lateral movement between applications managed by different teams.
+In multi-tenant environments, namespaces help isolate workloads. Different teams typically manage their applications within dedicated namespaces, ensuring logical isolation between workloads. This separation is critical when multiple applications run alongside each other. Applying network policies at the namespace scope is often the first step in securing workloads, as it prevents unrestricted lateral movement between applications managed by different teams.
 
 For example, restrict all ingress traffic to a namespace, allowing only traffic from the same namespace:
 
@@ -314,8 +314,6 @@ spec:
         - namespaceSelector:
             matchLabels:
               name: team-a
-```
-This ensures that only pods within team-a can communicate, blocking unauthorized access from other namespaces.
 
 ### Microsegmentation for Workload Isolation
 
