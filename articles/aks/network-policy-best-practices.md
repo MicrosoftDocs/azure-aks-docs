@@ -345,12 +345,13 @@ This prevents frontend pods from making unintended connections to other services
 
 By combining namespace-wide isolation with fine-grained application-level policies, teams can implement a multi-layered security model that prevents unauthorized traffic while allowing necessary communication for application functionality.
 
-### Layered Security Approach
+### Layered security approach
 
 Network security should be implemented in layers, combining multiple levels of enforcement:
-- L3/L4 Policies: Restrict traffic at the IP and port level (e.g., allow TCP traffic on port 443).
-- FQDN-Based Filtering: Restrict external communication based on domain names rather than IP addresses.
-- L7 Policies: Control communication based on application-layer attributes (e.g., allow only HTTP GET requests to specific API paths).
+
+- **L3/L4 policies**: Restrict traffic at the IP and port level (for example: allow TCP traffic on port 443).
+- **FQDN-based filtering**: Restrict external communication based on domain names rather than IP addresses.
+- **L7 policies**: Control communication based on application-layer attributes (for example: allow only HTTP GET requests to specific API paths).
 
 For example, a Cilium L7 policy can restrict frontend services to only issue GET requests to the backend API:
 
@@ -376,7 +377,6 @@ spec:
             http:
               - method: "GET"
                 path: "/api"
-```
 This prevents the frontend from making POST or DELETE requests, limiting the attack surface.
 
 ### Integrating RBAC with Network Policy management
