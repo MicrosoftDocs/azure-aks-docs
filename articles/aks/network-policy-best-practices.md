@@ -315,7 +315,7 @@ spec:
             matchLabels:
               name: team-a
 
-### Microsegmentation for Workload Isolation
+### Microsegmentation for workload isolation
 
 While namespace-based segmentation is an essential first step in securing multi-tenant Kubernetes clusters, application-level microsegmentation provides fine-grained control over how workloads interact within a namespace. Namespace isolation alone does not prevent unintended or unauthorized communication between different applications within the same namespace. This is where pod-level segmentation becomes critical.
 
@@ -341,7 +341,6 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
-```
 This prevents frontend pods from making unintended connections to other services, reducing the risk of unauthorized access or lateral movement inside the namespace.
 
 By combining namespace-wide isolation with fine-grained application-level policies, teams can implement a multi-layered security model that prevents unauthorized traffic while allowing necessary communication for application functionality.
