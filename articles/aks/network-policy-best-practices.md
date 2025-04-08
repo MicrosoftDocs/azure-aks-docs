@@ -270,9 +270,10 @@ spec:
               - method: "GET"
                 path: "/api"
 ```
+
 ## Strategies for network policies
 
-Securing Kubernetes workloads requires a thoughtful approach to defining and enforcing network policies. A well-designed strategy ensures that applications communicate only as intended, reducing the risk of unauthorized access, lateral movement, and potential breaches. Below are key strategies for implementing effective Kubernetes Network Policies.
+Securing Kubernetes workloads requires a thoughtful approach to defining and enforcing network policies. A well-designed strategy ensures that applications communicate only as intended, reducing the risk of unauthorized access, lateral movement, and potential breaches. The following sections cover key strategies for implementing effective Kubernetes Network Policies.
 
 ### Adopt a Zero-Trust Model
 
