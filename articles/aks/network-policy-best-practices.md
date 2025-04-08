@@ -139,38 +139,41 @@ az aks create \
 ### Anatomy of the Cilium Network Policy
 
 With Azure CNI powered by Cilium, you can configure network policies natively in Kubernetes using two available formats:
--	The standard NetworkPolicy resource which supports L3 and L4 policies at ingress or egress of the Pod.
--	The extended CiliumNetworkPolicy format which is available as a CustomResourceDefinition which supports specification of policies at Layers 3-7 for both ingress and egress.
+
+- **The standard `NetworkPolicy` resource**, which supports L3 and L4 policies at ingress or egress of the Pod.
+- **The extended `CiliumNetworkPolicy` format**, which is available as a CustomResourceDefinition that supports specification of policies at Layers 3-7 for both ingress and egress.
 
 With these CRDs, we can define security policies, and Kubernetes automatically distributes these policies to all the nodes in the cluster.
 
 A Network Policy consists of several key components:
--	Pod Selector: Specifies which pods the policy applies to using labels.
--	Policy Types: Determines whether the policy applies to ingress (incoming traffic), egress (outgoing traffic), or both.
--	Ingress Rules: Defines allowed sources (pods, namespaces, or IP ranges) and ports.
--	Egress Rules: Defines allowed destinations and ports.
 
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: frontend-egress
-  namespace: default
-spec:
-  podSelector:
-    matchLabels:
-      app: frontend
-  policyTypes:
-    - Egress
-  egress:
-    - to:
-        - podSelector:
-            matchLabels:
-              app: backend
-      ports:
-        - protocol: TCP
-          port: 8080
-```
+- **Pod selector**: Specifies which pods the policy applies to using labels.
+- **Policy types**: Determines whether the policy applies to ingress (incoming traffic), egress (outgoing traffic), or both.
+- **Ingress rules**: Defines allowed sources (pods, namespaces, or IP ranges) and ports.
+- **Egress rules**: Defines allowed destinations and ports.
+
+    ```yaml
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: frontend-egress
+      namespace: default
+    spec:
+      podSelector:
+        matchLabels:
+          app: frontend
+      policyTypes:
+        - Egress
+      egress:
+        - to:
+            - podSelector:
+                matchLabels:
+                  app: backend
+          ports:
+            - protocol: TCP
+              port: 8080
+    ```
+
 ## Advanced Network Policy
 
 Azure Kubernetes services offers the [Advanced Container Networking Service (ACNS)](/azure/aks/advanced-container-networking-services-overview?tabs=cilium) a suite of services designed to enhance the networking capabilities of AKS clusters.
