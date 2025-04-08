@@ -59,9 +59,10 @@ Relying solely on basic Kubernetes Network Policies might not be sufficient for 
 ### Management of Network Policies
 
 Who should manage network policies? This often depends on an organization’s structure and security requirements. A well-balanced approach allows both security teams and application developers to collaborate effectively.
-- Centralized Security Administration: Security or networking teams should define baseline policies to enforce global security requirements, such as default deny-all rules or compliance-driven restrictions.
-- Developer Autonomy with Guardrails: Application teams should be able to define service-specific network policies within their namespaces, enabling security while maintaining agility.
-- Policy Lifecycle Management: Regularly reviewing and updating policies ensures that security remains aligned with evolving application architectures. Observability tools can help detect policy misconfigurations and missing rules.
+
+- **Centralized security administration**: Security or networking teams should define baseline policies to enforce global security requirements, such as default deny-all rules or compliance-driven restrictions.
+- **Developer autonomy with guardrails**: Application teams should be able to define service-specific network policies within their namespaces, enabling security while maintaining agility.
+- **Policy lifecycle management**: Regularly reviewing and updating policies ensures that security remains aligned with evolving application architectures. Observability tools can help detect policy misconfigurations and missing rules.
 
 ### Example: Securing a Multi-Tier Web Application with Network Policies
 
