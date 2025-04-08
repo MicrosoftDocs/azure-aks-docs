@@ -48,12 +48,13 @@ A well-defined labeling strategy simplifies policy management, reduces misconfig
 
 - **Define Micro-segmentation:** Organizing workloads into security zones (e.g., frontend, backend, database) helps enforce the principle of least privilege. For instance, microservices handling customer transactions should be isolated from general-purpose applications.
 
-### Layered Security Approach for Kubernetes
+### Layered security approach for Kubernetes
 
-Relying solely on basic Kubernetes Network Policies may not be sufficient for all security needs. A layered approach ensures comprehensive protection across different levels of network communication.
-- (L3/L4) Policies: The foundation of network security, controlling traffic based on pod labels and namespaces at the IP, port and protocol level.
-- FQDN-Based Policies: Restrict egress traffic to specific external domains, ensuring workloads can only reach approved external services (e.g., only allowing access to microsoft.com for API calls).
-- Layer 7 Policies: Introduces fine-grained control over traffic by filtering requests based on HTTP methods, headers, and paths. This is useful for securing APIs and enforcing application-layer security policies.
+Relying solely on basic Kubernetes Network Policies might not be sufficient for all security needs. A layered approach ensures comprehensive protection across different levels of network communication.
+
+- **(L3/L4) policies**: The foundation of network security, controlling traffic based on pod labels and namespaces at the IP, port, and protocol level.
+- **FQDN-based policies**: Restrict egress traffic to specific external domains, ensuring workloads can only reach approved external services (for example: only allowing access to *microsoft.com* for API calls).
+- **Layer 7 policies**: Introduces fine-grained control over traffic by filtering requests based on HTTP methods, headers, and paths. This is useful for securing APIs and enforcing application-layer security policies.
 
 ### Management of Network Policies
 
