@@ -1,7 +1,7 @@
 ---
 title: Migrate Azure Kubernetes Fleet Manager preview instances to a supported state
 description: Quickly identify if an instance of Kubernetes Fleet Manager was created using preview custom resource APIs.
-ms.date: 12/12/2024
+ms.date: 04/09/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
