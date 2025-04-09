@@ -10,15 +10,14 @@ ms.date: 12/07/2024
 zone_pivot_groups: network-isolated-acr-type
 ---
 
-# Create a network isolated Azure Kubernetes Service (AKS) cluster (Preview)
+# Create a network isolated Azure Kubernetes Service (AKS) cluster 
 
 Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
 
 One solution to securing outbound addresses is using a firewall device that can control outbound traffic based on domain names.
 
-Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. A network isolated AKS cluster reduces the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
+Another solution, a network isolated AKS cluster, simplifies setting up outbound restrictions for a cluster out of the box. A network isolated AKS cluster reduces the risk of data exfiltration or unintentional exposure of cluster's public endpoints.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Before you begin
 
@@ -30,41 +29,9 @@ Another solution, a network isolated AKS cluster (preview), simplifies setting u
 
 - This article requires version 2.63.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 
-- Install the `aks-preview` Azure CLI extension version *9.0.0b2* or later.
-
-    - If you don't already have the `aks-preview` extension, install it using the [`az extension add`][az-extension-add] command.
-
-        ```azurecli-interactive
-        az extension add --name aks-preview
-        ```
-
-    - If you already have the `aks-preview` extension, update it to make sure you have the latest version using the [`az extension update`][az-extension-update] command.
-
-        ```azurecli-interactive
-        az extension update --name aks-preview
-- Register the `NetworkIsolatedClusterPreview` feature flag using the [az feature register][az-feature-register] command.
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name NetworkIsolatedClusterPreview
-    ```
-
-    Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*:
-
-    ```azurecli-interactive
-    az feature show --namespace Microsoft.ContainerService --name NetworkIsolatedClusterPreview
-    ```
-
-    > [!NOTE]
-    > If you choose to create network isolated cluster with API Server VNet Integration configured for private access of the API Server, then you need to repeat the above steps to register `EnableAPIServerVnetIntegrationPreview` feature flag too.
-    When the status reflects *Registered*, refresh the registration of the `Microsoft.ContainerService` and `Microsoft.ContainerRegistry` resource providers by using the [az provider register][az-provider-register] command:
-    > 
-    > ```azurecli-interactive
-    >  az provider register --namespace Microsoft.ContainerService
-    >  az provider register --namespace Microsoft.ContainerRegistry
-    >  ```
-
 - If you're choosing the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR needs to be of the [Premium SKU service tier][container-registry-skus].
 
-- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound network requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. It is recommended to set up private endpoint to access these features. For example, you can set up [private endpoint based ingestion][azmontoring-private-link] to use Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace) in network isolated clusters. If private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
+- (Optional) If you want to use any optional AKS feature or add-on which requires outbound network access, [this document][outbound-rules-control-egress] contains the outbound network requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. It is recommended to set up private endpoints to access these features. For example, you can set up [private endpoint based ingestion][azmontoring-private-link] to use Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace) in network isolated clusters. If a private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
 
 > [!NOTE] 
 > The following AKS cluster extensions aren't supported yet on network isolated clusters:
