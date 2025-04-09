@@ -18,7 +18,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 ## Prerequisites
 
 * An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free).
-* Custom Certificate Authority is available as GA in the [2025-01-01 GA API](https://learn.microsoft.com/rest/api/aks/managed-clusters/create-or-update?view=rest-aks-2025-01-01&tabs=HTTP#create-managed-cluster-with-custom-ca-trust-certificates:~:text=%2215m%22%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D-,Create%20Managed%20Cluster%20with%20Custom%20CA%20Trust%20Certificates,-Sample%20request). It is not yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [az rest command](https://learn.microsoft.com/cli/azure/reference-index?view=azure-cli-latest#az-rest) to add custom certificates during cluster creation.
+* Custom Certificate Authority is available as GA in the [2025-01-01 GA API][custom-ca-rest]. It is not yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] command to add custom certificates during cluster creation.
 * A base64 encoded certificate string or a text file with certificate.
 
 ## Limitations
@@ -49,7 +49,7 @@ Before proceeding to the next step, make sure that there are no additional blank
 2. Pass certificates to your cluster.
 
  > [!NOTE]
- > Custom Certificate Authority is available as GA in the [2025-01-01 GA API](https://learn.microsoft.com/rest/api/aks/managed-clusters/create-or-update?view=rest-aks-2025-01-01&tabs=HTTP#create-managed-cluster-with-custom-ca-trust-certificates:~:text=%2215m%22%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D-,Create%20Managed%20Cluster%20with%20Custom%20CA%20Trust%20Certificates,-Sample%20request). It is not yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] to add custom certificates during cluster creation.
+ > Custom Certificate Authority is available as GA in the [2025-01-01 GA API][custom-ca-rest]. It is not yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] command to add custom certificates during cluster creation.
 
  1. [Create an AKS cluster][quick-kubernetes-deply-cli] using the [`az aks create`][az-aks-create] command.
  2. Save the configuration of your cluster in a JSON file:
@@ -139,6 +139,7 @@ For more information on AKS security best practices, see [Best practices for clu
 [aks-best-practices-security-upgrades]: ./operator-best-practices-cluster-security.md
 [quick-kubernetes-deply-cli]: ./quick-kubernetes-deploy-cli.md
 [azure-cli-install]: /cli/azure/install-azure-cli
+[custom-ca-rest]: /rest/api/aks/managed-clusters/create-or-update?view=rest-aks-2025-01-01&tabs=HTTP#create-managed-cluster-with-custom-ca-trust-certificates:~:text=%2215m%22%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D-,Create%20Managed%20Cluster%20with%20Custom%20CA%20Trust%20Certificates,-Sample%20request
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-nodepool-add]: /cli/azure/aks#az-aks-nodepool-add
