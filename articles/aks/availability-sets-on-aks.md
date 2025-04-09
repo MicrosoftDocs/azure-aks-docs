@@ -9,7 +9,7 @@ author: wdarko1
 Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
-# Availability Sets deprecation - Azure Kubernetes Services
+# Availability Sets deprecation in Azure Kubernetes Service (AKS)
 
 This article details how Azure Kubernetes Services (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS). 
 Azure Kubernetes Services is moving away from Availability Sets in favor of Virtual Machines (VMs).
