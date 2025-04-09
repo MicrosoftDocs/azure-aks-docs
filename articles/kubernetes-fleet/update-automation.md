@@ -92,7 +92,7 @@ Use the [`az fleet autoupgradeprofile create`][az-fleet-autoupgradeprofile-creat
 You can create a disabled auto-upgrade profile by passing the `--disabled` argument when using the `create` command. In order to enable the auto-upgrade profile, you must reissue the entire `create` command and omit the `--disabled` argument.
 
 > [!NOTE]
-> Disabling an auto-upgrade profile doesn't affect any in-progess update runs, however no new update runs are generated until the you re-enable the profile.
+> Disabling an auto-upgrade profile doesn't affect any in-progess update runs, however no new update runs are generated until you re-enable the profile.
 
 #### Stable channel Kubernetes updates
 
@@ -261,7 +261,7 @@ Once update runs finish, you can rerun these commands and view the updated versi
 
 ## Use an auto-upgrade profile to generate an update run  
 
-When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new version release triggers auto-upgrade to create and execute an update run. Auto-upgrade allows you to generate a new update run at any time using the current AKS-published Kubernetes or node image version.
+When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new Kubernetes or node image version triggers auto-upgrade to create and execute an update run. Auto-upgrade provides the `generate-update-run` command that generates a new update run using the current AKS-published Kubernetes or node image version.
 
 For more information on creating an on-demand update run from an auto-upgrade profile, see [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile).
 
