@@ -31,8 +31,8 @@ Learn more about customer-managed keys on [Linux][customer-managed-keys-linux] a
 
     * Immediate usage of new CMK
 
-        - Scale down the node pool count to 0
-        - Rotate the key
+        - Scale down the node pool count to 0.
+        - Rotate the key.
         - Scale up the node pool to the original count.
 
     * Gradual usage of new CMK
