@@ -35,9 +35,9 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
     export CLUSTER=<aks-cluster-name>
     ```
 
-* You need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.3.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet

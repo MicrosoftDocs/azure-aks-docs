@@ -148,7 +148,7 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 >
 > Keep the following information in mind when using auto upgrade:
 >
-> * Auto-upgrade requires version 1.3.0 or later of the Fleet Azure CLI extension.
+> * Auto-upgrade requires version 1.5.0 or later of the Fleet Azure CLI extension.
 >
 > * Auto-upgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
 >

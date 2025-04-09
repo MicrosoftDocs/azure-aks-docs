@@ -31,9 +31,9 @@ This article covers how to define update strategies using groups and stages.
     export STRATEGY=<strategy-name>
     ```
 
-* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
