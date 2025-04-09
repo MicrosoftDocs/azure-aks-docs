@@ -92,7 +92,7 @@ Use the [`az fleet autoupgradeprofile create`][az-fleet-autoupgradeprofile-creat
 You can create a disabled auto-upgrade profile by passing the `--disabled` argument when using the `create` command. In order to enable the auto-upgrade profile, you must reissue the entire `create` command and omit the `--disabled` argument.
 
 > [!NOTE]
-> When you disable an auto-upgrade profile with an in-progress update run this has no affect on the update run which continues. No new update runs are generated until the you re-enable the profile.
+> Disabling an auto-upgrade profile doesn't affect any in-progess update runs, however no new update runs are generated until the you re-enable the profile.
 
 #### Stable channel Kubernetes updates
 
@@ -231,7 +231,7 @@ az fleet autoupgradeprofile delete \
 ---
 
 > [!NOTE]
-> Deleting an auto-upgrade profile for an in-progress update run won't affect the existing update run which continues.
+> Deleting an auto-upgrade profile doesn't affect any in-progress update runs.
 
 ## Validate auto-upgrade
 
