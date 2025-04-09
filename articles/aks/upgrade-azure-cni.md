@@ -81,6 +81,10 @@ Since the cluster is already using a private CIDR for pods which doesn't overlap
 > You can update an existing cluster to Azure CNI Powered by Cilium if the cluster meets the following criteria:
 >
 > - The cluster does not have any Windows node pools.
+> - The cluster is not using Azure CNI Node Subnet.
+>   - New Node Subnet clusters are supported with Cilium.
+
+
 > [!NOTE]
 > When you enable Cilium in a cluster with a different network policy engine (Azure NPM or Calico), the network policy engine is uninstalled and replaced with Cilium. For more information, see [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico).
 > [!WARNING]
