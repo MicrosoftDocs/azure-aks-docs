@@ -44,7 +44,31 @@ Example text file:
     -----END CERTIFICATE-----
  ```
 
+Before proceeding to the next step, make sure that there are no additional blank spaces in your text file. These will result in an error in the next step if not removed.
+
 2. Pass certificates to your cluster.
+
+ > [!NOTE]
+ > Custom Certificate Authority is available as GA in the [2025-01-01 GA API](https://learn.microsoft.com/rest/api/aks/managed-clusters/create-or-update?view=rest-aks-2025-01-01&tabs=HTTP#create-managed-cluster-with-custom-ca-trust-certificates:~:text=%2215m%22%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D-,Create%20Managed%20Cluster%20with%20Custom%20CA%20Trust%20Certificates,-Sample%20request)). It is not yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] to add custom certificates during cluster creation.
+
+ 1. [Create an AKS cluster][aks-quickstart-cli] using the [`az aks create`][az-aks-create] command.
+ 2. Save the configuration of your cluster in a JSON file:
+ ```azurecli-interactive
+ az rest --method get \
+  --url "/subscriptions/<subscription-id>/resourceGroups/<resource-grou-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" > body.json
+```
+  3. Modify the json file to add customCATrustCertificates to the security profile of that cluster
+```
+  "securityProfile": {
+    "azureKeyVaultKms": null,
+    "customCaTrustCertificates": [
+        "values"
+```
+  4. Pass the updated JSON file to add the certificates to the node's trust store
+```azurecli-interactive
+  az rest --method put \
+  --url "/subscriptions/<subscription-id>/resourceGroups/<resource-grou-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" --body @body.json
+```
 
 You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] to pass certificates to your cluster. Once the operation completes, the certificates are installed in your node's trust stores.
 
@@ -88,7 +112,24 @@ The securityProfile output should include your Custom CA Trust Certificates.
 
 ## Troubleshooting
 
-Troubleshooting can be found here:
+### Formatting error
+
+Adding certificates to a cluster may result in an error if the JSON file with the certificates is not formatted properly.
+
+```
+failed to decode one of SecurityProfile.CustomCATrustCertificates to PEM after base64 decoding
+```
+If you encounter this error, you should check that your input file has no extra new lines, white spaces, or data other than correctly formatted certificates as shown in the example file.
+
+### Feature is enabled and secret with CAs is added, but operations are failing with X.509 Certificate Signed by Unknown Authority error
+
+#### Incorrectly formatted certs passed in the secret
+AKS requires certs passed in the user-created secret to be properly formatted and base64 encoded. Make sure the CAs you passed are properly base64 encoded and that files with CAs don't have CRLF line breaks.
+
+Certificates passed to ```--custom-ca-trust-certificates``` shouldn't be base64 encoded.
+
+#### containerd hasn't picked up new certs
+From the node's shell, run ```systemctl restart containerd```. Once containerd is restarts, the new certs are properly picked up by the container runtime.
 
 ## Next steps
 
@@ -96,6 +137,7 @@ For more information on AKS security best practices, see [Best practices for clu
 
 <!-- LINKS INTERNAL -->
 [aks-best-practices-security-upgrades]: operator-best-practices-cluster-security.md
+[aks-quickstart-cli]: quick-kubernetes-deploy-cli.md
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
@@ -105,6 +147,7 @@ For more information on AKS security best practices, see [Best practices for clu
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-aks-show]: /cli/azure/aks#az-aks-show
+[az-rest]: /cli/azure/reference-index?view=azure-cli-latest#az-rest
 [install-azure-cli]:  /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
