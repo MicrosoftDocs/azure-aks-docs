@@ -1,6 +1,6 @@
 ---
 title: Upgrade Operating System (OS) version in Azure Kubernetes Service (AKS) clusters.
-description: Learn about support, testing, and rollback for OS versions available available on Azure Kubernetes Service (AKS).
+description: Learn about support, testing, and rollback for OS versions available on Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.date: 03/21/2025
@@ -10,7 +10,7 @@ ms.author: allyford
 
 # Upgrade Operating System (OS) versions in AKS
 
-This article describes OS versions available for Azure Kubernetes Service (AKS) nodes, as well as best practices for testing and upgrading your OS version.
+This article describes OS versions available for Azure Kubernetes Service (AKS) nodes, and best practices for testing and upgrading your OS version.
 
 > [!CAUTION]
 > In this article, there are references to Ubuntu OS versions that are being deprecated for AKS.
@@ -31,7 +31,7 @@ Each [node image][node-image] corresponds to an OS version which you can specify
 >
 >   - For Ubuntu, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku Ubuntu`. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
 >   - For Azure Linux, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureLinux`. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
->   - For Windows, we recommend creating node pools while specifying `--os-type Windows` and `--os-sku Windows2022`. You will need to manually update node pools to the next OS version when it's released.
+>   - For Windows, we recommend creating node pools while specifying `--os-type Windows` and `--os-sku Windows2022`. You need to manually update node pools to the next OS version when it's released.
 
 | OS Type | OS SKU | Supported Kubernetes versions | Default versioning |
 |--|--|--|--|
@@ -44,11 +44,11 @@ Each [node image][node-image] corresponds to an OS version which you can specify
 
 ## [Testing a new OS version](#tab/testing-a-new-os-version)
 
-When a new OS version releases on AKS, it will be supported in preview before it becomes generally available and default. We recommend testing your non-production workloads with the new OS version when it becomes available in preview. 
+When a new OS version releases on AKS, it is supported in preview before it becomes generally available and default. We recommend testing your non-production workloads with the new OS version when it becomes available in preview. 
 
 ### Update OS SKU on an existing node pool
 
-You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to update the `os-sku` on an existing node pool. In cases where there is a new os version available in preview, this will allow you to migrate your node pool to the new os version without needing to upgrade your kubernetes version.
+You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to update the `os-sku` on an existing node pool. In cases where there is a new os version available in preview, this allows you to migrate your node pool to the new os version without needing to upgrade your kubernetes version.
 
 Update `os-sku` using the `az aks nodepool update` command:
 
@@ -63,7 +63,7 @@ az aks nodepool update \
 ```
 
 > [NOTE]
-> The command above can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
+> The `az aks nodepool update` command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
 
 ## [Test Ubuntu 24.04 (preview)](#tab/Ubuntu-24.04-preview)
 
@@ -71,7 +71,7 @@ Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
 
 ### Limitations
 - `--os-sku Ubuntu2404` is supported in kubernetes version 1.32 to 1.38. 
-- `--os-sku Ubuntu2404` is intended for testing the new os version without upgrading your kubernetes version. You will need to update your OS SKU to a supported OS option to upgrade your kubernetes version to 1.39+.
+- `--os-sku Ubuntu2404` is intended for testing the new os version without upgrading your kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your kubernetes version to 1.39+.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -135,7 +135,7 @@ az aks nodepool update \
 ```
 
 > [NOTE]
-> The command above can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
+> The `az aks nodepool update` command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
 
 ## [Rollback to Ubuntu 22.04](#tab/Rollback-to-22.04)
 
@@ -143,7 +143,7 @@ Ubuntu 22.04 can be specified by using `--os-sku Ubuntu2204`.
 
 ### Limitations
 - `--os-sku Ubuntu2204` is supported in kubernetes version 1.25 to 1.33. 
-- `--os-sku Ubuntu2204` is intended for rollback to Ubuntu 22.04 on your current kubernetes version. You will need to update your OS SKU to a supported OS option to upgrade your kubernetes version to 1.34+.
+- `--os-sku Ubuntu2204` is intended for rollback to Ubuntu 22.04 on your current kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your kubernetes version to 1.34+.
 
 ### Update your node pool to use Ubuntu 22.04
 
