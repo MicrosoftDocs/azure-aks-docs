@@ -6,8 +6,6 @@ ms.date: 10/30/2024
 ms.custom: mvc, devx-track-azurecli
 ms.collection: 
  - migration
- - aws-to-azure
- - gcp-to-azure
 ---
 
 # Migrate to Azure Kubernetes Service (AKS)

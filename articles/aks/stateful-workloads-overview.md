@@ -8,8 +8,6 @@ author: schaffererin
 ms.author: schaffererin
 ms.collection: 
  - migration
- - aws-to-azure
- - gcp-to-azure
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)
