@@ -1,38 +1,42 @@
 ---
-title: Availability Sets retirement in Azure Kubernetes Services (AKS)
-description: Learn about Availability Sets retirement for AKS clusters.
-ms.topic: how-to
-ms.custom: devx-track-azurecli
-ms.date: 01/24/2025
+title: About the Availability Sets deprecation in Azure Kubernetes Services (AKS)
+description: Learn about the deprecation of Availability Sets in Azure Kubernetes Service (AKS).
+ms.topic: overview
+ms.date: 04/04/2025
 ms.author: wilsondarko
 author: wdarko1
-Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
 # Availability Sets deprecation in Azure Kubernetes Service (AKS)
 
-This article details how Azure Kubernetes Services (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS). 
-Azure Kubernetes Services is moving away from Availability Sets in favor of Virtual Machines (VMs).
+This article details how Azure Kubernetes Service (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS) in favor of Virtual Machines (VMs).
 
 > [!NOTE]
-> We recommend customers use [Virtual Machine Node Pools(Public Preview)](virtual-machines-node-pools.md) for an AKS optimized virtual machine. Virtual Machine Node Pools:
+> We recommend using [Virtual Machine Node Pools (Preview)](virtual-machines-node-pools.md) for AKS-optimized VMs.
 >
-> - Allow virtual machine instances to be centrally managed, configured, and updated.
+> Virtual Machine Node Pools:
+>
+> - Allow VM instances to be centrally managed, configured, and updated.
 > - Allow an increase or decrease of the number of virtual machine instances in response to demand or a defined schedule.
-> - Allow single node-level controls, and same-family mixing of different sized nodes to lift restrictions from a single model and improve consistency
+> - Allow single node-level controls and same-family mixing of different sized nodes to lift restrictions from a single model and improve consistency.
+>
 
-## Availability Sets Overview
-Availability sets are logical groupings of virtual machines that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
+## Availability Sets overview
+
+Availability sets are logical groupings of VMs that reduce the chance of correlated failures bringing down related VMs at the same time. Availability sets place VMs in different fault domains for better reliability.
 
 ### Phase out of Availability Sets
-As of 2019, we're no longer adding other features to Availability Sets in Azure Kubernetes Services. Any features introduced since 2019, such as AKS Backup, aren't supported in Availability Set node pools.
+
+As of 2019, we're no longer adding other features to Availability Sets in AKS. Any features introduced since 2019, such as AKS Backup, aren't supported in Availability Sets node pools.
 
 ### When will Availability Sets be fully deprecated?
-Availability Sets support will be fully deprecated by September 30, 2025. We recommend all workloads currently on VMAS be migrated to Virtual Machine Node Pools. 
+
+Availability Sets support will be **fully deprecated by September 30, 2025**. We recommend that you migrate all workloads currently on VMAS to Virtual Machine Node Pools. 
 
 ### Automatic migration
-Starting September 30 2025, we'll automatically migrate remaining Availability Set node pools to Virtual Machines node pools. 
 
-### Related Content
+Starting September 30, 2025, we'll automatically migrate remaining Availability Sets node pools to Virtual Machines node pools. 
+
+### Related content
 
 [More information on Virtual Machine node pools](virtual-machines-node-pools.md)
