@@ -6,6 +6,8 @@ ms.service: azure-kubernetes-service
 ms.date: 04/04/2025
 author: schaffererin
 ms.author: schaffererin
+ms.collection: 
+ - migration
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)
