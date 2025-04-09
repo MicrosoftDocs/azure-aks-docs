@@ -1,7 +1,7 @@
 ---
 title: Migrate Azure Kubernetes Fleet Manager preview instances to a supported state
 description: Quickly identify if an instance of Kubernetes Fleet Manager was created using preview custom resource APIs.
-ms.date: 12/12/2024
+ms.date: 04/09/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -30,9 +30,9 @@ Administrators with affected Kubernetes Fleet instances need to create a new Kub
 
 * The user undertaking this activity must be assigned the `Azure Kubernetes Fleet Manager RBAC Cluster Admin` Entra ID role.
 
-* You need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You need the `fleet` Azure CLI extension version 1.3.0 or later, which you can install by running the following command:
+* You need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
