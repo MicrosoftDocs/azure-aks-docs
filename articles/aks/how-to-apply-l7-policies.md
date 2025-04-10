@@ -115,13 +115,120 @@ Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
-## Setup test application on your AKS Cluster
+## Setup http-server application on your AKS Cluster
 
-Follow steps on [AKS tutorial](./tutorial-kubernetes-deploy-application.md) to run an application on your cluster.
+```yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-server
+  labels:
+    app: http-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server
+  template:
+    metadata:
+      labels:
+        app: http-server
+    spec:
+      containers:
+      - name: http-server
+        image: nginx:latest
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/conf.d
+      volumes:
+      - name: config-volume
+        configMap:
+          name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-server
+spec:
+  selector:
+    app: http-server
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  default.conf: |
+    server {
+        listen 8080;
+
+        location / {
+            return 200 "Hello from the server root!\n";
+        }
+
+        location /products {
+            return 200 "Listing products...\n";
+        }
+    }
+```
+## Setup http-client application on your AKS Cluster
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-client
+  labels:
+    app: http-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-client
+  template:
+    metadata:
+      labels:
+        app: http-client
+    spec:
+      containers:
+      - name: http-client
+        image: curlimages/curl:latest
+        command: ["sleep", "infinity"]
+```
 
 ## Test connectivity with a policy
 
-
+```yaml
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-get-products
+spec:
+  description: "Allow only GET requests to /products from http-client to http-server"
+  endpointSelector:
+    matchLabels:
+      app: http-server
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: http-client
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+      rules:
+        http:
+        - method: "GET"
+          path: "/products"
+```
 
 ### Verify policy
 
