@@ -24,7 +24,7 @@ These updates cover security information related to the following AKS components
 
 ---
 
-## AKS-2025-006 Important Security Update for Kubernetes Nginx Ingress Controller
+## AKS-2025-007 Important Security Update for Kubernetes Nginx Ingress Controller
 
 **Published Date**: March 24, 2025
 
@@ -58,6 +58,34 @@ You can check for ingress-nginx by running `kubectl get pods --all-namespaces --
 
 - If you're running your own Kubernetes NGINX Ingress Controller, review the CVEs and mitigate by updating to the latest patch versions (v1.11.5 and v1.12.1).
 
+---
+
+## AKS-2025-006 GitRepo Volume Inadvertent Local Repository Access
+ 
+**Published Date**: March 13, 2025
+ 
+### Description
+A security vulnerability was discovered in Kubernetes that could allow a user with create pod permission to exploit gitRepo volumes to access local git repositories belonging to other pods on the same node. This CVE only affects Kubernetes clusters that utilize the in-tree gitRepo volume to clone git repositories from other pods within the same node. Since the in-tree gitRepo volume feature has been deprecated and will not receive security updates from Kubernetes upstream, any cluster still using this feature remains vulnerable.
+ 
+### References
+ 
+- [CVE-2025-1767](https://github.com/kubernetes/kubernetes/issues/130786)
+ 
+ 
+### Affected Components
+ 
+#### [**AKS Cluster**](#tab/aks-cluster)
+ 
+**Affected Versions**
+ 
+- All AKS cluster versions
+ 
+ 
+**Resolutions**
+ 
+- Since the in-tree gitRepo volume feature has been deprecated, there is no fix available for the CVE.
+ 
+- To ensure only allowed volume types are allowed, assign Azure built-in policy definition- [Kubernetes cluster pods should only use allowed volume types](https://ms.portal.azure.com/#view/Microsoft_Azure_Policy/PolicyDetail.ReactView/id/%2Fproviders%2FMicrosoft.Authorization%2FpolicyDefinitions%2F16697877-1118-4fb1-9b65-9898ec2509ec/version/5.2.0/scopes/%5B%22%22%5D) in enforce mode to your AKS clusters that blocks deployments with gitRepo volume usage. You may view the allowed volume types [here](https://github.com/Azure/azure-policy/blob/8c4af2801d999ef960fe9a10a1f04375954c10a7/built-in-policies/policySetDefinitions/Kubernetes/PSPRestrictedStandard.json#L191). For detailed steps on how to enable Azure Policy on your AKS cluster, please review [Secure your Azure Kubernetes Service (AKS) clusters with Azure Policy](../use-azure-policy.md).
 ---
 
 ## AKS-2025-005 Important Security Update for Calico v3.26 Users
