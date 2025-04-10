@@ -70,7 +70,8 @@ Who should manage network policies? This often depends on an organization’s st
 
 * Visibility tools: Use Cilium Hubble to observe how pods communicate.
 
-    ![alt text](media/advanced-container-networking-services/hubble-ui.png)
+:::image type="content" source="./media/advanced-container-networking-services/hubble-ui.png" alt-text="Screenshot of the Hubble UI showing how the application's microservices are communicating with each other.":::
+
 
 - Mapping connectivity:
 
