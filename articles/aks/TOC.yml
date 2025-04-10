@@ -253,6 +253,8 @@
           href: operator-best-practices-cluster-security.md
         - name: Container image management
           href: operator-best-practices-container-image-management.md
+        - name: Network policies
+          href: network-policy-best-practices.md
     - name: Cluster operations
       items:
         - name: Multi-tenancy and cluster isolation
