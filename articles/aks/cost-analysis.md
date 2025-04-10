@@ -71,6 +71,15 @@ az aks update --resource-group <resource-group> --name <cluster-name> --enable-c
 > [!WARNING]
 > The AKS cost analysis add-on Memory usage is dependent on the number of containers deployed. You can roughly approximate Memory consumption using *200 MB + 0.5 MB per container*. The current Memory limit is set to *4 GB*, which supports approximately *7000 containers per cluster*. These estimates are subject to change.
 
+> [!NOTE]
+> Enabling the cost analysis also creates a [managed identity](/entra/identity/managed-identities-azure-resources/overview) named `cost-analysis-identity` with read access to the cluster's node resource group, and assigns it to the node pools in the cluster.
+> This is used to collect the ARM identifiers of cluster assets for reporting.
+> 
+> Since there is already a managed identity for the node pool itself, any commands on the node that use managed identities will need to [specify the identity to use](/entra/identity/managed-identities-azure-resources/managed-identities-faq#what-identity-will-imds-default-to-if-i-dont-specify-the-identity-in-the-request) rather than relying on the default.
+> 
+> For example, `az login --identity --resource-id <resource ID of identity>`.
+
+
 ## Disable cost analysis on your AKS cluster
 
 Disable cost analysis using the [`az aks update`][az-aks-update] command with the `--disable-cost-analysis` flag.
