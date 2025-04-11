@@ -108,25 +108,25 @@ Query for Node OS auto upgrade notifications:
     properties
 | order by eventTime asc
  ```
-4. Configuration for alert Conditions. For measurement, select Measure by "Table rows", and for Aggregation, select "Count" and aggregation granularity "30 minutes".Keep Threshold value at 0. For Split by dimesions, select "status" and "Include all future values".
+4. Configuration for alert Conditions. For measurement, select Measure by "Table rows", and for Aggregation, select "Count" and aggregation granularity "30 minutes". Keep Threshold value at 0. For Split by dimesions, select "status" and "Include all future values".
 
 :::image type="content" source="./media/auto-upgrade-cluster/edit-alert-rule.jpg" alt-text="The screenshot of the configuration options for alert conditions.":::
 
-5. The only values that will appear are "Scheduled", "Started", "Completed", "Cancelled", "Failed", but they wont show if the cluster has never had and auto upgrade operation.
+5. The only values that appear are "Scheduled","Started","Completed","Canceled","Failed", but they wont show if the cluster has never had and auto upgrade operation.
 
 :::image type="content" source="./media/auto-upgrade-cluster/by-dimension.jpg" alt-text="The screenshot of the split by dimensions drop down.":::
 
 6. Check an action group with the correct email address exists, to receive the notifications.
 
-7. Assign MSI: the alert should have a managed identiy assigned to it, you can use an existing one or let the system assign one.
+7. Assign Managed System Identity: the alert should have a managed identiy assigned to it. You can use an existing one or let the system assign one.
 
-:::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="The screenshot of where to assign MSI.":::
+:::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="The screenshot of where to assign Managed System Identity.":::
 
-8. Make sure to give the Read role to the resource group and to the subscription to the MSI of the log search alert rule.
+8. Make sure to give the Read role to the resource group and to the subscription to the Managed System Identity of the log search alert rule.
 
     Go to alert rule, Settings -> Identity -> System assigned managed identity -> Azure role assignments -> Add role assignment
 
-    Choose the role Reader and assign it to the resource group, repeat "Add role assignment" for the subscription.
+    Choose the role Reader and assign it to the resource group. Repeat "Add role assignment" for the subscription.
 
 ### Verification
 
