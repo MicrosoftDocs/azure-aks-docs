@@ -10,6 +10,8 @@ ms.topic: conceptual
 
 # Detecting and managing workload drift with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
+Add v1beta1 requirement.
+
 A drift occurs when a non-Fleet agent (e.g., a developer or a controller) makes changes to a field of a Fleet-managed resource directly on the member cluster side without modifying the corresponding resource template created on the hub cluster.
 
 In multi-cluster environments authorized users can make changes to fields on workloads placed by Fleet Managers cluster resource placement (CRP) for a range of reasons. If fleet administrators are unaware of these changes they can result in problems the next time an updated CRP is deployed, returning the modified values to their default state.

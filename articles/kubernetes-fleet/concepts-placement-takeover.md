@@ -10,6 +10,8 @@ ms.topic: conceptual
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
+Add v1beta1 requirement.
+
 A common scenario as a multi-cluster environment matures is the presence of a specific workload on multiple clusters. These clusters can be added to a fleet to centralize management which can lead to conflicts when Fleet Manager attempts to place a workload onto a cluster where it already exists. 
 
 In this article we will look at how you can use the `whenToTakeOver` property in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
