@@ -1,21 +1,23 @@
 ---
-title: "Understanding snapshots for Azure Kubernetes Fleet Manager cluster resource placement"
-description: This article describes how Fleet Manager's cluster resource placement manages snapshots.
-ms.date: 03/20/2025
+title: "Managing placement conflicts with Azure Kubernetes Fleet Manager cluster resource placement"
+description: This article describes how to use an applyStrategy property to control how Fleet Manager handles existing workloads or placed workload drifts.
+ms.date: 04/11/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ---
 
-# Understanding snapshots for Azure Kubernetes Fleet Manager cluster resource placement
+# Managing placement conflicts with Azure Kubernetes Fleet Manager cluster resource placement
 
-Fleet Manager keeps a history of the 10 most recently used placement scheduling policies, along with resource versions the placement selected. These policy and resource versions are held as `ClusterSchedulingPolicySnapshot` and `ClusterResourceSnapshot` objects respectively.
+In multi-cluster environments a conflicting workload may already be present on a cluster that is selected as a deployment target via cluster resource placement. Additionally, a placed workload may have some aspect of its state changed directly on the cluster by an authorized user, creating a drift between what was deployed and what is running. Both these scenarios result in conflicts when Fleet Manager attempts cluster resource placements.
 
-In this article, we explore these objects so you can understand them should you wish to work with them.
+In this article we will look at how you can use the `applyStrategy` property in a cluster resource placement to manage conflicts due to the presence of an existing workload or due to an introduced drift in a placed workload.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ## Viewing resource snapshots
 
