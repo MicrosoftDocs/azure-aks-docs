@@ -112,7 +112,7 @@ Query for Node OS auto upgrade notifications:
 
 :::image type="content" source="./media/auto-upgrade-cluster/edit-alert-rule.jpg" alt-text="The screenshot of the configuration options for alert conditions.":::
 
-5. The only values that appear are "Scheduled,""Started,""Completed,""Canceled,""Failed", but they wont show if the cluster never had an auto upgrade operation.
+5. The only values that appear are Scheduled, Started, Completed, Canceled, Failed. However, they wont show if the cluster never had an auto upgrade operation.
 
 :::image type="content" source="./media/auto-upgrade-cluster/by-dimension.jpg" alt-text="The screenshot of the split by dimensions drop down.":::
 
