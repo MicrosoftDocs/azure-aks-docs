@@ -100,7 +100,7 @@ Query for Node OS auto upgrade notifications:
 | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
 | extend eventTime = todatetime(tostring(eventTime))
 | where eventTime >= ago(2h)
-| where upgradeType == "K8sVersionUpgrade"
+| where upgradeType == "NodeOSUpgrade"
 | project
     eventTime,
     upgradeType,
@@ -108,9 +108,19 @@ Query for Node OS auto upgrade notifications:
     properties
 | order by eventTime asc
  ```
-6. The interval should be 30 minutes, and the threshold should be 1.
+4. Configuration for alert Conditions. For measurement, select Measure by "Table rows", and for Aggregation, select "Count" and aggregation granularity "30 minutes".Keep Threshold value at 0. For Split by dimesions, select "status" and "Include all future values".
 
-7. Check an action group with the correct email address exists, to receive the notifications.
+:::image type="content" source="./media/auto-upgrade-cluster/edit-alert-rule.jpg" alt-text="The screenshot of the configuration options for alert conditions.":::
+
+5. The only values that will appear are "Scheduled", "Started", "Completed", "Cancelled", "Failed", but they wont show if the cluster has never had and auto upgrade operation.
+
+:::image type="content" source="./media/auto-upgrade-cluster/by-dimension.jpg" alt-text="The screenshot of the split by dimensions drop down.":::
+
+6. Check an action group with the correct email address exists, to receive the notifications.
+
+7. Assign MSI: the alert should have a managed identiy assigned to it, you can use an existing one or let the system assign one.
+
+:::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="The screenshot of where to assign MSI.":::
 
 8. Make sure to give the Read role to the resource group and to the subscription to the MSI of the log search alert rule.
 
