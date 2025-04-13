@@ -365,7 +365,8 @@ Use the following command to update all secrets. If you don't run this command, 
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 ```
 
-Notice: After turning off KMS, the encryption key vault key is still needed. You cannot delete or expire it.
+> [!WARNING]
+> After turning off KMS, the encryption key vault key is still needed. You cannot delete or expire it.
 
 ### Change the key vault mode
 
@@ -472,7 +473,7 @@ You can check the KMS config in AKS resource json by:
 1. Using the `az aks show` command
 2. Through Azure Portal
 
-The `securityProfile.azureKeyVaultKms` section shows the KMS config, including Key vault, key, current and previous key versions.
+The `securityProfile.azureKeyVaultKms` section shows the KMS config, including Key vault, key, current key version.
 
 ### Diagnose and solve problems
 

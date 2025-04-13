@@ -38,14 +38,14 @@ This guide assumes you followed the [documentation][istio-deploy-add-on] to enab
           "ingressGateways": null
           },
           "revisions": [
-          "asm-1-18"
+          "asm-1-24"
           ]
       },
       "mode": "Istio"
     }
     ```
 
-2. Create a ConfigMap with the name `istio-shared-configmap-<asm-revision>` in the `aks-istio-system` namespace. For example, if your cluster is running asm-1-18 revision of mesh, then the ConfigMap needs to be named as `istio-shared-configmap-asm-1-18`. Mesh configuration has to be provided within the data section under mesh.
+2. Create a ConfigMap with the name `istio-shared-configmap-<asm-revision>` in the `aks-istio-system` namespace. For example, if your cluster is running asm-1-24 revision of mesh, then the ConfigMap needs to be named as `istio-shared-configmap-asm-1-24`. Mesh configuration has to be provided within the data section under mesh.
 
     Example:
 
@@ -53,7 +53,7 @@ This guide assumes you followed the [documentation][istio-deploy-add-on] to enab
     apiVersion: v1
     kind: ConfigMap
     metadata:
-      name: istio-shared-configmap-asm-1-18
+      name: istio-shared-configmap-asm-1-24
       namespace: aks-istio-system
     data:
       mesh: |-
@@ -64,11 +64,11 @@ This guide assumes you followed the [documentation][istio-deploy-add-on] to enab
     The values under `defaultConfig` are mesh-wide settings applied for Envoy sidecar proxy.
 
 > [!CAUTION]
-> A default ConfigMap (for example, `istio-asm-1-18` for revision asm-1-18) is created in `aks-istio-system` namespace on the cluster when the Istio add-on is enabled. However, this default ConfigMap gets reconciled by the managed Istio add-on and thus users should NOT directly edit this ConfigMap. Instead users should create a revision specific Istio shared ConfigMap (for example `istio-shared-configmap-asm-1-18` for revision asm-1-18) in the aks-istio-system namespace, and then the Istio control plane will merge this with the default ConfigMap, with the default settings taking precedence.
+> A default ConfigMap (for example, `istio-asm-1-24` for revision asm-1-24) is created in `aks-istio-system` namespace on the cluster when the Istio add-on is enabled. However, this default ConfigMap gets reconciled by the managed Istio add-on and thus users should NOT directly edit this ConfigMap. Instead users should create a revision specific Istio shared ConfigMap (for example `istio-shared-configmap-asm-1-24` for revision asm-1-24) in the aks-istio-system namespace, and then the Istio control plane will merge this with the default ConfigMap, with the default settings taking precedence.
 
 ### Mesh configuration and upgrades
 
-When you're performing [canary upgrade for Istio](./istio-upgrade.md), you need to create a separate ConfigMap for the new revision in the `aks-istio-system` namespace **before initiating the canary upgrade**. This way the configuration is available when the new revision's control plane is deployed on cluster. For example, if you're upgrading the mesh from asm-1-18 to asm-1-19, you need to copy changes over from `istio-shared-configmap-asm-1-18` to create a new ConfigMap called `istio-shared-configmap-asm-1-19` in the `aks-istio-system` namespace.
+When you're performing [canary upgrade for Istio](./istio-upgrade.md), you need to create a separate ConfigMap for the new revision in the `aks-istio-system` namespace **before initiating the canary upgrade**. This way the configuration is available when the new revision's control plane is deployed on cluster. For example, if you're upgrading the mesh from asm-1-24 to asm-1-25, you need to copy changes over from `istio-shared-configmap-asm-1-24` to create a new ConfigMap called `istio-shared-configmap-asm-1-25` in the `aks-istio-system` namespace.
 
 After the upgrade is completed or rolled back, you can delete the ConfigMap of the revision that was removed from the cluster.
 
@@ -148,7 +148,7 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 ## Common errors and troubleshooting tips
 
 - Ensure that the MeshConfig is indented with spaces instead of tabs.
-- Ensure that you're only editing the revision specific shared ConfigMap (for example `istio-shared-configmap-asm-1-18`) and not trying to edit the default ConfigMap (for example `istio-asm-1-18`).
+- Ensure that you're only editing the revision specific shared ConfigMap (for example `istio-shared-configmap-asm-1-24`) and not trying to edit the default ConfigMap (for example `istio-asm-1-24`).
 - The ConfigMap must follow the name `istio-shared-configmap-<asm-revision>` and be in the `aks-istio-system` namespace.
 - Ensure that all MeshConfig fields are spelled correctly. If they're unrecognized or if they aren't part of the allowed list, admission control denies such configurations.
 - When performing canary upgrades, [check your revision specific ConfigMaps](#mesh-configuration-and-upgrades) to ensure configurations exist for the revisions deployed on your cluster.
