@@ -36,7 +36,7 @@ Securing your containerized applications is essential in today's dynamic cloud e
 ### FQDN based filtering 
 
 Enhance egress control with Azure CNI Powered by Cilium's DNS-based policies. Simplify configuration by using domain names (FQDNs) instead of managing dynamic IP addresses.
-To learn more, see [FQDN Based Filtering Overview](./container-network-security-fqdn-filtering-concepts.md) documentation 
+To learn more, see [FQDN Based Filtering Overview](./container-network-security-fqdn-filtering-concepts.md) documentation.
 
 ### Layer 7 (L7) policy
 
