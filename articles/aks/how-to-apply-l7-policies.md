@@ -10,7 +10,7 @@ ms.date: 03/14/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Layer 7(L7) polices with Advanced Container Networking Services (Public Preview)
+# Set up Layer 7(L7) polices with Advanced Container Networking Services (Preview)
 
 This article demonstrates how to set up L7 policies with Advanced Container Networking Services in AKS clusters. Please continue only after you have reviewed the limitations and considerations listed on the [Layer 7 Policy Overview](./container-network-security-l7-policy-concepts.md) page.
 
@@ -85,7 +85,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [L7 Policy](./container-network-security-l7-policy-concepts.md) feature is not available for Non-cilium clusters
+> [L7 Policy](./container-network-security-l7-policy-concepts.md) feature is not available for Non-Cilium clusters
 
 ---
 
@@ -232,8 +232,6 @@ spec:
 
 ### Verify policy
 
-
-
 ## Clean up resources
 
 If you don't plan on using this application, delete the other resources you created in this article using the [`az group delete`](/cli/azure/#az_group_delete) command.
@@ -244,6 +242,6 @@ If you don't plan on using this application, delete the other resources you crea
 
 ## Next steps
 
-In this how-to article, you learned how to install and enable security features with Advanced Container Networking Services for your AKS cluster.
+In this how-to article, you learned how to enable and apply L7 Policies with Advanced Container Networking Services for your AKS cluster.
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).

@@ -40,7 +40,7 @@ To learn more, see [FQDN Based Filtering Overview](./container-network-security-
 
 ### Layer 7 (L7) policy
 
-Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see [L7 Policy Overview](./container-network-security-l7-policy-concepts.md) documentation 
+Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see [L7 Policy Overview](./container-network-security-l7-policy-concepts.md) documentation.
 
 ## Pricing
 > [!IMPORTANT]
