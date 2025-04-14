@@ -72,6 +72,7 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 * Kubernetes service names aren't supported.
 * Other L7 policies aren't supported.
 * FQDN pods may exhibit performance degradation when handling more than 1000 requests per second.
+* If ACNS security is disabled all L7 policies (DNS,Kafka, HTTP, CNP/CCNP) will be blocked. It means that the rules or configurations that govern application-layer traffic are no longer being enforced or processed
 * Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
 ```yml
