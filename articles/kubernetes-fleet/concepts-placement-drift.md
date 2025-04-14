@@ -10,11 +10,9 @@ ms.topic: conceptual
 
 # Detecting and managing workload drift with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
-A drift occurs when a non-Fleet agent (e.g., a developer or a controller) makes changes to a field of a Fleet-managed resource directly on the member cluster side without modifying the corresponding resource template created on the hub cluster.
+Authorized users can make direct changes at any time to fields on workloads placed on member clusters, causing a variation or _drift_ between the Fleet Manager cluster resource placement (CRP) definition and the placed workload. These drifts can result in issues when a future CRP deployment happens, potentially leading to outages and downtime.
 
-In multi-cluster environments authorized users can make changes to fields on workloads placed by Fleet Managers cluster resource placement (CRP) for a range of reasons. If fleet administrators are unaware of these changes they can result in problems the next time an updated CRP is deployed, returning the modified values to their default state.
-
-In this article we will look at how you can use the `applyStrategy` property in a cluster resource placement to determine how Fleet Manager detects and handles these conflicts.
+In this article we will look at how you can use a cluster resource placement CRP `applyStrategy` property to determine how Fleet Manager detects and handles these drifts.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
@@ -51,6 +49,34 @@ spec:
     rollingUpdate:
       maxUnavailable: 100%
       unavailablePeriodSeconds: 1
+```
+
+Apply the CRP to your hub cluster using the following command.
+
+```bash
+kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io crp-reportdiff-sample -o json
+```
+
+Which results in a response containing JSON similar to the following snippet. In this sample we can see that someone has directly overwritten the owner label on this cluster. 
+
+```json
+[
+  {
+    "firstDiffedObservedTime": "2025-03-19T06:49:54Z",
+    "kind": "Namespace",
+    "name": "web",
+    "observationTime": "2025-03-19T06:50:25Z",
+    "observedDiffs": [
+      {
+        "path": "/metadata/labels/owner",
+        "valueInHub": "simon",
+        "valueInMember": "chen"
+      }
+    ],
+    "targetClusterObservedGeneration": 0,
+    "version": "v1"
+  }
+]
 ```
 
 Important items to note when using `ReportDiff`:
