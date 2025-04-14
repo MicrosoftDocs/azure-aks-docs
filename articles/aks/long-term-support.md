@@ -71,8 +71,8 @@ If you want to carry out an in-place migration, the AKS service migrates your co
     ```
 
     > [!NOTE]
-    > Starting with kubernetes version 1.28, every kubernetes version is long term support compatible. Please check [supported version calendar][supported] for more details on timelines.
-    > Supported Patches in LTS today : [1.27.100] [https://github.com/aks-lts/kubernetes/blob/release-1.27-lts/CHANGELOG/CHANGELOG-1.27.md#v127100-akslts]
+    > Starting with kubernetes version 1.28, every kubernetes version is long term support compatible. Please check [supported version calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar) for more details on timelines.
+    > Supported Patches in LTS today : [1.27.100](https://github.com/aks-lts/kubernetes/blob/release-1.27-lts/CHANGELOG/CHANGELOG-1.27.md#v127100-akslts)
     > Currently LTS only supports the two most recent patches and prior old patches get deprecated.
 
 ## Disable long-term support on an existing cluster
