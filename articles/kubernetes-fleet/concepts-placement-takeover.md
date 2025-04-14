@@ -10,16 +10,14 @@ ms.topic: conceptual
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
-Add v1beta1 requirement.
-
 A common scenario as a multi-cluster environment matures is the presence of a specific workload on multiple clusters. These clusters can be added to a fleet to centralize management which can lead to conflicts when Fleet Manager attempts to place a workload onto a cluster where it already exists. 
 
-In this article we will look at how you can use the `whenToTakeOver` property in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
+In this article we will look at how you use a `whenToTakeOver` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+[!INCLUDE [preview features note](./includes/preview/preview-callout-dpbeta.md)]
 
 ## Workload take over options
 
@@ -27,26 +25,26 @@ As a first step you must stage the take over workload on your Fleet Manager [hub
 
 The `whenToTakeOver` property allows the following values:
 
-* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields will be overwritten on the target cluster. This is the default behavior for a CRP without an explicit `whenToTakeOver` setting.
+* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields will be overwritten on the target cluster. This is the default behavior for a CRP without an explicit `whenToTakeOver` property.
 
 * `IfNoDiff`: Fleet Manager checks for configuration differences when it finds a pre-existing workload and will only apply the hub cluster workload if no configuration differences are found. 
 
 * `Never`: Fleet Manager ignores pre-existing workloads and doesn't apply the hub cluster workload. Fleet manager still identifies matching workloads and raises an apply error, allowing you to safely check for the presence of pre-existing workloads.
 
-### Control fields used for comparison
+### Define which fields are used for comparison
 
 You can use an optional `comparisonOptions` property to fine-tune how configuration differences are determined by `whenToTakeOver`.
 
-* `partialComparison`: only fields that are present on the hub cluster workload and on the target cluster workload are used for value comparison. Missing fields on the target cluster workload are acceptable. This is the default behavior for a CRP without an explicit `comparisonOptions` setting.
+* `partialComparison`: only fields that are present on the hub cluster workload and on the target cluster workload are used for value comparison. Any additional unmanaged fields on the target cluster workload are ignored. This is the default behavior for a CRP without an explicit `comparisonOptions` setting.
 
-* `fullComparison`: all fields on the resource template on the Fleet hub cluster are considered. If any fields are missing on the target cluster workload, then it will be considered to have failed comparison.
+* `fullComparison`: all fields on the workload definition on the Fleet hub cluster must be present on the selected member cluster. If the target cluster has any additional unmanaged fields, then it will be considered to have failed comparison.
 
 ## Check for conflicting workloads
 
 In order to check for existing workloads for a CRP, start by adding an `applyStrategy` with a `whenToTakeOver` value of `Never` as shown in the sample.
 
 ```yml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
 metadata:
   name: web-2-crp
@@ -92,7 +90,7 @@ Once you decide to proceed with the take over of existing workloads you can modi
 This CRP will allow Fleet Manager to apply its hub cluster workload in place of the workload already present on the target cluster, specifically where there are no differences between just the managed fields on both workloads.
 
 ```yml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
 metadata:
   name: web-2-crp
