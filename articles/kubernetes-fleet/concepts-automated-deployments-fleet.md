@@ -6,7 +6,6 @@ ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: conceptual
 ms.date: 04/14/2025
-ms.subservice: aks-developer
 ms.custom: build-2025
 ---
 
