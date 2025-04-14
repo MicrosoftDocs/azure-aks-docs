@@ -9,9 +9,11 @@ ms.date: 04/14/2025
 ms.custom: build-2025
 ---
 
-# Automated deployments for Azure Kubernetes Fleet Manager
+# Automated deployments for Azure Kubernetes Fleet Manager (preview)
 
-Automated deployments for Azure Kubernetes Fleet Manager (Fleet Manager) simplify the process of configuring a continuous deployment pipeline that connects GitHub repositories to your Fleet Manager hub cluster, allowing you to build deploy workloads across your member clusters.
+Automated deployments for Azure Kubernetes Fleet Manager (Fleet Manager) simplify the process of configuring a continuous deployment pipeline that connects your Fleet Manager hub cluster to Git repositories, allowing you to build images for your workload and then use Fleet Manager's cluster resource placement (CRP) to deploy the images across your member clusters.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ## Prerequisites
 
