@@ -32,18 +32,22 @@
       href: concepts-update-orchestration.md
     - name: Multi-cluster workload placement and management
       items:
-        - name: Introduction to cluster resource placement
-          href: concepts-resource-propagation.md
-        - name: Defining a placement rollout strategy
-          href: concepts-rollout-strategy.md
-        - name: Controlling eviction and disruption
-          href: concepts-eviction-disruption.md
-        - name: Placement strategy and resource snapshots
-          href: concepts-placement-snapshots.md
-        - name: Taking over existing workloads
-          href: concepts-placement-takeover.md
-        - name: Detecting and managing workload drift
-          href: concepts-placement-drift.md 
+        - name: Placing workloads using cluster resource placement
+          items:
+          - name: Introduction to cluster resource placement
+            href: concepts-resource-propagation.md
+          - name: Defining a placement rollout strategy
+            href: concepts-rollout-strategy.md
+          - name: Controlling eviction and disruption
+            href: concepts-eviction-disruption.md
+          - name: Placement strategy and resource snapshots
+            href: concepts-placement-snapshots.md
+          - name: Taking over existing workloads
+            href: concepts-placement-takeover.md
+          - name: Detecting and managing workload drift
+            href: concepts-placement-drift.md 
+        - name: Automated deployments for multi-cluster workload
+          href: concepts-automated-deployments-fleet.md        
     - name: Layer 4 load balancing across multiple clusters
       href: concepts-l4-load-balancing.md
 - name: How-to guides
