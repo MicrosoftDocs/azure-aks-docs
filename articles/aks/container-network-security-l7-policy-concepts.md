@@ -9,9 +9,9 @@ ms.topic: conceptual
 ms.date:  03/14/2024
 ---
 
-# Overview of Layer 7 (L7) policy (Public Preview) 
+# Overview of Layer 7 (L7) policy (Preview) 
 
-Network policies are essential for securing Kubernetes clusters by defining and controlling pod communication. They mitigate unauthorized access and potential security breaches by regulating traffic flow. Advanced Container Networking Services strengthens security with FQDN-based network policies. Expanding on this foundation, Advanced Container Networking Services now provides L7 policy support, enabling detailed inspection and management of application-level traffic. This advancement enhances both the security and efficiency of network communications within AKS clusters. The offering includes comprehensive support for widely adopted protocols, including HTTP, gRPC, and Kafka.
+Network policies are essential for securing Kubernetes clusters by defining and controlling pod communication. They mitigate unauthorized access and potential security breaches by regulating traffic flow. Advanced Container Networking Services strengthens security with [FQDN-based network policies](./container-network-security-fqdn-filtering-concepts.md). Expanding on this foundation, Advanced Container Networking Services now provides L7 policy support, enabling detailed inspection and management of application-level traffic. This advancement enhances both the security and efficiency of network communications within AKS clusters. The offering includes comprehensive support for widely adopted protocols, including HTTP, gRPC, and Kafka.
 
 ## Components of L7 policy
 
@@ -28,7 +28,7 @@ The Envoy proxy, augmented with Cilium network filters, then decides whether to 
 
 ## Monitoring L7 Traffic with Hubble and Grafana
 
-To gain insights into Layer 7 (L7) traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages Hubble, which is enabled by default with Advanced Container Networking Services. Hubble provides detailed flow-level metrics.
+To gain insights into L7 traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages hubble agent, which is enabled by default with Advanced Container Networking Services. Hubble provides detailed flow-level metrics.
 
 To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**.
 
@@ -49,15 +49,15 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 ## Limitations and considerations:
 
-*	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka .
+*	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka.
 *	In preview, the maximum supported cluster size is up to 1000 nodes or 40,000 pods, whichever is greater.
 *    Traffic traversing Envoy proxies does come with latency. Users may experience noticeable latency degradation beyond 3000 requests per second.
 *    As part of our observability solution, we provide envoy_http_rq_total metrics. These metrics will give the total request count, which could be used to derive RPS.
 *    During a Cilium upgrade or rollout, existing sessions can be gracefully closed. Applications are expected to handle these interruptions gracefully—typically by implementing retry mechanisms at the connection or request level. New connections initiated during the rollout are not impacted.
-*	L7 policy through Advanced Container Networking Services (ACNS) is not compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios. 
-
-| Feature/Component                                | L7 Policies using AKS, Istio - Managed addon    |
-|---------------------------------------------------|-----------|
+*	L7 policy through Advanced Container Networking Services (ACNS) is not compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios.
+ 
+| Feature/Component                                  | L7 Policies using AKS, Istio - Managed addon    |
+|----------------------------------------------------|-----------|
 | K8s network policies by Azure CNI by Cilium (ACPC) | Supported |
 | L4 (FQDN) Policies by ACPC and ACNS                | Supported |
 | L7 (HTTP(s)/GRPC/Kafka) Policies by ACPC and ACNS  | Not Supported |

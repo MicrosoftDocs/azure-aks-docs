@@ -1,6 +1,6 @@
 ---
-title: "Set up L7 policies with Advanced Container Networking Services (ACNS)"
-description: Get started with L7 Feature for Advanced Container Networking Services (ACNS) for your AKS cluster using Azure managed Cilium Network Policies.
+title: "Set up Layer 7(L7) policies with Advanced Container Networking Services (ACNS)"
+description: Get started with Layer 7(L7) Feature for Advanced Container Networking Services (ACNS) for your AKS cluster using Azure managed Cilium Network Policies.
 author: Khushbu-Parekh
 ms.author: kparekh
 ms.service: azure-kubernetes-service
@@ -61,6 +61,8 @@ The `az aks create` command with the Advanced Container Networking Services flag
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
+>
+> For this demo, the --acns-advanced-networkpolicies parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value. For this demo you will need --acns-advanced-network policies to at least have L7 enabled.
@@ -73,13 +75,9 @@ az aks create \
     --resource-group $RESOURCE_GROUP \
     --generate-ssh-keys \
     --network-plugin azure \
-    --network-plugin-mode overlay \
     --network-dataplane cilium \
-    --node-count 2 \
-    --pod-cidr 192.168.0.0/16 \
-    --kubernetes-version 1.29 \
     --enable-acns \
-    --acns-advanced-networkpolicies <L7/FQDN/None>
+    --acns-advanced-networkpolicies L7
 ```
 
 #### [**Non-Cilium**](#tab/non-cilium)
@@ -96,13 +94,15 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Co
 
 > [!NOTE]
 > Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services. For this demo you will need --acns-advanced-network policies to at least have L7 enabled.
+>
+> For this demo, the --acns-advanced-networkpolicies parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
 
 ```azurecli-interactive
 az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns \
-    --acns-advanced-networkpolicies <L7/FQDN/None>
+    --acns-advanced-networkpolicies L7
 ```
 
 ---    
@@ -117,8 +117,9 @@ az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 
 ## Setup http-server application on your AKS Cluster
 
-```yaml
+Apply this YAML to your AKS cluster to set up the `http-server` application.
 
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -181,6 +182,10 @@ data:
     }
 ```
 ## Setup http-client application on your AKS Cluster
+
+
+Apply this YAML to your AKS cluster to set up the `http-client` application.
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -206,6 +211,8 @@ spec:
 
 ## Test connectivity with a policy
 
+Next, apply the following Layer 7 policy to allow only `GET` requests from the `http-client` application to the `/products` endpoint on the `http-server`:
+
 ```yaml
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -222,7 +229,7 @@ spec:
         app: http-client
     toPorts:
     - ports:
-      - port: "80"
+      - port: "8080"
         protocol: TCP
       rules:
         http:
@@ -231,6 +238,22 @@ spec:
 ```
 
 ### Verify policy
+To verify the policy's enforcement, execute these commands from the `http-client` pod:
+
+```azurecli-interactive
+kubectl exec -it <your-http-client-pod-name> -n default -- curl -v http://http-server:80/products
+```
+You should expect an output like  `Listing products...` when you run the above command 
+
+
+```azurecli-interactive
+kubectl exec -it <your-http-client-pod-name> -n default -- curl -v -XPOST http://http-server:80/products -d "test=data"
+```
+You should expect an output like `Access Denied` when you run the above command 
+
+
+### Observing metrics L7 metrics
+
 
 ## Clean up resources
 

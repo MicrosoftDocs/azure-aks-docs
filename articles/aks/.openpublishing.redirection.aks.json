@@ -592,7 +592,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/container-network-security-concepts.md",
-            "redirect_url": "/azure/aks/automatic/advanced-network-observability-concepts.md#container-network-security-concepts",
+            "redirect_url": "/azure/aks/advanced-network-observability-concepts.md#container-network-security-concepts",
             "redirect_document_id": false 
         }
 

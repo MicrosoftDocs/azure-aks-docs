@@ -38,13 +38,13 @@ Securing your containerized applications is essential in today's dynamic cloud e
 Enhance egress control with Azure CNI Powered by Cilium's DNS-based policies. Simplify configuration by using domain names (FQDNs) instead of managing dynamic IP addresses.
 To learn more, see [FQDN Based Filtering Overview](./container-network-security-fqdn-filtering-concepts.md) documentation.
 
-### Layer 7 (L7) policy
+### Layer 7 (L7) policy (Preview)
 
 Gain granular control over application-level traffic. Implement policies based on protocols like HTTP, gRPC and kafka, securing your applications with deep visibility and fine-grained access control. To learn more, see [L7 Policy Overview](./container-network-security-l7-policy-concepts.md) documentation.
 
 ## Pricing
 > [!IMPORTANT]
-> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/)
+> Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
 
 
 ## Set up Advanced Container Networking Services on your cluster
@@ -109,6 +109,9 @@ The `az aks create` command with the Advanced Container Networking Services flag
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
+>
+> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
+
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -151,6 +154,12 @@ az aks create \
 The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
 
 ##### [**Cilium**](#tab/cilium)
+
+> [!NOTE]
+> Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
+>
+> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
+
 ```azurecli-interactive
 az aks update \
     --resource-group $RESOURCE_GROUP \
