@@ -15,7 +15,7 @@ Container Network Security is an offering of [Advanced Container Networking Serv
 
 ## Features of Container Network Security
 
-As of today, the first feature available within Container Network Security is FQDN filtering. This allows you to define network security policies based on domain names, providing a more granular and user-friendly approach to managing network traffic.
+As of today, the first feature available within Container Network Security is Fully Qualified Domain Name(FQDN) filtering. This allows you to define network security policies based on domain names, providing a more granular and user-friendly approach to managing network traffic.
 
 ## Overview of FQDN filtering
 
