@@ -28,7 +28,7 @@ The Envoy proxy, augmented with Cilium network filters, then decides whether to 
 
 ## Monitoring L7 Traffic with Hubble and Grafana
 
-To gain insights into Layer 7 (L7) traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages Hubble, which is enabled by default with Advanced  Container Networking Services. Hubble provides detailed flow-level metrics.
+To gain insights into Layer 7 (L7) traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages Hubble, which is enabled by default with Advanced Container Networking Services. Hubble provides detailed flow-level metrics.
 
 To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**.
 
@@ -37,8 +37,6 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 > [!NOTE]
 > These dashboards will only display data if you have this feature enabled on your cluster and have relevant policies applied.
 > Additionally, the monitoring metrics are **not** required to flow through Envoy, a component of the ACNS security agent. Rather, these metrics are collected by the Hubble agent, which is installed on your cluster as part of the Advanced Container Networking Service's observability feature.
->
-
 ## Key benefits
 
 **Granular Application-Level Control**: L7 policies allow for fine-grained control over network traffic based on application-specific attributes, such as HTTP methods, gRPC paths, and Kafka topics. This extends beyond the basic IP address and port-based control of traditional network policies.
@@ -64,7 +62,6 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 | L4 (FQDN) Policies by ACPC and ACNS                | Supported |
 | L7 (HTTP(s)/GRPC/Kafka) Policies by ACPC and ACNS  | Not Supported |
   
-
 ## Pricing
 > [!IMPORTANT]
 > Advanced Container Networking Services is a paid offering. For more information about pricing, see [Advanced Container Networking Services - Pricing](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
