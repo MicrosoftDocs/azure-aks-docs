@@ -52,7 +52,7 @@ The following table includes parameters you can use to define a custom storage c
 |protocol | Specify blobfuse mount or NFSv3 mount. | `fuse`, `nfs` | No | `fuse`|
 |containerName | Specify the existing container (directory) name. | container | No | If empty, driver creates a new container name, starting with `pvc-fuse` for blobfuse or `pvc-nfs` for NFS v3. |
 |containerNamePrefix | Specify Azure storage directory prefix created by driver. | my |Can only contain lowercase letters, numbers, hyphens, and length should be fewer than 21 characters. | No |
-|server | Specify Azure storage account domain name. | Existing storage account DNS domain name, for example `<storage-account>.privatelink.blob.core.windows.net`. | No | If empty, driver uses default `<storage-account>.blob.core.windows.net` or other sovereign cloud storage account DNS domain name.|
+|server | Specify Azure storage account domain name. | Existing storage account DNS domain name, for example `<storage-account>.blob.core.windows.net`. | No | If empty, driver uses default `<storage-account>.blob.core.windows.net` or other sovereign cloud storage account DNS domain name.|
 |allowBlobPublicAccess | Allow or disallow public access to all blobs or containers for storage account created by driver. | `true`,`false` | No | `false`|
 |storageEndpointSuffix | Specify Azure storage endpoint suffix. | `core.windows.net` | No | If empty, driver will use default storage endpoint suffix according to cloud environment.|
 |tags | [Tags][az-tags] would be created in new storage account. | Tag format: 'foo=aaa,bar=bbb' | No | ""|
