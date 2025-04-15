@@ -8,15 +8,13 @@ ms.topic: conceptual
 ms.date: 11/10/2024
 ---
 
-# Network isolated Azure Kubernetes Service (AKS) clusters (Preview)
+# Network isolated Azure Kubernetes Service (AKS) clusters 
 
 Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
 
 One solution to restricting outbound traffic from the cluster is to use a firewall device to restrict traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
 
-Another solution, a network isolated AKS cluster (preview), simplifies setting up outbound restrictions for a cluster out of the box. The cluster operator can then incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated AKS cluster thus reduces the risk of data exfiltration.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+Another solution, a network isolated AKS cluster, simplifies setting up outbound restrictions for a cluster out of the box. The cluster operator can then incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated AKS cluster thus reduces the risk of data exfiltration.
 
 ## How a network isolated cluster works
 
@@ -29,10 +27,10 @@ AKS clusters pull images required for the cluster and its features or add-ons fr
 
 The following options are supported for a private ACR with network isolated clusters:
 
-* **AKS-managed ACR** - AKS creates, manages, and reconciles an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster. An AKS-managed ACR follows the same behavior as other resources (route table, Azure Virtual Machine Scale Sets, etc.) in the infrastructure resource group. **To avoid the risk of cluster components or new node bootstrap failing, do not update or delete the ACR, its cache rules, or its system images.**. The AKS-managed ACR is continuously reconciled so that cluster components and new nodes work as expected.
+* **AKS-managed ACR** - AKS creates, manages, and reconciles an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster. An AKS-managed ACR follows the same behavior as other resources (route table, Azure Virtual Machine Scale Sets, etc.) in the infrastructure resource group. **To avoid the risk of cluster components or new node bootstrap failing, do not update or delete the ACR, its cache rules, or its system images**. The AKS-managed ACR is continuously reconciled so that cluster components and new nodes work as expected.
 
     > [!NOTE]
-    > After you delete an AKS network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted.
+    > After you delete an AKS network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted. The AKS-managed ACR is your resource and is billed to your subscription. The AKS-managed ACR is your resource and is billed to your subscription.
 
 * **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry.
 
@@ -51,6 +49,7 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 * `SecurityPatch` channel of auto-upgrade for node OS images is not yet supported for network isolated clusters.
 * `Unmanaged` channel of auto-upgrade for node OS images is not supported.
 * Windows node pools are not currently supported.
+* If you are using [CSI driver][csi-driver] for Azure Files and Blob storage, you must create a [custom storage class][custom-storage-class] with "networkEndpointType: privateEndpoint" in azure file and blob storage class.
 * The following AKS cluster extensions aren't supported yet on network isolated clusters:
     * [Dapr][dapr-overview]
     * [Azure App Configuration][app-config-overview]
@@ -58,6 +57,9 @@ When creating a network isolated AKS cluster, you can choose one of the followin
     * [Flux (GitOps)][gitops-overview]
     * [Azure Container Storage][azure-container-storage]
     * [Azure Backup for AKS][azure-backup-aks]
+    
+    > [!NOTE]
+    > If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it will generate outbound traffic.
 
 ## Frequently asked questions
 
@@ -77,7 +79,7 @@ After setting up a network isolated cluster, if you want to enable features or a
 
 ### Can I manually upgrade packages to upgrade node pool image?
 
-Manually upgrading packages based on egress to package repositories isn't supported. Instead, you can [autoupgrade your node OS images][autoupgrade-node-os]. Only `NodeImage` node OS autoupgrade channel is supported for network isolated clusters.
+Manually upgrading packages based on egress to package repositories isn't supported. Instead, you can [autoupgrade your node OS images][autoupgrade-node-os]. Only `NodeImage` and `None` upgrade channel are currently supported for network isolated clusters.
 
 ## Next steps
 
@@ -92,6 +94,8 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 [outbound-rules]: ./outbound-rules-control-egress.md
 [app-config-overview]: ./azure-app-configuration.md
 [dapr-overview]: ./dapr.md
+[csi-driver]: ./azure-files-csi.md
+[node-public-ip]: ./use-node-public-ips.md
 
 <!-- LINKS - External -->
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
@@ -99,3 +103,5 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 [gitops-overview]: /azure/azure-arc/kubernetes/conceptual-gitops-flux2
 [azure-container-storage]: /azure/storage/container-storage/container-storage-introduction
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
+[custom-storage-class]: /azure/aks/azure-csi-files-storage-provision#storage-class-parameters-for-dynamic-persistentvolumes
+
