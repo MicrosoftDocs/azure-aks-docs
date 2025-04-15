@@ -56,7 +56,7 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 
 ## Limitations:
 
-* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (e.g., *.example.com), but you cannot use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
+* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you cannot use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
 - Supported Pattern:
 
     `*.example.com` - This allows traffic to all subdomains under example.com.
@@ -71,8 +71,8 @@ The ACNS Security Agent then decides whether to forward a DNS request to the DNS
 * Dual stack isn't supported.
 * Kubernetes service names aren't supported.
 * Other L7 policies aren't supported.
-* FQDN pods may exhibit performance degradation when handling more than 1000 requests per second.
-* If ACNS security is disabled all L7 policies (DNS,Kafka, HTTP, CNP/CCNP) will be blocked. It means that the rules or configurations that govern application-layer traffic are no longer being enforced or processed
+* FQDN pods may exhibit performance degradation when handling more than 1,000 requests per second.
+* If ACNS security is disabled, FQDN and L7 policies (HTTP(s), Kafka and gRPC) will be blocked.
 * Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
 ```yml
