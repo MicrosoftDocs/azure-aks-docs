@@ -139,7 +139,7 @@ For more information on AKS security best practices, see [Best practices for clu
 [aks-best-practices-security-upgrades]: ./operator-best-practices-cluster-security.md
 [quick-kubernetes-deply-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [azure-cli-install]: /cli/azure/install-azure-cli
-[custom-ca-rest]: /rest/api/aks/managed-clusters/create-or-update?view=rest-aks-2025-01-01&tabs=HTTP#create-managed-cluster-with-custom-ca-trust-certificates:~:text=%2215m%22%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D-,Create%20Managed%20Cluster%20with%20Custom%20CA%20Trust%20Certificates,-Sample%20request
+[custom-ca-rest]: /rest/api/aks/managed-clusters/create-or-update?view=rest-aks-2025-01-01&tabs=HTTP#create-managed-cluster-with-custom-ca-trust-certificates:~:text=%2215m%22%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D-,Create%20Managed%20Cluster%20with%20Custom%20CA%20Trust%20Certificates,-Sample%20request&preserve-view=true
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-nodepool-add]: /cli/azure/aks#az-aks-nodepool-add
@@ -148,7 +148,7 @@ For more information on AKS security best practices, see [Best practices for clu
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-feature-show]: /cli/azure/feature#az-feature-show
 [az-aks-show]: /cli/azure/aks#az-aks-show
-[az-rest]: /cli/azure/reference-index?view=azure-cli-latest#az-rest
+[az-rest]: /cli/azure/reference-index?view=azure-cli-latest#az-rest&preserve-view=true
 [install-azure-cli]:  /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
