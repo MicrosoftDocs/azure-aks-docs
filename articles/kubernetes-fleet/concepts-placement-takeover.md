@@ -10,9 +10,9 @@ ms.topic: conceptual
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
-As a multi-cluster environment matures the presence of a specific workload on multiple clusters is a common situation. One reason to add these clusters to a fleet is to centralize management of workloads to improve visibility of where workloads run and to ensure their consistency. However, when adding clusters with pre-existing workloads to a fleet, placement conflicts can arise when Fleet Manager attempts to place a managed workload onto the clusters. 
+As multi-cluster environment mature the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads to ensure consistency. However, adding clusters with pre-existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an adopted member cluster. 
 
-In this article, we will look at how you use a `whenToTakeOver` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
+In this article, wes look at how to use the `whenToTakeOver` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
@@ -21,13 +21,13 @@ In this article, we will look at how you use a `whenToTakeOver` property of an `
 
 ## Workload take over options
 
-Start by deploying the workload manifests onto your Fleet Manager [hub cluster][fleet-hub-cluster]. Once this done, define a CRP that specifies an explicit takeover behavior using the `whenToTakeOver` property.
+The starting point for workload take over is to deploying the workload manifests onto your Fleet Manager [hub cluster][fleet-hub-cluster]. Once deployed you define a CRP that specifies an explicit takeover behavior using the `whenToTakeOver` property.
 
 The `whenToTakeOver` property allows the following values:
 
-* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for a CRP without an explicit `whenToTakeOver` property.
+* `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for a CRP without an explicit `whenToTakeOver` setting.
 
-* `IfNoDiff`: Fleet Manager checks for configuration differences when it finds a pre-existing workload and will only apply the hub cluster workload if no configuration differences are found. 
+* `IfNoDiff`: Fleet Manager checks for configuration differences when it finds a pre-existing workload and only applies the hub cluster workload if no configuration differences are found. 
 
 * `Never`: Fleet Manager ignores pre-existing workloads and doesn't apply the hub cluster workload. Fleet manager still identifies matching workloads and raises an apply error, allowing you to safely check for the presence of pre-existing workloads.
 
@@ -82,7 +82,7 @@ kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io web-2
     | jq '[.[] | select (.failedPlacements != null)] | map({clusterName, failedPlacements})'
 ```
 
-Each cluster that failed placement due to an existing workload will return an entry similar to the following sample.
+Each cluster that fails placement due to an existing workload returns an entry similar to the following sample.
 
 ```json
 {
@@ -108,7 +108,7 @@ Each cluster that failed placement due to an existing workload will return an en
 
 To proceed with the take over of an existing workload you can modify the existing CRP, changing `whenToTakeOver` to `IfNoDiff`.
 
-Fleet Manager uses the CRP to apply its hub cluster workload in place of the workload already present on the target cluster, specifically where there are no differences between managed fields on both workloads. Extra fields are ignored.
+Fleet Manager applies the hub cluster workload in place of the existing workload on the target cluster where there are no differences between managed fields on both workloads. Extra fields are ignored.
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -143,7 +143,7 @@ kubectl apply -f web-2-crp.yaml
 
 Fleet Manager attempts to place the workload, overwriting target member clusters that have matching fields.
 
-Placements can still fail, so check for additional `failedPlacement` messages. Determine which member clusters failed using the following command. The [jq command](https://github.com/jqlang/jq) is used to format the output.
+Placements can still fail, so check for extra `failedPlacement` messages. Determine which member clusters failed using the following command. The [jq command](https://github.com/jqlang/jq) is used to format the output.
 
 ```bash
 kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io web-2-crp -o jsonpath='{.status.placementStatuses}' \
@@ -172,9 +172,9 @@ Each cluster that failed placement due to a configuration difference returns an 
 }
 ```
 
-If you want to view which fields are drifted you can use the process detailed on [report on drifted clusters](./concepts-placement-drift.md#report-on-drifted-clusters) in the drift detection article.
+To view which fields are drifted you can use the process detailed in the [report on drifted clusters](./concepts-placement-drift.md#report-on-drifted-clusters) section of the drift detection documentation.
 
-At this point you must decide on how to handle the drift, by either including the member cluster change(s) into your hub cluster workload definition, or electing to overwrite the member cluster workload by setting the `whenToTakeOver` property to `Always`.
+At this point you must decide on how to handle the drift, by either including the member cluster changes into your hub cluster workload definition, or electing to overwrite the member cluster workload by setting the `whenToTakeOver` property to `Always`.
 
 ## Next steps
 
