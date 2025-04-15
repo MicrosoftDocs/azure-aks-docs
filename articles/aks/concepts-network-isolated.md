@@ -30,7 +30,7 @@ The following options are supported for a private ACR with network isolated clus
 * **AKS-managed ACR** - AKS creates, manages, and reconciles an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster. An AKS-managed ACR follows the same behavior as other resources (route table, Azure Virtual Machine Scale Sets, etc.) in the infrastructure resource group. **To avoid the risk of cluster components or new node bootstrap failing, do not update or delete the ACR, its cache rules, or its system images**. The AKS-managed ACR is continuously reconciled so that cluster components and new nodes work as expected.
 
     > [!NOTE]
-    > After you delete an AKS network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted. The AKS-managed ACR is your resource and is billed to your subscription. The AKS-managed ACR is your resource and is billed to your subscription.
+    > After you delete an AKS network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted. The AKS-managed ACR is your resource and is billed to your subscription. 
 
 * **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry.
 
@@ -57,9 +57,9 @@ When creating a network isolated AKS cluster, you can choose one of the followin
     * [Flux (GitOps)][gitops-overview]
     * [Azure Container Storage][azure-container-storage]
     * [Azure Backup for AKS][azure-backup-aks]
-    
-    > [!NOTE]
-    > If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it will generate outbound traffic.
+
+> [!NOTE]
+> If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it will generate outbound traffic.
 
 ## Frequently asked questions
 
