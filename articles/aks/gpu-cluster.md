@@ -130,7 +130,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 1. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
 
     ```bash
-    kubectl create namespace gpu-operator
+    kubectl create namespace gpu-resources
     ```
 
 2. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
@@ -140,7 +140,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
     kind: DaemonSet
     metadata:
       name: nvidia-device-plugin-daemonset
-      namespace: kube-system
+      namespace: gpu-resources
     spec:
       selector:
         matchLabels:
@@ -157,13 +157,19 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
             operator: "Equal"
             value: "gpu"
             effect: "NoSchedule"
+          - key: "kubernetes.azure.com/scalesetpriority"
+            operator: "Equal"
+            value: "spot"
+            effect: "NoSchedule"
+          nodeSelector:
+            kubernetes.azure.com/accelerator: nvidia
           # Mark this pod as a critical add-on; when enabled, the critical add-on
           # scheduler reserves resources for critical add-on pods so that they can
           # be rescheduled after a failure.
           # See https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/
           priorityClassName: "system-node-critical"
           containers:
-          - image: nvcr.io/nvidia/k8s-device-plugin:v0.15.0
+          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.1
             name: nvidia-device-plugin-ctr
             env:
               - name: FAIL_ON_INIT_ERROR
