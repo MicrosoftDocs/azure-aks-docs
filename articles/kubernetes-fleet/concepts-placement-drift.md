@@ -10,9 +10,9 @@ ms.topic: conceptual
 
 # Detecting and managing workload drift with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
-Authorized users can make direct changes at any time to fields on workloads placed on member clusters, causing a variation or _drift_ between the Fleet Manager cluster resource placement (CRP) definition and the placed workload. These drifts can result in issues when a future CRP deployment happens, potentially leading to outages and downtime.
+Authorized users can make direct changes at any time to fields on workloads placed on member clusters. These changes cause a variation or _drift_ between the Fleet Manager hub cluster workload definition and the placed workload whichcan result in issues arising from new deployments, potentially leading to outages and downtime.
 
-In this article we will look at how you can use a cluster resource placement CRP `applyStrategy` property to determine how Fleet Manager detects and handles these drifts.
+In this article, we look at how you can use a cluster resource placement CRP `applyStrategy` property to determine how Fleet Manager detects and handles these drifts.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
@@ -25,7 +25,7 @@ This section provides an overview of the cluster resource placement `ReportDiff`
 
 Using the `ReportDiff` mode, Fleet Manager checks for configuration differences between the [hub cluster][fleet-hub-cluster] workload definition and corresponding placed workloads on the member clusters, reporting the results in the CRP status.
 
-In the following sample, Fleet Manager will report differences for the namespace `web` for any member cluster onto which it has previously been placed. 
+In the following sample, Fleet Manager reports differences for the namespace `web` for any member cluster with the placed namespace. 
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -102,38 +102,38 @@ Fleet Manager reports the following information about configuration differences:
 
 Important items to note when using `ReportDiff`:
 
-* Fleet Manager will only report differences on resources that have corresponding manifests on the hub cluster. If, for example, a namespace-scoped object has been created on the member cluster but not on the hub cluster, Fleet Manager will ignore the object, even if its owner namespace has been selected for placement.
+* Fleet Manager only reports differences on resources that have corresponding manifests on the hub cluster. If, for example, a namespace-scoped object exists on the member cluster but not on the hub cluster, Fleet Manager ignores the object, even if its owner namespace is selected for placement.
 
 * No apply operation is run; it is up to you to decide the best way to handle any identified configuration differences.
 
-* Difference reporting is considered successful and complete as soon as Fleet Manager finishes checking all the resources; whether configuration differences are found or not has no effect on the difference reporting success status.
+* Difference reporting is successful and complete as soon as Fleet Manager finishes checking all resources. Whether configuration differences exist or not has no effect on the difference reporting success status.
 
-* When a resource change has been applied on the hub cluster, for CRPs of the `ReportDiff` mode, the change will be immediately rolled out to all member clusters (when the rollout strategy is set to RollingUpdate, the default type), as soon as they have completed diff reporting earlier.
+* When a resource change is applied on the hub cluster, for CRPs of the `ReportDiff` mode, the change is immediately rolled out to all member clusters (when the rollout strategy is set to RollingUpdate, the default type), as soon as diff reporting has been completed.
 
 ## Handle drifted clusters during deployments
 
-Reporting on drifted state across a fleet using [ReportDiff](#detect-differences-across-a-fleet) is a point-in-time activity so it is always possible that configuration has drifted between a check and a deployment.
+Reporting on drifted state across a fleet using [ReportDiff](#detect-differences-across-a-fleet) is a point-in-time activity so it is always possible that configuration drifts between a check and a deployment.
 
-In this section we look at how you use a `whenToApply` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles drifted workloads when performing placements.  
+In this section, we look at how you use a `whenToApply` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles drifted workloads when performing placements.  
 
 The `whenToApply` property features two options:
 
-* `Always`: Fleet Manager will periodically apply the workload definition from the hub cluster to matching member clusters, regardless of their drifted status. This is the default behavior for a CRP without an explicit `whenToApply` property.
+* `Always`: Fleet Manager periodically applies the workload definition from the hub cluster to matching member clusters, regardless of their drifted status. This behavior is the default for a CRP without an explicit `whenToApply` property.
 
-* `IfNotDrifted`: Fleet Manager will check for drifts periodically; if drifts are found, Fleet Manager will stop applying the hub cluster workload definition and report in the CRP status.
+* `IfNotDrifted`: Fleet Manager checks for drifts periodically. If drifts are found, Fleet Manager will stop applying the hub cluster workload definition and report in the CRP status.
 
 > [!NOTE]
-> The presence of drifts will NOT stop Fleet Manager from rolling out newer workload versions. If you choose to edit the workload definition on the hub cluster, Fleet Manager will always apply the new workload definition.
+> The presence of drifts does NOT stop Fleet Manager from rolling out newer workload versions. If you edit the workload definition on the hub cluster, Fleet Manager always applies the new workload definition.
 
 ### Define which fields are used for comparison
 
 You can use an optional `comparisonOptions` property to fine-tune how configuration differences are determined by `whenToApply`.
 
-* `partialComparison`: only fields that are present on the hub cluster workload and on the target cluster workload are used for value comparison. Any additional unmanaged fields on the target cluster workload are ignored. This is the default behavior for a CRP without an explicit `comparisonOptions` setting.
+* `partialComparison`: only fields that are present on the hub cluster workload and on the target cluster workload are used for value comparison. Any extra unmanaged fields on the target cluster workload are ignored. This behavior is the default for a CRP without an explicit `comparisonOptions` setting.
 
-* `fullComparison`: all fields on the workload definition on the Fleet hub cluster must be present on the selected member cluster. If the target cluster has any additional unmanaged fields, then it will be considered to have failed comparison.
+* `fullComparison`: all fields on the workload definition on the Fleet hub cluster must be present on the selected member cluster. If the target cluster has any additional unmanaged fields, then it is considered to have failed comparison.
 
-In the follow sample, if a change is found in either any field (managed or unmanaged) then the CRP should be considered to have failed.
+In the following sample, if a change is found in either any field (managed or unmanaged) then the CRP will be considered to have failed.
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
