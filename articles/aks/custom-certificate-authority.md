@@ -44,7 +44,7 @@ Example text file:
     -----END CERTIFICATE-----
  ```
 
-Before proceeding to the next step, make sure that there are no additional blank spaces in your text file. These will result in an error in the next step if not removed.
+Before proceeding to the next step, make sure that there are no blank spaces in your text file. These will result in an error in the next step if not removed.
 
 2. Pass certificates to your cluster.
 
@@ -67,7 +67,7 @@ Before proceeding to the next step, make sure that there are no additional blank
   4. Pass the updated JSON file to add the certificates to the node's trust store
 ```azurecli-interactive
   az rest --method put \
-  --url "/subscriptions/<subscription-id>/resourceGroups/<resource-grou-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" --body @body.json
+  --url "/subscriptions/<subscription-id>/resourceGroups/<resource-group-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" --body @body.json
 ```
 
 You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] to pass certificates to your cluster. Once the operation completes, the certificates are installed in your node's trust stores.
@@ -114,7 +114,7 @@ The securityProfile output should include your Custom CA Trust Certificates.
 
 ### Formatting error
 
-Adding certificates to a cluster may result in an error if the JSON file with the certificates is not formatted properly.
+Adding certificates to a cluster may result in an error if the file with the certificates is not formatted properly.
 
 ```
 failed to decode one of SecurityProfile.CustomCATrustCertificates to PEM after base64 decoding
@@ -137,7 +137,7 @@ For more information on AKS security best practices, see [Best practices for clu
 
 <!-- LINKS INTERNAL -->
 [aks-best-practices-security-upgrades]: ./operator-best-practices-cluster-security.md
-[quick-kubernetes-deply-cli]: ./quick-kubernetes-deploy-cli.md
+[quick-kubernetes-deply-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [azure-cli-install]: /cli/azure/install-azure-cli
 [custom-ca-rest]: /rest/api/aks/managed-clusters/create-or-update?view=rest-aks-2025-01-01&tabs=HTTP#create-managed-cluster-with-custom-ca-trust-certificates:~:text=%2215m%22%0A%20%20%20%20%7D%0A%20%20%7D%0A%7D-,Create%20Managed%20Cluster%20with%20Custom%20CA%20Trust%20Certificates,-Sample%20request
 [az-aks-create]: /cli/azure/aks#az-aks-create
