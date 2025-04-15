@@ -134,13 +134,13 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
     REGISTRY_ID=$(az acr show --name ${REGISTRY_NAME} -g ${RESOURCE_GROUP}  --query 'id' --output tsv)
     ```
 
-2. Create an ACR cache rule following the below command to allow users to cache MCR container images in the new ACR, note the cache rule name and repo names must be strict aligned with the guidance.
+2. Create an ACR cache rule following the below command to allow users to cache MCR container images in the new ACR, note the cache rule name and repo names must be strict aligned with the guidance below.
 
     ```azurecli-interactive
     az acr cache create -n aks-managed-mcr -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
     ```
 [!NOTE]
-    >It is your responsibility to ensure the ACR cache rule is created correctly. AKS is not responsible to reconcile the cache rule.
+    > With BYO ACR, it is your responsibility to ensure the ACR cache rule is created and maintained correctly as above. This step is critical to network isolated cluster creation, functioning and upgrading. AKS is not responsible to reconcile the cache rule.
     
 
 ### Step 4: Create a private endpoint for the ACR
@@ -370,7 +370,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
 [vnet-disable-outbound-access]: /azure/virtual-network/ip-services/default-outbound-access#how-can-i-transition-to-an-explicit-method-of-public-connectivity-and-disable-default-outbound-access
 [azmontoring-private-link]: /azure/azure-monitor/containers/kubernetes-monitoring-private-link
-[ni-troubleshoot]: /azure/azure-kubernetes/extensions/troubleshoot-network-isolated-cluster
+[ni-troubleshoot]: /troubleshoot/azure/azure-kubernetes/extensions/troubleshoot-network-isolated-cluster
 
 <!-- LINKS - Internal -->
 [aks-firewall]: ./limit-egress-traffic.md
