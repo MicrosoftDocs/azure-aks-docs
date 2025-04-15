@@ -51,24 +51,24 @@ Before proceeding to the next step, make sure that there are no blank spaces in 
  > [!NOTE]
  > Custom Certificate Authority is available as GA in the [2025-01-01 GA API][custom-ca-rest]. It isn't yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] command to add custom certificates during cluster creation.
 
- 1. [Create an AKS cluster][quick-kubernetes-deply-cli] using the [`az aks create`][az-aks-create] command.
- 2. Save the configuration of your cluster in a JSON file:
- ```azurecli-interactive
- az rest --method get \
-  --url "/subscriptions/<subscription-id>/resourceGroups/<resource-grou-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" > body.json
-```
-  3. Modify the json file to add customCATrustCertificates to the security profile of that cluster
-```
-  "securityProfile": {
-    "azureKeyVaultKms": null,
-    "customCaTrustCertificates": [
-        "values"
-```
-  4. Pass the updated JSON file to add the certificates to the node's trust store
-```azurecli-interactive
-  az rest --method put \
-  --url "/subscriptions/<subscription-id>/resourceGroups/<resource-group-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" --body @body.json
-```
+  1. [Create an AKS cluster][quick-kubernetes-deply-cli] using the [`az aks create`][az-aks-create] command.
+  2. Save the configuration of your cluster in a JSON file:
+  ```azurecli-interactive
+  az rest --method get \
+    --url "/subscriptions/<subscription-id>/resourceGroups/<resource-grou-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" > body.json
+  ```
+    3. Modify the json file to add customCATrustCertificates to the security profile of that cluster
+  ```
+    "securityProfile": {
+      "azureKeyVaultKms": null,
+      "customCaTrustCertificates": [
+          "values"
+  ```
+    4. Pass the updated JSON file to add the certificates to the node's trust store
+  ```azurecli-interactive
+    az rest --method put \
+    --url "/subscriptions/<subscription-id>/resourceGroups/<resource-group-name>/providers/Microsoft.ContainerService/managedClusters/<cluster-name>?api-version=2025-01-01" --body @body.json
+  ```
 
 You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-update] to pass certificates to your cluster. Once the operation completes, the certificates are installed in your node's trust stores.
 
