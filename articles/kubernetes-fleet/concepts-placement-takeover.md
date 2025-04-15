@@ -10,7 +10,7 @@ ms.topic: conceptual
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
-As multi-cluster environment mature the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads to ensure consistency. However, adding clusters with pre-existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an adopted member cluster. 
+As a multi-cluster environment matures the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads across multiple clusters. However, adding clusters with pre-existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an added member cluster. 
 
 In this article, wes look at how to use the `whenToTakeOver` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
 

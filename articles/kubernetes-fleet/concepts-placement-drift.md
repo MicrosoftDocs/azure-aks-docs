@@ -51,7 +51,11 @@ spec:
       unavailablePeriodSeconds: 1
 ```
 
-Apply the CRP to your hub cluster.
+Apply the CRP to your Fleet Manager hub cluster.
+
+```bash
+kubectl apply -f crp-reportdiff-sample.yaml
+```
 
 ### Report on drifted clusters
 
@@ -93,7 +97,7 @@ Fleet Manager reports the following information about configuration differences:
 * `diffedPlacements`: a list of differences detected, with the following details:
     * `group`, `kind`, `version`, `namespace`, and `name`: identifying properties of the resource that has configuration differences (not all are shown in the sample).
     * `observationTime`: when the current difference detail was collected.
-    * `firstDiffedObservedTime`: when the current difference was first observed (may differ from `observationTime`).
+    * `firstDiffedObservedTime`: when the difference was first observed (may differ from `observationTime`).
     * `observedDiffs`: the diff details, specifically:
         * `path`: A JSON path ([RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901)) that points to the field with a different value;
         * `valueInHub`: the value at the JSON path as seen from the hub cluster workload definition (the desired state). If this value is absent, the field doesn't exist in the hub cluster workload definition.
@@ -112,7 +116,7 @@ Important items to note when using `ReportDiff`:
 
 ## Handle drifted clusters during deployments
 
-Reporting on drifted state across a fleet using [ReportDiff](#detect-differences-across-a-fleet) is a point-in-time activity so it's always possible that configuration drifts between a check and a deployment.
+Reporting on drifted state across a fleet using [ReportDiff](#detect-differences-across-a-fleet) is a point-in-time activity so it's always possible that configurations drift between a check and a deployment.
 
 In this section, we look at how you use a `whenToApply` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles drifted workloads when performing placements.  
 
@@ -133,7 +137,7 @@ You can use an optional `comparisonOptions` property to fine-tune how `whenToApp
 
 * `fullComparison`: all fields on the workload definition on the Fleet hub cluster must be present on the selected member cluster. If the target cluster has any extra unmanaged fields, then it fails comparison.
 
-In the following sample, if a change is found in either any field (managed or unmanaged) then the CRP will be considered to have failed.
+In the following sample, if a change is found in any field (managed or unmanaged) the CRP will fail.
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
