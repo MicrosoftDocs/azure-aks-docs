@@ -43,7 +43,6 @@ To disable the injection of the proxy environment variables, you need to annotat
 
 * You need the latest version of the Azure CLI. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * [Check for available AKS cluster upgrades](./upgrade-aks-cluster.md#check-for-available-aks-cluster-upgrades) to ensure you're running the latest version of AKS. If you need to upgrade, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
-* The OS files required for proxy configuration updates can only be updated during the node image upgrade process. After configuring the proxy, you must upgrade the node image to apply the changes. For more information, see [Upgrade AKS node images](#upgrade-aks-node-images).
 
 ## [Configure an HTTP proxy using the Azure CLI](#tab/use-azure-cli)
 
