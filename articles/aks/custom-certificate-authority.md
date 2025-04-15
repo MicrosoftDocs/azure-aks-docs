@@ -24,7 +24,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 ## Limitations
 
 * Windows node pools aren't supported.
-* Installing different CAs on different node pools isn't supported.
+* Installing different CAs in the same cluster isn't supported.
 
 ## Install CAs on your node's trust store
 
