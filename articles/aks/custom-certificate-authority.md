@@ -18,7 +18,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 ## Prerequisites
 
 * An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free).
-* Custom Certificate Authority is available as GA in the [2025-01-01 GA API][custom-ca-rest]. It is not yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] command to add custom certificates during cluster creation.
+* Custom Certificate Authority is available as GA in the [2025-01-01 GA API][custom-ca-rest]. It isn't yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] command to add custom certificates during cluster creation.
 * A base64 encoded certificate string or a text file with certificate.
 
 ## Limitations
@@ -44,12 +44,12 @@ Example text file:
     -----END CERTIFICATE-----
  ```
 
-Before proceeding to the next step, make sure that there are no blank spaces in your text file. These will result in an error in the next step if not removed.
+Before proceeding to the next step, make sure that there are no blank spaces in your text file. These blank spaces will result in an error in the next step if not removed.
 
 2. Pass certificates to your cluster.
 
  > [!NOTE]
- > Custom Certificate Authority is available as GA in the [2025-01-01 GA API][custom-ca-rest]. It is not yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] command to add custom certificates during cluster creation.
+ > Custom Certificate Authority is available as GA in the [2025-01-01 GA API][custom-ca-rest]. It isn't yet available in the CLI until May 2025. To use the GA feature in CLI before release, you can use the [`az rest`][az-rest] command to add custom certificates during cluster creation.
 
  1. [Create an AKS cluster][quick-kubernetes-deply-cli] using the [`az aks create`][az-aks-create] command.
  2. Save the configuration of your cluster in a JSON file:
@@ -94,8 +94,8 @@ You can use the [`az aks create`][az-aks-create] or [`az aks update`][az-aks-upd
  > [!NOTE]
  > This operation triggers a model update to ensure all existing nodes have the same CAs installed for correct provisioning. AKS creates new nodes, drains existing nodes, deletes existing nodes, and replaces them with nodes that have the new set of CAs installed.
 
-3. Check that CAs have been installed.
- Use the [`az aks show`][az-aks-show] command to check that CAs have been installed. 
+3. Check that CAs are installed.
+ Use the [`az aks show`][az-aks-show] command to check that CAs are installed. 
 
 ```azurecli-interactive
 az aks show -g <resource-group-name> -n <cluster-name> | grep securityProfile -A 4
@@ -114,7 +114,7 @@ The securityProfile output should include your Custom CA Trust Certificates.
 
 ### Formatting error
 
-Adding certificates to a cluster may result in an error if the file with the certificates is not formatted properly.
+Adding certificates to a cluster can result in an error if the file with the certificates isn't formatted properly.
 
 ```
 failed to decode one of SecurityProfile.CustomCATrustCertificates to PEM after base64 decoding
@@ -128,8 +128,8 @@ AKS requires certs passed in the user-created secret to be properly formatted an
 
 Certificates passed to ```--custom-ca-trust-certificates``` shouldn't be base64 encoded.
 
-#### containerd hasn't picked up new certs
-From the node's shell, run ```systemctl restart containerd```. Once containerd is restarts, the new certs are properly picked up by the container runtime.
+#### Containerd doesn't pick up new certs
+From the node's shell, run ```systemctl restart containerd```. Once containerd is restarts, the new certs will be picked up by the container runtime.
 
 ## Next steps
 
