@@ -335,6 +335,8 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you disable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
+## Troubleshooting
+If you're experiencing issues, such as image pull fails, see [Troubleshoot network isolated Azure Kubernetes Service (AKS) clusters issues][ni-troubleshoot]
 
 ## Next steps
 
@@ -368,6 +370,7 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
 [vnet-disable-outbound-access]: /azure/virtual-network/ip-services/default-outbound-access#how-can-i-transition-to-an-explicit-method-of-public-connectivity-and-disable-default-outbound-access
 [azmontoring-private-link]: /azure/azure-monitor/containers/kubernetes-monitoring-private-link
+[ni-troubleshoot]: /azure/azure-kubernetes/extensions/troubleshoot-network-isolated-cluster
 
 <!-- LINKS - Internal -->
 [aks-firewall]: ./limit-egress-traffic.md
