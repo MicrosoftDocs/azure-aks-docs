@@ -9,7 +9,7 @@ ms.date: 05/19/2023
 ms.custom: references_regions, devx-track-azurecli
 ---
 
-# Create an Azure Kubernetes Service cluster with API Server VNet Integration (Preview)
+# Create an Azure Kubernetes Service cluster with API Server VNet Integration 
 
 An Azure Kubernetes Service (AKS) cluster configured with API Server VNet Integration projects the API server endpoint directly into a delegated subnet in the VNet where AKS is deployed. API Server VNet Integration enables network communication between the API server and the cluster nodes without requiring a private link or tunnel. The API server is available behind an internal load balancer VIP in the delegated subnet, which the nodes are configured to utilize. By using API Server VNet Integration, you can ensure network traffic between your API server and your node pools remains on the private network only.
 
@@ -19,52 +19,16 @@ The control plane or API server is in an AKS-managed Azure subscription. Your cl
 
 API Server VNet Integration is supported for public or private clusters. You can add or remove public access after cluster provisioning. Unlike non-VNet integrated clusters, the agent nodes always communicate directly with the private IP address of the API server internal load balancer (ILB) IP without using DNS. All node to API server traffic is kept on private networking, and no tunnel is required for API server to node connectivity. Out-of-cluster clients needing to communicate with the API server can do so normally if public network access is enabled. If public network access is disabled, you should follow the same private DNS setup methodology as standard [private clusters](private-clusters.md).
 
-## Region availability
+## Limited availability
 
-API Server VNet Integration is available in all global Azure regions.
+> [!IMPORTANT]
+> **API Server VNet Integration has limited availability and capacity in certain regions.**
+> When creating or updating a cluster, you may receive an error stating that capacity is unavailable in your selected region. If this occurs, you can either retry later or choose a different region with available capacity.
 
-## Prerequisites
+API Server VNet Integration is not available in the following regions: 
 
-* Azure CLI with aks-preview extension 0.5.97 or later.
-* If using ARM or the REST API, the AKS API version must be 2022-04-02-preview or later.
+- TODO
 
-## Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli
-    az extension add --name aks-preview
-    ```
-
-* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli
-    az extension update --name aks-preview
-    ```
-
-## Register the 'EnableAPIServerVnetIntegrationPreview' feature flag
-
-1. Register the `EnableAPIServerVnetIntegrationPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "EnableAPIServerVnetIntegrationPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "EnableAPIServerVnetIntegrationPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
