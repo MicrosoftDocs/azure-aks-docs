@@ -3,10 +3,10 @@ title: Configure Azure Kubernetes Service (AKS) nodes with an HTTP proxy
 description: Use the HTTP proxy configuration feature for Azure Kubernetes Service (AKS) nodes.
 ms.subservice: aks-networking
 ms.custom: devx-track-arm-template, devx-track-azurecli
-author: schaffererin
+author: allyford
 ms.topic: how-to
-ms.date: 09/18/2023
-ms.author: schaffererin
+ms.date: 03/07/2025
+ms.author: allyford
 ---
 
 # HTTP proxy support in Azure Kubernetes Service (AKS)
@@ -24,7 +24,6 @@ The following scenarios are **not** supported:
 * Different proxy configurations per node pool
 * User/Password authentication
 * Custom certificate authorities (CAs) for API server communication
-* Configuring existing AKS clusters with an HTTP proxy is not supported; the HTTP proxy feature must be enabled at cluster creation time.
 * AKS clusters with Windows node pools
 * Node pools using Virtual Machine Availability Sets (VMAS)
 * Using * as wildcard attached to a domain suffix for noProxy
@@ -44,11 +43,12 @@ To disable the injection of the proxy environment variables, you need to annotat
 
 * You need the latest version of the Azure CLI. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * [Check for available AKS cluster upgrades](./upgrade-aks-cluster.md#check-for-available-aks-cluster-upgrades) to ensure you're running the latest version of AKS. If you need to upgrade, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
-* The OS files required for proxy configuration updates can only be updated during the node image upgrade process. After configuring the proxy, you must upgrade the node image to apply the changes. For more information, see [Upgrade AKS node images](#upgrade-aks-node-images).
 
-## Configure an HTTP proxy using the Azure CLI
+## [Configure an HTTP proxy using the Azure CLI](#tab/use-azure-cli)
 
 You can configure an AKS cluster with an HTTP proxy during cluster creation using the [`az aks create`][az-aks-create] command and passing in configuration as a JSON file.
+
+1. Create a file and provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If your environment requires it, provide a value for `trustedCa`.
 
 The schema for the config file looks like this:
 
@@ -63,6 +63,8 @@ The schema for the config file looks like this:
 }
 ```
 
+Review requirements for each parameter:
+
 * `httpProxy`: A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be `http`.
 * `httpsProxy`: A proxy URL to use for creating HTTPS connections outside the cluster. If not specified, then `httpProxy` is used for both HTTP and HTTPS connections.
 * `noProxy`: A list of destination domain names, domains, IP addresses, or other network CIDRs to exclude proxying.
@@ -74,9 +76,6 @@ The schema for the config file looks like this:
 > There are differences in applications on how to comply with the environment variable `http_proxy`, `https_proxy`, and `no_proxy`. Curl and Python don't support CIDR in `no_proxy`, but Ruby does.
 
 Example input:
-
-> [!NOTE]
-> The CA certificate should be the base64 encoded string of the PEM format cert content.
 
 ```json
 {
@@ -90,7 +89,7 @@ Example input:
 }
 ```
 
-Create a file and provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If your environment requires it, provide a value for `trustedCa`. Next, you can deploy the cluster using the [`az aks create`][az-aks-create] command with the `--http-proxy-config` parameter set to the file you created. Your cluster should initialize with the HTTP proxy configured on the nodes.
+2.  Create a cluster using the [`az aks create`][az-aks-create] command with the `--http-proxy-config` parameter set to the file you created. 
 
 ```azurecli-interactive
 az aks create \
@@ -99,10 +98,15 @@ az aks create \
     --http-proxy-config aks-proxy-config.json \
     --generate-ssh-keys
 ```
+Your cluster should initialize with the HTTP proxy configured on the nodes.
 
-## Configure an HTTP proxy using an Azure Resource Manager (ARM) template
+## [Configure an HTTP proxy using an Azure Resource Manager (ARM) template](#tab/use-arm)
 
-You can deploy an AKS cluster with an HTTP proxy using an ARM template. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
+You can deploy an AKS cluster with an HTTP proxy using an ARM template. 
+
+1. In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. 
+
+The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
 
 ```json
 "properties": {
@@ -118,9 +122,11 @@ You can deploy an AKS cluster with an HTTP proxy using an ARM template. The same
 }
 ```
 
-In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. Next, you can deploy the template. Your cluster should initialize with your HTTP proxy configured on the nodes.
+2. Deploy your ARM template with the HTTP Proxy configuration
 
-### Istio Add-On HTTP Proxy for External Services
+Next, you can deploy the template. Your cluster should initialize with your HTTP proxy configured on the nodes.
+
+## [Istio Add-On HTTP Proxy for External Services](#tab/use-Istio-add-on)
 
 If you are using the [Istio-based service mesh add-on for AKS][istio-add-on-docs], you must create a Service Entry to enable your applications in the mesh to access non-cluster or external resources via the HTTP proxy. For example:
 ```yaml
@@ -139,30 +145,29 @@ spec:
     protocol: TCP
   location: MESH_EXTERNAL
 ```
-Create a file and provide values for `PROXY_IP` and `PROXY_PORT`. You can deploy the Service Entry using 
+1. Create a file and provide values for `PROXY_IP` and `PROXY_PORT`. 
+
+2. You can deploy the Service Entry using:
 
 ```bash
 kubectl apply -f service_proxy.yaml
 ```
 
-## Update proxy configuration
+## Update cluster to enable or update http proxy configuration
 
 > [!NOTE]
 > If switching to a new proxy, the new proxy must already exist for the update to be successful. After the upgrade is completed, you can delete the old proxy.
 
-You can update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command with the `--http-proxy-config` parameter set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values. Pods must be rotated for the apps to pick it up, because the environment variable values are injected by a mutating admission webhook. For components under Kubernetes, like containerd and the node itself, this doesn't take effect until a node image upgrade is performed.
+HTTP Proxy configuration can be enabled or updated on an existing cluster using the [`az aks update`][az-aks-update] command. The `--http-proxy-config` parameter should be set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values.
+
+> [!CAUTION]
+> AKS will automatically reimage all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage. 
 
 For example, let's say you created a new file with the base64 encoded string of the new CA cert called *aks-proxy-config-2.json*. You can update the proxy configuration on your cluster with the following command:
 
 ```azurecli-interactive
 az aks update --name $clusterName --resource-group $resourceGroup --http-proxy-config aks-proxy-config-2.json
 ```
-
-## Upgrade AKS node images
-
-After configuring the proxy, you must upgrade the node image to apply the changes. The node image upgrade process is the only way to update the OS files required for proxy configuration updates. The node image upgrade process is a rolling upgrade that updates the OS image on each node in the node pool. The AKS control plane handles the upgrade process, which is nondisruptive to running applications.
-
-To upgrade AKS node images, see [Upgrade Azure Kubernetes Service (AKS) node images](./node-image-upgrade.md).
 
 ## Monitoring add-on configuration
 
@@ -186,4 +191,5 @@ For more information regarding the network requirements of AKS clusters, see [Co
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [install-azure-cli]: /cli/azure/install-azure-cli
 [istio-add-on-docs]: ./istio-about.md
+[operator-best-practices-scheduler]: ./operator-best-practices-scheduler.md
 
