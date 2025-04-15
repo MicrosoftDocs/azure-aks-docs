@@ -252,7 +252,11 @@ kubectl exec -it <your-http-client-pod-name> -n default -- curl -v -XPOST http:/
 You should expect an output like `Access Denied` when you run the above command 
 
 
-### Observing metrics L7 metrics
+### Observing L7 metrics
+
+If you have Advanced Container Network Service's container network observability enabled, you can visualize the traffic on Grafana. To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**. You should see metrics similar to the following:
+
+[![Screenshot showing Grafana dashboard for L7 traffic](./media/advanced-container-networking-services/l7-traffic-grafana.png)](./media/advanced-container-networking-services/l7-traffic-grafana.png#lightbox)
 
 
 ## Clean up resources
