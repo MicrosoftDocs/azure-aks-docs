@@ -23,9 +23,9 @@ In this article we will look at how you can use a cluster resource placement CRP
 
 This section provides an overview of the cluster resource placement `ReportDiff` apply mode, which can be used to evaluate configuration state of placed workload across a fleet at any time. 
 
-Using the `ReportDiff` mode, Fleet Manager checks for configuration differences between the hub cluster workload definition and corresponding workloads on the member clusters, reporting the results in the CRP status.
+Using the `ReportDiff` mode, Fleet Manager checks for configuration differences between the [hub cluster][fleet-hub-cluster] workload definition and corresponding placed workloads on the member clusters, reporting the results in the CRP status.
 
-In the following sample Fleet Manager will report differences for the namespace `web` for any member cluster onto which it has previously been placed. 
+In the following sample, Fleet Manager will report differences for the namespace `web` for any member cluster onto which it has previously been placed. 
 
 ```yml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -51,33 +51,54 @@ spec:
       unavailablePeriodSeconds: 1
 ```
 
-Apply the CRP to your hub cluster using the following command.
+Apply the CRP to your hub cluster.
+
+### Report on drifted clusters
+
+Using a command similar to the following you can determine on which clusters configuration has drifted. The [jq command](https://github.com/jqlang/jq) is used to format the output.
 
 ```bash
-kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io crp-reportdiff-sample -o json
+kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io crp-reportdiff-sample -o jsonpath='{.status.placementStatuses}' \
+    | jq '[.[] | select (.diffedPlacements != null)] | map({clusterName, diffedPlacements})'
 ```
 
-Which results in a response containing JSON similar to the following snippet. In this sample we can see that someone has directly overwritten the owner label on this cluster. 
+The command results in a response containing JSON similar to the following snippet. In this sample we can see that someone has directly overwritten the owner label on this cluster. 
 
 ```json
-[
-  {
-    "firstDiffedObservedTime": "2025-03-19T06:49:54Z",
-    "kind": "Namespace",
-    "name": "web",
-    "observationTime": "2025-03-19T06:50:25Z",
-    "observedDiffs": [
-      {
-        "path": "/metadata/labels/owner",
-        "valueInHub": "simon",
-        "valueInMember": "chen"
-      }
-    ],
-    "targetClusterObservedGeneration": 0,
-    "version": "v1"
-  }
-]
+{
+    "clusterName": "member-2",
+    "diffedPlacements": [
+        {
+            "firstDiffedObservedTime": "2025-03-19T06:49:54Z",
+            "kind": "Namespace",
+            "name": "web",
+            "observationTime": "2025-03-19T06:50:25Z",
+            "observedDiffs": [
+                {
+                    "path": "/metadata/labels/owner",
+                    "valueInHub": "simon",
+                    "valueInMember": "chen"
+                }
+            ],
+            "targetClusterObservedGeneration": 0,
+            "version": "v1" 
+        }
+    ]
+}
 ```
+
+Fleet Manager reports the following information about configuration differences:
+
+* `clusterName`: the member cluster on which the differences were detected.
+* `diffedPlacements`: a list of differences detected, with the following details:
+    * `group`, `kind`, `version`, `namespace`, and `name`: identifying properties of the resource that has configuration differences (not all are shown in the sample).
+    * `observationTime`: when the current difference detail was collected.
+    * `firstDiffedObservedTime`: when the current difference was first observed (may differ from `observationTime`).
+    * `observedDiffs`: the diff details, specifically:
+        * `path`: A JSON path ([RFC 6901](https://datatracker.ietf.org/doc/html/rfc6901)) that points to the field with a different value;
+        * `valueInHub`: the value at the JSON path as seen from the hub cluster workload definition (the desired state). If this value is absent, the field does not exist in the hub cluster workload definition.
+        * `valueInMember`: the value at the JSON path as seen from the member cluster workload (the current state). If this value is absent, the field does not exist on the member cluster.
+    * `targetClusterObservedGeneration`: the generation of the member cluster workload.
 
 Important items to note when using `ReportDiff`:
 
@@ -161,4 +182,3 @@ The following table summarizes the placement behavior depending on the `whenToAp
 <!-- LINKS - external -->
 [learn-conceptual-crp]: ./concepts-resource-propagation.md
 [fleet-hub-cluster]: ./access-fleet-hub-cluster-kubernetes-api.md
-[crp-staged-rollouts]: ./concepts-rollout-strategy.md#staged-update-strategy-preview

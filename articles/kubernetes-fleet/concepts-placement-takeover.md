@@ -73,15 +73,36 @@ Apply the CRP to your Fleet Manager hub cluster.
 kubectl apply -f web-2-crp.yaml
 ```
 
-Fleet Manager will attempt to place the workload and when it finds a matching workload on a target cluster it will return a `failedPlacement` with the message:
+Fleet Manager will attempt to place the workload and when it finds a matching workload on a target member cluster it will return a `failedPlacement`.
 
-```output
-Failed to apply the manifest (error: no ownership of the object in the member cluster; takeover is needed)
+You can determine which member clusters failed placement due to a clashing workload using the following command. The [jq command](https://github.com/jqlang/jq) is used to format the output.
+
+```bash
+kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io web-2-crp -o jsonpath='{.status.placementStatuses}' \
+    | jq '[.[] | select (.failedPlacements != null)] | map({clusterName, failedPlacements})'
 ```
 
-You can determine the clusters in the fleet with this issue by using the following process.
+Each cluster that failed placement due to an existing workload will return an entry similar to the following sample.
 
-TBC
+```json
+{
+    "clusterName": "member-2",
+    "failedPlacements": [
+        {
+            "condition": {
+                "lastTransitionTime": "...",
+                "message": "Failed to apply the manifest (error: no ownership of the object in the member cluster; takeover is needed)",
+                "reason": "NotTakenOver",
+                "status": "False",
+                "type": "Applied"
+            },
+            "kind": "Namespace",
+            "name": "web-2",
+            "version": "v1"
+        }
+    ]
+}
+```
 
 ## Safely take over matching workloads
 
@@ -120,15 +141,42 @@ Apply the CRP to your Fleet Manager hub cluster.
 kubectl apply -f web-2-crp.yaml
 ```
 
-Fleet Manager will attempt to place the workload, overwriting target clusters that have matching fields. Placements may still fail and you can check for additional `failedPlacement` messages which will now report failure due to configuration differences as shown.
+Fleet Manager will attempt to place the workload, overwriting target member clusters that have matching fields.
 
-```output
-Failed to apply the manifest (error: cannot take over object: configuration differences are found between the manifest object and the corresponding object in the member cluster)
+Placements may still fail and you can check for additional `failedPlacement` messages which will now report failure due to configuration differences as shown.
+
+Determine which member clusters failed placement due to a clashing workload using the following command. The [jq command](https://github.com/jqlang/jq) is used to format the output.
+
+```bash
+kubectl get clusterresourceplacement.v1beta1.placement.kubernetes-fleet.io web-2-crp -o jsonpath='{.status.placementStatuses}' \
+    | jq '[.[] | select (.failedPlacements != null)] | map({clusterName, failedPlacements})'
 ```
 
-You can determine the clusters with this issue by using the following process.
+Each cluster that failed placement due to a configuration difference will return an entry similar to the following sample.
 
-TBC
+```json
+{
+    "clusterName": "member-2",
+    "failedPlacements": [
+        {
+            "condition": {
+                "lastTransitionTime": "...",
+                "message": "Failed to apply the manifest (error: cannot take over object: configuration differences are found between the manifest object and the corresponding object in the member cluster)",
+                "reason": "FailedToTakeOver",
+                "status": "False",
+                "type": "Applied"
+            },
+            "kind": "Namespace",
+            "name": "work-2",
+            "version": "v1"
+        }
+    ]
+}
+```
+
+If you want to view which fields are drifted you can use the process detailed on [report on drifted clusters](./concepts-placement-drift.md#report-on-drifted-clusters) in the drift detection article.
+
+At this point you must decide on how to handle the drift, by either including the member cluster change(s) into your hub cluster workload definition, or electing to overwrite the member cluster workload by setting the `whenToTakeOver` property to `Always`.
 
 ## Next steps
 

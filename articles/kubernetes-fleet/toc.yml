@@ -45,9 +45,7 @@
           - name: Taking over existing workloads
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md 
-        - name: Automated deployments for multi-cluster workload
-          href: concepts-automated-deployments-fleet.md        
+            href: concepts-placement-drift.md      
     - name: Layer 4 load balancing across multiple clusters
       href: concepts-l4-load-balancing.md
 - name: How-to guides
@@ -58,7 +56,7 @@
           href: upgrade-hub-cluster-type.md
         - name: Migrate preview instances to supported instances 
           href: howto-migrate-preview-to-ga-fleets.md
-    - name: Upgrade Kubernetes and node images
+    - name: Progressively upgrade Kubernetes and node images
       items:
         - name: Define reusable update strategies
           href: update-create-update-strategy.md
