@@ -1,6 +1,6 @@
 ---
-title: Enable cost optimized add-on autoscaling on your Azure Kubernetes Service (AKS) cluster (Preview)
-description: This article provides an overview of the add-on autoscaling feature in Azure Kubernetes Service (AKS).
+title: Enable cost optimized add-on scaling on your Azure Kubernetes Service (AKS) cluster (Preview)
+description: This article provides an overview of the add-on scaling feature in Azure Kubernetes Service (AKS).
 ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
@@ -8,19 +8,19 @@ ms.service: azure-kubernetes-service
 ms.date: 03/18/2025
 ---
 
-# Enable cost optimized add-on autoscaling on your Azure Kubernetes Service (AKS) cluster (Preview)
+# Enable cost optimized add-on scaling on your Azure Kubernetes Service (AKS) cluster (Preview)
 
-This article provides an overview of cost optimized add-on autoscaling in Azure Kubernetes Service (AKS). With add-on autoscaling, you can easily manage workloads with CPU and memory requirements different from the default values by overriding the resource configuration. This feature ensures that resources aren't overly allocated to add-on pods, increasing cost savings and cluster efficiency.
+This article provides an overview of cost optimized add-on scaling in Azure Kubernetes Service (AKS). With cost optimized add-on scaling, you can easily manage workloads with CPU and memory requirements different from the default values by overriding the resource configuration. This feature ensures that resources aren't overly allocated to add-on pods, increasing cost savings and cluster efficiency.
 
 ## Overview
 
-Enabling the add-on autoscaling feature in your AKS cluster installs the [Vertical Pod Autoscaler (VPA) add-on](./vertical-pod-autoscaler.md) and VPA custom resources for AKS add-ons that support this capability.
+Enabling the cost optimized add-on scaling feature in your AKS cluster installs the [Vertical Pod Autoscaler (VPA) add-on](./vertical-pod-autoscaler.md) and VPA custom resources for AKS add-ons that support this capability.
 
 This feature also allows you to override the resource CPU and memory requests and limits in Deployments and DaemonSets, the maximum and minimum allowed CPU and memory, and the VPA update mode within VPA custom resources. For more information, see [Override the resource configuration for AKS add-ons](./override-resource-configuration.md).
 
 ### Supported AKS add-ons
 
-The following AKS managed add-ons support the add-on autoscaling feature:
+The following AKS managed add-ons support the cost optimized add-on scaling feature:
 
 | Add-on | Enablement behavior | VPA custom resource name | Command to check VPA custom resource |
 | -------------- | ------------------- | ------------------------ | ------------------------------------ |
@@ -31,20 +31,20 @@ The following AKS managed add-ons support the add-on autoscaling feature:
 | [Network Observability (Retina)](./container-network-observability-how-to.md) | Optional add-on that requires manual enablement. | `retina-agent` and `retina-operator` | `kubectl get vpa retina-agent --namespace kube-system` and `kubectl get vpa retina-operator --namespace kube-system` |
 
 > [!NOTE]
-> When enabling cost optimized add-on autoscaling, consider the following information:
+> When enabling cost optimized add-on scaling, consider the following information:
 >
 > * The two modes currently supported in the VPA include:
 >   * *Off*: The VPA provides resource recommendation data but doesn't apply it to the target pod.
 >   * *Initial*: The VPA automatically applies CPU and memory recommendations to the target pod when it restarts, but it doesn't initiate the restart itself.
 > * AKS doesn't retain the overridden CPU/memory requests/limits, VPA minimum/maximum allowed CPU/memory, or VPA update mode values. If you delete the Deployment, DaemonSet, or VPA custom resource, the changes revert back to the AKS add-on's initial configuration.
-> * The add-on autoscaling feature enables the VPA add-on to autoscale the AKS add-ons that support this capability. It doesn't work with the VPA controller or with user-created VPA custom resources.
+> * The cost optimized add-on scaling feature enables the VPA add-on to autoscale the AKS add-ons that support this capability. It doesn't work with the VPA controller or with user-created VPA custom resources.
 > * If the cluster doesn't enable the cluster autoscaler to adjust the number of nodes dynamically, it's possible that pod will be unable to be scheduled after VPA adjusts the CPU/memory requests/limits due to lack of resources on existing nodes.
 
 ## Prerequisites
 
 * An AKS cluster running Kubernetes version 1.25 or later.
 * The Azure CLI version 2.60.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) and [register the add-on autoscaling preview feature](#register-the-add-on-autoscaling-preview-feature).
+* [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) and [register the cost optimized add-on scaling preview feature](#register-the-add-on-autoscaling-preview-feature).
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -62,9 +62,9 @@ The following AKS managed add-ons support the add-on autoscaling feature:
     az extension update --name aks-preview
     ```
 
-### Register the add-on autoscaling preview feature
+### Register the cost optimized add-on scaling preview feature
 
-1. Register the add-on autoscaling preview feature using the `az feature register` command.
+1. Register the cost optimized add-on scaling preview feature using the `az feature register` command.
 
     ```azurecli-interactive
     az feature register --namespace "Microsoft.ContainerService" --name "AKS-AddonAutoscalingPreview"
@@ -84,43 +84,43 @@ The following AKS managed add-ons support the add-on autoscaling feature:
     az provider register --namespace Microsoft.ContainerService
     ```
 
-## Enable add-on autoscaling on an AKS cluster
+## Enable cost optimized add-on scaling on an AKS cluster
 
-When enabling the add-on, the AKS cluster automatically installs the [VPA add-on](./vertical-pod-autoscaler.md). The [AKS add-ons that support the add-on autoscaling feature](#supported-aks-add-ons) have different enablement behavior.
+When enabling the add-on, the AKS cluster automatically installs the [VPA add-on](./vertical-pod-autoscaler.md). The [AKS add-ons that support the cost optimized add-on scaling feature](#supported-aks-add-ons) have different enablement behavior.
 
 > [!NOTE]
 > If you're using Bicep, ARM templates, or Terraform, set `VerticalPodAutoscaler` to `"True"` and `AddonAutoscaling` to `"enabled"`.
 
-### Enable add-on autoscaling on a new cluster
+### Enable cost optimized add-on scaling on a new cluster
 
-* Enable add-on autoscaling on a new AKS cluster using the [`az aks create`][az-aks-create] command with the `--enable-addon-autoscaling` flag.
+* Enable cost optimized add-on scaling on a new AKS cluster using the [`az aks create`][az-aks-create] command with the `--enable-optimized-addon-scaling` flag.
 
     ```azurecli-interactive
-    az aks create --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME --enable-addon-autoscaling
+    az aks create --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME --enable-optimized-addon-scaling
     ```
 
-### Enable add-on autoscaling on an existing cluster
+### Enable cost optimized add-on scaling on an existing cluster
 
-* Enable add-on autoscaling on an existing AKS cluster using the [`az aks update`][az-aks-update] command with the `--enable-addon-autoscaling` flag.
+* Enable cost optimized add-on scaling on an existing AKS cluster using the [`az aks update`][az-aks-update] command with the `--enable-optimized-addon-scaling` flag.
 
     ```azurecli-interactive
-    az aks update --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME --enable-addon-autoscaling
+    az aks update --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME --enable-optimized-addon-scaling
     ```
 
-## Disable add-on autoscaling on an AKS cluster
+## Disable cost optimized add-on scaling on an AKS cluster
 
-* Disable add-on autoscaling on an AKS cluster using the [`az aks update`][az-aks-update] command with the `--disable-addon-autoscaling` flag.
+* Disable cost optimized add-on scaling on an AKS cluster using the [`az aks update`][az-aks-update] command with the `--disable-optimized-addon-scaling` flag.
 
     ```azurecli-interactive
-    az aks update --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME --disable-addon-autoscaling
+    az aks update --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME --disable-optimized-addon-scaling
     ```
 
 > [!NOTE]
-> Disabling the add-on autoscaling feature doesn't disable the VPA add-on by default. To disable VPA, see [Disable VPA on an AKS cluster](./use-vertical-pod-autoscaler.md#disable-the-vertical-pod-autoscaler-on-an-existing-cluster).
+> Disabling the cost optimized add-on scaling feature doesn't disable the VPA add-on by default. To disable VPA, see [Disable VPA on an AKS cluster](./use-vertical-pod-autoscaler.md#disable-the-vertical-pod-autoscaler-on-an-existing-cluster).
 
 ## Override default resource configuration
 
-With the add-on autoscaling feature enabled on your cluster, you can override the default CPU/memory settings for the add-on resources as well as the default VPA configuration for supported AKS add-ons. For more information, see [Override the resource configuration for AKS add-ons](./override-resource-configuration.md).
+With the cost optimized add-on scaling feature enabled on your cluster, you can override the default CPU/memory settings for the add-on resources as well as the default VPA configuration for supported AKS add-ons. For more information, see [Override the resource configuration for AKS add-ons](./override-resource-configuration.md).
 
 ## Apply the VPA recommended values
 
@@ -204,7 +204,7 @@ With the add-on autoscaling feature enabled on your cluster, you can override th
 
 ## Troubleshooting
 
-With the add-on autoscaling feature enabled on your cluster, you can override the default CPU and memory settings for add-on resources, as well as modify the default VPA configuration for supported AKS managed add-ons
+With the cost optimized add-on scaling feature enabled on your cluster, you can override the default CPU and memory settings for add-on resources, as well as modify the default VPA configuration for supported AKS managed add-ons
 
 If your autoscaling enabled add-on pods are in a pending state, or you don't see any VPA recommendations for autoscaling enabled add-ons, follow these steps to troubleshoot the issue.
 

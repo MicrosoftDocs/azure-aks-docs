@@ -10,20 +10,20 @@ ms.date: 08/02/2024
 
 # Override the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
 
-This article provides an overview of how to override the resource configuration for Azure Kubernetes Service (AKS) managed add-ons with add-on autoscaling (Preview).
+This article provides an overview of how to override the resource configuration for Azure Kubernetes Service (AKS) managed add-ons with cost optimized add-on scaling (Preview).
 
 ## Overview
 
-Enabling the add-on autoscaling in your AKS cluster installs the Vertical Pod Autoscaler (VPA) add-on and VPA custom resources for AKS managed add-ons that support this capability. This feature allows you to manually override the resource CPU and memory requests and limits in Deployments and DaemonSets. You can also override the maximum and minimum allowed CPU and memory and the VPA update mode within VPA custom resources.
+Enabling the cost optimized add-on scaling feature in your AKS cluster installs the Vertical Pod Autoscaler (VPA) add-on and VPA custom resources for AKS managed add-ons that support this capability. This feature also allows you to manually override the resource CPU and memory requests and limits in Deployments and DaemonSets. You can also override the maximum and minimum allowed CPU and memory and the VPA update mode within VPA custom resources.
 
 VPA maintains the specified limit-to-request ratios and adjusts the limit based on the ratio. For more information, see [VPA limits control](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#limits-control). The add-on's pod request/limit values are updated based on the VPA custom resources that you define. Changing the resource requests and limits triggers the add-on pod restart process.
 
-AKS updates the add-on pod request/limit values to a reasonable ratio (1:2) and restarts the add-on pod when enabling add-on autoscaling. Currently, the only exception is CoreDNS, which keeps the original resource request/limit values to prevent the CoreDNS pod restart process to avoid availability issues. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-vertical-pod-autoscaling-behavior).
+AKS updates the add-on pod request/limit values to a reasonable ratio (1:2) and restarts the add-on pod when enabling cost optimized add-on scaling. Currently, the only exception is CoreDNS, which keeps the original resource request/limit values to prevent the CoreDNS pod restart process to avoid availability issues. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-vertical-pod-autoscaling-behavior).
 
 ## Prerequisites
 
-* Review the [supported AKS managed add-ons](./addon-autoscaling.md#supported-aks-add-ons) and [limitations](./addon-autoscaling.md) for this feature.
-* You need an AKS cluster enabled with the add-on autoscaling feature. If you don't have one, see [Enable add-on autoscaling on your AKS cluster (Preview)](./addon-autoscaling.md).
+* Review the [supported AKS managed add-ons](./optimized-addon-scaling.md#supported-aks-add-ons) and [limitations](./optimized-addon-scaling.md) for this feature.
+* You need an AKS cluster enabled with the cost optimized add-on scaling feature. If you don't have one, see [Enable cost optimized add-on scaling on your AKS cluster (Preview)](./optimized-addon-scaling.md).
 
 ## Override resource annotations
 
@@ -137,7 +137,7 @@ spec:
 
 ## Troubleshooting
 
-1. Make sure the AKS managed add-on supports the add-on autoscaling feature. For more information, see [Supported AKS managed add-ons](./addon-autoscaling.md#supported-aks-add-ons).
+1. Make sure the AKS managed add-on supports the cost optimized add-on scaling feature. For more information, see [Supported AKS managed add-ons](./optimized-addon-scaling.md#supported-aks-add-ons).
 2. Verify that the `kubernetes.azure.com/override-requests-limits` annotation in the Deployment or DaemonSet is set to "enabled".
 3. Verify that the `kubernetes.azure.com/override-min-max` annotation in the VPA custom resource is set to "enabled".
 4. Verify that the `kubernetes.azure.com/override-update-mode` annotation in the VPA custom resource is set to "enabled".

@@ -533,10 +533,10 @@
               href: use-vertical-pod-autoscaler.md
             - name: Vertical Pod Autoscaler API reference
               href: vertical-pod-autoscaler-api-reference.md
-            - name: Add-on autoscaling
+            - name: Cost optimized add-on scaling
               items:
-                - name: Enable autoscaling for managed add-ons
-                  href: addon-autoscaling.md
+                - name: Enable Cost optimized add-on scaling
+                  href: optimized-addon-scaling.md
                 - name: Override resource configuration for managed add-ons
                   href: override-resource-configuration.md
         - name: Configure Metrics Server VPA
