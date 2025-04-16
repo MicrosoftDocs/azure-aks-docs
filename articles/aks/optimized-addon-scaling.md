@@ -10,7 +10,7 @@ ms.date: 03/18/2025
 
 # Enable cost optimized add-on scaling on your Azure Kubernetes Service (AKS) cluster (Preview)
 
-This article provides an overview of cost optimized add-on scaling in Azure Kubernetes Service (AKS). With cost optimized add-on scaling, you can easily manage workloads with CPU and memory requirements different from the default values by overriding the resource configuration. This feature ensures that resources aren't overly allocated to add-on pods, increasing cost savings and cluster efficiency.
+This article provides an overview of cost optimized add-on scaling in Azure Kubernetes Service (AKS). With cost-optimized add-on scaling, you can manage add-ons that require custom CPU and memory by overriding default configurations or enabling autoscaling. This feature ensures that resources aren't overly allocated to add-on pods, improving cost savings and cluster efficiency.
 
 ## Overview
 
