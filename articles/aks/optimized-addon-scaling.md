@@ -38,8 +38,9 @@ The following AKS managed add-ons support the cost optimized add-on scaling feat
 >   * *Initial*: The VPA automatically applies CPU and memory recommendations to the target pod when it restarts, but it doesn't initiate the restart itself.
 > * AKS doesn't retain the overridden CPU/memory requests/limits, VPA minimum/maximum allowed CPU/memory, or VPA update mode values. If you delete the Deployment, DaemonSet, or VPA custom resource, the changes revert back to the AKS add-on's initial configuration.
 > * The cost optimized add-on scaling feature enables the VPA add-on to autoscale the AKS add-ons that support this capability. It doesn't work with the VPA controller or with user-created VPA custom resources.
-> * If the cluster doesn't enable the cluster autoscaler to adjust the number of nodes dynamically, it's possible that pod will be unable to be scheduled after VPA adjusts the CPU/memory requests/limits due to lack of resources on existing nodes.
 
+> [!Warning]
+> Make sure you have enough system resources for your addons when you enable optimized autoscaling. AKS recommends turning on cluster autoscaler of node autoprovision to ensure right sizing of your system resources automatically
 ## Prerequisites
 
 * An AKS cluster running Kubernetes version 1.25 or later.
