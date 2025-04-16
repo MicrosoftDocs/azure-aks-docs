@@ -40,7 +40,8 @@ The following AKS managed add-ons support the cost optimized add-on scaling feat
 > * The cost optimized add-on scaling feature enables the VPA add-on to autoscale the AKS add-ons that support this capability. It doesn't work with the VPA controller or with user-created VPA custom resources.
 
 > [!Warning]
-> Make sure you have enough system resources for your addons when you enable optimized autoscaling. AKS recommends turning on cluster autoscaler of node autoprovision to ensure right sizing of your system resources automatically
+> Make sure you have enough system resources for your addons when you enable optimized autoscaling. AKS recommends turning on cluster autoscaler of node autoprovision to ensure right sizing of your system resources automatically.
+
 ## Prerequisites
 
 * An AKS cluster running Kubernetes version 1.25 or later.
