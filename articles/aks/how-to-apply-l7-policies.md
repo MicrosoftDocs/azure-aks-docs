@@ -62,7 +62,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> For this demo, the --acns-advanced-networkpolicies parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
+> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value. For this demo you will need --acns-advanced-network policies to at least have L7 enabled.
@@ -254,7 +254,11 @@ You should expect an output like `Access Denied` when you run the above command
 
 ### Observing L7 metrics
 
-If you have Advanced Container Network Service's container network observability enabled, you can visualize the traffic on Grafana. To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**. You should see metrics similar to the following:
+If you have Advanced Container Network Service's container network observability enabled, you can visualize the traffic on Grafana. 
+
+To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**. 
+
+You should see metrics similar to the following:
 
 [![Screenshot showing Grafana dashboard for L7 traffic](./media/advanced-container-networking-services/l7-traffic-grafana.png)](./media/advanced-container-networking-services/l7-traffic-grafana.png#lightbox)
 

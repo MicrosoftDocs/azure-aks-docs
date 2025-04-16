@@ -173,6 +173,8 @@
               href: concepts-network-azure-cni-pod-subnet.md
             - name: Legacy CNI options
               href: concepts-network-legacy-cni.md
+            - name: Azure CNI Powered by Cilium
+              href: concepts-network-azure-cni-powered-by-cilium.md
         - name: IP address planning
           href: concepts-network-ip-address-planning.md
         - name: Services
@@ -798,7 +800,7 @@
               items:
                 - name: FQDN Filtering with Advanced Container Networking Services (ACNS)
                   href: how-to-apply-fqdn-filtering-policies.md
-                - name: L7 Policy with Advanced Container Networking Services (ACNS)
+                - name: Layer 7 Policy with Advanced Container Networking Services (ACNS)
                   href: how-to-apply-l7-policies.md
     - name: Storage
       items:
