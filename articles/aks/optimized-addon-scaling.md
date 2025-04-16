@@ -42,7 +42,7 @@ The following AKS managed add-ons support the cost optimized add-on scaling feat
 > * AKS updates the add-on pod request/limit values to a reasonable ratio (1:2) and restarts the add-on pod when enabling cost optimized add-on scaling. Currently, the only exception is CoreDNS, which keeps the original resource request/limit values to prevent the CoreDNS pod restart process to avoid availability issues. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-vertical-pod-autoscaling-behavior).
 
 > [!Warning]
-> Make sure you have enough system resources for your addons when you enable optimized autoscaling. AKS recommends turning on cluster autoscaler of node autoprovision to ensure right sizing of your system resources automatically.
+> Make sure you have enough system resources for your addons when you enable optimized autoscaling. AKS recommends turning on [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-autoprovision.md) to ensure right sizing of your system resources automatically.
 
 ## Prerequisites
 
