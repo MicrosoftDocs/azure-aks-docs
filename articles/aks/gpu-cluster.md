@@ -54,7 +54,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 Using NVIDIA GPUs involves the installation of various NVIDIA software components such as the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), GPU driver installation, and more.
 
 > [!NOTE]
-> By default, Microsoft automatically maintains the version of the NVidia drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVidia drivers are installed by default on GPU capable nodes, you need to install the device plugin.
+> By default, Microsoft automatically maintains the version of the NVIDIA drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVIDIA drivers are installed by default on GPU capable nodes, you need to install the device plugin.
 
 ### NVIDIA device plugin installation
 
@@ -192,7 +192,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 ### Skip GPU driver installation (preview)
 
-If you want to control the installation of the NVidia drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVidia drivers as part of the node image deployment.
+If you want to control the installation of the NVIDIA drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVIDIA drivers as part of the node image deployment.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
