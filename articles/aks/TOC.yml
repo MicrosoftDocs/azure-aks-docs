@@ -174,7 +174,7 @@
             - name: Legacy CNI options
               href: concepts-network-legacy-cni.md
             - name: Azure CNI Powered by Cilium
-              href: concepts-network-azure-cni-powered-by-cilium.md
+              href: azure-cni-powered-by-cilium.md
         - name: IP address planning
           href: concepts-network-ip-address-planning.md
         - name: Services
