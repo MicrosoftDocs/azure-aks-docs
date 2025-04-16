@@ -22,8 +22,17 @@ API Server VNet Integration is supported for public or private clusters. You can
 ## Limited availability
 
 > [!IMPORTANT]
-> **API Server VNet Integration has limited availability and capacity in certain regions.**
-> When creating or updating a cluster, you may receive an error stating that capacity is unavailable in your selected region. If this occurs, you can either retry later or choose a different region with available capacity.
+> **API Server VNet Integration has limited availability and capacity in certain regions.**  
+> When creating or updating a cluster, you may receive the following error:
+>
+> **API Server VNet Integration is currently unavailable in region (_region_) due to high demand and limited capacity. AKS is actively expanding support for this feature. Check for other available regions at aka.ms/AksVnetIntegration.**
+>
+> This message indicates that the selected region has temporarily reached capacity for API Server VNet Integration.
+>
+> **To proceed**, you can:
+> - Retry your request at a later time, as capacity may become available.
+> - Select an alternate region where this feature is currently supported.
+
 
 API Server VNet Integration is not available in the following regions: 
 
