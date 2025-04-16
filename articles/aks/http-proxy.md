@@ -153,6 +153,7 @@ spec:
 kubectl apply -f service_proxy.yaml
 ```
 
+
 ## Update cluster to enable or update http proxy configuration
 
 > [!NOTE]
