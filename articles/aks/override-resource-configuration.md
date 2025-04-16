@@ -16,10 +16,6 @@ This article provides an overview of how to override the resource configuration 
 
 Enabling the cost optimized add-on scaling feature in your AKS cluster installs the Vertical Pod Autoscaler (VPA) add-on and VPA custom resources for AKS managed add-ons that support this capability. This feature also allows you to manually override the resource CPU and memory requests and limits in Deployments and DaemonSets. You can also override the maximum and minimum allowed CPU and memory and the VPA update mode within VPA custom resources.
 
-VPA maintains the specified limit-to-request ratios and adjusts the limit based on the ratio. For more information, see [VPA limits control](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#limits-control). The add-on's pod request/limit values are updated based on the VPA custom resources that you define. Changing the resource requests and limits triggers the add-on pod restart process.
-
-AKS updates the add-on pod request/limit values to a reasonable ratio (1:2) and restarts the add-on pod when enabling cost optimized add-on scaling. Currently, the only exception is CoreDNS, which keeps the original resource request/limit values to prevent the CoreDNS pod restart process to avoid availability issues. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-vertical-pod-autoscaling-behavior).
-
 ## Prerequisites
 
 * Review the [supported AKS managed add-ons](./optimized-addon-scaling.md#supported-aks-add-ons) and [limitations](./optimized-addon-scaling.md) for this feature.
