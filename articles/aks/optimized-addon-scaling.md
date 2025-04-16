@@ -45,7 +45,7 @@ The following AKS managed add-ons support the cost optimized add-on scaling feat
 
 * An AKS cluster running Kubernetes version 1.25 or later.
 * The Azure CLI version 2.60.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) and [register the cost optimized add-on scaling preview feature](#register-the-add-on-autoscaling-preview-feature).
+* [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension) and [register the cost optimized add-on scaling preview feature](#register-the-cost-optimized-add-on-scaling-preview-feature).
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
