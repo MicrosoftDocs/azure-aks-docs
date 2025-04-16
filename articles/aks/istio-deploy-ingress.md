@@ -21,6 +21,9 @@ This guide assumes you followed the [documentation][istio-deploy-addon] to enabl
 
 ## Enable external ingress gateway
 
+> [!NOTE]
+> If you need the ingress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or leverage the `azureservicemesh/istio.replica.preferred` label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
+
 Use `az aks mesh enable-ingress-gateway` to enable an externally accessible Istio ingress on your AKS cluster:
 
 ```azurecli-interactive
@@ -285,3 +288,4 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [external-dns]: https://kubernetes-sigs.github.io/external-dns/latest/docs/annotations/annotations/#external-dnsalphakubernetesiohostname
 [azure-load-balancer-annotations-for-ports]: /azure/aks/load-balancer-standard#customize-the-load-balancer-health-probe
 [kubernetes-docs-load-balancer]: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+[aks-system-nodes]: /azure/aks/use-system-pools

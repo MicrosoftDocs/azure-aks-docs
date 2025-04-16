@@ -14,7 +14,9 @@ In this guide, we review the prerequisites, architecture considerations, and key
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
-## What is Strimzi?
+## What is Apache Kafka and Strimzi?
+
+[Apache Kafka](https://kafka.apache.org/) is an open-source distributed event streaming platform designed to handle high-volume, high-throughput, and real-time streaming data. As a result, it is used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications. However, managing and scaling Kafka clusters can be challenging and often time-consuming.
 
 [Strimzi](https://strimzi.io) is an open-source project that simplifies the deployment, management, and operation of Apache Kafka on Kubernetes. It provides a set of Kubernetes Operators and container images that automate complex Kafka operational tasks through declarative configuration.
 
@@ -63,6 +65,18 @@ Cruise Control helps maintain optimal performance as your workload changes over 
 
 [Strimzi Drain Cleaner](https://strimzi.io/blog/2021/09/24/drain-cleaner/) is a utility designed to help manage Kafka broker pods deployed by Strimzi during Kubernetes node draining. Strimzi Drain Cleaner intercepts Kubernetes node drain operations through its admission webhook to coordinate graceful maintenance of Kafka clusters. When an eviction request is made for Kafka broker pods, the request is detected and the Drain Cleaner annotates the pods to signal the Strimzi Cluster Operator to handle the restart, ensuring that the Kafka cluster remains in a healthy state. This process maintains cluster health and data reliability during routine maintenance operations or unexpected node failures.
 
+## When to use Kafka on AKS  
+
+Consider running Kafka on AKS when:  
+
+* You need complete control over Kafka configuration and operations.  
+* Your use case requires specific Kafka features not available in managed offerings.  
+* You want to integrate Kafka with other containerized applications running on AKS.  
+* You need to deploy in regions where managed Kafka services aren't available.  
+* Your organization has existing expertise in Kubernetes and container orchestration.  
+
+For simpler use cases or when operational overhead is a concern, consider fully managed services like [Azure Event Hubs](/azure/event-hubs/event-hubs-about).
+
 ## Key considerations for Kafka on AKS  
 
 ### Azure Container Storage
@@ -73,7 +87,6 @@ For Kafka deployments, Strimzi leverages [(Just a Bunch of Disks (JBOD)](https:/
 
 > [!NOTE]  
 > Ephemeral storage isn't recommended for production Kafka clusters. When using ephemeral storage, broker restarts trigger full data replication across the cluster, which can significantly impact performance and recovery times.  
-
 
 The following table provides starting points for Premium SSD v2 disk configurations across different Kafka cluster sizes:
 
@@ -87,11 +100,11 @@ The actual required IOPS, bandwidth, and disk size varies based on your specific
 
 ### Node pools
 
-Selecting the appropriate node pools for your Kafka deployment on AKS is a critical architectural decision that directly impacts performance, availability, and cost efficiency. Kafka workloads have unique resource utilization patterns—characterized by high throughput demands, storage I/O intensity, and the need for consistent performance under varying loads. Kafka is typically more memory-intensive than CPU-intensive. However, CPU requirements can increase significantly with message compression/decompression, SSL/TLS encryption, or high-throughput scenarios with many small messages. 
+Selecting the appropriate node pools for your Kafka deployment on AKS is a critical architectural decision that directly impacts performance, availability, and cost efficiency. Kafka workloads have unique resource utilization patterns—characterized by high throughput demands, storage I/O intensity, and the need for consistent performance under varying loads. Kafka is typically more memory-intensive than CPU-intensive. However, CPU requirements can increase significantly with message compression/decompression, SSL/TLS encryption, or high-throughput scenarios with many small messages.
 
 Considering Strimzi's Kubernetes-native architecture where each Kafka broker runs as an individual pod, your AKS node selection strategy should optimize for horizontal scaling rather than single-node vertical scaling. Proper node pool configuration on AKS ensures efficient resource utilization while maintaining the performance isolation that Kafka components require to operate reliably.
 
-Kafka runs using a Java Virtual Machines (JVM). Tuning the JVM is critical for optimal Kafka performance, especially in production environments. LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka on Java for one of LinkedIn's busiest clusters: [Kafka Java Configuration](https://kafka.apache.org/documentation/#java). 
+Kafka runs using a Java Virtual Machines (JVM). Tuning the JVM is critical for optimal Kafka performance, especially in production environments. LinkedIn, the creators of Kafka, shared the typical arguments for running Kafka on Java for one of LinkedIn's busiest clusters: [Kafka Java Configuration](https://kafka.apache.org/documentation/#java).
 
 For this guide, a memory heap of 6GB will be used as a baseline for brokers, with an additional 2GB allocated to accommodate off-heap memory usage. For controllers, a 3GB memory heap will be used as a baseline, with an additional 1GB as overhead.
 
@@ -127,7 +140,7 @@ Before finalizing your production environment, we recommend taking the following
 * Perform load testing with representative data volumes and patterns.  
 * Monitor CPU, memory, disk, and network utilization during peak loads.  
 * Adjust AKS node pool SKUs based on observed bottlenecks.  
-* Review cost of node pool SKUs 
+* Review cost of node pool SKUs.
 
 ### High availability and resilience  
 
@@ -143,22 +156,10 @@ To ensure high availability of your Kafka deployment:
 
 Effective monitoring of Kafka clusters includes:  
 
-* JMX metrics collection configuration. 
+* JMX metrics collection configuration.
 * Consumer lag monitoring with Kafka Exporter.  
 * Integration with Azure Managed Prometheus and Azure Managed Grafana.  
 * Alerting on key performance indicators and health metrics.  
-
-## When to use Kafka on AKS  
-
-Consider running Kafka on AKS when:  
-
-* You need complete control over Kafka configuration and operations.  
-* Your use case requires specific Kafka features not available in managed offerings.  
-* You want to integrate Kafka with other containerized applications running on AKS.  
-* You need to deploy in regions where managed Kafka services aren't available.  
-* Your organization has existing expertise in Kubernetes and container orchestration.  
-
-For simpler use cases or when operational overhead is a concern, consider fully managed services like [Azure Event Hubs](/azure/event-hubs/event-hubs-about). 
 
 ## Next step  
 

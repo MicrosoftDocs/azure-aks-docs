@@ -253,6 +253,8 @@
           href: operator-best-practices-cluster-security.md
         - name: Container image management
           href: operator-best-practices-container-image-management.md
+        - name: Network policies
+          href: network-policy-best-practices.md
     - name: Cluster operations
       items:
         - name: Multi-tenancy and cluster isolation
@@ -395,6 +397,8 @@
               href: node-pool-snapshot.md
             - name: Add a Virtual Machines node pool
               href: virtual-machines-node-pools.md
+            - name: Availability Sets deprecation
+              href: availability-sets-on-aks.md  
             - name: Use system node pools
               href: use-system-pools.md
             - name: Resize node pools
@@ -904,6 +908,8 @@
                   href: istio-upgrade.md
                 - name: Support policy
                   href: istio-support-policy.md
+                - name: Uninstall
+                  href: istio-uninstall-addon.md
             - name: Traffic Management
               items:
                 - name: Ingress

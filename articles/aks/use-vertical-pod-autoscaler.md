@@ -547,7 +547,7 @@ If you encounter issues with the Vertical Pod Autoscaler, you can troubleshoot t
 1. Verify that all system components are running using the following command:
 
    ```bash
-   kubectl --namespace=kube-system get pods|grep vpa
+   kubectl get pods|grep vpa
    ```
 
     Your output should list *three pods*: recommender, updater, and admission-controller, all with a status of `Running`.
@@ -555,7 +555,7 @@ If you encounter issues with the Vertical Pod Autoscaler, you can troubleshoot t
 2. For each of the pods returned in your previous output, verify that the system components are logging any errors using the following command:
 
     ```bash
-    kubectl --namespace=kube-system logs [pod name] | grep -e '^E[0-9]\{4\}'
+    kubectl logs [pod name] | grep -e '^E[0-9]\{4\}'
     ```
 
 3. Verify that the custom resource definition was created using the following command:

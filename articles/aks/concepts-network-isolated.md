@@ -48,7 +48,8 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 ## Limitations
 
 * Network isolated clusters are supported on AKS clusters using Kubernetes version 1.30 or higher.
-* Only `NodeImage` channel of auto-upgrade for node OS images is supported for network isolated clusters
+* `SecurityPatch` channel of auto-upgrade for node OS images is not yet supported for network isolated clusters.
+* `Unmanaged` channel of auto-upgrade for node OS images is not supported.
 * Windows node pools are not currently supported.
 * The following AKS cluster extensions aren't supported yet on network isolated clusters:
     * [Dapr][dapr-overview]
