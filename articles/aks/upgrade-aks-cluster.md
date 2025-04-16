@@ -236,7 +236,7 @@ AKS accepts both integer values and a percentage value for max surge. For exampl
     az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --max-surge 5
     ```
 
-### Customize unavailable nodes during upgrade (Preview)
+### Customize unavailable nodes during upgrade
 
 > [!IMPORTANT]
 >
