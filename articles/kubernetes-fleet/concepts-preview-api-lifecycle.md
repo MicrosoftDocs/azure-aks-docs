@@ -1,7 +1,7 @@
 ---
 title: Azure Kubernetes Fleet Manager Preview API lifecycle
 description: Learn about the Azure Kubernetes Fleet Manager preview API lifecycle.
-ms.date: 04/15/2025
+ms.date: 04/16/2025
 ms.topic: conceptual
 author: sjwaight
 ms.author: simonwaight
@@ -28,8 +28,8 @@ This article covers Azure Kubernetes Fleet Manager API deprecations. For Azure K
 
 | API version        | Announce Date     | Deprecation Date  |
 |--------------------|-------------------|-------------------|
-| 2024-05-02-preview | June 2024         | September 2025    |
-| 2024-02-02-preview | June 2024         | September 2025    |
+| 2024-05-02-preview | June 2025         | September 2025    |
+| 2024-02-02-preview | June 2025         | September 2025    |
 
 ## Completed API deprecations
 
