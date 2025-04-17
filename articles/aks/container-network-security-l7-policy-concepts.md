@@ -24,7 +24,7 @@ evaluated to determine compliance with the configured application-level rules. T
 
 The Envoy proxy, augmented with Cilium network filters, then decides whether to forward the traffic to the destination pod based on policy criteria. If permitted, the traffic proceeds; if not, Envoy returns an appropriate error code to the originating pod. Upon successful authorization, the Envoy proxy facilitates the traffic flow, providing application-level visibility and control. This allows the Cilium agent to enforce detailed network policies within the policy engine. The following diagram illustrates the high-level flow of L7 policy enforcement.
 
-[![Screenshot showing how L7 policies work](./media/advanced-container-networking-services/how-l7-policy-works.png)](./media/advanced-container-networking-services/how-l7-policy-works.png#lightbox)
+[![Screenshot showing how L7 policies work.](./media/advanced-container-networking-services/how-l7-policy-works.png)](./media/advanced-container-networking-services/how-l7-policy-works.png#lightbox)
 
 ## Monitoring L7 Traffic with Hubble and Grafana
 
@@ -52,15 +52,15 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 *	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka.
 *	In preview, the maximum supported cluster size is up to 1000 nodes or 40,000 pods, whichever is greater.
 *    Traffic traversing Envoy proxies does come with latency. Users may experience noticeable latency degradation beyond 3000 requests per second.
-*    As part of our observability solution, we provide envoy_http_rq_total metrics. These metrics will give the total request count, which could be used to derive RPS.
-*    During a Cilium upgrade or rollout, existing sessions can be gracefully closed. Applications are expected to handle these interruptions gracefully—typically by implementing retry mechanisms at the connection or request level. New connections initiated during the rollout are not impacted.
-*	L7 policy through Advanced Container Networking Services (ACNS) is not compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios.
+*    As part of our observability solution, we provide envoy_http_rq_total metrics. These metrics will give the total request count, which could be used to derive requests per seconds (rps).
+*    During a Cilium upgrade or rollout, existing sessions can be gracefully closed. Applications are expected to handle these interruptions gracefully—typically by implementing retry mechanisms at the connection or request level. New connections initiated during the rollout aren't impacted.
+*	L7 policy through Advanced Container Networking Services (ACNS)  isn't  compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios.
  
 | Feature/Component                                  | L7 Policies using AKS, Istio - Managed addon    |
 |----------------------------------------------------|-----------|
-| K8s network policies by Azure CNI by Cilium (ACPC) | Supported |
-| L4 (FQDN) Policies by ACPC and ACNS                | Supported |
-| L7 (HTTP(s)/GRPC/Kafka) Policies by ACPC and ACNS  | Not Supported |
+| K8s network policies by Azure CNI powered by Cilium | Supported |
+| L4 (FQDN) Policies by Azure CNI powered by Cilium and ACNS                | Supported |
+| L7 (HTTP(s)/GRPC/Kafka) Policies by Azure CNI powered by Cilium and ACNS  | Not Supported |
   
 ## Pricing
 > [!IMPORTANT]

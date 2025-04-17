@@ -10,9 +10,9 @@ ms.date: 03/14/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Layer 7(L7) polices with Advanced Container Networking Services (Preview)
+# Set up Layer 7(L7) policies with Advanced Container Networking Services (Preview)
 
-This article demonstrates how to set up L7 policies with Advanced Container Networking Services in AKS clusters. Please continue only after you have reviewed the limitations and considerations listed on the [Layer 7 Policy Overview](./container-network-security-l7-policy-concepts.md) page.
+This article demonstrates how to set up L7 policies with Advanced Container Networking Services in AKS clusters. Continue only after you have reviewed the limitations and considerations listed on the [Layer 7 Policy Overview](./container-network-security-l7-policy-concepts.md) page.
 
 ## Prerequisites
 
@@ -55,17 +55,16 @@ To proceed, you must have an AKS cluster with [Advanced Container Networking Ser
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompass:
 * **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./container-network-observability-concepts.md).
 
-* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+* **Container Network Security:** Offers security features like Fully Qualified Domain Name (FQDN) filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 #### [**Cilium**](#tab/cilium)
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
+> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you don't want to enable either feature, use "None".
 
 ```azurecli-interactive
-# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value. For this demo you will need --acns-advanced-network policies to at least have L7 enabled.
 
 export CLUSTER_NAME="<aks-cluster-name>"
 
@@ -83,7 +82,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [L7 Policy](./container-network-security-l7-policy-concepts.md) feature is not available for Non-Cilium clusters
+> [L7 Policy](./container-network-security-l7-policy-concepts.md) feature is not available for Non-Cilium clusters.
 
 ---
 
@@ -93,9 +92,9 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Co
 
 
 > [!NOTE]
-> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services. For this demo you will need --acns-advanced-network policies to at least have L7 enabled.
+> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services. 
 >
-> For this demo, the --acns-advanced-networkpolicies parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
+> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you don't want to enable either feature, use "None".
 
 ```azurecli-interactive
 az aks update \
@@ -115,9 +114,9 @@ Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
 
-## Setup http-server application on your AKS Cluster
+## Set up http-server application on your AKS Cluster
 
-Apply this YAML to your AKS cluster to set up the `http-server` application.
+Apply the below YAML to your AKS cluster to set up the `http-server` application.
 
 ```yaml
 apiVersion: apps/v1
@@ -181,10 +180,10 @@ data:
         }
     }
 ```
-## Setup http-client application on your AKS Cluster
+## Set up http-client application on your AKS Cluster
 
 
-Apply this YAML to your AKS cluster to set up the `http-client` application.
+Apply the below YAML to your AKS cluster to set up the `http-client` application.
 
 ```yaml
 apiVersion: apps/v1
@@ -256,11 +255,11 @@ You should expect an output like `Access Denied` when you run the above command
 
 If you have Advanced Container Network Service's container network observability enabled, you can visualize the traffic on Grafana. 
 
-To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**. 
+To simplify the analysis of these L7 metrics, we provide preconfigured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**. 
 
 You should see metrics similar to the following:
 
-[![Screenshot showing Grafana dashboard for L7 traffic](./media/advanced-container-networking-services/l7-traffic-grafana.png)](./media/advanced-container-networking-services/l7-traffic-grafana.png#lightbox)
+[![Screenshot showing Grafana dashboard for L7 traffic.](./media/advanced-container-networking-services/l7-traffic-grafana.png)](./media/advanced-container-networking-services/l7-traffic-grafana.png#lightbox)
 
 
 ## Clean up resources

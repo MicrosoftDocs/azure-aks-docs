@@ -13,7 +13,7 @@ ms.date: 05/28/2024
 
 Advanced Container Networking Services is a suite of services designed to enhance the networking capabilities of Azure Kubernetes Service (AKS) clusters. The suite addresses challenges in modern containerized applications, such as observability, security, and compliance.
 
-With Advanced Container Networking Services, the focus is on delivering a seamless and integrated experience that enables you to maintain robust security postures and gain deep insights into your network traffic and application performance. This ensures that your containerized applications are not only secure but also meet or exceed your performance and reliability goals, allowing you to confidently manage and scale your infrastructure.
+With Advanced Container Networking Services, the focus is on delivering a seamless and integrated experience that enables you to maintain robust security postures and gain deep insights into your network traffic and application performance. This ensures that your containerized applications aren't only secure but also meet or exceed your performance and reliability goals, allowing you to confidently manage and scale your infrastructure.
 
 ## What is included in Advanced Container Networking Services?
 
@@ -69,7 +69,7 @@ az extension update --name aks-preview
 
 ### Register the `AdvancedNetworkingL7PolicyPreview` feature flag
 
-[!Note]
+> [!NOTE]
 > Container Network Security features only supported on Azure CNI powered by Cilium based clusters.
 > 
 
@@ -110,7 +110,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
+> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you don't  want to enable either feature, use "None".
 
 
 ```azurecli-interactive
@@ -132,7 +132,7 @@ az aks create \
 ##### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature is not available for Non-cilium clusters
+> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for Non-cilium clusters
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -158,7 +158,7 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Co
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you do not want to enable either feature, use "None".
+> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you don't want to enable either feature, use "None".
 
 ```azurecli-interactive
 az aks update \
@@ -240,7 +240,7 @@ az aks update \
 
 #### [**Non-Cilium**](#tab/non-cilium)
 
-Container Network Security is currently not supported on non-Cilium clusters. To leverage this feature and enable Azure CNI powered by Cilium, please refer to [Azure CNI powered by cilium documentation](./azure-cni-powered-by-cilium.md)
+Container Network Security is currently not supported on non-Cilium clusters. To leverage this feature and enable Azure CNI powered by Cilium, please refer to [Azure CNI powered by Cilium documentation](./azure-cni-powered-by-cilium.md)
 
 ---
 
