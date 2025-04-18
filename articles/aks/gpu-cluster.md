@@ -130,7 +130,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 1. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
 
     ```bash
-    kubectl create namespace gpu-operator
+    kubectl create namespace gpu-resources
     ```
 
 2. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
@@ -140,7 +140,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
     kind: DaemonSet
     metadata:
       name: nvidia-device-plugin-daemonset
-      namespace: kube-system
+      namespace: gpu-resources
     spec:
       selector:
         matchLabels:
