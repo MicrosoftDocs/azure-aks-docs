@@ -270,6 +270,8 @@ You can request a larger volume for a PVC. Edit the PVC object, and specify a la
 
 > [!NOTE]
 > A new PV is never created to satisfy the claim. Instead, an existing volume is resized.
+> 
+> Classic VM type like Standard_D4_v3 doesn't support online expansion and can get error message "OperationNotAllowed".
 
 In AKS, the built-in `managed-csi` storage class already supports expansion, so use the [PVC created earlier with this storage class](#dynamically-create-azure-disks-pvs-by-using-the-built-in-storage-classes). The PVC requested a 10-Gi persistent volume. You can confirm by running the following command:
 
