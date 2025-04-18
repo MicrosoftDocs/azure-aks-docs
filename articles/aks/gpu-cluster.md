@@ -223,18 +223,7 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 
     Adding the `--skip-gpu-driver-install` flag during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
 
-### Use NVIDIA GPU Operator with AKS
-
-The NVIDIA GPU Operator automates the management of all NVIDIA software components needed to provision GPU including driver installation, the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), the NVIDIA container runtime, and more. Since the GPU Operator handles these components, it's not necessary to manually install the NVIDIA device plugin. This also means that the automatic GPU driver installation on AKS is no longer required.
-
-1. Skip automatic GPU driver installation by creating a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with `--skip-gpu-driver-install`. Adding the `--skip-gpu-driver-install` flag during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
-
-2. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
-
-3. Now that you successfully installed the GPU Operator, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
-
-> [!NOTE]
-> There might be additional considerations to take when using the NVIDIA GPU Operator and deploying on SPOT instances. Please refer to <https://github.com/NVIDIA/gpu-operator/issues/577>
+3. You can optionally install the NVIDIA GPU Operator following [these steps][nvidia-gpu-operator].
 
 ## Confirm that GPUs are schedulable
 
@@ -438,6 +427,7 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 [azureml-deploy]: /azure/machine-learning/how-to-deploy-managed-online-endpoints
 [azureml-triton]: /azure/machine-learning/how-to-deploy-with-triton
 [aks-container-insights]: monitor-aks.md#integrations
+[nvidia-gpu-operator]: nvidia-gpu-operator.md
 [advanced-scheduler-aks]: operator-best-practices-advanced-scheduler.md
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-register]: /cli/azure/feature#az-feature-register

@@ -497,7 +497,7 @@
               href: use-flyte.md
         - name: GPU workloads
           items:
-            - name: Use GPUs
+            - name: Use Linux GPUs
               href: gpu-cluster.md
             - name: Use Windows GPUs
               href: use-windows-gpu.md
@@ -505,6 +505,8 @@
               href: gpu-multi-instance.md
             - name: Monitor GPU metrics
               href: monitor-gpu-metrics.md
+            - name: Set up NVIDIA GPU Operator
+              href: nvidia-gpu-operator.md
         - name: Vertical Pod Autoscaler
           items:
             - name: Vertical Pod Autoscaler overview
