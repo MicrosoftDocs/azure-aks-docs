@@ -11,11 +11,11 @@ author: schaffererin
 
 # Node autoprovisioning (preview)
 
-When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed.  As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
+When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
 Node autoprovisioning (NAP) (preview) decides based on pending pod resource requirements the optimal VM configuration to run those workloads in the most efficient and cost effective manner.
 
-NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also Open Source.  NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
+NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also Open Source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
 
 > [!IMPORTANT]
 > Node autoprovisioning (NAP) for AKS is currently in PREVIEW.
@@ -82,7 +82,7 @@ NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and t
 - [Start Stop mode](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
 - [OutboundType](./egress-outboundtype.md) mutation. All OutboundTypes are supported, however you can't change them after creation.
-- Private cluster (and BYO private DNS)
+- Private cluster (and bring your own private DNS)
 
 
 ## Enable node autoprovisioning
@@ -109,7 +109,7 @@ NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and t
 - Enable node autoprovisioning on a new cluster using the `az deployment group create` command and specify the `--template-file` parameter with the path to the ARM template file.
 
     ```azurecli-interactive
-    az deployment group create --resource-group $RESOURCE_GROUP_NAME --template-file ./nap.json  
+    az deployment group create --resource-group $RESOURCE_GROUP_NAME --template-file ./nap.json
     ```
 
     The `nap.json` file should contain the following ARM template:
@@ -179,7 +179,7 @@ If you have specific VM SKUs that are reserved instances, for example, you may w
 You can have multiple node pool definitions in a cluster, but AKS deploys a default node pool definition that you can modify:
 
 ```yaml
-apiVersion: karpenter.sh/v1beta1
+apiVersion: karpenter.sh/v1
 kind: NodePool
 metadata:
   name: default
@@ -245,7 +245,7 @@ az vm list-skus --resource-type virtualMachines --location <location> --query '[
 
 ## Node pool limits
 
-By default, NAP attempts to schedule your workloads within the Azure quota you have available.  You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
+By default, NAP attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
 
 ```
   # Resource limits constrain the total size of the cluster.
@@ -257,7 +257,7 @@ By default, NAP attempts to schedule your workloads within the Azure quota you h
 
 ## Node pool weights
 
-When you have multiple node pools defined, it's possible to set a preference of where a workload should be scheduled.  Define the relative weight on your Node pool definitions.
+When you have multiple node pools defined, it's possible to set a preference of where a workload should be scheduled. Define the relative weight on your Node pool definitions.
 
 ```
   # Priority given to the node pool when the scheduler considers which to select. Higher weights indicate higher priority when comparing node pools.
@@ -271,11 +271,11 @@ AKS with NAP manages the Kubernetes version upgrades and VM OS disk updates for 
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for NAP node pools follows the Control Plane Kubernetes version.  If you perform a cluster upgrade, your NAP nodes are updated automatically to follow the same versioning.
+Kubernetes upgrades for NAP node pools follow the Control Plane Kubernetes version. If you perform a cluster upgrade, your NAP nodes are updated automatically to follow the same versioning.
 
 ### Node image updates
 
-By default NAP node pool virtual machines are automatically updated when a new image is available.  If you wish to pin a node pool at a certain node image version, you can set the imageVersion on the node class:
+By default NAP node pool virtual machines are automatically updated when a new image is available. If you wish to pin a node pool at a certain node image version, you can set the imageVersion on the node class:
 
 ```kubectl
 kubectl edit aksnodeclass default
@@ -333,11 +333,117 @@ You can remove a node manually using `kubectl delete node`, but NAP can also con
 
 ## Monitoring selection events
 
-Node autoprovision produces cluster events that can be used to monitor deployment and scheduling decisions being made.  You can view events through the Kubernetes events stream.
+Node autoprovision produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
 
 ```
 kubectl get events -A --field-selector source=karpenter -w
 ```
+
+## Disabling node autoprovisioning
+
+Node autoprovisioning can only be disabled when:
+- There are no existing NAP-managed nodes. Use `kubectl list nodes -l karpenter.sh/nodepool` to view NAP-managed nodes.
+- All existing karpenter.sh/NodePools have their `spec.limits.cpu` set to 0.
+
+### Steps to disable node autoprovisioning
+
+1. Set all karpenter.sh/NodePools `spec.limits.cpu` field to 0. This prevents new nodes from being created, but doesn't disrupt currently running nodes.
+
+> [!NOTE]
+> If you don't care about ensuring that every pod that was running on a NAP node is migrated safely to a non-NAP node,
+> you can skip steps 2 and 3 and instead use the `kubectl delete node` command for each NAP-managed node.
+>
+> **Skipping steps 2 and 3 is not recommended, as it might leave some pods pending and doesn't honor PDBs.**
+>
+> **Do not run `kubectl delete node` on any nodes that are not managed by NAP.**
+
+2. Add the `karpenter.azure.com/disable:NoSchedule` taint to every karpenter.sh/NodePool.
+   ```yaml
+   apiVersion: karpenter.sh/v1
+   kind: NodePool
+   metadata:
+     name: default
+   spec:
+     template:
+       spec:
+         ...
+         taints:
+           - key: karpenter.azure.com/disable,
+             effect: NoSchedule
+   ```
+   This will start the process of migrating the workloads on the NAP-managed nodes to non-NAP nodes, honoring PDBs
+   and disruption limits. Pods will migrate to non-NAP nodes if they can fit. If there isn't enough fixed-size
+   capacity, some NAP-managed nodes will remain.
+3. Scale up existing fixed-size ManagedCluster AgentPools, or create new fixed-size AgentPools, to take the load from the NAP-managed nodes.
+   As these nodes are added to the cluster the NAP-managed nodes are drained, and work is migrated to the fixed-scale nodes.
+4. Confirm that all NAP-managed nodes are deleted, using `kubectl list nodes -l karpenter.sh/nodepool`. If there are still NAP-managed
+   nodes, it likely means that the cluster is out of fixed-scale capacity and needs more nodes so that the remaining workloads can be migrated.
+5. Update the node provisioning mode parameter of the ManagedCluster to `Manual`.
+
+    #### [Azure CLI](#tab/azure-cli)
+
+      ```azurecli-interactive
+      az aks update \
+          --name $CLUSTER_NAME \
+          --resource-group $RESOURCE_GROUP_NAME \
+          --node-provisioning-mode Manual
+      ```
+
+    #### [ARM template](#tab/arm)
+
+    ```azurecli-interactive
+    az deployment group create --resource-group $RESOURCE_GROUP_NAME --template-file ./nap.json
+    ```
+
+    The `nap.json` file should contain the following ARM template. The value of the `properties.nodeProvisioningProfile.mode` field set to `Manual`
+    is what's performing the disablement:
+
+    ```JSON
+    {
+      "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+      "contentVersion": "1.0.0.0",
+      "metadata": {},
+      "parameters": {},
+      "resources": [
+        {
+          "type": "Microsoft.ContainerService/managedClusters",
+          "apiVersion": "2023-09-02-preview",
+          "sku": {
+            "name": "Base",
+            "tier": "Standard"
+          },
+          "name": "napcluster",
+          "location": "uksouth",
+          "identity": {
+            "type": "SystemAssigned"
+          },
+          "properties": {
+            "networkProfile": {
+                "networkPlugin": "azure",
+                "networkPluginMode": "overlay",
+                "networkPolicy": "cilium",
+                "networkDataplane":"cilium",
+                "loadBalancerSku": "Standard"
+            },
+            "dnsPrefix": "napcluster",
+            "agentPoolProfiles": [
+              {
+                "name": "agentpool",
+                "count": 3,
+                "vmSize": "standard_d2s_v3",
+                "osType": "Linux",
+                "mode": "System"
+              }
+            ],
+            "nodeProvisioningProfile": {
+              "mode": "Manual"
+            },
+          }
+        }
+      ]
+    }
+    ```
+---
 
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
