@@ -550,7 +550,7 @@ For more information, see [Upgrade node pools in AKS](./upgrade-node-pool.md).
 
 ---
 
-#### Using `maxUnavailable` for Node Pool Upgrades
+#### Using `maxUnavailable` for node pool upgrades
 
 > **Best practice guidance**
 >
