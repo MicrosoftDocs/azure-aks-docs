@@ -524,7 +524,7 @@ For more information, see [Use the cluster autoscaler on node pools](./cluster-a
 
 System node pools are used to run system pods, such as the kube-proxy, coredns, and the Azure CNI plugin. We recommend that you ***ensure that system node pools have at least two nodes*** to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down. For more information, see [Manage system node pools in AKS](./use-system-pools.md).
 
-### Upgrade Configurations for Node Pools
+### Upgrade configurations for node pools
 
 #### Using `maxSurge` for Node Pool Upgrades
 
