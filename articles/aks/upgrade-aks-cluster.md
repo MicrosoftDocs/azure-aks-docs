@@ -16,7 +16,7 @@ Part of the AKS cluster lifecycle involves performing periodic upgrades to the l
 
 ## Kubernetes version upgrades
 
-When you upgrade a supported AKS cluster, you can't skip Kubernetes minor versions. You must perform all upgrades sequentially by major version number. For example, upgrades between *1.14.x* -> *1.15.x* or *1.15.x* -> *1.16.x* are allowed. *1.14.x* -> *1.16.x* isn't allowed. You can only skip multiple versions when upgrading from an *unsupported version* back to a *supported version*. For example, you can perform an upgrade from an unsupported *1.10.x* to a supported *1.12.x* if available.
+When you upgrade a supported AKS cluster, you can't skip Kubernetes minor versions. You must perform all upgrades sequentially by minor version number. For example, upgrades between *1.14.x* -> *1.15.x* or *1.15.x* -> *1.16.x* are allowed. *1.14.x* -> *1.16.x* isn't allowed. You can only skip multiple versions when upgrading from an *unsupported version* back to a *supported version*. For example, you can perform an upgrade from an unsupported *1.10.x* to a supported *1.12.x* if available.
 
 When you perform an upgrade from an *unsupported version* that skips two or more minor versions, the upgrade has no guarantee of functionality and is excluded from the service-level agreements and limited warranty. If your version is out of date, we recommend you recreate your cluster instead.
 

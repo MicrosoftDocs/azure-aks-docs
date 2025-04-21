@@ -135,6 +135,7 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 | proxyMetadata | Allowed | - |
 | statusPort | Allowed | - |
 | extraStatTags | Allowed | - |
+| gatewayTopology | Allowed | - |
 | proxyStatsMatcher | Allowed | - |
 | terminationDrainDuration | Supported | - |
 | meshId | Allowed | - |
