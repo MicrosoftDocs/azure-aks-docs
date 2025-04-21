@@ -148,7 +148,7 @@ For more information, see [Plan for availability using PDBs](./operator-best-pra
 
 Graceful termination ensures that pods are given enough time to clean up resources, complete ongoing tasks, or notify dependent services before being terminated. This is particularly important for stateful applications or services that require proper shutdown procedures.
 
-#### Using `PreStop` Hooks
+#### Using `PreStop` hooks
 
 A `PreStop` hook is called immediately before a container is terminated due to an API request or management event, such as preemption, resource contention, or a liveness/startup probe failure. The `PreStop` hook allows you to define custom commands or scripts to execute before the container is stopped. For example, you can use it to flush logs, close database connections, or notify other services of the shutdown.
 
