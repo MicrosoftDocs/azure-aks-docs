@@ -44,6 +44,7 @@ Virtual nodes functionality is heavily dependent on ACI's feature set. In additi
 * Volume mounting Azure Files share support [General-purpose V2](/azure/storage/common/storage-account-overview#types-of-storage-accounts) and [General-purpose V1](/azure/storage/common/storage-account-overview#types-of-storage-accounts). However, virtual nodes currently don't support [Persistent Volumes](concepts-storage.md#persistent-volumes) and [Persistent Volume Claims](concepts-storage.md#persistent-volume-claims). Follow the instructions for mounting [a volume with Azure Files share as an inline volume](azure-csi-files-storage-provision.md#mount-file-share-as-an-inline-volume).
 * Using IPv6 isn't supported.
 * Virtual nodes don't support the [Container hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/) feature.
+* Virtual nodes don't support private Docker registries.
 
 ## Next steps
 
