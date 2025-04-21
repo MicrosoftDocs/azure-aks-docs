@@ -546,7 +546,7 @@ az aks nodepool update \
 
 By configuring `maxSurge`, you can ensure that upgrades are performed faster while maintaining application availability.
 
-For more information, see [Upgrade node pools in AKS](https://learn.microsoft.com/azure/aks/upgrade-node-pool).
+For more information, see [Upgrade node pools in AKS](./upgrade-node-pool.md).
 
 ---
 
