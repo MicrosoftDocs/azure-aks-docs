@@ -30,19 +30,19 @@ The following AKS managed add-ons support the cost optimized add-on scaling feat
 | [Image Integrity](./image-integrity.md) | Optional add-on that requires manual enablement. | `ratify` | `kubectl get vpa ratify --namespace gatekeeper-system` |
 | [Network Observability (Retina)](./container-network-observability-how-to.md) | Optional add-on that requires manual enablement. | `retina-agent` and `retina-operator` | `kubectl get vpa retina-agent --namespace kube-system` and `kubectl get vpa retina-operator --namespace kube-system` |
 
+### Limitations
+VPA currently supports only the following two modes:
+* *Off*: The VPA provides resource recommendation data but doesn't apply it to the target pod.
+* *Initial*: The VPA automatically applies CPU and memory recommendations to the target pod when it restarts, but it doesn't initiate the restart itself.
+
 > [!NOTE]
 > When enabling cost optimized add-on scaling, consider the following information:
->
-> * The two modes currently supported in the VPA include:
->   * *Off*: The VPA provides resource recommendation data but doesn't apply it to the target pod.
->   * *Initial*: The VPA automatically applies CPU and memory recommendations to the target pod when it restarts, but it doesn't initiate the restart itself.
-> * AKS doesn't retain the overridden CPU/memory requests/limits, VPA minimum/maximum allowed CPU/memory, or VPA update mode values. If you delete the Deployment, DaemonSet, or VPA custom resource, the changes revert back to the AKS add-on's initial configuration.
+> * If you delete the Deployment, DaemonSet, or VPA custom resource, the changes revert back to the AKS add-on's initial configuration.
 > * The cost optimized add-on scaling feature enables the VPA add-on to autoscale the AKS add-ons that support this capability. It doesn't work with the VPA controller or with user-created VPA custom resources.
-> * VPA maintains the specified limit-to-request ratios and adjusts the limit based on the ratio. For more information, see [VPA limits control](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#limits-control). The add-on's pod request/limit values are updated based on the VPA custom resources that you define. Changing the resource requests and limits triggers the add-on pod restart process.
-> * AKS updates the add-on pod request/limit values to a reasonable ratio (1:2) and restarts the add-on pod when enabling cost optimized add-on scaling. Currently, the only exception is CoreDNS, which keeps the original resource request/limit values to prevent the CoreDNS pod restart process to avoid availability issues. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-behaviour-with-cost-optimized-add-on-scaling).
+> * AKS updates the add-on pod request/limit values to a reasonable ratio (1:2) and restarts the add-on pod when enabling cost optimized add-on scaling. Currently, the only exception is CoreDNS, which keeps the original resource request/limit values to prevent the CoreDNS pod restart process to avoid availability issues. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-behaviour-with-cost-optimized-add-on-scaling), [VPA limits control](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler#limits-control).
 
 > [!Warning]
-> Make sure you have enough system resources for your addons when you enable optimized autoscaling. AKS recommends turning on [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-autoprovision.md) to ensure right sizing of your system resources automatically.
+> Make sure you have enough compute resources for your addons when you enable cost optimized add-on scaling. AKS recommends turning on [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-autoprovision.md) to ensure right sizing of your compute resources automatically.
 
 ## Prerequisites
 
