@@ -187,7 +187,7 @@ Skip this step if using BYO Grafana
 > 1. Change it to networkobservabilityHubble = "hubble.*"
 > 1. Now the Pod flow metrics should populate.
 > 
-> To learn more about what minimal ingestion, see the [Minimal Ingestion Doumentation](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
+> To learn more about what minimal ingestion, see the [Minimal Ingestion Documentation](/azure/azure-monitor/containers/prometheus-metrics-scrape-configuration-minimal).
 > 
 
 --- 
