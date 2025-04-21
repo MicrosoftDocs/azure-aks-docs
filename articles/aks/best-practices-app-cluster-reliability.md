@@ -189,7 +189,7 @@ spec:
 
 For more information, see [Container lifecycle hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks) and [Termination of Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination).
 
-### High Availability during Upgrades
+### High availability during upgrades
 
 #### Using `maxSurge` for faster updates
 
