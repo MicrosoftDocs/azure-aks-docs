@@ -140,7 +140,7 @@ spec:
 
 For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
 
-### Graceful Termination for Pods
+### Graceful termination for pods
 
 > **Best practice guidance**
 >
