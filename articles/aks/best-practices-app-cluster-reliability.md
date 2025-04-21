@@ -87,7 +87,7 @@ For more information, see [Assign CPU Resources to Containers and Pods](https://
 >
 > Use Vertical Pod Autoscaler (VPA) to automatically adjust CPU and memory requests for your pods based on their actual usage.
 
-While not directly implemented through the pod yaml, The Vertical Pod Autoscaler (VPA) helps optimize resource allocation by automatically adjusting the CPU and memory requests for your pods. This ensures that your applications have the resources they need to run efficiently without over-provisioning or under-provisioning.
+While not directly implemented through the pod YAML, the Vertical Pod Autoscaler (VPA) helps optimize resource allocation by automatically adjusting the CPU and memory requests for your pods. This ensures that your applications have the resources they need to run efficiently without overprovisioning or underprovisioning.
 
 VPA operates in three modes:
 - **Off**: Only provides recommendations without applying changes.
