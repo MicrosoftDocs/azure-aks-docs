@@ -17,7 +17,7 @@ The best practices in this article are organized into the following categories:
 | Category | Best practices |
 | -------- | -------------- |
 | [Deployment level best practices](#deployment-level-best-practices) | • [Pod CPU and memory limits](#pod-cpu-and-memory-limits) <br/> • [Vertical Pod Autoscaler (VPA)](#vertical-pod-autoscaler-vpa) <br/> • [Pod Disruption Budgets (PDBs)](#pod-disruption-budgets-pdbs) <br/> • [High availability during upgrades](#high-availability-during-upgrades) <br/>• [Pod topology spread constraints](#pod-topology-spread-constraints) <br/> • [Readiness, liveness, and startup probes](#readiness-liveness-and-startup-probes) <br/> • [Multi-replica applications](#multi-replica-applications) |
-| [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Upgrade configurations for node pools](#upgrade-configuration-for-node-pools) <br/>  • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Premium Disks](#premium-disks) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
+| [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Upgrade configurations for node pools](#upgrade-configurations-for-node-pools) <br/>  • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Premium Disks](#premium-disks) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
 
 ## Deployment level best practices
 
@@ -546,7 +546,7 @@ az aks nodepool update \
 
 By configuring `maxSurge`, you can ensure that upgrades are performed faster while maintaining application availability.
 
-For more information, see [Upgrade node pools in AKS](./upgrade-node-pool.md).
+For more information, see [Upgrade node pools in AKS](./upgrade-cluster.md).
 
 ---
 
@@ -570,7 +570,7 @@ az aks nodepool update \
 
 By configuring `maxUnavailable`, you can control the impact of upgrades on your workloads, ensuring that sufficient resources remain available during the process.
 
-For more information, see [Upgrade node pools in AKS](./upgrade-node-pool.md).
+For more information, see [Upgrade node pools in AKS](./upgrade-cluster.md).
 
 > **Best practice guidance**
 >
