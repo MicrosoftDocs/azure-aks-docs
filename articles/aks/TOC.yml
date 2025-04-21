@@ -112,7 +112,7 @@
       href: availability-zones-overview.md
     - name: Reliability in AKS
       href: /azure/reliability/reliability-aks
-    - name: AKS Communication Manager (Preview)
+    - name: AKS Communication Manager
       href: aks-communication-manager.md
     - name: Resource reservations
       href: node-resource-reservations.md
