@@ -526,7 +526,7 @@ System node pools are used to run system pods, such as the kube-proxy, coredns, 
 
 ### Upgrade configurations for node pools
 
-#### Using `maxSurge` for Node Pool Upgrades
+#### Using `maxSurge` for node pool upgrades
 
 > **Best practice guidance**
 >
