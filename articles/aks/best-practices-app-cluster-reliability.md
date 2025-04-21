@@ -570,7 +570,7 @@ az aks nodepool update \
 
 By configuring `maxUnavailable`, you can control the impact of upgrades on your workloads, ensuring that sufficient resources remain available during the process.
 
-For more information, see [Upgrade node pools in AKS](https://learn.microsoft.com/azure/aks/upgrade-node-pool).
+For more information, see [Upgrade node pools in AKS](./upgrade-node-pool.md).
 
 > **Best practice guidance**
 >
