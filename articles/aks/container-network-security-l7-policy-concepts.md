@@ -43,16 +43,16 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 **Enhanced Security**: By inspecting application-level traffic, L7 policies can prevent attacks that exploit vulnerabilities at the application layer. This includes blocking unauthorized access to specific APIs or services. Furthermore, L7 policies are an important component of a Zero Trust security strategy, enabling the enforcement of the principle of least privilege at the application layer.
 
-**Graceful Error Handling**: Unlike L3/L4 policies that typically drop unauthorized traffic silently, L7 policies can return application-level error codes (e.g., HTTP 403, Kafka authorization failures), allowing applications to handle errors more gracefully.
+**Graceful Error Handling**: Unlike L3/L4 policies that typically drop unauthorized traffic silently, L7 policies can return application-level error codes (for example, HTTP 403, Kafka authorization failures), allowing applications to handle errors more gracefully.
 
 **Observability**: With observability enabled for Advanced Container Networking Services and L7 policies applied to your AKS cluster, you can monitor traffic and policy effectiveness using Grafana dashboards.
 
 ## Limitations and considerations:
 
 *	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka.
-*	In preview, the maximum supported cluster size is up to 1000 nodes or 40,000 pods, whichever is greater.
-*    Traffic traversing Envoy proxies does come with latency. Users may experience noticeable latency degradation beyond 3000 requests per second.
-*    As part of our observability solution, we provide envoy_http_rq_total metrics. These metrics will give the total request count, which could be used to derive requests per seconds (rps).
+*	In preview, the maximum supported cluster size is up to 1,000 nodes or 40,000 pods, whichever is greater.
+*    Traffic traversing Envoy proxies do come with latency. Users may experience noticeable latency degradation beyond 3,000 requests per second.
+*    As part of our observability solution, we provide envoy_http_rq_total metrics. These metrics give the total request count, which could be used to derive requests per seconds (rps).
 *    During a Cilium upgrade or rollout, existing sessions can be gracefully closed. Applications are expected to handle these interruptions gracefully—typically by implementing retry mechanisms at the connection or request level. New connections initiated during the rollout aren't impacted.
 *	L7 policy through Advanced Container Networking Services (ACNS)  isn't  compatible with L7 policies implemented via alternate methods such as Istio. The following table summarizes the supported scenarios.
  
