@@ -385,7 +385,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     ```output
     statefulset.apps/valkey-replicas created
     ```
-## Verify Pod and Node Distribution
+## Verify pod and node distribution
+
 1. Verify that `master-N` and `replica-N` are running in different nodes and zones using the `kubectl get nodes` and `kubectl get pods` commands.
 
     ```bash
