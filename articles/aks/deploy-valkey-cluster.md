@@ -418,7 +418,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
     Wait for all pods to be running before proceeding to the next step.
 
-## Create Headless Services
+## Create headless services
 1. Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
 
     ```bash
