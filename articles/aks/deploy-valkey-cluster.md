@@ -12,7 +12,7 @@ zone_pivot_groups: azure-cli-or-terraform
 
 # Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)
 
-In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS), including the creation of a Valkey Cluster ConfigMap, primary and secondary cluster pods to ensure redundancy and zone replication, and  Pod Disruption Budget (PDB) to ensure High Availability.
+In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS), including the creation of a Valkey cluster ConfigMap, primary and secondary cluster pods to ensure redundancy and zone replication, and a Pod Disruption Budget (PDB) to ensure high availability.
 
 > [!NOTE]
 > This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
