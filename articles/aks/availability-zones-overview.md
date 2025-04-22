@@ -40,7 +40,7 @@ There are three ways node pools can be deployed:
 - Zone-aligned scale set
 - Regional
 
-:::image type="content" source="media/availability-zones/az-spanning-inl.png" alt-text="Diagram that shows AKS node distribution across availability zones in the different models." lightbox="media/availability-zones/az-spanning-exp.png":::
+:::image type="content" source="media/availability-zones/az-spanning-inl.png" alt-text="Diagram that shows AKS node distribution across availability zones in different models." lightbox="media/availability-zones/az-spanning-exp.png":::
 
 For the system node pool, the number of zones that are used is configured when the cluster is created.
 
@@ -83,14 +83,14 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-z  --node-count 2 --zones 3
 ```
 
- This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md).
+This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md).
 
 > [!NOTE]
-> * If a single workload is deployed across node pools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale-up operations.
+> If a single workload is deployed across node pools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale-up operations.
 
 #### Regional (not using availability zones)
 
-Regional mode is used when the zone assignment isn't set in the deployment template (for example `"zones"=[] or "zones"=null`).
+Regional mode is used when the zone assignment isn't set in the deployment template (for example `"zones"=[]` or `"zones"=null`).
 
 In this configuration, the node pool creates regional (not zone-pinned) instances and implicitly places instances throughout the region. There's no guarantee that instances are balanced or spread across zones, or that instances are in the same availability zone.
 
@@ -117,13 +117,13 @@ Kubernetes is aware of Azure availability zones, and can balance pods across nod
 
 As documented in the Kubernetes reference [Well-Known Labels, Annotations and Taints][kubernetes-well-known-labels], Kubernetes uses the `topology.kubernetes.io/zone` label to automatically distribute pods in a replication controller or service across the various available zones available.
 
-To see which pods nodes are running, run the following command:
+To see which pods and nodes are running, run the following command:
 
 ```bash
   kubectl describe pod | grep -e "^Name:" -e "^Node:"
 ```
 
-The `maxSkew` parameter describes the degree to which Pods might be unevenly distributed. Assuming three zones and three replicas, setting this value to 1 ensures that each zone has at least one pod running:
+The `maxSkew` parameter describes the degree to which pods might be unevenly distributed. Assuming three zones and three replicas, setting this value to 1 ensures that each zone has at least one pod running:
 
 ```yaml
 apiVersion: apps/v1
@@ -153,11 +153,11 @@ spec:
 
 ### Storage and volumes
 
-By default, Kubernetes versions 1.29 and later use Azure Managed Disks by using zone-redundant storage for persistent volume claims.
+By default, Kubernetes versions 1.29 and later use Azure Managed Disks by using zone-redundant storage for Persistent Volume Claims.
 
 These disks are replicated between zones, in order to enhance the resilience of your applications. This action helps to safeguard your data against datacenter failures.
 
-The following example shows a persistent volume claim that uses Azure Standard SSD in zone-redundant storage:
+The following example shows a Persistent Volume Claim that uses Azure Standard SSD in zone-redundant storage:
 
 ```yaml
 apiVersion: v1
@@ -174,7 +174,7 @@ spec:
       storage: 5Gi
 ```
 
-For zone-aligned deployments, you can create a new storage class with the `skuname` parameter set to **LRS** (locally redundant storage). You can then use the new storage class in your persistent volume claim.
+For zone-aligned deployments, you can create a new storage class with the `skuname` parameter set to **LRS** (locally redundant storage). You can then use the new storage class in your Persistent Volume Claim.
 
 Although locally redundant storage disks are less expensive, they aren't zone-redundant, and attaching a disk to a node in a different zone isn't supported.
 
