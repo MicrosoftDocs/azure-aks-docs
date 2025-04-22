@@ -56,7 +56,7 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 
 ## Using features, add-ons, and extensions requiring egress
 
-* If you are using [CSI driver][csi-driver] for Azure Files and Blob storage, you must create a [custom storage class][custom-storage-class] with "networkEndpointType: privateEndpoint" in azure file and blob storage class.
+* If you are using [CSI driver][csi-driver] for Azure Files and Blob storage, you must create a [custom storage class][custom-storage-class] with "networkEndpointType: privateEndpoint" in Azure file and blob storage classes.
 * If you want to use any optional AKS feature or add-on which requires outbound network access in network isolated clusters with BYO ACR, [this document][outbound-rules-control-egress] contains the outbound network requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. It is recommended to set up private endpoints to access these features. For example, you can set up [private endpoint based ingestion][azmontoring-private-link] to use Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace) in network isolated clusters. If a private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
 * The following AKS cluster extensions aren't supported yet on network isolated clusters:
     * [Dapr][dapr-overview]
