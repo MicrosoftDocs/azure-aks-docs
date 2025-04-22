@@ -1,6 +1,6 @@
 ---
 title: AKS Communication Manager 
-description: Start here to learn how to set up and receive notices in Azure Resource Notifications for Azure Kubernetes Service maintenance events. 
+description: Learn how to set up and receive notices in Azure Resource Notifications for Azure Kubernetes Service maintenance events. 
 ms.date: 10/16/2024
 ms.custom: aks communication manager
 ms.topic: conceptual
@@ -11,13 +11,13 @@ ms.subservice: aks-upgrade
 
 # Azure Kubernetes Service Communication Manager
 
-The Azure Kubernetes Service (AKS) Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notifications and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. You can set up notifications for all types of autoupgrades that utilize maintenance windows by following these steps.
+The Azure Kubernetes Service (AKS) Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notifications and Azure Resource Graph frameworks. This tool enables you to closely monitor your upgrades because it provides you with timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow ups. You can set up notifications for all types of autoupgrades that utilize maintenance windows by following these steps.
 
 ## Prerequisites
 
 - Configure your cluster for either [Autoupgrade channel][aks-auto-upgrade] or [Node autoupgrade channel][aks-node-auto-upgrade].
 
-- Create a [planned maintenance window][planned-maintenance] as mentioned here for your autoupgrade configuration.
+- Create a [planned maintenance window][planned-maintenance] for your autoupgrade configuration.
 
 > [!NOTE]
 > After Communication Manager is set up, it sends advance notices one week before maintenance starts and one day before maintenance starts. You also receive timely alerts during the maintenance operation.
@@ -28,9 +28,9 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 
 1. Under the **Condition** tab, select **Custom log search** in the **Signal name** dropdown menu.
 
-     :::image type="content" source="./media/auto-upgrade-cluster/custom-log-search.jpg" alt-text="The screenshot of the custom log search in the alert rule pane.":::
+     :::image type="content" source="./media/auto-upgrade-cluster/custom-log-search.jpg" alt-text="Screenshot that shows the custom log search in the alert rule pane.":::
 
-1. In the opened "Search query" box, paste one of the following custom queries and select the **Review+Create** button.
+1. In the **Search query** box, paste one of the following custom queries and select the **Review+Create** button.
 
 The following query is for cluster autoupgrade notifications:
 
