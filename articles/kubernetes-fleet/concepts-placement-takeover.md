@@ -10,9 +10,9 @@ ms.topic: conceptual
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager cluster resource placement (preview)
 
-As a multi-cluster environment matures the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads across multiple clusters. However, adding clusters with pre-existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an added member cluster. 
+When a multi-cluster environment matures the presence of a specific workload on multiple clusters is a common situation. One reason to add clusters to a fleet is to centralize management of workloads to improve visibility and manageability of workloads across multiple clusters. However, adding clusters with existing workloads to a fleet can lead to placement conflicts when Fleet Manager attempts to place a managed workload onto an added member cluster. 
 
-In this article, wes look at how to use the `whenToTakeOver` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
+In this article, we look at how to use the `whenToTakeOver` property of an `applyStrategy` in a cluster resource placement (CRP) to explicitly control how Fleet Manager handles existing workloads when performing placements.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
@@ -27,9 +27,9 @@ The `whenToTakeOver` property allows the following values:
 
 * `Always`: Fleet Manager applies the corresponding workload from the hub cluster immediately, and any value differences in managed fields are overwritten on the target cluster. This behavior is the default for a CRP without an explicit `whenToTakeOver` setting.
 
-* `IfNoDiff`: Fleet Manager checks for configuration differences when it finds a pre-existing workload and only applies the hub cluster workload if no configuration differences are found. 
+* `IfNoDiff`: Fleet Manager checks for configuration differences when it finds an existing workload and only applies the hub cluster workload if no configuration differences are found. 
 
-* `Never`: Fleet Manager ignores pre-existing workloads and doesn't apply the hub cluster workload. Fleet manager still identifies matching workloads and raises an apply error, allowing you to safely check for the presence of pre-existing workloads.
+* `Never`: Fleet Manager ignores existing workloads and doesn't apply the hub cluster workload. Fleet manager still identifies matching workloads and raises an apply error, allowing you to safely check for the presence of existing workloads.
 
 ### Define which fields are used for comparison
 
@@ -172,15 +172,15 @@ Each cluster that failed placement due to a configuration difference returns an 
 }
 ```
 
-To view which fields are drifted you can use the process detailed in the [report on drifted clusters](./concepts-placement-drift.md#report-on-drifted-clusters) section of the drift detection documentation.
+Viewing drifted fields can be achieved by following the process detailed in the [report on drifted clusters](./concepts-placement-drift.md#report-on-drifted-clusters) section of the drift detection documentation.
 
 At this point you must decide on how to handle the drift, by either including the member cluster changes into your hub cluster workload definition, or electing to overwrite the member cluster workload by setting the `whenToTakeOver` property to `Always`.
 
 ## Next steps
 
 * [Detect and manage drift for resources placed using cluster resource placement](./concepts-placement-drift.md).
-* [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
-* [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
+* [Control eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
+* [Define a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 
