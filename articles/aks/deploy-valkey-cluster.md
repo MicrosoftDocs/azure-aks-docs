@@ -491,6 +491,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     ```
 
 ## Create Pod Disruption Budget (PDB)
+
 1. Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable during voluntary disruptions, such as upgrades or maintenance. This helps maintain the stability and availability of the Valkey application within the Kubernetes cluster.
 
     ```bash
