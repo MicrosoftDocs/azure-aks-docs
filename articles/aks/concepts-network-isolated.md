@@ -12,9 +12,9 @@ ms.date: 11/10/2024
 
 Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
 
-One solution to restricting outbound traffic from the cluster is to use a firewall device to restrict traffic based on domain names. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process.
+One common solution to restrict outbound traffic from the cluster is to use a [firewall device][firewall-restrict-egress] to restrict traffic based on domain names. Especially when your application requires outbound access and you need to control, inspect and secure the egress traffic, firewall is the perfect fine solution to have. Nevertheless, configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process if you only want to allow those endpoints required for AKS cluster bootstraping and it wouldn't really be possible to have a completely no outbound environment with firewall due to those dependecies required.
 
-Another solution, a network isolated AKS cluster, simplifies setting up outbound restrictions for a cluster out of the box. The cluster operator can then incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated AKS cluster thus reduces the risk of data exfiltration.
+Now with a network isolated AKS cluster, you can simplify setting up outbound restrictions for a vanilla cluster out of the box and it is a truly no outbound environment. The cluster operator will incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated AKS cluster thus reduces the risk of data exfiltration.
 
 ## How a network isolated cluster works
 
@@ -27,13 +27,13 @@ AKS clusters pull images required for the cluster and its features or add-ons fr
 
 The following options are supported for a private ACR with network isolated clusters:
 
-* **AKS-managed ACR** - AKS creates, manages, and reconciles an ACR resource in this option. You don't need to assign any permissions or manage the ACR. AKS manages the cache rules, private link, and private endpoint used in the network isolated cluster. An AKS-managed ACR follows the same behavior as other resources (route table, Azure Virtual Machine Scale Sets, etc.) in the infrastructure resource group. **To avoid the risk of cluster components or new node bootstrap failing, do not update or delete the ACR, its cache rules, or its system images**. The AKS-managed ACR is continuously reconciled so that cluster components and new nodes work as expected.
+* **AKS-managed ACR** - AKS creates, manages, and reconciles an ACR resource in this option. There's nothing you need to do.
 
     > [!NOTE]
     > The AKS-managed ACR resource is created in your tenant and subscription.
     > After you delete an AKS network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted. 
 
-* **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry.
+* **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry. You will also need to assign permissions and manage the cache rules, private link, and private endpoint used in the network isolated cluster. 
 
     > [!NOTE]
     > When you delete the AKS cluster, the BYO ACR, private link, and private endpoint aren't deleted automatically. If you add customized images and cache rules to the BYO ACR, they persist after cluster reconciliation, after you disable the feature, or after you delete the AKS cluster.
@@ -52,7 +52,7 @@ When creating a network isolated AKS cluster, you can choose one of the followin
 * Windows node pools are currently not supported.
 
 > [!Caution]
-> If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it will generate outbound traffic.
+> If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it may allow outbound traffic with outbound type `none`.
 
 ## Using features, add-ons, and extensions requiring egress
 
@@ -113,3 +113,4 @@ Manually upgrading packages based on egress to package repositories isn't suppor
 [azure-backup-aks]: /azure/backup/azure-kubernetes-service-backup-overview
 [custom-storage-class]: /azure/aks/azure-csi-blob-storage-provision?tabs=mount-nfs%2Csecret#create-a-custom-storage-class
 [azmontoring-private-link]: /azure/azure-monitor/containers/kubernetes-monitoring-private-link
+[firewall-restrict-egress]: /azure/firewall/protect-azure-kubernetes-service#restrict-egress-traffic-using-azure-firewall
