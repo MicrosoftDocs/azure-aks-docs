@@ -24,22 +24,28 @@
           href: concepts-lifecycle.md
         - name: Use Azure RBAC to control resource access
           href: concepts-rbac.md
-        - name: Preview API lifecycle
-          href: concepts-preview-api-lifecycle.md
-    - name: Upgrade Kubernetes and node images across multiple clusters
-      href: concepts-update-orchestration.md
-    - name: Workload propagation across multiple clusters
-      items:
-        - name: Using cluster resource placement for workload propagation
-          href: concepts-resource-propagation.md
-        - name: Defining a rollout strategy for cluster resource placement
-          href: concepts-rollout-strategy.md
-        - name: Controlling eviction and disruption of placed resources
-          href: concepts-eviction-disruption.md
-        - name: Placement strategy and resource snapshots
-          href: concepts-placement-snapshots.md
         - name: Scheduler and scheduling framework
           href: concepts-scheduler-scheduling-framework.md
+        - name: Preview API lifecycle
+          href: concepts-preview-api-lifecycle.md
+    - name: Multi-cluster Kubernetes and node images upgrades
+      href: concepts-update-orchestration.md
+    - name: Multi-cluster workload placement and management
+      items:
+        - name: Placing workloads using cluster resource placement
+          items:
+          - name: Introduction to cluster resource placement
+            href: concepts-resource-propagation.md
+          - name: Defining a placement rollout strategy
+            href: concepts-rollout-strategy.md
+          - name: Controlling eviction and disruption
+            href: concepts-eviction-disruption.md
+          - name: Placement strategy and resource snapshots
+            href: concepts-placement-snapshots.md
+          - name: Taking over existing workloads
+            href: concepts-placement-takeover.md
+          - name: Detecting and managing workload drift
+            href: concepts-placement-drift.md      
     - name: Layer 4 load balancing across multiple clusters
       href: concepts-l4-load-balancing.md
 - name: How-to guides
@@ -50,7 +56,7 @@
           href: upgrade-hub-cluster-type.md
         - name: Migrate preview instances to supported instances 
           href: howto-migrate-preview-to-ga-fleets.md
-    - name: Upgrade Kubernetes and node images across multiple clusters
+    - name: Progressively upgrade Kubernetes and node images
       items:
         - name: Define reusable update strategies
           href: update-create-update-strategy.md
@@ -60,7 +66,7 @@
           href: update-automation.md
         - name: Configure monitoring and alerting of update runs
           href: howto-monitor-update-runs.md
-    - name: Workload propagation across multiple clusters
+    - name: Place and manage workloads on multiple clusters
       items:
         - name: Access Fleet hub cluster API
           href: access-fleet-hub-cluster-kubernetes-api.md

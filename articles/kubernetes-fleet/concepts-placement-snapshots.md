@@ -1,6 +1,6 @@
 ---
 title: "Understanding snapshots for Azure Kubernetes Fleet Manager cluster resource placement"
-description: This article describes how to Fleet Manager's cluster resource placement manages snapshots.
+description: This article describes how Fleet Manager's cluster resource placement manages snapshots.
 ms.date: 03/20/2025
 author: sjwaight
 ms.author: simonwaight
@@ -21,7 +21,7 @@ In this article, we explore these objects so you can understand them should you 
 
 You can view the resource snapshots held by Fleet Manager using the following steps when connected to the [Fleet Manager hub cluster][fleet-hub-cluster].
 
-For this sample we use a ConfigMap resource that we have modified, leading to two snapshots.
+In this sample we use an updated ConfigMap, leading to two snapshots.
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
@@ -35,7 +35,7 @@ example-placement-0-snapshot   1     17m    kubernetes-fleet.io/is-latest-snapsh
 example-placement-1-snapshot   1     2m2s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
 ```
 
-We can inspect the contents of the `example-placement-1-snapshot` snapshot as follows.
+We can inspect the contents of the `example-placement-1-snapshot` object as follows.
 
 ```bash
 kubectl get clusterresourcesnapshots example-placement-1-snapshot -o yaml
@@ -111,8 +111,8 @@ spec:
 
 ## Next steps
 
-* [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
-* [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
+* [Define a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
+* [Control eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 
