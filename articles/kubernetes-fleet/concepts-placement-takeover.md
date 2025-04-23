@@ -17,7 +17,7 @@ In this article, we look at how to use the `whenToTakeOver` property of an `appl
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout-dpbeta.md)]
+[!INCLUDE [preview features note](./includes/preview/preview-callout-dataplane-beta.md)]
 
 ## Workload take over options
 

@@ -17,7 +17,7 @@ In this article, we explore how you can use Fleet Manager's `ClusterResourcePlac
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout-dpbeta.md)]
+[!INCLUDE [preview features note](./includes/preview/preview-callout-dataplane-beta.md)]
 
 ## Evicting placed resources (preview)
 
