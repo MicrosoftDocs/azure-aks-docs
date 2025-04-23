@@ -323,7 +323,15 @@ When deploying an AKS cluster into such a networking environment, there are some
 
 * When a private cluster is provisioned, a private endpoint (1) and a private DNS zone (2) are created in the cluster-managed resource group by default. The cluster uses an `A` record in the private zone to resolve the IP of the private endpoint for communication to the API server.
 * The private DNS zone is linked only to the VNet that the cluster nodes are attached to (3). This means that the private endpoint can only be resolved by hosts in that linked VNet. In scenarios where no custom DNS is configured on the VNet (default), this works without issue as hosts point at *168.63.129.16* for DNS that can resolve records in the private DNS zone because of the link.
-* If using the default private DNS zone behavior, AKS attempts to link the zone directly to the cluster's VNet—even if it's already linked to a hub VNet. This can cause deployment failures in VNets with custom DNS settings if the cluster's managed identity lacks **Network Contributor** permissions on the full VNet. To avoid this, you can provide a pre-created zone or set the DNS option to `none`.
+* If you keep the default private‑DNS‑zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.  
+  In spoke VNets that use custom DNS servers, this action can fail if the cluster’s managed identity lacks **Network Contributor** on the spoke VNet.  
+  To prevent the failure, choose **one** of the following supported configurations:
+
+  * **Custom private DNS zone** – Provide a pre‑created private zone and set `privateDNSZone` to its resource ID. Link that zone to the appropriate VNet (for example, the hub VNet) and set `publicDNS` to `false`.
+
+  * **Public DNS only** – Disable private‑zone creation by setting `privateDNSZone` to `none` **and** leave `publicDNS` at its default value (`true`).
+
+  > Setting `privateDNSZone: none` **and** `publicDNS: false` at the same time is **not supported**;
 
 > [!NOTE]
 > Conditional forwarding doesn't support subdomains.
