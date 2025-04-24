@@ -10,7 +10,7 @@ ms.date: 04/24/2025
 
 # Network isolated Azure Kubernetes Service (AKS) clusters 
 
-Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, basic SKU Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
+Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, standard SKU Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
 
 One common solution to restrict outbound traffic from the cluster is to use a [firewall device][aks-firewall] to restrict traffic based on firewall rules. When your application requires outbound access and you need to control, inspect and secure the egress traffic, firewall is a perfect fine solution to have. Nevertheless, configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome and complicated process especially if you only want to allow those endpoints required for a normal AKS cluster bootstraping. These dependency endpoints also make it diffult to have a completely no outbound environment.
 
@@ -45,8 +45,8 @@ To create a network isolated cluster, you need to first ensure network traffic b
 
 You also need to ensure the egress path for your AKS cluster are controlled and limited, you can choose one of the following network outbound types:
 
-* [Outbound type of `none`][outbound-type-none] - If `none` is set, AKS won't automatically configure egress paths. This option does not require a default route as part of validation.
-* [Outbound type of `block` (preview)][outbound-type-block] -If `block` is set, AKS configures network rules to actively block all egress traffic from the cluster. This option is useful for highly secure environments where outbound connectivity must be restricted.
+* [Outbound type of `none`][outbound-type-none] - If `none` is set, AKS won't automatically configure egress paths. This option does not require a default route as part of validation. It is supported in both bring-your-own (BYO) virtual network scenarios and managed VNet scenarios.For BYO VNet scenario, you must establish explicit egress paths if needed.
+* [Outbound type of `block` (preview)][outbound-type-block] -If `block` is set, AKS configures network rules to actively block all egress traffic from the cluster. This option is useful for highly secure environments where outbound connectivity must be restricted. It is supported in managed VNet scenario. Note that you can also achieve similar effect by blocking all egress traffic through adding network security group (NSG) rules with `none` in BYO VNet scenario.
 
 > [!NOTE]
 > Outbound type of `block` is still in public preview for network isolated cluster.
@@ -91,7 +91,7 @@ After setting up a network isolated cluster, if you want to enable features or a
 
 ### Can I manually upgrade packages to upgrade node pool image?
 
-Manually upgrading packages based on egress to package repositories isn't supported. Instead, you can [autoupgrade your node OS images][autoupgrade-node-os]. Only `NodeImage` and `None` upgrade channels are currently supported for network isolated clusters.
+Manually upgrading packages based on egress to package repositories is not recommended. Instead, you can [autoupgrade your node OS images][autoupgrade-node-os]. Only `NodeImage` and `None` upgrade channels are currently supported for network isolated clusters. If you want to manually upgrade node pool image, you have to allow egress explicitly for those required endpoints with outbound type `none` .
 
 ## Next steps
 
