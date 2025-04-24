@@ -33,7 +33,7 @@ The following two options are supported for a private ACR associated with networ
     > The AKS-managed ACR resource is created in your subscription.
     > After you delete a network isolated cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted. 
 
-* **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry. You will also need to assign permissions and manage the cache rules, private link, and private endpoint used in the cluster. 
+* **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry. You also need to assign permissions and manage the cache rules, private link, and private endpoint used in the cluster. 
 
     > [!NOTE]
     > When you delete the AKS cluster or after you disable the feature, the BYO ACR, private link, and private endpoint aren't deleted automatically. If you add customized images and cache rules to the BYO ACR, they persist after cluster reconciliation.
@@ -64,11 +64,11 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 
 For network isolated clusters with with BYO ACR:
 * If you want to use any AKS feature or add-on that requires outbound network access in network isolated clusters and outbound type `none` , [this document][outbound-rules-control-egress] contains the outbound network requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. It is recommended to set up private endpoints to access these features. For example, you can set up [private endpoint based ingestion][azmontoring-private-link] to use Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace) in network isolated clusters. If a private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
-* If you are using [CSI driver][csi-driver] for Azure Files and Blob storage, you must create a custom storage class with "networkEndpointType: privateEndpoint" in [Azure Files storage classes][custom-storage-class-file] and [Azure Blob storage classes][custom-storage-class-blob].
+* If you are using [Azure Container Storage Interface (CSI) driver][csi-driver] for Azure Files and Blob storage, you must create a custom storage class with "networkEndpointType: privateEndpoint" in [Azure Files storage classes][custom-storage-class-file] and [Azure Blob storage classes][custom-storage-class-blob].
 
 For network isolated clusters with with AKS-managed ACR:
 * Only these following AKS add-ons and features are currently supported:
-    * [Azure CNI][azure-cni]
+    * [Azure Container Networking Interface (CNI)][azure-cni]
     * [Azure Files CSI driver][csi-files]
     * [Azure Blob CSI driver][csi-blob]
     * [Azure Disks CSI driver][csi-disks]
