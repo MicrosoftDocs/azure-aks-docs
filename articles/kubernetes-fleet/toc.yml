@@ -30,6 +30,8 @@
           href: concepts-preview-api-lifecycle.md
     - name: Multi-cluster Kubernetes and node images upgrades
       href: concepts-update-orchestration.md
+    - name: Multi-cluster automated deployments
+      href: concepts-automated-deployments.md
     - name: Multi-cluster workload placement and management
       items:
         - name: Placing workloads using cluster resource placement
@@ -74,6 +76,8 @@
           href: quickstart-resource-propagation.md
         - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
+        - name: Use automated deployments to drive multi-cluster resource placement
+          href: howto-automated-deployments.md
         - name: Using envelope objects for reserved resource types
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations for workload scheduling

@@ -4,7 +4,7 @@ description: Learn how to use automated deployments to simplify the process of a
 ms.author: qpetraroia
 ms.topic: how-to
 ms.custom: build-2023, build-2024
-ms.date: 05/10/2023
+ms.date: 04/22/2025
 ms.subservice: aks-developer
 ms.service: azure-kubernetes-service
 author: qpetraroia
@@ -66,6 +66,10 @@ To switch GitHub profiles in Automated deployments, you will need to revoke acce
 
 You can now select a new GitHub account to authorize with Automated deployments.
 
+## Multi-cluster support
+
+To deploy an application to multiple AKS clusters using a single configuration you can use [Azure Kubernetes Fleet Manager's Automated Deployments capability][fleet-automated-deployments].
+
 ## Next steps
 
 You can modify these GitHub Actions to meet the needs of your team by opening them up in an editor like Visual Studio Code and changing them as you see fit.
@@ -76,3 +80,4 @@ Learn more about [GitHub Actions for Kubernetes][kubernetes-action].
 [kubernetes-action]: kubernetes-action.md
 [aks-deploy]: ./learn/quick-kubernetes-deploy-portal.md
 [acr-create]: ./cluster-container-registry-integration.md
+[fleet-automated-deployments]: /azure/kubernetes-fleet/howto-automated-deployments
