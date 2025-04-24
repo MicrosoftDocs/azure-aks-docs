@@ -26,11 +26,6 @@ Get the credentials for your AKS cluster using the [`az aks get-credentials`][az
 az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 ```
 
-### Use NVIDIA GPU Operator with AKS
-
-The NVIDIA GPU Operator automates the management of all NVIDIA software components needed to provision GPU including driver installation, the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), the NVIDIA container runtime, and more. Since the GPU Operator handles these components, it's not necessary to manually install the NVIDIA device plugin. This also means that the automatic GPU driver installation on AKS is not required to use the NVIDIA GPU Operator.
-
-[!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
 > [!NOTE]
 > The NVIDIA GPU Operator is not compatible with multiple OS versions on the same AKS cluster.
