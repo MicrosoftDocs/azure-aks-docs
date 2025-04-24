@@ -29,10 +29,10 @@ A network isolated cluster simplifies the process of setting up outbound restric
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
+- Network isolated clusters are supported on AKS clusters using Kubernetes version 1.30 or higher.
 - This article requires version 2.71.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 - If you're choosing to use the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR is [Premium SKU service tier][container-registry-skus].
-- Install the `aks-preview` Azure CLI extension version *9.0.0b2* or later, if you are using a network isolated cluster configured with API Server VNet Integration for private access of the API Server. You also need to register `EnableAPIServerVnetIntegrationPreview` feature flag.
-
+- If you are using a network isolated cluster configured with API Server VNet Integration, you should follow the prerequisites and guidance in this [document][api-server-vnet-integration].
 
 ::: zone pivot="aks-managed-acr"
 
@@ -112,7 +112,7 @@ SUBNET_ID=$(az network vnet subnet show --name ${AKS_SUBNET_NAME} --vnet-name ${
 az network vnet subnet create --name ${ACR_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.2.0/24 --private-endpoint-network-policies Disabled
 ```
 
-### Step 2: Disable virtual network outbound connectivity
+### Step 2: Disable virtual network outbound connectivity (Optional)
 
 There are multiple ways to [disable the virtual network outbound connectivity][vnet-disable-outbound-access].
 
