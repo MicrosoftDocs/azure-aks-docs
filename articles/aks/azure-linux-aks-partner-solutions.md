@@ -164,7 +164,7 @@ We uncover patterns that create overspending on infrastructure and help teams pr
 
 </details>
 
-For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/stackwatchinc1625592579012.kubecost?tab=overview).
+For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [IBM Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/ibm-usa-ny-armonk-hq-6275750-ibmcloud-asperia.ibm_kubecost_enterprise?tab=Overview).
 
 ### NetApp
 
@@ -370,7 +370,7 @@ TID enforces fetching certified versions of Istio and enables only compatible ve
 
 </details>
 
-For more information, see [Tetrate Solutions](https://istio.tetratelabs.io/download/) and [Tetrate on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/tetrate1598353087553.tetrateistio?tab=Overview).
+For more information, see [Tetrate documentation](https://docs.tetrate.io/) and [Tetrate on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/tetrate1598353087553.tetrateistio?tab=overview).
 
 ### Wiz
 

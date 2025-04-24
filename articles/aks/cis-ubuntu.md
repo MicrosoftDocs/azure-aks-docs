@@ -296,7 +296,7 @@ For more information about AKS security, see the following articles:
 * [AKS best practices](./best-practices.md)
 
 <!-- EXTERNAL LINKS -->
-[cis-benchmark-ubuntu]: https://www.cisecurity.org/benchmark/ubuntu/
+[cis-benchmark-ubuntu]: https://www.cisecurity.org/benchmark/ubuntu_linux
 
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark

@@ -195,7 +195,7 @@ az aks update \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
   --enable-acns
-
+```
 #### Example: Build a network policy that allows traffic to “bing.com”
 
 ```yaml
@@ -245,7 +245,7 @@ az aks update \
   --resource-group $RESOURCE_GROUP \
   --name $CLUSTER_NAME \
   --enable-acns
-
+```
 #### Example: Allow only GET requests to /api from the frontend pod to the backend service on port 8080
 
 ```yaml
@@ -293,7 +293,7 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-
+```
 ### Namespace and multi-tenancy segmentation
 
 In multi-tenant environments, namespaces help isolate workloads. Different teams typically manage their applications within dedicated namespaces, ensuring logical isolation between workloads. This separation is critical when multiple applications run alongside each other. Applying network policies at the namespace scope is often the first step in securing workloads, as it prevents unrestricted lateral movement between applications managed by different teams.
@@ -315,7 +315,7 @@ spec:
         - namespaceSelector:
             matchLabels:
               name: team-a
-
+```
 ### Microsegmentation for workload isolation
 
 While namespace-based segmentation is an essential first step in securing multi-tenant Kubernetes clusters, application-level microsegmentation provides fine-grained control over how workloads interact within a namespace. Namespace isolation alone does not prevent unintended or unauthorized communication between different applications within the same namespace. This is where pod-level segmentation becomes critical.
@@ -342,6 +342,7 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+```
 This prevents frontend pods from making unintended connections to other services, reducing the risk of unauthorized access or lateral movement inside the namespace.
 
 By combining namespace-wide isolation with fine-grained application-level policies, teams can implement a multi-layered security model that prevents unauthorized traffic while allowing necessary communication for application functionality.
@@ -378,6 +379,7 @@ spec:
             http:
               - method: "GET"
                 path: "/api"
+```
 This prevents the frontend from making POST or DELETE requests, limiting the attack surface.
 
 ### Integrating RBAC with Network Policy management

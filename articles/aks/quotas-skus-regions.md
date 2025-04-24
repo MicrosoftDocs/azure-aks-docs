@@ -55,14 +55,13 @@ The list of supported VM sizes in AKS is evolving with the release of new VM SKU
 
 ## Restricted VM sizes
 
-VM sizes with fewer than two CPUs may not be used with AKS.
-Each node in an AKS cluster contains a fixed amount of compute resources such as vCPU and memory. If an AKS node contains insufficient compute resources, pods might fail to run correctly. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, **don't use [B series VMs][b-series-vm] and the following VM SKUs in AKS on system node pools**:
+Each node in an AKS cluster contains a fixed amount of compute resources such as vCPU and memory. Due to the required compute resources needed to run Kubernetes correctly, certain VM SKU sizes are restricted by default in AKS. These restrictions are to ensure that pods can be scheduled and function correctly on these nodes.
 
-- Standard_A0
-- Standard_A1
-- Standard_A1_v2
-- Standard_F1
-- Standard_F1s
+### User nodepools
+For user nodepools, VM sizes with fewer than two vCPUs and two GBs of RAM (memory) may not be used.
+
+### System nodepools
+For system nodepools, VM sizes with fewer than two vCPUs and four GBs of RAM (memory) may not be used. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, it is recommonded to **not use any [B series VMs][b-series-vm] and [Av1 series VMs][a-series-vm]**.
 
 For more information on VM types and their compute resources, see [Sizes for virtual machines in Azure][vm-skus].
 
@@ -115,5 +114,5 @@ You can increase certain default limits and quotas. If your resource supports an
 [vm-skus]: /azure/virtual-machines/sizes
 [nodepool-upgrade]: use-multiple-node-pools.md#upgrade-a-node-pool
 [b-series-vm]: /azure/virtual-machines/sizes-b-series-burstable
-
+[a-series-vm]: /azure/virtual-machines/sizes/retirement/av1-series-retirement
 

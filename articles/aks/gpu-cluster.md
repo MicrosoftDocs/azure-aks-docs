@@ -54,7 +54,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 Using NVIDIA GPUs involves the installation of various NVIDIA software components such as the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), GPU driver installation, and more.
 
 > [!NOTE]
-> By default, Microsoft automatically maintains the version of the NVidia drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVidia drivers are installed by default on GPU capable nodes, you need to install the device plugin.
+> By default, Microsoft automatically maintains the version of the NVIDIA drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVIDIA drivers are installed by default on GPU capable nodes, you need to install the device plugin.
 
 ### NVIDIA device plugin installation
 
@@ -127,20 +127,20 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 ---
 
-1. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
+2. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
 
     ```bash
-    kubectl create namespace gpu-operator
+    kubectl create namespace gpu-resources
     ```
 
-2. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
+3. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
 
     ```yaml
     apiVersion: apps/v1
     kind: DaemonSet
     metadata:
       name: nvidia-device-plugin-daemonset
-      namespace: kube-system
+      namespace: gpu-resources
     spec:
       selector:
         matchLabels:
@@ -163,7 +163,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
           # See https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/
           priorityClassName: "system-node-critical"
           containers:
-          - image: nvcr.io/nvidia/k8s-device-plugin:v0.15.0
+          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.0
             name: nvidia-device-plugin-ctr
             env:
               - name: FAIL_ON_INIT_ERROR
@@ -181,18 +181,18 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
               path: /var/lib/kubelet/device-plugins
     ```
 
-3. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
+4. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
     kubectl apply -f nvidia-device-plugin-ds.yaml
     ```
 
-4. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
+5. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
 
 ### Skip GPU driver installation (preview)
 
-If you want to control the installation of the NVidia drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVidia drivers as part of the node image deployment.
+If you want to control the installation of the NVIDIA drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVIDIA drivers as part of the node image deployment.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 

@@ -278,7 +278,7 @@ For more information about AKS security, see the following articles:
 * [AKS best practices](./best-practices.md)
 
 <!-- EXTERNAL LINKS -->
-[cis-benchmark-windows]: https://www.cisecurity.org/benchmark/windows/
+[cis-benchmark-windows]: https://www.cisecurity.org/benchmark/microsoft_windows_desktop
 
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark

@@ -12,7 +12,7 @@ zone_pivot_groups: azure-cli-or-terraform
 
 # Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)
 
-In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS).
+In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS), including the creation of a Valkey cluster ConfigMap, primary and secondary cluster pods to ensure redundancy and zone replication, and a Pod Disruption Budget (PDB) to ensure high availability.
 
 > [!NOTE]
 > This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
@@ -97,7 +97,7 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     EOF
     ```
 
-## Deploy the Valkey cluster
+## Create the Valkey configuration file
 
 1. Create a `ConfigMap` resource to store the Valkey configuration file.
 
@@ -127,7 +127,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     configmap/valkey-cluster created
     ```
 
-2. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command.
+## Create Valkey primary cluster pods
+1. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -271,7 +272,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     statefulset.apps/valkey-masters created
     ```
 
-3. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
+## Create Valkey replica cluster pods
+1. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -383,8 +385,9 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     ```output
     statefulset.apps/valkey-replicas created
     ```
+## Verify pod and node distribution
 
-4. Verify that `master-N` and `replica-N` are running in different nodes and zones using the `kubectl get nodes` and `kubectl get pods` commands.
+1. Verify that `master-N` and `replica-N` are running in different nodes and zones using the `kubectl get nodes` and `kubectl get pods` commands.
 
     ```bash
     kubectl get pods -n valkey -o wide
@@ -415,7 +418,8 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
 
     Wait for all pods to be running before proceeding to the next step.
 
-5. Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
+## Create headless services
+1. Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -486,7 +490,9 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     service/valkey-replicas created
     ```
 
-6. Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable.
+## Create Pod Disruption Budget (PDB)
+
+1. Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable during voluntary disruptions, such as upgrades or maintenance. This helps maintain the stability and availability of the Valkey application within the Kubernetes cluster.
 
     ```bash
     kubectl apply -f - <<EOF

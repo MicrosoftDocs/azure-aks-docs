@@ -435,7 +435,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
 [ssh-keys]: /azure/virtual-machines/linux/create-ssh-keys-detailed
-[az-deployment-group-create]: /azure/azure-resource-manager/templates/deploy-cli#az_deployment_group_create
+[az-deployment-group-create]: /cli/azure/deployment/group#az-deployment-group-create
 [new-azresourcegroup]: /powershell/module/az.resources/new-azresourcegroup
 [new-azresourcegroupdeployment]: /powershell/module/az.resources/new-azresourcegroupdeployment
 [az-sshkey-create]: /cli/azure/sshkey#az_sshkey_create
