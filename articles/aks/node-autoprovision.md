@@ -11,11 +11,11 @@ author: schaffererin
 
 # Node autoprovisioning (preview)
 
-When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed.  As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
+When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed.  As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your virtual machine configuration for numerous resource requests becomes difficult.
 
-Node autoprovisioning (NAP) (preview) decides based on pending pod resource requirements the optimal VM configuration to run those workloads in the most efficient and cost effective manner.
+Node autoprovisioning (NAP) (preview) decides based on pending pod resource requirements the optimal virtual machine configuration to run those workloads in the most efficient and cost effective manner.
 
-NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also Open Source.  NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
+Node autoprovisioning is based on the Open Source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also Open Source.  Node autoprovisioning automatically deploys and configures and manages Karpenter on your AKS clusters.
 
 > [!IMPORTANT]
 > Node autoprovisioning (NAP) for AKS is currently in PREVIEW.
@@ -66,7 +66,6 @@ NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and t
 
 ## Limitations
 
-- The only network configuration allowed is [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md).
 - You can't enable in a cluster where node pools have cluster autoscaler enabled
 
 ### Unsupported features
@@ -84,6 +83,12 @@ NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and t
 - [OutboundType](./egress-outboundtype.md) mutation. All OutboundTypes are supported, however you can't change them after creation.
 - Private cluster (and BYO private DNS)
 
+### Networking Configuration
+
+The recommended network configurations for clusters enabled with Node Autoprovisioning are the following:
+- [Azure CNI](configure-azure-cni.md)
+- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
+- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md).
 
 ## Enable node autoprovisioning
 
@@ -170,11 +175,11 @@ NAP is based on the Open Source [Karpenter](https://karpenter.sh) project, and t
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --node-provisioning-mode Auto --network-plugin azure --network-plugin-mode overlay --network-dataplane cilium
     ```
 
-## Node pools
+## Node Pools
 
-Node autoprovision uses a list of VM SKUs as a starting point to decide which is best suited for the workloads that are in a pending state.  Having control over what SKU you want in the initial pool allows you to specify specific SKU families, or VM types and the maximum amount of resources a provisioner uses.
+Node autoprovision uses a list of VM SKUs as a starting point to decide which is best suited for the workloads that are in a pending state.  Having control over what SKU you want in the initial pool allows you to specify specific SKU families, or virtual machine types and the maximum amount of resources a provisioner uses. You can also reference different specifications in the Node Pool file, such as specifying Spot or On-Demand instances, multiple architectures, and more. 
 
-If you have specific VM SKUs that are reserved instances, for example, you may wish to only use those VMs as the starting pool.
+If you have specific virtual machine sizes that are reserved instances, for example, you may wish to only use those virtual machines as the starting pool.
 
 You can have multiple node pool definitions in a cluster, but AKS deploys a default node pool definition that you can modify:
 
@@ -237,7 +242,7 @@ spec:
 | kubernetes.io/os | Operating System (Linux only during preview) | linux |
 | kubernetes.io/arch | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
 
-To list the VM SKU capabilities and allowed values, use the `vm list-skus` command from the Azure CLI.
+To list the Virtual Machine SKU capabilities and allowed values, use the `vm list-skus` command from the Azure CLI.
 
 ```azurecli-interactive
 az vm list-skus --resource-type virtualMachines --location <location> --query '[].name' --output table
@@ -245,7 +250,7 @@ az vm list-skus --resource-type virtualMachines --location <location> --query '[
 
 ## Node pool limits
 
-By default, NAP attempts to schedule your workloads within the Azure quota you have available.  You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
+By default, Node autoprovision attempts to schedule your workloads within the Azure quota you have available.  You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
 
 ```
   # Resource limits constrain the total size of the cluster.
@@ -267,15 +272,15 @@ When you have multiple node pools defined, it's possible to set a preference of 
 
 ## Kubernetes and node image updates
 
-AKS with NAP manages the Kubernetes version upgrades and VM OS disk updates for you by default.
+AKS with Node autoprovision manages the Kubernetes version upgrades and VM OS disk updates for you by default.
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for NAP node pools follows the Control Plane Kubernetes version.  If you perform a cluster upgrade, your NAP nodes are updated automatically to follow the same versioning.
+Kubernetes upgrades for Node autoprovision nodes follows the Control Plane Kubernetes version.  If you perform a cluster upgrade, your Node autoprovision nodes are updated automatically to follow the same versioning.
 
 ### Node image updates
 
-By default NAP node pool virtual machines are automatically updated when a new image is available.  If you wish to pin a node pool at a certain node image version, you can set the imageVersion on the node class:
+By default virtual machines managed by Node autoprovision are automatically updated when a new image is available.  If you wish to pin a node at a certain node image version, you can set the imageVersion on the node class:
 
 ```kubectl
 kubectl edit aksnodeclass default
@@ -313,9 +318,9 @@ Removing the imageVersion spec would revert the node pool to be updated to the l
 
 ## Node disruption
 
-When the workloads on your nodes scale down, NAP uses disruption rules on the Node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient.
+When the workloads on your nodes scale down, Node autoprovision uses disruption rules on the Node Pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through Consolidation, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger Consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
-You can remove a node manually using `kubectl delete node`, but NAP can also control when it should optimize your nodes.
+You can remove a node manually using `kubectl delete node`, but Node autoprovision can also control when it should optimize your nodes, based on your specifications.
 
 ```yaml
   disruption:
