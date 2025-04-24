@@ -49,3 +49,9 @@ The NVIDIA GPU Operator automates the management of all NVIDIA software componen
 
 - [Monitor NVIDIA GPU metrics](monitor-gpu-metrics.md) using Azure Managed Prometheus and Azure Managed Grafana.
 - Learn more about [Ray clusters on AKS](ray-overview.md).
+
+<!-- LINKS -->
+[az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
+[aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
+[aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
+[aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
