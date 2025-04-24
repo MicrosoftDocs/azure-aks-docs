@@ -17,7 +17,7 @@ In this article, we explore how you can use Fleet Manager's `ClusterResourcePlac
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager's cluster resource placement (CRP), read the [conceptual overview of resource placement][learn-conceptual-crp] before reading this article.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-beta.md)]
 
 ## Evicting placed resources (preview)
 
@@ -36,7 +36,7 @@ Eviction can be used with cluster resource placement's `PickAll` and `PickN` pol
 Consider the following sample CRP.
 
 ```yaml
-apiVersion: placement.kubernetes-fleet.io/v1
+apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
 metadata:
   name: crp-app-sample
@@ -65,7 +65,7 @@ Let's say the placement picked two clusters named `member-cluster-01` and `membe
 1. Create a `NoSchedule` taint to block placement requests for the member cluster. You can read more about using taints on the [taints documentation][fleet-taints].
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1
+    apiVersion: placement.kubernetes-fleet.io/v1beta1
     kind: MemberCluster
     metadata:
       name: member-cluster-02
