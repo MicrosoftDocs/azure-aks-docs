@@ -120,7 +120,7 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 1. Configure `kubectl` to connect to your cluster using the [az aks get-credentials][az-aks-get-credentials] command.
 
     ```azurecli-interactive
-    az aks get-credentials --resource-group $AZURE_RESOURCE_GROUP --cluster-name $CLUSTER_NAME
+    az aks get-credentials --resource-group $AZURE_RESOURCE_GROUP --name $CLUSTER_NAME
     ```
 
 2. Verify the connection to your cluster using the `kubectl get` command.
