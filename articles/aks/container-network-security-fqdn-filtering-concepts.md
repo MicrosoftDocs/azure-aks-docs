@@ -9,7 +9,7 @@ ms.topic: conceptual
 ms.date: 07/30/2024
 ---
 
-## Overview of FQDN filtering
+# Overview of FQDN filtering
 
 Containerized environments present unique security challenges. Traditional network security methods, often reliant on IP-based filtering, can become cumbersome and less effective as IP addresses frequently change. Additionally, understanding network traffic patterns and identifying potential threats can be complex.
 

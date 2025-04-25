@@ -47,14 +47,11 @@ az aks create \
     --resource-group $RESOURCE_GROUP \
     --generate-ssh-keys \
     --location eastus \
-    --max-pods 250 \
     --network-plugin azure \
-    --network-plugin-mode overlay \
     --network-dataplane cilium \
     --node-count 2 \
-    --pod-cidr 192.168.0.0/16 \
-    --kubernetes-version 1.29 \
     --enable-acns
+    --acns-advanced-networkpolicies FQDN
 ```
 
 #### [**Non-Cilium**](#tab/non-cilium)
@@ -77,6 +74,7 @@ az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns
+    --acns-advanced-networkpolicies FQDN
 ```
 
 ---    
