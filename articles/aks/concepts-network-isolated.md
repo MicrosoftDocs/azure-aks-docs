@@ -49,7 +49,7 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 * [Outbound type of `block` (preview)][outbound-type-block] -If `block` is set, AKS configures network rules to actively block all egress traffic from the cluster. This option is useful for highly secure environments where outbound connectivity must be restricted. It is supported in managed VNet scenario. Note that you can also achieve similar effect by blocking all egress traffic through adding network security group (NSG) rules with `none` in BYO VNet scenario.
 
 > [!NOTE]
-> Outbound type of `block` is still in public preview for network isolated cluster.
+> Outbound type of `none` is now general available, `block` is still in public preview for network isolated cluster.
 
 ## Limitations
 
