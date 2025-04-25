@@ -23,7 +23,7 @@ A network isolated cluster simplifies the process of setting up outbound restric
   - Describes the [current limitations][conceptual-network-isolated-limitations].
 
 > [!NOTE]
-> Outbound type of `block` is still in public preview for network isolated cluster.
+> Outbound type of `none` is now general available, `block` is still in public preview for network isolated cluster .
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
