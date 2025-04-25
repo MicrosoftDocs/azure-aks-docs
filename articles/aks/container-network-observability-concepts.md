@@ -76,7 +76,7 @@ For non-Cilium data plane scenarios, Container Network Observability provides me
 The table below outlines the different metrics generated.
 
 > [!NOTE]
-> Due to an identified bug, TCP resets are temporarily not visible. As a result, the networkobservability_tcp_flag_counters metrics will not be published during this period. Our team is actively working on resolving this issue, and we will provide updates once the fix is implemented. We apologize for any inconvenience and appreciate your patience.
+> Due to an identified bug, TCP resets are temporarily not visible. As a result, the networkobservability_tcp_flag_counters metric will not be published during this period. Our team is actively working on resolving this issue, and we will provide updates once the fix is implemented. We apologize for any inconvenience and appreciate your patience.
 
 | Metric Name                                    | Description | Extra Labels | Linux | Windows |
 |------------------------------------------------|-------------|--------------|-------|---------|
