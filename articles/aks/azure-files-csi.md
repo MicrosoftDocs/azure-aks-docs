@@ -4,7 +4,7 @@ description: Learn how to use the Container Storage Interface (CSI) driver for A
 ms.topic: concept-article
 ms.custom:
 ms.subservice: aks-storage
-ms.date: 08/07/2024
+ms.date: 04/25/2025
 author: schaffererin
 ms.author: schaffererin
 
@@ -20,14 +20,6 @@ To create an AKS cluster with CSI drivers support, see [Enable CSI drivers on AK
 
 > [!NOTE]
 > *In-tree drivers* refers to the current storage drivers that are part of the core Kubernetes code versus the new CSI drivers, which are plug-ins.
-
-## Azure Files CSI driver new features
-
-In addition to the original in-tree driver features, Azure Files CSI driver supports the following new features:
-
-- Network File System (NFS) version 4.1
-- [Private endpoint][private-endpoint-overview]
-- Creating large mount of file shares in parallel.
 
 ## Use a persistent volume with Azure Files
 
@@ -321,13 +313,11 @@ This option is optimized for random access workloads with in-place data updates 
 
 ### Optimizing read and write size options
 
-This section provides information about how to approach performance tuning NFS with the Azure Files CSI driver with the *rsize* and *wsize* options. The rsize and wsize options set the maximum transfer size of an NFS operation. If rsize or wsize are not specified on mount, the client and server negotiate the largest size supported by the two. Currently, both Azure NetApp Files and modern Linux distributions support read and write sizes as large as 1,048,576 Bytes (1 MiB).
+This section provides information about how to approach performance tuning NFS with the Azure Files CSI driver with the *rsize* and *wsize* options. The rsize and wsize options set the maximum transfer size of an NFS operation. If rsize or wsize are not specified on mount, the client and server negotiate the largest size supported by the two. Currently, both Azure Files and modern Linux distributions support read and write sizes as large as 1,048,576 Bytes (1 MiB).
 
 Optimal performance is based on efficient client-server communication. Increasing or decreasing the **mount** read and write option size values can improve NFS performance. The default size of the read/write packets transferred between client and server are 8 KB for NFS version 2, and 32 KB for NFS version 3 and 4. These defaults may be too large or too small. Reducing the rsize and wsize might improve NFS performance in a congested network by sending smaller packets for each NFS-read reply and write request. However, this can increase the number of packets needed to send data across the network, increasing total network traffic and CPU utilization on the client and server.
 
 It's important that you perform testing to find an rsize and wsize that sustains efficent packet transfer, where it doesn't decrease throughput and increase latency.
-
-For more information on optimizing rsize and wsize, see [Linux NFS mount options best practices for Azure NetApp Files][azure-netapp-files-mount-options-best-practices].
 
 For example, to configure a maximum *rsize* and *wsize* of 256-KiB, configure the `mountOptions` in the storage class as follows:
 
@@ -491,6 +481,7 @@ The output of the commands resembles the following example:
 
 ## Next steps
 
+- For best practices when using Azure Files, see [Provision Azure Files storage](azure-csi-files-storage-provision.md#best-practices).
 - To learn how to use CSI driver for Azure Disks, see [Use Azure Disks with CSI driver][azure-disk-csi].
 - To learn how to use CSI driver for Azure Blob storage, see [Use Azure Blob storage with CSI driver][azure-blob-csi].
 - For more about storage best practices, see [Best practices for storage and backups in Azure Kubernetes Service][operator-best-practices-storage].
