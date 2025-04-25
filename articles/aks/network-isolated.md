@@ -17,9 +17,9 @@ A network isolated cluster simplifies the process of setting up outbound restric
 ## Before you begin
 
 - Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The overview article also:
-  - Explains the two access methods, AKS-managed ACR or BYO ACR, you can choose from in this article.
-  - Explains the two private cluster modes, private link-based or API Server Vnet Integration, you can choose from in this article.
-  - Explains the two outbound types, `none` or `block` (preview), you can choose from in this article.
+  - Explains the two options for private Azure Container Registry (ACR) resource, AKS-managed ACR or BYO ACR, you can choose from in this article.
+  - Explains the two private cluster modes for creating private access to API server, private link-based or API Server Vnet Integration, you can choose from in this article.
+  - Explains the two outbound types for cluster egress control, `none` or `block` (preview), you can choose from in this article.
   - Describes the [current limitations][conceptual-network-isolated-limitations].
 
 > [!NOTE]
