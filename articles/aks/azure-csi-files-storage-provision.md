@@ -495,7 +495,7 @@ spec:
 To have the best experience with Azure Files, please follow these best practices:
 
 - The location to configure mount options (mountOptions) depends on whether you are provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
-- FIO is recommended when running benchmarking tests. For more information, see [benchmarking tools and tests](https://learn.microsoft.com/azure/storage/files/nfs-performance#benchmarking-tools-and-tests). 
+- FIO is recommended when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests). 
 
 ### SMB
 - Recommended mount options when using SMB shares are provided in the following storage class example: 
@@ -522,9 +522,9 @@ To have the best experience with Azure Files, please follow these best practices
      ```
 
 
-- If using premium (SSD) file shares and your workload is metadata heavy, enroll to use the [metadata caching](https://learn.microsoft.com/azure/storage/files/smb-performance?tabs=portal#metadata-caching-for-ssd-file-shares) feature to improve performance.
+- If using premium (SSD) file shares and your workload is metadata heavy, enroll to use the [metadata caching](/azure/storage/files/smb-performance?tabs=portal#metadata-caching-for-ssd-file-shares) feature to improve performance.
 
-To learn more, see: [Improve performance for SMB Azure file shares](https://learn.microsoft.com/azure/storage/files/smb-performance).
+To learn more, see: [Improve performance for SMB Azure file shares](/azure/storage/files/smb-performance).
 
 ### NFS
 - Recommended mount options when using NFS shares are provided in the following storage class example:
@@ -547,10 +547,10 @@ To learn more, see: [Improve performance for SMB Azure file shares](https://lear
       - actimeo=30  # reduces latency for metadata-heavy workloads
      ```
 
-- Increase [read-ahead size](https://learn.microsoft.com/azure/storage/files/nfs-performance#increase-read-ahead-size-to-improve-read-throughput) to improve read throughput. 
+- Increase [read-ahead size](/azure/storage/files/nfs-performance#increase-read-ahead-size-to-improve-read-throughput) to improve read throughput. 
 - While Azure Files supports setting nconnect up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of nconnect=4. Currently, there are no gains beyond four channels for the Azure Files implementation of nconnect.
 
-To learn more, see: [Improve performance for NFS Azure file shares](https://learn.microsoft.com/azure/storage/files/nfs-performance).
+To learn more, see: [Improve performance for NFS Azure file shares](/azure/storage/files/nfs-performance).
 
 
 ## Next steps
