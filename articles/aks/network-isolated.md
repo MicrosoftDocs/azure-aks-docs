@@ -132,7 +132,7 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
     az acr cache create -n aks-managed-mcr -r ${REGISTRY_NAME} -g ${RESOURCE_GROUP} --source-repo "mcr.microsoft.com/*" --target-repo "aks-managed-repository/*"
     ```
 > [!NOTE]
-> With BYO ACR, it is your responsibility to ensure the ACR cache rule is created and maintained correctly as above. This step is critical to cluster creation, functioning and upgrading. If the cache rule is modified, it won't be reconciled.
+> With BYO ACR, it is your responsibility to ensure the ACR cache rule is created and maintained correctly as above. This step is critical to cluster creation, functioning and upgrading. This cache rule should NOT be modified.
     
 
 ### Step 4: Create a private endpoint for the ACR
