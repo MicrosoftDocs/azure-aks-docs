@@ -497,7 +497,7 @@ To have the best experience with Azure Files, please follow these best practices
 * The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 * We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
 
-### SMB
+### SMB shares
 
 * Recommended mount options when using SMB shares are provided in the following storage class example:
 
@@ -526,7 +526,7 @@ To have the best experience with Azure Files, please follow these best practices
 
 For more information, see [Improve performance for SMB Azure file shares](/azure/storage/files/smb-performance).
 
-### NFS
+### NFS shares
 
 * Recommended mount options when using NFS shares are provided in the following storage class example:
 
