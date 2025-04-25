@@ -248,7 +248,7 @@ parameters:
 ```
 
 > [!NOTE]
-> The location to configure mount options (mountOptions) depends on whether you are provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
+> The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 
 ### Using Azure tags
 
@@ -446,37 +446,37 @@ To mount the Azure Files file share into your pod, you configure the volume in t
 
 1. Create a new file named `azure-files-pod.yaml` and copy in the following contents. If you changed the name of the file share or secret name, update the `shareName` and `secretName`. You can also update the `mountPath`, which is the path where the Files share is mounted in the pod. For Windows Server containers, specify a `mountPath` using the Windows path convention, such as *'D:'*.
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: mypod
-spec:
-  nodeSelector:
-    kubernetes.io/os: linux
-  containers:
-    - image: 'mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine'
+    ```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
       name: mypod
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 250m
-          memory: 256Mi
-      volumeMounts:
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: 'mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine'
+          name: mypod
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: azure
+              mountPath: /mnt/azure
+              readOnly: false
+      volumes:
         - name: azure
-          mountPath: /mnt/azure
-          readOnly: false
-  volumes:
-    - name: azure
-      csi:
-        driver: file.csi.azure.com
-        volumeAttributes:
-          secretName: azure-secret  # required
-          shareName: aksshare  # required
-          mountOptions: 'dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock,nobrl'  # optional
-```
+          csi:
+            driver: file.csi.azure.com
+            volumeAttributes:
+              secretName: azure-secret  # required
+              shareName: aksshare  # required
+              mountOptions: 'dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock,nobrl'  # optional
+    ```
 
 2. Create the pod using the [`kubectl apply`][kubectl-apply] command.
 
@@ -489,15 +489,17 @@ spec:
     ```bash
     kubectl describe pod mypod
     ```
-## Best Practices
+
+## Best practices
 
 To have the best experience with Azure Files, please follow these best practices:
 
-- The location to configure mount options (mountOptions) depends on whether you are provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
-- FIO is recommended when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests). 
+* The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
+* We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
 
 ### SMB
-- Recommended mount options when using SMB shares are provided in the following storage class example: 
+
+* Recommended mount options when using SMB shares are provided in the following storage class example:
 
      ```yaml
     apiVersion: storage.k8s.io/v1
@@ -520,13 +522,13 @@ To have the best experience with Azure Files, please follow these best practices
       - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
      ```
 
+* If using premium (SSD) file shares and your workload is metadata heavy, enroll to use the [metadata caching](/azure/storage/files/smb-performance?tabs=portal#metadata-caching-for-ssd-file-shares) feature to improve performance.
 
-- If using premium (SSD) file shares and your workload is metadata heavy, enroll to use the [metadata caching](/azure/storage/files/smb-performance?tabs=portal#metadata-caching-for-ssd-file-shares) feature to improve performance.
-
-To learn more, see: [Improve performance for SMB Azure file shares](/azure/storage/files/smb-performance).
+For more information, see [Improve performance for SMB Azure file shares](/azure/storage/files/smb-performance).
 
 ### NFS
-- Recommended mount options when using NFS shares are provided in the following storage class example:
+
+* Recommended mount options when using NFS shares are provided in the following storage class example:
 
     ```yaml
     apiVersion: storage.k8s.io/v1
@@ -546,11 +548,10 @@ To learn more, see: [Improve performance for SMB Azure file shares](/azure/stora
       - actimeo=30  # reduces latency for metadata-heavy workloads
      ```
 
-- Increase [read-ahead size](/azure/storage/files/nfs-performance#increase-read-ahead-size-to-improve-read-throughput) to improve read throughput. 
-- While Azure Files supports setting nconnect up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of nconnect=4. Currently, there are no gains beyond four channels for the Azure Files implementation of nconnect.
+* Increase [read-ahead size](/azure/storage/files/nfs-performance#increase-read-ahead-size-to-improve-read-throughput) to improve read throughput.
+* While Azure Files supports setting nconnect up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of nconnect=4. Currently, there are no gains beyond four channels for the Azure Files implementation of nconnect.
 
-To learn more, see: [Improve performance for NFS Azure file shares](/azure/storage/files/nfs-performance).
-
+For more information, see [Improve performance for NFS Azure file shares](/azure/storage/files/nfs-performance).
 
 ## Next steps
 
