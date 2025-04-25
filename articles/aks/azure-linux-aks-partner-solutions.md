@@ -18,10 +18,10 @@ The third party partners featured in this article have introduction guides to he
 
 |          | Partners |
 |----------|----------|
-| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [VictoriaMetrics](#victoriametrics) |
+| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> •[VictoriaMetrics](#victoriametrics) |
 | **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
 | **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
+| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig) <br> •[Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
 | **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Config management** | • [Corent](#corent) |
 | **Migration** | • [Catalogic](#catalogic) |
@@ -191,6 +191,24 @@ With Spot Ocean, users gain:
 </details>
 
 For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/) and [Spot By NetApp on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/netapp.spot?tab=Overview).
+
+### Sysdig
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/sysdig.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Sysdig Secure | DevOps <br> Security |
+
+Sysdig Secure delivers real-time threat detection and posture management for Azure Linux processes and containers.
+
+<details> <summary> See more </summary><br>
+
+Powered by open source Falco and a cloud-native AI engine, Sysdig provides deep runtime visibility to detect anomalies, stop attacks, and enforce policies as they happen. Detect and respond to threats in real time. Continuously assess cloud posture against CIS, NIST, custom policies, and a long list of frameworks. Prioritize risks by correlating misconfigurations, vulnerabilities, and permissions with real runtime activity. Sysdig helps security and DevOps teams secure workloads without slowing down development.
+
+</details>
+
+For more information, see [Sysdig Solutions](https://sysdig.com)
 
 ## Networking
 
