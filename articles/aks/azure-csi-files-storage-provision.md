@@ -499,7 +499,7 @@ To have the best experience with Azure Files, please follow these best practices
 
 ### SMB shares
 
-* Recommended mount options when using SMB shares are provided in the following storage class example:
+* Recommended mount options for SMB shares are provided in the following storage class example:
 
      ```yaml
     apiVersion: storage.k8s.io/v1
@@ -528,7 +528,7 @@ For more information, see [Improve performance for SMB Azure file shares](/azure
 
 ### NFS shares
 
-* Recommended mount options when using NFS shares are provided in the following storage class example:
+* Recommended mount options for NFS shares are provided in the following storage class example:
 
     ```yaml
     apiVersion: storage.k8s.io/v1
