@@ -144,7 +144,7 @@ An update strategy consists of one or more stages, where a stage can contain one
 
 For this scenario, we'll create stages and groups to match the details used for the Azure portal process.  
 
-1. Create a JSON file to define the stages and groups for the update run. Here's an example of input from the stages file (*example-stages.json*) that represents the strategy shown for creation via the Azure portal:
+1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage, so ordering is not important. The following example file (*example-stages.json*) represents the strategy shown on the Azure portal instructions:
 
     ```json
     {
