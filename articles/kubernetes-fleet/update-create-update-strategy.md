@@ -2,7 +2,7 @@
 title: "Define reuseable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
 description: See how you can define staged update strategies that can be reused across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 04/09/2025
+ms.date: 04/28/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
