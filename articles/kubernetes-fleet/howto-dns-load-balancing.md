@@ -24,26 +24,29 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
 
 * Read the [conceptual overview of this feature](./concepts-dns-load-balancing.md), which provides an explanation of `TrafficManagerProfile` and `TrafficManagerBackend` objects referenced in this document.
 
-* A Kubernetes Fleet Manager with a hub cluster and managed identity.
+* A Kubernetes Fleet Manager with a hub cluster and managed identity. If you don't have one, see [Create an Azure Kubernetes Fleet Manager and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 
-
-
- and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
-
-* The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API . See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
+* The user completing the configuration has permissions to perform Azure role assignments and to access the Fleet Manager hub cluster Kubernetes API. See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 
 * A namespace already deployed on the Fleet Manager hub cluster.
 
+* An existing Azure resource group that the Azure Traffic Manager resource will be provisioned into. 
 
-
-* Set the following environment variables and obtain the kubeconfigs for the fleet and all member clusters:
+* Set the following environment variables:
 
     ```bash
+    export SUBSCRIPTION_ID=<subscription>
     export GROUP=<resource-group>
     export FLEET=<fleet-name>
     export MEMBER_CLUSTER_1=aks-member-1
     export MEMBER_CLUSTER_2=aks-member-2
+    export TRAFFIC_MANAGER_GROUP=rg-flt-tm-demo
+    export TRAFFIC_MANAGER_RG_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${TRAFFIC_MANAGER_GROUP}
+    ```
 
+* Obtain the kubeconfigs for the fleet and all member clusters:
+
+    ```azurecli-interactive
     az fleet get-credentials --resource-group ${GROUP} --name ${FLEET} --file fleet
 
     az aks get-credentials --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1} --file aks-member-1
@@ -52,6 +55,41 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
     ```
 
 [!INCLUDE [preview features note](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+
+## Configure role assignment for Traffic Manager
+
+During preview, you need to perform additional steps to enable Fleet Manager to create and manage Azure Traffic Manager resources. It is expected this step will be removed before general availability of this capability.
+
+In order to complete this step you must have created your Fleet Manager with managed identity enabled.
+
+* Obtain the identity information of your Fleet Manager resource.
+
+    ```azurecli-interactive
+    az fleet show \ 
+        --resource-group ${GROUP} \
+        --name ${FLEET} \
+        --query identity
+    ```
+
+  Your output should look similar to the following example output:
+
+    ```output
+    {
+      "principalId": "<FLEET-PRINCIPAL-ID>",
+      "tenantId": "<ENTRA-ID-TENANT>",
+      "type": "SystemAssigned",
+      "userAssignedIdentities": null
+    }
+    ```
+
+* Assign the Traffic Manager Contributor role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group.
+
+    ```azurecli-interactive
+    az role assignment create \
+        --assignee "<FLEET-PRINCIPAL-ID>" \
+        --role "Traffic Manager Contributor" \
+        --scope ${TRAFFIC_MANAGER_RG_ID}
+    ```
 
 ## Deploy a workload across member clusters of the Fleet resource
 
