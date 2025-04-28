@@ -22,7 +22,7 @@ Use Fleet Manager Automated Deployments to build and deploy an application from 
 * Read the [conceptual overview of resource propagation](./concepts-resource-propagation.md) to understand the concepts and terminology used in this article.
 * A Kubernetes Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API . See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
-* A namespace
+* A namespace already deployed on the Fleet Manager hub cluster.
 
 ## Bring your application source code
 

@@ -16,22 +16,25 @@ For applications deployed across multiple clusters, admins often want to route i
 
 You can follow this document to set up layer 4 load balancing for such multi-cluster applications.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-network-alpha.md)]
 
 ## Prerequisites
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
-* Read the [conceptual overview of this feature](./concepts-l4-load-balancing.md), which provides an explanation of `ServiceExport` and `MultiClusterService` objects referenced in this document.
+* Read the [conceptual overview of this feature](./concepts-dns-load-balancing.md), which provides an explanation of `TrafficManagerProfile` and `TrafficManagerBackend` objects referenced in this document.
 
-* You must have a Fleet resource with a hub cluster and member clusters. If you don't have this resource, follow [Quickstart: Create a Fleet resource and join member clusters](quickstart-create-fleet-and-members.md).
+* A Kubernetes Fleet Manager with a hub cluster and managed identity.
 
-* The target Azure Kubernetes Service (AKS) clusters on which the workloads are deployed need to be present on either the same [virtual network](/azure/virtual-network/virtual-networks-overview) or on [peered virtual networks](/azure/virtual-network/virtual-network-peering-overview).
 
-  * These target clusters have to be [added as member clusters to the Fleet resource](./quickstart-create-fleet-and-members.md#join-member-clusters).
-  * These target clusters should be using [Azure CNI (Container Networking Interface) networking](/azure/aks/configure-azure-cni).
 
-* You must gain access to the Kubernetes API of the hub cluster by following the steps in [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+ and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
+
+* The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API . See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
+
+* A namespace already deployed on the Fleet Manager hub cluster.
+
+
 
 * Set the following environment variables and obtain the kubeconfigs for the fleet and all member clusters:
 

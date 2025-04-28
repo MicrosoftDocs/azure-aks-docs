@@ -1,18 +1,18 @@
 ---
 title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI"
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI.
-ms.date: 03/18/2024
-author: shashankbarsin
-ms.author: shasb
+ms.date: 04/28/2025
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other, devx-track-azurecli, ignite-2023, build-2024
 ms.devlang: azurecli
 ms.topic: quickstart
 ---
 
-# Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI
+# Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI
 
-Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure CLI to create a Fleet resource and later connect Azure Kubernetes Service (AKS) clusters as member clusters.
+Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create a Fleet Manager resource and connect Azure Kubernetes Service (AKS) clusters as member clusters.
 
 ## Prerequisites
 
@@ -32,13 +32,19 @@ Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure CLI t
   * Microsoft.ContainerService/managedClusters/read
   * Microsoft.ContainerService/managedClusters/write
 
-* [Install or upgrade Azure CLI](/cli/azure/install-azure-cli) to version `2.53.1` or later.
+* Have the Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* Install the **fleet** Azure CLI extension using the [`az extension add`][az-extension-add] command and Make sure your version is at least `1.0.0`.
+* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
-    ```azurecli-interactive
-    az extension add --name fleet
-    ```
+  ```azurecli-interactive
+  az extension add --name fleet
+  ```
+
+  Run the following command to update to the latest version of the extension released:
+
+  ```azurecli-interactive
+  az extension update --name fleet
+  ```
 
 * Set the following environment variables:
 
@@ -48,7 +54,7 @@ Get started with Azure Kubernetes Fleet Manager (Fleet) by using the Azure CLI t
     export FLEET=<your_fleet_name>
     ```
 
-* Install `kubectl` and `kubelogin` using the [`az aks install-cli`][az-aks-install-cli] command.
+* Install `kubectl` using the [`az aks install-cli`][az-aks-install-cli] command.
 
   ```azurecli-interactive
   az aks install-cli
@@ -83,20 +89,19 @@ The following output example resembles successful creation of the resource group
 }
 ```
 
-## Create a Fleet resource
+## Create a Fleet Manager resource
 
-You can create a Fleet resource to later group your AKS clusters as member clusters. When created via Azure CLI, by default, this resource enables member cluster grouping and update orchestration. If the Fleet hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters and L4 service load balancing across multiple member clusters. For more information, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configurations.
+You can create a Fleet Manager resource to later group your AKS clusters as member clusters. When created via Azure CLI, by default, this resource enables member cluster grouping and update orchestration. If the Fleet hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters and L4 service load balancing across multiple member clusters. For more information, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configurations.
 
 > [!IMPORTANT]
-> Once a Kubernetes Fleet resource has been created, it's possible to upgrade a Kubernetes Fleet resource without a hub cluster to one with a hub cluster. For Kubernetes Fleet resources with a hub cluster, once private or public has been selected it cannot be changed.
+> Once a Fleet Manager resource has been created, it's possible to change from a Fleet Manager without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public is selected it cannot be changed.
 
+### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
 
-### [Kubernetes Fleet resource without hub cluster](#tab/without-hub-cluster)
-
-If you want to use Fleet only for update orchestration, which is the default experience when creating a new Fleet resource via Azure CLI, you can create a Fleet resource without the hub cluster using the [`az fleet create`][az-fleet-create] command.
+If you want to use Fleet Manager only for update orchestration, which is the default experience when creating a new Fleet resource via Azure CLI, you can create a Fleet resource without the hub cluster using the [`az fleet create`][az-fleet-create] command.
 
 ```azurecli-interactive
-az fleet create --resource-group ${GROUP} --name ${FLEET} --location eastus
+az fleet create --resource-group ${GROUP} --name ${FLEET} --location eastus --enable-managed-identity
 ```
 
 Your output should look similar to the following example output:
@@ -107,9 +112,9 @@ Your output should look similar to the following example output:
   "hubProfile": null,
   "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/fleet-demo/providers/Microsoft.ContainerService/fleets/fleet-demo",
   "identity": {
-    "principalId": null,
-    "tenantId": null,
-    "type": "None",
+    "principalId": <system-identity-id>,
+    "tenantId": <entra-tenant-id>,
+    "type": "SystemAssigned",
     "userAssignedIdentities": null
   },
   "location": "eastus",
@@ -129,9 +134,9 @@ Your output should look similar to the following example output:
 }
 ```
 
-### [Kubernetes Fleet resource with hub cluster](#tab/with-hub-cluster)
+### [Fleet Manager with hub cluster](#tab/with-hub-cluster)
 
-If you want to use Fleet for Kubernetes object propagation and multi-cluster load balancing in addition to update orchestration, then you need to create the Fleet resource with the hub cluster enabled by specifying the `--enable-hub` parameter with the [`az fleet create`][az-fleet-create] command.
+If you want to use Fleet Manager for intelligent Kubernetes object placement and multi-cluster load balancing in addition to update orchestration, then you must create the Fleet Manager with the hub cluster enabled by specifying the `--enable-hub` parameter with the [`az fleet create`][az-fleet-create] command.
 
 Kubernetes Fleet clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
@@ -261,9 +266,9 @@ Fleet currently supports joining existing AKS clusters as member clusters.
 * [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
 
 <!-- INTERNAL LINKS -->
-[az-extension-add]: /cli/azure/extension#az-extension-add
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [az-group-create]: /cli/azure/group#az-group-create
 [az-fleet-create]: /cli/azure/fleet#az-fleet-create
 [az-fleet-member-create]: /cli/azure/fleet/member#az-fleet-member-create
 [az-fleet-member-list]: /cli/azure/fleet/member#az-fleet-member-list
+[azure-cli-install]: /cli/azure/install-azure-cli
