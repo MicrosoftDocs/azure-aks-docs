@@ -56,11 +56,11 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
 
 [!INCLUDE [preview features note](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-## Configure role assignment for Traffic Manager
+## Configure Fleet Manager permissions
 
-During preview, you need to perform additional steps to enable Fleet Manager to create and manage Azure Traffic Manager resources. It is expected this step will be removed before general availability of this capability.
+During preview, you need to perform additional steps to enable Fleet Manager to create and manage Azure Traffic Manager resources and to obtain public IP addresses of services exposed on member clusters. It is expected these steps will be removed before general availability.
 
-In order to complete this step you must have created your Fleet Manager with managed identity enabled.
+In order to complete this step you must have created your Fleet Manager with managed identity enabled and be using a user with role assignment permissions. 
 
 * Obtain the identity information of your Fleet Manager resource.
 
@@ -82,13 +82,22 @@ In order to complete this step you must have created your Fleet Manager with man
     }
     ```
 
-* Assign the Traffic Manager Contributor role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group.
+* Assign the `Traffic Manager Contributor` role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group.
 
     ```azurecli-interactive
     az role assignment create \
         --assignee "<FLEET-PRINCIPAL-ID>" \
         --role "Traffic Manager Contributor" \
         --scope ${TRAFFIC_MANAGER_RG_ID}
+    ```
+
+* So Fleet Manager can obtain the IP address for member clusters when they are added to a `TrafficMangerBackend` via a `ServiceExport` you must grant Fleet Manager the `Reader` role to any member cluster.
+
+    ```azurecli-interactive
+    az role assignment create \
+        --assignee "<FLEET-PRINCIPAL-ID>" \
+        --role "Reader" \
+        --scope /full/path/to/member-cluster
     ```
 
 ## Deploy a workload across member clusters of the Fleet resource
