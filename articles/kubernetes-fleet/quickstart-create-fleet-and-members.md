@@ -95,7 +95,7 @@ The following output example resembles successful creation of the resource group
 You can create a Fleet Manager at any time, selecting to later add your AKS clusters as member clusters. When created via the Azure CLI, by default, Fleet Manager enables member cluster grouping and update orchestration. If the Fleet Manager is created with a hub cluster, intelligent Kubernetes object placement and load balancing across multiple member clusters is possible. For more information, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configurations.
 
 > [!IMPORTANT]
-> Once a Fleet Manager has been created, you can change from a Fleet Manager without a hub cluster to one with a hub cluster. For Fleet Managers with a hub cluster, once private or public access is selected it can't be changed.
+> You can change from a Fleet Manager without a hub cluster to one with a hub cluster, but not the reverse. For Fleet Managers with a hub cluster, once private or public access is selected it can't be changed.
 
 ### [Fleet Manager without hub cluster](#tab/without-hub-cluster)
 
@@ -146,7 +146,7 @@ If you want to use Fleet Manager for intelligent Kubernetes object placement and
 Fleet Manager hub clusters support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
 > [!NOTE]
-> By default, Fleet Manager hub clusters are public, and Fleet Manager will choose the VM SKU used for the hub node (at this time, Fleet Manager tries "Standard_D4s_v4", "Standard_D4s_v3", "Standard_D4s_v5", "Standard_Ds3_v2", "Standard_E4as_v4" in order). If none of these options are acceptable or available, you can select a VM SKU by setting `--vm-size <SKU>`.
+> By default, Fleet Manager hub clusters are public. Fleet Manager chooses the virtual machine (VM) SKU used for the hub node (at this time, Fleet Manager tries "Standard_D4s_v4", "Standard_D4s_v3", "Standard_D4s_v5", "Standard_Ds3_v2", "Standard_E4as_v4" in order). If none of these options are acceptable or available, you can select a VM SKU by setting `--vm-size <SKU>`.
 
 #### Public hub cluster
 
@@ -193,9 +193,9 @@ Your output should look similar to the following example output:
 
 #### Private hub cluster
 
-When creating a Fleet Manager with a hub cluster with private access, some extra considerations apply:
+When you create a Fleet Manager with a hub cluster with private access, some extra considerations apply:
 
-* Fleet Manager requires you to provide the subnet on which the hub cluster node VM will be placed. You can specify this at creation time by setting `--agent-subnet-id <subnet>`.
+* Fleet Manager requires you to provide the subnet on which the hub cluster node VM is placed. You can specify the subnet at creation time by setting `--agent-subnet-id <subnet>`.
 * The address prefix of the virtual network (VNet) whose subnet is passed via `--vnet-subnet-id` must not overlap with the AKS default service range of `10.0.0.0/16`.
 * When using an AKS private cluster, you have the ability to configure fully qualified domain names (FQDNs) and FQDN subdomains. This functionality doesn't apply to the private access mode type hub cluster.
 
