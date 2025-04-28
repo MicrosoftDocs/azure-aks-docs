@@ -1,20 +1,18 @@
 ---
-title: "How to set up multi-cluster Layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)"
-description: Learn how to use Azure Kubernetes Fleet Manager to set up multi-cluster Layer 4 load balancing across workloads deployed on multiple member clusters.
+title: "How to set up multi-cluster DNS load balancing across Azure Kubernetes Fleet Manager member clusters"
+description: Learn how to use Azure Kubernetes Fleet Manager to set up multi-cluster Layer 4 and 7 load balancing for workloads deployed on multiple member clusters.
 ms.topic: how-to
-ms.date: 03/20/2024
+ms.date: 04/28/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - devx-track-azurecli
 ---
 
 # Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters (preview)
 
-For applications deployed across multiple clusters, admins often want to route incoming traffic to them across clusters.
+Azure Kubernetes Fleet Manager can help increase availability and spread load across a workload this is deployed across multiple member clusters. As this capability is delivered via DNS it can be used to provide layer 4 and 7 load balancing as required.
 
-You can follow this document to set up layer 4 load balancing for such multi-cluster applications.
+Follow the steps in this document to set up DNS-based load balancing for multi-cluster applications hosted in your fleet.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-network-alpha.md)]
 
@@ -26,9 +24,9 @@ You can follow this document to set up layer 4 load balancing for such multi-clu
 
 * A Kubernetes Fleet Manager with a hub cluster and managed identity. If you don't have one, see [Create an Azure Kubernetes Fleet Manager and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 
-* The user completing the configuration has permissions to perform Azure role assignments and to access the Fleet Manager hub cluster Kubernetes API. See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
+* Two member clusters `aks-member-1` and `aks-member-2` onto which you will deploy the same workload using Fleet Manager's [cluster resource placement (CRP)](./intelligent-resource-placement.md).
 
-* A namespace already deployed on the Fleet Manager hub cluster.
+* The user completing the configuration has permissions to perform Azure role assignments and to access the Fleet Manager hub cluster Kubernetes API. See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 
 * An existing Azure resource group that the Azure Traffic Manager resource will be provisioned into. 
 
@@ -106,7 +104,7 @@ In order to complete this step you must have created your Fleet Manager with man
 >
 > * The steps in this how-to guide refer to a sample application for demonstration purposes only. You can substitute this workload for any of your own existing Deployment and Service objects.
 >
-> * These steps deploy the sample workload from the Fleet cluster to member clusters using Kubernetes configuration propagation. Alternatively, you can choose to deploy these Kubernetes configurations to each member cluster separately, one at a time.
+> * These steps deploy the sample workload from the Fleet Manager hub cluster to member clusters using Fleet Manager's cluster resource placement (CRP). Alternatively, you can choose to deploy these Kubernetes configurations to each member cluster separately, one at a time.
 
 1. Create a namespace on the Fleet Manager hub cluster.
 
@@ -120,7 +118,7 @@ In order to complete this step you must have created your Fleet Manager with man
     namespace/kuard-demo created
     ```
 
-1. Apply the Deployment, Service, ServiceExport objects by saving the following into a file called `kuard-export-service.yaml`:
+1. Stage the Deployment, Service, ServiceExport objects to the Fleet Manager hub cluster by saving the following into a file called `kuard-export-service.yaml` and then applying:
 
     ```yml
     apiVersion: apps/v1
@@ -172,6 +170,8 @@ In order to complete this step you must have created your Fleet Manager with man
       namespace: kuard-demo
     ```
     
+    Apply the objects to the Fleet Manager hub cluster:
+
     ```bash
     KUBECONFIG=fleet kubectl apply -f kuard-export-service.yaml
     ```
@@ -184,13 +184,9 @@ In order to complete this step you must have created your Fleet Manager with man
     serviceexport.networking.fleet.azure.com/kuard-export created
     ```
 
-1. Each service needs a unique DNS label so that it can be exposed via Azure Traffic Manager. Use a Fleet Manager cluster resource placement `ResourceOverride` to modify the service definition per member cluster:
+1. Each service needs a unique DNS label so that it can be exposed via Azure Traffic Manager. Use a Fleet Manager cluster resource placement `ResourceOverride` to modify the service definition per member cluster to create a unique name based on the Azure region and cluster name. You will need to create an override per cluster selector (in our example, per Azure region).
 
-    > [!NOTE]
-    > "${MEMBER-CLUSTER-NAME}" is a [reserved variable](./resource-override.md#reserved-variables-in-the-json-patch-override-value) in resource placement overrides, and it will be replaced with the name of the member cluster at run time.
-    
-
-    ```yml
+     ```yml
     apiVersion: placement.kubernetes-fleet.io/v1alpha1
     kind: ResourceOverride
     metadata:
@@ -218,13 +214,20 @@ In order to complete this step you must have created your Fleet Manager with man
                   {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
     ```
 
-1. Create the following `ClusterResourcePlacement` in a file called `crp-2.yaml`. Notice we're selecting clusters in the `eastus` region:
+  > [!NOTE]
+  > "${MEMBER-CLUSTER-NAME}" is a resource placement override [reserved variable](./resource-override.md#reserved-variables-in-the-json-patch-override-value) which is replaced with the name of the member cluster at run time.
+ 
+    ```bash
+    KUBECONFIG=fleet kubectl apply -f ro-kuard-demo-eastus.yaml
+    ```
+
+1. Create the following Fleet Manager CRP in a file called `crp-dns-demo.yaml`. Notice we're selecting a maximum of two clusters in the `eastus` region:
 
     ```yaml
     apiVersion: placement.kubernetes-fleet.io/v1
     kind: ClusterResourcePlacement
     metadata:
-      name: kuard-demo
+      name: crp-dns-demo
     spec:
       resourceSelectors:
         - group: ""
@@ -232,6 +235,8 @@ In order to complete this step you must have created your Fleet Manager with man
           kind: Namespace
           name: kuard-demo
       policy:
+        placementType: PickN
+        numberOfClusters: 2
         affinity:
           clusterAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
@@ -241,116 +246,82 @@ In order to complete this step you must have created your Fleet Manager with man
                       fleet.azure.com/location: eastus
     ```
 
-1. Apply the `ClusterResourcePlacement`:
+    Apply the CRP:
 
     ```bash
-    KUBECONFIG=fleet kubectl apply -f crp-2.yaml
+    KUBECONFIG=fleet kubectl apply -f crp-dns-demo.yaml
     ```
 
     If successful, the output looks similar to the following example:
 
     ```console
-    clusterresourceplacement.placement.kubernetes-fleet.io/kuard-demo created
+    clusterresourceplacement.placement.kubernetes-fleet.io/crp-dns-demo created
     ```
 
-1. Check the status of the `ClusterResourcePlacement`:
+## Configure Azure Traffic Manager to load balance across the service endpoints in multiple member clusters
 
+1. Define the `TrafficManagerProfile` to define the parameters to be used by Traffic Manager and save it to the file `kuard-atm-demo.yaml`.
+
+    ```yml
+    apiVersion: networking.fleet.azure.com/v1beta1
+    kind: TrafficManagerProfile
+    metadata:
+      name: kuard-atm-demo
+      namespace: kuard-demo
+    spec:
+      resourceGroup: "rg-flt-tm-demo"
+      monitorConfig:
+        port: 80
+    ```
+
+    Apply the configuration:
+    
+    ```bash
+    KUBECONFIG=fleet kubectl apply -f kuard-atm-demo.yaml
+    ```
+
+1. Define a corresponding `TrafficManagerBackend` that is used to group together exported `Service` entries from member clusters.
+
+    ```yml
+    apiVersion: networking.fleet.azure.com/v1beta1
+    kind: TrafficManagerBackend
+    metadata:
+      name: kuard-atm-demo-backend
+      namespace: kuard-demo
+    spec:
+      profile:
+        name: "kuard-atm-demo"
+      backend:
+        name: "kuard-svc"
+      weight: 100
+    ```
+
+    Apply the configuration:
+    
+    ```bash
+    KUBECONFIG=fleet kubectl apply -f kuard-atm-demo-backend.yaml
+    ```
+
+1. Verify the service is available via Azure Traffic Manager by running the following command:
 
     ```bash
-    KUBECONFIG=fleet kubectl get clusterresourceplacements
-    ```
-
-    If successful, the output looks similar to the following example:
-
-    ```console
-    NAME            GEN   SCHEDULED   SCHEDULEDGEN   APPLIED   APPLIEDGEN   AGE
-    kuard-demo      1     True        1              True      1            20s
-    ```
-
-## Create MultiClusterService to load balance across the service endpoints in multiple member clusters
-
-1. Check whether the service is successfully exported for the member clusters in `eastus` region:
-
-    ```bash
-    KUBECONFIG=aks-member-1 kubectl get serviceexport kuard --namespace kuard-demo
-    ```
-
-    Output looks similar to the following example:
-
-    ```console
-    NAME    IS-VALID   IS-CONFLICTED   AGE
-    kuard   True       False           25s
-    ```
-
-    ```bash
-    KUBECONFIG=aks-member-2 kubectl get serviceexport kuard --namespace kuard-demo
-    ```
-
-    Output looks similar to the following example:
-
-    ```console
-    NAME    IS-VALID   IS-CONFLICTED   AGE
-    kuard   True       False           55s
-    ```
-
-    You should see that the service is valid for export (`IS-VALID` field is `true`) and has no conflicts with other exports (`IS-CONFLICT` is `false`).
-
-    > [!NOTE]
-    > It may take a minute or two for the ServiceExport to be propagated.
-
-1. Create `MultiClusterService` on one member to load balance across the service endpoints in these clusters:
-
-    ```bash
-    KUBECONFIG=aks-member-1 kubectl apply -f https://raw.githubusercontent.com/Azure/AKS/master/examples/fleet/kuard/kuard-mcs.yaml
-    ```
-
-    > [!NOTE]
-    > To expose the service via the internal IP instead of public one, add the annotation to the MultiClusterService:
-    >  
-    > ```yaml
-    > apiVersion: networking.fleet.azure.com/v1alpha1
-    > kind: MultiClusterService
-    > metadata:
-    >   name: kuard
-    >   namespace: kuard-demo
-    >   annotations:
-    >      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-    >   ...
-    > ```
-
-    Output looks similar to the following example:
-
-    ```console
-    multiclusterservice.networking.fleet.azure.com/kuard created
-    ```
-
-1. Verify the MultiClusterService is valid by running the following command:
-
-    ```bash
-    KUBECONFIG=aks-member-1 kubectl get multiclusterservice kuard --namespace kuard-demo
+    nslookup kuard-atm-demo.trafficmanager.net
     ```
 
     The output should look similar to the following example:
 
     ```console
-    NAME    SERVICE-IMPORT   EXTERNAL-IP     IS-VALID   AGE
-    kuard   kuard            <a.b.c.d>       True       40s
+    Server:         10.X.X.254
+    Address:        10.X.X.254#53
+    
+    Non-authoritative answer:
+    Name:   kuard-atm-demo.trafficmanger.net
+    Address: 123.X.X.16
+    Name:   kuard-atm-demo.trafficmanger.net
+    Address: 74.X.X.78
+    Name:   kuard-atm-demo.trafficmanger.net
+    Address: 173.X.X.164
     ```
 
-    The `IS-VALID` field should be `true` in the output. Check out the external load balancer IP address (`EXTERNAL-IP`) in the output. It may take a while before the import is fully processed and the IP address becomes available.
+1. Use a web browser to visit the URL and see how Kuard responds. Try flushing your DNS and re-trying to see if you are served another instance from another cluster.
 
-1. Run the following command multiple times using the external load balancer IP address:
-
-    ```bash
-    curl <a.b.c.d>:8080 | grep addrs 
-    ```
-
-    Notice that the IPs of the pods serving the request is changing and that these pods are from member clusters `aks-member-1` and `aks-member-2` from the `eastus` region. You can verify the pod IPs by running the following commands on the clusters from `eastus` region:
-
-    ```bash
-    KUBECONFIG=aks-member-1 kubectl get pods -n kuard-demo -o wide
-    ```
-
-    ```bash
-    KUBECONFIG=aks-member-2 kubectl get pods -n kuard-demo -o wide
-    ```
