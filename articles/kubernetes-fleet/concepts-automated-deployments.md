@@ -23,7 +23,7 @@ In order to use Fleet Manager's Automated Deployments the following prerequisite
 * An application to deploy. The application can already be containerized, or Automated Deployments can containerize it based on the contents of the repository.
 * An Azure Kubernetes Fleet Manager [with a hub cluster][fleet-deploy-hub] and one or more member AKS cluster.
 * A Kubernetes namespace on the Fleet Manager hub cluster.
-* An Azure Container Registry (ACR) with [AcrPull rights granted to member AKS cluster][acr-create].
+* An Azure Container Registry (ACR) with [AcrPull rights granted to member AKS clusters][acr-create].
 
 ## Core concepts
 
