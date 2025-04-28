@@ -165,7 +165,7 @@ When the Deploy stage finishes, select the **Approve pull request** button to op
 
 Merging the change runs the GitHub Actions workflow that builds your application into a container image and stores it in the selected Azure Container Registry.
 
-:::image type="content" source="media/automated-deployments/fleet-auto-deploy-github-action.png" alt-text="Screenshot showing GitHub Actions workflow in progress." lightbox="media/automated-deployments/fleet-auto-deploy-github-action.pn" :::
+:::image type="content" source="media/automated-deployments/fleet-auto-deploy-github-action.png" alt-text="Screenshot showing GitHub Actions workflow in progress." lightbox="media/automated-deployments/fleet-auto-deploy-github-action.png" :::
 
 ### Check the deployed resources
 

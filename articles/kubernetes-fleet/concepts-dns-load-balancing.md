@@ -30,5 +30,5 @@ The creation and configuration of the associated Traffic Manager is handled enti
 
 <!-- INTERNAL LINKS -->
 [traffic-manager-overview]: /azure/traffic-manager/traffic-manager-overview
-[traffic-manager-weighted]: azure/traffic-manager/traffic-manager-routing-methods#weighted-traffic-routing-method
-[traffic-manager-health-check]: azure/traffic-manager/traffic-manager-monitoring#configure-endpoint-monitoring
+[traffic-manager-weighted]: /azure/traffic-manager/traffic-manager-routing-methods#weighted-traffic-routing-method
+[traffic-manager-health-check]: /azure/traffic-manager/traffic-manager-monitoring#configure-endpoint-monitoring
