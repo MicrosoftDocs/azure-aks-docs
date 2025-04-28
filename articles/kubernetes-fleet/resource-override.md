@@ -6,8 +6,6 @@ ms.date: 05/10/2024
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - build-2024
 ---
 
 # Customize namespace-scoped resources in Azure Kubernetes Fleet Manager with resource overrides
@@ -58,7 +56,7 @@ spec:
 
 This example selects a `Deployment` object named `test-nginx` from the `test-namespace` namespace for overriding.
 
-## Policy
+### Policy
 
 A `Policy` object consists of a set of rules, `overrideRules`, that specify the changes to apply to the selected resources. Each `overrideRules` object supports the following fields:
 
@@ -94,13 +92,13 @@ spec:
 
 This example replaces the container image in the `Deployment` object with the `nginx:1.20.0` image for clusters with the `env: prod` label.
 
-### Cluster selector
+#### Cluster selector
 
 You can use the `clusterSelector` field in the `overrideRules` object to specify the resources to which the override rule applies. The `ClusterSelector` object supports the following field:
 
 * `clusterSelectorTerms`: A list of terms that specify the criteria for selecting clusters. Each term includes a `labelSelector` field that defines a set of labels to match.
 
-### JSON patch overrides
+#### JSON patch overrides
 
 You can use `jsonPatchOverrides` in the `overrideRules` object to specify the changes to apply to the selected resources. The `JsonPatch` object supports the following fields:
 
@@ -168,6 +166,43 @@ This example replaces the container image in the `Deployment` object with:
 
 * The `nginx:1.20.0` image for clusters with the `env: prod` label.
 * The `nginx:latest` image for clusters with the `env: test` label.
+
+### Reserved Variables in the JSON Patch Override Value
+
+This is the list of reserved variables that will be replaced by the actual values used in the `value` of the JSON patch override rule:
+
+* `${MEMBER-CLUSTER-NAME}`:  will be replaced by the name of the `memberCluster` that represents this cluster.
+
+For example, to add a label to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`, you can use the following configuration:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ClusterResourceOverride
+metadata:
+  name: example-cro
+spec:
+  placement:
+    name: crp-example
+  clusterResourceSelectors:
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+      version: v1
+      name: secret-reader
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  env: prod
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/labels
+            value:
+              {"cluster-name":"${MEMBER-CLUSTER-NAME}"}
+```
+
+The example `ClusterResourceOverride` object will add a label `cluster-name` with the value of the `memberCluster` name to the `ClusterRole` named `secret-reader` on clusters with the label `env: prod`.
 
 ## Apply the cluster resource placement
 

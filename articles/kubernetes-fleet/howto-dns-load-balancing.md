@@ -82,7 +82,7 @@ In order to complete this step you must have created your Fleet Manager with man
     }
     ```
 
-* Assign the `Traffic Manager Contributor` role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group.
+* Assign the `Traffic Manager Contributor` role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group where the Traffic Manager Profile will be created.
 
     ```azurecli-interactive
     az role assignment create \
@@ -91,7 +91,7 @@ In order to complete this step you must have created your Fleet Manager with man
         --scope ${TRAFFIC_MANAGER_RG_ID}
     ```
 
-* So Fleet Manager can obtain the IP address for member clusters when they are added to a `TrafficMangerBackend` via a `ServiceExport` you must grant Fleet Manager the `Reader` role to any member cluster.
+* The Fleet Manager hub cluster identity also needs the Azure `Reader` role for any member cluster so Fleet Manager can read the public IP address for member clusters when they are added to a `TrafficMangerBackend` via a `ServiceExport`.
 
     ```azurecli-interactive
     az role assignment create \
@@ -108,30 +108,114 @@ In order to complete this step you must have created your Fleet Manager with man
 >
 > * These steps deploy the sample workload from the Fleet cluster to member clusters using Kubernetes configuration propagation. Alternatively, you can choose to deploy these Kubernetes configurations to each member cluster separately, one at a time.
 
-1. Create a namespace on the fleet cluster:
+1. Create a namespace on the Fleet Manager hub cluster.
 
     ```bash
     KUBECONFIG=fleet kubectl create namespace kuard-demo
     ```
 
-    Output looks similar to the following example:
+    Output looks similar to the following:
 
     ```console
     namespace/kuard-demo created
     ```
 
-1. Apply the Deployment, Service, ServiceExport objects:
+1. Apply the Deployment, Service, ServiceExport objects by saving the following into a file called `kuard-export-service.yaml`:
 
+    ```yml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: kuard
+      namespace: kuard-demo
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: kuard
+      template:
+        metadata:
+          labels:
+            app: kuard
+        spec:
+          containers:
+            - name: kuard
+              image: gcr.io/kuar-demo/kuard-amd64:blue
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+                limits:
+                  cpu: 250m
+                  memory: 256Mi
+    ---
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: kuard-svc
+      namespace: kuard-demo
+      labels:
+        app: kuard
+    spec:
+      selector:
+        app: kuard
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
+    ---
+    apiVersion: networking.fleet.azure.com/v1alpha1
+    kind: ServiceExport
+    metadata:
+      name: kuard-export
+      namespace: kuard-demo
+    ```
+    
     ```bash
-    KUBECONFIG=fleet kubectl apply -f https://raw.githubusercontent.com/Azure/AKS/master/examples/fleet/kuard/kuard-export-service.yaml
+    KUBECONFIG=fleet kubectl apply -f kuard-export-service.yaml
     ```
 
-    The `ServiceExport` specification in the above file allows you to export a service from member clusters to the Fleet resource. Once successfully exported, the service and all its endpoints are synced to the fleet cluster and can then be used to set up multi-cluster load balancing across these endpoints. The output looks similar to the following example:
+    The `ServiceExport` specification in the above file allows you to export a service from member clusters to the Fleet Manager hub cluster. Once successfully exported, the service and all its endpoints are synced to the Fleet Manager hub cluster and can then be used to set up DNS load balancing across these endpoints. The output looks similar to the following example:
 
     ```console
     deployment.apps/kuard created
-    service/kuard created
-    serviceexport.networking.fleet.azure.com/kuard created
+    service/kuard-svc created
+    serviceexport.networking.fleet.azure.com/kuard-export created
+    ```
+
+1. Each service needs a unique DNS label so that it can be exposed via Azure Traffic Manager. Use a Fleet Manager cluster resource placement `ResourceOverride` to modify the service definition per member cluster:
+
+    > [!NOTE]
+    > "${MEMBER-CLUSTER-NAME}" is a [reserved variable](./resource-override.md#reserved-variables-in-the-json-patch-override-value) in resource placement overrides, and it will be replaced with the name of the member cluster at run time.
+    
+
+    ```yml
+    apiVersion: placement.kubernetes-fleet.io/v1alpha1
+    kind: ResourceOverride
+    metadata:
+      name: ro-kuard-demo-eastus
+      namespace: kuard-demo
+    spec:
+      placement:
+        name: crp-kuard-demo
+      resourceSelectors:
+        -  group: ""
+           kind: Service
+           version: v1
+           name: kuard-svc
+      policy:
+        overrideRules:
+          - clusterSelector:
+              clusterSelectorTerms:
+                - labelSelector:
+                    matchLabels:
+                      fleet.azure.com/location: eastus
+            jsonPatchOverrides:
+              - op: add
+                path: /metadata/annotations
+                value:
+                  {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
     ```
 
 1. Create the following `ClusterResourcePlacement` in a file called `crp-2.yaml`. Notice we're selecting clusters in the `eastus` region:
