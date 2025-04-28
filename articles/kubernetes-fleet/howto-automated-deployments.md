@@ -167,18 +167,19 @@ Merging the change runs the GitHub Actions workflow that builds your application
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-github-action.png" alt-text="Screenshot showing GitHub Actions workflow in progress." lightbox="media/automated-deployments/fleet-auto-deploy-github-action.png" :::
 
-### Check the deployed resources
-
-TODO: Fleet Manager CRP documentation / sample here.
-
+### Check the staged resources
 
 After the pipeline is completed, you can review the created container image on the Azure portal by locating the Azure Container Registry instance you configured and opening the image repository.
 
-:::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-registry-image.png" alt-text="Screenshot of the built container image hosted in an Azure Container Registry repository." lightbox="../media/automatic/from-code/fleet-auto-deploy-check-registry-image.png" :::
+:::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-registry-image.png" alt-text="Screenshot of the built container image hosted in an Azure Container Registry repository." lightbox="media/automated-deployments/fleet-auto-deploy-check-registry-image.png" :::
 
-Selecting the **External IP** should open up a new browser page with the running application.
+TODO: add view in Automated deployments tab in Portal.
 
-:::image type="content" source="../media/automatic/from-code/automatic-from-app-running.png" alt-text="Screenshot showing the Contoso Air application running." lightbox="../media/automatic/from-code/automatic-from-app-running.png" :::
+### Using CRP to place staged resources
+
+During preview you will need to perform additional manual steps to configure placement on to member clusters.
+
+TODO: Fleet Manager CRP documentation / sample here.
 
 ### Resulting GitHub Action workflow
 
