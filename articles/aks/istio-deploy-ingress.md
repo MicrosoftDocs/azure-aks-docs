@@ -13,7 +13,7 @@ ms.author: shasb
 This article shows you how to deploy external or internal ingresses for the Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
 > [!NOTE]
-> When performing a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-the-ingress-gateway) of the Istio add-on, another deployment for the external / internal gateways will be created for the new control plane revision.
+> When performing a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-ingress-and-egress-gateways) of the Istio add-on, another deployment for the external / internal gateways will be created for the new control plane revision.
 
 ## Prerequisites
 
@@ -278,6 +278,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 
 * [Secure ingress gateway for Istio service mesh add-on][istio-secure-gateway]
 * [Configure ingress gateway Horizontal Pod Autoscaler (HPA)][istio-scaling-guide]
+* [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
 
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-secure-gateway]: istio-secure-gateway.md
@@ -289,3 +290,4 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [azure-load-balancer-annotations-for-ports]: /azure/aks/load-balancer-standard#customize-the-load-balancer-health-probe
 [kubernetes-docs-load-balancer]: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
 [aks-system-nodes]: /azure/aks/use-system-pools
+[istio-egress-gateway]: istio-deploy-egress.md

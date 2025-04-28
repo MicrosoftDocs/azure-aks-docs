@@ -190,11 +190,11 @@ The following example illustrates how to upgrade from revision `asm-1-23` to `as
 
 1. If [mesh configuration][meshconfig] was previously set up for the revisions, you can now delete the ConfigMap for the revision that was removed from the cluster during complete/rollback.
 
-### Minor revision upgrades with the ingress gateway
+### Minor revision upgrades with ingress and egress gateways
 
-If you're currently using [Istio ingress gateways](./istio-deploy-ingress.md) and are performing a minor revision upgrade, keep in mind that Istio ingress gateway pods / deployments are deployed per-revision. However, we provide a single LoadBalancer service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways remains unchanged throughout the course of an upgrade.
+If you're currently using [Istio ingress gateways][istio-deploy-ingress] or [egress gateways][istio-deploy-egress] and are performing a minor revision upgrade, keep in mind that Istio ingress and egress gateway pods / deployments are deployed per-revision. However, we provide a single `LoadBalancer` service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways remains unchanged throughout the course of an upgrade. Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, the ingress gateway pods of both revisions serve incoming traffic.
 
-Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, the ingress gateway pods of both revisions serve incoming traffic.
+Likewise, all the pods for a particular egress gateway will have a single `ClusterIP` service, and all egress gateway pods across both revisions will serve traffic routed to the egress gateway service.
 
 ### Minor revision upgrades with horizontal pod autoscaling customizations
 
@@ -274,4 +274,5 @@ If you have customized [horizontal pod autoscaling (HPA) settings for Istiod or 
 [meshconfig-canary-upgrade]: ./istio-meshconfig.md#mesh-configuration-and-upgrades
 [upgrade-istio-service-mesh-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-minor-revision-upgrade
 [istio-scale-hpa]: ./istio-scale.md#horizontal-pod-autoscaling-customization
-
+[istio-deploy-ingress]: ./istio-deploy-ingress.md
+[istio-deploy-egress]: ./istio-deploy-egress.md
