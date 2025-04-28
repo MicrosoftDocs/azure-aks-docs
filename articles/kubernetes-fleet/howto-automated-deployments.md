@@ -174,7 +174,7 @@ TODO: Fleet Manager CRP documentation / sample here.
 
 After the pipeline is completed, you can review the created container image on the Azure portal by locating the Azure Container Registry instance you configured and opening the image repository.
 
-:::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-registry-image.png" alt-text="Screenshot of the built container image hosted in an Azure Container Registry repository." lightbox="../media/automatic/from-code/afleet-auto-deploy-check-registry-image.png" :::
+:::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-registry-image.png" alt-text="Screenshot of the built container image hosted in an Azure Container Registry repository." lightbox="../media/automatic/from-code/fleet-auto-deploy-check-registry-image.png" :::
 
 Selecting the **External IP** should open up a new browser page with the running application.
 
@@ -360,10 +360,10 @@ jobs:
 [automated-deployments]: ./concepts-automated-deployments.md
 [azure-portal]: https://portal.azure.com
 [portal-fleets]: https://portal.azure.com/#browse/Microsoft.ContainerService%2Ffleets
-[aks-identities]: ../use-managed-identity.md#summary-of-managed-identities-used-by-aks
+[aks-identities]: /azure/aks/use-managed-identity#summary-of-managed-identities-used-by-aks
 [kubernetes-documentation]: https://kubernetes.io/docs/concepts/workloads/
 [deployment-safeguards]: /azure/aks/deployment-safeguards
-[seccomp-profile]: ../secure-container-access.md#secure-computing-seccomp
+[seccomp-profile]: /azure/aks/secure-container-access#secure-computing-seccomp
 [kubernetes-probes]: https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/
 [kubernetes-pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [pod-anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity

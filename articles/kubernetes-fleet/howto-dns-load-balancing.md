@@ -42,7 +42,7 @@ Follow the steps in this document to set up DNS-based load balancing for multi-c
     export TRAFFIC_MANAGER_RG_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${TRAFFIC_MANAGER_GROUP}
     ```
 
-* Obtain the kubeconfigs for the fleet and all member clusters:
+* **TODO (simplify)** Obtain the kubeconfigs for the fleet and all member clusters:
 
     ```azurecli-interactive
     az fleet get-credentials --resource-group ${GROUP} --name ${FLEET} --file fleet
@@ -214,9 +214,9 @@ In order to complete this step you must have created your Fleet Manager with man
                   {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
     ```
 
-  > [!NOTE]
-  > "${MEMBER-CLUSTER-NAME}" is a resource placement override [reserved variable](./resource-override.md#reserved-variables-in-the-json-patch-override-value) which is replaced with the name of the member cluster at run time.
- 
+    > [!NOTE]
+    > "${MEMBER-CLUSTER-NAME}" is a resource placement override [reserved variable](./resource-override.md#reserved-variables-in-the-json-patch-override-value) which is replaced with the name of the member cluster at run time.
+    
     ```bash
     KUBECONFIG=fleet kubectl apply -f ro-kuard-demo-eastus.yaml
     ```
@@ -258,7 +258,7 @@ In order to complete this step you must have created your Fleet Manager with man
     clusterresourceplacement.placement.kubernetes-fleet.io/crp-dns-demo created
     ```
 
-## Configure Azure Traffic Manager to load balance across the service endpoints in multiple member clusters
+## Configure DNS load balancing with Azure Traffic Manager
 
 1. Define the `TrafficManagerProfile` to define the parameters to be used by Traffic Manager and save it to the file `kuard-atm-demo.yaml`.
 
