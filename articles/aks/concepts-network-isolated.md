@@ -14,7 +14,7 @@ Organizations typically have strict security and compliance requirements to regu
 
 One common solution to restricting outbound traffic from the cluster is to use a [firewall device][aks-firewall] to restrict traffic based on firewall rules. Firewall is applicable when your application requires outbound access, but when outbound requests have to be inspected and secured. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome process especially if your only requirement is to create an isolated AKS cluster with no outbound dependencies for the cluster boostrapping.
 
-To reduce risk of data exfiltration, network isolated AKS cluster allows for bootstrapping the AKS cluster without any outbound network dependencies, even for fetching cluster components/images from Microsoft Artifact Registry (MAR). The cluster operator could incrementally set up allowed outbound traffic for each scenario they want to enable.
+To reduce risk of data exfiltration, network isolated cluster allows for bootstrapping the AKS cluster without any outbound network dependencies, even for fetching cluster components/images from Microsoft Artifact Registry (MAR). The cluster operator could incrementally set up allowed outbound traffic for each scenario they want to enable.
 
 ## How a network isolated cluster works
 
@@ -65,6 +65,13 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 For network isolated clusters with BYO ACR:
 * If you want to use any AKS feature or add-on that requires outbound network access in network isolated clusters with outbound type `none` , [this document][outbound-rules-control-egress] contains the outbound network requirements for each feature. Also, this doc enumerates the features or add-ons that support private link integration for secure connection from within the cluster's virtual network. It is recommended to set up private endpoints to access these features. For example, you can set up [private endpoint based ingestion][azmontoring-private-link] to use Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace) in network isolated clusters. If a private link integration is not available for any of these features, then the cluster can be set up with an [user-defined routing table and an Azure Firewall][aks-firewall] based on the network rules and application rules required for that feature.
 * If you are using [Azure Container Storage Interface (CSI) driver][csi-driver] for Azure Files and Blob storage, you must create a custom storage class with "networkEndpointType: privateEndpoint" in [Azure Files storage classes][custom-storage-class-file] and [Azure Blob storage classes][custom-storage-class-blob].
+* The following AKS cluster extensions aren't supported yet on network isolated clusters:
+    * [Dapr][dapr-overview]
+    * [Azure App Configuration][app-config-overview]
+    * [Azure Machine Learning][azure-ml-overview]
+    * [Flux (GitOps)][gitops-overview]
+    * [Azure Container Storage][azure-container-storage]
+    * [Azure Backup for AKS][azure-backup-aks]
 
 ## Frequently asked questions
 
