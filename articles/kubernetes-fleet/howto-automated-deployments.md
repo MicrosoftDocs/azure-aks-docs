@@ -227,7 +227,7 @@ Pod Template:
 Events:                      <none>
 ```
 
-### Add Fleet Manager resource placement
+## Add Fleet Manager resource placement
 
 During preview you will need to perform additional manual steps to configure placement of your staged workload on to member clusters.
 
