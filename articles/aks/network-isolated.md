@@ -35,7 +35,13 @@ To reduce risk of data exfiltration, network isolated cluster allows for bootstr
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 > - This article requires version 2.71.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 > - You should install the `aks-preview` Azure CLI extension version *9.0.0b2* or later if you are using outbound type `block` (preview).
-
+>    - If you don't already have the `aks-preview` extension, install it using the [`az extension add`][az-extension-add] command.
+        ```azurecli-interactive
+        az extension add --name aks-preview
+        ```
+>    - If you already have the `aks-preview` extension, update it to make sure you have the latest version using the [`az extension update`][az-extension-update] command.
+        ```azurecli-interactive
+        az extension update --name aks-preview
 - Network isolated clusters are supported on AKS clusters using Kubernetes version 1.30 or higher.
 - If you're choosing to use the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR is [Premium SKU service tier][container-registry-skus].
 - If you are using a network isolated cluster configured with API Server VNet Integration, you should follow the prerequisites and guidance in this [document][api-server-vnet-integration].
