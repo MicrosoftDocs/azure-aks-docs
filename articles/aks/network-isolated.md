@@ -12,15 +12,20 @@ zone_pivot_groups: network-isolated-acr-type
 
 # Create a network isolated Azure Kubernetes Service (AKS) cluster 
 
-A network isolated cluster simplifies the process of setting up outbound restrictions for creating a cluster out of the box and brings a completely no outbound environment. This article walks you through the steps of creating a network isolated cluster.
+Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, standard SKU Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
+
+One common solution to restricting outbound traffic from the cluster is to use a [firewall device][aks-firewall] to restrict traffic based on firewall rules. Firewall is applicable when your application requires outbound access, but when outbound requests have to be inspected and secured. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome process especially if your only requirement is to create an isolated AKS cluster with no outbound dependencies for the cluster boostrapping.
+
+To reduce risk of data exfiltration, network isolated cluster allows for bootstrapping the AKS cluster without any outbound network dependencies, even for fetching cluster components/images from Microsoft Artifact Registry (MAR). The cluster operator could incrementally set up allowed outbound traffic for each scenario they want to enable. This article walks you through the steps of creating a network isolated cluster.
+
 
 ## Before you begin
 
 - Read the [conceptual overview of this feature][conceptual-network-isolated], which provides an explanation of how network isolated clusters work. The overview article also:
-  - Explains the two options for private Azure Container Registry (ACR) resource, AKS-managed ACR or BYO ACR, you can choose from in this article.
-  - Explains the two private cluster modes for creating private access to API server, private link-based or API Server Vnet Integration, you can choose from in this article.
-  - Explains the two outbound types for cluster egress control, `none` or `block` (preview), you can choose from in this article.
-  - Describes the [current limitations][conceptual-network-isolated-limitations].
+  - Explains two options for private Azure Container Registry (ACR) resource used for cluster bootstrapping - AKS-managed ACR or bring-your-own ACR.
+  - Explains two private cluster modes for creating private access to API server - [private link-based][private-clusters] or [API Server Vnet Integration][api-server-vnet-integration].
+  - Explains the two outbound types for cluster egress control - `none` or `block` (preview).
+  - Describes the [current limitations of network isolated clusters][conceptual-network-isolated-limitations].
 
 > [!NOTE]
 > Outbound type of `none` is now general available, `block` is still in public preview for network isolated cluster .
@@ -28,9 +33,10 @@ A network isolated cluster simplifies the process of setting up outbound restric
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+> - This article requires version 2.71.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+> - You should install the `aks-preview` Azure CLI extension version *9.0.0b2* or later if you are using outbound type `block` (preview).
 
 - Network isolated clusters are supported on AKS clusters using Kubernetes version 1.30 or higher.
-- This article requires version 2.71.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 - If you're choosing to use the Bring your own (BYO) Azure Container Registry (ACR) option, you need to ensure the ACR is [Premium SKU service tier][container-registry-skus].
 - If you are using a network isolated cluster configured with API Server VNet Integration, you should follow the prerequisites and guidance in this [document][api-server-vnet-integration].
 
@@ -379,3 +385,6 @@ If you want to restrict how pods communicate between themselves and East-West tr
 [app-config-overview]: ./azure-app-configuration.md
 [azure-ml-overview]: /azure/machine-learning/how-to-attach-kubernetes-anywhere
 [dapr-overview]: ./dapr.md
+[outbound-rules]: ./outbound-rules-control-egress.md
+[aks-firewall]: ./limit-egress-traffic.md
+
