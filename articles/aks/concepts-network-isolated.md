@@ -14,7 +14,7 @@ Organizations typically have strict security and compliance requirements to regu
 
 One common solution to restricting outbound traffic from the cluster is to use a [firewall device][aks-firewall] to restrict traffic based on firewall rules. Firewall is applicable when your application requires outbound access, but when outbound requests have to be inspected and secured. Configuring a firewall manually with required egress rules and *FQDNs* is a cumbersome process especially if your only requirement is to create an isolated AKS cluster with no outbound dependencies for the cluster boostrapping.
 
-With a network isolated cluster, you can now simplify setting up outbound restrictions for a vanilla cluster out of the box and it is a truly no outbound environment. The cluster operator could incrementally set up allowed outbound traffic for each scenario they want to enable. A network isolated cluster thus reduces the risk of data exfiltration and leakage.
+To reduce risk of data exfiltration, network isolated AKS cluster allows for bootstrapping the AKS cluster without any outbound network dependencies, even for fetching cluster components/images from Microsoft Artifact Registry (MAR). The cluster operator could incrementally set up allowed outbound traffic for each scenario they want to enable.
 
 ## How a network isolated cluster works
 
