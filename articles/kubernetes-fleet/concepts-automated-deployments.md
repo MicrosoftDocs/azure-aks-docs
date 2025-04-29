@@ -1,5 +1,5 @@
 ---
-title: Azure Kubernetes Fleet Manager Automated Deployments 
+title: Azure Kubernetes Fleet Manager Automated Deployments conceptual overview
 description: Learn about the concepts behind Fleet Manager Automated Deployments which simplify the process of building and deploying your application from Git.
 author: sjwaight
 ms.author: simonwaight
@@ -11,13 +11,13 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Azure Kubernetes Fleet Manager Automated Deployments (Preview)
 
-This article provides a conceptual overview of Fleet Manager's Automated Deployments capability. Fleet Manager Automated Deployments simplify the process of taking your application source code from GitHub repository and deploying it across one or more AKS cluster in your fleet. Once configured, every new commit you make runs the pipeline, resulting in updates to your application wherever it's deployed in your fleet.
+This article provides a conceptual overview of Fleet Manager's Automated Deployments capability. Fleet Manager Automated Deployments simplify the process of taking your application source code from a GitHub repository and deploying it across one or more AKS cluster in your fleet. Once configured, every new commit you make runs the pipeline, resulting in updates to your application wherever it's deployed in your fleet.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 ## Prerequisites
 
-To use Fleet Manager's Automated Deployments the following prerequisites must be in place.
+To use Fleet Manager Automated Deployments the following prerequisites must be in place.
 
 * A GitHub account.
 * An application to deploy. The application can already be containerized, or Automated Deployments can containerize it based on the contents of the repository.
@@ -31,17 +31,17 @@ Fleet Manager Automated Deployments help with the following activities:
 
 * Securely connecting a source GitHub repository to a Fleet hub cluster without the need for an operator to handle credentials. You can connect multiple repositories or branches to a single Fleet Manager.
 * Building container images and publishing to an existing Azure Container Registry (ACR) ensuring images are located in a known registry which fleet members can access.
-* Staging existing [cluster resource placement (CRP)][concept-crp] manifests into an existing namespace on the Fleet Manager hub cluster so they're ready for placement. Using an existing namespace allows 
+* Staging resource manifests into an existing namespace on the Fleet Manager hub cluster so they're ready for [cluster resource placement (CRP)][concept-crp]. 
 
-You can modify the generated GitHub Action workflow to meet your needs by opening it up in an editor like Visual Studio Code and changing as you see fit.
+The generated GitHub Actions workflow can be modified to meet your needs by using an editor like Visual Studio Code.
 
 ### Existing resource requirements
 
-Let's look at why you are required to use an existing Azure Container Registry and Kubernetes Namespace when using Fleet Manager Automated Deployments.
+These resources must already exist and be configured when using Fleet Manager Automated Deployments.
 
-* **Container Registry** - in order to facilitate image pulls from Azure Container Registry, member AKS clusters must be granted `AcrPull` rights on the Registry. On initial configuration, Automated Deployments is unable to determine which member clusters might receive a placement, so it's not possible to automate permission setup for an unknown set of clusters. Additionally, automatically granting all member clusters `AcrPull` rights on a Registry is likely undesirable, so the decision to configure this permission is delegated to the fleet administrative user outside the scope of Automated Deployments.
+* **Container Registry** - in order to facilitate image pulls from Azure Container Registry, member AKS clusters must be granted `AcrPull` rights on the Registry. On initial configuration, Automated Deployments is unable to determine which member clusters might receive a placement, so it's not possible to automate permission setup for an unknown set of clusters. Granting all member clusters `AcrPull` rights on a Registry is likely undesirable, so the decision to configure this permission on clusters is delegated to an authorized user outside the scope of Automated Deployments.
 
-* **Kubernetes Namespace** - while Fleet Manager's cluster resource placements can be used to deploy cluster-scoped resources we have limited Automated Deployments to deploying only namespace-scoped resources. This limit provides fleet administrators with control over where in their fleet a deployment can be placed by ensuring the namespace resides only on clusters defined by the administrator. This limitation also simplifies the setup of deployments by allowing users configuring Automated Deployments to focus on their application workload instead of Kubernetes constructs.
+* **Kubernetes Namespace** - while Fleet Manager's cluster resource placements can be used to deploy cluster-scoped resources we have limited Automated Deployments to deploying only namespace-scoped resources. This limitation simplifies the setup of deployments by focusing on application workloads in a namespace instead of broader Kubernetes constructs.
 
 > [!NOTE]
 > We welcome feedback as we continue to work on Fleet Manager Automated Deployments. 
@@ -52,7 +52,7 @@ Let's look at why you are required to use an existing Azure Container Registry a
 
 ## GitHub OAuth application
 
-Once you grant Automated Deployments access to your GitHub repository you will find a new application in your GitHub `Authorized OAuth Apps` list named `AKS Developer Hub`.
+Once you grant Automated Deployments access to your GitHub repository you will find a new application in your GitHub `Authorized OAuth Apps` list named `AKS Developer Hub`. This is the same application as used by the AKS Automated Deployments capability.
 
 ## Single cluster support
 
@@ -60,7 +60,7 @@ To deploy to a single AKS cluster, you can use [Automated Deployments for AKS][a
 
 ## Next steps
 
-Now that you understand the concepts, see an end-to-end example showing how you can [use Fleet Manager Automated Deployments to drive multi-cluster resource placement][fleet-autodeploy-howto].
+Now that you understand the Fleet Manager Automated Deployments concepts, see an end-to-end example showing how you can [use Fleet Manager Automated Deployments to drive multi-cluster resource placement][fleet-autodeploy-howto].
 
 <!-- LINKS -->
 [fleet-deploy-hub]: ./concepts-choosing-fleet.md#kubernetes-fleet-resource-with-hub-clusters

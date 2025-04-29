@@ -30,10 +30,10 @@
           href: concepts-preview-api-lifecycle.md
     - name: Multi-cluster Kubernetes and node images upgrades
       href: concepts-update-orchestration.md
-    - name: Multi-cluster automated deployments
-      href: concepts-automated-deployments.md
     - name: Multi-cluster workload placement and management
       items:
+        - name: Fleet Manager Automated Deployments overview
+          href: concepts-automated-deployments.md
         - name: Placing workloads using cluster resource placement
           items:
           - name: Introduction to cluster resource placement
