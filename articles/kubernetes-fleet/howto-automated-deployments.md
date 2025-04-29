@@ -85,7 +85,7 @@ Use Fleet Manager Automated Deployments to generate a Dockerfile for many langua
 
 ### Choose the Kubernetes manifest configuration
 
-An application running on Kubernetes consists of many Kubernetes primitive components. These components describe what container image to use, how many replicas to run, if there's a public IP required to expose the application, etc. For more information, see the official [Kubernetes documentation][kubernetes-documentation]. If your source code repository doesn't already have the basic Kubernetes manifests, Automated Deployments can generate them for you. You can also choose an existing Helm chart.
+An application running on Kubernetes consists of many Kubernetes primitive components. These components describe what container image to use, how many replicas to run, if there's a public IP required to expose the application, etc. For more information, see the official [Kubernetes documentation][kubernetes-documentation]. If your source code repository doesn't already have Kubernetes manifests, Automated Deployments can generate them for you. You can also choose an existing Helm chart.
 
 > [!WARNING]
 > When selecting a namespace don't choose the `fleet-system` or any of the `fleet-member` namespaces as these are internal namespaces used by Fleet Manager and cannot be used to place your application. 

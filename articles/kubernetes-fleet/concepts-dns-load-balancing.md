@@ -14,7 +14,7 @@ Azure Kubernetes Fleet Manager can be used to set up and manage DNS-based multi-
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-network-alpha.md)]
 
-:::image type="content" source="./media/dns-load-balancing/fleet-dns-load-balance-conceptual.png" alt-text="A diagram showing a conceptual overview of how Fleet Manager supports DNS load balancing across three member clusters using Azure Traffic Manager and Kubernetes ServiceExport resources." lightbox="./media/dns-load-balancing/fleet-dns-load-balance-conceptual.png":::
+:::image type="content" source="./media/concepts-dns-load-balancing/fleet-dns-load-balance-conceptual.png" alt-text="A diagram showing a conceptual overview of how Fleet Manager supports DNS load balancing across three member clusters using Azure Traffic Manager and Kubernetes ServiceExport resources." lightbox="./media/concepts-dns-load-balancing/fleet-dns-load-balance-conceptual.png":::
 
 To deliver multi-cluster public load balancing with DNS, Fleet Manager utilizes [Azure Traffic Manager][traffic-manager-overview] with a [weighted routing profile][traffic-manager-weighted] to act as a frontend for `Services` exported from member clusters. As this capability is delivered via DNS it can be used to provide layer 4 and 7 load balancing as required.
 

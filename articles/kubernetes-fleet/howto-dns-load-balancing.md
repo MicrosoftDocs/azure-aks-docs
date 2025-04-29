@@ -10,7 +10,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters (preview)
 
-Azure Kubernetes Fleet Manager can help increase availability and spread load across a workload this is deployed across multiple member clusters. As this capability is delivered via DNS it can be used to provide layer 4 and 7 load balancing as required.
+Azure Kubernetes Fleet Manager DNS load balancing can help increase availability and spread load across a workload deployed across multiple member clusters. As this capability is delivered via DNS, it can be used to provide layer 4 and 7 load balancing as required.
 
 Follow the steps in this document to set up DNS-based load balancing for multi-cluster applications hosted in your fleet.
 
@@ -24,11 +24,11 @@ Follow the steps in this document to set up DNS-based load balancing for multi-c
 
 * A Kubernetes Fleet Manager with a hub cluster and managed identity. If you don't have one, see [Create an Azure Kubernetes Fleet Manager and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 
-* Two member clusters `aks-member-1` and `aks-member-2` onto which you will deploy the same workload using Fleet Manager's [cluster resource placement (CRP)](./intelligent-resource-placement.md).
+* Two member clusters `aks-member-1` and `aks-member-2` onto which you deploy the same workload using Fleet Manager's [cluster resource placement (CRP)](./intelligent-resource-placement.md).
 
-* The user completing the configuration has permissions to perform Azure role assignments and to access the Fleet Manager hub cluster Kubernetes API. See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
+* The user completing the configuration has permissions to perform Azure role assignments and to access the Fleet Manager hub cluster Kubernetes API. For more information, see [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 
-* An existing Azure resource group that the Azure Traffic Manager resource will be provisioned into. 
+* An existing Azure resource group which will host the provisioned Azure Traffic Manager resource. 
 
 * Set the following environment variables:
 
@@ -42,23 +42,19 @@ Follow the steps in this document to set up DNS-based load balancing for multi-c
     export TRAFFIC_MANAGER_RG_ID="/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${TRAFFIC_MANAGER_GROUP}
     ```
 
-* **TODO (simplify)** Obtain the kubeconfigs for the fleet and all member clusters:
+* Obtain the credentials to access the Fleet Manager hub cluster Kubernetes API:
 
     ```azurecli-interactive
-    az fleet get-credentials --resource-group ${GROUP} --name ${FLEET} --file fleet
-
-    az aks get-credentials --resource-group ${GROUP} --name ${MEMBER_CLUSTER_1} --file aks-member-1
-
-    az aks get-credentials --resource-group ${GROUP} --name ${MEMBER_CLUSTER_2} --file aks-member-2
+    az fleet get-credentials \
+        --resource-group ${GROUP} \
+        --name ${FLEET}
     ```
-
-[!INCLUDE [preview features note](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 ## Configure Fleet Manager permissions
 
-During preview, you need to perform additional steps to enable Fleet Manager to create and manage Azure Traffic Manager resources and to obtain public IP addresses of services exposed on member clusters. It is expected these steps will be removed before general availability.
+During preview, you need to perform extra steps to enable Fleet Manager to create and manage Azure Traffic Manager resources and to obtain public IP addresses of services exposed on member clusters.
 
-In order to complete this step you must have created your Fleet Manager with managed identity enabled and be using a user with role assignment permissions. 
+In order to complete this step, you must create your Fleet Manager with managed identity enabled. Your user must have Azure RBAC role assignment permissions. 
 
 * Obtain the identity information of your Fleet Manager resource.
 
@@ -69,7 +65,7 @@ In order to complete this step you must have created your Fleet Manager with man
         --query identity
     ```
 
-  Your output should look similar to the following example output:
+  Your output should look similar to the example output:
 
     ```output
     {
@@ -80,7 +76,7 @@ In order to complete this step you must have created your Fleet Manager with man
     }
     ```
 
-* Assign the `Traffic Manager Contributor` role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group where the Traffic Manager Profile will be created.
+* Assign the `Traffic Manager Contributor` role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group where the Traffic Manager resource is created.
 
     ```azurecli-interactive
     az role assignment create \
@@ -89,7 +85,7 @@ In order to complete this step you must have created your Fleet Manager with man
         --scope ${TRAFFIC_MANAGER_RG_ID}
     ```
 
-* The Fleet Manager hub cluster identity also needs the Azure `Reader` role for any member cluster so Fleet Manager can read the public IP address for member clusters when they are added to a `TrafficMangerBackend` via a `ServiceExport`.
+* The Fleet Manager hub cluster identity also needs the Azure `Reader` role for any member cluster so Fleet Manager can read the public IP address for member clusters when they're added to a `TrafficMangerBackend` via a `ServiceExport`.
 
     ```azurecli-interactive
     az role assignment create \
@@ -109,16 +105,16 @@ In order to complete this step you must have created your Fleet Manager with man
 1. Create a namespace on the Fleet Manager hub cluster.
 
     ```bash
-    KUBECONFIG=fleet kubectl create namespace kuard-demo
+    kubectl create namespace kuard-demo
     ```
 
-    Output looks similar to the following:
+    Output looks similar to:
 
     ```console
     namespace/kuard-demo created
     ```
 
-1. Stage the Deployment, Service, ServiceExport objects to the Fleet Manager hub cluster by saving the following into a file called `kuard-export-service.yaml` and then applying:
+1. Stage the Deployment, Service, ServiceExport objects to the Fleet Manager hub cluster by saving the following into a file called `kuard-export-service.yaml`:
 
     ```yml
     apiVersion: apps/v1
@@ -170,13 +166,13 @@ In order to complete this step you must have created your Fleet Manager with man
       namespace: kuard-demo
     ```
     
-    Apply the objects to the Fleet Manager hub cluster:
+    Stage the objects on the Fleet Manager hub cluster:
 
     ```bash
-    KUBECONFIG=fleet kubectl apply -f kuard-export-service.yaml
+    kubectl apply -f kuard-export-service.yaml
     ```
 
-    The `ServiceExport` specification in the above file allows you to export a service from member clusters to the Fleet Manager hub cluster. Once successfully exported, the service and all its endpoints are synced to the Fleet Manager hub cluster and can then be used to set up DNS load balancing across these endpoints. The output looks similar to the following example:
+    The `ServiceExport` specification in the sample allows you to export a service from member clusters to the Fleet Manager hub cluster. Once successfully exported, the service and all its endpoints are synced to the Fleet Manager hub cluster and can then be used to set up DNS load balancing across these endpoints. The output looks similar to the following example:
 
     ```console
     deployment.apps/kuard created
@@ -184,7 +180,7 @@ In order to complete this step you must have created your Fleet Manager with man
     serviceexport.networking.fleet.azure.com/kuard-export created
     ```
 
-1. Each service needs a unique DNS label so that it can be exposed via Azure Traffic Manager. Use a Fleet Manager cluster resource placement `ResourceOverride` to modify the service definition per member cluster to create a unique name based on the Azure region and cluster name. You will need to create an override per cluster selector (in our example, per Azure region).
+1. Each service needs a unique DNS label so that it can be exposed via Azure Traffic Manager. Use a Fleet Manager cluster resource placement `ResourceOverride` to modify the service definition per member cluster to create a unique name based on the Azure region and cluster name. You need to create an override per cluster selector (in our example, per Azure region).
 
      ```yml
     apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -218,10 +214,10 @@ In order to complete this step you must have created your Fleet Manager with man
     > "${MEMBER-CLUSTER-NAME}" is a resource placement override [reserved variable](./resource-override.md#reserved-variables-in-the-json-patch-override-value) which is replaced with the name of the member cluster at run time.
     
     ```bash
-    KUBECONFIG=fleet kubectl apply -f ro-kuard-demo-eastus.yaml
+    kubectl apply -f ro-kuard-demo-eastus.yaml
     ```
 
-1. Create the following Fleet Manager CRP in a file called `crp-dns-demo.yaml`. Notice we're selecting a maximum of two clusters in the `eastus` region:
+1. Create the following Fleet Manager [cluster resource placement][fleet-crp] (CRP) in a file called `crp-dns-demo.yaml`. Notice we're selecting a maximum of two clusters in the `eastus` region:
 
     ```yaml
     apiVersion: placement.kubernetes-fleet.io/v1
@@ -249,10 +245,10 @@ In order to complete this step you must have created your Fleet Manager with man
     Apply the CRP:
 
     ```bash
-    KUBECONFIG=fleet kubectl apply -f crp-dns-demo.yaml
+    kubectl apply -f crp-dns-demo.yaml
     ```
 
-    If successful, the output looks similar to the following example:
+    If successful, the output looks similar to:
 
     ```console
     clusterresourceplacement.placement.kubernetes-fleet.io/crp-dns-demo created
@@ -277,7 +273,7 @@ In order to complete this step you must have created your Fleet Manager with man
     Apply the configuration:
     
     ```bash
-    KUBECONFIG=fleet kubectl apply -f kuard-atm-demo.yaml
+    kubectl apply -f kuard-atm-demo.yaml
     ```
 
 1. Define a corresponding `TrafficManagerBackend` that is used to group together exported `Service` entries from member clusters.
@@ -299,7 +295,7 @@ In order to complete this step you must have created your Fleet Manager with man
     Apply the configuration:
     
     ```bash
-    KUBECONFIG=fleet kubectl apply -f kuard-atm-demo-backend.yaml
+    kubectl apply -f kuard-atm-demo-backend.yaml
     ```
 
 1. Verify the service is available via Azure Traffic Manager by running the following command:
@@ -323,5 +319,10 @@ In order to complete this step you must have created your Fleet Manager with man
     Address: 173.X.X.164
     ```
 
-1. Use a web browser to visit the URL and see how Kuard responds. Try flushing your DNS and re-trying to see if you are served another instance from another cluster.
+1. Use a web browser to visit the URL and see how Kuard responds. Try flushing your DNS and retrying to see if you're served another service instance from another cluster.
 
+:::image type="content" source="./media/howto-dns-load-balancing/fleet-dns-load-balance-kuard-sample.png" alt-text="A screenshot of a web page displaying details from the Kuard demo application." lightbox="./media/howto-dns-load-balancing/fleet-dns-load-balance-kuard-sample.png":::
+
+
+<!-- INTERNAL LINKS -->
+[fleet-crp]: ./concepts-resource-propagation.md
