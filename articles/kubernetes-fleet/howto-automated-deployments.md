@@ -233,7 +233,7 @@ During preview you will need to perform additional manual steps to configure pla
 
 1. In the source code repository for your application create a folder in the repository root called **fleet**.
 
-1. Create a new file `distribute-virtual-worker-two-regions.yaml` in the new folder and add the contents shown. This sample will deploy the `contoso-store` namespace across two clusters that must be in two different Azure regions. 
+1. Create a new file `deploy-contoso-store-two-regions.yaml` in the new folder and add the contents shown. This sample will deploy the `contoso-store` namespace across two clusters that must be in two different Azure regions. 
 
     ```yml
     apiVersion: placement.kubernetes-fleet.io/v1
