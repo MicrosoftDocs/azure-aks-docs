@@ -19,7 +19,7 @@ This article shows you how to set up Advanced Container Networking Services with
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
- The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+ The minimum version of Azure CLI required for the steps in this article is 2.71.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 ### Enable Advanced Container Networking Services
 
@@ -35,7 +35,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> To enable FQDN policies specifically for this demo, set the `--acns-advanced-networkpolicies` parameter to "FQDN". Note that setting it to "L7" will enable both L7 and FQDN filtering. Use "None" to disable these advanced features.
+> To enable FQDN policies specifically for this demo, set the `--acns-advanced-networkpolicies` parameter to "FQDN". Note that setting it to "L7" will enable both L7 and FQDN filtering. To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.

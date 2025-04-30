@@ -54,11 +54,13 @@ Gain granular control over application-level traffic. Implement policies based o
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-* The minimum version of Azure CLI required for the steps in this article is 2.61.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* The minimum version of Azure CLI required for the steps in this article is 2.71.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 ### Install the `aks-preview` Azure CLI extension
 
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
+
+The minimum version of the aks-preview Azure CLI extension is `14.0.0b6`
 
 ```azurecli-interactive
 # Install the aks-preview extension
@@ -110,7 +112,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you don't  want to enable either feature, use "None".
+> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
 
 
 ```azurecli-interactive
@@ -126,7 +128,7 @@ az aks create \
     --network-dataplane cilium \
     --kubernetes-version 1.29 \
     --enable-acns \
-    --acns-advanced-networkpolicies <L7/FQDN/None>
+    --acns-advanced-networkpolicies <L7/FQDN>
 ```
 
 ##### [**Non-Cilium**](#tab/non-cilium)
@@ -158,14 +160,14 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Co
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". If you don't want to enable either feature, use "None".
+> When the `--acns-advanced-networkpolicies` parameter is set to "L7", both L7 and FQDN filtering policies are enabled. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
 
 ```azurecli-interactive
 az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns \
-    --acns-advanced-networkpolicies <L7/FQDN/None>
+    --acns-advanced-networkpolicies <L7/FQDN>
 ```
 
 
