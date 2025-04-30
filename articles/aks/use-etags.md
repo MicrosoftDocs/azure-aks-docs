@@ -1,5 +1,5 @@
 ---
-title: Enhancing Concurrency Control with Entity Tags (eTags) in Azure Kubernetes Service (Preview)
+title: Enhancing Concurrency Control with Entity Tags (eTags) in Azure Kubernetes Service
 description: Learn how to use eTags (Entity Tags) to enable concurrency control and avoid racing conditions or overwriting scenarios. 
 ms.topic: how-to
 ms.date: 02/28/2025
@@ -10,7 +10,7 @@ ms.subservice: aks-nodes
 
 
 
-# Enhance concurrency control with entity tags (eTags) in Azure Kubernetes Service (Preview)
+# Enhance concurrency control with entity tags (eTags) in Azure Kubernetes Service 
 
 To prevent conflicting requests in Azure Kubernetes Service (AKS), eTags (Entity Tags) serve as unique identifiers that enable concurrency control. When a request to the cluster is made, the system checks whether the provided eTag matches the latest version stored in the database. If there is a mismatch, the request fails early, ensuring that no unintended overwrites occur.
 
@@ -22,22 +22,6 @@ There are two options for applying eTags through headers:
 
 **`–-if-none-match`** Header: Ensures that the operation is performed only if none of the eTags matches the value provided in this header. This header type can only be empty or a `*`. 
 
-### Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-
-1. Install the aks-preview extension using the [`az extension add`][az extension add] command:
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the aks-preview extension using the [`az extension update`][az extension update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
 ### Find existing ETags
 
 You can do either a `LIST` or a `GET` call to your cluster or node pool to see the existing ETag. An ETag looks something like the following example:
