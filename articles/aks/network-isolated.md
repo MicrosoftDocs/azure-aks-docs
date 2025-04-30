@@ -28,7 +28,8 @@ To reduce risk of data exfiltration, network isolated cluster allows for bootstr
   - Describes the [current limitations of network isolated clusters][conceptual-network-isolated-limitations].
 
 > [!NOTE]
-> Outbound type of `none` is now general available, `block` is still in public preview for network isolated cluster .
+> Outbound type `none` is generally available.
+> Outbound type`block` is in preview.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
