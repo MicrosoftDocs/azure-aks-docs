@@ -64,7 +64,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security] (advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
+> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
 
 ```azurecli-interactive
 
@@ -96,7 +96,7 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Co
 > [!NOTE]
 > Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services. 
 >
-> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security] (advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
+> For this demo, the `--acns-advanced-networkpolicies` parameter must be set to "L7" to enable L7 policies.  Setting this parameter to "L7" also enables FQDN filtering. If you only want to enable FQDN filtering, set the parameter to "FQDN". To disable both features, you can follow the instructions provided in [Disable Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
 
 ```azurecli-interactive
 az aks update \
