@@ -50,7 +50,7 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 
 > [!NOTE]
 > Outbound type of `none` is generally available. 
-> Outbound type `block` is still in public preview.
+> Outbound type `block` is in preview.
 
 ## Limitations
 
