@@ -18,12 +18,12 @@ The third party partners featured in this article have introduction guides to he
 
 |          | Partners |
 |----------|----------|
-| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> •[VictoriaMetrics](#victoriametrics) |
+| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
 | **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig) <br> •[Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
+| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
 | **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Config management** | • [Corent](#corent) |
+| **Config management** | • [Corent](#corent) <br> • [Sysdig](#sysdig) |
 | **Migration** | • [Catalogic](#catalogic) |
 | **Monitoring** | • [VictoriaMetrics](#victoriametrics) |
 
@@ -198,17 +198,17 @@ For more information, see [Spot By NetApp Solutions](https://spot.io/product/oce
 
 | Solution | Categories |
 |----------|------------|
-| Sysdig Secure | DevOps <br> Security |
+| Sysdig Secure | DevOps <br> Security <br> Config Management |
 
-Sysdig Secure delivers real-time threat detection and posture management for Azure Linux processes and containers.
+Sysdig is a leader in cloud security powered by runtime insights.
 
 <details> <summary> See more </summary><br>
 
-Powered by open source Falco and a cloud-native AI engine, Sysdig provides deep runtime visibility to detect anomalies, stop attacks, and enforce policies as they happen. Detect and respond to threats in real time. Continuously assess cloud posture against CIS, NIST, custom policies, and a long list of frameworks. Prioritize risks by correlating misconfigurations, vulnerabilities, and permissions with real runtime activity. Sysdig helps security and DevOps teams secure workloads without slowing down development.
+Built on open source Falco, Sysdig detects threats in real time across cloud environments—helping teams uncover hidden risks and stop attacks. With full-stack visibility into workloads, identities, and services, Sysdig goes beyond traditional scanning to correlate live signals and prioritize what matters most. Whether securing containers, Kubernetes, cloud services, or serverless apps, Sysdig helps teams act with speed and confidence. By reducing alert fatigue, prioritizing vulnerabilities, accelerating response, and consolidating point tools, Sysdig empowers Azure customers to innovate securely at cloud speed. From prevention to defense, Sysdig helps you secure every second.
 
 </details>
 
-For more information, see [Sysdig Solutions](https://sysdig.com)
+For more information, see [Sysdig Solutions](https://sysdig.com/ecosystem/microsoft-azure/) and [Sysdig on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/sysdig.sysdig-enterprise-azure).
 
 ## Networking
 
