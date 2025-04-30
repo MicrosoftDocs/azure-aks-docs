@@ -52,6 +52,8 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 > Outbound type of `none` is generally available. 
 > Outbound type `block` is in preview.
 
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
 ## Limitations
 
 * `SecurityPatch` channel of auto-upgrade for node OS images is not yet supported, `Unmanaged` channel is not supported.
