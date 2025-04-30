@@ -17,7 +17,7 @@ Network policies are essential for securing Kubernetes clusters by defining and 
 
 **Envoy proxy**: Envoy, part of ACNS security agent acts as the enforcement point for L7 policies. A TPROXY inspects application traffic, comparing it against the defined L7 policies. To enhance scalability and resource management, Envoy is deployed as a separate DaemonSet, decoupled from the Cilium Agent.
 
-## How L7 Policy works
+## How L7 policy works
 
 When L7 policy enforcement is enabled for an application or pod, outgoing network traffic is first 
 evaluated to determine compliance with the configured application-level rules. The eBPF probe attached to the source pod’s network interface marks the packets, which are then redirected to a node-local Envoy Proxy. This redirection occurs only for pods enforcing L7 policies, ensuring that policy enforcement is applied selectively.
@@ -26,9 +26,9 @@ The Envoy proxy, augmented with Cilium network filters, then decides whether to 
 
 [![Screenshot showing how L7 policies work.](./media/advanced-container-networking-services/how-l7-policy-works.png)](./media/advanced-container-networking-services/how-l7-policy-works.png#lightbox)
 
-## Monitoring L7 Traffic with Hubble and Grafana
+## Monitoring L7 traffic with Hubble and Grafana
 
-To gain insights into L7 traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages hubble agent, which is enabled by default with Advanced Container Networking Services. Hubble provides detailed flow-level metrics.
+To gain insights into L7 traffic flows, specifically HTTP, gRPC, and Kafka, Azure CNI Powered by Cilium leverages Hubble agent, which is enabled by default with Advanced Container Networking Services. Hubble provides detailed flow-level metrics.
 
 To simplify the analysis of these L7 metrics, we provide pre-configured Azure Managed Grafana dashboards. You can find them under the **Dashboards > Azure Managed Prometheus** folder, with filenames like  **"Kubernetes/Networking/L7 (Namespace)"** and **"Kubernetes/Networking/L7 (Workload)"**.
 
@@ -47,7 +47,7 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 **Observability**: With observability enabled for Advanced Container Networking Services and L7 policies applied to your AKS cluster, you can monitor traffic and policy effectiveness using Grafana dashboards.
 
-## Limitations and considerations:
+## Limitations and considerations
 
 *	Current feature support relies on Cilium's Layer 7 policy enforcement based on HTTP, HTTPS, gRPC, and Kafka.
 *	In preview, the maximum supported cluster size is up to 1,000 nodes or 40,000 pods, whichever is greater.

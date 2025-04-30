@@ -1,5 +1,5 @@
 ---
-title: Fqdn filtering with Advanced Container Networking Services (ACNS)
+title: FQDN filtering with Advanced Container Networking Services (ACNS)
 description: An overview of Advanced Container Networking Services' Security capabilities on Azure Kubernetes Service (AKS).
 author: sf-msft
 ms.author: samfoo
