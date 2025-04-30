@@ -3,7 +3,7 @@ title: Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchai
 description: Learn how to enable the AI toolchain operator add-on on Azure Kubernetes Service (AKS) to simplify OSS AI model management and deployment.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service, devx-track-azurecli
-ms.date: 02/28/2024
+ms.date: 04/30/2025
 author: schaffererin
 ms.author: schaffererin
 
@@ -120,7 +120,7 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 1. Configure `kubectl` to connect to your cluster using the [az aks get-credentials][az-aks-get-credentials] command.
 
     ```azurecli-interactive
-    az aks get-credentials --resource-group $AZURE_RESOURCE_GROUP --cluster-name $CLUSTER_NAME
+    az aks get-credentials --resource-group $AZURE_RESOURCE_GROUP --name $CLUSTER_NAME
     ```
 
 2. Verify the connection to your cluster using the `kubectl get` command.
