@@ -128,7 +128,7 @@ az aks create \
     --network-dataplane cilium \
     --kubernetes-version 1.29 \
     --enable-acns \
-    --acns-advanced-networkpolicies <L7/FQDN/None>
+    --acns-advanced-networkpolicies <L7/FQDN>
 ```
 
 ##### [**Non-Cilium**](#tab/non-cilium)
@@ -167,7 +167,7 @@ az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns \
-    --acns-advanced-networkpolicies <L7/FQDN/None>
+    --acns-advanced-networkpolicies <L7/FQDN>
 ```
 
 
