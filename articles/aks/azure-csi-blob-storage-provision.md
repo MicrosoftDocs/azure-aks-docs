@@ -67,6 +67,7 @@ The following table includes parameters you can use to define a custom storage c
 |mountPermissions | Specify mounted folder permissions. |The default is `0777`. If set to `0`, driver won't perform `chmod` after mount. | `0777` | No |
 
 <sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.blob.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you are using Azure Blob storage in a network isolated cluster, you must create a custom storage class with "networkEndpointType: privateEndpoint". You can follow the below sample for reference.
+
 ```bash
 ---
 apiVersion: storage.k8s.io/v1
