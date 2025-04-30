@@ -26,14 +26,16 @@ This article shows you how to set up Advanced Container Networking Services with
 To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
 
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompass:
-* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./container-network-observability-concepts.md).
+* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-container-networking-services-overview.md?tabs=cilium#container-network-observability).
 
-* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./container-network-security-concepts.md).
+* **Container Network Security:** Offers security features like Fully Qualified Domain Name (FQDN) filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#container-network-security).
 
 #### [**Cilium**](#tab/cilium)
 
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
+>
+> To enable FQDN policies specifically for this demo, set the `--acns-advanced-networkpolicies` parameter to "FQDN". Note that setting it to "L7" will enable both L7 and FQDN filtering. Use "None" to disable these advanced features.
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -45,26 +47,23 @@ az aks create \
     --resource-group $RESOURCE_GROUP \
     --generate-ssh-keys \
     --location eastus \
-    --max-pods 250 \
     --network-plugin azure \
-    --network-plugin-mode overlay \
     --network-dataplane cilium \
     --node-count 2 \
-    --pod-cidr 192.168.0.0/16 \
-    --kubernetes-version 1.29 \
     --enable-acns
+    --acns-advanced-networkpolicies FQDN
 ```
 
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [Container Network Security](./container-network-security-concepts.md) feature is not available for Non-cilium clusters
+> [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md) feature is not available for Non-cilium clusters
 
 ---
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./container-network-security-concepts.md) feature.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-container-networking-services-overview.md?tabs=cilium#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md?tabs=cilium#container-network-security) feature
 
 
 > [!NOTE]
@@ -75,6 +74,7 @@ az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns
+    --acns-advanced-networkpolicies FQDN
 ```
 
 ---    
