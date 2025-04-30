@@ -58,8 +58,6 @@ Azure CNI powered by Cilium currently has the following limitations:
 
 * Available only for Linux and not for Windows.
 
-* Cilium L7 policy enforcement is disabled.
-
 * Network policies can't use `ipBlock` to allow access to node or pod IPs. See [frequently asked questions](#frequently-asked-questions) for details and recommended workaround.
 
 * Multiple Kubernetes services can't use the same host port with different protocols (for example, TCP or UDP) ([Cilium issue #14287](https://github.com/cilium/cilium/issues/14287)).
@@ -69,6 +67,10 @@ Azure CNI powered by Cilium currently has the following limitations:
 * Network policies aren't applied to pods using host networking (`spec.hostNetwork: true`) because these pods use the host identity instead of having individual identities.
 
 * Cilium Endpoint Slices are supported in Kubernetes version 1.32 and above. Cilium Endpoint Slices do not support configuration of how Cilium Endpoints are grouped. Priority namespaces through `cilium.io/ces-namespace` is not supported.
+
+## Considerations
+
+To gain capabilities such as observability into your network traffic and security features like Fully Qualified Domain Name (FQDN) based filtering and Layer 7-based network policies on your cluster, consider enabling [Advanced Container Networking services](./advanced-container-networking-services-overview.md) on your clusters.
 
 ## Prerequisites
 

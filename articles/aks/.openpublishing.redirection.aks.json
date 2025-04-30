@@ -583,12 +583,18 @@
         {
             "source_path_from_root": "/articles/aks/configure-kubenet-dual-stack.md",
             "redirect_url": "/azure/aks/configure-dual-stack",
-            "redirect_document_id": false
+            "redirect_document_id": false  
         },
         {
             "source_path_from_root": "/articles/aks/upgrade-aks-ipam-and-dataplane.md",
             "redirect_url": "/azure/aks/upgrade-azure-cni",
             "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/container-network-security-concepts.md",
+            "redirect_url": "/azure/aks/advanced-container-networking-services-overview?tabs=cilium#container-network-security",
+            "redirect_document_id": false 
         }
+
      ]
 }
