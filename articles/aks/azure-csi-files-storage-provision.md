@@ -74,7 +74,29 @@ The following table includes parameters you can use to define a custom storage c
 |vnetName | Virtual network name | Existing virtual network name. | No | if empty, driver will update all the subnets under the cluster virtual network. |
 |vnetResourceGroup | Specify VNet resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
 
-<sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account.
+<sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you are using Azure Files storage in a network isolated cluster, you must create a custom storage class with "networkEndpointType: privateEndpoint". You can follow the below sample for reference.
+```bash
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile-csi
+provisioner: file.csi.azure.com
+allowVolumeExpansion: true
+parameters:
+  skuName: Premium_LRS  # available values: Premium_LRS, Premium_ZRS, Standard_LRS, Standard_GRS, Standard_ZRS, Standard_RAGRS, Standard_RAGZRS
+  networkEndpointType: privateEndpoint
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  - dir_mode=0777  # modify this permission if you want to enhance the security
+  - file_mode=0777
+  - mfsymlinks
+  - cache=strict  # https://linux.die.net/man/8/mount.cifs
+  - nosharesock  # reduce probability of reconnect race
+  - actimeo=30  # reduce latency for metadata-heavy workload
+  - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
+  ```
 
 ### Create a storage class
 
