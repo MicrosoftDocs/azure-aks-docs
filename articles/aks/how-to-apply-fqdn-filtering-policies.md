@@ -35,7 +35,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 >
-> To enable FQDN policies specifically for this demo, set the `--acns-advanced-networkpolicies` parameter to "FQDN". Note that setting it to "L7" will enable both L7 and FQDN filtering. Use "None" to disable these advanced features.
+> To enable FQDN policies specifically for this demo, set the `--acns-advanced-networkpolicies` parameter to "FQDN". Note that setting it to "L7" will enable both L7 and FQDN filtering. To disable both features, you can follow the instructions provided in [Disable Container Network Security] (advanced-container-networking-services-overview.md?tabs=cilium#disable-container-network-security).
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
