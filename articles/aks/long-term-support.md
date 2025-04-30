@@ -26,7 +26,7 @@ AKS provides one year of *community support* and one year of *long-term support*
 |   | Community support  |Long-term support   |
 |---|---|---|
 | **When to use** | When you can keep up with upstream Kubernetes releases | When you need control over when to migrate from one version to another  |
-|  **Support versions** | Three-GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support EOL period. Refer to the [Community Support Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar) for more information. |
+|  **Support versions** | Three-GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support EOL period. Refer to the [Community Support Calendar][supported] for more information. |
 
 ## Enable long-term support
 
@@ -152,4 +152,4 @@ This is expected. If there was no defined autoUpgradeChannel for the AKS cluster
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [az-aks-upgrade]: /cli/azure/aks#az-aks-upgrade
-[supported]:/articles/aks/supported-kubernetes-versions.md#aks-kubernetes-release-calendar
+[supported]: ./supported-kubernetes-versions.md#aks-kubernetes-release-calendar
