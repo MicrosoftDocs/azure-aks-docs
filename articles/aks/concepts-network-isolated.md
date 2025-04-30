@@ -46,7 +46,7 @@ To create a network isolated cluster, you need to first ensure network traffic b
 You also need to ensure the egress path for your AKS cluster are controlled and limited, you can choose one of the following network outbound types:
 
 * [Outbound type of `none`][outbound-type-none] - If `none` is set, AKS won't automatically configure egress paths and a default route is not required. It is supported in both bring-your-own (BYO) virtual network scenarios and managed virtual network scenarios. For bring your own virtual network scenario, you must establish explicit egress paths if needed.
-* [Outbound type of `block` (preview)][outbound-type-block] -If `block` is set, AKS configures network rules to actively block all egress traffic from the cluster. This option is useful for highly secure environments where outbound connectivity must be restricted. It is supported in managed virtual network scenario. Note that you can also achieve similar effect by blocking all egress traffic through adding [network security group (NSG)][nsg] rules with `none` in bring-your-own virtual network scenario.
+* [Outbound type of `block` (preview)][outbound-type-block] -If `block` is set, AKS configures network rules to actively block all egress traffic from the cluster. This option is useful for highly secure environments where outbound connectivity must be restricted. It is supported in managed virtual network scenario. Note that you can also achieve similar effect by blocking all egress traffic by adding [network security group (NSG)][nsg] rules with `none` in bring-your-own virtual network scenario.
 
 > [!NOTE]
 > Outbound type of `none` is generally available. 
