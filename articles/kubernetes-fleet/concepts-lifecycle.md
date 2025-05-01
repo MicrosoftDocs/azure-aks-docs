@@ -5,7 +5,7 @@ ms.date: 10/03/2024
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Fleet hub cluster overview

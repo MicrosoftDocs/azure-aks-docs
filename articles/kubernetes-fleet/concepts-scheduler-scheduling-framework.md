@@ -5,7 +5,7 @@ ms.date: 04/01/2024
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Azure Kubernetes Fleet Manager scheduler and scheduling framework

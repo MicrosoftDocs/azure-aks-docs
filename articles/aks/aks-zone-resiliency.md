@@ -2,7 +2,7 @@
 title: Zone resiliency considerations for Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn about the various considerations for zone resiliency in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 06/05/2024
 author: schaffererin
 ms.author: schaffererin

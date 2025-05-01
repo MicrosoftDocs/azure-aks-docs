@@ -5,7 +5,7 @@ ms.date: 03/11/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Defining a rollout strategy for Azure Kubernetes Fleet Manager cluster resource placement

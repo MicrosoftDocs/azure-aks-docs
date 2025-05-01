@@ -5,7 +5,7 @@ description: Discover partner-tested solutions that enable you to build, test, d
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
-ms.topic: conceptual
+ms.topic: concept-article
 ms.custom: linux-related-content
 ms.date: 12/02/2024
 ---
