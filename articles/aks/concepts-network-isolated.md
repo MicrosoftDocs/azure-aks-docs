@@ -32,8 +32,8 @@ The following two options are supported for a private ACR associated with networ
 
     > [!NOTE]
     > The AKS-managed ACR resource is created in your subscription.
-    > If you delete a cluster or disable the network isolated mode of a network cluster with AKS-managed ACR, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted.
-    > If you only change the outbound type to any type other than `none` or `block` with `bootstrap-artifact-source` retained as `cache`, related resources are not deleted.
+    > If you delete the cluster having AKS-managed ACR for bootstrap artifact source, related resources such as the AKS-managed ACR, private link, and private endpoint are also automatically deleted.
+    > If you change outbound type on a cluster to any type other than `none` or `block` with `--bootstrap-artifact-source` retained as `Cache`, then the related resources are not deleted.
 
 * **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry. You also need to assign permissions and manage the cache rules, private link, and private endpoint used in the cluster. 
 
