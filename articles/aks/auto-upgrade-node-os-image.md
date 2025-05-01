@@ -192,7 +192,7 @@ With the `SecurityPatch` channel, the Linux cluster nodes have to download the r
 
 ### How do I know if a `SecurityPatch` or `NodeImage` upgrade is applied on my node?
  
-Run the `kubectl get nodes --show-labels` command to list the nodes in your cluster and their labels
+Run the `kubectl get nodes --show-labels` command to list the nodes in your cluster and their labels.
 
 Among the returned labels, you should see a line similar to the following output:
 
