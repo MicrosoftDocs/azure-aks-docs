@@ -818,7 +818,7 @@ You might also want to use `docker rmi` to delete the container images `postgres
 
 ## Next steps
 
-- [Azure Kubernetes Service](https://azure.microsoft.com/free/services/kubernetes-service/)
+- [Azure Kubernetes Service](https://azure.microsoft.com/services/kubernetes-service/)
 - [Deploy serverless Java apps with Quarkus on Azure Functions](/azure/azure-functions/functions-create-first-quarkus)
 - [Quarkus](https://quarkus.io/)
 - [Kubernetes Extension](https://quarkus.io/guides/deploying-to-kubernetes)
