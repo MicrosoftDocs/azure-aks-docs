@@ -1,7 +1,7 @@
 ---
 title: Concepts - Azure CNI Pod Subnet networking in AKS
 description: Learn about Azure CNI Pod Subnet, dynamic IP allocation mode, and static block allocation mode in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 05/21/2024
 author: schaffererin
 ms.author: schaffererin

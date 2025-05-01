@@ -3,7 +3,7 @@ title: Monitor Azure Kubernetes Service (AKS)
 description: Start here to learn how to monitor Azure Kubernetes Service (AKS) as it supports your critical applications and business processes. 
 ms.date: 09/06/2024
 ms.custom: horz-monitor
-ms.topic: conceptual
+ms.topic: concept-article
 author: xuhongl
 ms.author: xuhliu
 ms.subservice: aks-monitoring
@@ -308,6 +308,8 @@ Cilium exposes several metrics including the following used by Container Network
 
 For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 The table below outlines the different metrics generated.
+> [!NOTE]
+> Due to an identified bug, TCP resets are temporarily not visible. As a result, the networkobservability_tcp_flag_counters metrics will not be published during this period. Our team is actively working on resolving this issue, and we will provide updates once the fix is implemented. We apologize for any inconvenience and appreciate your patience.
 
 | Metric Name                                    | Description | Extra Labels | Linux | Windows |
 |------------------------------------------------|-------------|--------------|-------|---------|

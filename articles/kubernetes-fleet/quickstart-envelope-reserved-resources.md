@@ -3,8 +3,8 @@ title: "Propagate Reserved Resources from an Azure Kubernetes Fleet Manager Hub 
 description: Learn how to propagate resources by using the ClusterResourcePlacement API without unintended side effects on the hub cluster.
 ms.topic: how-to
 ms.date: 11/22/2024
-author: jamyct
-ms.author: jamisontsai
+author: sjwaight
+ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
 - devx-track-azurecli

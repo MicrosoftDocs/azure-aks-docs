@@ -382,7 +382,7 @@ A successful AKS cluster creation using a kubelet managed identity should result
 To update an existing cluster to use the kubelet managed identity, first get the current control plane managed identity for your AKS cluster.
 
 > [!WARNING]
-> Updating the kubelet managed identity upgrades your AKS cluster's node pools, which causes downtime for the cluster as the nodes in the node pools are cordoned/drained and reimaged.
+> Updating the kubelet managed identity upgrades your AKS cluster's node pools, make sure you have the right availability configurations, such as Pod Disruption Budgets, configured before executing this to avoid workload disruption or execute this during a maintenance window.
 
 1. Confirm your AKS cluster is using the user-assigned managed identity using the [`az aks show`][az-aks-show] command.
 

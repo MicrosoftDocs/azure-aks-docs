@@ -6,6 +6,7 @@ author: shashankbarsin
 ms.author: shasb
 ms.topic: conceptual
 ms.date: 04/24/2025
+
 ---
 
 # Network isolated Azure Kubernetes Service (AKS) clusters 

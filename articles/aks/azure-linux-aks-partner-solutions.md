@@ -5,7 +5,7 @@ description: Discover partner-tested solutions that enable you to build, test, d
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
-ms.topic: conceptual
+ms.topic: concept-article
 ms.custom: linux-related-content
 ms.date: 12/02/2024
 ---
@@ -18,12 +18,12 @@ The third party partners featured in this article have introduction guides to he
 
 |          | Partners |
 |----------|----------|
-| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [VictoriaMetrics](#victoriametrics) |
+| **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
-| **Observability** | •• [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
+| **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
+| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
 | **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Config management** | • [Corent](#corent) |
+| **Config management** | • [Corent](#corent) <br> • [Sysdig](#sysdig) |
 | **Migration** | • [Catalogic](#catalogic) |
 | **Monitoring** | • [VictoriaMetrics](#victoriametrics) |
 
@@ -164,7 +164,7 @@ We uncover patterns that create overspending on infrastructure and help teams pr
 
 </details>
 
-For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/stackwatchinc1625592579012.kubecost?tab=overview).
+For more information, see [Kubecost Solutions](https://www.kubecost.com/) and [IBM Kubecost on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/ibm-usa-ny-armonk-hq-6275750-ibmcloud-asperia.ibm_kubecost_enterprise?tab=Overview).
 
 ### NetApp
 
@@ -191,6 +191,24 @@ With Spot Ocean, users gain:
 </details>
 
 For more information, see [Spot By NetApp Solutions](https://spot.io/product/ocean/) and [Spot By NetApp on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/netapp.spot?tab=Overview).
+
+### Sysdig
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/sysdig.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Sysdig Secure | DevOps <br> Security <br> Config Management |
+
+Sysdig is a leader in cloud security powered by runtime insights.
+
+<details> <summary> See more </summary><br>
+
+Built on open source Falco, Sysdig detects threats in real time across cloud environments—helping teams uncover hidden risks and stop attacks. With full-stack visibility into workloads, identities, and services, Sysdig goes beyond traditional scanning to correlate live signals and prioritize what matters most. Whether securing containers, Kubernetes, cloud services, or serverless apps, Sysdig helps teams act with speed and confidence. By reducing alert fatigue, prioritizing vulnerabilities, accelerating response, and consolidating point tools, Sysdig empowers Azure customers to innovate securely at cloud speed. From prevention to defense, Sysdig helps you secure every second.
+
+</details>
+
+For more information, see [Sysdig Solutions](https://sysdig.com/ecosystem/microsoft-azure/) and [Sysdig on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/sysdig.sysdig-enterprise-azure).
 
 ## Networking
 
@@ -288,6 +306,24 @@ Fully automated, AI-assisted observability across Azure environments Dynatrace i
 
 For more information, see [Dynatrace Solutions](https://www.dynatrace.com/technologies/azure-monitoring/) and [Dynatrace on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/dynatrace.dynatrace_portal_integration?tab=Overview).
 
+### New Relic
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/new-relic.png":::
+
+| Solution | Categories |
+|----------|------------|
+| New Relic Azure Monitoring | Observability |
+
+The New Relic Intelligent Observability Platform helps businesses eliminate interruptions in digital experiences.
+
+<details> <summary> See more </summary><br>
+
+New Relic is the only AI-driven platform to unify and pair telemetry data to provide clarity over your entire digital estate. We move your problem solving past proactive to predictive by processing the right data at the right time to maximize value and control costs.
+
+</details>
+
+For more information, see [New Relic Solutions](https://newrelic.com/solutions/partners/azure) and [New Relic on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/newrelicinc1635200720692.newrelic_liftr_payg?tab=Overview).
+
 ## Security
 
 Ensure the integrity and confidentiality of applications and foster trust and compliance across your infrastructure.
@@ -370,7 +406,7 @@ TID enforces fetching certified versions of Istio and enables only compatible ve
 
 </details>
 
-For more information, see [Tetrate Solutions](https://istio.tetratelabs.io/download/) and [Tetrate on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/tetrate1598353087553.tetrateistio?tab=Overview).
+For more information, see [Tetrate documentation](https://docs.tetrate.io/) and [Tetrate on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/tetrate1598353087553.tetrateistio?tab=overview).
 
 ### Wiz
 
