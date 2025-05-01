@@ -472,7 +472,7 @@ Click the Save icon to save your dashboard.
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Test and validate PostgreSQL database on AKS][validate-postgresql]
+> [Test and validate PostgreSQL][validate-postgresql]
 
 ## Contributors
 
