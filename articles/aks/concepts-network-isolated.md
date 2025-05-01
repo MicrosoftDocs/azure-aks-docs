@@ -94,7 +94,7 @@ After setting up a network isolated cluster, if you want to enable features or a
 
 ### Can I manually upgrade packages to upgrade node pool image?
 
-Manually upgrading packages based on egress to package repositories is not recommended. Instead, you can [autoupgrade your node OS images][autoupgrade-node-os]. Only `NodeImage` and `None` upgrade channels are currently supported for network isolated clusters. If you want to manually upgrade node pool image through packages, you may have to allow egress explicitly for those required endpoints with outbound type `none` .
+Manually upgrading packages based on egress to package repositories is not recommended. Instead, you can [manually upgrade][manual-upgrade] or [autoupgrade your node OS images][autoupgrade-node-os]. Only `NodeImage` and `None` upgrade channels are currently supported for network isolated clusters.
 
 ## Next steps
 
@@ -117,6 +117,7 @@ Manually upgrading packages based on egress to package repositories is not recom
 [csi-files]: ./azure-files-csi.md
 [csi-blob]: ./azure-blob-csi.md
 [csi-disks]: ./azure-disk-csi.md
+[manual-upgrade]: ./node-image-upgrade.md
 
 <!-- LINKS - External -->
 [container-registry-private-link]: /azure/container-registry/container-registry-private-link
