@@ -27,12 +27,11 @@ AKS clusters fetch artifacts required for the cluster and its features or add-on
 
 The following two options are supported for a private ACR associated with network isolated clusters:
 
-* **AKS-managed ACR** - AKS creates, manages, and reconciles an ACR resource in this option. There's nothing you need to do other than clean up the unused artifacts in the ACR storage regularly.
+* **AKS-managed ACR** - AKS creates, manages, and reconciles an ACR resource in this option. There's nothing you need to do.
 
     > [!NOTE]
     > The AKS-managed ACR resource is created in your subscription.
-    > If you delete a cluster, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted.
-    > If outbound type is changed to any type other than `none` or `block`, related resources such as the AKS-managed ACR, private link, and private endpoint are not deleted.
+    > If you delete a cluster or disable the network isolated mode of a network cluster with AKS-managed ACR, related resources such as the AKS-managed ACR, private link, and private endpoint are automatically deleted.
 
 * **Bring your own (BYO) ACR** - The BYO ACR option requires creating an ACR with a private link between the ACR resource and the AKS cluster. See [Connect privately to an Azure container registry using Azure Private Link][container-registry-private-link] to understand how to configure a private endpoint for your registry. You also need to assign permissions and manage the cache rules, private link, and private endpoint used in the cluster. 
 
@@ -95,6 +94,11 @@ After setting up a network isolated cluster, if you want to enable features or a
 ### Can I manually upgrade packages to upgrade node pool image?
 
 Manually upgrading packages based on egress to package repositories is not recommended. Instead, you can [manually upgrade][manual-upgrade] or [autoupgrade your node OS images][autoupgrade-node-os]. Only `NodeImage` and `None` upgrade channels are currently supported for network isolated clusters.
+
+### What if I change the outbound type other than `none` or `block`, does that still make a network isolated cluster?
+
+The only supported outbound types for a network isolated cluster are outbound type `none` and `block`. If you use any other outbound type, the cluster may still pull artifacts from the private ACR associated, however that may generate egress traffic.
+
 
 ## Next steps
 
