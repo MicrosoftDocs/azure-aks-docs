@@ -193,7 +193,7 @@ csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstra
 To confirm whether the node's kubelet is using a serving certificate signed by the cluster CA, use  [`kubectl debug`][kubectl-debug] to examine the contents of the kubelet's PKI directory.
 
 ```azurecli-interactive
-kubectl debug
+kubectl debug node/mynode -it --image=azurelinux --ls -la /var/lib/kubelet/pki/
 ```
 
 If a `kubelet-server-current.pem` symlink exists, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and is signed by the cluster CA.
