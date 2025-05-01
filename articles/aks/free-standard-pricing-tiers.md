@@ -1,7 +1,7 @@
 ---
 title: Azure Kubernetes Service (AKS) Free, Standard, and Premium pricing tiers for cluster management
 description: Learn about the Azure Kubernetes Service (AKS) Free, Standard, and Premium pricing plans and what features, deployment patterns, and recommendations to consider between each plan.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 06/07/2024
 author: schaffererin
 ms.author: schaffererin

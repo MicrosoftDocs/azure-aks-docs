@@ -5,7 +5,7 @@ ms.date: 04/11/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Detecting and managing workload drift with Azure Kubernetes Fleet Manager cluster resource placement (preview)

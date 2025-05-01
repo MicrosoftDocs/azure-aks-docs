@@ -1,7 +1,7 @@
 ---
 title:  Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes
 description: Learn about how AKS uses Node Problem Detector to expose issues with the node.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 05/31/2023
 author: nickomang
 ms.author: nickoman

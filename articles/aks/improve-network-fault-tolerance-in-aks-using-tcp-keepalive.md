@@ -2,7 +2,7 @@
 title: Improve network fault tolerance in Azure Kubernetes Service using TCP keepalive
 titleSuffix: Azure Kubernetes Service
 description: Learn how to use TCP keepalive to enhance network fault tolerance in cloud applications hosted in Azure Kubernetes Service.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.author: rhulrai
 author: rahulrai-in
 ms.subservice: aks-networking
