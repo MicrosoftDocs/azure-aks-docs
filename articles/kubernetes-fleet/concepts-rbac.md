@@ -6,7 +6,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: build-2024, devx-track-azurecli
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Grant access to Azure Kubernetes Fleet Manager resources with Azure role-based access control

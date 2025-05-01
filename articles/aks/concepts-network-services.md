@@ -1,7 +1,7 @@
 ---
 title: Concepts - Services in Azure Kubernetes Services (AKS)
 description: Learn about networking services in Azure Kubernetes Service (AKS), including what Kubernetes Services are and what types of services are available in AKS.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 04/08/2024
 ms.service: azure-kubernetes-service
 ms.custom: fasttrack-edit

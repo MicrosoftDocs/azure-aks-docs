@@ -5,7 +5,7 @@ ms.date: 03/20/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Understanding snapshots for Azure Kubernetes Fleet Manager cluster resource placement

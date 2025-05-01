@@ -5,7 +5,7 @@ ms.date: 03/04/2024
 author: shashankbarsin
 ms.author: shasb
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Multi-cluster layer-4 load balancing (preview)

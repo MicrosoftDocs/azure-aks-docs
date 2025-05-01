@@ -5,7 +5,7 @@ author: sf-msft
 ms.author: samfoo
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 07/30/2024
 ---
 

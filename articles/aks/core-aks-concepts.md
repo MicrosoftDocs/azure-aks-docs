@@ -1,7 +1,7 @@
 ---
 title: Azure Kubernetes Services (AKS) core concepts
 description: Learn about the core concepts of Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 07/10/2024
 author: schaffererin
 ms.author: schaffererin
