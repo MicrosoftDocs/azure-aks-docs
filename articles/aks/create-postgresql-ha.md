@@ -572,7 +572,7 @@ In this section, you install the CNPG operator in the AKS cluster using Helm or 
 ## Next steps
 
 > [!div class="nextstepaction"]
-> [Deploy a highly available PostgreSQL database on the AKS cluster][deploy-postgresql]
+> [Deploy PostgreSQL on AKS][deploy-postgresql]
 
 ## Contributors
 
