@@ -21,7 +21,7 @@ This article walks through the prerequisites for setting up a PostgreSQL cluster
 * This guide assumes a basic understanding of [core Kubernetes concepts][core-kubernetes-concepts] and [PostgreSQL][postgresql].
 * You need the **Owner** or **User Access Administrator** and the **Contributor** [Azure built-in roles][azure-roles] on a subscription in your Azure account.
 
-[!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+[!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
 * You also need the following resources installed:
 
@@ -59,6 +59,16 @@ Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing ano
 > For applications that require data separation at the database level, you can add more databases with postInitSQL commands and similar. It is not currently possible with the CNPG operator to add more databases in a declarative way.
 [Learn more](https://github.com/cloudnative-pg/cloudnative-pg) about the CNPG operator. 
 
+### Storage considerations
+
+The type of storage you use can have large effects on PostgreSQL performance. Later in this guide, you will select the option that is best suited for your goals and performance needs.
+
+| Storage type | Compatible driver | Description  |
+|-|-|-|
+| [Premium SSD][pv1] | Azure Disks CSI driver or Azure Container Storage | **Best data resiliency**. Azure Premium SSD delivers high-performance storage and seamlessly works with Azure Premium zone-redundant storage (ZRS). Premium SSD is provisioned based on specific sizes, which each offer certain IOPS and throughput levels. |
+| [Premium SSD v2][pv2] | **Best price-performance**. Azure Disks CSI driver or Azure Container Storage | Azure Premium SSD v2 offers higher performance than Azure Premium SSDs while also generally being less costly. Unlike Premium SSDs, Premium SSD v2 doesn't have dedicated sizes. You can set a Premium SSD v2 to any supported size you prefer, and make granular adjustments to the performance without downtime. Azure Premium SSD v2 disks have certain limitations that you should be aware of. For a complete list, see [Premium SSD v2 limitations][pv2-limitations]. |
+| [Local NVMe or temp SSD (Ephemeral Disks)][ephemeral-disks] | Azure Container Storage only | **Maximum performance**. Ephemeral Disks are the local NVMe and temp SSD storage resources available to select VM families. This provides the highest possible IOPS and throughput to your AKS cluster while providing the lowest sub-millsecond latency. However, ephemeral means that the disks are deployed on the local VMs hosting the AKS cluster and not saved to an Azure storage service. Data will be lost on these disks if you stop/deallocate your cluster. Using Ephemeral Disks is straightforward with Azure Container Storage, which exposes these storage devices to your AKS cluster. [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) is a managed Kubernetes storage solution that dynamically provisions persistent volumes for stateful applications like Kafka. Based on the OpenEBS open-source project, it provides enterprise-grade storage capabilities specifically optimized for containerized workloads. |
+
 ## Next steps
 
 > [!div class="nextstepaction"]
@@ -90,3 +100,7 @@ Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing ano
 [install-krew]: https://krew.sigs.k8s.io/
 [cnpg-plugin]: https://cloudnative-pg.io/documentation/current/kubectl-plugin/#using-krew
 [create-infrastructure]: ./create-postgresql-ha.md
+[pv1]: /azure/virtual-machines/disks-types#premium-ssds
+[pv2]: /azure/virtual-machines/disks-types#premium-ssd-v2
+[pv2-limitations]: /azure/virtual-machines/disks-types#premium-ssd-v2-limitations
+[ephemeral-disks]: /azure/storage/container-storage/use-container-storage-with-local-disk#what-is-ephemeral-disk
