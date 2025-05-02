@@ -74,7 +74,6 @@ For network isolated clusters with BYO ACR:
     * [Azure App Configuration][app-config-overview]
     * [Azure Machine Learning][azure-ml-overview]
     * [Flux (GitOps)][gitops-overview]
-    * [Azure Container Storage][azure-container-storage]
     * [Azure Backup for AKS][azure-backup-aks]
 
 ## Frequently asked questions
