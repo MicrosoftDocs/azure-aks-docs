@@ -2,12 +2,10 @@
 title: Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using Azure CLI
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in a Windows Server container in Azure Kubernetes Service (AKS) using Azure CLI.
 ms.topic: quickstart
-ms.custom: devx-track-azurecli
-ms.date: 01/11/2024
+ms.custom: devx-track-azurecli, innovation-engine
+ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
-
-#Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy a Windows Server container so that I can see how to run applications running on a Windows Server container using the managed Kubernetes service in Azure.
 ---
 
 # Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using Azure CLI
@@ -33,27 +31,32 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
 An [Azure resource group](/azure/azure-resource-manager/management/overview) is a logical group in which Azure resources are deployed and managed. When you create a resource group, you're asked to specify a location. This location is where resource group metadata is stored and where your resources run in Azure if you don't specify another region during resource creation.
 
-- Create a resource group using the [az group create][az-group-create] command. The following example creates a resource group named *myResourceGroup* in the *eastus* location. Enter this command and other commands in this article into a BASH shell:
+- Create a resource group using the [az group create][az-group-create] command. The following example creates a resource group named *myResourceGroup* in the *WestUS2* location. Enter this command and other commands in this article into a BASH shell:
 
-    ```azurecli
-    az group create --name myResourceGroup --location eastus
-    ```
+```bash
+export RANDOM_SUFFIX=$(openssl rand -hex 3)
+export REGION="canadacentral"
+export MY_RESOURCE_GROUP_NAME="myAKSResourceGroup$RANDOM_SUFFIX"
+az group create --name $MY_RESOURCE_GROUP_NAME --location $REGION
+```
 
-  The following sample output shows the resource group created successfully:
+Results:
 
-    ```output
-    {
-      "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
-      "location": "eastus",
-      "managedBy": null,
-      "name": "myResourceGroup",
-      "properties": {
-        "provisioningState": "Succeeded"
-      },
-      "tags": null,
-      "type": null
-    }
-    ```
+<!-- expected_similarity=0.3 -->
+
+```JSON
+{
+  "id": "/subscriptions/xxxxx-xxxxx-xxxxx-xxxxx/resourceGroups/myResourceGroupxxxxx",
+  "location": "WestUS2",
+  "managedBy": null,
+  "name": "myResourceGroupxxxxx",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+```
 
 ## Create an AKS cluster
 
@@ -65,42 +68,43 @@ In this section, we create an AKS cluster with the following configuration:
 
 To create the AKS cluster with Azure CLI, follow these steps:
 
-1. Create a username to use as administrator credentials for the Windows Server nodes on your cluster. The following commands prompt you for a username and set it to *WINDOWS_USERNAME* for use in a later command.
+1. Create a username to use as administrator credentials for the Windows Server nodes on your cluster. (The original example prompted for input; in this Exec Doc, the environment variable is set non-interactively.)
 
-    ```azurecli
-    echo "Please enter the username to use as administrator credentials for Windows Server nodes on your cluster: " && read WINDOWS_USERNAME
-    ```
+```bash
+export WINDOWS_USERNAME="winadmin"
+```
 
 2. Create a password for the administrator username you created in the previous step. The password must be a minimum of 14 characters and meet the [Windows Server password complexity requirements][windows-server-password].
 
-    ```azurecli
-    echo "Please enter the password to use as administrator credentials for Windows Server nodes on your cluster: " && read WINDOWS_PASSWORD
-    ```
+```bash
+export WINDOWS_PASSWORD=$(echo "P@ssw0rd$(openssl rand -base64 10 | tr -dc 'A-Za-z0-9!@#$%^&*()' | cut -c1-6)")
+```
 
-3. Create your cluster using the [az aks create][az-aks-create] command and specify the `--windows-admin-username` and `--windows-admin-password` parameters. The following example command creates a cluster using the value from *WINDOWS_USERNAME* you set in the previous command. Alternatively, you can provide a different username directly in the parameter instead of using *WINDOWS_USERNAME*.
+3. Create your cluster using the [az aks create][az-aks-create] command and specify the `--windows-admin-username` and `--windows-admin-password` parameters. The following example command creates a cluster using the values from *WINDOWS_USERNAME* and *WINDOWS_PASSWORD* you set in the previous commands. A random suffix is appended to the cluster name for uniqueness.
 
-    ```azurecli
-    az aks create \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
-        --node-count 2 \
-        --enable-addons monitoring \
-        --generate-ssh-keys \
-        --windows-admin-username $WINDOWS_USERNAME \
-        --windows-admin-password $WINDOWS_PASSWORD \
-        --vm-set-type VirtualMachineScaleSets \
-        --network-plugin azure
-    ```
+```bash
+export MY_AKS_CLUSTER="myAKSCluster$RANDOM_SUFFIX"
+az aks create \
+    --resource-group $MY_RESOURCE_GROUP_NAME \
+    --name $MY_AKS_CLUSTER \
+    --node-count 2 \
+    --enable-addons monitoring \
+    --generate-ssh-keys \
+    --windows-admin-username $WINDOWS_USERNAME \
+    --windows-admin-password $WINDOWS_PASSWORD \
+    --vm-set-type VirtualMachineScaleSets \
+    --network-plugin azure
+```
 
-    After a few minutes, the command completes and returns JSON-formatted information about the cluster. Occasionally, the cluster can take longer than a few minutes to provision. Allow up to 10 minutes for provisioning.
+After a few minutes, the command completes and returns JSON-formatted information about the cluster. Occasionally, the cluster can take longer than a few minutes to provision. Allow up to 10 minutes for provisioning.
 
-    If you get a password validation error, and the password that you set meets the length and complexity requirements, try creating your resource group in another region. Then try creating the cluster with the new resource group.
+If you get a password validation error, and the password that you set meets the length and complexity requirements, try creating your resource group in another region. Then try creating the cluster with the new resource group.
 
-    If you don't specify an administrator username and password when creating the node pool, the username is set to *azureuser* and the password is set to a random value. For more information, see the [Windows Server FAQ](../windows-faq.yml)
+If you don't specify an administrator username and password when creating the node pool, the username is set to *azureuser* and the password is set to a random value. For more information, see the [Windows Server FAQ](../windows-faq.yml)
 
-    The administrator username can't be changed, but you can change the administrator password that your AKS cluster uses for Windows Server nodes using `az aks update`. For more information, see [Windows Server FAQ](../windows-faq.yml).
+The administrator username can't be changed, but you can change the administrator password that your AKS cluster uses for Windows Server nodes using `az aks update`. For more information, see [Windows Server FAQ](../windows-faq.yml).
 
-    To run an AKS cluster that supports node pools for Windows Server containers, your cluster needs to use a network policy that uses [Azure CNI (advanced)][azure-cni] network plugin. The `--network-plugin azure` parameter specifies Azure CNI.
+To run an AKS cluster that supports node pools for Windows Server containers, your cluster needs to use a network policy that uses [Azure CNI (advanced)][azure-cni] network plugin. The `--network-plugin azure` parameter specifies Azure CNI.
 
 ## Add a node pool
 
@@ -114,10 +118,10 @@ To use the default OS SKU, create the node pool without specifying an OS SKU. Th
 
 Add a Windows node pool using the `az aks nodepool add` command. The following command creates a new node pool named *npwin* and adds it to *myAKSCluster*. The command also uses the default subnet in the default virtual network created when running `az aks create`. An OS SKU isn't specified, so the node pool is set to the default operating system based on the Kubernetes version of the cluster:
 
-```azurecli
+```text
 az aks nodepool add \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
+    --resource-group $MY_RESOURCE_GROUP_NAME \
+    --cluster-name $MY_AKS_CLUSTER \
     --os-type Windows \
     --name npwin \
     --node-count 1
@@ -135,10 +139,10 @@ To use Windows Server 2022, specify the following parameters:
 
 Add a Windows Server 2022 node pool using the `az aks nodepool add` command:
 
-```azurecli
+```text
 az aks nodepool add \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
+    --resource-group $MY_RESOURCE_GROUP_NAME \
+    --cluster-name $MY_AKS_CLUSTER \
     --os-type Windows \
     --os-sku Windows2022 \
     --name npwin \
@@ -157,17 +161,15 @@ To use Windows Server 2019, specify the following parameters:
 
 Add a Windows Server 2019 node pool using the `az aks nodepool add` command:
 
-```azurecli
+```text
 az aks nodepool add \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
+    --resource-group $MY_RESOURCE_GROUP_NAME \
+    --cluster-name $MY_AKS_CLUSTER \
     --os-type Windows \
     --os-sku Windows2019 \
     --name npwin \
     --node-count 1
 ```
-
----
 
 ## Connect to the cluster
 
@@ -175,27 +177,29 @@ You use [kubectl][kubectl], the Kubernetes command-line client, to manage your K
 
 1. Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
 
-    ```azurecli
-    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
-    ```
+```bash
+az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_AKS_CLUSTER
+```
 
-1. Verify the connection to your cluster using the [kubectl get][kubectl-get] command, which returns a list of the cluster nodes.
+2. Verify the connection to your cluster using the [kubectl get][kubectl-get] command, which returns a list of the cluster nodes.
 
-    ```console
-    kubectl get nodes -o wide
-    ```
+```bash
+kubectl get nodes -o wide
+```
 
-    The following sample output shows all nodes in the cluster. Make sure the status of all nodes is *Ready*:
+The following sample output shows all nodes in the cluster. Make sure the status of all nodes is *Ready*:
 
-    ```output
-    NAME                                STATUS   ROLES   AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION      CONTAINER-RUNTIME
-    aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.27.7   10.224.0.4    <none>        Ubuntu 22.04.3 LTS               5.15.0-1052-azure   containerd://1.7.5-1
-    aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.27.7   10.224.0.33   <none>        Ubuntu 22.04.3 LTS               5.15.0-1052-azure   containerd://1.7.5-1
-    aksnpwin000000                      Ready    agent   20h   v1.27.7   10.224.0.62   <none>        Windows Server 2022 Datacenter   10.0.20348.2159     containerd://1.6.21+azure
-    ```
+<!-- expected_similarity=0.3 -->
 
-    > [!NOTE]
-    > The container runtime for each node pool is shown under *CONTAINER-RUNTIME*. The container runtime values begin with `containerd://`, which means that they each use `containerd` for the container runtime.
+```text
+NAME                                STATUS   ROLES   AGE   VERSION   INTERNAL-IP   EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION      CONTAINER-RUNTIME
+aks-nodepool1-20786768-vmss000000   Ready    agent   22h   v1.27.7   10.224.0.4    <none>        Ubuntu 22.04.3 LTS               5.15.0-1052-azure   containerd://1.7.5-1
+aks-nodepool1-20786768-vmss000001   Ready    agent   22h   v1.27.7   10.224.0.33   <none>        Ubuntu 22.04.3 LTS               5.15.0-1052-azure   containerd://1.7.5-1
+aksnpwin000000                      Ready    agent   20h   v1.27.7   10.224.0.62   <none>        Windows Server 2022 Datacenter   10.0.20348.2159     containerd://1.6.21+azure
+```
+
+> [!NOTE]
+> The container runtime for each node pool is shown under *CONTAINER-RUNTIME*. The container runtime values begin with `containerd://`, which means that they each use `containerd` for the container runtime.
 
 ## Deploy the application
 
@@ -205,111 +209,119 @@ The ASP.NET sample application is provided as part of the [.NET Framework Sample
 
 1. Create a file named `sample.yaml` and copy in the following YAML definition.
 
-    ```yaml
-    apiVersion: apps/v1
-    kind: Deployment
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample
+  labels:
+    app: sample
+spec:
+  replicas: 1
+  template:
     metadata:
       name: sample
       labels:
         app: sample
     spec:
-      replicas: 1
-      template:
-        metadata:
-          name: sample
-          labels:
-            app: sample
-        spec:
-          nodeSelector:
-            "kubernetes.io/os": windows
-          containers:
-          - name: sample
-            image: mcr.microsoft.com/dotnet/framework/samples:aspnetapp
-            resources:
-              limits:
-                cpu: 1
-                memory: 800M
-            ports:
-              - containerPort: 80
-      selector:
-        matchLabels:
-          app: sample
-    ---
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: sample
-    spec:
-      type: LoadBalancer
-      ports:
-      - protocol: TCP
-        port: 80
-      selector:
-        app: sample
-    ```
+      nodeSelector:
+        "kubernetes.io/os": windows
+      containers:
+      - name: sample
+        image: mcr.microsoft.com/dotnet/framework/samples:aspnetapp
+        resources:
+          limits:
+            cpu: 1
+            memory: 800M
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: sample
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: sample
+```
 
-    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](../concepts-clusters-workloads.md#deployments-and-yaml-manifests).
+For a breakdown of YAML manifest files, see [Deployments and YAML manifests](../concepts-clusters-workloads.md#deployments-and-yaml-manifests).
 
-    If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
+If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-1. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
+2. Deploy the application using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest.
 
-    ```console
-    kubectl apply -f sample.yaml
-    ```
+```bash
+kubectl apply -f sample.yaml
+```
 
-    The following sample output shows the deployment and service created successfully:
+The following sample output shows the deployment and service created successfully:
 
-    ```output
-    deployment.apps/sample created
-    service/sample created
-    ```
+<!-- expected_similarity=0.3 -->
+
+```text
+{
+  "deployment.apps/sample": "created",
+  "service/sample": "created"
+}
+```
 
 ## Test the application
 
 When the application runs, a Kubernetes service exposes the application front end to the internet. This process can take a few minutes to complete. Occasionally, the service can take longer than a few minutes to provision. Allow up to 10 minutes for provisioning.
 
-1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make all pods are `Running` before proceeding.
+1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command. Make sure all pods are `Running` before proceeding.
 
-    ```console
-    kubectl get pods
-    ```
-
-1. Monitor progress using the [kubectl get service][kubectl-get] command with the `--watch` argument.
-
-    ```console
-    kubectl get service sample --watch
-    ```
-
-    Initially, the output shows the *EXTERNAL-IP* for the sample service as *pending*:
-
-    ```output
-    NAME               TYPE           CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
-    sample             LoadBalancer   10.0.37.27   <pending>     80:30572/TCP   6s
-    ```
-
-    When the *EXTERNAL-IP* address changes from *pending* to an actual public IP address, use `CTRL-C` to stop the `kubectl` watch process. The following sample output shows a valid public IP address assigned to the service:
-
-    ```output
-    sample  LoadBalancer   10.0.37.27   52.179.23.131   80:30572/TCP   2m
-    ```
-
-1. See the sample app in action by opening a web browser to the external IP address of your service.
-
-    :::image type="content" source="media/quick-windows-container-deploy-cli/asp-net-sample-app.png" alt-text="Screenshot of browsing to ASP.NET sample application." lightbox="media/quick-windows-container-deploy-cli/asp-net-sample-app.png":::
-
-## Delete resources
-
-If you don't plan on going through the [AKS tutorial][aks-tutorial], you should delete your cluster to avoid incurring Azure charges.
-
-Delete your resource group, container service, and all related resources using the [az group delete](/cli/azure/group#az_group_delete) command.
-
-```azurecli
-az group delete --name myResourceGroup --yes --no-wait
+```bash
+kubectl get pods
 ```
 
-> [!NOTE]
-> The AKS cluster was created with system-assigned managed identity (the default identity option used in this quickstart). The Azure platform manages this identity, so it doesn't require removal.
+2. Monitor progress using the [kubectl get service][kubectl-get] command with the `--watch` argument.
+
+```bash
+while true; do
+  export EXTERNAL_IP=$(kubectl get service sample -o jsonpath="{.status.loadBalancer.ingress[0].ip}" 2>/dev/null)
+  if [[ -n "$EXTERNAL_IP" && "$EXTERNAL_IP" != "<pending>" ]]; then
+    kubectl get service sample
+    break
+  fi
+  echo "Still waiting for external IP assignment..."
+  sleep 5
+done
+```
+
+Initially, the output shows the *EXTERNAL-IP* for the sample service as *pending*:
+
+<!-- expected_similarity=0.3 -->
+
+```text
+NAME     TYPE           CLUSTER-IP     EXTERNAL-IP       PORT(S)        AGE
+sample   LoadBalancer   xx.xx.xx.xx    pending          xx:xxxx/TCP     2m
+```
+
+When the *EXTERNAL-IP* address changes from *pending* to an actual public IP address, use `CTRL-C` to stop the `kubectl` watch process. The following sample output shows a valid public IP address assigned to the service:
+
+```JSON
+{
+  "NAME": "sample",
+  "TYPE": "LoadBalancer",
+  "CLUSTER-IP": "10.0.37.27",
+  "EXTERNAL-IP": "52.179.23.131",
+  "PORT(S)": "80:30572/TCP",
+  "AGE": "2m"
+}
+```
+
+See the sample app in action by opening a web browser to the external IP address of your service after a few minutes. 
+
+:::image type="content" source="media/quick-windows-container-deploy-cli/asp-net-sample-app.png" alt-text="Screenshot of browsing to ASP.NET sample application." lightbox="media/quick-windows-container-deploy-cli/asp-net-sample-app.png":::
 
 ## Next steps
 
@@ -340,4 +352,3 @@ To learn more about AKS, and to walk through a complete code-to-deployment examp
 [kubernetes-service]: ../concepts-network-services.md
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-

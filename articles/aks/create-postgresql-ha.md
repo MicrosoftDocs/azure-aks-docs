@@ -396,7 +396,24 @@ To use Premium SSD v2, you can create a custom storage class.
 2. Use the provided Azure Container Storage storage class
 
     ```bash
-    export POSTGRES_STORAGE_CLASS="acstor-ephemeraldisk-nvme"
+    cat <<EOF | kubectl apply -f -
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+        name: acstor-ephemeraldisk-nvme-db
+    parameters:
+        acstor.azure.com/storagepool: ephemeraldisk-nvme
+        hyperconverged: "true"
+        ioTimeout: "60"
+        proto: nvmf
+        repl: "1"
+        enableDBProfile: "true"
+    provisioner: containerstorage.csi.azure.com
+    reclaimPolicy: Delete
+    volumeBindingMode: WaitForFirstConsumer
+    EOF
+
+    export POSTGRES_STORAGE_CLASS="acstor-ephemeraldisk-nvme-db"
     ```
 
 ---
