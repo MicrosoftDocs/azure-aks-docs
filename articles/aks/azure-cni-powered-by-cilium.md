@@ -166,6 +166,17 @@ az aks create \
         - matchPattern: "*.example.com"
     ```
 
+- **Which Cilium features are supported in Azure managed CNI? Which of those require Advanced Container Networking Services?**
+
+    | Supported Feature | w/o ACNS | w/ ACNS |
+    | ----------------- | -------- | ------- |
+    | Cilium Endpoint Slices | ✔️ | ✔️ |
+    | K8s Network Policies | ✔️ | ✔️ |
+    | Cilium L3/L4 Network Policies | ✔️ | ✔️ |
+    | FQDN Filtering | ❌ | ✔️ |
+    | L7 Network Policies (HTTP/gRPC/Kafka) | ❌ | ✔️ |
+    | Container Network Observability (Metrics and Flow logs ) | ❌ | ✔️ |
+
 - **Why is traffic being blocked when the `NetworkPolicy` has an `ipBlock` that allows the IP address?**
 
     A limitation of Azure CNI Powered by Cilium is that a `NetworkPolicy`'s `ipBlock` can't select pod or node IPs.
