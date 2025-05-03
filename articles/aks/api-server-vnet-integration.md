@@ -184,7 +184,27 @@ az group create --location <location> --name <resource-group>
 
 ## Convert an existing AKS cluster to API Server VNet Integration
 
-You can convert existing public/private AKS clusters to API Server VNet Integration clusters by supplying an API server subnet that meets the requirements listed earlier. These requirements include: in the same VNet as the cluster nodes, permissions granted for the AKS cluster identity, not used by other resources like private endpoint, and size of at least */28*. Converting your cluster is a one-way migration. Clusters can't have API Server VNet Integration disabled after it's been enabled.
+>[!WARNING]
+> **API Server VNet Integration is a one-way, capacity-sensitive feature.**
+>
+> - **Manual restart required.**  
+>   After enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must manually restart the cluster for the change to take effect. This restart is not automated and, like any restart, the cluster will be temporarily unavailable until it completes.
+>
+> - **Feature cannot be disabled.**  
+>   Once enabled, the feature is permanent. You cannot disable it or revert to the previous configuration.
+>
+> - **Capacity is only validated at the time of enablement.**  
+>   When enabling the feature, AKS checks if the required regional capacity is available. However, this validation **does not reserve** the capacity. If you delay the restart, the necessary infrastructure might no longer be available—leading to potential control plane failure.
+>
+> - **Clusters with the feature already enabled (before GA or without restart) are at higher risk.**  
+>   Clusters that enabled the feature before GA or that haven’t yet restarted since enablement **did not go through capacity validation**. These clusters are most at risk: if they restart and regional capacity is no longer available, the API server may fail to start.
+>
+> - **Once successfully restarted, capacity is locked in.**  
+>   After a successful restart post-enablement, your cluster is running with the correct infrastructure configuration. Future restarts are not subject to this risk.
+>
+> **Recommended approach**  
+> 1. **If enabling now:** Restart immediately after enabling the feature to finalize the transition while capacity is available.  
+> 2. **If already enabled (but not restarted):** Create a new cluster with the feature enabled at creation time. Verify successful provisioning, then migrate workloads. This approach avoids the risk of control plane downtime during future restarts.
 
 This upgrade performs a node-image version upgrade on all node pools and restarts all workloads while they undergo a rolling image upgrade.
 
