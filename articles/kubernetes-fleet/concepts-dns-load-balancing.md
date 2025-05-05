@@ -37,7 +37,7 @@ metadata:
 spec:
   monitorConfig:
     protocol: HTTP
-    path: /f
+    path: /api
     port: 8080
     intervalInSeconds: 30
     timeoutInSeconds: 10
