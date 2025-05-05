@@ -14,7 +14,7 @@ Azure Kubernetes Fleet Manager DNS load balancing can help increase availability
 
 Follow the steps in this document to set up DNS-based load balancing for multi-cluster applications hosted in your fleet.
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-network-alpha.md)]
+[!INCLUDE [preview features note](./includes/preview/preview-callout-data-plane-network.md)]
 
 ## Prerequisites
 
