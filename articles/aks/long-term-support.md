@@ -71,7 +71,7 @@ If you want to carry out an in-place migration, the AKS service will migrate you
     ```
 
     > [!NOTE]
-    > 1.30 is the next LTS version after 1.27. You can opt into LTS from a 1.30 version cluster through the steps given above. LTS version 1.27 will go end of life (EOL) by July 2025.  
+    > Kubernetes versions 1.27, 1.28, 1.29, and 1.30 are available as Long-Term Support (LTS) versions. To view available LTS releases and their patches by region, see the [AKS release tracker](release-tracker.md). Moving forward, all AKS Kubernetes versions will be LTS-compatible. For the LTS calendar, visit the [AKS Kubernetes Release Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
 
 ## Disable long-term support on an existing cluster
 
@@ -126,17 +126,21 @@ Read the [AKS release notes](https://github.com/Azure/AKS/releases) to stay info
 
 ## Frequently asked questions
 
-### Community support for AKS 1.27 ends expires in July 2024. Can I create a new AKS cluster with version 1.27 after that date?
+### Can I create a new AKS cluster with an LTS version after community support ends?
 
-Yes, as long as LTS is enabled on the cluster, you can create a new AKS cluster with version 1.27 after the community support window has ended.
+Yes, you can create a new AKS cluster using an LTS version even after its community support period has ended, provided you have opted into LTS. However, this is only valid until the end of the LTS version's lifecycle. After that, you must upgrade to the next supported LTS version. For more details, see the [AKS Kubernetes Release Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
 
-### Can I enable and disable LTS on AKS 1.27 after the end of community support?
+### Can I enable and disable LTS on an AKS-supported version after community support ends?
 
-You can enable the LTS support plan on AKS 1.27 after the end of community support. However, you can't disable LTS on AKS 1.27 after the end of community support.
+Yes, you can enable the LTS support plan on any AKS-supported version even after its community support period has ended. However, once the community support period has ended, you cannot disable LTS for that version.
 
-### I have a cluster running on version 1.27. Does it mean it is automatically in LTS?
+### Does a community-supported AKS cluster automatically become LTS eligible after EOL?
 
-No, you need to explicitly enable LTS on the cluster to receive LTS support. Enabling LTS also requires being on the Premium tier.
+No, you must explicitly enable LTS on the cluster to receive support. This also requires upgrading to the Premium tier.
+
+### Will every AKS version support Long-Term Support (LTS)?
+
+Yes, AKS ensures that all supported Kubernetes versions are eligible for Long-Term Support (LTS). You can opt into LTS for any supported version available today.
 
 ### What is the pricing model for LTS?
 
