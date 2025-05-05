@@ -23,8 +23,8 @@ Automated Deployments build on [draft.sh](https://draft.sh). When you create a n
 * [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 * Read the conceptual overviews of [Automated Deployments](./concepts-automated-deployments.md) and [resource propagation](./concepts-resource-propagation.md) to understand the concepts and terminology used in this article.
 * A Kubernetes Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
-* The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API. See [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
-* A Kuberenetes namespace already deployed on the Fleet Manager hub cluster.
+* The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API. For more information, see [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
+* A Kubernetes namespace already deployed on the Fleet Manager hub cluster.
 
 ## Bring your application source code
 
@@ -34,7 +34,7 @@ Find your Azure Kubernetes Fleet Manager and start Automated Deployments configu
 1. Select [**Kubernetes fleet manager**][portal-fleets] in the search results.
 1. Select your Azure Kubernetes Fleet Manager from the resource list. 
 1. From the Fleet Manager service menu, under **Fleet resources**, select **Automated deployments**.
-1. Select **+ Create** in the top menu. If this is your first configuration, you can also select **Create** in the deployment list area.
+1. Select **+ Create** in the top menu. If this deployment is your first, you can also select **Create** in the deployment list area.
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-create.png" alt-text="Screenshot showing create options for Fleet Manager Automated Deployments." lightbox="media/automated-deployments/fleet-auto-deploy-create.png" :::
 
@@ -46,7 +46,7 @@ Create a workflow and authorize it to connect to the desired source code reposit
 1. Next, select **Authorize access** to authorize a user against GitHub to obtain a list of repositories. 
 1. For **Repository source** select either:
     1. **My repositories** for repositories the currently authorized GitHub user owns, or;
-    1. **All repositories** for repositories the currently authorized GitHub user can access. You will also need to select the **Organization** which owns the repository.
+    1. **All repositories** for repositories the currently authorized GitHub user can access. You need to select the **Organization** which owns the repository.
 1. Choose the **Repository** and **Branch**.
 1. Select the **Next** button.
 
@@ -62,7 +62,7 @@ If your code repository already has a Dockerfile, you can use it to build the ap
 
 1. Select **Existing Dockerfile** for the **Container configuration**.
 1. Select the **Dockerfile** from your repository.
-1. Enter the **Dockerfile build context** to pass the set of files and directories to the build process (this is typically the same folder as the Dockerfile). These files are used to build the image, and they're included in the final image, unless they're ignored by a `.dockerignore` file.
+1. Enter the **Dockerfile build context** to pass the set of files and directories to the build process (typically the same folder as the Dockerfile). These files are used to build the image, and they're included in the final image, unless they're ignored through inclusion in a `.dockerignore` file.
 1. Select an existing **Azure Container Registry**. This registry is used to store the built application image. Any AKS cluster that can receive the application must be given `AcrPull` permissions on the Registry.
 1. Set the **Azure Container Registry image** name. You must use this image name in your Kubernetes deployment manifests.
 
@@ -89,11 +89,11 @@ Use Fleet Manager Automated Deployments to generate a Dockerfile for many langua
 An application running on Kubernetes consists of many Kubernetes primitive components. These components describe what container image to use, how many replicas to run, if there's a public IP required to expose the application, etc. For more information, see the official [Kubernetes documentation][kubernetes-documentation]. If your source code repository doesn't already have Kubernetes manifests, Automated Deployments can generate them for you. You can also choose an existing Helm chart.
 
 > [!WARNING]
-> When selecting a namespace don't choose the `fleet-system` or any of the `fleet-member` namespaces as these are internal namespaces used by Fleet Manager and cannot be used to place your application. 
+> Don't choose the `fleet-system` or any of the `fleet-member` namespaces as these are internal namespaces used by Fleet Manager and can't be used to place your application. 
 
 #### [Use existing Kubernetes manifests](#tab/existing-kubernetes-manifests)
 
-If your code repository already has a Kubernetes manifest, you can select it to control what workload is deployed and how it is configured by a cluster resource placement.
+If your code repository already has a Kubernetes manifest, you can select it to control what workload is deployed and configured by a cluster resource placement.
 
 1. Select **Use existing Kubernetes manifest deployment files** for the deployment options.
 1. Select the **Kubernetes manifest file or folder** from your repository.
@@ -105,7 +105,7 @@ If your code repository already has a Kubernetes manifest, you can select it to 
 
 #### [Generate Kubernetes manifests](#tab/generate-kubernetes-manifests)
 
-Use Fleet Manager Automated Deployments to generate a set of basic Kubernetes manifest files to get your application up and running. At present, Automated Deployments creates a `Deployment`, a `Service`, and a `ConfigMap`.
+Use Fleet Manager Automated Deployments to generate a set of basic Kubernetes manifest files to get your application up and running. Currently, Automated Deployments creates a `Deployment`, a `Service`, and a `ConfigMap`.
 
 The generated manifests are designed to apply recommendations of [deployment safeguards][deployment-safeguards], such as:
 
@@ -157,7 +157,7 @@ Setup takes a few minutes, so don't navigate away from the Deploy page.
 When the Deploy stage finishes, select the **Approve pull request** button to open the generated pull request on your code repository.
 
 > [!NOTE]
-> There is a known issue with the naming of the generated pull request where it says it is deploying to AKS. Despite this incorrect name, the resulting workflow does stage your workload on the Fleet Manager hub cluster in the namespace you selected. 
+> There's a known issue with the naming of the generated pull request where it says it's deploying to AKS. Despite this incorrect name, the resulting workflow does stage your workload on the Fleet Manager hub cluster in the namespace you selected. 
 
  :::image type="content" source="media/automated-deployments/fleet-auto-deploy-merge-pr.png" alt-text="Screenshot of pull request on GitHub." lightbox="media/automated-deployments/fleet-auto-deploy-merge-pr.png" :::
 
@@ -174,11 +174,11 @@ After the pipeline is completed, you can review the created container image on t
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-registry-image.png" alt-text="Screenshot of the built container image hosted in an Azure Container Registry repository." lightbox="media/automated-deployments/fleet-auto-deploy-check-registry-image.png" :::
 
-You can also view the Fleet Manager Automated Deployment configuration. Selecting the `workflow` name will open GitHub on the GitHub Action.
+You can also view the Fleet Manager Automated Deployment configuration. Selecting the `workflow` name opens GitHub on the GitHub Action.
 
 :::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-deployments.png" alt-text="Screenshot of the configured Fleet Manager Automated Deployment, including a link to the GitHub Action." lightbox="media/automated-deployments/fleet-auto-deploy-check-deployments.png" :::
 
-Finally, you can confirm the expected Kubernetes resources have been staged on the Fleet Manager hub cluster by the pipeline.
+Finally, you can confirm the expected Kubernetes resources are staged on the Fleet Manager hub cluster.
 
 ```azurecli-interactive
 az fleet get-credentials \
@@ -190,7 +190,7 @@ az fleet get-credentials \
 kubectl describe deployments virtual-worker --namespace=contoso-store
 ```
 
-Output looks similar to the below. The replicas of 0 is expected as workloads are not scheduled on the Fleet Manager hub cluster. Make sure that the `Image` property points at the built image in your Azure Container Registry.
+Output looks similar to the below. The replicas of 0 is expected as workloads aren't scheduled on the Fleet Manager hub cluster. Make sure that the `Image` property points at the built image in your Azure Container Registry.
 
 ```output
 Name:                   virtual-worker
@@ -229,11 +229,11 @@ Events:                      <none>
 
 ## Add Fleet Manager resource placement
 
-During preview you will need to perform additional manual steps to configure placement of your staged workload on to member clusters.
+During preview you need to perform more steps to configure placement of your staged workload on to member clusters.
 
-1. In the source code repository for your application create a folder in the repository root called **fleet**.
+1. In the source code repository for your application, create a folder in the repository root called **fleet**.
 
-1. Create a new file `deploy-contoso-store-two-regions.yaml` in the new folder and add the contents shown. This sample will deploy the `contoso-store` namespace across two clusters that must be in two different Azure regions. 
+1. Create a new file `deploy-contoso-store-two-regions.yaml` in the new folder and add the contents shown. This sample deploys the `contoso-store` namespace across two clusters that must be in two different Azure regions. 
 
     ```yml
     apiVersion: placement.kubernetes-fleet.io/v1
