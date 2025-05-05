@@ -75,6 +75,10 @@ When a container image is very large (1 TiB or more), kubelet might not be able 
 
 For the latest list of where you can deploy and run clusters, see [AKS region availability][region-availability].
 
+## Smart VM Defaults
+
+As of May 2025, AKS will automatically select the optimal default VM SKU based on available capacity and quota if the parameter is unspecified during deployment. This ensures that deployments are matched with the best possible SKU, enhancing performance and reliability while optimizing resource utilization. Previously, the default AKS VM SKU was Standard_DS2_V2, but there are now dynamic outcomes in default provisioning based on SKU availability. This affects all new VM create operations.
+
 ## Cluster configuration presets in the Azure portal
 
 When you create a cluster using the Azure portal, you can choose a preset configuration to quickly customize based on your scenario. You can modify any of the preset values at any time.
