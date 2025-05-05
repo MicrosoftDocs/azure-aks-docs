@@ -1,7 +1,7 @@
 ---
 title: Use Microsoft Entra pod-managed identities in Azure Kubernetes Service (Preview)
 description: Learn how to use Microsoft Entra pod-managed identities in Azure Kubernetes Service (AKS)
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/29/2024
@@ -156,6 +156,8 @@ spec:
 ```
 
 ## Create an AKS cluster with Kubenet network plugin
+
+[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
 Create an AKS cluster with Kubenet network plugin and pod-managed identity enabled.
 

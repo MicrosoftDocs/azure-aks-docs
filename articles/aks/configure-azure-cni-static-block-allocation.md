@@ -53,15 +53,6 @@ Below are some of the limitations of using Azure CNI Static Block allocation:
 `max_pods` = `(N * 16) - 1`  
 where N is any positive integer and N > 0
 
-### Region availability 
-
-This feature is **_not_** available in the following regions:
-
-- US South
-- East US 2
-- West US
-- West US 2
-
 ## Plan IP addressing
 
 Planning your IP addressing is more flexible and granular. Since the nodes and pods scale independently, their address spaces can also be planned separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.

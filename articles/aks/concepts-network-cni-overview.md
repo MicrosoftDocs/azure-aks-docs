@@ -1,7 +1,7 @@
 ---
 title: Concepts - CNI networking in AKS
 description: Learn about CNI networking options in Azure Kubernetes Service (AKS)
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 05/28/2024
 author: schaffererin
 ms.author: schaffererin
@@ -34,7 +34,6 @@ In overlay networks, pods can communicate with each other directly. Traffic leav
 Azure Kubernetes Service provides the following CNI plugins for overlay networking:
 
 - [Azure CNI Overlay][azure-cni-overlay], the recommended CNI plugin for most scenarios.
-- [kubenet][kubenet], the legacy overlay model CNI.
 
 ### Flat networks
 
@@ -71,7 +70,7 @@ When choosing a networking model, consider the use cases for each CNI plugin and
 | CNI plugin | Networking model | Use case highlights |
 |-------------|----------------------|-----------------------|
 | **Azure CNI Overlay** | Overlay | - Best for VNET IP conservation<br/>- Max node count supported by API Server + 250 pods per node<br/>- Simpler configuration<br/> -No direct external pod IP access |
-| **Azure CNI Pod Subnet (Preview)** | Flat | - Direct external pod access<br/>- Modes for efficient VNet IP usage _or_ large cluster scale support |
+| **Azure CNI Pod Subnet** | Flat | - Direct external pod access<br/>- Modes for efficient VNet IP usage _or_ large cluster scale support(Preview) |
 | **Kubenet (Legacy)** | Overlay | - Prioritizes IP conservation<br/>- Limited scale<br/>- Manual route management |
 | **Azure CNI Node Subnet (Legacy)** | Flat | - Direct external pod access<br/>- Simpler configuration <br/>- Limited scale <br/>- Inefficient use of VNet IPs |
 
@@ -86,8 +85,8 @@ You might also want to compare the features of each CNI plugin. The following ta
 | On-premises access via VPN/Express Route | Pod initiated | Both ways | Both ways | Pod initiated |
 | Access to service endpoints | Supported | Supported | Supported | Supported |
 | Expose services using load balancer | Supported | Supported | Supported | Supported |
-| Expose services using App Gateway | Currently not supported | Supported | Supported | Supported |
-| Expose services using ingress controller | Supported | Supported | Supported | Supported |
+| Expose services using App Gateway Ingress Controller | Supported | Supported | Supported | Supported |
+| Expose services using App Gateway for Containers | Supported | Supported | Supported | Not Supported |
 | Windows node pools | Supported | Supported | Supported | Not supported |
 | Default Azure DNS and Private Zones | Supported | Supported | Supported | Supported |
 | VNet Subnet sharing across multiple clusters | Supported | Supported | Supported | Not supported |
@@ -110,10 +109,10 @@ There are several requirements and considerations to keep in mind when planning 
 
 - The virtual network for the AKS cluster must allow outbound internet connectivity.
 - AKS clusters can't use `169.254.0.0/16`, `172.30.0.0/16`, `172.31.0.0/16`, or `192.0.2.0/24` for the Kubernetes service address range, pod address range, or cluster virtual network address range.
-- In BYO CNI scenarios, the cluster identity used by the AKS cluster must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you wish to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
+- In BYO VNet scenarios, the cluster identity used by the AKS cluster must have at least [Network Contributor](/azure/role-based-access-control/built-in-roles#network-contributor) permissions on the subnet within your virtual network. If you wish to define a [custom role](/azure/role-based-access-control/custom-roles) instead of using the built-in Network Contributor role, the following permissions are required:
   - `Microsoft.Network/virtualNetworks/subnets/join/action`
-  - `Microsoft.Network/virtualNetworks/subnets/read`
   - `Microsoft.Authorization/roleAssignments/write`
+  - `Microsoft.Network/virtualNetworks/subnets/read` (only needed if you are defining your own subnets and CIDRs)
 - The subnet assigned to the AKS node pool can't be a [delegated subnet][delegated-subnet].
 - AKS doesn't apply Network Security Groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. If you provide your own subnet and add NSGs associated with that subnet, you must ensure the security rules in the NSGs allow traffic within the node CIDR range. For more information, see [Network security groups][aks-network-nsg].
 

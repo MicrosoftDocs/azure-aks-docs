@@ -2,7 +2,7 @@
 title: Use OpenFaaS on Azure Kubernetes Service (AKS)
 description: Learn how to deploy and use OpenFaaS on an Azure Kubernetes Service (AKS) cluster to build serverless functions with containers.
 author: justindavies
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 08/29/2023
 ms.subservice: aks-developer
 ms.author: juda
@@ -50,6 +50,9 @@ As a good practice, OpenFaaS and OpenFaaS functions should be stored in their ow
     --from-literal=basic-auth-user=admin \
     --from-literal=basic-auth-password="$PASSWORD"
     ```
+
+    > [!IMPORTANT]
+    > Using a username and password for authentication is an insecure pattern. If you have an OpenFaaS enterprise license, we recommend using [Identity and Access Management (IAM) for OpenFaaS](https://www.openfaas.com/blog/walkthrough-iam-for-openfaas/) instead.
 
 3. Get the value for your password using the following `echo` command.
 
@@ -148,13 +151,13 @@ As a good practice, OpenFaaS and OpenFaaS functions should be stored in their ow
     az cosmosdb create --resource-group serverless-backing --name openfaas-cosmos --kind MongoDB
     ```
 
-4. Get the Azure Cosmos DB database connection string and store it in a variable using the [`az cosmosdb list`][az-cosmosdb-list] command. Make sure you replace the value for the `--resource-group` argument with the name of your resource group, and the `--name` argument with the name of your Azure Cosmos DB instance.
+4. Get the Azure Cosmos DB database connection string and store it in a variable using the [`az cosmosdb keys list`][az-cosmosdb-keys-list] command. Make sure you replace the value for the `--resource-group` argument with the name of your resource group, and the `--name` argument with the name of your Azure Cosmos DB instance.
 
     ```azurecli-interactive
-    COSMOS=$(az cosmosdb list-connection-strings \
+    COSMOS=$(az cosmosdb keys list \
+      --type connection-strings \
       --resource-group serverless-backing \
       --name openfaas-cosmos \
-      --query connectionStrings[0].connectionString \
       --output tsv)
     ```
 
@@ -235,5 +238,4 @@ Continue to learn with the [OpenFaaS workshop][openfaas-workshop], which include
 [openfaas-workshop]: https://github.com/openfaas/workshop
 [az-group-create]: /cli/azure/group#az_group_create
 [az-cosmosdb-create]: /cli/azure/cosmosdb#az_cosmosdb_create
-[az-cosmosdb-list]: /cli/azure/cosmosdb#az_cosmosdb_list
-
+[az-cosmosdb-keys-list]: /cli/azure/cosmosdb/keys#az_cosmosdb_keys_list

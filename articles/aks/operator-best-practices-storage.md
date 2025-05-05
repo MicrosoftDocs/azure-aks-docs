@@ -2,11 +2,11 @@
 title: Best practices for storage and backup
 titleSuffix: Azure Kubernetes Service
 description: Learn the cluster operator best practices for storage, data encryption, and backups in Azure Kubernetes Service (AKS)
-ms.topic: conceptual
+ms.topic: best-practice
 ms.subservice: aks-storage
 ms.date: 04/28/2023
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 
 ---

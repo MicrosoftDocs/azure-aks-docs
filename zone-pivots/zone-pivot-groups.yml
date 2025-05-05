@@ -19,6 +19,15 @@ groups:
     title: macOS
   - id: client-operating-system-windows
     title: Windows
+# Owner: asabbour
+- id: bicep-azure-cli
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: bicep
+    title: Bicep
 - id: bicep-azure-cli-portal
   title: Interaction type
   prompt: Select how you want to interact with Azure
@@ -29,6 +38,14 @@ groups:
     title: Azure CLI
   - id: bicep
     title: Bicep
+- id: azure-cli-or-terraform
+  title: Interaction type
+  prompt: Select how you want to interact with Azure
+  pivots:
+  - id: azure-cli
+    title: Azure CLI
+  - id: terraform
+    title: Terraform
 # Owner: ruslany
 - id: aks-azure-developer-cli
   title: Azure command line interfaces
@@ -39,3 +56,23 @@ groups:
   - id: development-environment-azure-developer
     title: Azure Developer CLI
 # Owner: jopeng
+# Owner: schaffererin
+- id: csi-secrets-store-identity-access
+  title: Choose a Secrets Store CSI Driver access method
+  prompt: Choose an access method
+  pivots:
+  - id: access-with-service-connector
+    title: Service Connector with managed identity
+  - id: access-with-a-microsoft-entra-workload-identity
+    title: Workload ID
+  - id: access-with-a-user-assigned-managed-identity
+    title: Managed identity
+#Owner: shashankbarsin
+- id: network-isolated-acr-type
+  title: Choose Azure Container Registry (ACR) mode
+  prompt: Choose an access method
+  pivots:
+  - id: aks-managed-acr
+    title: AKS-managed Azure Container Registry
+  - id: byo-acr
+    title: Bring your own (BYO) Azure Container Registry

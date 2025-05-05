@@ -5,7 +5,8 @@ ms.topic: how-to
 ms.author: nickoman
 author: nickomang
 ms.subservice: aks-upgrade
-ms.date: 05/01/2023
+ms.date: 04/06/2025
+ms.custom: aks-upgrade, automation, innovation-engine
 ---
 
 # Automatically upgrade an Azure Kubernetes Service (AKS) cluster
@@ -62,6 +63,8 @@ The following upgrade channels are available:
 > * If you're using the preview API `11-02-preview` or later, and you select the `node-image` cluster auto-upgrade channel, the [node image auto-upgrade channel][node-image-auto-upgrade] automatically sets to `NodeImage`.
 >
 > * Each cluster can only be associated with a single auto-upgrade channel. This is because your specified channel determines the Kubernetes version that runs on the cluster.
+>   
+> * If your cluster has no auto-upgrade channel and you enable it for LTS *(Long-Term Support)*, it will default to a `patch` auto-upgrade channel.
 
 ## Use cluster auto-upgrade with a new AKS cluster
 
@@ -69,9 +72,12 @@ The following upgrade channels are available:
 
 * Set the auto-upgrade channel when creating a new cluster using the [`az aks create`][az-aks-create] command and the `auto-upgrade-channel` parameter.
 
-    ```azurecli-interactive
-    az aks create --resource-group myResourceGroup --name myAKSCluster --auto-upgrade-channel stable --generate-ssh-keys
-    ```
+```text
+export RANDOM_SUFFIX=$(openssl rand -hex 3)
+export RESOURCE_GROUP="myResourceGroup$RANDOM_SUFFIX"
+export AKS_CLUSTER_NAME="myAKSCluster"
+az aks create --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --auto-upgrade-channel stable --generate-ssh-keys
+```
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -90,9 +96,23 @@ The following upgrade channels are available:
 
 * Set the auto-upgrade channel on an existing cluster using the [`az aks update`][az-aks-update] command with the `auto-upgrade-channel` parameter.
 
-    ```azurecli-interactive
-    az aks update --resource-group myResourceGroup --name myAKSCluster --auto-upgrade-channel stable
-    ```
+```azurecli-interactive
+az aks update --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER_NAME --auto-upgrade-channel stable
+```
+
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```JSON
+{
+  "id": "/subscriptions/xxxxx-xxxxx-xxxxx-xxxxx/resourceGroups/myResourceGroupabc123/providers/Microsoft.ContainerService/managedClusters/myAKSCluster",
+  "properties": {
+    "autoUpgradeChannel": "stable",
+    "provisioningState": "Succeeded"
+  }
+}
+```
 
 ### [Azure portal](#tab/azure-portal)
 

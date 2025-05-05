@@ -33,7 +33,6 @@ AKS uses the following rules for applying updates to installed add-ons:
 
 | Name | Description | Articles | GitHub |
 |---|---|---| --- |
-| web_application_routing | Use a managed NGINX ingress controller with your AKS cluster.| [Application Routing Overview][app-routing] | [GitHub][app-routing-repo] |
 | ingress-appgw | Use Application Gateway Ingress Controller with your AKS cluster. | [What is Application Gateway Ingress Controller?][agic] | [GitHub][agic-repo] |
 | keda | Use event-driven autoscaling for the applications on your AKS cluster. | [Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on][keda] | [GitHub][keda-repo] |
 | monitoring | Use Container Insights and Managed Prometheus monitoring with your AKS cluster. | [Container insights overview][container-insights]<br>[Managed Prometheus overview][managed-prometheus] | [GitHub][aks-repo]<br>[GitHub][managed-prometheus-repo] |
@@ -109,7 +108,7 @@ For more information, see [Windows AKS partner solutions][windows-aks-partner-so
 [istio]: https://istio.io/
 [istio-install]: https://istio.io/latest/docs/setup/install/
 [linkerd]: https://linkerd.io/
-[linkerd-install]: https://linkerd.io/getting-started/
+[linkerd-install]: https://linkerd.io/2.16/getting-started/
 [consul]: https://www.consul.io/
 [consul-install]: https://learn.hashicorp.com/tutorials/consul/service-mesh-deploy
 [grafana]: https://grafana.com/

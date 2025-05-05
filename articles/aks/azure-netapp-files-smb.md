@@ -1,12 +1,12 @@
 ---
 title: Provision Azure NetApp Files SMB volumes for Azure Kubernetes Service
 description: Describes how to statically and dynamically provision Azure NetApp Files SMB volumes for Azure Kubernetes Service.
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
 ms.date: 05/08/2023
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 ---
 
@@ -309,22 +309,22 @@ You must install a Container Storage Interface (CSI) driver to create a Kubernet
 
 ## Dynamically configure for applications that use SMB volumes 
 
-This section covers how to use Astra Trident to dynamically create an SMB volume on Azure NetApp Files and automatically mount it to a containerized windows application.  
+This section covers how to use Trident to dynamically create an SMB volume on Azure NetApp Files and automatically mount it to a containerized windows application.  
 
-### Install Astra Trident 
+### Install Trident 
 
-To dynamically provision SMB volumes, you need to install Astra Trident version 22.10 or later. Dynamically provisioning SMB volumes requires windows worker nodes. 
+To dynamically provision SMB volumes, you need to install Trident version 22.10 or later. Dynamically provisioning SMB volumes requires windows worker nodes. 
 
-Astra Trident is NetApp's dynamic storage provisioner that is purpose-built for Kubernetes. Simplify the consumption of storage for Kubernetes applications using Astra Trident's industry-standard [Container Storage Interface (CSI)](https://kubernetes-csi.github.io/docs/) driver. Astra Trident deploys on Kubernetes clusters as pods and provides dynamic storage orchestration services for your Kubernetes workloads.
+Trident is NetApp's dynamic storage provisioner that is purpose-built for Kubernetes. Simplify the consumption of storage for Kubernetes applications using Trident's industry-standard [Container Storage Interface (CSI)](https://kubernetes-csi.github.io/docs/) driver. Trident deploys on Kubernetes clusters as pods and provides dynamic storage orchestration services for your Kubernetes workloads.
 
 Trident can be installed using the Trident operator (manually or using [Helm](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html)) or [`tridentctl`](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-tridentctl.html). To learn more about these installation methods and how they work, see the [Install Guide](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html).
 
 
-#### Install Astra Trident using Helm   
+#### Install Trident using Helm   
 
-[Helm](https://helm.sh/) must be installed on your workstation to install Astra Trident using this method. For other methods of installing Astra Trident, see the [Astra Trident Install Guide](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html). If you have windows worker nodes in the cluster, ensure to enable windows with any installation method. 
+[Helm](https://helm.sh/) must be installed on your workstation to install Trident using this method. For other methods of installing Trident, see the [Trident Install Guide](https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html). If you have windows worker nodes in the cluster, ensure to enable windows with any installation method. 
 
-1. To install Astra Trident using Helm for a cluster with windows worker nodes, run the following commands:  
+1. To install Trident using Helm for a cluster with windows worker nodes, run the following commands:  
 
     ```bash
     helm repo add netapp-trident https://netapp.github.io/trident-helm-chart
@@ -356,7 +356,7 @@ Trident can be installed using the Trident operator (manually or using [Helm](ht
       $ helm get all trident
     ```
 
-2. To confirm Astra Trident was installed successfully, run the following [`kubectl describe`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe) command:   
+2. To confirm Trident was installed successfully, run the following [`kubectl describe`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe) command:   
 
     ```bash
     kubectl describe torc trident
@@ -428,7 +428,7 @@ Trident can be installed using the Trident operator (manually or using [Helm](ht
 
 ### Create a backend
 
-A backend must be created to instruct Astra Trident about the Azure NetApp Files subscription and where it needs to create volumes. For more information about backends, see [Azure NetApp Files backend configuration options and examples](https://docs.netapp.com/us-en/trident/trident-use/anf-examples.html).
+A backend must be created to instruct Trident about the Azure NetApp Files subscription and where it needs to create volumes. For more information about backends, see [Azure NetApp Files backend configuration options and examples](https://docs.netapp.com/us-en/trident/trident-use/anf-examples.html).
 
 1. Create a file named `backend-secret-smb.yaml` and copy in the following YAML. Change the `Client ID` and `clientSecret` to the correct values for your environment.
 
@@ -439,7 +439,7 @@ A backend must be created to instruct Astra Trident about the Azure NetApp Files
       name: backend-tbc-anf-secret
     type: Opaque
     stringData:
-      clientID: abcde356-bf8e-fake-c111-abcde35613aa
+      clientID: 00001111-aaaa-2222-bbbb-3333cccc4444
       clientSecret: rR0rUmWXfNioN1KhtHisiSAnoTherboGuskey6pU
     ``` 
 
@@ -453,8 +453,8 @@ A backend must be created to instruct Astra Trident about the Azure NetApp Files
     spec:
       version: 1
       storageDriverName: azure-netapp-files
-      subscriptionID: 12abc678-4774-fake-a1b2-a7abcde39312
-      tenantID: a7abcde3-edc1-fake-b111-a7abcde356cf
+      subscriptionID: aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e
+      tenantID: aaaabbbb-0000-cccc-1111-dddd2222eeee
       location: eastus
       serviceLevel: Premium
       credentials:
@@ -566,7 +566,7 @@ A storage class is used to define how a unit of storage is dynamically created w
 
 ### Create a PVC
 
-A persistent volume claim (PVC) is a request for storage by a user. Upon the creation of a persistent volume claim, Astra Trident automatically creates an Azure NetApp Files SMB share and makes it available for Kubernetes workloads to consume.
+A persistent volume claim (PVC) is a request for storage by a user. Upon the creation of a persistent volume claim, Trident automatically creates an Azure NetApp Files SMB share and makes it available for Kubernetes workloads to consume.
 
 1. Create a file named `anf-pvc-smb.yaml` and copy the following YAML. In this example, a 100-GiB volume is created with `ReadWriteMany` access and uses the storage class created in [Create a storage class](#create-a-storage-class).
 
@@ -609,7 +609,7 @@ A persistent volume claim (PVC) is a request for storage by a user. Upon the cre
     anf-pvc-smb   Bound    pvc-209268f5-c175-4a23-b61b-e34faf5b6239   100Gi      RWX            anf-sc-smb     5m38s
     ```
 
-4. To view the persistent volume created by Astra Trident, run the following [`kubectl get`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command: 
+4. To view the persistent volume created by Trident, run the following [`kubectl get`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command: 
 
     ```bash
     kubectl get pv
@@ -737,19 +737,18 @@ After the PVC is created, a pod can be spun up to access the Azure NetApp Files 
 
 ## Next steps
 
-Astra Trident supports many features with Azure NetApp Files. For more information, see:
+Trident supports many features with Azure NetApp Files. For more information, see:
 
 * [Expanding volumes][expand-trident-volumes]
 * [On-demand volume snapshots][on-demand-trident-volume-snapshots]
 * [Importing volumes][importing-trident-volumes]
 
 <!-- EXTERNAL LINKS -->
-[astra-trident]: https://docs.netapp.com/us-en/trident/index.html
+[trident]: https://docs.netapp.com/us-en/trident/index.html
 [kubectl-create]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe
 [kubectl-exec]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#exec
-[astra-control-service]: https://cloud.netapp.com/astra-control
 [kubernetes-csi-driver]: https://kubernetes-csi.github.io/docs/
 [trident-install-guide]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy.html
 [trident-helm-chart]: https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-operator.html
@@ -778,4 +777,3 @@ Astra Trident supports many features with Azure NetApp Files. For more informati
 [install-azure-cli]: /cli/azure/install-azure-cli
 [use-tags]: use-tags.md
 [azure-ad-app-registration]: ../active-directory/develop/howto-create-service-principal-portal.md
-

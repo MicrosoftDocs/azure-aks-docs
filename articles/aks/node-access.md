@@ -229,11 +229,10 @@ To connect to another node in the cluster, use the `kubectl debug` command. For 
 
 If your Linux proxy node isn't reachable, using Azure Bastion as a proxy is an alternative. This method requires that you set up an Azure Bastion host for the virtual network in which the cluster resides. See [Connect with Azure Bastion][azure-bastion] for more details.
 
-## SSH using private IPs from the AKS API (preview)
+## SSH using private IPs from the AKS API
 
-If you don't have access to the Kubernetes API, you can get access to properties such as ```Node IP``` and ```Node Name``` through the [AKS agent pool API (preview)][agent-pool-rest-api], (available on preview versions `07-02-2023` or above) to connect to AKS nodes.
+If you don't have access to the Kubernetes API, you can get access to properties such as ```Node IP``` and ```Node Name``` through the [AKS agent pool API ][agent-pool-rest-api], (available on stable versions `07-01-2024` or above) to connect to AKS nodes.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ### Create an interactive shell connection to a node using the IP address
 

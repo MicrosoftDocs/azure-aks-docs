@@ -5,7 +5,7 @@ author: nickomang
 ms.author: nickoman
 ms.subservice: aks-security
 ms.topic: how-to
-ms.date: 10/19/2023
+ms.date: 01/03/2025
 ms.custom: template-how-to, devx-track-azurecli
 ---
 
@@ -17,17 +17,16 @@ Follow the steps in [Use the Azure Key Vault provider for Secrets Store CSI Driv
 
 ### Enable and disable auto-rotation
 
-> [!NOTE]
-> When the Azure Key Vault provider for Secrets Store CSI Driver is enabled, it updates the pod mount and the Kubernetes secret defined in the `secretObjects` field of `SecretProviderClass`. It does so by polling for changes periodically, based on the rotation poll interval you defined. The default rotation poll interval is *two minutes*.
+Once you enable auto-rotation for Azure Key Vault Secrets Provider, it updates the pod mount and the Kubernetes secret defined in the `secretObjects` field of `SecretProviderClass`. It does so by polling for changes periodically, based on the rotation poll interval you defined. The default rotation poll interval is *two minutes*.
 
->[!NOTE]
-> When a secret updates in an external secrets store after initial pod deployment, the Kubernetes Secret and the pod mount periodically update depending on how the application consumes the secret data.
->
-> **Mount the Kubernetes Secret as a volume**: Use the auto-rotation and sync K8s secrets features of Secrets Store CSI Driver. The application needs to watch for changes from the mounted Kubernetes Secret volume. When the CSI Driver updates the Kubernetes Secret, the corresponding volume contents automatically update as well.
->
-> **Application reads the data from the container filesystem**: Use the rotation feature of Secrets Store CSI Driver. The application needs to watch for the file change from the volume mounted by the CSI driver.
->
-> **Use the Kubernetes Secret for an environment variable**: Restart the pod to get the latest secret as an environment variable. Use a tool such as [Reloader][reloader] to watch for changes on the synced Kubernetes Secret and perform rolling upgrades on pods.
+
+When a secret updates in an external secrets store after initial pod deployment, the Kubernetes Secret and the pod mount periodically update depending on how the application consumes the secret data.
+
+* Mount the Kubernetes Secret as a volume: Use the auto-rotation and sync K8s secrets features of Secrets Store CSI Driver. The application needs to watch for changes from the mounted Kubernetes Secret volume. When the CSI Driver updates the Kubernetes Secret, the corresponding volume contents automatically update as well.
+
+* Application reads the data from the container filesystem: Use the rotation feature of Secrets Store CSI Driver. The application needs to watch for the file change from the volume mounted by the CSI driver.
+
+* Use the Kubernetes Secret for an environment variable: Restart the pod to get the latest secret as an environment variable. Use a tool such as [Reloader][reloader] to watch for changes on the synced Kubernetes Secret and perform rolling upgrades on pods.
 
 #### Enable auto-rotation on a new AKS cluster
 

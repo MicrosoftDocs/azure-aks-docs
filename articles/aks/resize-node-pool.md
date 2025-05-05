@@ -67,7 +67,9 @@ kube-system   metrics-server-774f99dbf4-h52hn       1/1     Running   1         
 
 ### [Azure CLI](#tab/azure-cli)
 
-Use the [az aks nodepool add][az-aks-nodepool-add] command to create a new node pool called `mynodepool` with three nodes using the `Standard_DS3_v2` VM SKU:
+When resizing, be sure to consider all workload requirements, such as availability zones, and configure your node pool accordingly. You might need to modify the following command to best fit your needs. For a full list of the configuration options, see the [`az aks nodepool add`][az-aks-nodepool-add] reference page.
+
+Use the [`az aks nodepool add`][az-aks-nodepool-add] command to create a new node pool called `mynodepool` with three nodes using the `Standard_DS3_v2` VM SKU:
 
 ```azurecli-interactive
 az aks nodepool add \
@@ -82,8 +84,6 @@ az aks nodepool add \
 
 > [!NOTE]
 > Every AKS cluster must contain at least one system node pool with at least one node. In the example above, we are using a `--mode` of `System`, as the cluster is assumed to have only one node pool, necessitating a `System` node pool to replace it. A node pool's mode can be [updated at any time][update-node-pool-mode].
-
-When resizing, be sure to consider other requirements and configure your node pool accordingly. You may need to modify the above command. For a full list of the configuration options, see the [az aks nodepool add][az-aks-nodepool-add] reference page.
 
 After a few minutes, the new node pool has been created:
 
@@ -103,7 +103,9 @@ aks-nodepool1-31721111-vmss000002    Ready    agent   10d   v1.21.9
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-Use the [New-AzAksNodePool][new-azaksnodepool] cmdlet to create a new node pool called `mynodepool` with three nodes using the `Standard_DS3_v2` VM SKU:
+When resizing, be sure to consider all workload requirements, such as availability zones, and configure your node pool accordingly. You might need to modify the following command to best fit your needs. For a full list of the configuration options, see the [`New-AzAksNodePool`][new-azaksnodepool] reference page.
+
+Use the [`New-AzAksNodePool`][new-azaksnodepool] cmdlet to create a new node pool called `mynodepool` with three nodes using the `Standard_DS3_v2` VM SKU:
 
 ```azurepowershell-interactive
 $params = @{
@@ -140,8 +142,6 @@ $myAKSCluster = Get-AzAksCluster -ResourceGroupName myResourceGroup -Name myAKSC
 ($myAKSCluster.AgentPoolProfiles | Where-Object Name -eq 'mynodepool').Mode = 'System'
 $myAKSCluster | Set-AzAksCluster
 ```
-
-When resizing, be sure to consider other requirements and configure your node pool accordingly. You may need to modify the above command. For a full list of the configuration options, see the [New-AzAksNodePool][new-azaksnodepool] reference page.
 
 ---
 
@@ -235,6 +235,7 @@ By default, your cluster has AKS_managed pod disruption budgets (such as `coredn
 
 > [!TIP]
 > Consider draining nodes one-by-one for a smoother eviction experience and to avoid throttling. For more information, see:
+>
 > * [Plan for availability using a pod disruption budget][pod-disruption-budget]
 > * [Specifying a Disruption Budget for your Application][specify-disruption-budget]
 > * [Disruptions][disruptions]
@@ -243,7 +244,7 @@ By default, your cluster has AKS_managed pod disruption budgets (such as `coredn
 
 ### [Azure CLI](#tab/azure-cli)
 
-To delete the existing node pool, use the Azure portal or the [az aks nodepool delete][az-aks-nodepool-delete] command:
+To delete the existing node pool, use the Azure portal or the [`az aks nodepool delete`][az-aks-nodepool-delete] command:
 
 ```azurecli-interactive
 az aks nodepool delete \
@@ -254,7 +255,7 @@ az aks nodepool delete \
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-To delete the existing node pool, use the Azure portal or the [Remove-AzAksNodePool][remove-azaksnodepool] cmdlet:
+To delete the existing node pool, use the Azure portal or the [`Remove-AzAksNodePool`][remove-azaksnodepool] cmdlet:
 
 > [!IMPORTANT]
 > When you delete a node pool, AKS doesn't perform cordon and drain. To minimize the disruption of rescheduling pods currently running on the node pool you are going to delete, perform a cordon and drain on all nodes in the node pool before deleting.

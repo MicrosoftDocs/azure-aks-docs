@@ -14,7 +14,7 @@ ms.custom: mvc, devx-track-azurepowershell
 
 As part of the application and cluster lifecycle, you might want to upgrade to the latest available version of Kubernetes. You can upgrade your Azure Kubernetes Service (AKS) cluster using the Azure CLI, Azure PowerShell, or the Azure portal.
 
-In this tutorial, part seven of seven, you upgrade an AKS cluster. You learn how to:
+In this tutorial, you upgrade an AKS cluster. You learn how to:
 
 > [!div class="checklist"]
 >
@@ -72,18 +72,18 @@ If using Azure PowerShell, this tutorial requires Azure PowerShell version 5.9.0
       Select-Object -Property Name, CurrentKubernetesVersion, Location
     ```
 
-    The following example output shows the current version as *1.28.9* and the location as *eastus*:
+    The following example output shows the current version as *1.28.9* and the location as *westus2*:
 
     ```output
     Name              CurrentKubernetesVersion      Location
     ----              ------------------------      --------
-    myAKSCluster      1.28.9                        eastus
+    myAKSCluster      1.28.9                        westus2
     ```
 
 2. Check which Kubernetes upgrade releases are available in the region where your cluster resides using the [`Get-AzAksVersion`][get-azaksversion] cmdlet.
 
     ```azurepowershell-interactive
-    Get-AzAksVersion -Location eastus | Where-Object OrchestratorVersion
+    Get-AzAksVersion -Location westus2 | Where-Object OrchestratorVersion
     ```
 
     The following example output shows the available versions under `OrchestratorVersion`:
@@ -178,10 +178,10 @@ You can either [manually upgrade your cluster](#manually-upgrade-cluster) or [co
       "currentKubernetesVersion": "1.29.2",
       "dnsPrefix": "myAKSClust-myResourceGroup-19da35",
       "enableRbac": false,
-      "fqdn": "myaksclust-myresourcegroup-19da35-bd54a4be.hcp.eastus.azmk8s.io",
+      "fqdn": "myaksclust-myresourcegroup-19da35-bd54a4be.hcp.westus2.azmk8s.io",
       "id": "/subscriptions/<Subscription ID>/resourcegroups/myResourceGroup/providers/Microsoft.ContainerService/managedClusters/myAKSCluster",
       "kubernetesVersion": "1.29.2",
-      "location": "eastus",
+      "location": "westus2",
       "name": "myAKSCluster",
       "type": "Microsoft.ContainerService/ManagedClusters"
       ...
@@ -211,7 +211,7 @@ You can either [manually upgrade your cluster](#manually-upgrade-cluster) or [co
     ResourceGroupName        : myResourceGroup
     Name                     : myAKSCluster
     Type                     : Microsoft.ContainerService/ManagedClusters
-    Location                 : eastus
+    Location                 : westus2
     Tags                     :
     ```
 
@@ -307,7 +307,7 @@ AKS regularly provides new node images. Linux node images are updated weekly, an
     ```output
     Name          Location    ResourceGroup    KubernetesVersion    CurrentKubernetesVersion  ProvisioningState    Fqdn
     ------------  ----------  ---------------  -------------------  ------------------------  -------------------  ----------------------------------------------------------------
-    myAKSCluster  eastus      myResourceGroup  1.29.2               1.29.2                    Succeeded            myaksclust-myresourcegroup-19da35-bd54a4be.hcp.eastus.azmk8s.io
+    myAKSCluster  westus2      myResourceGroup  1.29.2               1.29.2                    Succeeded            myaksclust-myresourcegroup-19da35-bd54a4be.hcp.westus2.azmk8s.io
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -324,7 +324,7 @@ AKS regularly provides new node images. Linux node images are updated weekly, an
     ```output
     Name             Location     KubernetesVersion     ProvisioningState
     ----             --------     -----------------     -----------------
-    myAKSCluster     eastus       1.29.2                Succeeded
+    myAKSCluster     westus2       1.29.2                Succeeded
     ```
 
 ### [Azure portal](#tab/azure-portal)

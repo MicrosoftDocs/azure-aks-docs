@@ -121,9 +121,19 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/container-insights-live-data.md",
+            "redirect_url": "/azure/aks/monitor-aks",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/container-service-quotas.md",
             "redirect_url": "/azure/aks/quotas-skus-regions",
             "redirect_document_id": true
+        },
+        {
+            "source_path_from_root": "/articles/aks/control-plane-metrics-default-list.md",
+            "redirect_url": "/azure/aks/monitor-aks-reference",
+            "redirect_document_id": false
         },
         {
             "source_path_from_root": "/articles/aks/create-cluster.md",
@@ -236,6 +246,11 @@
             "redirect_document_id": false
         },
         {
+            "source_path_from_root": "/articles/aks/draft-devx-extension-aks.md",
+            "redirect_url": "/azure/aks/aks-extension-draft-dockerfile",
+            "redirect_document_id": false
+        },
+        {
             "source_path_from_root": "/articles/aks/kubernetes-walkthrough-portal.md",
             "redirect_url": "/azure/aks/learn/quick-kubernetes-deploy-portal",
             "redirect_document_id": false
@@ -283,6 +298,11 @@
         {
             "source_path_from_root": "/articles/aks/monitor-apiserver.md",
             "redirect_url": "/azure/aks/monitor-aks#resource-logs",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/monitor-control-plane-metrics.md",
+            "redirect_url": "/azure/aks/monitor-aks",
             "redirect_document_id": false
         },
         {
@@ -387,7 +407,7 @@
         },
         {
             "source_path_from_root": "/articles/aks/servicemesh-istio-install.md",
-            "redirect_url": "/azure/aks/servicemesh-about",
+            "redirect_url": "/azure/aks/istio-deploy-addon",
             "redirect_document_id": false
         },
         {
@@ -514,6 +534,67 @@
             "source_path_from_root": "/articles/aks/edge-zones.md",
             "redirect_url": "/azure/aks/extended-zones",
             "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/tutorial-kubernetes-app-update.md",
+            "redirect_url": "/azure/aks/tutorial-kubernetes-upgrade-cluster",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-observability-bring-your-own-cli.md",
+            "redirect_url": "/azure/aks/container-network-observability-how-to",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-container-services-security-cli.md",
+            "redirect_url": "/azure/aks/how-to-apply-fqdn-filtering-policies",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/network-observability-managed-cli.md",
+            "redirect_url": "/azure/aks/monitor-aks#network-observability",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/network-observability-overview.md",
+            "redirect_url": "/azure/aks/monitor-aks#network-observability",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-container-services-security-concepts.md",
+            "redirect_url": "/azure/aks/container-network-security-concepts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-observability-concepts.md",
+            "redirect_url": "/azure/aks/container-network-observability-concepts",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/advanced-network-observability-cli.md",
+            "redirect_url": "/azure/aks/container-network-observability-how-to",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/learn/quick-kubernetes-automatic-deploy.md",
+            "redirect_url": "/azure/aks/automatic/quick-automatic-managed-network",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/configure-kubenet-dual-stack.md",
+            "redirect_url": "/azure/aks/configure-dual-stack",
+            "redirect_document_id": false  
+        },
+        {
+            "source_path_from_root": "/articles/aks/upgrade-aks-ipam-and-dataplane.md",
+            "redirect_url": "/azure/aks/upgrade-azure-cni",
+            "redirect_document_id": false
+        },
+        {
+            "source_path_from_root": "/articles/aks/container-network-security-concepts.md",
+            "redirect_url": "/azure/aks/advanced-container-networking-services-overview?tabs=cilium#container-network-security",
+            "redirect_document_id": false 
         }
+
      ]
 }

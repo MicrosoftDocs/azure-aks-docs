@@ -2,23 +2,30 @@
 title: Optimize costs in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Recommendations and best practices for optimizing costs in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: best-practice
+ms.service: azure-kubernetes-service
 ms.date: 02/21/2024
-author: nickomang
-ms.author: nickoman
+author: schaffererin
+ms.author: schaffererin
 ---
 
-# Optimize costs in Azure Kubernetes Service (AKS)
+# Best practices for cost optimization in Azure Kubernetes Service (AKS)
 
 Cost optimization is about maximizing the value of resources while minimizing unnecessary expenses within your cloud environment. This process involves identifying cost effective configuration options and implementing best practices to improve operational efficiency. An AKS environment can be optimized to minimize cost while taking into account performance and reliability requirements.
 
 In this article, you learn about:
 > [!div class="checklist"]
 >
+> * Holistic monitoring and FinOps practices.
 > * Strategic infrastructure selection.
 > * Dynamic rightsizing and autoscaling.
 > * Leveraging Azure discounts for substantial savings.
-> * Holistic monitoring and FinOps practices.
+
+## Embrace FinOps to build a cost saving culture
+
+[Financial operations (FinOps)](https://www.finops.org/introduction/what-is-finops/) is a discipline that combines financial accountability with cloud management and optimization. It focuses on driving alignment between finance, operations, and engineering teams to understand and control cloud costs. The FinOps foundation has several notable projects, such as the [**FinOps Framework**](https://finops.org/framework) and the [**FOCUS Specification**](https://focus.finops.org/).
+
+For more information, see [What is FinOps?](/azure/cost-management-billing/finops/)
 
 ## Prepare the application environment  
 
@@ -29,7 +36,7 @@ It's important to evaluate the resource requirements of your application before 
 | SKU family | Description | Use case |
 |------------|-------------|----------|
 | [**Azure Spot Virtual Machines**](/azure/virtual-machines/spot-vms)| Azure Spot Virtual machine scale sets back [Spot node pools](./spot-node-pool.md) and deployed to a single fault domain with no high availability or service-level agreement (SLA) guarantees. Spot VMs allow you to take advantage of unutilized Azure capacity with significant discounts (up to 90%, as compared to pay-as-you-go prices). If Azure needs capacity back, the Azure infrastructure evicts the Spot nodes. | Best for dev/test environments, workloads that can handle interruptions such as batch processing jobs, and workloads with flexible execution time. |
-| [**Ampere Altra Arm-based processors (Arm64)**](https://azure.microsoft.com/blog/now-in-preview-azure-virtual-machines-with-ampere-altra-armbased-processors/) | Arm64 VMs are power-efficient and cost effective but don't compromise on performance. With [Arm64 node pool support in AKS](./create-node-pools.md#arm64-node-pools), you can create Arm64 Ubuntu agent nodes and even mix Intel and ARM architecture nodes within a cluster. These ARM VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads. | Best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more. |
+| [**Arm-based processors (Arm64)**][cobalt-arm64-vm] | Arm64 VMs are power-efficient and cost-effective, but don't compromise on performance. With [Arm64 node pool support in AKS](./use-arm64-vms.md), you can create Arm64 Ubuntu agent nodes and even mix Intel and ARM architecture nodes within a cluster. These ARM VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads. | Best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more. |
 | [**GPU optimized SKUs**](/azure/virtual-machines/sizes) | Depending on the nature of your workload, consider using compute optimized, memory optimized, storage optimized, or even graphical processing unit (GPU) optimized VM SKUs. GPU VM sizes are specialized VMs that are available with single, multiple, and fractional GPUs. | [GPU-enabled Linux node pools on AKS](./gpu-cluster.md) are best for compute-intensive workloads like graphics rendering, large model training, and inferencing. |
 
 > [!NOTE]
@@ -89,6 +96,10 @@ For more information, see [Azure Monitor best practices](/azure/azure-monitor/be
 
 For control plane logs, consider disabling the categories you don't need and/or using the Basic Logs API when applicable to reduce Log Analytics costs. For more information, see [Azure Kubernetes Service (AKS) control plane/resource logs](./monitor-aks.md#aks-control-planeresource-logs). For data plane logs, or *application logs*, consider adjusting the [cost optimization settings](./monitor-aks.md#aks-data-planecontainer-insights-logs).
 
+### Azure Advisor cost recommendations
+
+AKS cost recommendations in Azure Advisor provide recommendations to help you achieve cost-efficiency without sacrificing reliability. Advisor analyzes your resource configurations and recommends optimization solutions. For more information, see [Get Azure Kubernetes Service (AKS) cost recommendations in Azure Advisor](./cost-advisors.md).
+
 ## Optimize workloads through autoscaling
 
 ### Establish a baseline
@@ -139,13 +150,6 @@ If you have consistent spend, but your use of disparate resources across SKUs an
 
 [Azure Hybrid Benefit for Azure Kubernetes Service (AKS)](./azure-hybrid-benefit.md) allows you to maximize your on-premises licenses at no extra cost. Use any qualifying on-premises licenses that also have an active Software Assurance (SA) or a qualifying subscription to get Windows VMs on Azure at a reduced cost.
 
-## Embrace FinOps to build a cost saving culture
-
-[Financial operations (FinOps)](https://www.finops.org/introduction/what-is-finops/) is a discipline that combines financial accountability with cloud management and optimization. It focuses on driving alignment between finance, operations, and engineering teams to understand and control cloud costs. The FinOps foundation has several notable projects, such as:
-
-* [**FinOps Framework**](https://finops.org/framework): An operating model for how to practice and implement FinOps.
-* [**FOCUS Specification**](https://focus.finops.org/): A technical specification and open standard for cloud usage, cost, and billing data across all major cloud provider services.
-
 ## Next steps
 
 Cost optimization is an ongoing and iterative effort. Learn more by reviewing the following recommendations and architecture guidance:
@@ -154,4 +158,6 @@ Cost optimization is an ongoing and iterative effort. Learn more by reviewing th
 * [Baseline architecture guide for AKS](/azure/architecture/reference-architectures/containers/aks/baseline-aks)
 * [Optimize compute costs on AKS](/training/modules/aks-optimize-compute-costs/)
 * [AKS cost optimization techniques](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/azure-kubernetes-service-aks-cost-optimization-techniques/ba-p/3652908)
-* [What is FinOps?](/azure/cost-management-billing/finops/)
+
+<!-- LINKS - Internal -->
+[cobalt-arm64-vm]: /azure/virtual-machines/sizes/cobalt-overview

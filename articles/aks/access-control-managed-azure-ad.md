@@ -1,11 +1,11 @@
 ---
 title: Control cluster access using Conditional Access with AKS-managed Microsoft Entra integration
 description: Learn how to access clusters using Conditional Access when integrating Microsoft Entra ID in your Azure Kubernetes Service (AKS) clusters.
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-integration
 ms.date: 04/20/2023
-author: tamram
-ms.author: tamram
+author: nickomang
+ms.author: nickoman
 ms.custom: devx-track-azurecli
 ---
 

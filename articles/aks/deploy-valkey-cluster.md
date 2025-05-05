@@ -6,21 +6,33 @@ ms.custom: azure-kubernetes-service
 ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
+zone_pivot_groups: azure-cli-or-terraform
+
 ---
 
 # Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)
 
-In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS).
+In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS), including the creation of a Valkey cluster ConfigMap, primary and secondary cluster pods to ensure redundancy and zone replication, and a Pod Disruption Budget (PDB) to ensure high availability.
 
 > [!NOTE]
 > This article contains references to the terms *master* and *slave*, which are terms that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
 
-## Configure workload identity
+## Connect to the AKS cluster
+> [!NOTE]
+> Ensure that if you're using Terraform, you've replaced the placeholders in the code with the actual outputs from the terraform commands that was deployed in the previous step [deploying the infrastructure][create-valkey-cluster]. 
+
+* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
+    ```
+
+## Create a namespace
 
 1. Create a namespace for the Valkey cluster using the `kubectl create namespace` command.
 
     ```bash
-    kubectl create namespace ${SERVICE_ACCOUNT_NAMESPACE} --dry-run=client --output yaml | kubectl apply -f -
+    kubectl create namespace valkey --dry-run=client --output yaml | kubectl apply -f -
     ```
 
     Example output:
@@ -29,230 +41,65 @@ In this article, we configure and deploy a Valkey cluster on Azure Kubernetes Se
     namespace/valkey created
     ```
 
-2. Create a service account and configure workload identity using the `kubectl apply` command.
+## Create secrets
+
+:::zone pivot="azure-cli"
+
+1. Generate a random password for the Valkey cluster using openssl and store it in your Azure key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
+   Set the policy to allow the user-assigned identity to get the secret using the [`az keyvault set-policy`][az-keyvault-set-policy] command.
+
+    ```azurecli-interactive
+    SECRET=$(openssl rand -base64 32)
+    echo requirepass $SECRET > /tmp/valkey-password-file.conf
+    echo primaryauth $SECRET >> /tmp/valkey-password-file.conf
+    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name valkey-password-file --file /tmp/valkey-password-file.conf --output none
+    rm /tmp/valkey-password-file.conf
+    az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $userAssignedObjectID --secret-permissions get --output table
+    ```
+:::zone-end
+
+:::zone pivot="terraform"
+
+1. Get the Identity ID and the Object ID created by the Azure KeyVault Secret Provider Addon, using the [`az aks show`][az-aks-show] command.
+
+    ```azurecli-interactive
+    export userAssignedIdentityID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.clientId --output tsv)
+    export userAssignedObjectID=$(az aks show --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --query addonProfiles.azureKeyvaultSecretsProvider.identity.objectId --output tsv)
+
+    ```
+:::zone-end
+
+2. Create a `SecretProviderClass` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
 
     ```bash
     export TENANT_ID=$(az account show --query tenantId --output tsv)
-    cat <<EOF | kubectl apply -f -
-    apiVersion: v1
-    kind: ServiceAccount
-    metadata:
-      annotations:
-        azure.workload.identity/client-id: "${MY_IDENTITY_NAME_CLIENT_ID}"
-        azure.workload.identity/tenant-id: "${TENANT_ID}"
-      name: "${SERVICE_ACCOUNT_NAME}"
-      namespace: "${SERVICE_ACCOUNT_NAMESPACE}"
-    EOF
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    serviceaccount/valkey created
-    ```
-
-## Install the External Secrets Operator
-
-In this section, we use Helm to install the External Secrets Operator. The External Secrets Operator is a Kubernetes operator that manages the lifecycle of external secrets stored in external secret stores like Azure Key Vault.
-
-1. Add the External Secrets Helm repository and update the repository using the `helm repo add` and `helm repo update` commands.
-
-    ```bash
-    helm repo add external-secrets https://charts.external-secrets.io
-    helm repo update
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.1 -->
-    ```output
-    Hang tight while we grab the latest from your chart repositories...
-    ...Successfully got an update from the "external-secrets" chart repository
-    ```
-
-2. Install the External Secrets Operator using the `helm install` command.
-
-    ```bash
-    helm install external-secrets \
-       external-secrets/external-secrets \
-        --namespace external-secrets \
-        --create-namespace \
-       --set installCRDs=true \
-       --wait
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    NAME: external-secrets
-    LAST DEPLOYED: Tue Jun 11 11:55:32 2024
-    NAMESPACE: external-secrets
-    STATUS: deployed
-    REVISION: 1
-    TEST SUITE: None
-    NOTES:
-    external-secrets has been deployed successfully in namespace external-secrets!
-    
-    In order to begin using ExternalSecrets, you will need to set up a SecretStore
-    or ClusterSecretStore resource (for example, by creating a 'vault' SecretStore).
-    
-    More information on the different types of SecretStores and how to configure them
-    can be found in our Github: https://github.com/external-secrets/external-secrets
-    ```
-
-3. Generate a random password for the Valkey cluster using open ssl and store it in your Azure key vault using the [`az keyvault secret set`][az-keyvault-secret-set] command.
-
-    ```azurecli-interactive
-    az keyvault secret set --vault-name $MY_KEYVAULT_NAME --name valkey-password --value $(openssl rand -base64 32) --output table
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.5 -->
-    ```output
-    Name             Value
-    ---------------  --------------------------------------------
-    valkey-password  I9ebCSVLzpGXxLtz74joWtv7vRI0pcz47x8sVtx1uU8=
-    ```
-
-## Create secrets
-
-1. Create a `SecretStore` resource to access the Valkey password stored in your key vault using the `kubectl apply` command.
-
-    ```bash
     kubectl apply -f - <<EOF
-    apiVersion: external-secrets.io/v1beta1
-    kind: SecretStore
-    metadata:
-      name: azure-store
-      namespace: valkey
-    spec:
-      provider:
-        # provider type: azure keyvault
-        azurekv:
-          authType: WorkloadIdentity
-          vaultUrl: "${KEYVAULTURL}"
-          serviceAccountRef:
-            name: ${SERVICE_ACCOUNT_NAME}
-    EOF
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    secretstore.external-secrets.io/azure-store created
-    ```
-
-2. Create an `ExternalSecret` resource, which creates a Kubernetes `Secret` in the Valkey namespace with the password stored in your key vault, using the `kubectl apply` command.
-
-    ```bash
-    kubectl apply -f - <<EOF
-    apiVersion: external-secrets.io/v1beta1
-    kind: ExternalSecret
+    ---
+    apiVersion: secrets-store.csi.x-k8s.io/v1
+    kind: SecretProviderClass
     metadata:
       name: valkey-password
       namespace: valkey
     spec:
-      refreshInterval: 1h
-      secretStoreRef:
-        kind: SecretStore
-        name: azure-store
-
-      target:
-        name: valkey-password
-        creationPolicy: Owner
-
-      data:
-      # name of the SECRET in the Azure KV (no prefix is by default a SECRET)
-      - secretKey: valkey-password
-        remoteRef:
-          key: valkey-password
+      provider: azure
+      parameters:
+        usePodIdentity: "false"
+        useVMManagedIdentity: "true"
+        userAssignedIdentityID: "${userAssignedIdentityID}"
+        keyvaultName: ${MY_KEYVAULT_NAME}              # the name of the AKV instance
+        objects: |
+          array:
+            - |
+              objectName: valkey-password-file
+              objectAlias: valkey-password-file.conf
+              objectType: secret
+        tenantId: "${TENANT_ID}" # the tenant ID of the AKV instance
     EOF
     ```
 
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    externalsecret.external-secrets.io/valkey-password created
-    ```
+## Create the Valkey configuration file
 
-3. Create a federated credential using the [`az identity federated-credential create`][az-identity-federated-credential-create] command.
-
-    ```azurecli-interactive
-    az identity federated-credential create \
-                --name external-secret-operator \
-                --identity-name ${MY_IDENTITY_NAME} \
-                --resource-group ${MY_RESOURCE_GROUP_NAME} \
-                --issuer ${OIDC_URL} \
-                --subject system:serviceaccount:${SERVICE_ACCOUNT_NAMESPACE}:${SERVICE_ACCOUNT_NAME} \
-                --output table
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    Issuer                                                                                                            Name                      ResourceGroup       Subject
-    ----------------------------------------------------------------------------------------------------------------  ------------------------  ------------------  -----------------------------------
-    https://eastus.oic.prod-aks.azure.com/72f988bf-86f1-41af-91ab-2d7cd011db47/86d8a7db-c0c9-417e-9dc1-626749e8dc88/  external-secret-operator  myResourceGroup-rg  system:serviceaccount:valkey:valkey
-    ```
-
-4. Give permission to the user-assigned identity to access the secret using the [`az keyvault set-policy`][az-keyvault-set-policy] command.
-
-    ```azurecli-interactive
-    az keyvault set-policy --name $MY_KEYVAULT_NAME --object-id $MY_IDENTITY_NAME_PRINCIPAL_ID --secret-permissions get --output table
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    Location    Name            ResourceGroup
-    ----------  --------------  ------------------
-    eastus      vault-bbbhe-kv  myResourceGroup-rg
-    ```
-
-## Install Reloader
-
-1. Add the [Reloader][reloader] Helm repository to reboot Valkey pods when the secret changes and update the repository using the `helm repo add` and `helm repo update` commands.
-
-    ```bash
-    helm repo add stakater https://stakater.github.io/stakater-charts
-    helm repo update
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.1 -->
-    ```output
-    Hang tight while we grab the latest from your chart repositories...
-    ...Successfully got an update from the "external-secrets" chart repository
-    ...Successfully got an update from the "stakater" chart repository
-    ```
-
-2. Install the Reloader Helm chart using the `helm install` command.
-
-    ```bash
-    helm install reloader stakater/reloader
-    ```
-
-    Example output:
-    <!-- expected_similarity=0.8 -->
-    ```output
-    NAME: reloader
-    LAST DEPLOYED: Tue Jun 11 12:02:28 2024
-    NAMESPACE: default
-    STATUS: deployed
-    REVISION: 1
-    TEST SUITE: None
-    NOTES:
-    - For a `Deployment` called `foo` have a `ConfigMap` called `foo-configmap`. Then add this annotation to main metadata of your `Deployment`
-      configmap.reloader.stakater.com/reload: "foo-configmap"
-
-    - For a `Deployment` called `foo` have a `Secret` called `foo-secret`. Then add this annotation to main metadata of your `Deployment`
-      secret.reloader.stakater.com/reload: "foo-secret"
-
-    - After successful installation, your pods will get rolling updates when a change in data of configmap or secret will happen.
-    ```
-
-## Deploy the Valkey cluster
-
-1. Create a `ConfigMap` mounted as a volume in the Valkey `StatefulSet` to use to configure the Valkey cluster using the `kubectl apply` command.
+1. Create a `ConfigMap` resource to store the Valkey configuration file.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -267,9 +114,10 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
         cluster-node-timeout 15000
         cluster-config-file /data/nodes.conf
         appendonly yes
-        protected-mode no
+        protected-mode yes
         dir /data
         port 6379
+        include /etc/valkey-password/valkey-password-file.conf
     EOF
     ```
 
@@ -279,7 +127,8 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     configmap/valkey-cluster created
     ```
 
-2. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1, preferably in different nodes, using the `kubectl apply` command.
+## Create Valkey primary cluster pods
+1. Create a `StatefulSet` resource with a `spec.affinity` goal is to keep all primaries in zone 1 and zone 2, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -289,8 +138,6 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     metadata:
       name: valkey-masters
       namespace: valkey
-      annotations:
-        secret.reloader.stakater.com/reload: valkey-password
     spec:
       serviceName: "valkey-masters"
       replicas: 3
@@ -313,13 +160,30 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                     operator: In
                     values:
                     - valkey
-                - matchExpressions:
                   - key: topology.kubernetes.io/zone
                     operator: In
                     values:
                     - ${MY_LOCATION}-1
+                - matchExpressions:
+                  - key: agentpool
+                    operator: In
+                    values:
+                    - valkey
+                  - key: topology.kubernetes.io/zone
+                    operator: In
+                    values:
+                    - ${MY_LOCATION}-2
             podAntiAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  labelSelector:
+                    matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                      - valkey
+                  topologyKey: topology.kubernetes.io/zone
               - weight: 90
                 podAffinityTerm:
                   labelSelector:
@@ -330,17 +194,34 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                       - valkey
                   topologyKey: kubernetes.io/hostname
           containers:
+          - name: role-master-checker
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
+            command:
+              - "/bin/bash"
+              - "-c"
+            args:
+              [
+                "while true; do role=\$(valkey-cli --pass \$(cat /etc/valkey-password/valkey-password-file.conf | awk '{print \$2; exit}') role | awk '{print \$1; exit}');     if [ \"\$role\" = \"slave\" ]; then valkey-cli --pass \$(cat /etc/valkey-password/valkey-password-file.conf | awk '{print \$2; exit}') cluster failover; fi; sleep 30; done"
+              ]
+            volumeMounts:
+            - name: valkey-password
+              mountPath: /etc/valkey-password
+              readOnly: true
           - name: valkey
-            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:7.2.5"
-            envFrom:
-            - secretRef:
-                name: valkey-password
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
+            env:
+            - name: VALKEY_PASSWORD_FILE
+              value: "/etc/valkey-password/valkey-password-file.conf"
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             command:
               - "valkey-server"
             args:
               - "/conf/valkey.conf"
-              - "--protected-mode"
-              - "no"
+              - "--cluster-announce-ip"
+              - "\$(MY_POD_IP)"
             resources:
               requests:
                 cpu: "100m"
@@ -359,7 +240,16 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
             - name: data
               mountPath: /data
               readOnly: false
+            - name: valkey-password
+              mountPath: /etc/valkey-password
+              readOnly: true
           volumes:
+          - name: valkey-password
+            csi:
+              driver: secrets-store.csi.k8s.io
+              readOnly: true
+              volumeAttributes:
+                secretProviderClass: valkey-password
           - name: conf
             configMap:
               name: valkey-cluster
@@ -382,7 +272,8 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     statefulset.apps/valkey-masters created
     ```
 
-3. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 2, preferably in different nodes, using the `kubectl apply` command.
+## Create Valkey replica cluster pods
+1. Create a second `StatefulSet` resource for the Valkey secondaries with a `spec.affinity` goal to keep all replicas in zone 3, preferably in different nodes, using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -392,8 +283,6 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     metadata:
       name: valkey-replicas
       namespace: valkey
-      annotations:
-        secret.reloader.stakater.com/reload: valkey-password
     spec:
       serviceName: "valkey-replicas"
       replicas: 3
@@ -416,11 +305,10 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                     operator: In
                     values:
                     - valkey
-                - matchExpressions:
                   - key: topology.kubernetes.io/zone
                     operator: In
                     values:
-                    - ${MY_LOCATION}-2
+                    - ${MY_LOCATION}-3
             podAntiAffinity:
               preferredDuringSchedulingIgnoredDuringExecution:
               - weight: 90
@@ -432,27 +320,22 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                       values:
                       - valkey
                   topologyKey: kubernetes.io/hostname
-              - weight: 100
-                podAffinityTerm:
-                  labelSelector:
-                    matchExpressions:
-                    - key: app
-                      operator: In
-                      values:
-                      - valkey
-                  topologyKey: failure-domain.beta.kubernetes.io/zone
           containers:
           - name: valkey
-            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:7.2.5"
-            envFrom:
-            - secretRef:
-                name: valkey-password
+            image: "${MY_ACR_REGISTRY}.azurecr.io/valkey:latest"
+            env:
+            - name: VALKEY_PASSWORD_FILE
+              value: "/etc/valkey-password/valkey-password-file.conf"
+            - name: MY_POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
             command:
               - "valkey-server"
             args:
               - "/conf/valkey.conf"
-              - "--protected-mode"
-              - "no"
+              - "--cluster-announce-ip"
+              - "\$(MY_POD_IP)"
             resources:
               requests:
                 cpu: "100m"
@@ -464,7 +347,6 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
                 - name: cluster
                   containerPort: 16379
                   protocol: "TCP"
-
             volumeMounts:
             - name: conf
               mountPath: /conf
@@ -472,7 +354,16 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
             - name: data
               mountPath: /data
               readOnly: false
+            - name: valkey-password
+              mountPath: /etc/valkey-password
+              readOnly: true
           volumes:
+          - name: valkey-password
+            csi:
+              driver: secrets-store.csi.k8s.io
+              readOnly: true
+              volumeAttributes:
+                secretProviderClass: valkey-password
           - name: conf
             configMap:
               name: valkey-cluster
@@ -494,8 +385,9 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     ```output
     statefulset.apps/valkey-replicas created
     ```
+## Verify pod and node distribution
 
-4. Verify that `master-N` and `replica-N` are running in different nodes and zones using the `kubectl get nodes` and `kubectl get pods` commands.
+1. Verify that `master-N` and `replica-N` are running in different nodes and zones using the `kubectl get nodes` and `kubectl get pods` commands.
 
     ```bash
     kubectl get pods -n valkey -o wide
@@ -505,28 +397,29 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     Example output:
     <!-- expected_similarity=0.4 -->
     ```output
-    NAME                READY   STATUS    RESTARTS   AGE     IP             NODE                                NOMINATED NODE   READINESS GATES
-    valkey-masters-0    1/1     Running   0          2m22s   10.224.0.14    aks-nodepool1-11412955-vmss000000   <none>           <none>
-    valkey-masters-1    1/1     Running   0          2m2s    10.224.0.247   aks-valkey-27955880-vmss000000      <none>           <none>
-    valkey-masters-2    1/1     Running   0          89s     10.224.0.176   aks-valkey-27955880-vmss000002      <none>           <none>
-    valkey-replicas-0   1/1     Running   0          2m2s    10.224.0.224   aks-valkey-27955880-vmss000001      <none>           <none>
-    valkey-replicas-1   1/1     Running   0          80s     10.224.0.103   aks-valkey-27955880-vmss000005      <none>           <none>
-    valkey-replicas-2   1/1     Running   0          50s     10.224.0.200   aks-valkey-27955880-vmss000004      <none>           <none>
+    NAME                READY   STATUS    RESTARTS   AGE     IP             NODE                             NOMINATED NODE   READINESS GATES
+    valkey-masters-0    1/1     Running   0          2m55s   10.224.0.4     aks-valkey-18693609-vmss000004   <none>           <none>
+    valkey-masters-1    1/1     Running   0          2m31s   10.224.0.137   aks-valkey-18693609-vmss000000   <none>           <none>
+    valkey-masters-2    1/1     Running   0          2m7s    10.224.0.222   aks-valkey-18693609-vmss000001   <none>           <none>
+    valkey-replicas-0   1/1     Running   0          88s     10.224.0.237   aks-valkey-18693609-vmss000005   <none>           <none>
+    valkey-replicas-1   1/1     Running   0          70s     10.224.0.18    aks-valkey-18693609-vmss000002   <none>           <none>
+    valkey-replicas-2   1/1     Running   0          48s     10.224.0.242   aks-valkey-18693609-vmss000005   <none>           <none>
     Name                                Zone
-    aks-nodepool1-11412955-vmss000000   eastus-1
-    aks-nodepool1-11412955-vmss000001   eastus-2
-    aks-nodepool1-11412955-vmss000002   eastus-3
-    aks-valkey-27955880-vmss000000      eastus-1
-    aks-valkey-27955880-vmss000001      eastus-2
-    aks-valkey-27955880-vmss000002      eastus-1
-    aks-valkey-27955880-vmss000003      eastus-2
-    aks-valkey-27955880-vmss000004      eastus-1
-    aks-valkey-27955880-vmss000005      eastus-2
+    aks-nodepool1-17621399-vmss000000   centralus-1
+    aks-nodepool1-17621399-vmss000001   centralus-2
+    aks-nodepool1-17621399-vmss000003   centralus-3
+    aks-valkey-18693609-vmss000000      centralus-1
+    aks-valkey-18693609-vmss000001      centralus-2
+    aks-valkey-18693609-vmss000002      centralus-3
+    aks-valkey-18693609-vmss000003      centralus-1
+    aks-valkey-18693609-vmss000004      centralus-2
+    aks-valkey-18693609-vmss000005      centralus-3
     ```
 
     Wait for all pods to be running before proceeding to the next step.
 
-5. Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
+## Create headless services
+1. Create three headless `Service` resources (the first for the entire cluster, the second for the primaries, and the third for the secondaries) to use to get the IP addresses of the Valkey pods using the `kubectl apply` command.
 
     ```bash
     kubectl apply -f - <<EOF
@@ -597,15 +490,41 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     service/valkey-replicas created
     ```
 
+## Create Pod Disruption Budget (PDB)
+
+1. Create a Pod Disruption Budget (PDB) to ensure always that one pod at most is unavailable during voluntary disruptions, such as upgrades or maintenance. This helps maintain the stability and availability of the Valkey application within the Kubernetes cluster.
+
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: policy/v1
+    kind: PodDisruptionBudget
+    metadata:
+      name: valkey
+      namespace: valkey
+    spec:
+      maxUnavailable: 1
+      selector:
+        matchLabels:
+          app: valkey
+    EOF
+    ```
+
+    Example output:
+    <!-- expected_similarity=0.8 -->
+    ```output
+    poddisruptionbudget.policy/valkey created
+    ```
+
 ## Run the Valkey cluster
 
-1. Add the Valkey primaries, each in a different availability zone, to the cluster using the `kubectl exec` command.
+1. Add the Valkey primaries, in zone 1 and 2, to the cluster using the `kubectl exec` command.
 
     ```bash
     kubectl exec -it -n valkey valkey-masters-0 -- valkey-cli --cluster create --cluster-yes --cluster-replicas 0 \
                         valkey-masters-0.valkey-masters.valkey.svc.cluster.local:6379 \
                         valkey-masters-1.valkey-masters.valkey.svc.cluster.local:6379 \
-                        valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379
+                        valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379 \
+                        --pass ${SECRET}
     ```
 
     Example output:
@@ -639,20 +558,23 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
     [OK] All 16384 slots covered.
     ```
 
-2. Add the Valkey replicas, each in a different availability zone, to the cluster using the `kubectl exec` command.
+2. Add the Valkey replicas, in zone 3, to the cluster using the `kubectl exec` command.
 
     ```bash
     kubectl exec -ti -n valkey valkey-masters-0 -- valkey-cli --cluster add-node \
                         valkey-replicas-0.valkey-replicas.valkey.svc.cluster.local:6379 \
-                        valkey-masters-0.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave
+                        valkey-masters-0.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave \
+                        --pass ${SECRET}
 
     kubectl exec -ti -n valkey valkey-masters-0 -- valkey-cli --cluster add-node \
                         valkey-replicas-1.valkey-replicas.valkey.svc.cluster.local:6379 \
-                        valkey-masters-1.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave
+                        valkey-masters-1.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave \
+                        --pass ${SECRET}
 
     kubectl exec -ti -n valkey valkey-masters-0 -- valkey-cli --cluster add-node \
                         valkey-replicas-2.valkey-replicas.valkey.svc.cluster.local:6379 \
-                        valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave
+                        valkey-masters-2.valkey-masters.valkey.svc.cluster.local:6379  --cluster-slave \
+                        --pass ${SECRET}
     ```
 
     Example output:
@@ -729,8 +651,8 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 3. Verify the roles of the pods using the following commands:
 
     ```bash
-    for x in $(seq 0 2); do echo "valkey-masters-$x"; kubectl exec -n valkey valkey-masters-$x  -- valkey-cli role; echo; done
-    for x in $(seq 0 2); do echo "valkey-replicas-$x"; kubectl exec -n valkey valkey-replicas-$x -- valkey-cli role; echo; done
+    for x in $(seq 0 2); do echo "valkey-masters-$x"; kubectl exec -n valkey valkey-masters-$x  -- valkey-cli --pass ${SECRET} role; echo; done
+    for x in $(seq 0 2); do echo "valkey-replicas-$x"; kubectl exec -n valkey valkey-replicas-$x -- valkey-cli --pass ${SECRET} role; echo; done
     ```
 
     Example output:
@@ -781,12 +703,17 @@ In this section, we use Helm to install the External Secrets Operator. The Exter
 
 ## Next steps
 
+> [!div class="nextstepaction"]
+> [Validate the resiliency of the Valkey cluster on AKS][validate-valkey-cluster]
+
 To learn more about deploying open-source software on Azure Kubernetes Service (AKS), see the following articles:
 
 * [Deploy a highly available PostgreSQL database on AKS][postgresql-aks]
 * [Build and deploy data and machine learning pipelines with Flyte on AKS][flyte-aks]
 
 ## Contributors
+
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 * Nelly Kiboi | Service Engineer
 * Saverio Proto | Principal Customer Experience Engineer
@@ -799,12 +726,13 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 * Naveed Kharadi | Customer Experience Engineer
 * Erin Schaffer | Content Developer 2
 
-<!-- External links -->
-[reloader]: https://github.com/stakater/Reloader
-
 <!-- Internal links -->
 [az-keyvault-secret-set]: /cli/azure/keyvault/secret#az-keyvault-secret-set
 [az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az-identity-federated-credential-create
 [az-keyvault-set-policy]: /cli/azure/keyvault#az-keyvault-set-policy
 [postgresql-aks]: ./postgresql-ha-overview.md
 [flyte-aks]: ./use-flyte.md
+[validate-valkey-cluster]: ./validate-valkey-cluster.md
+[create-valkey-cluster]: ./create-valkey-infrastructure.md
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-show]: /cli/azure/aks#az-aks-show

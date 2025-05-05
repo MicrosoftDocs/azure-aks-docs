@@ -45,7 +45,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
 
         > [!NOTE]
         > You can change the preset configuration when creating your cluster by selecting **Compare presets** and choosing a different option.
-        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-preset-options.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-preset-options.png":::
+        > :::image type="content" source="media/quick-kubernetes-deploy-portal/cluster-presets.png" alt-text="Screenshot of Create AKS cluster - portal preset options." lightbox="media/quick-kubernetes-deploy-portal/cluster-presets.png":::
 
       - **Kubernetes cluster name**: Enter a cluster name, such as *myAKSCluster*.
       - **Region**: Select a region, such as *East US 2*.
@@ -53,7 +53,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
       - **AKS pricing tier**: Select **Free**.
       - Leave the default values for the remaining settings, and select **Next**.
 
-        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster-basics.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster-basics.png":::
+        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-cluster.png" alt-text="Screenshot showing how to configure an AKS cluster in Azure portal." lightbox="media/quick-kubernetes-deploy-portal/create-cluster.png":::
 
 1. On the **Node pools** tab, configure the following settings:
     - Select **Add node pool** and enter a **Node pool name**, such as *nplinux*.
@@ -64,7 +64,7 @@ This quickstart assumes a basic understanding of Kubernetes concepts. For more i
     - **Node size**: Select **Choose a size**. On the **Select a VM size** page, select **D2s_v3**, and then select **Select**.
     - Leave the default values for the remaining settings, and select **Add**.
 
-        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-node-pool-linux.png" alt-text="Screenshot showing how to create a node pool running Ubuntu Linux." lightbox="media/quick-kubernetes-deploy-portal/create-node-pool-linux.png":::
+        :::image type="content" source="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png" alt-text="Screenshot showing how to create a node pool running Ubuntu Linux." lightbox="media/quick-kubernetes-deploy-portal/create-linux-node-pool.png":::
 
 1. Select **Review + create** to run validation on the cluster configuration. After validation completes, select **Create**.
 
@@ -93,8 +93,8 @@ If you're using Cloud Shell, open it with the `>_` button on the top of the Azur
     The following example output shows the single node created in the previous steps. Make sure the node status is *Ready*.
 
     ```output
-    NAME                                STATUS   ROLES   AGE       VERSION
-    aks-nodepool1-31718369-0   Ready    agent    6m44s   v1.15.10
+    NAME                       STATUS   ROLES   AGE     VERSION
+    aks-nodepool1-31718369-0   Ready    agent   6m44s   v1.15.10
     ```
 
 ### [Azure PowerShell](#tab/azure-powershell)
@@ -114,8 +114,8 @@ If you're using Cloud Shell, open it with the `>_` button on the top of the Azur
     The following example output shows the single node created in the previous steps. Make sure the node status is *Ready*.
 
     ```output
-    NAME                                STATUS   ROLES   AGE       VERSION
-    aks-nodepool1-31718369-0   Ready    agent    6m44s   v1.15.10
+    NAME                       STATUS  ROLES   AGE     VERSION
+    aks-nodepool1-31718369-0   Ready   agent   6m44s   v1.15.10
     ```
 
 ---
@@ -137,12 +137,13 @@ You use a manifest file to create all the objects required to run the [AKS Store
 1. In the Cloud Shell, open an editor and create a file named `aks-store-quickstart.yaml`.
 2. Paste the following manifest into the editor:
 
-    ```yaml
+    ```YAML
     apiVersion: apps/v1
-    kind: Deployment
+    kind: StatefulSet
     metadata:
       name: rabbitmq
     spec:
+      serviceName: rabbitmq
       replicas: 1
       selector:
         matchLabels:
@@ -192,7 +193,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
         [rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0].
     kind: ConfigMap
     metadata:
-      name: rabbitmq-enabled-plugins
+      name: rabbitmq-enabled-plugins            
     ---
     apiVersion: v1
     kind: Service
@@ -251,6 +252,27 @@ You use a manifest file to create all the objects required to run the [AKS Store
               limits:
                 cpu: 75m
                 memory: 128Mi
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 20
+              periodSeconds: 10
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 5
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
           initContainers:
           - name: wait-for-rabbitmq
             image: busybox
@@ -261,7 +283,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
                 memory: 50Mi
               limits:
                 cpu: 75m
-                memory: 128Mi
+                memory: 128Mi    
     ---
     apiVersion: v1
     kind: Service
@@ -297,13 +319,30 @@ You use a manifest file to create all the objects required to run the [AKS Store
             image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
             ports:
             - containerPort: 3002
+            env: 
+            - name: AI_SERVICE_URL
+              value: "http://ai-service:5001/"
             resources:
               requests:
                 cpu: 1m
                 memory: 1Mi
               limits:
-                cpu: 1m
-                memory: 7Mi
+                cpu: 2m
+                memory: 20Mi
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3002
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 5
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3002
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
     ---
     apiVersion: v1
     kind: Service
@@ -340,7 +379,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
             ports:
             - containerPort: 8080
               name: store-front
-            env:
+            env: 
             - name: VUE_APP_ORDER_SERVICE_URL
               value: "http://order-service:3000/"
             - name: VUE_APP_PRODUCT_SERVICE_URL
@@ -352,6 +391,27 @@ You use a manifest file to create all the objects required to run the [AKS Store
               limits:
                 cpu: 1000m
                 memory: 512Mi
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 8080
+              failureThreshold: 3
+              initialDelaySeconds: 5
+              periodSeconds: 5
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 8080
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 3
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 8080
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
     ---
     apiVersion: v1
     kind: Service

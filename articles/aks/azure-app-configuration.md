@@ -1,25 +1,25 @@
 ---
-title: Azure App Configuration extension for Azure Kubernetes Service (Preview) 
+title: Azure App Configuration extension for Azure Kubernetes Service
 description: Install and configure Azure App Configuration extension on your Azure Kubernetes Service (AKS).
 author: RichardChen820
 ms.author: junbchen
 ms.service: azure-kubernetes-service
-ms.topic: article
-ms.date: 05/09/2024
+ms.topic: concept-article
+ms.date: 10/10/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
 ---
 
-# Azure App Configuration extension for Azure Kubernetes Service (Preview) 
+# Install Azure App Configuration AKS extension
 
 [Azure App Configuration](/azure/azure-app-configuration/overview) provides a service to centrally manage application settings and feature flags. [Azure App Configuration Kubernetes Provider](https://mcr.microsoft.com/en-us/product/azure-app-configuration/kubernetes-provider/about) is a Kubernetes operator that gets key-values, Key Vault references and feature flags from Azure App Configuration and builds them into Kubernetes ConfigMaps and Secrets. Azure App Configuration extension for Azure Kubernetes Service (AKS) allows you to install and manage Azure App Configuration Kubernetes Provider on your AKS cluster via Azure Resource Manager (ARM).
 
 ## Prerequisites 
 
-- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/free/?WT.mc_id=A261C142F)
-- Install the latest version of the [Azure CLI](/cli/azure/install-azure-cli).
-- If you don't have one already, you need to create an [AKS cluster](./tutorial-kubernetes-deploy-cluster.md).
-- Make sure you have [an Azure Kubernetes Service RBAC Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) 
+- An Azure subscription. [Create a free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- The latest version of the [Azure CLI](/cli/azure/install-azure-cli).
+- An Azure Kubernetes Service (AKS) cluster. [Create an AKS cluster](/azure/aks/tutorial-kubernetes-deploy-cluster#create-a-kubernetes-cluster).
+- Permission with the [Azure Kubernetes Service RBAC Admin](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) role.
 
 ### Set up the Azure CLI extension for cluster extensions
 
@@ -70,8 +70,7 @@ az k8s-extension create --cluster-type managedClusters \
     --cluster-name myAKSCluster \
     --resource-group myResourceGroup \
     --name appconfigurationkubernetesprovider \
-    --extension-type Microsoft.AppConfiguration \
-    --release-train preview
+    --extension-type Microsoft.AppConfiguration
 ```
 
 ### [Bicep](#tab/bicep)
@@ -95,7 +94,6 @@ resource appConfigExtension 'Microsoft.KubernetesConfiguration/extensions@2022-1
       'global.clusterType': 'managedclusters'
     }
     extensionType: 'microsoft.appconfiguration'
-    releaseTrain: 'preview'
   }
 }
 ```
@@ -145,9 +143,8 @@ az k8s-extension create --cluster-type managedClusters \
     --resource-group myResourceGroup \
     --name appconfigurationkubernetesprovider \
     --extension-type Microsoft.AppConfiguration \
-    --auto-upgrade-minor-version false \
-    --release-train preview \
-    --version 2.0.0-preview
+    --auto-upgrade-minor-version false
+    --version 2.1.0
 ```
 
 #### [Bicep](#tab/bicep)
@@ -171,8 +168,7 @@ resource appConfigExtension 'Microsoft.KubernetesConfiguration/extensions@2022-1
       'global.clusterType': 'managedclusters'
     }
     extensionType: 'microsoft.appconfiguration'
-    releaseTrain: 'preview'
-    version: '2.0.0-preview'
+    version: '2.1.0'
   }
 }
 ```
@@ -191,14 +187,8 @@ az deployment group create \
 ## Extension versions
 
 The Azure App Configuration extension supports the following version of Azure App Configuration Kubernetes Provider:
-- `2.0.0-preview`
-
-## Regions
-
-The Azure App Configuration extension is available in the following regions:
-
-> East US 2 EUAP, Canada Central, West Central US, Central India, East US, East US 2, North Europe, UK South, Australia East, Central US, West Europe, West US, West US 2, West US 3
-
+- `2.1.0`
+- `2.0.0`
 
 ## Troubleshoot extension installation errors
 

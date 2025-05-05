@@ -27,7 +27,7 @@ Communication with endpoints outside the cluster, such as on-premises and peered
 
 You can provide outbound (egress) connectivity to the internet for Overlay pods using a [Standard SKU Load Balancer](./egress-outboundtype.md#outbound-type-of-loadbalancer) or [Managed NAT Gateway](./nat-gateway.md). You can also control egress traffic by directing it to a firewall using [User Defined Routes on the cluster subnet](./egress-outboundtype.md#outbound-type-of-userdefinedrouting).
 
-You can configure ingress connectivity to the cluster using an ingress controller, such as Nginx or [HTTP application routing](./http-application-routing.md). You cannot configure ingress connectivity using Azure App Gateway. For details see [Limitations with Azure CNI Overlay](#limitations-with-azure-cni-overlay).
+You can configure ingress connectivity to the cluster using an ingress controller, such as Application Gateway for Containers, NGINX, or Application Routing Add-on.
 
 ## Differences between Kubenet and Azure CNI Overlay
 
@@ -51,6 +51,9 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
     - Pod CIDR space must not overlap with directly connected networks (like VNet peering, ExpressRoute, or VPN). If external traffic has source IPs in the podCIDR range, it needs translation to a non-overlapping IP via SNAT to communicate with the cluster.
 - **Kubernetes service address range**: The size of the service address CIDR depends on the number of cluster services you plan to create. It must be smaller than `/12`. This range shouldn't overlap with the pod CIDR range, cluster subnet range, and IP range used in peered VNets and on-premises networks.
 - **Kubernetes DNS service IP address**: This IP address is within the Kubernetes service address range that's used by cluster service discovery. Don't use the first IP address in your address range, as this address is used for the `kubernetes.default.svc.cluster.local` address.
+
+> [!IMPORTANT]
+> The private CIDR ranges available for the Pod CIDR are defined in [RFC 1918](https://tools.ietf.org/html/rfc1918). While we don't block the use of public IP ranges, they are considered out of Microsoft's support scope. We recommend using private IP ranges for pod CIDR.
 
 ## Network security groups
 
@@ -89,7 +92,6 @@ Azure CNI offers two IP addressing options for pods: The traditional configurati
 
 Azure CNI Overlay has the following limitations:
 
-- You can't use Application Gateway as an Ingress Controller (AGIC) for an Overlay cluster.
 - Virtual Machine Availability Sets (VMAS) aren't supported for Overlay.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet Confidential Computing requirements, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
 - In case you are using your own subnet to deploy the cluster, the names of the subnet, VNET and resource group which contains the VNET, must be 63 characters or less. This comes from the fact that these names will be used as labels in AKS worker nodes, and are therefore subjected to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).  
@@ -135,66 +137,6 @@ az aks nodepool add --resource-group $resourceGroup --cluster-name $clusterName 
   --mode system --vnet-subnet-id $subnetResourceId
 ```
 
-## Upgrade an existing cluster to CNI Overlay
-
-> [!NOTE]
-> You can update an existing Azure CNI cluster to Overlay if the cluster meets the following criteria:
->
-> - The cluster is on Kubernetes version 1.22+.
-> - Doesn't use the dynamic pod IP allocation feature.
-> - Doesn't have network policies enabled. Network Policy engine can be uninstalled before the upgrade, see [Uninstall Azure Network Policy Manager or Calico](use-network-policies.md#uninstall-azure-network-policy-manager-or-calico)
-> - Doesn't use any Windows node pools with docker as the container runtime.
-
-> [!NOTE]
-> Upgrading an existing cluster to CNI Overlay is a non-reversible process.
-
-> [!WARNING]
-> Prior to Windows OS Build 20348.1668, there was a limitation around Windows Overlay pods incorrectly SNATing packets from host network pods, which had a more detrimental effect for clusters upgrading to Overlay. To avoid this issue, **use Windows OS Build greater than or equal to 20348.1668**.
-
-> [!WARNING]
-> If using a custom azure-ip-masq-agent config to include additional IP ranges that should not SNAT packets from pods, upgrading to Azure CNI Overlay can break connectivity to these ranges. Pod IPs from the overlay space will not be reachable by anything outside the cluster nodes.
-> Additionally, for sufficiently old clusters there might be a ConfigMap left over from a previous version of azure-ip-masq-agent. If this ConfigMap, named `azure-ip-masq-agent-config`, exists and is not intentionally in-place it should be deleted before running the update command.
-> If not using a custom ip-masq-agent config, only the `azure-ip-masq-agent-config-reconciled` ConfigMap should exist with respect to Azure ip-masq-agent ConfigMaps and this will be updated automatically during the upgrade process.
-
-The upgrade process triggers each node pool to be re-imaged simultaneously. Upgrading each node pool separately to Overlay isn't supported. Any disruptions to cluster networking are similar to a node image upgrade or Kubernetes version upgrade where each node in a node pool is re-imaged.
-
-### Azure CNI Cluster Upgrade
-
-Update an existing Azure CNI cluster to use Overlay using the [`az aks update`][az-aks-update] command.
-
-```azurecli-interactive
-clusterName="myOverlayCluster"
-resourceGroup="myResourceGroup"
-location="westcentralus"
-
-az aks update --name $clusterName \
---resource-group $resourceGroup \
---network-plugin-mode overlay \
---pod-cidr 192.168.0.0/16
-```
-
-The `--pod-cidr` parameter is required when upgrading from legacy CNI because the pods need to get IPs from a new overlay space, which doesn't overlap with the existing node subnet. The pod CIDR also can't overlap with any VNet address of the node pools. For example, if your VNet address is *10.0.0.0/8*, and your nodes are in the subnet *10.240.0.0/16*, the `--pod-cidr` can't overlap with *10.0.0.0/8* or the existing service CIDR on the cluster.
-
-
-### Kubenet Cluster Upgrade
-
-Update an existing Kubenet cluster to use Azure CNI Overlay using the [`az aks update`][az-aks-update] command.
-
-```azurecli-interactive
-clusterName="myOverlayCluster"
-resourceGroup="myResourceGroup"
-location="westcentralus"
-
-az aks update --name $clusterName \
---resource-group $resourceGroup \
---network-plugin azure \
---network-plugin-mode overlay 
-```
-
-Since the cluster is already using a private CIDR for pods which doesn't overlap with the VNet IP space, you don't need to specify the `--pod-cidr` parameter and the Pod CIDR will remain the same if the parameter is not used.
-
-> [!NOTE]
-> When upgrading from Kubenet to CNI Overlay, the route table will no longer be required for pod routing. If the cluster is using a customer provided route table, the routes which were being used to direct pod traffic to the correct node will automatically be deleted during the migration operation. If the cluster is using a managed route table (the route table was created by AKS and lives in the node resource group) then that route table will be deleted as part of the migration.
 
 ## Dual-stack Networking
 
@@ -362,52 +304,13 @@ The application routing addon is the recommended way for ingress in an AKS clust
 
 ---
 
-## Dual-stack networking with Azure CNI Powered by Cilium - (Preview)
+## Dual-stack networking with Azure CNI Powered by Cilium
 
 You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. This also allows you to control your IPv6 traffic with the Cilium Network Policy engine.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
 ### Prerequisites
 
-* You must have the latest version of the AKS preview extension.
 * You must have Kubernetes version 1.29 or greater. 
-
-### Install the aks-preview Azure CLI extension
-
-* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli
-    az extension add --name aks-preview
-    ```
-
-* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli
-    az extension update --name aks-preview
-    ```
-
-### Register the 'AzureOverlayDualStackPreview' feature flag
-
-1. Register the `AzureOverlayDualStackPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command:
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "AzureOverlayDualStackPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ### Set up Overlay clusters with Azure CNI Powered by Cilium
 
@@ -426,7 +329,7 @@ az aks create \
     --network-plugin-mode overlay \
     --network-dataplane cilium \
     --ip-families ipv4,ipv6 \
-    --generate-ssh-keys\
+    --generate-ssh-keys
 ```
 
 For more information on Azure CNI Powered by Cilium, see [Azure CNI Powered by Cilium][azure-cni-powered-by-cilium].
@@ -489,7 +392,7 @@ az aks create \
     --network-plugin azure \
     --network-plugin-mode overlay \
     --ip-families ipv4,ipv6 \
-    --generate-ssh-keys\
+    --generate-ssh-keys
 ```
 
 ### Add a Windows nodepool to the cluster
@@ -506,6 +409,8 @@ az aks nodepool add \
 ```
 
 ## Next steps
+
+To learn how to upgrade existing clusters to Azure CNI overlay, see [Upgrade Azure CNI IPAM modes and Dataplane Technology](upgrade-azure-cni.md).
 
 To learn how to utilize AKS with your own Container Network Interface (CNI) plugin, see [Bring your own Container Network Interface (CNI) plugin](use-byo-cni.md).
 

@@ -1,10 +1,10 @@
 ---
 title: Use Key Management Service etcd encryption in Azure Kubernetes Service 
 description: Learn how to use Key Management Service (KMS) etcd encryption with Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
-ms.date: 07/19/2024
+ms.date: 09/26/2024
 ---
 
 # Add Key Management Service etcd encryption to an Azure Kubernetes Service cluster
@@ -24,10 +24,13 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 * Azure CLI version 2.39.0 or later. Run `az --version` to find your version. If you need to install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 > [!WARNING]
-> KMS supports Konnectivity or [API Server VNet Integration (preview)][api-server-vnet-integration] for public key vault.
 >
-> KMS only supports [API Server VNet Integration (preview)][api-server-vnet-integration] for private key vault.
-> 
+> Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that have not previously used this configuration. For subscriptions that are currently using this configuration or have used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
+>
+> KMS supports Konnectivity or [API Server VNet Integration (preview)][api-server-vnet-integration] for public key vaults.
+>
+> KMS supports [API Server VNet Integration (preview)][api-server-vnet-integration] for both private and public key vaults.
+>
 > You can use `kubectl get po -n kube-system` to verify the results and show that a konnectivity-agent pod is running. If a pod is running, the AKS cluster is using Konnectivity. When you use API Server VNet Integration, you can run the `az aks show -g -n` command to verify that the `enableVnetIntegration` setting is set to `true`.
 
 ## Limitations
@@ -42,7 +45,7 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 * With KMS turned on, you can't change the associated key vault mode (public versus private). To [update a key vault mode][update-a-key-vault-mode], you must first turn off KMS, and then turn it on again.
 * If a cluster has KMS turned on and has a private key vault, it must use the [API Server VNet Integration (preview)][api-server-vnet-integration] tunnel. Konnectivity isn't supported.
 * Using the Virtual Machine Scale Sets API to scale the nodes in the cluster down to zero deallocates the nodes. The cluster then goes down and becomes unrecoverable.
-* After you turn off KMS, you can't destroy the keys. Destroying the keys causes the API server to stop working.
+* After you turn off KMS, you can't delete or expire the keys. Such behaviors would cause the API server to stop working.
 
 KMS supports a [public key vault][turn-on-kms-for-a-public-key-vault] or a [private key vault][turn-on-kms-for-a-private-key-vault].
 
@@ -192,6 +195,8 @@ After you change the key ID (including changing either the key name or the key v
 > Remember to update all secrets after key rotation. If you don't update all secrets, the secrets are inaccessible if the keys that were created earlier don't exist or no longer work.
 >
 > KMS uses 2 keys at the same time. After the first key rotation, you need to ensure both the old and new keys are valid (not expired) until the next key rotation. After the second key rotation, the oldest key can be safely removed/expired
+>
+> After rotating KMS key version with the new `keyId`, please check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
 ```azurecli-interactive
 az aks update --name myAKSCluster --resource-group MyResourceGroup  --enable-azure-keyvault-kms --azure-keyvault-kms-key-vault-network-access "Public" --azure-keyvault-kms-key-id $NEW_KEY_ID 
@@ -326,6 +331,8 @@ After you change the key ID (including the key name and the key version), you ca
 > Remember to update all secrets after key rotation. If you don't update all secrets, the secrets are inaccessible if the keys that were created earlier don't exist or no longer work.
 >
 > After you rotate the key, the previous key (key1) is still cached and shouldn't be deleted. If you want to delete the previous key (key1) immediately, you need to rotate the key twice. Then key2 and key3 are cached, and key1 can be deleted without affecting the existing cluster.
+>
+> After rotating KMS key version with the new `keyId`, please check `securityProfile.azureKeyVaultKms.keyId` in AKS resource json. Ensure the new key version is in use.
 
 ```azurecli-interactive
 az aks update --name myAKSCluster --resource-group MyResourceGroup  --enable-azure-keyvault-kms --azure-keyvault-kms-key-id $NewKEY_ID --azure-keyvault-kms-key-vault-network-access "Private" --azure-keyvault-kms-key-vault-resource-id $KEYVAULT_RESOURCE_ID
@@ -357,6 +364,9 @@ Use the following command to update all secrets. If you don't run this command, 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 ```
+
+> [!WARNING]
+> After turning off KMS, the encryption key vault key is still needed. You cannot delete or expire it.
 
 ### Change the key vault mode
 
@@ -453,6 +463,32 @@ To re-encrypt all secrets in KMS v2, use the `kubectl get secrets` command with 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 ```
+
+## KMS observability
+
+### AKS resource json
+
+You can check the KMS config in AKS resource json by:
+
+1. Using the `az aks show` command
+2. Through Azure Portal
+
+The `securityProfile.azureKeyVaultKms` section shows the KMS config, including Key vault, key, current key version.
+
+### Diagnose and solve problems
+
+Because KMS plugin is a side car of kube-apiserver Pod, you cannot access it directly. To improve the observability of KMS, you can check the KMS status by:
+
+1. Open Azure Portal page of your AKS cluster
+2. Go to `Diagnose and solve problems` and search for `KMS`
+3. In `KMS` detector, you can see the status of KMS and if it is in some known failing scenarios
+
+Take `KeyExpired: Operation encrypt is not allowed on an expired key` as an example:
+
+Because AKS KMS plugin currently only allows BYO key vault and key, it is your responsibility to manage the key lifecycle. If the key is expired, the KMS plugin will fail to decrypt the existing secrets. You need to
+
+1. Extend the key expiration date to make KMS work
+2. Rotate the key version
 
 <!-- LINKS - Internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
