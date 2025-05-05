@@ -20,9 +20,9 @@ To deliver multi-cluster public load balancing with DNS, Fleet Manager utilizes 
 
 Fleet administrators use `kubectl` to create and configure `TrafficManagerProfile` and `TrafficManagerBackend` resources on the Fleet Manager hub cluster. The `TrafficManagerProfile` defines an Azure Traffic Manager Profile that includes [endpoint health monitoring][traffic-manager-health-check] configuration, with the associated `TrafficManagerBackend` defining the `Service` to be load balanced.
 
-Services on member clusters can be added to the load balancing by creating a `ServiceExport` on the cluster and configuring a unique DNS hostname for the `Service`. Optional weights can be defined that configure traffic routing behavior between clusters. If the workload has been deployed using Fleet Manager's [cluster resource placement][concept-crp], the DNS hostname can be configured on placement using a `ResourceOverride`.
+Services on member clusters can be added to the load balancing by creating a `ServiceExport` on the cluster and configuring a unique DNS hostname for the `Service`. Optional weights can be defined that configure traffic routing behavior between clusters. If the workload is deployed using Fleet Manager's [cluster resource placement][concept-crp], the DNS hostname can be configured on placement using a `ResourceOverride`.
 
-The creation and configuration of the associated Traffic Manager is handled entirely by Fleet Manager, with fleet administrators able to drive the end to end experience using the Kubernetes API.
+The creation and configuration of the associated Traffic Manager is managed by Fleet Manager, with fleet administrators able to drive the end to end experience using the Kubernetes API.
 
 ## TrafficManagerProfile properties
 
@@ -37,7 +37,7 @@ metadata:
 spec:
   monitorConfig:
     protocol: HTTP
-    path: /
+    path: /f
     port: 8080
     intervalInSeconds: 30
     timeoutInSeconds: 10
@@ -46,8 +46,8 @@ spec:
 
 The important properties to understand include:
 
-* `name`: this is used as the DNS prefix for the `trafficmanager.net` DNS name. It must be unique and if already in use, deployment will fail.
-* `namespace`: this must be the same as the corresponding `TrafficManagerBackend` and `Service` resource.
+* `name`: used as the DNS prefix for the `trafficmanager.net` DNS name. It must be unique. If the name is already in use, deployment fails.
+* `namespace`: must be the same as the corresponding `TrafficManagerBackend` and `Service` resources.
 * `monitorCOnfig`: maps to the standard Azure Traffic Manager monitoring configuration. Unsupported Azure Traffic Manager endpoint monitoring options are: Custom header settings; expected status codes.
 
 ## TrafficManagerBackend properties
@@ -69,12 +69,12 @@ spec:
 The important properties to understand include:
 
 * `spec/profile/name`: must match the corresponding `TrafficManagerProfile`.
-* `spec/backend/name`: must match the exported service name that will be load balanced. 
+* `spec/backend/name`: must match the exported service name to load balance. 
 * `spec/weight`: weight (out of 100) to apply to this backend configuration.
 
 ## Nested Traffic Manager Profiles
 
-It is possible to use [nested Traffic Manager Profiles][traffic-manager-nested] though this is an advanced topic not currently covered in our documentation.
+It is possible to use [nested Traffic Manager Profiles][traffic-manager-nested]. This advanced topic not currently available in our documentation.
 
 ## Next steps
 
