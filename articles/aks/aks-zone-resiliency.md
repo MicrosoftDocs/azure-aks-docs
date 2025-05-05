@@ -60,7 +60,7 @@ For more information, see [Use availability zones in Azure Kubernetes Service (A
 
 ### Ensure pods are spread across AZs
 
-In AKS, the Kubernetes Scheduler is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone` as outlined below:
+Starting Kubernetes version 1.33, the default Kube-Scheduler in AKS is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone` as outlined below:
 ```yml
 topologySpreadConstraints:
 - maxSkew: 1
