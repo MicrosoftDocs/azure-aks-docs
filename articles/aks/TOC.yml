@@ -153,6 +153,12 @@
               href: cis-azure-linux.md
             - name: CIS Windows Server benchmark
               href: cis-windows.md
+        - name: Container Network Security
+          items:
+            - name: FQDN based filtering
+              href: container-network-security-fqdn-filtering-concepts.md
+            - name: Layer 7 Policy
+              href: container-network-security-l7-policy-concepts.md
     - name: Networking
       items:
         - name: Networking concepts
@@ -167,6 +173,8 @@
               href: concepts-network-azure-cni-pod-subnet.md
             - name: Legacy CNI options
               href: concepts-network-legacy-cni.md
+            - name: Azure CNI Powered by Cilium
+              href: azure-cni-powered-by-cilium.md
         - name: IP address planning
           href: concepts-network-ip-address-planning.md
         - name: Services
@@ -181,6 +189,16 @@
             - name: Network isolated clusters
               href: concepts-network-isolated.md
               displayName: outbound, egress, private
+        - name: Advanced Container Networking Services
+          items:
+            - name: Advanced Container Networking Services (ACNS) overview
+              href: advanced-container-networking-services-overview.md
+            - name: Container Network Observability overview
+              href: container-network-observability-concepts.md
+            - name: FQDN based Filtering
+              href: container-network-security-fqdn-filtering-concepts.md
+            - name: Layer 7 Policy
+              href: container-network-security-l7-policy-concepts.md
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -189,14 +207,6 @@
           href: concepts-fine-tune-language-models.md
         - name: Machine learning operations (MLOps)
           href: concepts-machine-learning-ops.md
-    - name: Advanced Container Networking Services
-      items:
-        - name: Advanced Container Networking Services (ACNS) overview
-          href: advanced-container-networking-services-overview.md
-        - name: Container Network Observability overview
-          href: container-network-observability-concepts.md
-        - name: Container Network Security overview
-          href: container-network-security-concepts.md
     - name: Storage
       href: concepts-storage.md
     - name: Scaling
@@ -784,6 +794,8 @@
               items:
                 - name: FQDN Filtering with Advanced Container Networking Services (ACNS)
                   href: how-to-apply-fqdn-filtering-policies.md
+                - name: Layer 7 Policy with Advanced Container Networking Services (ACNS)
+                  href: how-to-apply-l7-policies.md
     - name: Storage
       items:
         - name: CSI storage drivers

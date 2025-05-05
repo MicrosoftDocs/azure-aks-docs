@@ -640,7 +640,7 @@ In this how-to guide, you learned how to:
 * Simulate a cluster interruption and PostgreSQL replica failover.
 * Perform a backup and restore of the PostgreSQL database.
 
-To learn more about how you can leverage AKS for your workloads, see [What is Azure Kubernetes Service (AKS)?][what-is-aks]
+To learn more about how you can leverage AKS for your workloads, see [What is Azure Kubernetes Service (AKS)?][what-is-aks] To learn more about Azure Database for PostgreSQL, see [What is Azure Database for PostgreSQL?](/azure/postgresql/flexible-server/overview)
 
 ## Contributors
 

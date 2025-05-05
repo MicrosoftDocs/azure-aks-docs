@@ -4,7 +4,7 @@ description: This article provides security/vulnerability related updates and tr
 ms.date: 03/27/2025
 author: bahe
 ms.author: bahe
-ms.topic: conceptual
+ms.topic: concept-article
 ms.subservice: aks-security
 ---
 

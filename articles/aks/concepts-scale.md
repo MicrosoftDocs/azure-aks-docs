@@ -1,7 +1,7 @@
 ---
 title: Concepts - Scale applications in Azure Kubernetes Services (AKS)
 description: Learn about scaling in Azure Kubernetes Service (AKS), including the horizontal pod autoscaler, cluster autoscaler, and Azure Container Instances.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 03/18/2024
 author: nickomang
 ms.author: nickoman

@@ -1,7 +1,7 @@
 ---
 title: Concepts - Azure CNI Overlay networking in AKS
 description: Learn about Azure CNI Overlay in Azure Kubernetes Service (AKS)
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 05/14/2024
 author: schaffererin
 ms.author: schaffererin

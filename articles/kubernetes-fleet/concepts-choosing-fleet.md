@@ -7,7 +7,7 @@ ms.author: shasb
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Choosing an Azure Kubernetes Fleet Manager option

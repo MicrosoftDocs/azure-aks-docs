@@ -5,7 +5,7 @@ ms.date: 04/09/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Update Kubernetes and node images across multiple member clusters
