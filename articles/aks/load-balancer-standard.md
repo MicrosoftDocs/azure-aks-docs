@@ -605,6 +605,91 @@ Take advantage of connection reuse and connection pooling whenever possible. The
 * Never silently abandon a TCP flow and rely on TCP timers to clean up flow. If you don't let TCP explicitly close the connection, state remains allocated at intermediate systems and endpoints, and it makes SNAT ports unavailable for other connections. This pattern can trigger application failures and SNAT exhaustion.
 * Don't change OS-level TCP close related timer values without expert knowledge of impact. While the TCP stack recovers, your application performance can be negatively affected when the endpoints of a connection have mismatched expectations. Wishing to change timers is usually a sign of an underlying design problem. Review following recommendations.
 
+## Shared health probes for `externalTrafficPolicy: Cluster` Services (preview)
+
+In clusters that use `externalTrafficPolicy: Cluster`, Azure Load Balancer (SLB) currently creates a _separate probe per Service_ and targets each Service’s `nodePort`.  
+That design means SLB infers node health from whichever **application pod** answers the probe. As clusters grow, this approach leads to several well‑documented issues:
+
+* **Configuration drift and blind spots** – SLB can’t detect a failed or mis‑configured `kube‑proxy` if iptables rules are still present.
+* **Duplicate health logic** – readiness must be defined twice: once in each pod’s `readinessProbe`, and again through SLB annotations.
+* **Operational overhead** – every Service on every node is probed every 5 seconds, consuming connections, SNAT ports, and SLB rule space.
+* **Feature friction** – customers cannot set `allocateLoadBalancerNodePorts=false`, and workloads like Istio or ingress‑nginx require extra annotations to keep probes working.
+* **Troubleshooting confusion** – an unhealthy app, Network Policy rule, or scale‑to‑zero event can make an *entire node* appear down.
+
+The **shared probe mode** (preview) solves these problems by moving to a *single HTTP probe* for all `externalTrafficPolicy: Cluster` Services:
+
+* SLB probes `http://<node‑ip>:10256/healthz`, the standard `kube‑proxy` health endpoint.
+* A lightweight sidecar runs next to `kube‑proxy` to relay the probe and handle PROXY protocol when Private Link Service is enabled.
+
+**Key benefits**
+
+| Benefit                | Why it matters                                                            |
+|------------------------|---------------------------------------------------------------------------|
+| Accurate node health   | SLB now measures `kube‑proxy` directly, not an arbitrary backend pod.     |
+| Simpler configuration  | No per‑Service probe annotations; readiness lives solely in the pod spec. |
+| Lower traffic overhead | One probe per node instead of *Services × (nodes – 1)* probes.            |
+
+> [!NOTE]  
+> *Services that use `externalTrafficPolicy: Local` are **unchanged**.*  
+> This feature does **not** address container‑native load balancing.
+
+### Install the aks-preview Azure CLI extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli
+    az extension add --name aks-preview
+    ```
+
+* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli
+    az extension update --name aks-preview
+    ```
+
+### Register the 'TODO' feature flag
+
+1. Register the `TODO` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "TODO"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command:
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "TODO"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+### Create a new cluster with shared probe mode
+  
+```bash
+az aks create \
+  --resource-group <rg> \
+  --name <cluster> \
+  --cluster-service-load-balancer-health-probe-mode shared
+```
+
+### Enable shared probe mode on an existing cluster  
+
+```bash
+az aks update \
+  --resource-group <rg> \
+  --name <cluster> \
+  --cluster-service-load-balancer-health-probe-mode shared
+```
+
+
 ## Moving from a *Basic* SKU load balancer to *Standard* SKU
 
 If you have an existing cluster with the *Basic* SKU load balancer, there are important behavioral differences to note when migrating to the *Standard* SKU load balancer.
