@@ -76,9 +76,14 @@ The important properties to understand include:
 
 It is possible to use [nested Traffic Manager Profiles][traffic-manager-nested]. This advanced topic not currently available in our documentation.
 
+## Deletion behavior
+
+When a `TrafficManagerProfile` Kubernetes resource is deleted, the associated Azure Traffic Manager and its endpoints are also deleted and requests are no longer routed to clusters.
+
 ## Next steps
 
 * [Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters](./howto-dns-load-balancing.md).
+* [Hands-on exercise on GitHub for this feature](https://github.com/Azure/fleet-networking/tree/main/docs/demos/TrafficManagerProfile).
 
 <!-- INTERNAL LINKS -->
 [traffic-manager-overview]: /azure/traffic-manager/traffic-manager-overview
