@@ -180,4 +180,4 @@ In this article, you learned how to enable trusted launch. Learn more about [tru
 [azure-generation-two-virtual-machines]: /azure/virtual-machines/generation-2
 [verify-secure-boot-failures]: /azure/virtual-machines/trusted-launch-faq#verify-secure-boot-failures
 [tusted-launch-ephemeral-os-sizes]: /azure/virtual-machines/ephemeral-os-disks#trusted-launch-for-ephemeral-os-disks
-[skip-gpu-driver-install]: gpu-cluster.md#skip-gpu-driver-installation-preview
+[skip-gpu-driver-install]: gpu-cluster.md#skip-gpu-driver-installation
