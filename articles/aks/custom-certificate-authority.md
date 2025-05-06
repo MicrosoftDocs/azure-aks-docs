@@ -106,7 +106,7 @@ AKS requires certs passed in the user-created secret to be properly formatted an
 Certificates passed to ```--custom-ca-trust-certificates``` shouldn't be base64 encoded.
 
 #### Containerd doesn't pick up new certificates
-From the node's shell, run ```systemctl restart containerd```. Once containerd is restarts, the container runtime picks up the new certificates.
+From the node's shell, run ```systemctl restart containerd```. Once containerd restarts, the container runtime picks up the new certificates.
 
 ## Next steps
 
