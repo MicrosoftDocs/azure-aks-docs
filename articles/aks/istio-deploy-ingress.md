@@ -8,9 +8,9 @@ ms.date: 08/07/2023
 ms.author: shasb
 ---
 
-# Azure Kubernetes Service (AKS) external or internal ingresses for Istio service mesh add-on deployment
+# Deploy ingress gateways for Istio service mesh add-on for Azure Kubernetes Service
 
-This article shows you how to deploy external or internal ingresses for Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
+This article shows you how to deploy external or internal ingresses for the Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
 > [!NOTE]
 > When performing a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-the-ingress-gateway) of the Istio add-on, another deployment for the external / internal gateways will be created for the new control plane revision.
@@ -20,6 +20,9 @@ This article shows you how to deploy external or internal ingresses for Istio se
 This guide assumes you followed the [documentation][istio-deploy-addon] to enable the Istio add-on on an AKS cluster, deploy a sample application, and set environment variables.
 
 ## Enable external ingress gateway
+
+> [!NOTE]
+> If you need the ingress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or leverage the `azureservicemesh/istio.replica.preferred` label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
 
 Use `az aks mesh enable-ingress-gateway` to enable an externally accessible Istio ingress on your AKS cluster:
 
@@ -39,9 +42,6 @@ Observe from the output that the external IP address of the service is a publicl
 NAME                                TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)                                      AGE
 aks-istio-ingressgateway-external   LoadBalancer   10.0.10.249   <EXTERNAL_IP>   15021:30705/TCP,80:32444/TCP,443:31728/TCP   4m21s
 ```
-
-> [!NOTE]
-> Customizations to IP address on internal and external gateways aren't supported yet. IP address customizations on the ingress specifications are reverted back by the Istio add-on.It's planned to allow these customizations in the Gateway API implementation for the Istio add-on in future.
 
 Applications aren't accessible from outside the cluster by default after enabling the ingress gateway. To make an application accessible, map the sample deployment's ingress to the Istio ingress gateway using the following manifest:
 
@@ -141,7 +141,7 @@ NAME                                TYPE           CLUSTER-IP    EXTERNAL-IP    
 aks-istio-ingressgateway-internal   LoadBalancer   10.0.182.240  <IP>      15021:30764/TCP,80:32186/TCP,443:31713/TCP   87s
 ```
 
-After enabling the ingress gateway, applications need to be exposed through the gateway and routing rules need to be configured accordingly. Use the following manifest to map the sample deployment's ingress to the Istio ingress gateway:
+After enabling the ingress gateway, applications need to be exposed through the gateway, and routing rules need to be configured accordingly. Use the following manifest to map the sample deployment's ingress to the Istio ingress gateway:
 
 ```bash
 kubectl apply -f - <<EOF
@@ -224,12 +224,39 @@ Confirm that the sample application's product page is accessible. The expected o
 <title>Simple Bookstore App</title>
 ```
 
+## Ingress gateway service customizations
+
+### Annotations
+
+The following annotations can be added to the Kubernetes service for the external and internal ingress gateways:
+
+- `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`: name of subnet to bind internal ingress gateway to. This subnet must exist in the same virtual network as the mesh.
+- `service.beta.kubernetes.io/azure-shared-securityrule`: for exposing the ingress gateway through an [augmented security rule][azure-nsg-docs].
+- `service.beta.kubernetes.io/azure-allowed-service-tags`: for specifying which [service tags][azure-service-tags] the ingress gateway can receive requests from.
+- `service.beta.kubernetes.io/azure-load-balancer-ipv4`: for configuring a static IPv4 address.
+- `service.beta.kubernetes.io/azure-load-balancer-resource-group`: for specifying the resource group of a public IP in a different resource group from the cluster.
+- `service.beta.kubernetes.io/azure-pip-name`: for specifying the name of a public IP address.
+- `external-dns.alpha.kubernetes.io/hostname`: for specifying the domain for resource's DNS records. For more information, see [external-dns][external-dns].
+
+The add-on supports health probe annotations for ports 80 and 443. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
+
+### External traffic policy
+
+The add-on supports customization of `.spec.externalTrafficPolicy` in the Kubernetes service for the ingress gateway. Setting `.spec.externalTrafficPolicy` to `Local` preserves the client source IP at the Istio ingress gateway and avoids a second hop in the traffic path to the backend ingress gateway pods.
+
+```bash
+kubectl patch service aks-istio-ingressgateway-external -n aks-istio-ingress --type merge --patch '{"spec": {"externalTrafficPolicy": "Local"}}'
+```
+
+> [!NOTE]
+> Modifying the `.spec.externalTrafficPolicy` to `Local` risks potentially imbalanced traffic spreading. Before applying this change, it is recommended to read the [Kubernetes docs][kubernetes-docs-load-balancer] to understand the tradeoffs between the different `externalTrafficPolicy` settings.
+
 ## Delete resources
 
 If you want to clean up the Istio external or internal ingress gateways, but leave the mesh enabled on the cluster, run the following command:
 
-```azure-cli-interactive
-az aks mesh disable-ingress-gateway --ingress-gateway-type <external/internal> --resource-group ${RESOURCE_GROUP}
+```azurecli-interactive
+az aks mesh disable-ingress-gateway --ingress-gateway-type <external/internal> --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
 ```
 
 If you want to clean up the Istio service mesh and the ingresses (leaving behind the cluster), run the following command:
@@ -247,12 +274,18 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 ## Next steps
 
 > [!NOTE]
-> In case of any issues encountered with deploying the Istio ingress gateway or configuring ingress traffic routing, refer to [article on troubleshooting Istio add-on ingress gateways][istio-ingress-tsg]
+> If there are any issues encountered with deploying the Istio ingress gateway or configuring ingress traffic routing, refer to [article on troubleshooting Istio add-on ingress gateways][istio-ingress-tsg]
 
 * [Secure ingress gateway for Istio service mesh add-on][istio-secure-gateway]
-* [Scale ingress gateway HPA][istio-scaling-guide]
+* [Configure ingress gateway Horizontal Pod Autoscaler (HPA)][istio-scaling-guide]
 
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-secure-gateway]: istio-secure-gateway.md
 [istio-scaling-guide]: istio-scale.md#scaling
 [istio-ingress-tsg]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-ingress-gateway
+[azure-nsg-docs]: /azure/virtual-network/network-security-groups-overview#augmented-security-rules
+[azure-service-tags]: /azure/virtual-network/service-tags-overview
+[external-dns]: https://kubernetes-sigs.github.io/external-dns/latest/docs/annotations/annotations/#external-dnsalphakubernetesiohostname
+[azure-load-balancer-annotations-for-ports]: /azure/aks/load-balancer-standard#customize-the-load-balancer-health-probe
+[kubernetes-docs-load-balancer]: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+[aks-system-nodes]: /azure/aks/use-system-pools

@@ -19,7 +19,10 @@ Regular maintenance is performed on your AKS cluster automatically. There are tw
 * *AKS-initiated maintenance* involves the weekly releases that AKS performs to keep your cluster up to date with the latest features and fixes.
 * *User-initiated maintenance* includes [cluster auto-upgrades][aks-upgrade] and [node operating system (OS) automatic security updates][node-image-auto-upgrade].
 
-When you use the feature of planned maintenance in AKS, you can run both types of maintenance in a cadence of your choice to minimize workload impact. You can use planned maintenance to schedule the timing of automatic upgrades, but enabling or disabling planned maintenance won't enable or disable automatic upgrades.
+When you use the feature of planned maintenance in AKS, you can run both types of maintenance in a cadence of your choice to minimize workload impact.
+
+> [!NOTE]
+> You can use planned maintenance to schedule the timing of automatic upgrades, but enabling or disabling planned maintenance won't enable or disable automatic upgrades.
 
 ## Before you begin
 
@@ -157,7 +160,7 @@ az aks maintenanceconfiguration add --resource-group myResourceGroup --cluster-n
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, go to your AKS cluster.
-2. In the **Settings** section, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Add schedule**.
 
     :::image type="content" source="./media/planned-maintenance/add-schedule-portal.png" alt-text="Screenshot that shows the option to add a schedule in the Azure portal.":::
@@ -264,7 +267,7 @@ az aks maintenanceconfiguration update --resource-group myResourceGroup --cluste
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, go to your AKS cluster.
-2. In the **Settings** section, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/edit-schedule-portal.png" alt-text="Screenshot that shows the option for editing a schedule in the Azure portal.":::
@@ -372,7 +375,7 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
 ### [Azure portal](#tab/azure-portal)
 
 1. In the Azure portal, go to your AKS cluster.
-2. In the **Settings** section, select **Cluster configuration**.
+2. From the service menu, under **Settings**, select **Cluster configuration**.
 3. Under **Upgrade** > **Automatic upgrade scheduler**, select **Edit schedule**.
 
     :::image type="content" source="./media/planned-maintenance/edit-schedule-portal.png" alt-text="Screenshot that shows the option for editing a schedule in the Azure portal.":::
@@ -423,6 +426,8 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
 
   If an agent pool isn't upgraded (for example, because pod disruption budgets prevented it), it might be upgraded later, outside the maintenance window. This scenario is called a "catch-up upgrade." It avoids letting agent pools be upgraded with a different version from the AKS control plane.
 
+  Another reason why an agent pool could be upgraded unexpectedly is when there is no defined maintenance configuration, or if it's been deleted. In that case, a cluster with auto-upgrade *but without a maintenance configuration* will be upgraded at random times (*fallback schedule*), which might be an undesired timeframe.
+
 * Are there any best practices for the maintenance configurations?
 
   We recommend setting the [node OS security updates][node-image-auto-upgrade] schedule to a weekly cadence if you're using the `NodeImage` channel, because a new node image is shipped every week. You can also opt in for the `SecurityPatch` channel to receive daily security updates.
@@ -430,6 +435,10 @@ az aks maintenanceconfiguration delete --resource-group myResourceGroup --cluste
   Set the [auto-upgrade][auto-upgrade] schedule to a monthly cadence to stay current with the Kubernetes N-2 [support policy][aks-support-policy].
   
   For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
+
+* Can I configure all my clusters in a single subscription to use the same maintenance configuration?
+
+  We don't recommend using the same maintenance configuration for multiple clusters in a single subscription, as doing so can lead to ARM throttling errors causing cluster upgrades to fail. Instead, we recommend staggering the maintenance windows for each cluster to avoid these errors.
 
 ## Next steps
 

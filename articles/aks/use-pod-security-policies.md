@@ -1,7 +1,7 @@
 ---
 title: Use pod security policies in Azure Kubernetes Service (AKS) (deprecated)
 description: Learn how to control pod admissions using PodSecurityPolicy in Azure Kubernetes Service (AKS)
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 08/01/2023
 ROBOTS: NOINDEX

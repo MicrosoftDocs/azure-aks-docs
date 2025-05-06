@@ -1,15 +1,15 @@
 ---
 title: Use a managed identity in Azure Kubernetes Service (AKS)
 description: Learn how to use a system-assigned or user-assigned managed identity in Azure Kubernetes Service (AKS).
-author: tamram
+author: nickomang
 
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom:
   - devx-track-azurecli
   - ignite-2023
 ms.date: 06/07/2024
-ms.author: tamram
+ms.author: nickoman
 ---
 
 # Use a managed identity in Azure Kubernetes Service (AKS)
@@ -22,7 +22,7 @@ This article shows how to enable the following types of managed identity on a ne
 
 * **System-assigned managed identity.** A system-assigned managed identity is associated with a single Azure resource, such as an AKS cluster. It exists for the lifecycle of the cluster only.
 * **User-assigned managed identity.** A user-assigned managed identity is a standalone Azure resource that an AKS cluster can use to authorize access to other Azure services. It persists separately from the AKS cluster and can be used by multiple Azure resources.
-* **Pre-created kubelet managed identity.** A pre-created kubelet managed identity is an optional user-assigned identity that kubelet can use to access other resources in Azure. If you don't specify a user-assigned managed identity for kubelet, AKS creates a system-assigned kubelet identity in the node resource group.
+* **Pre-created kubelet managed identity.** A pre-created kubelet managed identity is an optional user-assigned identity that kubelet can use to access other resources in Azure. If you don't specify a user-assigned managed identity for kubelet, AKS creates a user-assigned kubelet identity in the node resource group.
 
 To learn more about managed identities, see [Managed identities for Azure resources](/entra/identity/managed-identities-azure-resources/overview).
 
@@ -326,13 +326,13 @@ Your output should resemble the following example output:
 
 ### Assign an RBAC role to the kubelet managed identity
 
-Assign the `Managed Identity Operator` role on the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command. Provide the kubelet identity's principal ID for the $KUBELET_CLIENT_ID variable.
+Assign the `ACRPull` role on the kubelet identity using the [`az role assignment create`][az-role-assignment-create] command. Provide the kubelet identity's principal ID for the $KUBELET_CLIENT_ID variable and provide the ACR registry ID for the $ACR_REGISTRY_ID variable.
 
 ```azurecli-interactive
 az role assignment create \
     --assignee $KUBELET_CLIENT_ID \
-    --role "Managed Identity Operator" \
-    --scope "<kubelet-identity-resource-id>"
+    --role "acrpull" \
+    --scope "$ACR_REGISTRY_ID"
 ```
 
 ### Create a cluster to use the kubelet identity
@@ -382,7 +382,7 @@ A successful AKS cluster creation using a kubelet managed identity should result
 To update an existing cluster to use the kubelet managed identity, first get the current control plane managed identity for your AKS cluster.
 
 > [!WARNING]
-> Updating the kubelet managed identity upgrades your AKS cluster's node pools, which causes downtime for the cluster as the nodes in the node pools are cordoned/drained and reimaged.
+> Updating the kubelet managed identity upgrades your AKS cluster's node pools, make sure you have the right availability configurations, such as Pod Disruption Budgets, configured before executing this to avoid workload disruption or execute this during a maintenance window.
 
 1. Confirm your AKS cluster is using the user-assigned managed identity using the [`az aks show`][az-aks-show] command.
 

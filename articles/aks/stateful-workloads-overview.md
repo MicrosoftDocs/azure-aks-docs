@@ -3,9 +3,11 @@ title: Stateful workloads in Azure Kubernetes Service (AKS)
 description: Learn about running stateful workloads in Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 09/09/2024
+ms.date: 04/04/2025
 author: schaffererin
 ms.author: schaffererin
+ms.collection: 
+ - migration
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)
@@ -47,6 +49,16 @@ We also need a Kubernetes Controller or Kubernetes Operator, like the [Secrets S
 
 The following sections provide links to design and deployment information for stateful workload scenarios on Azure.
 
+### MongoDB
+
+* [MongoDB stateful workload design overview](mongodb-overview.md)
+* [Create the infrastructure for running a MongoDB cluster on Azure Kubernetes Service (AKS)](create-mongodb-infrastructure.md)
+* [Configure and deploy a MongoDB cluster on Azure Kubernetes Service (AKS)](deploy-mongodb-cluster.md)
+* [Deploy a client application to connect to a MongoDB cluster on Azure Kubernetes Service (AKS)](validate-mongodb-cluster.md)
+* [Validate resiliency of a MongoDB cluster on Azure Kubernetes Service (AKS)](resiliency-mongodb-cluster.md)
+* [Validate MongoDB resiliency during an Azure Kubernetes Service (AKS) node pool upgrade](upgrade-mongodb-cluster.md)
+* [Set up monitoring for a MongoDB cluster on Azure Kubernetes Service (AKS)](monitor-aks-mongodb.md)
+
 ### PostgreSQL
 
 * [PostgreSQL stateful workload design overview](postgresql-ha-overview.md)
@@ -58,3 +70,26 @@ The following sections provide links to design and deployment information for st
 * [Valkey stateful workload design overview](valkey-overview.md)
 * [Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)](create-valkey-infrastructure.md)
 * [Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)](deploy-valkey-cluster.md)
+* [Validate resiliency of a Valkey cluster on Azure Kubernetes Service (AKS)](validate-valkey-cluster.md)
+* [Validate Valkey resiliency during an Azure Kubernetes Service (AKS) node pool upgrade](upgrade-valkey-aks-nodepool.md)
+
+### Apache Airflow
+
+* [Apache Airflow stateful workload design overview](airflow-overview.md)
+* [Create the infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)](airflow-create-infrastructure.md)
+* [Configure and deploy Airflow on Azure Kubernetes Service (AKS)](airflow-deploy.md)
+
+### Apache Kafka with Strimzi
+
+* [Deploy a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi overview](kafka-overview.md)
+* [Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)](kafka-infrastructure.md)
+* [Configure and deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)](kafka-deploy.md)
+* [Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)](kafka-configure.md)
+
+## Contributors
+
+*Microsoft maintains this article. The following contributors originally wrote it:*
+
+* Don High | Principal Customer Engineer
+* Colin Mixon | Product Manager
+* Erin Schaffer | Content Developer 2

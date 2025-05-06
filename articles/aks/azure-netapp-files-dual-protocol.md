@@ -1,12 +1,12 @@
 ---
 title: Provision Azure NetApp Files dual-protocol volumes for Azure Kubernetes Service
 description: Describes how to statically provision Azure NetApp Files dual-protocol volumes for Azure Kubernetes Service.
-ms.topic: article
+ms.topic: concept-article
 ms.custom:
 ms.subservice: aks-storage
-ms.date: 02/26/2024
-author: tamram
-ms.author: tamram
+ms.date: 11/15/2024
+author: schaffererin
+ms.author: schaffererin
 
 ---
 
@@ -451,7 +451,7 @@ You must install a Container Storage Interface (CSI) driver to create a Kubernet
 
 ## Next steps
 
-Astra Trident supports many features with Azure NetApp Files. For more information, see:
+Trident supports many features with Azure NetApp Files. For more information, see:
 
 * [Expanding volumes][expand-trident-volumes]
 * [On-demand volume snapshots][on-demand-trident-volume-snapshots]

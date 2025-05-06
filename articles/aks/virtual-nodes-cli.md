@@ -2,7 +2,7 @@
 title: Create virtual nodes in Azure Kubernetes Service (AKS) using Azure CLI
 titleSuffix: Azure Kubernetes Service
 description: Learn how to use Azure CLI to create an Azure Kubernetes Services (AKS) cluster that uses virtual nodes to run pods.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 08/28/2023
 author: nickomang
@@ -112,6 +112,9 @@ An Azure resource group is a logical group in which Azure resources are deployed
 For more information on managed identities, see [Use managed identities](use-managed-identity.md).
 
 ## Enable the virtual nodes addon
+
+> [!NOTE]
+> If you have an existing Azure Kubernetes Service Cluster created that uses Azure CNI for the Advanced Networking you should be able to enable virtual nodes as an add-on using the CLI.
 
 * Enable virtual nodes using the [`az aks enable-addons`][az-aks-enable-addons] command. The following example uses the subnet named *myVirtualNodeSubnet* created in a previous step.
 

@@ -3,8 +3,9 @@ title: Update application code for the event-driven workflow (EDW) workload
 description: Learn how to update the application code of the AWS EKS event-driven workflow (EDW) workload to replicate it in AKS.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: JnHs
-ms.author: jenhayes
+author: schaffererin
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
 ---
 
 # Update application code for the event-driven workflow (EDW) workload
@@ -227,7 +228,7 @@ To build the container images and push them to ACR, make sure the environment va
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 - Ken Kilty | Principal TPM
 - Russell de Pina | Principal TPM

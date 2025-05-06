@@ -2,7 +2,7 @@
 title: Use Azure Hybrid Benefit
 titleSuffix: Azure Kubernetes Service
 description: Learn how to save costs for Windows workloads by using existing Windows Server licenses on Azure Kubernetes Service.
-ms.topic: article
+ms.topic: concept-article
 ms.date: 02/09/2024
 ms.author: viniap
 author: vrapolinario
@@ -21,12 +21,12 @@ For more information on qualifications for Azure Hybrid Benefit, what is include
 
 Azure Hybrid Benefit for Azure Kubernetes Service can be enabled at cluster creation or on an existing AKS cluster. You can enable and disable Azure Hybrid Benefit using either the Azure CLI or Azure PowerShell. In the following examples, be sure to replace the variable definitions with values matching your own cluster.
 
-### Use Azure CLI to manage Azure Hybrid Benefit for AKS
-
 To create a new AKS cluster with Azure Hybrid Benefit enabled:
 
-```azurecli
-PASSWORD='tempPassword1234$'
+### [Azure CLI](#tab/azure-cli)
+
+```azurecli-interactive
+PASSWORD='' # replace with your own password value
 RG_NAME='myResourceGroup'
 CLUSTER='myAKSCluster'
 
@@ -41,7 +41,21 @@ az aks create \
     --generate-ssh-keys
 ```
 
+### [Azure PowerShell](#tab/azure-powershell)
+
+```powershell
+$password= ConvertTo-SecureString -AsPlainText "" -Force # replace with your own password value
+$rg_name = "myResourceGroup"
+$cluster = "myAKSCluster"
+
+New-AzAksCluster -ResourceGroupName $rg_name -Name $cluster -WindowsProfileAdminUserName azureuser -WindowsProfileAdminUserPassword $cred -NetworkPlugin azure -NodeVmSetType VirtualMachineScaleSets --EnableAHUB
+```
+
+---
+
 To enable Azure Hybrid Benefit on an existing AKS cluster:
+
+### [Azure CLI](#tab/azure-cli)
 
 ```azurecli
 RG_NAME='myResourceGroup'
@@ -50,28 +64,7 @@ CLUSTER='myAKSCluster'
 az aks update --resouce-group $RG_NAME --name $CLUSTER--enable-ahub
 ```
 
-To disable Azure Hybrid Benefit for an AKS cluster:
-
-```azurecli
-RG_NAME='myResourceGroup'
-CLUSTER='myAKSCluster'
-
-az aks update --resource-group $RG_NAME --name $CLUSTER --disable-ahub
-```
-
-### Use Azure PowerShell to manage Azure Hybrid Benefit for AKS
-
-To create a new AKS cluster with Azure Hybrid Benefit enabled:
-
-```powershell
-$password= ConvertTo-SecureString -AsPlainText "Password!!123" -Force
-$rg_name = "myResourceGroup"
-$cluster = "myAKSCluster"
-
-New-AzAksCluster -ResourceGroupName $rg_name -Name $cluster -WindowsProfileAdminUserName azureuser -WindowsProfileAdminUserPassword $cred -NetworkPlugin azure -NodeVmSetType VirtualMachineScaleSets --EnableAHUB
-```
-
-To enable Azure Hybrid Benefit on an existing AKS cluster:
+### [Azure PowerShell](#tab/azure-powershell)
 
 ```powershell
 $rg_name = "myResourceGroup"
@@ -80,8 +73,26 @@ $cluster = "myAKSCluster"
 Get-AzAksCluster -ResourceGroupName $rg_name -Name $cluster | Set-AzAksCluster -EnableAHUB
 ```
 
->[!Note]
->It is currently not possible to disable Azure Hybrid Benefit for AKS using Azure PowerShell.
+---
+
+## Disable Azure Hybrid Benefit for Azure Kubernetes Service
+
+To disable Azure Hybrid Benefit for an AKS cluster:
+
+### [Azure CLI](#tab/azure-cli)
+
+```azurecli
+RG_NAME='myResourceGroup'
+CLUSTER='myAKSCluster'
+
+az aks update --resource-group $RG_NAME --name $CLUSTER --disable-ahub
+```
+
+### [Azure PowerShell](#tab/azure-powershell)
+
+It is currently not possible to disable Azure Hybrid Benefit for AKS using Azure PowerShell.
+
+---
 
 ## Next steps
 

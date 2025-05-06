@@ -2,7 +2,7 @@
 title: About service meshes
 description: Obtain an overview of service meshes, supported scenarios, selection criteria, and next steps to explore.
 author: phillipgibson
-ms.topic: article
+ms.topic: concept-article
 ms.date: 04/18/2023
 ms.author: pgibson
 ---
@@ -57,7 +57,7 @@ For more details on service mesh standardization efforts, see:
 - [Service Mesh Performance (SMP)][smp]
 
 <!-- LINKS - external -->
-[linkerd]: https://linkerd.io/getting-started/
+[linkerd]: https://linkerd.io/2.16/getting-started/
 [consul]: https://learn.hashicorp.com/tutorials/consul/service-mesh-deploy
 [service-mesh-landscape]: https://layer5.io/service-mesh-landscape
 [smi]: https://smi-spec.io/

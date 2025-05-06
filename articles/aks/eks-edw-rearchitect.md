@@ -3,8 +3,9 @@ title: Rearchitect the event-driven workflow (EDW) workload for Azure Kubernetes
 description: Learn about architectural differences for replicating the AWS EKS scaling with KEDA and Karpenter event-driven workflow (EDW) workload in AKS.
 ms.topic: how-to
 ms.date: 06/20/2024
-author: JnHs
-ms.author: jenhayes
+author: schaffererin
+ms.author: schaffererin
+ms.service: azure-kubernetes-service
 ---
 
 # Rearchitect the event-driven workflow (EDW) workload for Azure Kubernetes Service (AKS)
@@ -21,7 +22,7 @@ The workload consists of an AWS EKS cluster to orchestrate consumers reading mes
 
 The following diagram represents the architecture of the EDW workload in AWS:
 
-:::image type="content" source="media/eks-edw-rearchitect/edw-architecture-aws.png" alt-text="Architecture diagram of the EDW workload in AWS.":::
+:::image type="content" source="media/eks-edw-rearchitect/aws-edw-architecture.png" alt-text="Architecture diagram of the EDW workload in AWS.":::
 
 ## Map AWS services to Azure services
 
@@ -40,7 +41,7 @@ The following table summarizes the service mapping:
 
 The following diagram represents the architecture of the Azure EDW workload using the [AWS to Azure service mapping](#map-aws-services-to-azure-services):
 
-:::image type="content" source="media/eks-edw-rearchitect/edw-architecture-azure.png" alt-text="Architecture diagram of the EDW workload in Azure.":::
+:::image type="content" source="media/eks-edw-rearchitect/azure-edw-architecture.png" alt-text="Architecture diagram of the EDW workload in Azure.":::
 
 ## Compute options
 
@@ -55,7 +56,7 @@ In AWS, you can choose between on-demand compute (more expensive but no eviction
 
 ## Contributors
 
-*This article is maintained by Microsoft. It was originally written by the following contributors*:
+*Microsoft maintains this article. The following contributors originally wrote it:*
 
 - Ken Kilty | Principal TPM
 - Russell de Pina | Principal TPM

@@ -1,10 +1,10 @@
 ---
 title: Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using PowerShell
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in a Windows Server container in Azure Kubernetes Service (AKS) using PowerShell.
-ms.topic: article
+ms.topic: quickstart
 ms.date: 01/11/2024
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 ms.custom: devx-track-azurepowershell
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy a Windows Server container so that I can see how to run applications running on a Windows Server container using the managed Kubernetes service in Azure.
@@ -46,7 +46,7 @@ ResourceGroupName : myResourceGroup
 Location          : eastus
 ProvisioningState : Succeeded
 Tags              :
-ResourceId        : /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/myResourceGroup
+ResourceId        : /subscriptions/aaaa0a0a-bb1b-cc2c-dd3d-eeeeee4e4e4e/resourceGroups/myResourceGroup
 ```
 
 ## Create an AKS cluster
@@ -83,9 +83,9 @@ To create the AKS cluster with Azure PowerShell, follow these steps:
 
     If you get a password validation error, and the password that you set meets the length and complexity requirements, try creating your resource group in another region. Then try creating the cluster with the new resource group.
 
-    If you don't specify an administrator username and password when creating the node pool, the username is set to *azureuser* and the password is set to a random value. For more information, see [How do I change the administrator password for Windows Server nodes on my cluster?](../windows-faq.md#how-do-i-change-the-administrator-password-for-windows-server-nodes-on-my-cluster).
+    If you don't specify an administrator username and password when creating the node pool, the username is set to *azureuser* and the password is set to a random value. For more information, see the [Windows Server FAQ](../windows-faq.yml).
 
-    The administrator username can't be changed, but you can change the administrator password that your AKS cluster uses for Windows Server nodes using `az aks update`. For more information, see [Windows Server node pools FAQ][win-faq-change-admin-creds].
+    The administrator username can't be changed, but you can change the administrator password that your AKS cluster uses for Windows Server nodes using `az aks update`. For more information, see the [Windows Server FAQ](../windows-faq.yml).
 
     To run an AKS cluster that supports node pools for Windows Server containers, your cluster needs to use a network policy that uses [Azure CNI (advanced)][azure-cni] network plugin. The `-NetworkPlugin azure` parameter specifies Azure CNI.
 
@@ -119,8 +119,7 @@ To use Windows Server 2022, specify the following parameters:
 > [!NOTE]
 >
 > - Specifying the `OsSKU` parameter requires PowerShell Az module version 9.2.0 or higher.
-> - Windows Server 2022 requires Kubernetes version 1.23.0 or higher.
-> - Windows Server 2022 is being retired after Kubernetes version 1.34 reaches its end of life (EOL). For more information about this retirement, see the [AKS release notes][aks-release-notes].
+> Windows Server 2022 requires Kubernetes version 1.23.0 or higher. Windows Server 2022 is being retired after Kubernetes version 1.34 reaches its end of support. Windows Server 2022 will not be supported in Kubernetes version 1.35 and above. For more information about this retirement, see the [AKS release notes][aks-release-notes].
 
 To add a Windows Server 2022 node pool, call the [New-AzAksNodePool][new-azaksnodepool] cmdlet:
 
@@ -143,7 +142,7 @@ To use Windows Server 2019, specify the following parameters:
 > [!NOTE]
 >
 > - `OsSKU` requires PowerShell Az module version 9.2.0 or higher.
-> - Windows Server 2019 is being retired after Kubernetes version 1.32 reaches end of life (EOL) and won't be supported in future releases. For more information about this retirement, see the [AKS release notes][aks-release-notes].
+> Windows Server 2019 is being retired after Kubernetes version 1.32 reaches end of support. Windows Server 2019 will not be supported in Kubernetes version 1.33 and above. For more information about this retirement, see the [AKS release notes][aks-release-notes].
 
 To add a Windows Server 2019 node pool, call the [New-AzAksNodePool][new-azaksnodepool] cmdlet:
 
@@ -324,5 +323,3 @@ To learn more about AKS, and to walk through a complete code-to-deployment examp
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference
 [new-azaksnodepool]: /powershell/module/az.aks/new-azaksnodepool
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-[win-faq-change-admin-creds]: ../windows-faq.md#how-do-i-change-the-administrator-password-for-windows-server-nodes-on-my-cluster
-

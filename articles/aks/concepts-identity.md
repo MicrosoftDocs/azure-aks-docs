@@ -1,7 +1,7 @@
 ---
 title: Concepts - Access and identity in Azure Kubernetes Services (AKS)
 description: Learn about access and identity in Azure Kubernetes Service (AKS), including Microsoft Entra integration, Kubernetes role-based access control (Kubernetes RBAC), and roles and bindings.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 03/07/2024
 author: palma21
@@ -157,7 +157,7 @@ As shown in the graphic above, the API server calls the AKS webhook server and p
 4. `kubectl` sends the access_token to API Server.
 5. The API Server is configured with the Auth WebHook Server to perform validation.
 6. The authentication webhook server confirms the JSON Web Token signature is valid by checking the Microsoft Entra public signing key.
-7. The server application uses user-provided credentials to query group memberships of the logged-in user from the MS Graph API.
+7. If the groups are bigger than 200, the server application uses user-provided credentials to query group memberships of the logged-in user from the MS Graph API. If groups do not exceedd 200, the groups claim already exists in the client token, no query will be performed.
 8. A response is sent to the API Server with user information such as the user principal name (UPN) claim of the access token, and the group membership of the user based on the object ID.
 9. The API performs an authorization decision based on the Kubernetes Role/RoleBinding.
 10. Once authorized, the API server returns a response to `kubectl`.
@@ -254,7 +254,7 @@ In the Azure portal, you can find:
 
 | Description        | Role grant required| Cluster admin Microsoft Entra group(s) | When to use |
 | -------------------|------------|----------------------------|-------------|
-| Legacy admin login using client certificate| **Azure Kubernetes Service Admin Role**. This role allows `az aks get-credentials` to be used with the `--admin` flag, which downloads a [legacy (non-Microsoft Entra) cluster admin certificate](control-kubeconfig-access.md) into the user's `.kube/config`. This is the only purpose of "Azure Kubernetes Admin Role".|n/a|If you're permanently blocked by not having access to a valid Microsoft Entra group with access to your cluster.| 
+| Legacy admin login using client certificate| **Azure Kubernetes Service Cluster Admin Role**. This role allows `az aks get-credentials` to be used with the `--admin` flag, which downloads a [legacy (non-Microsoft Entra) cluster admin certificate](control-kubeconfig-access.md) into the user's `.kube/config`. This is the only purpose of "Azure Kubernetes Service Cluster Admin Role".|n/a|If you're permanently blocked by not having access to a valid Microsoft Entra group with access to your cluster.| 
 | Microsoft Entra ID with manual (Cluster)RoleBindings| **Azure Kubernetes Service Cluster User Role**. The "User" role allows `az aks get-credentials` to be used without the `--admin` flag. (This is the only purpose of "Azure Kubernetes Service Cluster User Role".) The result, on a Microsoft Entra ID-enabled cluster, is the download of [an empty entry](control-kubeconfig-access.md) into `.kube/config`, which triggers browser-based authentication when it's first used by `kubectl`.| User is not in any of these groups. Because the user is not in any Cluster Admin groups, their rights will be controlled entirely by any RoleBindings or ClusterRoleBindings that have been set up by cluster admins. The (Cluster)RoleBindings [nominate Microsoft Entra users or Microsoft Entra groups](azure-ad-rbac.md) as their `subjects`. If no such bindings have been set up, the user will not be able to excute any `kubectl` commands.|If you want fine-grained access control, and you're not using Azure RBAC for Kubernetes Authorization. Note that the user who sets up the bindings must log in by one of the other methods listed in this table.|
 | Microsoft Entra ID by member of admin group| Same as above|User is a member of one of the groups listed here. AKS automatically generates a ClusterRoleBinding that binds all of the listed groups to the `cluster-admin` Kubernetes role. So users in these groups can run all `kubectl` commands as `cluster-admin`.|If you want to conveniently grant users full admin rights, and are _not_ using Azure RBAC for Kubernetes authorization.|
 | Microsoft Entra ID with Azure RBAC for Kubernetes Authorization|Two roles: <br> First, **Azure Kubernetes Service Cluster User Role** (as above). <br> Second, one of the "Azure Kubernetes Service **RBAC**..." roles listed above, or your own custom alternative.|The admin roles field on the Configuration tab is irrelevant when Azure RBAC for Kubernetes Authorization is enabled.|You are using Azure RBAC for Kubernetes authorization. This approach gives you fine-grained control, without the need to set up RoleBindings or ClusterRoleBindings.|

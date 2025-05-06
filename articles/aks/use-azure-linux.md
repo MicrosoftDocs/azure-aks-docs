@@ -2,7 +2,7 @@
 
 title: Use the Azure Linux container host on Azure Kubernetes Service (AKS)
 description: Learn how to use the Azure Linux container host on Azure Kubernetes Service (AKS)
-ms.topic: article
+ms.topic: how-to
 ms.custom: build-2023, linux-related-content
 ms.date: 02/27/2024
 author: schaffererin
@@ -12,7 +12,7 @@ ms.author: schaffererin
 
 # Use the Azure Linux container host for Azure Kubernetes Service (AKS)
 
-The Azure Linux container host for AKS is an open-source Linux distribution created by Microsoft, and it’s available as a container host on Azure Kubernetes Service (AKS). The Azure Linux container host provides reliability and consistency from cloud to edge across the AKS, AKS-HCI, and Arc products. You can deploy Azure Linux node pools in a new cluster, add Azure Linux node pools to your existing Ubuntu clusters, or migrate your Ubuntu nodes to Azure Linux nodes. To learn more about Azure Linux, see the [Azure Linux documentation][azurelinux-doc].
+The Azure Linux container host for AKS is an open-source Linux distribution created by Microsoft, and it’s generally available as a container host on Azure Kubernetes Service (AKS). The Azure Linux container host provides reliability and consistency from cloud to edge across the AKS, AKS-HCI, and Arc products. You can deploy Azure Linux node pools in a new cluster, add Azure Linux node pools to your existing Ubuntu clusters, or migrate your Ubuntu nodes to Azure Linux nodes. To learn more about Azure Linux, see the [Azure Linux documentation][azurelinux-doc].
 
 ## Why use Azure Linux
 
@@ -20,32 +20,13 @@ The Azure Linux container host on AKS uses a native AKS image that provides one 
 
 ## How to use Azure Linux on AKS
 
-> [!NOTE]
-> The Azure Linux node pool is now generally available (GA). To learn about the benefits and deployment steps, see the [Introduction to the Azure Linux Container Host for AKS][azurelinuxdocumentation].
-
 To get started using the Azure Linux container host for AKS, see:
 
 * [Creating a cluster with Azure Linux][azurelinux-cluster-config]
+* [How to upgrade Azure Linux clusters](/azure/azure-linux/tutorial-azure-linux-upgrade)
 * [Add an Azure Linux node pool to your existing cluster][azurelinux-node-pool]
 * [Ubuntu to Azure Linux migration][ubuntu-to-azurelinux]
 * [Azure Linux supported GPU SKUs](/azure/azure-linux/intro-azure-linux#azure-linux-container-host-supported-gpu-skus)
-
-## How to upgrade Azure Linux nodes
-
-We recommend keeping your clusters up to date and secured by enabling automatic upgrades for your cluster. To enable automatic upgrades, see:
-
-* [Automatically upgrade an Azure Kubernetes Service (AKS) cluster][auto-upgrade-aks]
-* [Deploy kured in an AKS cluster][kured]
-
-To manually upgrade the node-image on a cluster, you can run `az aks nodepool upgrade`:
-
-```azurecli
-az aks nodepool upgrade \
-    --resource-group myResourceGroup \
-    --cluster-name myAKSCluster \
-    --name myNodePool \
-    --node-image-only
-```
 
 ## Regional availability
 

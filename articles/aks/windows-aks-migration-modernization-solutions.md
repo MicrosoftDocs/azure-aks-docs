@@ -2,7 +2,7 @@
 title: Migration and modernization solutions for Windows AKS
 titleSuffix: Migration and modernization solutions for Windows Server containers on AKS
 description: Read end-to-end walkthroughs of assessing your applications to find containerization and PaaS blockers.
-ms.topic: article
+ms.topic: concept-article
 ms.date: 01/31/2024
 author: schaffererin
 ms.author: schaffererin

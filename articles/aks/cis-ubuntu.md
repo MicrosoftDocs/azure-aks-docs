@@ -1,7 +1,7 @@
 ---
 title: Azure Kubernetes Service (AKS) Ubuntu image alignment with Center for Internet Security (CIS) benchmark
 description: Learn how AKS applies the CIS benchmark to Ubuntu image used by Azure Kubernetes Service.
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 09/27/2023
 ms.reviewer: mattmcinnes
@@ -296,7 +296,7 @@ For more information about AKS security, see the following articles:
 * [AKS best practices](./best-practices.md)
 
 <!-- EXTERNAL LINKS -->
-[cis-benchmark-ubuntu]: https://www.cisecurity.org/benchmark/ubuntu/
+[cis-benchmark-ubuntu]: https://www.cisecurity.org/benchmark/ubuntu_linux
 
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark

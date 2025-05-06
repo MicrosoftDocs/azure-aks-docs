@@ -1,12 +1,12 @@
 ---
 title: Deploy an AKS cluster using the Bicep Kubernetes extension
 description: Learn how to quickly deploy a Kubernetes cluster using the Bicep Kubernetes extension and deploy an application in Azure Kubernetes Service (AKS). 
-author: tamram
+author: schaffererin
 
 ms.topic: quickstart
 ms.custom: devx-track-bicep
 ms.date: 01/11/2024
-ms.author: tamram
+ms.author: schaffererin
 
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
 ---
@@ -435,7 +435,7 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [remove-azresourcegroup]: /powershell/module/az.resources/remove-azresourcegroup
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
 [ssh-keys]: /azure/virtual-machines/linux/create-ssh-keys-detailed
-[az-deployment-group-create]: /cli/azure/group/deployment#az_deployment_group_create
+[az-deployment-group-create]: /cli/azure/deployment/group#az-deployment-group-create
 [new-azresourcegroup]: /powershell/module/az.resources/new-azresourcegroup
 [new-azresourcegroupdeployment]: /powershell/module/az.resources/new-azresourcegroupdeployment
 [az-sshkey-create]: /cli/azure/sshkey#az_sshkey_create

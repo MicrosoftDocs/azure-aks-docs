@@ -374,7 +374,7 @@ The `VerticalPodAutoscaler` object automatically sets resource requests on pods 
 
 The Recommender provides recommendations for resource usage based on real-time resource consumption. AKS deploys a Recommender when a cluster enables VPA. You can deploy a customized Recommender or an extra Recommender with the same image as the default one. The benefit of having a customized Recommender is that you can customize your recommendation logic. With an extra Recommender, you can partition VPAs to use different Recommenders.
 
-In the following example, we create an extra Recommender, apply to an existing AKS clust, and configure the VPA object to use the extra Recommender.
+In the following example, we create an extra Recommender, apply to an existing AKS cluster, and configure the VPA object to use the extra Recommender.
 
 1. Create a file named `extra_recommender.yaml` and copy in the following manifest:
 
@@ -547,7 +547,7 @@ If you encounter issues with the Vertical Pod Autoscaler, you can troubleshoot t
 1. Verify that all system components are running using the following command:
 
    ```bash
-   kubectl --namespace=kube-system get pods|grep vpa
+   kubectl get pods|grep vpa
    ```
 
     Your output should list *three pods*: recommender, updater, and admission-controller, all with a status of `Running`.
@@ -555,7 +555,7 @@ If you encounter issues with the Vertical Pod Autoscaler, you can troubleshoot t
 2. For each of the pods returned in your previous output, verify that the system components are logging any errors using the following command:
 
     ```bash
-    kubectl --namespace=kube-system logs [pod name] | grep -e '^E[0-9]\{4\}'
+    kubectl logs [pod name] | grep -e '^E[0-9]\{4\}'
     ```
 
 3. Verify that the custom resource definition was created using the following command:

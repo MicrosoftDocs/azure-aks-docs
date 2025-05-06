@@ -1,7 +1,7 @@
 ---
 title: Enable Group Managed Service Accounts (GMSA) for your Windows Server nodes on your Azure Kubernetes Service (AKS) cluster
 description: Learn how to enable Group Managed Service Accounts (GMSA) for your Windows Server nodes on your Azure Kubernetes Service (AKS) cluster to secure your pods.
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/30/2023
@@ -399,7 +399,7 @@ If your pod doesn't start after running the `kubectl get pods --watch`  command 
 
 ## Next steps
 
-* Learn more about [Windows Server containers on AKS](./windows-faq.md).
+For more information, see [Windows containers considerations with Azure Kubernetes Service (AKS)](./windows-vs-linux-containers.md).
 
 <!-- LINKS - internal -->
 [aks-cni]: configure-azure-cni.md

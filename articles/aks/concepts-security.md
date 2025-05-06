@@ -1,12 +1,11 @@
 ---
 title: Concepts - Security in Azure Kubernetes Services (AKS)
 description: Learn about security in Azure Kubernetes Service (AKS), including master and node communication, network policies, and Kubernetes secrets.
-author: miwithro
-ms.topic: conceptual
+author: shashankbarsin
+ms.topic: concept-article
 ms.subservice: aks-security
-ms.custom: build-2023
-ms.date: 03/18/2024
-ms.author: miwithro
+ms.date: 04/03/2025
+ms.author: shasb
 ---
 
 # Security concepts for applications and clusters in Azure Kubernetes Service (AKS)
@@ -46,18 +45,18 @@ You can control access to the API server using Kubernetes role-based access cont
 AKS nodes are Azure virtual machines (VMs) that you manage and maintain.
 
 * Linux nodes run optimized versions of Ubuntu or Azure Linux.
-* Windows Server nodes run an optimized Windows Server 2019 release using the `containerd` or Docker container runtime.
+* Windows Server nodes run an optimized Windows Server 2022 release using the `containerd` container runtime.
 
 When an AKS cluster is created or scaled up, the nodes are automatically deployed with the latest OS security updates and configurations.
 
 > [!NOTE]
 > AKS clusters running:
-> * Kubernetes version 1.19 and higher - Linux node pools use `containerd` as its container runtime. Windows Server 2019 node pools use `containerd` as its container runtime, which is currently in preview. For more information, see [Add a Windows Server node pool with `containerd`][aks-add-np-containerd].
-> * Kubernetes version 1.19 and earlier - Linux node pools use Docker as its container runtime. Windows Server 2019 node pools use Docker for the default container runtime.
+> * Kubernetes version 1.19 and higher - Linux node pools use `containerd` as its container runtime. Windows Server 2019 and Windows Server 2022 node pools use `containerd` as its container runtime. For more information, see [Add a Windows Server node pool with `containerd`][aks-add-np-containerd].
+> * Kubernetes version 1.19 and earlier - Linux node pools use Docker as its container runtime. 
 
 For more information about the security upgrade process for Linux and Windows worker nodes, see [Security patching nodes][aks-vulnerability-management-nodes].
 
-AKS clusters running Azure Generation 2 VMs includes support for [Trusted Launch][trusted-launch] (preview), which protects against advanced and persistent attack techniques by combining technologies that can be independently enabled, like secure boot and virtualized version of trusted platform module (vTPM). Administrators can deploy AKS worker nodes with verified and signed bootloaders, OS kernels, and drivers to ensure integrity of the entire boot chain of the underlying VM.
+AKS clusters running Azure Generation 2 VMs includes support for [Trusted Launch][trusted-launch], which protects against advanced and persistent attack techniques by combining technologies that can be independently enabled, like secure boot and virtualized version of trusted platform module (vTPM). Administrators can deploy AKS worker nodes with verified and signed bootloaders, OS kernels, and drivers to ensure integrity of the entire boot chain of the underlying VM.
 
 ### Node authorization
 
@@ -103,6 +102,10 @@ To limit network traffic between pods in your cluster, AKS offers support for [K
 
 To protect pods running on AKS, consider [Microsoft Defender for Containers][microsoft-defender-for-containers] to detect and restrict cyber attacks against your applications running in your pods.  Run continual scanning to detect drift in the vulnerability state of your application and implement a "blue/green/canary" process to patch and replace the vulnerable images. 
 
+## Secure container access to resources
+
+In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. Built-in Linux security features such as *AppArmor* and *seccomp* are recommended as [best practices][security-best-practices] to [secure container access to resources][secure-container-access].
+
 ## Kubernetes Secrets
 
 With a Kubernetes *Secret*, you inject sensitive data into pods, such as access credentials or keys.
@@ -119,7 +122,7 @@ Using Secrets reduces the sensitive information defined in the pod or service YA
 > [!NOTE]
 > The raw secret manifest files contain the secret data in base64 format. For more information, see the [official documentation][secret-risks]. Treat these files as sensitive information, and never commit them to source control.
 
-Kubernetes secrets are stored in *etcd*, a distributed key-value store. AKS fully manages the *etcd* store and [data is encrypted at rest within the Azure platform][encryption-atrest].
+Kubernetes secrets are stored in *etcd*, a distributed key-value store. AKS allows [encryption at rest of secrets in etcd using customer managed keys][etcd-encryption-cmk].
 
 ## Next steps
 
@@ -137,7 +140,7 @@ For more information on core Kubernetes and AKS concepts, see:
 
 <!-- LINKS - External -->
 [secret-risks]: https://kubernetes.io/docs/concepts/configuration/secret/#risks
-[encryption-atrest]: /azure/security/fundamentals/encryption-atrest
+
 
 <!-- LINKS - Internal -->
 [microsoft-defender-for-containers]: /azure/defender-for-cloud/defender-for-containers-introduction
@@ -164,3 +167,7 @@ For more information on core Kubernetes and AKS concepts, see:
 [aks-vulnerability-management-nodes]: concepts-vulnerability-management.md#worker-nodes
 [manage-ssh-access]: manage-ssh-node-access.md
 [trusted-launch]: use-trusted-launch.md
+[custom-node-configuration]: /azure/aks/custom-node-configuration
+[security-best-practices]: /azure/aks/operator-best-practices-cluster-security
+[security-container-access]: secure-container-access.md
+[etcd-encryption-cmk]: use-kms-etcd-encryption.md

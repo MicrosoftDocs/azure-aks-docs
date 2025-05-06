@@ -1,12 +1,12 @@
 ---
 title: Use a Microsoft Entra Workload ID on AKS
 description: Learn about Microsoft Entra Workload ID for Azure Kubernetes Service (AKS) and how to migrate your application to authenticate using this identity.  
-author: tamram
-ms.topic: article
+author: nickomang
+ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: build-2023
 ms.date: 05/28/2024
-ms.author: tamram
+ms.author: nickoman
 ---
 
 # Use Microsoft Entra Workload ID with Azure Kubernetes Service (AKS)
@@ -46,7 +46,7 @@ The following table provides the **minimum** package version required for each l
 | Node.js | [@azure/identity](/javascript/api/overview/azure/identity-readme) | 3.2.0 |
 | Python | [azure-identity](/python/api/overview/azure/identity-readme) | 1.13.0 |
 
-In the following code samples, `DefaultAzureCredential` is used. This credential type uses the environment variables injected by the Azure Workload Identity mutating webhook to authenticate with Azure Key Vault.
+In the following code samples, `DefaultAzureCredential` is used. This credential type uses the environment variables injected by the Azure Workload Identity mutating webhook to authenticate with Azure Key Vault. To see samples using one of the other approaches, refer to the Ecosystem-specific client library links above.
 
 ## [.NET](#tab/dotnet)
 
@@ -215,7 +215,7 @@ The following client libraries are the **minimum** version required.
 
 In this security model, the AKS cluster acts as the token issuer. Microsoft Entra ID uses OpenID Connect to discover public signing keys and verify the authenticity of the service account token before exchanging it for a Microsoft Entra token. Your workload can exchange a service account token projected to its volume for a Microsoft Entra token using the Azure Identity client library or the Microsoft Authentication Library (MSAL).
 
-:::image type="content" source="media/workload-identity-overview/aks-workload-identity-model.png" alt-text="Diagram of the AKS workload identity security model." lightbox="media/workload-identity-overview/aks-workload-identity-model.png":::
+:::image type="content" source="media/workload-identity-overview/workload-id-model.png" alt-text="Diagram of the AKS workload identity security model." lightbox="media/workload-identity-overview/workload-id-model.png":::
 
 The following table describes the required OIDC issuer endpoints for Microsoft Entra Workload ID:
 
@@ -226,7 +226,7 @@ The following table describes the required OIDC issuer endpoints for Microsoft E
 
 The following diagram summarizes the authentication sequence using OpenID Connect.
 
-:::image type="content" source="media/workload-identity-overview/aks-workload-identity-oidc-authentication-model.png" alt-text="Diagram of the AKS workload identity OIDC authentication sequence." lightbox="media/workload-identity-overview/aks-workload-identity-oidc-authentication-model.png":::
+:::image type="content" source="media/workload-identity-overview/workload-id-oidc-authentication-model.png" alt-text="Diagram of the AKS workload identity OIDC authentication sequence." lightbox="media/workload-identity-overview/workload-id-oidc-authentication-model.png":::
 
 ### Webhook Certificate Auto Rotation
 
@@ -271,15 +271,15 @@ All annotations are optional. If the annotation isn't specified, the default val
 | Annotation | Description | Default |
 |--|--|--|
 | `azure.workload.identity/service-account-token-expiration` | Represents the `expirationSeconds` field for the projected service account token. It's an optional field that you configure to prevent any downtime caused by errors during service account token refresh. Kubernetes service account token expiry isn't correlated with Microsoft Entra tokens. Microsoft Entra tokens expire in 24 hours after they're issued. <sup>1</sup> | 3600<br> Supported range is 3600-86400. |
-| `azure.workload.identity/skip-containers` | Represents a semi-colon-separated list of containers to skip adding projected service account token volume. For example, `container1;container2`. | By default, the projected service account token volume is added to all containers if the service account is labeled with `azure.workload.identity/use: true`. |
+| `azure.workload.identity/skip-containers` | Represents a semi-colon-separated list of containers to skip adding projected service account token volume. For example, `container1;container2`. | By default, the projected service account token volume is added to all containers if the pod is labeled with `azure.workload.identity/use: true`. |
 | `azure.workload.identity/inject-proxy-sidecar` | Injects a proxy init container and proxy sidecar into the pod. The proxy sidecar is used to intercept token requests to IMDS and acquire a Microsoft Entra token on behalf of the user with federated identity credential. | true |
 | `azure.workload.identity/proxy-sidecar-port` | Represents the port of the proxy sidecar. | 8000 |
 
  <sup>1</sup> Takes precedence if the service account is also annotated.
 
-## How to migrate to Entra Workload ID
+## How to migrate to Microsoft Entra Workload ID
 
-On a cluster that is already running a pod-managed identity, you can configure it to use workload identity one of two ways. The first option allows you to use the same configuration that you've implemented for pod-managed identity. You can annotate the service account within the namespace with the identity to enable Entra Workload ID and inject the annotations into the pods.
+On a cluster that is already running a pod-managed identity, you can configure it to use workload identity one of two ways. The first option allows you to use the same configuration that you've implemented for pod-managed identity. You can annotate the service account within the namespace with the identity to enable Microsoft Entra Workload ID and inject the annotations into the pods.
 
 The second option is to rewrite your application to use the latest version of the Azure Identity client library.
 

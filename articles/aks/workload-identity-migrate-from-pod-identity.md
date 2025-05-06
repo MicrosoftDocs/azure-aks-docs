@@ -1,16 +1,18 @@
 ---
 title: Migrate your Azure Kubernetes Service (AKS) pod to use workload identity
 description: In this Azure Kubernetes Service (AKS) article, you learn how to configure your Azure Kubernetes Service pod to authenticate with workload identity.
-ms.topic: article
+ms.topic: how-to
 ms.subservice: aks-security
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 07/31/2023
-author: tamram
-ms.author: tamram
+author: nickomang
+ms.author: nickoman
 
 ---
 
 # Migrate from pod managed-identity to workload identity
+
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303216)
 
 This article focuses on migrating from a pod-managed identity to Microsoft Entra Workload ID for your Azure Kubernetes Service (AKS) cluster. It also provides guidance depending on the version of the [Azure Identity][azure-identity-supported-versions] client library used by your container-based application.
 
@@ -231,7 +233,7 @@ This article showed you how to set up your pod to authenticate using a workload 
 [azure-identity-libraries]: ../active-directory/develop/reference-v2-libraries.md
 [openid-connect-overview]: /azure/active-directory/develop/v2-protocols-oidc
 [install-azure-cli]: /cli/azure/install-azure-cli
-[assign-rbac-managed-identity]: /azure/active-directory/managed-identities-azure-resources/howto-assign-access-cli
+[assign-rbac-managed-identity]: /azure/role-based-access-control/role-assignments-portal-managed-identity
 
 <!-- EXTERNAL LINKS -->
 [kubectl-describe]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe

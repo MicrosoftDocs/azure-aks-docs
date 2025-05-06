@@ -1,7 +1,7 @@
 ---
 title: Build, test, and deploy containers to Azure Kubernetes Service (AKS) using GitHub Actions
 description: Learn how to use GitHub Actions to build, test, and deploy containers to Azure Kubernetes Service (AKS).
-ms.topic: article
+ms.topic: how-to
 ms.date: 09/12/2023
 author: nickomang
 ms.author: nickoman

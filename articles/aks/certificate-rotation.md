@@ -1,10 +1,10 @@
 ---
 title: Certificate Rotation in Azure Kubernetes Service (AKS)
 description: Learn about certificate rotation in an Azure Kubernetes Service (AKS) cluster.
-author: tamram
+author: nickomang
 
-ms.author: tamram
-ms.topic: article
+ms.author: nickoman
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/29/2024
@@ -12,10 +12,10 @@ ms.date: 08/29/2024
 
 # Certificate rotation in Azure Kubernetes Service (AKS)
 
-Azure Kubernetes Service (AKS) uses certificates for authentication with many of its components. Clusters with Azure role-based access control (Azure RBAC) that were created after March 2022 are enabled with certificate auto-rotation. You may need to periodically rotate those certificates for security or policy reasons. For example, you may have a policy to rotate all your certificates every 90 days.
+Azure Kubernetes Service (AKS) uses certificates for authentication with many of its components. Clusters with Azure role-based access control (Azure RBAC) that were created after March 2022 are enabled with certificate auto rotation. You might need to periodically rotate those certificates for security or policy reasons. For example, you might have a policy to rotate all your certificates every 90 days.
 
 > [!NOTE]
-> Certificate auto-rotation is enabled by default only for RBAC-enabled AKS clusters.
+> Certificate auto rotation is enabled by default only for RBAC-enabled AKS clusters.
 
 This article shows you how certificate rotation works in your AKS cluster.
 
@@ -71,13 +71,13 @@ Microsoft maintains all certificates mentioned in this section, except for the c
 
 ### Check certificate expiration for the virtual machine scale set agent node
 
-* Check the expiration date of the virtual machine scale set agent node certificate using the `az vm run-command invoke` command.
+* Check the expiration date of the virtual machine scale set agent node certificate using the `az vmss run-command invoke` command.
 
     ```azurecli-interactive
-    az vmss run-command invoke --resource-group "MC_rg_myAKSCluster_region" --name "vmss-name" --command-id RunShellScript --instance-id 1 --scripts "openssl x509 -in  /var/lib/kubelet/pki/kubelet-client-current.pem -text" --query "value[0].message"
+    az vmss run-command invoke --resource-group "MC_rg_myAKSCluster_region" --name "vmss-name" --command-id RunShellScript --instance-id 1 --scripts "openssl x509 -in  /var/lib/kubelet/pki/kubelet-client-current.pem -noout -enddate" --query "value[0].message"
     ```
 
-## Certificate auto-rotation
+## Certificate auto rotation
 
 For AKS to automatically rotate non-CA certificates, the cluster must have [TLS Bootstrapping](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/), which is enabled by default in all Azure regions.
 
@@ -99,7 +99,7 @@ For any AKS clusters created or upgraded after March 2022, Azure Kubernetes Serv
     For more information, see [Connect to Azure Kubernetes Service cluster nodes for maintenance or troubleshooting][aks-node-access].
 
     > [!NOTE]
-    > The file path may change as Kubernetes versions evolve.
+    > The file path might change as Kubernetes versions evolve.
 
 2. Once a region is configured, create a new cluster or upgrade an existing cluster to set auto rotation for the cluster certificate. You need to upgrade the control plane and node pool to enable this feature.
 
@@ -121,7 +121,7 @@ For any AKS clusters created or upgraded after March 2022, Azure Kubernetes Serv
     ```
 
     > [!IMPORTANT]
-    > It may take up to 30 minutes for `az aks rotate-certs` to complete. If the command fails before completing, use `az aks show` to verify the status of the cluster is *Certificate Rotating*. If the cluster is in a failed state, rerun `az aks rotate-certs` to rotate your certificates again.
+    > It might take up to 30 minutes for `az aks rotate-certs` to complete. If the command fails before completing, use `az aks show` to verify the status of the cluster is *Certificate Rotating*. If the cluster is in a failed state, rerun `az aks rotate-certs` to rotate your certificates again.
 
 3. Verify the old certificates are no longer valid using any `kubectl` command, such as `kubectl get nodes`.
 
@@ -150,16 +150,75 @@ For any AKS clusters created or upgraded after March 2022, Azure Kubernetes Serv
     > [!NOTE]
     > If you have any services that run on top of AKS, you might need to update their certificates.
 
+## Kubelet serving certificate rotation
+
+Kubelet serving certificate rotation allows AKS to utilize kubelet server TLS bootstrapping for both bootstrapping and rotating serving certificates signed by the Cluster CA.
+
+### Limitations
+
+- Supported on Kubernetes version 1.27 and above.
+- Not supported when the node pool is provisioned based on a snapshot.
+- This feature can't be manually enabled. Existing node pools will have kubelet serving certificate rotation enabled by default when they perform their first upgrade to any kubernetes version 1.27 or greater. New node pools on kubernetes version 1.27 or greater will have kubelet serving certificate rotation enabled by default. To see if kubelet serving certificate rotation has been enabled in your region, see [AKS Releases](https://github.com/Azure/AKS/releases).
+
+### Verify kubelet serving certificate rotation has been enabled 
+
+Each node with the feature enabled is automatically given the label `kubernetes.azure.com/kubelet-serving-ca=cluster`. Verify the labels were set using the `kubectl get nodes -L kubernetes.azure.com/kubelet-serving-ca` command.
+
+ ```bash
+kubectl get nodes -L kubernetes.azure.com/kubelet-serving-ca
+ ```
+
+### Verify kubelet goes through TLS bootstrapping process
+
+With this feature enabled, each kubelet running your nodes should go through the serving [TLS bootstrapping process](https://kubernetes.io/docs/reference/access-authn-authz/kubelet-tls-bootstrapping/#certificate-rotation).
+
+Verify the bootstrapping process is taking place by using the [`kubectl get`][kubectl-get] command to get the current CSR objects within your cluster.
+
+```azurecli-interactive
+kubectl get csr --field-selector=spec.signerName=kubernetes.io/kubelet-serving
+```
+
+All serving CSRs should be in the `Approved,Issued` state, which indicates the CSR was approved and issued a signed certificate. Serving CSRs have a signer name of `kubernetes.io/kubelet-serving`. 
+
+```output
+   NAME        AGE    SIGNERNAME                                    REQUESTOR                    REQUESTEDDURATION   CONDITION
+csr-8mx4w   113s   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:uoxr9r      none              Approved,Issued
+csr-bchlj   111s   kubernetes.io/kubelet-serving                 system:node:akswinp7000000   none              Approved,Issued
+csr-sb4wz   46m    kubernetes.io/kubelet-serving                 system:node:akswinp6000000   none              Approved,Issued
+csr-zc4wt   46m    kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:ho7zyu      none              Approved,Issued
+```
+
+### Verify kubelet is using a certificate obtained from server TLS bootstrapping
+
+To confirm whether the node's kubelet is using a serving certificate signed by the cluster CA, use  [`kubectl debug`][kubectl-debug] to examine the contents of the kubelet's PKI directory.
+
+```azurecli-interactive
+kubectl debug node/<node> -ti --image=mcr.microsoft.com/azurelinux/base/core:3.0 -- ls -l /host/var/lib/kubelet/kubelet-server-current.pem
+```
+
+If a `kubelet-server-current.pem` symlink exists, then the kubelet has bootstrapped/rotated its own serving certificate via the TLS bootstrapping process, and is signed by the cluster CA.
+
+### Disable kubelet serving certificate rotation
+
+You can disable kubelet serving certificate rotation by updating the node pool using the [az aks nodepool update][az-aks-nodepool-update] command to specify the tag `aks-disable-kubelet-serving-certificate-rotation=true` and then reimaging your nodes. A node reimage can be done via a [node image upgrade][node-image-upgrade] or by scaling the pool to 0 instances and then back up to the desired value.
+
+```azurecli-interactive
+az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --tags aks-disable-kubelet-serving-certificate-rotation=true
+```
+
 ## Next steps
 
 This article showed you how to manually and automatically rotate your cluster certificates, CAs, and SAs. For more information, see [Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)][aks-best-practices-security-upgrades].
 
 <!-- LINKS - internal -->
 [azure-cli-install]: /cli/azure/install-azure-cli
+[az-aks-nodepool-update]: /cli/azure/aks#az-aks-update
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
 [aks-best-practices-security-upgrades]: operator-best-practices-cluster-security.md
 [aks-node-access]: ./node-access.md
 [az-aks-rotate-certs]: /cli/azure/aks#az_aks_rotate_certs
+[node-image-upgrade]: node-image-upgrade.md
 
 <!-- LINKS - external -->
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[kubelet-debug]: https://kubernetes.io/docs/reference/kubectl/generated/kubectl_debug/

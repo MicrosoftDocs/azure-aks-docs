@@ -2,7 +2,7 @@
 title: Integrate Microsoft Entra ID with Azure Kubernetes Service (AKS) (legacy)
 description: Learn how to use the Azure CLI to create and Microsoft Entra ID-enabled Azure Kubernetes Service (AKS) cluster (legacy)
 author: miwithro
-ms.topic: article
+ms.topic: concept-article
 ms.subservice: aks-integration
 ms.custom: devx-track-azurecli
 ms.date: 02/21/2024

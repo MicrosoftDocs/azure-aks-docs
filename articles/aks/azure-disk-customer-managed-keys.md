@@ -1,12 +1,12 @@
 ---
 title: Use a customer-managed key to encrypt Azure managed disks in Azure Kubernetes Service (AKS)
 description: Bring your own keys (BYOK) to encrypt managed OS and data disks in AKS.
-ms.topic: article
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
 ms.date: 02/01/2024
-author: tamram
-ms.author: tamram
+author: schaffererin
+ms.author: schaffererin
 
 ---
 
@@ -27,11 +27,19 @@ Learn more about customer-managed keys on [Linux][customer-managed-keys-linux] a
 
 * Encryption of an OS disk with customer-managed keys can only be enabled when creating an AKS cluster.
 * Virtual nodes are not supported.
-* When encrypting an ephemeral OS disk-enabled node pool with customer-managed keys, if you want to rotate the key in Azure Key Vault, you need to:
+* When encrypting an ephemeral OS disk-enabled node pool with customer-managed keys, if you want to rotate the key in Azure Key Vault, there are two options to consider:
 
-   * Scale down the node pool count to 0
-   * Rotate the key
-   * Scale up the node pool to the original count.
+    * Immediate usage of new CMK
+
+        - Scale down the node pool count to 0.
+        - Rotate the key.
+        - Scale up the node pool to the original count.
+
+    * Gradual usage of new CMK
+
+        - Allow AKS node image upgrades or version upgrades to naturally adopt the new CMK over time.
+        - Until all nodes in the pool are upgraded, the existing CMK will continue to function without disruption.
+        - Once the upgrade process is complete across all nodes, the new CMK takes effect seamlessly.
 
 ## Create an Azure Key Vault instance
 
@@ -55,6 +63,9 @@ az keyvault create --name myKeyVaultName --resource-group myResourceGroup --loca
 ## Create an instance of a DiskEncryptionSet
 
 Replace *myKeyVaultName* with the name of your key vault. You also need a *key* stored in Azure Key Vault to complete the following steps. Either store your existing Key in the Key Vault you created on the previous steps, or [generate a new key][key-vault-generate] and replace *myKeyName* with the name of your key.
+
+> [!NOTE]
+> For cross-account access support for customer-managed encryption keys, you need to create the DiskEncryptionSet for cross-tenant customer-managed keys as detailed in [this guide](/azure/virtual-machines/disks-cross-tenant-customer-managed-keys?tabs=azure-cli#create-a-disk-encryption-set). The remaining storage class configuration is the same as normal customer managed keys.
 
 ```azurecli-interactive
 # Retrieve the Key Vault Id and store it in a variable
@@ -115,6 +126,9 @@ When new node pools are added to the cluster, the customer-managed key provided 
 ```azurecli-interactive
 az aks nodepool add --cluster-name $CLUSTER_NAME --resource-group $RG_NAME --name $NODEPOOL_NAME --node-osdisk-type Ephemeral
 ```
+
+> [!IMPORTANT]
+> The DiskEncryptionSet we previously applied to the storage class only encrypts new PVCs. Encrypting existing PVCs requires detaching first before using the Azure Disks API/CLI to update the underlying disks, as shown in [this related guide](/azure/virtual-machines/linux/disks-enable-customer-managed-keys-cli#encrypt-existing-managed-disks).
 
 ## Encrypt your AKS cluster data disk
 
