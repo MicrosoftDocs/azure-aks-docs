@@ -21,6 +21,9 @@ API Server VNet Integration is supported for public or private clusters. You can
 
 ## Limited availability
 
+> [!CAUTION] 
+> Once API Server VNet Integration is enabled on a cluster, stopping your cluster deallocates the control plane and releases the capacity. In regions experiencing capacity constraints, customers may be unable to start a stopped cluster. We do not recommend stopping mission critical workloads for this reason. 
+
 > [!IMPORTANT]
 > **API Server VNet Integration has limited availability and capacity in certain regions.**  
 > When creating or updating a cluster with API Server VNet Integration enabled, you may receive the following error:
