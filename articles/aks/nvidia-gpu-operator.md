@@ -35,7 +35,8 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 > [!NOTE]
 > The NVIDIA GPU Operator is not compatible with multiple OS versions on the same AKS cluster.
 
-1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the automatic GPU driver installation, see [this example](gpu-cluster.md#skip-gpu-driver-installation-preview). Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
+1. Skip automatic GPU driver installation by creating an NVIDIA GPU-enabled node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to the value `none`. Setting this API field to `none` during node pool creation skips the default GPU driver installation, see [this example](gpu-cluster.md#skip-gpu-driver-installation-preview). Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
+
 
 2. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
 
