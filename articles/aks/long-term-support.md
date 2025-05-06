@@ -101,7 +101,6 @@ The following table provides a list of add-ons and features that aren't supporte
 
 |  Add-on / Feature | Reason it's unsupported |
 |---|---|
-| Istio |  The Istio support cycle is short (six months), and there won't be maintenance releases for Kubernetes 1.27. |
 | Keda | Unable to guarantee future version compatibility with Kubernetes 1.27. |
 | Calico  |  Requires Calico Enterprise agreement past community support. |
 | Key Management Service (KMS) | KMSv2 replaces KMS during this LTS cycle. |
@@ -136,7 +135,7 @@ Yes, you can enable the LTS support plan on any AKS-supported version even after
 
 ### Does a community-supported AKS cluster automatically become LTS eligible after EOL?
 
-No, you must explicitly enable LTS on the cluster to receive support. This also requires upgrading to the Premium tier.
+No, you must explicitly enable LTS on the cluster to receive support. This also requires upgrading to the Premium tier. Please refer to the [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/) for more information.
 
 ### Will every AKS version support Long-Term Support (LTS)?
 
