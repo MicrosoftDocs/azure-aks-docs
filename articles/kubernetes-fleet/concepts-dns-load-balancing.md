@@ -72,6 +72,47 @@ The important properties to understand include:
 * `spec/backend/name`: must match the exported service name to load balance. 
 * `spec/weight`: optional weight (priority) to apply to this backend configuration. Integer value between 1 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. For further information see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
 
+## Unique DNS hostname via Service annotation
+
+In order to add a `Service` to the Traffic Manager it must have a unique DNS hostname. The DNS hostname can be set by following the AKS recommended method of using the `service.beta.kubernetes.io/azure-dns-label-name` annotation as shown.
+
+
+```yml
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: kuard-svc
+      namespace: kuard-demo
+      labels:
+        app: kuard
+      annotations:
+        service.beta.kubernetes.io/azure-dns-label-name: kuard-demo-cluster-01
+    spec:
+      selector:
+        app: kuard
+      ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 80
+      type: LoadBalancer
+```
+
+The annotation can be overridden using the `ResourceOverride` feature of Fleet Manager making it possible to deploy unique host names across multiple clusters. See the [how-to guide for more information](./howto-dns-load-balancing.md).
+
+## Control cluster traffic via ServiceExport annotation
+
+In order to control flow of traffic between clusters, you can define a weight on the `ServiceExport`. Weights of all `ServiceExport` resources should add up to 100. The sample shown would ensure 50% of traffic is routed to the cluster with this `ServiceExport`.
+
+```yml
+apiVersion: networking.fleet.azure.com/v1alpha1
+kind: ServiceExport
+metadata:
+  name: kuard-export
+  namespace: kuard-demo
+  annotations:
+    networking.fleet.azure.com/weight: "50"
+```
+
 ## Deletion behavior
 
 When a `TrafficManagerProfile` Kubernetes resource is deleted, the associated Azure Traffic Manager and its endpoints are also deleted and requests are no longer routed to clusters.
@@ -85,5 +126,4 @@ When a `TrafficManagerProfile` Kubernetes resource is deleted, the associated Az
 [traffic-manager-overview]: /azure/traffic-manager/traffic-manager-overview
 [traffic-manager-weighted]: /azure/traffic-manager/traffic-manager-routing-methods#weighted-traffic-routing-method
 [traffic-manager-health-check]: /azure/traffic-manager/traffic-manager-monitoring#configure-endpoint-monitoring
-[traffic-manager-nested]: /azure/traffic-manager/traffic-manager-nested-profiles
 [concept-crp]: ./concepts-resource-propagation.md
