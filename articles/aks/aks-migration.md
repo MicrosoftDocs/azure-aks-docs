@@ -4,6 +4,8 @@ description: This article shows you how to migrate to Azure Kubernetes Service (
 ms.topic: concept-article
 ms.date: 10/30/2024
 ms.custom: mvc, devx-track-azurecli
+ms.collection: 
+ - migration
 ---
 
 # Migrate to Azure Kubernetes Service (AKS)

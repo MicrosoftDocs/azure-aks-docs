@@ -12,7 +12,7 @@ ms.custom: mvc, devx-track-extended-azdevcli
 
 # Tutorial - Prepare an application for Azure Kubernetes Service (AKS)
 
-In this tutorial, part one of seven, you prepare a multi-container application to use in Kubernetes. You use existing development tools like Docker Compose to locally build and test the application. You learn how to:
+In this tutorial, you prepare a multi-container application to use in Kubernetes. You use existing development tools like Docker Compose to locally build and test the application. You learn how to:
 
 > [!div class="checklist"]
 >

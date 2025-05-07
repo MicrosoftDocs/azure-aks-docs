@@ -6,11 +6,11 @@ ms.topic: best-practice
 ms.date: 03/18/2024
 author: schaffererin
 ms.author: schaffererin
-
-
 ---
 
 # Best practices for network connectivity and security in Azure Kubernetes Service (AKS)
+
+[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
 As you create and manage clusters in Azure Kubernetes Service (AKS), you provide network connectivity for your nodes and applications. These network resources include IP address ranges, load balancers, and ingress controllers.
 
@@ -18,7 +18,7 @@ This best practices article focuses on network connectivity and security for clu
 
 > [!div class="checklist"]
 >
-> * Compare the kubenet and Azure Container Networking Interface (CNI) network modes in AKS.
+> * Explain Azure Container Networking Interface (CNI) network mode in AKS.
 > * Plan for required IP addressing and connectivity.
 > * Distribute traffic using load balancers, ingress controllers, or a web application firewall (WAF).
 > * Securely connect to cluster nodes.
@@ -32,9 +32,8 @@ This best practices article focuses on network connectivity and security for clu
 Virtual networks provide the basic connectivity for AKS nodes and customers to access your applications. There are two different ways to deploy AKS clusters into virtual networks:
 
 * **Azure CNI networking**: Deploys into a virtual network and uses the [Azure CNI][cni-networking] Kubernetes plugin. Pods receive individual IPs that can route to other network services or on-premises resources.
-* **Kubenet networking**: Azure manages the virtual network resources as the cluster is deployed and uses the [kubenet][kubenet] Kubernetes plugin.
 
-Azure CNI and kubenet are both valid options for production deployments.
+Azure CNI is a valid option for production deployments.
 
 ### CNI Networking
 
@@ -59,7 +58,7 @@ By default, AKS uses a managed identity for its cluster identity. However, you c
 As each node and pod receives its own IP address, plan out the address ranges for the AKS subnets. Keep the following criteria in mind:
 
 * The subnet must be large enough to provide IP addresses for every node, pod, and network resource you deploy.
-  * With both kubenet and Azure CNI networking, each running node has default limits to the number of pods.
+  * With Azure CNI networking, each running node has default limits to the number of pods.
 * Avoid using IP address ranges that overlap with existing network resources.
   * It's necessary to allow connectivity to on-premises or peered networks in Azure.
 * To handle scale out events or cluster upgrades, you need extra IP addresses available in the assigned subnet.
@@ -71,24 +70,6 @@ When creating a cluster with Azure CNI networking, you specify other address ran
 
 For the specific details around limits and sizing for these address ranges, see [Configure Azure CNI networking in AKS][advanced-networking].
 
-### Kubenet networking
-
-Although kubenet doesn't require you to configure the virtual networks before deploying the cluster, there are disadvantages to waiting, such as:
-
-* Since nodes and pods are placed on different IP subnets, User Defined Routing (UDR) and IP forwarding routes traffic between pods and nodes. This extra routing may reduce network performance.
-* Connections to existing on-premises networks or peering to other Azure virtual networks can be complex.
-
-Since you don't create the virtual network and subnets separately from the AKS cluster, Kubenet is ideal for the following scenarios:
-
-* Small development or test workloads.
-* Simple websites with low traffic.
-* Lifting and shifting workloads into containers.
-
-For production deployments, both kubenet and Azure CNI are valid options. Environments which require separation of control and management, Azure CNI may the preferred option.  Additionally, kubenet is suited for Linux only environments where IP address range conservation is a priority.
-
-You can also [configure your own IP address ranges and virtual networks using kubenet][aks-configure-kubenet-networking]. Like Azure CNI networking, these address ranges shouldn't overlap each other or any networks associated with the cluster (virtual networks, subnets, on-premises and peered networks).
-
-For the specific details around limits and sizing for these address ranges, see [Use kubenet networking with your own IP address ranges in AKS][aks-configure-kubenet-networking].
 
 ## Distribute ingress traffic
 
@@ -232,7 +213,6 @@ This article focused on network connectivity and security. For more information 
 
 <!-- LINKS - External -->
 [cni-networking]: https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
-[kubenet]: https://kubernetes.io/docs/concepts/cluster-administration/network-plugins/#kubenet
 [app-gateway-ingress]: https://github.com/Azure/application-gateway-kubernetes-ingress
 [nginx]: https://www.nginx.com/products/nginx/kubernetes-ingress-controller
 [contour]: https://github.com/heptio/contour
@@ -248,7 +228,6 @@ This article focused on network connectivity and security. For more information 
 [app-gateway]: /azure/application-gateway/overview
 [use-network-policies]: use-network-policies.md
 [advanced-networking]: configure-azure-cni.md
-[aks-configure-kubenet-networking]: configure-kubenet.md
 [concepts-node-selectors]: concepts-clusters-workloads.md#node-selectors
 [nodepool-upgrade]: manage-node-pools.md#upgrade-a-single-node-pool
 

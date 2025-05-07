@@ -1,7 +1,7 @@
 ---
 title: Concepts - Ingress Networking in Azure Kubernetes Service (AKS)
 description: Learn about ingress networking in Azure Kubernetes Service (AKS) including ingress controllers 
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 06/03/2024
 author: schaffererin
 ms.author: schaffererin
@@ -32,7 +32,7 @@ The following table lists the feature differences between the different ingress 
 | **Scaling**                                       | Autoscaling               | Autoscaling                              | Autoscaling                                 |
 | **Load balancing**                                | Internal/External         | External                                 | Internal/External                           |
 | **SSL termination**                               | In-cluster                | Yes: Offloading and E2E SSL              | In-cluster                                  |
-| **mTLS**                                          | N/A                       | Yes to backend                           | N/A                                         |
+| **mTLS**                                          | N/A                       | Yes: frontend and backend                | N/A                                         |
 | **Static IP Address**                             | N/A                       | FQDN                                     | N/A                                         |
 | **Azure Key Vault stored SSL certificates**       | Yes                       | Yes                                      | N/A                                         |
 | **Azure DNS integration for DNS zone management** | Yes                       | Yes                                      | N/A                                         |

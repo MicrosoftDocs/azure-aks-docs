@@ -59,8 +59,9 @@ Istio-based service mesh add-on for AKS has the following limitations:
     * Local rate limit (`type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit`)
     
     > [!NOTE]
-    > While these `EnvoyFilter`s are allowed, any issue arising from them (for example from the Lua scipt or from the compression library) are outside the support scope of the Istio add-on. See the [support policy document][istio-support-policy] for more information about the support categories for Istio add-on features and configuration options.
-* Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) are currently not yet supported with Istio add-on. However, Gateway API for Istio ingress traffic management is currently under active development for the add-on. While the add-on supports [annotation customization for the Istio ingress gateways][istio-ingress-annotation-customization] for IP addresses and service tags, port or protocol configuration is currently not supported.
+    > While these `EnvoyFilter`s are allowed, any issue arising from them (for example from the Lua script or from the compression library) are outside the support scope of the Istio add-on. See the [support policy document][istio-support-policy] for more information about the support categories for Istio add-on features and configuration options.
+* Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) is currently not yet supported with Istio add-on. However, Gateway API for Istio ingress traffic management is currently under active development for the add-on. While the add-on supports [annotation and `externalTrafficPolicy` customization for the Istio ingress gateways][istio-ingress-customization], port or protocol configuration is currently not supported.
+* The add-on supports customization of a subset of the fields in [MeshConfig][upstream-istio-meshconfig]. Other customizations may be allowed but unsupported or disallowed entirely, as detailed [here][istio-meshconfig-allowlist].
 
 ## Feedback and feature ask
 
@@ -77,9 +78,11 @@ Feedback and feature ask for the Istio add-on can be provided by creating [issue
 [azure-cni-cilium]: azure-cni-powered-by-cilium.md
 [open-service-mesh-about]: open-service-mesh-about.md
 [istio-ingress]: ./istio-deploy-ingress.md
-[istio-ingress-annotation-customization]: ./istio-deploy-ingress.md#ingress-gateway-service-annotation-customization
+[istio-ingress-customization]: ./istio-deploy-ingress.md#ingress-gateway-service-customizations
 [istio-troubleshooting]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-general-troubleshooting
 [istio-deploy-addon]: istio-deploy-addon.md
+[istio-meshconfig-allowlist]: istio-meshconfig.md#allowed-supported-and-blocked-meshconfig-values
+[upstream-istio-meshconfig]: https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/
 
 [istio-oss-windows-issue]: https://github.com/istio/istio/issues/27893
 [aks-github-service-mesh-issues]: https://github.com/Azure/AKS/issues?q=is%3Aopen+is%3Aissue+label%3Aservice-mesh

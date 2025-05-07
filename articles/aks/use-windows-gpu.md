@@ -30,7 +30,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 ## Before you begin
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* You need the Azure CLI version 1.0.0b2 or later installed and configured to use the `--skip-gpu-driver-install` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* You need the Azure CLI version 2.72.2 or later installed and configured to use the `--gpu-driver` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * You need the Azure CLI version 9.0.0b5 or later installed and configured to use the `--driver-type` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ## Get the credentials for your cluster
@@ -133,26 +133,14 @@ For example, the above command creates a GPU-enabled node pool using the `GRID` 
 
 When creating a Windows node pool with N-series (NVIDIA GPU) VM sizes in AKS, the GPU driver and Kubernetes DirectX device plugin are installed automatically. To bypass this automatic installation, use the following steps:
 
-1. [Skip GPU driver installation (preview)](#skip-gpu-driver-installation-preview) using `--skip-gpu-driver-install`.
+1. [Skip GPU driver installation](#skip-gpu-driver-installation) by setting the configuration `--gpu-driver none` at node pool create time.
 2. [Manual installation of the Kubernetes DirectX device plugin](#manually-install-the-kubernetes-directx-device-plugin).
 
-### Skip GPU driver installation (preview)
+### Skip GPU driver installation
 
 AKS has automatic GPU driver installation enabled by default. In some cases, such as installing your own drivers, you may want to skip GPU driver installation.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Register or update the aks-preview extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    # Register the aks-preview extension
-    az extension add --name aks-preview
-
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-2. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--skip-gpu-driver-install` flag to skip automatic GPU driver installation.
+1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to `none` to skip automatic GPU driver installation.
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -162,11 +150,11 @@ AKS has automatic GPU driver installation enabled by default. In some cases, suc
         --node-count 1 \
         --os-type windows \
         --os-sku windows2022 \
-        --skip-gpu-driver-install
+        --gpu-driver none
     ```
 
  > [!NOTE]
- > If the `--node-vm-size` that you're using isn't yet onboarded on AKS, you can't use GPUs and `--skip-gpu-driver-install` doesn't work.
+ > If the `--node-vm-size` that you're using isn't yet onboarded on AKS, you can't use GPUs and the `--gpu-driver` field doesn't work.
 
 ### Manually install the Kubernetes DirectX device plugin
 
@@ -283,20 +271,6 @@ After creating your cluster, confirm that GPUs are schedulable in Kubernetes.
      microsoft.com.directx/gpu:                 1
     [...]
     ```
-
-## Use Container Insights to monitor GPU usage
-
-[Container Insights with AKS][aks-container-insights] monitors the following GPU usage metrics:
-
-| Metric name | Metric dimension (tags) | Description |
-|-------------|-------------------------|-------------|
-| containerGpuDutyCycle | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName`, `gpuId`, `gpuModel`, `gpuVendor`| Percentage of time over the past sample period (60 seconds) during which GPU was busy/actively processing for a container. Duty cycle is a number between 1 and 100. |
-| containerGpuLimits | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName` | Each container can specify limits as one or more GPUs. It's not possible to request or limit a fraction of a GPU. |
-| containerGpuRequests | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName` | Each container can request one or more GPUs. It's not possible to request or limit a fraction of a GPU. |
-| containerGpumemoryTotalBytes | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName`, `gpuId`, `gpuModel`, `gpuVendor` | Amount of GPU Memory in bytes available to use for a specific container. |
-| containerGpumemoryUsedBytes | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `containerName`, `gpuId`, `gpuModel`, `gpuVendor` | Amount of GPU Memory in bytes used by a specific container. |
-| nodeGpuAllocatable | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `gpuVendor` | Number of GPUs in a node that Kubernetes can use.|
-| nodeGpuCapacity | `container.azm.ms/clusterId`, `container.azm.ms/clusterName`, `gpuVendor` | Total Number of GPUs in a node. |
 
 ## Clean up resources
 

@@ -283,7 +283,7 @@ You may need to create node pools with different VM sizes and capabilities. For 
 
 In the following example, we create a GPU-based node pool that uses the *Standard_NC6s_v3* VM size. These VMs are powered by the NVIDIA Tesla K80 card. For information, see [Available sizes for Linux virtual machines in Azure][vm-sizes].
 
-1. Create a node pool using the [`az aks node pool add`][az-aks-nodepool-add] command. Specify the name *gpunodepool* and use the `--node-vm-size` parameter to specify the *Standard_NC6* size.
+1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command. Specify the name *gpunodepool* and use the `--node-vm-size` parameter to specify the *Standard_NC6* size.
 
     ```azurecli-interactive
     az aks nodepool add \

@@ -11,7 +11,7 @@ ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
 
 With Kubernetes, you can use PaaS services, such as [Azure Service Bus][azure-service-bus], to develop and run your applications.
 
-In this tutorial, part five of seven, you create an Azure Service Bus namespace and queue to test your application. You learn how to:
+In this tutorial, you create an Azure Service Bus namespace and queue to test your application. You learn how to:
 
 > [!div class="checklist"]
 >
@@ -40,7 +40,7 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
 * Create the following environment variables to use for the commands in this tutorial:
 
     ```azurecli-interactive
-    LOC_NAME=eastus
+    LOC_NAME=westus2
     RAND=$RANDOM
     RG_NAME=myResourceGroup
     AKS_NAME=myAKSCluster
@@ -52,7 +52,7 @@ This tutorial requires Azure PowerShell version 5.9.0 or later. Run `Get-Install
 * Create the following environment variables to use for the commands in this tutorial:
 
     ```azurepowershell-interactive
-    $LOC_NAME="eastus"
+    $LOC_NAME="westus2"
     $rand=New-Object System.Random
     $RAND=$rand.Next()
     $RG_NAME="myResourceGroup"
@@ -91,7 +91,7 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
         --rights Send
     ```
 
-4. Get the Azure Service Bus credentials for later use using the [`az servicebus namespace show`][az-servicebus-namespace-show] and [`az servicebus queue authorization-rule keys list`][az-servicebus-queue-authorization-rule-keys-list] commands.
+4. Get the Azure Service Bus credentials for later use by using the [`az servicebus namespace show`][az-servicebus-namespace-show] and [`az servicebus queue authorization-rule keys list`][az-servicebus-queue-authorization-rule-keys-list] commands.
 
     ```azurecli-interactive
     az servicebus namespace show --name $SB_NS --resource-group $RG_NAME --query name -o tsv
@@ -123,7 +123,7 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
         -Rights Send
     ```
 
-4. Get the Azure Service Bus credentials for later use using the [`Get-AzServiceBusNamespace`][get-az-service-bus-namespace] and [`Get-AzServiceBusKey`][get-az-service-bus-key] cmdlets.
+4. Get the Azure Service Bus credentials for later use by using the [`Get-AzServiceBusNamespace`][get-az-service-bus-namespace] and [`Get-AzServiceBusKey`][get-az-service-bus-key] cmdlets.
 
     ```azurepowershell-interactive
     (Get-AzServiceBusNamespace -Name $SB_NS -ResourceGroupName $RG_NAME).Name 

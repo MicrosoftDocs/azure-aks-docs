@@ -270,7 +270,7 @@ In the following section, you create a MongoDB Locust client pod in your AKS clu
     kubectl -n $AKS_MONGODB_NAMESPACE exec -it mongodb-locust-client-564695f8f-q6745 -- /bin/bash
     ```
 
-2. Once you're connected to the pod, use the following command to connect to the MongoDB shell. Make sure you replace `${MY_CLUSTER_NAME}`, `${databaseAdmin}` and `${databaseAdminPassword}` with the values you obtained from the [previous tutorial][deploy-mongodb-cluster].
+2. Once you're connected to the pod, use the following command to connect to the MongoDB shell. Make sure you have the correct values for `${MY_CLUSTER_NAME}`, `${databaseAdmin}` and `${databaseAdminPassword}` as obtained in Step 3 of the [previous tutorial][deploy-mongodb-cluster].
 
     ```bash
     mongosh --host ${MY_CLUSTER_NAME}-mongodb-rs0-0.${MY_CLUSTER_NAME}-mongodb-rs0.mongodb.svc.cluster.local --port 27017 -u ${databaseAdmin} -p ${databaseAdminPassword} --authenticationDatabase admin
@@ -404,7 +404,7 @@ While the database script continues to execute in first terminal window, in the 
    kubectl -n $AKS_MONGODB_NAMESPACE exec -it mongodb-locust-client-564695f8f-q6745 -- /bin/bash
    ```
 
-3. Once you're connected to the pod, connect to the MongoDB shell using the following command. Make sure you replace `${MY_CLUSTER_NAME}`, `${databaseAdmin}` and `${databaseAdminPassword}` with the values you obtained in the [previous tutorial][deploy-mongodb-cluster].
+3. Once you're connected to the pod, use the following command to connect to the MongoDB shell. Make sure you have the correct values for `${MY_CLUSTER_NAME}`, `${databaseAdmin}` and `${databaseAdminPassword}` as obtained in Step 3 of the [previous tutorial][deploy-mongodb-cluster].
 
    ```bash
    mongosh --host ${MY_CLUSTER_NAME}-mongodb-rs0-0.${MY_CLUSTER_NAME}-mongodb-rs0.mongodb.svc.cluster.local --port 27017 -u ${databaseAdmin} -p ${databaseAdminPassword} --authenticationDatabase admin
@@ -487,5 +487,5 @@ While the database script continues to execute in first terminal window, in the 
 > [Validate MongoDB resiliency during an AKS node pool upgrade][upgrade-mongodb-cluster]
 
 <!-- Internal links -->
-[deploy-mongodb-cluster]: ./deploy-mongodb-cluster.md#verify-the-mongodb-cluster
+[deploy-mongodb-cluster]: ./deploy-mongodb-cluster.md#connect-to-the-percona-server
 [upgrade-mongodb-cluster]: ./upgrade-mongodb-cluster.md

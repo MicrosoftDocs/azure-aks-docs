@@ -10,12 +10,14 @@ ms.author: nickoman
 
 # Install the Kubernetes Event-driven Autoscaling (KEDA) add-on using an ARM template
 
+[!INCLUDE [change value callout](./includes/keda/change-value-callout.md)]
+
 This article shows you how to deploy the Kubernetes Event-driven Autoscaling (KEDA) add-on to Azure Kubernetes Service (AKS) using an [ARM template](/azure/azure-resource-manager/templates/).
 
 [!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]
 
 > [!NOTE]
-> KEDA version 2.15 introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15, it will begin running it in the AKS preview version 1.31.
+> KEDA version 2.15+ introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15+, it will begin running it in the AKS preview version 1.31.
 >
 > For more information on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
 ## Before you begin

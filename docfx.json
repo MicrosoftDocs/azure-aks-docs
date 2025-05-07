@@ -143,6 +143,14 @@
       "author": {
         "articles/aks/**/*.md": "schaffererin"
       },
+      "manager": {
+        "articles/aks/**/*.md": "rayoflores",
+        "articles/aks/**/*.yml": "rayoflores"
+      },
+      "ms.reviewer": {
+        "articles/aks/**/*.md": "doveychase",
+        "articles/aks/**/*.yml": "doveychase"
+      },
       "featureFlags": {
         "articles/**/*.md": [
           "show_learn_banner"

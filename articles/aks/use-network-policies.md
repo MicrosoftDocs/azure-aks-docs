@@ -12,6 +12,8 @@ ms.author: schaffererin
 
 # Secure traffic between pods by using network policies in AKS
 
+[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
+
 When you run modern, microservices-based applications in Kubernetes, you often want to control which components can communicate with each other. The principle of least privilege should be applied to how traffic can flow between pods in an Azure Kubernetes Service (AKS) cluster. Let's say you want to block traffic directly to back-end applications. The network policy feature in Kubernetes lets you define rules for ingress and egress traffic between pods in a cluster.
 
 This article shows you how to install the network policy engine and create Kubernetes network policies to control the flow of traffic between pods in AKS. Network policies could be used for Linux-based or Windows-based nodes and pods in AKS.
@@ -48,7 +50,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 ## Limitations of Azure Network Policy Manager
 
 > [!NOTE]
-> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./upgrade-aks-ipam-and-dataplane.md) to use Cilium as the network policy engine.
+> With Azure NPM for Linux, we don't allow scaling beyond _250 nodes_ and _20,000 pods_. If you attempt to scale beyond these limits, you might experience _Out of Memory (OOM)_ errors. For better scalability and IPv6 support, and if the following limitations are of concern, we recommend using or upgrading to [Azure CNI Powered by Cilium](./upgrade-azure-cni.md) to use Cilium as the network policy engine.
 
 Azure NPM doesn't support IPv6. Otherwise, it fully supports the network policy specifications in Linux.
 

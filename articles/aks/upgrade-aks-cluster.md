@@ -16,9 +16,10 @@ Part of the AKS cluster lifecycle involves performing periodic upgrades to the l
 
 ## Kubernetes version upgrades
 
-When you upgrade a supported AKS cluster, you can't skip Kubernetes minor versions. You must perform all upgrades sequentially by major version number. For example, upgrades between *1.14.x* -> *1.15.x* or *1.15.x* -> *1.16.x* are allowed. *1.14.x* -> *1.16.x* isn't allowed. You can only skip multiple versions when upgrading from an *unsupported version* back to a *supported version*. For example, you can perform an upgrade from an unsupported *1.10.x* to a supported *1.12.x* if available.
+> [!IMPORTANT]
+> When you upgrade a supported AKS cluster, you can't skip Kubernetes minor versions. You must perform all upgrades sequentially by minor version number. For example, upgrades between *1.14.x* -> *1.15.x* or *1.15.x* -> *1.16.x* are allowed. *1.14.x* -> *1.16.x* isn't allowed. You can only skip multiple versions when upgrading from an *unsupported version* back to a *supported version*. For example, you can perform an upgrade from an unsupported *1.10.x* to a supported *1.12.x* if available.
 
-When you perform an upgrade from an *unsupported version* that skips two or more minor versions, the upgrade has no guarantee of functionality and is excluded from the service-level agreements and limited warranty. If your version is significantly out of date, we recommend you recreate your cluster instead.
+When you perform an upgrade from an *unsupported version* that skips two or more minor versions, the upgrade has no guarantee of functionality and is excluded from the service-level agreements and limited warranty. If your version is out of date, we recommend you recreate your cluster instead.
 
 ## Before you begin
 
@@ -119,15 +120,15 @@ If your Azure CLI is updated and you receive the following example output, it me
 ERROR: Table output unavailable. Use the --query option to specify an appropriate query. Use --debug for more info.
 ```
 
-If no upgrades are available, create a new cluster with a supported version of Kubernetes and migrate your workloads from the existing cluster to the new cluster. AKS does not support upgrading a cluster to a newer Kubernetes version when `az aks get-upgrades` shows that no upgrades are available.
+If no upgrades are available, create a new cluster with a supported version of Kubernetes and migrate your workloads from the existing cluster to the new cluster. AKS doesn't support upgrading a cluster to a newer Kubernetes version when `az aks get-upgrades` shows that no upgrades are available.
 
 ### [Azure PowerShell](#tab/azure-powershell)
 
-If no upgrades are available, create a new cluster with a supported version of Kubernetes and migrate your workloads from the existing cluster to the new cluster. AKS does not support upgrading a cluster to a newer Kubernetes version when `Get-AzAksUpgradeProfile` shows that no upgrades are available.
+If no upgrades are available, create a new cluster with a supported version of Kubernetes and migrate your workloads from the existing cluster to the new cluster. AKS doesn't support upgrading a cluster to a newer Kubernetes version when `Get-AzAksUpgradeProfile` shows that no upgrades are available.
 
 ### [Azure portal](#tab/azure-portal)
 
-If no upgrades are available, create a new cluster with a supported version of Kubernetes and migrate your workloads from the existing cluster to the new cluster. AKS does not support upgrading a cluster to a newer Kubernetes version when no upgrades are available.
+If no upgrades are available, create a new cluster with a supported version of Kubernetes and migrate your workloads from the existing cluster to the new cluster. AKS doesn't support upgrading a cluster to a newer Kubernetes version when no upgrades are available.
 
 ---
 
@@ -137,7 +138,7 @@ During the cluster upgrade process, AKS performs the following operations:
 
 * Add a new buffer node (or as many nodes as configured in [max surge](#customize-node-surge-upgrade)) to the cluster that runs the specified Kubernetes version.
 * [Cordon and drain][kubernetes-drain] one of the old nodes to minimize disruption to running applications. If you're using max surge, it [cordons and drains][kubernetes-drain] as many nodes at the same time as the number of buffer nodes specified.
-* For long running pods, you can configure the node drain timeout, which allows for custom wait time on the eviction of pods and graceful termination per node. If not specified, the default is 30 minutes. Minimum allowed timeout value is 5 minutes. The maximum limit for drain timeout is 24 hours.
+* For long running pods, you can configure the node drain time-out, which allows for custom wait time on the eviction of pods and graceful termination per node. If not specified, the default is 30 minutes. Minimum allowed time-out value is 5 minutes. The maximum limit for drain time-out is 24 hours.
 * When the old node is fully drained, it's reimaged to receive the new version and becomes the buffer node for the following node to be upgraded.
 * Optionally, you can set a duration of time to wait between draining a node and proceeding to reimage it and move on to the next node. A short interval allows you to complete other tasks, such as checking application health from a Grafana dashboard during the upgrade process. We recommend a short timeframe for the upgrade process, as close to 0 minutes as reasonably possible. Otherwise, a higher node soak time affects how long before you discover an issue. The minimum soak time value is 0 minutes, with a maximum of 30 minutes. If not specified, the default value is 0 minutes.
 * This process repeats until all nodes in the cluster are upgraded.
@@ -149,7 +150,7 @@ During the cluster upgrade process, AKS performs the following operations:
 
 1. Upgrade your cluster using the [`az aks upgrade`][az-aks-upgrade] command.
 
-    ```azurecli-interactive
+    ```azurecli-interactive 
     az aks upgrade \
         --resource-group myResourceGroup \
         --name myAKSCluster \
@@ -220,9 +221,9 @@ You can set an auto-upgrade channel on your cluster. For more information, see [
 
 AKS configures upgrades to surge with one extra node by default. A default value of *one* for the max surge settings enables AKS to minimize workload disruption by creating an extra node before the cordon/drain of existing applications to replace an older versioned node. You can customize the max surge value per node pool. When you increase the max surge value, the upgrade process completes faster, and you might experience disruptions during the upgrade process. 
 
-For example, a max surge value of *100%* provides the fastest possible upgrade process, but also causes all nodes in the node pool to be drained simultaneously. You might want to use a higher value such as this for testing environments. For production node pools, we recommend a `max_surge` setting of *33%*.
+For example, a max surge value of `100%` provides the fastest possible upgrade process but also causes all nodes in the node pool to be drained simultaneously. You might want to use a higher value like this for testing environments. For production node pools, we recommend a `max_surge` setting of `33%`.
 
-AKS accepts both integer values and a percentage value for max surge. An integer such as *5* indicates five extra nodes to surge. A value of *50%* indicates a surge value of half the current node count in the pool. Max surge percent values can be a minimum of *1%* and a maximum of *100%*. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. During an upgrade, the max surge value can be a minimum of *1* and a maximum value equal to the number of nodes in your node pool. You can set larger values, but you can't set the maximum number of nodes used for max surge higher than the number of nodes in the pool at the time of upgrade.
+AKS accepts both integer values and a percentage value for max surge. For example, an integer value of `5` indicates five extra nodes to surge. A percentage value of `50%` indicates a surge value of half the current node count in the pool. Max surge percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. If the max surge value is higher than the required number of nodes to be upgraded, the number of nodes to be upgraded is used for the max surge value. During an upgrade, the max surge value can be a minimum of `0` and a maximum value equal to the number of nodes in your node pool. You can set larger values, but you can't set the maximum number of nodes used for max surge higher than the number of nodes in the pool at the time of upgrade.
 
 #### Set max surge value
 
@@ -236,23 +237,49 @@ AKS accepts both integer values and a percentage value for max surge. An integer
     az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --max-surge 5
     ```
 
-#### Set node drain timeout value
+### Customize unavailable nodes during upgrade (Preview)
 
-At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain timeout that AKS will respect in the upgrade workflow. If no node drain timeout value is specified, the default is 30 minutes. Minimum allowed drain timeout value is 5 minutes and the maximum limit of drain timeout is 24 hours.
+> [!IMPORTANT]
+>
+> * `maxSurge` must be set to `0` for `maxUnavailable` to be set. The two values can't both be active at the same time.
+> * `maxUnavailable` won't create surge nodes during the upgrade process. Instead, AKS cordons *n* `maxUnavailable` nodes at a time and evict the pods to other nodes in the agent pool. This might cause workload disruptions if the pods can't be scheduled.
+> * `maxUnavailable` might cause more failures due to unsatisfied PodDisruptionBudgets (PDBs) since there will be fewer resources for pods to be scheduled on. Please see the [troubleshooting for PodDisruptionBudgets][pdb-troubleshooting] for mitigation suggestions if you are faced with failures while using this feature.
+> * You can't set `maxUnavailable` on System node pools.
 
-If the drain timeout value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade. It is also recommended for long running pods to configure the [`terminationGracePeriodSeconds`][https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/].
+AKS can also configure upgrades to not use a surge node and upgrade the nodes in place. The `maxUnavailable` value can be used to determine how many nodes can be cordoned and drained from the existing node pool nodes.
 
-* Set node drain timeout for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command.
+AKS accepts both integer values and a percentage value for `maxUnavailable`. For example, an integer value of `5` indicates five nodes will be cordoned from the existing nodes on the node pool. A percentage value of `50%` indicates a `maxUnavailable` value of half the current node count in the pool. `maxUnavailable` percent values can be a minimum of `1%` and a maximum of `100%`. A percent value is rounded up to the nearest node count. During an upgrade, the `maxUnavailable` value can be a minimum of `0` and a maximum value equal to the number of nodes in your node pool.
+
+#### Set maxUnavailable value
+
+* Set `maxUnvailable` values for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command.
 
     ```azurecli-interactive
-    # Set drain timeout for a new node pool
-    az aks nodepool add --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster  --drain-timeout 100
-
-    # Update drain timeout for an existing node pool
-    az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --drain-timeout 45
+    # Set maxUnavailable for a new node pool
+    az aks nodepool add --name mynodepool --resource-group myResourceGroup --cluster-name myManagedCluster --max-surge 0 --max-unavailable 5
+    # Update maxUnavailable for an existing node pool 
+    az aks nodepool update --name mynodepool --resource-group myResourceGroup --cluster-name myManagedCluster --max-surge 0 --max-unavailable 5
+    # Set maxUnavailable at upgrade time for an existing node pool
+    az aks nodepool upgrade --name mynodepool --resource-group myResourceGroup --cluster-name myManagedCluster --max-surge 0 --max-unavailable 5
     ```
 
-#### Set node soak time value
+### Set node drain timeout value
+
+At times, you may have a long running workload on a certain pod and it can't be rescheduled to another node during runtime, for example, a memory intensive stateful workload that must finish running. In these cases, you can configure a node drain time-out that AKS will respect in the upgrade workflow. If no node drain time-out value is specified, the default is 30 minutes. Minimum allowed drain time-out value is 5 minutes and the maximum limit of drain time-out is 24 hours.
+
+If the drain time-out value elapses and pods are still running, then the upgrade operation is stopped. Any subsequent PUT operation shall resume the stopped upgrade. It's also recommended for long running pods to configure the [`terminationGracePeriodSeconds`][https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/].
+
+* Set node drain time-out for new or existing node pools using the [`az aks nodepool add`][az-aks-nodepool-add] or [`az aks nodepool update`][az-aks-nodepool-update] command.
+
+    ```azurecli-interactive
+    # Set drain time-out for a new node pool
+    az aks nodepool add --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster  --drain-time-out 100
+
+    # Update drain time-out for an existing node pool
+    az aks nodepool update --name mynodepool --resource-group MyResourceGroup --cluster-name MyManagedCluster --drain-time-out 45
+    ```
+
+### Set node soak time value
 
 To allow for a duration of time to wait between draining a node and proceeding to reimage it and move on to the next node, you can set the soak time to a value between 0 and 30 minutes. If no node soak time value is specified, the default is 0 minutes.
 
@@ -268,6 +295,14 @@ To allow for a duration of time to wait between draining a node and proceeding t
     # Set node soak time when upgrading an existing node pool
     az aks nodepool upgrade --name MyNodePool --resource-group MyResourceGroup --cluster-name MyManagedCluster --max-surge 33% --node-soak-duration 20
     ```
+
+## Upgrading through significant version drift
+
+When upgrading from an unsupported version of Kubernetes to a supported version, it's important to test your workloads on the target version.  While AKS will make every effort to upgrade your control plane and data plane, where is no guarantee your workloads will continue to work.   If your workloads rely on deprecated Kubernetes APIs, the platform has introduced breaking changes or behaviors (documented in the AKS release notes), these need to be resolved.
+
+In these situations we recommend testing your workloads on the new version, and resolving any version issues before doing an in place upgrade of your cluster. 
+
+A common pattern in this situation is to carry out a blue / green deployment of your modified workloads to a new cluster that is on a supported Kubernetes version, and route requests to the new cluster.
 
 ## View upgrade events
 
@@ -313,7 +348,7 @@ For a detailed discussion of upgrade best practices and other considerations, se
 [configure-automatic-aks-upgrades]: ./upgrade-cluster.md#configure-automatic-upgrades
 [release-tracker]: release-tracker.md
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
+[pdb-troubleshooting]: /troubleshoot/azure/azure-kubernetes/create-upgrade-delete/error-code-poddrainfailure
 
 <!-- LINKS - external -->
 [kubernetes-drain]: https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/
-

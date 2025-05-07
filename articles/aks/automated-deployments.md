@@ -14,9 +14,6 @@ author: qpetraroia
 
 Automated deployments simplify the process of setting up a GitHub Action and creating an automated pipeline for your code releases to your Azure Kubernetes Service (AKS) cluster. Once connected, every new commit you make kicks off the pipeline, resulting in updates to your application.
 
-> [!NOTE]
-> Private clusters are currently not supported.
-
 ## Prerequisites
 
 * A GitHub account.

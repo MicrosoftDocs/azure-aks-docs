@@ -133,7 +133,7 @@ Your output should look similar to the following example output:
 
 If you want to use Fleet for Kubernetes object propagation and multi-cluster load balancing in addition to update orchestration, then you need to create the Fleet resource with the hub cluster enabled by specifying the `--enable-hub` parameter with the [`az fleet create`][az-fleet-create] command.
 
-Kubernetes Fleet clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster.
+Kubernetes Fleet clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
 > [!NOTE]
 > By default, Kubernetes Fleet resources with hub clusters are public, and Fleet will choose the VM SKU used for the hub node (at this time, it tries "Standard_D4s_v4", "Standard_D4s_v3", "Standard_D4s_v5", "Standard_Ds3_v2", "Standard_E4as_v4" in order). If none of these options are acceptable or available, you can select a VM SKU by setting `--vm-size <SKU>`.

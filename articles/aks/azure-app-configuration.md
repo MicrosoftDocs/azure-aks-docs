@@ -5,21 +5,21 @@ author: RichardChen820
 ms.author: junbchen
 ms.service: azure-kubernetes-service
 ms.topic: concept-article
-ms.date: 09/10/2024
+ms.date: 10/10/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
 ---
 
-# Azure App Configuration extension for Azure Kubernetes Service
+# Install Azure App Configuration AKS extension
 
 [Azure App Configuration](/azure/azure-app-configuration/overview) provides a service to centrally manage application settings and feature flags. [Azure App Configuration Kubernetes Provider](https://mcr.microsoft.com/en-us/product/azure-app-configuration/kubernetes-provider/about) is a Kubernetes operator that gets key-values, Key Vault references and feature flags from Azure App Configuration and builds them into Kubernetes ConfigMaps and Secrets. Azure App Configuration extension for Azure Kubernetes Service (AKS) allows you to install and manage Azure App Configuration Kubernetes Provider on your AKS cluster via Azure Resource Manager (ARM).
 
 ## Prerequisites 
 
-- An Azure subscription. [Don't have one? Create a free account.](https://azure.microsoft.com/free/?WT.mc_id=A261C142F)
-- Install the latest version of the [Azure CLI](/cli/azure/install-azure-cli).
-- If you don't have one already, you need to create an [AKS cluster](./tutorial-kubernetes-deploy-cluster.md).
-- Make sure you have [an Azure Kubernetes Service RBAC Admin role](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) 
+- An Azure subscription. [Create a free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+- The latest version of the [Azure CLI](/cli/azure/install-azure-cli).
+- An Azure Kubernetes Service (AKS) cluster. [Create an AKS cluster](/azure/aks/tutorial-kubernetes-deploy-cluster#create-a-kubernetes-cluster).
+- Permission with the [Azure Kubernetes Service RBAC Admin](/azure/role-based-access-control/built-in-roles#azure-kubernetes-service-rbac-admin) role.
 
 ### Set up the Azure CLI extension for cluster extensions
 

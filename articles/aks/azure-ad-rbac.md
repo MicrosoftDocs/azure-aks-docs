@@ -34,7 +34,7 @@ Use the Azure portal or Azure CLI to verify Microsoft Entra integration with Kub
 To verify using the Azure portal:
 
 1. Sign in to the [Azure portal](https://portal.azure.com) and navigate to your AKS cluster resource.
-2. In the service menu, under **Settings**, select **Cluster configuration**.
+2. In the service menu, under **Settings**, select **Security configuration**.
 3. Under the **Authentication and Authorization** section, verify the **Microsoft Entra authentication with Kubernetes RBAC** option is selected.
 
 #### [Azure CLI](#tab/azure-cli)

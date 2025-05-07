@@ -120,29 +120,6 @@ The cluster created in the previous step has a single node pool. In this section
     ]
     ```
 
-## ARM64 node pools
-
-The ARM64 processor provides low power compute for your Kubernetes workloads. To create an ARM64 node pool, you need to choose a [Dpsv5][arm-sku-vm1], [Dplsv5][arm-sku-vm2] or [Epsv5][arm-sku-vm3] series Virtual Machine.
-
-### Limitations
-
-* ARM64 node pools aren't supported on Defender-enabled clusters with Kubernetes version less than 1.29.0.
-* FIPS-enabled node pools aren't supported with ARM64 SKUs.
-* Windows node pools aren't supported with ARM64 SKUs.
-
-### Add an ARM64 node pool
-
-* Add an ARM64 node pool into your existing cluster using the [`az aks nodepool add`][az-aks-nodepool-add].
-
-    ```azurecli-interactive
-    az aks nodepool add \
-        --resource-group $RESOURCE_GROUP_NAME \
-        --cluster-name $CLUSTER_NAME \
-        --name $ARM_NODE_POOL_NAME \
-        --node-count 3 \
-        --node-vm-size Standard_D2pds_v5
-    ```
-
 ## Azure Linux node pools
 
 The Azure Linux container host for AKS is an open-source Linux distribution available as an AKS container host. It provides high reliability, security, and consistency. It only includes the minimal set of packages needed for running container workloads, which improve boot times and overall performance.

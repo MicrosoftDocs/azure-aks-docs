@@ -3,7 +3,7 @@ title: Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kuberne
 description: Learn more about using Dapr on your Azure Kubernetes Service (AKS) cluster to develop applications.
 ms.author: nickoman
 ms.topic: overview
-ms.date: 09/05/2024
+ms.date: 03/06/2025
 ---
 
 # Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
@@ -15,7 +15,7 @@ ms.date: 09/05/2024
 - Observability
 - Secret management 
 
-Dapr is incrementally adoptable. You can use any of the API building blocks as needed. [Learn the support level Microsoft offers for each Dapr API and component.](#currently-supported)
+Dapr is incrementally adoptable. You can use any of the API building blocks as needed. [Learn the support level Microsoft offers for the Dapr extension.](#issue-handling)
 
 ## Capabilities and features
 
@@ -38,11 +38,7 @@ Dapr provides the following set of capabilities to help with your microservice d
 - Integration with Visual Studio Code through the Dapr extension
 - [More APIs for solving distributed application challenges][dapr-blocks]
 
-## Currently supported
-
-The Dapr extension is the only Microsoft-supported option for Dapr in AKS. 
-
-### Issue handling
+## Issue handling
 
 Microsoft categorizes issues raised against the Dapr extension into two parts: 
 - Extension operations
@@ -53,52 +49,7 @@ The following table breaks down support priority levels for each of these catego
 |   | Description | Security risks/Regressions | Functional issues |
 | - | ----------- | -------------------------- | ----------------- |
 | **Extension operations** | Issues encountered during extension operations, such as installing/uninstalling or upgrading the Dapr extension. | Microsoft prioritizes for immediate resolution. | Microsoft investigates and addresses as needed. | 
-| **Dapr runtime** | Issues encountered when using the Dapr runtime, APIs, and components via the extension. | Microsoft works with the open source community to investigate high priority issues. Depending on priority, severity, and size of the issue, Microsoft either resolves them directly in the extension, or works with the Dapr open source project to resolve in a hotfix or future Dapr open source release. Once fixes are released in Dapr open source, they are then made available in the Dapr extension. | Microsoft investigates new functional issues alongside the Dapr open source project and collaborates with them to resolve in a hotfix or future Dapr open source release. Known open source functional issues won't be investigated by Microsoft at this time. |
-
-### Dapr versions
-
-Microsoft provides best-effort support for [the latest version of Dapr and two previous versions (N-2)][dapr-supported-version]. The latest patch version is the only supported version of each minor version release. Currently, the Dapr extension for AKS or Arc-enabled Kubernetes supports the following Dapr versions:
-
-- 1.14.x 
-- 1.13.x 
-- 1.12.x 
-
-You can run Azure CLI commands to retrieve a list of available versions in [a cluster](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-cluster) or [a location](/cli/azure/k8s-extension/extension-types#az-k8s-extension-extension-types-list-versions-by-location).
-
-[Learn how to view and target the latest stable Dapr versions available to your managed AKS cluster.](./dapr.md#viewing-the-latest-stable-dapr-versions-available)
-
-### Runtime support
-
-The Dapr extension support varies depending on how you manage the runtime.
-
-#### Self-managed 
-Self-managed runtime requires manual upgrade to remain in the support window. To upgrade Dapr via the extension, follow the [Update extension instance](deploy-extensions-az-cli.md#update-extension-instance) instructions.
-
-After a Dapr runtime version reaches end of Microsoft support, your applications continue to run unchanged. However, Microsoft can no longer provide security patches or related customer support for that runtime version. If your application encounters any problems past the end-of-support date for that version, we recommend upgrading to a supported version to receive the latest security patches and features.
-
-#### Auto-upgrade  
-[Enabling auto-upgrade](./dapr.md#configuring-automatic-updates-to-dapr-control-plane) requires careful consideration. While auto-upgrade keeps your Dapr extension updated to the latest minor version, you may experience breaking changes between updates. Microsoft isn't responsible for any downtime caused due to breaking changes between auto-updates.
-
-### Components and APIs
-
-You can use all Dapr components and APIs via the Dapr extension, including those in [alpha and beta status][dapr-alpha-beta]. However, Microsoft only provides support to a subset of APIs and components, following the [defined issue handling policies](#issue-handling).
-
-#### Stable Dapr APIs
-
-The Dapr extension supports stable versions of Dapr APIs (building blocks). 
-
-| Dapr API                                              | Status | Description                                                                                                                                                     |
-| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |  
-| [**Service-to-service invocation**][dapr-serviceinvo] | Stable | Discover services and perform reliable, direct service-to-service calls with automatic mTLS authentication and encryption.(#limitations)                                     |
-| [**State management**][dapr-statemgmt]                | Stable | Provides state management capabilities for transactions and CRUD operations.                                                                                    |
-| [**Pub/sub**][dapr-pubsub]                            | Stable | Allows publisher and subscriber apps to intercommunicate via an intermediary message broker. You can also create [declarative subscriptions][dapr-subscriptions] to a topic using an external component JSON file.                                                          |
-| [**Bindings**][dapr-bindings]                         | Stable | Trigger your applications based on events.                                                                                                                       |
-| [**Actors**][dapr-actors]                             | Stable | Dapr actors are message-driven, single-threaded, units of work designed to quickly scale. For example, in burst-heavy workload situations. |
-| [**Observability**][dapr-observability]               | Stable | Send tracing information to an Application Insights backend.                                                                                                    |
-| [**Secrets**][dapr-secrets]                           | Stable | Access secrets from your application code or reference secure values in your Dapr components.                                                                   |
-| [**Configuration**][dapr-config]                           | Stable | Retrieve and subscribe to application configuration items for supported configuration. stores.                                                                   |
-
-[!INCLUDE [component-support](~/reusable-content/ce-skilling/azure/includes/dapr-in-azure/dapr-support-policy.md)]
+| **Dapr runtime** | Issues encountered when using the Dapr runtime, APIs, and components via the extension, like cert expiration and unexpected component behavior. | [Work with the Dapr open source project](https://github.com/dapr/dapr/issues/new/choose) to resolve in a hotfix or future Dapr open source release. Once fixes are released in Dapr open source, they are then made available in the Dapr extension. Known open source security risks and regressions won't be investigated by Microsoft at this time. | [Discuss issues with the Dapr open source project](https://github.com/dapr/dapr/issues/new/choose) to resolve in a hotfix or future Dapr open source release. Known open source functional issues won't be investigated by Microsoft at this time. |
 
 ### Clouds/regions
 

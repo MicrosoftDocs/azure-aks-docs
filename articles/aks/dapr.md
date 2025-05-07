@@ -5,7 +5,7 @@ author: greenie-msft
 ms.author: nigreenf
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 07/16/2024
+ms.date: 01/16/2025
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
 ---
@@ -189,7 +189,7 @@ az k8s-extension extension-types list-versions-by-location --location westus --e
 > [!NOTE]
 > Dapr is supported with a rolling window, including only the current and previous versions. It is your operational responsibility to remain up to date with these supported versions. If you have an older version of Dapr, you may have to do intermediate upgrades to get to a supported version.
 
-The same command-line argument is used for installing a specific version of Dapr or rolling back to a previous version. Set `--auto-upgrade-minor-version` to `false` and `--version` to the version of Dapr you wish to install. If the `version` parameter is omitted, the extension installs the latest version of Dapr. For example, to use Dapr 1.13.5:
+The same command-line argument is used for installing a specific version of Dapr or rolling back to a previous version. Set `--auto-upgrade-minor-version` to `false` and `--version` to the version of Dapr you wish to install. If the `version` parameter is omitted, the extension installs the latest version of Dapr. The following example command installs Dapr version `1.14.4-msft.10` on your AKS cluster:
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
@@ -198,7 +198,7 @@ az k8s-extension create --cluster-type managedClusters \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version false \
---version 1.13.5
+--version 1.14.4-msft.10
 ```
 
 # [Bicep](#tab/bicep)
@@ -350,23 +350,50 @@ properties: {
 
 ---
 
-## Troubleshooting extension errors
+## Troubleshooting 
+
+### Troubleshooting extension management errors
 
 If the extension fails to create or update, try suggestions and solutions in the [Dapr extension troubleshooting guide](./dapr-troubleshooting.md).
 
-### Troubleshooting Dapr
+### Troubleshooting Dapr functional errors
 
-Troubleshoot Dapr errors via the [common Dapr issues and solutions guide][dapr-troubleshooting].
+Troubleshoot Dapr open source errors unrelated to the extension via the [common Dapr issues and solutions guide][dapr-troubleshooting].
 
-## Delete the extension
+## Support
 
-If you need to delete the extension and remove Dapr from your AKS cluster, you can use the following command: 
+> [!NOTE]
+> Learn more about [how Microsoft handles issues raised for the Dapr extension](./dapr-overview.md#issue-handling).
+
+If you're experiencing Dapr runtime security risks and regressions while using the extension, open an issue with the [Dapr open source project](https://github.com/dapr/dapr/issues/new/choose).
+
+You could also start a discussion in the Dapr project Discord:
+- [Dapr runtime](https://discord.com/channels/778680217417809931/778684372475707416)
+- [Dapr components](https://discord.com/channels/778680217417809931/781589820128493598)
+
+## Delete the Dapr extension from your cluster
+
+The process of uninstalling the Dapr extension from AKS does not delete the CRDs created during installation. These CRDs remain in the cluster as residual components, essential for the reconciler during the installation and uninstallation of the extension. 
+
+To clean the cluster of these CRDs, you can manually delete them **after** the Dapr extension has been completely uninstalled from AKS.
+
+### Uninstalling the extension
+
+Delete the extension from your AKS cluster using the following command: 
 
 ```azurecli
 az k8s-extension delete --resource-group <myResourceGroup> --cluster-name <myAKSCluster> --cluster-type managedClusters --name dapr
 ```
 
-Or you can remove the Bicep template.
+Or, if using a Bicep template, you can delete the template.
+
+### Listing the CRDs in your cluster
+
+To find the CRDs you'd like to remove, run the following command:
+
+```powershell
+kubectl get crds | findstr dapr.io
+```
 
 ## Next Steps
 

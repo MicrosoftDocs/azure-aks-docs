@@ -2,7 +2,7 @@
 title: Limits for resources, SKUs, and regions in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn about the default quotas, restricted node VM SKU sizes, and region availability of the Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 01/12/2024
 author: nickomang
 ms.author: nickoman
@@ -23,18 +23,22 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 AKS uses the [token bucket](https://en.wikipedia.org/wiki/Token_bucket) throttling algorithm to limit certain AKS [resource provider](/azure/azure-resource-manager/management/resource-providers-and-types) APIs. This ensures the performance of the service and promotes fair usage of the service for all customers.
 
-The buckets have a fixed size and refill over time at a fixed rate. Each throttling limit is in effect at the regional level for the specified resource in that region.
+The buckets have a fixed size (also known as a burst rate) and refill over time at a fixed rate (also konwn as a sustained rate). Each throttling limit is in effect at the regional level for the specified resource in that region. For example, in the below table, a Subscription can call ListManagedClusters a maximum of 60 times (burst rate) at once for each ResourceGroup, but can continue to make 1 call every second thereafter (sustained rate).
 
-| API request | Bucket size | Refill rate | Resource |
+| API request | Bucket size | Refill rate | Scope |
 |---|---|---|---|
-| LIST | 500 requests | 1 requests / 1 second | Subscription |
-| PUT | 20 requests | 1 request / 1 minute | AgentPools |
-| PUT | 20 requests | 1 request / 1 minute | ManagedClusters |
+| LIST ManagedClusters | 500 requests | 1 requests / 1 second | Subscription |
+| LIST ManagedClusters | 60 requests | 1 request / 1 second | ResourceGroup |
+| PUT AgentPool | 20 requests | 1 request / 1 minute | AgentPool |
+| PUT ManagedCluster | 20 requests | 1 request / 1 minute | ManagedCluster |
+| GET ManagedCluster | 60 requests | 1 request / 1 second | Managed Cluster |
+| GET Operation Status | 200 requests | 2 requests / 1 second | Subscription |
+| All Other APIs | 60 requests | 1 request / 1 second | Subscription |
 
 > [!NOTE]
 > The ManagedClusters and AgentPools buckets are counted separately for the same AKS cluster.
 
-If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. 
+If a request is throttled, the request will return HTTP response code `429` (Too Many Requests) and the error code will show as `Throttled` in the response. Each throttled request includes a `Retry-After` in the HTTP response header with the interval to wait before retrying, in seconds. Clients that use a bursty API call pattern should ensure that the Retry-After can be handled appropriately. To learn more about Retry-After, please see the [following article](https://developer.mozilla.org/docs/Web/HTTP/Headers/Retry-After). Specifically, AKS will use ```delay-seconds``` to specify the retry.
 
 ## Provisioned infrastructure
 
@@ -51,14 +55,13 @@ The list of supported VM sizes in AKS is evolving with the release of new VM SKU
 
 ## Restricted VM sizes
 
-VM sizes with fewer than two CPUs may not be used with AKS.
-Each node in an AKS cluster contains a fixed amount of compute resources such as vCPU and memory. If an AKS node contains insufficient compute resources, pods might fail to run correctly. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, **don't use [B series VMs][b-series-vm] and the following VM SKUs in AKS on system node pools**:
+Each node in an AKS cluster contains a fixed amount of compute resources such as vCPU and memory. Due to the required compute resources needed to run Kubernetes correctly, certain VM SKU sizes are restricted by default in AKS. These restrictions are to ensure that pods can be scheduled and function correctly on these nodes.
 
-- Standard_A0
-- Standard_A1
-- Standard_A1_v2
-- Standard_F1
-- Standard_F1s
+### User nodepools
+For user nodepools, VM sizes with fewer than two vCPUs and two GBs of RAM (memory) may not be used.
+
+### System nodepools
+For system nodepools, VM sizes with fewer than two vCPUs and four GBs of RAM (memory) may not be used. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, it is recommonded to **not use any [B series VMs][b-series-vm] and [Av1 series VMs][a-series-vm]**.
 
 For more information on VM types and their compute resources, see [Sizes for virtual machines in Azure][vm-skus].
 
@@ -85,18 +88,18 @@ When you create a cluster using the Azure portal, you can choose a preset config
 
 |                              | Production Standard |Dev/Test|Production Economy|Production Enterprise|
 |------------------------------|---------|--------|--------|--------|
-|**System node pool node size**|Standard_D8ds_v5 |Standard_DS2_v2|Standard_D8ds_v5|Standard_D16ds_v5|
-|**System node pool autoscaling range**|2-5 nodes|2-100 nodes|2-5 nodes|2-5 nodes|
+|**System node pool node size**|Standard_D8ds_v5|Standard_D4ds_v5|Standard_D8ds_v5|Standard_D16ds_v5|
+|**System node pool autoscaling range**|2-5 nodes|2-5 nodes|2-5 nodes|2-5 nodes|
 |**User node pool node size**|Standard_D8ds_v5|-|Standard_D8as_v4|Standard_D8ds_v5|
-|**User node pool autoscaling range**|2-100 nodes|-|-|2-100 nodes|
+|**User node pool autoscaling range**|2-100 nodes|-|0-25 nodes|2-100 nodes|
 |**Private cluster**|-|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Availability zones**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Azure Policy**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Azure Monitor**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Secrets store CSI driver**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
-|**Network configuration**|Azure CNI|Kubenet|Azure CNI|Azure CNI|
-|**Network configuration**|Calico|Calico|Calico|Calico|
-|**Authentication and Authorization**|Local accounts with Kubernetes RBAC|Local accounts with Kubernetes RBAC|Azure AD Authentication with Azure RBAC|Azure AD authentication with Azure RBAC|
+|**Network configuration**|Azure CNI Overlay|Azure CNI Overlay|Azure CNI Overlay|Azure CNI Overlay|
+|**Network policy**|None|None|None|None|
+|**Authentication and Authorization**|Local accounts with Kubernetes RBAC|Local accounts with Kubernetes RBAC|Microsoft Entra ID Authentication with Azure RBAC|Microsoft Entra ID authentication with Azure RBAC|
 
 
 ## Next steps
@@ -111,5 +114,5 @@ You can increase certain default limits and quotas. If your resource supports an
 [vm-skus]: /azure/virtual-machines/sizes
 [nodepool-upgrade]: use-multiple-node-pools.md#upgrade-a-node-pool
 [b-series-vm]: /azure/virtual-machines/sizes-b-series-burstable
-
+[a-series-vm]: /azure/virtual-machines/sizes/retirement/av1-series-retirement
 

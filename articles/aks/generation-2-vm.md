@@ -14,14 +14,14 @@ Azure supports [Generation 2 (Gen 2) virtual machines (VMs)](/azure/virtual-mach
 
 Generation 2 VMs use the new UEFI-based boot architecture rather than the BIOS-based architecture used by Generation 1 VMs. Only specific SKUs and sizes support Generation 2 VMs. Check the [list of supported sizes](/azure/virtual-machines/generation-2#generation-2-vm-sizes) to see if your SKU supports or requires Generation 2.
 
-Additionally, not all VM images support Generation 2 VMs. On AKS, Generation 2 VMs use the AKS Ubuntu 22.04 or 18.04 image or the AKS Windows Server 2022 image. These images support all Generation 2 SKUs and sizes.
+Additionally, not all VM images support Generation 2 VMs. On AKS, Generation 2 VMs use the AKS Ubuntu 22.04 or the AKS Windows Server 2022 image. These images support all Generation 2 SKUs and sizes.
 
 ## Default behavior for supported vm sizes
 
 There are three scenarios when creating a node pool with a supported VM size:
 
 1. If the VM size supports only Generation 1, the default behavior for both Linux and Windows node pools is to use the Generation 1 node image.
-2. If the VM size supports only Generation 2, the default behavior for both Linux and Windows node pools is to use the Generation 2 node image.
+2. If the VM size supports only Generation 2, the default behavior for both Linux and Windows node pools is to use the Generation 2 node image. Windows node pools require a custom header to use a VM size that only supports Generation 2, see [Create a Windows node pool with a Generation 2 VM](#create-a-node-pool-with-a-generation-2-vm).
 3. If the VM size supports both Generation 1 and Generation 2, the default behavior for Linux and Windows differs. Linux uses the Generation 2 node image, and Windows uses Generation 1 image. To use the Generation 2 node image, see [Create a Windows node pool with a Generation 2 VM](#create-a-node-pool-with-a-generation-2-vm).
 
 ## Check available Generation 2 VM sizes
@@ -42,12 +42,12 @@ Create a Linux node pool with a Generation 2 VM using the default [node pool cre
 
 ### [Windows node pool](#tab/windows-node-pool)
 
-By default, Windows uses the Generation 1 node image unless the VM size doesn't support Generation 1.
+By default, Windows uses the Generation 1 node image.
 
-Create a Windows node pool with a Generation 2 VM using the [`az aks nodepool add`][az-aks-nodepool-add] command. To specify that you want to use Generation 2, add a custom header `--aks-custom-headers UseWindowsGen2VM=true`. Generation 2 VM also requires Windows Server 2022.
+If you'd like to use a Generation 2 node image, create a Windows node pool with a Generation 2 VM using the [`az aks nodepool add`][az-aks-nodepool-add] command. To specify that you want to use Generation 2, add a custom header `--aks-custom-headers UseWindowsGen2VM=true`. Generation 2 VM also requires Windows Server 2022.
 
 ```azurecli-interactive
-az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
+az aks nodepool add --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --node-vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
 ```
 
 ---
@@ -56,10 +56,10 @@ az aks nodepool add --resource-group <resource-group-name> --cluster-name <clust
 
 ### [Linux node pool](#tab/linux-node-pool)
 
-If you're using a VM size that only supports Generation 1, you can update your node pool to a vm size that supports Generation 2 using the [`az aks nodepool update`][az-aks-nodepool-update] command. This update changes your node image from Generation 1 to Generation 2.
+If you're using a VM size that only supports Generation 1, you can update your node pool to a VM size that supports Generation 2 using the [`az aks nodepool update`][az-aks-nodepool-update] command. This update changes your node image from Generation 1 to Generation 2.
 
 ```azurecli-interactive
-az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --vm-size <supported-generation-2-vm-size> --os-type Linux
+az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --node-vm-size <supported-generation-2-vm-size> --os-type Linux
 ```
 
 ### [Windows node pool](#tab/windows-node-pool)
@@ -67,8 +67,9 @@ az aks nodepool update --resource-group <resource-group-name> --cluster-name <cl
 If you're using a Generation 1 image, you can update your node pool to use Generation 2 by selecting a VM size that supports Generation 2 using the [`az aks nodepool update`][az-aks-nodepool-update] command. To specify that you want to use Generation 2, add a custom header `--aks-custom-headers UseWindowsGen2VM=true`. Generation 2 VM also requires Windows Server 2022. This update changes your node image from Generation 1 to Generation 2.
 
 ```azurecli-interactive
-az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
+az aks nodepool update --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --node-vm-size <supported-generation-2-vm-size> --os-type Windows --os-sku Windows2022 --aks-custom-headers UseWindowsGen2VM=true
 ```
+
 ---
 
 ## Check if you're using a Generation 2 node image
@@ -81,7 +82,8 @@ az aks nodepool show --resource-group <resource-group-name> --cluster-name <clus
 
 ## Next steps
 
-To learn more about Generation 2 VMs, see [Support for Generation 2 VMs on Azure](/azure/virtual-machines/generation-2).
+- To learn more about Generation 2 VMs, see [Support for Generation 2 VMs on Azure](/azure/virtual-machines/generation-2).
+- To learn more about supported Generation 2 node images, see [Node Images](./node-images.md).
 
 <!-- LINKS -->
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add

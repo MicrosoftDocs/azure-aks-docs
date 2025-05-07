@@ -12,7 +12,7 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 ## Kubernetes CIS benchmark
 
-The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.9.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.27.x through AKS 1.29.x.
+The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.9.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.27.x through AKS 1.29.x,with 1.29.x reaching its end of life (EOL) in March 2025.
 
 ### Security levels
 

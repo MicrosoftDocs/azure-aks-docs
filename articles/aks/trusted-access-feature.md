@@ -93,6 +93,9 @@ Results:
 }
 ```
 
+> [!NOTE]
+> You can create up to 8 Trusted Access role bindings in an AKS cluster.
+
 ## Update an existing Trusted Access role binding
 
 For an existing role binding that has an associated source service, you can update the role binding with new roles using the `az aks trustedaccess rolebinding update --resource-group $RESOURCE_GROUP_NAME --cluster-name $CLUSTER_NAME --name $ROLE_BINDING_NAME --roles $ROLE_NAME_3,$ROLE_NAME_4` command. This command updates the role binding with the new roles that you specify.

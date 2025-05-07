@@ -49,12 +49,8 @@ az monitor activity-log list --offset 30d --max-events 10000 --namespace microso
 
 | API version        | Announce Date     | Deprecation Date  |
 |--------------------|-------------------|-------------------|
-| 2022-07-02-preview | November 20, 2023 | February 14, 2024 |
-| 2022-08-02-preview | March 27, 2024    | June 20, 2024     |
-| 2022-08-03-preview | March 27, 2024    | June 20, 2024     |
 | 2022-09-02-preview | March 27, 2024    | June 20, 2024     |
 | 2022-10-02-preview | March 27, 2024    | June 20, 2024     |
-| 2022-11-02-preview | March 27, 2024    | June 20, 2024     |
 | 2023-01-02-preview | March 27, 2024    | June 20, 2024     |
 | 2023-02-02-preview | March 27, 2024    | June 20, 2024     |
 | 2023-03-02-preview | Oct 21, 2024      | February 3, 2025  |
@@ -76,3 +72,7 @@ az monitor activity-log list --offset 30d --max-events 10000 --namespace microso
 | 2022-04-02-preview | May 3, 2023       | Sept 1, 2023      |
 | 2022-05-02-preview | May 3, 2023       | Sept 1, 2023      |
 | 2022-06-02-preview | May 3, 2023       | Sept 1, 2023      |
+| 2022-07-02-preview | November 20, 2023 | February 14, 2024 |
+| 2022-08-02-preview | March 27, 2024    | June 20, 2024     |
+| 2022-08-03-preview | March 27, 2024    | June 20, 2024     |
+| 2022-11-02-preview | March 27, 2024    | June 20, 2024     |

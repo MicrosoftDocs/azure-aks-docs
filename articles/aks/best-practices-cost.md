@@ -36,7 +36,7 @@ It's important to evaluate the resource requirements of your application before 
 | SKU family | Description | Use case |
 |------------|-------------|----------|
 | [**Azure Spot Virtual Machines**](/azure/virtual-machines/spot-vms)| Azure Spot Virtual machine scale sets back [Spot node pools](./spot-node-pool.md) and deployed to a single fault domain with no high availability or service-level agreement (SLA) guarantees. Spot VMs allow you to take advantage of unutilized Azure capacity with significant discounts (up to 90%, as compared to pay-as-you-go prices). If Azure needs capacity back, the Azure infrastructure evicts the Spot nodes. | Best for dev/test environments, workloads that can handle interruptions such as batch processing jobs, and workloads with flexible execution time. |
-| [**Ampere Altra Arm-based processors (Arm64)**](https://azure.microsoft.com/blog/now-in-preview-azure-virtual-machines-with-ampere-altra-armbased-processors/) | Arm64 VMs are power-efficient and cost effective but don't compromise on performance. With [Arm64 node pool support in AKS](./create-node-pools.md#arm64-node-pools), you can create Arm64 Ubuntu agent nodes and even mix Intel and ARM architecture nodes within a cluster. These ARM VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads. | Best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more. |
+| [**Arm-based processors (Arm64)**][cobalt-arm64-vm] | Arm64 VMs are power-efficient and cost-effective, but don't compromise on performance. With [Arm64 node pool support in AKS](./use-arm64-vms.md), you can create Arm64 Ubuntu agent nodes and even mix Intel and ARM architecture nodes within a cluster. These ARM VMs are engineered to efficiently run dynamic, scalable workloads and can deliver up to 50% better price-performance than comparable x86-based VMs for scale-out workloads. | Best for web or application servers, open-source databases, cloud-native applications, gaming servers, and more. |
 | [**GPU optimized SKUs**](/azure/virtual-machines/sizes) | Depending on the nature of your workload, consider using compute optimized, memory optimized, storage optimized, or even graphical processing unit (GPU) optimized VM SKUs. GPU VM sizes are specialized VMs that are available with single, multiple, and fractional GPUs. | [GPU-enabled Linux node pools on AKS](./gpu-cluster.md) are best for compute-intensive workloads like graphics rendering, large model training, and inferencing. |
 
 > [!NOTE]
@@ -96,6 +96,10 @@ For more information, see [Azure Monitor best practices](/azure/azure-monitor/be
 
 For control plane logs, consider disabling the categories you don't need and/or using the Basic Logs API when applicable to reduce Log Analytics costs. For more information, see [Azure Kubernetes Service (AKS) control plane/resource logs](./monitor-aks.md#aks-control-planeresource-logs). For data plane logs, or *application logs*, consider adjusting the [cost optimization settings](./monitor-aks.md#aks-data-planecontainer-insights-logs).
 
+### Azure Advisor cost recommendations
+
+AKS cost recommendations in Azure Advisor provide recommendations to help you achieve cost-efficiency without sacrificing reliability. Advisor analyzes your resource configurations and recommends optimization solutions. For more information, see [Get Azure Kubernetes Service (AKS) cost recommendations in Azure Advisor](./cost-advisors.md).
+
 ## Optimize workloads through autoscaling
 
 ### Establish a baseline
@@ -154,3 +158,6 @@ Cost optimization is an ongoing and iterative effort. Learn more by reviewing th
 * [Baseline architecture guide for AKS](/azure/architecture/reference-architectures/containers/aks/baseline-aks)
 * [Optimize compute costs on AKS](/training/modules/aks-optimize-compute-costs/)
 * [AKS cost optimization techniques](https://techcommunity.microsoft.com/t5/apps-on-azure-blog/azure-kubernetes-service-aks-cost-optimization-techniques/ba-p/3652908)
+
+<!-- LINKS - Internal -->
+[cobalt-arm64-vm]: /azure/virtual-machines/sizes/cobalt-overview

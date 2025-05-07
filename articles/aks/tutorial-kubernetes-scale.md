@@ -14,7 +14,7 @@ ms.custom: mvc
 
 If you followed the previous tutorials, you have a working Kubernetes cluster and Azure Store Front app.
 
-In this tutorial, part six of seven, you scale out the pods in the app, try pod autoscaling, and scale the number of Azure VM nodes to change the cluster's capacity for hosting workloads. You learn how to:
+In this tutorial, you scale out the pods in the app, try pod autoscaling, and scale the number of Azure VM nodes to change the cluster's capacity for hosting workloads. You learn how to:
 
 > [!div class="checklist"]
 >

@@ -3,7 +3,7 @@ title: Deploy an Azure Kubernetes application by using an ARM template
 description: Learn how to deploy an Azure Kubernetes application by using an ARM template.
 author: maanasagovi
 ms.author: maanasagovi
-ms.topic: conceptual
+ms.topic: concept-article
 ms.custom: devx-track-arm-template
 ms.subservice: aks-developer
 ms.date: 05/15/2023
@@ -42,7 +42,7 @@ Continue on to generate the ARM template for your deployment.
 
 ## Accept terms and agreements
 
-Before you can deploy a Kubernetes application, you need to accept its terms and agreements. To do so, use [Azure CLI](/cli/azure/vm/image/terms) or [Azure PowerShell](/powershell/module/azurerm.marketplaceordering/). Be sure to use the values you copied for `plan-publisher`, `plan-offerID`, and `plan-name` in your command.
+Before you can deploy a Kubernetes application, you need to accept its terms and agreements. To do so, use [Azure CLI](/cli/azure/vm/image/terms) or [Azure PowerShell](/powershell/module/az.marketplaceordering/). Be sure to use the values you copied for `plan-publisher`, `plan-offerID`, and `plan-name` in your command.
 
 ```azurecli
 az vm image terms accept --offer <Product ID> --plan <Plan ID> --publisher <Publisher ID>
@@ -52,7 +52,7 @@ az vm image terms accept --offer <Product ID> --plan <Plan ID> --publisher <Publ
 > Although this Azure CLI command is for VMs, it also works for containers. For more information, see the [`az cm image terms` reference](/cli/azure/vm/image/terms).
 
 ```azurepowershell
-## Get-AzureRmMarketplaceTerms -Publisher <Publisher ID> -Product <Product ID> -Name <Plan ID>
+## Get-AzMarketplaceTerms -Publisher <Publisher ID> -Product <Product ID> -Name <Plan ID>
 ```
 
 ## Deploy ARM template

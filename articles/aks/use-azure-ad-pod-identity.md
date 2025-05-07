@@ -157,6 +157,8 @@ spec:
 
 ## Create an AKS cluster with Kubenet network plugin
 
+[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
+
 Create an AKS cluster with Kubenet network plugin and pod-managed identity enabled.
 
 ```azurecli-interactive

@@ -5,7 +5,7 @@ ms.date: 10/03/2022
 author: shashankbarsin
 ms.author: shasb
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Frequently Asked Questions - Azure Kubernetes Fleet Manager

@@ -1,7 +1,7 @@
 ---
 title: Concepts - Machine learning operations (MLOps) for AI and machine learning workflows
 description: Learn about MLOps and how you can use it with your AI and machine learning workflows on Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 10/15/2024
 ms.service: azure-kubernetes-service
 author: schaffererin

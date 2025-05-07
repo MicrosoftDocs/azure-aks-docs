@@ -6,6 +6,8 @@ ms.custom: azure-kubernetes-service
 ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
+zone_pivot_groups: azure-cli-or-terraform
+
 ---
 
 # Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)
@@ -18,8 +20,10 @@ In this article, we create the infrastructure resources required to run a Valkey
 * An Azure subscription. If you don't have one, create a [free account][azure-free-account].
 * Azure CLI version 2.61.0. To install or upgrade, see [Install Azure CLI][install-azure-cli].
 * Helm version 3 or later. To install, see [Installing Helm][install-helm].
-* `kubectl`, which the Azure Cloud Shell has installed by default.
+* `kubectl`, which the Azure Cloud Shell installs by default.
 * Docker installed on your local machine. To install, see [Get Docker][install-docker].
+
+:::zone pivot="azure-cli"
 
 ## Set environment variables
 
@@ -32,8 +36,6 @@ In this article, we create the infrastructure resources required to run a Valkey
     export MY_ACR_REGISTRY=mydnsrandomname$(echo $random)
     export MY_KEYVAULT_NAME=vault-$(echo $random)-kv
     export MY_CLUSTER_NAME=cluster-aks
-    export SERVICE_ACCOUNT_NAMESPACE=valkey
-    export TENANT_ID=$(az account show --query tenantId --output tsv)
     ```
 
 ## Create a resource group
@@ -179,17 +181,9 @@ In this section, we create a node pool dedicated to running the Valkey workload.
     6        1.28.9                        b7aa8e37-ff39-4ec7-bed0-cb37876416cc  False                False                  False                     False         False                 False             OS                 30         User    valkey  AKSUbuntu-2204gen2containerd-202405.27.0  1.28                   128             Managed       Ubuntu   Linux     Succeeded            myResourceGroup-rg  Delete           VirtualMachineScaleSets  Standard_D4s_v3  OCIContainer
     ```
 
-## Connect to the AKS cluster
-
-* Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
-
-    ```azurecli-interactive
-    az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
-    ```
-
 ## Upload Valkey images to your Azure Container Registry
 
-In this section, we download the Valkey image from Dockerhub and upload it to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
+In this section, we download the Valkey image from Docker Hub and upload it to Azure Container Registry. This step ensures that the image is available in your private registry and can be used in your AKS cluster. We don't recommend consuming the public image in a production environment.
 
 * Import the Valkey image from Dockerhub and upload it to your Azure Container Registry using the [`az acr import`][az-acr-import] command.
 
@@ -200,6 +194,73 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
         --image valkey:latest \
         --output table
     ```
+
+:::zone-end
+
+:::zone pivot="terraform"
+
+## Deploy the infrastructure with Terraform
+
+To deploy the infrastructure using Terraform, we're going to use the [Azure Verified Module](https://azure.github.io/Azure-Verified-Modules/)[for AKS](https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git).
+
+> [!NOTE]
+> If you're planning to run this deployment in production, we recommend looking at [AKS production pattern module for Azure Verified Modules](https://github.com/Azure/terraform-azurerm-avm-ptn-aks-production). This module comes coupled with best practice recommendations.
+
+1. Clone the git repository with the terraform module.
+
+    ```bash
+    git clone https://github.com/Azure/terraform-azurerm-avm-res-containerservice-managedcluster.git
+    cd terraform-azurerm-avm-res-containerservice-managedcluster/tree/stateful-workloads/examples/stateful-workloads-valkey
+    ```
+
+2. Set Valkey variables by creating a `valkey.tfvars` file with the following contents. You can also provide your specific [variables](https://developer.hashicorp.com/terraform/language/values/variables) at this step:
+
+    ```terraform
+        acr_task_content = <<-EOF
+        version: v1.1.0
+        steps:
+          - cmd: bash echo Waiting 10 seconds the propagation of the Container Registry Data Importer and Data Reader role
+          - cmd: bash sleep 10
+          - cmd: az login --identity
+          - cmd: az acr import --name $RegistryName --source docker.io/valkey/valkey:latest --image valkey:latest
+        EOF
+        
+        valkey_enabled = true
+        node_pools = {
+          valkey = {
+            name       = "valkey"
+            vm_size    = "Standard_DS4_v2"
+            node_count = 3
+            zones      = [1, 2, 3]
+            os_type    = "Linux"
+          }
+        }
+    ```
+    
+
+3. To deploy the infrastructure, run the Terraform commands.In this step, we set the required variables that will be used when deploying Valkey in the next step.
+
+    ```bash
+    terraform init
+    export MY_RESOURCE_GROUP_NAME=myResourceGroup-rg
+    export MY_LOCATION=centralus
+    SECRET=$(openssl rand -base64 32)
+    export TF_VAR_valkey_password=${SECRET}
+    export TF_VAR_location=${MY_LOCATION}
+    export TF_VAR_resource_group_name=${MY_RESOURCE_GROUP_NAME}
+    terraform apply -var-file="valkey.tfvars"
+    ```
+
+> [!NOTE]
+> In some cases, the container registry tasks that import Valkey images to the container registry might fail. For more information, see [container-registry-task]. In most cases, retrying resolves the problem.
+
+4. Run the following command to export the Terraform output values as environment variables in the terminal to use them in the next steps:
+    ```bash
+    export MY_ACR_REGISTRY=$(terraform output -raw acr_registry_name)
+    export MY_CLUSTER_NAME=$(terraform output -raw aks_cluster_name)
+    ```
+
+:::zone-end
 
 ## Next steps
 
@@ -224,6 +285,7 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
 <!-- External links -->
 [install-helm]: https://helm.sh/docs/intro/install/
 [install-docker]: https://docs.docker.com/get-docker/
+[github-azure]: https://github.com/Azure/
 
 <!-- Internal links -->
 [valkey-solution-overview]: ./valkey-overview.md
@@ -237,6 +299,6 @@ In this section, we download the Valkey image from Dockerhub and upload it to Az
 [az-aks-show]: /cli/azure/aks#az-aks-show
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
-[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-acr-import]: /cli/azure/acr#az-acr-import
 [deploy-valkey]: ./deploy-valkey-cluster.md
+[container-registry-task]:/azure/container-registry/container-registry-faq#run-error-message-troubleshooting

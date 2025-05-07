@@ -323,7 +323,15 @@ When deploying an AKS cluster into such a networking environment, there are some
 
 * When a private cluster is provisioned, a private endpoint (1) and a private DNS zone (2) are created in the cluster-managed resource group by default. The cluster uses an `A` record in the private zone to resolve the IP of the private endpoint for communication to the API server.
 * The private DNS zone is linked only to the VNet that the cluster nodes are attached to (3). This means that the private endpoint can only be resolved by hosts in that linked VNet. In scenarios where no custom DNS is configured on the VNet (default), this works without issue as hosts point at *168.63.129.16* for DNS that can resolve records in the private DNS zone because of the link.
-* In scenarios where the VNet containing your cluster has custom DNS settings (4), cluster deployment fails unless the private DNS zone is linked to the VNet that contains the custom DNS resolvers (5). This link can be created manually after the private zone is created during cluster provisioning or via automation upon detection of creation of the zone using event-based deployment mechanisms (for example, Azure Event Grid and Azure Functions). To avoid cluster failure during initial deployment, the cluster can be deployed with the private DNS zone resource ID. This only works with resource type `Microsoft.ContainerService/managedCluster` and API version `2022-07-01`. Using an older version with an ARM template or Bicep resource definition isn't supported.
+* If you keep the default private‑DNS‑zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.  
+  In spoke VNets that use custom DNS servers, this action can fail if the cluster’s managed identity lacks **Network Contributor** on the spoke VNet.  
+  To prevent the failure, choose **one** of the following supported configurations:
+
+  * **Custom private DNS zone** – Provide a pre‑created private zone and set `privateDNSZone` to its resource ID. Link that zone to the appropriate VNet (for example, the hub VNet) and set `publicDNS` to `false`.
+
+  * **Public DNS only** – Disable private‑zone creation by setting `privateDNSZone` to `none` **and** leave `publicDNS` at its default value (`true`).
+
+  > Setting `privateDNSZone: none` **and** `publicDNS: false` at the same time is **not supported**;
 
 > [!NOTE]
 > Conditional forwarding doesn't support subdomains.
