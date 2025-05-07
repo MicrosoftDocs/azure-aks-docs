@@ -164,6 +164,8 @@ In order to complete this step, you must create your Fleet Manager with managed 
     metadata:
       name: kuard-export
       namespace: kuard-demo
+      annotations:
+        networking.fleet.azure.com/weight: "50"
     ```
     
     Stage the objects on the Fleet Manager hub cluster:
@@ -172,7 +174,7 @@ In order to complete this step, you must create your Fleet Manager with managed 
     kubectl apply -f kuard-export-service.yaml
     ```
 
-    The `ServiceExport` specification in the sample allows you to export a service from member clusters to the Fleet Manager hub cluster. Once successfully exported, the service and all its endpoints are synced to the Fleet Manager hub cluster and can then be used to set up DNS load balancing across these endpoints. The output looks similar to the following example:
+    The `ServiceExport` specification in the sample allows you to export a service from member clusters to the Fleet Manager hub cluster. We want to split the traffic evenly between the two clusters so we set the `ServiceExport` weight annotation to 50. Once successfully exported, the service and all its endpoints are synced to the Fleet Manager hub cluster and can then be used to set up DNS load balancing across these endpoints. The output looks similar to the following example:
 
     ```console
     deployment.apps/kuard created

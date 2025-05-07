@@ -70,11 +70,7 @@ The important properties to understand include:
 
 * `spec/profile/name`: must match the corresponding `TrafficManagerProfile`.
 * `spec/backend/name`: must match the exported service name to load balance. 
-* `spec/weight`: weight (out of 100) to apply to this backend configuration.
-
-## Nested Traffic Manager Profiles
-
-It is possible to use [nested Traffic Manager Profiles][traffic-manager-nested]. This advanced topic not currently available in our documentation.
+* `spec/weight`: optional weight (priority) to apply to this backend configuration. Integer value between 1 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. For further information see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
 
 ## Deletion behavior
 
