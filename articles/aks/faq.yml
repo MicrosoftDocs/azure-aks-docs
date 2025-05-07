@@ -22,14 +22,14 @@ sections:
       - question: |
           What is platform support, and what does it include?
         answer: |
-          Platform support is a reduced support plan for unsupported "n-3" version clusters. Platform support includes only Azure infrastructure support.
+          Platform support is a reduced support plan for unsupported n-3 version clusters. Platform support includes only Azure infrastructure support.
 
           For more information, see the [platform support policy](./supported-kubernetes-versions.md).
           
       - question: |
           Does AKS automatically upgrade my unsupported clusters?
         answer: |
-          Yes, AKS initiates auto-upgrades for unsupported clusters. When a cluster in an n-3 version (where n is the latest supported AKS minor version that's generally available) is about to drop to n-4, AKS automatically upgrades the cluster to n-2 to remain in an AKS support policy.
+          Yes, AKS initiates auto-upgrades for unsupported clusters. When a cluster in an n-3 version (where *n* is the latest supported AKS minor version that's generally available) is about to drop to n-4, AKS automatically upgrades the cluster to n-2 to remain in an AKS support policy.
           
           For more information, see [Supported Kubernetes versions](./supported-kubernetes-versions.md), [Planned maintenance windows](./planned-maintenance.md), and [Automatic upgrades](./auto-upgrade-cluster.md).
           
@@ -107,7 +107,7 @@ sections:
         answer: |
           By default, AKS names the node resource group *MC_resourcegroupname_clustername_location*, but you can provide your own name. 
 
-          To specify your own resource group name, install the [aks-preview](/cli/azure/aks) Azure CLI extension version *0.3.2* or later. When you create an AKS cluster by using the [`az aks create`][az-aks-create] command, use the `--node-resource-group` parameter and specify a name for the resource group. If you use an [Azure Resource Manager template](/azure/templates/microsoft.containerservice/2022-09-01/managedclusters) to deploy an AKS cluster, you can define the resource group name by using the `nodeResourceGroup` property.
+          To specify your own resource group name, install the [aks-preview](/cli/azure/aks) Azure CLI extension version *0.3.2* or later. When you create an AKS cluster by using the `az aks create` command, use the `--node-resource-group` parameter and specify a name for the resource group. If you use an [Azure Resource Manager template](/azure/templates/microsoft.containerservice/2022-09-01/managedclusters) to deploy an AKS cluster, you can define the resource group name by using the `nodeResourceGroup` property.
 
           - The Azure resource provider automatically creates the secondary resource group.
           - You can specify a custom resource group name only when you create the cluster.
@@ -162,7 +162,7 @@ sections:
         answer: |
           AKS doesn't set a limit on the container image size. But the larger the image, the higher the memory demand. A larger size could potentially exceed resource limits or the overall available memory of worker nodes. By default, memory for VM size Standard_DS2_v2 for an AKS cluster is set to 7 GiB.
 
-          When a container image is excessively large, as in the terabyte (TB) range, kubelet might not be able to pull it from your container registry to a node because of the lack of disk space.
+          When a container image is excessively large, as in the terabyte (TB) range, the kubelet might not be able to pull it from your container registry to a node because of the lack of disk space.
 
           For Windows Server nodes, Windows Update doesn't automatically run and apply the latest updates. You should perform an upgrade on the cluster and the Windows Server node pools in your AKS cluster. Follow a regular schedule based on the Windows Update release cycle and your own validation process. This upgrade process creates nodes that run the latest Windows Server image and patches, and then removes the older nodes. For more information on this process, see [Upgrade a node pool in AKS](./manage-node-pools.md#upgrade-a-single-node-pool).
 
@@ -189,7 +189,7 @@ sections:
       - question: |
           Are security updates applied to AKS agent nodes?
         answer: |
-          AKS patches CVEs that have a "vendor fix" every week. CVEs without a fix are waiting on a "vendor fix" before they can be remediated. The AKS images are automatically updated inside of 30 days. We recommend that you apply an updated node image on a regular cadence to ensure that the latest patched images and OS patches are all applied and current. You can do this task:
+          AKS patches CVEs that have a *vendor fix* every week. CVEs without a fix are waiting on a vendor fix before they can be remediated. The AKS images are automatically updated within 30 days. We recommend that you apply an updated node image on a regular cadence to ensure that the latest patched images and OS patches are all applied and current. You can do this task:
 
           - Manually, through the Azure portal or the Azure CLI.
           - By upgrading your AKS cluster. The cluster upgrades [cordon and drain nodes](https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/) automatically. Then it brings a new node online with the latest Ubuntu image and a new patch version or a minor Kubernetes version. For more information, see [Upgrade an AKS cluster](./upgrade-cluster.md).
@@ -201,7 +201,7 @@ sections:
           Microsoft provides guidance for other actions that you can take to secure your workloads through services like [Microsoft Defender for Containers](/azure/defender-for-cloud/defender-for-containers-introduction?tabs=defender-for-container-arch-aks). For information on a security threat related to AKS and Kubernetes, see [New large-scale campaign targets Kubeflow](https://techcommunity.microsoft.com/t5/azure-security-center/new-large-scale-campaign-targets-kubeflow/ba-p/2425750) (June 8, 2021).
 
       - question: |
-          Does AKS store any customer data outside of the cluster's region?
+          Does AKS store any customer data outside the cluster's region?
         answer: |
           No. All data is stored in the cluster's region.
 
@@ -230,7 +230,7 @@ sections:
       - question: |
           How does the managed control plane communicate with my nodes?
         answer: |
-          AKS uses a secure tunnel communication to allow the `api-server` and individual node kubelets to communicate, even on separate virtual networks. The tunnel is secured through mutual Transport Layer Security encryption. The current main tunnel that's used by AKS is [Konnectivity, previously known as apiserver-network-proxy](https://kubernetes.io/docs/tasks/extend-kubernetes/setup-konnectivity/). Verify that all network rules follow the [Azure required network rules and fully qualified domain names (FQDNs)](./limit-egress-traffic.md).
+          AKS uses a secure tunnel communication to allow the `api-server` and individual node kubelets to communicate, even on separate virtual networks. The tunnel is secured through mutual Transport Layer Security encryption. The current main tunnel that AKS uses is [Konnectivity, previously known as apiserver-network-proxy](https://kubernetes.io/docs/tasks/extend-kubernetes/setup-konnectivity/). Verify that all network rules follow the [Azure required network rules and fully qualified domain names (FQDNs)](./limit-egress-traffic.md).
           
       - question: |
           Can my pods use the API server FQDN instead of the cluster IP?
@@ -240,7 +240,7 @@ sections:
       - question: |
           Can I configure NSGs with AKS?
         answer: |
-          AKS doesn't apply network security groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. AKS modifies only the network interface NSG settings. If you're using Azure Container Networking Interface, you also must ensure that the security rules in the NSGs allow traffic between the node and pod classless interdomain routing (CIDR) ranges. If you're using kubenet, you must also ensure that the security rules in the NSGs allow traffic between the node and pod CIDR. For more information, see [Network security groups](./concepts-network.md#network-security-groups).
+          AKS doesn't apply network security groups (NSGs) to its subnet and doesn't modify any of the NSGs associated with that subnet. AKS modifies only the network interface NSG settings. If you're using Container Network Interface (CNI), you also must ensure that the security rules in the NSGs allow traffic between the node and pod classless interdomain routing (CIDR) ranges. If you're using kubenet, you must also ensure that the security rules in the NSGs allow traffic between the node and pod CIDR. For more information, see [Network security groups](./concepts-network.md#network-security-groups).
           
       - question: |
           How does time synchronization work in AKS?
@@ -295,7 +295,8 @@ sections:
 
           If you have a critical use case for deploying something on `kube-system` (not recommended) in support of your custom admission webhook, you can add the following label or annotation so that the admissions enforcer ignores it.
 
-          Label: ```"admissions.enforcer/disabled": "true"``` or Annotation: ```"admissions.enforcer/disabled": true```
+          - Label: ```"admissions.enforcer/disabled": "true"```
+          - Annotation: ```"admissions.enforcer/disabled": true```
           
       - question: |
           Is Azure Key Vault integrated with AKS?
@@ -335,7 +336,7 @@ sections:
       - question: |
           Why is it taking so long to delete my cluster?
         answer: |
-          Most clusters are deleted upon user request. In some cases, especially cases where you bring your own resource group or perform cross-resource group tasks, deletion can take more time or even fail. If you have an issue with deletions, double-check that you don't have locks on the resource group. Also make sure that any resources outside of the resource group are disassociated from the resource group.
+          Most clusters are deleted upon user request. In some cases, especially cases where you bring your own resource group or perform cross-resource group tasks, deletion can take more time or even fail. If you have an issue with deletions, double-check that you don't have locks on the resource group. Also make sure that any resources outside the resource group are disassociated from the resource group.
           
       - question: |
           Why is it taking so long to create or update my cluster?
