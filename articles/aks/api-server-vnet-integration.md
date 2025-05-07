@@ -195,12 +195,10 @@ az group create --location <location> --name <resource-group>
 > Create a new cluster with the feature enabled at creation time. Verify successful provisioning, then migrate workloads. This approach avoids the risk of control plane downtime or outage when cluster is updating to enable the feature.
 >
 > - **Manual restart required.**
->   After enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must manually restart the cluster for the change to take effect. This restart is not automated and, like any restart, the cluster will be temporarily unavailable until it completes.
+> If you decide to accept the risk and update an existing cluster, after enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must manually restart the cluster for the change to take effect. This restart is not automated and, like any restart, the cluster will be temporarily unavailable until it completes.
 >
 > - **Feature cannot be disabled and capacity is not guaranteed**  
 >   Once enabled, the feature is permanent. You cannot disable it or revert to the previous configuration. This means if you enable the feature and capacity is not available, you may be unable to start the cluster after stopping it.
-
-
 
 This upgrade performs a node-image version upgrade on all node pools and restarts all workloads while they undergo a rolling image upgrade.
 
