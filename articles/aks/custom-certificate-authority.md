@@ -18,7 +18,7 @@ This article shows you how to create custom CAs and apply them to your AKS clust
 ## Prerequisites
 
 * An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free).
-* You need the Azure CLI version 2.72.0 or later installed and configured. To fine your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* You need the Azure CLI version 2.72.0 or later installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * A base64 encoded certificate string or a text file with certificate.
 
 ## Limitations
