@@ -47,7 +47,7 @@ The Azure managed control plane is composed of several components that help mana
 
 ### Nodes
 
-Each AKS cluster has at least one node, which is an Azure virtual machine (VM) that runs Kubernetes node components. The following components run on each node:
+Each AKS cluster has at least one node, which is an Azure VM that runs Kubernetes node components. The following components run on each node:
 
 | Component | Description |
 | --------- | ----------- |
