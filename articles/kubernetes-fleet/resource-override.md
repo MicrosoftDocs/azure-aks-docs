@@ -158,7 +158,7 @@ spec:
               {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
 ```
 
-The example `ClusterResourceOverride` object will add a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
+The example `ResourceOverride` object will add a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
 
 ### Multiple override rules
 
