@@ -8,15 +8,13 @@ ms.service: azure-kubernetes-service
 ms.date: 3/25/2025
 ---
 
-# Monitor and visualize AI inference metrics on Azure Kubernetes Service (AKS) with the AI toolchain operator (Preview)
+# Monitor and visualize AI inference metrics on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 
 Monitoring and observability play a key role in maintaining high performance and low cost of your AI workload deployments on AKS. Visibility into system and performance metrics can indicate the limits of your underlying infrastructure and motivate real-time adjustments and optimizations to reduce workload interruptions. Monitoring also provides valuable insights into resource utilization, enabling cost-effective management of computational resources and avoiding over-provisioning or under-provisioning. 
 
 The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the deployment and operations for AI models on your AKS cluster. Starting with [KAITO version 0.4.4](https://github.com/kaito-project/kaito/releases/tag/v0.4.4), the vLLM inference runtime is enabled by default in the AKS managed add-on. vLLM surfaces key system performance, resource usage, and request processing [Prometheus metrics](https://docs.vllm.ai/en/latest/design/v1/metrics.html) that can be used to evaluate your KAITO inference deployments.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-In this article, you'll learn how to monitor and visualize vLLM inference metrics using the AI toolchain operator add-on (preview) with Azure Managed Prometheus and Azure Managed Grafana on your AKS cluster.
+In this article, you'll learn how to monitor and visualize vLLM inference metrics using the AI toolchain operator add-on with Azure Managed Prometheus and Azure Managed Grafana on your AKS cluster.
 
 ## Before you begin
 

@@ -1,5 +1,5 @@
 ---
-title: Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)
+title: Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 description: Learn how to enable the AI toolchain operator add-on on Azure Kubernetes Service (AKS) to simplify OSS AI model management and deployment.
 ms.topic: how-to
 ms.custom: azure-kubernetes-service, devx-track-azurecli
@@ -9,15 +9,13 @@ ms.author: schaffererin
 
 ---
 
-# Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator (preview)
+# Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303212)
 
 The AI toolchain operator (KAITO) is a managed add-on that simplifies the experience of running open-source and private AI models on your AKS cluster. KAITO reduces the time to onboard models and provision resources, enabling faster AI model prototyping and development rather than infrastructure management.
 
 This article shows you how to enable the AI toolchain operator add-on and deploy an AI model for inferencing on AKS.
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Before you begin
 
@@ -35,38 +33,6 @@ This article shows you how to enable the AI toolchain operator add-on and deploy
 
 * Azure CLI version 2.47.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 * The Kubernetes command-line client, kubectl, installed and configured. For more information, see [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
-* [Install the Azure CLI AKS preview extension](#install-the-azure-cli-preview-extension).
-* [Register the AI toolchain operator add-on feature flag](#register-the-ai-toolchain-operator-add-on-feature-flag).
-
-### Install the Azure CLI preview extension
-
-1. Install the Azure CLI preview extension using the [az extension add][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to make sure you have the latest version using the [az extension update][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the AI toolchain operator add-on feature flag
-
-1. Register the AIToolchainOperatorPreview feature flag using the [az feature register][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AIToolchainOperatorPreview"
-    ```
-
-    It takes a few minutes for the registration to complete.
-
-2. Verify the registration using the [az feature show][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "AIToolchainOperatorPreview"
-    ```
 
 ### Export environment variables
 
@@ -115,6 +81,12 @@ The following sections describe how to create an AKS cluster with the AI toolcha
             --enable-ai-toolchain-operator
     ```
 
+4. Verify that the KAITO GPU provisioner deployment is running using the `kubectl get` command:
+
+    ```azurecli-interactive
+    kubectl get deployment -n kube-system | grep kaito
+    ```
+
 ## Connect to your cluster
 
 1. Configure `kubectl` to connect to your cluster using the [az aks get-credentials][az-aks-get-credentials] command.
@@ -127,73 +99,6 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 
     ```azurecli-interactive
     kubectl get nodes
-    ```
-
-## Export environment variables
-
-* Export environment variables for the MC resource group, principal ID identity, and KAITO identity using the following commands:
-
-    ```azurecli-interactive
-    export MC_RESOURCE_GROUP=$(az aks show --resource-group $AZURE_RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --query nodeResourceGroup \
-        -o tsv)
-    export PRINCIPAL_ID=$(az identity show --name "ai-toolchain-operator-${CLUSTER_NAME}" \
-        --resource-group $MC_RESOURCE_GROUP \
-        --query 'principalId' \
-        -o tsv)
-    export KAITO_IDENTITY_NAME="ai-toolchain-operator-${CLUSTER_NAME}"
-    ```
-
-## Get the AKS OpenID Connect (OIDC) Issuer
-
-* Get the AKS OIDC Issuer URL and export it as an environment variable:
-
-    ```azurecli-interactive
-    export AKS_OIDC_ISSUER=$(az aks show --resource-group $AZURE_RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --query "oidcIssuerProfile.issuerUrl" \
-        -o tsv)
-    ```
-
-## Create role assignment for the service principal
-
-* Create a new role assignment for the service principal using the [az role assignment create][az-role-assignment-create] command.
-
-    ```azurecli-interactive
-    az role assignment create --role "Contributor" \
-        --assignee $PRINCIPAL_ID \
-        --scope "/subscriptions/$AZURE_SUBSCRIPTION_ID/resourcegroups/$AZURE_RESOURCE_GROUP"
-    ```
-
-## Establish a federated identity credential
-
-* Create the federated identity credential between the managed identity, AKS OIDC issuer, and subject using the [az identity federated-credential create][az-identity-federated-credential-create] command.
-
-    ```azurecli-interactive
-    az identity federated-credential create --name "kaito-federated-identity" \
-        --identity-name $KAITO_IDENTITY_NAME \
-        -g $MC_RESOURCE_GROUP \
-        --issuer $AKS_OIDC_ISSUER \
-        --subject system:serviceaccount:"kube-system:kaito-gpu-provisioner" \
-        --audience api://AzureADTokenExchange
-    ```
-
-    > [!NOTE]
-    > Before this step is complete, the `gpu-provisioner` controller pod will remain in a crash loop status. Once the federated credential is created, the `gpu-provisioner` controller pod will reach a running state and you will be able to verify that the deployment is running in the following steps.
-
-## Verify that your deployment is running
-
-1. Restart the KAITO GPU provisioner deployment on your pods using the `kubectl rollout restart` command:
-
-    ```azurecli-interactive
-    kubectl rollout restart deployment/kaito-gpu-provisioner -n kube-system
-    ```
-
-2. Verify that the GPU provisioner deployment is running using the `kubectl get` command:
-
-    ```azurecli-interactive
-    kubectl get deployment -n kube-system | grep kaito
     ```
 
 ## Deploy a default hosted AI model
@@ -276,8 +181,6 @@ Learn more about [KAITO model deployment options](https://github.com/Azure/kaito
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [az-aks-get-credentials]: /cli/azure/aks#az_aks_get_credentials
-[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
-[az-identity-federated-credential-create]: /cli/azure/identity/federated-credential#az_identity_federated_credential_create
 [az-account-set]: /cli/azure/account#az_account_set
 [az-extension-add]: /cli/azure/extension#az_extension_add
 [az-extension-update]: /cli/azure/extension#az_extension_update
