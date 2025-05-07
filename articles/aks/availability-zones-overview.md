@@ -36,17 +36,17 @@ When you create an AKS cluster, one [system node pool](/azure/aks/use-system-poo
 
 There are three ways node pools can be deployed:
 
-- Zone-spanning scale set
-- Zone-aligned scale set
+- Zone-spanning 
+- Zone-aligned 
 - Regional
 
 :::image type="content" source="media/availability-zones/az-spanning-inl.png" alt-text="Diagram that shows AKS node distribution across availability zones in different models." lightbox="media/availability-zones/az-spanning-exp.png":::
 
-For the system node pool, the number of zones that are used is configured when the cluster is created.
+The system node pool zones are configured when the cluster or node pool is created.
 
-#### Zone-spanning scale set
+#### Zone-spanning
 
-A zone-spanning scale set spreads nodes across all selected zones. These zones are specified by using the `--zones` parameter.
+In this configuration, nodes are spread across all selected zones. These zones are specified by using the `--zones` parameter.
 
 ```bash
 # Create an AKS cluster, and create a zone-spanning system node pool in all three AZs, one node in each AZ
@@ -72,7 +72,7 @@ aks-nodepool1-34917322-vmss000001   eastus   eastus-2
 aks-nodepool1-34917322-vmss000002   eastus   eastus-3
 ```
 
-#### Zone-aligned scale set
+#### Zone-aligned
 
 In this configuration, each node is aligned (pinned) to a specific zone. To create three node pools for a region with three availability zones:
 
