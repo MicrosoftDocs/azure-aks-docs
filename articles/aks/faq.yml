@@ -293,7 +293,7 @@ sections:
         answer: |
           To protect the stability of the system and prevent custom admission controllers from affecting internal services in the `kube-system` namespace, AKS has an admissions enforcer, which automatically excludes `kube-system` and AKS internal namespaces. This service ensures that the custom admission controllers don't affect the services that run in `kube-system`.
 
-          If you have a critical use case for deploying something on `kube-system` (not recommended) in support of your custom admission webhook, you can add the following label or annotation so that the admissions enforcer ignores it.
+          If you have a critical use case for deploying something on `kube-system` (not recommended) in support of your custom admission webhook, you can add the following label or annotation so that the admissions enforcer ignores it:
 
           - Label: ```"admissions.enforcer/disabled": "true"```
           - Annotation: ```"admissions.enforcer/disabled": true```
@@ -356,7 +356,7 @@ sections:
       - question: |
           I tried to delete my cluster, but I see the error "[Errno 11001] getaddrinfo failed."
         answer: |
-          Most commonly, this error arises if you have one or more NSGs in use that are still associated with the cluster. Remove them and attempt the to delete the cluster again.
+          Most commonly, this error arises if you have one or more NSGs in use that are still associated with the cluster. Remove them and attempt to delete the cluster again.
 
       - question: |
           I ran an upgrade, but now my pods are in crash loops and readiness probes fail.
