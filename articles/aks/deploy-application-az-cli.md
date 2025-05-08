@@ -3,7 +3,7 @@ title: Deploy an Azure Kubernetes application programmatically by using Azure CL
 description: Learn how to deploy an Azure Kubernetes application programmatically by using Azure CLI.
 author: maanasagovi
 ms.author: maanasagovi
-ms.topic: conceptual
+ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 10/30/2024

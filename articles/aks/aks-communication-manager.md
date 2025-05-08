@@ -3,7 +3,7 @@ title: AKS Communication Manager
 description: Start here to learn how to set up and receive notices in Azure Resource Notification for AKS Maintenance events. 
 ms.date: 10/16/2024
 ms.custom: aks communication manager
-ms.topic: conceptual
+ms.topic: concept-article
 author: kaarthis
 ms.author: kaarthis
 ms.subservice: aks-upgrade
