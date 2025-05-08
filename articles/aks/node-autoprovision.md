@@ -87,8 +87,16 @@ Node autoprovisioning is based on the Open Source [Karpenter](https://karpenter.
 
 The recommended network configurations for clusters enabled with Node Autoprovisioning are the following:
 - [Azure CNI](configure-azure-cni.md)
+- [Azure CNI](configure-azure-cni.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
-- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md).
+- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
+
+Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md). 
+
+The following networking configurations are not currently supported:
+- Calico network policy
+- Dynamic IP Allocation
+- Static Allocation of CIDR blocks 
 
 ## Enable node autoprovisioning
 
