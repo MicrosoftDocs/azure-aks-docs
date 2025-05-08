@@ -74,6 +74,23 @@ Since the cluster is already using a private CIDR for pods which doesn't overlap
 > [!NOTE]
 > When upgrading from Kubenet to CNI Overlay, the route table is no longer required for pod routing. If the cluster is using a customer provided route table, the routes which were being used to direct pod traffic to the correct node is automatically deleted during the migration operation. If the cluster is using a managed route table (AKS creates the route table which lives in the node resource group), then that route table is deleted as part of the migration.
 
+### Node Subnet Cluster Upgrade
+
+Update an existing Node Subnet cluster to use Azure CNI Overlay using the [`az aks update`][az-aks-update] command.
+
+```azurecli-interactive
+clusterName="myOverlayCluster"
+resourceGroup="myResourceGroup"
+location="westcentralus"
+
+az aks update --name $clusterName \
+--resource-group $resourceGroup \
+--network-plugin azure \
+--network-plugin-mode overlay 
+```
+
+> [!NOTE]
+> When upgrading Node Subnet, either only upgrade the IPAM networking mode or data plane. Upgrading both in a single operation is not supported.
 
 ## Upgrade to Azure CNI Powered by Cilium
 
@@ -81,9 +98,6 @@ Since the cluster is already using a private CIDR for pods which doesn't overlap
 > You can update an existing cluster to Azure CNI Powered by Cilium if the cluster meets the following criteria:
 >
 > - The cluster does not have any Windows node pools.
-> - The cluster is not using Azure CNI Node Subnet.
->   - New Node Subnet clusters are supported with Cilium.
-
 
 > [!NOTE]
 > When you enable Cilium in a cluster with a different network policy engine (Azure NPM or Calico), the network policy engine is uninstalled and replaced with Cilium. For more information, see [Uninstall Azure Network Policy Manager or Calico](./use-network-policies.md#uninstall-azure-network-policy-manager-or-calico).
