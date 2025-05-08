@@ -16,7 +16,7 @@ Azure Kubernetes Fleet Manager can be used to create and manage DNS-based multi-
 
 :::image type="content" source="./media/concepts-dns-load-balancing/fleet-dns-load-balance-conceptual.png" alt-text="A diagram showing a conceptual overview of how Fleet Manager supports DNS load balancing across three member clusters using Azure Traffic Manager and Kubernetes ServiceExport resources." lightbox="./media/concepts-dns-load-balancing/fleet-dns-load-balance-conceptual.png":::
 
-To deliver multi-cluster public load balancing with DNS, Fleet Manager utilizes [Azure Traffic Manager][traffic-manager-overview] with a [weighted routing profile][traffic-manager-weighted] to act as a frontend for `Services` exported from member clusters. Both layer 4 and 7 load balancing is possible using this capability.
+To deliver multi-cluster public load balancing with DNS, Fleet Manager utilizes [Azure Traffic Manager][traffic-manager-overview] with a [weighted routing profile][traffic-manager-weighted] to act as a frontend for `Services` exported from member clusters. It is possible to use this capability for both layer 4 and 7 load balancing.
 
 Fleet administrators use `kubectl` to create and configure `TrafficManagerProfile` and `TrafficManagerBackend` resources on the Fleet Manager hub cluster. The `TrafficManagerProfile` defines an Azure Traffic Manager Profile that includes [endpoint health monitoring][traffic-manager-health-check] configuration, with the associated `TrafficManagerBackend` defining the `Service` to be load balanced.
 
@@ -72,7 +72,7 @@ The important properties to understand include:
 
 * `spec/profile/name`: must match the corresponding `TrafficManagerProfile`.
 * `spec/backend/name`: must match the exported service name to load balance. 
-* `spec/weight`: optional weight (priority) to apply to this backend. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Traffic Manger Profile resource. For further information see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
+* `spec/weight`: optional weight (priority) to apply to this backend. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Traffic Manger Profile resource. For further information, see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
 
 ## ServiceExport properties
 
@@ -90,11 +90,11 @@ metadata:
 
 The important properties to understand include:
 * `metadata/namespace`: must match the namespace of the `Service` to be exported.  
-* `metadata/annotations/networking.fleet.azure.com/weight`: optional weight (priority) to apply to this service export. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Service endpoint. For further information see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
+* `metadata/annotations/networking.fleet.azure.com/weight`: optional weight (priority) to apply to this service export. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Service endpoint. For further information, see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
 
 ## Unique DNS hostname via Service annotation
 
-In order to add a `Service` to the Traffic Manager it must have a unique DNS hostname. The DNS hostname can be set by following the AKS recommended method of using the `service.beta.kubernetes.io/azure-dns-label-name` annotation as shown.
+In order to add a `Service` to the Traffic Manager, it must have a unique DNS hostname. The DNS hostname can be set by following the AKS recommended method of using the `service.beta.kubernetes.io/azure-dns-label-name` annotation as shown.
 
 ```yml
 apiVersion: v1
@@ -116,7 +116,7 @@ spec:
   type: LoadBalancer
 ```
 
-The DNS label annotation can be overridden using the `ResourceOverride` feature of Fleet Manager making it possible to deploy unique host names across multiple clusters. For more information, see the [DNS load balancing how-to guide](./howto-dns-load-balancing.md).
+The DNS label annotation can be overridden using the `ResourceOverride` feature of Fleet Manager making it possible to deploy unique host names across multiple clusters. For further information, see the [DNS load balancing how-to guide](./howto-dns-load-balancing.md).
 
 ## Controlling traffic routing
 
@@ -141,7 +141,7 @@ To evenly distribute traffic across clusters use the definitions shown.
         name: app
     ```
 
-1. On each cluster create a `ServiceExport` and omit the `weight` property.
+1. On each cluster, create a `ServiceExport` and omit the `weight` property.
 
     ```yml
     apiVersion: networking.fleet.azure.com/v1alpha1
@@ -151,7 +151,7 @@ To evenly distribute traffic across clusters use the definitions shown.
       namespace: kuard-demo
     ```
 
-Once deployed, traffic will be evenly distributed across each cluster with a `ServiceExport` resource.
+Once deployed, traffic is evenly distributed across each cluster with a `ServiceExport` resource.
 
 ### Distribute traffic across clusters with different weights
 
@@ -187,7 +187,7 @@ To distribute traffic across clusters with different weights, set the `weight` p
 
 ### Exclude a cluster from traffic routing
 
-To exclude a cluster from traffic routing, set the `weight` property to `0` on the `ServiceExport` resource. This will remove the endpoint from the Traffic Manager configuration.
+To exclude a cluster from traffic routing, set the `weight` property to `0` on the `ServiceExport` resource. This weight removes the endpoint from the Traffic Manager configuration.
 
 ```yml
 apiVersion: networking.fleet.azure.com/v1alpha1
