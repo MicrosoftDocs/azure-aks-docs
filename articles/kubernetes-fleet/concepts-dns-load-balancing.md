@@ -52,6 +52,8 @@ The important properties to understand include:
 
 ## TrafficManagerBackend properties
 
+The `TrafficManagerBackend` resource provides a Kubernetes object representation of a standard Azure Traffic Manager endpoint.
+
 ```yml
 apiVersion: networking.fleet.azure.com/v1beta1
 kind: TrafficManagerBackend
@@ -70,38 +72,11 @@ The important properties to understand include:
 
 * `spec/profile/name`: must match the corresponding `TrafficManagerProfile`.
 * `spec/backend/name`: must match the exported service name to load balance. 
-* `spec/weight`: optional weight (priority) to apply to this backend configuration. Integer value between 1 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. For further information see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
+* `spec/weight`: optional weight (priority) to apply to this backend. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Traffic Manger Profile resource. For further information see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
 
-## Unique DNS hostname via Service annotation
+## ServiceExport properties
 
-In order to add a `Service` to the Traffic Manager it must have a unique DNS hostname. The DNS hostname can be set by following the AKS recommended method of using the `service.beta.kubernetes.io/azure-dns-label-name` annotation as shown.
-
-
-```yml
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: kuard-svc
-      namespace: kuard-demo
-      labels:
-        app: kuard
-      annotations:
-        service.beta.kubernetes.io/azure-dns-label-name: kuard-demo-cluster-01
-    spec:
-      selector:
-        app: kuard
-      ports:
-        - protocol: TCP
-          port: 80
-          targetPort: 80
-      type: LoadBalancer
-```
-
-The annotation can be overridden using the `ResourceOverride` feature of Fleet Manager making it possible to deploy unique host names across multiple clusters. See the [how-to guide for more information](./howto-dns-load-balancing.md).
-
-## Control cluster traffic via ServiceExport annotation
-
-In order to control flow of traffic between clusters, you can define a weight on the `ServiceExport`. Weights of all `ServiceExport` resources should add up to 100. The sample shown would ensure 50% of traffic is routed to the cluster with this `ServiceExport`.
+To add a `Service` to the Traffic Manager, create a `ServiceExport` resource on the member cluster. The `ServiceExport` resource must be created in the same namespace as the `Service` to be exported.
 
 ```yml
 apiVersion: networking.fleet.azure.com/v1alpha1
@@ -113,9 +88,122 @@ metadata:
     networking.fleet.azure.com/weight: "50"
 ```
 
-## Deletion behavior
+The important properties to understand include:
+* `metadata/namespace`: must match the namespace of the `Service` to be exported.  
+* `metadata/annotations/networking.fleet.azure.com/weight`: optional weight (priority) to apply to this service export. Integer value between 0 and 1,000. If omitted, Traffic Manager uses a default weight of '1'. Set to '0' to disable traffic routing without deleting the associated Service endpoint. For further information see [Azure Traffic Manager weighted routing method][traffic-manager-weighted].
+
+## Unique DNS hostname via Service annotation
+
+In order to add a `Service` to the Traffic Manager it must have a unique DNS hostname. The DNS hostname can be set by following the AKS recommended method of using the `service.beta.kubernetes.io/azure-dns-label-name` annotation as shown.
+
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: kuard-svc
+  namespace: kuard-demo
+  labels:
+    app: kuard
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: kuard-demo-cluster-01
+spec:
+  selector:
+    app: kuard
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+```
+
+The DNS label annotation can be overridden using the `ResourceOverride` feature of Fleet Manager making it possible to deploy unique host names across multiple clusters. For more information, see the [DNS load balancing how-to guide](./howto-dns-load-balancing.md).
+
+## Controlling traffic routing
+
+In this section we look at common scenarios for controlling traffic routing between clusters.
+
+### Evenly distribute traffic across clusters
+
+To evenly distribute traffic across clusters use the definitions shown.
+
+1. Create a `TrafficManagerBackend` resource and omit the `weight` property, which sets it to the default value of `1`.
+
+    ```yml
+    apiVersion: networking.fleet.azure.com/v1beta1
+    kind: TrafficManagerBackend
+    metadata:
+      name: app
+      namespace: work
+    spec:
+      profile:
+        name: myatm
+      backend:
+        name: app
+    ```
+
+1. On each cluster create a `ServiceExport` and omit the `weight` property.
+
+    ```yml
+    apiVersion: networking.fleet.azure.com/v1alpha1
+    kind: ServiceExport
+    metadata:
+      name: kuard-export
+      namespace: kuard-demo
+    ```
+
+Once deployed, traffic will be evenly distributed across each cluster with a `ServiceExport` resource.
+
+### Distribute traffic across clusters with different weights
+
+To distribute traffic across clusters with different weights, set the `weight` property on the `ServiceExport` resource. The sum of all weights must equal 100.
+
+1. Create a `TrafficManagerBackend` resource and set the `weight` property to `100`.
+
+    ```yml
+    apiVersion: networking.fleet.azure.com/v1beta1
+    kind: TrafficManagerBackend
+    metadata:
+      name: app
+      namespace: work
+    spec:
+      profile:
+        name: myatm
+      backend:
+        name: app
+      weight: 100
+    ```
+
+1. On each cluster create a `ServiceExport` and set the `weight` property to a value representing the priority Traffic Manager should use when considering the cluster to receive traffic.
+
+    ```yml
+    apiVersion: networking.fleet.azure.com/v1alpha1
+    kind: ServiceExport
+    metadata:
+      name: kuard-export
+      namespace: kuard-demo
+      annotations:
+        networking.fleet.azure.com/weight: "40"
+    ```
+
+### Exclude a cluster from traffic routing
+
+To exclude a cluster from traffic routing, set the `weight` property to `0` on the `ServiceExport` resource. This will remove the endpoint from the Traffic Manager configuration.
+
+```yml
+apiVersion: networking.fleet.azure.com/v1alpha1
+kind: ServiceExport
+metadata:
+  name: kuard-export
+  namespace: kuard-demo
+  annotations:
+    networking.fleet.azure.com/weight: "0"
+```
+
+## TrafficManagerProfile deletion behavior
 
 When a `TrafficManagerProfile` Kubernetes resource is deleted, the associated Azure Traffic Manager and its endpoints are also deleted and requests are no longer routed to clusters.
+
+If you wish to stop traffic routing but retain the Azure Traffic Manager and its endpoints, set the `weight` property to `0` on the `TrafficManagerBackend` resource. 
 
 ## Next steps
 
