@@ -126,7 +126,7 @@ In this section we look at common scenarios for controlling traffic routing betw
 
 To allow Traffic Manager to consider any cluster to receive traffic use the definitions shown.
 
-1. Create a `TrafficManagerBackend` resource and omit the `weight` property, which sets it to the default value of `1`.
+1. Create a `TrafficManagerBackend` resource and omit the `weight` property.
 
     ```yml
     apiVersion: networking.fleet.azure.com/v1beta1
