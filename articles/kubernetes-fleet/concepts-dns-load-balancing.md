@@ -52,7 +52,7 @@ The important properties to understand include:
 
 ## TrafficManagerBackend properties
 
-The `TrafficManagerBackend` resource provides a Kubernetes object representation of a standard Azure Traffic Manager endpoint.
+The `TrafficManagerBackend` resource provides a Kubernetes object that is used to store backend endpoints which can be considered by Traffic Manager to receive traffic. Before traffic is routed to an endpoint a `ServiceExport` must be created.
 
 ```yml
 apiVersion: networking.fleet.azure.com/v1beta1
@@ -76,7 +76,7 @@ The important properties to understand include:
 
 ## ServiceExport properties
 
-To add a `Service` to the Traffic Manager, create a `ServiceExport` resource on the member cluster. The `ServiceExport` resource must be created in the same namespace as the `Service` to be exported.
+To add an endpoint for a `Service` to Traffic Manager, create a `ServiceExport` resource on the member cluster containing the service. The `ServiceExport` resource must be created in the same namespace as the `Service` to be exported.
 
 ```yml
 apiVersion: networking.fleet.azure.com/v1alpha1
