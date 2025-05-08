@@ -122,9 +122,9 @@ The DNS label annotation can be overridden using the `ResourceOverride` feature 
 
 In this section we look at common scenarios for controlling traffic routing between clusters.
 
-### Evenly distribute traffic across clusters
+### Distribute traffic across clusters
 
-To evenly distribute traffic across clusters use the definitions shown.
+To allow Traffic Manager to consider any cluster to receive traffic use the definitions shown.
 
 1. Create a `TrafficManagerBackend` resource and omit the `weight` property, which sets it to the default value of `1`.
 
@@ -151,11 +151,11 @@ To evenly distribute traffic across clusters use the definitions shown.
       namespace: kuard-demo
     ```
 
-Once deployed, traffic is evenly distributed across each cluster with a `ServiceExport` resource.
+Once deployed, Traffic Manager will pick a cluster at random, considering all clusters of equal weight.
 
 ### Distribute traffic across clusters with different weights
 
-To distribute traffic across clusters with different weights, set the `weight` property on the `ServiceExport` resource. The sum of all weights must equal 100.
+To provide Traffic Manager with preference hints when selecting clusters, set the `weight` property on the `TrafficManagerBackend` and `ServiceExport` objects. 
 
 1. Create a `TrafficManagerBackend` resource and set the `weight` property to `100`.
 
@@ -173,7 +173,7 @@ To distribute traffic across clusters with different weights, set the `weight` p
       weight: 100
     ```
 
-1. On each cluster create a `ServiceExport` and set the `weight` property to a value representing the priority Traffic Manager should use when considering the cluster to receive traffic.
+1. Create a `ServiceExport` and set the `weight` property to a value representing the priority Traffic Manager should use when considering a cluster to receive traffic.
 
     ```yml
     apiVersion: networking.fleet.azure.com/v1alpha1
@@ -184,6 +184,8 @@ To distribute traffic across clusters with different weights, set the `weight` p
       annotations:
         networking.fleet.azure.com/weight: "40"
     ```
+
+Once deployed, Traffic Manager will preference clusters with a higher weight. It is not required that you set the weight value on every cluster. If you set the weight value the same on more than one cluster, Traffic Manager will consider those clusters equally.
 
 ### Exclude a cluster from traffic routing
 
