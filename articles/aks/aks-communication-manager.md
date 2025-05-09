@@ -114,7 +114,7 @@ The following query is for Node OS autoupgrade notifications:
 
 1. Make sure that an action group with the correct email address exists, so that you can receive the notifications.
 
-1. Make sure to give the **Read** role to the resource group and to the subscription to the MSI of the log search alert rule.
+1. Make sure to give the **Read** role to the resource group and to the subscription to the managed identify of the log search alert rule.
 
 1. Go to alert rule: **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
 
