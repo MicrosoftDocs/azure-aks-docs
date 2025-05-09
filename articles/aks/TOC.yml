@@ -191,7 +191,7 @@
               displayName: outbound, egress, private
         - name: Advanced Container Networking Services
           items:
-            - name: Advanced Container Networking Services (ACNS) overview
+            - name: Advanced Container Networking Services overview
               href: advanced-container-networking-services-overview.md
             - name: Container Network Observability overview
               href: container-network-observability-concepts.md
