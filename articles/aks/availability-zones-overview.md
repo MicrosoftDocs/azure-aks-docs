@@ -10,7 +10,7 @@ ms.author: dabossch
 
 # Availability zones in Azure Kubernetes Service (AKS)
 
-[Availability zones](/azure/reliability/availability-zones-overview) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
+[Availability zones](/azure/reliability/availability-zones-overview) in Azure Kubernetes Service (AKS) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
 
 Using AKS with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones doesn't incur additional costs.
 
@@ -57,7 +57,7 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 
 AKS automatically balances the number of nodes between zones.
 
-If a zonal outage occurs, nodes within the affected zone might be impacted, but nodes in other availability zones remain unaffected.
+If a zonal outage occurs, nodes within the affected zone might be affected, but nodes in other availability zones remain unaffected.
 
 To validate node locations, run the following command:
 
@@ -83,18 +83,18 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-z  --node-count 2 --zones 3
 ```
 
-This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or using the [cluster autoscaler](./cluster-autoscaler-overview.md).
+This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when you're using the [cluster autoscaler](./cluster-autoscaler-overview.md).
 
 > [!NOTE]
 > If a single workload is deployed across node pools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale-up operations.
 
 #### Regional (not using availability zones)
 
-Regional mode is used when the zone assignment isn't set in the deployment template (for example `"zones"=[]` or `"zones"=null`).
+Regional mode is used when the zone assignment isn't set in the deployment template (for example, `"zones"=[]` or `"zones"=null`).
 
 In this configuration, the node pool creates regional (not zone-pinned) instances and implicitly places instances throughout the region. There's no guarantee that instances are balanced or spread across zones, or that instances are in the same availability zone.
 
-In the rare case of a full zonal outage, any or all instances within the node pool might be impacted.
+In the rare case of a full zonal outage, any or all instances within the node pool might be affected.
 
 To validate node locations, run the following command:
 
@@ -113,7 +113,7 @@ aks-nodepool1-34917322-vmss000002   eastus   0
 
 ### Pods
 
-Kubernetes is aware of Azure availability zones, and can balance pods across nodes in different zones. In the event a zone becomes unavailable, Kubernetes moves pods away from impacted nodes automatically.
+Kubernetes is aware of Azure availability zones, and can balance pods across nodes in different zones. In the event a zone becomes unavailable, Kubernetes moves pods away from affected nodes automatically.
 
 As documented in the Kubernetes reference [Well-Known Labels, Annotations and Taints][kubernetes-well-known-labels], Kubernetes uses the `topology.kubernetes.io/zone` label to automatically distribute pods in a replication controller or service across the various available zones available.
 
@@ -155,7 +155,7 @@ spec:
 
 By default, Kubernetes versions 1.29 and later use Azure Managed Disks by using zone-redundant storage for Persistent Volume Claims.
 
-These disks are replicated between zones, in order to enhance the resilience of your applications. This action helps to safeguard your data against datacenter failures.
+These disks are replicated between zones, to enhance the resilience of your applications. This action helps to safeguard your data against datacenter failures.
 
 The following example shows a Persistent Volume Claim that uses Azure Standard SSD in zone-redundant storage:
 
@@ -174,7 +174,7 @@ spec:
       storage: 5Gi
 ```
 
-For zone-aligned deployments, you can create a new storage class with the `skuname` parameter set to **LRS** (locally redundant storage). You can then use the new storage class in your Persistent Volume Claim.
+For zone-aligned deployments, you can create a new storage class with the `skuname` parameter set to `LRS` (locally redundant storage). You can then use the new storage class in your Persistent Volume Claim.
 
 Although locally redundant storage disks are less expensive, they aren't zone-redundant, and attaching a disk to a node in a different zone isn't supported.
 
@@ -216,11 +216,11 @@ spec:
 
 ## Limitations
 
-The following limitations apply when using availability zones:
+The following limitations apply when you're using availability zones:
 
 * See [Quotas, virtual machine size restrictions, and region availability in AKS][aks-vm-sizes].
 * The number of availability zones used *can't be changed* after the node pool is created.
-* Most regions support availability zones. A list of regions can be found [here][zones].
+* Most regions support availability zones. [See a list of regions][zones].
 
 ## Related content
 
