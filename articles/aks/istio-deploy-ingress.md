@@ -228,7 +228,7 @@ Confirm that the sample application's product page is accessible. The expected o
 
 ### Annotations
 
-The following annotations can be added to the Kubernetes service for the external and internal ingress gateways:
+The following annotations can be added to the Kubernetes service for the external and internal ingress gateways. Note that annotations will only work when yamls are edited using kubectl apply. The Azure Service mesh addon controller will overwrite changes made via kubectl edit or other 3rd party tools like k9s:
 
 - `service.beta.kubernetes.io/azure-load-balancer-internal-subnet`: name of subnet to bind internal ingress gateway to. This subnet must exist in the same virtual network as the mesh.
 - `service.beta.kubernetes.io/azure-shared-securityrule`: for exposing the ingress gateway through an [augmented security rule][azure-nsg-docs].
