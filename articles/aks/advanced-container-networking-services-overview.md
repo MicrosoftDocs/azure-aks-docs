@@ -1,6 +1,6 @@
 ---
-title: Advanced Container Networking Services (ACNS) for the Azure Kubernetes Service (AKS)
-description: Discover how  Advanced Container Networking Services (ACNS) empowers your AKS clusters with Container Network Observability and Container Network Security features.
+title: Advanced Container Networking Services for the Azure Kubernetes Service (AKS)
+description: Discover how  Advanced Container Networking Services empowers your AKS clusters with Container Network Observability and Container Network Security features.
 author: Khushbu-Parekh
 ms.author: kparekh
 ms.service: azure-kubernetes-service
