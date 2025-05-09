@@ -80,7 +80,7 @@
           href: quickstart-resource-propagation.md
         - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
-        - name: Use automated deployments to drive multi-cluster resource placement
+        - name: Use Automated Deployments to drive multi-cluster resource placement
           href: howto-automated-deployments.md
         - name: Using envelope objects for reserved resource types
           href: quickstart-envelope-reserved-resources.md

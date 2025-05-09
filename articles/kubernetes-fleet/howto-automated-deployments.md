@@ -227,13 +227,13 @@ Pod Template:
 Events:                      <none>
 ```
 
-## Add Fleet Manager resource placement
+## Define cluster resource placement
 
-During preview you need to perform more steps to configure placement of your staged workload on to member clusters.
+During preview, to configure placement of your staged workload on to member clusters you can follow these steps.
 
 1. In the source code repository for your application, create a folder in the repository root called **fleet**.
 
-1. Create a new file `deploy-contoso-store-two-regions.yaml` in the new folder and add the contents shown. This sample deploys the `contoso-store` namespace across two clusters that must be in two different Azure regions. 
+1. Create a new file `deploy-contoso-ns-two-regions.yaml` in the **fleet** folder and add the contents shown. This sample deploys the `contoso-store` namespace across two clusters that must be in two different Azure regions. 
 
     ```yml
     apiVersion: placement.kubernetes-fleet.io/v1
@@ -260,10 +260,15 @@ During preview you need to perform more steps to configure placement of your sta
     ```yml
     DEPLOYMENT_MANIFEST_PATH: |
       ./virtual-worker.yaml
-      ./fleet/deploy-contoso-store-two-regions.yaml
+      ./fleet/deploy-contoso-ns-two-regions.yaml
     ```
 
-1. Commit the CRP and GitHub Action workflow file and observe how the workload is placed according to the policy defined in the CRP definition.
+1. Commit the new CRP manifest and updated GitHub Action workflow file.
+
+1. Check the workload is placed according to the policy defined in the CRP definition. You check either using the Azure portal or `kubectl` at the command line.
+
+:::image type="content" source="media/automated-deployments/fleet-auto-deploy-check-placement.png" alt-text="Screenshot of the Fleet Manager Resource Placements showing a successfully completed placement." lightbox="media/automated-deployments/fleet-auto-deploy-check-placement.png" :::
+
 
 ## Next steps
 

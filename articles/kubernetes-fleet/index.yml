@@ -6,10 +6,9 @@ metadata:
   title: Azure Kubernetes Fleet Manager
   description: Learn how to address multi-cluster and at-scale scenarios for Azure Kubernetes Service (AKS) clusters
   ms.service: azure-kubernetes-fleet-manager
-  ms.author: rayoflores
-  ms.custom: ignite-2023
+  ms.author: simonwaight
   ms.topic: landing-page
-  ms.date: 04/01/2024
+  ms.date: 05/09/2025
 landingContent:
   - title: About Azure Kubernetes Fleet Manager
     linkLists:
@@ -21,14 +20,14 @@ landingContent:
         links:
           - text: Fleets and member clusters
             url: concepts-fleet.md
-          - text: Scheduler and scheduling framework
-            url: concepts-scheduler-scheduling-framework.md
           - text: Update orchestration across multiple member clusters
             url: concepts-update-orchestration.md
-          - text: Kubernetes resource propagation from hub cluster to member clusters
+          - text: Kubernetes resource placement and management
             url: concepts-resource-propagation.md
-          - text: Multi-cluster layer-4 load balancing
-            url: concepts-l4-load-balancing.md
+          - text: Fleet Manager Automated Deployments overview
+            url: concepts-automated-deployments.md
+          - text: Multi-cluster DNS load balancing
+            url: concepts-dns-load-balancing.md
           - text: Frequently asked questions
             url: faq.md
 
@@ -59,13 +58,13 @@ landingContent:
     linkLists:
       - linkListType: quickstart
         links:
-          - text: Create a Fleet resource and join member clusters
+          - text: Create a Fleet Manager and join member clusters
             url: quickstart-create-fleet-and-members.md
       - linkListType: quickstart
         links:
-          - text: Access Fleet hub cluster Kubernetes API
-            url: access-fleet-hub-cluster-kubernetes-api.md
-      - linkListType: quickstart
-        links:
-          - text: Propagate Kubernetes resource objects from a Fleet resource to member clusters
+          - text: Use Fleet Manager to deploy workloads across multiple clusters
             url: quickstart-resource-propagation.md
+      - linkListType: tutorial
+        links:
+          - text: Use Automated Deployments to drive multi-cluster resource placement
+            url: howto-automated-deployments.md
