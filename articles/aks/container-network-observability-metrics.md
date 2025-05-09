@@ -1,6 +1,6 @@
 ---
-title: Container Network Observability - Advanced Container Networking Services (ACNS) for Azure Kubernetes Service (AKS)
-description: An overview of Advanced Container Networking Services'a Container Network Observability capabilities Azure Kubernetes Service (AKS).
+title: Node and Pod level Network metrics with Advanced Container Networking Services (ACNS)
+description: An overview of Metric capture feature under container network observability in  Azure Kubernetes Service (AKS).
 author: Khushbu-Parekh
 ms.author: kparekh
 ms.service: azure-kubernetes-service

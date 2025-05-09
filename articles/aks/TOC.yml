@@ -125,7 +125,7 @@
         - name: Monitor control plane metrics
           href: control-plane-metrics-monitor.md
         - name: Container Network Observability
-          href: container-network-observability-concepts.md
+          href: advanced-container-networking-services-overview.md
         - name: Monitor your AI inference service with the AI toolchain operator
           href: ai-toolchain-operator-monitoring.md
     - name: Security
@@ -193,8 +193,10 @@
           items:
             - name: Advanced Container Networking Services (ACNS) overview
               href: advanced-container-networking-services-overview.md
-            - name: Container Network Observability overview
-              href: container-network-observability-concepts.md
+            - name: Metrics
+              href: container-network-observability-metrics.md
+              name: Container Network Logs
+              href: container-network-observaility-containernetworklogs.md
             - name: FQDN based Filtering
               href: container-network-security-fqdn-filtering-concepts.md
             - name: Layer 7 Policy
