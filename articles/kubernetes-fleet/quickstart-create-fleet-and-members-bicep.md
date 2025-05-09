@@ -20,17 +20,9 @@ Get started with Azure Kubernetes Fleet Manager (Fleet) by using Bicep to create
 
 * Read the [conceptual overview of this feature](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-* An identity (user or service principal) with the following permissions on the Fleet and AKS resource types for completing the steps listed in this quickstart:
 
-  * Microsoft.ContainerService/fleets/read
-  * Microsoft.ContainerService/fleets/write
-  * Microsoft.ContainerService/fleets/members/read
-  * Microsoft.ContainerService/fleets/members/write
-  * Microsoft.ContainerService/fleetMemberships/read
-  * Microsoft.ContainerService/fleetMemberships/write
-  * Microsoft.ContainerService/managedClusters/read
-  * Microsoft.ContainerService/managedClusters/write
-  * Microsoft.ContainerService/managedClusters/listClusterUserCredential/action
+* [Install or upgrade Azure CLI](/cli/azure/install-azure-cli) to version `2.71.0` or later.
+    - Ensure **fleet** extension is updated to version `1.5.2` or higher.
 
 ## Create a Fleet resource
 
@@ -108,16 +100,16 @@ When creating a private access mode Kubernetes Fleet resource with a hub cluster
 - Fleet requires you to provide the subnet on which the Fleet hub cluster's node VMs will be placed. This can be done by setting `subnetId` in the `agentProfile` within the Fleet's `hubProfile`.
 -  The address prefix of the vnet **vnet_name** must not overlap with the AKS default service range of `10.0.0.0/16`.
 - When using an AKS private cluster, you have the ability to configure fully qualified domain names (FQDNs) and FQDN subdomains. This functionality doesn't apply to the private access mode type hub cluster.
-- Private access mode requires a `Network Contributor` role assignment on the agent subnet for Fleet's first party identity. This is **NOT** needed when creating private fleet using the `az fleet create` command because the CLI automatically creates the role assignment.
+- Private access mode requires a `Network Contributor` role assignment on the agent subnet for Fleet's first party service principal. This is **NOT** needed when creating private fleet using the `az fleet create` command because the CLI automatically creates the role assignment.
 
 1. Fetch Fleet's service principal object ID:
 
     ```azurecli-interactive
-    az ad sp show --id "609d2f62-527f-4451-bfd2-ac2c7850822c" --query id -o tsv
+    az ad sp list --display-name "Azure Kubernetes Service - Fleet RP" --query
     ```
 
     ```output
-    f3d1f4a8-1a2c-470a-8f8a-79bcfb2b5db1
+    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     ```
 
 2. Deploy the Bicep with service principal object ID from Step 1:

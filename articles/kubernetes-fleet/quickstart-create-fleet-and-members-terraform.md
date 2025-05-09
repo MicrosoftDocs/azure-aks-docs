@@ -20,18 +20,6 @@ Get started with Azure Kubernetes Fleet Manager (Fleet) by using Terraform to cr
 
 * Read the [conceptual overview of this feature](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
-* An identity (user or service principal) with the following permissions on the Fleet and AKS resource types for completing the steps listed in this quickstart:
-
-  * Microsoft.ContainerService/fleets/read
-  * Microsoft.ContainerService/fleets/write
-  * Microsoft.ContainerService/fleets/members/read
-  * Microsoft.ContainerService/fleets/members/write
-  * Microsoft.ContainerService/fleetMemberships/read
-  * Microsoft.ContainerService/fleetMemberships/write
-  * Microsoft.ContainerService/managedClusters/read
-  * Microsoft.ContainerService/managedClusters/write
-  * Microsoft.ContainerService/managedClusters/listClusterUserCredential/action
-
 * [Install and configure Terraform](/azure/developer/terraform/quickstart-configure).
 
 ## Create a Fleet resource
