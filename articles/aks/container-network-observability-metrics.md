@@ -1,8 +1,8 @@
 ---
 title: Node and Pod level Network metrics with Advanced Container Networking Services (ACNS)
 description: An overview of Metric capture feature under container network observability in  Azure Kubernetes Service (AKS).
-author: Khushbu-Parekh
-ms.author: kparekh
+author: shaifaligargmsft
+ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article

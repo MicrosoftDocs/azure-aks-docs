@@ -1,8 +1,8 @@
 ---
 title: Container Network Logs with Advanced Container Networking Services (ACNS)
 description: An overview of Container Network Logs capabilities on Azure Kubernetes Service (AKS).
-author: shaifali garg
-ms.author: shaifali garg
+author: shaifaligargmsft
+ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
@@ -40,14 +40,14 @@ For long-term storage and comprehensive analysis, it is recommended to configure
 
 ### Supported Plans
 
-For container network logs, both Analytics and Basic table plans are supported. For more detailed information on table plans, refer to the ([Azure Monitor Logs Documentation](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-platform-logs)).
+For container network logs, both Analytics and Basic table plans are supported. For more detailed information on table plans, refer to the ([Azure Monitor Logs Documentation](https://learn.microsoft.com/azure/azure-monitor/logs/data-platform-logs)).
 
 ## Simple Visualization in Azure Monitor and Grafana dashboards
 
 ### Visualization of Container Network logs in Azure portal
 
 User can visualize, query and analyze Flow logs in azure portal in azure log analytics workspace of their cluster:
-[![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
+[![Snapshot of Container Network Logs in Azure log analytics.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
 
 ### Visualization of Container Network logs in Grafana Dashboards
 

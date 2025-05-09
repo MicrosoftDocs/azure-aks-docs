@@ -1,8 +1,8 @@
 ---
 title: "Set up Container Network Logs with Advanced Container Networking Services (Preview)"
 description: Enabling Container Network Flow logs with storage in AKS"
-author: shaifali garg
-ms.author: shaifali garg
+author: shaifaligargmsft
+ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
@@ -10,9 +10,9 @@ ms.date: 09/05/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up Container Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana
+# Set up Container Network Logs with Advanced Container Networking Services
 
-This document is designed to provide clear steps for configuring and utilizing Container Network Logs feature using Advanced Container Networking Services (ACNS).  These logs offer persistent network flow monitoring tailored to enhance visibility within containerized environments. By capturing Container Network Logs , you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate Container Network Logs for your system. For more information about Container Network Logs Feature, see 
+This document is designed to provide clear steps for configuring and utilizing Container Network Logs feature using Advanced Container Networking Services (ACNS). These logs offer persistent network flow monitoring tailored to enhance visibility within containerized environments. By capturing Container Network Logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate Container Network Logs for your system. For more information about Container Network Logs Feature, see 
  [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
 
 ## Prerequisites
@@ -20,7 +20,7 @@ This document is designed to provide clear steps for configuring and utilizing C
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-*  The minimum version of Azure CLI required for the steps in this article is 2.71.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+*  The minimum version of Azure CLI required for the steps in this article is 2.71.0. To find the version, Run `az --version` . If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 * Container Network Log is available for Cilium Data planes only. 
 
@@ -56,9 +56,9 @@ Once the feature shows `Registered`, refresh the registration of the `Microsoft.
 ### Enable Advanced Container Networking Services on a new cluster
 
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompass:
-* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./container-network-observability-concepts.md).
+* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
 
-* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+* **Container Network Security:** Offers security features like Fully Qualified Domain filtering(FQDN). To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 #### [**Cilium**](#tab/cilium)
 
@@ -88,7 +88,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> Conatiner Network Logs feature is not available for Non-Cilium clusters.
+> Containers Network Logs feature isn't available for Non-Cilium clusters.
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -107,11 +107,11 @@ az aks create \
 
 ---
 ### Configuring Container Network Logs 
-Container Network Logs is part of the Advanced Container Networking Services feature and are enabled by default. The additional step required is to configure filters for collection of logs by appling a Custom Resource Definition (CRD). 
+Container Network Logs is part of the Advanced Container Networking Services feature. It is enabled by default. One additional step required is to configure filters for collection of logs by applying a Custom Resource Definition (CRD). 
 When ACNS is enabled and at least one CRD is applied, container network logs are collected and stored on the host node as /var/log/acns/hubble/event.log.
  
 - Creating and configuring the CRD of type RetinaNetworkFlowLog:
- Logging can be configured using Custom Resource Definitions (CRDs) of type "RetinaNetworkFlowLog" to filter logs for collection at the source by namespace, pod, service, port, protocol, or verdict. Users must apply at least one CRD with non-empty filters to trigger log collection by ACNS. At one instance, any cluster can have multiple CRDs. If there would be no CRD applied, there would not be any logs saved at /var/log/acns/hubble.
+ Logging can be configured using Custom Resource Definitions (CRDs) of type "RetinaNetworkFlowLog" to filter logs for collection at the source by namespace, pod, service, port, protocol, or verdict. Users must apply at least one CRD with non-empty filters to trigger log collection by ACNS. At one instance, any cluster can have multiple CRDs. If there would be no CRD applied, there wouldn't be any logs saved at /var/log/acns/hubble.
 This sample CRD demonstrates how to configure Retina network flow logs:
 
 ```azurecli-interactive
@@ -137,14 +137,14 @@ spec:
         - dropped
 ```
 
-- Apply RetinaNetworkFlowLog CRD to enable log collection at cluster with this command :
+- Apply RetinaNetworkFlowLog CRD to enable log collection at cluster with this command:
 
 ```azurecli-interactive
 kubectl apply -f <crd.yaml>
 ```
-Logs stored Locally on host nodes are temporary, as the host or node itself is not a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis, it is recommended to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
+Logs stored Locally on host nodes are temporary, as the host or node itself isn't a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis, it is recommended to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
 
-### Configuring Azure Monitor agent to scrap logs in azure log analytics workspace for new cluster
+### Configuring Azure Monitor agent to scrap logs in Azure log analytics workspace for new cluster
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -171,7 +171,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
 
 
 > [!NOTE]
@@ -185,7 +185,8 @@ az aks update \
 ```
 
 ### Configuring Container Network Logs with Azure Monitor Agent on existing cluster
-To enable the container network logs on existing cluster, please follow following steps:
+
+To enable the container network logs on existing cluster, follow these steps:
 1. Check if monitoring addon is already enabled on that cluster with following command
    ```azurecli-interactive
     az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
@@ -219,7 +220,7 @@ Validate if Retina Network flow log capability is enabled with following command
 ```azurecli-interactive
    az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME
 ```
-Expected Output for for above is :
+Expected Output from command above is:
 [![Screenshot showing Retina Network flow log is enabled at azure monitor.](./media/advanced-container-networking-services/enableretinaflowlogstrue.png)](./media/advanced-container-networking-services/enableretinaflowlogstrue.png#lightbox)
 
 Validate if CRD of type RetinaNetworkFlowLog is applied 
@@ -229,15 +230,15 @@ Validate if CRD of type RetinaNetworkFlowLog is applied
 Expected Output with sample CRD provided above is – 
 [![Screenshot showing Retina Network flow log is enabled at azure monitor.](./media/advanced-container-networking-services/enableretinaflowlogstrue.png)](./media/advanced-container-networking-services/CRDappliedsuccessfuly.png#lightbox)
 
-### Visualisation of Container Network Logs in Azure portal. 
+### Visualization of Container Network Logs in Azure portal. 
 
-User can visualise, query and analyse Flow logs in azure portal in azure log analytics workspace of their cluster:
+User can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
 [![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
 
-### Visualisation of Container Network Logs in Grafana Dashboards 
+### Visualization of Container Network Logs in Grafana Dashboards 
 
-User can visualise Container Network logs for analysis with Azure Managed Grafana and with BYO Grafana. For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS, refer [Setting up Grfana](articles/aks/container-network-observability-how-to.md)
-To simplify the analysis of these, we provide preconfigured Azure Managed Grafana dashboards. You can find them under the Dashboards > Azure Managed Prometheus folder, with filename "Kubernetes/Networking/Flow Logs”. Following is the snapshot of the Flow log dashboard. 
+User can visualize Container Network logs for analysis with Azure Managed Grafana and with BYO Grafana. For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS, refer [Setting up Grfana](articles/aks/container-network-observability-how-to.md#visualisation)
+To simplify the analysis of logs, we provide preconfigured Azure Managed Grafana dashboards. You can find them under the Dashboards > Azure Managed Prometheus folder, with filename "Kubernetes/Networking/Flow Logs”. Following is the snapshot of the Flow log dashboard. 
 
 [![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
 

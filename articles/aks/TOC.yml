@@ -195,7 +195,7 @@
               href: advanced-container-networking-services-overview.md
             - name: Metrics
               href: container-network-observability-metrics.md
-              name: Container Network Logs
+            - name: Container Network Logs
               href: container-network-observaility-containernetworklogs.md
             - name: FQDN based Filtering
               href: container-network-security-fqdn-filtering-concepts.md
