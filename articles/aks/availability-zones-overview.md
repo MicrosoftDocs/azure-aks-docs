@@ -224,10 +224,10 @@ The following limitations apply when you're using availability zones:
 
 ## Related content
 
-* Learn about [system node pool](/azure/aks/use-system-pools)
-* Learn about [user node pools](/azure/aks/create-node-pools)
-* Learn about [load balancers](/azure/aks/load-balancer-standard)
-* [Best practices for business continuity and disaster recovery in AKS][best-practices-multi-region]
+* Learn about [system node pools](/azure/aks/use-system-pools).
+* Learn about [user node pools](/azure/aks/create-node-pools).
+* Learn about [load balancers](/azure/aks/load-balancer-standard).
+* Get [best practices for business continuity and disaster recovery in AKS][best-practices-multi-region].
 
 <!-- LINKS - external -->
 [kubernetes-well-known-labels]: https://kubernetes.io/docs/reference/labels-annotations-taints/
