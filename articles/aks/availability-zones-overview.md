@@ -26,7 +26,7 @@ This diagram shows the Azure resources that are created when you create an AKS c
 
 Microsoft hosts the [AKS control plane](/azure/aks/core-aks-concepts#control-plane), the Kubernetes API server, and services such as `scheduler` and `etcd` as a managed service. Microsoft replicates the control plane in multiple zones.
 
-Other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_*, for managed cluster and contains the following resources:
+Other resources of your cluster deploy in a managed resource group in your Azure subscription. By default, this resource group is prefixed with *MC_* for *managed cluster* and contains the resources mentioned in the following sections.
 
 ### Node pools
 
@@ -57,7 +57,7 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 
 AKS automatically balances the number of nodes between zones.
 
-If a zonal outage occurs, nodes within the affected zone can be impacted, but nodes in other availability zones remain unaffected.
+If a zonal outage occurs, nodes within the affected zone might be impacted, but nodes in other availability zones remain unaffected.
 
 To validate node locations, run the following command:
 
@@ -83,7 +83,7 @@ az aks nodepool add --resource-group example-rg --cluster-name example-cluster -
 az aks nodepool add --resource-group example-rg --cluster-name example-cluster --name userpool-z  --node-count 2 --zones 3
 ```
 
-This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or when using the [cluster autoscaler](./cluster-autoscaler-overview.md).
+This configuration can be used when you need [lower latency between nodes](/azure/aks/reduce-latency-ppg). It also provides more granular control over scaling operations, or using the [cluster autoscaler](./cluster-autoscaler-overview.md).
 
 > [!NOTE]
 > If a single workload is deployed across node pools, we recommend setting `--balance-similar-node-groups`  to `true` to maintain a balanced distribution of nodes across zones for your workloads during scale-up operations.
@@ -94,7 +94,7 @@ Regional mode is used when the zone assignment isn't set in the deployment templ
 
 In this configuration, the node pool creates regional (not zone-pinned) instances and implicitly places instances throughout the region. There's no guarantee that instances are balanced or spread across zones, or that instances are in the same availability zone.
 
-In the rare case of a full zonal outage, any or all instances within the node pool can be impacted.
+In the rare case of a full zonal outage, any or all instances within the node pool might be impacted.
 
 To validate node locations, run the following command:
 
@@ -123,7 +123,7 @@ To see which pods and nodes are running, run the following command:
   kubectl describe pod | grep -e "^Name:" -e "^Node:"
 ```
 
-The `maxSkew` parameter describes the degree to which pods might be unevenly distributed. Assuming three zones and three replicas, setting this value to 1 ensures that each zone has at least one pod running:
+The `maxSkew` parameter describes the degree to which pods might be unevenly distributed. Assuming three zones and three replicas, setting this value to `1` ensures that each zone has at least one pod running:
 
 ```yaml
 apiVersion: apps/v1
