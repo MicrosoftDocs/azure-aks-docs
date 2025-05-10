@@ -6,48 +6,35 @@ ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
-ms.date: 05/10/2024
+ms.date: 10/10/2025
 ---
 
-# What is Container Network Observability?
+## Overview of Metric Capture in ACNS under Container Network Observability
+The metric capture feature within Advanced Container Networking Services (ACNS) in Azure Kubernetes Service (AKS) is designed to provide deep visibility into the networking performance of containerized environments. It continuously collects a variety of critical metrics at both the node and pod levels. These metrics encompass important networking aspects such as traffic volume, dropped packets, connection states, and DNS resolution times.
 
-Container Network Observability is a feature of the [Advanced Container Networking Services](advanced-container-networking-services-overview.md) suite. It equips you with next-level monitoring and diagnostics tools, providing unparalleled visibility into your containerized workloads. These tools empower you to pinpoint and troubleshoot network issues with ease, ensuring optimal performance for your applications.
+The ability to capture these metrics is essential for understanding how containers communicate, how traffic flows between services, and where bottlenecks or disruptions might be occurring. ACNS integrates seamlessly with monitoring tools like Prometheus and Grafana, providing users with a complete view of networking metrics that can be used for in-depth troubleshooting, network optimization, and performance tuning.
 
-Container Network Observability is compatible with all Linux workloads seamlessly integrating with Hubble regardless of whether the underlying data plane is Cilium or non-Cilium (both are supported) ensuring flexibility for your container networking needs.
+In today’s cloud-native world, maintaining a healthy and efficient network in a dynamic containerized environment is vital to ensuring that applications perform as expected. Without proper visibility into network traffic and its patterns, identifying potential issues or inefficiencies becomes challenging.
 
-:::image type="content" source="./media/advanced-container-networking-services/advanced-network-observability.png" alt-text="Diagram of Container Network Observability.":::
+### Key Benefits of Metric Capture
+1. Deep Visibility into Network Performance
+1. Enhanced Troubleshooting and Optimization
+1. Proactive Anomaly Detection
+1. Better Resource Management and Scaling
+1. Capacity Planning and Compliance
+1. Simplified Metrics Storage and Visualization Options:
+   Choose between:
+  * **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
+  * **Bring Your Own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.
 
-> [!NOTE]
-> For Cilium data plane scenarios, Container Network Observability is available beginning with Kubernetes version 1.29.
-> Container Network Observability is supported on all Linux distributions including Azure Linux beginning with version 2.0.
 
-## Features of Container Network Observability
+## Type of Metrics Captured 
 
 Container Network Observability offers the following capabilities to monitor network-related issues in your cluster:
 
 * **Node-Level Metrics:** Understanding the health of your container network at the node-level is crucial for maintaining optimal application performance. These metrics provide insights into traffic volume, dropped packets, number of connections, etc. by node. The metrics are stored in Prometheus format and, as such, you can view them in Grafana.
 
-* **Hubble Metrics (DNS and Pod-Level Metrics):** These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors and DNS requests missing responses.
-
-* **Hubble Flow Logs:** Flow logs provide deep visibility into your cluster's network activity. All communications to and from pods are logged allowing you to investigate connectivity issues over time. Flow logs help answer questions such as: did the server receive the client's request? What is the round-trip latency between the client's request and server's response?
-
-  * **Hubble CLI:** The Hubble Command-Line Interface (CLI) can retrieve flow logs across the entire cluster with customizable filtering and formatting.
-
-  * **Hubble UI:** Hubble UI is a user-friendly browser-based interface for exploring cluster network activity. It creates a service-connection graph based on flow logs, and displays flow logs for the selected namespace. Users are responsible for provisioning and managing the infrastructure required to run Hubble UI.
-
-## Key Benefits of Container Network Observability
-
-* **CNI-Agnostic**: Supported on all Azure CNI variants including kubenet.
-
-* **Cilium and Non-Cilium**: Provides a uniform, seamless experience across both Cilium and non-Cilium data planes.
-
-* **eBPF-Based Network Observability:** Leverages eBPF (extended Berkeley Packet Filter) for performance and scalability to identify potential bottlenecks and congestion issues before they impact application performance. Gain insights into key network health indicators, including traffic volume, dropped packets, and connection information.
-
-* **Deep Visibility into Network Activity:** Understand how your applications are communicating with each other through detailed network flow logs.
-
-* **Simplified Metrics Storage and Visualization Options**: Choose between:
-  * **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
-  * **Bring Your Own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.
+* **Hubble Metrics (DNS and Pod-Level Metrics):** These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors, and DNS requests missing responses.
 
 ## Metrics
 
@@ -60,7 +47,7 @@ The following metrics are aggregated per node. All metrics include labels:
 
 #### [**Cilium**](#tab/cilium)
 
-For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux, Windows is currently not supported.
+For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux. Windows is currently not supported.
 Cilium exposes several metrics including the following used by Container Network Observability.
 
 | Metric Name                    | Description                  | Extra Labels          |Linux | Windows |
@@ -76,7 +63,7 @@ For non-Cilium data plane scenarios, Container Network Observability provides me
 The table below outlines the different metrics generated.
 
 > [!NOTE]
-> Due to an identified bug, TCP resets are temporarily not visible. As a result, the networkobservability_tcp_flag_counters metric will not be published during this period. Our team is actively working on resolving this issue, and we will provide updates once the fix is implemented. We apologize for any inconvenience and appreciate your patience.
+> Due to an identified bug, TCP resets are temporarily not visible. As a result, the networkobservability_tcp_flag_counters metric will not be published during this period. Our team is actively working on resolving this issue, and we provide updates once the fix is implemented. We apologize for any inconvenience and appreciate your patience.
 
 | Metric Name                                    | Description | Extra Labels | Linux | Windows |
 |------------------------------------------------|-------------|--------------|-------|---------|
@@ -134,6 +121,9 @@ Azure managed Prometheus and Grafana impose service-specific scale limitations. 
 
 ## Next steps
 
-* To create an AKS cluster with Container Network Observability, see [Setup Container Network Observability for Azure Kubernetes Service (AKS)](container-network-observability-how-to.md).
+* To create an AKS cluster with Container Network Observability tp capture Metrics, see [Setup Container Network Observability for Azure Kubernetes Service (AKS)](container-network-observability-how-to.md).
+- For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [advanced-container-networking-services-overview](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
+- Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
+- Explore Container Network Security features in Advanced Container Networking Services in [What is Container Network Security?](./advanced-container-networking-services-overview.md#container-network-security).
 
 

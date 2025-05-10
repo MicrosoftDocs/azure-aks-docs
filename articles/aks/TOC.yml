@@ -898,6 +898,8 @@
           items:
             - name: Container Network Observability
               href: container-network-observability-how-to.md
+            - name: Container Network Logs
+              href: how-to-apply-containernetworklogs.md
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on

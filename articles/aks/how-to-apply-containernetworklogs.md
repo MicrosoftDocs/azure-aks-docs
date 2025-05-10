@@ -233,11 +233,11 @@ Expected Output with sample CRD provided above is –
 ### Visualization of Container Network Logs in Azure portal. 
 
 User can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
-[![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
+[![Snapshot of Flow Logs in Azure analytics.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
 
 ### Visualization of Container Network Logs in Grafana Dashboards 
 
-User can visualize Container Network logs for analysis with Azure Managed Grafana and with BYO Grafana. For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS, refer [Setting up Grfana](articles/aks/container-network-observability-how-to.md#visualisation)
+User can visualize Container Network logs for analysis with Azure Managed Grafana and with BYO Grafana. For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS, refer [Setting up Grfana](./container-network-observability-how-to.md#visualization)
 To simplify the analysis of logs, we provide preconfigured Azure Managed Grafana dashboards. You can find them under the Dashboards > Azure Managed Prometheus folder, with filename "Kubernetes/Networking/Flow Logs”. Following is the snapshot of the Flow log dashboard. 
 
 [![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
