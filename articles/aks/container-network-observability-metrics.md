@@ -9,7 +9,7 @@ ms.topic: concept-article
 ms.date: 10/10/2025
 ---
 
-## Overview of Metric Capture in ACNS under Container Network Observability
+# Overview of Metric Capture in ACNS under Container Network Observability
 The metric capture feature within Advanced Container Networking Services (ACNS) in Azure Kubernetes Service (AKS) is designed to provide deep visibility into the networking performance of containerized environments. It continuously collects a variety of critical metrics at both the node and pod levels. These metrics encompass important networking aspects such as traffic volume, dropped packets, connection states, and DNS resolution times.
 
 The ability to capture these metrics is essential for understanding how containers communicate, how traffic flows between services, and where bottlenecks or disruptions might be occurring. ACNS integrates seamlessly with monitoring tools like Prometheus and Grafana, providing users with a complete view of networking metrics that can be used for in-depth troubleshooting, network optimization, and performance tuning.
