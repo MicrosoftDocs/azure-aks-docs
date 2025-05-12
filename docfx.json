@@ -148,8 +148,8 @@
         "articles/aks/**/*.yml": "rayoflores"
       },
       "ms.reviewer": {
-        "articles/aks/**/*.md": "doveychase",
-        "articles/aks/**/*.yml": "doveychase"
+        "articles/aks/**/*.md": "davidsmatlak",
+        "articles/aks/**/*.yml": "davidsmatlak"
       },
       "featureFlags": {
         "articles/**/*.md": [
@@ -162,7 +162,7 @@
         ]
       },
       "ms.author": {
-        "articles/aks/**/*.md": "magoedte"
+        "articles/aks/**/*.md": "schaffererin"
       },
       "ms.service": {
         "articles/aks/**/*.md": "azure-kubernetes-service"
