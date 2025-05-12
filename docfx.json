@@ -161,6 +161,9 @@
           "azure"
         ]
       },
+      "ms.author": {
+        "articles/aks/**/*.md": "schaffererin"
+      },
       "ms.service": {
         "articles/aks/**/*.md": "azure-kubernetes-service"
       },
