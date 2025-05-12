@@ -294,6 +294,6 @@ For details on how to remove a cluster resource placement via the Azure portal o
 * To learn more about resource propagation, see the [open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
 
 <!-- LINKS -->
-[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-resource
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager-resource
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
