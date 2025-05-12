@@ -1,6 +1,6 @@
 ---
-title: Use Fleet Manager Automated Deployments to drive multi-cluster resource placement
-description: Learn how to use Fleet Manager Automated Deployments to build and deploy an application across multiple clusters.
+title: Use Azure Kubernetes Fleet Manager Automated Deployments to drive multi-cluster resource placement
+description: Learn how to use Azure Kubernetes Fleet Manager Automated Deployments to build and deploy an application across multiple clusters.
 author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
@@ -9,9 +9,9 @@ ms.date: 04/22/2025
 ms.service: azure-kubernetes-fleet-manager
 ---
 
-# Use Fleet Manager Automated Deployments to drive multi-cluster resource placement (Preview)
+# Use Azure Kubernetes Fleet Manager Automated Deployments to drive multi-cluster resource placement (Preview)
 
-Fleet Manager Automated Deployments can be used to build and deploy an application from a code repository to one or more AKS cluster in a fleet. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make runs the pipeline. 
+Azure Kubernetes Fleet Manager Automated Deployments can be used to build and deploy an application from a code repository to one or more AKS cluster in a fleet. Automated deployments simplify the process of setting up a GitHub Action workflow to build and deploy your code. Once connected, every new commit you make runs the pipeline. 
 
 Automated Deployments build on [draft.sh](https://draft.sh). When you create a new deployment workflow, you can use an existing Dockerfile, generate a Dockerfile, use existing Kubernetes manifests, or generate Kubernetes manifests. The generated manifests are created with security and resiliency best practices in mind.
 

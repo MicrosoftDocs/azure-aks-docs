@@ -25,18 +25,12 @@ The `ResourceOverride` API consists of the following components:
 
 A `ResourceOverride` object can include one or more resource selectors to specify which resources to override. The `ResourceSelector` object includes the following fields.
 
-> [!NOTE]
-> If you select a namespace in `ResourceSelector`, the override will apply to all resources in the namespace.
-
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
 * `kind`: The kind of the resource.
 * `namespace`: The namespace of the resource.
 
 To add a resource selector to a `ResourceOverride` object, use the `resourceSelectors` field with the following YAML format.
-
-> [!IMPORTANT]
-> The `ResourceOverride` object needs to be in the same namespace as the resource that you want to override.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -52,11 +46,15 @@ spec:
        name: test-nginx
 ```
 
+> [!IMPORTANT]
+> * If you select a namespace in `ResourceSelector`, the override applies to all resources in the namespace.
+> * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
+
 This example selects a `Deployment` object named `test-nginx` from the `test-namespace` namespace for overriding.
 
 ## Policy
 
-A `Policy` object consists of a set of rules, `overrideRules`, that specify the changes to apply to the selected resources. Each `overrideRules` object supports the following fields:
+A `Policy` object consists of a set of `overrideRules` that specify the changes to apply to the selected resources. Each `overrideRules` object supports the following fields:
 
 * `clusterSelector`: Specifies the set of clusters to which the override rule applies.
 * `jsonPatchOverrides`: Specifies the changes to apply to the selected resources.
@@ -124,11 +122,11 @@ The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by 
 
 ### Reserved Variables in the JSON Patch Override Value
 
-This is the list of reserved variables that will be replaced by the actual values used in the `value` of the JSON patch override rule:
+Reserved variables are replaced by value used in the `value` of the JSON patch override rule. Currently supported reserved variables:
 
-* `${MEMBER-CLUSTER-NAME}`:  will be replaced by the name of the `memberCluster` that represents this cluster.
+* `${MEMBER-CLUSTER-NAME}`: replaced by the name of the `memberCluster`.
 
-For example, to create a Azure DNS hostname that contains the name of the cluster, you can use a configuration similar to the following:
+For example, to create an Azure DNS hostname that contains the name of the cluster, you can use a configuration similar to:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -158,7 +156,7 @@ spec:
               {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
 ```
 
-The example `ResourceOverride` object will add a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
+The example `ResourceOverride` object adds a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
 
 ### Multiple override rules
 
@@ -282,7 +280,7 @@ This example replaces the container image in the `Deployment` object with:
 
 ### [Portal](#tab/azure-portal)
 
-1. On the Azure portal overview page for your Kubernetes Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
+1. On the Azure portal overview page for your Fleet Manager resource, in the **Fleet Resources** section, select **Resource placements**.
 
 1. Select **Create**.
 
@@ -321,7 +319,7 @@ This example replaces the container image in the `Deployment` object with:
 
     :::image type="content" source="./media/quickstart-resource-propagation/overview-cluster-resource-inline.png" lightbox="./media/quickstart-resource-propagation/overview-cluster-resource.png" alt-text="Screenshot of the Azure portal page for cluster resource placements, showing a successfully created placement.":::
 
-1. Verify that the cluster resource placement was applied to the selected resources by selecting the resource from the list and checking the status.
+1. Verify that the cluster resource placement is applied by selecting the CRP from the list and checking the placement status.
 
 ---
 
