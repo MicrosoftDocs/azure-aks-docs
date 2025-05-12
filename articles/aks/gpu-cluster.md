@@ -39,7 +39,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 ## Before you begin
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* You need the Azure CLI version 2.0.64 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* You need the Azure CLI version 2.72.2 or later installed to set the `--gpu-driver` field. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 ## Get the credentials for your cluster
 
@@ -54,7 +54,7 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 Using NVIDIA GPUs involves the installation of various NVIDIA software components such as the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), GPU driver installation, and more.
 
 > [!NOTE]
-> By default, Microsoft automatically maintains the version of the NVidia drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVidia drivers are installed by default on GPU capable nodes, you need to install the device plugin.
+> By default, Microsoft automatically maintains the version of the NVIDIA drivers as part of the node image deployment, and AKS ***supports and manages*** it. While the NVIDIA drivers are installed by default on GPU capable nodes, you need to install the device plugin.
 
 ### NVIDIA device plugin installation
 
@@ -127,20 +127,20 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 ---
 
-1. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
+2. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
 
     ```bash
-    kubectl create namespace gpu-operator
+    kubectl create namespace gpu-resources
     ```
 
-2. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
+3. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
 
     ```yaml
     apiVersion: apps/v1
     kind: DaemonSet
     metadata:
       name: nvidia-device-plugin-daemonset
-      namespace: kube-system
+      namespace: gpu-resources
     spec:
       selector:
         matchLabels:
@@ -163,7 +163,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
           # See https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/
           priorityClassName: "system-node-critical"
           containers:
-          - image: nvcr.io/nvidia/k8s-device-plugin:v0.15.0
+          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.0
             name: nvidia-device-plugin-ctr
             env:
               - name: FAIL_ON_INIT_ERROR
@@ -181,32 +181,20 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
               path: /var/lib/kubelet/device-plugins
     ```
 
-3. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
+4. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
     kubectl apply -f nvidia-device-plugin-ds.yaml
     ```
 
-4. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
+5. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
 
-### Skip GPU driver installation (preview)
+### Skip GPU driver installation
 
-If you want to control the installation of the NVidia drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVidia drivers as part of the node image deployment.
+If you want to control the installation of the NVIDIA drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVIDIA drivers as part of the node image deployment.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Register or update the aks-preview extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    # Register the aks-preview extension
-    az extension add --name aks-preview
-
-    # Update the aks-preview extension
-    az extension update --name aks-preview
-    ```
-
-2. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with the `--skip-gpu-driver-install` flag to skip automatic GPU driver installation.
+1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and set `--gpu-driver` field to `none` to skip default GPU driver installation.
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -214,27 +202,16 @@ If you want to control the installation of the NVidia drivers or use the [NVIDIA
         --cluster-name myAKSCluster \
         --name gpunp \
         --node-count 1 \
-        --skip-gpu-driver-install \
+        --gpu-driver none \
         --node-vm-size Standard_NC6s_v3 \
         --enable-cluster-autoscaler \
         --min-count 1 \
         --max-count 3
     ```
 
-    Adding the `--skip-gpu-driver-install` flag during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
+    Setting the `--gpu-driver` API field to `none` during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
 
-### Use NVIDIA GPU Operator with AKS
-
-The NVIDIA GPU Operator automates the management of all NVIDIA software components needed to provision GPU including driver installation, the [NVIDIA device plugin for Kubernetes](https://github.com/NVIDIA/k8s-device-plugin?tab=readme-ov-file), the NVIDIA container runtime, and more. Since the GPU Operator handles these components, it's not necessary to manually install the NVIDIA device plugin. This also means that the automatic GPU driver installation on AKS is no longer required.
-
-1. Skip automatic GPU driver installation by creating a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command with `--skip-gpu-driver-install`. Adding the `--skip-gpu-driver-install` flag during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
-
-2. Follow the NVIDIA documentation to [Install the GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html).
-
-3. Now that you successfully installed the GPU Operator, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
-
-> [!NOTE]
-> There might be additional considerations to take when using the NVIDIA GPU Operator and deploying on SPOT instances. Please refer to <https://github.com/NVIDIA/gpu-operator/issues/577>
+3. You can optionally install the NVIDIA GPU Operator following [these steps][nvidia-gpu-operator].
 
 ## Confirm that GPUs are schedulable
 
@@ -438,6 +415,7 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 [azureml-deploy]: /azure/machine-learning/how-to-deploy-managed-online-endpoints
 [azureml-triton]: /azure/machine-learning/how-to-deploy-with-triton
 [aks-container-insights]: monitor-aks.md#integrations
+[nvidia-gpu-operator]: nvidia-gpu-operator.md
 [advanced-scheduler-aks]: operator-best-practices-advanced-scheduler.md
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-register]: /cli/azure/feature#az-feature-register

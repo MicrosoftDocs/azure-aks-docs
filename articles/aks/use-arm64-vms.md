@@ -55,7 +55,7 @@ Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm6
    Limitations: 
    
     - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) enabled aren't supported with Ubuntu OS.
-    - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
+    - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.31+.
 
    Use the [`az aks nodepool add`][az-aks-nodepool-add] with `--enable-fips-image` and `--os-sku` parameters.
 
@@ -66,7 +66,7 @@ Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm6
            --name $ARM_NODE_POOL_NAME \
            --os-sku AzureLinux
            --enable-fips-image
-           --kubernetes-version 1.32
+           --kubernetes-version 1.31
            --node-count 3 \
            --node-vm-size Standard_D2pds_v5
     ```
@@ -77,7 +77,7 @@ Use [`az aks nodepool add`][az-aks-nodepool-add] to add a node pool with an Arm6
    Limitations: 
    
     - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) enabled aren't supported with Ubuntu OS.
-    - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.32+.
+    - Node pools with Arm64 VMs and [FIPS](./enable-fips-nodes.md) require kubernetes version 1.31+.
 
    Use [`az aks nodepool update`][az-aks-nodepool-update] command with the `--enable-fips-image` parameter to enable FIPS on an existing node pool.
 

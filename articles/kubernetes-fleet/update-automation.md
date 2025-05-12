@@ -2,13 +2,13 @@
 title: "Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager"
 description: Learn how to configure automated upgrades of Kubernetes and node images across multiple clusters by using Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 09/16/2024
+ms.date: 04/09/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ---
 
-# Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager (preview)
+# Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager
 
 Platform admins managing large number of clusters often have problems with staging the updates of multiple clusters (for example, upgrading node OS image or Kubernetes versions) in a safe and predictable way. To address this challenge, Azure Kubernetes Fleet Manager (Fleet) allows you to orchestrate updates across multiple clusters using update runs.
 
@@ -16,15 +16,13 @@ Update runs consist of stages, groups, and strategies and can be applied either 
 
 This article covers how to use auto-upgrade profiles to automatically trigger update runs when new Kubernetes or node image versions are made available. 
 
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
-
 ## Prerequisites
 
-* Read the [conceptual overview of auto-upgrade profiles](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles-preview), which provides an explanation of configurations referenced in this guide.
+* Read the [conceptual overview of auto-upgrade profiles](./concepts-update-orchestration.md#understanding-auto-upgrade-profiles), which provides an explanation of configurations referenced in this guide.
 
 * You must have a Fleet resource with one or more member clusters. If not, follow the [quickstart][fleet-quickstart] to create a Fleet resource and join Azure Kubernetes Service (AKS) clusters as members.
 
-* If you wish to use an update strategy you should configure one using the instructions in the [update run how-to article](./update-orchestration.md#create-an-update-run-using-update-strategies). You need the update strategy resource identifier to use with an auto-upgrade profile.
+* To use an update strategy, configure one using the instructions in the [update run how-to article](./update-orchestration.md#create-an-update-run-using-update-strategies). You need the update strategy resource identifier to use with an auto-upgrade profile.
 
 * Set the following environment variables:
 
@@ -37,9 +35,9 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
     export CLUSTER=<aks-cluster-name>
     ```
 
-* You need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* You need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.3.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -94,7 +92,7 @@ Use the [`az fleet autoupgradeprofile create`][az-fleet-autoupgradeprofile-creat
 You can create a disabled auto-upgrade profile by passing the `--disabled` argument when using the `create` command. In order to enable the auto-upgrade profile, you must reissue the entire `create` command and omit the `--disabled` argument.
 
 > [!NOTE]
-> Disabling an auto-upgrade profile that has an in-progress update run won't affect the existing update run which continues, however no further update runs are generated until the profile is re-enabled.
+> Disabling an auto-upgrade profile doesn't affect any in-progess update runs, however no new update runs are generated until you re-enable the profile.
 
 #### Stable channel Kubernetes updates
 
@@ -233,7 +231,7 @@ az fleet autoupgradeprofile delete \
 ---
 
 > [!NOTE]
-> Deleting an auto-upgrade profile for an in-progress update run won't affect the existing update run which continues.
+> Deleting an auto-upgrade profile doesn't affect any in-progress update runs.
 
 ## Validate auto-upgrade
 
@@ -260,6 +258,12 @@ az aks show \
 Once update runs finish, you can rerun these commands and view the updated versions that are deployed.
 
 ---
+
+## Use an auto-upgrade profile to generate an update run  
+
+When you create an auto-upgrade profile, your clusters can be on various versions of Kubernetes or node image. Depending on your selected auto-upgrade channel, it may be some time before a new Kubernetes or node image version triggers auto-upgrade to create and execute an update run. Auto-upgrade provides the `generate-update-run` command that generates a new update run using the current AKS-published Kubernetes or node image version.
+
+For more information on creating an on-demand update run from an auto-upgrade profile, see [generate an update run from an auto-upgrade profile](./update-orchestration.md#generate-an-update-run-from-an-auto-upgrade-profile).
 
 ## Next steps
 

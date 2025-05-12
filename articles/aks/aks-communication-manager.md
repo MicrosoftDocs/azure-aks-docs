@@ -1,22 +1,23 @@
 ---
 title: AKS Communication Manager 
-description: Start here to learn how to set up and receive notices in Azure Resource Notification for AKS Maintenance events. 
+description: Learn how to set up and receive notices in Azure Resource Notifications for Azure Kubernetes Service maintenance events. 
 ms.date: 10/16/2024
 ms.custom: aks communication manager
-ms.topic: conceptual
+ms.topic: concept-article
 author: kaarthis
 ms.author: kaarthis
 ms.subservice: aks-upgrade
 ---
 
 # Azure Kubernetes Service Communication Manager
-The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. You can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
+
+The Azure Kubernetes Service (AKS) Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notifications and Azure Resource Graph frameworks. This tool enables you to closely monitor your upgrades because it provides you with timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. You can set up notifications for all types of autoupgrades that utilize maintenance windows by following these steps.
 
 ## Prerequisites
 
-- Configure your cluster for either [Auto upgrade channel][aks-auto-upgrade] or [Node Auto upgrade channel][aks-node-auto-upgrade].
+- Configure your cluster for either [Autoupgrade channel][aks-auto-upgrade] or [Node autoupgrade channel][aks-node-auto-upgrade].
 
-- Create [Planned maintenance window][planned-maintenance] as mentioned here for your auto upgrade configuration. 
+- Create a [planned maintenance window][planned-maintenance] for your autoupgrade configuration.
 
 > [!NOTE]
 > Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation. 
@@ -128,18 +129,19 @@ Query for Node OS auto upgrade notifications:
 
     Choose the role Reader and assign it to the resource group. Repeat "Add role assignment" for the subscription.
 
+
 ### Verification
 
-Wait for the auto upgrader to start to upgrade the cluster. Then verify if you receive notices promptly on the email configured to receive these notices.
+To upgrade the cluster, wait for the autoupgrader to start. Then verify that you promptly receive notices on the email configured to receive notices.
 
-Check Azure Resource Graph database for the scheduled notification record. Each scheduled event notification should be listed as one record in the "containerserviceeventresources" table.
-!
+Check the Azure Resource Graph database for the scheduled notification record. Each scheduled event notification should be listed as one record in the `containerserviceeventresources` table.
 
-:::image type="content" source="./media/auto-upgrade-cluster/azure-resource-graph.jpeg" alt-text="Screenshot of how to look up Azure resource graph.":::
+:::image type="content" source="./media/auto-upgrade-cluster/azure-resource-graph.jpeg" alt-text="Screenshot that shows how to look up Azure Resource Graph.":::
 
-### Next Steps
-See how you can set up a [planned maintenance][planned-maintenance] window for your upgrades.
-See how you can optimize your [upgrades][upgrade-cluster].
+## Related content
+
+- See how you can set up a [planned maintenance][planned-maintenance] window for your upgrades.
+- See how you can optimize your [upgrades][upgrade-cluster].
 
 <!-- LINKS - internal -->
 [aks-auto-upgrade]: auto-upgrade-cluster.md

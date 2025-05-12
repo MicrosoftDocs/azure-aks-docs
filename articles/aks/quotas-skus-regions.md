@@ -2,7 +2,7 @@
 title: Limits for resources, SKUs, and regions in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn about the default quotas, restricted node VM SKU sizes, and region availability of the Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 01/12/2024
 author: nickomang
 ms.author: nickoman
@@ -55,14 +55,13 @@ The list of supported VM sizes in AKS is evolving with the release of new VM SKU
 
 ## Restricted VM sizes
 
-VM sizes with fewer than two CPUs may not be used with AKS.
-Each node in an AKS cluster contains a fixed amount of compute resources such as vCPU and memory. If an AKS node contains insufficient compute resources, pods might fail to run correctly. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, **don't use [B series VMs][b-series-vm] and the following VM SKUs in AKS on system node pools**:
+Each node in an AKS cluster contains a fixed amount of compute resources such as vCPU and memory. Due to the required compute resources needed to run Kubernetes correctly, certain VM SKU sizes are restricted by default in AKS. These restrictions are to ensure that pods can be scheduled and function correctly on these nodes.
 
-- Standard_A0
-- Standard_A1
-- Standard_A1_v2
-- Standard_F1
-- Standard_F1s
+### User nodepools
+For user nodepools, VM sizes with fewer than two vCPUs and two GBs of RAM (memory) may not be used.
+
+### System nodepools
+For system nodepools, VM sizes with fewer than two vCPUs and four GBs of RAM (memory) may not be used. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, it is recommonded to **not use any [B series VMs][b-series-vm] and [Av1 series VMs][a-series-vm]**.
 
 For more information on VM types and their compute resources, see [Sizes for virtual machines in Azure][vm-skus].
 
@@ -75,6 +74,10 @@ When a container image is very large (1 TiB or more), kubelet might not be able 
 ## Region availability
 
 For the latest list of where you can deploy and run clusters, see [AKS region availability][region-availability].
+
+## Smart VM Defaults
+
+As of May 2025, AKS will automatically select the optimal default VM SKU based on available capacity and quota if the parameter is unspecified during deployment. This ensures that deployments are matched with the best possible SKU, enhancing performance and reliability while optimizing resource utilization. Previously, the default AKS VM SKU was Standard_DS2_V2, but there are now dynamic outcomes in default provisioning based on SKU availability. This affects all new VM create operations.
 
 ## Cluster configuration presets in the Azure portal
 
@@ -115,5 +118,5 @@ You can increase certain default limits and quotas. If your resource supports an
 [vm-skus]: /azure/virtual-machines/sizes
 [nodepool-upgrade]: use-multiple-node-pools.md#upgrade-a-node-pool
 [b-series-vm]: /azure/virtual-machines/sizes-b-series-burstable
-
+[a-series-vm]: /azure/virtual-machines/sizes/retirement/av1-series-retirement
 

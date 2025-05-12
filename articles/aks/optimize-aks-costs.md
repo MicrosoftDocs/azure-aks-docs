@@ -152,3 +152,4 @@ To learn more about cost in AKS, see the following articles:
 
 * [Understand Azure Kubernetes Service (AKS) usage and costs](./understand-aks-costs.md)
 * [Best practices for cost optimization in Azure Kubernetes Service (AKS)](./best-practices-cost.md)
+* [Get Azure Kubernetes Service (AKS) cost recommendations in Azure Advisor](./cost-advisors.md)

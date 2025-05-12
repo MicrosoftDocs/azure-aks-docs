@@ -64,7 +64,7 @@ You must deploy the AKS cluster into an existing virtual network with a subnet t
 
 For more information, see [configuring cluster egress via user-defined routing](egress-udr.md).
 
-### Outbound type of `none` (Preview)
+### Outbound type of `none` 
 
 > [!IMPORTANT]  
 > The `none` outbound type is only available with [Network Isolated Cluster](concepts-network-isolated.md) and requires careful planning to ensure the cluster operates as expected without unintended dependencies on external services. For fully isolated clusters, see [isolated cluster considerations](concepts-network-isolated.md).  

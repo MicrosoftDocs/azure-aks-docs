@@ -3,9 +3,11 @@ title: Stateful workloads in Azure Kubernetes Service (AKS)
 description: Learn about running stateful workloads in Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 01/17/2025
+ms.date: 04/04/2025
 author: schaffererin
 ms.author: schaffererin
+ms.collection: 
+ - migration
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)
@@ -76,6 +78,13 @@ The following sections provide links to design and deployment information for st
 * [Apache Airflow stateful workload design overview](airflow-overview.md)
 * [Create the infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)](airflow-create-infrastructure.md)
 * [Configure and deploy Airflow on Azure Kubernetes Service (AKS)](airflow-deploy.md)
+
+### Apache Kafka with Strimzi
+
+* [Deploy a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi overview](kafka-overview.md)
+* [Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)](kafka-infrastructure.md)
+* [Configure and deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)](kafka-deploy.md)
+* [Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)](kafka-configure.md)
 
 ## Contributors
 

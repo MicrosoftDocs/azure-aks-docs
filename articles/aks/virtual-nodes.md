@@ -1,10 +1,9 @@
 ---
-title: Use virtual nodes
-titleSuffix: Azure Kubernetes Service
-description: Overview of how using virtual node with Azure Kubernetes Services (AKS)
-ms.topic: conceptual
+title: Use virtual nodes with Azure Kubernetes Service (AKS)
+description: How to create and configure an Azure Kubernetes Service (AKS) cluster to use virtual nodes.
+ms.topic: how-to
 ms.date: 11/06/2023
-ms.custom: references_regions
+ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
 ---
 
@@ -32,12 +31,16 @@ Pods running in Azure Container Instances (ACI) need access to the AKS API serve
 
 Virtual nodes functionality is heavily dependent on ACI's feature set. In addition to the [quotas and limits for Azure Container Instances](/azure/container-instances/container-instances-quotas), the following are scenarios not supported with virtual nodes or are deployment considerations:
 
-* Using service principal to pull ACR images. [Workaround](https://github.com/virtual-kubelet/azure-aci/blob/master/README.md#private-registry) is to use [Kubernetes secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line)
+* Using service principal to pull ACR images. [Workaround](https://github.com/virtual-kubelet/azure-aci/blob/master/README.md#private-registry) is to use [Kubernetes secrets](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/#create-a-secret-by-providing-credentials-on-the-command-line).
+
+    > [!IMPORTANT]
+    > Secrets built according to the Kubernetes documentation (for standard nodes) will not work with virtual nodes. A specific server format is required, as detailed in [`ImageRegistryCredential`- Azure Container Instances](/azure/templates/microsoft.containerinstance/2022-10-01-preview/containergroups?pivots=deployment-language-bicep#imageregistrycredential).
+
 * [Virtual Network Limitations](/azure/container-instances/container-instances-vnet) including VNet peering, Kubernetes network policies, and outbound traffic to the internet with network security groups.
-* Init containers
-* [Host aliases](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/)
-* [Arguments](/azure/container-instances/container-instances-exec#restrictions) for exec in ACI
-* [DaemonSets](concepts-clusters-workloads.md#statefulsets-and-daemonsets) won't deploy pods to the virtual nodes
+* Init containers.
+* [Host aliases](https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/).
+* [Arguments](/azure/container-instances/container-instances-exec#restrictions) for exec in ACI.
+* [DaemonSets](concepts-clusters-workloads.md#statefulsets-and-daemonsets) won't deploy pods to the virtual nodes.
 * To schedule Windows Server containers to ACI, you need to manually install the open source [Virtual Kubelet ACI](https://github.com/virtual-kubelet/azure-aci) provider.
 * Virtual nodes require AKS clusters with Azure CNI networking.
 * Using API server authorized ip ranges for AKS.

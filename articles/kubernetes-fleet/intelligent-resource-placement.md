@@ -283,7 +283,7 @@ spec:
 
 If you want to view the status of a placement, you can use either the Azure portal or the kubectl command.
 
-You can find details on how to view a placement's progress in [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-the-clusterresourceplacement-api-to-propagate-resources-to-member-clusters).
+You can find details on how to view a placement's progress in [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters).
 
 ## Clean up resources
 
@@ -294,6 +294,6 @@ For details on how to remove a cluster resource placement via the Azure portal o
 * To learn more about resource propagation, see the [open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
 
 <!-- LINKS -->
-[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-resource
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager-resource
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update

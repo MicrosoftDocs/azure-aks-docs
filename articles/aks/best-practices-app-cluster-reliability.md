@@ -16,8 +16,8 @@ The best practices in this article are organized into the following categories:
 
 | Category | Best practices |
 | -------- | -------------- |
-| [Deployment level best practices](#deployment-level-best-practices) | • [Pod Disruption Budgets (PDBs)](#pod-disruption-budgets-pdbs) <br/> • [Pod CPU and memory limits](#pod-cpu-and-memory-limits) <br/> • [Pre-stop hooks](#pre-stop-hooks) <br/> • [maxUnavailable](#maxunavailable) <br/> • [Pod topology spread constraints](#pod-topology-spread-constraints) <br/> • [Readiness, liveness, and startup probes](#readiness-liveness-and-startup-probes) <br/> • [Multi-replica applications](#multi-replica-applications) |
-| [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Accelerated Networking](#accelerated-networking) <br/> • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Premium Disks](#premium-disks) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
+| [Deployment level best practices](#deployment-level-best-practices) | • [Pod CPU and memory limits](#pod-cpu-and-memory-limits) <br/> • [Vertical Pod Autoscaler (VPA)](#vertical-pod-autoscaler-vpa) <br/> • [Pod Disruption Budgets (PDBs)](#pod-disruption-budgets-pdbs) <br/> • [High availability during upgrades](#high-availability-during-upgrades) <br/>• [Pod topology spread constraints](#pod-topology-spread-constraints) <br/> • [Readiness, liveness, and startup probes](#readiness-liveness-and-startup-probes) <br/> • [Multi-replica applications](#multi-replica-applications) |
+| [Cluster and node pool level best practices](#cluster-and-node-pool-level-best-practices) | • [Availability zones](#availability-zones) <br/> • [Cluster autoscaling](#cluster-autoscaling) <br/> • [Standard Load Balancer](#standard-load-balancer) <br/> • [System node pools](#system-node-pools) <br/> • [Upgrade configurations for node pools](#upgrade-configurations-for-node-pools) <br/>  • [Image versions](#image-versions) <br/> • [Azure CNI for dynamic IP allocation](#azure-cni-for-dynamic-ip-allocation) <br/> • [v5 SKU VMs](#v5-sku-vms) <br/> • [Do *not* use B series VMs](#do-not-use-b-series-vms) <br/> • [Premium Disks](#premium-disks) <br/> • [Container Insights](#container-insights) <br/> • [Azure Policy](#azure-policy) |
 
 ## Deployment level best practices
 
@@ -25,32 +25,6 @@ The following deployment level best practices help ensure high availability and 
 
 > [!NOTE]
 > Make sure you implement these best practices every time you deploy an update to your application. If not, you might experience issues with your application's availability and reliability, such as unintentional application downtime.
-
-### Pod Disruption Budgets (PDBs)
-
-> **Best practice guidance**
->
-> Use Pod Disruption Budgets (PDBs) to ensure that a minimum number of pods remain available during *voluntary disruptions*, such as upgrade operations or accidental pod deletions.
-
-[Pod Disruption Budgets (PDBs)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets) allow you to define how deployments or replica sets respond during voluntary disruptions, such as upgrade operations or accidental pod deletions. Using PDBs, you can define a minimum or maximum unavailable resource count. PDBs only affect the Eviction API for voluntary disruptions.
-
-For example, let's say you need to perform a cluster upgrade and already have a PDB defined. Before performing the cluster upgrade, the Kubernetes scheduler ensures that the minimum number of pods defined in the PDB are available. If the upgrade would cause the number of available pods to fall below the minimum defined in the PDBs, the scheduler schedules extra pods on other nodes before allowing the upgrade to proceed. If you don't set a PDB, the scheduler doesn't have any constraints on the number of pods that can be unavailable during the upgrade, which can lead to a lack of resources and potential cluster outages.
-
-In the following example PDB definition file, the `minAvailable` field sets the minimum number of pods that must remain available during voluntary disruptions. The value can be an absolute number (for example, *3*) or a percentage of the desired number of pods (for example, *10%*).
-
-```yaml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-   name: mypdb
-spec:
-   minAvailable: 3 # Minimum number of pods that must remain available during voluntary disruptions
-   selector:
-    matchLabels:
-      app: myapp
-```
-
-For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
 
 ### Pod CPU and memory limits
 
@@ -107,13 +81,76 @@ spec:
 
 For more information, see [Assign CPU Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/) and [Assign Memory Resources to Containers and Pods](https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/).
 
-### Pre-stop hooks
+### Vertical Pod Autoscaler (VPA)
 
 > **Best practice guidance**
 >
-> When applicable, use pre-stop hooks to ensure graceful termination of a container.
+> Use Vertical Pod Autoscaler (VPA) to automatically adjust CPU and memory requests for your pods based on their actual usage.
 
-A `PreStop` hook is called immediately before a container is terminated due to an API request or management event, such as preemption, resource contention, or a liveness/startup probe failure. A call to the `PreStop` hook fails if the container is already in a terminated or completed state, and the hook must complete before the TERM signal to stop the container is sent. The pod's termination grace period countdown begins before the `PreStop` hook is executed, so the container eventually terminates within the termination grace period.
+While not directly implemented through the pod YAML, the Vertical Pod Autoscaler (VPA) helps optimize resource allocation by automatically adjusting the CPU and memory requests for your pods. This ensures that your applications have the resources they need to run efficiently without overprovisioning or underprovisioning.
+
+VPA operates in three modes:
+- **Off**: Only provides recommendations without applying changes.
+- **Auto**: Automatically updates pod resource requests during pod restarts.
+- **Initial**: Sets resource requests only during pod creation.
+
+The following example shows how to configure a VPA resource in Kubernetes:
+
+```yaml
+apiVersion: autoscaling.k8s.io/v1
+kind: VerticalPodAutoscaler
+metadata:
+  name: my-vpa
+spec:
+  targetRef:
+    apiVersion: "apps/v1"
+    kind: Deployment
+    name: my-deployment
+  updatePolicy:
+    updateMode: "Auto" # Options: Off, Auto, Initial
+```
+
+For more information, see [Vertical Pod Autoscaler documentation](https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler).
+
+---
+
+### Pod Disruption Budgets (PDBs)
+
+> **Best practice guidance**
+>
+> Use Pod Disruption Budgets (PDBs) to ensure that a minimum number of pods remain available during *voluntary disruptions*, such as upgrade operations or accidental pod deletions.
+
+[Pod Disruption Budgets (PDBs)](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets) allow you to define how deployments or replica sets respond during voluntary disruptions, such as upgrade operations or accidental pod deletions. Using PDBs, you can define a minimum or maximum unavailable resource count. PDBs only affect the Eviction API for voluntary disruptions.
+
+For example, let's say you need to perform a cluster upgrade and already have a PDB defined. Before performing the cluster upgrade, the Kubernetes scheduler ensures that the minimum number of pods defined in the PDB are available. If the upgrade would cause the number of available pods to fall below the minimum defined in the PDBs, the scheduler schedules extra pods on other nodes before allowing the upgrade to proceed. If you don't set a PDB, the scheduler doesn't have any constraints on the number of pods that can be unavailable during the upgrade, which can lead to a lack of resources and potential cluster outages.
+
+In the following example PDB definition file, the `minAvailable` field sets the minimum number of pods that must remain available during voluntary disruptions. The value can be an absolute number (for example, *3*) or a percentage of the desired number of pods (for example, *10%*).
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+   name: mypdb
+spec:
+   minAvailable: 3 # Minimum number of pods that must remain available during voluntary disruptions
+   selector:
+    matchLabels:
+      app: myapp
+```
+
+For more information, see [Plan for availability using PDBs](./operator-best-practices-scheduler.md#plan-for-availability-using-pod-disruption-budgets) and [Specifying a Disruption Budget for your Application](https://kubernetes.io/docs/tasks/run-application/configure-pdb/).
+
+### Graceful termination for pods
+
+> **Best practice guidance**
+>
+> Utilize `PreStop` hooks and configure an appropriate `terminationGracePeriodSeconds` value to ensure pods are terminated gracefully.
+
+Graceful termination ensures that pods are given enough time to clean up resources, complete ongoing tasks, or notify dependent services before being terminated. This is particularly important for stateful applications or services that require proper shutdown procedures.
+
+#### Using `PreStop` hooks
+
+A `PreStop` hook is called immediately before a container is terminated due to an API request or management event, such as preemption, resource contention, or a liveness/startup probe failure. The `PreStop` hook allows you to define custom commands or scripts to execute before the container is stopped. For example, you can use it to flush logs, close database connections, or notify other services of the shutdown.
 
 The following example pod definition file shows how to use a `PreStop` hook to ensure graceful termination of a container:
 
@@ -127,55 +164,117 @@ spec:
   - name: lifecycle-demo-container
     image: nginx
     lifecycle:
-      postStart:
-        exec:
-          command: ["/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message"]
       preStop:
         exec:
-          command: ["/bin/sh","-c","nginx -s quit; while killall -0 nginx; do sleep 1; done"]
+          command: ["/bin/sh", "-c", "nginx -s quit; while killall -0 nginx; do sleep 1; done"]
+```
+
+#### Configuring `terminationGracePeriodSeconds`
+
+The `terminationGracePeriodSeconds` field specifies the amount of time Kubernetes waits before forcefully terminating a pod. This period includes the time taken to execute the `PreStop` hook. If the `PreStop` hook doesn't complete within the grace period, the pod is forcefully terminated.
+
+For example, the following pod definition sets a termination grace period of 30 seconds:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  terminationGracePeriodSeconds: 30
+  containers:
+  - name: example-container
+    image: nginx
 ```
 
 For more information, see [Container lifecycle hooks](https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks) and [Termination of Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-termination).
 
-### maxUnavailable
+### High availability during upgrades
+
+#### Using `maxSurge` for faster updates
 
 > **Best practice guidance**
 >
-> Define the maximum number of pods that can be unavailable during a rolling update using the `maxUnavailable` field in your deployment to ensure that a minimum number of pods remain available during the upgrade.
+> Configure the `maxSurge` field to allow additional pods to be created during rolling updates, enabling faster updates with minimal downtime.
 
-The `maxUnavailable` field specifies the maximum number of pods that can be unavailable during the update process. The value can be an absolute number (for example, *3*) or a percentage of the desired number of pods (for example, *10%*). `maxUnavailable` pertains to the Delete API, which is used during rolling updates.
+The `maxSurge` field specifies the maximum number of additional pods that can be created beyond the desired number of pods during a rolling update. This allows new pods to be created and become ready before old pods are terminated, ensuring faster updates and reducing the risk of downtime.
 
-The following example deployment manifest uses the `maxAvailable` field to set the maximum number of pods that can be unavailable during the update process:
+The following example deployment manifest demonstrates how to configure `maxSurge`:
 
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: nginx-deployment
- labels:
-   app: nginx
+  name: nginx-deployment
+  labels:
+    app: nginx
 spec:
- replicas: 3
- selector:
-   matchLabels:
-     app: nginx
- template:
-   metadata:
-     labels:
-       app: nginx
-   spec:
-     containers:
-     - name: nginx
-       image: nginx:1.14.2
-       ports:
-       - containerPort: 80
- strategy:
-   type: RollingUpdate
-   rollingUpdate:
-     maxUnavailable: 1 # Maximum number of pods that can be unavailable during the upgrade
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 33% # Maximum number of additional pods created during the update
 ```
 
-For more information, see [Max Unavailable](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#max-unavailable).
+By setting `maxSurge` to 3, this configuration ensures that up to three additional pods can be created during the rolling update, speeding up the deployment process while maintaining availability of your application.
+For more information, see [Rolling Updates in Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment).
+
+#### Using `maxUnavailable` for controlled updates
+
+> **Best practice guidance**
+>
+> Configure the `maxUnavailable` field to limit the number of pods that can be unavailable during rolling updates, ensuring your application remains operational with minimal disruption.
+
+The `maxUnavailable` field is particularly useful for applications that require are compute intensive or have specific infrastructure needs. It specifies the maximum number of pods that can be unavailable at any given time during a rolling update. This ensures that a portion of your application remains functional while new pods are being deployed and old ones are terminated.
+
+You can set `maxUnavailable` as an absolute number (e.g., `1`) or a percentage of the desired number of pods (e.g., `25%`). For example, if your application has four replicas and you set `maxUnavailable` to `1`, Kubernetes ensures that at least three pods remain available during the update process.
+
+The following example deployment manifest demonstrates how to configure `maxUnavailable`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1 # Maximum number of pods that can be unavailable during the update
+```
+
+In this example, setting `maxUnavailable` to `1` ensures that no more than one pod is unavailable at any given time during the rolling update. This configuration is ideal for applications which require specialized compute, where maintaining a minimum level of service availability is critical.
+
+For more information, see [Rolling Updates in Kubernetes](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment).
 
 ### Pod topology spread constraints
 
@@ -417,15 +516,61 @@ Use the autoscaler on node pools to configure the minimum and maximum scale limi
 
 For more information, see [Use the cluster autoscaler on node pools](./cluster-autoscaler.md#use-the-cluster-autoscaler-on-node-pools).
 
-#### At least three nodes per system node pool
+#### At least two nodes per system node pool
 
 > **Best practice guidance**
 >
-> Ensure that system node pools have at least three nodes to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down.
+> Ensure that system node pools have at least two nodes to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down.
 
-System node pools are used to run system pods, such as the kube-proxy, coredns, and the Azure CNI plugin. We recommend that you ***ensure that system node pools have at least three nodes*** to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down. For more information, see [Manage system node pools in AKS](./use-system-pools.md).
+System node pools are used to run system pods, such as the kube-proxy, coredns, and the Azure CNI plugin. We recommend that you ***ensure that system node pools have at least two nodes*** to ensure resiliency against freeze/upgrade scenarios, which can lead to nodes being restarted or shut down. For more information, see [Manage system node pools in AKS](./use-system-pools.md).
 
-### Accelerated Networking
+### Upgrade configurations for node pools
+
+#### Using `maxSurge` for node pool upgrades
+
+> **Best practice guidance**
+>
+> Configure the `maxSurge` setting for node pool upgrades to improve reliability and minimize downtime during upgrade operations.
+
+The `maxSurge` setting specifies the maximum number of additional nodes that can be created during an upgrade. This ensures that new nodes are provisioned and ready before old nodes are drained and removed, reducing the risk of application downtime.
+
+For example, the following Azure CLI command sets `maxSurge` to 1 for a node pool:
+
+```azurecli-interactive
+az aks nodepool update \
+  --resource-group myResourceGroup \
+  --cluster-name myAKSCluster \
+  --name myNodePool \
+  --max-surge 1
+```
+
+By configuring `maxSurge`, you can ensure that upgrades are performed faster while maintaining application availability.
+
+For more information, see [Upgrade node pools in AKS](./upgrade-cluster.md).
+
+---
+
+#### Using `maxUnavailable` for node pool upgrades
+
+> **Best practice guidance**
+>
+> Configure the `maxUnavailable` setting for node pool upgrades to ensure application availability during upgrade operations.
+
+The `maxUnavailable` setting specifies the maximum number of nodes that can be unavailable during an upgrade. This ensures that a portion of your node pool remains operational while nodes are being upgraded.
+
+For example, the following Azure CLI command sets `maxUnavailable` to 1 for a node pool:
+
+```azurecli-interactive
+az aks nodepool update \
+  --resource-group myResourceGroup \
+  --cluster-name myAKSCluster \
+  --name myNodePool \
+  --max-unavailable 1
+```
+
+By configuring `maxUnavailable`, you can control the impact of upgrades on your workloads, ensuring that sufficient resources remain available during the process.
+
+For more information, see [Upgrade node pools in AKS](./upgrade-cluster.md).
 
 > **Best practice guidance**
 >

@@ -2,7 +2,7 @@
 title: Zone resiliency considerations for Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn about the various considerations for zone resiliency in Azure Kubernetes Service (AKS).
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 06/05/2024
 author: schaffererin
 ms.author: schaffererin
@@ -60,7 +60,7 @@ For more information, see [Use availability zones in Azure Kubernetes Service (A
 
 ### Ensure pods are spread across AZs
 
-In AKS, the Kubernetes Scheduler is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone` as outlined below:
+Starting with Kubernetes version 1.33, the default Kube-Scheduler in AKS is configured to use a `MaxSkew` value of 1 for `topology.kubernetes.io/zone` as outlined below:
 ```yml
 topologySpreadConstraints:
 - maxSkew: 1
@@ -102,6 +102,7 @@ spec:
 > If your application has strict zone spread requirements, where the expected behavior would be to leave a pod in pending state if a suitable node isn't found, you can use `whenUnsatisfiable: DoNotSchedule`. This configuration tells the scheduler to leave the pod in pending if a node in the right zone or different host doesn't exist or can't be scaled up.
 
 For more information on configuring pod distribution and understanding the implications of `MaxSkew`, see the [Kubernetes Pod Topology documentation](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/#topologyspreadconstraints-field).
+
 
 ### Configure AZ-aware networking
 

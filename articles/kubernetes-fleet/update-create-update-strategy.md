@@ -1,16 +1,16 @@
 ---
-title: "Define re-useable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
-description: See how you can define staged update strategies that can be re-used across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
+title: "Define reuseable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
+description: See how you can define staged update strategies that can be reused across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 11/11/2024
+ms.date: 04/28/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ---
 
-# Define re-usable update strategies using Azure Kubernetes Fleet Manager
+# Define reusable update strategies using Azure Kubernetes Fleet Manager
 
-Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed independently of update runs or auto-upgrades, allowing strategies to be reused as required.
+Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups, and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed independently of update runs or auto-upgrades, allowing strategies to be reused as required.
 
 This article covers how to define update strategies using groups and stages. 
 
@@ -31,9 +31,9 @@ This article covers how to define update strategies using groups and stages.
     export STRATEGY=<strategy-name>
     ```
 
-* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.61.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
+* If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -47,7 +47,7 @@ This article covers how to define update strategies using groups and stages.
 
 ## Assign clusters to update groups
 
-Before clusters can be used in update strategies they must be added to update groups which can be used in update stages. Within an update stage, updates are applied to each update group in parallel. Within an update group, member clusters update sequentially.
+Clusters can be used in update strategies once they are added to an update group which can be assigned to update stages. Within an update stage, updates are applied to each update group in parallel. Within an update group, member clusters update sequentially.
 
 You can assign a member cluster to a specific update group in one of two ways:
 
@@ -56,7 +56,7 @@ You can assign a member cluster to a specific update group in one of two ways:
 
 > [!NOTE]
 > A fleet member can only be a part of one update group, but an update group can have multiple fleet members assigned to it.
-> An update group itself is not a separate resource type. Update groups are only strings representing references from the fleet members. So, if all fleet members with references to a common update group are deleted, that specific update group will cease to exist as well.
+> An update group itself isn't a separate resource type. Update groups are only strings representing references from the fleet members. So, if all fleet members with references to a common update group are deleted, that specific update group ceases to exist as well.
 
 ### Assign to group when adding member cluster to the fleet
 
@@ -132,7 +132,7 @@ An update strategy consists of one or more stages, where a stage can contain one
 1. Select **Create Stage** and enter:
     * **Stage name** - name the stage - it must be unique across all stage names in the fleet.
     * **(Optional) Pause after stage** - select this option if you would like to define a pause before moving to the next stage.
-    * **(Optional) Pause duration** - select a pre-defined duration, or enter a custom value in seconds.
+    * **(Optional) Pause duration** - select a predefined duration, or enter a custom value in seconds.
 
     :::image type="content" source="./media/create-update-strategy/create-stage-basics-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/create-update-strategy/create-stage-basics.png":::
 
@@ -142,9 +142,9 @@ An update strategy consists of one or more stages, where a stage can contain one
 
 ### [Azure CLI](#tab/cli)
 
-For this scenario, we'll create stages and groups to match the details used for the Azure portal process.  
+For this scenario, we create stages and groups to match the details used for the Azure portal process.  
 
-1. Create a JSON file to define the stages and groups for the update run. Here's an example of input from the stages file (*example-stages.json*) that represents the strategy shown for creation via the Azure portal:
+1. Create a JSON file to define the stages and groups for the update run. Stages run sequentially in the order they appear in the JSON file. Groups run in parallel within each stage, so ordering isn't important. The following example file (*example-stages.json*) represents the strategy shown on the Azure portal instructions:
 
     ```json
     {

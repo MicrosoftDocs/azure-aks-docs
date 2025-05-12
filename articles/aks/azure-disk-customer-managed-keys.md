@@ -27,11 +27,19 @@ Learn more about customer-managed keys on [Linux][customer-managed-keys-linux] a
 
 * Encryption of an OS disk with customer-managed keys can only be enabled when creating an AKS cluster.
 * Virtual nodes are not supported.
-* When encrypting an ephemeral OS disk-enabled node pool with customer-managed keys, if you want to rotate the key in Azure Key Vault, you need to:
+* When encrypting an ephemeral OS disk-enabled node pool with customer-managed keys, if you want to rotate the key in Azure Key Vault, there are two options to consider:
 
-   * Scale down the node pool count to 0
-   * Rotate the key
-   * Scale up the node pool to the original count.
+    * Immediate usage of new CMK
+
+        - Scale down the node pool count to 0.
+        - Rotate the key.
+        - Scale up the node pool to the original count.
+
+    * Gradual usage of new CMK
+
+        - Allow AKS node image upgrades or version upgrades to naturally adopt the new CMK over time.
+        - Until all nodes in the pool are upgraded, the existing CMK will continue to function without disruption.
+        - Once the upgrade process is complete across all nodes, the new CMK takes effect seamlessly.
 
 ## Create an Azure Key Vault instance
 

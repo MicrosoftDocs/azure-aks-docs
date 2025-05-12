@@ -1,7 +1,7 @@
 ---
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: include
-ms.date: 09/22/2022
+ms.date: 04/14/2025
 author: shashankbarsin
 ms.author: shasb
 ---

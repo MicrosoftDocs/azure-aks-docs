@@ -630,7 +630,7 @@ az group delete --name $Env:RESOURCE_GROUP_NAME --yes --no-wait
 
 You can learn more from the following references:
 
-* [Azure Kubernetes Service](https://azure.microsoft.com/free/services/kubernetes-service/)
+* [Azure Kubernetes Service](https://azure.microsoft.com/services/kubernetes-service/)
 * [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli)
 * [Integrate Azure SQL Database with Service Connector](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java%2Csql-secret-java)
 * [Connect using Microsoft Entra authentication](/sql/connect/jdbc/connecting-using-azure-active-directory-authentication?view=azuresqldb-current&preserve-view=true)

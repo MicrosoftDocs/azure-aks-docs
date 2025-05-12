@@ -24,18 +24,36 @@
           href: concepts-lifecycle.md
         - name: Use Azure RBAC to control resource access
           href: concepts-rbac.md
-        - name: Preview API lifecycle
-          href: concepts-preview-api-lifecycle.md
-    - name: Upgrade Kubernetes and node images across multiple clusters
-      href: concepts-update-orchestration.md
-    - name: Workload propagation across multiple clusters
-      items:
-        - name: Using cluster resource placement for workload propagation
-          href: concepts-resource-propagation.md
         - name: Scheduler and scheduling framework
           href: concepts-scheduler-scheduling-framework.md
-    - name: Layer 4 load balancing across multiple clusters
-      href: concepts-l4-load-balancing.md
+        - name: Preview API lifecycle
+          href: concepts-preview-api-lifecycle.md
+    - name: Multi-cluster Kubernetes and node images upgrades
+      href: concepts-update-orchestration.md
+    - name: Multi-cluster workload placement and management
+      items:
+        - name: Fleet Manager Automated Deployments overview
+          href: concepts-automated-deployments.md
+        - name: Placing workloads using cluster resource placement
+          items:
+          - name: Introduction to cluster resource placement
+            href: concepts-resource-propagation.md
+          - name: Defining a placement rollout strategy
+            href: concepts-rollout-strategy.md
+          - name: Controlling eviction and disruption
+            href: concepts-eviction-disruption.md
+          - name: Placement strategy and resource snapshots
+            href: concepts-placement-snapshots.md
+          - name: Taking over existing workloads
+            href: concepts-placement-takeover.md
+          - name: Detecting and managing workload drift
+            href: concepts-placement-drift.md    
+    - name: Multi-cluster networking 
+      items:
+        - name: DNS-based load balancing across multiple clusters
+          href: concepts-dns-load-balancing.md
+        - name: Layer 4 load balancing across multiple clusters
+          href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
     - name: Configure Kubernetes Fleet Manager
@@ -44,9 +62,9 @@
           href: upgrade-hub-cluster-type.md
         - name: Migrate preview instances to supported instances 
           href: howto-migrate-preview-to-ga-fleets.md
-    - name: Upgrade Kubernetes and node images across multiple clusters
+    - name: Progressively upgrade Kubernetes and node images
       items:
-        - name: Define re-usable update strategies
+        - name: Define reusable update strategies
           href: update-create-update-strategy.md
         - name: Update Kubernetes and node images
           href: update-orchestration.md
@@ -54,14 +72,16 @@
           href: update-automation.md
         - name: Configure monitoring and alerting of update runs
           href: howto-monitor-update-runs.md
-    - name: Workload propagation across multiple clusters
+    - name: Place and manage workloads on multiple clusters
       items:
         - name: Access Fleet hub cluster API
           href: access-fleet-hub-cluster-kubernetes-api.md
-        - name: Using cluster resource placement for workload propagation
+        - name: Multi-cluster resource placement using cluster resource placement
           href: quickstart-resource-propagation.md
-        - name: Intelligent resource placement using cluster properties
+        - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
+        - name: Use Automated Deployments to drive multi-cluster resource placement
+          href: howto-automated-deployments.md
         - name: Using envelope objects for reserved resource types
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations for workload scheduling
@@ -70,14 +90,18 @@
           href: cluster-resource-override.md
         - name: Use overrides to customize namespace-scope resources
           href: resource-override.md
-    - name: Multi-cluster Layer 4 Load Balancing
-      href: l4-load-balancing.md
+    - name: Load balance multi-cluster services
+      items:
+        - name: Use DNS-based load balancing across multiple clusters
+          href: howto-dns-load-balancing.md
+        - name: Multi-cluster Layer 4 Load Balancing
+          href: l4-load-balancing.md
 - name: Resources
   items:
   - name: Pricing
     href: https://azure.microsoft.com/pricing/details/kubernetes-fleet-manager/#pricing
   - name: Fleet Manager roadmap
-    href: https://aka.ms/fleet/roadmap
+    href: https://aka.ms/kubernetes-fleet/roadmap
 - name: Reference
   items:
   - name: Azure CLI
