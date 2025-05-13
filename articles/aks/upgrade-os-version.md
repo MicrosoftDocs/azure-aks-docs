@@ -49,7 +49,9 @@ When a new OS version releases on AKS, it is supported in preview before it beco
 ### Update OS SKU on an existing node pool
 
 You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to update the `os-sku` on an existing node pool. In cases where there is a new os version available in preview, this allows you to migrate your node pool to the new os version without needing to upgrade your kubernetes version.
-
+#### Limitations
+- `--os-sku Windows2019` is not a valid `os-sku` for node pool update command. 
+- `--os-sku Windows2022` is not a valid `os-sku` for node pool update command. 
 Update `os-sku` using the `az aks nodepool update` command:
 
 ```azurecli
