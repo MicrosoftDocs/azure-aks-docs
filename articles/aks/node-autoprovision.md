@@ -96,7 +96,7 @@ Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md
 The following networking configurations are not currently supported:
 - Calico network policy
 - Dynamic IP Allocation
-- Static Allocation of CIDR blocks 
+- Static Allocation of CIDR blocks
 
 ## Enable node autoprovisioning
 
