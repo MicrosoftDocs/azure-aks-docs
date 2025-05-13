@@ -32,6 +32,8 @@
       href: concepts-update-orchestration.md
     - name: Multi-cluster workload placement and management
       items:
+        - name: Fleet Manager Automated Deployments overview
+          href: concepts-automated-deployments.md
         - name: Placing workloads using cluster resource placement
           items:
           - name: Introduction to cluster resource placement
@@ -45,9 +47,13 @@
           - name: Taking over existing workloads
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md      
-    - name: Layer 4 load balancing across multiple clusters
-      href: concepts-l4-load-balancing.md
+            href: concepts-placement-drift.md    
+    - name: Multi-cluster networking 
+      items:
+        - name: DNS-based load balancing across multiple clusters
+          href: concepts-dns-load-balancing.md
+        - name: Layer 4 load balancing across multiple clusters
+          href: concepts-l4-load-balancing.md
 - name: How-to guides
   items:
     - name: Configure Kubernetes Fleet Manager
@@ -74,6 +80,8 @@
           href: quickstart-resource-propagation.md
         - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
+        - name: Use Automated Deployments to drive multi-cluster resource placement
+          href: howto-automated-deployments.md
         - name: Using envelope objects for reserved resource types
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations for workload scheduling
@@ -82,8 +90,12 @@
           href: cluster-resource-override.md
         - name: Use overrides to customize namespace-scope resources
           href: resource-override.md
-    - name: Multi-cluster Layer 4 Load Balancing
-      href: l4-load-balancing.md
+    - name: Load balance multi-cluster services
+      items:
+        - name: Use DNS-based load balancing across multiple clusters
+          href: howto-dns-load-balancing.md
+        - name: Multi-cluster Layer 4 Load Balancing
+          href: l4-load-balancing.md
 - name: Resources
   items:
   - name: Pricing
