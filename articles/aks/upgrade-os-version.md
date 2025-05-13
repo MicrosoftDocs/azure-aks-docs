@@ -169,7 +169,6 @@ az aks nodepool update \
 ```
 
 
-
 ## Next steps
 
 To learn more about node images, node pool upgrades, and node configurations on AKS, see the following resources:
