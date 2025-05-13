@@ -166,7 +166,17 @@ Your output should look similar to the following example output:
 ```output
 {
   "etag": "...",
-  "hubProfile": null,
+  "hubProfile": {
+    "agentProfile": {
+      "subnetId": null,
+      "vmSize": null
+    },
+    "apiServerAccessProfile": {
+      "enablePrivateCluster": false,
+      "enableVnetIntegration": false,
+      "subnetId": null
+    }
+  },
   "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/fleet-demo/providers/Microsoft.ContainerService/fleets/fleet-demo",
   "identity": {
     "principalId": <system-identity-id>,
