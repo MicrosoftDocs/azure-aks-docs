@@ -49,10 +49,12 @@ When a new OS version releases on AKS, it is supported in preview before it beco
 ### Update OS SKU on an existing node pool
 
 You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to update the `os-sku` on an existing node pool. In cases where there is a new os version available in preview, this allows you to migrate your node pool to the new os version without needing to upgrade your kubernetes version.
+
 #### Limitations
 - `--os-sku Windows2019` is not a valid `os-sku` for node pool update command. 
 - `--os-sku Windows2022` is not a valid `os-sku` for node pool update command. 
-Update `os-sku` using the `az aks nodepool update` command:
+
+#### Update `os-sku` using the [`az aks nodepool update`][az-aks-nodepool-update] command:
 
 ```azurecli
 az aks nodepool update \
@@ -73,7 +75,7 @@ Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
 
 ### Limitations
 - `--os-sku Ubuntu2404` is supported in kubernetes version 1.32 to 1.38. 
-- `--os-sku Ubuntu2404` is intended for testing the new os version without upgrading your kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your kubernetes version to 1.39+.
+- `--os-sku Ubuntu2404` is intended for testing the new os version without upgrading your kubernetes version. You need to update your OS SKU to a supported OS option before upgrading your kubernetes version to 1.39+.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -124,7 +126,11 @@ For example, if you encounter issues while using Ubuntu 24.04, then you can upda
 
 You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to update the `os-sku` on an existing node pool. In cases where there is a previous OS version supported in your kubernetes version, this can allow you to rollback you OS version.
 
-Update `os-sku` using the `az aks nodepool update` command:
+#### Limitations
+- `--os-sku Windows2019` is not a valid `os-sku` for node pool update command. 
+- `--os-sku Windows2022` is not a valid `os-sku` for node pool update command. 
+
+#### Update `os-sku` using the [`az aks nodepool update`][az-aks-nodepool-update] command:
 
 ```azurecli
 az aks nodepool update \
@@ -161,7 +167,6 @@ az aks nodepool update \
     --name npwin \
     --node-count 1
 ```
-## Use node labels for more information on your node pool's OS version
 
 
 
