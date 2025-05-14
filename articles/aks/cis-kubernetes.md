@@ -12,7 +12,7 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 ## Kubernetes CIS benchmark
 
-The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.9.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.27.x through AKS 1.29.x,with 1.29.x reaching its end of life (EOL) in March 2025.
+The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.9.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.27.x through AKS 1.29.x, with 1.29.x reaching its end of life (EOL) in March 2025.
 
 ### Security levels
 
@@ -42,44 +42,44 @@ Recommendations can have one of the following attestation statuses:
 
 ### Benchmark details
 
-| CIS ID | Recommendation description|Assessment status|Level|Status|
-|---|---|---|---|---|
+| CIS ID | Recommendation description|Assessment status|Level|Status|Reason|
+|---|---|---|---|---|---|
 |1|Control Plane Components||||
 |1.1|Control Plane Node Configuration Files||||
 |1.1.1|Ensure that the API server pod specification file permissions are set to 600 or more restrictive|Automated|L1|N/A|
-|1.1.2|Ensure that the API server pod specification file ownership is set to root:root|Automated|L1|N/A|
+|1.1.2|Ensure that the API server pod specification file ownership is set to root: root|Automated|L1|N/A|
 |1.1.3|Ensure that the controller manager pod specification file permissions are set to 600 or more restrictive|Automated|L1|N/A|
-|1.1.4|Ensure that the controller manager pod specification file ownership is set to root:root|Automated|L1|N/A|
+|1.1.4|Ensure that the controller manager pod specification file ownership is set to root: root|Automated|L1|N/A|
 |1.1.5|Ensure that the scheduler pod specification file permissions are set to 600 or more restrictive|Automated|L1|N/A|
-|1.1.6|Ensure that the scheduler pod specification file ownership is set to root:root|Automated|L1|N/A|
+|1.1.6|Ensure that the scheduler pod specification file ownership is set to root: root|Automated|L1|N/A|
 |1.1.7|Ensure that the etcd pod specification file permissions are set to 600 or more restrictive|Automated|L1|N/A|
-|1.1.8|Ensure that the etcd pod specification file ownership is set to root:root|Automated|L1|N/A|
+|1.1.8|Ensure that the etcd pod specification file ownership is set to root: root|Automated|L1|N/A|
 |1.1.9|Ensure that the Container Network Interface file permissions are set to 600 or more restrictive|Manual|L1|N/A|
-|1.1.10|Ensure that the Container Network Interface file ownership is set to root:root|Manual|L1|N/A|
+|1.1.10|Ensure that the Container Network Interface file ownership is set to root: root|Manual|L1|N/A|
 |1.1.11|Ensure that the etcd data directory permissions are set to 700 or more restrictive|Automated|L1|N/A|
 |1.1.12|Ensure that the etcd data directory ownership is set to etcd:etcd|Automated|L1|N/A|
 |1.1.13|Ensure that the admin.conf file permissions are set to 600 or more restrictive|Automated|L1|N/A|
-|1.1.14|Ensure that the admin.conf file ownership is set to root:root|Automated|L1|N/A|
+|1.1.14|Ensure that the admin.conf file ownership is set to root: root|Automated|L1|N/A|
 |1.1.15|Ensure that the scheduler.conf file permissions are set to 600 or more restrictive|Automated|L1|N/A|
-|1.1.16|Ensure that the scheduler.conf file ownership is set to root:root|Automated|L1|N/A|
+|1.1.16|Ensure that the scheduler.conf file ownership is set to root: root|Automated|L1|N/A|
 |1.1.17|Ensure that the controller-manager.conf file permissions are set to 600 or more restrictive|Automated|L1|N/A|
-|1.1.18|Ensure that the controller-manager.conf file ownership is set to root:root|Automated|L1|N/A|
-|1.1.19|Ensure that the Kubernetes PKI directory and file ownership is set to root:root|Automated|L1|N/A|
+|1.1.18|Ensure that the controller-manager.conf file ownership is set to root: root|Automated|L1|N/A|
+|1.1.19|Ensure that the Kubernetes PKI directory and file ownership is set to root: root|Automated|L1|N/A|
 |1.1.20|Ensure that the Kubernetes PKI certificate file permissions are set to 600 or more restrictive|Manual|L1|N/A|
 |1.1.21|Ensure that the Kubernetes PKI key file permissions are set to 600|Manual|L1|N/A|
 |1.2|API Server||||
 |1.2.1|Ensure that the `--anonymous-auth` argument is set to false|Manual|L1|Pass|
-|1.2.2|Ensure that the `--token-auth-file` parameter is not set|Automated|L1|Fail|
-|1.2.3|Ensure that `--DenyServiceExternalIPs` is not set|Manual|L1|Fail|
+|1.2.2|Ensure that the `--token-auth-file` parameter is not set|Automated|L1|Fail|Equivalent control implemented|
+|1.2.3|Ensure that `--DenyServiceExternalIPs` is not set|Manual|L1|Fail||Equivalent Control implemented|
 |1.2.4|Ensure that the `--kubelet-client-certificate` and `--kubelet-client-key` arguments are set as appropriate|Automated|L1|Pass|
 |1.2.5|Ensure that the `--kubelet-certificate-authority` argument is set as appropriate|Automated|L1|Fail|
 |1.2.6|Ensure that the `--authorization-mode` argument is not set to AlwaysAllow|Automated|L1|Pass|
 |1.2.7|Ensure that the `--authorization-mode` argument includes Node|Automated|L1|Pass|
 |1.2.8|Ensure that the `--authorization-mode` argument includes RBAC|Automated|L1|Pass|
-|1.2.9|Ensure that the admission control plugin EventRateLimit is set|Manual|L1|Fail|
+|1.2.9|Ensure that the admission control plugin EventRateLimit is set|Manual|L1|Fail|Operational impact|
 |1.2.10|Ensure that the admission control plugin AlwaysAdmit is not set|Automated|L1|Pass|
-|1.2.11|Ensure that the admission control plugin AlwaysPullImages is set|Manual|L1|Fail|
-|1.2.12|Ensure that the admission control plugin ServiceAccount is set|Automated|L2|Fail|
+|1.2.11|Ensure that the admission control plugin AlwaysPullImages is set|Manual|L1|Fail|Operational impact|
+|1.2.12|Ensure that the admission control plugin ServiceAccount is set|Automated|L2|Fail|Equivalent control implemented|
 |1.2.13|Ensure that the admission control plugin NamespaceLifecycle is set|Automated|L2|Pass|
 |1.2.14|Ensure that the admission control plugin NodeRestriction is set|Automated|L2|Pass|
 |1.2.15|Ensure that the `--profiling` argument is set to false|Automated|L1|Pass|
@@ -127,15 +127,15 @@ Recommendations can have one of the following attestation statuses:
 |4|Worker Nodes||||
 |4.1|Worker Node Configuration Files||||
 |4.1.1|Ensure that the kubelet service file permissions are set to 600 or more restrictive|Automated|L1|Pass|
-|4.1.2|Ensure that the kubelet service file ownership is set to root:root|Automated|L1|Pass|
+|4.1.2|Ensure that the kubelet service file ownership is set to root: root|Automated|L1|Pass|
 |4.1.3|If a proxy kubeconfig file exists, ensure permissions are set to 600 or more restrictive|Manual|L1|N/A|
-|4.1.4|If a proxy kubeconfig file exists, ensure ownership is set to root:root|Manual|L1|N/A|
+|4.1.4|If a proxy kubeconfig file exists, ensure ownership is set to root: root|Manual|L1|N/A|
 |4.1.5|Ensure that the `--kubeconfig` kubelet.conf file permissions are set to 600 or more restrictive|Automated|L1|Pass|
-|4.1.6|Ensure that the `--kubeconfig` kubelet.conf file ownership is set to root:root|Automated|L1|Pass|
+|4.1.6|Ensure that the `--kubeconfig` kubelet.conf file ownership is set to root: root|Automated|L1|Pass|
 |4.1.7|Ensure that the certificate authorities file permissions are set to 600 or more restrictive|Manual|L1|Pass|
-|4.1.8|Ensure that the client certificate authorities file ownership is set to root:root|Manual|L1|Pass|
+|4.1.8|Ensure that the client certificate authorities file ownership is set to root: root|Manual|L1|Pass|
 |4.1.9|If the kubelet config.yaml configuration file is being used, ensure permissions set to 600 or more restrictive|Automated|L1|Pass|
-|4.1.10|If the kubelet config.yaml configuration file is being used, ensure file ownership is set to root:root|Automated|L1|Pass|
+|4.1.10|If the kubelet config.yaml configuration file is being used, ensure file ownership is set to root: root|Automated|L1|Pass|
 |4.2|Kubelet||||
 |4.2.1|Ensure that the `--anonymous-auth` argument is set to false|Automated|L1|Pass|
 |4.2.2|Ensure that the `--authorization-mode` argument is not set to AlwaysAllow|Automated|L1|Pass|
@@ -151,7 +151,7 @@ Recommendations can have one of the following attestation statuses:
 |4.2.12|Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers|Manual|L1|Pass|
 |4.2.13|Ensure that a limit is set on pod PIDs|Manual|L1|Pass|
 |4.3|kube-proxy||||
-|4.3.1|Ensure that the kube-proxy metrics service is bound to localhost|Automated|L1|Pass|
+|4.3.1|Ensure that the kube-proxy metrics service is bound to localhost|Automated|L1|Fail|Operational impact|
 |5|Policies||||
 |5.1|RBAC and Service Accounts||||
 |5.1.1|Ensure that the cluster-admin role is only used where required|Automated|L1|Depends on Environment|
@@ -160,7 +160,7 @@ Recommendations can have one of the following attestation statuses:
 |5.1.4|Minimize access to create pods|Automated|L1|Depends on Environment|
 |5.1.5|Ensure that default service accounts are not actively used|Automated|L1|Depends on Environment|
 |5.1.6|Ensure that Service Account Tokens are only mounted where necessary|Automated|L1|Depends on Environment|
-|5.1.7|Avoid use of system:masters group|Manual|L1|Depends on Environment|
+|5.1.7|Avoid use of system: masters group|Manual|L1|Depends on Environment|
 |5.1.8|Limit use of the Bind, Impersonate and Escalate permissions in the Kubernetes cluster|Manual|L1|Depends on Environment|
 |5.1.9|Minimize access to create persistent volumes|Manual|L1|Depends on Environment|
 |5.1.10|Minimize access to the proxy sub-resource of nodes|Manual|L1|Depends on Environment|
@@ -188,7 +188,7 @@ Recommendations can have one of the following attestation statuses:
 |5.4.1|Prefer using secrets as files over secrets as environment variables|Manual|L2|Depends on Environment|
 |5.4.2|Consider external secret storage|Manual|L2|Depends on Environment|
 |5.5|Extensible Admission Control||||
-|5.5.1|Configure Image Provenance using ImagePolicyWebhook admission controller|Manual|L2|Fail|
+|5.5.1|Configure Image Provenance using ImagePolicyWebhook admission controller|Manual|L2|Fail|Equivalent control implemented|
 |5.6|General Policies||||
 |5.6.1|Create administrative boundaries between resources using namespaces|Manual|L1|Depends on Environment|
 |5.6.2|Ensure that the seccomp profile is set to docker/default in your pod definitions|Manual|L2|Depends on Environment|
