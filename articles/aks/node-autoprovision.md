@@ -14,9 +14,9 @@ author: schaffererin
 When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
 
-Node autoprovisioning (NAP) (preview) decides based on pending pod resource requirements the optimal virtual machine configuration to run those workloads in the most efficient and cost effective manner.
+Node autoprovisioning (NAP) (preview) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-Node autoprovisioning is based on the Open Source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also Open Source.  Node autoprovisioning automatically deploys and configures and manages Karpenter on your AKS clusters.
+NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
 
 
 > [!IMPORTANT]
@@ -85,7 +85,7 @@ Node autoprovisioning is based on the Open Source [Karpenter](https://karpenter.
 - [OutboundType](./egress-outboundtype.md) mutation. All OutboundTypes are supported, however you can't change them after creation.
 - Private cluster (and bring your own private DNS)
 
-### Networking Configuration
+### Networking configuration
 
 The recommended network configurations for clusters enabled with Node Autoprovisioning are the following:
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
@@ -95,7 +95,8 @@ The recommended network configurations for clusters enabled with Node Autoprovis
 
 Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md). 
 
-The following networking configurations are not currently supported:
+The following networking configurations are currently *not* supported:
+
 - Calico network policy
 - Dynamic IP Allocation
 - Static Allocation of CIDR blocks
@@ -185,9 +186,9 @@ The following networking configurations are not currently supported:
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --node-provisioning-mode Auto --network-plugin azure --network-plugin-mode overlay --network-dataplane cilium
     ```
 
-## Node Pools
+## Node pools
 
-Node autoprovision uses a list of VM SKUs as a starting point to decide which is best suited for the workloads that are in a pending state.  Having control over what SKU you want in the initial pool allows you to specify specific SKU families, or virtual machine types and the maximum amount of resources a provisioner uses. You can also reference different specifications in the Node Pool file, such as specifying Spot or On-Demand instances, multiple architectures, and more. 
+Node autoprovisioning uses a list of VM SKUs as a starting point to decide which SKU is best suited for the workloads that are in a pending state. Having control over what SKU you want in the initial pool allows you to specify specific SKU families or virtual machine types and the maximum number of resources a provisioner uses. You can also reference different specifications in the node pool file, such as specifying *spot* or *on-demand* instances, multiple architectures, and more. 
 
 If you have specific virtual machine sizes that are reserved instances, for example, you may wish to only use those virtual machines as the starting pool.
 
@@ -252,7 +253,7 @@ spec:
 | kubernetes.io/os | Operating System (Linux only during preview) | linux |
 | kubernetes.io/arch | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
 
-To list the Virtual Machine SKU capabilities and allowed values, use the `vm list-skus` command from the Azure CLI.
+To list the virtual machine SKU capabilities and allowed values, use the `vm list-skus` Azure CLI command.
 
 ```azurecli-interactive
 az vm list-skus --resource-type virtualMachines --location <location> --query '[].name' --output table
@@ -260,7 +261,7 @@ az vm list-skus --resource-type virtualMachines --location <location> --query '[
 
 ## Node pool limits
 
-By default, Node autoprovision attempts to schedule your workloads within the Azure quota you have available.  You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
+By default, node autoprovisioning attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
 
 
 
@@ -284,11 +285,11 @@ When you have multiple node pools defined, it's possible to set a preference of 
 
 ## Kubernetes and node image updates
 
-AKS with Node autoprovision manages the Kubernetes version upgrades and VM OS disk updates for you by default.
+AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates for you by default.
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for Node autoprovision nodes follows the Control Plane Kubernetes version.  If you perform a cluster upgrade, your Node autoprovision nodes are updated automatically to follow the same versioning.
+Kubernetes upgrades for node autoprovision nodes follows the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning.
 
 ### Node image updates
 
@@ -331,7 +332,7 @@ Removing the imageVersion spec would revert the node pool to be updated to the l
 
 ## Node disruption
 
-When the workloads on your nodes scale down, Node autoprovision uses disruption rules on the Node Pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through Consolidation, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger Consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
+When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
 You can remove a node manually using `kubectl delete node`, but Node autoprovision can also control when it should optimize your nodes, based on your specifications.
 
