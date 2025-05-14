@@ -14,13 +14,13 @@ This article shows you how to deploy egress gateways for the Istio service mesh 
 
 ## Overview
 
-The Istio egress gateway can serve as a centralized point to monitor and restrict outbound traffic from applications in the mesh. With the Istio add-on, you can deploy multiple egress gateways with names of your choice across different namespaces, allowing you to set up an egress gateway topology for your particular use-case (egress gateways per-cluster, per-namespace, per-workload, etc). While AKS manages the provisioning and lifecycle of the Istio add-on egress gateways, you must create Istio custom resources to route traffic from applications in the mesh through the egress gateway and apply Istio policies and telemetry collection rules for egress traffic.
+The Istio egress gateway can serve as a centralized point to monitor and restrict outbound traffic from applications in the mesh. With the Istio add-on, you can deploy multiple egress gateways across different namespaces, allowing you to set up an egress gateway topology of your choice: egress gateways per-cluster, per-namespace, per-workload, etc. While AKS manages the provisioning and lifecycle of the Istio add-on egress gateways, you must create Istio custom resources to route traffic from applications in the mesh through the egress gateway and apply Istio policies and telemetry collection rules for egress traffic.
 
 The Istio add-on egress gateway also takes a hard dependency on the [Static Egress Gateway][static-egress-gateway] feature. Through the integration with the Static Egress Gateway, requests routed via Istio add-on egress gateway will obtain a predictable source IP address that you can use for firewall rules and other traffic filtering mechanisms. Applying Istio L7, identity-based policies as well as IP-based restrictions allows for defense-in-depth egress traffic control.
 
 ## Limitations and requirements
 
-- You can deploy a maximum of `2000` Istio egress gateways per cluster. 
+- You can deploy a maximum of `500` Istio egress gateways per cluster. 
 - Istio add-on egress gateway names must be unique per namespace.
 - Istio add-on egress gateway names must be between `1-53` characters, must only consist of lowercase alphanumerical characters, '-' and '.,' and must start and end with an alphanumerical character. Names should also be a valid DNS name. The regex used for name validation is `^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`.
 - Gateway API is currently not supported for the Istio add-on egress gateway.
@@ -64,7 +64,7 @@ az aks mesh enable-egress-gateway --resource-group $RESOURCE_GROUP --name $CLUST
 Verify that the service has been created for the egress gateway. 
 
 ```bash
-kubectl get svc $ISTIO_EGRESS_NAME -n ISTIO_EGRESS_NAMESPACE
+kubectl get svc $ISTIO_EGRESS_NAME -n $ISTIO_EGRESS_NAMESPACE
 ```
 
 You should see a `ClusterIP` service for the egress gateway:
@@ -90,7 +90,7 @@ You can run the `az aks mesh enable-egress-gateway` command again to create anot
 ## Route traffic through the Istio egress gateway
 
 ### Set `outboundTrafficPolicy.mode`
-By default, the Istio `outboundTrafficPolicy.mode` is set to `ALLOW_ANY`, meaning that Envoy will pass through requests for unknown services. As a security best-practice, it is recommended to set the Istio `outboundTrafficPolicy.mode` to `REGISTRY_ONLY` so that the Istio proxy blocks requests to services that haven't been added to Istio's Service Registry. Hosts outside of the cluster can be added to Istio's service registry with a `ServiceEntry`. 
+By default, the Istio `outboundTrafficPolicy.mode` is set to `ALLOW_ANY`, meaning that Envoy will pass through requests for unknown services. As a security best-practice, it is recommended to set the Istio `outboundTrafficPolicy.mode` to `REGISTRY_ONLY` so that the Istio proxy blocks requests to services that haven't been added to Istio's Service Registry. You can add hosts outside of the cluster to Istio's service registry with a `ServiceEntry`. 
 
 You can configure the `outboundTrafficPolicy.mode` on a mesh-wide level using the Istio add-on [shared MeshConfig][shared-mesh-config], or use the [Sidecar Custom Resource][sidecar-cr] to target specific namespaces or workloads.
 
@@ -130,7 +130,7 @@ curl-5b549b49b8-bcgts                      2/2     Running   0          13s
 Try sending a request from `curl` directly to `edition.cnn.com`: 
 
 ```bash
-SOURCE_POD=$(kubectl get pod -n $EGRESS_NAMESPACE -l app=curl -o jsonpath={.items..metadata.name})
+SOURCE_POD=$(kubectl get pod -n $ISTIO_EGRESS_NAMESPACE -l app=curl -o jsonpath={.items..metadata.name})
 
 kubectl exec -n $ISTIO_EGRESS_NAMESPACE "$SOURCE_POD" -c curl -- curl -sSL -o /dev/null -D - http://edition.cnn.com/politics
 ```
