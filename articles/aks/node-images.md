@@ -44,7 +44,7 @@ AKS sets a default operating system (OS) and node image during cluster and node 
 
 ### Factors that influence the default node image
 
-The following factors will influence the default image AKS chooses for your node pool:
+The following factors influence the default image AKS chooses for your node pool:
 
 - **OS SKU**: If `--os-sku` is specified, then your default OS changes. For example, if you specify Azure Linux as the OS SKU, then your node image is Azure Linux with containerd.
 - **Virtual machine (VM) size**: 
