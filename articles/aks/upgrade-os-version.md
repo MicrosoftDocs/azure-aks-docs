@@ -190,6 +190,8 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [use-cvm]: ./use-cvm.md
 [create-node-pools]: ./create-node-pools.md
 [node-images]: ./node-images.md
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases
