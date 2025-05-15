@@ -181,4 +181,4 @@ For information on more core concepts for AKS, see the following resources:
 [windows-considerations]: ./windows-vs-linux-containers.md
 [upgrade-2019-2022]: ./upgrade-windows-os.md
 [node-images]: ./node-images.md
-[servicing-channels-comparison]: ./windows-server/get-started/servicing-channels-comparison.md
+[servicing-channels-comparison]: ./windows-server/get-started/servicing-channels-comparison
