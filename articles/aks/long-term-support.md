@@ -71,7 +71,7 @@ If you want to carry out an in-place migration, the AKS service migrates your co
     ```
 
     > [!NOTE]
-    > Kubernetes versions 1.27, 1.28, 1.29, and 1.30 are available as Long-Term Support (LTS) versions. To view available LTS releases and their patches by region, see the [AKS release tracker](release-tracker.md). Moving forward, all AKS Kubernetes versions will be LTS-compatible. For the LTS calendar, visit the [AKS Kubernetes Release Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
+    > Moving forward, all AKS Kubernetes versions will be LTS-compatible. For the latest LTS calendar, visit the [AKS Kubernetes Release Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar). To view available LTS releases and their patches by region, see the [AKS release tracker](release-tracker.md).
 
 
 ## Disable long-term support on an existing cluster
