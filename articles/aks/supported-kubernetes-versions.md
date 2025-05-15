@@ -48,6 +48,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Until 1.34 GA |
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
+| 1.33 | Apr 2025 | May 2025 | May 2025 | May 2026 | Until 1.37 GA |
 
 
 LTS Versions
@@ -63,6 +64,7 @@ LTS Versions
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Jul 2026|
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Nov 2026|
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
+| 1.33 | Apr 2025 | May 2025 | May 2025 | May 2026 | May 2027|
 
 ### AKS Kubernetes release schedule Gantt chart
 
@@ -73,10 +75,6 @@ If you prefer to see this information visually, here's a Gantt chart with all th
 ## AKS components breaking changes by version
 
 Note the following important changes before you upgrade to any of the available minor versions:
-
-### Kubernetes 1.33
-
-Sure, here is the table for Kubernetes 1.33.0 in markdown format:
 
 ### Kubernetes 1.33.0
 
