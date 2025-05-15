@@ -66,8 +66,7 @@ az aks nodepool update \
     --node-count 1
 ```
 
-> [NOTE]
-> The `az aks nodepool update` command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
+The [`az aks nodepool update`][az-aks-nodepool-update] command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
 
 ## [Test Ubuntu 24.04 (preview)](#tab/test-ubuntu-preview)
 
@@ -115,6 +114,7 @@ az aks nodepool update \
     --name npwin \
     --node-count 1
 ```
+---
 
 ## [Roll back your OS version](#tab/roll-back-your-os-version)
 
@@ -142,8 +142,7 @@ az aks nodepool update \
     --node-count 1
 ```
 
-> [NOTE]
-> The `az aks nodepool update` command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
+The [`az aks nodepool update`][az-aks-nodepool-update] command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
 
 ## [Rollback to Ubuntu 22.04](#tab/test-roll-back)
 
@@ -167,7 +166,7 @@ az aks nodepool update \
     --name npwin \
     --node-count 1
 ```
-
+---
 
 ## Next steps
 
