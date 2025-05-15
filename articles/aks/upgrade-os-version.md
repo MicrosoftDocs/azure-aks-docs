@@ -69,7 +69,7 @@ az aks nodepool update \
 > [NOTE]
 > The `az aks nodepool update` command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
 
-## [Test Ubuntu 24.04 (preview)](#tab/ubuntu-24.04-preview)
+## [Test Ubuntu 24.04 (preview)](#tab/test-ubuntu-preview)
 
 Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
 
@@ -145,7 +145,7 @@ az aks nodepool update \
 > [NOTE]
 > The `az aks nodepool update` command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
 
-## [Rollback to Ubuntu 22.04](#tab/rollback-to-22.04)
+## [Rollback to Ubuntu 22.04](#tab/test-rollback)
 
 Ubuntu 22.04 can be specified by using `--os-sku Ubuntu2204`.
 
