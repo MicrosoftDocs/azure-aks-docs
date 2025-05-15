@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Validate MongoDB resiliency during an Azure Kubernetes Service (AKS) node pool upgrade

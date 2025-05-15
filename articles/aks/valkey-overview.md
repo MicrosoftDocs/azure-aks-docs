@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service
 ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Deploy a Valkey cluster on Azure Kubernetes Service (AKS)

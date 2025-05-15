@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Load Test MongoDB cluster on Azure Kubernetes Service (AKS)

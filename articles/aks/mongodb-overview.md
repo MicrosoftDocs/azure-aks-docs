@@ -5,7 +5,7 @@ ms.topic: overview
 ms.date: 01/07/2025
 author: fossygirl
 ms.author: carols
-ms.custom: aks-related-content
+ms.custom: 'aks-related-content, stateful-workloads'
 ---
 
 # Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)

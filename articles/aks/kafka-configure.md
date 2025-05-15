@@ -2,10 +2,11 @@
 title: Configure monitoring and networking for a Kafka cluster on AKS using Strimzi  
 description: In this article, we provide guidance for configuring monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS) deployed using Strimzi. 
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
+ms.custom: 'stateful-workloads'
 ---
 
 # Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)  

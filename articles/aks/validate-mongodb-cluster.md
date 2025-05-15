@@ -7,6 +7,7 @@ ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
+ms.custom: 'stateful-workloads'
 ---
 
 # Deploy a client application to connect to a MongoDB cluster on Azure Kubernetes Service (AKS)
