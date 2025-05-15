@@ -69,7 +69,7 @@ spec:
       hostNetwork: true
       containers:
         - name: powershell
-          image: mcr.microsoft.com/powershell:lts-nanoserver-1809 # or lts-nanoserver-ltsc2022
+          image: mcr.microsoft.com/windows/nanoserver:ltsc2019 # or nanoserver:ltsc2022
           command:
             - powershell.exe
             - -Command
