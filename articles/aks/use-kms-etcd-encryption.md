@@ -432,7 +432,7 @@ az aks update --name myAKSCluster --resource-group MyResourceGroup --disable-azu
 
 #### Migrate storage
 
-To update all secrets, use the `kubectl get secrets` command with the `--all-namespaces` argument. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin.:
+To update all secrets, use the `kubectl get secrets` command with the `--all-namespaces` argument. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin:
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
