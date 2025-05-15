@@ -51,6 +51,7 @@ When a new OS version releases on AKS, it's supported in preview before it becom
 You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to update the `os-sku` on an existing node pool. In cases where there's a new os version available in preview, this functionality allows you to migrate your node pool to the new os version without needing to upgrade your kubernetes version.
 
 #### Limitations
+
 - `--os-sku Windows2019` isn't a valid `os-sku` for node pool update command. 
 - `--os-sku Windows2022` isn't a valid `os-sku` for node pool update command. 
 
@@ -73,6 +74,7 @@ The [`az aks nodepool update`][az-aks-nodepool-update] command can be used to mi
 Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
 
 ### Limitations
+
 - `--os-sku Ubuntu2404` is supported in kubernetes version 1.32 to 1.38. 
 - `--os-sku Ubuntu2404` is intended for testing the new os version without upgrading your kubernetes version. You need to update your OS SKU to a supported OS option before upgrading your kubernetes version to 1.39+.
 
@@ -127,6 +129,7 @@ For example, if you encounter issues while using Ubuntu 24.04, then you can upda
 You can use the [`az aks nodepool update`][az-aks-nodepool-update] command to update the `os-sku` on an existing node pool. In cases where there's a previous OS version supported in your kubernetes version, this functionality can allow you to roll back you OS version.
 
 #### Limitations
+
 - `--os-sku Windows2019` isn't a valid `os-sku` for node pool update command. 
 - `--os-sku Windows2022` isn't a valid `os-sku` for node pool update command. 
 
@@ -149,6 +152,7 @@ The [`az aks nodepool update`][az-aks-nodepool-update] command can be used to mi
 Ubuntu 22.04 can be specified by using `--os-sku Ubuntu2204`.
 
 ### Limitations
+
 - `--os-sku Ubuntu2204` is supported in kubernetes version 1.25 to 1.33. 
 - `--os-sku Ubuntu2204` is intended for roll back to Ubuntu 22.04 on your current kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your kubernetes version to 1.34+.
 

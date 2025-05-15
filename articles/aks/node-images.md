@@ -42,9 +42,9 @@ AKS sets a default operating system (OS) and node image during cluster and node 
 > [!NOTE]
 > You can't specify the Windows OS Type during cluster creation since the system node pool in every cluster must be Linux.
 
-### Factors that might influence default node images
+### Factors that influence the default node image
 
-The following factors might influence the default image AKS chooses for your node pool:
+The following factors will influence the default image AKS chooses for your node pool:
 
 - **OS SKU**: If `--os-sku` is specified, then your default OS changes. For example, if you specify Azure Linux as the OS SKU, then your node image is Azure Linux with containerd.
 - **Virtual machine (VM) size**: 
