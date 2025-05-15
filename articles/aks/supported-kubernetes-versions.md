@@ -25,17 +25,17 @@ Examples:
   1.29.1
 ```
 
-Each number in the version indicates general compatibility with the previous version:
+Each number in the version reflects compatibility with previous versions:
 
-* **Major versions** change when incompatible API updates or backwards compatibility might be broken.
-* **Minor versions** change when functionality updates are made that are backwards compatible to the other minor releases.
-* **Patch versions** change when backwards-compatible bug fixes are made.
+* **Major versions**: Introduce incompatible API changes or break backward compatibility.
+* **Minor versions**: Add new features while maintaining backward compatibility.
+* **Patch versions**: Include backward-compatible bug fixes.
 
-Aim to run the latest patch release of the minor version you're running. For example, if your production cluster is on **`1.29.1`** and **`1.29.2`** is the latest available patch version available for the *1.29* minor version, you should upgrade to **`1.29.2`** as soon as possible to ensure your cluster is fully patched and supported.
+Always use the latest patch release for your current minor version. For example, if your production cluster is on **`1.29.1`** and **`1.29.2`** is the latest available patch version available for the *1.29* minor version, you should upgrade to **`1.29.2`** as soon as possible to ensure your cluster is fully patched and supported.
 
 ## AKS Kubernetes release calendar
 
-View the upcoming version releases on the AKS Kubernetes release calendar. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
+Check the AKS Kubernetes release calendar for upcoming version releases. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
 
 > [!NOTE]
 > AKS follows 12 months of support for a generally available (GA) Kubernetes version. To read more about our support policy for Kubernetes versioning, read our [FAQ](./supported-kubernetes-versions.md#faq).
@@ -115,7 +115,7 @@ Note the following important changes before you upgrade to any of the available 
 > Alias minor version requires Azure CLI version 2.37 or above and API version 20220401 or above. Use `az upgrade` to install the latest version of the CLI.
 
 
-AKS allows you to create a cluster without specifying the exact patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. For example, if you create a cluster with **`1.29`** and **`1.29.2`** is the latest GA would patch available, your cluster will be created with **`1.29.2`**. If you want to upgrade your patch version in the same minor version, please use [autoupgrade](./auto-upgrade-cluster.md).
+You can create an AKS cluster without specifying a patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. For example, if you create a cluster with **`1.29`** and **`1.29.2`** is the latest GA would patch available, your cluster will be created with **`1.29.2`**. If you want to upgrade your patch version in the same minor version, please use [autoupgrade](./auto-upgrade-cluster.md).
 
 
 To see what patch you're on, run the `az aks show --resource-group myResourceGroup --name myAKSCluster` command. The `currentKubernetesVersion` property shows the whole Kubernetes version.
@@ -134,8 +134,9 @@ To see what patch you're on, run the `az aks show --resource-group myResourceGro
 
 AKS defines a generally available (GA) version as a version available in all regions and enabled in all SLO or SLA measurements. AKS supports three GA minor versions of Kubernetes:
 
-* The latest GA minor version released in AKS (which we refer to as *N*).
-* Two previous minor versions.
+AKS supports three GA minor versions:
+* The latest GA version (N).
+* The two previous minor versions (N-1 and N-2).
   * Each supported minor version can support any number of patches at a given time. AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, refer to version release notes and visit the [AKS release status webpage][aks-tracker].
 
 AKS might also support preview versions, which are explicitly labeled and subject to [preview terms and conditions][preview-terms].
@@ -202,7 +203,7 @@ This table outlines support guidelines for Community Support compared to Platfor
 
 ### Supported `kubectl` versions
 
-You can use one minor version older or newer of `kubectl` relative to your *kube-apiserver* version, consistent with the [Kubernetes support policy for kubectl](https://kubernetes.io/docs/setup/release/version-skew-policy/#kubectl).
+You can use a `kubectl` version that is one minor version older or newer than your kube-apiserver version, [Kubernetes support policy for kubectl](https://kubernetes.io/docs/setup/release/version-skew-policy/#kubectl).
 
 For example, if your *kube-apiserver* is at *1.28*, then you can use versions *1.27* to *1.29* of `kubectl` with that *kube-apiserver*.
 
@@ -224,7 +225,7 @@ Install-AzAksKubectl -Version latest
 
 ## Long Term Support (LTS)
 
-AKS provides one year Community Support and one year of Long Term Support (LTS) to back port security fixes from the community upstream in our public repository. Our upstream LTS working group contributes efforts back to the community to provide our customers with a longer support window.
+AKS offers one year of Community Support and one year of Long Term Support (LTS), including backported security fixes from the upstream community. Our upstream LTS working group contributes efforts back to the community to provide our customers with a longer support window.
 
 For more information on LTS, see [Long term support for Azure Kubernetes Service (AKS)](./long-term-support.md).
 
