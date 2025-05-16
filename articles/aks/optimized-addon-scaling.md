@@ -33,7 +33,7 @@ The following AKS managed add-ons support the cost optimized add-on scaling feat
 VPA currently supports the following modes for cost optimized add-on scaling:
 * *Off*: The VPA provides resource recommendation data but doesn't apply it to the target pod.
 * *Initial* (default mode): The VPA automatically applies CPU and memory recommendations to the target pod when it restarts, but it doesn't initiate the restart itself.
-* *Auto*: The VPA automatically updates CPU and memory requests for running pods based on recommendations.
+* *Auto*: The VPA automatically updates CPU and memory requests for pods based on recommendations.
 
 > [!NOTE]
 > When enabling cost optimized add-on scaling, consider the following information:
