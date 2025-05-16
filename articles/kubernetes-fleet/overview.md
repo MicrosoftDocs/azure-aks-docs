@@ -4,7 +4,7 @@ services: kubernetes-fleet
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - ignite-2023
-ms.date: 04/01/2025
+ms.date: 04/28/2025
 ms.topic: overview
 author: sjwaight
 ms.author: simonwaight
@@ -22,9 +22,11 @@ Azure Kubernetes Fleet Manager enables at-scale management of multiple Azure Kub
 
 * Automatically trigger version upgrades when new Kubernetes or node image versions are published.
 
-* Create Kubernetes resource objects on the Fleet Manager hub cluster and control object placement on to member clusters.
+* Use Automated Deployments to stage Kubernetes workloads from Git repositories to Fleet Manager's hub cluster, ready for placement (preview).
 
-* Export and import services between member clusters, and load balance incoming layer-4 traffic across service endpoints on multiple clusters (preview).
+* Intelligently place Kubernetes resources across member clusters based on cluster labels and properties.
+
+* Export and import services between member clusters, and load balance incoming traffic across service endpoints on multiple clusters (preview).
 
 ## Next steps
 
