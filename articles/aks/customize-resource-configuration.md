@@ -10,7 +10,7 @@ ms.date: 08/02/2024
 
 # Customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
 
-This article provides an overview of how to customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons with cost optimized add-on scaling (Preview).
+This article provides an overview of how to customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons with [cost optimized add-on scaling (Preview)](./optimized-addon-scaling.md).
 
 ## Overview
 
