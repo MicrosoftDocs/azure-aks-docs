@@ -1,6 +1,6 @@
 ---
-title: Override the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
-description: Learn how to override the resource configuration for Azure Kubernetes Service (AKS) managed add-ons.
+title: Customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
+description: Learn how to customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons.
 ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
@@ -8,30 +8,30 @@ ms.service: azure-kubernetes-service
 ms.date: 08/02/2024
 ---
 
-# Override the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
+# Customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
 
-This article provides an overview of how to override the resource configuration for Azure Kubernetes Service (AKS) managed add-ons with cost optimized add-on scaling (Preview).
+This article provides an overview of how to customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons with cost optimized add-on scaling (Preview).
 
 ## Overview
 
-Enabling the cost optimized add-on scaling feature in your AKS cluster installs the Vertical Pod Autoscaler (VPA) add-on and VPA custom resources for AKS managed add-ons that support this capability. This feature also allows you to manually override the resource CPU and memory requests and limits in Deployments and DaemonSets. You can also override the maximum and minimum allowed CPU and memory and the VPA update mode within VPA custom resources.
+Enabling the cost optimized add-on scaling feature in your AKS cluster installs the Vertical Pod Autoscaler (VPA) add-on and VPA custom resources for AKS managed add-ons that support this capability. This feature also allows you to manually customize the resource CPU and memory requests and limits in Deployments and DaemonSets. You can also customize the maximum and minimum allowed CPU and memory and the VPA update mode within VPA custom resources.
 
 ## Prerequisites
 
 * Review the [supported AKS managed add-ons](./optimized-addon-scaling.md#supported-aks-add-ons) and [limitations](./optimized-addon-scaling.md) for this feature.
 * You need an AKS cluster enabled with the cost optimized add-on scaling feature. If you don't have one, see [Enable cost optimized add-on scaling on your AKS cluster (Preview)](./optimized-addon-scaling.md).
 
-## Override resource annotations
+## Customize resource annotations
 
 | Annotation | Description | Values |
 | --- | --- | --- |
-| `kubernetes.azure.com/override-requests-limits` | Supports the capability to override the container resource CPU/memory requests/limits in a Deployment or DaemonSet if the value is "enabled". Set the value to "disabled" to return back to AKS provides container policy max/min CPU/memory value. | "enabled" or "disabled" |
-| `kubernetes.azure.com/override-min-max` | Supports the capability to override the container policy maximum/minimum allowed CPU/memory value in VPA custom resource if the value is "enabled". Set the value to "disabled" to return back to AKS provides container policy max/min CPU/memory value. | "enabled" or "disabled" |
-| `kubernetes.azure.com/override-update-mode` | Supports the capability to override the update policy `updateMode` value in a VPA custom resource if the value is "enabled". Set the value to "disabled" to return back to AKS provides update mode "Initial". | "enabled" or "disabled" |
+| `kubernetes.azure.com/override-requests-limits` | Supports the capability to customize the container resource CPU/memory requests/limits in a Deployment or DaemonSet if the value is "enabled". Set the value to "disabled" to return back to AKS provides container policy max/min CPU/memory value. | "enabled" or "disabled" |
+| `kubernetes.azure.com/override-min-max` | Supports the capability to customize the container policy maximum/minimum allowed CPU/memory value in VPA custom resource if the value is "enabled". Set the value to "disabled" to return back to AKS provides container policy max/min CPU/memory value. | "enabled" or "disabled" |
+| `kubernetes.azure.com/override-update-mode` | Supports the capability to customize the update policy `updateMode` value in a VPA custom resource if the value is "enabled". Set the value to "disabled" to return back to AKS provides update mode "Initial". | "enabled" or "disabled" |
 
-## Override resource CPU/memory requests/limits
+## Customize resource CPU/memory requests/limits
 
-After setting the `kubernetes.azure.com/override-requests-limits` annotation to "enabled" in a Deployment or DaemonSet, you can override the resource CPU/memory requests and limits. The following example shows how to override the resource CPU/memory requests and limits in a Deployment:
+After setting the `kubernetes.azure.com/override-requests-limits` annotation to "enabled" in a Deployment or DaemonSet, you can customize the resource CPU/memory requests and limits. The following example shows how to customize the resource CPU/memory requests and limits in a Deployment:
 
 ```yaml
 apiVersion: apps/v1
@@ -59,9 +59,9 @@ spec:
         memory: "70Mi"
 ```
 
-## Override resource maximum/minimum allowed CPU/memory
+## Customize resource maximum/minimum allowed CPU/memory
 
-After setting the `kubernetes.azure.com/override-min-max` annotation to "enabled" in a VPA custom resource, you can override the maximum and minimum allowed CPU and memory values in a VPA custom resource. The following example shows how to override the maximum and minimum allowed CPU and memory values in a VPA custom resource:
+After setting the `kubernetes.azure.com/override-min-max` annotation to "enabled" in a VPA custom resource, you can customize the maximum and minimum allowed CPU and memory values in a VPA custom resource. The following example shows how to customize the maximum and minimum allowed CPU and memory values in a VPA custom resource:
 
 ```yaml
 apiVersion: autoscaling.k8s.io/v1
@@ -89,9 +89,9 @@ spec:
   ...
 ```
 
-## Override resource update mode
+## Customize resource update mode
 
-After setting the `kubernetes.azure.com/override-update-mode` annotation to "enabled" in a VPA custom resource, you can override the update policy `updateMode` value in a VPA custom resource to "Off" or "Initial" (default). The following example shows how to override the update policy `updateMode` value to "Initial" in a VPA custom resource:
+After setting the `kubernetes.azure.com/override-update-mode` annotation to "enabled" in a VPA custom resource, you can customize the update policy `updateMode` value in a VPA custom resource to "Off" or "Initial" (default). The following example shows how to customize the update policy `updateMode` value to "Initial" in a VPA custom resource:
 
 ```yaml
 apiVersion: autoscaling.k8s.io/v1

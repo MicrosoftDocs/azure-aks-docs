@@ -537,8 +537,8 @@
               items:
                 - name: Enable Cost optimized add-on scaling
                   href: optimized-addon-scaling.md
-                - name: Override resource configuration for managed add-ons
-                  href: override-resource-configuration.md
+                - name: Customize resource configuration for managed add-ons
+                  href: customize-resource-configuration.md
         - name: Configure Metrics Server VPA
           href: use-metrics-server-vertical-pod-autoscaler.md
         - name: Proximity placement groups
