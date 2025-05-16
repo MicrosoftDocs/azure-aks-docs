@@ -25,9 +25,9 @@ Enabling the cost optimized add-on scaling feature in your AKS cluster installs 
 
 | Annotation | Description | Values |
 | --- | --- | --- |
-| `kubernetes.azure.com/override-requests-limits` | Supports the capability to customize the container resource CPU/memory requests/limits in a Deployment or DaemonSet if the value is "enabled". Set the value to "disabled" to return back to AKS provides container policy max/min CPU/memory value. | "enabled" or "disabled" |
-| `kubernetes.azure.com/override-min-max` | Supports the capability to customize the container policy maximum/minimum allowed CPU/memory value in VPA custom resource if the value is "enabled". Set the value to "disabled" to return back to AKS provides container policy max/min CPU/memory value. | "enabled" or "disabled" |
-| `kubernetes.azure.com/override-update-mode` | Supports the capability to customize the update policy `updateMode` value in a VPA custom resource if the value is "enabled". Set the value to "disabled" to return back to AKS provides update mode "Initial". | "enabled" or "disabled" |
+| `kubernetes.azure.com/override-requests-limits` | Supports the capability to customize the container resource CPU/memory requests/limits in a Deployment or DaemonSet if the value is "enabled". Set the value to "disabled" to reset to AKS defaults. | "enabled" or "disabled" |
+| `kubernetes.azure.com/override-min-max` | Supports the capability to customize the container policy maximum/minimum allowed CPU/memory value in VPA custom resource if the value is "enabled". Set the value to "disabled" to reset to AKS defaults. | "enabled" or "disabled" |
+| `kubernetes.azure.com/override-update-mode` | Supports the capability to customize the update policy `updateMode` value in a VPA custom resource if the value is "enabled". Set the value to "disabled" to reset to AKS defaults. | "enabled" or "disabled" |
 
 ## Customize resource CPU/memory requests/limits
 
