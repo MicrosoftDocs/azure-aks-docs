@@ -72,6 +72,12 @@ If this race condition occurs for a node, the Azure NPM pod on that node enters 
 
 To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with *four or less* `ipBlock` sections is less likely to hit the issue.
 
+### Filtering load balancer or service traffic
+
+Kubernetes service routing for both inbound and outbound services often involves rewriting the source and destination IPs on traffic that is being processed, including traffic that comes into the cluster from a LoadBalancer service. This rewrite behavior means that traffic being received from or sent to an external service may not be properly processed by network policies (see the [Kubernetes Network Policies documentation][kubernetes-network-policies] for more details).
+
+To restrict what sources can send traffic to a load balancer service, use the `spec.loadBalancerSourceRanges` to configure traffic blocking that is applied before any rewrites occur. More information is available in the [AKS standard load balancer](/azure/aks/load-balancer-standard#restrict-inbound-traffic-to-specific-ip-ranges) documentation.
+
 ## Before you begin
 
 You need the Azure CLI version 2.0.61 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].

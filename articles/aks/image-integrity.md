@@ -215,18 +215,20 @@ If you want to use your own images, see the [guidance for image signing](/azure/
 
 ## Disable Image Integrity
 
-* Disable Image Integrity on your cluster using the [`az aks update`][az-aks-update] command with the `--disable-image-integrity` flag.
-
-    ```azurecli-interactive
-    az aks update --resource-group myResourceGroup --name MyManagedCluster --disable-image-integrity
-    ```
-
 ### Remove policy initiative
 
-* Remove the policy initiative using the [`az policy assignment delete`][az-policy-assignment-delete] command.
+* First you should remove the policy initiative using the [`az policy assignment delete`][az-policy-assignment-delete] command.
 
     ```azurecli-interactive
     az policy assignment delete --name 'deploy-trustedimages'
+    ```
+
+### Diable add-on
+
+* Then disable Image Integrity add-on on your cluster using the [`az aks update`][az-aks-update] command with the `--disable-image-integrity` flag.
+
+    ```azurecli-interactive
+    az aks update --resource-group myResourceGroup --name MyManagedCluster --disable-image-integrity
     ```
 
 ## Next steps
