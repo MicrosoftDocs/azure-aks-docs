@@ -6,7 +6,7 @@ ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
-ms.date: 10/10/2025
+ms.date: 10/05/2025
 ---
 
 # Overview of Metric Capture in ACNS under Container Network Observability

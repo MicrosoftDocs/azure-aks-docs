@@ -24,6 +24,8 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 * Container Network Log is available for Cilium Data planes only. 
 
+* If existing cluster is < 1.32, upgrade the cluster to the latest available Kubernetes version.
+
 ### Install the `aks-preview` Azure CLI extension
 
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
@@ -36,7 +38,7 @@ az extension add --name aks-preview
 # Update the extension to make sure you have the latest version installed
 az extension update --name aks-preview
 ``` 
-* If existing cluster is < 1.32, upgrade the cluster to the latest available Kubernetes version.
+
 
 ## Configuring Conatiner Network Logs:always-on
 
@@ -84,7 +86,7 @@ az aks create \
     --network-dataplane cilium \
     --node-count 2 \
     --pod-cidr 192.168.0.0/16 \
-    --kubernetes-version 1.29 \
+    --kubernetes-version 1.32 \
     --enable-acns
 ```
 ---
@@ -215,14 +217,14 @@ To enable the container network logs on existing cluster, follow these steps:
    ```
 ---    
 
-## Get cluster credentials 
+### Get cluster credentials 
 
 Once you have Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.
 
 ```azurecli-interactive
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 ```
-## Validate the Setup
+### Validate the Setup
 Validate if Retina Network flow log capability is enabled with following command –
 ```azurecli-interactive
    az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME
