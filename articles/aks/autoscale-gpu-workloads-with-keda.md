@@ -236,3 +236,6 @@ az aks nodepool add \
 - Deploy a [multi-instance GPU (MIG)](./gpu-multi-instance.md) workload on AKS.
 - Explore [KAITO on AKS](./ai-toolchain-operator.md) for AI inferencing and fine-tuning.
 - Learn more about [Ray clusters on AKS](./ray-overview.md).
+
+<!-- INTERNAL LINKS -->
+[install-azure-cli]: /cli/azure/install-azure-cli
