@@ -1,7 +1,7 @@
 ---
 title: "Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI"
 description: In this quickstart, you learn how to create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure CLI.
-ms.date: 04/28/2025
+ms.date: 05/13/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -166,7 +166,17 @@ Your output should look similar to the following example output:
 ```output
 {
   "etag": "...",
-  "hubProfile": null,
+  "hubProfile": {
+    "agentProfile": {
+      "subnetId": null,
+      "vmSize": null
+    },
+    "apiServerAccessProfile": {
+      "enablePrivateCluster": false,
+      "enableVnetIntegration": false,
+      "subnetId": null
+    }
+  },
   "id": "/subscriptions/<SUBSCRIPTION_ID>/resourceGroups/fleet-demo/providers/Microsoft.ContainerService/fleets/fleet-demo",
   "identity": {
     "principalId": <system-identity-id>,
