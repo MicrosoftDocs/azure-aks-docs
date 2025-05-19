@@ -114,7 +114,8 @@ Apply this manifest using the `kubectl apply` command:
 kubectl apply -f keda-gpu-scaler-prometheus.yaml
 ```
 
-## Test the New Scaling Capabilities
+## Test the new scaling capabilities
+
 
 1. Create a sample workload that consumes GPU resources in your AKS cluster. You can start with the following example:
 
