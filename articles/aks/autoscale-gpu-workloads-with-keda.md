@@ -158,24 +158,25 @@ kubectl apply -f keda-gpu-scaler-prometheus.yaml
     ```
 
 
-> [!NOTE] 
-> If no GPU nodes are currently available, the pod will remain in a `Pending` state until a node is provisioned, showing the following message:
+    > [!NOTE] 
+    > If no GPU nodes are currently available, the pod will remain in a `Pending` state until a node is provisioned, showing the following message:
 
-```bash
-Events:
-  Type     Reason            Age    From                Message
-  ----     ------            ----   ----                -------
-  Warning  FailedScheduling  3m19s  default-scheduler   0/2 nodes are available: 2 Insufficient nvidia.com/gpu. preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
-```
+    ```bash
+    Events:
+      Type     Reason            Age    From                Message
+      ----     ------            ----   ----                -------
+      Warning  FailedScheduling  3m19s  default-scheduler   0/2 nodes are available: 2 Insufficient nvidia.com/gpu. preemption: 0/2 nodes are available: 2 No preemption victims found for incoming pod.
+    ```
 
-The cluster autoscaler will eventually start and provision a new GPU node:
+    The cluster autoscaler will eventually start and provision a new GPU node:
 
-```bash
-Normal   TriggeredScaleUp  2m43s  cluster-autoscaler  pod triggered scale-up: [{aks-gpunp-36854149-vmss 0->1 (max: 2)}]
-```
+    ```bash
+    Normal   TriggeredScaleUp  2m43s  cluster-autoscaler  pod triggered scale-up: [{aks-gpunp-36854149-vmss 0->1 (max: 2)}]
+    ```
 
-> [!NOTE] 
-> Depending on the size of your provisioned GPU SKU, node provisioning might take several minutes.
+    > [!NOTE] 
+    > Depending on the size of your provisioned GPU SKU, node provisioning might take several minutes.
+
 
 3. To verify progress, check the Horizontal Pod Autoscaler (HPA) events using the `kubectl describe` command:
 
