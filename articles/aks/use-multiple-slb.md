@@ -57,7 +57,45 @@ This mechanism lets you:
 - Azure CLI ** Need Requirements
 - Subscription feature flag `Microsoft.ContainerService/MultipleStandardLoadBalancersPreview` registered.  
 - Kubernetes version 1.28 or later.
-- Cluster created with `--load-balancer-backend-pool-type nodeIP` or update and existing cluster using `az aks update`.  
+- Cluster created with `--load-balancer-backend-pool-type nodeIP` or update and existing cluster using `az aks update`.
+
+### Install the aks-preview Azure CLI extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli
+    az extension add --name aks-preview
+    ```
+
+* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli
+    az extension update --name aks-preview
+    ```
+
+### Register the 'MultipleStandardLoadBalancersPreview' feature flag
+
+1. Register the `MultipleStandardLoadBalancersPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "MultipleStandardLoadBalancersPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command:
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "MultipleStandardLoadBalancersPreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
 
 ### Add the first load balancer configuration
 
