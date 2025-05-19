@@ -33,14 +33,15 @@ At this point, you should have:
 
 ## Create a new KEDA scaler using the NVIDIA DCGM Exporter metrics
 
-To create a KEDA scaler, you will need two components:
+To create a KEDA scaler, you need two components:
 
 1. The Prometheus query endpoint.
 2. The User Assigned Managed Identity.
 
-## Retrieve the Azure Managed Prometheus query endpoint
+### Retrieve the Azure Managed Prometheus query endpoint
 
-This value is available in the **Overview** section of the Azure Monitor workspace attached to your AKS cluster.
+1. You can find this value in the **Overview** section of the Azure Monitor workspace attached to your AKS cluster in the Azure portal.
+
 
 :::image type="content" source="./media/autoscale-gpu/prometheus-query-ep.png" alt-text="Screenshot of the Managed Prometheus Query Endpoint.":::
 
