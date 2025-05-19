@@ -8,6 +8,7 @@ ms.topic: how-to
 ms.date: 05/13/2025
 ms.author: allensu
 author: asudbring
+ms.service: azure-kubernetes-service
 ---
 
 ## Overview
