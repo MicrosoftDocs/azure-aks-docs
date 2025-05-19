@@ -43,7 +43,7 @@ To create a KEDA scaler, you need two components:
 1. You can find this value in the **Overview** section of the Azure Monitor workspace attached to your AKS cluster in the Azure portal.
 
 
-:::image type="content" source="./media/autoscale-gpu/prometheus-query-ep-1.png" alt-text="Screenshot of the Managed Prometheus Query Endpoint.":::
+    :::image type="content" source="./media/autoscale-gpu/prometheus-query-ep-1.png" alt-text="Screenshot of the Managed Prometheus Query Endpoint.":::
 
 2. Export the Azure Managed Prometheus query endpoint to an environmental variable:
 
