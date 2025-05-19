@@ -45,11 +45,11 @@ To create a KEDA scaler, you need two components:
 
 :::image type="content" source="./media/autoscale-gpu/prometheus-query-ep-1.png" alt-text="Screenshot of the Managed Prometheus Query Endpoint.":::
 
-Export the Azure Managed Prometheus query endpoint to an environmental variable:
+2. Export the Azure Managed Prometheus query endpoint to an environmental variable:
 
-```bash
-export PROMETHEUS_QUERY_ENDPOINT="https://example.prometheus.monitor.azure.com"
-```
+    ```bash
+    export PROMETHEUS_QUERY_ENDPOINT="https://example.prometheus.monitor.azure.com"
+    ```
 
 ## Retrieve the User Assigned Managed Identity
 
