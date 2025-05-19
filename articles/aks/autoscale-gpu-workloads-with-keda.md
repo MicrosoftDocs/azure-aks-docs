@@ -177,37 +177,38 @@ Normal   TriggeredScaleUp  2m43s  cluster-autoscaler  pod triggered scale-up: [{
 > [!NOTE] 
 > Depending on the size of your provisioned GPU SKU, node provisioning might take several minutes.
 
-To verify progress, check the Horizontal Pod Autoscaler (HPA) events using the `kubectl describe` command:
+3. To verify progress, check the Horizontal Pod Autoscaler (HPA) events using the `kubectl describe` command:
 
-```bash
-kubectl describe hpa my-gpu-workload
-```
+    ```bash
+    kubectl describe hpa my-gpu-workload
+    ```
 
-The output should look like the following:
+    The output should look like the following:
 
-```bash
-Conditions:
-  Type            Status  Reason            Message
-  ----            ------  ------            -------
-  AbleToScale     True    ReadyForNewScale  recommended size matches current size
-  ScalingActive   True    ValidMetricFound  the HPA successfully calculated a replica count from external metric s0-prometheus(&LabelSelector{MatchLabels:map[string]string{scaledobject.keda.sh/name: my-gpu-workload}})
-  ScalingLimited  True    TooFewReplicas    the desired replica count is less than the minimum replica count
-```
+    ```output
+    Conditions:
+      Type            Status  Reason            Message
+      ----            ------  ------            -------
+      AbleToScale     True    ReadyForNewScale  recommended size matches current size
+      ScalingActive   True    ValidMetricFound  the HPA successfully calculated a replica count from external metric s0-prometheus(&LabelSelector{MatchLabels:map[string]string{scaledobject.keda.sh/name: my-gpu-workload}})
+      ScalingLimited  True    TooFewReplicas    the desired replica count is less than the minimum replica count
+    ```
 
-Confirm that the GPU node has been added and the pod is running with the `kubectl get` command:
+4. Confirm that the GPU node has been added and the pod is running with the `kubectl get` command:
 
-```bash
-kubectl get nodes
-```
+    ```bash
+    kubectl get nodes
+    ```
 
-The output should look like the following:
+    The output should look like the following:
 
-```bash
-NAME                                STATUS   ROLES    AGE     VERSION
-aks-gpunp-36854149-vmss000005       Ready    <none>   4m36s   v1.31.7
-aks-nodepool1-34179260-vmss000002   Ready    <none>   26h     v1.31.7
-aks-nodepool1-34179260-vmss000003   Ready    <none>   26h     v1.31.7
-```
+    ```output
+    NAME                                STATUS   ROLES    AGE     VERSION
+    aks-gpunp-36854149-vmss000005       Ready    <none>   4m36s   v1.31.7
+    aks-nodepool1-34179260-vmss000002   Ready    <none>   26h     v1.31.7
+    aks-nodepool1-34179260-vmss000003   Ready    <none>   26h     v1.31.7
+    ```
+
 
 ## Scale down the GPU node pool
 
