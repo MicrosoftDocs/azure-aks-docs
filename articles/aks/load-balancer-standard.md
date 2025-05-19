@@ -608,7 +608,7 @@ Take advantage of connection reuse and connection pooling whenever possible. The
 ## Shared health probes for `externalTrafficPolicy: Cluster` Services (preview)
 
 In clusters that use `externalTrafficPolicy: Cluster`, Azure Load Balancer (SLB) currently creates a _separate probe per Service_ and targets each Service’s `nodePort`.  
-That design means SLB infers node health from whichever **application pod** answers the probe. As clusters grow, this approach leads to several well‑documented issues:
+That design means SLB infers node health from whichever **application pod** answers the probe. As clusters grow, this approach leads to several issues:
 
 * **Configuration drift and blind spots** – SLB can’t detect a failed or mis‑configured `kube‑proxy` if iptables rules are still present.
 * **Duplicate health logic** – readiness must be defined twice: once in each pod’s `readinessProbe`, and again through SLB annotations.
@@ -649,12 +649,12 @@ The **shared probe mode** (preview) solves these problems by moving to a *single
     az extension update --name aks-preview
     ```
 
-### Register the 'TODO' feature flag
+### Register the 'EnableSLBSharedHealthProbePreview' feature flag
 
-1. Register the `TODO` feature flag using the [`az feature register`][az-feature-register] command.
+1. Register the `EnableSLBSharedHealthProbePreview` feature flag using the [`az feature register`][az-feature-register] command.
 
     ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "TODO"
+    az feature register --namespace "Microsoft.ContainerService" --name "EnableSLBSharedHealthProbePreview"
     ```
 
     It takes a few minutes for the status to show *Registered*.
@@ -662,7 +662,7 @@ The **shared probe mode** (preview) solves these problems by moving to a *single
 2. Verify the registration status using the [`az feature show`][az-feature-show] command:
 
     ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "TODO"
+    az feature show --namespace "Microsoft.ContainerService" --name "EnableSLBSharedHealthProbePreview"
     ```
 
 3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
