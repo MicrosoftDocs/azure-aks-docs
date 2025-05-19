@@ -53,7 +53,7 @@ To create a KEDA scaler, you need two components:
 
 ### Retrieve the User Assigned Managed Identity
 
-The User Assigned Managed Identity was previously created following the [KEDA integration steps](/azure/azure-monitor/containers/integrate-keda#set-up-a-workload-identity). If needed, reload this value with the [az identity show](/cli/azure/identity#az-identity-show) command:
+The User Assigned Managed Identity was previously created following the [KEDA integration steps](/azure/azure-monitor/containers/integrate-keda#set-up-a-workload-identity). If needed, reload this value with the [`az identity show`](/cli/azure/identity#az-identity-show) command:
 
 ```bash
 export USER_ASSIGNED_CLIENT_ID="$(az identity show --resource-group $RESOURCE_GROUP --name $USER_ASSIGNED_IDENTITY_NAME --query 'clientId' -o tsv)"
