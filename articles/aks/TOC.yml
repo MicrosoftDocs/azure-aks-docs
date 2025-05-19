@@ -1134,7 +1134,7 @@
           href: devops-pipeline.md
         - name: GitHub Actions for Kubernetes
           href: kubernetes-action.md
-        - name: Configure automated deployments
+        - name: Automate app deployment to AKS with CI/CD
           href: automated-deployments.md
         - name: Jenkins continuous deployment
           href: /azure/developer/jenkins/deploy-from-github-to-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json

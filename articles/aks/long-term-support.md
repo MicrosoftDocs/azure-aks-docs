@@ -21,16 +21,16 @@ To help you manage your Kubernetes version upgrades, AKS provides a *long-term s
 
 After approximately one year, a given Kubernetes minor version exits *community support*, making bug fixes and security updates unavailable for your AKS clusters.
 
-AKS provides one year of *community support* and one year of *long-term support* to back port security fixes from the community upstream in the public AKS repository. The upstream LTS working group contributes efforts back to the community to provide customers with a longer support window. LTS intends to give you an extended period of time to plan and test for upgrades over a two-year period from the general availability (GA) of the designated Kubernetes version.
+AKS offers one year of *community support* and one year of *long-term support* to backport security fixes from the upstream community. The upstream LTS working group contributes to the community, extending the support window. LTS provides more time to plan and test upgrades over two years from the Kubernetes version's general availability (GA).
 
 |   | Community support  |Long-term support   |
 |---|---|---|
 | **When to use** | When you can keep up with upstream Kubernetes releases | When you need control over when to migrate from one version to another  |
-|  **Support versions** | Three-GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support EOL period. Refer to the [Community Support Calendar][supported] for more information. |
+|  **Support versions** | Three-GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support end of life period. Refer to the [Community Support Calendar][supported] for more information. |
 
 ## Enable long-term support
 
-**Enabling LTS requires moving your cluster to the Premium tier and explicitly selecting the LTS support plan**. While it's possible to enable LTS when the cluster is in *community support, you are charged once you enable the Premium tier.
+**Enabling LTS requires moving your cluster to the Premium tier and explicitly selecting the LTS support plan**. While it's possible to enable LTS when the cluster is in *community support, you're  charged once you enable the Premium tier.
 
 ### Enable LTS on a new cluster
 
@@ -71,7 +71,7 @@ If you want to carry out an in-place migration, the AKS service migrates your co
     ```
 
     > [!NOTE]
-    > Kubernetes versions 1.27, 1.28, 1.29, and 1.30 are available as Long-Term Support (LTS) versions. To view available LTS releases and their patches by region, see the [AKS release tracker](release-tracker.md). Moving forward, all AKS Kubernetes versions will be LTS-compatible. For the LTS calendar, visit the [AKS Kubernetes Release Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar).
+    > Moving forward, all AKS Kubernetes versions will be LTS-compatible. For the latest LTS calendar, visit the [AKS Kubernetes Release Calendar](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-kubernetes-release-calendar). To view available LTS releases and their patches by region, see the [AKS release tracker](release-tracker.md).
 
 
 ## Disable long-term support on an existing cluster
@@ -133,12 +133,12 @@ Yes, you can create a new AKS cluster using an LTS version even after its commun
 
 ### Can I enable and disable LTS on an AKS-supported version after community support ends?
 
-Yes, you can enable the LTS support plan on any AKS-supported version even after its community support period has ended. However, once the community support period has ended, you cannot disable LTS for that version.
+Yes, you can enable the LTS support plan on any AKS-supported version even after its community support period has ended. However, once the community support period has ended, you can't disable LTS for that version.
 
 
-### Does a community-supported AKS cluster automatically become LTS eligible after EOL?
+### Does a community-supported AKS cluster automatically become LTS eligible after End of Life?
 
-No, you must explicitly enable LTS on the cluster to receive support. This also requires upgrading to the Premium tier. Please refer to the [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/) for more information.
+No, you must explicitly enable LTS on the cluster to receive support. This also requires upgrading to the Premium tier. Refer to the [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/) for more information.
 
 ### Will every AKS version support Long-Term Support (LTS)?
 
@@ -150,7 +150,7 @@ LTS is available on the Premium tier refer to the [Premium tier pricing](https:/
 
 ### After enabling LTS, my cluster's autoUpgradeChannel changed to patch channel
 
-This is expected. If there was no defined autoUpgradeChannel for the AKS cluster, it will default to `patch` with LTS.
+This is expected. If there was no defined autoUpgradeChannel for the AKS cluster, it defaults to `patch` with LTS.
 
 <!-- LINKS -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
