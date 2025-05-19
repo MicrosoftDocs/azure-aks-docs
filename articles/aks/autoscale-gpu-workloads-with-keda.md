@@ -73,46 +73,46 @@ This manifest creates the `TriggerAuthentication` and `ScaledObject` for autosca
 | `threshold`           | The target average GPU utilization percentage that triggers scaling. If the average exceeds **5%**, the scaler increases the number of pod replicas.                                              |
 | `activationThreshold` | The minimum average GPU utilization required to activate scaling. If the utilization is below **2%**, scaling actions will not occur, preventing unnecessary scaling during low activity periods. |
 
-Create the following KEDA manifest:
+1. Create the following KEDA manifest:
 
-```bash
-cat <<EOF > keda-gpu-scaler-prometheus.yaml
-apiVersion: keda.sh/v1alpha1
-kind: TriggerAuthentication
-metadata:
-  name: azure-managed-prometheus-trigger-auth
-spec:
-  podIdentity:
-    provider: azure-workload
-    identityId: ${USER_ASSIGNED_CLIENT_ID}
----
-apiVersion: keda.sh/v1alpha1
-kind: ScaledObject
-metadata:
-  name: my-gpu-workload
-spec:
-  scaleTargetRef:
-    name: my-gpu-workload
-  minReplicaCount: 1
-  maxReplicaCount: 20
-  triggers:
-    - type: prometheus
-      metadata:
-        serverAddress: ${PROMETHEUS_QUERY_ENDPOINT}
-        metricName: DCGM_FI_DEV_GPU_UTIL
-        query: avg(DCGM_FI_DEV_GPU_UTIL{deployment="my-gpu-workload"})
-        threshold: '5'
-        activationThreshold: '2'
-      authenticationRef:
-        name: azure-managed-prometheus-trigger-auth
-EOF
-```
+    ```bash
+    cat <<EOF > keda-gpu-scaler-prometheus.yaml
+    apiVersion: keda.sh/v1alpha1
+    kind: TriggerAuthentication
+    metadata:
+      name: azure-managed-prometheus-trigger-auth
+    spec:
+      podIdentity:
+        provider: azure-workload
+        identityId: ${USER_ASSIGNED_CLIENT_ID}
+    ---
+    apiVersion: keda.sh/v1alpha1
+    kind: ScaledObject
+    metadata:
+      name: my-gpu-workload
+    spec:
+      scaleTargetRef:
+        name: my-gpu-workload
+      minReplicaCount: 1
+      maxReplicaCount: 20
+      triggers:
+        - type: prometheus
+          metadata:
+            serverAddress: ${PROMETHEUS_QUERY_ENDPOINT}
+            metricName: DCGM_FI_DEV_GPU_UTIL
+            query: avg(DCGM_FI_DEV_GPU_UTIL{deployment="my-gpu-workload"})
+            threshold: '5'
+            activationThreshold: '2'
+          authenticationRef:
+            name: azure-managed-prometheus-trigger-auth
+    EOF
+    ```
 
-Apply this manifest using the `kubectl apply` command:
+2. Apply this manifest using the `kubectl apply` command:
 
-```bash
-kubectl apply -f keda-gpu-scaler-prometheus.yaml
-```
+    ```bash
+    kubectl apply -f keda-gpu-scaler-prometheus.yaml
+    ```
 
 ## Test the new scaling capabilities
 
