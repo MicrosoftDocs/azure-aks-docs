@@ -37,6 +37,8 @@ The following Service types are available in AKS: [`ClusterIP`](#clusterip), [`N
 
 For HTTP load balancing of inbound traffic, you can also use an [Ingress controller][ingress-controllers].
 
+You can also use the `LoadBalancer` type to create multiple public load balancers in a single AKS cluster. This is useful for large clusters or port-heavy workloads that can quickly exhaust the limits of a single load balancer. For more information, see [Use multiple public load balancers in Azure Kubernetes Service (preview)](use-multiple-slb.md).
+
 ## ExternalName
 
 `ExternalName` creates a specific DNS entry for easier application access. You can dynamically assign the load balancers and service IP address, or you can specify an existing static IP address. You can assign both internal and external static IP addresses. Existing static IP addresses are often tied to a DNS entry.
