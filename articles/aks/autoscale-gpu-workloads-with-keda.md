@@ -51,7 +51,7 @@ To create a KEDA scaler, you need two components:
     export PROMETHEUS_QUERY_ENDPOINT="https://example.prometheus.monitor.azure.com"
     ```
 
-## Retrieve the User Assigned Managed Identity
+### Retrieve the User Assigned Managed Identity
 
 The User Assigned Managed Identity was previously created following the [KEDA integration steps](/azure/azure-monitor/containers/integrate-keda#set-up-a-workload-identity). If needed, reload this value with the [az identity show](/cli/azure/identity#az-identity-show) command:
 
