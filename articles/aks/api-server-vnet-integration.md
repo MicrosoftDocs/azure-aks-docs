@@ -69,7 +69,6 @@ API Server VNet Integration is available in the following regions:
 - westus
 - westus3
 
-
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
 You can configure your AKS clusters with API Server VNet Integration in managed VNet or bring-your-own VNet mode. You can create them as public clusters (with API server access available via a public IP) or private clusters (where the API server is only accessible via private VNet connectivity). You can also toggle between a public and private state without redeploying your cluster.
