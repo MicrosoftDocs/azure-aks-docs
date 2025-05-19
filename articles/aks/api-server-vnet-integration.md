@@ -19,6 +19,10 @@ The control plane or API server is in an AKS-managed Azure subscription. Your cl
 
 API Server VNet Integration is supported for public or private clusters. You can add or remove public access after cluster provisioning. Unlike non-VNet integrated clusters, the agent nodes always communicate directly with the private IP address of the API server internal load balancer (ILB) IP without using DNS. All node to API server traffic is kept on private networking, and no tunnel is required for API server to node connectivity. Out-of-cluster clients needing to communicate with the API server can do so normally if public network access is enabled. If public network access is disabled, you should follow the same private DNS setup methodology as standard [private clusters](private-clusters.md).
 
+## Pre-requisites
+
+- You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
+
 ## Limited availability
 
 > [!IMPORTANT]
