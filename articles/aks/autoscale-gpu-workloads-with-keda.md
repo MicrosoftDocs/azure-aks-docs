@@ -116,46 +116,47 @@ kubectl apply -f keda-gpu-scaler-prometheus.yaml
 
 ## Test the New Scaling Capabilities
 
-Create a sample workload that consumes GPU resources in your AKS cluster. You can start with the following example:
+1. Create a sample workload that consumes GPU resources in your AKS cluster. You can start with the following example:
 
-```bash
-cat <<EOF > my-gpu-workload.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: my-gpu-workload
-  namespace: default
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: my-gpu-workload
-  template:
+    ```bash
+    cat <<EOF > my-gpu-workload.yaml
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
-      labels:
-        app: my-gpu-workload
+      name: my-gpu-workload
+      namespace: default
     spec:
-      tolerations:
-        - key: "sku"
-          operator: "Equal"
-          value: "gpu"
-          effect: "NoSchedule"
-      containers:
-        - name: my-gpu-workload
-          image: mcr.microsoft.com/azuredocs/samples-tf-mnist-demo:gpu
-          command: ["/bin/sh"]
-          args: ["-c", "while true; do python /app/main.py --max_steps=500; done"]
-          resources:
-            limits:
-              nvidia.com/gpu: 1
-EOF
-```
+      replicas: 1
+      selector:
+        matchLabels:
+          app: my-gpu-workload
+      template:
+        metadata:
+          labels:
+            app: my-gpu-workload
+        spec:
+          tolerations:
+            - key: "sku"
+              operator: "Equal"
+              value: "gpu"
+              effect: "NoSchedule"
+          containers:
+            - name: my-gpu-workload
+              image: mcr.microsoft.com/azuredocs/samples-tf-mnist-demo:gpu
+              command: ["/bin/sh"]
+              args: ["-c", "while true; do python /app/main.py --max_steps=500; done"]
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+    EOF
+    ```
 
-Apply this deployment manifest using the `kubectl apply` command:
+2. Apply this deployment manifest using the `kubectl apply` command:
 
-```bash
-kubectl apply -f my-gpu-workload.yaml
-```
+    ```bash
+    kubectl apply -f my-gpu-workload.yaml
+    ```
+
 
 > [!NOTE] 
 > If no GPU nodes are currently available, the pod will remain in a `Pending` state until a node is provisioned, showing the following message:
