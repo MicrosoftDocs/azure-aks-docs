@@ -221,19 +221,21 @@ kubectl delete deployment my-gpu-workload
 
 > [!NOTE] 
 > You can configure the node pool to scale down to zero by enabling the cluster autoscaler and setting the `min-count` to `0` at node pool creation time. For example:
+>
+> ```azurecli-interactive
+> az aks nodepool add \
+>  --resource-group myResourceGroup \
+>  --cluster-name myAKSCluster \
+>  --name gpunp \
+>  --node-count 1 \
+>  --node-vm-size Standard_NC40ads_H100_v5 \
+>  --node-taints sku=gpu:NoSchedule \
+>  --enable-cluster-autoscaler \
+>  --min-count 0 \
+>  --max-count 3
+> ```
+>
 
-```bash
-az aks nodepool add \
-  --resource-group myResourceGroup \
-  --cluster-name myAKSCluster \
-  --name gpunp \
-  --node-count 1 \
-  --node-vm-size Standard_NC40ads_H100_v5 \
-  --node-taints sku=gpu:NoSchedule \
-  --enable-cluster-autoscaler \
-  --min-count 0 \
-  --max-count 3
-```
 
 ## Next steps
 
