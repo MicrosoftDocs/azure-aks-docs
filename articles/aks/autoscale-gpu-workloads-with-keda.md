@@ -14,7 +14,7 @@ In this article, you learn how to autoscale GPU workloads on Azure Kubernetes Se
 
 ## Prerequisites
 
-- You will need [Azure CLI](/cli/azure/install-azure-cli) version 2.60.0 or later for this tutorial. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+- [Azure CLI](/cli/azure/install-azure-cli) version 2.60.0 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 - [Helm](https://helm.sh/docs/intro/install/) version 3.17.0 or later installed. 
 - [kubectl](https://kubernetes.io/docs/tasks/tools/) version 1.28.9 or later installed.
 - NVIDIA GPU quota in your Azure subscription. This example uses the `Standard_NC40ads_H100_v5` SKU, but other NVIDIA H100 VM SKUs are also supported.
