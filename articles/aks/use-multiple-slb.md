@@ -22,12 +22,42 @@ Use this feature to:
 - Isolate tenant or workload traffic by binding a dedicated SLB to its own agent pool.  
 - Distribute private‑link services across multiple SLBs when you approach the per‑SLB limit.
 
+### How AKS chooses a load balancer (node & Service placement)
+
+Multiple‑SLB clusters rely on three independent selectors to decide where traffic lands:
+
+| Selector source | Evaluated for | What it does |
+|-----------------|--------------|--------------|
+| **Primary agent‑pool name** (set when the LB config is created) | Nodes only | All nodes in this pool are permanently attached to the corresponding SLB backend pool. Guarantees each SLB has at least one healthy node. |
+| **Node selector** (`--node-selector` on the LB config)<br>*Kubernetes label selector* | Nodes only | Adds any node whose labels match to the SLB, supplementing the primary pool. Useful for multi‑pool or zone spread. |
+| **Namespace & Service selectors** (`--service-namespace-selector`, `--service-label-selector` on the LB config)<br>*Kubernetes label selectors* | Services only | A `LoadBalancer` Service is eligible for an SLB when **both** its namespace labels and its own labels satisfy these selectors (if supplied). |
+
+**Optional Service annotation**
+
+`service.beta.kubernetes.io/azure-load-balancer-configurations: "<lb‑config‑1>,<lb‑config‑2>"`  
+narrows the controller’s choice to a named subset of SLB configs. If the annotation is omitted, every configuration that passes the selectors is considered.
+
+**Controller placement sequence**
+
+1. **Node reconciliation** – Each new or updated node is evaluated against *primary pool* and *node selectors*; matching SLBs add the node to their backend pools.  
+2. **Service reconciliation** – When a `LoadBalancer` Service appears:  
+   - Intersect the annotation list (if present) with SLBs whose namespace and label selectors match.  
+   - Discard SLBs with `allowServicePlacement=false`, or that would exceed Azure limits (300 rules / 8 private‑link services).  
+   - Select the SLB that currently has the fewest rules. The Service’s front‑end is provisioned there.  
+3. **Rebalance (optional)** – Run `az aks loadbalancer rebalance` to redistribute nodes if rule counts drift after scaling operations.
+
+This mechanism lets you:
+
+- Keep platform or shared traffic on the default `kubernetes` configuration.  
+- Route team‑, environment‑, or workload‑specific Services to their own SLBs via labels.  
+- Scale a single cluster well past the 300‑rule per‑NIC ceiling without re‑architecting.
+
 ### Prerequisites
 
-- Azure CLI ** Need Requirements  
+- Azure CLI ** Need Requirements
 - Subscription feature flag `Microsoft.ContainerService/MultipleStandardLoadBalancersPreview` registered.  
-- Kubernetes version 1.27 or later.
-- Cluster created with `--load-balancer-backend-pool-type nodeIP` (you can’t migrate an existing NIC‑based cluster).  
+- Kubernetes version 1.28 or later.
+- Cluster created with `--load-balancer-backend-pool-type nodeIP` or update and existing cluster using `az aks update`.  
 
 ### Add the first load balancer configuration
 
@@ -89,7 +119,7 @@ Label the target namespace (e.g., `team1-apps`) to match the selector:
 You can now list the loadbalancers in the cluster to see the multiple configurations:
 
 ```azurecli
-az aks loadbalancer list --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME
+az aks loadbalancer list --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --output table
 ```
 
 ```output
