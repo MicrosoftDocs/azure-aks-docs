@@ -25,17 +25,17 @@ Examples:
   1.29.1
 ```
 
-Each number in the version indicates general compatibility with the previous version:
+Each number in the version reflects compatibility with previous versions:
 
-* **Major versions** change when incompatible API updates or backwards compatibility might be broken.
-* **Minor versions** change when functionality updates are made that are backwards compatible to the other minor releases.
-* **Patch versions** change when backwards-compatible bug fixes are made.
+* **Major versions**: Introduce incompatible API changes or break backward compatibility.
+* **Minor versions**: Add new features while maintaining backward compatibility.
+* **Patch versions**: Include backward-compatible bug fixes.
 
-Aim to run the latest patch release of the minor version you're running. For example, if your production cluster is on **`1.29.1`** and **`1.29.2`** is the latest available patch version available for the *1.29* minor version, you should upgrade to **`1.29.2`** as soon as possible to ensure your cluster is fully patched and supported.
+Always use the latest patch release for your current minor version. For example, if your production cluster is on **`1.29.1`** and **`1.29.2`** is the latest available patch version available for the *1.29* minor version, you should upgrade to **`1.29.2`** as soon as possible to ensure your cluster is fully patched and supported.
 
 ## AKS Kubernetes release calendar
 
-View the upcoming version releases on the AKS Kubernetes release calendar. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
+Check the AKS Kubernetes release calendar for upcoming version releases. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
 
 > [!NOTE]
 > AKS follows 12 months of support for a generally available (GA) Kubernetes version. To read more about our support policy for Kubernetes versioning, read our [FAQ](./supported-kubernetes-versions.md#faq).
@@ -48,6 +48,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Until 1.34 GA |
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
+| 1.33 | Apr 2025 | May 2025 | May 2025 | May 2026 | Until 1.37 GA |
 
 
 LTS Versions
@@ -59,8 +60,11 @@ LTS Versions
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
 | 1.27 | Apr 2023 | Jun 2023 | Jul 2023 | Jul 2024 | Jul 2025|
 | 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan 2025 | Feb 2026|
+| 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Apr 2026|
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Jul 2026|
-
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Nov 2026|
+| 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
+| 1.33 | Apr 2025 | May 2025 | May 2025 | May 2026 | May 2027|
 
 ### AKS Kubernetes release schedule Gantt chart
 
@@ -72,7 +76,14 @@ If you prefer to see this information visually, here's a Gantt chart with all th
 
 Note the following important changes before you upgrade to any of the available minor versions:
 
+### Kubernetes 1.33.0
+
+| AKS managed add-ons | AKS components | OS components | Breaking changes | Notes |
+|---------------------|----------------|---------------|------------------|-------|
+| • aci-connector-linux 1.6.2<br> • addon-resizer v1.8.23-2<br> • ai-toolchain-operator 0.4.5<br> • aks-windows-gpu-device-plugin 0.0.19<br> • ama-logs-linux 3.1.26<br> • ama-logs-win win-3.1.26<br> • app-routing-operator 0.0.3<br> • azure-monitor-metrics-cfg-reader 6.16.0-main-04-15-2025-d78050c6-cfg<br> • azure-monitor-metrics-ksm v2.15.0-4<br> • azure-monitor-metrics-linux 6.16.0-main-04-15-2025-d78050c6<br> • azure-monitor-metrics-target-allocator 6.16.0-main-04-15-2025-d78050c6-targetallocator<br> • azure-monitor-metrics-windows 6.16.0-main-04-15-2025-d78050c6-win<br> • azure-npm-image v1.5.45<br> • azure-npm-image-windows v1.5.5<br> • azure-policy 1.10.1<br> • azure-policy-webhook 1.10.0<br> • certgen v0.1.9<br> • cilium-agent 1.14.10-1<br> • cilium-envoy v1.31.5-250218<br> • cilium-operator-generic 1.14.10<br> • cloud-provider-node-manager-linux v1.33.0<br> • cloud-provider-node-manager-windows v1.33.0<br> • cluster-proportional-autoscaler v1.9.0-1<br> • container-networking-cilium-agent v1.16.6-250129<br> • container-networking-cilium-operator-generic v1.16.6-250129<br> • coredns v1.12.1-1<br> • cost-analysis-agent v0.0.23<br> • cost-analysis-opencost v1.111.0<br> • cost-analysis-prometheus v2.54.1<br> • cost-analysis-victoria-metrics v1.103.0<br> • extension-config-agent 1.23.3<br> • extension-manager 1.23.3<br> • fqdn-policy v1.16.6-250129<br> • gpu-provisioner 0.3.3<br> • health-probe-proxy v1.29.1<br> • hubble-relay v1.15.0<br> • image-cleaner v1.3.1<br> • ingress-appgw 1.8.1<br> • ip-masq-agent-v2 v0.1.15-2<br> • ipv6-hp-bpf v0.0.1<br> • keda v2.16.1<br> • keda-admission-webhooks v2.16.1<br> • keda-metrics-apiserver v2.16.1<br> • kube-egress-gateway-cni v0.0.20<br> • kube-egress-gateway-cni-ipam v0.0.20<br> • kube-egress-gateway-cnimanager v0.0.20<br> • kube-egress-gateway-daemon v0.0.20<br> • kube-egress-gateway-daemon-init v0.0.20<br> • metrics-server v0.7.2-6<br> • microsoft-defender-admission-controller 20250325.2<br> • microsoft-defender-low-level-collector 2.0.205<br> • microsoft-defender-low-level-init 1.3.81<br> • microsoft-defender-old-file-cleaner 1.0.214<br> • microsoft-defender-pod-collector 1.0.177<br> • microsoft-defender-security-publisher 1.0.211<br> • open-policy-agent-gatekeeper v3.18.2-1<br> • osm-bootstrap v1.2.9<br> • osm-controller v1.2.9<br> • osm-crds v1.2.9<br> • osm-healthcheck v1.2.9<br> • osm-init v1.2.9<br> • osm-injector v1.2.9<br> • osm-sidecar v1.32.2-hotfix.20241216<br> • overlay-vpa 1.2.1<br> • overlay-vpa-webhook-generation master.250430.1<br> • ratify-base v1.2.3<br> • retina-agent v0.0.31<br> • retina-agent-enterprise v0.1.9<br> • retina-agent-win v0.0.31<br> • retina-operator v0.1.9<br> • secrets-store-csi-driver v1.4.8<br> • secrets-store-csi-driver-windows v1.4.8<br> • secrets-store-driver-registrar-linux v2.11.1<br> • secrets-store-driver-registrar-windows v2.11.1<br> • secrets-store-livenessprobe-linux v2.13.1<br> • secrets-store-livenessprobe-windows v2.13.1<br> • secrets-store-provider-azure v1.6.2<br> • secrets-store-provider-azure-windows v1.6.2<br> • sgx-attestation 3.3.1<br> • sgx-plugin 1.0.0<br> • sgx-webhook 1.2.2<br> • tigera-operator v1.36.7<br> • windows-gmsa-webhook-image v0.12.1-2<br> • workload-identity-webhook v1.5.0 | • addon-override-manager master.250116.1<br> • apiserver-network-proxy-server v0.30.3-hotfix.20240819<br> • app-routing-operator 0.2.5<br> • ccp-webhook master.250509.3<br> • cluster-autoscaler v1.32.1-aks<br> • cost-analysis-scraper v0.0.23<br> • customer-net-probe master.250430.1<br> • envoy v1.31.5-master.241218.3<br> • ingress-dispatcher v1.31.5-master.250126.7<br> • kube-state-metrics v2.15.0-4<br> • gpu-provisioner 0.3.3<br> • karpenter 0.7.3-aks<br> • kube-egress-gateway-controller v0.0.20<br> • kubelet-serving-csr-approver v0.0.7<br> • live-patching-controller v0.0.8 | • Linux - Ubuntu 22.04<br>  • containerd 1.7.27-ubuntu22.04u1<br>  • kubernetes-cri-tools 1.32.0-ubuntu22.04u3<br>  • runc 1.2.6-ubuntu22.04u1<br> • Linux - AzureLinux 3.0<br>  • containerd 2.0.0-4.azl3<br>  • nvidia-container-toolkit 1.17.3<br> • Windows - Windows2022<br>  • containerd v1.7.20-azure.1 | • coredns v1.11.3-7 -> v1.12.1-1<br> • cloud-provider-node-manager-windows v1.32.5 -> v1.33.0<br> • cloud-provider-node-manager-linux v1.32.5 -> v1.33.0 | N/A |
+
 ### Kubernetes 1.32
+
 
 | AKS managed add-ons | AKS components | OS components | Breaking changes | Notes |
 |---------------------|----------------|---------------|------------------|-------|
@@ -104,7 +115,7 @@ Note the following important changes before you upgrade to any of the available 
 > Alias minor version requires Azure CLI version 2.37 or above and API version 20220401 or above. Use `az upgrade` to install the latest version of the CLI.
 
 
-AKS allows you to create a cluster without specifying the exact patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. For example, if you create a cluster with **`1.29`** and **`1.29.2`** is the latest GA would patch available, your cluster will be created with **`1.29.2`**. If you want to upgrade your patch version in the same minor version, please use [autoupgrade](./auto-upgrade-cluster.md).
+You can create an AKS cluster without specifying a patch version. When you create a cluster without designating a patch, the cluster runs the minor version's latest GA patch. For example, if you create a cluster with **`1.29`** and **`1.29.2`** is the latest GA would patch available, your cluster is created with **`1.29.2`**. If you want to upgrade your patch version in the same minor version, use [autoupgrade](./auto-upgrade-cluster.md).
 
 
 To see what patch you're on, run the `az aks show --resource-group myResourceGroup --name myAKSCluster` command. The `currentKubernetesVersion` property shows the whole Kubernetes version.
@@ -123,8 +134,9 @@ To see what patch you're on, run the `az aks show --resource-group myResourceGro
 
 AKS defines a generally available (GA) version as a version available in all regions and enabled in all SLO or SLA measurements. AKS supports three GA minor versions of Kubernetes:
 
-* The latest GA minor version released in AKS (which we refer to as *N*).
-* Two previous minor versions.
+AKS supports three GA minor versions:
+* The latest GA version (N).
+* The two previous minor versions (N-1 and N-2).
   * Each supported minor version can support any number of patches at a given time. AKS reserves the right to deprecate patches if a critical CVE or security vulnerability is detected. For awareness on patch availability and any ad-hoc deprecation, refer to version release notes and visit the [AKS release status webpage][aks-tracker].
 
 AKS might also support preview versions, which are explicitly labeled and subject to [preview terms and conditions][preview-terms].
@@ -191,7 +203,7 @@ This table outlines support guidelines for Community Support compared to Platfor
 
 ### Supported `kubectl` versions
 
-You can use one minor version older or newer of `kubectl` relative to your *kube-apiserver* version, consistent with the [Kubernetes support policy for kubectl](https://kubernetes.io/docs/setup/release/version-skew-policy/#kubectl).
+You can use a `kubectl` version that is one minor version older or newer than your kube-apiserver version, [Kubernetes support policy for kubectl](https://kubernetes.io/docs/setup/release/version-skew-policy/#kubectl).
 
 For example, if your *kube-apiserver* is at *1.28*, then you can use versions *1.27* to *1.29* of `kubectl` with that *kube-apiserver*.
 
@@ -213,7 +225,7 @@ Install-AzAksKubectl -Version latest
 
 ## Long Term Support (LTS)
 
-AKS provides one year Community Support and one year of Long Term Support (LTS) to back port security fixes from the community upstream in our public repository. Our upstream LTS working group contributes efforts back to the community to provide our customers with a longer support window.
+AKS offers one year of Community Support and one year of Long Term Support (LTS), including backported security fixes from the upstream community. Our upstream LTS working group contributes efforts back to the community to provide our customers with a longer support window.
 
 For more information on LTS, see [Long term support for Azure Kubernetes Service (AKS)](./long-term-support.md).
 
@@ -223,7 +235,7 @@ You can reference upcoming version releases and deprecations on the [AKS Kuberne
 
 For new **minor** versions of Kubernetes:
 
-* AKS announces the planned release date of a new version and the deprecation of the old version in the [AKS Release notes](https://aka.ms/aks/releasenotes)  at least 30 days before removal.
+* AKS announces new version release dates and old version deprecation in the [AKS Release notes](https://aka.ms/aks/releasenotes) at least 30 days before removal.
 * AKS uses [Azure Advisor](/azure/advisor/advisor-overview) to alert you if a new version could cause issues in your cluster because of deprecated APIs. Azure Advisor also alerts you if you're out of support
 * AKS publishes a [service health notification](/azure/service-health/service-health-overview) available to all users with AKS and portal access and sends an email to the subscription administrators with the planned version removal dates.
   > [!NOTE]
@@ -300,7 +312,7 @@ For minor versions not supported by AKS, scaling in or out should continue to wo
 
 ### Can you stay on a Kubernetes version forever?
 
-If a cluster is out of support for more than three minor versions and carries security risks, Azure will proactively contact you. They will advise you to upgrade your cluster. If you don't take further action, Azure reserves the right to automatically upgrade your cluster on your behalf.
+If a cluster is out of support for more than three minor versions and carries security risks, Azure  proactively contacts you. They advise you to upgrade your cluster. If you don't take further action, Azure reserves the right to automatically upgrade your cluster on your behalf.
 
 ### What happens if you scale a Kubernetes cluster with a minor version that isn't supported?
 
@@ -330,7 +342,7 @@ To upgrade from *1.27.x* -> *1.29.x*:
 1. Upgrade from *1.27.x* -> *1.28.x*.
 2. Upgrade from *1.28.x* -> *1.29.x*.
 
-Note starting from 1.28 version onwards, agentpool versions can be upto 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). If your version is much behind the minimum supported version, you may have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. You may have to upgrade sequentially 4 times from *1.23.x* in order to get to *1.27.x*. Also note that Agent pool versions can be upgraded to the control plane minor version. In the above example you can upgrade agentpool version twice i.e once from *1.23.x* to *1.25.x*, when the control plane version is at *1.25.x*. And subsequently from *1.25.x* to *1.27.x* , when control plane version is at *1.27.x*. When upgrading in-place i.e control plane and agent pool together the same rules applicable to control plane upgrade applies. 
+Note starting from 1.28 version onwards, agentpool versions can be upto 3 versions older to control plane versions per [version skew policy](https://kubernetes.io/releases/version-skew-policy/). If your version is much behind the minimum supported version, you may have to do more than one control plane upgrade operation to get to the minimum supported version. For example, if your current control plane version is *1.23.x* and you intend to upgrade to a minimum supported version of *1.27.x* as an example. You may have to upgrade sequentially 4 times from *1.23.x* in order to get to *1.27.x*. Also note that Agent pool versions can be upgraded to the control plane minor version. In the above example you can upgrade agentpool version twice i.e once from *1.23.x* to *1.25.x*, when the control plane version is at *1.25.x*. And subsequently from *1.25.x* to *1.27.x* , when control plane version is at *1.27.x*. When upgrading in-place, i.e, control plane and agent pool together the same rules applicable to control plane upgrade applies. 
 
 
 If, performing an upgrade from an _unsupported version_ - the upgrade is performed without any guarantee of functionality and is excluded from the service-level agreements and limited warranty. Clusters running _unsupported version_ has the flexibility of decoupling control plane upgrades with node pool upgrades. However if your version is out of date, we recommend that you re-create the cluster.
