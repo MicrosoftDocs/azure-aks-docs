@@ -58,7 +58,6 @@ API Server VNet Integration is available in the following regions:
 - southafricanorth
 - southcentralus
 - southindia
-- westus2stage
 - uaecentral
 - uaenorth
 - ukwest
