@@ -21,9 +21,6 @@ API Server VNet Integration is supported for public or private clusters. You can
 
 ## Limited availability
 
-> [!CAUTION] 
-> Once API Server VNet Integration is enabled on a cluster, stopping your cluster de-allocates the control plane and releases the capacity. In regions experiencing capacity constraints, customers may be unable to start a stopped cluster. We do not recommend stopping mission critical workloads for this reason. 
-
 > [!IMPORTANT]
 > **API Server VNet Integration has limited availability and capacity in certain regions.**  
 > When creating or updating a cluster with API Server VNet Integration enabled, you may receive the following error:
@@ -36,9 +33,38 @@ API Server VNet Integration is supported for public or private clusters. You can
 > - Retry your request at a later time, as capacity may become available.
 > - Select an alternate region where this feature is currently supported.
 
-API Server VNet Integration is not available in the following regions: 
+> [!CAUTION] 
+> Once API Server VNet Integration is enabled on a cluster, stopping your cluster de-allocates the control plane and releases the capacity. In regions experiencing capacity constraints, customers may be unable to start a stopped cluster. We do not recommend stopping mission critical workloads for this reason. 
 
-- TODO
+API Server VNet Integration is available in the following regions: 
+
+- australiacentral
+- australiacentral2
+- australiasoutheast
+- canadaeast
+- centraluseuap
+- eastus2euap
+- francecentral
+- francesouth
+- germanynorth
+- japaneast
+- japanwest
+- jioindiacentral
+- jioindiawest
+- koreacentral
+- koreasouth
+- northcentralus
+- norwayeast
+- southafricanorth
+- southcentralus
+- southindia
+- westus2stage
+- uaecentral
+- uaenorth
+- ukwest
+- westcentralus
+- westus
+- westus3
 
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
@@ -263,14 +289,6 @@ All traffic within the VNet is allowed by default. But if you have added NSG rul
 For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
 
 <!-- LINKS - internal -->
-[az-provider-register]: /cli/azure/provider#az-provider-register
-[az-feature-register]: /cli/azure/feature#az-feature-register
-[az-feature-show]: /cli/azure/feature#az-feature-show
-[az-extension-add]: /cli/azure/extension#az-extension-add
-[az-extension-update]: /cli/azure/extension#az-extension-update
-[private-link-service]: ../private-link/private-link-service-overview.md#limitations
-[virtual-network-peering]: ../virtual-network/virtual-network-peering-overview.md
-[command-invoke]: command-invoke.md
 [operator-best-practices-network]: operator-best-practices-network.md
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
