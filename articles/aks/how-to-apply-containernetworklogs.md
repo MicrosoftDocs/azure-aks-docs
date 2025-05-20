@@ -361,16 +361,16 @@ User can visualize Container Network Flow log for analysis with several prebuilt
     ama-metrics-win-node-tkrm8            2/2     Running   0 (26h ago)   26h
     ```
 2. To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
-- Azure / Insights / Containers / Networking / Flow Logs - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
+  -    **Azure / Insights / Containers / Networking / Flow Logs**  - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 
-    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance.":::
+    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
 
-- Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
+-    **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
     :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana isntance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
 
 For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
 
-- #### Visualization using BYO Grafana
+#### Visualization using BYO Grafana
 
 Skip this step if using Azure managed Grafana
 
@@ -766,19 +766,18 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 ### Basic Troubleshooting 
 
 1) Advanced Container Networking Services is a prerequisite for enabling AMA log collection feature:
-
-    Trying to enable this on a cluster without enabling Advanced Container Networking Services:
+   Trying to enable this on a cluster without enabling Advanced Container Networking Services:
 
     ```az aks update -g test-rg -n test-cluster --enable-retina-flow-logs ```
 
-    Would result in an error message:
+   Would result in an error message:
 
     ```Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.```
 
 
-2) If the cluster Kubernetes version is below 1.31.0, trying to enable '--enable-retina-flow-logs':
+2) If the cluster Kubernetes version is below 1.32.0, trying to enable '--enable-retina-flow-logs':
 
-    ```The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.31.0 or later. ```
+    ```The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later. ```
 
     Where the %s is replaced by the customer's K8s version
 

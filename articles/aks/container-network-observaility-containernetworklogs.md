@@ -58,11 +58,11 @@ User can visualize network flow logs for analysis with several prebuilt Grafana 
 For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Neworking Services with following link:  For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services, see [Setting up Grafana](./how-to-apply-containernetworklogs.md#visualization-in-azure-managed-grafana-instances)
 
 To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
-- Azure / Insights / Containers / Networking / Flow Logs - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
+1.    **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 
     :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
 
-- Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
+2.    **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
 
     :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana instance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
 
@@ -85,7 +85,8 @@ Users are able to see three major components in these dashboards:
 
     :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Snapshot of top namespaces and pod." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
 
-- Import into Bring your Own(BYO) Grafana instances from the Grafana gallery.  For configuring BYO Grafana, refer Setting up BYO Managed Grafana with Advanced Container Networking Services, refer [Setting up BYO Grfana](./how-to-apply-containernetworklogs.md#visualization-using-byo-grafana)
+- Access Through Bring your Own(BYO) Grafana instances-
+   Import pre-configured dashboards from the gallery into your grafana instances.For configuring BYO Grafana for Container Network Logs, refer Setting up BYO Managed Grafana with Advanced Container Networking Services, refer [Setting up BYO Grfana](./how-to-apply-containernetworklogs.md#visualization-using-byo-grafana)
 
 
 
