@@ -58,7 +58,7 @@ For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS with f
 To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
 - Azure / Insights / Containers / Networking / Flow Logs - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 
-[![Snapshot of Flow log Grafana dashboard in grafana instance.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
+:::image type="content" source="./media/advanced-container-networking-services/PFLdashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/PFLdashboard.png":::
 
 - Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
 [![Snapshot of Flow log (external) Grafana dashboard in grafana isntance.](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png)](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png#lightbox)
