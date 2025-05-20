@@ -2,7 +2,7 @@
 title: Deploy a client application (Mongo Express) to connect to a MongoDB cluster on Azure Kubernetes Service (AKS)
 description: In this article, you learn how to connect to a MongoDB cluster on Azure Kubernetes Service (AKS) using sample client app.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
