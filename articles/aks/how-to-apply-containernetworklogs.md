@@ -202,9 +202,9 @@ To enable the container network logs on existing cluster, follow these steps:
     ```azurecli-interactive
     az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
    ```
-   Reason for disabling is - it may already have monitoring enabled but not the high scale. For more information refer [High Scale mode](https://learn.microsoft.com/azure/azure-monitor/containers/container-insights-high-scale#overview)
+   Reason for disabling is - it might already have monitoring enabled but not the high scale. For more information, refer [High Scale mode](/azure/azure-monitor/containers/container-insights-high-scale)
 
-1. Enable azure monitor with high log scale mode
+1. Enable Azure monitor with high log scale mode
      ```azurecli-interactive
     az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
    ```
@@ -338,11 +338,11 @@ az aks update \
     --grafana-resource-id $grafanaId
 ```
 
-### Visualisation in Grafana dashboards
+### Visualization in Grafana dashboards
 
-User can visualize Container Network Flow log for analysis with several pre-built Grafana dashboards. Customers have several options to access these dashboards
+User can visualize Container Network Flow log for analysis with several prebuilt Grafana dashboards. Customers have several options to access these dashboards
 
-#### Visualisation in Azure Managed Grafana instances
+#### Visualization in Azure Managed Grafana instances
 
 1. Make sure the Azure Monitor pods are running using the `kubectl get pods` command.
 
@@ -366,7 +366,7 @@ User can visualize Container Network Flow log for analysis with several pre-buil
 [![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
 
 - Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
-[![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png)](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png#lightbox)
+[![Snapshot of Flow log External Grafana dashboard.](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png)](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png#lightbox)
 For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
 
 - #### Visualization using BYO Grafana
@@ -404,7 +404,7 @@ Skip this step if using Azure managed Grafana
 
 1. Sign in to Grafana and import following example dashboards using the following IDs:
       * **Flow Logs:** shows Network flow log within cluster. ([Flow Log Dashboard](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//))
-      * **Flow Logs (External):** Shows Network flow logs for communication outside outside cluster([Flow Log Dashboard(external)](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic/))
+      * **Flow Logs (External):** Shows Network flow logs for communication outside cluster([Flow Log Dashboard(external)](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic/))
 
     > [!NOTE] 
     > * Depending on your Prometheus/Grafana instances’ settings, some dashboard panels may require tweaks to display all data.
@@ -779,16 +779,16 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
     ```The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.31.0 or later. ```
 
-    Where the %s is replaced by the customer's k8s version
+    Where the %s is replaced by the customer's K8s version
 
-3) If a customer tries to enable '--enable-retina-flow-logs' on a subscription where AFEC flag is not enabled:
+3) If a customer tries to enable '--enable-retina-flow-logs' on a subscription where AFEC flag isn't enabled:
 
     ``` Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.```
 
 
 #### KubeCtl
 
-1) If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where ACNS is not enabled:
+1) If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where ACNS isn't enabled:
     
    ``` error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
    ```ensure CRDs are installed first```
@@ -797,7 +797,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 ### Disable Container Network Logs:always-on on existing cluster 
 If all the CRDs get deleted, Flow log collection would stop as there would be no filters defined for collection. 
-To disable retina flow log collection by azure monitor agent, use following command 
+To disable retina flow log collection by Azure monitor agent, use following command 
 ```azurecli-interactive
    az aks update -n $CLUSTER_NAME -g $RESOURCE_GROUP –disable-retina-flow-logs 
 ```
@@ -814,3 +814,4 @@ If you don't plan on using this application, delete the other resources you crea
 In this how-to article, you learned how to enable Container Network logs with Advanced Container Networking Services for your AKS cluster.
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
+* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability)

@@ -58,10 +58,10 @@ For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS with f
 To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
 - Azure / Insights / Containers / Networking / Flow Logs - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 
-[![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
+[![Snapshot of Flow log Grafana dashboard in grafana instance.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
 
 - Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
-[![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png)](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png#lightbox)
+[![Snapshot of Flow log (external) Grafana dashboard in grafana isntance.](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png)](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png#lightbox)
 
 Users are able to see three major components in these dashboards:
 
@@ -94,7 +94,7 @@ Advanced Container Networking Services (ACNS) enables the on-demand capture of n
 
 The command-line interface provides a flexible and interactive way to query, filter, and analyze flow logs directly from the terminal. Users can execute real-time commands to inspect traffic flows, view packet metadata, and troubleshoot network issues without leaving their operational environment.
 
-[![Snapshot of Hubble UI.](./media/advanced-container-networking-services/HubbleCliscreenshot.png)](./media/advanced-container-networking-services/HubbleCliscreenshot.png#lightbox)
+[![Snapshot of Hubble CLI.](./media/advanced-container-networking-services/HubbleCliscreenshot.png)](./media/advanced-container-networking-services/HubbleCliscreenshot.png#lightbox)
 
 ### Hubble UI
 
@@ -121,8 +121,7 @@ Together, these tools provide real-time visibility and actionable insights, enab
 
 ## Next Steps
 
-- Learn how to enable Container Network Logs, Refer [Configure Conatiner Network Logs](how-to-apply-containernetworklogs.md).
-- Learn how to enable Hubble Flow logs, Refer Configure Hubble Flow [Visualise Hubble flow](container-network-observability-how-to.md).
-- For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [advanced-container-networking-services-overview](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
-- Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
--  Explore Container Network Security features in Advanced Container Networking Services in [What is Container Network Security?](./advanced-container-networking-services-overview.md#container-network-security).
+* Learn how to enable Container Network Logs, Refer [Configure Conatiner Network Logs](how-to-apply-containernetworklogs.md).
+* For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [advanced-container-networking-services-overview](./advanced-container-networking-services-overview.md).
+* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability)
+* Explore Container Network Security features in Advanced Container Networking Services in [What is Container Network Security?](./advanced-container-networking-services-overview.md#container-network-security).
