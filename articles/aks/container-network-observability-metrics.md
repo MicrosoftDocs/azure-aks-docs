@@ -6,7 +6,7 @@ ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
-ms.date: 10/05/2025
+ms.date: 05/10/2025
 ---
 
 # Overview of Metric Capture in ACNS under Container Network Observability
@@ -123,7 +123,7 @@ Azure managed Prometheus and Grafana impose service-specific scale limitations. 
 
 * To create an AKS cluster with Container Network Observability tp capture Metrics, see [Setup Container Network Observability for Azure Kubernetes Service (AKS)](container-network-observability-how-to.md).
 - For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [advanced-container-networking-services-overview](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
-- Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
+- Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](/advanced-container-networking-services-overview.md#container-network-observability).
 - Explore Container Network Security features in Advanced Container Networking Services in [What is Container Network Security?](./advanced-container-networking-services-overview.md#container-network-security).
 
 

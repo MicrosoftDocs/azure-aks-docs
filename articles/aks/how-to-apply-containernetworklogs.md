@@ -6,7 +6,7 @@ ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 09/05/2024
+ms.date: 05/09/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
@@ -40,7 +40,7 @@ az extension update --name aks-preview
 ``` 
 
 
-## Configuring Conatiner Network Logs:always-on
+## Configuring Container Network Logs:always-on
 
 ### Register the `AdvancedNetworkingFlowLogsPreview' feature flag
 
@@ -90,9 +90,9 @@ az aks create \
     --enable-acns
 ```
 ---
-### Configuring Custom Resource for Log flitering  
-Container Network Logs, a feature of Advanced Container Networking Services (ACNS), is enabled by default but requires configuring filters through the definition of specific Custom Resources for log collection. When ACNS is active and at least one Custom Resource is defined, logs are collected and stored on the host node at /var/log/acns/hubble/event.log. To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously, but if no Custom Resource is defined with non-empty filters, no logs will be saved in the designated location.
-This sample CRD demonstrates how to configure Retina network flow logs:
+### Configuring Custom Resource for Log filtering  
+Container Network Logs:always-on, a feature of Advanced Container Networking Services (ACNS), is enabled by default but requires configuring filters through the definition of specific Custom Resources for log collection. When ACNS is active and at least one Custom Resource is defined, logs are collected and stored on the host node at /var/log/acns/hubble/event.log. To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously, but if no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
+This sample definition of Custom resource demonstrates how to configure Retina network flow logs:
 #### CR Template 
 ```azurecli-interactive
 apiVersion: acn.azure.com/v1alpha1 
@@ -139,8 +139,8 @@ Following is the description of fields in this Custom resource definition.
 
 | **Field**                        | **Description**                                                                 |
 |----------------------------------|---------------------------------------------------------------------------------|
-| `apiVersion`                     | API group and version (e.g., `acn.azure.com/v1alpha1`).                         |
-| `kind`                           | The type of custom resource (e.g., `RetinaNetworkFlowLog`).                    |
+| `apiVersion`                     | API group and version (for example, `acn.azure.com/v1alpha1`).                         |
+| `kind`                           | The type of custom resource (for example, `RetinaNetworkFlowLog`).                    |
 | `metadata.name`                  | Unique name for the CRD instance.                                              |
 | `spec`                           | Defines the desired state of the custom resource.                              |
 | `filters`                        | List of filter rules to apply to network flows.                                |
@@ -150,15 +150,15 @@ Following is the description of fields in this Custom resource definition.
 | `labelSelector.matchLabels`      | Selects pods based on exact label matches.                                     |
 | `labelSelector.matchExpressions` | Allows complex label selection using operators like `In`, `NotIn`, etc.        |
 | `ip`                             | List of IP addresses or CIDR blocks to match.                                  |
-| `protocol`                       | List of protocols to filter (e.g., `tcp`, `udp`, `dns`).                       |
-| `verdict`                        | Specifies flow verdicts to include (e.g., `forwarded`, `dropped`).             |
+| `protocol`                       | List of protocols to filter (for example, `tcp`, `udp`, `dns`).                       |
+| `verdict`                        | Specifies flow verdicts to include (for example, `forwarded`, `dropped`).             |
 
 - Apply RetinaNetworkFlowLog CR to enable log collection at cluster with this command:
 
 ```azurecli-interactive
 kubectl apply -f <crd.yaml>
 ```
-Logs stored Locally on host nodes are temporary, as the host or node itself isn't a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis, it is recommended to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
+Logs stored Locally on host nodes are temporary, as the host or node itself isn't a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis, it's recommended to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
 
 ### Configuring Azure Monitor agent to scrape logs in Azure log analytics workspace for new cluster
 
@@ -191,14 +191,14 @@ az aks update \
     --enable-acns
 ```
 
-### Configuring Container Network Logs with Azure Monitor Agent on existing cluster
+### Configuring existing cluster to store logs at Azure Log analytics workspace
 
 To enable the container network logs on existing cluster, follow these steps:
 1. Check if monitoring addon is already enabled on that cluster with following command
    ```azurecli-interactive
     az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
    ```
-1. If monitoring is already enabled, disable monitoring addon with following command
+1. Disable monitoring addon with following command, if monitoring addon is already enabled.
     ```azurecli-interactive
     az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
    ```
@@ -270,20 +270,14 @@ Status:
   State:      CONFIGURED
   Timestamp:  2025-05-01T11:24:48Z
 ``` 
-### Visualization of Container Network Logs in Azure portal. 
 
-User can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
-[![Snapshot of Flow Logs in Azure analytics.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
-
-### Visualization of Container Network Logs in Grafana Dashboards 
-
-## Azure managed Prometheus and Grafana 
+### Azure managed Prometheus and Grafana 
 
 Skip this Section if using BYO Prometheus and Grafana
 
 Use the following example to install and enable Prometheus and Grafana for your AKS cluster.
 
-### Create Azure Monitor resource
+#### Create Azure Monitor resource
 
 ```azurecli-interactive
 #Set an environment variable for the Grafana name. Make sure to replace the placeholder with your own value.
@@ -299,7 +293,7 @@ az resource create \
     --properties '{}'
 ```
 
-### Create Azure Managed Grafana instance
+#### Create Azure Managed Grafana instance
 
 Use [az grafana create](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the Grafana instance must be unique.
 
@@ -313,7 +307,7 @@ az grafana create \
     --resource-group $RESOURCE_GROUP 
 ```
 
-### Place the Azure Managed Grafana and Azure Monitor resource IDs in variables
+#### Place the Azure Managed Grafana and Azure Monitor resource IDs in variables
 
 Use [az grafana show](/cli/azure/grafana#az-grafana-show) to place the Grafana resource ID in a variable. Use [az resource show](/cli/azure/resource#az-resource-show) to place the Azure Monitor resource ID in a variable. Replace **myGrafana** with the name of your Grafana instance.
 
@@ -331,7 +325,7 @@ azuremonitorId=$(az resource show \
                     --output tsv)
 ```
 
-### Link Azure Monitor and Azure Managed Grafana to the AKS cluster
+#### Link Azure Monitor and Azure Managed Grafana to the AKS cluster
 
 Use [az aks update](/cli/azure/aks#az-aks-update) to link the Azure Monitor and Grafana resources to your AKS cluster.
 
@@ -344,27 +338,82 @@ az aks update \
     --grafana-resource-id $grafanaId
 ```
 
-### Configure Visualisation in Grafana dashboards
+### Visualisation in Grafana dashboards
 
 User can visualize Container Network Flow log for analysis with several pre-built Grafana dashboards. Customers have several options to access these dashboards
 
-- Access in the Azure Portal with the "Dashbaords with Grafana" option
-  For more information refer [Container Insights documentation](https://aka.ms/ContainerNetworkLogsDoc_CI)
+#### Visualisation in Azure Managed Grafana instances
 
-- Import into Bring your Own(BYO) Grafana instances from the Grafana gallery.  For configuring BYO Grafana, refer Setting up BYO Managed Grafana with ACNS, refer [Setting up Grfana](./container-network-observability-how-to.md#visualization)
+1. Make sure the Azure Monitor pods are running using the `kubectl get pods` command.
 
-  https://grafana.com/grafana/dashboards/23155-kubernetes-networking-flow-logs/ 
-  https://grafana.com/grafana/dashboards/23156-kubernetes-networking-flow-logs-external-traffic/ 
-
-- Access in Azure Managed Grafana instances
-
-For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS with following link:  For configuring Grafana, refer Setting up Azure Managed Grafana with ACNS, refer [Setting up Grfana](./container-network-observability-how-to.md#visualization)
-
-To simplify the analysis of logs, we provide preconfigured Azure Managed Grafana dashboards. You can find them under the Dashboards > Azure Managed Prometheus folder, with filename "Kubernetes/Networking/Flow Logs”. Following is the snapshot of the Flow log dashboard.
+    ```azurecli-interactive
+    kubectl get pods -o wide -n kube-system | grep ama-
+    ```
+    
+    Your output should look similar to the following example output:
+    
+    ```output
+    ama-metrics-5bc6c6d948-zkgc9          2/2     Running   0 (21h ago)   26h
+    ama-metrics-ksm-556d86b5dc-2ndkv      1/1     Running   0 (26h ago)   26h
+    ama-metrics-node-lbwcj                2/2     Running   0 (21h ago)   26h
+    ama-metrics-node-rzkzn                2/2     Running   0 (21h ago)   26h
+    ama-metrics-win-node-gqnkw            2/2     Running   0 (26h ago)   26h
+    ama-metrics-win-node-tkrm8            2/2     Running   0 (26h ago)   26h
+    ```
+2. To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
+- Azure / Insights / Containers / Networking / Flow Logs - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 
 [![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
 
+- Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
+[![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png)](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png#lightbox)
 For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
+
+- #### Visualization using BYO Grafana
+
+Skip this step if using Azure managed Grafana
+
+1. Add the following scrape job to your existing Prometheus configuration and restart your Prometheus server:
+
+    ```yml
+    - job_name: networkobservability-hubble
+      kubernetes_sd_configs:
+        - role: pod
+      relabel_configs:
+        - target_label: cluster
+          replacement: myAKSCluster
+          action: replace
+        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_k8s_app]
+          regex: kube-system;(retina|cilium)
+          action: keep
+        - source_labels: [__address__]
+          action: replace
+          regex: ([^:]+)(?::\d+)?
+          replacement: $1:9965
+          target_label: __address__
+        - source_labels: [__meta_kubernetes_pod_node_name]
+          target_label: instance
+          action: replace
+      metric_relabel_configs:
+        - source_labels: [__name__]
+          regex: '|hubble_dns_queries_total|hubble_dns_responses_total|hubble_drop_total|hubble_tcp_flags_total' # if desired, add |hubble_flows_processed_total
+          action: keep
+    ``` 
+
+1. In **Targets** of Prometheus, verify the **network-obs-pods** are present.
+
+1. Sign in to Grafana and import following example dashboards using the following IDs:
+      * **Flow Logs:** shows Network flow log within cluster. ([Flow Log Dashboard](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//))
+      * **Flow Logs (External):** Shows Network flow logs for communication outside outside cluster([Flow Log Dashboard(external)](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic/))
+
+    > [!NOTE] 
+    > * Depending on your Prometheus/Grafana instances’ settings, some dashboard panels may require tweaks to display all data.
+    > * Cilium does not currently support DNS metrics/dashboards.
+
+#### Visualization of Container Network Logs in Azure portal. 
+
+User can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
+[![Snapshot of Flow Logs in Azure analytics.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
 
 ## Configuring Container Network Logs:on-demand
 
