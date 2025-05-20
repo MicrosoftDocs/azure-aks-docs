@@ -2,10 +2,11 @@
 title: Solution overview for deploying a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi
 description: In this article, we provide an overview of deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.
 ms.topic: overview
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
+ms.custom: 'stateful-workloads'
 ---
 
 # Deploy a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi

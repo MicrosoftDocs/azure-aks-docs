@@ -2,10 +2,11 @@
 title: Deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)
 description: In this article, we provide guidance for deploying the Strimzi Operator and a Kafka cluster on Azure Kubernetes Service (AKS). 
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
+ms.custom: 'stateful-workloads'
 ---
 
 # Configure and deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)  

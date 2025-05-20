@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.date: 06/07/2024
 author: kenkilty
 ms.author: kkilty
-ms.custom: innovation-engine, aks-related-content
+ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
 ---
 
 # Deploy a highly available PostgreSQL database on AKS

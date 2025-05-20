@@ -2,10 +2,11 @@
 title: Deploy a Ray cluster on Azure Kubernetes Service (AKS)
 description: In this article, you deploy a Ray cluster on Azure Kubernetes Service (AKS).
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 12/19/2024
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Configure and deploy a Ray cluster on Azure Kubernetes Service (AKS)
