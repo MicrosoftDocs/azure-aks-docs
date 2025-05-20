@@ -58,13 +58,11 @@ User can visualize network flow logs for analysis with several prebuilt Grafana 
 For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Neworking Services with following link:  For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services, see [Setting up Grafana](./how-to-apply-containernetworklogs.md#visualization-in-azure-managed-grafana-instances)
 
 To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
-1.    **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
+1. **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
+:::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
 
-    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
-
-2.    **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
-
-    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana instance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
+2. **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
+:::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana instance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
 
 
 Users are able to see three major components in these dashboards:
