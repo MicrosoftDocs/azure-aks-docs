@@ -269,6 +269,10 @@ For hub‑and‑spoke environments, you can also link the zone to a central hub 
 
 ## Validate the connection
 
+TODO: Need an easy way to validate the connection. Thinking of doing an NSLookup from a VM in the remote VNet.
+
+```azurecli
+
 ## Clean up resources
 
 To avoid ongoing charges, delete the resource groups when you are finished:
@@ -276,9 +280,10 @@ To avoid ongoing charges, delete the resource groups when you are finished:
 ```azurecli
 az group delete --name $AKS_RG --yes --no-wait
 az group delete --name $REMOTE_RG --yes --no-wait
-```dotnetcli
+```
 
 ## Next steps
+
 * [API Server VNet Integration](./api-server-vnet-integration.md)
 * [Private Link](azure/private-link/private-link-overview)
 * [Private Link Service](azure/private-link/private-link-service-overview)
