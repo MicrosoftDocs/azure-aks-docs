@@ -193,10 +193,14 @@
           items:
             - name: Advanced Container Networking Services (ACNS) overview
               href: advanced-container-networking-services-overview.md
-            - name: Metrics
-              href: container-network-observability-metrics.md
-            - name: Container Network Logs
-              href: container-network-observaility-containernetworklogs.md
+            - name: Conatiner Network Observability
+              items:
+                - name: Container network metrics
+                  href: container-network-observability-metrics.md
+                - name: Container network logs
+                  href: container-network-observaility-containernetworklogs.md
+            - name: Conatiner Network Security
+              items:    
             - name: FQDN based Filtering
               href: container-network-security-fqdn-filtering-concepts.md
             - name: Layer 7 Policy

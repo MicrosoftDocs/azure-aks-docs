@@ -1,6 +1,6 @@
 ---
-title: Node and Pod level Network metrics with Advanced Container Networking Services (ACNS)
-description: An overview of Metric capture feature under container network observability in  Azure Kubernetes Service (AKS).
+title: Node and Pod level Network metrics with Advanced Container Networking Services
+description: An overview of Container Network Metrics feature under container network observability in  Azure Kubernetes Service (AKS).
 author: shaifaligargmsft
 ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
@@ -9,37 +9,27 @@ ms.topic: concept-article
 ms.date: 05/10/2025
 ---
 
-# Overview of Metric Capture in ACNS under Container Network Observability
-The metric capture feature within Advanced Container Networking Services (ACNS) in Azure Kubernetes Service (AKS) is designed to provide deep visibility into the networking performance of containerized environments. It continuously collects a variety of critical metrics at both the node and pod levels. These metrics encompass important networking aspects such as traffic volume, dropped packets, connection states, and DNS resolution times.
+# Overview of Container Network Metrics 
+Advanced Container Networking Services in Azure Kubernetes Service (AKS) facilitate the collection of comprehensive container network metrics, providing valuable insights into the performance of containerized environments. This capability continuously captures essential metrics at the node and pod levels, including traffic volume, dropped packets, connection states, and DNS resolution times, enabling effective monitoring and optimization of network performance.
 
-The ability to capture these metrics is essential for understanding how containers communicate, how traffic flows between services, and where bottlenecks or disruptions might be occurring. ACNS integrates seamlessly with monitoring tools like Prometheus and Grafana, providing users with a complete view of networking metrics that can be used for in-depth troubleshooting, network optimization, and performance tuning.
+The ability to capture these metrics is essential for understanding how containers communicate, how traffic flows between services, and where bottlenecks or disruptions might be occurring. Advanced Container Networking Services integrates seamlessly with monitoring tools like Prometheus and Grafana, providing users with a complete view of networking metrics that can be used for in-depth troubleshooting, network optimization, and performance tuning.
 
 In today’s cloud-native world, maintaining a healthy and efficient network in a dynamic containerized environment is vital to ensuring that applications perform as expected. Without proper visibility into network traffic and its patterns, identifying potential issues or inefficiencies becomes challenging.
 
-### Key Benefits of Metric Capture
+### Key Benefits 
 1. Deep Visibility into Network Performance
 1. Enhanced Troubleshooting and Optimization
 1. Proactive Anomaly Detection
 1. Better Resource Management and Scaling
 1. Capacity Planning and Compliance
-1. Simplified Metrics Storage and Visualization Options:
-   Choose between:
-  * **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
-  * **Bring Your Own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.
+1. Simplified Metrics Storage and Visualization Options: Choose between:
+    * **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
+    * **Bring Your Own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.
 
-
-## Type of Metrics Captured 
-
-Container Network Observability offers the following capabilities to monitor network-related issues in your cluster:
-
-* **Node-Level Metrics:** Understanding the health of your container network at the node-level is crucial for maintaining optimal application performance. These metrics provide insights into traffic volume, dropped packets, number of connections, etc. by node. The metrics are stored in Prometheus format and, as such, you can view them in Grafana.
-
-* **Hubble Metrics (DNS and Pod-Level Metrics):** These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors, and DNS requests missing responses.
-
-## Metrics
+## Types of Metrics Captured
 
 ### Node-Level Metrics
-
+Understanding the health of your container network at the node-level is crucial for maintaining optimal application performance. These metrics provide insights into traffic volume, dropped packets, number of connections, etc. by node. The metrics are stored in Prometheus format and, as such, you can view them in Grafana.
 The following metrics are aggregated per node. All metrics include labels:
 
 * `cluster`
@@ -84,7 +74,7 @@ The table below outlines the different metrics generated.
 
 ### Pod-Level Metrics (Hubble Metrics)
 
-The following metrics are aggregated per pod (node information is preserved). All metrics include labels:
+These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors, and DNS requests missing responses.The following metrics are aggregated per pod (node information is preserved). All metrics include labels:
 
 * `cluster`
 * `instance` (Node name)

@@ -1,6 +1,6 @@
 ---
-title: Advanced Container Networking Services (ACNS) for the Azure Kubernetes Service (AKS)
-description: Discover how  Advanced Container Networking Services (ACNS) empowers your AKS clusters with Container Network Observability and Container Network Security features.
+title: Advanced Container Networking Services for the Azure Kubernetes Service (AKS)
+description: Discover how  Advanced Container Networking Services empowers your AKS clusters with Container Network Observability and Container Network Security features.
 author: Khushbu-Parekh
 ms.author: kparekh
 ms.service: azure-kubernetes-service
@@ -25,7 +25,7 @@ Advanced Container Networking Services contains features split into two pillars:
 
 ## Container Network Observability
  
-Container Network Observability in Azure Kubernetes Service (AKS) is a comprehensive feature set within Advanced Container Networking Services (ACNS), designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. Leveraging eBPF, this feature enhances scalability and performance by identifying potential bottlenecks and network congestion before impacting applications.
+Container network observability in Azure Kubernetes Service (AKS) is a comprehensive feature set within Advanced Container Networking Services, designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. Leveraging eBPF, this feature enhances scalability and performance by identifying potential bottlenecks and network congestion before impacting applications.
 
 Key benefits include compatibility with all Azure CNI variants, detailed visibility into node-level metrics, and Hubble metrics for DNS resolution, pod-to-pod communication, and service interactions. Container Network Logs capture essential metadata such as IPs, ports, and traffic flow, enabling troubleshooting, monitoring, and security enforcement.
 
@@ -33,7 +33,9 @@ Additionally, it integrates with Azure Managed Prometheus and Grafana for simpli
 
 [![Screenshot showing Architecure of container network observavility.](./media/advanced-container-networking-services/advanced-network-observability.png)](./media/advanced-container-networking-services/advanced-network-observability.png#lightbox)
 
-### Metrics 
+:::image type="content" source="./media/advanced-container-networking-services/advanced-network-observability.png" alt-text="Diagram of container network observability architecture" lightbox="./media/advanced-container-networking-services/advanced-network-observability.png":::
+
+### Container Network Metrics
 
 This feature collects node-level metrics, including CPU, memory, and network performance, to monitor the health of cluster nodes. For deeper insights, Hubble metrics provide data on DNS resolution times, service-to-service communication, and pod-level network behavior. These metrics enable users to analyze application performance, detect anomalies, and optimize workloads
 
@@ -41,7 +43,7 @@ To learn more, see [Metrics Overview](container-network-observability-metrics.md
 
 ### Container Network Logs
 
-Container Network Logs in ACNS provide detailed insights into traffic within and across clusters by capturing metadata like source/destination IPs, ports, protocols, and flow direction. These logs enable monitoring network behavior, troubleshooting connectivity issues, and enforcing security policies. Persistent and real-time logging options ensure comprehensive, actionable network observability.
+Container Network Logs provides detailed insights into traffic within and across clusters by capturing metadata like source/destination IPs, ports, protocols, and flow direction. These logs enable monitoring network behavior, troubleshooting connectivity issues, and enforcing security policies. Persistent and real-time logging options ensure comprehensive, actionable network observability.
 
 To learn more, see [Container Network Logs Overview](container-network-observaility-containernetworklogs.md) documentation.
 
