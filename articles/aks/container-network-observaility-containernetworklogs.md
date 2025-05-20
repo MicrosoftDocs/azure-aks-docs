@@ -44,7 +44,7 @@ Workspace used for logs storage is the same which is configured during onboardin
 
 User can visualize, query, and analyze flow logs in Azure portal in Azure log analytics workspace of their cluster:
 
-:::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Snapshot of Container Network Logs in Azure log analytics." lightbox="./media/advanced-container-networking-services/azure-log-analytic.png":::
+:::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Snapshot of Container Network Logs in Azure log analytics." lightbox="./media/advanced-container-networking-services/azure-log-analytics.png":::
 
 ### Visualization of Container Network logs in Grafana dashboards
 
@@ -79,7 +79,7 @@ Users are able to see three major components in these dashboards:
 
     User can filter out these logs just by expanding log and filter out the fields of their choice. Separating sections of flow logs and error logs helps in quicker analysis of issues. This organization allows users to quickly identify and address errors without sifting through unrelated information, improving efficiency in troubleshooting and debugging processes. Additionally, using clear labels and timestamps for each log entry can further enhance the ability to pinpoint specific events or errors within the system.
 
-    :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Snapshot of filters available. lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Snapshot of filters available." lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
 
 3. The third section of this dashboard lets users view top namespaces, workloads, DNS errors, etc. The network flow log visualization is vital for monitoring and analyzing communication within a Kubernetes cluster. It provides insights into namespaces, workloads, port/query usage, and helps identify trends, detect bottlenecks, and diagnose issues. Users can spot significant network activity, drop requests, and assess protocol distribution (for example, TCP vs. UDP). This overview supports cluster health, resource optimization, and security by detecting unusual traffic patterns.
 
