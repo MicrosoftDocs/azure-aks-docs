@@ -12,7 +12,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 
 # Set up Container Network Logs with Advanced Container Networking Services
 
-This document is designed to provide clear steps for configuring and utilizing Container Network Logs feature using Advanced Container Networking Services (ACNS). These logs offer persistent network flow monitoring tailored to enhance visibility within containerized environments. By capturing Container Network Logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate Container Network Logs for your system. For more information about Container Network Logs Feature, see 
+This document is designed to provide clear steps for configuring and utilizing Container Network Logs feature using Advanced Container Networking Services. These logs offer persistent network flow monitoring tailored to enhance visibility within containerized environments. By capturing Container Network Logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate Container Network Logs for your system. For more information about Container Network Logs Feature, see 
  [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
 
 ## Prerequisites
@@ -40,7 +40,7 @@ az extension update --name aks-preview
 ``` 
 
 
-## Configuring Container Network Logs:always-on
+## Configuring Always-on mode for Container Network Logs
 
 ### Register the `AdvancedNetworkingFlowLogsPreview' feature flag
 
@@ -91,7 +91,7 @@ az aks create \
 ```
 ---
 ### Configuring Custom Resource for Log filtering  
-Container Network Logs:always-on, a feature of Advanced Container Networking Services (ACNS), is enabled by default but requires configuring filters through the definition of specific Custom Resources for log collection. When ACNS is active and at least one Custom Resource is defined, logs are collected and stored on the host node at /var/log/acns/hubble/event.log. To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously, but if no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
+Configuring Container Network Logs in always-on mode requires defining specific Custom Resources to set filters for log collection. When Advanced Container Networking Services is enabled and at least one Custom Resource is defined, logs are collected and stored on the host node at /var/log/acns/hubble/event.log. To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously. If no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
 This sample definition of Custom resource demonstrates how to configure Retina network flow logs:
 #### CR Template 
 ```azurecli-interactive
@@ -363,10 +363,11 @@ User can visualize Container Network Flow log for analysis with several prebuilt
 2. To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
 - Azure / Insights / Containers / Networking / Flow Logs - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 
-[![Snapshot of Flow log Grafana dashboard.](./media/advanced-container-networking-services/PFLdashboard.png)](./media/advanced-container-networking-services/PFLdashboard.png#lightbox)
+    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
 
 - Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
-[![Snapshot of Flow log External Grafana dashboard.](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png)](./media/advanced-container-networking-services/Containernetworklogsnapshotexternal.png#lightbox)
+    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana isntance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
+
 For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
 
 - #### Visualization using BYO Grafana
@@ -413,9 +414,9 @@ Skip this step if using Azure managed Grafana
 #### Visualization of Container Network Logs in Azure portal. 
 
 User can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
-[![Snapshot of Flow Logs in Azure analytics.](./media/advanced-container-networking-services/Azureloganalytics.png)](./media/advanced-container-networking-services/Azureloganalytics.png#lightbox)
+    :::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Snapshot of Container Network Logs in Azure log analytics." lightbox="./media/advanced-container-networking-services/azure-log-analytic.png":::
 
-## Configuring Container Network Logs:on-demand
+## Configuring on-demand mode
 
 ### Install Hubble CLI
 Install the Hubble CLI to access the data it collects using the following commands:
@@ -764,9 +765,9 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 ---
 ### Basic Troubleshooting 
 
-1) ACNS is a prerequisite for enabling AMA log collection feature:
+1) Advanced Container Networking Services is a prerequisite for enabling AMA log collection feature:
 
-    Trying to enable this on a cluster without acns:
+    Trying to enable this on a cluster without enabling Advanced Container Networking Services:
 
     ```az aks update -g test-rg -n test-cluster --enable-retina-flow-logs ```
 
@@ -788,7 +789,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 #### KubeCtl
 
-1) If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where ACNS isn't enabled:
+1) If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where Advanced Container Networking Services isn't enabled:
     
    ``` error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
    ```ensure CRDs are installed first```

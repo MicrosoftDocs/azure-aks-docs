@@ -31,8 +31,6 @@ Key benefits include compatibility with all Azure CNI variants, detailed visibil
 
 Additionally, it integrates with Azure Managed Prometheus and Grafana for simplified metrics storage and visualization. Whether using managed services or user-controlled infrastructure, this observability solution ensures a highly performant, secure, and compliant network environment for AKS workloads.
 
-[![Screenshot showing Architecure of container network observavility.](./media/advanced-container-networking-services/advanced-network-observability.png)](./media/advanced-container-networking-services/advanced-network-observability.png#lightbox)
-
 :::image type="content" source="./media/advanced-container-networking-services/advanced-network-observability.png" alt-text="Diagram of container network observability architecture" lightbox="./media/advanced-container-networking-services/advanced-network-observability.png":::
 
 ### Container Network Metrics

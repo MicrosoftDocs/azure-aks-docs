@@ -17,11 +17,11 @@ The ability to capture these metrics is essential for understanding how containe
 In today’s cloud-native world, maintaining a healthy and efficient network in a dynamic containerized environment is vital to ensuring that applications perform as expected. Without proper visibility into network traffic and its patterns, identifying potential issues or inefficiencies becomes challenging.
 
 ### Key Benefits 
-1. Deep Visibility into Network Performance
-1. Enhanced Troubleshooting and Optimization
-1. Proactive Anomaly Detection
-1. Better Resource Management and Scaling
-1. Capacity Planning and Compliance
+1. Deep visibility into network performance
+1. Enhanced troubleshooting and optimization
+1. Proactive anomaly detection
+1. Better resource management and scaling
+1. Capacity planning and compliance
 1. Simplified Metrics Storage and Visualization Options: Choose between:
     * **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
     * **Bring Your Own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.

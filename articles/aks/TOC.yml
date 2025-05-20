@@ -195,16 +195,16 @@
               href: advanced-container-networking-services-overview.md
             - name: Conatiner Network Observability
               items:
-                - name: Container network metrics
+                - name: Metrics
                   href: container-network-observability-metrics.md
-                - name: Container network logs
+                - name: Logs
                   href: container-network-observaility-containernetworklogs.md
             - name: Conatiner Network Security
               items:    
-            - name: FQDN based Filtering
-              href: container-network-security-fqdn-filtering-concepts.md
-            - name: Layer 7 Policy
-              href: container-network-security-l7-policy-concepts.md
+                - name: FQDN based Filtering
+                  href: container-network-security-fqdn-filtering-concepts.md
+                - name: Layer 7 Policy
+                  href: container-network-security-l7-policy-concepts.md
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -900,7 +900,7 @@
               href: cost-analysis-idle-costs.md
         - name: Network Observability
           items:
-            - name: Container Network Observability
+            - name: Container Network Metrics
               href: container-network-observability-how-to.md
             - name: Container Network Logs
               href: how-to-apply-containernetworklogs.md
