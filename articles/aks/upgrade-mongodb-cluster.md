@@ -2,10 +2,11 @@
 title: Validate MongoDB resiliency during an Azure Kubernetes Service (AKS) node pool upgrade
 description: In this article, you learn how to test resiliency of MongoDB cluster on Azure Kubernetes Service (AKS) during node pool upgrade.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Validate MongoDB resiliency during an Azure Kubernetes Service (AKS) node pool upgrade
