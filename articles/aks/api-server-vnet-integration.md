@@ -277,6 +277,24 @@ AKS clusters configured with API Server VNet Integration can have public network
     az aks get-credentials --resource-group <resource-group> --name <cluster-name>
     ```
 
+## Expose the API server through Private Link
+
+You can expose the API server endpoint of a private cluster with API Server VNet Integration using Azure Private Link. The following steps show how to create a Private Link Service (PLS) in the cluster VNet and connect to it from another VNet or subscription using a Private Endpoint.
+
+### Create an API Server VNet Integration Private cluster
+
+* Create a private AKS cluster with API Server VNet Integration using the [`az aks create`][az-aks-create] command with the `--enable-api-server-vnet-integration` and `--enable-private-cluster` flags.
+
+    ```azurecli-interactive
+    az aks create --name <cluster-name> \
+        --resource-group <resource-group> \
+        --location <location> \
+        --enable-private-cluster \
+        --enable-apiserver-vnet-integration
+    ```
+
+
+
 ## NSG security rules
 
 All traffic within the VNet is allowed by default. But if you have added NSG rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
@@ -284,7 +302,7 @@ All traffic within the VNet is allowed by default. But if you have added NSG rul
 | Destination | Source | Protocol | Port | Use |
 |--- |--- |--- |--- |--- |
 | APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communicatios between the Azure Load Balancer and the API Server Subnet CIDR. |
+| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communications between the Azure Load Balancer and the API Server Subnet CIDR. |
 
 ## Next steps
 
