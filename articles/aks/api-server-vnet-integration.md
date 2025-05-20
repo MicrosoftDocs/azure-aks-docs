@@ -19,7 +19,7 @@ The control plane or API server is in an AKS-managed Azure subscription. Your cl
 
 API Server VNet Integration is supported for public or private clusters. You can add or remove public access after cluster provisioning. Unlike non-VNet integrated clusters, the agent nodes always communicate directly with the private IP address of the API server internal load balancer (ILB) IP without using DNS. All node to API server traffic is kept on private networking, and no tunnel is required for API server to node connectivity. Out-of-cluster clients needing to communicate with the API server can do so normally if public network access is enabled. If public network access is disabled, you should follow the same private DNS setup methodology as standard [private clusters](private-clusters.md).
 
-## Pre-requisites
+## Prerequisites
 
 - You must have Azure CLI version 2.73.0 or later installed. You can check your version using the `az --version` command.
 
@@ -29,7 +29,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 > **API Server VNet Integration has limited availability and capacity in certain regions.**  
 > When creating or updating a cluster with API Server VNet Integration enabled, you may receive the following error:
 >
-> **API Server VNet Integration is currently unavailable in region (_region_) due to high demand and limited capacity. AKS is actively expanding support for this feature. Check for other available regions at aka.ms/AksVnetIntegration.**
+> **`API Server VNet Integration is currently unavailable in region (_region_) due to high demand and limited capacity. AKS is actively expanding support for this feature. Check for other available regions at aka.ms/AksVnetIntegration.`**
 >
 > This message indicates that the selected region has temporarily reached capacity for API Server VNet Integration.
 >
@@ -217,16 +217,16 @@ az group create --location <location> --name <resource-group>
 >[!WARNING]
 > **API Server VNet Integration is a one-way, capacity-sensitive feature.**
 >
-> There is no current validation for capacity availability in the region when enabling API Server VNet Integration. If you enable the feature and regional capacity is not available, you may be unable to start the cluster after stopping it.
+> There's no current validation for capacity availability in the region when enabling API Server VNet Integration. If you enable the feature and regional capacity isn't available, you might be unable to start the cluster after stopping it.
 
 > **Recommended approach**  
 > Create a new cluster with the feature enabled at creation time. Verify successful provisioning, then migrate workloads. This approach avoids the risk of control plane downtime or outage when cluster is updating to enable the feature.
 >
 > - **Manual restart required.**
-> If you decide to accept the risk and update an existing cluster, after enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must manually restart the cluster for the change to take effect. This restart is not automated and, like any restart, the cluster will be temporarily unavailable until it completes.
+> If you decide to accept the risk and update an existing cluster, after enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must manually restart the cluster for the change to take effect. This restart isn't automated, and, like any restart, the cluster will be temporarily unavailable until it completes.
 >
-> - **Feature cannot be disabled and capacity is not guaranteed**  
->   Once enabled, the feature is permanent. You cannot disable it or revert to the previous configuration. This means if you enable the feature and capacity is not available, you may be unable to start the cluster after stopping it.
+> - **Feature can't be disabled, and capacity isn't guaranteed**  
+>   Once enabled, the feature is permanent. You can't disable it or revert to the previous configuration. This means if you enable the feature and capacity isn't available, you might be unable to start the cluster after stopping it.
 
 This upgrade performs a node-image version upgrade on all node pools and restarts all workloads while they undergo a rolling image upgrade.
 
