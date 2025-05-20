@@ -363,7 +363,7 @@ User can visualize Container Network Flow log for analysis with several prebuilt
 2. To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
 - Azure / Insights / Containers / Networking / Flow Logs - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 
-    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance.":::
 
 - Azure / Insights / Containers / Networking / Flow Logs (External Traffic) - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
     :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana isntance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
@@ -414,7 +414,7 @@ Skip this step if using Azure managed Grafana
 #### Visualization of Container Network Logs in Azure portal. 
 
 User can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
-    :::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Snapshot of Container Network Logs in Azure log analytics." lightbox="./media/advanced-container-networking-services/azure-log-analytic.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Snapshot of Container Network Logs in Azure log analytics.":::
 
 ## Configuring on-demand mode
 
