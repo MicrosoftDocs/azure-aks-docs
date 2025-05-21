@@ -15,10 +15,10 @@ API Server VNet Integration lets you place the control‑plane IP inside your ow
 
 This article applies **only to clusters that are created with [API Server VNet Integration](./api-server-vnet-integration.md)** and shows you how to:
 
-1. Deploy a **private** AKS cluster with API Server VNet Integration.  
-2. Expose the API server through a **Private Link Service (PLS)** inside the cluster virtual network.  
-3. Create a **Private Endpoint (PE)** in a different virtual network.  
-4. Configure **private DNS** so Kubernetes tools resolve the cluster’s private FQDN inside the remote network.
+* Deploy a **private** AKS cluster with API Server VNet Integration.  
+* Expose the API server through a **Private Link Service (PLS)** inside the cluster virtual network.  
+* Create a **Private Endpoint (PE)** in a different virtual network.  
+* Configure **private DNS** so Kubernetes tools resolve the cluster’s private FQDN inside the remote network.
 
 For private clusters that **do not** use API Server VNet Integration, see [Create a private AKS cluster](./private-clusters.md).
 ## Region availability
