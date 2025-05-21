@@ -302,6 +302,7 @@ To avoid ongoing Azure charges, delete the resource groups using the [`az group 
 ```azurecli-interactive
 az group delete --name $AKS_RG --yes --no-wait
 az group delete --name $REMOTE_RG --yes --no-wait
+```
 
 ## Next steps
 
