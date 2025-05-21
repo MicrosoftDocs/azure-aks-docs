@@ -70,10 +70,13 @@ DNS_ZONE="private.${LOCATION}.azmk8s.io"
 DNS_LINK="dns-link"
 ```
 
-## Create a resource group for the AKS cluster
+## Create resource groups
 
 ```azurecli
+# Create resource groups for the AKS cluster
 az group create --name $AKS_RG --location $LOCATION
+
+# Create a resource group for the remote VNet
 az group create --name $REMOTE_RG --location $LOCATION
 ```
 
@@ -120,13 +123,8 @@ az network private-link-service create \
   --resource-group $AKS_NODE_RG \
   --vnet-name $AKS_VNET \
   --subnet $PLS_SUBNET \
-  --lb-name kube-apiserver \
-  --lb-frontend-ip-configs kube-apiserver-frontend \
   --location $LOCATION
 ```
-
-> [!NOTE]
-> AKS automatically names the internal load balancer kube-apiserver. If you use a custom name, adjust the --lb-name and --lb-frontend-ip-configs parameters accordingly. You can verify the names in the node resource group > Load balancers blade of the Azure portal.
 
 ## Create a PrivateEndpoint (PE) in the remote VNet
 
@@ -216,54 +214,6 @@ kubectl get nodes
 ```
 
 A successful node list confirms the Private Endpoint and DNS path.
-
-
-## Configure private DNS
-
-```azurecli
-# Create the private DNS zone
-az network private-dns zone create \
-  --name $DNS_ZONE \
-  --resource-group $REMOTE_RG
-
-# Get the private IP address of the Private Endpoint
-PE_NIC_ID=$(az network private-endpoint show \
-  --name $PE_NAME \
-  --resource-group $REMOTE_RG \
-  --query 'networkInterfaces[0].id' \
-  --output tsv)
-
-PE_IP=$(az network nic show \
-  --ids $PE_NIC_ID \
-  --query 'ipConfigurations[0].privateIPAddress' \
-  --output tsv)
-
-# Create the A record that maps the cluster DNS name to the Private Endpoint IP
-az network private-dns record-set a create \
-  --name $DNS_RECORD \
-  --zone-name $DNS_ZONE \
-  --resource-group $REMOTE_RG \
-  --ttl 3600
-
-az network private-dns record-set a add-record \
-  --record-set-name $DNS_RECORD \
-  --zone-name $DNS_ZONE \
-  --resource-group $REMOTE_RG \
-  --ipv4-address $PE_IP
-
-# Link the DNS zone to the remote VNet
-REMOTE_VNET_ID=$(az network vnet show \
-  --name $REMOTE_VNET \
-  --resource-group $REMOTE_RG \
-  --query id -o tsv)
-
-az network private-dns link vnet create \
-  --name $DNS_LINK \
-  --zone-name $DNS_ZONE \
-  --resource-group $REMOTE_RG \
-  --virtual-network $REMOTE_VNET_ID \
-  --registration-enabled false
-```
 
 For hub‑and‑spoke environments, you can also link the zone to a central hub VNet or to an on‑premises DNS appliance by using conditional forwarding. For details, see Integrate your own DNS solution with Azure Private Link.
 
