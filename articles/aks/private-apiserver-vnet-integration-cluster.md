@@ -1,5 +1,5 @@
 ---
-title: Connect to an API Server VNet Integration Cluster from Another Virtual Network
+title: Access a Private API Server VNet Integration Cluster from Another Virtual Network
 description: Step‑by‑step guidance for exposing the API server of an AKS cluster that has API Server VNet Integration enabled, by using Azure Private Link and consuming it from a separate virtual network.
 author: schaffererin
 ms.author: schaffererin
