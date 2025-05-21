@@ -11,7 +11,7 @@ ms.custom: devx-track-azurecli
 
 # Connect to an API Server VNet Integration cluster by using Azure Private Link
 
-API Server VNet Integration lets you place the control‑plane IP inside your own VNet. The pattern described here extends that capability to additional VNets by chaining Private Link. It's useful for hub‑and‑spoke topologies, dedicated build networks, or jump‑host VNets that must administer production clusters without opening the API server to the public internet.
+API Server VNet Integration lets you place the control‑plane IP inside your own VNet. The pattern described here extends that capability to more VNets by chaining Private Link. It's useful for hub‑and‑spoke topologies, dedicated build networks, or jump‑host VNets that must administer production clusters without opening the API server to the public internet.
 
 This article applies **only to clusters that are created with [API Server VNet Integration](./api-server-vnet-integration.md)** and shows you how to:
 
@@ -80,7 +80,7 @@ az group create --name $REMOTE_RG --location $LOCATION
 ## Deploy a private cluster with API Server VNet Integration
 
 > [!IMPORTANT]
-> API Server VNet Integration requires its own subnet. If you do not supply one, AKS will create it automatically in the node resource group.
+> API Server VNet Integration requires its own subnet. If you don't supply one, AKS automatically creates it in the node resource group.
 
 ```azurecli
 az aks create \
@@ -106,7 +106,7 @@ FRONTEND_IP_CONFIG_ID=$(az network lb show \
 
 ## Create a Private Link Service (PLS) in the AKS cluster VNet
 
-Add a dedicated subnet for the PLS and disable network policies, which are not supported on Private Link subnets.
+Add a dedicated subnet for the PLS and disable network policies, which aren't supported on Private Link subnets.
 
 Create the PLS and point it to the kube‑apiserver internal load balancer that AKS created for the control plane.
 
@@ -212,7 +212,7 @@ az network private-dns link vnet create \
 
 ## Test the connection
 
-If you try and run this locally, you will get an error because the DNS zone is not linked to your local network.
+If you try to test the connection locally, you might get an error because the DNS zone isn't linked to your local network.
 
 ```bash
 az aks get-credentials --resource-group $AKS_RG --name $AKS_CLUSTER
