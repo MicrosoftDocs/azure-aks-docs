@@ -148,7 +148,7 @@ az aks create \
 
 - **Can I use `CiliumNetworkPolicy` custom resources instead of Kubernetes `NetworkPolicy` resources?**
 
-    `CiliumNetworkPolicy` custom resources are partially supported. Customers may use FQDN filtering as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
+    `CiliumNetworkPolicy` custom resources are partially supported. Customers may use FQDN filtering and Layer 7 Policies as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
 
     This `CiliumNetworkPolicy` example demonstrates a sample matching pattern for services that match the specified label.
 
