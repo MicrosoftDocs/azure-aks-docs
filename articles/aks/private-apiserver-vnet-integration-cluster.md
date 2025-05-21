@@ -11,10 +11,9 @@ ms.custom: devx-track-azurecli
 
 # Connect to an API Server VNet Integration cluster by using Azure Private Link
 
-API Server VNet Integration lets you place the control‑plane IP inside your own VNet. The pattern described here extends that capability to additional VNets by chaining Private Link. It is useful for hub‑and‑spoke topologies, dedicated build networks, or jump‑host VNets that must administer production clusters without opening the API server to the public internet.
+API Server VNet Integration lets you place the control‑plane IP inside your own VNet. The pattern described here extends that capability to additional VNets by chaining Private Link. It's useful for hub‑and‑spoke topologies, dedicated build networks, or jump‑host VNets that must administer production clusters without opening the API server to the public internet.
 
-This article applies **only to clusters that are created with [API Server VNet Integration](./api-server-vnet-integration.md)**.  
-It shows how to:
+This article applies **only to clusters that are created with [API Server VNet Integration](./api-server-vnet-integration.md)** and shows you how to:
 
 1. Deploy a **private** AKS cluster with API Server VNet Integration.  
 2. Expose the API server through a **Private Link Service (PLS)** inside the cluster virtual network.  
@@ -22,13 +21,9 @@ It shows how to:
 4. Configure **private DNS** so Kubernetes tools resolve the cluster’s private FQDN inside the remote network.
 
 For private clusters that **do not** use API Server VNet Integration, see [Create a private AKS cluster](./private-clusters.md).
-
-
 ## Region availability
 
-API Server VNet Integration is currently available in a subset of Azure regions and is subject to regional capacity limits. Before you begin, confirm that your target region is supported. For more information, see [API Server VNet Integration](api-server-vnet-integration).
-
----
+API Server VNet Integration is currently available in a subset of Azure regions and is subject to regional capacity limits. Before you begin, confirm that your target region is supported. For more information, see [API Server VNet Integration](./api-server-vnet-integration.md).
 
 ## Prerequisites
 
@@ -40,6 +35,8 @@ API Server VNet Integration is currently available in a subset of Azure regions 
 If you use custom DNS servers, add Azure’s virtual IP **168.63.129.16** as an upstream forwarder.
 
 ## Set environment variables
+
+Set the following environment variables for use throughout this article. Feel free to replace the placeholder values with your own.
 
 ```bash
 LOCATION="westus3"
@@ -300,18 +297,17 @@ exit
 
 ## Clean up resources
 
-To avoid ongoing charges, delete the resource groups when you are finished:
+To avoid ongoing Azure charges, delete the resource groups using the [`az group delete`](/cli/azure/group#az-group-delete) command.
 
-```azurecli
+```azurecli-interactive
 az group delete --name $AKS_RG --yes --no-wait
 az group delete --name $REMOTE_RG --yes --no-wait
-```
 
 ## Next steps
 
 * [API Server VNet Integration](./api-server-vnet-integration.md)
-* [Private Link](azure/private-link/private-link-overview)
-* [Private Link Service](azure/private-link/private-link-service-overview)
-* [Private Endpoint](azure/private-link/private-endpoint-overview)
-* [Private DNS](azure/private-link/private-dns-overview)
-* [Integrate your own DNS solution with Azure Private Link](azure/private-link/private-link-dns)
+* [Private Link](/azure/private-link/private-link-overview)
+* [Private Link Service](/azure/private-link/private-link-service-overview)
+* [Private Endpoint](/azure/private-link/private-endpoint-overview)
+* [Private DNS](/azure/dns/private-dns-overview)
+* [Integrate your own DNS solution with Azure Private Link](/azure/private-link/private-endpoint-dns-integration)
