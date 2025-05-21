@@ -182,7 +182,14 @@ Create tenant‑specific configurations by specifying a different primary pool p
 Label the target namespace (e.g., `team1-apps`) to match the selector:
 
 ```azurecli
-
+az aks command invoke \
+  --resource-group $RESOURCE_GROUP \
+  --name $CLUSTER_NAME \
+  --command "
+kubectl create namespace team1-apps --dry-run=client -o yaml | kubectl apply -f -
+kubectl label namespace team1-apps tenant=team1 --overwrite
+"
+```
 
 You can now list the loadbalancers in the cluster to see the multiple configurations:
 
