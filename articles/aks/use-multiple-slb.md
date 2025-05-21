@@ -25,33 +25,41 @@ Use this feature to:
 
 ### How AKS chooses a load balancer (node & Service placement)
 
-Multiple‑SLB clusters rely on three independent selectors to decide where traffic lands:
+AKS uses multiple inputs to determine where to place nodes and expose LoadBalancer Services. These inputs are defined in each load balancer configuration and influence which SLB is selected for each resource.
 
-| Selector source                                                                                                                                 | Evaluated for | What it does                                                                                                                                 |
-|-------------------------------------------------------------------------------------------------------------------------------------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| **Primary agent‑pool name** (set when the LB config is created)                                                                                 | Nodes only    | All nodes in this pool are permanently attached to the corresponding SLB backend pool. Guarantees each SLB has at least one healthy node.    |
-| **Node selector** (`--node-selector` on the LB config)<br>*Kubernetes label selector*                                                           | Nodes only    | Adds any node whose labels match to the SLB, supplementing the primary pool. Useful for multi‑pool or zone spread.                           |
-| **Service namespace and label selectors** (`--service-namespace-selector`, `--service-label-selector` on the LB config)<br>*Kubernetes label selectors* | Services only | A `LoadBalancer` Service is eligible for an SLB when **both** its namespace labels and its own labels satisfy these selectors (if supplied). |
+| Input type                                                                                      | Applies to | Description |
+|--------------------------------------------------------------------------------------------------|------------|-------------|
+| **Primary agent pool**<br>`--primary-agent-pool-name`                                            | Nodes      | Required. All nodes in this pool are always added to the SLB’s backend pool. Ensures each SLB has at least one healthy node. |
+| **Node selector**<br>`--node-selector`                                                          | Nodes      | Optional. Adds any node with matching labels to the SLB, in addition to the primary pool. |
+| **Service namespace selector**<br>`--service-namespace-selector`                                | Services   | Optional. Only Services in namespaces with matching labels are considered for this SLB. |
+| **Service label selector**<br>`--service-label-selector`                                        | Services   | Optional. Only Services with matching labels are eligible for this SLB. |
+| **Service annotation**<br>`service.beta.kubernetes.io/azure-load-balancer-configurations`       | Services   | Optional. Limits placement to one or more explicitly named SLB configurations. Without it, any matching configuration is eligible. |
 
-**Optional Service annotation**
+> [!NOTE]
+> Selectors define eligibility. The annotation (if used) restricts the controller to a specific subset of SLBs.
 
-`service.beta.kubernetes.io/azure-load-balancer-configurations: "<lb‑config‑1>,<lb‑config‑2>"`  
-narrows the controller’s choice to a named subset of SLB configs. If the annotation is omitted, every configuration that passes the selectors is considered.
+#### How AKS uses these inputs
 
-**Controller placement sequence**
+The AKS control plane continuously reconciles node and Service state using the rules above:
 
-1. **Node reconciliation** –When a node joins or is updated, AKS checks the primary pool flag and any nodeSelector rules in each load‑balancer configuration. All matching SLBs are considered; if more than one qualifies, the SLB with the fewest current nodes is chosen, and the node is added to that backend pool.  
-2. **Service reconciliation** – When a `LoadBalancer` Service appears:  
-   - Intersect the annotation list (if present) with SLBs whose namespace and label selectors match.  
-   - Discard SLBs with `allowServicePlacement=false`, or that would exceed Azure limits (300 rules / 8 private‑link services).  
-   - Select the SLB that currently has the fewest rules. The Service’s front‑end is provisioned there.  
-3. **Rebalance (optional)** – Run `az aks loadbalancer rebalance` to redistribute nodes if rule counts drift after scaling operations.
+**Node Placement**
+When a node is added or updated, AKS checks which SLBs it qualifies for based on primary pool and node selector.
 
-This mechanism lets you:
+	-	If multiple SLBs match, the controller picks the one with the fewest current nodes.
+	-	The node is added to that SLB’s backend pool.
 
-- Keep platform or shared traffic on the default `kubernetes` configuration.  
-- Route team‑, environment‑, or workload‑specific Services to their own SLBs via labels.  
-- Scale a single cluster well past the 300‑rule per‑NIC ceiling without re‑architecting.
+**Service placement**
+When a LoadBalancer Service is created or updated:
+
+1. AKS finds SLBs whose namespace and label selectors match the Service.
+1. If the Service annotation is present, only those named SLBs are considered.
+1. SLBs that have allowServicePlacement=false or that would exceed Azure limits (300 rules or 8 private-link services) are excluded.
+1. Among valid options, the SLB with the fewest rules is chosen.
+
+**Optional: Rebalancing**
+You can manually rebalance node distribution later using `az aks loadbalancer rebalance`
+
+This design lets you define flexible, label-driven routing for both infrastructure and workloads, while AKS handles placement automatically to maintain balance and avoid quota issues.
 
 ### Prerequisites
 
@@ -164,10 +172,10 @@ az aks loadbalancer list --resource-group $RESOURCE_GROUP --cluster-name $CLUSTE
 ```
 
 ```output
-AllowServicePlacement    ETag                                  Name        PrimaryAgentPoolName    ProvisioningState    ResourceGroup
------------------------  ------------------------------------  ----------  ----------------------  -------------------  ---------------
-True                     98bda91b-0247-4579-b969-ad8a92398694  kubernetes  nodepool1               Succeeded            rg-aks-multislb
-True                     fc576898-4f4c-47cc-b49f-c7d83b9f0173  team1-lb    team1pool               Succeeded            rg-aks-multislb
+AllowServicePlacement    ETag     Name        PrimaryAgentPoolName    ProvisioningState    ResourceGroup
+-----------------------  -------  ----------  ----------------------  -------------------  ---------------
+True                     <ETAG>   kubernetes  nodepool1               Succeeded            rg-aks-multislb
+True                     <ETAG>   team1-lb    team1pool               Succeeded            rg-aks-multislb
 ```
 
 ### Deploy a Service to a specific load balancer
