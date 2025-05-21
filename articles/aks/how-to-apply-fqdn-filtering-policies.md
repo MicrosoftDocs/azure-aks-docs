@@ -68,7 +68,6 @@ az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns
-    --acns-advanced-networkpolicies FQDN
 ```
 
 ---    
