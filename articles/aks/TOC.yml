@@ -1206,7 +1206,7 @@
     - name: Support policies
       href: support-policies.md
     - name: Azure Roadmap
-      href: https://azure.microsoft.com/roadmap/
+      href: https://azure.microsoft.com/updates/
     - name: AKS Roadmap
       href: https://github.com/Azure/AKS/projects/1
     - name: Stack Overflow
