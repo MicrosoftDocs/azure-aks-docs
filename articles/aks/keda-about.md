@@ -62,7 +62,9 @@ The KEDA AKS add-on has the following limitations:
 * KEDA's [external scaler for Azure Cosmos DB][keda-cosmos-db-scaler] to scale based on Azure Cosmos DB change feed isn't installed with the extension, but can be deployed separately.
 * Only one external metric server is allowed in the Kubernetes cluster. Because of that the KEDA add-on should be the only external metrics server inside the cluster.
     * Multiple KEDA installations aren't supported
-* It is recommended not to combine using KEDA’s ScaledObject with a Horizontal Pod Autoscaler (HPA) to scale the same workload. They will compete with each other given KEDA uses Horizontal Pod Autoscaler (HPA) under the hood and will result in odd scaling behavior. If an HPA is created first and then a KEDA ScaledObject is created, the KEDA ScaledObject would fail to be created. However, if a KEDA ScaledObject is created first and then a HPA is created, the creation will not be blocked.   
+* It's not recommended to combine KEDA's ScaledObject with a Horizontal Pod Autoscaler (HPA) to scale the same workload. They compete with each other because KEDA uses Horizontal Pod Autoscaler (HPA) in the background and results in odd scaling behavior.
+    * If an HPA is created first, then a KEDA ScaledObject is created and the KEDA ScaledObject would fail to be created.
+    * If a KEDA ScaledObject is created first and then an HPA is created, the HPA creation isn't blocked.
 
 For general KEDA questions, we recommend [visiting the FAQ overview][keda-faq].
 
