@@ -120,7 +120,7 @@ Create a file named `demo-policy.yaml` and paste the following YAML manifest:
 > [!NOTE]
 >The field `spec.egress.toPorts.rules.dns.matchPattern` is **mandatory** when using to FQDNs in a policy. This section tells Cilium to inspect DNS queries and match them against specified patterns. Without this section, Cilium will only allow the DNS traffic and not inspect its contents to learn which IPs are associated with the FQDNs. As a result, connections to those IPs (i.e., non-DNS traffic) will be blocked because Cilium cannot associate them with the allowed domain.
 >
->Make sure to check the [limitations](#Limitations) section first. 
+>Make sure to check the [limitations](#limitations) section first. 
 
 ```yaml
 apiVersion: "cilium.io/v2"
