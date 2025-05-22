@@ -96,63 +96,70 @@ Configuring Container Network Logs in always-on mode requires defining specific 
 This sample definition of Custom resource demonstrates how to configure Retina network flow logs:
 #### CR Template 
 ```azurecli-interactive
-apiVersion: acn.azure.com/v1alpha1 
-kind: RetinaNetworkFlowLog 
-metadata: 
-  name: sample-retinanetworkflowlog # Cluster scoped 
-spec: 
-  filters: # List of filters  
-    - name: sample-filter # Filter name 
-      from:  
-        namespacedPod: # List of source namespace/pods. Prepend namespace with / 
-          - sample-pod 
-        labelSelector: # Standard k8s label selector 
-          matchLabels: 
-            app: sample-app 
-            k8s.io/namespace: sample-namespace 
-        ip: # List of source IPs; can be CIDR 
-          - "192.168.1.10" 
-      to: 
-        namespacedPod: 
-          - sample-pod 
-        labelSelector: 
-          matchLabels: 
-            app: sample-app 
-            k8s.io/namespace: sample-namespace 
-          matchExpressions: 
-            - key: k8s.app 
-              operator: In 
-              values: 
-                - sample-app 
-                - sample-app2 
-        ip: 
-          - "192.168.1.20" 
-      protocol: # List of protocols; can be tcp, udp, dns 
-        - tcp 
-        - udp 
-        - dns 
-      verdict: # List of verdicts; can be forwarded, dropped 
-        - forwarded 
-        - dropped 
+apiVersion: acn.azure.com/v1alpha1
+kind: RetinaNetworkFlowLog
+metadata:
+  name: sample-retinanetworkflowlog # Cluster scoped
+spec:
+  includefilters: # List of filters
+    - name: sample-filter # Filter name
+      from:
+        namespacedPod: # List of source namespace/pods. Prepend namespace with /
+          - sample-namespace/sample-pod
+        labelSelector: # Standard k8s label selector
+          matchLabels:
+            app: frontend
+            k8s.io/namespace: sample-namespace
+          matchExpressions:
+            - key: environment
+              operator: In
+              values:
+                - production
+                - staging
+        ip: # List of source IPs; can be CIDR
+          - "192.168.1.10"
+          - "10.0.0.1"
+      to:
+        namespacedPod:
+          - sample-namespace2/sample-pod2
+        labelSelector:
+          matchLabels:
+            app: backend
+            k8s.io/namespace: sample-namespace2
+          matchExpressions:
+            - key: tier
+              operator: NotIn
+              values:
+                - dev
+        ip:
+          - "192.168.1.20"
+          - "10.0.1.1"
+      protocol: # List of protocols; can be tcp, udp, dns
+        - tcp
+        - udp
+        - dns
+      verdict: # List of verdicts; can be forwarded, dropped
+        - forwarded
+        - dropped
 ```
 
-Following is the description of fields in this Custom resource definition. 
+Following is the description of fields in this Custom resource definition.
 
-| **Field**                        | **Description**                                                                 |
-|----------------------------------|---------------------------------------------------------------------------------|
-| `apiVersion`                     | API group and version (for example, `acn.azure.com/v1alpha1`).                         |
-| `kind`                           | The type of custom resource (for example, `RetinaNetworkFlowLog`).                    |
-| `metadata.name`                  | Unique name for the CRD instance.                                              |
-| `spec`                           | Defines the desired state of the custom resource.                              |
-| `filters`                        | List of filter rules to apply to network flows.                                |
-| `filters.name`                   | Identifier for the filter rule.                                                |
-| `filters.from` / `filters.to`    | Define the source and destination of the traffic.                              |
-| `namespacedPod`                  | List of pod names, optionally with namespaces.                                 |
-| `labelSelector.matchLabels`      | Selects pods based on exact label matches.                                     |
-| `labelSelector.matchExpressions` | Allows complex label selection using operators like `In`, `NotIn`, etc.        |
-| `ip`                             | List of IP addresses or CIDR blocks to match.                                  |
-| `protocol`                       | List of protocols to filter (for example, `tcp`, `udp`, `dns`).                       |
-| `verdict`                        | Specifies flow verdicts to include (for example, `forwarded`, `dropped`).             |
+| **Field**                        | **Type**         | **Description**                                                                                                                         | **Required** |
+|----------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------|
+| `includefilters`                 | Array of Objects | A list of filters defining network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria. | Mandatory    |
+| `includefilters.name`            | String           | The name of the filter.                                                                                                                | Mandatory    |
+| `includefilters.protocol`        | Array of Strings | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`.                                                      | Optional     |
+| `includefilters.verdict`         | Array of Strings | The verdict of the flow to match. Valid values are `forwarded` and `dropped`.                                                          | Optional     |
+| `includefilters.from`            | Object           | Specifies the source of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                           | Mandatory    |
+| `includefilters.from.ip`         | Array of Strings | A list of source IP addresses.                                                                                                         | Optional     |
+| `includefilters.from.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
+| `includefilters.from.namespacedPod` | Array of Strings | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source.                                              | Optional     |
+| `includefilters.to`              | Object           | Specifies the destination of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                      | Mandatory    |
+| `includefilters.to.ip`           | Array of Strings | A list of destination IP addresses.                                                                                                   | Optional     |
+| `includefilters.to.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
+| `includefilters.to.namespacedPod` | Array of Strings | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the destination.                                         | Optional     |
+
 
 - Apply RetinaNetworkFlowLog CR to enable log collection at cluster with this command:
 
