@@ -88,7 +88,7 @@ An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintena
 
 Four available schedule types are available: `Daily`, `Weekly`, `AbsoluteMonthly`, and `RelativeMonthly`.
 
-`Weekly`, `AbsoluteMonthly`, and `RelativeMonthly` schedule types are applicable only to `aksManagedClusterAutoUpgradeSchedule` and `aksManagedNodeOSUpgradeSchedule` configurations. `Daily` schedules are applicable only to `aksManagedNodeOSUpgradeSchedule` configurations.
+`Weekly`, `AbsoluteMonthly`, and `RelativeMonthly` schedule types are applicable only to `aksManagedClusterAutoUpgradeSchedule` and `aksManagedNodeOSUpgradeSchedule` configurations.
 
 All of the fields shown for each schedule type are required.
 
