@@ -193,7 +193,7 @@
           items:
             - name: Advanced Container Networking Services (ACNS) overview
               href: advanced-container-networking-services-overview.md
-            - name: Conatiner Network Observability
+            - name: Container Network Observability
               items:
                 - name: Metrics
                   href: container-network-observability-metrics.md
@@ -900,9 +900,9 @@
               href: cost-analysis-idle-costs.md
         - name: Network Observability
           items:
-            - name: Container Network Metrics
+            - name: Metrics
               href: container-network-observability-how-to.md
-            - name: Container Network Logs
+            - name: Logs
               href: how-to-apply-containernetworklogs.md
     - name: Service Mesh
       items:

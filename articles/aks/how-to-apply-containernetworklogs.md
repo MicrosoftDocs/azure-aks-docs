@@ -24,13 +24,13 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 * Container Network Log is available for Cilium Data planes only. 
 
-* If existing cluster is < 1.32, upgrade the cluster to the latest available Kubernetes version.
+* If existing cluster is <= 1.31, upgrade the cluster to the latest available Kubernetes version.
 
 ### Install the `aks-preview` Azure CLI extension
 
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
 
- The minimum version of the aks-preview Azure CLI extension is `14.0.0b6`
+ The minimum version of the aks-preview Azure CLI extension is `14.0.0b7`
 
 ```azurecli-interactive
 # Install the aks-preview extension
@@ -73,6 +73,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
 export CLUSTER_NAME="<aks-cluster-name>"
+export RESOURCE_GROUP="<aks-resource-group>"
 
 # Create an AKS cluster
 az aks create \
@@ -90,8 +91,8 @@ az aks create \
     --enable-acns
 ```
 ---
-### Configuring Custom Resource for Log filtering  
-Configuring Container Network Logs in always-on mode requires defining specific Custom Resources to set filters for log collection. When Advanced Container Networking Services is enabled and at least one Custom Resource is defined, logs are collected and stored on the host node at /var/log/acns/hubble/event.log. To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously. If no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
+#### Configuring Custom Resource for Log filtering  
+Configuring Container Network Logs in always-on mode requires defining specific Custom Resources to set filters for log collection. When Advanced Container Networking Services is enabled and at least one Custom Resource is defined, logs are collected and stored on the host node at /var/log/acns/hubble/events.log. To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously. If no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
 This sample definition of Custom resource demonstrates how to configure Retina network flow logs:
 #### CR Template 
 ```azurecli-interactive
@@ -160,11 +161,12 @@ kubectl apply -f <crd.yaml>
 ```
 Logs stored Locally on host nodes are temporary, as the host or node itself isn't a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis, it's recommended to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
 
-### Configuring Azure Monitor agent to scrape logs in Azure log analytics workspace for new cluster
+#### Configuring Azure Monitor agent to scrape logs in Azure log analytics workspace for new cluster
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
   export CLUSTER_NAME="<aks-cluster-name>"
+  export RESOURCE_GROUP="<aks-resource-group>"
 
 # Enable azure monitor with high log scale mode
   az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
@@ -191,7 +193,7 @@ az aks update \
     --enable-acns
 ```
 
-### Configuring existing cluster to store logs at Azure Log analytics workspace
+#### Configuring existing cluster to store logs at Azure Log analytics workspace
 
 To enable the container network logs on existing cluster, follow these steps:
 1. Check if monitoring addon is already enabled on that cluster with following command
@@ -282,6 +284,7 @@ Use the following example to install and enable Prometheus and Grafana for your 
 ```azurecli-interactive
 #Set an environment variable for the Grafana name. Make sure to replace the placeholder with your own value.
 export AZURE_MONITOR_NAME="<azure-monitor-name>"
+export RESOURCE_GROUP="<aks-resource-group>"
 
 # Create Azure monitor resource
 az resource create \

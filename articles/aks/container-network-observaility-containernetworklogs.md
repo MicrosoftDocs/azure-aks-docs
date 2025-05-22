@@ -30,11 +30,11 @@ To read more about throttling and Container Insights, refer [Container Insights 
 
 1. Customizable filters: Logging is configurable via defining Custom Resources(CR) of type [RetinaNetworkFlowLog](./how-to-apply-containernetworklogs.md#cr-template). With these CRs, users can apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress/egress). This flexibility ensures precise data collection tailored to specific use cases, logs only relevant traffic, and optimizes storage usage for better performance, compliance, and efficient troubleshooting.
 
-2. Log Storage Options: There are two primary storage options for Container Network Logs: Managed Storage and Unmanaged Storage.
+2. Log storage options: There are two primary storage options for Container Network Logs: managed storage and unmanaged storage.
 
-- Unmanaged storage option: By default, network flow logs are stored locally on the host nodes at the fixed mount location /var/log/acns/hubble. However, this storage location is temporary, as the node itself isn't a persistent storage solution. Additionally, Once the log files reach a size of 50 MB, they're automatically rotated, which means older logs are overwritten. This storage solution is suitable for real-time monitoring but doesn't support long-term storage or retention. For users seeking additional log management capabilities, third-party logging services such as an OpenTelemetry collector can be integrated. This provides flexibility to manage logs outside of the Azure ecosystem and is useful for customers who already use specific log management platforms.
+- Unmanaged storage: By default, network flow logs are stored locally on the host nodes at the fixed mount location /var/log/acns/hubble. However, this storage location is temporary, as the node itself isn't a persistent storage solution. Additionally, once the log files reach a size of 50 MB, they're automatically rotated, which means older logs are overwritten. This storage solution is suitable for real-time monitoring but doesn't support long-term storage or retention. For users seeking additional log management capabilities, third-party logging services such as an OpenTelemetry collector can be integrated. This provides flexibility to manage logs outside of the Azure ecosystem and is useful for customers who already use specific log management platforms.
 
-- Managed storage Option: For long-term retention and advanced analytics, it's recommended to configure Azure monitoring within your AKS cluster to collect and store logs in an Azure Log Analytics workspace. This setup not only ensures secure and compliant log storage but also enables powerful capabilities such as anomaly detection, performance tuning, and historical data analysis. By leveraging historical logs, users can identify trends, baseline behaviors, and proactively address recurring issues.
+- Managed storage: For long-term retention and advanced analytics, it's recommended to configure Azure monitoring within your AKS cluster to collect and store logs in an Azure Log Analytics workspace. This setup not only ensures secure and compliant log storage but also enables powerful capabilities such as anomaly detection, performance tuning, and historical data analysis. By leveraging historical logs, users can identify trends, baseline behaviors, and proactively address recurring issues.
 For example, with Azure Managed Prometheus, users can configure alerts on both metrics and logs, enabling real-time monitoring and rapid detection of outliers.  
 Workspace used for logs storage is the same which is configured during onboarding. In context of supported plans for storage for this feature, both Analytics and Basic table plans are supported. For more detailed information on table plans, refer to the ([Azure Monitor Logs Documentation](/azure/azure-monitor/logs/data-platform-logs))
 
@@ -55,14 +55,14 @@ User can visualize network flow logs for analysis with several prebuilt Grafana 
 
 - Access in Azure Managed Grafana instances
 
-For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Neworking Services with following link:  For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services, see [Setting up Grafana](./how-to-apply-containernetworklogs.md#visualization-in-azure-managed-grafana-instances)
-
 To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
 1. **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
 
 2. **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
 :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana instance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
+
+For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Neworking Services with following link:  For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services, see [Setting up Grafana](./how-to-apply-containernetworklogs.md#visualization-in-azure-managed-grafana-instances)
 
 
 Users are able to see three major components in these dashboards:
