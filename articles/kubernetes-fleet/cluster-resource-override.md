@@ -2,7 +2,7 @@
 title: "Customize Cluster-Scoped Resources in Azure Kubernetes Fleet Manager with Cluster Resource Overrides"
 description: This article provides an overview of how to use the ClusterResourceOverride API to override cluster-scoped resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 05/10/2024
+ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -10,11 +10,11 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Customize cluster-scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides
 
-This article provides an overview of how to use the `ClusterResourceOverride` API from the [Kubernetes Fleet open-source project](https://github.com/Azure/fleet/tree/main/docs) to customize cluster-scoped resources in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
+This article provides an overview of how to use the `ClusterResourceOverride` API to customize cluster-scoped resources in Azure Kubernetes Fleet Manager.
 
 You can modify or override specific attributes across cluster resources. With `ClusterResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to various cluster-wide resources. These resources include namespaces, cluster roles, cluster role bindings, or custom resource definitions.
 
-These modifications might include updates to permissions, configurations, or other parameters. Such updates help ensure consistent management and enforcement of configurations across your clusters managed through Kubernetes Fleet.
+These modifications might include updates to permissions, configurations, or other parameters. Such updates help ensure consistent management and enforcement of configurations across your clusters managed through Fleet Manager.
 
 ## API components
 
@@ -248,7 +248,7 @@ rules:
 
 ### [Portal](#tab/azure-portal)
 
-1. On the Azure portal overview page for your Kubernetes Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
+1. On the Azure portal overview page for your Fleet Manager, in the **Fleet Resources** section, select **Resource placements**.
 
 1. Select **Create**.
 
@@ -290,5 +290,5 @@ rules:
 
 ## Related content
 
-* [Open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [KubeFleet override documentation](https://kubefleet-dev.github.io/website/docs/concepts/override/)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)
