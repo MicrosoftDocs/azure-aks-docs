@@ -211,6 +211,8 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 
     Setting the `--gpu-driver` API field to `none` during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
 
+   Note: if you get the error "unrecognized arguments: --gpu-driver none", upgrade the Azure CLI version. 
+
 3. You can optionally install the NVIDIA GPU Operator following [these steps][nvidia-gpu-operator].
 
 ## Confirm that GPUs are schedulable
