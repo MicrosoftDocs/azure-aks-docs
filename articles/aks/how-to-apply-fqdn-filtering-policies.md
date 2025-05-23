@@ -38,7 +38,7 @@ This article shows you how to set up Advanced Container Networking Services with
 * Kubernetes service names aren't supported.
 * Other L7 policies aren't supported.
 * FQDN pods may exhibit performance degradation when handling more than 1,000 requests per second.
-* If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP(s), Kafka and gRPC) will be blocked.
+* If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP, HTTPS, Kafka and gRPC) will be blocked.
 * Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
 ```yml
@@ -118,7 +118,7 @@ This section demonstrates how to observe a policy being enforced through the Cil
 
 Create a file named `demo-policy.yaml` and paste the following YAML manifest:
 > [!NOTE]
->The field `spec.egress.toPorts.rules.dns.matchPattern` is **mandatory** when using to FQDNs in a policy. This section tells Cilium to inspect DNS queries and match them against specified patterns. Without this section, Cilium will only allow the DNS traffic and not inspect its contents to learn which IPs are associated with the FQDNs. As a result, connections to those IPs (i.e., non-DNS traffic) will be blocked because Cilium cannot associate them with the allowed domain.
+>The field `spec.egress.toPorts.rules.dns.matchPattern` is **mandatory** when using to FQDNs in a policy. This section tells Cilium to inspect DNS queries and match them against specified patterns. Without this section, Cilium only allows the DNS traffic and not inspect its contents to learn which IPs are associated with the FQDNs. As a result, connections to those IPs (i.e., non-DNS traffic) will be blocked because Cilium cannot associate them with the allowed domain.
 >
 >Make sure to check the [limitations](#limitations) section first. 
 
