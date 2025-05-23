@@ -23,7 +23,7 @@ This article shows you how to set up Advanced Container Networking Services with
 
 ## Limitations:
 
-* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you cannot use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
+* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you can't use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
 - Supported Pattern:
 
     `*.example.com` - This allows traffic to all subdomains under example.com.
@@ -32,14 +32,14 @@ This article shows you how to set up Advanced Container Networking Services with
 
 - Unsupported Pattern
     
-    `*` This attempts to match any domain name, which isn't supported.
+    `*` This attempt to match any domain name, which isn't supported.
 
 * FQDN filtering is currently not supported with node-local DNS.
 * Kubernetes service names aren't supported.
 * Other L7 policies aren't supported.
-* FQDN pods may exhibit performance degradation when handling more than 1,000 requests per second.
-* If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP, HTTPS, Kafka and gRPC) will be blocked.
-* Alpine-based container images may encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
+* FQDN pods might exhibit performance degradation when handling more than 1,000 requests per second.
+* If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP, HTTPS, Kafka, and gRPC) will be blocked.
+* Alpine-based container images might encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
 
 ```yml
 rules:
@@ -83,7 +83,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md) feature is not available for Non-cilium clusters
+> [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md) feature isn't available for Non-cilium clusters
 
 ---
 
@@ -114,11 +114,11 @@ az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 
 ## Test connectivity with a policy
 
-This section demonstrates how to observe a policy being enforced through the Cilium Agent. A DNS request is made to an allowed FQDN and another case where it is blocked.
+This section demonstrates how to observe a policy being enforced through the Cilium Agent. A DNS request is made to an allowed FQDN and another case where it's blocked.
 
 Create a file named `demo-policy.yaml` and paste the following YAML manifest:
 > [!NOTE]
->The field `spec.egress.toPorts.rules.dns.matchPattern` is **mandatory** when using to FQDNs in a policy. This section tells Cilium to inspect DNS queries and match them against specified patterns. Without this section, Cilium only allows the DNS traffic and not inspect its contents to learn which IPs are associated with the FQDNs. As a result, connections to those IPs (i.e., non-DNS traffic) will be blocked because Cilium cannot associate them with the allowed domain.
+>The field `spec.egress.toPorts.rules.dns.matchPattern` is **mandatory** when using to FQDNs in a policy. This section tells Cilium to inspect DNS queries and match them against specified patterns. Without this section, Cilium only allows the DNS traffic and not inspect its contents to learn which IPs are associated with the FQDNs. As a result, connections to those IPs (i.e., non-DNS traffic) are blocked because Cilium can't associate them with the allowed domain.
 >
 >Make sure to check the [limitations](#limitations) section first. 
 
@@ -215,7 +215,7 @@ time="2024-10-08T17:48:27Z" level=info msg="Initializing dissection cache..." su
 
 ### Verify policy
 
-From the first shell, create a request to the allowed FQDN, `*.bing.com`, as specified by the policy. This should succeed and allowed by the agent.
+From the first shell, create a request to the allowed FQDN, `*.bing.com`, as specified by the policy. This request should succeed and allowed by the agent.
 
 ```bash
 ./agnhost connect www.bing.com:80
