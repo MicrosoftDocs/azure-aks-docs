@@ -21,6 +21,38 @@ This article shows you how to set up Advanced Container Networking Services with
 
  The minimum version of Azure CLI required for the steps in this article is 2.71.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
+## Limitations:
+
+* Wildcard FQDN policies are partially supported. This means you can create policies that match specific patterns with a leading wildcard (for example, *.example.com), but you can't use a universal wildcard (*) to match all domains on the field `spec.egress.toPorts.rules.dns.matchPattern`
+- Supported Pattern:
+
+    `*.example.com` - This allows traffic to all subdomains under example.com.
+
+    `app*.example.com` - This rule is more specific and only allows traffic to subdomains that start with "app" under example.com
+
+- Unsupported Pattern
+    
+    `*` This attempt to match any domain name, which isn't supported.
+
+* FQDN filtering is currently not supported with node-local DNS.
+* Kubernetes service names aren't supported.
+* Other L7 policies aren't supported.
+* FQDN pods might exhibit performance degradation when handling more than 1,000 requests per second.
+* If Advanced Container Networking Services(ACNS) security is disabled, FQDN and L7 policies (HTTP, HTTPS, Kafka, and gRPC) will be blocked.
+* Alpine-based container images might encounter DNS resolution issues when used with Cilium Network Policies. This is due to musl libc's limited search domain iteration. To work around this, explicitly define all search domains in the Network Policy's DNS rules using wildcard patterns, like the below example
+
+```yml
+rules:
+  dns:
+  - matchPattern: "*.example.com"
+  - matchPattern: "*.example.com.*.*"
+  - matchPattern: "*.example.com.*.*.*"
+  - matchPattern: "*.example.com.*.*.*.*"
+  - matchPattern: "*.example.com.*.*.*.*.*"
+- toFQDNs:
+  - matchPattern: "*.example.com"
+```
+
 ### Enable Advanced Container Networking Services
 
 To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
@@ -51,7 +83,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md) feature is not available for Non-cilium clusters
+> [FQDN filtering](./container-network-security-fqdn-filtering-concepts.md) feature isn't available for Non-cilium clusters
 
 ---
 
@@ -82,9 +114,13 @@ az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 
 ## Test connectivity with a policy
 
-This section demonstrates how to observe a policy being enforced through the Cilium Agent. A DNS request is made to an allowed FQDN and another case where it is blocked.
+This section demonstrates how to observe a policy being enforced through the Cilium Agent. A DNS request is made to an allowed FQDN and another case where it's blocked.
 
 Create a file named `demo-policy.yaml` and paste the following YAML manifest:
+> [!NOTE]
+>The field `spec.egress.toPorts.rules.dns.matchPattern` is **mandatory** when using to FQDNs in a policy. This section tells Cilium to inspect DNS queries and match them against specified patterns. Without this section, Cilium only allows the DNS traffic and not inspect its contents to learn which IPs are associated with the FQDNs. As a result, connections to those IPs (i.e., non-DNS traffic) are blocked because Cilium can't associate them with the allowed domain.
+>
+>Make sure to check the [limitations](#limitations) section first. 
 
 ```yaml
 apiVersion: "cilium.io/v2"
@@ -112,7 +148,8 @@ spec:
 ```
 Specify the name of your YAML manifest and apply it by using [kubectl apply][kubectl-apply]:
 ```console
-kubectl apply –f demo-policy.yaml -n demo
+kubectl create ns demo
+kubectl apply -f demo-policy.yaml -n demo
 ```
 
 ### Create a demo pod
@@ -146,7 +183,7 @@ client   1/1     Running   0          5m50s   192.168.0.139   aks-nodepool1-2205
 The pod is running on a node named `aks-nodepool1-22058664-vmss000001`. Obtain the Cilium Agent instance running on that node:
 
 ```bash
-k get po -n kube-system -o wide --field-selector spec.nodeName="aks-nodepool1-22058664-vmss000001" | grep "cilium"
+kubectl get po -n kube-system -o wide --field-selector spec.nodeName="aks-nodepool1-22058664-vmss000001" | grep "cilium"
 ```
 
 The expected `cilium-s4x24` should be in the output.
@@ -178,16 +215,16 @@ time="2024-10-08T17:48:27Z" level=info msg="Initializing dissection cache..." su
 
 ### Verify policy
 
-From the first shell, create a request to the allowed FQDN, `*.bing.com`, as specified by the policy. This should succeed and allowed by the agent.
+From the first shell, create a request to the allowed FQDN, `*.bing.com`, as specified by the policy. This request should succeed and allowed by the agent.
 
 ```bash
-bash-5.0# ./agnhost connect www.bing.com:80
+./agnhost connect www.bing.com:80
 ```
 
 Then create another request to an FQDN expected to be blocked:
 
 ```bash
-bash-5.0# ./agnhost connect www.example.com:80
+./agnhost connect www.example.com:80
 ```
 
 Cilium Agent blocked the request with the output:
