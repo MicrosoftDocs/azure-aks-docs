@@ -63,7 +63,7 @@ To deploy to a single AKS cluster, you can use [Automated Deployments for AKS][a
 Now that you understand the Fleet Manager Automated Deployments concepts, see an end-to-end example showing how you can [use Fleet Manager Automated Deployments to drive multi-cluster resource placement][fleet-autodeploy-howto].
 
 <!-- LINKS -->
-[fleet-deploy-hub]: ./concepts-choosing-fleet.md#kubernetes-fleet-resource-with-hub-clusters
+[fleet-deploy-hub]: ./concepts-choosing-fleet.md#fleet-manager-with-hub-cluster
 [fleet-autodeploy-howto]: ./howto-automated-deployments.md
 [concept-crp]: ./concepts-resource-propagation.md
 [acr-create]: /azure/aks/cluster-container-registry-integration

@@ -325,5 +325,5 @@ This example replaces the container image in the `Deployment` object with:
 
 ## Related content
 
-* [Open-source KubeFleet documentation](hhttps://kubefleet-dev.github.io/website/docs/concepts/override/)
+* [Open-source KubeFleet documentation](https://kubefleet-dev.github.io/website/docs/concepts/override/)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)
