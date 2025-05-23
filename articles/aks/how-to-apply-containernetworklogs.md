@@ -22,7 +22,9 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 *  The minimum version of Azure CLI required for the steps in this article is 2.71.0. To find the version, Run `az --version` . If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-* Container Network Log is available for Cilium Data planes only. 
+* Container Network Log with Always-on mode works only for Cilium data planes. 
+
+* Conatiner Network logs with On-demand mode works for both cilium and non-cilium data planes. 
 
 * If existing cluster is <= 1.31, upgrade the cluster to the latest available Kubernetes version.
 
@@ -148,18 +150,17 @@ Following is the description of fields in this Custom resource definition.
 | **Field**                        | **Type**         | **Description**                                                                                                                         | **Required** |
 |----------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------|
 | `includefilters`                 | Array of Objects | A list of filters defining network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria. | Mandatory    |
-| `includefilters.name`            | String           | The name of the filter.                                                                                                                | Mandatory    |
-| `includefilters.protocol`        | Array of Strings | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`.                                                      | Optional     |
-| `includefilters.verdict`         | Array of Strings | The verdict of the flow to match. Valid values are `forwarded` and `dropped`.                                                          | Optional     |
+| `includefilters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
+| `includefilters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`.  As It's an optional parameter, if it is not specified , logs will all protocols would be included.                                                      | Optional     |
+| `includefilters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`.  As It's an optional parameter, if it is not specified , logs will all verdicts would be included.                                                        | Optional     |
 | `includefilters.from`            | Object           | Specifies the source of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                           | Mandatory    |
-| `includefilters.from.ip`         | Array of Strings | A list of source IP addresses.                                                                                                         | Optional     |
-| `includefilters.from.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
-| `includefilters.from.namespacedPod` | Array of Strings | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source.                                              | Optional     |
+| `includefilters.from.ip`         | []string | It can be single IP or CIDR.                                                                                                         | Optional     |
+| `includefilters.from.labelSelector` | Object           | A Label Selector is a mechanism to filter and query resources based on labels, allowing users to identify specific subsets of resources.A label selector can include two components: matchLabels and matchExpressions. Use matchLabels for straightforward matching by specifying a key-value pair (e.g., {"app": "frontend"}). For more advanced criteria, use matchExpressions, where you define a label key, an operator (such as In, NotIn, Exists, or DoesNotExist), and an optional list of values. Ensure that the conditions in both matchLabels and matchExpressions are met, as they are logically ANDed. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
+| `includefilters.from.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source. name should match regex pattern ^.+$                                              | Optional     |
 | `includefilters.to`              | Object           | Specifies the destination of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                      | Mandatory    |
-| `includefilters.to.ip`           | Array of Strings | A list of destination IP addresses.                                                                                                   | Optional     |
+| `includefilters.to.ip`           | []string | It can be single IP or CIDR.         | Optional     |
 | `includefilters.to.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
-| `includefilters.to.namespacedPod` | Array of Strings | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the destination.                                         | Optional     |
-
+| `includefilters.to.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the destination.                                         | Optional     |
 
 - Apply RetinaNetworkFlowLog CR to enable log collection at cluster with this command:
 
@@ -178,26 +179,10 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
 # Enable azure monitor with high log scale mode
   az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
 # Update the aks cluster with enable retina flow log flag 
-  az aks cluster update --enable-acns \
+  az aks update --enable-acns \
     --enable-retina-flow-logs \
     -g $RESOURCE_GROUP \
     -n $CLUSTER_NAME
-```
-
-
-### Enable Advanced Container Networking Services on an existing cluster
-
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
-
-
-> [!NOTE]
-> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services.
-
-```azurecli-interactive
-az aks update \
-    --resource-group $RESOURCE_GROUP \
-    --name $CLUSTER_NAME \
-    --enable-acns
 ```
 
 #### Configuring existing cluster to store logs at Azure Log analytics workspace
@@ -377,48 +362,7 @@ User can visualize Container Network Flow log for analysis with several prebuilt
     2. **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
 :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana instance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
 
-    For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
-
-#### Visualization using BYO Grafana
-
-Skip this step if using Azure managed Grafana
-
-1. Add the following scrape job to your existing Prometheus configuration and restart your Prometheus server:
-
-    ```yml
-    - job_name: networkobservability-hubble
-      kubernetes_sd_configs:
-        - role: pod
-      relabel_configs:
-        - target_label: cluster
-          replacement: myAKSCluster
-          action: replace
-        - source_labels: [__meta_kubernetes_namespace, __meta_kubernetes_pod_label_k8s_app]
-          regex: kube-system;(retina|cilium)
-          action: keep
-        - source_labels: [__address__]
-          action: replace
-          regex: ([^:]+)(?::\d+)?
-          replacement: $1:9965
-          target_label: __address__
-        - source_labels: [__meta_kubernetes_pod_node_name]
-          target_label: instance
-          action: replace
-      metric_relabel_configs:
-        - source_labels: [__name__]
-          regex: '|hubble_dns_queries_total|hubble_dns_responses_total|hubble_drop_total|hubble_tcp_flags_total' # if desired, add |hubble_flows_processed_total
-          action: keep
-    ``` 
-
-1. In **Targets** of Prometheus, verify the **network-obs-pods** are present.
-
-1. Sign in to Grafana and import following example dashboards using the following IDs:
-      * **Flow Logs:** shows Network flow log within cluster. ([Flow Log Dashboard](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//))
-      * **Flow Logs (External):** Shows Network flow logs for communication outside cluster([Flow Log Dashboard(external)](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic/))
-
-    > [!NOTE] 
-    > * Depending on your Prometheus/Grafana instances’ settings, some dashboard panels may require tweaks to display all data.
-    > * Cilium does not currently support DNS metrics/dashboards.
+    For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)       
 
 #### Visualization of Container Network Logs in Azure portal. 
 
@@ -426,6 +370,8 @@ User can visualize, query, and analyze Flow logs in Azure portal in Azure log an
   :::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Snapshot of Container Network Logs in Azure log analytics.":::
 
 ## Configuring on-demand mode
+
+On-demand mode for network flows work with both cilium and Non-cilium Data planes.
 
 ### Install Hubble CLI
 Install the Hubble CLI to access the data it collects using the following commands:
@@ -459,7 +405,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
     
 1. Port forward Hubble Relay using the `kubectl port-forward` command.
     
-    ```azurecli-interactive
+    ```bash
     kubectl port-forward -n kube-system svc/hubble-relay --address 127.0.0.1 4245:443
     ```
     
