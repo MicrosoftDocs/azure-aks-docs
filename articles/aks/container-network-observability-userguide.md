@@ -1,18 +1,18 @@
 ---
 title: Advanced Container Network Onservability User Guide
-description: User guide to explain How to use ACNS dashboards effectively
+description: User guide to explain How to use Advanced Container Networking Services effectively
 author: shaifaligargmsft
 ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
-ms.topic: user-guide
+ms.topic: concept-article
 ms.date:  06/05/2024
 ---
 
-# Overview 
-As modern containerized applications scale across clusters and clouds, ensuring reliable, efficient, and secure network communication becomes critical. [Advanced Container Networking Services](./container-network-observability-concepts.md) provides robust observability solutions for Kubernetes environments, enabling users to monitor, debug, and optimize their network infrastructure seamlessly. Leveraging eBPF-based technologies like Hubble and Retina, and deep integration with Azure Kubernetes Service (AKS), ACNS delivers powerful tools for tracking network flows, diagnosing connectivity issues, and resolving complex challenges like DNS failures, packet drops, and network policy violations. Users have the capability to define Prometheus alerts based on metrics, enabling proactive monitoring of the health of the cluster's network and detection of anomalies.
+# Advanced Container Networking Services User guide 
+As modern containerized applications scale across clusters and clouds, ensuring reliable, efficient, and secure network communication becomes critical. [Advanced Container Networking Services](./container-network-observability-concepts.md) provides robust observability solutions for Kubernetes environments, enabling users to monitor, debug, and optimize their network infrastructure seamlessly. Leveraging eBPF-based technologies like Hubble and Retina, and deep integration with Azure Kubernetes Service (AKS), Advanced Container Networking Services delivers powerful tools for tracking network flows, diagnosing connectivity issues, and resolving complex challenges like DNS failures, packet drops, and network policy violations. Users have the capability to define Prometheus alerts based on metrics, enabling proactive monitoring of the health of the cluster's network and detection of anomalies.
 
-This guide serves as a practical resource to help users navigate ACNS observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness ACNS observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively. With ACNS, teams gain the insights they need to maintain high-performing and secure Kubernetes workloads, even in the most dynamic environments. Sample dashboards have been created, bearing names such as "Kubernetes / Networking /." . To know how to setup these dahsboards , refer[link](./container-network-observability-how-to.md)
+This guide serves as a practical resource to help users navigate Advanced Container Networking Service observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively. With Advanced Container Networking Service, teams gain the insights they need to maintain high-performing and secure Kubernetes workloads, even in the most dynamic environments. Sample dashboards have been created, bearing names such as "Kubernetes / Networking /." . To know how to setup these dahsboards , refer[link](./container-network-observability-how-to.md)
 
 The suite of dashboards includes:
 
@@ -32,7 +32,7 @@ The suite of dashboards includes:
 
 - L7 Flows (Workload): shows http, Kafka and gRPC flows to/from the specified workload (e.g. Pods of a Deployment or DaemonSet) when a Layer 7 based policy is applied.This is available only for clusters with cilium dataplane. 
 
-## Use Case 1: Demystifying Pod-Level Domain Name Server(DNS) Issues in Kubernetes and Leveraging ACNS for Root Cause Analysis (RCA)
+## Use Case 1: Demystifying Domain Name Server(DNS) issues using Advanced Container Networking Service for Root Cause Analysis (RCA)
 
 DNS issues at the pod level are a common challenge in Kubernetes, often causing failed service discovery, slow application responses, or communication failures between pods. These problems frequently arise from misconfigured DNS policies, limited query capacity, or latency in resolving external domains. For instance, if the CoreDNS service is overloaded or an upstream DNS server stops responding, it may lead to failures in dependent pods.  Resolving these issues requires not just identification but deep visibility into DNS behaviour within the cluster.
 Let us assume that user has set up a web application in AKS cluster and now that web application is not reachable. User is recieving DNS errors such as DNS_PROBE_FINISHED_NXDOMAIN or SERVFAIL. These are few errors that DNS server is throeing while resolving web applicatiopn's address
@@ -115,7 +115,7 @@ The Hubble UI service graph complements CLI insights by visualizing DNS-related 
 
 :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubble-ui-servicemap.png" alt-text="Diagram of Hubble UI service map ." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubble-ui-servicemap.png":::
 
-With the combined capabilities of the ACNS dashboard, Hubble CLI, and Hubble UI, users can swiftly identify DNS issues and perform root cause analysis (RCA) with efficiency and precision.
+With the combined capabilities of the grafana dashboards, Hubble CLI, and Hubble UI, users can swiftly identify DNS issues and perform root cause analysis (RCA) with efficiency and precision.
 
 ## Use Case 2: Identifying packet drops at cluster and pod level due to misconfigured network policy or network connectivity issues.
 
@@ -173,7 +173,7 @@ Traffic imbalances occur when certain pods or services within a workload or name
 
 Consider an online retail platform running on an AKS cluster. The platform consists of multiple microservices, including a product search service, a user authentication service, and an order processing service, all deployed within the same namespace. During a seasonal sale, the product search service experiences a surge in traffic, while the other services remain idle. The load balancer inadvertently directs more requests to a subset of pods within the product search deployment, leading to congestion and increased latency for search queries. Meanwhile, other pods in the same deployment are underutilized. To learn how to deploy application with microservices in AKS cluster ,refer [Deploy AKS store demo application on AKS](./tutorial-kubernetes-prepare-app.md)
 
-Without observability, it is challenging to identify which pods or namespaces are overloaded or underutilized. Advanced container networking services (ACNS) can help by monitoring real-time traffic patterns at the pod level. They provide metrics on bandwidth usage, request rates, and latency, making it easy to pinpoint imbalances.
+Without observability, it is challenging to identify which pods or namespaces are overloaded or underutilized. Advanced container networking services can help by monitoring real-time traffic patterns at the pod level. They provide metrics on bandwidth usage, request rates, and latency, making it easy to pinpoint imbalances.
 
 ### Step 1. Investigate Pod traffic by Grafana dashboard.
 
@@ -207,11 +207,11 @@ The following heatmap indication higher traffic is receiving and coming out of t
 
 8. Stacked (Total) Incoming TCP RST by Destination Pod: This graph aggregates incoming resets, showing how network congestion affects destination pods. For example, A sustained increase in resets for pets/rabbitmq-0 may indicate that this service is unable to handle incoming traffic effectively, leading to timeouts.
     
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/stacked-incoming-tcpreset-by-destinationpods.png" alt-text="Snapshot of Total Incoming TCP reset by destination pods." lightbox="./media/advanced-container-networking-services/acnsdashboard/stacked-incoming-tcpreset-by-destinationpods.png":::
 
 By correlating data across these graphs, user can:
 
-- Pinpoint the pods responsible for high RST packet rates.
+- Pinpoint the pods responsible for high TCP reset packet rates.
 
 - Identify time frames and workloads with significant traffic imbalances.
 
@@ -221,34 +221,35 @@ By correlating data across these graphs, user can:
 
 ## Use case 4: Real -time monitoring of cluster’s network health and performance.
 
-Presenting a cluster's network health metrics at a high level is essential for ensuring the overall stability and performance of the system. High-level metrics provide a quick and comprehensive view of the cluster’s network performance, allowing administrators to easily identify potential bottlenecks, failures, or inefficiencies without delving into granular details. These metrics, such as latency, throughput, packet loss, and error rates, offer a snapshot of the cluster’s health, enabling proactive monitoring and rapid troubleshooting. We have a sample dashboard that represents overall health of the cluster. “Kubernetes / Networking / Clusters”
-
-Let’s dig deeper into the overall dashboard.
+Presenting a cluster's network health metrics at a high level is essential for ensuring the overall stability and performance of the system. High-level metrics provide a quick and comprehensive view of the cluster’s network performance, allowing administrators to easily identify potential bottlenecks, failures, or inefficiencies without delving into granular details. These metrics, such as latency, throughput, packet loss, and error rates, offer a snapshot of the cluster’s health, enabling proactive monitoring and rapid troubleshooting. We have a sample dashboard that represents overall health of the cluster. “Kubernetes / Networking / Clusters”. Let’s dig deeper into the overall dashboard.
 
 1. Identifying Network Bottlenecks: By analyzing the "Bytes Forwarded" and "Packets Forwarded" graphs, users can identify if there are any sudden drops or spikes indicating potential bottlenecks or congestion in the network.
     
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/fleet-view.png" alt-text="Fleet view of overall health of cluster." lightbox="./media/advanced-container-networking-services/acnsdashboard/fleet-view.png":::
 
 2. Detecting Packet Loss: The "Packets Dropped" and "Bytes Dropped" sections help in identifying if there is significant packet loss occurring within specific clusters, which could indicate issues like faulty hardware or misconfigured network settings.
         
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/bytes-andpackets-dropped-by-cluster.png" alt-text="Diagram of bytes and packets dropped by cluster." lightbox="./media/advanced-container-networking-services/acnsdashboard/bytes-andpackets-dropped-by-cluster.png":::
 
-Monitoring Traffic Patterns: Users can monitor traffic patterns over time to understand normal versus abnormal behavior, which helps in proactive troubleshooting before issues escalate.
 
-3. By comparing max and min ingress/egress bytes and packets, users can analyse performance trends and determine if certain times of day or specific workloads are causing performance degradation.
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+
+3. Monitoring Traffic Patterns: Users can monitor traffic patterns over time to understand normal versus abnormal behavior, which helps in proactive         troubleshooting before issues escalate.By comparing max and min ingress/egress bytes and packets, users can analyse performance trends and determine if certain times of day or specific workloads are causing performance degradation.
+    
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/egress-ingress-packets-traffic-metrics.png" alt-text="Diagram of egress ingress packets traffic metrics ." lightbox="./media/advanced-container-networking-services/acnsdashboard/egress-ingress-packets-traffic-metrics.png":::
 
 4. Diagnosing Drop Reasons: The "Bytes Dropped by Reason" and "Packets Dropped by Reason" sections help in understanding the specific reasons for packet drops, such as policy denials or unknown protocols. This information is crucial for addressing the root cause of network issues.
  
-   :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/bytes-drooped-by-reason.png" alt-text="Diagram of bytes drooped by reason." lightbox="./media/advanced-container-networking-services/acnsdashboard/bytes-drooped-by-reason.png":::
 
 5. Node-Specific Analysis: The "Bytes Dropped by Node" and "Packets Dropped by Node" graphs provide insights into which nodes are experiencing the most packet drops. This helps in pinpointing problematic nodes and taking corrective actions to improve network performance.
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+    
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/bytes-and-packets-dropped-by-node.png" alt-text="Diagram of bytes and packets dropped by different node." lightbox="./media/advanced-container-networking-services/acnsdashboard/bytes-and-packets-dropped-by-node.png":::
 
 6. Distribution of TCP connections: The graph here signifies the distribution of TCP connections across different states. For instance, if the graph shows an unusually high number of connections in the SYN_SENT state, it may indicate that the cluster nodes are having trouble establishing connections, due to network latency or misconfiguration. On the other hand, a considerable number of connections in the TIME_WAIT state could suggest that connections are not being properly released, potentially leading to resource exhaustion.
-   :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+   
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/distribution-of-tcp-connections-by-state.png" alt-text="Diagram of tcp connection by state ." lightbox="./media/advanced-container-networking-services/acnsdashboard/distribution-of-tcp-connections-by-state.png":::
 
-## Use Case 5 - Diagnosing Application-level network issues with ACNS.
+## Use Case 5 - Diagnosing Application-level network issues with Advanced Container Networking Services
 
 L7 traffic observability addresses critical application-layer networking issues by providing deep visibility into HTTP, gRPC, and Kafka traffic. These insights help detect problems such as high error rates (e.g., 4xx client-side or 5xx server-side errors), unexpected traffic drops, latency spikes, uneven traffic distribution across pods, and misconfigured network policies. These issues frequently arise in complex microservice architectures where dependencies between services are intricate, and resource allocation is dynamic. For example, sudden increases in dropped Kafka messages or delayed gRPC calls may signal bottlenecks in message processing or network congestion.
 
@@ -256,10 +257,10 @@ Imagine an e-commerce platform deployed in a Kubernetes cluster, where the front
 
 1. Identifying patterns of dropped and forwarded HTTP requests: In the given graph, the outgoing HTTP traffic is segmented by the verdict, highlighting whether requests are "forwarded" or "dropped." For the e-commerce platform, this graph can help identify potential bottlenecks or failures in the checkout process. If there is a noticeable increase in dropped HTTP flows, it may indicate issues such as misconfigured network policies, resource constraints, or connectivity problems between the frontend and backend services. By correlating this graph with specific timeframes of user complaints, administrators can pinpoint whether these drops align with checkout failure.
 
-:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-traffic-by-verdict.png" alt-text="Diagram of outgoing http traffic by verdict." lightbox="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-traffic-by-verdict.png":::
 
 2. Following section presents a line graph depicting the rate of outgoing HTTP requests over time, categorized by their status codes (e.g., 200, 403). Users can use this graph to identify spikes in error rates (e.g., 403 Forbidden errors), which may indicate issues with authentication or access control. By correlating these spikes with specific time intervals, users can investigate and resolve the underlying problems, such as misconfigured security policies or server-side issues.
-   :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-requests-method-and-count.png" alt-text="Diagram of outgoing http requests method and count." lightbox="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-requests-method-and-count.png":::
 
 3. This section provides a heatmap indicating which pods have outgoing HTTP requests that resulted in 4xx errors. Users can use this heatmap to quickly identify problematic pods and investigate the reasons for the errors. By addressing these issues at the pod level, users can improve the overall performance and reliability of their L7 traffic.
      :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic ." lightbox="./media/advanced-container-networking-services/acnsdashboard/workloadsnapshot-for-pod-traffic.png":::
@@ -288,7 +289,7 @@ Imagine an e-commerce platform deployed in a Kubernetes cluster, where the front
 
 # Conclusion
 
-In conclusion, Advanced Container Networking Services (ACNS) provide a robust framework for real-time monitoring and troubleshooting of cluster network health and performance. By leveraging the comprehensive set of metrics and visual dashboards, users can swiftly identify network bottlenecks, detect packet loss, monitor traffic patterns, and diagnose drop reasons. The node-specific analysis further aids in pinpointing problematic nodes, allowing for targeted interventions to enhance network stability. With these tools at their disposal, administrators can ensure optimal performance and proactive management of their cluster networks, leading to a more resilient and efficient system.
+In conclusion, Advanced Container Networking Services provide a robust framework for real-time monitoring and troubleshooting of cluster network health and performance. By leveraging the comprehensive set of metrics and visual dashboards, users can swiftly identify network bottlenecks, detect packet loss, monitor traffic patterns, and diagnose drop reasons. The node-specific analysis further aids in pinpointing problematic nodes, allowing for targeted interventions to enhance network stability. With these tools at their disposal, administrators can ensure optimal performance and proactive management of their cluster networks, leading to a more resilient and efficient system.
 
 ## nEXT STEPS
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
