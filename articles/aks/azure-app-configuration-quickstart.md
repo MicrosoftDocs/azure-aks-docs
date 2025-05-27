@@ -3,7 +3,7 @@ title: Quickstart Generate ConfigMap from Azure App Configuration
 description: Learn how to configure the workload in Azure Kubernetes Service (AKS) with ConfigMap that is generated from Azure App Configuration.
 author: RichardChen820
 ms.author: junbchen
-ms.topic: article
+ms.topic: quickstart
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 10/10/2024

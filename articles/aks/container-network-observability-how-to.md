@@ -268,7 +268,7 @@ Skip this step if using Azure managed Grafana
 
 Install the Hubble CLI to access the data it collects using the following commands:
 
-```azurecli-interactive
+```bash
 # Set environment variables
 export HUBBLE_VERSION=v1.16.3
 export HUBBLE_ARCH=amd64
@@ -285,7 +285,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 1. Make sure the Hubble pods are running using the `kubectl get pods` command.
 
-    ```azurecli-interactive
+    ```bash
     kubectl get pods -o wide -n kube-system -l k8s-app=hubble-relay
     ```
     
@@ -297,13 +297,13 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
     
 1. Port forward Hubble Relay using the `kubectl port-forward` command.
     
-    ```azurecli-interactive
+    ```bash
     kubectl port-forward -n kube-system svc/hubble-relay --address 127.0.0.1 4245:443
     ```
     
 1. Mutual TLS (mTLS) ensures the security of the Hubble Relay server. To enable the Hubble client to retrieve flows, you need to get the appropriate certificates and configure the client with them. Apply the certificates using the following commands:
 
-    ```azurecli-interactive
+    ```bash
     #!/usr/bin/env bash
     
     set -euo pipefail
@@ -337,7 +337,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
     ```
 
 1. Verify the secrets were generated using the following `kubectl get secrets` command:
-    ```azurecli-interactive
+    ```bash
     kubectl get secrets -n kube-system | grep hubble-
     ```
 
@@ -353,7 +353,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 2. Make sure the Hubble Relay pod is running using the `hubble observe` command.
 
-    ```azurecli-interactive
+    ```bash
     hubble observe --pod hubble-relay-7ddd887cdb-h6khj
     ```
 
@@ -597,13 +597,13 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
     ```
 
 1. Apply the hubble-ui.yaml manifest to your cluster, using the following command 
-    ```azurecli-interactive
+    ```bash
     kubectl apply -f hubble-ui.yaml
     ```
 
 1. Set up port forwarding for Hubble UI using the `kubectl port-forward` command.
 
-    ```azurecli-interactive
+    ```bash
     kubectl -n kube-system port-forward svc/hubble-ui 12000:80
     ```
 

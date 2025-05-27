@@ -2,10 +2,11 @@
 title: Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS) with Locust.
 description: In this article, you learn how to test a Valkey cluster on Azure Kubernetes Service (AKS) using Locust.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 10/15/2024
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS)

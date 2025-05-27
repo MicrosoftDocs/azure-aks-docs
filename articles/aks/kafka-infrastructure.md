@@ -2,11 +2,12 @@
 title: Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
 description: In this article, you prepare the infrastructure for deploying a Kafka cluster on Azure Kubernetes Service (AKS) using the Strimzi Operator.  
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
 zone_pivot_groups: azure-cli-or-terraform
+ms.custom: 'stateful-workloads'
 ---
 
 # Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  
