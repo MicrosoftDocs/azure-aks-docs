@@ -53,7 +53,7 @@ DNS (Workload): Shows DNS metrics for the specified workload (for example, Pods
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/toppods-with-dns-errors-inworkload.png" alt-text="Snapshot of top pods in all namespaces. " lightbox="./media/advanced-container-networking-services/acnsdashboard/toppods-with-dns-errors-inworkload.png":::
 
-Once the user identifies the pods causing the most DNS issues, they can delve further into the DNS Workload dashboard for a more granular view. By correlating data across various panels within the dashboard, the user can systematically narrow down the root causes of the issues.
+    Once the user identifies the pods causing the most DNS issues, they can delve further into the DNS Workload dashboard for a more granular view. By correlating data across various panels within the dashboard, the user can systematically narrow down the root causes of the issues.
 
 3. DNS Requests and Responses: Identify trends like a sudden drop in response rates or an increase in missing responses (as seen in the below panel). A high "Requests Missing Response %" indicates potential upstream DNS server issues or query overload. Here, user can see there's a sudden increase in requests and responses at around 15.22.
 
@@ -78,13 +78,13 @@ Once the user identifies the pods causing the most DNS issues, they can delve fu
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/dns-response-table.png" alt-text="Diagram of DNS response table. " lightbox="./media/advanced-container-networking-services/acnsdashboard/dns-response-table.png":::
 
-8. Finally, when it's confirmed that there's a DNS issue, the following graph identifies the top ten destinations causing DNS errors in a cluster. Users can use this to prioritize troubleshooting specific endpoints, detect misconfigurations, or investigate network issues. By focusing on the most problematic destinations, users can efficiently address critical DNS failures.
+8. Finally, when it's confirmed that there's a DNS issue, the following graph identifies the top ten endpoints causing DNS errors in a specific workload or namespace. Users can use this to prioritize troubleshooting specific endpoints, detect misconfigurations, or investigate network issues. By focusing on the most problematic endpoints, users can efficiently address critical DNS failures.
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/top-pods-with-dnserrors-inworkload.png" alt-text="Diagram of top pods with most DNS errors. " lightbox="./media/advanced-container-networking-services/acnsdashboard/top-pods-with-dnserrors-inworkload.png":::
 
 ### Step 2: Debugging DNS Resolution of a Pod with Hubble flow logs
 
-To dig deeper, we can leverage the Hubble CLI tool to inspect flows in real time. The below snapshot shows how we can filter traffic using namespace and type. From the above step, user would have list of pods that causes most DNS errors, so user can use following command to see DNS flows on each pod.
+To dig deeper, we can leverage the Hubble CLI tool to inspect flows in real time. From the above step, user would have list of pods that causes most DNS errors, so user can use following command to see DNS flows on each pod.
 
 ```azurecli-interactive
 hubble observe --dns --pod <pod-name>
@@ -149,7 +149,7 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
 6. Investigate Stacked Outgoing Drops: Use the Stacked (Total) Outgoing/Incoming Drops by Source Pod chart to compare drop rates across affected pods. Identify if specific pods consistently show higher drops (e.g., kapinger-bad-6659b89fd8-zjb9k at 26.8 p/s). Here p/s refers to drop packet per second. Cross-reference these pods with their workloads, labels, and network policies to diagnose potential misconfigurations.
 
-:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/total-outgoing-drops-by-sourcepods.png" alt-text="Diagram of Hubble UI service map ." lightbox="./media/advanced-container-networking-services/acnsdashboard/total-outgoing-drops-by-sourcepods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/total-outgoing-drops-by-sourcepods.png" alt-text="Diagram of Hubble UI service map ." lightbox="./media/advanced-container-networking-services/acnsdashboard/total-outgoing-drops-by-sourcepods.png":::
 
 By combining these insights, the user can pinpoint specific pods, time intervals, and misconfigured policies responsible for packet drops, enabling targeted troubleshooting and policy corrections.
 
@@ -157,21 +157,19 @@ By combining these insights, the user can pinpoint specific pods, time intervals
 
 Using Hubble CLI, user can identify packet drops caused by misconfigured network policies with detailed, real-time data. Hubble CLI provides granular, real-time insights into dropped packets. By observing traffic, focusing on policy denied drops, and analyzing patterns, user can identify the misconfigured network policies and validate fixes.
 
-:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble UI service map. " lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble cli for drop flows. " lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
 
 ### Step 3: Observe the Hubble UI
 
 Another useful tool is the Hubble UI, which provides a visual representation of traffic flows within a namespace. For example, in the agnhost namespace, the UI displays interactions between pods within the same namespace, pods in other namespaces, and even packets originating from outside the cluster. Additionally, the interface highlights dropped packets and provides detailed information, such as the source and destination pod names, along with pod and namespace labels. This data can be instrumental in reviewing the network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies. Refer following image –
 
-:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets. " lightbox="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets. " lightbox="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png":::
 
 ## Use Case 3: Identifying Traffic Imbalances within Workloads and Namespaces
 
 Traffic imbalances occur when certain pods or services within a workload or namespace handle a disproportionately high volume of network traffic compared to others. This can lead to resource contention, degraded performance for overloaded pods, and underutilization of others. Such imbalances often arise due to misconfigured services, uneven traffic distribution by load balancers, or unanticipated usage patterns.
 
-**Example:**
-
-Consider an online retail platform running on an AKS cluster. The platform consists of multiple microservices, including a product search service, a user authentication service, and an order processing service, all deployed within the same namespace. During a seasonal sale, the product search service experiences a surge in traffic, while the other services remain idle. The load balancer inadvertently directs more requests to a subset of pods within the product search deployment, leading to congestion and increased latency for search queries. Meanwhile, other pods in the same deployment are underutilized. To learn how to deploy application with microservices in AKS cluster ,refer [Deploy AKS store demo application on AKS](./tutorial-kubernetes-prepare-app.md)
+**Example:** Consider an online retail platform running on an AKS cluster. The platform consists of multiple microservices, including a product search service, a user authentication service, and an order processing service, all deployed within the same namespace. During a seasonal sale, the product search service experiences a surge in traffic, while the other services remain idle. The load balancer inadvertently directs more requests to a subset of pods within the product search deployment, leading to congestion and increased latency for search queries. Meanwhile, other pods in the same deployment are underutilized. To learn how to deploy application with microservices in AKS cluster ,refer [Deploy AKS store demo application on AKS](./tutorial-kubernetes-prepare-app.md)
 
 Without observability, it is challenging to identify which pods or namespaces are overloaded or underutilized. Advanced container networking services can help by monitoring real-time traffic patterns at the pod level. They provide metrics on bandwidth usage, request rates, and latency, making it easy to pinpoint imbalances.
 
