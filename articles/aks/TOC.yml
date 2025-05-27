@@ -196,7 +196,7 @@
             - name: Container Network Observability overview
               href: container-network-observability-concepts.md
             - name: Container Network Observability Userguide
-            - href: container-network-observability-userguide.md
+              href: container-network-observability-userguide.md
             - name: FQDN based Filtering
               href: container-network-security-fqdn-filtering-concepts.md
             - name: Layer 7 Policy
