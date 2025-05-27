@@ -9,6 +9,7 @@ ms.date: 01/23/2024
 ms.author: allensu
 author: asudbring
 #Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an Azure Load Balancer with a Standard SKU.
+# Customer intent: "As a Kubernetes administrator, I want to configure a public load balancer with a Standard SKU in AKS, so that I can expose services for reliable scalability and management of inbound and outbound network traffic."
 ---
 
 # Use a public standard load balancer in Azure Kubernetes Service (AKS)

@@ -5,6 +5,7 @@ author: tomkerkhove
 ms.topic: concept-article
 ms.date: 08/08/2023
 ms.author: tomkerkhove
+# Customer intent: As a cloud engineer, I want to implement event-driven autoscaling in my Kubernetes environment using KEDA, so that I can optimize my application performance and resource usage while ensuring cost efficiency.
 ---
 
 # Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on

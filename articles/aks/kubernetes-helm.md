@@ -8,6 +8,7 @@ ms.date: 05/09/2023
 ms.author: nickoman
 
 #Customer intent: As a cluster operator or developer, I want to learn how to deploy Helm into an AKS cluster and then install and manage applications using Helm charts.
+# Customer intent: "As a Kubernetes operator, I want to deploy existing applications using Helm in my Azure Kubernetes Service (AKS) cluster, so that I can efficiently manage their lifecycle and configurations."
 ---
 
 # Install existing applications with Helm in Azure Kubernetes Service (AKS)

@@ -8,6 +8,7 @@ ms.author: schaffererin
 
 ms.custom: mvc, subject-armbicep, devx-track-bicep, devx-track-azurecli
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+# Customer intent: As a developer or Kubernetes administrator, I want to quickly deploy an AKS cluster using Bicep and run a sample application, so that I can learn how to utilize Azure's managed Kubernetes service for application deployment and management.
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Bicep

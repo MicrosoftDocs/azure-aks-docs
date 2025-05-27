@@ -8,6 +8,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom:
 ms.date: 11/28/2023
+# Customer intent: "As a Kubernetes administrator, I want to configure the kubelogin plugin for Microsoft Entra authentication in AKS, so that I can streamline user access and improve security for cluster management."
 ---
 
 # Use kubelogin to authenticate users in Azure Kubernetes Service

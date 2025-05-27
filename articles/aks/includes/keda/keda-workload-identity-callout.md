@@ -4,6 +4,7 @@ ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 11/02/2023
 ms.author: nickoman
+# Customer intent: "As a Kubernetes administrator, I want to restart the KEDA operator pods after enabling Workload Identity, so that I can ensure the environment variables are correctly injected for proper functionality."
 ---
 
 > [!NOTE]

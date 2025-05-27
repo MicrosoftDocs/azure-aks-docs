@@ -6,6 +6,7 @@ ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 09/30/2024
 ms.author: shalierxia
+# Customer intent: As a Kubernetes administrator, I want to compare latency performance across different Istio add-on versions, so that I can optimize the service mesh configuration for my applications.
 ---
 
 # Latency comparison across versions

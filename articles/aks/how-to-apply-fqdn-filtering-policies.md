@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 07/30/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
+# Customer intent: As a cloud engineer managing an AKS cluster, I want to configure FQDN filtering in Advanced Container Networking Services, so that I can enhance security by controlling outbound traffic to specific domains.
 ---
 
 # Set up FQDN filtering feature for Container Network Security in Advanced Container Networking Services

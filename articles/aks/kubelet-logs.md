@@ -9,6 +9,7 @@ ms.author: nickoman
 
 
 #Customer intent: As a cluster operator, I want to view the logs for the kubelet that runs on each node in an AKS cluster to troubleshoot problems.
+# Customer intent: As a cluster operator, I want to access kubelet logs on AKS nodes, so that I can effectively troubleshoot issues within my Kubernetes environment.
 ---
 
 # Get kubelet logs from Azure Kubernetes Service (AKS) cluster nodes

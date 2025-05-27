@@ -7,6 +7,7 @@ ms.date: 01/24/2024
 ms.author: juda
 author: justindavies
 #Customer intent: As a cluster operator or developer, I want to understand how long-term support for Kubernetes on AKS works.
+# Customer intent: As a cluster operator or developer, I want to understand long-term support for Kubernetes versions in AKS, so that I can effectively manage upgrade timelines and maintain application stability.
 ---
 
 # Long-term support for Azure Kubernetes Service (AKS) versions

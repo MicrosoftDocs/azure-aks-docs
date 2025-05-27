@@ -7,6 +7,7 @@ ms.date: 05/21/2024
 author: sabbour
 ms.author: asabbour
 
+# Customer intent: "As a DevOps engineer, I want to use Azure Kubernetes Service Automatic to deploy and manage containerized applications, so that I can benefit from automated cluster management, resource allocation, and security best practices with minimal setup and operational overhead."
 ---
 
 # What is Azure Kubernetes Service (AKS) Automatic (preview)?

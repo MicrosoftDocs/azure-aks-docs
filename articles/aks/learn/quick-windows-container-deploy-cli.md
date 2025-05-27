@@ -6,6 +6,7 @@ ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud developer, I want to deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using the command line, so that I can efficiently manage containerized applications in a scalable environment.
 ---
 
 # Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using Azure CLI

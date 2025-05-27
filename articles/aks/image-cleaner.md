@@ -6,6 +6,7 @@ author: nickomang
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 01/22/2024
+# Customer intent: "As a DevOps engineer managing an AKS cluster, I want to configure Image Cleaner to automatically remove vulnerable stale images, so that I can enhance the security and efficiency of my image management process."
 ---
 
 # Use Image Cleaner to clean up vulnerable stale images on your Azure Kubernetes Service (AKS) cluster

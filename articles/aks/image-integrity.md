@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 09/26/2023
+# Customer intent: "As a Kubernetes administrator, I want to validate signed images before deploying them to AKS clusters, so that I can ensure only trusted and unaltered images are used in my cloud-native applications."
 ---
 
 # Use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters (Preview)

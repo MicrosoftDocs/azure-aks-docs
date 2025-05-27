@@ -7,6 +7,7 @@ author: allyford
 ms.topic: how-to
 ms.date: 03/07/2025
 ms.author: allyford
+# Customer intent: "As a DevOps engineer, I want to configure an HTTP proxy for AKS nodes, so that I can ensure secure outbound internet access in environments requiring proxy routing."
 ---
 
 # HTTP proxy support in Azure Kubernetes Service (AKS)

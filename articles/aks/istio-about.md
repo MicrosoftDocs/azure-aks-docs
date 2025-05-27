@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 04/09/2023
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: As a cloud developer, I want to integrate an Istio-based service mesh with Azure Kubernetes Service, so that I can enhance my microservices architecture with capabilities like observability, traffic management, and security without modifying my application code.
 ---
 
 # Istio-based service mesh add-on for Azure Kubernetes Service

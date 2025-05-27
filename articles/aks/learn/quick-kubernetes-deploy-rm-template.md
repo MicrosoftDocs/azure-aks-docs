@@ -8,6 +8,7 @@ ms.author: schaffererin
 
 ms.custom: mvc, subject-armqs, mode-arm, devx-track-arm-template, devx-track-azurecli
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+# Customer intent: "As a developer or cluster operator, I want to deploy an Azure Kubernetes Service (AKS) cluster using an ARM template and run a multi-container application, so that I can evaluate the managed Kubernetes service and understand its functionality in a practical scenario."
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using an ARM template

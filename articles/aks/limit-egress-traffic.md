@@ -8,6 +8,7 @@ ms.author: allensu
 ms.date: 12/05/2023
 author: asudbring
 #Customer intent: As a cluster operator, I want to restrict egress traffic for nodes to only access defined ports and addresses and improve cluster security.
+# Customer intent: As a cluster operator, I want to configure Azure Firewall to enforce outbound traffic rules for my AKS cluster, so that I can securely manage egress connections and improve the overall security posture of my Kubernetes environment.
 ---
 
 # Limit network traffic with Azure Firewall in Azure Kubernetes Service (AKS)

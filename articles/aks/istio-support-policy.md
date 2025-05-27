@@ -7,6 +7,7 @@ ms.date: 08/02/2024
 ms.author: kochhars
 author: sanyakochhar
 ms.custom: devx-track-azurecli
+# Customer intent: As a cloud engineer managing microservices on Kubernetes, I want to understand the support and compatibility policies for the Istio-based service mesh add-on, so that I can ensure my deployments are secure and compliant with the latest updates.
 ---
 # Support policy for Istio-based service mesh add-on for Azure Kubernetes Service
 

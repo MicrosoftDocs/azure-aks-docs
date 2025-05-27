@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.date: 02/14/2024
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: As a Kubernetes administrator, I want to configure the Istio service mesh add-on for my AKS cluster, so that I can manage service communication and enhance observability in my applications.
 ---
 
 # Configure Istio-based service mesh add-on for Azure Kubernetes Service
