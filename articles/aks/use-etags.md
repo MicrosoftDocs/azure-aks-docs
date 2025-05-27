@@ -6,6 +6,7 @@ ms.date: 02/28/2025
 ms.author: reginalin
 author: reginalin
 ms.subservice: aks-nodes
+# Customer intent: As a cloud engineer, I want to implement eTags for entity-level concurrency control in Azure Kubernetes Service, so that I can prevent conflicting requests and ensure data integrity during resource updates.
 ---
 
 

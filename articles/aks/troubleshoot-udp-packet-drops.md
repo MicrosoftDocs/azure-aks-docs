@@ -6,6 +6,7 @@ ms.date: 07/25/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a Kubernetes administrator, I want to diagnose and troubleshoot UDP packet drop issues in my AKS cluster, so that I can ensure reliable performance for my UDP-based applications."
 ---
 
 # Diagnose and solve UDP packet drops in Azure Kubernetes Service (AKS)

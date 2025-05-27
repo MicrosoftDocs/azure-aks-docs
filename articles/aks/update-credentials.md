@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 03/01/2023
+# Customer intent: As a Kubernetes administrator, I want to update or rotate the service principal and Microsoft Entra application credentials for my AKS cluster, so that I can ensure ongoing security and adherence to my organization's credential management policies.
 ---
 
 # Update or rotate the credentials for an Azure Kubernetes Service (AKS) cluster

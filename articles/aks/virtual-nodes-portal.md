@@ -8,6 +8,7 @@ ms.author: nickoman
 
 ms.custom: references_regions
 ms.subservice: aks-nodes
+# Customer intent: As a cloud engineer, I want to create an Azure Kubernetes Service cluster with virtual nodes, so that I can enable seamless communication between pods in Azure Container Instances and my AKS cluster.
 ---
 
 # Create and configure an Azure Kubernetes Services (AKS) cluster to use virtual nodes in the Azure portal

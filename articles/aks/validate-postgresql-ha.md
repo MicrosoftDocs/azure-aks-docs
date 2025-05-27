@@ -6,6 +6,7 @@ ms.date: 06/07/2024
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
+# Customer intent: "As a database administrator, I want to test and validate a highly available PostgreSQL database on AKS, so that I can ensure its reliability and performance in a production environment."
 ---
 
 # Test and validate PostgreSQL database on AKS

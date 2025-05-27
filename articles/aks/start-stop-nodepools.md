@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.date: 04/25/2023
 author: qpetraroia
 ms.author: qpetraroia
+# Customer intent: As a cloud administrator, I want to start and stop node pools in my Kubernetes cluster, so that I can manage compute costs effectively while maintaining the performance of my workloads.
 ---
 
 # Start and stop an Azure Kubernetes Service (AKS) node pool

@@ -8,6 +8,7 @@ ms.author: nickoman
 ms.topic: sample
 ms.subservice: aks-security
 ms.custom: subject-policy-compliancecontrols
+# Customer intent: As a cloud compliance officer, I want to understand the regulatory compliance controls for Azure Kubernetes Service, so that I can ensure our deployments adhere to required security standards and manage compliance effectively.
 ---
 
 # Azure Policy Regulatory Compliance controls for Azure Kubernetes Service (AKS)

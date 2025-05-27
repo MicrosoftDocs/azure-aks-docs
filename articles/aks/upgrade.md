@@ -6,6 +6,7 @@ ms.author: nickoman
 ms.topic: overview
 ms.subservice: aks-upgrade
 ms.date: 01/26/2024
+# Customer intent: As a cloud operations engineer, I want to upgrade the Azure Kubernetes Service cluster and its components, so that I can ensure security, compatibility, and access to the latest features while minimizing workload impact.
 ---
 
 # Upgrading Azure Kubernetes Service clusters and node pools

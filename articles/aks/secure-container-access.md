@@ -8,6 +8,7 @@ ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.date: 11/08/2024
 ms.author: allyford
+# Customer intent: As a cloud security administrator, I want to implement least privilege access for containers in Kubernetes so that I can minimize risks of unauthorized actions and potential attacks on our resources.
 ---
 
 # Security container access to resources using built-in Linux security features

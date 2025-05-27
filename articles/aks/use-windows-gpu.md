@@ -7,6 +7,7 @@ ms.date: 03/18/2024
 author: schaffererin
 ms.author: schaffererin
 #Customer intent: As a cluster administrator or developer, I want to create an AKS cluster that can use high-performance GPU-based VMs for compute-intensive workloads using a Windows os.
+# Customer intent: As a cluster administrator or developer, I want to provision a Windows GPU-enabled node pool in AKS, so that I can efficiently run high-performance compute or graphics-intensive workloads using GPU-based virtual machines.
 ---
 
 # Use Windows GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS) (preview)

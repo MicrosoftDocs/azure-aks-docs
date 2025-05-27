@@ -8,6 +8,7 @@ ms.date: 06/07/2023
 author: nickomang
 ms.author: nickoman
 
+# Customer intent: As a cloud administrator, I want to implement Pod Sandboxing on an Azure Kubernetes Service cluster, so that I can enhance the security of container workloads by isolating them from untrusted or potentially malicious code.
 ---
 
 # Pod Sandboxing (preview) with Azure Kubernetes Service (AKS)

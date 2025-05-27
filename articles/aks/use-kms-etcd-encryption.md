@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 09/26/2024
+# Customer intent: As a Kubernetes administrator, I want to enable Key Management Service etcd encryption in my Azure Kubernetes Service cluster, so that I can ensure the security of sensitive data stored in etcd while maintaining control over key management and access policies.
 ---
 
 # Add Key Management Service etcd encryption to an Azure Kubernetes Service cluster

@@ -6,6 +6,7 @@ ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-nodes
+# Customer intent: As a Kubernetes administrator, I want to add an Azure Spot node pool to my existing AKS cluster, so that I can utilize unutilized Azure capacity for cost-effective workloads that can tolerate interruptions.
 ---
 
 # Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster

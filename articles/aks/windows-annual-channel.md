@@ -7,6 +7,7 @@ ms.author: allyford
 author: schaffererin
 ms.topic: how-to
 ms.date: 07/01/2024
+# Customer intent: As a cloud engineer, I want to deploy Windows Server Annual Channel containers in Azure Kubernetes Service, so that I can leverage annual updates and improved portability for my containerized applications.
 ---
 
 # Use Windows Server Annual Channel for Containers on Azure Kubernetes Service (AKS) (Preview)

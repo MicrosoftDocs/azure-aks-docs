@@ -6,6 +6,7 @@ ms.date: 05/09/2024
 ms.author: nickoman
 author: nickomang
 ms.custom: mvc, build-2023
+# Customer intent: "As a cloud administrator, I want to track the deployment status of AKS releases in real time by region, so that I can ensure my clusters are updated with the latest fixes and features promptly."
 ---
 
 # AKS release tracker

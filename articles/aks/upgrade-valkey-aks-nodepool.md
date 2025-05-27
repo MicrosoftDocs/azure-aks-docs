@@ -7,6 +7,7 @@ ms.date: 10/28/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: As a Kubernetes administrator, I want to validate the resiliency of the Valkey cluster during a node pool upgrade, so that I can ensure minimal disruption and continued performance of my applications throughout the upgrade process.
 ---
 
 # Validate Valkey resiliency during an AKS node pool upgrade

@@ -8,6 +8,7 @@ ms.date: 03/28/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a DevOps engineer, I want to implement network policies in Azure Kubernetes Service, so that I can control and secure pod traffic by restricting communication according to the principle of least privilege.
 ---
 
 # Secure traffic between pods by using network policies in AKS

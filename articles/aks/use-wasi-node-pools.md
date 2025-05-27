@@ -7,6 +7,7 @@ ms.date: 05/17/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a cloud developer, I want to set up WebAssembly System Interface (WASI) node pools in a Kubernetes environment so that I can efficiently run Wasm workloads and optimize application performance.
 ---
 
 # Create WebAssembly System Interface (WASI) node pools in Azure Kubernetes Service (AKS) to run your WebAssembly (Wasm) workload (preview)

@@ -6,6 +6,7 @@ ms.author: rayoflores
 ms.topic: how-to 
 ms.date: 05/09/2023
 #Customer intent: As a cluster operator, I want to learn how to use labels in an AKS cluster so that I can set scheduling rules for nodes.
+# Customer intent: As an AKS cluster operator, I want to understand how to use labels for node pools so that I can effectively manage scheduling and resource allocation within my Kubernetes environment.
 ---
 
 # Use labels in an Azure Kubernetes Service (AKS) cluster

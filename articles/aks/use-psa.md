@@ -7,6 +7,7 @@ ms.date: 09/12/2023
 author: nickomang
 ms.author: nickoman
 
+# Customer intent: As a Kubernetes administrator, I want to implement Pod Security Admission policies in my AKS cluster, so that I can enforce security standards and ensure that only compliant pods are deployed in designated namespaces.
 ---
 
 # Use Pod Security Admission in Azure Kubernetes Service (AKS)

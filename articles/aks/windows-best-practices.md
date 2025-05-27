@@ -6,6 +6,7 @@ ms.custom: linux-related-content
 ms.author: schaffererin
 ms.topic: best-practice
 ms.date: 10/27/2023
+# Customer intent: As a Kubernetes administrator managing Windows containers, I want to implement best practices for Windows workloads in AKS, so that I can ensure optimal performance, security, and compliance in my containerized applications.
 ---
 
 # Best practices for Windows containers on Azure Kubernetes Service (AKS)

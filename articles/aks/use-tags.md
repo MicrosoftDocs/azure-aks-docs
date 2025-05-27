@@ -7,6 +7,7 @@ ms.date: 06/16/2023
 author: nickomang
 ms.author: nickoman
 
+# Customer intent: As an AKS user, I want to set and manage Azure tags for my AKS clusters and resources, so that I can effectively track and categorize resource usage for billing and operational purposes.
 ---
 
 # Use Azure tags in Azure Kubernetes Service (AKS)

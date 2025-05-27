@@ -10,6 +10,7 @@ ms.custom:
   - ignite-2023
 ms.date: 06/07/2024
 ms.author: nickoman
+# Customer intent: "As a DevOps engineer, I want to implement managed identities in Azure Kubernetes Service (AKS) so that I can securely authorize access to Azure resources without managing credentials manually."
 ---
 
 # Use a managed identity in Azure Kubernetes Service (AKS)

@@ -7,6 +7,7 @@ ms.subservice: aks-security
 ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 05/28/2024
 ms.author: nickoman
+# Customer intent: As a cloud engineer, I want to deploy and configure an Azure Kubernetes Service cluster with workload identity so that my applications can securely authenticate to Azure resources without managing credentials directly.
 ---
 
 # Deploy and configure workload identity on an Azure Kubernetes Service (AKS) cluster
