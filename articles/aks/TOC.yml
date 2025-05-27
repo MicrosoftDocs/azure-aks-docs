@@ -195,7 +195,7 @@
               href: advanced-container-networking-services-overview.md
             - name: Container Network Observability overview
               href: container-network-observability-concepts.md
-            - name: Container Network Observability Userguide
+            - name: Container Network Observability userguide
               href: container-network-observability-userguide.md
             - name: FQDN based Filtering
               href: container-network-security-fqdn-filtering-concepts.md
