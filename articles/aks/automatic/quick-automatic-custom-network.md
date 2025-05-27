@@ -6,6 +6,7 @@ ms.date: 03/03/2025
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli
+# Customer intent: As a DevOps engineer, I want to deploy an AKS Automatic cluster within a custom virtual network, so that I can leverage managed Kubernetes for my applications while ensuring optimal network configuration and security.
 ---
 
 # Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network

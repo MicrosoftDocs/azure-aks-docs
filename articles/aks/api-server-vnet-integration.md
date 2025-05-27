@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/19/2023
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: As a cloud architect, I want to configure an Azure Kubernetes Service cluster with API Server VNet Integration, so that I can ensure secure, private communication between the API server and cluster nodes without requiring external links or tunnels.
 ---
 
 # Create an Azure Kubernetes Service cluster with API Server VNet Integration 

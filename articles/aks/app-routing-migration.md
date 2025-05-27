@@ -6,6 +6,7 @@ ms.author: nickoman
 author: nickomang
 ms.custom:
 ms.date: 11/03/2023
+# Customer intent: "As an AKS administrator, I want to migrate from the deprecated HTTP application routing feature to the application routing add-on, so that I can maintain a supported configuration and ensure the continuity of my cluster's routing capabilities."
 ---
 
 # Migrate from HTTP application routing to the application routing add-on

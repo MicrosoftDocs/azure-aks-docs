@@ -5,6 +5,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 11/21/2023
+# Customer intent: As a Kubernetes administrator, I want to configure multiple NGINX ingress controllers with the application routing add-on, so that I can manage traffic to my applications using different load balancer settings and optimize my ingress resources.
 ---
 
 # Advanced NGINX ingress controller and ingress configurations with the application routing add-on

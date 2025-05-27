@@ -8,6 +8,7 @@ author: schaffererin
 ms.subservice: aks-integration
 ms.custom: devx-track-azurecli
 ms.date: 02/13/2023
+# Customer intent: "As a Kubernetes administrator, I want to configure role-based access control using Microsoft Entra group membership, so that I can restrict cluster resource access based on user identities and enhance security in my Azure Kubernetes Service environment."
 ---
 
 # Use Kubernetes role-based access control with Microsoft Entra ID in Azure Kubernetes Service

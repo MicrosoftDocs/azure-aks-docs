@@ -7,6 +7,7 @@ ms.topic: concept-article
 author: kaarthis
 ms.author: kaarthis
 ms.subservice: aks-upgrade
+# Customer intent: As a Kubernetes administrator, I want to set up notifications for AKS maintenance events so that I can receive timely alerts and reduce operational issues related to monitoring upgrades and failures.
 ---
 
 # Azure Kubernetes Service Communication Manager

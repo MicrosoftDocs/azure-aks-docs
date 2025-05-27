@@ -6,6 +6,7 @@ ms.topic: how-to
 author: sachidesai
 ms.service: azure-kubernetes-service
 ms.date: 3/25/2025
+# Customer intent: "As a data engineer, I want to monitor and visualize inference service metrics on AKS, so that I can ensure optimal performance and resource utilization while managing AI workloads."
 ---
 
 # Monitor and visualize AI inference metrics on Azure Kubernetes Service (AKS) with the AI toolchain operator (Preview)

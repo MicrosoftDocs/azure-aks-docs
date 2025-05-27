@@ -7,6 +7,7 @@ author: asudbring
 ms.topic: how-to
 ms.date: 11/21/2023
 ms.author: allensu
+# Customer intent: As a cloud engineer, I want to deploy and configure NGINX ingress on Azure Kubernetes Service using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications while ensuring secure access and integration with Azure DNS.
 ---
 
 # Managed NGINX ingress with the application routing add-on

@@ -7,6 +7,7 @@ author: nickomang
 ms.subservice: aks-upgrade
 ms.date: 04/06/2025
 ms.custom: aks-upgrade, automation, innovation-engine
+# Customer intent: "As a DevOps engineer, I want to enable automatic upgrades for my Kubernetes clusters, so that I can ensure my environment remains secure and up to date without manual intervention."
 ---
 
 # Automatically upgrade an Azure Kubernetes Service (AKS) cluster

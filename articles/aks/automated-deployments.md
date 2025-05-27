@@ -8,6 +8,7 @@ ms.date: 05/10/2023
 ms.subservice: aks-developer
 ms.service: azure-kubernetes-service
 author: qpetraroia
+# Customer intent: "As a developer implementing CI/CD, I want to automate the deployment of my application to Azure Kubernetes Service, so that I can ensure seamless updates and simplify the management of containerized applications."
 ---
 
 # Automated deployments for Azure Kubernetes Service (AKS)

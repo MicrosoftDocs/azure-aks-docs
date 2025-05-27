@@ -6,6 +6,7 @@ ms.date: 10/30/2024
 ms.custom: mvc, devx-track-azurecli
 ms.collection: 
  - migration
+# Customer intent: As a DevOps engineer, I want to migrate my applications to Azure Kubernetes Service (AKS) so that I can leverage managed services for improved scalability and reduced management overhead while ensuring high availability and business continuity during the transition.
 ---
 
 # Migrate to Azure Kubernetes Service (AKS)
