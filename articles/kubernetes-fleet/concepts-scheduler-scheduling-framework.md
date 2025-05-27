@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a cloud administrator, I want to understand the scheduling framework in Azure Kubernetes Fleet Manager so that I can optimize resource allocation across multiple clusters effectively.
 ---
 
 # Azure Kubernetes Fleet Manager scheduler and scheduling framework

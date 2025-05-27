@@ -7,6 +7,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 
+# Customer intent: As a Kubernetes administrator, I want to monitor and update my Azure Kubernetes Fleet Manager API versions regularly, so that I can ensure continued functionality and take advantage of new features without interruption.
 ---
 
 # Azure Kubernetes Fleet Manager Preview API lifecycle

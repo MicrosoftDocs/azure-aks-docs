@@ -6,6 +6,7 @@ ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a Kubernetes administrator, I want to define reusable update strategies for multiple clusters, so that I can streamline and manage update processes efficiently across my fleet.
 ---
 
 # Define reusable update strategies using Azure Kubernetes Fleet Manager

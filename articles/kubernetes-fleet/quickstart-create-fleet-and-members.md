@@ -14,6 +14,8 @@ ms.custom:
   - build-2024
   - build-2025
 ms.devlang: azurecli
+ms.topic: quickstart
+# Customer intent: "As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure CLI, so that I can effectively manage and orchestrate multiple Kubernetes clusters from a centralized resource."
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI

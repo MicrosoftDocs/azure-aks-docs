@@ -6,6 +6,7 @@ author: shashankbarsin
 ms.author: shasb
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a cloud architect, I want to implement multi-cluster layer-4 load balancing, so that I can efficiently manage traffic across deployed workloads in Azure Kubernetes clusters."
 ---
 
 # Multi-cluster layer-4 load balancing (preview)

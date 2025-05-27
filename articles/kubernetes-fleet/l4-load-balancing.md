@@ -8,6 +8,7 @@ ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - devx-track-azurecli
+# Customer intent: "As a Kubernetes administrator, I want to set up multi-cluster Layer 4 load balancing across multiple member clusters, so that I can efficiently route incoming traffic to applications deployed on these clusters."
 ---
 
 # Set up multi-cluster layer 4 load balancing across Azure Kubernetes Fleet Manager member clusters (preview)

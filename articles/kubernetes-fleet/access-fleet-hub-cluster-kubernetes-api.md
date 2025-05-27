@@ -6,6 +6,7 @@ ms.date: 04/01/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a Kubernetes administrator, I want to access the Kubernetes API for my Azure Kubernetes Fleet Manager hub cluster, so that I can manage resource propagation and monitor member clusters effectively.
 ---
 
 # Access the Kubernetes API for an Azure Kubernetes Fleet Manager hub cluster

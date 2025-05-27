@@ -6,6 +6,7 @@ ms.date: 03/05/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a fleet administrator, I want to configure alerts for Azure Kubernetes Fleet Manager update runs, so that I can monitor long-running updates and take timely actions based on their status."
 ---
 
 # Configure monitoring and alerting of Update Runs for Azure Kubernetes Fleet Manager
