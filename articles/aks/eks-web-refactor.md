@@ -10,6 +10,7 @@ ms.custom:
     - migration
     - aws-to-azure
     - eks-to-aks
+# Customer intent: As a cloud architect, I want to migrate a web application from AWS to Azure Kubernetes Service, so that I can leverage Azure's resource management and security features without needing to modify the application code.
 ---
 
 # Migrate Amazon Web Services (AWS) web application to Azure Kubernetes Service (AKS)

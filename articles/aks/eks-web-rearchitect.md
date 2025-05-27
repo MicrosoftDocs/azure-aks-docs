@@ -10,6 +10,7 @@ ms.custom:
     - migration
     - aws-to-azure
     - eks-to-aks
+# Customer intent: "As a cloud architect, I want to rearchitect an AWS EKS web application for Azure Kubernetes Service (AKS), so that I can leverage Azure's native services and ensure seamless functionality while maintaining security and performance."
 ---
 
 # Rearchitect AWS EKS web application for Azure Kubernetes Service (AKS)

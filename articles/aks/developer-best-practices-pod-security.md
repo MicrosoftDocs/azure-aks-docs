@@ -6,6 +6,7 @@ ms.subservice: aks-security
 ms.date: 01/12/2024
 author: davidsmatlak
 ms.author: davidsmatlak
+# Customer intent: "As a developer deploying applications in Azure Kubernetes Service, I want to implement best practices for pod security, so that I can protect sensitive credentials and minimize security vulnerabilities in my applications."
 ---
 
 # Best practices for pod security in Azure Kubernetes Service (AKS)

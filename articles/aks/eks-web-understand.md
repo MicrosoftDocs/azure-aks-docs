@@ -6,6 +6,7 @@ ms.author: paolos
 ms.date: 10/31/2024
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud architect, I want to understand the operational differences between AWS and Azure for hosting web applications, so that I can make informed decisions when migrating workloads to the appropriate cloud platform."
 ---
 
 # Understand platform differences for the web application workload

@@ -10,6 +10,7 @@ ms.custom:
     - migration
     - aws-to-azure
     - eks-to-aks
+# Customer intent: As a cloud engineer, I want to deploy an AWS web application to Azure Kubernetes Service so that I can leverage Azure's infrastructure and services for better scalability and management.
 ---
 
 # Deploy an Amazon Web Services (AWS) web application to Azure

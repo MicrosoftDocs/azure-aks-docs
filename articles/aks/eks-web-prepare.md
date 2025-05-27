@@ -6,6 +6,7 @@ ms.author: paolos
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
+# Customer intent: As a cloud engineer, I want to deploy a web application workload from AWS to Azure Kubernetes Service (AKS) so that I can leverage Azure's infrastructure for hosting, scaling, and securing my application efficiently.
 ---
 
 # Prepare to deploy Amazon Web Services (AWS) web application workload to Azure

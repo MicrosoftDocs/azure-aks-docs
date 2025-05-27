@@ -6,6 +6,7 @@ ms.author: davidsmatlak
 author: davidsmatlak
 ms.subservice: aks-monitoring
 ms.date: 09/07/2023
+# Customer intent: As a Kubernetes administrator, I want to monitor and troubleshoot issues using Kubernetes events, so that I can maintain the health and performance of my Azure Kubernetes Service (AKS) clusters effectively.
 ---
 
 # Use Kubernetes events for troubleshooting in Azure Kubernetes Service (AKS)
