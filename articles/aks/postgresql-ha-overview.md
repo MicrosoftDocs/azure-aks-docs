@@ -7,6 +7,7 @@ author: kenkilty
 ms.author: kkilty
 ms.custom: 'aks-related-content, stateful-workloads'
 #Customer intent: As a developer or cluster operator, I want to deploy a highly available PostgreSQL database on AKS so I can see how to run a stateful database workload using the managed Kubernetes service in Azure.
+# Customer intent: As a developer or cluster operator, I want to deploy a highly available PostgreSQL database on AKS using Azure CLI, so that I can ensure robust performance and data resiliency for my stateful applications across multiple availability zones.
 ---
 # Deploy a highly available PostgreSQL database on AKS with Azure CLI
 

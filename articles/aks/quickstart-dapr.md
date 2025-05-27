@@ -6,6 +6,7 @@ ms.author: davidsmatlak
 ms.topic: quickstart
 ms.date: 12/17/2024
 ms.custom: template-quickstart, mode-other, devx-track-js, devx-track-python
+# Customer intent: As a cloud developer, I want to deploy a sample application using Dapr on Azure Kubernetes Service or Arc-enabled Kubernetes, so that I can learn how to configure microservices and integrate them with state management effectively.
 ---
 
 # Quickstart: Deploy an application using the Dapr cluster extension for Azure Kubernetes Service (AKS) or Arc-enabled Kubernetes

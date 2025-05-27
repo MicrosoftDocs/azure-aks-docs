@@ -11,6 +11,7 @@ ms.author: davidsmatlak
 
 ms.subservice: aks-upgrade
 #Customer intent: As a cluster administrator, I want to know how to automatically apply Linux updates and reboot nodes in AKS for security and/or compliance
+# Customer intent: As a cluster administrator, I want to automate the reboot process for Linux nodes in Azure Kubernetes Service, so that I can ensure timely application of security updates and maintain cluster compliance without manual intervention.
 ---
 
 # Apply security and kernel updates to Linux nodes in Azure Kubernetes Service (AKS)
