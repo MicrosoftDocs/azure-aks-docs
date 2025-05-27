@@ -7,6 +7,7 @@ ms.date: 04/24/2023
 ms.author: jpalma
 author: palma21
 ms.subservice: aks-nodes
+# Customer intent: "As a cloud engineer, I want to customize node configurations on my Kubernetes cluster, so that I can optimize performance and resource management for my specific workloads."
 ---
 
 # Customize node configuration for Azure Kubernetes Service (AKS) node pools

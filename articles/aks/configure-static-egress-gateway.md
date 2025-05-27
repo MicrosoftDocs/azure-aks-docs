@@ -7,6 +7,7 @@ ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 10/18/2024
+# Customer intent: As a Kubernetes administrator, I want to configure a Static Egress Gateway in my AKS cluster, so that I can manage egress traffic with fixed source IP addresses for secure and consistent communication with external systems.
 ---
 
 # Configure Static Egress Gateway in Azure Kubernetes Service (AKS)

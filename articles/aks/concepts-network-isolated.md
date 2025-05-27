@@ -7,6 +7,7 @@ ms.author: shasb
 ms.topic: conceptual
 ms.date: 04/24/2025
 
+# Customer intent: "As a Kubernetes administrator, I want to configure a network isolated AKS cluster, so that I can enhance security by eliminating egress traffic and reducing risks of data exfiltration while managing my cluster's dependencies privately."
 ---
 
 # Network isolated Azure Kubernetes Service (AKS) clusters 

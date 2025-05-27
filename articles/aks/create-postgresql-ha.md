@@ -6,6 +6,7 @@ ms.date: 06/07/2024
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
+# Customer intent: As a database administrator, I want to create a highly available PostgreSQL database on a managed Kubernetes service, so that I can ensure reliability and scalability of my data storage and access.
 ---
 
 # Create infrastructure for deploying a highly available PostgreSQL database on AKS

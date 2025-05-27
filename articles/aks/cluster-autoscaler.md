@@ -7,6 +7,7 @@ ms.date: 01/11/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As an AKS operator, I want to configure the cluster autoscaler for my Kubernetes workloads, so that I can automatically adjust the number of nodes based on application demand and optimize resource utilization."
 ---
 
 # Use the cluster autoscaler in Azure Kubernetes Service (AKS)

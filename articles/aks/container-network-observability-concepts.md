@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
 ms.date: 05/10/2024
+# Customer intent: "As a Kubernetes administrator, I want to implement Container Network Observability, so that I can monitor and troubleshoot network issues in my containerized workloads effectively, ensuring optimal application performance."
 ---
 
 # What is Container Network Observability?

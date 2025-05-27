@@ -6,6 +6,7 @@ ms.date: 06/20/2023
 author: nickomang
 ms.author: nickoman
 
+# Customer intent: As a software engineer, I want to apply sustainable engineering principles in my Azure Kubernetes Service (AKS) deployments so that I can minimize carbon emissions and enhance operational efficiency in my cloud applications.
 ---
 
 # Sustainable software engineering practices in Azure Kubernetes Service (AKS)

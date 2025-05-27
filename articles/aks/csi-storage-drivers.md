@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.subservice: aks-storage
+# Customer intent: "As a Kubernetes administrator, I want to deploy and manage Container Storage Interface (CSI) drivers on my Azure Kubernetes Service (AKS) cluster, so that I can enable flexible and efficient storage solutions for my containerized applications."
 ---
 
 # Container Storage Interface (CSI) drivers on Azure Kubernetes Service (AKS)

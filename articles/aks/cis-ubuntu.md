@@ -5,6 +5,7 @@ ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 09/27/2023
 ms.reviewer: mattmcinnes
+# Customer intent: "As a cloud security engineer, I want to understand how AKS implements the CIS benchmark for its Ubuntu image, so that I can ensure my deployments comply with security best practices and reduce the attack surface for containerized applications."
 ---
 
 # Azure Kubernetes Service (AKS) Ubuntu image alignment with Center for Internet Security (CIS) benchmark

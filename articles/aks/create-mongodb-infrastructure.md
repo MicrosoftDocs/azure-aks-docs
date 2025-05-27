@@ -7,6 +7,7 @@ author: fossygirl
 ms.author: carols
 ms.custom: 'aks-related-content, stateful-workloads'
 zone_pivot_groups: azure-cli-or-terraform
+# Customer intent: As a cloud architect, I want to establish the infrastructure needed to run a MongoDB cluster on Azure Kubernetes Service (AKS) so that I can ensure scalable, reliable data management in containerized applications.
 ---
 
 # Create the infrastructure for running a MongoDB cluster on Azure Kubernetes Service (AKS)

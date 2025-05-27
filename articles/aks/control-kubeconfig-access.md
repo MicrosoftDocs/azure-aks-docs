@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 03/28/2023
+# Customer intent: "As a cluster administrator, I want to manage access to the kubeconfig file using role-based access control, so that I can ensure that only authorized users have the necessary permissions to interact with our Azure Kubernetes Service clusters."
 ---
 
 # Use Azure role-based access control to define access to the Kubernetes configuration file in Azure Kubernetes Service (AKS)

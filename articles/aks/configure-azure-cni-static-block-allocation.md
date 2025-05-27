@@ -9,6 +9,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 03/18/2024
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: "As a Kubernetes operator, I want to configure static CIDR block allocation in Azure CNI so that I can enhance pod scalability and manage IP allocation more efficiently for large clusters."
 ---
 
 # Configure Azure CNI Networking for static allocation of CIDR blocks and enhanced subnet support in Azure Kubernetes Service (AKS) - (Preview)

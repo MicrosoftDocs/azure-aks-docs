@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 12/07/2023
 ms.custom: devx-track-azurecli, build-2023
+# Customer intent: As a cloud architect, I want to configure dual-stack networking in Azure Kubernetes Service so that I can enable both IPv4 and IPv6 support for my applications to ensure compatibility and improved network management.
 ---
 
 # Use dual-stack networking in Azure Kubernetes Service (AKS)

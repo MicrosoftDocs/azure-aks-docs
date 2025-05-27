@@ -7,6 +7,7 @@ ms.date: 05/29/2024
 author: matthchr
 ms.author: matthchr
 
+# Customer intent: As a cloud developer, I want to stay informed about the lifecycle and deprecation schedule of AKS preview APIs, so that I can ensure my applications are using up-to-date versions and avoid disruptions in service.
 ---
 
 # AKS Preview API life cycle

@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.date: 02/21/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud architect, I want to implement cost optimization strategies in Azure Kubernetes Service, so that I can maximize resource efficiency and minimize unnecessary expenses while ensuring performance and reliability for my applications.
 ---
 
 # Best practices for cost optimization in Azure Kubernetes Service (AKS)
