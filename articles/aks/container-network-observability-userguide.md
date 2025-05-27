@@ -97,7 +97,7 @@ This command filters DNS-related traffic for the specified pod, showing details 
 :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubble-dns-response-combined.png" alt-text="Diagram of one of the command for hubble CLI. " lightbox="./media/advanced-container-networking-services/acnsdashboard/hubble-dns-response-combined.png":::
 
 
-Hubble logs provide detailed insights into DNS queries and their responses, which can assist in diagnosing and troubleshooting DNS-related issues. Each log entry includes information such as the query type (for example, A or AAAA), the queried domain name, the DNS response code (for example, "Query Refused," "Non-Existent Domain," or "Server Failure"), and the source and destination of the DNS request. To troubleshoot DNS issues, users should:
+Hubble logs provide detailed insights into DNS queries and their responses, which can help diagnosing and troubleshooting DNS-related issues. Each log entry includes information such as the query type (for example, A or AAAA), the queried domain name, the DNS response code (for example, "Query Refused," "Non-Existent Domain," or "Server Failure"), and the source and destination of the DNS request. To troubleshoot DNS issues, users should:
 1.	Identify the Query Status: Examine the DNS Answer RCode field for responses like Query Refused or Server Failure, which indicates issues with the DNS server or configuration.
 2.	Verify the Queried Domain: Ensure the domain name listed (for example, example.com) is correct and exists. For "Non-Existent Domain" errors, confirm the domain is valid and resolvable.
 3.	Track Forwarding Behavior: Look at forwarding details to understand whether the query was successfully forwarded to the DNS server or endpoint. Disruptions in this process could indicate networking or configuration problems.
@@ -135,7 +135,7 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workload-snapshot-for-dropped-packets.png" alt-text="Diagram of Workload snapshot of dropped packets." lightbox="./media/advanced-container-networking-services/acnsdashboard/workload-snapshot-for-dropped-packets.png":::
 
-3. Analyze Workload Snapshot: Look at the following Workload Snapshot panel to identify pods with outgoing packet drops. Focus on the metrics "Max Outgoing Drops" and "Min Outgoing Drops" to understand the severity of the issue (e.g., 1.93 packets/sec in this example). Prioritize investigating pods with consistently high packet drop rates.
+3. Analyze Workload Snapshot: Look at the following Workload Snapshot panel to identify pods with outgoing packet drops. Focus on the metrics "Max Outgoing Drops" and "Min Outgoing Drops" to understand the severity of the issue (for example, 1.93 packets/sec in this example). Prioritize investigating pods with consistently high packet drop rates.
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/workload-snapshot-with-metrics.png" alt-text="Diagram of Workload snapshot of pod flow metrics. " lightbox="./media/advanced-container-networking-services/acnsdashboard/workload-snapshot-with-metrics.png":::
 
@@ -147,7 +147,7 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/heatmap-of-droppakets-at-destinationpod.png" alt-text="Diagram of heatmap of incoming drops for top destination pods." lightbox="./media/advanced-container-networking-services/acnsdashboard/heatmap-of-droppakets-at-destinationpod.png":::
 
-6. Investigate Stacked Outgoing Drops: Use the Stacked (Total) Outgoing/Incoming Drops by Source Pod chart to compare drop rates across affected pods. Identify if specific pods consistently show higher drops (e.g., kapinger-bad-6659b89fd8-zjb9k at 26.8 p/s). Here p/s refers to drop packet per second. Cross-reference these pods with their workloads, labels, and network policies to diagnose potential misconfigurations.
+6. Investigate Stacked Outgoing Drops: Use the Stacked (Total) Outgoing/Incoming Drops by Source Pod chart to compare drop rates across affected pods. Identify if specific pods consistently show higher drops (for example, kapinger-bad-6659b89fd8-zjb9k at 26.8 p/s). Here, p/s refers to drop packet per second. Cross-reference these pods with their workloads, labels, and network policies to diagnose potential misconfigurations.
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/total-outgoing-drops-by-sourcepods.png" alt-text="Diagram of Hubble UI service map ." lightbox="./media/advanced-container-networking-services/acnsdashboard/total-outgoing-drops-by-sourcepods.png":::
 
@@ -157,7 +157,7 @@ By combining these insights, the user can pinpoint specific pods, time intervals
 
 Using Hubble CLI, user can identify packet drops caused by misconfigured network policies with detailed, real-time data. Hubble CLI provides granular, real-time insights into dropped packets. By observing traffic, focusing on policy denied drops, and analyzing patterns, user can identify the misconfigured network policies and validate fixes.
 
-:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble cli for drop flows." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble CLI for drop flows." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
 
 ### Step 3: Observe the Hubble UI
 
@@ -231,7 +231,7 @@ Presenting a cluster's network health metrics at a high level is essential for e
 
 
 
-3. Monitoring Traffic Patterns: Users can monitor traffic patterns over time to understand normal versus abnormal behavior, which helps in proactive         troubleshooting before issues escalate. By comparing max and min ingress/egress bytes and packets, users can analyse performance trends and determine if certain times of day or specific workloads are causing performance degradation.
+3. Monitoring Traffic Patterns: Users can monitor traffic patterns over time to understand normal versus abnormal behavior, which helps in proactive         troubleshooting before issues escalate. By comparing max and min ingress/egress bytes and packets, users can analyze performance trends and determine if certain times of day or specific workloads are causing performance degradation.
     
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/egress-ingress-packets-traffic-metrics.png" alt-text="Diagram of egress ingress packets traffic metrics. " lightbox="./media/advanced-container-networking-services/acnsdashboard/egress-ingress-packets-traffic-metrics.png":::
 
@@ -243,7 +243,7 @@ Presenting a cluster's network health metrics at a high level is essential for e
     
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/bytes-and-packets-dropped-by-node.png" alt-text="Diagram of bytes and packets dropped by different node." lightbox="./media/advanced-container-networking-services/acnsdashboard/bytes-and-packets-dropped-by-node.png":::
 
-6. Distribution of TCP connections: The graph here signifies the distribution of TCP connections across different states. For instance, if the graph shows an unusually high number of connections in the SYN_SENT state, it may indicate that the cluster nodes are having trouble establishing connections, due to network latency or misconfiguration. On the other hand, a considerable number of connections in the TIME_WAIT state could suggest that connections are not being properly released, potentially leading to resource exhaustion.
+6. Distribution of TCP connections: The graph here signifies the distribution of TCP connections across different states. For instance, if the graph shows an unusually high number of connections in the SYN_SENT state, it may indicate that the cluster nodes are having trouble establishing connections, due to network latency or misconfiguration. On the other hand, a considerable number of connections in the TIME_WAIT state could suggest that connections aren't being properly released, potentially leading to resource exhaustion.
    
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/distribution-of-tcp-connections-by-state.png" alt-text="Diagram of tcp connection by state. " lightbox="./media/advanced-container-networking-services/acnsdashboard/distribution-of-tcp-connections-by-state.png":::
 
@@ -251,13 +251,13 @@ Presenting a cluster's network health metrics at a high level is essential for e
 
 L7 traffic observability addresses critical application-layer networking issues by providing deep visibility into HTTP, gRPC, and Kafka traffic. These insights help detect problems such as high error rates (for example, 4xx client-side or 5xx server-side errors), unexpected traffic drops, latency spikes, uneven traffic distribution across pods, and misconfigured network policies. These issues frequently arise in complex microservice architectures where dependencies between services are intricate, and resource allocation is dynamic. For example, sudden increases in dropped Kafka messages or delayed gRPC calls may signal bottlenecks in message processing or network congestion.
 
-Imagine an e-commerce platform deployed in a Kubernetes cluster, where the frontend service relies on several backend microservices, including a payment gateway (gRPC), a product catalog (HTTP), and an order processing service that communicates through Kafka. Recently, users have reported increased checkout failures and slow page load times. Let us dig deeper how to perform RCA of this issue using our pre-configured dashboard for L7 traffic which can be found as “Kubernetes/Networking/L7(namespaces)” and Kubernetes/Networking/L7(Workload)”
+Imagine an e-commerce platform deployed in a Kubernetes cluster, where the frontend service relies on several backend microservices, including a payment gateway (gRPC), a product catalog (HTTP), and an order processing service that communicates through Kafka. Recently, users have reported increased checkout failures and slow page load times. Let us dig deeper how to perform RCA of this issue using our preconfigured dashboard for L7 traffic which can be found as “Kubernetes/Networking/L7(namespaces)” and Kubernetes/Networking/L7(Workload)”
 
-1. Identifying patterns of dropped and forwarded HTTP requests: In the given graph, the outgoing HTTP traffic is segmented by the verdict, highlighting whether requests are "forwarded" or "dropped." For the e-commerce platform, this graph can help identify potential bottlenecks or failures in the checkout process. If there is a noticeable increase in dropped HTTP flows, it may indicate issues such as misconfigured network policies, resource constraints, or connectivity problems between the frontend and backend services. By correlating this graph with specific timeframes of user complaints, administrators can pinpoint whether these drops align with checkout failure.
+1. Identifying patterns of dropped and forwarded HTTP requests: In the given graph, the outgoing HTTP traffic is segmented by the verdict, highlighting whether requests are "forwarded" or "dropped." For the e-commerce platform, this graph can help identify potential bottlenecks or failures in the checkout process. If there's a noticeable increase in dropped HTTP flows, it may indicate issues such as misconfigured network policies, resource constraints, or connectivity problems between the frontend and backend services. By correlating this graph with specific timeframes of user complaints, administrators can pinpoint whether these drops align with checkout failure.
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-traffic-by-verdict.png" alt-text="Diagram of outgoing http traffic by verdict." lightbox="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-traffic-by-verdict.png":::
 
-2. Following section presents a line graph depicting the rate of outgoing HTTP requests over time, categorized by their status codes (e.g., 200, 403). Users can use this graph to identify spikes in error rates (e.g., 403 Forbidden errors), which may indicate issues with authentication or access control. By correlating these spikes with specific time intervals, users can investigate and resolve the underlying problems, such as misconfigured security policies or server-side issues.
+2. Following section presents a line graph depicting the rate of outgoing HTTP requests over time, categorized by their status codes (for example, 200, 403). Users can use this graph to identify spikes in error rates (for example, 403 Forbidden errors), which may indicate issues with authentication or access control. By correlating these spikes with specific time intervals, users can investigate and resolve the underlying problems, such as misconfigured security policies or server-side issues.
    
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-requests-method-and-count.png" alt-text="Diagram of outgoing http requests method and count." lightbox="./media/advanced-container-networking-services/acnsdashboard/outgoing-http-requests-method-and-count.png":::
 
@@ -267,7 +267,7 @@ Imagine an e-commerce platform deployed in a Kubernetes cluster, where the front
 
 4. Use the following graph to check which pods receive the most traffic. This helps identify overburdened pods.
    - The first graph, titled "Outgoing HTTP Requests for Top 10 Source Pods in default," shows a stable number of outgoing HTTP requests over time for the top ten source pods. The line remains almost flat, indicating consistent traffic without significant spikes or drops.
-   - The second graph, titled "Heatmap of Dropped Outgoing HTTP Requests for Top 10 Source Pods in default," uses colour coding to represent the number of dropped requests. Darker colours indicate higher numbers of dropped requests, while lighter colours indicate fewer or no dropped requests. The alternating dark and light bands suggest periodic patterns in request drops.
+   - The second graph, titled "Heatmap of Dropped Outgoing HTTP Requests for Top 10 Source Pods in default," uses color coding to represent the number of dropped requests. Darker colors indicate higher numbers of dropped requests, while lighter colors indicate fewer or no dropped requests. The alternating dark and light bands suggest periodic patterns in request drops.
    These graphs provide customers with valuable insights into their network traffic and performance. The first graph helps customers understand the consistency and volume of their outgoing HTTP traffic, which is crucial for monitoring and maintaining optimal network performance. The second graph allows customers to identify patterns or periods when there are issues with dropped requests, which can be crucial for troubleshooting network problems or optimizing performance.
 
     :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/http-requests-for-top-sourcepods.png" alt-text="Diagram of http requests for top source pods." lightbox="./media/advanced-container-networking-services/acnsdashboard/http-requests-for-top-sourcepods.png":::
@@ -276,7 +276,7 @@ Imagine an e-commerce platform deployed in a Kubernetes cluster, where the front
 
 1. **Traffic Patterns and Volume**: Analyze traffic trends to identify surges, drops, or imbalance in traffic distribution. Overloaded nodes or services may lead to bottlenecks or dropped requests.
 
-   :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/l7-traffic-grafana.png" alt-text="Diagram of l7 traffic grafana ." lightbox="./media/advanced-container-networking-services/acnsdashboard/l7-traffic-grafana.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/l7-traffic-grafana.png" alt-text="Diagram of l7 traffic grafana. " lightbox="./media/advanced-container-networking-services/acnsdashboard/l7-traffic-grafana.png":::
 
 2. **Error Rates**: Track trends in 4xx (invalid requests) and 5xx (backend failures) errors. Persistent errors indicate client misconfigurations or server-side resource constraints.
 
@@ -288,7 +288,7 @@ Imagine an e-commerce platform deployed in a Kubernetes cluster, where the front
 
 ## Conclusion
 
-In conclusion, Advanced Container Networking Services provide a robust framework for real-time monitoring and troubleshooting of cluster network health and performance. By leveraging the comprehensive set of metrics and visual dashboards, users can swiftly identify network bottlenecks, detect packet loss, monitor traffic patterns, and diagnose drop reasons. The node-specific analysis further aids in pinpointing problematic nodes, allowing for targeted interventions to enhance network stability. With these tools at their disposal, administrators can ensure optimal performance and proactive management of their cluster networks, leading to a more resilient and efficient system.
+In conclusion, Advanced Container Networking Services provides a robust framework for real-time monitoring and troubleshooting of cluster network health and performance. By leveraging the comprehensive set of metrics and visual dashboards, users can swiftly identify network bottlenecks, detect packet loss, monitor traffic patterns, and diagnose drop reasons. The node-specific analysis further aids in pinpointing problematic nodes, allowing for targeted interventions to enhance network stability. With these tools at their disposal, administrators can ensure optimal performance and proactive management of their cluster networks, leading to a more resilient and efficient system.
 
 ## Next Steps
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
