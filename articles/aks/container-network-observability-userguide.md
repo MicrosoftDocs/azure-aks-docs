@@ -9,7 +9,7 @@ ms.topic: concept-article
 ms.date:  06/05/2024
 ---
 
-# Advanced Container Networking Services User guide 
+# User guide for container network observability
 As modern containerized applications scale across clusters and clouds, ensuring reliable, efficient, and secure network communication becomes critical. [Advanced Container Networking Services](./container-network-observability-concepts.md) provides robust observability solutions for Kubernetes environments, enabling users to monitor, debug, and optimize their network infrastructure seamlessly. Using eBPF-based technologies like Hubble and Retina, and deep integration with Azure Kubernetes Service (AKS), Advanced Container Networking Services delivers powerful tools for tracking network flows, diagnosing connectivity issues, and resolving complex challenges like Domain Name Server(DNS) failures, packet drops, and network policy violations. Users have the capability to define Prometheus alerts based on metrics, enabling proactive monitoring of the health of the cluster's network and detection of anomalies.
 
 This guide serves as a practical resource to help users navigate Advanced Container Networking Service observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively. With Advanced Container Networking Service, teams gain the insights they need to maintain high-performing and secure Kubernetes workloads, even in the most dynamic environments. Sample dashboards have been created, bearing names such as "Kubernetes / Networking /." . To know how to set up these dahsboards, refer[link](./container-network-observability-how-to.md)
@@ -157,13 +157,13 @@ By combining these insights, the user can pinpoint specific pods, time intervals
 
 Using Hubble CLI, user can identify packet drops caused by misconfigured network policies with detailed, real-time data. Hubble CLI provides granular, real-time insights into dropped packets. By observing traffic, focusing on policy denied drops, and analyzing patterns, user can identify the misconfigured network policies and validate fixes.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble cli for drop flows. " lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble cli for drop flows." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
 
 ### Step 3: Observe the Hubble UI
 
 Another useful tool is the Hubble UI, which provides a visual representation of traffic flows within a namespace. For example, in the agnhost namespace, the UI displays interactions between pods within the same namespace, pods in other namespaces, and even packets originating from outside the cluster. Additionally, the interface highlights dropped packets and provides detailed information, such as the source and destination pod names, along with pod and namespace labels. This data can be instrumental in reviewing the network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies. Refer following image –
 
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets. " lightbox="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png":::
 
 ## Use Case 3: Identifying Traffic Imbalances within Workloads and Namespaces
 
