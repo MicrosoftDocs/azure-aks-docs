@@ -157,13 +157,13 @@ By combining these insights, the user can pinpoint specific pods, time intervals
 
 Using Hubble CLI, user can identify packet drops caused by misconfigured network policies with detailed, real-time data. Hubble CLI provides granular, real-time insights into dropped packets. By observing traffic, focusing on policy denied drops, and analyzing patterns, user can identify the misconfigured network policies and validate fixes.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble cli for drop flows." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble cli for drop flows." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubblecli-logs-for-drop-flow.png":::
 
 ### Step 3: Observe the Hubble UI
 
 Another useful tool is the Hubble UI, which provides a visual representation of traffic flows within a namespace. For example, in the agnhost namespace, the UI displays interactions between pods within the same namespace, pods in other namespaces, and even packets originating from outside the cluster. Additionally, the interface highlights dropped packets and provides detailed information, such as the source and destination pod names, along with pod and namespace labels. This data can be instrumental in reviewing the network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies. Refer following image –
 
-    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets." lightbox="./media/advanced-container-networking-services/acnsdashboard/hubbleui-for-drop-flow.png":::
 
 ## Use Case 3: Identifying Traffic Imbalances within Workloads and Namespaces
 
@@ -197,7 +197,7 @@ The following heatmap indication higher traffic is receiving and coming out of t
 
 6. Heatmap of Incoming TCP RST by Top Destination Pods: This heatmap identifies destination pods receiving the most TCP RST packets, pointing to potential bottlenecks or connection issues at these pods. If pets/mongodb-0 is frequently receiving RST packets, it could be an indicator of overloaded database connections or faulty network configurations. Solution: Increase database capacity, implement rate limiting, or investigate upstream workloads causing excessive connections.
    
-      :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/heatmap-incoming-tcpreset-destination.png" alt-text="Diagram of heatmap of incoming TCP reset by top destination pods. " lightbox="./media/advanced-container-networking-services/acnsdashboard/heatmap-incoming-tcpreset-destination.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acnsdashboard/heatmap-incoming-tcpreset-destination.png" alt-text="Diagram of heatmap of incoming TCP reset by top destination pods. " lightbox="./media/advanced-container-networking-services/acnsdashboard/heatmap-incoming-tcpreset-destination.png":::
 
 7. Stacked (Total) Outgoing TCP RST by Source Pod:  This graph provides an aggregated view of outgoing resets over time, highlighting trends or anomalies.
     
