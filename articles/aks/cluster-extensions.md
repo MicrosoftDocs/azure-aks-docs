@@ -44,6 +44,7 @@ For supported Kubernetes versions, refer to the corresponding documentation for 
 | [Flux (GitOps)][gitops-overview] | Use GitOps with Flux to manage cluster configuration and application deployment. See also [supported versions of Flux (GitOps)][gitops-support] and [Tutorial: Deploy applications using GitOps with Flux v2][gitops-tutorial].|
 | [Azure Container Storage](/azure/storage/container-storage/container-storage-introduction) | Use Azure Container Storage to manage block storage on AKS clusters to store data in persistent volumes. |
 | [Azure Backup for AKS](/azure/backup/azure-kubernetes-service-backup-overview) | Use Azure Backup for AKS to protect your containerized applications and data stored in Persistent Volumes deployed in the AKS clusters. |
+| [Azure NetApp Files extension](azure-netapp-files.md) | Use Azure NetApp Files as a storage backend to store data in persistent volumes. |
 
 You can also [select and deploy Kubernetes applications available through Marketplace](deploy-marketplace.md).
 

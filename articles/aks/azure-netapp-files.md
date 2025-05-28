@@ -24,9 +24,13 @@ A persistent volume represents a piece of storage that has been provisioned for 
 
 Using a CSI driver to directly consume Azure NetApp Files volumes from AKS workloads is the recommended configuration for most use cases. This requirement is accomplished using Trident, an open-source dynamic storage orchestrator for Kubernetes. Trident is an enterprise-grade storage orchestrator purpose-built for Kubernetes, and fully supported by NetApp. It simplifies access to storage from Kubernetes clusters by automating storage provisioning.
 
+<!-- change -->
+
 You can take advantage of Trident's Container Storage Interface (CSI) driver for Azure NetApp Files to abstract underlying details and create, expand, and snapshot volumes on-demand.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
+
+Azure NetApp Files also supports the [Astra Storage cluster extension](../azure-arc/kubernetes/extensions-release.md), providing an Azure Resource Manager driven experience for installation and lifecycle management.
 
 ## Before you begin
 
@@ -106,6 +110,35 @@ After you [configure Azure NetApp Files for AKS workloads](#configure-azure-neta
 * [Provision Azure NetApp Files NFS volumes for Azure Kubernetes Service](azure-netapp-files-nfs.md)
 * [Provision Azure NetApp Files SMB volumes for Azure Kubernetes Service](azure-netapp-files-smb.md)
 * [Provision Azure NetApp Files dual-protocol volumes for Azure Kubernetes Service](azure-netapp-files-dual-protocol.md)
+
+## Manage Azure NetApp Files extension
+
+Astra Storage is an open-source and fully supported storage orchestrator for containers and Kubernetes distributions. Astra Storage is an [Azure Kubernetes Service (AKS) cluster extension](../aks/cluster-extensions.md), integrating with both Azure NetApp Files and [Azure Kubernetes Service](../aks/index.yml). 
+
+The extension runs as a single Controller Pod plus a Node Pod on each worker node in the cluster. With the Astra Storage extension, you can configure an Azure NetApp Files storage backend based on project needs and storage system models that enable advanced storage features, including compression, specific disk types, or QoS levels that guarantee a certain level of performance. 
+
+### Requirements and considerations 
+
+* Ensure that you follow [AKS cluster extension requirements](cluster-extensions.md#cluster-extension-requirements).
+* You must have a NetApp subscription and a capacity pool configured. 
+* For SMB configurations: 
+    * You must have configured [Microsoft Entra Domain Service](/azure/azure-netapp-files/create-active-directory-connections).
+    * You must create a `secret smbcreds` in the namespace where the extension is being installed using Active Directory credentials (the default namespace is `trident`). To generate a `secret smbcreds`, run: `kubectl create secret generic smbcreds --from-literal username=user --from-literal password='password`
+
+### Install the extension 
+
+1. Install the extension: 
+```azurecli
+az k8s-extension create --cluster-type managedClusters  --cluster-name <myAKSCluster>  --resource-group <myResourceGroup>  --name astrastorage  --extension-type microsoft.azurenetappfiles 
+```
+
+### Update Azure NetApp Files extension
+
+### Delete Azure NetApp Files extension
+
+### Troubleshoot Azure NetApp Files extension
+
+For more information, see [Troubleshoot Azure NetApp Files extension](azure-netapp-files-extension-troubleshoot.md).
 
 ## Next steps
 
