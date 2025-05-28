@@ -16,7 +16,7 @@ This article shows you how to deploy egress gateways for the Istio service mesh 
 
 The Istio egress gateway can serve as a centralized point to monitor and restrict outbound traffic from applications in the mesh. With the Istio add-on, you can deploy multiple egress gateways across different namespaces, allowing you to set up an egress gateway topology of your choice: egress gateways per-cluster, per-namespace, per-workload, etc. While AKS manages the provisioning and lifecycle of the Istio add-on egress gateways, you must create Istio custom resources to route traffic from applications in the mesh through the egress gateway and apply Istio policies and telemetry collection rules for egress traffic.
 
-The Istio add-on egress gateway also takes a hard dependency on the [Static Egress Gateway][static-egress-gateway] feature. Through the integration with the Static Egress Gateway, requests routed via Istio add-on egress gateway will obtain a predictable source IP address that you can use for firewall rules and other traffic filtering mechanisms. Applying Istio L7, identity-based policies as well as IP-based restrictions allows for defense-in-depth egress traffic control.
+The Istio add-on egress gateway also takes a hard dependency on the [Static Egress Gateway][static-egress-gateway] feature, which assigns a fixed source IP address prefix to the Istio egress Pods that you can use for firewall rules and other traffic filtering mechanisms. Thus, you can apply Istio L7, identity-based policies as well as IP-based restrictions for defense-in-depth egress traffic control.
 
 ## Limitations and requirements
 
@@ -27,6 +27,10 @@ The Istio add-on egress gateway also takes a hard dependency on the [Static Egre
 - Because Static Egress Gateway is currently not supported on [Azure CNI Pod Subnet clusters][azure-cni-pod-subnet], the Istio add-on egress gateway is not supported on Pod Subnet clusters either.
 
 ## Prerequisites
+
+### Enable Istio add-on
+
+This guide assumes you followed the [documentation][istio-deploy-addon] to enable the Istio add-on on an AKS cluster.
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -53,9 +57,9 @@ Follow the instructions in the [Static Egress Gateway documentation][static-egre
 > [!NOTE]
 > The Istio add-on egress gateway pods do not get scheduled onto the `gateway` node pool. The `gateway` node pool is only used to route egress traffic and doesn't serve general-purpose workloads. If you need the egress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or leverage the `azureservicemesh/istio.replica.preferred` label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
 
-Use `az aks mesh enable-egress-gateway` to enable an Istio egress gateway on your AKS cluster. You must specify a name for the Istio egress gateway as well as the name of the `StaticGatewayConfiguration` that you created in the [prerequisites](#prerequisites) step. You can also specify a namespace to deploy the Istio egress gateway in, which must be the same namespace that the `StaticGatewayConfiguration` was created in. If you don't specify a namespace, it will default to the `aks-istio-egress` namespace. 
+Use `az aks mesh enable-egress-gateway` to enable an Istio egress gateway on your AKS cluster. You must specify a name for the Istio egress gateway as well as the name of the `StaticGatewayConfiguration` that you created in the [prerequisites](#prerequisites) step. You can also specify a namespace to deploy the Istio egress gateway in, which must be the same namespace that the `StaticGatewayConfiguration` was created in. If you don't specify a namespace, the egress gateway will be provisioned in the `aks-istio-egress` namespace. 
 
-As a best-practice, it's advised to wait until the `StaticGatewayConfiguration` is assigned an `egressIpPrefix` before creating an Istio egress gateway using that `StaticGatewayConfiguration`. 
+As a best-practice, it's advised to wait until the `StaticGatewayConfiguration` is assigned an `egressIpPrefix` before enabling the Istio egress gateway using that gateway configuration. 
 
 ```azurecli-interactive
 az aks mesh enable-egress-gateway --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --istio-egressgateway-name $ISTIO_EGRESS_NAME --istio-egressgateway-namespace $ISTIO_EGRESS_NAMESPACE --gateway-configuration-name $ISTIO_SGC_NAME
@@ -519,3 +523,4 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 [sidecar-cr]: https://istio.io/latest/docs/reference/config/networking/sidecar/#OutboundTrafficPolicy
 [envoy-access-logging]: https://istio.io/latest/docs/tasks/observability/logs/access-log/
 [istio-deploy-ingress]: istio-deploy-ingress.md
+[istio-deploy-addon]: istio-deploy-addon.md
