@@ -45,15 +45,25 @@ AKS uses best-effort zone balancing in node groups. During an upgrade surge, the
 
 Persistent volume claims (PVCs) backed by Azure locally redundant storage (LRS) Disks are bound to a particular zone and might fail to recover immediately if the surge node doesn't match the zone of the PVC. If the zones don't match, it can cause downtime on your application when the upgrade operation continues to drain nodes but the PVs are bound to a zone. To handle this case and maintain high availability, configure a [Pod Disruption Budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) on your application to allow Kubernetes to respect your availability requirements during the drain operation.
 
-## Optimize for undrainable node behavior
+## Optimize for undrainable node behavior (Preview)
 
 You can configure the upgrade process behavior for drain failures. The default upgrade behavior is `Schedule`, which consists of a node drain failure causing the upgrade operation to fail, leaving the undrained nodes in a schedulable state. Alternatively, you can select the `Cordon` behavior, which skips nodes that fail to drain by placing them in a quarantined state, labels them `kubernetes.azure.com/upgrade-status:Quarantined`, and proceeds with upgrading the remaining nodes. This behavior ensures that all nodes are either upgraded or quarantined. This approach allows you to troubleshoot drain failures and gracefully manage the quarantined nodes.
 
 ### Set new cordon behavior
 
-You need to use `Azure CLI` version 2.74 or later to set the new cordon behavior.
+You need to use `aks-preview` extension 9.0.0b3 or later to set the new cordon behavior.
 
-1. Update the node pool undrainable node behavior to `Cordon` using the [`az aks nodepool update`][az-aks-nodepool-update] command.
+1. Install or update the `aks-preview` extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command:
+
+    ```azurecli-interactive
+    # Install the aks-preview extension
+    az extension add --name aks-preview
+    
+    # Update the aks-preview extension to the latest version
+    az extension update --name aks-preview
+    ```
+
+2. Update the node pool undrainable node behavior to `Cordon` using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
     ```azurecli-interactive
     az aks nodepool update --cluster-name $CLUSTER_NAME --name $NODE_POOL_NAME --resource-group $RESOURCE_GROUP --max-surge 1 --undrainable-node-behavior Cordon
@@ -70,7 +80,7 @@ You need to use `Azure CLI` version 2.74 or later to set the new cordon behavior
       }
     ```
 
-2. Verify the label on any blocked nodes when there's a drain node failure on upgrade using the `kubectl get` command.
+3. Verify the label on any blocked nodes when there's a drain node failure on upgrade using the `kubectl get` command.
 
     ```bash
     kubectl get nodes --show-labels=true
