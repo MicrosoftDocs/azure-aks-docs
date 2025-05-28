@@ -607,21 +607,22 @@ Take advantage of connection reuse and connection pooling whenever possible. The
 
 ## Shared health probes for `externalTrafficPolicy: Cluster` Services (preview)
 
-In clusters that use `externalTrafficPolicy: Cluster`, Azure Load Balancer (SLB) currently creates a _separate probe per Service_ and targets each Service’s `nodePort`.  
-That design means SLB infers node health from whichever **application pod** answers the probe. As clusters grow, this approach leads to several issues:
+In clusters that use `externalTrafficPolicy: Cluster`, Azure Load Balancer (SLB) currently creates a _separate probe per Service_ and targets each Service’s `nodePort`.
 
-* **Configuration drift and blind spots** – SLB can’t detect a failed or mis‑configured `kube‑proxy` if iptables rules are still present.
-* **Duplicate health logic** – readiness must be defined twice: once in each pod’s `readinessProbe`, and again through SLB annotations.
-* **Operational overhead** – every Service on every node is probed every 5 seconds, consuming connections, SNAT ports, and SLB rule space.
-* **Feature friction** – customers cannot set `allocateLoadBalancerNodePorts=false`, and workloads like Istio or ingress‑nginx require extra annotations to keep probes working.
-* **Troubleshooting confusion** – an unhealthy app, Network Policy rule, or scale‑to‑zero event can make an *entire node* appear down.
+This design means SLB infers node health from whichever **application pod** answers the probe. As clusters grow, this approach leads to several issues:
+
+* **Configuration drift and blind spots**: SLB can’t detect a failed or misconfigured `kube‑proxy` if iptables rules are still present.
+* **Duplicate health logic**: Readiness must be defined twice. Once in each pod’s `readinessProbe`, and again through SLB annotations.
+* **Operational overhead**: Each Service on each node is probed every *five seconds*, consuming connections, SNAT ports, and SLB rule space.
+* **Feature friction**: Customers can't set `allocateLoadBalancerNodePorts=false`, and workloads like Istio or ingress‑nginx require extra annotations to keep probes working.
+* **Troubleshooting confusion**: An unhealthy app, Network Policy rule, or scale‑to‑zero event can make an *entire node* appear down.
 
 The **shared probe mode** (preview) solves these problems by moving to a *single HTTP probe* for all `externalTrafficPolicy: Cluster` Services:
 
 * SLB probes `http://<node‑ip>:10256/healthz`, the standard `kube‑proxy` health endpoint.
 * A lightweight sidecar runs next to `kube‑proxy` to relay the probe and handle PROXY protocol when Private Link Service is enabled.
 
-**Key benefits**
+The following table outlines **key benefits** of using shared probe mode:
 
 | Benefit                | Why it matters                                                            |
 |------------------------|---------------------------------------------------------------------------|
@@ -649,7 +650,7 @@ The **shared probe mode** (preview) solves these problems by moving to a *single
     az extension update --name aks-preview
     ```
 
-### Register the 'EnableSLBSharedHealthProbePreview' feature flag
+### Register the `EnableSLBSharedHealthProbePreview` feature flag
 
 1. Register the `EnableSLBSharedHealthProbePreview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -671,18 +672,22 @@ The **shared probe mode** (preview) solves these problems by moving to a *single
     az provider register --namespace Microsoft.ContainerService
     ```
 
-### Create a new cluster with shared probe mode
+### Create a new cluster with shared probe mode\
+
+Create a new cluster with shared probe mode using the following [`az aks create`](/cli/azure/aks#az-aks-create) command:
   
-```bash
+```azurecli-interactive
 az aks create \
   --resource-group <rg> \
   --name <cluster> \
   --cluster-service-load-balancer-health-probe-mode shared
 ```
 
-### Enable shared probe mode on an existing cluster  
+### Enable shared probe mode on an existing cluster
 
-```bash
+Enable shared probe mode on an existing cluster using the following [`az aks update`](/cli/azure/aks#az-aks-update) command:
+  
+```azurecli-interactive
 az aks update \
   --resource-group <rg> \
   --name <cluster> \
