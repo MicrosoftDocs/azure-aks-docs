@@ -13,7 +13,7 @@ ms.service: azure-kubernetes-service
 
 # Use multiple public load balancers in Azure Kubernetes Service (preview)
 
-Azure Kubernetes Service (AKS) normally provisions one Standard Load Balancer (SLB) for all `LoadBalancer` Services in a cluster. Because each node NIC is limited to [**300 inbound load‑balancing rules** and **8 private‑link services**](azure/azure-resource-manager/management/azure-subscription-service-limits#load-balancer), large clusters or port‑heavy workloads can quickly exhaust these limits.
+Azure Kubernetes Service (AKS) normally provisions one Standard Load Balancer (SLB) for all `LoadBalancer` Services in a cluster. Because each node NIC is limited to [**300 inbound load‑balancing rules** and **8 private‑link services**](/azure/azure-resource-manager/management/azure-subscription-service-limits#load-balancer), large clusters or port‑heavy workloads can quickly exhaust these limits.
 
 The **multiple SLB preview** removes that bottleneck by letting you create several SLBs inside the same cluster and shard nodes and Services across them. You define *load‑balancer configurations*, each tied to a primary agent pool and optional namespace, label, or node selectors—and AKS automatically places nodes and Services on the appropriate SLB. Outbound SNAT behavior is unchanged if `outboundType` is `loadBalancer`. Outbound traffic still flows through the first SLB.
 
@@ -67,7 +67,7 @@ Use this feature to:
     az provider register --namespace Microsoft.ContainerService
     ```
 
-### How AKS chooses a load balancer (node & Service placement)
+## How AKS chooses a load balancer (node & Service placement)
 
 AKS uses multiple inputs to determine where to place nodes and expose LoadBalancer Services. These inputs are defined in each load balancer configuration and influence which SLB is selected for each resource.
 
@@ -82,17 +82,19 @@ AKS uses multiple inputs to determine where to place nodes and expose LoadBalanc
 > [!NOTE]
 > Selectors define eligibility. The annotation (if used) restricts the controller to a specific subset of SLBs.
 
-#### How AKS uses these inputs
+### How AKS uses these inputs
 
 The AKS control plane continuously reconciles node and Service state using the rules above:
 
-**Node Placement**
+#### Node placement
+
 When a node is added or updated, AKS checks which SLBs it qualifies for based on primary pool and node selector.
 
-	-	If multiple SLBs match, the controller picks the one with the fewest current nodes.
-	-	The node is added to that SLB’s backend pool.
+- If multiple SLBs match, the controller picks the one with the fewest current nodes.
+- The node is added to that SLB’s backend pool.
 
-**Service placement**
+#### Service placement
+
 When a LoadBalancer Service is created or updated:
 
 1. AKS finds SLBs whose namespace and label selectors match the Service.
@@ -100,11 +102,11 @@ When a LoadBalancer Service is created or updated:
 1. SLBs that have allowServicePlacement=false or that would exceed Azure limits (300 rules or 8 private-link services) are excluded.
 1. Among valid options, the SLB with the fewest rules is chosen.
 
-**Optional: Rebalancing**
-You can manually rebalance node distribution later using `az aks loadbalancer rebalance`
+#### Optional: Rebalancing
+
+You can manually rebalance node distribution later using `az aks loadbalancer rebalance`.
 
 This design lets you define flexible, label-driven routing for both infrastructure and workloads, while AKS handles placement automatically to maintain balance and avoid quota issues.
-
 
 ## Add the first load balancer configuration
 
@@ -179,30 +181,32 @@ Create tenant‑specific configurations by specifying a different primary pool p
     ```
 
 
-Label the target namespace (e.g., `team1-apps`) to match the selector:
+4. Label the target namespace (e.g., `team1-apps`) to match the selector using the [`az aks command invoke`][az-aks-command-invoke] command.
 
-```azurecli
-az aks command invoke \
-  --resource-group $RESOURCE_GROUP \
-  --name $CLUSTER_NAME \
-  --command "
-kubectl create namespace team1-apps --dry-run=client -o yaml | kubectl apply -f -
-kubectl label namespace team1-apps tenant=team1 --overwrite
-"
-```
+    ```azurecli-interactive
+    az aks command invoke \
+      --resource-group $RESOURCE_GROUP \
+      --name $CLUSTER_NAME \
+      --command "
+    kubectl create namespace team1-apps --dry-run=client -o yaml | kubectl apply -f -
+    kubectl label namespace team1-apps tenant=team1 --overwrite
+    "
+    ```
 
-You can now list the loadbalancers in the cluster to see the multiple configurations:
+5. You can now list the load balancers in the cluster to see the multiple configurations using the [`az aks loadbalancer list`][az-aks-loadbalancer-list] command.
 
-```azurecli
-az aks loadbalancer list --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --output table
-```
+    ```azurecli-interactive
+    az aks loadbalancer list --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --output table
+    ```
 
-```output
-AllowServicePlacement    ETag     Name        PrimaryAgentPoolName    ProvisioningState    ResourceGroup
------------------------  -------  ----------  ----------------------  -------------------  ---------------
-True                     <ETAG>   kubernetes  nodepool1               Succeeded            rg-aks-multislb
-True                     <ETAG>   team1-lb    team1pool               Succeeded            rg-aks-multislb
-```
+    Example output:
+
+    ```output
+    AllowServicePlacement    ETag     Name        PrimaryAgentPoolName    ProvisioningState    ResourceGroup
+    -----------------------  -------  ----------  ----------------------  -------------------  ---------------
+    True                     <ETAG>   kubernetes  nodepool1               Succeeded            rg-aks-multislb
+    True                     <ETAG>   team1-lb    team1pool               Succeeded            rg-aks-multislb
+    ```
 
 ### Deploy a Service to a specific load balancer
 
@@ -302,4 +306,14 @@ The multiple SLB feature helps scale and isolate workloads at the networking lay
 - [AKS Load Balancer concepts](load-balancer-standard.md)
 - [Configure outbound connections in AKS](egress-outboundtype.md)
 - [AKS node pools](manage-node-pools.md)
-- [Azure subscription limits](azure/azure-resource-manager/management/azure-subscription-service-limits#load-balancer)
+- [Azure subscription limits](/azure/azure-resource-manager/management/azure-subscription-service-limits#load-balancer)
+
+<!-- LINKS -->
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
+[az-provider-register]: /cli/azure/provider#az-provider-register
+[az-aks-command-invoke]: /cli/azure/aks/command#az-aks-command-invoke
+[az-aks-loadbalancer-list]: /cli/azure/aks/loadbalancer#az-aks-loadbalancer-list
+
