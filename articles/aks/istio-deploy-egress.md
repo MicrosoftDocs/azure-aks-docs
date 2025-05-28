@@ -16,7 +16,7 @@ This article shows you how to deploy egress gateways for the Istio service mesh 
 
 The Istio egress gateway can serve as a centralized point to monitor and restrict outbound traffic from applications in the mesh. With the Istio add-on, you can deploy multiple egress gateways across different namespaces, allowing you to set up an egress gateway topology of your choice: egress gateways per-cluster, per-namespace, per-workload, etc. While AKS manages the provisioning and lifecycle of the Istio add-on egress gateways, you must create Istio custom resources to route traffic from applications in the mesh through the egress gateway and apply policies and telemetry collection.
 
-The Istio add-on egress gateway also builds on top of and requires the [Static Egress Gateway][static-egress-gateway] feature, which assigns a fixed source IP address prefix to the Istio egress Pods that you can use for firewall rules and other traffic filtering mechanisms. By using Istio egress gateway on top of Static Egress Gateway, you can apply Istio L7, identity-based policies, and IP-based restrictions for defense-in-depth egress traffic control. Additionally, directing outbound traffic through the Istio egress gateway allows multiple workloads to route traffic via the Static Egress Gateway node pools without modifying those application pods/deployments directly. 
+The Istio add-on egress gateway also builds on top of and requires the [Static Egress Gateway][static-egress-gateway] feature, which assigns a fixed source IP address prefix to the Istio egress Pods. You can use this predicable egress IP range for firewall rules and other outbound traffic filtering mechanisms. By using Istio egress gateway on top of Static Egress Gateway, you can apply Istio L7, identity-based policies, and IP-based restrictions for defense-in-depth egress traffic control. Additionally, directing outbound traffic through the Istio egress gateway allows multiple workloads to route traffic via the Static Egress Gateway node pools without modifying those application pods/deployments directly. 
 
 ## Limitations and requirements
 
@@ -34,7 +34,7 @@ This guide assumes you followed the [documentation][istio-deploy-addon] to enabl
 
 ### Install the `aks-preview` Azure CLI extension
 
-Install the `aks-preview` extension if you're using Azure CLI. You must use `aks-preview` version `14.0.0b2` or above.
+Install the `aks-preview` extension if you're using Azure CLI. You must use `aks-preview` version `14.0.0b2` or higher.
 
 1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
 
@@ -50,7 +50,7 @@ Install the `aks-preview` extension if you're using Azure CLI. You must use `aks
 
 ### Enable and Configure Static Egress Gateway
 
-Follow the instructions in the [Static Egress Gateway documentation][static-egress-gateway] to enable Static Egress Gateway on your cluster, create an node pool of mode `gateway`, and create a `StaticGatewayConfiguration` resource.
+Follow the instructions in the [Static Egress Gateway documentation][static-egress-gateway] to enable Static Egress Gateway on your cluster, create a node pool of mode `gateway`, and create a `StaticGatewayConfiguration` resource.
 
 ## Enable an Istio egress gateway
 
@@ -89,7 +89,7 @@ kubectl get deployment $ISTIO_EGRESS_NAME-$ASM_REVISION -n $ISTIO_EGRESS_NAMESPA
 You can run the `az aks mesh enable-egress-gateway` command again to create another Istio egress gateway. 
 
 > [!NOTE]
-> When performing a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-ingress-and-egress-gateways) of the Istio add-on, another deployment for each egress gateway will be created for the new control plane revision.
+> When you perform a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-ingress-and-egress-gateways) of the Istio add-on, another deployment for each egress gateway will be created for the new control plane revision.
 
 ## Route traffic through the Istio egress gateway
 
