@@ -57,7 +57,7 @@ Follow the instructions in the [Static Egress Gateway documentation][static-egre
 > [!NOTE]
 > The Istio add-on egress gateway pods don't get scheduled onto the `gateway` node pool. The `gateway` node pool is only used to route egress traffic and doesn't serve general-purpose workloads. If you need the egress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or the `azureservicemesh/istio.replica.preferred` label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
 
-Use `az aks mesh enable-egress-gateway` to enable an Istio egress gateway on your AKS cluster. You must specify a name for the Istio egress gateway and the name of the `StaticGatewayConfiguration` that you created in the [prerequisites](#prerequisites) step. You can also specify a namespace to deploy the Istio egress gateway in, which must be the same namespace that the `StaticGatewayConfiguration` was created in. If you don't specify a namespace, the egress gateway will be provisioned in the `aks-istio-egress` namespace. 
+Use `az aks mesh enable-egress-gateway` to enable an Istio egress gateway on your AKS cluster. You must specify a name for the Istio egress gateway and the name of the `StaticGatewayConfiguration` that you created in the [prerequisites](#prerequisites) step. You can also specify a namespace to deploy the Istio egress gateway in, which must be the same namespace that the `StaticGatewayConfiguration` was created in. If you don't specify a namespace, the egress gateway gets provisioned in the `aks-istio-egress` namespace. 
 
 As a best-practice, you should wait until the `StaticGatewayConfiguration` is assigned an `egressIpPrefix` before enabling the Istio egress gateway using that gateway configuration. 
 
@@ -65,7 +65,7 @@ As a best-practice, you should wait until the `StaticGatewayConfiguration` is as
 az aks mesh enable-egress-gateway --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --istio-egressgateway-name $ISTIO_EGRESS_NAME --istio-egressgateway-namespace $ISTIO_EGRESS_NAMESPACE --gateway-configuration-name $ISTIO_SGC_NAME
 ```
 
-Verify that the service has been created for the egress gateway. 
+Verify that the service gets created for the egress gateway. 
 
 ```bash
 kubectl get svc $ISTIO_EGRESS_NAME -n $ISTIO_EGRESS_NAMESPACE
@@ -78,7 +78,7 @@ NAME              TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)               
 asm-egress-test   ClusterIP   10.0.128.17   <none>        15021/TCP,80/TCP,443/TCP   6d4h
 ```
 
-You can also verify that a deployment has been created for the Istio egress gateway and that the egress gateway pods have the `kubernetes.azure.com/static-gateway-configuration` annotation set to the `gatewayConfigurationName`.
+You can also verify that a deployment gets created for the Istio egress gateway and that the egress gateway pods have the `kubernetes.azure.com/static-gateway-configuration` annotation set to the `gatewayConfigurationName`.
 
 ```bash
 ASM_REVISION=$(az aks show -g $RESOURCE_GROUP -n $CLUSTER_NAME | jq '.serviceMeshProfile.istio.revisions[0]' | sed 's/"//g')
@@ -89,12 +89,12 @@ kubectl get deployment $ISTIO_EGRESS_NAME-$ASM_REVISION -n $ISTIO_EGRESS_NAMESPA
 You can run the `az aks mesh enable-egress-gateway` command again to create another Istio egress gateway. 
 
 > [!NOTE]
-> When you perform a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-ingress-and-egress-gateways) of the Istio add-on, another deployment for each egress gateway will be created for the new control plane revision.
+> When you perform a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-ingress-and-egress-gateways) of the Istio add-on, another deployment for each egress gateway gets created for the new control plane revision.
 
 ## Route traffic through the Istio egress gateway
 
 ### Set `outboundTrafficPolicy.mode`
-By default, the Istio `outboundTrafficPolicy.mode` is set to `ALLOW_ANY`, meaning that Envoy will pass through requests for unknown services. As a security best-practice, it's recommended to set the Istio `outboundTrafficPolicy.mode` to `REGISTRY_ONLY` so that the Istio proxy blocks requests to services that haven't been added to Istio's Service Registry. You can add hosts outside of the cluster to Istio's service registry with a `ServiceEntry`. 
+By default, the Istio `outboundTrafficPolicy.mode` is set to `ALLOW_ANY`, meaning that Envoy passes through requests for unknown services. As a security best-practice, you should set the Istio `outboundTrafficPolicy.mode` to `REGISTRY_ONLY` so that the Istio proxy blocks requests to services that weren't added to Istio's Service Registry. You can add hosts outside of the cluster to Istio's service registry with a `ServiceEntry`. 
 
 You can configure the `outboundTrafficPolicy.mode` on a mesh-wide level using the Istio add-on [shared MeshConfig][shared-mesh-config], or use the [Sidecar Custom Resource][sidecar-cr] to target specific namespaces or workloads.
 
@@ -112,7 +112,7 @@ data:
 
 ### Deploy sample application
 
-In this example, we'll deploy the `curl` application in the same namespace as the Istio add-on egress gateway. Remember to label the `ISTIO_EGRESS_NAMESPACE` with the `istio.io/rev` label so that the deployed application pod gets injected with a sidecar:
+In this example, we deploy the `curl` application in the same namespace as the Istio add-on egress gateway. Remember to label the `ISTIO_EGRESS_NAMESPACE` with the `istio.io/rev` label so that the deployed application pod gets injected with a sidecar:
 
 ```bash
 kubectl label namespace $ISTIO_EGRESS_NAMESPACE istio.io/rev=$ASM_REVISION
@@ -139,7 +139,7 @@ SOURCE_POD=$(kubectl get pod -n $ISTIO_EGRESS_NAMESPACE -l app=curl -o jsonpath=
 kubectl exec -n $ISTIO_EGRESS_NAMESPACE "$SOURCE_POD" -c curl -- curl -sSL -o /dev/null -D - http://edition.cnn.com/politics
 ```
 
-If you set `outboundTrafficPolicy.mode` to `REGISTRY_ONLY`, then the `curl` request should fail because you haven't created a `ServiceEntry` for `edition.cnn.com`. If `outboundTrafficPolicy.mode` is `ALLOW_ANY`, then the request should succeed. 
+If you set `outboundTrafficPolicy.mode` to `REGISTRY_ONLY`, then the `curl` request should fail because you didn't create a `ServiceEntry` for `edition.cnn.com`. If `outboundTrafficPolicy.mode` is `ALLOW_ANY`, then the request should succeed. 
 
 To actually route requests to `edition.cnn.com` from the `curl` pod to the Istio add-on egress gateway, you need to create a `ServiceEntry` and configure other Istio custom resources. Follow instructions one of the subsequent sections to configure an [HTTP Egress Gateway](#configure-an-http-istio-egress-gateway), [HTTPS Egress Gateway](#configure-an-https-istio-egress-gateway), or an [Egress Gateway that originates a Transport Layer Security (TLS) connection](#configure-an-istio-egress-gateway-to-perform-tls-origination).
 
