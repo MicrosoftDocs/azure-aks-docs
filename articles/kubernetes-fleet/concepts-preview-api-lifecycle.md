@@ -1,7 +1,7 @@
 ---
 title: Azure Kubernetes Fleet Manager Preview API lifecycle
 description: Learn about the Azure Kubernetes Fleet Manager preview API lifecycle.
-ms.date: 04/16/2025
+ms.date: 05/29/2025
 ms.topic: concept-article
 author: sjwaight
 ms.author: simonwaight
