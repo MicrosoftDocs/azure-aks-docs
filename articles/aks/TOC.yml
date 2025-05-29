@@ -928,6 +928,10 @@
                       href: istio-deploy-ingress.md
                     - name: Secure ingress gateways
                       href: istio-secure-gateway.md
+                - name: Egress
+                  items:
+                    - name: Deploy egress gateways (preview)
+                      href: istio-deploy-egress.md
             - name: Security
               items:
                 - name: Plug-in CA certificates

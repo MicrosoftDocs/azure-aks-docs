@@ -28,7 +28,7 @@ For more information on Istio and the service mesh add-on, see [Istio-based serv
     ```bash
     kubectl delete crd $(kubectl get crd -A | grep "istio.io" | awk '{print $1}')
     ```
-    It is recommend to also clean up other resources from self-managed installations of Istio such as ClusterRoles, MutatingWebhookConfigurations and ValidatingWebhookConfigurations.
+    It is recommended to also clean up other resources from self-managed installations of Istio such as ClusterRoles, MutatingWebhookConfigurations and ValidatingWebhookConfigurations.
 
 * Note that if you choose to use any `istioctl` CLI commands, you will need to include a flag to point to the add-on installation of Istio: `--istioNamespace aks-istio-system`
 
@@ -45,7 +45,7 @@ export LOCATION=<location>
 This section includes steps to install the Istio add-on during cluster creation or enable for an existing cluster using the Azure CLI. If you want to install the add-on using Bicep, see the guide for [installing an AKS cluster with the Istio service mesh add-on using Bicep][install-aks-cluster-istio-bicep]. To learn more about the Bicep resource definition for an AKS cluster, see [Bicep managedCluster reference][bicep-aks-resource-definition].
 
 > [!NOTE]
-> If you need the `istiod` and ingress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or leverage the `azureservicemesh/istio.replica.preferred` label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
+> If you need the `istiod` and ingress/egress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or the `azureservicemesh/istio.replica.preferred` node label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
 
 ### Revision selection
 
@@ -229,6 +229,7 @@ To test this sample application against ingress, check out [next-steps](#next-st
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
 * [Scale istiod and ingress gateway HPA][istio-scaling-guide]
 * [Collect metrics for Istio service mesh add-on workloads in Azure Managed Prometheus][istio-metrics-managed-prometheus]
+* [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
 
 <!--- External Links --->
 [install-aks-cluster-istio-bicep]: https://github.com/Azure-Samples/aks-istio-addon-bicep
@@ -247,3 +248,4 @@ To test this sample application against ingress, check out [next-steps](#next-st
 [istio-scaling-guide]: istio-scale.md#scaling
 [istio-metrics-managed-prometheus]: istio-metrics-managed-prometheus.md
 [aks-system-nodes]: /azure/aks/use-system-pools
+[istio-egress-gateway]: istio-deploy-egress.md

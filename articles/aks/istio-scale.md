@@ -133,7 +133,7 @@ kubectl patch hpa aks-istio-ingressgateway-external-asm-1-19 -n aks-istio-ingres
 ## Service entry
 Istio's ServiceEntry custom resource definition enables adding other services into the Istio’s internal service registry. A [ServiceEntry][serviceentry] allows services already in the mesh to route or access the services specified. However, the configuration of multiple ServiceEntries with the `resolution` field set to DNS can cause a [heavy load on Domain Name System (DNS) servers][understanding-dns]. The following suggestions can help reduce the load:
 
-- Switch to `resolution: NONE` to avoid proxy DNS lookups entirely. Suitable for most use cases.
+- Switch to `resolution: NONE` to avoid proxy DNS lookups entirely. Suitable for most use cases. However, when using an [Istio add-on egress gateway][istio-egress-gateway], the ServiceEntry resolution must be set to `DNS`. 
 - Increase TTL (Time To Live) if you control the domains being resolved.
 - Limit the ServiceEntry scope with `exportTo`.
 
@@ -146,3 +146,4 @@ Istio's ServiceEntry custom resource definition enables adding other services in
 [understanding-dns]: https://preliminary.istio.io/latest/docs/ops/configuration/traffic-management/dns/#proxy-dns-resolution
 [hpa]: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 [istio-upgrade-hpa]: ./istio-upgrade.md#minor-revision-upgrades-with-horizontal-pod-autoscaling-customizations
+[istio-egress-gateway]: ./istio-deploy-egress.md
