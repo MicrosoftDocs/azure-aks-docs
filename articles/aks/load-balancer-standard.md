@@ -631,7 +631,7 @@ The following table outlines **key benefits** of using shared probe mode:
 | Lower traffic overhead | One probe per node instead of *Services × (nodes – 1)* probes.            |
 
 > [!NOTE]  
-> *Services that use `externalTrafficPolicy: Local` are **unchanged**.*  
+> * Services that use `externalTrafficPolicy: Local` are **unchanged**.*  
 > This feature does **not** address container‑native load balancing.
 
 ### Install the aks-preview Azure CLI extension
