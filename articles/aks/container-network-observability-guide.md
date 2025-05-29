@@ -44,7 +44,7 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
 
 2. Scroll down to find out pods with most DNS request and errors in all namespaces.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/toppods-with-dns-errors-inworkload.png" alt-text="Snapshot of top pods in all namespaces. " lightbox="./media/advanced-container-networking-services/acns-dashboard/toppods-with-dns-errors-inworkload.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-all-namespaces.png" alt-text="Snapshot of top pods in all namespaces. " lightbox="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-all-namespaces.png":::
 
     Once you identify the pods causing the most DNS issues, you can delve further into the **DNS Workload** dashboard for a more granular view. By correlating data across various panels within the dashboard, you can systematically narrow down the root causes of the issues.
 
@@ -54,14 +54,14 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
 
 4. Check for any DNS errors by type, and check for spikes in specific error types (for example, `NXDOMAIN` for nonexistent domains). In this example, there's a significant increase in *Query refused errors*, suggesting a mismatch in DNS configurations or unsupported queries.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/types-of-dnserror-responses.png" alt-text="Diagram of DNS Errors by type. " lightbox="./media/advanced-container-networking-services/acns-dashboard/types-of-dnserror-responses.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/types-of-dns-error-responses.png" alt-text="Diagram of DNS Errors by type. " lightbox="./media/advanced-container-networking-services/acns-dashboard/types-of-dns-error-responses.png":::
 
 5. Use sections like **DNS Response IPs Returned** to ensure that expected responses are being processed. This graph displays the rate of successful DNS queries processed per second. This information is useful for understanding how frequently DNS queries are being successfully resolved for the specified workload.
 
    - An **increased rate** might indicate a surge in traffic or a potential DNS attack (for example, *Distributed Denial of Service (DDoS)*).
    - A **decreased rate** might signify issues reaching the external DNS server, a CoreDNS configuration issue, or an unreachable workload from CoreDNS.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/rate-of-IPs-returned-dnsreponses.png" alt-text="Diagram of rate of IPs retuned in DNS responses per second. " lightbox="./media/advanced-container-networking-services/acns-dashboard/rate-of-IPs-returned-dnsreponses.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/rate-of-ips-returned-dns-reponses.png" alt-text="Diagram of rate of IPs retuned in DNS responses per second. " lightbox="./media/advanced-container-networking-services/acns-dashboard/rate-of-ips-returned-dns-reponses.png":::
 
 6. Examining the most frequent DNS queries can help identify patterns in network traffic. This information is useful for understanding workload distribution and detecting any unusual or unexpected query behaviors that might require attention.
 
@@ -75,7 +75,7 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
 
 8. When it's confirmed that there's a DNS issue, the following graph identifies the top ten endpoints causing DNS errors in a specific workload or namespace. You can use this to prioritize troubleshooting specific endpoints, detect misconfigurations, or investigate network issues.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dnserrors-inworkload.png" alt-text="Diagram of top pods with most DNS errors. " lightbox="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dnserrors-inworkload.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-workload.png" alt-text="Diagram of top pods with most DNS errors. " lightbox="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-workload.png":::
 
 ### Step 2: Debug DNS resolution of a pod with Hubble flow logs
 
@@ -105,7 +105,7 @@ The Hubble UI service graph complements CLI insights by visualizing DNS-related 
 - The flow of traffic to CoreDNS or external DNS services.
 - Dropped packets flows, often marked in red.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-servicemap.png" alt-text="Diagram of Hubble UI service map. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-servicemap.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-service-map.png" alt-text="Diagram of Hubble UI service map. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-service-map.png":::
 
 With the combined capabilities of the grafana dashboards, Hubble CLI, and Hubble UI, you can identify DNS issues and perform root cause analysis effectively.
 
@@ -135,27 +135,27 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
 4. Use the **Dropped Incoming/Outgoing Traffic by Reason** graph to identify the root cause of the drops. In this example, the reason is policy denied, indicating misconfigured network policies blocking outgoing traffic. Check if any specific time interval shows a spike in drops to narrow down when the issue started.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-byreason.png" alt-text="Diagram of Dropped Incoming traffic by reason." lightbox="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-byreason.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-by-reason.png" alt-text="Diagram of Dropped Incoming traffic by reason." lightbox="./media/advanced-container-networking-services/acns-dashboard/dropped-traffic-by-reason.png":::
 
 5. Use the **Heatmap of Incoming Drops for Top Source/Destination Pods** to identify which pods are most affected. Brighter colors indicate higher rates of drops. Compare across time to detect patterns or spikes in specific pods.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-droppakets-at-destinationpod.png" alt-text="Diagram of heatmap of incoming drops for top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-droppakets-at-destinationpod.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-pakets-at-destination-pod.png" alt-text="Diagram of heatmap of incoming drops for top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-pakets-at-destination-pod.png":::
 
 6. Use the **Stacked (Total) Outgoing/Incoming Drops by Source Pod** chart to compare drop rates across affected pods. Identify if specific pods consistently show higher drops (for example, kapinger-bad-6659b89fd8-zjb9k at 26.8 p/s). Here, p/s refers to drop packet per second. Cross-reference these pods with their workloads, labels, and network policies to diagnose potential misconfigurations.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-sourcepods.png" alt-text="Diagram of Hubble UI service map ." lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-sourcepods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Diagram of Hubble UI service map ." lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
 
 ### Step 2: Investigate with Hubble CLI
 
 Using Hubble CLI, you can identify packet drops caused by misconfigured network policies with detailed, real-time data. Hubble CLI provides granular, real-time insights into dropped packets. By observing traffic, focusing on policy denied drops, and analyzing patterns, you can identify the misconfigured network policies and validate fixes.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubblecli-logs-for-drop-flow.png" alt-text="Diagram of Hubble CLI for drop flows." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubblecli-logs-for-drop-flow.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-cli-logs-for-drop-flow.png" alt-text="Diagram of Hubble CLI for drop flows." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-cli-logs-for-drop-flow.png":::
 
 ### Step 3: Observe the Hubble UI
 
 Another useful tool is the Hubble UI, which provides a visual representation of traffic flows within a namespace. For example, in the *agnhost* namespace, the UI displays interactions between pods within the same namespace, pods in other namespaces, and even packets originating from outside the cluster. Additionally, the interface highlights dropped packets and provides detailed information, such as the source and destination pod names, along with pod and namespace labels. This data can be instrumental in reviewing the network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubbleui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubbleui-for-drop-flow.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png":::
 
 ## Use case 3: Identify traffic imbalances within workloads and namespaces
 
@@ -167,7 +167,7 @@ Traffic imbalances occur when certain pods or services within a workload or name
 
 1. View the **Pod Flows (Workload)** dashboard. The **Workload Snapshot** displays various statistics such as outgoing and incoming traffic, and outgoing and incoming drops.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workloadsnapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic. " lightbox="./media/advanced-container-networking-services/acns-dashboard/workloadsnapshot-for-pod-traffic.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-for-pod-traffic.png" alt-text="Diagram of workload snapshot for pod traffic. " lightbox="./media/advanced-container-networking-services/acns-dashboard/workload-snapshot-for-pod-traffic.png":::
 
 2. Examine the fluctuations in traffic for each trace type. Significant variations in the blue and green lines indicate changes in traffic volume for applications and services, which might contribute to congestion. By identifying periods with high traffic, you  can pinpoint times of congestion and investigate further. Additionally, compare the outgoing and incoming traffic patterns. If there's a significant imbalance between outgoing and incoming traffic, it might indicate network congestion or bottlenecks.
     :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/outgoing-traffic-by-trace-type.png" alt-text="Diagram of outgoing traffic by trace type." lightbox="./media/advanced-container-networking-services/acns-dashboard/outgoing-traffic-by-trace-type.png":::
@@ -184,19 +184,19 @@ Traffic imbalances occur when certain pods or services within a workload or name
 
 5. The **Heatmap of Outgoing TCP RST by Top Source Pods** shows which source pods are generating the most TCP RST packets and when the activity spikes. For the following example heatmap, if *pets/rabbitmq-0* consistently shows high outgoing resets during peak traffic hours, it might indicate that the application or its underlying resources (CPU, memory) are overloaded. The solution could be to optimize the pod's configuration, scale resources, or distribute traffic evenly across replicas.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcpreset-sourcepods.png" alt-text="Diagram of heatmap of outgoing TCP reset by source pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcpreset-sourcepods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcp-reset-source-pods.png" alt-text="Diagram of heatmap of outgoing TCP reset by source pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-outgoing-tcp-reset-source-pods.png":::
 
 6. The **Heatmap of Incoming TCP RST by Top Destination Pods** identifies destination pods receiving the most TCP RST packets, pointing to potential bottlenecks or connection issues at these pods. If *pets/mongodb-0* is frequently receiving RST packets, it might be an indicator of overloaded database connections or faulty network configurations. The solution could be to increase database capacity, implement rate limiting, or investigate upstream workloads causing excessive connections.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcpreset-destination.png" alt-text="Diagram of heatmap of incoming TCP reset by top destination pods. " lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcpreset-destination.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcp-reset-destination.png" alt-text="Diagram of heatmap of incoming TCP reset by top destination pods. " lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-incoming-tcp-reset-destination.png":::
 
 7. The **Stacked (Total) Outgoing TCP RST by Source Pod** graph provides an aggregated view of outgoing resets over time, highlighting trends or anomalies.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/stacked-outgoing-tcpreset-by-sourcepods.png" alt-text="Snapshot of Stacked(total) outgoing TCP reset by source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/stacked-outgoing-tcpreset-by-sourcepods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/stacked-outgoing-tcp-reset-by-source-pods.png" alt-text="Snapshot of Stacked(total) outgoing TCP reset by source pod." lightbox="./media/advanced-container-networking-services/acns-dashboard/stacked-outgoing-tcp-reset-by-source-pods.png":::
 
 8. The **Stacked (Total) Incoming TCP RST by Destination Pod** graph aggregates incoming resets, showing how network congestion affects destination pods. For example, a sustained increase in resets for *pets/rabbitmq-0* might indicate that this service is unable to handle incoming traffic effectively, leading to timeouts.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/stacked-incoming-tcpreset-by-destinationpods.png" alt-text="Snapshot of Total Incoming TCP reset by destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/stacked-incoming-tcpreset-by-destinationpods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/stacked-incoming-tcp-reset-by-destination-pods.png" alt-text="Snapshot of Total Incoming TCP reset by destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/stacked-incoming-tcp-reset-by-destination-pods.png":::
 
 ## Use case 4: Real time monitoring of cluster’s network health and performance
 
@@ -210,7 +210,7 @@ Presenting a cluster's network health metrics at a high level is essential for e
 
 2. **Detect packet loss**: The **Packets Dropped** and **Bytes Dropped** sections help in identifying if there's significant packet loss occurring within specific clusters, which could indicate issues like faulty hardware or misconfigured network settings.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-andpackets-dropped-by-cluster.png" alt-text="Diagram of bytes and packets dropped by cluster." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-andpackets-dropped-by-cluster.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-and-packets-dropped-by-cluster.png" alt-text="Diagram of bytes and packets dropped by cluster." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-and-packets-dropped-by-cluster.png":::
 
 3. **Monitor traffic patterns**: You can monitor traffic patterns over time to understand normal versus abnormal behavior, which helps in proactive troubleshooting. By comparing max and min ingress/egress bytes and packets, you can analyze performance trends and determine if certain times of day or specific workloads are causing performance degradation.
 
@@ -244,7 +244,7 @@ L7 traffic observability addresses critical application-layer networking issues 
 
 3. This following heatmap indicates which pods have outgoing HTTP requests that resulted in 4xx errors. You can use this heatmap to quickly identify problematic pods and investigate the reasons for the errors. By addressing these issues at the pod level, you can improve the overall performance and reliability of their L7 traffic.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-httprequests-return-4xxerror.png" alt-text="Diagram of http requests that retuned 4xx errors." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-httprequests-return-4xxerror.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xxerror.png" alt-text="Diagram of http requests that retuned 4xx errors." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xxerror.png":::
 
 4. Use the following graphs to check which pods receive the most traffic. This helps identify overburdened pods.
 
@@ -253,7 +253,7 @@ L7 traffic observability addresses critical application-layer networking issues 
 
    These graphs provide you with valuable insights into their network traffic and performance. The first graph helps you understand the consistency and volume of their outgoing HTTP traffic, which is crucial for monitoring and maintaining optimal network performance. The second graph allows you to identify patterns or periods when there are issues with dropped requests, which can be crucial for troubleshooting network problems or optimizing performance.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-sourcepods.png" alt-text="Diagram of http requests for top source pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-sourcepods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-source-pods.png" alt-text="Diagram of http requests for top source pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/http-requests-for-top-source-pods.png":::
 
 ### Key factors to focus on during root cause analysis for L7 traffic
 
