@@ -61,7 +61,7 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
    - An **increased rate** might indicate a surge in traffic or a potential DNS attack (for example, *Distributed Denial of Service (DDoS)*).
    - A **decreased rate** might signify issues reaching the external DNS server, a CoreDNS configuration issue, or an unreachable workload from CoreDNS.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/rate-of-ips-returned-dns-reponses.png" alt-text="Diagram of rate of IPs retuned in DNS responses per second. " lightbox="./media/advanced-container-networking-services/acns-dashboard/rate-of-ips-returned-dns-reponses.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/rate-of-ips-returned-dns-responses.png" alt-text="Diagram of rate of IPs retuned in DNS responses per second. " lightbox="./media/advanced-container-networking-services/acns-dashboard/rate-of-ips-returned-dns-responses.png":::
 
 6. Examining the most frequent DNS queries can help identify patterns in network traffic. This information is useful for understanding workload distribution and detecting any unusual or unexpected query behaviors that might require attention.
 
@@ -139,7 +139,7 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
 5. Use the **Heatmap of Incoming Drops for Top Source/Destination Pods** to identify which pods are most affected. Brighter colors indicate higher rates of drops. Compare across time to detect patterns or spikes in specific pods.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-pakets-at-destination-pod.png" alt-text="Diagram of heatmap of incoming drops for top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-pakets-at-destination-pod.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-packets-at-destination-pod.png" alt-text="Diagram of heatmap of incoming drops for top destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-of-drop-packets-at-destination-pod.png":::
 
 6. Use the **Stacked (Total) Outgoing/Incoming Drops by Source Pod** chart to compare drop rates across affected pods. Identify if specific pods consistently show higher drops (for example, kapinger-bad-6659b89fd8-zjb9k at 26.8 p/s). Here, p/s refers to drop packet per second. Cross-reference these pods with their workloads, labels, and network policies to diagnose potential misconfigurations.
 
@@ -218,7 +218,7 @@ Presenting a cluster's network health metrics at a high level is essential for e
 
 4. **Diagnose drop reasons**: The **Bytes Dropped by Reason** and **Packets Dropped by Reason** sections help in understanding the specific reasons for packet drops, such as policy denials or unknown protocols.
 
-   :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-drooped-by-reason.png" alt-text="Diagram of bytes drooped by reason." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-drooped-by-reason.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/bytes-dropped-by-reason.png" alt-text="Diagram of bytes drooped by reason." lightbox="./media/advanced-container-networking-services/acns-dashboard/bytes-dropped-by-reason.png":::
 
 5. **Node-specific analysis**: The **Bytes Dropped by Node** and **Packets Dropped by Node** graphs provide insights into which nodes are experiencing the most packet drops. This helps in pinpointing problematic nodes and taking corrective actions to improve network performance.
 
@@ -244,7 +244,7 @@ L7 traffic observability addresses critical application-layer networking issues 
 
 3. This following heatmap indicates which pods have outgoing HTTP requests that resulted in 4xx errors. You can use this heatmap to quickly identify problematic pods and investigate the reasons for the errors. By addressing these issues at the pod level, you can improve the overall performance and reliability of their L7 traffic.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xxerror.png" alt-text="Diagram of http requests that retuned 4xx errors." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xxerror.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xx-error.png" alt-text="Diagram of http requests that retuned 4xx errors." lightbox="./media/advanced-container-networking-services/acns-dashboard/heatmap-http-requests-return-4xx-error.png":::
 
 4. Use the following graphs to check which pods receive the most traffic. This helps identify overburdened pods.
 
