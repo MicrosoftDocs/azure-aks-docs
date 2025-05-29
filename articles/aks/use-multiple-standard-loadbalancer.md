@@ -289,7 +289,7 @@ az aks loadbalancer rebalance --resource-group $RESOURCE_GROUP --cluster-name $C
 | Outbound SNAT        | Always uses the first SLB; outbound flows aren’t sharded.                                  |
 | Backend pool type    | Create or update and existing cluster to use `nodeIP` backend pools.                       |
 | Autoscaler zeros     | A primary agent pool can’t scale to 0 nodes.                                               |
-| Rebalance disruption | Removing a node from a backend pool drops in‑flight connections. plan maintenance windows. |
+| Rebalance disruption | Removing a node from a backend pool drops in‑flight connections. Plan maintenance windows. |
 
 ## Clean up resources
 
@@ -299,7 +299,7 @@ Delete the resource group when you’re finished to remove the cluster and load 
 az group delete --name $RESOURCE_GROUP --yes --no-wait
 ```
 
-### Next steps
+## Next steps
 
 The multiple SLB feature helps scale and isolate workloads at the networking layer while maintaining simplicity through Azure-managed configuration. For more information, see the following resources:
 

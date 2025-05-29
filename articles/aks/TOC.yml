@@ -783,7 +783,7 @@
             - name: Use kube-proxy configuration (IPVS)
               href: configure-kube-proxy.md
             - name: Use multiple Standard Load Balancers
-              href: use-multiple-slb.md
+              href: use-multiple-standard-loadbalancer.md
         - name: Security
           items:
             - name: Use API Server VNet Integration
