@@ -32,28 +32,28 @@ az aks get-credentials --resource-group <ResourceGroupName> --name <ClusterName>
 
 The application routing add-on uses a Kubernetes [custom resource definition (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) called [`NginxIngressController`](https://github.com/Azure/aks-app-routing-operator/blob/main/config/crd/bases/approuting.kubernetes.azure.com_nginxingresscontrollers.yaml) to configure NGINX ingress controllers. You can create more ingress controllers or modify existing configuration.
 
-This table shows a reference to properties you can set to configure an `NginxIngressController` and the corresponding operator version.
+This table shows a reference to properties you can set to configure an `NginxIngressController`.
 
-| Field                                  | Operator Version      | Type    | Description                                                                                                                                | Required | Default                               |
-|----------------------------------------|-----------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------------------------------|
-| `controllerNamePrefix`                 | [0.1.0][0.1.0]+       | string  | Name for the managed NGINX Ingress Controller resources.                                                                                   | Yes      | `nginx`                               |
-| `customHTTPErrors`                     | [0.2.5][0.2.5]+       | array   | Array of error codes to be sent to the default backend in case of an error.                                                                | No       |                                       |
-| `defaultBackendService`                | [0.2.5][0.2.5]+       | object  | Service to route unmatched HTTP traffic. Contains nested properties:                                                                       | No       |                                       |
-| &emsp;`name`                           | [0.2.5][0.2.5]+       | string  | Service name.                                                                                                                              | Yes      |                                       |
-| &emsp;`namespace`                      | [0.2.5][0.2.5]+       | string  | Service namespace.                                                                                                                         | Yes      |                                       |
-| `defaultSSLCertificate`                | [0.2.2][0.2.2]+       | object  | Contains the default certificate for accessing the default backend service. Contains nested properties:                                   | No       |                                       |
-| &emsp;`forceSSLRedirect`               | [0.2.4][0.2.4]+       | boolean | Forces HTTPS redirection when a certificate is set.                                                                                        | No       | `false`                               |
-| &emsp;`keyVaultURI`                    | [0.2.2][0.2.2]+       | string  | URI for a Key Vault secret storing the certificate.                                                                                        | No       |                                       |
-| &emsp;`secret`                         | [0.2.2][0.2.2]+       | object  | Holds secret information for the default SSL certificate. Contains nested properties:                                                       | No       |                                       |
-| &emsp;&emsp;`name`                     | [0.2.2][0.2.2]+       | string  | Secret name.                                                                                                                               | Yes      |                                       |
-| &emsp;&emsp;`namespace`                | [0.2.2][0.2.2]+       | string  | Secret namespace.                                                                                                                          | Yes      |                                       |
-| `httpDisabled`                         | [0.2.5][0.2.5]+       | boolean | Flag to disable HTTP traffic to the controller.                                                                                            | No       |                                       |
-| `ingressClassName`                     | [0.1.0][0.1.0]+       | string  | IngressClass name used by the controller.                                                                                                  | Yes      | `nginx.approuting.kubernetes.azure.com` |
-| `loadBalancerAnnotations`              | [0.1.0][0.1.0]+       | object  | A map of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations). | No       |                                       |
-| `scaling`                              | [0.2.2][0.2.2]+       | object  | Configuration for scaling the controller. Contains nested properties:                                                                       | No       |                                       |
-| &emsp;`maxReplicas`                    | [0.2.2][0.2.2]+       | integer | Upper limit for replicas.                                                                                                                  | No       | `100`                                 |
-| &emsp;`minReplicas`                    | [0.2.2][0.2.2]+       | integer | Lower limit for replicas.                                                                                                                  | No       | `2`                                   |
-| &emsp;`threshold`                      | [0.2.2][0.2.2]+       | string  | Scaling threshold defining how aggressively to scale. **`rapid`** scales quickly for sudden spikes, **`steady`** favors cost-effectiveness, and **`balanced`** is a mix. | No       | `balanced`                           |
+| Field                                  | Type    | Description                                                                                                                                | Required | Default                               |
+|----------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------------------------------|
+| `controllerNamePrefix`                 | string  | Name for the managed NGINX Ingress Controller resources.                                                                                   | Yes      | `nginx`                               |
+| `customHTTPErrors`                     | array   | Array of error codes to be sent to the default backend in case of an error.                                                                | No       |                                       |
+| `defaultBackendService`                | object  | Service to route unmatched HTTP traffic. Contains nested properties:                                                                       | No       |                                       |
+| &emsp;`name`                           | string  | Service name.                                                                                                                              | Yes      |                                       |
+| &emsp;`namespace`                      | string  | Service namespace.                                                                                                                         | Yes      |                                       |
+| `defaultSSLCertificate`                | object  | Contains the default certificate for accessing the default backend service. Contains nested properties:                                   | No       |                                       |
+| &emsp;`forceSSLRedirect`               | boolean | Forces HTTPS redirection when a certificate is set.                                                                                        | No       | `false`                               |
+| &emsp;`keyVaultURI`                    | string  | URI for a Key Vault secret storing the certificate.                                                                                        | No       |                                       |
+| &emsp;`secret`                         | object  | Holds secret information for the default SSL certificate. Contains nested properties:                                                       | No       |                                       |
+| &emsp;&emsp;`name`                     | string  | Secret name.                                                                                                                               | Yes      |                                       |
+| &emsp;&emsp;`namespace`                | string  | Secret namespace.                                                                                                                          | Yes      |                                       |
+| `httpDisabled`                         | boolean | Flag to disable HTTP traffic to the controller.                                                                                            | No       |                                       |
+| `ingressClassName`                     | string  | IngressClass name used by the controller.                                                                                                  | Yes      | `nginx.approuting.kubernetes.azure.com` |
+| `loadBalancerAnnotations`              | object  | A map of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations). | No       |                                       |
+| `scaling`                              | object  | Configuration for scaling the controller. Contains nested properties:                                                                       | No       |                                       |
+| &emsp;`maxReplicas`                    | integer | Upper limit for replicas.                                                                                                                  | No       | `100`                                 |
+| &emsp;`minReplicas`                    | integer | Lower limit for replicas.                                                                                                                  | No       | `2`                                   |
+| &emsp;`threshold`                      | string  | Scaling threshold defining how aggressively to scale. **`rapid`** scales quickly for sudden spikes, **`steady`** favors cost-effectiveness, and **`balanced`** is a mix. | No       | `balanced`                           |
 
 ## Common configurations
 
@@ -595,12 +595,6 @@ Learn about monitoring the ingress-nginx controller metrics included with the ap
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 [kubectl-delete]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#delete
-
-<!-- LINKS for release notes -->
-[0.1.0]: https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.1.0
-[0.2.2]: https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2
-[0.2.4]: https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.4
-[0.2.5]: https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.5
 
 <!-- LINKS - internal -->
 [az-network-public-ip-create]: /cli/azure/network/public-ip#az_network_public_ip_create
