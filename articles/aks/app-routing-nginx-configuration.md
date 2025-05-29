@@ -32,35 +32,32 @@ az aks get-credentials --resource-group <ResourceGroupName> --name <ClusterName>
 
 The application routing add-on uses a Kubernetes [custom resource definition (CRD)](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) called [`NginxIngressController`](https://github.com/Azure/aks-app-routing-operator/blob/main/config/crd/bases/approuting.kubernetes.azure.com_nginxingresscontrollers.yaml) to configure NGINX ingress controllers. You can create more ingress controllers or modify existing configuration.
 
-This table shows a mapping between the application routing operator version and the Kubernetes version.
+This table shows a reference to properties you can set to configure an `NginxIngressController`.
 
-| Kubernetes version | Operator version |
-|---|---|
-| <1.30 | 0.2.1-patch-7 |
-| >=1.30 | 0.2.3-patch-5 |
+| Field                                  | Type    | Description                                                                                                                                | Required | Default                               |
+|----------------------------------------|---------|--------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------------------------------|
+| `controllerNamePrefix`                 | string  | Name for the managed NGINX Ingress Controller resources.                                                                                   | Yes      | `nginx`                               |
+| `customHTTPErrors`                     | array   | Array of error codes to be sent to the default backend in case of an error.                                                                | No       |                                       |
+| `defaultBackendService`                | object  | Service to route unmatched HTTP traffic. Contains nested properties:                                                                       | No       |                                       |
+| &emsp;`name`                           | string  | Service name.                                                                                                                              | Yes      |                                       |
+| &emsp;`namespace`                      | string  | Service namespace.                                                                                                                         | Yes      |                                       |
+| `defaultSSLCertificate`                | object  | Contains the default certificate for accessing the default backend service. Contains nested properties:                                   | No       |                                       |
+| &emsp;`forceSSLRedirect`               | boolean | Forces HTTPS redirection when a certificate is set.                                                                                        | No       | `false`                               |
+| &emsp;`keyVaultURI`                    | string  | URI for a Key Vault secret storing the certificate.                                                                                        | No       |                                       |
+| &emsp;`secret`                         | object  | Holds secret information for the default SSL certificate. Contains nested properties:                                                       | No       |                                       |
+| &emsp;&emsp;`name`                     | string  | Secret name.                                                                                                                               | Yes      |                                       |
+| &emsp;&emsp;`namespace`                | string  | Secret namespace.                                                                                                                          | Yes      |                                       |
+| `httpDisabled`                         | boolean | Flag to disable HTTP traffic to the controller.                                                                                            | No       |                                       |
+| `ingressClassName`                     | string  | IngressClass name used by the controller.                                                                                                  | Yes      | `nginx.approuting.kubernetes.azure.com` |
+| `loadBalancerAnnotations`              | object  | A map of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations). | No       |                                       |
+| `scaling`                              | object  | Configuration for scaling the controller. Contains nested properties:                                                                       | No       |                                       |
+| &emsp;`maxReplicas`                    | integer | Upper limit for replicas.                                                                                                                  | No       | `100`                                 |
+| &emsp;`minReplicas`                    | integer | Lower limit for replicas.                                                                                                                  | No       | `2`                                   |
+| &emsp;`threshold`                      | string  | Scaling threshold defining how aggressively to scale. **`rapid`** scales quickly for sudden spikes, **`steady`** favors cost-effectiveness, and **`balanced`** is a mix. | No       | `balanced`                           |
 
-This table shows a reference to properties you can set to configure an `NginxIngressController` and the corresponding operator version.
-
-| Property                              | Operator version | Description                                                                                                           |
-|---------------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------|
-| **ingressClassName**                  |    [0.1.0](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.1.0)+   | The name of the `IngressClass` that is used for the NGINX Ingress Controller. Defaults to the name of the `NginxIngressController` if not specified. |
-| **controllerNamePrefix**              |   [0.1.0](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.1.0)+   | A name used to prefix the managed NGINX ingress controller resources. Defaults to `nginx`.                             |
-| **loadBalancerAnnotations**           |     [0.1.0](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.1.0)+    | A set of annotations to control the behavior of the NGINX ingress controller's service by setting [load balancer annotations](load-balancer-standard.md#customizations-via-kubernetes-annotations)  |
-| **scaling**                           |                  | Configuration options for how the NGINX Ingress Controller scales.                                                     |
-| _scaling.minReplicas_                 |   [0.2.2](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2)+   | The lower limit for the number of Ingress Controller replicas. It defaults to 2 pods.                                  |
-| _scaling.maxReplicas_                 |   [0.2.2](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2)+   | The upper limit for the number of Ingress Controller replicas. It defaults to 100 pods.                                |
-| _scaling.threshold_                   |   [0.2.2](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2)+   | Defines how quickly the NGINX Ingress Controller pods should scale based on workload. **`Rapid`** means the Ingress Controller scales quickly and aggressively for handling sudden and significant traffic spikes. **`Steady`** prioritizes cost-effectiveness with fewer replicas handling more work. **`Balanced`** is a good mix between the two that works for most use-cases. If unspecified, this field defaults to **`Balanced`**. |
-| **defaultSSLCertificate**             |                  | The secret referred to by this property contains the default certificate to be used when accessing the default backend service. If this property is not provided NGINX uses a self-signed certificate. If the `tls:` section is not set on an Ingress, NGINX provides the default certificate but will not force HTTPS redirect.  |                                          
-| _defaultSSLCertificate.keyVaultURI_   |     [0.2.2](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2)+             | The Azure Key Vault URI where the default SSL certificate can be found. The add-on needs to be [configured to use the key vault](app-routing-dns-ssl.md#enable-azure-key-vault-integration). |
-| _defaultSSLCertificate.secret_        |   [0.2.2](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2)+    | Configures the name and namespace where the default SSL secret is on the cluster.                                       |
-| _defaultSSLCertificate.secret.name_   |   [0.2.2](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2)+   | Name of the secret.                                                                                                    |
-| _defaultSSLCertificate.secret.namespace_ |   [0.2.2](https://github.com/Azure/aks-app-routing-operator/releases/tag/v0.2.2)+    | Namespace of the secret.                                                                                                |
 ## Common configurations
 
-### Control the default NGINX ingress controller configuration (preview)
-
-> [!NOTE]
-> Controlling the NGINX ingress controller configuration when enabling the add-on is available in `API 2024-06-02-preview`, Kubernetes version 1.30 or later, and the [aks-preview](/cli/azure/aks) Azure CLI extension version `7.0.0b5` or later. To check your AKS cluster version, see [Check for available AKS cluster upgrades][aks-upgrade].
+### Control the default NGINX ingress controller configuration
 
 When you enable the application routing add-on with NGINX, it creates an ingress controller called `default` in the `app-routing-namespace` configured with a public facing Azure load balancer. That ingress controller uses an ingress class name of `webapprouting.kubernetes.azure.com`.
 
