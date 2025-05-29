@@ -512,7 +512,7 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
 
 > [!NOTE]
-> If there are any issues encountered with deploying the Istio ingress gateway or configuring ingress traffic routing, refer to [article on troubleshooting Istio add-on ingress gateways][istio-ingress-tsg]
+> If there are any issues encountered with deploying the Istio egress gateway or configuring egress traffic routing, refer to [article on troubleshooting Istio add-on egress gateways][istio-egress-tsg]
 
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
@@ -524,3 +524,4 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 [envoy-access-logging]: https://istio.io/latest/docs/tasks/observability/logs/access-log/
 [istio-deploy-ingress]: istio-deploy-ingress.md
 [istio-deploy-addon]: istio-deploy-addon.md
+[istio-egress-tsg]:  /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-egress-gateway
