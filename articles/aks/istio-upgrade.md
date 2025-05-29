@@ -192,9 +192,11 @@ The following example illustrates how to upgrade from revision `asm-1-23` to `as
 
 ### Minor revision upgrades with ingress and egress gateways
 
-If you're currently using [Istio ingress gateways][istio-deploy-ingress] or [egress gateways][istio-deploy-egress] and are performing a minor revision upgrade, keep in mind that Istio ingress and egress gateway pods / deployments are deployed per-revision. However, we provide a single `LoadBalancer` service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways remains unchanged throughout the course of an upgrade. Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, the ingress gateway pods of both revisions serve incoming traffic.
+If you're currently using [Istio ingress gateways][istio-deploy-ingress] or [egress gateways][istio-deploy-egress] and are performing a minor revision upgrade, keep in mind that Istio ingress and egress gateway pods / deployments are deployed per-revision, but the service is 
 
-Likewise, all the pods for a particular egress gateway will have a single `ClusterIP` service, and all egress gateway pods across both revisions will serve traffic routed to the egress gateway service.
+We provide a single `LoadBalancer` service across all ingress gateway pods over multiple revisions, so the external/internal IP address of the ingress gateways remains unchanged throughout the course of an upgrade. Thus, during the canary upgrade, when two revisions exist simultaneously on the cluster, the ingress gateway pods of both revisions serve incoming traffic.
+
+Likewise, during a canary upgrade, all pods for an egress gateway across both revisions will be served by a single `ClusterIP` service. 
 
 ### Minor revision upgrades with horizontal pod autoscaling customizations
 
