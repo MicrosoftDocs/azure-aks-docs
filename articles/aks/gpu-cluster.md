@@ -164,7 +164,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
           # See https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/
           priorityClassName: "system-node-critical"
           containers:
-          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.0
+          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.2
             name: nvidia-device-plugin-ctr
             env:
               - name: FAIL_ON_INIT_ERROR

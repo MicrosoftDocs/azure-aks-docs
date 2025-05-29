@@ -217,7 +217,7 @@ You can deploy a DaemonSet for the Kubernetes DirectX device plugin, which runs 
             value: "gpu"
             effect: "NoSchedule"
           containers:
-          - image: mcr.microsoft.com/oss/nvidia/k8s-device-plugin:v0.14.1
+          - image: mcr.microsoft.com/aks/aks-windows-gpu-device-plugin:0.0.17
             name: nvidia-device-plugin-ctr
             securityContext:
               allowPrivilegeEscalation: false
