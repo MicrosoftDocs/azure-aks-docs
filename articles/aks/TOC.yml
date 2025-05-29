@@ -782,7 +782,7 @@
               href: load-balancer-standard.md
             - name: Use kube-proxy configuration (IPVS)
               href: configure-kube-proxy.md
-            - name: Use multiple Standard Load Balancers (Preview)
+            - name: Use multiple Standard Load Balancers
               href: use-multiple-slb.md
         - name: Security
           items:
