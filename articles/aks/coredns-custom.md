@@ -318,8 +318,53 @@ metadata:
    kubectl logs --namespace kube-system -l k8s-app=kube-dns
    ```
 
-## Next steps
+## Troubleshoot CoreDNS pod traffic imbalance
 
+You may observe that one or two CoreDNS pods show significantly higher CPU usage and handle more DNS queries than others, even though multiple CoreDNS pods are running in your AKS cluster. This is a [known issue](https://github.com/kubernetes/kubernetes/issues/76517#issuecomment-490731578) in Kubernetes and can lead to one of the CoreDNS pods being overloaded and crashing.
+
+This uneven distribution of DNS queries is primarily caused by UDP load balancing limitations in Kubernetes. The platform uses a five-tuple hash (source IP, source port, destination IP, destination port, protocol) to distribute UDP traffic so if an application reuses the same source port for DNS queries, all queries from that client will be routed to the same CoreDNS pod, resulting in a single pod handling a disproportionate amount of traffic.
+
+Additionally, some applications use connection pooling and reuse DNS connections. This behavior can further concentrate DNS queries on a single CoreDNS pod, exacerbating the imbalance and increasing the risk of overloading and potential crashes.
+
+### Checking your CoreDNS pod traffic distribution
+
+Before you begin, follow the steps in the [Enable DNS query logging](#enable-dns-query-logging) section above to capture required DNS query logs from CoreDNS pods. Once this is enabled, run the following commands:
+1. Run the following command to get the names of all CoreDNS pods in your cluster:
+     ```console
+     kubectl get pods --namespace kube-system -l k8s-app=kube-dns
+     ```
+
+3. Review the logs for each CoreDNS pod to analyze DNS query patterns:
+     ```console
+     kubectl logs --namespace kube-system <coredns-pod1>
+     kubectl logs --namespace kube-system <coredns-pod2>
+     # Repeat on all CoreDNS pods
+     ```
+
+4. Look for repeated client IP addresses and ports that appear only in the logs of a single CoreDNS pod. This indicates that DNS queries from certain clients are not being distributed evenly.
+
+     Example log entry:
+     ```
+     [INFO] 10.244.0.247:5556 - 42621 "A IN myservice.default.svc.cluster.local. udp 28" NOERROR qr,aa,rd 106 0.000141s
+     ```
+     - `10.244.0.247`: Client IP address making the DNS query
+     - `5556`: Client source port
+     - `42621`: Query ID
+
+     If you see the same client IP and port repeatedly in only one pod's logs, this confirms a traffic imbalance.
+
+Once you root cause your imbalance to either UDP source port reuse or application-level connection pooling, you can take the following mitigation actions:
+
+- **Caused by UDP source port reuse:**
+
+   If UDP source port reuse is the issue, update your applications or DNS clients to randomize source ports for each DNS query, which helps distribute requests more evenly across pods.
+
+- **Caused by connection pooling:**  
+  If connection pooling is the cause, adjust your application's DNS connection handling by reducing connection TTLs (Time to Live) or randomizing connection creation, ensuring queries are not concentrated on a single CoreDNS pod. 
+
+These changes can help achieve a more balanced DNS query distribution and reduce the risk of overloading individual pods.
+
+## Next steps
 This article showed some example scenarios for CoreDNS customization. For information on the CoreDNS project, see [the CoreDNS upstream project page][coredns].
 
 To learn more about core network concepts, see [Network concepts for applications in AKS][concepts-network].
