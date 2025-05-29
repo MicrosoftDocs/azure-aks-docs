@@ -169,7 +169,6 @@ By following these steps, you can effectively set up and manage Static Egress Ga
 
 * [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
 
-
 <!-- LINKS - Internal -->
 [az-provider-register]: /cli/azure/provider#az-provider-register
 [az-feature-register]: /cli/azure/feature#az-feature-register
@@ -178,4 +177,3 @@ By following these steps, you can effectively set up and manage Static Egress Ga
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
 [istio-egress-gateway]: istio-deploy-egress.md
-
