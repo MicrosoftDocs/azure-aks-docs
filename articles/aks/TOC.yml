@@ -287,6 +287,8 @@
       items:
         - name: Proactive monitoring
           href: best-practices-monitoring-proactive.md
+        - name: Advanced Container Networking Services observability guide
+          href: container-network-observability-guide.md
     - name: Application development
       items:
         - name: Resource management
