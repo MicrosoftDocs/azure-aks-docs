@@ -96,6 +96,10 @@
           href: howto-dns-load-balancing.md
         - name: Multi-cluster Layer 4 Load Balancing
           href: l4-load-balancing.md
+    - name: Monitor Fleet agents
+      items:
+        - name: View Fleet agent logs
+          href: view-fleet-agent-logs.md
 - name: Resources
   items:
   - name: Pricing
