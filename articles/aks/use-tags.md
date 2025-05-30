@@ -4,8 +4,8 @@ description: Learn how to use Azure provider tags to track resources in Azure Ku
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 06/16/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 

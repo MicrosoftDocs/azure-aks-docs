@@ -4,8 +4,8 @@ description: Learn about vertical pod autoscaling in Azure Kubernetes Service (A
 ms.topic: overview
 ms.custom: devx-track-azurecli
 ms.date: 09/28/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 

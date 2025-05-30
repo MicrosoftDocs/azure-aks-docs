@@ -3,8 +3,8 @@ title: Concepts - Sustainable software engineering in Azure Kubernetes Services 
 description: Learn about sustainable software engineering in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 06/20/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 

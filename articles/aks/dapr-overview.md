@@ -1,7 +1,8 @@
 ---
 title: Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
 description: Learn more about using Dapr on your Azure Kubernetes Service (AKS) cluster to develop applications.
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: overview
 ms.date: 03/06/2025
 ---
@@ -32,7 +33,7 @@ Dapr provides the following set of capabilities to help with your microservice d
 - Easy provisioning of Dapr on AKS through [cluster extensions][cluster-extensions]
 - Portability enabled through HTTP and gRPC APIs which abstract underlying technologies choices
 - Reliable, secure, and resilient service-to-service calls through HTTP and gRPC APIs
-- Publish and subscribe messaging made easy with support for CloudEvent filtering and “at-least-once” semantics for message delivery
+- Publish and subscribe messaging made easy with support for CloudEvent filtering and "at-least-once" semantics for message delivery
 - Pluggable observability and monitoring through Open Telemetry API collector
 - Independent of language, while also offering language specific software development kits (SDKs)
 - Integration with Visual Studio Code through the Dapr extension
@@ -150,7 +151,7 @@ Lastly, the Dapr extension is an extension of AKS, therefore you can expect the 
 - Learn how [Dapr components authenticate with Microsoft Entra ID][dapr-msi].
 - Learn about [using managed identities with AKS][aks-msi].
 
-### How can I switch to using the Dapr extension if I’ve already installed Dapr via a method, such as Helm?
+### How can I switch to using the Dapr extension if I've already installed Dapr via a method, such as Helm?
 
 Recommended guidance is to completely uninstall Dapr from the AKS cluster and reinstall it via the cluster extension. [You can also check for the existing Dapr installation and migrate it to AKS.](./dapr-migration.md)
 

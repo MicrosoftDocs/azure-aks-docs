@@ -4,8 +4,8 @@ description: Learn about the add-ons, extensions, and open-source integrations y
 ms.topic: overview
 ms.subservice: aks-integration
 ms.date: 05/22/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 
