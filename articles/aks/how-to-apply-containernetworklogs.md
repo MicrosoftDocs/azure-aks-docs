@@ -82,7 +82,7 @@ az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
     --generate-ssh-keys \
-    --location eastus \
+    --location uksouth \
     --max-pods 250 \
     --network-plugin azure \
     --network-plugin-mode overlay \
@@ -204,7 +204,7 @@ To enable the container network logs on existing cluster, follow these steps:
    ```
 1. Update the aks cluster with enable retina flow log flag 
    ```azurecli-interactive
-      az aks cluster update --enable-acns \
+      az aks update --enable-acns \
          --enable-retina-flow-logs \
          -g $RESOURCE_GROUP \
          -n $CLUSTER_NAME
