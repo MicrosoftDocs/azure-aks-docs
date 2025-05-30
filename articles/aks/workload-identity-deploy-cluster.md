@@ -261,7 +261,7 @@ The following example shows how to use the Azure role-based access control (Azur
 1. Assign yourself the RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
 
     ```azurecli-interactive
-    export KEYVAULT_RESOURCE_ID=$(az keyvault show --resource-group "${KEYVAULT_RESOURCE_GROUP}" \
+    export KEYVAULT_RESOURCE_ID=$(az keyvault show --resource-group "${RESOURCE_GROUP}" \
         --name "${KEYVAULT_NAME}" \
         --query id \
         --output tsv)
