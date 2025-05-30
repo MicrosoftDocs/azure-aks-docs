@@ -4,8 +4,8 @@ description: Learn how to enable and use Pod Security Admission with Azure Kuber
 ms.custom: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 09/12/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 

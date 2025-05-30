@@ -4,8 +4,8 @@ description: Use Azure Event Grid to subscribe to Azure Kubernetes Service event
 ms.topic: how-to
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
 ms.date: 06/22/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 
