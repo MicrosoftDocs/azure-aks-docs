@@ -1,8 +1,8 @@
 ---
 title: Deploy a Kubernetes application from Azure Marketplace 
 description: Learn how to deploy Kubernetes applications from Azure Marketplace on an Azure Kubernetes Service (AKS) cluster.
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.date: 10/15/2024
 ms.service: azure-kubernetes-service

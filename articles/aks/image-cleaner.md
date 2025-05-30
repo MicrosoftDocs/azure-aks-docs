@@ -1,8 +1,8 @@
 ---
 title: Use Image Cleaner on Azure Kubernetes Service (AKS)
 description: Learn how to use Image Cleaner to clean up vulnerable stale images on Azure Kubernetes Service (AKS)
-ms.author: nickoman
-author: nickomang
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 01/22/2024

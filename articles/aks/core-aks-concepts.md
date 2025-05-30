@@ -118,7 +118,7 @@ The following namespaces are created by default in an AKS cluster:
 | `default` | The [default][kubernetes-namespaces] namespace allows you to start using cluster resources without creating a new namespace. |
 | `kube-node-lease` | The [kube-node-lease][kubernetes-namespaces] namespace enables nodes to communicate their availability to the control plane. |
 | `kube-public` | The [kube-public][kubernetes-namespaces] namespace isn't typically used, but you can use it so that resources are visible across the whole cluster by any user. |
-| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. |
+| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. It is not recommended to deploy your own applications to this namespace. For rare cases where deploying your own applications to this namespace is necessary, see the [FAQ](faq.yml#can-admission-controller-webhooks-affect-kube-system-and-internal-aks-namespaces-) to learn how. |
 
 ![Screenshot that shows Kubernetes namespaces to logically divide resources and applications.](media/concepts-clusters-workloads/namespaces.png)
 

@@ -1,9 +1,9 @@
 ---
 title: Certificate Rotation in Azure Kubernetes Service (AKS)
 description: Learn about certificate rotation in an Azure Kubernetes Service (AKS) cluster.
-author: nickomang
+author: davidsmatlak
 
-ms.author: nickoman
+ms.author: davidsmatlak
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli

@@ -3,8 +3,8 @@ title: Supported Kubernetes versions in Azure Kubernetes Service (AKS).
 description: Learn the Kubernetes version support policy and lifecycle of clusters in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 10/30/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Supported Kubernetes versions in Azure Kubernetes Service (AKS)
@@ -54,7 +54,7 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 LTS Versions
 
 > [!NOTE]
-> Azure Linux supports 1.27 LTS only. For more information on 1.30 LTS with Azure Linux, read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
+> Azure Linux 2.0 goes End of Life during the LTS period of AKS v1.28–v1.31. For more information on upgrading to Azure Linux 3.0 on AKS v1.28–v1.31, read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
 
 |  K8s version | Upstream release  | AKS preview  | AKS GA  | End of life | LTS End of life |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
