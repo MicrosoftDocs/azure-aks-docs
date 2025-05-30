@@ -110,7 +110,7 @@ Call the [az identity create][az-identity-create] command to create a managed id
 
 ```azurecli-interactive
 export SUBSCRIPTION="$(az account show --query id --output tsv)"
-export USER_ASSIGNED_IDENTITY_NAME="myIdentity$RANDOM_ID"
+export USER_ASSIGNED_IDENTITY_NAME="myIdentity$RANDOMID"
 az identity create \
     --name "${USER_ASSIGNED_IDENTITY_NAME}" \
     --resource-group "${RESOURCE_GROUP}" \
