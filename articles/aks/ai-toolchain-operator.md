@@ -81,12 +81,6 @@ The following sections describe how to create an AKS cluster with the AI toolcha
             --enable-ai-toolchain-operator
     ```
 
-4. Verify that the KAITO GPU provisioner deployment is running using the `kubectl get` command:
-
-    ```azurecli-interactive
-    kubectl get deployment -n kube-system | grep kaito
-    ```
-
 ## Connect to your cluster
 
 1. Configure `kubectl` to connect to your cluster using the [az aks get-credentials][az-aks-get-credentials] command.
