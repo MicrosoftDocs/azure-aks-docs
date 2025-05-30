@@ -171,6 +171,8 @@ az aks nodepool add \
     --node-count 1
 ```
 
+---
+
 ## Connect to the cluster
 
 You use [kubectl][kubectl], the Kubernetes command-line client, to manage your Kubernetes clusters. If you use Azure Cloud Shell, `kubectl` is already installed. If you want to install and run `kubectl` locally, call the [az aks install-cli][az-aks-install-cli] command.
