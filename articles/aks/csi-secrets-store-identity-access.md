@@ -1,8 +1,8 @@
 ---
 title: Access Azure Key Vault with the CSI Driver Identity Provider
 description: Learn how to integrate the Azure Key Vault Provider for Secrets Store CSI Driver with your Azure credentials and user identities.
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 12/19/2023

@@ -2,12 +2,13 @@
 title: Secure pod traffic with network policies
 titleSuffix: Azure Kubernetes Service
 description: Learn how to secure traffic that flows in and out of pods by using Kubernetes network policies in Azure Kubernetes Service (AKS).
-ms.topic: how-to
-ms.custom: devx-track-azurecli
-ms.date: 03/28/2024
 author: schaffererin
 ms.author: schaffererin
-
+ms.date: 03/28/2024
+ms.topic: how-to
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
 ---
 
 # Secure traffic between pods by using network policies in AKS
@@ -71,6 +72,12 @@ In some rare cases, there's a chance of hitting a race condition that might resu
 If this race condition occurs for a node, the Azure NPM pod on that node enters a state where it can't update security rules, which might lead to unexpected connectivity for new connections to/from pods on the impacted node. To mitigate the issue, the Azure NPM pod automatically restarts ~15 seconds after entering this state. While Azure NPM is rebooting on the impacted node, it deletes all security rules, then reapplies security rules for all network policies. While all the security rules are being reapplied, there's a chance of temporary, unexpected connectivity for new connections to/from pods on the impacted node.
 
 To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with *four or less* `ipBlock` sections is less likely to hit the issue.
+
+### Filtering load balancer or service traffic
+
+Kubernetes service routing for both inbound and outbound services often involves rewriting the source and destination IPs on traffic that is being processed, including traffic that comes into the cluster from a LoadBalancer service. This rewrite behavior means that traffic being received from or sent to an external service may not be properly processed by network policies (see the [Kubernetes Network Policies documentation][kubernetes-network-policies] for more details).
+
+To restrict what sources can send traffic to a load balancer service, use the `spec.loadBalancerSourceRanges` to configure traffic blocking that is applied before any rewrites occur. More information is available in the [AKS standard load balancer](/azure/aks/load-balancer-standard#restrict-inbound-traffic-to-specific-ip-ranges) documentation.
 
 ## Before you begin
 

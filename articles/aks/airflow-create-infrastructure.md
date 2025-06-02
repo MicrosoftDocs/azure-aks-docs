@@ -2,10 +2,11 @@
 title: Create the infrastructure for deploying Apache Airflow on Azure Kubernetes Service (AKS)
 description: In this article, you create the infrastructure needed to deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 12/19/2024
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Create the infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)

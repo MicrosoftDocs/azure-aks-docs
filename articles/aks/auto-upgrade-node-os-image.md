@@ -11,6 +11,9 @@ ms.date: 04/06/2025
 
 # autoupgrade node OS images
 
+> [!div class=""nextstepaction""]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321852)
+
 AKS provides multiple autoupgrade channels dedicated to timely node-level OS security updates. This channel is different from cluster-level Kubernetes version upgrades and supersedes it.
 
 ## Interactions between node OS autoupgrade and cluster autoupgrade

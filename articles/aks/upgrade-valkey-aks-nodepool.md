@@ -2,10 +2,11 @@
 title: Validate Valkey resiliency during an AKS node pool upgrade
 description: In this article, you learn how to validate the resiliency of the Valkey cluster on Azure Kubernetes during a nodepool upgrade.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 10/28/2024
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
 # Validate Valkey resiliency during an AKS node pool upgrade

@@ -4,8 +4,8 @@ titleSuffix: Azure Kubernetes Service
 description: Learn about the default quotas, restricted node VM SKU sizes, and region availability of the Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 01/12/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 
@@ -74,6 +74,10 @@ When a container image is very large (1 TiB or more), kubelet might not be able 
 ## Region availability
 
 For the latest list of where you can deploy and run clusters, see [AKS region availability][region-availability].
+
+## Smart VM Defaults
+
+As of May 2025, AKS will automatically select the optimal default VM SKU based on available capacity and quota if the parameter is unspecified during deployment. This ensures that deployments are matched with the best possible SKU, enhancing performance and reliability while optimizing resource utilization. Previously, the default AKS VM SKU was Standard_DS2_V2, but there are now dynamic outcomes in default provisioning based on SKU availability. This affects all new VM create operations.
 
 ## Cluster configuration presets in the Azure portal
 

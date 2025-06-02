@@ -1,14 +1,15 @@
 ---
-title: Validate resiliency of MongoDB cluster on Azure Kubernetes Service (AKS)
+title: Load test MongoDB cluster on Azure Kubernetes Service (AKS)
 description: In this article, you learn how to test resiliency of MongoDB cluster on Azure Kubernetes Service (AKS) using sample client app.
 ms.topic: how-to
-ms.custom: azure-kubernetes-service
+ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
 author: schaffererin
 ms.author: schaffererin
+ms.custom: 'stateful-workloads'
 ---
 
-# Validate resiliency of MongoDB cluster on Azure Kubernetes Service (AKS)
+# Load Test MongoDB cluster on Azure Kubernetes Service (AKS)
 
 After deploying the MongoDB cluster on AKS using the Percona Operator for MongoDB and installing `mongo-express` on your cluster to interact with MongoDB, you test the resiliency of the MongoDB cluster in several scenarios. This tutorial builds upon the MongoDB cluster deployment and MongoDB cluster validation covered in previous guides.
 

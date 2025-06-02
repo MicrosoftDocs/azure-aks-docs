@@ -1,10 +1,12 @@
 ---
-title: Use Key Management Service etcd encryption in Azure Kubernetes Service 
+title: Use Key Management Service etcd encryption in Azure Kubernetes Service
 description: Learn how to use Key Management Service (KMS) etcd encryption with Azure Kubernetes Service (AKS).
-ms.topic: how-to
-ms.subservice: aks-security
-ms.custom: devx-track-azurecli
 ms.date: 09/26/2024
+ms.subservice: aks-security
+ms.topic: how-to
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
 ---
 
 # Add Key Management Service etcd encryption to an Azure Kubernetes Service cluster
@@ -181,7 +183,7 @@ To turn on KMS etcd encryption for an existing cluster, use the [az aks update][
 az aks update --name myAKSCluster --resource-group MyResourceGroup --enable-azure-keyvault-kms --azure-keyvault-kms-key-vault-network-access "Public" --azure-keyvault-kms-key-id $KEY_ID
 ```
 
-Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are no longer encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin.
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -202,7 +204,7 @@ After you change the key ID (including changing either the key name or the key v
 az aks update --name myAKSCluster --resource-group MyResourceGroup  --enable-azure-keyvault-kms --azure-keyvault-kms-key-vault-network-access "Public" --azure-keyvault-kms-key-id $NEW_KEY_ID 
 ```
 
-Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are still encrypted with the previous key. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are still encrypted with the previous key. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin.
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -317,7 +319,7 @@ To turn on KMS etcd encryption on an existing cluster that has a private key vau
 az aks update --name myAKSCluster --resource-group MyResourceGroup --enable-azure-keyvault-kms --azure-keyvault-kms-key-id $KEY_ID --azure-keyvault-kms-key-vault-network-access "Private" --azure-keyvault-kms-key-vault-resource-id $KEYVAULT_RESOURCE_ID
 ```
 
-Use the following command to update all secrets. If you don't run this command, secrets that were created earlier aren't encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+Use the following command to update all secrets. If you don't run this command, secrets that were created earlier aren't encrypted. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin.
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -338,7 +340,7 @@ After you change the key ID (including the key name and the key version), you ca
 az aks update --name myAKSCluster --resource-group MyResourceGroup  --enable-azure-keyvault-kms --azure-keyvault-kms-key-id $NewKEY_ID --azure-keyvault-kms-key-vault-network-access "Private" --azure-keyvault-kms-key-vault-resource-id $KEYVAULT_RESOURCE_ID
 ```
 
-Use the following command to update all secrets. If you don't update all secrets, secrets that were created earlier are encrypted with the previous key. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+Use the following command to update all secrets. If you don't update all secrets, secrets that were created earlier are encrypted with the previous key. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin.
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -359,7 +361,7 @@ Turn off KMS on an existing cluster and release the key vault:
 az aks update --name myAKSCluster --resource-group MyResourceGroup --disable-azure-keyvault-kms
 ```
 
-Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are still encrypted with the previous key. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are still encrypted with the previous key. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin.
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -402,7 +404,7 @@ If the results confirm KMS that is on, run the following command to turn off KMS
 az aks update --name myAKSCluster --resource-group MyResourceGroup --disable-azure-keyvault-kms
 ```
 
-Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are still encrypted with the previous key, and the encrypt and decrypt permissions on the key vault are still required. For larger clusters, you might want to subdivide the secrets by namespace or create an update script.
+Use the following command to update all secrets. If you don't run this command, secrets that were created earlier are still encrypted with the previous key, and the encrypt and decrypt permissions on the key vault are still required. For larger clusters, you might want to subdivide the secrets by namespace or create an update script. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin.
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -
@@ -432,7 +434,7 @@ az aks update --name myAKSCluster --resource-group MyResourceGroup --disable-azu
 
 #### Migrate storage
 
-To update all secrets, use the `kubectl get secrets` command with the `--all-namespaces` argument:
+To update all secrets, use the `kubectl get secrets` command with the `--all-namespaces` argument. If the above command to update KMS fails, please still run the below command to avoid unexpected state for KMS plugin:
 
 ```azurecli-interactive
 kubectl get secrets --all-namespaces -o json | kubectl replace -f -

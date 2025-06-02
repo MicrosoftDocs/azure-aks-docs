@@ -191,7 +191,7 @@
               displayName: outbound, egress, private
         - name: Advanced Container Networking Services
           items:
-            - name: Advanced Container Networking Services (ACNS) overview
+            - name: Advanced Container Networking Services overview
               href: advanced-container-networking-services-overview.md
             - name: Container Network Observability
               items:
@@ -293,6 +293,8 @@
       items:
         - name: Proactive monitoring
           href: best-practices-monitoring-proactive.md
+        - name: Advanced Container Networking Services observability guide
+          href: container-network-observability-guide.md
     - name: Application development
       items:
         - name: Resource management
@@ -357,6 +359,8 @@
           items:
             - name: Create a private cluster
               href: private-clusters.md
+            - name: Access a Private API Server VNet Integration Cluster from Another Virtual Network
+              href: private-apiserver-vnet-integration-cluster.md
             - name: Access a private cluster remotely
               href: access-private-cluster.md
         - name: Integration
@@ -513,6 +517,8 @@
               href: gpu-multi-instance.md
             - name: Monitor GPU metrics
               href: monitor-gpu-metrics.md
+            - name: Autoscale GPU workloads with KEDA
+              href: autoscale-gpu-workloads-with-keda.md
             - name: Set up NVIDIA GPU Operator
               href: nvidia-gpu-operator.md
         - name: Vertical Pod Autoscaler
@@ -932,6 +938,10 @@
                       href: istio-deploy-ingress.md
                     - name: Secure ingress gateways
                       href: istio-secure-gateway.md
+                - name: Egress
+                  items:
+                    - name: Deploy egress gateways (preview)
+                      href: istio-deploy-egress.md
             - name: Security
               items:
                 - name: Plug-in CA certificates
@@ -1140,7 +1150,7 @@
           href: devops-pipeline.md
         - name: GitHub Actions for Kubernetes
           href: kubernetes-action.md
-        - name: Configure automated deployments
+        - name: Automate app deployment to AKS with CI/CD
           href: automated-deployments.md
         - name: Jenkins continuous deployment
           href: /azure/developer/jenkins/deploy-from-github-to-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
@@ -1212,7 +1222,7 @@
     - name: Support policies
       href: support-policies.md
     - name: Azure Roadmap
-      href: https://azure.microsoft.com/roadmap/
+      href: https://azure.microsoft.com/updates/
     - name: AKS Roadmap
       href: https://github.com/Azure/AKS/projects/1
     - name: Stack Overflow
