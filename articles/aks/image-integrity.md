@@ -123,7 +123,7 @@ In this article, we use a self-signed CA cert from the official Ratify documenta
 
     ```YAML
     apiVersion: config.ratify.deislabs.io/v1beta1
-    kind: CertificateStore
+    kind: KeyManagementProvider
     metadata:
       name: certstore-inline
     spec:
