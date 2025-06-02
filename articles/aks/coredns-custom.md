@@ -353,14 +353,14 @@ Before you begin, follow the steps in the [Enable DNS query logging](#enable-dns
 
      If you see the same client IP and port repeatedly in only one pod's logs, this confirms a traffic imbalance.
 
-Once you root cause your imbalance to either UDP source port reuse or application-level connection pooling, you can take the following mitigation actions:
+If you notice this imbalance, your application could be reusing UDP source ports or pooling their connections. Based on the root cause, you can take the following mitigation actions:
 
 - **Caused by UDP source port reuse:**
 
-   If UDP source port reuse is the issue, update your applications or DNS clients to randomize source ports for each DNS query, which helps distribute requests more evenly across pods.
+   UDP source port reuse occurs when a client application sends multiple DNS queries from the same UDP source port. If this is the issue, update your applications or DNS clients to randomize source ports for each DNS query, which helps distribute requests more evenly across pods.
 
 - **Caused by connection pooling:**  
-  If connection pooling is the cause, adjust your application's DNS connection handling by reducing connection TTLs (Time to Live) or randomizing connection creation, ensuring queries are not concentrated on a single CoreDNS pod. 
+   Connection pools are mechanisms used by applications to reuse existing network connections instead of creating a new connection for each request. While this improves efficiency, it can result in all DNS queries from an application being sent over the same connection, and thus routed to the same CoreDNS pod. To mitigate this, adjust your application's DNS connection handling by reducing connection TTLs (Time to Live) or randomizing connection creation, ensuring queries are not concentrated on a single CoreDNS pod.
 
 These changes can help achieve a more balanced DNS query distribution and reduce the risk of overloading individual pods.
 
