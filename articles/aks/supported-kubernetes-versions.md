@@ -1,10 +1,12 @@
 ---
 title: Supported Kubernetes versions in Azure Kubernetes Service (AKS).
 description: Learn the Kubernetes version support policy and lifecycle of clusters in Azure Kubernetes Service (AKS).
-ms.topic: concept-article
-ms.date: 10/30/2024
 author: davidsmatlak
 ms.author: davidsmatlak
+ms.date: 10/30/2024
+ms.topic: concept-article
+ms.custom:
+  - build-2025
 ---
 
 # Supported Kubernetes versions in Azure Kubernetes Service (AKS)
