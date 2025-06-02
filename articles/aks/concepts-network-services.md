@@ -37,7 +37,7 @@ The following Service types are available in AKS: [`ClusterIP`](#clusterip), [`N
 
 For HTTP load balancing of inbound traffic, you can also use an [Ingress controller][ingress-controllers].
 
-You can also use the `LoadBalancer` type to create multiple public load balancers in a single AKS cluster. This is useful for large clusters or port-heavy workloads that can quickly exhaust the limits of a single load balancer. For more information, see [Use multiple public load balancers in Azure Kubernetes Service (preview)](use-multiple-standard-loadbalancer.md).
+You can also use the `LoadBalancer` type to create multiple public load balancers in a single AKS cluster. This is useful for large clusters or port-heavy workloads that can quickly exhaust the limits of a single load balancer. For more information, see [Use multiple public load balancers in Azure Kubernetes Service (preview)](use-multiple-standard-load-balancer.md).
 
 ## ExternalName
 
