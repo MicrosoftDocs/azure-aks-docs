@@ -48,7 +48,7 @@ Install the `aks-preview` extension if you're using Azure CLI. You must use `aks
     az extension update --name aks-preview
     ```
 
-### Enable and Configure Static Egress Gateway
+### Enable and configure Static Egress Gateway
 
 Follow the instructions in the [Static Egress Gateway documentation][static-egress-gateway] to enable Static Egress Gateway on your cluster, create a node pool of mode `gateway`, and create a `StaticGatewayConfiguration` resource.
 
@@ -516,6 +516,7 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[aks-system-nodes]: /azure/aks/use-system-pools
 [static-egress-gateway]: configure-static-egress-gateway.md
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
 [shared-mesh-config]: istio-meshconfig.md
