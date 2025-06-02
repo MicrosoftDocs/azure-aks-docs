@@ -11,7 +11,7 @@ ms.date: 05/28/2025
 
 # Use Advanced Container Networking Services for diagnosing and resolving network issues
 
-This guide helps you navigate [Advanced Container Networking Services](./container-network-observability-concepts.md) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively.
+This guide helps you navigate [Advanced Container Networking Services](./advanced-container-networking-services-overview.md#container-network-observability) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively.
 
 ## Overview of Advanced Container Networking Services dashboards
 

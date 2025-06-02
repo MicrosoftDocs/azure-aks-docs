@@ -83,11 +83,6 @@ Users are able to see three major components in these dashboards:
 
     :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Snapshot of top namespaces and pod." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
 
-- Access Through Bring your Own(BYO) Grafana instances-
-   Import pre-configured dashboards from the gallery into your grafana instances.For configuring BYO Grafana for Container Network Logs, refer Setting up BYO Managed Grafana with Advanced Container Networking Services, refer [Setting up BYO Grfana](./how-to-apply-containernetworklogs.md#visualization-using-byo-grafana)
-
-
-
 ## On-demand
 
 Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without requiring prior configuration or persistent storage using Hubble CLI and Hubble UI.
