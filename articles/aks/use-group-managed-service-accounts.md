@@ -401,7 +401,7 @@ If your pod doesn't start after running the `kubectl get pods --watch`  command 
 
 If you see this error message, it may indicate that DNS queries are failing due to blocked TCP fallback.
 
-When gMSA is enabled, the system performs DNS lookups to locate domain controllers (e.g., for _ldap._tcp.dc._msdcs.<domain>). In large Active Directory environments, these responses can exceed the 512-byte UDP limit. When this happens, the DNS server sets the truncated (TC) flag, prompting CoreDNS to retry the query over TCP, as required by [RFC5966](https://datatracker.ietf.org/doc/html/rfc5966). This fallback to TCP is essential for completing the authentication flow. If TCP traffic on port 53 is blocked by NSG or firewall rules, the DNS resolution, and therefore gMSA login, will fail.
+When gMSA is enabled, the system performs DNS lookups to locate domain controllers (e.g., for _ldap._tcp.dc._msdcs.<domain name>). In large Active Directory environments, these responses can exceed the 512-byte UDP limit. When this happens, the DNS server sets the truncated (TC) flag, prompting CoreDNS to retry the query over TCP, as required by [RFC5966](https://datatracker.ietf.org/doc/html/rfc5966). This fallback to TCP is essential for completing the authentication flow. If TCP traffic on port 53 is blocked by NSG or firewall rules, the DNS resolution, and therefore gMSA login, will fail.
 
 To verify if this is occurring in your environment, enable [CoreDNS query logging](./coredns-custom.md) and use the `kubectl logs --namespace kube-system -l k8s-app=kube-dns` command to view CoreDNS logs.
 
