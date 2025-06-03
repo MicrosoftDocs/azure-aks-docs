@@ -399,6 +399,24 @@ If you receive a connection timeout when trying to load the page, verify the sam
 
 If your pod doesn't start after running the `kubectl get pods --watch`  command and waiting several minutes, use the `kubectl describe pod POD_NAME` command. If you see a *winapi error* in the pod events, it's likely an error in your GMSA cred spec configuration. Verify all the replacement values in *gmsa-spec.yaml* are correct, rerun `kubectl apply -f gmsa-spec.yaml`, and redeploy the sample application.
 
+### Container Credential Guard event logs show *"The directory service is not available" errors*
+
+If you see this error message, it may indicate that DNS queries are failing due to blocked TCP fallback.
+
+When gMSA is enabled, the system performs DNS lookups to locate domain controllers (e.g., for `_ldap._tcp.dc._msdcs.<domain>`). In large Active Directory environments, these responses can exceed the 512-byte UDP limit. When this happens, the DNS server sets the truncated (TC) flag, prompting CoreDNS to retry the query over TCP, as required by [RFC5966](https://datatracker.ietf.org/doc/html/rfc5966). This fallback to TCP is essential for completing the authentication flow. If TCP traffic on port 53 is blocked by NSG or firewall rules, the DNS resolution, and therefore gMSA login, will fail.
+
+To verify if this is occurring in your environment, enable [CoreDNS query logging](./coredns-custom.md) and use the `kubectl logs --namespace kube-system -l k8s-app=kube-dns` command to view CoreDNS logs.
+
+Look for patterns like this, where UDP responses are truncated and TCP retries fail:
+
+```
+[INFO] 10.123.123.200:62380 - 2 "ANY IN _ldap._tcp.dc._msdcs.contoso.com. udp 49 false 512" NOERROR qr,aa,tc,rd,ra 1357 0.003399698s
+[INFO] 10.123.123.200:64233 - 2 "ANY IN _ldap._tcp.dc._msdcs.contoso.com. tcp 49 false 65535" - - 0 6.009670817s
+[ERROR] plugin/errors: 2 _ldap._tcp.dc._msdcs.contoso.com. ANY: read tcp 10.123.123.11:55216-><DNS server IP>:53: i/o timeout
+```
+
+To resolve this, we recommend updating your NSG or firewall rules to explicitly allow DNS traffic over TCP on port 53. This will ensure that large DNS responses can be successfully retried over TCP, enabling the authentication flow to complete as expected.
+
 ## Next steps
 
 For more information, see [Windows containers considerations with Azure Kubernetes Service (AKS)](./windows-vs-linux-containers.md).
