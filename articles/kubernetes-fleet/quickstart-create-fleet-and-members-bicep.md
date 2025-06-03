@@ -137,6 +137,7 @@ Deploy the Bicep file with service principal object ID from first step:
     New-AzResourceGroup -Name myResourceGroup -Location eastus
     New-AzResourceGroupDeployment -ResourceGroupName myResourceGroup -TemplateFile ./main.bicep -fleets_sp_object_id=<fleet-sp-object-id>"
     ```
+---
 
 ## Next steps
 

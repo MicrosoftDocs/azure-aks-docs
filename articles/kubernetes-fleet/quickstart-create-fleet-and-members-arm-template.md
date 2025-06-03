@@ -122,6 +122,7 @@ Deploy the ARM template with service principal object ID from first step:
 
 3. Select **Review + Create** > **Create**.
 
+---
 
 ## Next steps
 
