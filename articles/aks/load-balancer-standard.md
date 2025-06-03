@@ -427,7 +427,7 @@ The following annotations are supported for Kubernetes services with type `LoadB
 | `service.beta.kubernetes.io/azure-load-balancer-ipv4`              | IPv4 address                        | Specify the IPv4 address to assign to the load balancer.                                                                                                                                                     |
 | `service.beta.kubernetes.io/azure-load-balancer-ipv6`              | IPv6 address                        | Specify the IPv6 address to assign to the load balancer.                                                                                                                                                     |
 
-### Customize Allowed IP Ranges(Preview)
+### Customize Allowed IP Ranges (Preview)
 
 You can use the `azure-allowed-service-tags` and `azure-allowed-ip-ranges` annotations to combine CIDR blocks and Azure Service Tags on the LoadBalancer Service. Add `service.beta.kubernetes.io/azure-allowed-ip-ranges` with a comma-separated list of IP prefixes, and add `service.beta.kubernetes.io/azure-allowed-service-tags` with one or more Azure Service Tags. The AKS cloud provider will merge both values into a single network security group (NSG) rule, so traffic is filtered centrally at the NSG giving you a single, NSG-centric control plane for both IP addresses and service tags.
 
