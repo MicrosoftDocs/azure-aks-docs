@@ -77,6 +77,7 @@ Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
 
 - `--os-sku Ubuntu2404` is supported in kubernetes version 1.32 to 1.38. 
 - `--os-sku Ubuntu2404` is intended for testing the new os version without upgrading your kubernetes version. You need to update your OS SKU to a supported OS option before upgrading your kubernetes version to 1.39+.
+- You need the Azure CLI version 18.0.0b5 or later installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -192,6 +193,9 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [node-images]: ./node-images.md
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
 [az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
+[install-azure-cli]:  /cli/azure/install-azure-cli
+[az-feature-register]: /cli/azure/feature#az-feature-register
+[az-provider-register]: /cli/azure/provider#az-provider-register
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases
