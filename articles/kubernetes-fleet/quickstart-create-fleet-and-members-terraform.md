@@ -72,6 +72,7 @@ To create a public Kubernetes Fleet resource with a hub cluster, implement the f
 
 Private hub cluster fleet can not be created using Terraform yet.
 
+
 ## Next steps
 
 * [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).

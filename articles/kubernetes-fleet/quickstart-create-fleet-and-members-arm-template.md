@@ -91,37 +91,37 @@ When creating a private access mode Kubernetes Fleet resource with a hub cluster
 - When using an AKS private cluster, you have the ability to configure fully qualified domain names (FQDNs) and FQDN subdomains. This functionality doesn't apply to the private access mode type hub cluster.
 - Private access mode requires a `Network Contributor` role assignment on the agent subnet for Fleet's first party service principal. This is **NOT** needed when creating private fleet using the `az fleet create` command because the CLI automatically creates the role assignment.
 
-1. Fetch Fleet's service principal object ID:
+##### Fetch Fleet's service principal object ID:
 
-    ```azurecli-interactive
-    az ad sp list --display-name "Azure Kubernetes Service - Fleet RP" --query "[].{id:id}" --output tsv
-    ```
+ ```azurecli-interactive
+az ad sp list --display-name "Azure Kubernetes Service - Fleet RP" --query "[].{id:id}" --output tsv
+```
 
-    ```output
-    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-    ```
+```output
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
 
-2. Review the following ARM template with service principal object ID from **Step 1**:
+##### Review the template
 
-    ##### Review the template
-    :::code language="json" source="~/quickstart-templates/quickstarts/microsoft.kubernetes/fleet-hubful-private/azuredeploy.json":::
+:::code language="json" source="~/quickstart-templates/quickstarts/microsoft.kubernetes/fleet-hubful-private/azuredeploy.json":::
     
-    #####  Deploy the template
-    
-    1. Select **Deploy to Azure** to sign in and open a template.
-    
-        :::image type="content" source="~/reusable-content/ce-skilling/azure/media/template-deployments/deploy-to-azure-button.svg" alt-text="Button to deploy the Resource Manager template to Azure." border="false" link="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2Fquickstarts%2Fmicrosoft.kubernetes%2Ffleet-hubful-private%2Fazuredeploy.json":::
-    
-    2. On the **Basics** page, configure the following template parameters:
-      - **Subscription**: Select an Azure subscription.
-      - **Resource group**: Select **Create new**. Enter a unique name for the resource group, such as *myResourceGroup*, then select **OK**.
-      - **Location**: Select a location, such as **East US**.
-      - **Fleet Name**: Enter a unique name for the Fleet, such as *myFleet*.
-      - **Vnet Name**: Enter a unique name for the virtual network, such as *myVnet*
-      - **Fleet SP Object ID**: Enter the service principal object ID from **Step 1** output.
+#####  Deploy the template
+Deploy the ARM template with service principal object ID from first step:
 
-    3. Select **Review + Create** > **Create**.
     
+1. Select **Deploy to Azure** to sign in and open a template.
+:::image type="content" source="~/reusable-content/ce-skilling/azure/media/template-deployments/deploy-to-azure-button.svg" alt-text="Button to deploy the Resource Manager template to Azure." border="false" link="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fazure-quickstart-templates%2Fmaster%2Fquickstarts%2Fmicrosoft.kubernetes%2Ffleet-hubful-private%2Fazuredeploy.json":::
+    
+2. On the **Basics** page, configure the following template parameters:
+    - **Subscription**: Select an Azure subscription.
+    - **Resource group**: Select **Create new**. Enter a unique name for the resource group, such as *myResourceGroup*, then select **OK**.
+    - **Location**: Select a location, such as **East US**.
+    - **Fleet Name**: Enter a unique name for the Fleet, such as *myFleet*.
+    - **Vnet Name**: Enter a unique name for the virtual network, such as *myVnet*
+    - **Fleet SP Object ID**: Enter the service principal object ID from **Step 1** output.
+
+3. Select **Review + Create** > **Create**.
+
 
 ## Next steps
 

@@ -102,41 +102,41 @@ When creating a private access mode Kubernetes Fleet resource with a hub cluster
 - When using an AKS private cluster, you have the ability to configure fully qualified domain names (FQDNs) and FQDN subdomains. This functionality doesn't apply to the private access mode type hub cluster.
 - Private access mode requires a `Network Contributor` role assignment on the agent subnet for Fleet's first party service principal. This is **NOT** needed when creating private fleet using the `az fleet create` command because the CLI automatically creates the role assignment.
 
-1. Fetch Fleet's service principal object ID:
+##### Fetch Fleet's service principal object ID:
 
-    ```azurecli-interactive
-    az ad sp list --display-name "Azure Kubernetes Service - Fleet RP" --query
+```azurecli-interactive
+az ad sp list --display-name "Azure Kubernetes Service - Fleet RP" --query
+```
+
+```output
+xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+
+##### Review Bicep
+:::code language="bicep" source="~/quickstart-templates/quickstarts/microsoft.kubernetes/aks/fleet/private-hubful-fleet-deploy.bicep":::
+
+##### Deploy the Bicep file using either Azure CLI or Azure PowerShell.
+Deploy the Bicep file with service principal object ID from first step:
+
+    
+1. Save the Bicep file as **main.bicep** to your local computer.
+    
+    
+2. Deploy the Bicep file using either Azure CLI or Azure PowerShell.
+        
+    ### [Azure CLI](#tab/azure-cli)
+        
+    ```azurecli
+    az deployment group create --resource-group myResourceGroup --template-file main.bicep --parameters fleets_sp_object_id=<fleet-sp-object-id>
     ```
-
-    ```output
-    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        
+    ### [Azure PowerShell](#tab/azure-powershell)
+        
+    ```azurepowershell
+    New-AzResourceGroup -Name myResourceGroup -Location eastus
+    New-AzResourceGroupDeployment -ResourceGroupName myResourceGroup -TemplateFile ./main.bicep -fleets_sp_object_id=<fleet-sp-object-id>"
     ```
-
-2. Deploy the Bicep with service principal object ID from Step 1:
-
-    ##### Review Bicep
-    :::code language="bicep" source="~/quickstart-templates/quickstarts/microsoft.kubernetes/aks/fleet/private-hubful-fleet-deploy.bicep":::
-
-    ##### Deploy the Bicep file using either Azure CLI or Azure PowerShell.
-    
-      1. Save the Bicep file as **main.bicep** to your local computer.
-    
-    
-      2. Deploy the Bicep file using either Azure CLI or Azure PowerShell.
-        
-          ### [Azure CLI](#tab/azure-cli)
-        
-          ```azurecli
-          az deployment group create --resource-group myResourceGroup --template-file main.bicep --parameters fleets_sp_object_id=<fleet-sp-object-id>
-          ```
-        
-          ### [Azure PowerShell](#tab/azure-powershell)
-        
-          ```azurepowershell
-          New-AzResourceGroup -Name myResourceGroup -Location eastus
-          New-AzResourceGroupDeployment -ResourceGroupName myResourceGroup -TemplateFile ./main.bicep -fleets_sp_object_id=<fleet-sp-object-id>"
-          ```
-    
 
 ## Next steps
 
