@@ -43,7 +43,7 @@ To learn more, see [Metrics Overview](container-network-observability-metrics.md
 
 Container Network Logs provides detailed insights into traffic within and across clusters by capturing metadata like source/destination IPs, ports, protocols, and flow direction. These logs enable monitoring network behavior, troubleshooting connectivity issues, and enforcing security policies. Persistent and real-time logging options ensure comprehensive, actionable network observability.
 
-To learn more, see [Container Network Logs Overview](container-network-observaility-network-logs.md) documentation.
+To learn more, see [Container Network Logs Overview](container-network-observaility-logs.md) documentation.
 
 ## Container Network Security
 
@@ -244,8 +244,6 @@ az aks update \
 
 ### Disable Container Network Security 
 
-#### [**Cilium**](#tab/cilium)
-
 To disable Container Network Security features without affecting other Advanced Container Networking Services features, use `--enable-acns`  and  `--disable-acns-security`
 
 ```azurecli-interactive
@@ -255,11 +253,6 @@ az aks update \
     --enable-acns \
     --disable-acns-security
 ```
-
-#### [**Non-Cilium**](#tab/non-Cilium)
-
-Container Network Security is currently not supported on non-Cilium clusters. To leverage this feature and enable Azure CNI powered by Cilium, please refer to [Azure CNI powered by Cilium documentation](./azure-cni-powered-by-cilium.md)
-
 ---
 
 ## Next steps
