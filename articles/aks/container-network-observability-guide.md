@@ -87,7 +87,7 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
 
     In the following example output, you can see the query is getting refused:
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png" alt-text="Diagram of one of the command for hubble CLI. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png" alt-text="Diagram of one of the commands for hubble CLI. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png":::
 
     Hubble logs provide detailed insights into DNS queries and their responses, which can help diagnosing and troubleshooting DNS-related issues. Each log entry includes information such as the query type (for example, *A* or *AAAA*), the queried domain name, the DNS response code (for example, *Query Refused*, *Non-Existent Domain*, or *Server Failure*), and the source and destination of the DNS request.
 

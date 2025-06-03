@@ -13,7 +13,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 # Set up Container Network Logs with Advanced Container Networking Services
 
 This document is designed to provide clear steps for configuring and utilizing Container Network Logs feature using Advanced Container Networking Services. These logs offer persistent network flow monitoring tailored to enhance visibility within containerized environments. By capturing Container Network Logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate Container Network Logs for your system. For more information about Container Network Logs Feature, see 
- [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)
+ [Overview of Container Network Logs](container-network-observaility-logs.md)
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 * Container Network Log with Always-on mode works only for Cilium data planes. 
 
-* Conatiner Network logs with On-demand mode works for both cilium and non-cilium data planes. 
+* Container Network logs with On-demand mode works for both Cilium and non-Cilium data planes. 
 
 * If existing cluster is <= 1.31, upgrade the cluster to the latest available Kubernetes version.
 
@@ -32,7 +32,7 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
 
- The minimum version of the aks-preview Azure CLI extension is `14.0.0b7`
+ The minimum version of the aks-preview Azure CLI extension is `14.0.0b7`.
 
 ```azurecli-interactive
 # Install the aks-preview extension
@@ -67,8 +67,6 @@ The `az aks create` command with the Advanced Container Networking Services flag
 
 * **Container Network Security:** Offers security features like Fully Qualified Domain filtering(FQDN). To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
-#### [**Cilium**](#tab/cilium)
-
 > [!NOTE]
 > Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 
@@ -94,7 +92,7 @@ az aks create \
 ```
 ---
 #### Configuring Custom Resource for Log filtering  
-Configuring Container Network Logs in always-on mode requires defining specific Custom Resources to set filters for log collection. When Advanced Container Networking Services is enabled and at least one Custom Resource is defined, logs are collected and stored on the host node at /var/log/acns/hubble/events.log. To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously. If no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
+Configuring Container Network Logs in always-on mode requires defining specific Custom Resources to set filters for log collection. When Advanced Container Networking Services is enabled and at least one Custom Resource is defined, logs are collected and stored on the host node at "/var/log/acns/hubble/events.log". To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously. If no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
 This sample definition of Custom resource demonstrates how to configure Retina network flow logs:
 #### CR Template 
 ```azurecli-interactive
@@ -151,11 +149,11 @@ Following is the description of fields in this Custom resource definition.
 |----------------------------------|------------------|-----------------------------------------------------------------------------------------------------------------------------------------|--------------|
 | `includefilters`                 | Array of Objects | A list of filters defining network flows to include. Each filter specifies the source, destination, protocol, and other matching criteria. | Mandatory    |
 | `includefilters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
-| `includefilters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`.  As It's an optional parameter, if it is not specified , logs will all protocols would be included.                                                      | Optional     |
-| `includefilters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`.  As It's an optional parameter, if it is not specified , logs will all verdicts would be included.                                                        | Optional     |
+| `includefilters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`.  As It's an optional parameter, if it isn't specified, logs with all protocols would be included.                                                      | Optional     |
+| `includefilters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`.  As It's an optional parameter, if it isn't specified, logs with all verdicts would be included.                                                        | Optional     |
 | `includefilters.from`            | Object           | Specifies the source of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                           | Mandatory    |
 | `includefilters.from.ip`         | []string | It can be single IP or CIDR.                                                                                                         | Optional     |
-| `includefilters.from.labelSelector` | Object           | A Label Selector is a mechanism to filter and query resources based on labels, allowing users to identify specific subsets of resources.A label selector can include two components: matchLabels and matchExpressions. Use matchLabels for straightforward matching by specifying a key-value pair (e.g., {"app": "frontend"}). For more advanced criteria, use matchExpressions, where you define a label key, an operator (such as In, NotIn, Exists, or DoesNotExist), and an optional list of values. Ensure that the conditions in both matchLabels and matchExpressions are met, as they are logically ANDed. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
+| `includefilters.from.labelSelector` | Object           | A Label Selector is a mechanism to filter and query resources based on labels, allowing users to identify specific subsets of resources.A label selector can include two components: matchLabels and matchExpressions. Use matchLabels for straightforward matching by specifying a key-value pair (for example, {"app": "frontend"}). For more advanced criteria, use matchExpressions, where you define a label key, an operator (such as In, NotIn, Exists, or DoesNotExist), and an optional list of values. Ensure that the conditions in both matchLabels and matchExpressions are met, as they're logically ANDed. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
 | `includefilters.from.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source. name should match regex pattern ^.+$                                              | Optional     |
 | `includefilters.to`              | Object           | Specifies the destination of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                      | Mandatory    |
 | `includefilters.to.ip`           | []string | It can be single IP or CIDR.         | Optional     |
@@ -167,7 +165,7 @@ Following is the description of fields in this Custom resource definition.
 ```azurecli-interactive
 kubectl apply -f <crd.yaml>
 ```
-Logs stored Locally on host nodes are temporary, as the host or node itself isn't a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis, it's recommended to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
+Logs stored Locally on host nodes are temporary, as the host or node itself isn't a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis,  recommendation is to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
 
 #### Configuring Azure Monitor agent to scrape logs in Azure log analytics workspace for new cluster
 
@@ -178,7 +176,7 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
 
 # Enable azure monitor with high log scale mode
   az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
-# Update the aks cluster with enable retina flow log flag 
+# Update the aks cluster with enable retina flow log flag. 
   az aks update --enable-acns \
     --enable-retina-flow-logs \
     -g $RESOURCE_GROUP \
@@ -188,7 +186,7 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
 #### Configuring existing cluster to store logs at Azure Log analytics workspace
 
 To enable the container network logs on existing cluster, follow these steps:
-1. Check if monitoring addon is already enabled on that cluster with following command
+1. Check if monitoring addon is already enabled on that cluster with following command.
    ```azurecli-interactive
     az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
    ```
@@ -196,9 +194,9 @@ To enable the container network logs on existing cluster, follow these steps:
     ```azurecli-interactive
     az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
    ```
-   Reason for disabling is - it might already have monitoring enabled but not the high scale. For more information, refer [High Scale mode](/azure/azure-monitor/containers/container-insights-high-scale)
+   The reason for disabling is - it might already have monitoring enabled but not the high scale. For more information, refer to [High Scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
 
-1. Enable Azure monitor with high log scale mode
+1. Enable Azure monitor with high log scale mode.
      ```azurecli-interactive
     az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
    ```
@@ -245,7 +243,7 @@ Validate if CRD of type RetinaNetworkFlowLog is applied
 ```azurecli-interactive
    kubectl describe retinanetworkflowlogs <cr-name>
 ```
-Expect to see a Spec node that contains 'Includefilters' & Status node. Status.State should be 'CONFIGURED' not 'FAILED'
+Expect to see a Spec node that contains 'Include filters' & Status node. Status. State should be 'CONFIGURED' not 'FAILED'
 ```shell
 Spec:
   Includefilters:
@@ -266,8 +264,6 @@ Status:
 ``` 
 
 ### Azure managed Prometheus and Grafana 
-
-Skip this Section if using BYO Prometheus and Grafana
 
 Use the following example to install and enable Prometheus and Grafana for your AKS cluster.
 
@@ -337,7 +333,7 @@ az aks update \
 
 User can visualize Container Network Flow log for analysis with several prebuilt Grafana dashboards. Customers have several options to access these dashboards
 
-#### Visualization in Azure Managed Grafana instances
+#### Visualization using Azure Managed Grafana
 
 1. Make sure the Azure Monitor pods are running using the `kubectl get pods` command.
 
@@ -356,22 +352,100 @@ User can visualize Container Network Flow log for analysis with several prebuilt
     ama-metrics-win-node-tkrm8            2/2     Running   0 (26h ago)   26h
     ```
 2. To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
-    1. **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
-:::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Snapshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
+    - **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
+    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard.png" alt-text="Screenshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard.png":::
 
-    2. **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
-:::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Snapshot of Flow log (external) Grafana dashboard in grafana instance.." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
+    - **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
+    :::image type="content" source="./media/advanced-container-networking-services/cnl-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/cnl-dashboard-external.png":::
 
-    For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-containernetworklogs.md)       
+        For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-logs.md)       
 
-#### Visualization of Container Network Logs in Azure portal. 
+#### Visualization of container network logs in azure portal. 
 
-User can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
-  :::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Snapshot of Container Network Logs in Azure log analytics.":::
+The user can visualize, query, and analyze Flow logs in Azure portal in Azure log analytics workspace of their cluster:
+  :::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Screenshot of Container Network Logs in Azure log analytics." lightbox=./media/advanced-container-networking-services/azure-log-analytics.png":::
 
 ## Configuring on-demand mode
 
-On-demand mode for network flows work with both cilium and Non-cilium Data planes.
+On-demand mode for network flows work with both Cilium and Non-Cilium Data planes.
+To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
+
+The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompass:
+* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
+
+* **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+
+#### [**Cilium**](#tab/cilium)
+
+> [!NOTE]
+> Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
+
+```azurecli-interactive
+# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
+export CLUSTER_NAME="<aks-cluster-name>"
+
+# Create an AKS cluster
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --generate-ssh-keys \
+    --location eastus \
+    --max-pods 250 \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --network-dataplane cilium \
+    --node-count 2 \
+    --pod-cidr 192.168.0.0/16 \
+    --kubernetes-version 1.29 \
+    --enable-acns
+```
+
+#### [**Non-Cilium**](#tab/non-cilium)
+
+> [!NOTE]
+> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature is not available for Non-cilium clusters
+
+```azurecli-interactive
+# Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
+export CLUSTER_NAME="<aks-cluster-name>"
+
+# Create an AKS cluster
+az aks create \
+    --name $CLUSTER_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --generate-ssh-keys \
+    --network-plugin azure \
+    --network-plugin-mode overlay \
+    --pod-cidr 192.168.0.0/16 \
+    --enable-acns
+```
+
+---
+
+### Enable Advanced Container Networking Services on an existing cluster
+
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
+
+
+> [!NOTE]
+> Only clusters with the Cilium data plane support Container Network Security features of Advanced Container Networking Services.
+
+```azurecli-interactive
+az aks update \
+    --resource-group $RESOURCE_GROUP \
+    --name $CLUSTER_NAME \
+    --enable-acns
+```
+
+---    
+
+## Get cluster credentials 
+
+Once you have Get your cluster credentials using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command.
+
+```azurecli-interactive
+az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
+```
 
 ### Install Hubble CLI
 Install the Hubble CLI to access the data it collects using the following commands:
@@ -467,7 +541,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 ### Visualize using Hubble UI
 
-1. To use Hubble UI, save the following into hubble-ui.yaml
+1. To use Hubble UI, save following into hubble-ui.yaml
     ```yml
     apiVersion: v1
     kind: ServiceAccount
@@ -704,7 +778,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
           targetPort: 8081
     ```
 
-1. Apply the hubble-ui.yaml manifest to your cluster, using the following command 
+1. Apply the hubble-ui.yaml manifest to your cluster, using the following command. 
     ```azurecli-interactive
     kubectl apply -f hubble-ui.yaml
     ```
@@ -718,42 +792,36 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 1. Access Hubble UI by entering `http://localhost:12000/` into your web browser.
 
 ---
-### Basic Troubleshooting 
+### Basic troubleshooting 
 
 1) Advanced Container Networking Services is a prerequisite for enabling AMA log collection feature:
-   Trying to enable this on a cluster without enabling Advanced Container Networking Services:
+   Trying to enable container network flow logs capability on a cluster without enabling Advanced Container Networking Services:
 
-    ```az aks update -g test-rg -n test-cluster --enable-retina-flow-logs ```
+    ```az aks update -g test-rg -n test-cluster --enable-retina-flow-logs```
 
    Would result in an error message:
 
     ```Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.```
 
-
 2) If the cluster Kubernetes version is below 1.32.0, trying to enable '--enable-retina-flow-logs':
 
-    ```The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later. ```
+    ```The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later.```
 
     Where the %s is replaced by the customer's K8s version
 
 3) If a customer tries to enable '--enable-retina-flow-logs' on a subscription where AFEC flag isn't enabled:
 
-    ``` Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.```
+    ```Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.```
 
-
-#### KubeCtl
-
-1) If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where Advanced Container Networking Services isn't enabled:
+4) If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where Advanced Container Networking Services isn't enabled:
     
-   ``` error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
+   ```error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
    ```ensure CRDs are installed first```
 
-
-
-### Disable Container Network Logs:always-on on existing cluster 
+### Disable container network logs: always-on on existing cluster 
 If all the CRDs get deleted, Flow log collection would stop as there would be no filters defined for collection. 
 To disable retina flow log collection by Azure monitor agent, use following command 
-```azurecli-interactive
+  ```azurecli-interactive
    az aks update -n $CLUSTER_NAME -g $RESOURCE_GROUP –disable-retina-flow-logs 
 ```
 ## Clean up resources

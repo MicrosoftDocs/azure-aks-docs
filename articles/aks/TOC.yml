@@ -198,7 +198,7 @@
                 - name: Metrics
                   href: container-network-observability-metrics.md
                 - name: Logs
-                  href: container-network-observaility-containernetworklogs.md
+                  href: container-network-observaility-logs.md
             - name: Conatiner Network Security
               items:    
                 - name: FQDN based Filtering
@@ -909,7 +909,7 @@
             - name: Metrics
               href: container-network-observability-how-to.md
             - name: Logs
-              href: how-to-apply-containernetworklogs.md
+              href: how-to-configure-container-network-logs.md
     - name: Service Mesh
       items:
         - name: Istio service mesh AKS add-on

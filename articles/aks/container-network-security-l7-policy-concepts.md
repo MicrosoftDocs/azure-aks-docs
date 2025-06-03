@@ -74,4 +74,4 @@ These dashboards offer granular visibility into L7 flow data at the cluster, nam
 
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md).
 
-* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](./advanced-container-networking-services-overview.md#container-network-observability).
+* Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](./advanced-container-networking-services-overview.md#container-network-observability)

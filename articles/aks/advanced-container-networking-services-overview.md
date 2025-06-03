@@ -31,11 +31,11 @@ Key benefits include compatibility with all Azure CNI variants, detailed visibil
 
 Additionally, it integrates with Azure Managed Prometheus and Grafana for simplified metrics storage and visualization. Whether using managed services or user-controlled infrastructure, this observability solution ensures a highly performant, secure, and compliant network environment for AKS workloads.
 
-:::image type="content" source="./media/advanced-container-networking-services/advanced-network-observability.png" alt-text="Diagram of container network observability architecture" lightbox="./media/advanced-container-networking-services/advanced-network-observability.png":::
+:::image type="content" source="./media/advanced-container-networking-services/advanced-network-observability.png" alt-text="Diagram of container network observability architecture." lightbox="./media/advanced-container-networking-services/advanced-network-observability.png":::
 
 ### Container Network Metrics
 
-This feature collects node-level metrics, including CPU, memory, and network performance, to monitor the health of cluster nodes. For deeper insights, Hubble metrics provide data on DNS resolution times, service-to-service communication, and pod-level network behavior. These metrics enable users to analyze application performance, detect anomalies, and optimize workloads
+This feature collects node-level metrics, including CPU, memory, and network performance, to monitor the health of cluster nodes. For deeper insights, Hubble metrics provide data on DNS resolution times, service-to-service communication, and pod-level network behavior. These metrics enable users to analyze application performance, detect anomalies, and optimize workloads.
 
 To learn more, see [Metrics Overview](container-network-observability-metrics.md) documentation.
 
@@ -43,7 +43,7 @@ To learn more, see [Metrics Overview](container-network-observability-metrics.md
 
 Container Network Logs provides detailed insights into traffic within and across clusters by capturing metadata like source/destination IPs, ports, protocols, and flow direction. These logs enable monitoring network behavior, troubleshooting connectivity issues, and enforcing security policies. Persistent and real-time logging options ensure comprehensive, actionable network observability.
 
-To learn more, see [Container Network Logs Overview](container-network-observaility-containernetworklogs.md) documentation.
+To learn more, see [Container Network Logs Overview](container-network-observaility-network-logs.md) documentation.
 
 ## Container Network Security
 
@@ -256,7 +256,7 @@ az aks update \
     --disable-acns-security
 ```
 
-#### [**Non-Cilium**](#tab/non-cilium)
+#### [**Non-Cilium**](#tab/non-Cilium)
 
 Container Network Security is currently not supported on non-Cilium clusters. To leverage this feature and enable Azure CNI powered by Cilium, please refer to [Azure CNI powered by Cilium documentation](./azure-cni-powered-by-cilium.md)
 
@@ -264,6 +264,6 @@ Container Network Security is currently not supported on non-Cilium clusters. To
 
 ## Next steps
 
-* For more information about Container Network Observability and its capabilities, see [What is Container Network Observability?](./advanced-container-networking-services-overview.md#container-network-observability).
+* For more information about Container Network Observability and its capabilities, see [What is Container Network Observability?](./advanced-container-networking-services-overview.md#container-network-observability)
 
-* For more information on Container Network Security and its capabilities, see [What  is Container Network Security?](container-network-security-concepts.md).
+* For more information on Container Network Security and its capabilities, see [What  is Container Network Security?](container-network-security-concepts.md)

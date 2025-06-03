@@ -17,12 +17,12 @@ The ability to capture these metrics is essential for understanding how containe
 In today’s cloud-native world, maintaining a healthy and efficient network in a dynamic containerized environment is vital to ensuring that applications perform as expected. Without proper visibility into network traffic and its patterns, identifying potential issues or inefficiencies becomes challenging.
 
 ### Key Benefits 
-1. Deep visibility into network performance
-1. Enhanced troubleshooting and optimization
-1. Proactive anomaly detection
-1. Better resource management and scaling
-1. Capacity planning and compliance
-1. Simplified Metrics Storage and Visualization Options: Choose between:
+-    Deep visibility into network performance
+-    Enhanced troubleshooting and optimization
+-    Proactive anomaly detection
+-    Better resource management and scaling
+-    Capacity planning and compliance
+-    Simplified Metrics Storage and Visualization Options: Choose between:
     * **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
     * **Bring Your Own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.
 
@@ -74,7 +74,7 @@ The table below outlines the different metrics generated.
 
 ### Pod-Level Metrics (Hubble Metrics)
 
-These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors, and DNS requests missing responses.The following metrics are aggregated per pod (node information is preserved). All metrics include labels:
+These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors, and DNS requests missing responses. The following metrics are aggregated per pod (node information is preserved). All metrics include labels:
 
 * `cluster`
 * `instance` (Node name)
@@ -98,7 +98,7 @@ For *incoming traffic*, there will be a `destination` label with destination pod
 * Metric labels may have subtle differences between Cilium and non-Cilium clusters.
 * For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network policies (CNP) configured on their clusters.
 * Flow logs are not currently available in the air gapped cloud.
-* Hubble relay may crash if one of the hubble node agents goes down and may cause interruptions to Hubble CLI.
+* Hubble relay may crash if one of the Hubble node agents goes down and may cause interruptions to Hubble CLI.
 
 ### Scale
 
@@ -111,7 +111,7 @@ Azure managed Prometheus and Grafana impose service-specific scale limitations. 
 
 ## Next steps
 
-* To create an AKS cluster with Container Network Observability tp capture Metrics, see [Setup Container Network Observability for Azure Kubernetes Service (AKS)](container-network-observability-how-to.md).
+* To create an AKS cluster with Container Network Observability to capture Metrics, see [Setup Container Network Observability for Azure Kubernetes Service (AKS)](container-network-observability-how-to.md).
 * For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [advanced-container-networking-services-overview](https://azure.microsoft.com/pricing/details/azure-container-networking-services/).
 * Explore Container Network Observability features in Advanced Container Networking Services in [What is Container Network Observability?](./advanced-container-networking-services-overview.md#container-network-observability).
 * Explore Container Network Security features in Advanced Container Networking Services in [What is Container Network Security?](./advanced-container-networking-services-overview.md#container-network-security).
