@@ -334,14 +334,14 @@ Before you begin, follow the steps in the [Enable DNS query logging](#enable-dns
      kubectl get pods --namespace kube-system -l k8s-app=kube-dns
      ```
 
-3. Review the logs for each CoreDNS pod to analyze DNS query patterns:
+2. Review the logs for each CoreDNS pod to analyze DNS query patterns:
      ```console
      kubectl logs --namespace kube-system <coredns-pod1>
      kubectl logs --namespace kube-system <coredns-pod2>
      # Repeat on all CoreDNS pods
      ```
 
-4. Look for repeated client IP addresses and ports that appear only in the logs of a single CoreDNS pod. This indicates that DNS queries from certain clients are not being distributed evenly.
+3. Look for repeated client IP addresses and ports that appear only in the logs of a single CoreDNS pod. This indicates that DNS queries from certain clients are not being distributed evenly.
 
      Example log entry:
      ```
