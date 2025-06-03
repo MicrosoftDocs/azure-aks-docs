@@ -168,10 +168,10 @@ Load balancer or ingress resources continually run in your AKS cluster and refin
 
 Network policy is a Kubernetes feature available in AKS that lets you control the traffic flow between pods. You allow or deny traffic to the pod based on settings such as assigned labels, namespace, or traffic port. Network policies are a cloud-native way to control the flow of traffic for pods. As pods are dynamically created in an AKS cluster, required network policies can be automatically applied.
 
-To use network policy, enable the feature when you create a new AKS cluster. You can't enable network policy on an existing AKS cluster. Plan ahead to enable network policy on the necessary clusters.
+To use [network policies in AKS][use-network-policies], the feature can be enabled either during cluster creation or on an existing AKS cluster. If you are planning to use network policies, ensure the feature is enabled on your AKS cluster.
 
 >[!NOTE]
-> Network policy should only be used for Linux-based nodes and pods in AKS.
+> Network policies could be used for Linux-based or Windows-based nodes and pods in AKS.
 
 You create a network policy as a Kubernetes resource using a YAML manifest. Policies are applied to defined pods, with ingress or egress rules defining traffic flow.
 
@@ -230,4 +230,5 @@ This article focused on network connectivity and security. For more information 
 [advanced-networking]: configure-azure-cni.md
 [concepts-node-selectors]: concepts-clusters-workloads.md#node-selectors
 [nodepool-upgrade]: manage-node-pools.md#upgrade-a-single-node-pool
+
 
