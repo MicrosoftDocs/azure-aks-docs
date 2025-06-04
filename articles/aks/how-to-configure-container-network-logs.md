@@ -287,7 +287,7 @@ az grafana create \
 ```
 Note
 > [!NOTE]
-> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/https://learn.microsoft.com/azure/managed-grafana/how-to-permissions?tabs=azure-portal))
+> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/azure/managed-grafana/how-to-permissions))
 
 ### Visualization in Grafana dashboards
 
