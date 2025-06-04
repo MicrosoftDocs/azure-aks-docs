@@ -81,7 +81,7 @@ and when it appears in the destination of your choice.
 7. For the log categories, make sure that at least one of the three categories,
 `fleet-member-agent`, `fleet-member-net-controller-manager`, and `fleet-mcs-controller-manager`, is selected.
 You may also pick other log categories as needed.
-8. For the destination details, pick the destination you prefer. Additional option appear that ask you for more
+8. For the destination details, pick the destination you prefer. More options appear that ask you for more
 destination information. For more information, see [Create a Diagnostic Setting](/azure/azure-monitor/essentials/diagnostic-settings).
     If you plan to use a Log Analytics workspace as the destination, an AKS cluster resource supports both the
     Azure Diagnostics mode and the resource-specific mode. For differences between the two modes, see the explanation on the
@@ -109,7 +109,7 @@ Fleet agent logs are written in the `klog` nonstructured format; the format is
 [IWEF]yyyymmdd hh:mm:ss.uuuuuu threadid file:line msg kvs
 ```
 
-where:
+Where:
 
 * `[IWEF]` is the log level.
     * `I` represents the `info` level.
