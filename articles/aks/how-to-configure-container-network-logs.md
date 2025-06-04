@@ -191,29 +191,29 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
 
 To enable the container network logs on existing cluster, follow these steps:
 1. Check if monitoring addon is already enabled on that cluster with following command.
-  ```azurecli-interactive
-    az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
-   ```
+    ```azurecli-interactive
+     az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
+    ```
 1. Disable monitoring addon with following command, if monitoring addon is already enabled.
     ```azurecli-interactive
-    az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
-   ```
+     az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
+    ```
    The reason for disabling is - it might already have monitoring enabled but not the high scale. For more information, refer to [High Scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
 
 1. Enable Azure monitor with high log scale mode.
     ```azurecli-interactive
-      ### Use default Log Analytics workspace
-      az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
-      ### Use existing Log Analytics workspace
-      az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
+     ### Use default Log Analytics workspace
+     az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
+     ### Use existing Log Analytics workspace
+     az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
     ```
 1. Update the aks cluster with enable retina flow log flag 
-   ```azurecli-interactive
-      az aks update --enable-acns \
+    ```azurecli-interactive
+     az aks update --enable-acns \
          --enable-retina-flow-logs \
          -g $RESOURCE_GROUP \
          -n $CLUSTER_NAME
-   ```
+    ```
 ---    
 
 ### Get cluster credentials 
@@ -287,7 +287,7 @@ az grafana create \
 ```
 Note
 > [!NOTE]
-> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/managed-garfana/how-to-permissions))
+> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/azure-docs/articles/managed-garfana/how-to-permissions))
 
 ### Visualization in Grafana dashboards
 
