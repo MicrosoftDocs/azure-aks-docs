@@ -1,6 +1,6 @@
 ---
-title: Upgrade Operating System (OS) version in Azure Kubernetes Service (AKS) clusters.
-description: Learn about support, testing, and roll back for OS versions available on Azure Kubernetes Service (AKS).
+title: Upgrade Operating System (OS) version in Azure Kubernetes Service (AKS) clusters
+description: Learn about support, testing, and rollback for OS versions available on Azure Kubernetes Service (AKS).
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.date: 03/21/2025
@@ -8,7 +8,7 @@ author: allyford
 ms.author: allyford
 ---
 
-# Upgrade Operating System (OS) versions in AKS
+# Upgrade operating system (OS) versions in AKS
 
 This article describes OS versions available for Azure Kubernetes Service (AKS) nodes, and best practices for testing and upgrading your OS version.
 
@@ -33,7 +33,7 @@ Each [node image][node-image] corresponds to an OS version which you can specify
 >   - For Azure Linux, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureLinux`. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
 >   - For Windows, we recommend creating node pools while specifying `--os-type Windows` and `--os-sku Windows2022`. You need to manually update node pools to the next OS version when it's released.
 
-| OS Type | OS SKU | Supported Kubernetes versions | Default versioning |
+| OS type | OS SKU | Supported Kubernetes versions | Default versioning |
 |--|--|--|--|
 | Linux | Ubuntu | This OS SKU is supported in all kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes version 1.25 to 1.32. |
 | Linux | Ubuntu2404 | This OS SKU is supported in kubernetes 1.32 to 1.38. | Ubuntu 24.04 is available in preview with K8s 1.32+ using `--os-sku Ubuntu2404`. This OS SKU is recommended if you want to test out the new os version without upgrading your kubernetes version. |
@@ -42,7 +42,7 @@ Each [node image][node-image] corresponds to an OS version which you can specify
 | Windows | Windows2019 | 1.14-1.32 | Default for Windows OS Type in Kubernetes version 1.14 to 1.24. |
 | Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.33. |
 
-## [Testing a new OS version](#tab/testing-a-new-os-version)
+## [Test a new OS version](#tab/testing-a-new-os-version)
 
 When a new OS version releases on AKS, it's supported in preview before it becomes generally available and default. We recommend testing your nonproduction workloads with the new OS version when it becomes available in preview. 
 
@@ -148,7 +148,7 @@ az aks nodepool update \
 
 The [`az aks nodepool update`][az-aks-nodepool-update] command can be used to migrate between any supported Linux `os-sku`. The command may fail if the target OS does not have a supported node image for your kubernetes version, vm size, or FIPS enablement. 
 
-## [Rollback to Ubuntu 22.04](#tab/test-roll-back)
+## [Roll back to Ubuntu 22.04](#tab/test-roll-back)
 
 Ubuntu 22.04 can be specified by using `--os-sku Ubuntu2204`.
 
