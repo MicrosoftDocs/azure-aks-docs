@@ -11,7 +11,7 @@ ms.custom: aks-upgrade, automation, innovation-engine
 
 # Automatically upgrade an Azure Kubernetes Service (AKS) cluster
 
-> [!div class=""nextstepaction""]
+> [!div class="nextstepaction"]
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321740)
 
 Part of the AKS cluster lifecycle involves performing periodic upgrades to the latest Kubernetes version. It’s important you apply the latest security releases or upgrade to get the latest features. Before learning about auto-upgrade, make sure you understand the [AKS cluster upgrade fundamentals][upgrade-aks-cluster].
