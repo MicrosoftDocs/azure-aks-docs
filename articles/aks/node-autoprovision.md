@@ -361,7 +361,7 @@ kubectl get events -A --field-selector source=karpenter -w
 ## Disabling node autoprovisioning
 
 Node autoprovisioning can only be disabled when:
-- There are no existing NAP-managed nodes. Use `kubectl list nodes -l karpenter.sh/nodepool` to view NAP-managed nodes.
+- There are no existing NAP-managed nodes. Use `kubectl get nodes -l karpenter.sh/nodepool` to view NAP-managed nodes.
 - All existing karpenter.sh/NodePools have their `spec.limits.cpu` set to 0.
 
 ### Steps to disable node autoprovisioning
@@ -395,7 +395,7 @@ Node autoprovisioning can only be disabled when:
    capacity, some NAP-managed nodes will remain.
 3. Scale up existing fixed-size ManagedCluster AgentPools, or create new fixed-size AgentPools, to take the load from the NAP-managed nodes.
    As these nodes are added to the cluster the NAP-managed nodes are drained, and work is migrated to the fixed-scale nodes.
-4. Confirm that all NAP-managed nodes are deleted, using `kubectl list nodes -l karpenter.sh/nodepool`. If there are still NAP-managed
+4. Confirm that all NAP-managed nodes are deleted, using `kubectl get nodes -l karpenter.sh/nodepool`. If there are still NAP-managed
    nodes, it likely means that the cluster is out of fixed-scale capacity and needs more nodes so that the remaining workloads can be migrated.
 5. Update the node provisioning mode parameter of the ManagedCluster to `Manual`.
 
