@@ -10,7 +10,7 @@ ms.subservice: aks-nodes
 
 # Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster
 
-> [!div class=""nextstepaction""]
+> [!div class="nextstepaction"]
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321851)
 
 In this article, you add a secondary Spot node pool to an existing Azure Kubernetes Service (AKS) cluster.
