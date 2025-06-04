@@ -183,9 +183,9 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 | **`vault.azure.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server.|
 | **`*.vault.usgovcloudapi.net`** | **`HTTPS:443`** | Required for CSI Secret Store addon pods to talk to Azure KeyVault server in Azure Government.|
 
-### Azure Monitor - Managed Prometheus and Container Insights
+### Azure Monitor - Managed Prometheus, Container Insights, and Azure Monitor Application Insights Autoinstrumentation
 
-If using network isolated clusters, it's recommended to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for both Managed Prometheus (Azure Monitor workspace) and Container insights (Log Analytics workspace).
+If using network isolated clusters, it's recommended to set up [private endpoint based ingestion][azure-monitor-ingestion-private-link], which is supported for Managed Prometheus (Azure Monitor workspace), Container insights (Log Analytics workspace), and Azure Monitor Application Insights Autoinstrumentation (Application Insights resource).
 
 If your cluster has outbound type user-defined routing and Azure Firewall, the following network rules and application rules are applicable:
 
@@ -202,6 +202,7 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 | **`*.ods.opinsights.azure.com`** | | 443 |
 | **`*.oms.opinsights.azure.com`** | | 443 |
 | **`dc.services.visualstudio.com`** | | 443 |
+| **`*.in.applicationinsights.azure.com`** | Application Insights Autoinstrumentation. To limit the scope, can be changed to only allow endpoints in connection strings for the destination resources | 443 |
 | **`*.monitoring.azure.com`** | | 443 |
 | **`login.microsoftonline.com`** | | 443 |
 | **`global.handler.control.monitor.azure.com`** | Access control service | 443 |
@@ -216,6 +217,7 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 | **`*.ods.opinsights.azure.cn`** | Data ingestion | 443 |
 | **`*.oms.opinsights.azure.cn`** | Azure Monitor agent (AMA) onboarding | 443 |
 | **`dc.services.visualstudio.com`** | For agent telemetry that uses Azure Public Cloud Application Insights | 443 |
+| **`*.in.applicationinsights.azure.com`** | Application Insights Autoinstrumentation. To limit the scope, can be changed to only allow endpoints in connection strings for the destination resources | 443 |
 | **`global.handler.control.monitor.azure.cn`** | Access control service | 443 |
 | **`<cluster-region-name>.handler.control.monitor.azure.cn`** | Fetch data collection rules for specific cluster | 443 |
 | **`*.ingest.monitor.azure.cn`** | Container Insights - logs ingestion endpoint (DCE) | 443 |
@@ -228,6 +230,7 @@ If your cluster has outbound type user-defined routing and Azure Firewall, the f
 | **`*.ods.opinsights.azure.us`** | Data ingestion | 443 |
 | **`*.oms.opinsights.azure.us`** | Azure Monitor agent (AMA) onboarding | 443 |
 | **`dc.services.visualstudio.com`** | For agent telemetry that uses Azure Public Cloud Application Insights | 443 |
+| **`*.in.applicationinsights.azure.com`** | Application Insights Autoinstrumentation. To limit the scope, can be changed to only allow endpoints in connection strings for the destination resources | 443 |
 | **`global.handler.control.monitor.azure.us`** | Access control service | 443 |
 | **`<cluster-region-name>.handler.control.monitor.azure.us`** | Fetch data collection rules for specific cluster | 443 |
 | **`*.ingest.monitor.azure.us`** | Container Insights - logs ingestion endpoint (DCE) | 443 |
