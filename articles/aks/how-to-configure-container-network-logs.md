@@ -20,7 +20,7 @@ This document is designed to provide clear steps for configuring and utilizing C
 * An Azure account with an active subscription. If you don't have one, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 [!INCLUDE [azure-CLI-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 
-*  The minimum version of Azure CLI required for the steps in this article is 2.71.0. To find the version, Run `az --version` . If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+*  The minimum version of Azure CLI required for the steps in this article is 2.73.0. To find the version, Run `az --version` . If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
 * Container Network Log with Always-on mode works only for Cilium data planes. 
 
@@ -32,7 +32,7 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
 
- The minimum version of the aks-preview Azure CLI extension is `14.0.0b7`.
+ The minimum version of the aks-preview Azure CLI extension is `18.0.0b2`.
 
 ```azurecli-interactive
 # Install the aks-preview extension
@@ -175,7 +175,11 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
   export RESOURCE_GROUP="<aks-resource-group>"
 
 # Enable azure monitor with high log scale mode
-  az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
+    ### Use default Log Analytics workspace
+    az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
+    ### Use existing Log Analytics workspace
+    az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
+
 # Update the aks cluster with enable retina flow log flag. 
   az aks update --enable-acns \
     --enable-retina-flow-logs \
@@ -187,7 +191,7 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
 
 To enable the container network logs on existing cluster, follow these steps:
 1. Check if monitoring addon is already enabled on that cluster with following command.
-   ```azurecli-interactive
+  ```azurecli-interactive
     az aks addon list -g $RESOURCE_GROUP -n $CLUSTER_NAME
    ```
 1. Disable monitoring addon with following command, if monitoring addon is already enabled.
@@ -197,9 +201,12 @@ To enable the container network logs on existing cluster, follow these steps:
    The reason for disabling is - it might already have monitoring enabled but not the high scale. For more information, refer to [High Scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
 
 1. Enable Azure monitor with high log scale mode.
-     ```azurecli-interactive
-    az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
-   ```
+    ```azurecli-interactive
+      ### Use default Log Analytics workspace
+      az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME 
+      ### Use existing Log Analytics workspace
+      az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
+    ```
 1. Update the aks cluster with enable retina flow log flag 
    ```azurecli-interactive
       az aks update --enable-acns \
@@ -263,26 +270,7 @@ Status:
   Timestamp:  2025-05-01T11:24:48Z
 ``` 
 
-### Azure managed Prometheus and Grafana 
-
-Use the following example to install and enable Prometheus and Grafana for your AKS cluster.
-
-#### Create Azure Monitor resource
-
-```azurecli-interactive
-#Set an environment variable for the Grafana name. Make sure to replace the placeholder with your own value.
-export AZURE_MONITOR_NAME="<azure-monitor-name>"
-export RESOURCE_GROUP="<aks-resource-group>"
-
-# Create Azure monitor resource
-az resource create \
-    --resource-group $RESOURCE_GROUP \
-    --namespace microsoft.monitor \
-    --resource-type accounts \
-    --name $AZURE_MONITOR_NAME \
-    --location eastus \
-    --properties '{}'
-```
+### Azure managed Grafana
 
 #### Create Azure Managed Grafana instance
 
@@ -297,68 +285,39 @@ az grafana create \
     --name $GRAFANA_NAME \
     --resource-group $RESOURCE_GROUP 
 ```
-
-#### Place the Azure Managed Grafana and Azure Monitor resource IDs in variables
-
-Use [az grafana show](/cli/azure/grafana#az-grafana-show) to place the Grafana resource ID in a variable. Use [az resource show](/cli/azure/resource#az-resource-show) to place the Azure Monitor resource ID in a variable. Replace **myGrafana** with the name of your Grafana instance.
-
-```azurecli-interactive
-grafanaId=$(az grafana show \
-                --name $GRAFANA_NAME \
-                --resource-group $RESOURCE_GROUP \
-                --query id \
-                --output tsv)
-azuremonitorId=$(az resource show \
-                    --resource-group $RESOURCE_GROUP \
-                    --name $AZURE_MONITOR_NAME \
-                    --resource-type "Microsoft.Monitor/accounts" \
-                    --query id \
-                    --output tsv)
-```
-
-#### Link Azure Monitor and Azure Managed Grafana to the AKS cluster
-
-Use [az aks update](/cli/azure/aks#az-aks-update) to link the Azure Monitor and Grafana resources to your AKS cluster.
-
-```azurecli-interactive
-az aks update \
-    --name $CLUSTER_NAME \
-    --resource-group $RESOURCE_GROUP \
-    --enable-azure-monitor-metrics \
-    --azure-monitor-workspace-resource-id $azuremonitorId \
-    --grafana-resource-id $grafanaId
-```
+Note
+> [!NOTE]
+> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/managed-garfana/how-to-permissions))
 
 ### Visualization in Grafana dashboards
 
-User can visualize Container Network Flow log for analysis with several prebuilt Grafana dashboards. Customers have several options to access these dashboards
+User can visualize Container Network Flow log for analysis with two prebuilt Grafana dashboards. Customers have several options to access these dashboards
 
 #### Visualization using Azure Managed Grafana
 
-1. Make sure the Azure Monitor pods are running using the `kubectl get pods` command.
+1. Make sure the Azure logs pods are running using the `kubectl get pods` command.
 
     ```azurecli-interactive
-    kubectl get pods -o wide -n kube-system | grep ama-
+    kubectl get pods -o wide -n kube-system | grep ama-logs
     ```
     
     Your output should look similar to the following example output:
     
     ```output
-    ama-metrics-5bc6c6d948-zkgc9          2/2     Running   0 (21h ago)   26h
-    ama-metrics-ksm-556d86b5dc-2ndkv      1/1     Running   0 (26h ago)   26h
-    ama-metrics-node-lbwcj                2/2     Running   0 (21h ago)   26h
-    ama-metrics-node-rzkzn                2/2     Running   0 (21h ago)   26h
-    ama-metrics-win-node-gqnkw            2/2     Running   0 (26h ago)   26h
-    ama-metrics-win-node-tkrm8            2/2     Running   0 (26h ago)   26h
+    ama-logs-9bxc6                                   3/3     Running   1 (39m ago)   44m
+    ama-logs-fd568                                   3/3     Running   1 (40m ago)   44m
+    ama-logs-rs-65bdd98f75-hqnd2                     2/2     Running   1 (43m ago)   22h
+    
     ```
 2. To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
-    - **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
+    - **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors. Currently user needs to import those dashboards with ID.
+    (ID: [23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//))
     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard.png" alt-text="Screenshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard.png":::
 
-    - **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
+    - **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors.
+     (ID: [23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//))
     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
-
-        For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-logs.md)       
+    For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-logs.md)       
 
 #### Visualization of container network logs in azure portal. 
 
@@ -817,13 +776,15 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
     
    ```error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
    ```ensure CRDs are installed first```
-
+ 
 ### Disable container network logs: always-on on existing cluster 
 If all the CRDs get deleted, Flow log collection would stop as there would be no filters defined for collection. 
 To disable retina flow log collection by Azure monitor agent, use following command 
   ```azurecli-interactive
-   az aks update -n $CLUSTER_NAME -g $RESOURCE_GROUP –disable-retina-flow-logs 
+   az aks update -n $CLUSTER_NAME -g $RESOURCE_GROUP --disable-retina-flow-logs
+
 ```
+
 ## Clean up resources
 
 If you don't plan on using this application, delete the other resources you created in this article using the [`az group delete`](/cli/azure/#az_group_delete) command.

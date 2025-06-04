@@ -50,12 +50,7 @@ User can visualize, query, and analyze flow logs in Azure portal in Azure log an
 
 User can visualize network flow logs for analysis with several prebuilt Grafana dashboards. Customers have several options to access these dashboards
 
-- Access in the Azure portal with the "Dashboards with Grafana" option
-  For more information refer [Container Insights documentation](https://aka.ms/ContainerNetworkLogsDoc_CI)
-
-- Access in Azure Managed Grafana instances
-
-To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
+- Access in Azure Managed Grafana instances- To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
  - **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
 :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard.png" alt-text="Screenshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard.png":::
 
@@ -63,6 +58,8 @@ To simplify the analysis of logs, we provide preconfigured two Azure Managed Gra
 :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services with following link:  For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services, see [Setting up Grafana](./how-to-configure-container-network-logs.md#visualization-using-azure-managed-grafana)
 
+- Access in the Azure portal with the "Dashboards with Grafana" option. At present user has to import grafana dashboards with user id to fetch flow logs dahboard in azure portal. We understand this is an interim solution, soon all the relavnt dahsboards would be available here automatically.
+ :::image type="content" source="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png" alt-text="Screenshot of grafana dashboards in azure monitor." lightbox="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png":::
 
 Users are able to see following major components in these dashboards:
 
