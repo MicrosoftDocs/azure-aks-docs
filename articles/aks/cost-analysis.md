@@ -11,7 +11,7 @@ ms.date: 04/06/2025
 
 # Azure Kubernetes Service (AKS) cost analysis
 
-> [!div class=""nextstepaction""]
+> [!div class="nextstepaction"]
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321938)
 
 In this article, you learn how to enable cost analysis on Azure Kubernetes Service (AKS) to view detailed cost data for cluster resources.
