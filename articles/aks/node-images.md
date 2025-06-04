@@ -14,10 +14,8 @@ This article describes the node images available for Azure Kubernetes Service (A
 
 > [!CAUTION]
 > In this article, there are references to Ubuntu OS versions that are being deprecated for AKS.
->- Starting on 17 June 2025, AKS will no longer support Ubuntu 18.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to a supported kubernetes version to migrate to a supported Ubuntu version.
->- Starting on 17 March 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+ to migrate to a supported Ubuntu version.
->For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues)
-
+>- Starting on 17 June 2025, AKS no longer supports Ubuntu 18.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. Migrate to a supported Ubuntu version by [upgrading your node pools](./upgrade-aks-cluster.md) to a supported kubernetes version.  For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues/4873).
+>- Starting on 17 March 2027, AKS no longer supports Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. Migrate to a supported Ubuntu version by [upgrading your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+. For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues/4874).
 
 ## Node image releases
 
@@ -44,32 +42,9 @@ AKS sets a default operating system (OS) and node image during cluster and node 
 > [!NOTE]
 > You can't specify the Windows OS Type during cluster creation since the system node pool in every cluster must be Linux.
 
-### Supported OS versions
+### Factors that influence the default node image
 
-Each node image corresponds to an OS version which you can specify using OS SKU. You specify the following parameters when creating clusters and node pools:
-
-* **--os-type**: OS type, including Linux or Windows.
-* **--os-sku**: Used to specify OS version or OS variant.
-* **--kubernetes-version**: Version of Kubernetes to use for creating the node pool or cluster.
-
-> **Best practice guidance**
->
-> The default OS version is the most recent validated version.
->
->   - For Ubuntu, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku Ubuntu`. This will automatically update you to the latest default Ubuntu version based on your Kubernetes version.
->   - For Azure Linux, we recommend creating clusters and node pools while specifying `--os-type Linux` and `--os-sku AzureLinux`. This will automatically update you to the latest default Azure Linux version based on your Kubernetes version.
->   - For Windows, we recommend creating node pools while specifying `--os-type Windows` and `--os-sku Windows2022`. You will need to manually update node pools to the next OS version when it's released.
-
-| OS Type | OS SKU | Supported Kubernetes versions | Default versioning |
-|--|--|--|--|
-| Linux | Ubuntu | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Ubuntu 22.04 is default for Kubernetes version 1.25 to 1.32. |
-| Linux | Azure Linux | This OS SKU is supported in all Kubernetes versions. | OS version for this OS SKU changes based on your Kubernetes version. Azure Linux 2.0 is default for Kubernetes version 1.27 to 1.31. Azure Linux 3.0 is default for Kubernetes version 1.32+. |
-| Windows | Windows2019 | 1.14-1.32 | Default for Windows OS Type in Kubernetes version 1.14 to 1.24. |
-| Windows | Windows2022 | 1.23 to 1.34 | Default for Windows OS Type in Kubernetes version 1.25 to 1.33. |
-
-### Factors that might impact default node images
-
-The following factors might impact the default image AKS chooses for your node pool:
+The following factors influence the default image AKS chooses for your node pool:
 
 - **OS SKU**: If `--os-sku` is specified, then your default OS changes. For example, if you specify Azure Linux as the OS SKU, then your node image is Azure Linux with containerd.
 - **Virtual machine (VM) size**: 
@@ -149,6 +124,8 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [custom-node-configuration]: ./custom-node-configuration.md
 [use-cvm]: ./use-cvm.md
 [create-node-pools]: ./create-node-pools.md
+[az-aks-nodepool-add]: /cli/azure/aks/nodepool#az-aks-nodepool-add
+[az-aks-nodepool-update]: /cli/azure/aks/nodepool#az-aks-nodepool-update
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases

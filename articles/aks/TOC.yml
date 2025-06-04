@@ -1012,16 +1012,18 @@
           href: upgrade-cluster.md
         - name: Perform manual upgrades
           items:
-            - name: Upgrade an AKS cluster
-              href: upgrade-aks-cluster.md
-            - name: Orchestrate upgrade across multiple clusters
-              href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-            - name: Upgrade node OS images
-              href: node-image-upgrade.md
-            - name: Customize node surge upgrade
-              href: upgrade-aks-cluster.md#customize-node-surge-upgrade
-            - name: Process node OS updates
-              href: node-updates-kured.md
+          - name: Upgrade an AKS cluster
+            href: upgrade-aks-cluster.md
+          - name: Orchestrate upgrade across multiple clusters
+            href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+          - name: Upgrade node OS images
+            href: node-image-upgrade.md
+          - name: Customize node surge upgrade
+            href: upgrade-aks-cluster.md#customize-node-surge-upgrade
+          - name: Process node OS updates
+            href: node-updates-kured.md
+          - name: Upgrade OS version
+            href: upgrade-os-version.md
         - name: Configure automatic upgrades
           items:
             - name: Automatically upgrade an AKS cluster
