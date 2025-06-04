@@ -504,7 +504,7 @@
         - name: GPU workloads
           items:
             - name: Use Linux GPUs
-              href: gpu-cluster.md
+              href: use-nvidia-gpu.md
             - name: Use Windows GPUs
               href: use-windows-gpu.md
             - name: Multi-instance GPU node pool
