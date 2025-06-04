@@ -11,7 +11,7 @@ ms.date: 04/06/2025
 
 # Configure Azure CNI Powered by Cilium in Azure Kubernetes Service (AKS)
 
-> [!div class=""nextstepaction""]
+> [!div class="nextstepaction"]
 > [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321738)
 
 Azure CNI Powered by Cilium combines the robust control plane of Azure CNI with the data plane of [Cilium](https://cilium.io/) to provide high-performance networking and security.
