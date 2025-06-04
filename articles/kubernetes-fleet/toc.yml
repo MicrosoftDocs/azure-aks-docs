@@ -62,6 +62,8 @@
           href: upgrade-hub-cluster-type.md
         - name: Migrate preview instances to supported instances 
           href: howto-migrate-preview-to-ga-fleets.md
+        - name: View Fleet agent logs
+          href: view-fleet-agent-logs.md
     - name: Progressively upgrade Kubernetes and node images
       items:
         - name: Define reusable update strategies
@@ -96,10 +98,6 @@
           href: howto-dns-load-balancing.md
         - name: Multi-cluster Layer 4 Load Balancing
           href: l4-load-balancing.md
-    - name: Monitor Fleet agents
-      items:
-        - name: View Fleet agent logs
-          href: view-fleet-agent-logs.md
 - name: Resources
   items:
   - name: Pricing

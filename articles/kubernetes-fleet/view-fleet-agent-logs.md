@@ -1,6 +1,6 @@
 ---
 title: View agent logs in Azure Kubernetes Fleet Manager
-description: Learn how to set up, configure, and access Fleet agent logs for monitoring and troubleshooting in Azure Kubernetes Fleet Manager
+description: Learn how to set up, configure, and access Fleet agent logs, for monitoring and troubleshooting in Azure Kubernetes Fleet Manager
 ms.topic: how-to
 ms.service: azure-kubernetes-fleet-manager
 ms.date: 05/30/2025
@@ -11,7 +11,7 @@ ms.author: chenyu1
 # View agent logs in Azure Kubernetes Fleet Manager
 
 This article shows you how to view Fleet agent logs from your hub and member clusters in Azure Kubernetes Fleet Manager. 
-If you have a Fleet with the hub cluster mode enabled, Azure Kubernetes Fleet Manager will install Fleet agents in both the
+If you have a Fleet with the hub cluster mode enabled, Azure Kubernetes Fleet Manager installs Fleet agents in both the
 hub cluster and the member clusters to facilitate communications and orchestrate operations across the Fleet, in support of
 Fleet's workload orchestration and load balancing capabilities. These agents generate logs that provide insights into:
 
@@ -27,27 +27,27 @@ Fleet agent logs are implemented as [resource logs](/azure/azure-monitor/essenti
 
 * Fleet agent logs for the Fleet hub cluster are implemented as part of the resource logs for the Fleet resource.
     * Two agents are installed on the Fleet hub cluster, commonly known as the Fleet hub agents, which include:
-        * `fleet-hub-agent`: the Fleet agent that manages cluster memberships and processes workload orchestration tasks on the hub cluster tasks (e.g., scheduling, rolling out changes).
+        * `fleet-hub-agent`: the Fleet agent that manages cluster memberships and processes workload orchestration tasks on the hub cluster side (for example, scheduling, rolling out changes).
         * `fleet-hub-net-controller-manager`: the Fleet agent that processes load balancing tasks on the hub cluster side.
 * Fleet agent logs for a Fleet member cluster are implemented as part of the resource logs for the AKS cluster resource.
     * Three agents are installed on a Fleet member cluster, commonly known as the Fleet member agents, which include:
-        * `fleet-member-agent`: the Fleet agent that registers the member cluster to the hub cluster and processes workload orchestration tasks on the member cluster side (e.g., applying manifests, drift detection, takeover).
+        * `fleet-member-agent`: the Fleet agent that registers the member cluster to the hub cluster and processes workload orchestration tasks on the member cluster side (for example, applying manifests, drift detection, takeover).
         * `fleet-member-net-controller-manager`: the Fleet agent that processes load balancing tasks on the member cluster side.
         * `fleet-mcs-controller-manager`: the Fleet agent that facilitates multi-cluster services.
 
-Resource logs are not collected and stored until you create a diagnostic setting to route them to one or more locations.
-Azure Monitor supports a variety of locations that you may use, such as a Azure storage account or a Log Analytics workspace;
+Resource logs aren't collected and stored until you create a diagnostic setting to route them to one or more locations.
+Azure Monitor supports various locations that you may use, such as an Azure storage account or a Log Analytics workspace;
 for a list of available locations and their limitations,
 see the [Azure Monitor Diagnostic Settings Destinations](/azure/azure-monitor/platform/diagnostic-settings#destinations) page.
 
 To collect the Fleet agent logs, create a diagnostic setting for the corresponding resource. Depending on your Fleet use case,
 you may choose to collect logs from one or more specific Fleet agents only. The most straightforward approach
-would be to use the Azure Portal; see the steps below for further instructions. You may also use the Azure CLI, PowerShell,
-the Azure Resource Manager, the REST API, or the Azure Policy to set things up; for more information, see
+would be to use the Azure portal; see the steps for further instructions. You may also use the Azure CLI, PowerShell,
+the Azure Resource Manager, the REST API, or the Azure Policy to set up things; for more information, see
 [Create a Diagnostic Setting](/azure/azure-monitor/essentials/diagnostic-settings).
 
 > [!IMPORTANT]
-> There can be substantial costs when collecting the Fleet agent logs. It is recommended that you
+> There can be substantial costs when collecting the Fleet agent logs. It's recommended that you
 > * collect logs only from the most relevant Fleet agents 
 > * read the [Cost optimization and Azure Monitor](/azure/azure-monitor/best-practices-cost) document for strategies to reduce your monitoring costs.
 
@@ -62,11 +62,11 @@ the Azure Resource Manager, the REST API, or the Azure Policy to set things up; 
 6. Enter a name for the diagnostic setting. 
 7. For the log categories, make sure that at least one of the two categories,
 `fleet-hub-agent` and `fleet-hub-net-controller-manager`, is selected. You may also pick other log categories as needed.
-8. For the destination details, pick the destination you prefer. Additional options will appear that ask you for additional
-destination information. For further details, see [Create a Diagnostic Setting](/azure/azure-monitor/essentials/diagnostic-settings).
+8. For the destination details, pick the destination you prefer. More options appear that ask you for extra
+destination information. For more information, see [Create a Diagnostic Setting](/azure/azure-monitor/essentials/diagnostic-settings).
 9. Select **Save**.
 
-After a few moments, the new setting appears in your list of diagnostic settings for this resource. Logs are streamed to the specified destinations as new data is generated. Note that it may take a while between when a log is emitted by the agent
+After a few moments, the new setting appears in your list of diagnostic settings for this resource. Logs are streamed to the specified destinations as new data is generated. It may take a while between when agent emits a log
 and when it appears in the destination of your choice.
 
 ### Configure diagnostic settings on the member AKS cluster resource for Fleet member agent logs
@@ -81,14 +81,14 @@ and when it appears in the destination of your choice.
 7. For the log categories, make sure that at least one of the three categories,
 `fleet-member-agent`, `fleet-member-net-controller-manager`, and `fleet-mcs-controller-manager`, is selected.
 You may also pick other log categories as needed.
-8. For the destination details, pick the destination you prefer. Additional options will appear that ask you for additional
-destination information. For further details, see [Create a Diagnostic Setting](/azure/azure-monitor/essentials/diagnostic-settings).
-    If you plan to use a Log Analytics workspace as the destination, note that an AKS cluster resource supports both the
+8. For the destination details, pick the destination you prefer. Additional option appear that ask you for more
+destination information. For more information, see [Create a Diagnostic Setting](/azure/azure-monitor/essentials/diagnostic-settings).
+    If you plan to use a Log Analytics workspace as the destination, an AKS cluster resource supports both the
     Azure Diagnostics mode and the resource-specific mode. For differences between the two modes, see the explanation on the
     [Send to Log Analytics workspace](/azure/azure-monitor/platform/resource-logs#send-to-log-analytics-workspace) page.
 9. Select **Save**.
 
-After a few moments, the new setting appears in your list of diagnostic settings for this resource. Logs are streamed to the specified destinations as new data is generated. Note that it may take a while between when a log is emitted by the agent
+After a few moments, the new setting appears in your list of diagnostic settings for this resource. Logs are streamed to the specified destinations as new data is generated. It may take a while between when the agent emits a log
 and when it appears in the destination of your choice.
 
 ## View Fleet agent logs
@@ -103,7 +103,7 @@ To view the Fleet agent logs in the destination of your choice, see
 
 ### Understand Fleet agent logs
 
-Fleet agent logs are written in the `klog` non-structured format; the format is
+Fleet agent logs are written in the `klog` nonstructured format; the format is
 
 ```
 [IWEF]yyyymmdd hh:mm:ss.uuuuuu threadid file:line msg kvs
@@ -121,7 +121,7 @@ where:
 * `threadid` is the thread ID (PID/TID) of the Fleet agent process/thread.
 * `file:line` is the file name and line number of the source code which emits the logs.
 * `msg` is the log message.
-* `kvs` is a list of key-value pairs (e.g., `work=123`) that provides additional information, such as the API object that the log message involves.
+* `kvs` is a list of key-value pairs (for example, `work=123`) that provides additional information, such as the API object that the log message involves.
 
 You might want to cross-reference a log message with the Fleet agent source code to better understand the log message in context.
 For the Fleet agents `fleet-hub-agent` and `fleet-member-agent`,
@@ -131,13 +131,13 @@ for `fleet-hub-net-controller-manager`, `fleet-member-net-controller-manager`, a
 
 ### Useful Kusto queries
 
-Below is a list of Kusto queries that might help you easier search Fleet agent logs in a Log Analytics workspace:
+The following list of Kusto queries that might help you easier search Fleet agent logs in a Log Analytics workspace:
 
 > [!NOTE]
-> The examples below assumes that you have used Azure Diagnostics mode when collecting Fleet member agent logs. If you
+> The examples assume that you use Azure Diagnostics mode when collecting Fleet member agent logs. If you
 > have the resource-specific mode enabled, use the `AKSControlPlane` table instead for the applicable query examples.
 
-* Retrieve the latest 1000 log entries from all Fleet hub agents.
+* Retrieve the latest 1,000 log entries from all Fleet hub agents.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -149,7 +149,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries from all Fleet member agents.
+* Retrieve the latest 1,000 log entries from all Fleet member agents.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your AKS member cluster resource.
@@ -161,7 +161,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet manages cluster memberships on the hub cluster side.
+* Retrieve the latest 1,000 log entries on how Fleet manages cluster memberships on the hub cluster side.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -174,7 +174,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet processes the CRP API objects.
+* Retrieve the latest 1,000 log entries on how Fleet processes the `ClusterResourcePlacement` API objects.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -187,7 +187,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet schedules workloads.
+* Retrieve the latest 1,000 log entries on how Fleet schedules workloads.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -200,7 +200,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet processes rolling updates.
+* Retrieve the latest 1,000 log entries on how Fleet processes rolling updates.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -213,7 +213,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet processes staged updates.
+* Retrieve the latest 1,000 log entries on how Fleet processes staged updates.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -226,7 +226,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet synchronizes workloads to the member clusters.
+* Retrieve the latest 1,000 log entries on how Fleet synchronizes workloads to the member clusters.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -239,7 +239,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet reports cluster memberships on the member cluster side.
+* Retrieve the latest 1,000 log entries on how Fleet reports cluster memberships on the member cluster side.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your AKS member cluster resource.
@@ -252,7 +252,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet applies manifests to a specific member cluster.
+* Retrieve the latest 1,000 log entries on how Fleet applies manifests to a specific member cluster.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your AKS member cluster resource.
@@ -265,7 +265,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet manages endpoint exports/imports for networking capabilities on the hub cluster side.
+* Retrieve the latest 1,000 log entries on how Fleet manages endpoint exports/imports for networking capabilities on the hub cluster side.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -278,7 +278,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet manages service exports/imports for networking capabilities on the hub cluster side.
+* Retrieve the latest 1,000 log entries on how Fleet manages service exports/imports for networking capabilities on the hub cluster side.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -291,7 +291,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet manages Azure Traffic Manager related resources for networking capabilities.
+* Retrieve the latest 1,000 log entries on how Fleet manages Azure Traffic Manager related resources for networking capabilities.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your Fleet resource.
@@ -304,7 +304,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet manages endpoint exports/imports for networking capabilities on the member cluster side.
+* Retrieve the latest 1,000 log entries on how Fleet manages endpoint exports/imports for networking capabilities on the member cluster side.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your AKS member cluster resource.
@@ -317,7 +317,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet manages service exports/imports for networking capabilities on the member cluster side.
+* Retrieve the latest 1,000 log entries on how Fleet manages service exports/imports for networking capabilities on the member cluster side.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your AKS member cluster resource.
@@ -330,7 +330,7 @@ AzureDiagnostics
 | take 1000
 ```
 
-* Retrieve the latest 1000 log entries on how Fleet manages multi-cluster services for networking capabilities.
+* Retrieve the latest 1,000 log entries on how Fleet manages multi-cluster services for networking capabilities.
 
 ```kusto
 // Replace YOUR-RESOURCE-ID with the value of your AKS member cluster resource.
