@@ -118,6 +118,8 @@ To learn more about node images, node pool upgrades, and node configurations on 
 - Learn about upgrading best practices with [AKS patch and upgrade guidance][upgrade-operators-guide].
 
 <!-- LINKS - internal -->
+[upgrade-operators-guide]: ./azure/architecture/operator-guides/aks/aks-upgrade-practices
+[github-schedule]: ./node-upgrade-github-actions.md
 [upgrade-aks-node-images]: ./node-image-upgrade.md
 [use-windows-annual]: ./windows-annual-channel.md
 [aks-core-concepts]: ./core-aks-concepts.md

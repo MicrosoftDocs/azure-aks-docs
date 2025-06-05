@@ -19,7 +19,7 @@ This article describes OS versions available for Azure Kubernetes Service (AKS) 
 
 ## Supported OS versions
 
-Each [node image][node-image] corresponds to an OS version which you can specify using OS SKU. You can specify the following parameters when creating clusters and node pools:
+Each [node image][node-images] corresponds to an OS version which you can specify using OS SKU. You can specify the following parameters when creating clusters and node pools:
 
 * **--os-type**: OS type, including Linux or Windows. Windows OS type can't be specified during cluster creation or update.
 * **--os-sku**: Used to specify OS version or OS variant. Windows OS SKU can't be specified during cluster creation or update.
@@ -184,6 +184,8 @@ To learn more about node images, node pool upgrades, and node configurations on 
 - Learn about upgrading best practices with [AKS patch and upgrade guidance][upgrade-operators-guide].
 
 <!-- LINKS - internal -->
+[upgrade-operators-guide]: ./azure/architecture/operator-guides/aks/aks-upgrade-practices
+[github-schedule]: ./node-upgrade-github-actions.md
 [upgrade-aks-node-images]: ./node-image-upgrade.md
 [use-windows-annual]: ./windows-annual-channel.md
 [aks-core-concepts]: ./core-aks-concepts.md
