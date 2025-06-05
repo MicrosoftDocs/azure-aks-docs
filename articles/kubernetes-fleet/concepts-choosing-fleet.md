@@ -37,7 +37,7 @@ For more information, see [Create a Kubernetes Fleet resource without a hub clus
 
 A Fleet Manager with a hub cluster has an associated AKS-managed cluster, which hosts the open source [KubeFleet][fleet-github] solution for workload placement and the [fleet network manager][fleet-networking-github] for network management and load balancing.
 
-Upon the creation of a Fleet Manager with a hub cluster, a hub AKS cluster is automatically created in the same Azure subscription under a managed resource group that begins with `FL_`. To improve reliability, hub clusters are deny any user-initiated mutations to the corresponding AKS cluster (under the Fleet-managed resource group `FL_`) and their underlying Azure resources (under the AKS-managed resource group `MC_FL_*`), such as virtual machines (VMs). 
+Upon the creation of a Fleet Manager with a hub cluster, a hub AKS cluster is automatically created in the same Azure subscription under a managed resource group that begins with `FL_`. To improve reliability, hub clusters are denied any user-initiated mutations to the corresponding AKS cluster (under the Fleet-managed resource group `FL_`) and their underlying Azure resources (under the AKS-managed resource group `MC_FL_*`), such as virtual machines (VMs). 
 
 Control plane operations, such as changing the hub cluster's configuration through Azure Resource Manager (ARM) or deleting the cluster entirely, are denied. Data plane operations, such as connecting to the hub cluster's Kubernetes API server in order to configure workload placement, are allowed.
 
