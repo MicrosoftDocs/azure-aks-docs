@@ -43,8 +43,8 @@ az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
 
 Using AMD GPUs involves the installation of various AMD GPU software components such as the [AMD device plugin for Kubernetes](https://github.com/ROCm/k8s-device-plugin), GPU drivers, and more.
 
-    > [!NOTE]
-    > Today, AKS does not automate the installation of GPU drivers nor the AMD GPU device plugin on AMD GPU-enabled node pools.
+> [!NOTE]
+> Currently, AKS does not automate the installation of GPU drivers nor the AMD GPU device plugin on AMD GPU-enabled node pools.
 
 ### Register the AKSInfinibandSupport feature
 
