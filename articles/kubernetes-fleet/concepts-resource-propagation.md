@@ -354,7 +354,7 @@ For more information, see the [documentation on snapshots][fleet-snapshots].
 * `effect`: The effect of the toleration, such as `NoSchedule`.
 * `operator`: The operator of the toleration, such as `Exists` or `Equal`.
 
-Each toleration is used to tolerate one or more specific taint applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once created.
+Each toleration is used to tolerate one or more specific taints applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once created.
 
 For more information, see the [documentation on tolerations][fleet-tolerations].
 
