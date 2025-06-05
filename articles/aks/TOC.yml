@@ -287,6 +287,8 @@
       items:
         - name: Proactive monitoring
           href: best-practices-monitoring-proactive.md
+        - name: Advanced Container Networking Services observability guide
+          href: container-network-observability-guide.md
     - name: Application development
       items:
         - name: Resource management
@@ -502,7 +504,7 @@
         - name: GPU workloads
           items:
             - name: Use Linux GPUs
-              href: gpu-cluster.md
+              href: use-nvidia-gpu.md
             - name: Use Windows GPUs
               href: use-windows-gpu.md
             - name: Multi-instance GPU node pool
@@ -928,6 +930,10 @@
                       href: istio-deploy-ingress.md
                     - name: Secure ingress gateways
                       href: istio-secure-gateway.md
+                - name: Egress
+                  items:
+                    - name: Deploy egress gateways (preview)
+                      href: istio-deploy-egress.md
             - name: Security
               items:
                 - name: Plug-in CA certificates
@@ -1006,16 +1012,18 @@
           href: upgrade-cluster.md
         - name: Perform manual upgrades
           items:
-            - name: Upgrade an AKS cluster
-              href: upgrade-aks-cluster.md
-            - name: Orchestrate upgrade across multiple clusters
-              href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-            - name: Upgrade node OS images
-              href: node-image-upgrade.md
-            - name: Customize node surge upgrade
-              href: upgrade-aks-cluster.md#customize-node-surge-upgrade
-            - name: Process node OS updates
-              href: node-updates-kured.md
+          - name: Upgrade an AKS cluster
+            href: upgrade-aks-cluster.md
+          - name: Orchestrate upgrade across multiple clusters
+            href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+          - name: Upgrade node OS images
+            href: node-image-upgrade.md
+          - name: Customize node surge upgrade
+            href: upgrade-aks-cluster.md#customize-node-surge-upgrade
+          - name: Process node OS updates
+            href: node-updates-kured.md
+          - name: Upgrade OS version
+            href: upgrade-os-version.md
         - name: Configure automatic upgrades
           items:
             - name: Automatically upgrade an AKS cluster
@@ -1208,7 +1216,7 @@
     - name: Support policies
       href: support-policies.md
     - name: Azure Roadmap
-      href: https://azure.microsoft.com/roadmap/
+      href: https://azure.microsoft.com/updates/
     - name: AKS Roadmap
       href: https://github.com/Azure/AKS/projects/1
     - name: Stack Overflow

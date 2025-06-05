@@ -3,10 +3,12 @@ title: Use Image Integrity to validate signed images before deploying them to yo
 description: Learn how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters.
 author: schaffererin
 ms.author: schaffererin
-ms.service: azure-kubernetes-service
-ms.custom: devx-track-azurecli
-ms.topic: how-to
 ms.date: 09/26/2023
+ms.service: azure-kubernetes-service
+ms.topic: how-to
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
 ---
 
 # Use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters (Preview)
@@ -123,7 +125,7 @@ In this article, we use a self-signed CA cert from the official Ratify documenta
 
     ```YAML
     apiVersion: config.ratify.deislabs.io/v1beta1
-    kind: CertificateStore
+    kind: KeyManagementProvider
     metadata:
       name: certstore-inline
     spec:

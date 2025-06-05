@@ -45,25 +45,15 @@ AKS uses best-effort zone balancing in node groups. During an upgrade surge, the
 
 Persistent volume claims (PVCs) backed by Azure locally redundant storage (LRS) Disks are bound to a particular zone and might fail to recover immediately if the surge node doesn't match the zone of the PVC. If the zones don't match, it can cause downtime on your application when the upgrade operation continues to drain nodes but the PVs are bound to a zone. To handle this case and maintain high availability, configure a [Pod Disruption Budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) on your application to allow Kubernetes to respect your availability requirements during the drain operation.
 
-## Optimize for undrainable node behavior (Preview)
+## Optimize for undrainable node behavior
 
 You can configure the upgrade process behavior for drain failures. The default upgrade behavior is `Schedule`, which consists of a node drain failure causing the upgrade operation to fail, leaving the undrained nodes in a schedulable state. Alternatively, you can select the `Cordon` behavior, which skips nodes that fail to drain by placing them in a quarantined state, labels them `kubernetes.azure.com/upgrade-status:Quarantined`, and proceeds with upgrading the remaining nodes. This behavior ensures that all nodes are either upgraded or quarantined. This approach allows you to troubleshoot drain failures and gracefully manage the quarantined nodes.
 
 ### Set new cordon behavior
 
-You need to use `aks-preview` extension 9.0.0b3 or later to set the new cordon behavior.
+You need to use `Azure CLI` version 2.74 or later to set the new cordon behavior.
 
-1. Install or update the `aks-preview` extension using the [`az extension add`][az-extension-add] or [`az extension update`][az-extension-update] command:
-
-    ```azurecli-interactive
-    # Install the aks-preview extension
-    az extension add --name aks-preview
-    
-    # Update the aks-preview extension to the latest version
-    az extension update --name aks-preview
-    ```
-
-2. Update the node pool undrainable node behavior to `Cordon` using the [`az aks nodepool update`][az-aks-nodepool-update] command.
+1. Update the node pool undrainable node behavior to `Cordon` using the [`az aks nodepool update`][az-aks-nodepool-update] command.
 
     ```azurecli-interactive
     az aks nodepool update --cluster-name $CLUSTER_NAME --name $NODE_POOL_NAME --resource-group $RESOURCE_GROUP --max-surge 1 --undrainable-node-behavior Cordon
@@ -80,7 +70,7 @@ You need to use `aks-preview` extension 9.0.0b3 or later to set the new cordon b
       }
     ```
 
-3. Verify the label on any blocked nodes when there's a drain node failure on upgrade using the `kubectl get` command.
+2. Verify the label on any blocked nodes when there's a drain node failure on upgrade using the `kubectl get` command.
 
     ```bash
     kubectl get nodes --show-labels=true
@@ -127,7 +117,7 @@ The combination of [Planned Maintenance Window][planned-maintenance], [Max Surge
 
 * [Planned Maintenance Window][planned-maintenance] enables service teams to schedule auto-upgrade during a predefined window, typically a low-traffic period, to minimize workload impact. We recommend a window duration of at least *four hours*.
 * [Max Surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade) on the node pool allows requesting extra quota during the upgrade process and limits the number of nodes selected for upgrade simultaneously. A higher max surge results in a faster upgrade process. We don't recommend setting it at 100%, as it upgrades all nodes simultaneously, which can cause disruptions to running applications. We recommend a max surge quota of *33%* for production node pools.
-* [Max Unavailable (Preview)](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade-preview) on the node pool allows upgrades to occur by cordoning the existing nodes and draining without adding any surge nodes. A higher max unavailable result in faster upgrade but also causes more workload disruptions for the node pool. This feature is recommended for customers facing capacity constraints due to lack of extra SKU capacity in the region or quota issues.
+* [Max Unavailable](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade) on the node pool allows upgrades to occur by cordoning the existing nodes and draining without adding any surge nodes. A higher max unavailable result in faster upgrade but also causes more workload disruptions for the node pool. This feature is recommended for customers facing capacity constraints due to lack of extra SKU capacity in the region or quota issues.
 * [Pod Disruption Budget][pdb-spec] is set for service applications and limits the number of pods that can be down during voluntary disruptions, such as AKS-controlled node upgrades. It can be configured as `minAvailable` replicas, indicating the minimum number of application pods that need to be active, or `maxUnavailable` replicas, indicating the maximum number of application pods that can be terminated, ensuring high availability for the application. Refer to the guidance provided for configuring [Pod Disruption Budgets (PDBs)][pdb-concepts]. PDB values should be validated to determine the settings that work best for your specific service.
 * [Node drain timeout][drain-timeout] on the node pool allows you to configure the wait duration for eviction of pods and graceful termination per node during an upgrade. This option is useful when dealing with long running workloads. When the node drain timeout is specified (in minutes), AKS respects waiting on pod disruption budgets. If not specified, the default timeout is 30 minutes.
 * [Node soak time][soak-time] helps stagger node upgrades in a controlled manner and can minimize application downtime during an upgrade. You can specify a wait time, preferably as reasonably close to 0 minutes as possible, to check application readiness between node upgrades. If not specified, the default value is 0 minutes. Node soak time works together with the max surge and node drain timeout properties available in the node pool to deliver the right outcomes in terms of upgrade speed and application availability.

@@ -1,12 +1,14 @@
 ---
 title: Long-term support for Azure Kubernetes Service (AKS) versions
 description: Learn about Azure Kubernetes Service (AKS) long-term support for Kubernetes
-ms.topic: concept-article
-ms.custom: devx-track-azurecli
-ms.date: 01/24/2024
-ms.author: juda
 author: justindavies
-#Customer intent: As a cluster operator or developer, I want to understand how long-term support for Kubernetes on AKS works.
+ms.author: juda
+ms.date: 01/24/2024
+ms.topic: concept-article
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
+# Customer intent: As a cluster operator or developer, I want to understand how long-term support for Kubernetes on AKS works.
 ---
 
 # Long-term support for Azure Kubernetes Service (AKS) versions
