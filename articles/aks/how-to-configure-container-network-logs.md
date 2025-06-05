@@ -285,9 +285,8 @@ az grafana create \
     --name $GRAFANA_NAME \
     --resource-group $RESOURCE_GROUP 
 ```
-Note
 > [!NOTE]
-> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/azure/managed-grafana/how-to-permissions))
+> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/azure/managed-grafana/how-to-permissions.md))
 
 ### Visualization in Grafana dashboards
 
@@ -317,7 +316,7 @@ User can visualize Container Network Flow log for analysis with two prebuilt Gra
     - **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors.
      (ID: [23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//))
     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
-    For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observaility-logs.md)       
+    For more information about usage of this dashboard, refer [Overview of Container Network Logs](container-network-observability-logs.md)       
 
 #### Visualization of container network logs in azure portal. 
 
@@ -362,7 +361,7 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature is not available for Non-cilium clusters
+> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature is not available for Non-cilium clusters.
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -394,9 +393,7 @@ az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
     --enable-acns
-```
-
----    
+```    
 
 ## Get cluster credentials 
 
@@ -750,10 +747,9 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 1. Access Hubble UI by entering `http://localhost:12000/` into your web browser.
 
----
 ### Basic troubleshooting 
 
-1) Advanced Container Networking Services is a prerequisite for enabling AMA log collection feature:
+- Advanced Container Networking Services is a prerequisite for enabling AMA log collection feature:
    Trying to enable container network flow logs capability on a cluster without enabling Advanced Container Networking Services:
 
     ```az aks update -g test-rg -n test-cluster --enable-retina-flow-logs```
@@ -762,17 +758,17 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
     ```Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.```
 
-2) If the cluster Kubernetes version is below 1.32.0, trying to enable '--enable-retina-flow-logs':
+- If the cluster Kubernetes version is below 1.32.0, trying to enable '--enable-retina-flow-logs':
 
     ```The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later.```
 
     Where the %s is replaced by the customer's K8s version
 
-3) If a customer tries to enable '--enable-retina-flow-logs' on a subscription where AFEC flag isn't enabled:
+- If a customer tries to enable '--enable-retina-flow-logs' on a subscription where AFEC flag isn't enabled:
 
     ```Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.```
 
-4) If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where Advanced Container Networking Services isn't enabled:
+- If a customer tries to apply a RetinaNetworkFlowLog CR on a cluster where Advanced Container Networking Services isn't enabled:
     
    ```error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
    ```ensure CRDs are installed first```

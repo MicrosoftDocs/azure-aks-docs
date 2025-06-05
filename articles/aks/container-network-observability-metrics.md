@@ -10,13 +10,13 @@ ms.date: 05/10/2025
 ---
 
 # Overview of Container Network Metrics 
-Advanced Container Networking Services in Azure Kubernetes Service (AKS) facilitate the collection of comprehensive container network metrics, providing valuable insights into the performance of containerized environments. This capability continuously captures essential metrics at the node and pod levels, including traffic volume, dropped packets, connection states, and DNS resolution times, enabling effective monitoring and optimization of network performance.
+Advanced Container Networking Services in Azure Kubernetes Service (AKS) facilitates the collection of comprehensive container network metrics, providing valuable insights into the performance of containerized environments. This capability continuously captures essential metrics at the node and pod levels, including traffic volume, dropped packets, connection states, and DNS resolution times, enabling effective monitoring and optimization of network performance.
 
 The ability to capture these metrics is essential for understanding how containers communicate, how traffic flows between services, and where bottlenecks or disruptions might be occurring. Advanced Container Networking Services integrates seamlessly with monitoring tools like Prometheus and Grafana, providing users with a complete view of networking metrics that can be used for in-depth troubleshooting, network optimization, and performance tuning.
 
 In today’s cloud-native world, maintaining a healthy and efficient network in a dynamic containerized environment is vital to ensuring that applications perform as expected. Without proper visibility into network traffic and its patterns, identifying potential issues or inefficiencies becomes challenging.
 
-### Key Benefits 
+### Key benefits 
 -    Deep visibility into network performance
 -    Enhanced troubleshooting and optimization
 -    Proactive anomaly detection
@@ -26,16 +26,16 @@ In today’s cloud-native world, maintaining a healthy and efficient network in 
     * **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
     * **Bring Your Own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.
 
-## Types of Metrics Captured
+## Types of metrics captured
 
-### Node-Level Metrics
+### Node-Level metrics
 Understanding the health of your container network at the node-level is crucial for maintaining optimal application performance. These metrics provide insights into traffic volume, dropped packets, number of connections, etc. by node. The metrics are stored in Prometheus format and, as such, you can view them in Grafana.
 The following metrics are aggregated per node. All metrics include labels:
 
 * `cluster`
 * `instance` (Node name)
 
-#### [**Cilium**](#tab/cilium)
+#### [**Cilium**](#tab/Cilium)
 
 For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux. Windows is currently not supported.
 Cilium exposes several metrics including the following used by Container Network Observability.
@@ -47,7 +47,7 @@ Cilium exposes several metrics including the following used by Container Network
 | **cilium_drop_count_total**    | Total dropped packet count   | `direction`, `reason` | ✅ | ❌ |
 | **cilium_drop_bytes_total**    | Total dropped byte count     | `direction`, `reason` | ✅ | ❌ |
 
-#### [**Non-Cilium**](#tab/non-cilium)
+#### [**Non-Cilium**](#tab/non-Cilium)
 
 For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 The table below outlines the different metrics generated.
@@ -72,7 +72,7 @@ The table below outlines the different metrics generated.
 
 ---
 
-### Pod-Level Metrics (Hubble Metrics)
+### Pod-Level metrics (Hubble Metrics)
 
 These Prometheus metrics include source and destination pod information allowing you to pinpoint network-related issues at a granular level. Metrics cover traffic volume, dropped packets, TCP resets, L4/L7 packet flows, etc. There are also DNS metrics (currently only for Non-Cilium data planes), covering DNS errors, and DNS requests missing responses. The following metrics are aggregated per pod (node information is preserved). All metrics include labels:
 
@@ -95,7 +95,7 @@ For *incoming traffic*, there will be a `destination` label with destination pod
 
 * Pod-level metrics are available only on Linux.
 * Cilium data plane is supported starting with Kubernetes version 1.29.
-* Metric labels may have subtle differences between Cilium and non-Cilium clusters.
+* Metric labels have subtle differences between Cilium and non-Cilium clusters.
 * For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network policies (CNP) configured on their clusters.
 * Flow logs are not currently available in the air gapped cloud.
 * Hubble relay may crash if one of the Hubble node agents goes down and may cause interruptions to Hubble CLI.

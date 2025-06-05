@@ -43,7 +43,7 @@ To learn more, see [Metrics Overview](container-network-observability-metrics.md
 
 Container Network Logs provides detailed insights into traffic within and across clusters by capturing metadata like source/destination IPs, ports, protocols, and flow direction. These logs enable monitoring network behavior, troubleshooting connectivity issues, and enforcing security policies. Persistent and real-time logging options ensure comprehensive, actionable network observability.
 
-To learn more, see [Container Network Logs Overview](container-network-observaility-logs.md) documentation.
+To learn more, see [Container Network Logs Overview](container-network-observability-logs.md) documentation.
 
 ## Container Network Security
 
