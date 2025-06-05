@@ -202,7 +202,7 @@ Remove the associated Kubernetes objects you created in this article using the [
 
 ## Next steps
 
-- Explore the [different storage options](/cli/azure/aks/concepts-storage) for your GPU-based application on AKS.
+- Explore the [different storage options](concepts-storage.md) for your GPU-based application on AKS.
 - Learn more about [Ray clusters on AKS](ray-overview.md).
 
 
