@@ -1,12 +1,10 @@
 ---
 title: "Azure Kubernetes Fleet Manager and member clusters"
 description: This article provides a conceptual overview of Azure Kubernetes Fleet Manager and member clusters.
-ms.date: 04/23/2024
+ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - build-2024
 ms.topic: concept-article
 ---
 
@@ -47,7 +45,7 @@ Member clusters support the specification of taints, which apply to the `MemberC
 
 Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introducing-clusterresourceplacement) to the `MemberCluster`.
 
-For more information, see [the open-source Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/MemberCluster/README.md).
+For more information, see the [KubeFleet components documentation](https://kubefleet.dev/docs/concepts/components/).
 
 ## Next steps
 
