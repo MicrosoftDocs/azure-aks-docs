@@ -13,7 +13,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 # Set up Container Network Logs with Advanced Container Networking Services
 
 This document is designed to provide clear steps for configuring and utilizing Container Network Logs feature using Advanced Container Networking Services. These logs offer persistent network flow monitoring tailored to enhance visibility within containerized environments. By capturing Container Network Logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate Container Network Logs for your system. For more information about Container Network Logs Feature, see 
- [Overview of Container Network Logs](container-network-observaility-logs.md)
+ [Overview of Container Network Logs](container-network-observability-logs.md)
 
 ## Prerequisites
 
@@ -286,7 +286,7 @@ az grafana create \
     --resource-group $RESOURCE_GROUP 
 ```
 > [!NOTE]
-> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/azure/managed-grafana/how-to-permissions.md))
+> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more, ([How to modify access permissions](/azure/managed-grafana/how-to-permissions))
 
 ### Visualization in Grafana dashboards
 

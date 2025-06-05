@@ -143,7 +143,7 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
 6. Use the **Stacked (Total) Outgoing/Incoming Drops by Source Pod** chart to compare drop rates across affected pods. Identify if specific pods consistently show higher drops (for example, kapinger-bad-6659b89fd8-zjb9k at 26.8 p/s). Here, p/s refers to drop packet per second. Cross-reference these pods with their workloads, labels, and network policies to diagnose potential misconfigurations.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Diagram of Hubble UI service map. " lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Diagram of total outgoing drops by source pods. " lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
 
 ### Step 2: Investigate with Hubble CLI
 
@@ -155,7 +155,7 @@ Using Hubble CLI, you can identify packet drops caused by misconfigured network 
 
 Another useful tool is the Hubble UI, which provides a visual representation of traffic flows within a namespace. For example, in the *agnhost* namespace, the UI displays interactions between pods within the same namespace, pods in other namespaces, and even packets originating from outside the cluster. Additionally, the interface highlights dropped packets and provides detailed information, such as the source and destination pod names, along with pod and namespace labels. This data can be instrumental in reviewing the network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png" alt-text="Diagram of Hubble UI for dropped packets." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png":::
 
 ## Use case 3: Identify traffic imbalances within workloads and namespaces
 
