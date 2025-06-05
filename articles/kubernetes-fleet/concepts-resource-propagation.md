@@ -10,7 +10,7 @@ ms.topic: concept-article
 
 # Kubernetes resource placement from hub cluster to member clusters
 
-This article describes the concept of Kubernetes resource placement from hub clusters to member clusters using Azure Kubernetes Fleet Manager (Kubernetes Fleet).
+This article describes the concept of Kubernetes resource placement from hub clusters to member clusters using Azure Kubernetes Fleet Manager.
 
 Platform admins often need to deploy Kubernetes resources onto multiple clusters for various reasons, for example:
 
@@ -23,9 +23,9 @@ Application developers often need to deploy Kubernetes resources onto multiple c
 * Deploying a shopping cart application into two paired regions for customers to continue to shop during a single region outage.
 * Deploying a batch compute application into clusters with inexpensive spot node pools available.
 
-It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Kubernetes Fleet, you can create Kubernetes resources in the hub cluster and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`.
+It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet Manager provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Fleet Manager, you can create Kubernetes resources on a Fleet-managed hub cluster and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`.
 
-Kubernetes Fleet supports these custom resources based on the open-source KubeFleet solution which you can read more about on the [KubeFleet documentation site][fleet-github].
+Fleet Manager supports these custom resources based on the open-source KubeFleet solution which you can read more about on the [KubeFleet documentation site][fleet-github].
 
 ## Introducing ClusterResourcePlacement
 
@@ -33,10 +33,10 @@ A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to p
 
 With `ClusterResourcePlacement`, you can:
 
-* Select which cluster-scoped Kubernetes resources to propagate to member clusters.
-* Specify placement policies to manually or automatically select member clusters as target clusters.
+* Select which resources to propagate. These can be cluster-scoped Kubernetes resources defined using [Kubernetes Group Version Kind (GVK)](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#api-groups) references, or a namespace which will propagate the namespace and all its resources.
+* Specify placement policies to select member clusters. These policies can explicitly select clusters by names, or dynamically select clusters based on cluster labels and properties. 
 * Specify rollout strategies to safely roll out any updates of the selected Kubernetes resources to multiple target clusters.
-* View the propagation progress towards each target cluster.
+* View the propagation progress for each target cluster.
 
 An example is shown in the following diagram.
 
