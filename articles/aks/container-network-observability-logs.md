@@ -14,6 +14,7 @@ ms.date:  05/16/2025
 Container Network Logs for Azure Kubernetes Service (AKS) in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) provide deep visibility into network traffic within the cluster. These logs capture essential metadata including source and destination IP addresses, pod/service names, ports, protocols, and traffic direction, offering detailed insights into network behavior. Container Network Logs captures Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic. This enables effective monitoring of connectivity, troubleshooting, network topology visualization, and security policy enforcement. There can be two modes of using this capability - always-on and on-demand. 
 
 ## Always-on 
+
 This mode ensures continuous log generation and collection on the AKS cluster when Advanced Container Networking Services is enabled and custom filters are configured. This feature remains active until explicitly disabled by the customer, allowing extended log retention. This feature supports filtering of traffic, which allows collection and retention of logs relevant to user, thus reducing storage cost, and making analysis easier. Traffic filtering can be achieved by defining a specific type of Custom Resource (CR).
 
 ### How Always-on mode works
