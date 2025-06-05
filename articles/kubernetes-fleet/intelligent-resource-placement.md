@@ -289,7 +289,7 @@ For details on how to remove a cluster resource placement via the Azure portal o
 
 ## Related content
 
-* To learn more about resource placement, see the open-source [KubeFleet documentation](https://kubefleet-dev.github.io/website/docs/concepts/crp/).
+* To learn more about resource placement, see the open-source [KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
 
 <!-- LINKS -->
 [fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager-resource

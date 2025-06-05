@@ -515,9 +515,9 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
 
 <!-- LINKS - external -->
-[fleet-github]: https://kubefleet-dev.github.io/website/docs/
-[envelope-object]: https://kubefleet-dev.github.io/website/docs/how-tos/envelope-object/
-[crp-topo]: https://kubefleet-dev.github.io/website/docs/how-tos/topology-spread-constraints/
+[fleet-github]: https://kubefleet.dev/docs/
+[envelope-object]: https://kubefleet.dev/docs/how-tos/envelope-object/
+[crp-topo]: https://kubefleet.dev/docs/how-tos/topology-spread-constraints/
 [fleet-rollout]: ./concepts-rollout-strategy.md
 [fleet-staged-rollout]: ./concepts-rollout-strategy.md#staged-update-strategy-preview
 [fleet-tolerations]: ./use-taints-tolerations.md

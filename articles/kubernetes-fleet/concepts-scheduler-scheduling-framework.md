@@ -25,7 +25,7 @@ Scheduling resources within a `ClusterResourcePlacement` involves more dependenc
 * In a `ClusterResourcePlacement`, multiple replicas of resources can't be scheduled on the same cluster.
 * The `ClusterResourcePlacement` supports different placement types within a single object.
 
-For more information, see the open-source [KubeFleet Scheduler documentation](https://kubefleet-dev.github.io/website/docs/concepts/scheduler/).
+For more information, see the open-source [KubeFleet Scheduler documentation](https://kubefleet.dev/docs/concepts/scheduler/).
 
 ## What is the scheduling framework?
 
@@ -43,7 +43,7 @@ The fleet scheduler integrates the following fundamental built-in plugins:
 * **Cluster eligibility plugin**: Enables cluster selection based on specific status criteria.
 * **Taint & toleration plugin**: Enables cluster selection based on [taints on the cluster](./concepts-fleet.md#taints) and [tolerations on the `ClusterResourcePlacement`](./concepts-resource-propagation.md#using-tolerations).
 
-For more information, see the open-source [KubeFleet Scheduling Framework documentation](https://kubefleet-dev.github.io/website/docs/concepts/scheduling-framework/).
+For more information, see the open-source [KubeFleet Scheduling Framework documentation](https://kubefleet.dev/docs/concepts/scheduling-framework/).
 
 ## Next steps
 

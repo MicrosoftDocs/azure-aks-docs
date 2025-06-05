@@ -75,5 +75,5 @@ Now that you understand the different types of Kubernetes fleet resources, see [
 [create-private-hub-cluster]: quickstart-create-fleet-and-members.md?tabs=with-hub-cluster#private-hub-cluster
 
 <!-- LINKS - external -->
-[fleet-github]: https://kubefleet-dev.github.io/website/docs/
+[fleet-github]: https://kubefleet.dev/
 [fleet-networking-github]: https://github.com/Azure/fleet-networking

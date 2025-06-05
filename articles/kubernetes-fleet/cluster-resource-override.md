@@ -290,5 +290,5 @@ rules:
 
 ## Related content
 
-* [KubeFleet override documentation](https://kubefleet-dev.github.io/website/docs/concepts/override/)
+* [KubeFleet override documentation](https://kubefleet.dev/docs/concepts/override/)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)

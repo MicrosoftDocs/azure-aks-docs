@@ -302,4 +302,4 @@ In this example, you add a toleration to a `ClusterResourcePlacement` resource t
 
 ## Related content
 
-* [Open-source KubeFleet documentation](https://kubefleet-dev.github.io/website/docs/how-tos/taints-tolerations/)
+* [Open-source KubeFleet documentation](https://kubefleet.dev/docs/how-tos/taints-tolerations/)

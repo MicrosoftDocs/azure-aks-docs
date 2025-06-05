@@ -24,7 +24,7 @@ This article describes how to use Azure Kubernetes Fleet Manager cluster resourc
 
 The `ClusterResourcePlacement` object is created on the hub cluster and is used to propagate resources to member clusters. It specifies the resources to propagate and the placement policy to use when you're selecting member clusters. This example demonstrates how to propagate a namespace to member clusters by using the `ClusterResourcePlacement` object with a `PickAll` placement policy.
 
-For more information, see [resource placement using Azure Kubernetes Fleet Manager cluster resource placement](./concepts-resource-propagation.md) and the open-source [KubeFleet documentation](https://kubefleet-dev.github.io/website/docs/concepts/crp/).
+For more information, see [resource placement using Azure Kubernetes Fleet Manager cluster resource placement](./concepts-resource-propagation.md) and the open-source [KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -256,4 +256,4 @@ To learn more about resource propagation, see the following resources:
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md)
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
-* [Open-source KubeFleet documentation](https://kubefleet-dev.github.io/website/docs/concepts/crp/).
+* [Open-source KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).

@@ -45,7 +45,7 @@ Member clusters support the specification of taints, which apply to the `MemberC
 
 Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introducing-clusterresourceplacement) to the `MemberCluster`.
 
-For more information, see the [KubeFleet components documentation](https://kubefleet-dev.github.io/website/docs/concepts/components/).
+For more information, see the [KubeFleet components documentation](https://kubefleet.dev/docs/concepts/components/).
 
 ## Next steps
 
