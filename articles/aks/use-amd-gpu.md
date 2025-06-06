@@ -101,7 +101,7 @@ After creating your nodepool, confirm that GPUs are schedulable in your AKS clus
 
 1. Confirm the GPUs are schedulable using the [`kubectl describe node`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#describe) command.
 
-    ```console
+    ```bash
     kubectl describe node aks-gpunp-00000000
     ```
 
