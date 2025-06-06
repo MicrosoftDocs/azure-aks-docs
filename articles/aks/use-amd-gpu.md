@@ -48,7 +48,7 @@ Using AMD GPUs involves the installation of various AMD GPU software components 
 
 ### Register the AKSInfinibandSupport feature
 
-1. If your AMD GPU VM size is RDMA-enabled with the `r` naming convention (e.g. `Standard_ND96isr_MI300X_v5`), you will need to ensure that the machines in the nodepool land on the same physical Infiniband network. To achieve this, register the `AKSInfinibandSupport` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command:
+1. If your AMD GPU VM size is RDMA-enabled with the `r` naming convention (e.g. `Standard_ND96isr_MI300X_v5`), you will need to ensure that the machines in the node pool land on the same physical Infiniband network. To achieve this, register the `AKSInfinibandSupport` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command:
 
     ```azurecli-interactive
     az feature register --name AKSInfinibandSupport --namespace Microsoft.ContainerService
