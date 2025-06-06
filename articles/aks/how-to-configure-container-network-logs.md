@@ -26,7 +26,7 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 * Container Network logs with On-demand mode works for both Cilium and non-Cilium data planes. 
 
-* If existing cluster is <= 1.31, upgrade the cluster to the latest available Kubernetes version.
+* If existing cluster is <= 1.32, upgrade the cluster to the latest available Kubernetes version.
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -67,8 +67,6 @@ The `az aks create` command with the Advanced Container Networking Services flag
 
 * **Container Network Security:** Offers security features like Fully Qualified Domain filtering(FQDN). To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
-> [!NOTE]
-> Clusters with the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -187,7 +185,8 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
     -n $CLUSTER_NAME
 ```
 > [!NOTE]
-> When managed log storage is enabled after a delay, the Azure Monitor Agent (AMA) begins collecting container network flow logs from the point of activation. It does not ingest historical log entries older than two minutes. Instead, the agent tails the events.log file and only collects new entries that are appended after monitoring begins.
+> By default, container network flow logs are written to /var/log/acns/hubble/events.log as soon as the custom resource RetinaNetworkFlowLog is applied.If Log Analytics integration is enabled later, the Azure Monitor Agent (AMA) begins collecting logs from that point onward. Logs older than two minutes are not ingested; only new entries appended after monitoring begins are collected in log analytics workspace. 
+
 #### Configuring existing cluster to store logs at Azure Log analytics workspace
 
 To enable the container network logs on existing cluster, follow these steps:
