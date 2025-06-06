@@ -188,7 +188,7 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
 
 1. To confirm that the appropriate AMD GPU device has been discovered, display the output of the GPU-enabled workload using the [`kubectl logs`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs) command.
 
-    ```console
+    ```bash
     kubectl logs samples-tf-mnist-demo-smnr6
     ```
 
