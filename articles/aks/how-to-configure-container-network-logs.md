@@ -39,9 +39,7 @@ Install or update the Azure CLI preview extension using the [`az extension add`]
 az extension add --name aks-preview
 # Update the extension to make sure you have the latest version installed
 az extension update --name aks-preview
-``` 
-
-
+```
 ## Configuring Always-on mode for Container Network Logs
 
 ### Register the `AdvancedNetworkingFlowLogsPreview' feature flag
