@@ -157,7 +157,7 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
 
 1. Run the job using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command, which parses the manifest file and creates the defined Kubernetes objects.
 
-    ```console
+    ```bash
     kubectl apply -f samples-tf-mnist-demo.yaml
     ```
 
