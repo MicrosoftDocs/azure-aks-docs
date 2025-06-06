@@ -29,7 +29,7 @@ To read more about throttling and Container Insights, refer to [Container Insigh
 
 ### Key Capabilities of Always-on mode
 
-- Customizable filters: Logging is configurable via defining Custom Resources(CR) of type [RetinaNetworkFlowLog](./how-to-configure-container-network-logs.md#cr-template). With these CRs, users can apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress/egress). This flexibility ensures precise data collection tailored to specific use cases, logs only relevant traffic, and optimizes storage usage for better performance, compliance, and efficient troubleshooting.
+- Customizable filters: Logging is configurable via defining Custom Resources(CR) of type [RetinaNetworkFlowLog](./how-to-configure-container-network-logs.md#retinanetworkflowlog-template). With these CRs, users can apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress/egress). This flexibility ensures precise data collection tailored to specific use cases, logs only relevant traffic, and optimizes storage usage for better performance, compliance, and efficient troubleshooting.
 
 - Log storage options: There are two primary storage options for Container Network Logs: managed storage and unmanaged storage.
 
