@@ -182,7 +182,7 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
 
 1. Get the name of the pod using the [`kubectl get pods`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command.
 
-    ```console
+    ```bash
     kubectl get pods --selector app=samples-tf-mnist-demo
     ```
 
