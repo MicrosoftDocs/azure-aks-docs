@@ -49,22 +49,19 @@ The user can visualize, query, and analyze flow logs in Azure portal in Azure lo
 
 ### Visualization of Container Network logs in Grafana dashboards
 
-The user can visualize network flow logs for analysis with several prebuilt Grafana dashboards. Customers have several options to access these dashboards
-
 - Access in Azure Managed Grafana instances- To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as 
- - **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors
+    - **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors. Currently, user has to import grafana dashboards with user ID to fetch flow logs dashboard in Azure portal. We understand this is an interim solution, soon all the relavnt dashboard would be available here automatically.
 :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard.png" alt-text="Screenshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard.png":::
-
- - **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
+    - **Azure / Insights / Containers / Networking / Flow Logs (External Traffic)** - This dashboard provides visualizations into which Kubernetes workloads are sending/receiving communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. 
 :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services, see [Setting up Grafana](./how-to-configure-container-network-logs.md#visualization-using-azure-managed-grafana).
 
-- Access in the Azure portal with the "Dashboards with Grafana" option. Currently, user has to import grafana dashboards with user ID to fetch flow logs dashboard in Azure portal. We understand this is an interim solution, soon all the relavnt dashboard would be available here automatically.
+- Access in the Azure portal with the "Dashboards with Grafana" option- 
  :::image type="content" source="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png" alt-text="Screenshot of grafana dashboards in Azure monitor." lightbox="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png":::
 
 The users are able to see following major components in these dashboards:
 
-- Summary statistics give a quick overview of network health by summarizing metrics like total flow logs, unique requests, dropped requests, and forwarded requests, helping users identify anomalies for efficient operation and improvements.A service dependency graph shows the relationships between services in an application or cluster, helping users see interactions, traffic flow, bottlenecks, and dependencies to troubleshoot issues and optimize performance.
+- The dashboard provides a comprehensive overview of network health with key metrics such as total flow logs, unique requests, dropped requests, and forwarded requests, enabling quick anomaly detection and efficient troubleshooting. It categorizes statistics by protocol and behavior, including DNS dropped requests, HTTP 2xx responses, Layer 4 request/response rates, and dropped request counts. A service dependency graph visualizes application or cluster interactions, highlighting traffic flow, bottlenecks, and dependencies for performance optimization.
 :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Screenshot of Flow log stats and service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
 
 - Flow logs and error logs for quick analysis. These logs can be filtered out for root cause analysis. For example, for DNS issues, one can filter out error logs based on the Domain Name Server (DNS) protocol.   
