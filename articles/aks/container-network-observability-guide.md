@@ -11,7 +11,7 @@ ms.date: 05/28/2025
 
 # Use Advanced Container Networking Services for diagnosing and resolving network issues
 
-This guide helps you navigate [Advanced Container Networking Services](./container-network-observability-concepts.md) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively.
+This guide helps you navigate [Advanced Container Networking Services](./advanced-container-networking-services-overview.md#container-network-observability) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively.
 
 ## Overview of Advanced Container Networking Services dashboards
 
@@ -87,11 +87,11 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
 
     In the following example output, you can see the query is getting refused:
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png" alt-text="Diagram of one of the command for hubble CLI. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png" alt-text="Diagram of one of the commands for hubble CLI. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png":::
 
     Hubble logs provide detailed insights into DNS queries and their responses, which can help diagnosing and troubleshooting DNS-related issues. Each log entry includes information such as the query type (for example, *A* or *AAAA*), the queried domain name, the DNS response code (for example, *Query Refused*, *Non-Existent Domain*, or *Server Failure*), and the source and destination of the DNS request.
 
-2. **Identify the query status**: Examine the **DNS Answer RCode** field for responses like *Query Refused* or *Server Failure*, which indicate issues with the DNS server or configuration.
+2. **Identify the query status**: Examine the **DNS Answer RCode** field for responses like *Query Refused* or *Server Failure, which indicates issues with the DNS server or configuration.
 3. **Verify the queried domain**: Ensure the domain name listed (for example, *example.com*) is correct and exists. For *Non-Existent Domain* errors, confirm the domain is valid and resolvable.
 4. **Track forwarding behavior**: Look at forwarding details to understand whether the query was successfully forwarded to the DNS server or endpoint. Disruptions in this process might indicate networking or configuration problems.
 5. **Analyze timestamps**: Use timestamps to correlate specific DNS issues with other events in your system for a comprehensive diagnosis.
@@ -143,7 +143,7 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
 6. Use the **Stacked (Total) Outgoing/Incoming Drops by Source Pod** chart to compare drop rates across affected pods. Identify if specific pods consistently show higher drops (for example, kapinger-bad-6659b89fd8-zjb9k at 26.8 p/s). Here, p/s refers to drop packet per second. Cross-reference these pods with their workloads, labels, and network policies to diagnose potential misconfigurations.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Diagram of Hubble UI service map ." lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Diagram of total outgoing drops by source pods. " lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
 
 ### Step 2: Investigate with Hubble CLI
 
@@ -155,7 +155,7 @@ Using Hubble CLI, you can identify packet drops caused by misconfigured network 
 
 Another useful tool is the Hubble UI, which provides a visual representation of traffic flows within a namespace. For example, in the *agnhost* namespace, the UI displays interactions between pods within the same namespace, pods in other namespaces, and even packets originating from outside the cluster. Additionally, the interface highlights dropped packets and provides detailed information, such as the source and destination pod names, along with pod and namespace labels. This data can be instrumental in reviewing the network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png" alt-text="Diagram of Hubble UI service map for dropped packets." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png":::
+:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png" alt-text="Diagram of Hubble UI for dropped packets." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png":::
 
 ## Use case 3: Identify traffic imbalances within workloads and namespaces
 
