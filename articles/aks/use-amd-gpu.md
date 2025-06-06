@@ -95,7 +95,7 @@ After creating your nodepool, confirm that GPUs are schedulable in your AKS clus
 
 1. List the nodes in your cluster using the [`kubectl get nodes`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command.
 
-    ```console
+    ```bash
     kubectl get nodes
     ```
 
