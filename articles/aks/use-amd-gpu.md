@@ -79,7 +79,7 @@ Using AMD GPUs involves the installation of various AMD GPU software components 
 
 ### Deploy the AMD GPU Operator on AKS
 
-The AMD GPU Operator automates the management and deployment of all AMD software components needed to provision GPU including driver installation, the [AMD device plugin for Kubernetes](), the AMD container runtime, and more. Since the AMD GPU Operator handles these components, it's not necessary to separately install the AMD device plugin on your AKS cluster. This also means that the automatic GPU driver installation should be skipped in order to use the AMD GPU Operator on AKS.
+The [AMD GPU Operator](https://instinct.docs.amd.com/projects/gpu-operator/en/latest/usage.html) automates the management and deployment of all AMD software components needed to provision GPU including driver installation, the [AMD device plugin for Kubernetes](https://github.com/ROCm/k8s-device-plugin), the AMD container runtime, and more. Since the AMD GPU Operator handles these components, it's not necessary to separately install the AMD device plugin on your AKS cluster. This also means that the automatic GPU driver installation should be skipped in order to use the AMD GPU Operator on AKS.
 
 1. Follow the AMD documentation to [Install the GPU Operator](https://instinct.docs.amd.com/projects/gpu-operator/en/latest/usage.html).
 
