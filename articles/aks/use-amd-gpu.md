@@ -165,7 +165,7 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
 
 1. Monitor the progress of the job using the [`kubectl get jobs`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command with the `--watch` flag. It may take a few minutes to first pull the image and process the dataset.
 
-    ```console
+    ```bash
     kubectl get jobs samples-tf-mnist-demo --watch
     ```
 
