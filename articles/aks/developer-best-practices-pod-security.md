@@ -4,7 +4,7 @@ description: Learn the developer best practices for how to secure pods in Azure 
 ms.topic: best-practice
 ms.subservice: aks-security
 ms.date: 01/12/2024
-ms.author: magoedte
+ms.author: schaffererin
 ---
 
 # Best practices for pod security in Azure Kubernetes Service (AKS)
