@@ -107,7 +107,7 @@ After creating your nodepool, confirm that GPUs are schedulable in your AKS clus
 
     Under the *Capacity* section, the GPU should list as `amd.com/gpu:  1`. Your output should look similar to the following condensed example output:
 
-    ```console
+    ```output
     Name:               aks-gpunp-00000000
     Roles:              agent
     Labels:             accelerator=amd
