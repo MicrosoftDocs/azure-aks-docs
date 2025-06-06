@@ -171,7 +171,7 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
 
     When the *COMPLETIONS* column shows *1/1*, the job has successfully finished, as shown in the following example output:
 
-    ```console
+    ```output
     NAME                    COMPLETIONS   DURATION   AGE
 
     samples-tf-mnist-demo   0/1           3m29s      3m29s
