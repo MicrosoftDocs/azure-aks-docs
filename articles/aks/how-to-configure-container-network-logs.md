@@ -162,7 +162,7 @@ kubectl apply -f <crd.yaml>
 ```
 Logs stored Locally on host nodes are temporary, as the host or node itself isn't a persistent storage solution. Furthermore, logs on host nodes are rotated upon reaching 50 MB in size. For longer-term storage and analysis,  recommendation is to configure the Azure Monitor Agent on the cluster to collect and retain logs into the Log analytics workspace. Alternatively, third-party logging services an OpenTelemetry collector can be integrated for additional log management options. 
 
-#### Configuring Azure Monitor agent to scrape logs in Azure log analytics workspace for new cluster(Managed storage)
+#### Configuring Azure Monitor agent to scrape logs in Azure log analytics workspace for new cluster (Managed storage)
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
