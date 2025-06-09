@@ -8,13 +8,13 @@ ms.date: 04/25/2024
 ms.author: schaffererin
 ---
 
-# Use deployment safeguards to enforce best practices in Azure Kubernetes Service (AKS) (Preview)
+# Use deployment safeguards to enforce best practices in Azure Kubernetes Service (AKS)
 
 This article shows you how to use deployment safeguards to enforce best practices on an Azure Kubernetes Service (AKS) cluster.
 
 ## Overview
 
-Throughout the development lifecycle, it's common for bugs, issues, and other problems to arise if the initial deployment of your Kubernetes resources includes misconfigurations. To ease the burden of Kubernetes development, Azure Kubernetes Service (AKS) offers deployment safeguards (preview). Deployment safeguards enforce Kubernetes best practices in your AKS cluster through Azure Policy controls.
+Throughout the development lifecycle, it's common for bugs, issues, and other problems to arise if the initial deployment of your Kubernetes resources includes misconfigurations. To ease the burden of Kubernetes development, Azure Kubernetes Service (AKS) offers deployment safeguards. Deployment safeguards enforce Kubernetes best practices in your AKS cluster through Azure Policy controls.
 
 Deployment safeguards offer two levels of configuration:
 
@@ -23,117 +23,48 @@ Deployment safeguards offer two levels of configuration:
 
 After you configure deployment safeguards for 'Warning' or 'Enforcement', Deployment safeguards programmatically assess your clusters at creation or update time for compliance. Deployment safeguards also display aggregated compliance information across your workloads at a per resource level via Azure Policy's compliance dashboard in the [Azure portal][Azure-Policy-compliance-portal] or in your CLI or terminal. Running a noncompliant workload indicates that your cluster isn't following best practices and that workloads on your cluster are at risk of experiencing issues caused by your cluster configuration.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
 ## Prerequisites
+> [!NOTE]
+> Cluster admins do not need Azure Policy permissions to enable or disable Deployment Safeguards. However, it is required to have the Azure Policy add-on installed.
 
 * You need to enable the Azure Policy add-on for AKS. For more information, see [Enable Azure Policy on your AKS cluster][policy-for-kubernetes].
-* To configure deployment safeguards, you must have version `2.0.0b1` or later of the `aks-preview` extension. To install the extension, see [Install the aks-preview CLI extension](#install-the-aks-preview-cli-extension). We also recommend updating the Azure CLI to ensure you have the latest version installed.
-* To create and modify the configuration for deployment safeguards, you need a subscription with the [following permissions on your AKS cluster][Azure-Policy-RBAC-permissions]:
-
-    * *Microsoft.Authorization/policyAssignments/write*
-    * *Microsoft.Authorization/policyAssignments/read*
-
-* You need to register the deployment safeguards feature flag. To register the feature flag, see [Register the feature flag for deployment safeguards](#register-the-deployment-safeguards-feature-flag).
-
-### Install the aks-preview CLI extension
-
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the deployment safeguards feature flag
-
-1. Register the `SafeguardsPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace Microsoft.ContainerService --name SafeguardsPreview
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace Microsoft.ContainerService --name SafeguardsPreview
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
- 
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Deployment safeguards policies
 
->[!NOTE]
-> The `ReadOnlyRootFilesystem` and `RootfilesystemInitContainers` policies are currently only available on Linux.
-
 The following table lists the policies that become active and the Kubernetes resources they target when you enable deployment safeguards. You can view the [currently available deployment safeguards][deployment-safeguards-list] in the Azure portal as an Azure Policy definition or at [Azure Policy built-in definitions for Azure Kubernetes Service][Azure-Policy-built-in-definition-docs]. The intention behind this collection is to create a common and generic list of best practices applicable to most users and use cases.
 
-| Deployment safeguard policy | Targeted Kubernetes resource | Mutation outcome if available |
-|--------------|--------------|--------------|
-| [Preview]: Cannot Edit Individual Nodes | Node | N/A |
-| Kubernetes cluster containers CPU and memory resource limits shouldn't exceed the specified limits | Pod | Sets CPU resource limits to 500m if not set and sets memory limits to 500Mi if no path is present |
-| [Preview]: Must Have Anti Affinity Rules Set | Deployment, StatefulSet, ReplicationController, ReplicaSet | N/A |
-| [Preview]: No AKS Specific Labels | Deployment, StatefulSet, Replicaset | N/A |
-| Kubernetes cluster containers should only use allowed images | Pod | N/A |
-| [Preview]: Reserved System Pool Taints | Node | Removes the `CriticalAddonsOnly` taint from a user node pool if not set. AKS uses the `CriticalAddonsOnly` taint to keep customer pods away from the system pool. This configuration ensures a clear separation between AKS components and customer pods and prevents eviction of customer pods that don't tolerate the `CriticalAddonsOnly` taint. |
-| Ensure cluster containers have readiness or liveness probes configured | Pod | N/A |
-| Kubernetes clusters should use Container Storage Interface (CSI) driver StorageClass | StorageClass | N/A|
-| [Preview]: Kubernetes cluster should implement accurate Pod Disruption Budgets | Deployment, ReplicaSet, StatefulSet | Sets `maxUnavailable` in PodDisruptionBudget resource to 1.|
-| [Preview]: Kubernetes cluster services should use unique selectors | Service | N/A| 
-| [Preview]: `ReadOnlyRootFilesystem` in Pod spec is set to true | Pod | Sets `readOnlyRootFilesystem` in the Pod spec to `true` if not set. This configuration prevents containers from writing to the root filesystem. |
-| [Preview]: `RootfilesystemInitContainers` in Pod spec is set to true | Pod | Sets `rootFilesystemInitContainers` in the Pod spec to `true` if not set. |
-| [Preview]: Kubernetes cluster container images should not include latest image tag | Deployment, StatefulSet, ReplicationController, ReplicaSet | N/A |
-| [Preview]: Kubernetes cluster container images must include the preStop hook | Deployment, StatefulSet, ReplicationController, ReplicaSet | N/A |
-
+| Deployment safeguard policy | Mutation outcome if available |
+|--------------|--------------|
+| Cannot Edit Individual Nodes | N/A |
+| Kubernetes cluster containers CPU and memory resource limits shouldn't exceed the specified limits | Sets CPU resource limits to 500m if not set and sets memory limits to 500Mi if no path is present |
+| Must Have Anti Affinity Rules Set | N/A |
+| No AKS Specific Labels | N/A |
+| Kubernetes cluster containers should only use allowed images | N/A |
+| Reserved System Pool Taints | Removes the `CriticalAddonsOnly` taint from a user node pool if not set. AKS uses the `CriticalAddonsOnly` taint to keep customer pods away from the system pool. This configuration ensures a clear separation between AKS components and customer pods and prevents eviction of customer pods that don't tolerate the `CriticalAddonsOnly` taint. |
+| Ensure cluster containers have readiness or liveness probes configured | N/A |
+| Kubernetes clusters should use Container Storage Interface (CSI) driver StorageClass | N/A|
+| Kubernetes cluster services should use unique selectors | N/A| 
+| Kubernetes cluster container images should not include latest image tag | N/A |
 
 If you want to submit an idea or request for deployment safeguards, open an issue in the [AKS GitHub repository][aks-gh-repo] and add `[deployment safeguards request]` to the beginning of the title.
 
 ## Enable deployment safeguards
 
 >[!NOTE]
-> If you enabled Azure Policy for the first time to use deployment safeguards, you might need to wait *up to 20 minutes* for Azure Policy to take effect.
->
 > Using the deployment safeguards `Enforcement` level means you're opting in to deployments being blocked and mutated. Please consider how these policies might work with your AKS cluster before enabling `Enforcement`.
-
-### Enable deployment safeguards on a new cluster
-
-Enable deployment safeguards on a new cluster using the [`az aks create`][az-aks-create] command with the `--safeguards-level` and `--safeguards-version` flags.
-
-If you want to receive noncompliance warnings, set the `--safeguards-level` to `Warning`. If you want to deny or mutate all noncompliant deployments, set it to `Enforcement`. To receive warnings, set the `--safeguards-level` to "Warning". To deny or mutate all deployments that don't adhere to deployment safeguards, set the `--safeguards-level` to "Enforcement". To set the deployment safeguards version, use the `--safeguards-version` flag. Currently, V2.0.0 is the latest version of deployment safeguards.
-
-```azurecli-interactive
-az aks create \
-    --name myAKSCluster \
-    --resource-group myResourceGroup \
-    --enable-addons azure-policy \
-    --safeguards-level Warning \
-    --safeguards-version v2.0.0 \
-    --generate-ssh-keys
-```
 
 ### Enable deployment safeguards on an existing cluster
 
-Enable deployment safeguards on an existing cluster that has the Azure Policy add-on enabled using the [`az aks update`][az-aks-update] command with the `--safeguards-level` and `--safeguards-version` flags. If you want to receive noncompliance warnings, set the `--safeguards-level` to `Warning`. If you want to deny or mutate all noncompliant deployments, set it to `Enforcement`.
+Enable deployment safeguards on an existing cluster that has the Azure Policy add-on enabled using the `az aks safeguard update` command with the `--level` flag. If you want to receive noncompliance warnings, set the `--level` to `Warning`. If you want to deny or mutate all noncompliant deployments, set it to `Enforcement`.
 
 ```azurecli-interactive
-az aks update --name myAKSCluster --resource-group myResourceGroup --safeguards-level Enforcement --safeguards-version v2.0.0
+az aks safeguard update -g <RGNAME> -n <CLUSTERNAME> --level Enforcement 
 ```
 
-If you want to update the deployment safeguards level of an existing cluster, use the [`az aks update`][az-aks-update] command with the `--safeguards-level` flag set to `Warning` or `Enforcement`.
+If you want to update the deployment safeguards level of an existing cluster, rereun the following command with the new value for `--level`.
 
 ```azurecli-interactive
-az aks update --name myAKSCluster --resource-group myResourceGroup --safeguards-level Enforcement
+az aks safeguard update -g <RGNAME> -n <CLUSTERNAME> --level Warning 
 ```
 
 ### Excluding namespaces
@@ -143,19 +74,14 @@ You can also exclude certain namespaces from deployment safeguards. When you exc
 For example, to exclude the namespaces `ns1` and `ns2`, use a comma-separated list of namespaces with the `--safeguards-excluded-ns` flag, as shown in the following example:
 
 ```azurecli-interactive
-az aks update --name myAKSCluster --resource-group myResourceGroup --safeguards-level Warning --safeguards-version v2.0.0 --safeguards-excluded-ns ns1,ns2 
+az aks safeguards update -g <RGNAME> -n <CLUSTERNAME> --level Warning --safeguards-excluded-ns ns1,ns2 
 ```
 
 ### Update your deployment safeguard version
 
->[!NOTE]
-> v2.0.0 is the latest version of deployment safeguards.
+Deployment safeguards adhere to the AKS addon versioning scheme. Each new version of a deployment safeguard will be released as a new minor version in AKS. These updates will be communicated through the AKS GitHub release notes and reflected in the "Deployment Safeguards Policies" table in our documentation.
 
-Update your deployment safeguards version using the [`az aks update`][az-aks-update] command with the `--safeguards-version` flag set to the new version. The following example updates an existing cluster to use version 2.0.0:
-
-```azurecli-interactive
-az aks update --name myAKSCluster --resource-group myResourceGroup --safeguards-version v2.0.0
-```
+To learn more about AKS versioning and addons, refer to the following documentation: [aks-component-versions] and [aks-versioning-for-addons].
 
 ## Verify compliance across clusters
 
@@ -204,23 +130,15 @@ From the list of policies and initiatives, select the initiative associated with
 
 ## Disable deployment safeguards
 
-Disable deployment safeguards on your cluster using the [`az aks update`][az-aks-update] command and set the `--safeguards-level` to `Off`.
+Disable deployment safeguards on your cluster by setting the safeguards `--level` to `off`.
 
 ```azurecli-interactive
-az aks update --name myAKSCluster --resource-group myResourceGroup --safeguards-level Off
+az aks safeguards update -g <RGNAME> -n <CLUSTERNAME> --level off
 ```
 
 --
 
 ## FAQ
-
-#### I enabled deployment safeguards with Azure Policy for the first time. Why don't I see any warnings? Why aren't my pods being declined?
-
-Azure Policy can take up to 35 minutes to sync with your cluster after it is enabled for the first time.
-
-#### I just switched from Warning to Enforcement. Will this take effect immediately?
-
-When switching deployment safeguard levels, you may need to wait up to 15 minutes for the new level to take effect.
 
 #### Can I create my own mutations?
 
@@ -255,3 +173,5 @@ To learn more, see [workload validation in Gatekeeper](https://open-policy-agent
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
+[aks-component-versions]: https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version
+[aks-versioning-for-addons]: https://learn.microsoft.com/azure/aks/integrations#add-ons
