@@ -22,7 +22,7 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 *  The minimum version of Azure CLI required for the steps in this article is 2.73.0. To find the version, Run `az --version` . If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-* Container Network Log with Always-on mode works only for Cilium data planes. 
+* Container Network Log with Stored logs mode works only for Cilium data planes. 
 
 * Container Network logs with On-demand mode works for both Cilium and non-Cilium data planes. 
 
@@ -40,7 +40,7 @@ az extension add --name aks-preview
 # Update the extension to make sure you have the latest version installed
 az extension update --name aks-preview
 ```
-## Configuring Always-on mode for Container Network Logs
+## Configuring Stored logs mode for Container Network Logs
 
 ### Register the `AdvancedNetworkingFlowLogsPreview' feature flag
 
@@ -86,9 +86,8 @@ az aks create \
     --kubernetes-version 1.32 \
     --enable-acns
 ```
----
 #### Configuring Custom Resource for Log filtering  
-Configuring Container Network Logs in always-on mode requires defining specific Custom Resources to set filters for log collection. When Advanced Container Networking Services is enabled and at least one Custom Resource is defined, logs are collected and stored on the host node at "/var/log/acns/hubble/events.log". To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously. If no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
+Configuring Container Network Logs in stored logs mode requires defining specific Custom Resources to set filters for log collection. When Advanced Container Networking Services is enabled and at least one Custom Resource is defined, logs are collected and stored on the host node at "/var/log/acns/hubble/events.log". To configure logging, users must define and apply Custom Resources of the "RetinaNetworkFlowLog" type, specifying filters such as namespace, pod, service, port, protocol, or verdict. Multiple Custom Resources can exist in a cluster simultaneously. If no Custom Resource is defined with nonempty filters, no logs are saved in the designated location.
 This sample definition of Custom resource demonstrates how to configure Retina network flow logs:
 #### RetinaNetworkFlowLog Template 
 ```azurecli-interactive
@@ -147,14 +146,14 @@ Following is the description of fields in this Custom resource definition.
 | `filters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
 | `filters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`.  As It's an optional parameter, if it isn't specified, logs with all protocols would be included.                                                      | Optional     |
 | `filters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`.  As It's an optional parameter, if it isn't specified, logs with all verdicts would be included.                                                        | Optional     |
-| `filters.from`            | Object           | Specifies the source of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                           | Optional    |
-| `filters.from.ip`         | []string | It can be single IP or CIDR.                                                                                                         | Optional     |
-| `filters.from.labelSelector` | Object           | A Label Selector is a mechanism to filter and query resources based on labels, allowing users to identify specific subsets of resources.A label selector can include two components: matchLabels and matchExpressions. Use matchLabels for straightforward matching by specifying a key-value pair (for example, {"app": "frontend"}). For more advanced criteria, use matchExpressions, where you define a label key, an operator (such as In, NotIn, Exists, or DoesNotExist), and an optional list of values. Ensure that the conditions in both matchLabels and matchExpressions are met, as they're logically ANDed. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
-| `filters.from.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source. name should match regex pattern ^.+$                                              | Optional     |
-| `filters.to`              | Object           | Specifies the destination of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                      | Optional    |
-| `filters.to.ip`           | []string | It can be single IP or CIDR.         | Optional     |
-| `filters.to.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
-| `filters.to.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the destination.                                         | Optional     |
+| `filters.from`            | Endpoint          | Specifies the source of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                           | Optional    |
+| `Endpoint.ip`         | []string | It can be single IP or CIDR.                                                                                                         | Optional     |
+| `Endpoint.labelSelector` | Object           | A Label Selector is a mechanism to filter and query resources based on labels, allowing users to identify specific subsets of resources.A label selector can include two components: matchLabels and matchExpressions. Use matchLabels for straightforward matching by specifying a key-value pair (for example, {"app": "frontend"}). For more advanced criteria, use matchExpressions, where you define a label key, an operator (such as In, NotIn, Exists, or DoesNotExist), and an optional list of values. Ensure that the conditions in both matchLabels and matchExpressions are met, as they're logically ANDed. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
+| `Endpoint.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source. name should match regex pattern ^.+$                                              | Optional     |
+| `filters.to`              | Endpoint           | Specifies the destination of the network flow. Can include IP addresses, label selectors, or namespace-pod pairs.                      | Optional    |
+| `Endpoint.ip`           | []string | It can be single IP or CIDR.         | Optional     |
+| `Endpoint.labelSelector` | Object           | A label selector to match resources based on their labels.                                                                             | Optional     |
+| `Endpoint.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the destination.                                         | Optional     |
 
 - Apply RetinaNetworkFlowLog CR to enable log collection at cluster with this command:
 
@@ -183,7 +182,7 @@ Logs stored Locally on host nodes are temporary, as the host or node itself isn'
     -n $CLUSTER_NAME
 ```
 > [!NOTE]
-> By default, container network flow logs are written to /var/log/acns/hubble/events.log as soon as the custom resource RetinaNetworkFlowLog is applied.If Log Analytics integration is enabled later, the Azure Monitor Agent (AMA) begins collecting logs from that point onward. Logs older than two minutes are not ingested; only new entries appended after monitoring begins are collected in log analytics workspace. 
+> When enabled, container network flow logs are written to /var/log/acns/hubble/events.log as soon as the custom resource RetinaNetworkFlowLog is applied.If Log Analytics integration is enabled later, the Azure Monitor Agent (AMA) begins collecting logs from that point onward. Logs older than two minutes are not ingested; only new entries appended after monitoring begins are collected in log analytics workspace. 
 
 #### Configuring existing cluster to store logs at Azure Log analytics workspace
 
@@ -283,7 +282,7 @@ az grafana create \
     --name $GRAFANA_NAME \
     --resource-group $RESOURCE_GROUP 
 ```
-Verify data source for grafana isntance- The user can verify subscription for data source for grafana dashboards vy checking data source tab in grafana instance as shown below -
+Verify data source for grafana instance- The user can verify subscription for data source for grafana dashboards vy checking data source tab in grafana instance as shown below -
   :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking data source for grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
   
 > [!NOTE]
@@ -774,7 +773,7 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
    ```error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
    ```ensure CRDs are installed first```
  
-### Disable container network logs: always-on on existing cluster 
+### Disable container network logs: stored logs mode on existing cluster 
 If all the CRDs get deleted, Flow log collection would stop as there would be no filters defined for collection. 
 To disable retina flow log collection by Azure monitor agent, use following command 
   ```azurecli-interactive
