@@ -90,13 +90,9 @@ After deploying your Kubernetes manifest, you see warnings or a potential denial
 **Warning**
 
 ```
-$ kubectl apply -f pod.yml
-Warning: [azurepolicy-k8sazurev2containerenforceprob-0e8a839bcd103e7b96a8] Container <my-container> in your Pod <my-pod> has no <livenessProbe>. Required probes: ["readinessProbe", "livenessProbe"]
-Warning: [azurepolicy-k8sazurev2containerenforceprob-0e8a839bcd103e7b96a8] Container <my-container> in your Pod <my-pod> has no <readinessProbe>. Required probes: ["readinessProbe", "livenessProbe"]
-Warning: [azurepolicy-k8sazurev1restrictedlabels-67c4210cc58f28acdfdb] Label <{"kubernetes.azure.com"}> is reserved for AKS use only
-Warning: [azurepolicy-k8sazurev3containerlimits-a8754961dbd4c1d8b49d] container <my-container> has no resource limits
-Warning: [azurepolicy-k8sazurev1containerrestrictedi-bde07e1776cbcc9aa8b8] my-pod in default does not have imagePullSecrets. Unauthenticated image pulls are not recommended.
-pod/my-pod created
+$ kubectl apply -f deployment.yaml
+Warning: [azurepolicy-k8sazurev1antiaffinityrules-ceffa082711831ebffd1] Deployment with 2 replicas should have either podAntiAffinity or topologySpreadConstraints set to avoid disruptions due to nodes crashing
+deployment.apps/simple-web created
 ```
 
 **Enforcement**
@@ -104,19 +100,16 @@ pod/my-pod created
 With deployment safeguard mutations, the `Enforcement` level mutates your Kubernetes resources when applicable. However, your Kubernetes resources still need to pass all safeguards to deploy successfully. If any safeguard policies fail, your resource is denied and won't be deployed.
 
 ```
-$ kubectl apply -f pod.yml
-Error from server (Forbidden): error when creating ".\pod.yml": admission webhook "validation.gatekeeper.sh" denied the request: [azurepolicy-k8sazurev2containerenforceprob-0e8a839bcd103e7b96a8] Container <my-container> in your Pod <my-pod> has no <livenessProbe>. Required probes: ["readinessProbe", "livenessProbe"]
-[azurepolicy-k8sazurev2containerenforceprob-0e8a839bcd103e7b96a8] Container <my-container> in your Pod <my-pod> has no <readinessProbe>. Required probes: ["readinessProbe", "livenessProbe"]
-[azurepolicy-k8sazurev2containerallowedimag-1ff6d14b2f8da22019d7] Container image my-image for container my-container has not been allowed.
-[azurepolicy-k8sazurev1restrictedlabels-67c4210cc58f28acdfdb] Label <{"kubernetes.azure.com"}> is reserved for AKS use only
-[azurepolicy-k8sazurev1containerrestrictedi-bde07e1776cbcc9aa8b8] my-pod in default does not have imagePullSecrets. Unauthenticated image pulls are not recommended.
+$ kubectl apply -f deployment.yaml 
+Warning: [azurepolicy-k8sazurev2customcontainerallow-8a11c7579763b41302d2] Container image safeguardsTest for container web has not been allowed.
+Error from server (Forbidden): error when creating "deployment.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [azurepolicy-k8sazurev1antiaffinityrules-ceffa082711831ebffd1] Deployment with 2 replicas should have either podAntiAffinity or topologySpreadConstraints set to avoid disruptions due to nodes crashing
 ```
 
 If your Kubernetes resources comply with the applicable mutation safeguards and meet all other safeguard requirements, they will be successfully deployed, as shown in the following example:
 
 ```
-$ kubectl apply -f pod.yml
-pod/my-pod created
+$ kubectl apply -f deployment.yaml
+deployment.apps/simple-web created
 ```
 
 ## Verify compliance across clusters using the Azure Policy dashboard
