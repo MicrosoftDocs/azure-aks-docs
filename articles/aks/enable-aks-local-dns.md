@@ -107,30 +107,30 @@ You can enable AKSLocalDNS for new and existing clusters at a cluster or node po
 
 ### Enable localdns in a new cluster
 
-     ```console
-     az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
-     ```
+```console
+az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
+ ```
 
 > [!IMPORTANT]
 > If enabling localdns at cluster create, the configuration will only apply to the nodes in the initial node pools. For node pools added in the future, please enable localdns on each as outlined in the following sections
 
 ### Enable localdns in an existing cluster
 
-     ```console
-     az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
-     ```
+```console
+az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
+```
      
 ### Enable localdns in a new node pool
 
-     ```console
-     az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
-     ```
+```console
+az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
+```
      
 ### Enable localdns in an existing node pool
 
-     ```console
-     az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
-     ```
+```console
+az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
+```
 
 These changes require nodes to be reimaged for the changes to apply. This can cause disruption to the pods currently running in the cluster.
 
@@ -142,15 +142,15 @@ To disable localdns, you need to update the `localdnsconfig.json` file to use `"
 
 ### Disable localdns in an existing cluster
 
-     ```console
-     az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
-     ```
+```console
+az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
+```
 
 ### Disable localdns in an existing node pool
 
-     ```console
-     az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
-     ```
+```console
+az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
+```
 
 ## Next steps
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coredns].
