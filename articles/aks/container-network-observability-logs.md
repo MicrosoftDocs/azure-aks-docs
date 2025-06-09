@@ -9,15 +9,15 @@ ms.topic: concept-article
 ms.date:  05/16/2025
 ---
 
-# Overview of Container Network Logs
+# Overview of Container Network Logs (Preview)
 
-Container Network Logs for Azure Kubernetes Service (AKS) in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) provide deep visibility into network traffic within the cluster. These logs capture essential metadata including source and destination IP addresses, pod/service names, ports, protocols, and traffic direction, offering detailed insights into network behavior. Container Network Logs captures Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic. This enables effective monitoring of connectivity, troubleshooting, network topology visualization, and security policy enforcement. There can be two modes of using this capability - always-on and on-demand. 
+Container Network Logs for Azure Kubernetes Service (AKS) in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) provide deep visibility into network traffic within the cluster. These logs capture essential metadata including source and destination IP addresses, pod/service names, ports, protocols, and traffic direction, offering detailed insights into network behavior. Container Network Logs captures Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic. This enables effective monitoring of connectivity, troubleshooting, network topology visualization, and security policy enforcement. There can be two modes of using this capability - stored logs and on-demand logs . 
 
-## Always-on 
+## Stored logs
 
-This mode ensures continuous log generation and collection on the AKS cluster when Advanced Container Networking Services is enabled and custom filters are configured. This feature remains active until explicitly disabled by the customer, allowing extended log retention. This feature supports filtering of traffic, which allows collection and retention of logs relevant to user, thus reducing storage cost, and making analysis easier. Traffic filtering can be achieved by defining a specific type of Custom Resource (CR).
+This mode ensures continuous log generation and collection on the AKS cluster when Advanced Container Networking Services is enabled and custom filters are configured. Log collection is disabled by default. Users can enable log collection by defining custom resources (CRs) to specify the types of traffic to monitor, such as namespaces, pods, services, or protocols. This feature remains active until explicitly disabled by the customer, allowing extended log retention. This feature supports filtering of traffic, which allows collection and retention of logs relevant to user, thus reducing storage cost, and making analysis easier. Traffic filtering can be achieved by defining a specific type of Custom Resource (CR).
 
-### How Always-on mode works
+### How Stored log mode works
 
 Advanced Container Networking Services leverage ebpf technology with Cilium to fetch logs from nodes. To start collecting logs, users define one or more Custom Resources (CRs) to specify the types of traffic they want to monitor. These CRs allow fine-grained control, ensuring only relevant traffic is captured. The Cilium agent, running on each node, collects the network traffic that matches the criteria set in the CRs. Then the Logs are stored in JSON format on the host, providing a structured and accessible format for further use. Alternatively, if the Azure Monitoring add-on is enabled, agents for Container Insights collects the logs from the host, applies the default throttling limits, and sends them to the Azure Log Analytics workspace. The system aggregates and stores log efficiently, providing visibility into network traffic for monitoring, troubleshooting, and security. 
 
@@ -27,13 +27,13 @@ Advanced Container Networking Services leverage ebpf technology with Cilium to f
 To read more about throttling and Container Insights, refer to [Container Insights documentation](https://aka.ms/ContainerNetworkLogsDoc_CI).
 
 
-### Key Capabilities of Always-on mode
+### Key Capabilities of stored logs mode
 
 - Customizable filters: Logging is configurable via defining Custom Resources(CR) of type [RetinaNetworkFlowLog](./how-to-configure-container-network-logs.md#retinanetworkflowlog-template). With these CRs, users can apply granular filters by namespace, pod, service, port, protocol, verdict, or traffic direction (ingress/egress). This flexibility ensures precise data collection tailored to specific use cases, logs only relevant traffic, and optimizes storage usage for better performance, compliance, and efficient troubleshooting.
 
 - Log storage options: There are two primary storage options for Container Network Logs: managed storage and unmanaged storage.
 
-    - Unmanaged storage: By default, network flow logs are stored locally on the host nodes at the fixed mount location /var/log/acns/hubble. However, this storage location is temporary, as the node itself isn't a persistent storage solution. Additionally, once the log files reach a size of 50 MB, they're automatically rotated, which means older logs are overwritten. This storage solution is suitable for real-time monitoring but doesn't support long-term storage or retention. For users seeking additional log management capabilities, non-Microsoft logging services such as an OpenTelemetry collector can be integrated. This provides flexibility to manage logs outside of the Azure ecosystem and is useful for customers who already use specific log management platforms.
+    - Unmanaged storage: When CR is applied to enabled collection of logs, network flow logs are stored locally on the host nodes at the fixed mount location /var/log/acns/hubble. However, this storage location is temporary, as the node itself isn't a persistent storage solution. Additionally, once the log files reach a size of 50 MB, they're automatically rotated, which means older logs are overwritten. This storage solution is suitable for real-time monitoring but doesn't support long-term storage or retention. For users seeking additional log management capabilities, non-Microsoft logging services such as an OpenTelemetry collector can be integrated. This provides flexibility to manage logs outside of the Azure ecosystem and is useful for customers who already use specific log management platforms.
 
     - Managed storage: For long-term retention and advanced analytics, it's recommended to configure Azure monitoring within your AKS cluster to collect and store logs in an Azure Log Analytics workspace. This setup not only ensures secure and compliant log storage but also enables powerful capabilities such as anomaly detection, performance tuning, and historical data analysis. Using historical logs, users can identify trends, baseline behaviors, and proactively address recurring issues.
 For example, with Azure Managed Prometheus, users can configure alerts on both metrics and logs, enabling real-time monitoring and rapid detection of outliers.  
@@ -75,7 +75,7 @@ The users are able to see following major components in these dashboards:
 
 ## On-demand
 
-Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without requiring prior configuration or persistent storage using Hubble CLI and Hubble UI.
+Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without requiring prior configuration or persistent storage using Hubble CLI and Hubble UI. This mode for getting on-demand logs is in general availibility(GA).
 
 ### Hubble CLI
 
