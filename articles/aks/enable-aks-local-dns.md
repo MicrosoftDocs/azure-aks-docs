@@ -15,31 +15,31 @@ As a cluster operator or developer, I want to improve my DNS lookup latency and 
 
 ## Overview
 
-AKS LocalDNS is an advanced feature designed to optimize DNS resolution performance and reliability within Azure Kubernetes Service (AKS) clusters. By deploying a local DNS proxy on each node, AKS LocalDNS significantly reduces DNS query latency and minimizes reliance on the cluster CoreDNS pods. This architecture is especially advantageous for large-scale clusters or environments with high DNS query volumes, where cluster DNS can become a bottleneck.
+AKS LocalDNS is an advanced feature that improves Domain Name System (DNS) resolution performance and reliability in Azure Kubernetes Service (AKS) clusters. LocalDNS deploys a DNS proxy on each node. This proxy reduces DNS query latency and lowers reliance on the cluster’s CoreDNS pods. LocalDNS is especially helpful for large clusters or environments with high DNS query volumes, where cluster DNS can become a bottleneck.
 
-When you enable the AKS LocalDNS feature, AKS deploys local cache on each node as a systemd service allowing for DNS queries from pods to be resolved locally on the node. This reduces network hops and improving overall query response times. This local resolution also helps prevent issues related to conntrack table exhaustion, as fewer connections are tracked at the node level. Additionally, the feature allows for stale-cache responses, improving resiliency during upstream DNS outages as the local cache will continue to serve pod traffic for a set period of time. 
+When you enable LocalDNS, AKS installs a local DNS cache on each node as a systemd service. Pods on the node send DNS queries to this local cache, which resolves them directly. This setup reduces network hops and speeds up DNS responses. Local resolution also helps prevent issues with conntrack table exhaustion, because fewer connections are tracked at the node level. LocalDNS can serve cached responses during upstream DNS outages, which keeps pod traffic running for a set period.
 
 ### Key Capabilities
 
 - **DNS resolution:**  
-    Each AKS node runs a dedicated `localdns` systemd service, enabling DNS queries from workloads on the node to be resolved locally. This reduces network hops and improves response times for DNS lookups.
+    Each AKS node runs a `localdns` systemd service. Workloads on the node send DNS queries to this service, which resolves them locally. This reduces network hops and speeds up DNS lookups.
 
-- **Customizable DNS forwarding:**
-    Supports `kubeDNSOverrides` and `vnetDNSOverrides` for better control on DNS behavior in the cluster
+- **Customizable DNS forwarding:**  
+    You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
 
-- **Reduced Conntrack table exhaustion:**
-    Pods will reach out to the `localdns` service running on the same node which does not create a new entry in the conntrack table. This helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and mitigates the issue of UDP connections filling up the table leading to dropped/rejected connections when the table gets exhausted.
+- **Reduced conntrack table exhaustion:**  
+    Pods send DNS queries to the `localdns` service on the same node. This approach doesn't create new entries in the conntrack table. It helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and prevents User Datagram Protocol (UDP) connections from filling up the table, which can cause dropped or rejected connections.
 
-- **Upgrades to TCP:**
-    The connection from the `localdns` cache to the cluster coreDNS service has been upgraded to TCP allowing for rebalancing of every connection. This delivers reliability improvements as the conntrack table entry is removed when the connection is closed on the server side. This is an improvement compared to UDP connections which have a default 30s timeout. This however does not require any changes in the application since the localdns service listens for UDP traffic.
+- **TCP upgrades:**  
+    The connection from the `localdns` cache to the cluster’s CoreDNS service uses Transmission Control Protocol (TCP). TCP allows for connection rebalancing and removes conntrack table entries when the server closes the connection. This is an improvement over UDP connections, which have a default 30-second timeout. Applications don't need changes, because the `localdns` service still listens for UDP traffic.
 
 - **Failover and caching:**  
-    The local DNS proxy includes robust failover mechanisms and caching capabilities. Features like `serveStale`, `cacheDurationInSeconds`, and `forwardPolicy` help maintain DNS availability and performance, even during upstream DNS outages or high load scenarios.
+    The local DNS proxy includes failover and caching features. Options like `serveStale`, `cacheDurationInSeconds`, and `forwardPolicy` help maintain DNS availability and performance, even during upstream DNS outages or high load.
 
 - **Protocol control:**  
-    You can configure the DNS query protocol (such as PreferUDP or ForceTCP) on a per-domain basis. This flexibility allows you to optimize DNS traffic for specific domains or comply with network requirements.
+    You can set the DNS query protocol (such as PreferUDP or ForceTCP) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
 
-By leveraging AKS LocalDNS, you can achieve faster, more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain greater control over DNS traffic within your AKS environment.
+By using AKS LocalDNS, you get faster and more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain more control over DNS traffic in your AKS environment.
 
 ## Before you begin
 * This article assumes that you have an existing AKS cluster with Kubernetes versions 1.33+. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
@@ -47,7 +47,7 @@ By leveraging AKS LocalDNS, you can achieve faster, more reliable DNS resolution
 * This article requires the `aks-preview` Azure CLI extension version 9.0.0b4 or later
 
 ## Setting up the `localdnsconfig` file
-In order to set up localdns in your cluster, you need to build a config file called `localdnsconfig.json`. This file includes the required plugins and support for domains specific rules. 
+In order to set up localDNS in your cluster, you need to build a config file called `localdnsconfig.json`. This file includes the required plugins and support for domains specific rules. 
 ### Sample `localdnsconfig.json` file
 ```json
 {
@@ -105,28 +105,28 @@ In order to set up localdns in your cluster, you need to build a config file cal
 ## Enable AKSLocalDNS
 You can enable AKSLocalDNS for new and existing clusters at a cluster or node pool level.
 
-### Enable localdns in a new cluster
+### Enable localDNS in a new cluster
 
 ```console
 az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
  ```
 
 > [!IMPORTANT]
-> If enabling localdns at cluster create, the configuration will only apply to the nodes in the initial node pools. For node pools added in the future, please enable localdns on each as outlined in the following sections
+> If enabling localDNS at cluster create, the configuration will only apply to the nodes in the initial node pools. For node pools added in the future, please enable localDNS on each as outlined in the following sections
 
-### Enable localdns in an existing cluster
+### Enable localDNS in an existing cluster
 
 ```console
 az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
      
-### Enable localdns in a new node pool
+### Enable localDNS in a new node pool
 
 ```console
 az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
      
-### Enable localdns in an existing node pool
+### Enable localDNS in an existing node pool
 
 ```console
 az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
@@ -134,19 +134,19 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 
 These changes require nodes to be reimaged for the changes to apply. This can cause disruption to the pods currently running in the cluster.
 
-## Verify if localdns is enabled
-Once LocalDNS is enabled, you can verify its operation by running DNS queries from pods in the specified node pool and inspecting the `SERVER` field in the responses to confirm LocalDNS addresses are returned ( 169.254.10.10 or 169.254.10.11 )
+## Verify if localDNS is enabled
+Once LocalDNS is enabled, you can verify its operation by running DNS queries from pods in the specified node pool and inspecting the `SERVER` field in the responses to confirm LocalDNS addresses are returned (169.254.10.10 or 169.254.10.11)
 
-## Disable localdns
-To disable localdns, you need to update the `localdnsconfig.json` file to use `"mode":"Disabled"`. Once the file is updated, you can apply the configuration to the cluster/node pool to enable the change.
+## Disable localDNS
+To disable localDNS, you need to update the `localdnsconfig.json` file to use `"mode":"Disabled"`. Once the file is updated, you can apply the configuration to the cluster/node pool to enable the change.
 
-### Disable localdns in an existing cluster
+### Disable localDNS in an existing cluster
 
 ```console
 az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
 
-### Disable localdns in an existing node pool
+### Disable localDNS in an existing node pool
 
 ```console
 az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
