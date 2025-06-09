@@ -12,7 +12,7 @@ author: sachidesai
 
 # Use AMD GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS)
 
-AMD GPU VM sizes on Azure can provide flexibility in performance and cost, offering high compute capacity while allowing you to choose the right configuration for your workload requirements. AKS supports AMD GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads.
+AMD [GPU Virtual Machine (VM)](https://learn.microsoft.com/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated) sizes on Azure can provide flexibility in performance and cost, offering high compute capacity while allowing you to choose the right configuration for your workload requirements. AKS supports AMD GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads.
 
 This article helps you provision nodes with schedulable AMD GPUs on new and existing AKS clusters.
 
@@ -20,7 +20,7 @@ This article helps you provision nodes with schedulable AMD GPUs on new and exis
 * AKS currently supports the `Standard_ND96isr_MI300X_v5` Azure VM size powered by the [MI300 series AMD GPU](https://www.amd.com/en/products/accelerators/instinct/mi300.html).
 * Updating an existing node pool to add an AMD GPU VM size is not supported on AKS.
 * Updating a non-AMD GPU-enabled node pool with an AMD GPU VM size is not supported.
-* AMD GPU is not yet supported on AKS node pools with `AzureLinux` or `Windows` ossku.
+* `AzureLinux` and `Windows` are not yet supported with AMD GPU.
 
 ## Before you begin
 
@@ -84,7 +84,7 @@ The [AMD GPU Operator](https://instinct.docs.amd.com/projects/gpu-operator/en/la
 
 1. Follow the AMD documentation to [Install the GPU Operator](https://instinct.docs.amd.com/projects/gpu-operator/en/latest/usage.html).
 
-1. Check the status of the AMD GPUs in your nodepool using the `kubectl get nodes` command:
+1. Check the status of the AMD GPUs in your node pool using the `kubectl get nodes` command:
 
     ```bash
     kubectl get nodes -o custom-columns=NAME:.metadata.name,GPUs:.status.capacity.'amd\.com/gpu'
@@ -92,7 +92,7 @@ The [AMD GPU Operator](https://instinct.docs.amd.com/projects/gpu-operator/en/la
 
 ## Confirm that the AMD GPUs are schedulable
 
-After creating your nodepool, confirm that GPUs are schedulable in your AKS cluster.
+After creating your node pool, confirm that GPUs are schedulable in your AKS cluster.
 
 1. List the nodes in your cluster using the [`kubectl get nodes`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command.
 
@@ -164,7 +164,7 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
 
 ## View the status of the GPU-enabled workload
 
-1. Monitor the progress of the job using the [`kubectl get jobs`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command with the `--watch` flag. It may take a few minutes to first pull the image and process the dataset.
+1. Monitor the progress of the job using the [`kubectl get jobs`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get) command with the `--watch` flag. It might take a few minutes to first pull the image and process the dataset.
 
     ```bash
     kubectl get jobs samples-tf-mnist-demo --watch
