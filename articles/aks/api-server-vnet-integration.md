@@ -42,15 +42,15 @@ API Server VNet Integration is supported for public or private clusters. You can
 
 API Server VNet Integration is available in the following regions: 
 
-|API | Server |VNet | Integration |
-|---|---|---|---|
-| australiacentral | francesouth | koreasouth | uaecentral |
-| australiacentral2 | germanynorth | northcentralus | uaenorth |
-| australiasoutheast | japaneast | norwayeast | ukwest |
-| canadaeast | japanwest | southafricanorth | westcentralus |
-| centraluseuap | jioindiacentral | southcentralus | westus |
-| eastus2euap | jioindiawest | southindia | westus3 |
-| francecentral | koreacentral |  |  |
+| Region             | Region          | Region           | Regions       |
+|--------------------|-----------------|------------------|---------------|
+| australiacentral   | francesouth     | koreasouth       | uaecentral    |
+| australiacentral2  | germanynorth    | northcentralus   | uaenorth      |
+| australiasoutheast | japaneast       | norwayeast       | ukwest        |
+| canadaeast         | japanwest       | southafricanorth | westcentralus |
+| centraluseuap      | jioindiacentral | southcentralus   | westus        |
+| eastus2euap        | jioindiawest    | southindia       | westus3       |
+| francecentral      | koreacentral    |                  |               |
 
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
@@ -283,10 +283,10 @@ You can expose the API server endpoint of a private cluster with API Server VNet
 
 All traffic within the VNet is allowed by default. But if you have added NSG rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
-| Destination | Source | Protocol | Port | Use |
-|--- |--- |--- |--- |--- |
-| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communications between the Azure Load Balancer and the API Server Subnet CIDR. |
+| Destination           | Source              | Protocol | Port         | Use                                                                                                                                                                                     |
+|-----------------------|---------------------|----------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| APIServer Subnet CIDR | Cluster Subnet      | TCP      | 443 and 4443 | Required to enable communication between Nodes and the API server.                                                                                                                      |
+| APIServer Subnet CIDR | Azure Load Balancer | TCP      | 9988         | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communications between the Azure Load Balancer and the API Server Subnet CIDR. |
 
 ## Next steps
 
