@@ -24,7 +24,7 @@ This article shows you how to:
 
 - You have an existing AKS cluster with Microsoft Entra integration enabled. If you need an AKS cluster with this configuration, see [Integrate Microsoft Entra ID with AKS][azure-ad-aks-cli].
 - Kubernetes RBAC is enabled by default during AKS cluster creation. To upgrade an existing cluster with Microsoft Entra integration and Kubernetes RBAC, [Enable Microsoft Entra integration on your existing AKS cluster][enable-azure-ad-integration-existing-cluster].
-- Make sure that Azure CLI version 2.0.61 or later is installed and configured. To find the versoin, run `az --version`. To install or upgrade, see [Install Azure CLI][install-azure-cli].
+- Make sure that Azure CLI version 2.0.61 or later is installed and configured. To find the version, run `az --version`. To install or upgrade, see [Install Azure CLI][install-azure-cli].
 - If using Terraform, install [Terraform][terraform-on-azure] version 2.99.0 or later.
 
 Use the Azure portal or Azure CLI to verify Microsoft Entra integration with Kubernetes RBAC is enabled.
