@@ -167,4 +167,4 @@ To learn more, see [workload validation in Gatekeeper](https://open-policy-agent
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
 [aks-component-versions]: ./supported-kubernetes-version.md#aks-components-breaking-changes-by-version
-[aks-versioning-for-addons]: https://learn.microsoft.com/azure/aks/integrations#add-ons
+[aks-versioning-for-addons]: ./integrations.md#add-ons
