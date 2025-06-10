@@ -23,7 +23,7 @@ This article shows you how to:
 ## Before you begin
 
 * You have an existing AKS cluster with Microsoft Entra integration enabled. If you need an AKS cluster with this configuration, see [Integrate Microsoft Entra ID with AKS][azure-ad-aks-cli].
-* Kubernetes RBAC is enabled by default during AKS cluster creation. To upgrade your cluster with Microsoft Entra integration and Kubernetes RBAC, [Enable Microsoft Entra integration on your existing AKS cluster][enable-azure-ad-integration-existing-cluster].
+* Kubernetes RBAC is enabled by default during AKS cluster creation. To upgrade an existing cluster with Microsoft Entra integration and Kubernetes RBAC, [Enable Microsoft Entra integration on your existing AKS cluster][enable-azure-ad-integration-existing-cluster].
 * Make sure that Azure CLI version 2.0.61 or later is installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 * If using Terraform, install [Terraform][terraform-on-azure] version 2.99.0 or later.
 
@@ -39,7 +39,7 @@ To verify using the Azure portal:
 
 #### [Azure CLI](#tab/azure-cli)
 
-You can verify using the Azure CLI `az aks show` command. Replace the value *myResourceGroup* with the resource group name hosting the AKS cluster resource, and replace *myAKSCluster* with the actual name of your AKS cluster.
+You can verify using the Azure CLI `az aks show` command. Replace the value *myResourceGroup* with the resource group name hosting your AKS cluster resource, and replace *myAKSCluster* with the actual name of your AKS cluster.
 
 ```azurecli
 az aks show --resource-group myResourceGroup --name myAKSCluster
@@ -112,7 +112,7 @@ Now that we have two example groups created in Microsoft Entra ID for our applic
 
 ### Set the user principal name and password for application developers
 
-Set the user principal name (UPN) and password for the application developers. The UPN must include the verified domain name of your tenant, for example `aksdev@contoso.com`.
+Set the user principal name (UPN) and password for the application developers. The UPN must include the verified domain name of your tenant, for example `aksdev@contoso.com`. In order to figure out (or set) the verified domain names in your tenant, follow the instructions [here](https://learn.microsoft.com/en-us/entra/identity/users/domains-manage).
 
 The following command prompts you for the UPN and sets it to *AAD_DEV_UPN* so it can be used in a later command:
 
@@ -166,7 +166,7 @@ AKSSRE_ID=$(az ad user create \
   --password $AAD_SRE_PW \
   --query id -o tsv)
 
-# Add the user to the opssre Azure AD group
+# Add the user to the opssre Entra ID group
 az ad group member add --group opssre --member-id $AKSSRE_ID
 ```
 
@@ -381,7 +381,7 @@ Error from server (Forbidden): pods is forbidden: User "aksdev@contoso.com" cann
 
 ### Test the SRE access to the AKS cluster resources
 
-To confirm that our Microsoft Entra group membership and Kubernetes RBAC work correctly between different users and groups, try the previous commands when signed in as the *opssre* user.
+To confirm that our Microsoft Entra group membership and Kubernetes RBAC works correctly between different users and groups, try the previous commands when signed in as the *opssre* user.
 
 1. Reset the *kubeconfig* context using the [`az aks get-credentials`][az-aks-get-credentials] command that clears the previously cached authentication token for the *aksdev* user.
 
