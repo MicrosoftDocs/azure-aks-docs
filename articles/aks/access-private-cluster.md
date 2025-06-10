@@ -126,11 +126,12 @@ You can use the following kubectl commands with the `Run command` feature:
 4. Select the file(s) you want to attach and then select **Attach**.
 5. Enter the command you want to run and select **Run**.
 
+---
+
 ## Disable `Run command`
 
 You can disable the `Run command` feature by setting [`.properties.apiServerAccessProfile.disableRunCommand` to `true`](/rest/api/aks/managed-clusters/create-or-update).
 
----
 
 ## Troubleshooting
 
