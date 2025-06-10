@@ -126,7 +126,7 @@ From the list of policies and initiatives, select the initiative associated with
 Disable deployment safeguards on your cluster by setting the safeguards `--level` to `off`.
 
 ```azurecli-interactive
-az aks safeguards update -g <RGNAME> -n <CLUSTERNAME> --level off
+az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level off
 ```
 
 --
