@@ -85,7 +85,7 @@
         - name: Use Automated Deployments to drive multi-cluster resource placement
           href: howto-automated-deployments.md
         - name: Using envelope objects for reserved resource types
-          href: howto-envelope-reserved-resources.md
+          href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations for workload scheduling
           href: use-taints-tolerations.md
         - name: Use overrides to customize cluster-scoped resources
