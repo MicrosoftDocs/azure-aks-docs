@@ -40,12 +40,9 @@ API Server VNet Integration is supported for public or private clusters. You can
 > [!CAUTION] 
 > Once API Server VNet Integration is enabled on a cluster, stopping your cluster de-allocates the control plane and releases the capacity. In regions experiencing capacity constraints, customers may be unable to start a stopped cluster. We do not recommend stopping mission critical workloads for this reason. 
 
-API Server VNet Integration is **NOT** available in the following regions: 
+API Server VNet Integration is available in the following regions: 
 
-<details>
-<summary>Click to expand supported regions</summary>
-
-| | | | |
+|API | Server |VNet | Integration |
 |---|---|---|---|
 | australiacentral | francesouth | koreasouth | uaecentral |
 | australiacentral2 | germanynorth | northcentralus | uaenorth |
@@ -55,7 +52,6 @@ API Server VNet Integration is **NOT** available in the following regions:
 | eastus2euap | jioindiawest | southindia | westus3 |
 | francecentral | koreacentral |  |  |
 
-</details>
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
