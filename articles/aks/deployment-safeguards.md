@@ -166,5 +166,5 @@ To learn more, see [workload validation in Gatekeeper](https://open-policy-agent
 [Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-update]: /cli/azure/aks#az-aks-update
-[aks-component-versions]: https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#aks-components-breaking-changes-by-version
+[aks-component-versions]: ./supported-kubernetes-version.md#aks-components-breaking-changes-by-version
 [aks-versioning-for-addons]: https://learn.microsoft.com/azure/aks/integrations#add-ons
