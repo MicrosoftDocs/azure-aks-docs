@@ -10,7 +10,7 @@ ms.author: schaffererin
 
 # Use deployment safeguards to enforce best practices in Azure Kubernetes Service (AKS)
 
-This article shows you how to use deployment safeguards to enforce best practices on an Azure Kubernetes Service (AKS) cluster.
+This article shows you how to use Deployment Safeguards to enforce best practices on an Azure Kubernetes Service (AKS) cluster.
 
 ## Overview
 
@@ -18,10 +18,10 @@ Throughout the development lifecycle, it's common for bugs, issues, and other pr
 
 Deployment safeguards offer two levels of configuration:
 
-  * `Warning`: Displays warning messages in the code terminal to alert you of any noncompliant cluster configurations but still allows the request to go through.
-  * `Enforcement`: Enforces compliant configurations by denying and mutating deployments if they don't follow best practices.
+  * `Warn`: Displays warning messages in the code terminal to alert you of any noncompliant cluster configurations but still allows the request to go through.
+  * `Enforce`: Enforces compliant configurations by denying and mutating deployments if they don't follow best practices.
 
-After you configure deployment safeguards for 'Warning' or 'Enforcement', Deployment safeguards programmatically assess your clusters at creation or update time for compliance. Deployment safeguards also display aggregated compliance information across your workloads at a per resource level via Azure Policy's compliance dashboard in the [Azure portal][Azure-Policy-compliance-portal] or in your CLI or terminal. Running a noncompliant workload indicates that your cluster isn't following best practices and that workloads on your cluster are at risk of experiencing issues caused by your cluster configuration.
+After you configure deployment safeguards for 'Warn' or 'Enforce', Deployment safeguards programmatically assess your clusters at creation or update time for compliance. Deployment safeguards also display aggregated compliance information across your workloads at a per resource level via Azure Policy's compliance dashboard in the [Azure portal][Azure-Policy-compliance-portal] or in your CLI or terminal. Running a noncompliant workload indicates that your cluster isn't following best practices and that workloads on your cluster are at risk of experiencing issues caused by your cluster configuration.
 
 ## Prerequisites
 > [!NOTE]
@@ -37,7 +37,7 @@ The following table lists the policies that become active and the Kubernetes res
 |--------------|--------------|
 | Cannot Edit Individual Nodes | N/A |
 | Kubernetes cluster containers CPU and memory resource limits shouldn't exceed the specified limits | Sets CPU resource limits to 500m if not set and sets memory limits to 500Mi if no path is present |
-| Must Have Anti Affinity Rules Set | N/A |
+| Must Have Anti Affinity Rules or topologySpreadConstraintsSet | N/A |
 | No AKS Specific Labels | N/A |
 | Kubernetes cluster containers should only use allowed images | N/A |
 | Reserved System Pool Taints | Removes the `CriticalAddonsOnly` taint from a user node pool if not set. AKS uses the `CriticalAddonsOnly` taint to keep customer pods away from the system pool. This configuration ensures a clear separation between AKS components and customer pods and prevents eviction of customer pods that don't tolerate the `CriticalAddonsOnly` taint. |
@@ -51,11 +51,11 @@ If you want to submit an idea or request for deployment safeguards, open an issu
 ## Enable deployment safeguards
 
 >[!NOTE]
-> Using the deployment safeguards `Enforcement` level means you're opting in to deployments being blocked and mutated. Please consider how these policies might work with your AKS cluster before enabling `Enforcement`.
+> Using the deployment safeguards `Enforce` level means you're opting in to deployments being blocked and mutated. Please consider how these policies might work with your AKS cluster before enabling `Enforce`.
 
 ### Enable deployment safeguards on an existing cluster
 
-Enable deployment safeguards on an existing cluster that has the Azure Policy add-on enabled using the `az aks safeguard update` command with the `--level` flag. If you want to receive noncompliance warnings, set the `--level` to `Warning`. If you want to deny or mutate all noncompliant deployments, set it to `Enforcement`.
+Enable deployment safeguards on an existing cluster that has the Azure Policy add-on enabled using the `az aks safeguard update` command with the `--level` flag. If you want to receive noncompliance warnings, set the `--level` to `Warn`. If you want to deny or mutate all noncompliant deployments, set it to `Enforce`.
 
 ```azurecli-interactive
 az aks safeguard update --resource-group <resource-group-name> --name <cluster-name> --level Enforcement 
@@ -64,17 +64,17 @@ az aks safeguard update --resource-group <resource-group-name> --name <cluster-n
 If you want to update the deployment safeguards level of an existing cluster, rereun the following command with the new value for `--level`.
 
 ```azurecli-interactive
-az aks safeguard update --resource-group <resource-group-name> --name <cluster-name> --level Warning 
+az aks safeguard update --resource-group <resource-group-name> --name <cluster-name> --level Warn 
 ```
 
 ### Excluding namespaces
 
 You can also exclude certain namespaces from deployment safeguards. When you exclude a namespace, activity in that namespace is unaffected by deployment safeguards warnings or enforcement.
 
-For example, to exclude the namespaces `ns1` and `ns2`, use a comma-separated list of namespaces with the `--safeguards-excluded-ns` flag, as shown in the following example:
+For example, to exclude the namespaces `ns1` and `ns2`, use a comma-separated list of namespaces with the `--excluded-ns` flag, as shown in the following example:
 
 ```azurecli-interactive
-az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warning --safeguards-excluded-ns ns1,ns2 
+az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warning --excluded-ns ns1,ns2 
 ```
 
 ### Update your deployment safeguard version
@@ -87,7 +87,7 @@ To learn more about AKS versioning and addons, refer to the following documentat
 
 After deploying your Kubernetes manifest, you see warnings or a potential denial message in your CLI or terminal if the cluster isn't compliant with deployment safeguards, as shown in the following examples:
 
-**Warning**
+**Warn**
 
 ```
 $ kubectl apply -f deployment.yaml
@@ -95,9 +95,9 @@ Warning: [azurepolicy-k8sazurev1antiaffinityrules-ceffa082711831ebffd1] Deployme
 deployment.apps/simple-web created
 ```
 
-**Enforcement**
+**Enforce**
 
-With deployment safeguard mutations, the `Enforcement` level mutates your Kubernetes resources when applicable. However, your Kubernetes resources still need to pass all safeguards to deploy successfully. If any safeguard policies fail, your resource is denied and won't be deployed.
+With deployment safeguard mutations, the `Enforce` level mutates your Kubernetes resources when applicable. However, your Kubernetes resources still need to pass all safeguards to deploy successfully. If any safeguard policies fail, your resource is denied and won't be deployed.
 
 ```
 $ kubectl apply -f deployment.yaml 
@@ -122,11 +122,11 @@ From the list of policies and initiatives, select the initiative associated with
 > To properly assess compliance across your AKS cluster, the Azure Policy initiative must be scoped to your cluster's resource group.
 
 ## Disable deployment safeguards
-
-Disable deployment safeguards on your cluster by setting the safeguards `--level` to `off`.
-
+ 
+To disable Deployment Safeguards on your cluster, use the `delete` command.
+ 
 ```azurecli-interactive
-az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level off
+az aks safeguards delete --resource-group <resource-group-name> --name <cluster-name>
 ```
 
 --
@@ -139,7 +139,7 @@ No. If you have an idea for a safeguard, open an issue in the [AKS GitHub reposi
 
 #### Can I pick and choose which mutations I want in Enforcement?
 
-No. Deployment safeguards is all or nothing. Once you turn on Warning or Enforcement, all safeguards will be active.
+No. Deployment safeguards is all or nothing. Once you turn on Warn or Enforce, all safeguards will be active.
 
 #### Why did my deployment resource get admitted even though it wasn't following best practices?
 
