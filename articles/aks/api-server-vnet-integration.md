@@ -42,26 +42,20 @@ API Server VNet Integration is supported for public or private clusters. You can
 
 API Server VNet Integration is **NOT** available in the following regions: 
 
-- brazilsouth
-- centralindia
-- centralus
-- chilecentral
-- eastasia
-- eastus
-- eastus2
-- germanywestcentral
-- israelnorthwest
-- malaysiasouth
-- malaysiawest
-- northeurope
-- qatarcentral
-- southcentralus2
-- southeastasia
-- southeastus3
-- switzerlandnorth
-- uksouth
-- westeurope
-- westus2
+<details>
+<summary>Click to expand supported regions</summary>
+
+| | | | |
+|---|---|---|---|
+| australiacentral | francesouth | koreasouth | uaecentral |
+| australiacentral2 | germanynorth | northcentralus | uaenorth |
+| australiasoutheast | japaneast | norwayeast | ukwest |
+| canadaeast | japanwest | southafricanorth | westcentralus |
+| centraluseuap | jioindiacentral | southcentralus | westus |
+| eastus2euap | jioindiawest | southindia | westus3 |
+| francecentral | koreacentral |  |  |
+
+</details>
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
