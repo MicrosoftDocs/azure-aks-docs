@@ -64,7 +64,7 @@ az aks safeguard update --resource-group <resource-group-name> --name <cluster-n
 If you want to update the deployment safeguards level of an existing cluster, rereun the following command with the new value for `--level`.
 
 ```azurecli-interactive
-az aks safeguard update -g <RGNAME> -n <CLUSTERNAME> --level Warning 
+az aks safeguard update --resource-group <resource-group-name> --name <cluster-name> --level Warning 
 ```
 
 ### Excluding namespaces
