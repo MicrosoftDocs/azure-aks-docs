@@ -16,17 +16,6 @@ ms.custom:
 
 This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.
 
-## Why Use Envelope Objects?
-
-When propagating resources to member clusters using Fleet, it's important to understand that the hub cluster itself is also a Kubernetes cluster. Without envelope objects, any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:
-
-1. **Unintended Side Effects**: Resources like ValidatingWebhookConfigurations, MutatingWebhookConfigurations, or Admission Controllers would become active on the hub cluster, potentially intercepting and affecting hub cluster operations.
-
-2. **Security Risks**: RBAC resources (Roles, ClusterRoles, RoleBindings, ClusterRoleBindings) intended for member clusters could grant unintended permissions on the hub cluster.
-
-3. **Resource Limitations**: ResourceQuotas, FlowSchema or LimitRanges defined for member clusters would take effect on the hub cluster. While this is generally not a critical issue, there may be cases where you want to avoid these constraints on the hub.
-
-Envelope objects solve these problems by allowing you to define resources that should be propagated without actually deploying their contents on the hub cluster. The envelope object itself is applied to the hub, but the resources it contains are only extracted and applied when they reach the member clusters.
 
 ## Envelope Objects with CRDs
 
@@ -122,6 +111,7 @@ data:
 We apply our envelope objects on the hub cluster and then use a `ClusterResourcePlacement` object to propagate these resources from the hub to member clusters.
 
 ### Example CRP spec for propagating a ResourceEnvelope:
+Here is an example of a `ClusterResourcePlacement` (CRP) that propagates a `ResourceEnvelope` to a member cluster, please note that since the `ResourceEnvelope` is namespace-scoped, the CRP just needs to select the namespace that contains the envelope object:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -138,17 +128,13 @@ spec:
     kind: Namespace
     name: app
     version: v1
-  - group: placement.kubernetes-fleet.io
-    kind: ResourceEnvelope
-    name: example
-    namespace: app
-    version: v1beta1
   revisionHistoryLimit: 10
   strategy:
     type: RollingUpdate
 ```
 
 ### Example CRP spec for propagating a ClusterResourceEnvelope:
+Here is an example of a `ClusterResourcePlacement` (CRP) that propagates a `ClusterResourceEnvelope` to a member cluster, please note that since the `ClusterResourceEnvelope` is cluster-scoped, the CRP just needs to select the envelope object itself:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -170,10 +156,21 @@ spec:
     type: RollingUpdate
 ```
 
-### CRP status for ResourceEnvelope:
+### Example CRP status for envelope resources:
+For the `ClusterResourcePlacement` that propagates a `ResourceEnvelope`, the status will include the selected namespace and the envelope object itself, but not the individual resources within the envelope. The status will look like this:
 
 ```yaml
 status:
+  selectedResources:
+  - group: ""
+    kind: Namespace
+    name: app
+    version: v1
+  - group: placement.kubernetes-fleet.io
+    kind: ResourceEnvelope
+    name: example
+    namespace: app
+    version: v1beta1
   conditions:
   - lastTransitionTime: "2023-11-30T19:54:13Z"
     message: found all the clusters needed as specified by the scheduling policy
@@ -215,24 +212,13 @@ status:
       reason: ApplySucceeded
       status: "True"
       type: ResourceApplied
-  selectedResources:
-  - kind: Namespace
-    name: app
-    version: v1
-  - group: placement.kubernetes-fleet.io
-    kind: ResourceEnvelope
-    name: example
-    namespace: app
-    version: v1beta1
 ```
 
 > **Note:** In the `selectedResources` section, we specifically display the propagated envelope object. We do not individually list all the resources contained within the envelope object in the status.
 
-Upon inspection of the `selectedResources`, it indicates that the namespace `app` and the ResourceEnvelope `example` have been successfully propagated. Users can further verify the successful propagation of resources contained within the envelope object by ensuring that the `failedPlacements` section in the `placementStatus` for the target cluster does not appear in the status.
+Upon inspection of the `selectedResources`, it indicates that the namespace `app` and the ResourceEnvelope `example` are successfully propagated. Users can further verify the successful propagation of resources contained within the envelope object by ensuring that the `failedPlacements` section in the `placementStatus` for the target cluster doesn't appear in the status.
 
-## Example CRP status where resources within an envelope object failed to apply
-
-### CRP status with failed ResourceEnvelope resource:
+### Example CRP status with failed ResourceEnvelope resource:
 
 In the example below, within the `placementStatus` section for `kind-cluster-1`, the `failedPlacements` section provides details on a resource that failed to apply along with information about the envelope object which contained the resource.
 
@@ -308,51 +294,6 @@ status:
 ### CRP status with failed ClusterResourceEnvelope resource:
 
 Similar to namespace-scoped resources, cluster-scoped resources within a ClusterResourceEnvelope can also fail to apply:
-
-```yaml
-status:
-  conditions:
-  - lastTransitionTime: "2023-12-06T00:09:53Z"
-    message: found all the clusters needed as specified by the scheduling policy
-    observedGeneration: 2
-    reason: SchedulingPolicyFulfilled
-    status: "True"
-    type: ClusterResourcePlacementScheduled
-  - lastTransitionTime: "2023-12-06T00:09:58Z"
-    message: Failed to apply manifests to 1 clusters, please check the `failedPlacements` status
-    observedGeneration: 2
-    reason: ApplyFailed
-    status: "False"
-    type: ClusterResourcePlacementApplied
-  placementStatuses:
-  - clusterName: kind-cluster-1
-    conditions:
-    - lastTransitionTime: "2023-12-06T00:09:58Z"
-      message: Failed to apply manifests, please check the `failedPlacements` status
-      observedGeneration: 2
-      reason: ApplyFailed
-      status: "False"
-      type: ResourceApplied
-    failedPlacements:
-    - condition:
-        lastTransitionTime: "2023-12-06T00:09:53Z"
-        message: 'Failed to apply manifest: service "guard" not found in namespace "ops"'
-        reason: AppliedManifestFailedReason
-        status: "False"
-        type: Applied
-      envelope:
-        name: example
-        type: ClusterResourceEnvelope
-      kind: ValidatingWebhookConfiguration
-      name: guard
-      group: admissionregistration.k8s.io
-      version: v1
-  selectedResources:
-  - group: placement.kubernetes-fleet.io
-    kind: ClusterResourceEnvelope
-    name: example
-    version: v1beta1
-```
 
 ```yaml
 status:

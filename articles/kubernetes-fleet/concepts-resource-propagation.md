@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 ---
 
-# Kubernetes resource placement from hub cluster to member clusters
+# Introducing ClusterResourcePlacement API
 
 This article describes the concept of Kubernetes resource placement from hub clusters to member clusters using Azure Kubernetes Fleet Manager.
 
@@ -345,6 +345,19 @@ These snapshots can be used with [staged rollout strategies][fleet-staged-rollou
 
 For more information, see the [documentation on snapshots][fleet-snapshots].
 
+## Encapsulating resources
+## Why Use Envelope Objects?
+
+When propagating resources to member clusters using Fleet, it's important to understand that the hub cluster itself is also a Kubernetes cluster. Without envelope objects, any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:
+
+1. **Unintended Side Effects**: Resources like ValidatingWebhookConfigurations, MutatingWebhookConfigurations, or Admission Controllers would become active on the hub cluster, potentially intercepting and affecting hub cluster operations.
+
+2. **Security Risks**: RBAC resources (Roles, ClusterRoles, RoleBindings, ClusterRoleBindings) intended for member clusters could grant unintended permissions on the hub cluster.
+
+3. **Resource Limitations**: ResourceQuotas, FlowSchema, or LimitRanges defined for member clusters would take effect on the hub cluster. While those side effects are generally not a critical issue, there might be cases where you want to avoid these constraints on the hub.
+
+Azure Kubernetes fleet manager provides custom resources to wrap objects to solve these problems. The envelope object itself is applied to the hub, but the resources it contains are only extracted and applied when they reach the member clusters. In this way, one can define resources that should be propagated without actually deploying their contents on the hub cluster. For a list of resource types and to understand how this feature works see our [envelope object documentation][envelope-object]
+
 ## Using Tolerations
 
 `ClusterResourcePlacement` objects support the specification of tolerations, which apply to the `ClusterResourcePlacement` object. Each toleration object consists of the following fields:
@@ -506,6 +519,7 @@ The Fleet scheduler prioritizes the stability of existing workload placements. T
   * A cluster with a placement is removed from the fleet. Depending on the policy, the scheduler attempts to place all affected workloads on remaining clusters without affecting existing placements.
 
 Resource-only changes (updating the resources or updating the `ResourceSelector` in the `ClusterResourcePlacement` object) roll out gradually in existing placements but do **not** trigger rescheduling of the workload.
+
 
 ## Next steps
 
