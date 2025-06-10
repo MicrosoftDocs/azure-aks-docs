@@ -74,7 +74,7 @@ You can also exclude certain namespaces from deployment safeguards. When you exc
 For example, to exclude the namespaces `ns1` and `ns2`, use a comma-separated list of namespaces with the `--safeguards-excluded-ns` flag, as shown in the following example:
 
 ```azurecli-interactive
-az aks safeguards update -g <RGNAME> -n <CLUSTERNAME> --level Warning --safeguards-excluded-ns ns1,ns2 
+az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warning --safeguards-excluded-ns ns1,ns2 
 ```
 
 ### Update your deployment safeguard version
