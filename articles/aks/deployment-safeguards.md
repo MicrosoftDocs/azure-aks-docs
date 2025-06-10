@@ -58,7 +58,7 @@ If you want to submit an idea or request for deployment safeguards, open an issu
 Enable deployment safeguards on an existing cluster that has the Azure Policy add-on enabled using the `az aks safeguard update` command with the `--level` flag. If you want to receive noncompliance warnings, set the `--level` to `Warning`. If you want to deny or mutate all noncompliant deployments, set it to `Enforcement`.
 
 ```azurecli-interactive
-az aks safeguard update -g <RGNAME> -n <CLUSTERNAME> --level Enforcement 
+az aks safeguard update --resource-group <resource-group-name> --name <cluster-name> --level Enforcement 
 ```
 
 If you want to update the deployment safeguards level of an existing cluster, rereun the following command with the new value for `--level`.
