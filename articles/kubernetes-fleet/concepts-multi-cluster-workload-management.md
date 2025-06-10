@@ -80,7 +80,7 @@ An example YAML file of how one can use Azure Kubernetes Fleet Manager API to ma
 
 ## Next steps
 
-* [Use cluster resource placement to manage workloads across multiple clusters](./concepts-cluster-resource-propagation.md).
+* [Use cluster resource placement to manage workloads across multiple clusters](./concepts-resource-propagation.md).
 
 <!-- LINKS - external -->
 [kubefleet]: https://github.com/kubefleet-dev/kubefleet

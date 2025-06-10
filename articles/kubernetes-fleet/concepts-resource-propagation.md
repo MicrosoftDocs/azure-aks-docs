@@ -530,7 +530,7 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 
 <!-- LINKS - external -->
 [fleet-github]: https://kubefleet.dev/docs/
-[envelope-object]: https://kubefleet.dev/docs/how-tos/envelope-object/
+[envelope-object]: ./quickstart-envelope-reserved-resources.md
 [crp-topo]: https://kubefleet.dev/docs/how-tos/topology-spread-constraints/
 [fleet-rollout]: ./concepts-rollout-strategy.md
 [fleet-staged-rollout]: ./concepts-rollout-strategy.md#staged-update-strategy-preview
