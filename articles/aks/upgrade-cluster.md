@@ -48,26 +48,45 @@ Message: Drain node ... failed when evicting pod ... failed with Too Many Reques
       --name <NODEPOOL_NAME> \
       --undrainable-node-behavior Cordon
     ```
+  - The following example output shows the undrainable node behavior updated:
+    ```output  
+    "upgradeSettings": {
+        "drainTimeoutInMinutes": null,
+        "maxSurge": "1",
+        "nodeSoakDurationInMinutes": null,
+        "undrainableNodeBehavior": "Cordon"
+      }
+    ```
 - Extend drain timeout if workloads need more time (default is 30 minutes).
 - Test PDBs in staging, monitor upgrade events, and use blue-green deployments for critical workloads. [More info](https://learn.microsoft.com/en-us/azure/architecture/guide/aks/blue-green-deployment-for-aks)
+
+**Verifying undrainable nodes:**
+- The blocked nodes are unscheduled for pods and marked with the label `"kubernetes.azure.com/upgrade-status: Quarantined"`.
+- Verify the label on any blocked nodes when there's a drain node failure on upgrade:
+    ```bash
+    kubectl get nodes --show-labels=true
+    ```
 
 **Resolving undrainable nodes:**
 1. Remove the responsible PDB:
     ```bash
     kubectl delete pdb <pdb-name>
     ```
-2. Remove the quarantined label:
+2. Remove the kubernetes.azure.com/upgrade-status: Quarantined label:
     ```bash
-    kubectl label nodes <node-name> kubernetes.azure.com/upgrade-status-
+    kubectl label nodes <node-name> <label-name>
     ```
 3. Optionally, delete the blocked node:
     ```powershell
     az aks nodepool delete-machines --cluster-name $CLUSTER_NAME --machine-names <machine-name> --name $NODEPOOL_NAME --resource-group $RESOURCE_GROUP
     ```
-4. Reconcile cluster status by updating or scaling the node pool:
-    ```powershell
+4. After you complete this step, you can reconcile the cluster status by performing any update operation without the optional fields as outlined [here](/cli/azure/aks#az-aks-update). Alternatively, you can scale the node pool to the same number of nodes as the count of upgraded nodes. This action ensures the node pool gets to its intended original size. AKS prioritizes the removal of the blocked nodes. This command also restores the cluster provisioning status to `Succeeded`. In the example given, `2` is the total number of upgraded nodes.
+    ```azurecli-interactive
+    # Update the cluster to restore the provisioning status
     az aks update --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME
-    az aks nodepool scale --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name $NODEPOOL_NAME --node-count <desired-count>
+
+    # Scale the node pool to restore the original size
+    az aks nodepool scale --resource-group $RESOURCE_GROUP --cluster-name $CLUSTER_NAME --name $NODE_POOL_NAME --node-count 2 
     ```
 
 ## Scenario 3: Slow upgrades
