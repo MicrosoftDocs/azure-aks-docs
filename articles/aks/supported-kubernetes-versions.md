@@ -50,10 +50,10 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Until 1.34 GA |
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
-| 1.33 | Apr 2025 | May 2025 | May 2025 | May 2026 | Until 1.37 GA |
+| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Until 1.37 GA |
 
 
-LTS Versions
+### LTS Versions
 
 > [!NOTE]
 > Azure Linux 2.0 goes End of Life during the LTS period of AKS v1.28–v1.31. For more information on upgrading to Azure Linux 3.0 on AKS v1.28–v1.31, read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
@@ -66,7 +66,7 @@ LTS Versions
 | 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Jul 2026|
 | 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Nov 2026|
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
-| 1.33 | Apr 2025 | May 2025 | May 2025 | May 2026 | May 2027|
+| 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027|
 
 ### AKS Kubernetes release schedule Gantt chart
 

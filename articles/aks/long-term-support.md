@@ -1,9 +1,9 @@
 ---
 title: Long-term support for Azure Kubernetes Service (AKS) versions
 description: Learn about Azure Kubernetes Service (AKS) long-term support for Kubernetes
-author: justindavies
-ms.author: juda
-ms.date: 01/24/2024
+author: Kaarthikeyan Subramanian
+ms.author: kaarthis
+ms.date: 06/10/2025
 ms.topic: concept-article
 ms.custom:
   - devx-track-azurecli
@@ -29,6 +29,14 @@ AKS offers one year of *community support* and one year of *long-term support* t
 |---|---|---|
 | **When to use** | When you can keep up with upstream Kubernetes releases | When you need control over when to migrate from one version to another  |
 |  **Support versions** | Three-GA minor versions | Two Kubernetes version (currently *1.27 and 1.30*) for 1 extra year from community support end of life period. Refer to the [Community Support Calendar][supported] for more information. |
+
+## LTS Patch process
+
+LTS supports only the two most recent patch versions. This differs from Community support, where all patch versions are supported. However, AKS reserves the right to deprecate any patch version in response to critical security vulnerabilities (CVEs). For more details on community support policy, see [Kubernetes version support policy](https://learn.microsoft.com/azure/aks/supported-kubernetes-versions?tabs=azure-cli#kubernetes-version-support-policy).
+
+To identify the latest supported patch versions, refer to the [AKS release tracker](https://releases.aks.azure.com/webpage/index.html).
+
+We recommend enabling the [auto-upgrade patch channel](https://learn.microsoft.com/azure/aks/auto-upgrade-cluster?tabs=azure-cli) to ensure your clusters remain up-to-date with the latest patches.
 
 ## Enable long-term support
 
