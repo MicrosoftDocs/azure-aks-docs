@@ -328,6 +328,28 @@ For more information, see [New Relic Solutions](https://newrelic.com/solutions/p
 
 Ensure the integrity and confidentiality of applications and foster trust and compliance across your infrastructure.
 
+### CrowdStrike
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/CS_Logo_2022_Stacked_Full-Red_RGB.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Falcon   | Security   |
+
+Our solution is designed to be easy to use, with a simple and intuitive interface that makes it easy to manage your applications. Our software solution is also highly scalable, allowing you to easily add new resources as your business grows.
+
+<details> <summary> See more </summary><br>
+
+Finally, our software solution is highly secure, with built-in security features that protect your applications from unauthorized access. With Contoso's software solution, you can rest assured that your applications are always safe and secure."
+
+Powered by the CrowdStrike Security Cloud and world-class AI, the CrowdStrike Falcon® platform leverages real-time indicators of attack, threat intelligence, evolving adversary tradecraft and enriched telemetry from across the enterprise to deliver hyper-accurate detections, automated protection and remediation, elite threat hunting and prioritized observability of vulnerabilities.
+
+Purpose-built in the cloud with a single lightweight-agent architecture, the Falcon platform delivers rapid and scalable deployment, superior protection and performance, reduced complexity and immediate time-to-value.
+
+</details>
+
+For more information, see [CrowdStrike](https://crowdstrike.com).
+
 ### Palo Alto Networks
 
 :::image type="icon" source="./media/azure-linux-aks-partner-solutions/palo-alto-networks.png":::
