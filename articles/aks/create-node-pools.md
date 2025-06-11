@@ -279,7 +279,7 @@ If you no longer need a node pool, you can delete it and remove the underlying V
 In this article, you learned how to create multiple node pools in an AKS cluster. To learn about how to manage multiple node pools, see [Manage multiple node pools for a cluster in Azure Kubernetes Service (AKS)](manage-node-pools.md).
 
 > [!div class="nextstepaction"]
-> [Add a dedicated system node pool to an existing AKS cluster][use-system-pools]
+> [Add a dedicated system node pool to an existing AKS cluster][use-system-pool]
 
 <!-- LINKS -->
 [aks-storage-concepts]: concepts-storage.md
