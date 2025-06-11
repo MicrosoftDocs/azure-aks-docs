@@ -5,6 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/30/2023
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Enable Group Managed Service Accounts (GMSA) for your Windows Server nodes on your Azure Kubernetes Service (AKS) cluster
