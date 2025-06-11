@@ -37,19 +37,20 @@ It's a common practice to enable cluster autoscaler for nodes and either the Ver
   * We recommend separating them into distinct node pools with [Affinity Rules](./operator-best-practices-advanced-scheduler.md#node-affinity)/[expanders](https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-expanders). The example format of the priority expander ConfigMap is shown below
   
   ```
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: cluster-autoscaler-priority-expander
-      namespace: kube-system
-    data:
-      priorities: |-
-        10: 
-          - .*aksspot1.*
-          - .*aksspot2.*
-        50: 
-          - .*aksondemand1.*
-    ```
+  apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: cluster-autoscaler-priority-expander
+    namespace: kube-system
+  data:
+    priorities: |-
+      10: 
+        - .*spotpool1.*
+        - .*spotpool2.*
+      50: 
+        - .*ondemandpool1.*
+    
+  ```
   
   * Use [PodDisruptionBudget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) to help prevent unnecessary node drain or scale down operations. Specifying the annotation [cluster-autoscaler.kubernetes.io/safe-to-evict: "false"](https://kubernetes.io/docs/reference/labels-annotations-taints/#cluster-autoscaler-kubernetes-io-safe-to-evict) on the Pod spec will also prevent the pods from being evicted. Use this annotation with caution, as it may cause the Cluster Autoscaler encounter issues when draining a node with a running Pod that includes this annotation. 
 * In an autoscaler-enabled node pool, scale down nodes by removing workloads, instead of manually reducing the min/ max count of the node pool. This can be problematic if the node pool is already at maximum capacity or if there are active workloads running on the nodes, potentially causing unexpected behavior by the cluster autoscaler.
