@@ -6,6 +6,7 @@ ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 04/18/2025
 author: sachidesai
+ms.author: schaffererin
 
 #Customer intent: As a cluster administrator or developer, I want to create an AKS cluster that can use high-performance GPU-based VMs and configure them for advanced AI or HPC workload deployments using the NVIDIA GPU Operator.
 ---

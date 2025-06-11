@@ -5,6 +5,7 @@ services: container-service
 ms.topic: how-to
 ms.date: 09/25/2024
 ms.author: pgibson
+author: schaffererin
 ---
 
 # Migration guidance for Open Service Mesh (OSM) configurations to Istio

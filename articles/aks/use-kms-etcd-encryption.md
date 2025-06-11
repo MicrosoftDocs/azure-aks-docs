@@ -7,6 +7,8 @@ ms.topic: how-to
 ms.custom:
   - devx-track-azurecli
   - build-2025
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Add Key Management Service etcd encryption to an Azure Kubernetes Service cluster

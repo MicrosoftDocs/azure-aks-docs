@@ -5,6 +5,8 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
 ms.date: 10/09/2024
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Trusted launch for Azure Kubernetes Service (AKS)

@@ -4,6 +4,7 @@ description: Learn how to create a multi-instance GPU node pool in Azure Kuberne
 ms.topic: how-to
 ms.date: 08/30/2023
 ms.author: sachidesai
+author: schaffererin
 ms.subservice: aks-nodes
 ---
 
