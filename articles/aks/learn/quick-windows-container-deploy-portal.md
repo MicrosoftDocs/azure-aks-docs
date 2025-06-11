@@ -4,6 +4,9 @@ description: Learn how to quickly deploy a Kubernetes cluster and deploy an appl
 ms.topic: quickstart
 ms.custom: azure-kubernetes-service
 ms.date: 01/11/2024
+author: davidsmatlak
+ms.author: davidsmatlak
+
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy a Windows Server container so that I can see how to run applications running on a Windows Server container using the managed Kubernetes service in Azure.
 ---
 
