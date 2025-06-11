@@ -5,6 +5,8 @@ description: Learn the cluster operator best practices for how to manage cluster
 ms.topic: best-practice
 ms.custom: linux-related-content
 ms.date: 03/02/2023
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)

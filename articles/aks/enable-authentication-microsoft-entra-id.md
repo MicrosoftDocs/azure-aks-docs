@@ -5,7 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 02/08/2024
 ms.custom: devx-track-azurecli
-ms.author: miwithro
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Enable Azure managed identity authentication for Kubernetes clusters with kubelogin

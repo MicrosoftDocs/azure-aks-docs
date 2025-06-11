@@ -5,6 +5,8 @@ ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 08/01/2023
 ROBOTS: NOINDEX
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Secure your cluster using pod security policies in Azure Kubernetes Service (AKS) (preview)

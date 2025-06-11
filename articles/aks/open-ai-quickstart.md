@@ -5,6 +5,8 @@ ms.topic: how-to
 ms.date: 10/02/2023
 ms.custom: template-how-to, devx-track-azurecli 
 ms.subservice: aks-developer
+author: schaffererin
+ms.author: schaffererin
 ---
 
 # Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)

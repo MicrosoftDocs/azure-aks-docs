@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.custom: devx-track-bicep
 ms.date: 09/25/2024
 ms.author: pgibson
-ms.editor: schaffererin
+author: schaffererin
 ---
 
 # Deploy the Open Service Mesh add-on using Bicep in Azure Kubernetes Service (AKS)

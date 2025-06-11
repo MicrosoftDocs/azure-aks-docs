@@ -4,6 +4,7 @@ description: Learn about best practices for running Windows containers in Azure 
 ms.service: azure-kubernetes-service
 ms.custom: linux-related-content
 ms.author: schaffererin
+author: schaffererin
 ms.topic: best-practice
 ms.date: 10/27/2023
 ---

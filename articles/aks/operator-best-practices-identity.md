@@ -5,6 +5,8 @@ description: Learn the cluster operator best practices for how to manage authent
 ms.topic: best-practice
 ms.subservice: aks-security
 ms.date: 02/16/2024
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Best practices for authentication and authorization in Azure Kubernetes Service (AKS)

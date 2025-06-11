@@ -4,6 +4,8 @@ description: In this Azure Kubernetes Service (AKS) tutorial, you deploy a multi
 ms.topic: tutorial
 ms.date: 06/10/2024
 ms.custom: mvc, devx-track-extended-azdevcli
+ms.author: schaffererin
+author: schaffererin
 #Customer intent: As a developer, I want to learn how to deploy apps to an Azure Kubernetes Service (AKS) cluster so that I can deploy and run my own applications.
 ---
 
