@@ -5,7 +5,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
 ms.custom: build-2025
-ms.date: 04/22/2025
+ms.date: 06/12/2025
 ms.service: azure-kubernetes-fleet-manager
 ---
 
