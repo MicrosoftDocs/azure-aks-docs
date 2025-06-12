@@ -5,7 +5,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
 ms.custom: build-2025
-ms.date: 04/22/2025
+ms.date: 06/12/2025
 ms.service: azure-kubernetes-fleet-manager
 ---
 
@@ -25,6 +25,7 @@ Automated Deployments build on [draft.sh](https://draft.sh). When you create a n
 * A Kubernetes Fleet Manager with a hub cluster and member clusters. If you don't have one, see [Create an Azure Kubernetes Fleet Manager resource and join member clusters by using the Azure CLI](quickstart-create-fleet-and-members.md).
 * The user completing the configuration has permissions to the Fleet Manager hub cluster Kubernetes API. For more information, see [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 * A Kubernetes namespace already deployed on the Fleet Manager hub cluster.
+* An Azure Container Registry (ACR) with [AcrPull rights granted to member AKS clusters][acr-create].
 
 ## Bring your application source code
 
@@ -284,3 +285,4 @@ During preview, to configure placement of your staged workload on to member clus
 [kubernetes-pod-security-standards]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [pod-anti-affinity]: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
 [topology-spread-constraints]: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+[acr-create]: /azure/aks/cluster-container-registry-integration
