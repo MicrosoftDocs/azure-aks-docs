@@ -149,6 +149,7 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 
 <!-- LINKS INTERNAL -->
 [az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-enable-addons]: /cli/azure/aks#az-aks-enable-addons
 [identity-access-methods]: ./csi-secrets-store-identity-access.md
 [az-keyvault-create]: /cli/azure/keyvault#az-keyvault-create.md
