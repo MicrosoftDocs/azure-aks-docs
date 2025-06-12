@@ -58,7 +58,7 @@ az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --loc
  ```
 
 > [!IMPORTANT]
-> When you enable localDNS during cluster create, the configuration will only apply to the nodes in the initial node pools. For future node pools, enable localDNS on each as outlined in the following sections
+> When you enable localDNS during cluster create, the configuration only applies to the nodes in the initial node pools. For future node pools, enable localDNS on each as outlined in the following sections
 
 ### Enable localDNS in an existing cluster
 
@@ -79,7 +79,7 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 ```
 
 > [!IMPORTANT]
-> Enabling localDNS on a node pool will trigger a reimage operation on the nodes for the new setting to take effect.
+> Enabling localDNS on a node pool triggers a reimage operation on the nodes for the new setting to take effect.
 
 ## Verify if localDNS is enabled
 Once LocalDNS is enabled, you can verify its operation by running DNS queries from pods in the specified node pool and inspecting the `SERVER` field in the responses to confirm LocalDNS addresses are returned (169.254.10.10 or 169.254.10.11)
@@ -94,11 +94,11 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 ```
 
 ## Current Limitations
-* This configuration is only supported on Linux node pools
-* Currently, you require Kubernetes versions 1.33+ to use the localdns feature
+* Windows node pools are not supported
+* Kubernetes version 1.33+ is required to use localDNS
 
 ## Configure `localdnsconfig.json`
-With localDNS, you can define custom server blocks and can use supported plugins as outlined in the table below. To set them up in your node pool, you need to create a `localdnsconfig.json` file with the configurations.
+With localDNS, you can define custom server blocks and can use supported plugins for each. To set them up in your node pool, you need to create a `localdnsconfig.json` file with the configurations.
 
 ### Setting `Mode` for localDNS
 ```json
@@ -109,23 +109,24 @@ With localDNS, you can define custom server blocks and can use supported plugins
 }
 ```
 The `mode` for localDNS specified if localDNS is enabled or not. It allows three values:
-* `Required`: In this mode, LocalDNS is enforced, but it fails when incompatible. If any settings like node pool type do not meet the requirement for localDNS, it will automatically 
+* `Required`: In this mode, LocalDNS is enforced, but it fails when incompatible. If any settings like node pool type don't meet the requirement for localDNS, it will automatically 
 * `Preferred`: 
 * `Disabled`: 
 
 ### Defining a Server Block in localDNS
-With localDNS, you can use the following list of default server blocks or you can define your own (eg: bing.com). localDNS will match the queries to the most specific server block based on the exact domain being queried and not just partial matches. 
+With localDNS, you can use the following list of default server blocks or you can define your own (for example: bing.com). localDNS matches the queries to the most specific server block based on the exact domain being queried and not just partial matches. 
 * `vNetDNSOverrides`: addresses queries from pods using dnsPolicy: default or from the kubelet agent running on the node.
 * `kubeDNSOverrides`: addresses queries from pods with dnsPolicy: ClusterFirst.
+
 ### Supported Plugins
-| Plugin                        | Description                                                                                   | Allwed Inputs                      | Documentation Link                                    |
+| Plugin                        | Description                                                                                   | Allowed Inputs                      | Documentation Link                                    |
 |-------------------------------|-----------------------------------------------------------------------------------------------|------------------------------------|-------------------------------------------------------|
 | `queryLogging`                | Define the logging level for DNS queries.                                                     | `Error` `Log`                      | [Log Plugin](https://coredns.io/plugins/log/)         |
 | `protocol`                    | Sets the protocol used for DNS queries (UDP/TCP preference).                                  | `PreferUDP` `ForceTCP`             | [Forward Plugin](https://coredns.io/plugins/forward/) |
 | `forwardDestination`          | Specifies the DNS server to forward queries to.                                               | `VnetDNS` `ClusterCoreDNS`         | [Forward Plugin](https://coredns.io/plugins/forward/) |
 | `forwardPolicy`               | Determines the policy to use when selecting the upstream DNS server. Default is `random`      | `random` `round_robin` `Sequential`| [Forward Plugin](https://coredns.io/plugins/forward/) |
 | `maxConcurrent`               | Maximum number of concurrent DNS queries handled by the proxy.                                | Integer (default:`1000`)           | [Forward Plugin](https://coredns.io/plugins/forward/) |
-| `cacheDurationInSeconds`      | Maximum TTL in seconds for which DNS responses are cached                                     | Integer (default:`3600`)           | [Cache Plugin](https://coredns.io/plugins/cache)      |
+| `cacheDurationInSeconds`      | Maximum TTL (Time To Live) in seconds for which DNS responses are cached                      | Integer (default:`3600`)           | [Cache Plugin](https://coredns.io/plugins/cache)      |
 | `serveStaleDurationInSeconds` | Duration (in seconds) to serve stale DNS responses if upstream is unavailable.                | Integer (default:`3600`)           | [Cache Plugin](https://coredns.io/plugins/cache)      |
 | `serveStale`                  | Policy for serving stale DNS responses during upstream failures.                              | `Verify` `immediate`               | [Cache Plugin](https://coredns.io/plugins/cache)      |
 
