@@ -330,10 +330,8 @@ spec:
 
 Removing the imageVersion spec would revert the node pool to be updated to the latest node image version.
 
-
 > [!IMPORTANT]
 > After you update the SSH key, AKS doesn't automatically update your nodes. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with Node Auto-provisioning enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
-
 
 ## Node disruption
 
