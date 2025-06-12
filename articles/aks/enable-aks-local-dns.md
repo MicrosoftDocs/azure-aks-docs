@@ -114,9 +114,21 @@ The `mode` for localDNS specified if localDNS is enabled or not. It allows three
 * `Disabled`: 
 
 ### Defining a Server Block in localDNS
-With localDNS, you can use the following list of default server blocks or you can define your own (for example: bing.com). localDNS matches the queries to the most specific server block based on the exact domain being queried and not just partial matches. 
-* `vNetDNSOverrides`: addresses queries from pods using dnsPolicy: default or from the kubelet agent running on the node.
-* `kubeDNSOverrides`: addresses queries from pods with dnsPolicy: ClusterFirst.
+With localDNS, you can respond to queries from pods using `dnsPolicy:default` using `vnetDNSOverrides` and pods using `dnsPolicy:ClusterFirst` using `kubeDNSOverrides`. Within each, you can define your own server block serving your domain and can use the server block `.` to work as a default.
+
+For example, if you have specific DNS needs when accessing bing.com, you could use the following server block:
+```json
+"bing.com": {
+  "queryLogging": "Error",
+  "protocol": "ForceTCP",
+  "forwardDestination": "ClusterCoreDNS",
+  "forwardPolicy": "Sequential"
+  "maxConcurrent": 1000,
+  "cacheDurationInSeconds": 3600,
+  "serveStaleDurationInSeconds": 3600,
+  "serveStale": "Verify",
+}
+```
 
 ### Supported Plugins
 | Plugin                        | Description                                                                                   | Allowed Inputs                      | Documentation Link                                    |
