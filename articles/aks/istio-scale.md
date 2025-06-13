@@ -104,7 +104,7 @@ A comparison of data plane latency performance across Istio add-on and AKS versi
 
 ### Horizontal pod autoscaling customization
 
-[Horizontal pod autoscaling (HPA)][hpa] is enabled for the `istiod` and ingress gateway pods. The default configurations for `istiod` and the gateways are:
+[Horizontal pod autoscaling (HPA)][hpa] is enabled for the `istiod` and ingress/egress gateway deployments. The default configurations for `istiod` and the gateways are:
 - Min Replicas: 2
 - Max Replicas: 5
 - CPU Utilization: 80%
