@@ -3,7 +3,7 @@ title: Introduction to Azure Kubernetes Service (AKS) Automatic (preview)
 description: Simplify deployment and management of container-based applications in Azure by learning about the features and benefits of Azure Kubernetes Service Automatic.
 ms.topic: overview
 ms.custom: build-2024
-ms.date: 05/21/2024
+ms.date: 06/13/2025
 author: sabbour
 ms.author: asabbour
 
@@ -78,12 +78,6 @@ AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay
 | Ingress	        | **Pre-configured:** [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault. <br/> **Optional:** <ul><li>[Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> | **Optional:** <ul><li>[Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault.</li><li>[Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> |
 | Egress	        | **Pre-configured:** [AKS managed NAT gateway][managed-nat-gateway] for a scalable outbound connection flows when used with managed virtual network <br/> **Optional (with custom virtual network):** <ul><li> [Azure Load Balancer][egress-load-balancer]</li><li>[User-assigned NAT gateway][managed-nat-gateway]</li><li>[User-defined routing (UDR)][udr]</li> | **Default:** [Azure Load Balancer][egress-load-balancer] <br/> **Optional:** <ul><li>[User-assigned NAT gateway][managed-nat-gateway]</li><li>[AKS managed NAT gateway][userassigned-nat-gateway]</li><li>[User-defined routing (UDR)][udr]</li></ul> |
 | Service mesh	        | **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-mesh]</li><li>Bring your own service mesh.</li></ul> | **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-mesh]</li><li>Bring your own service mesh.</li></ul> |
-
-### Storage
-
-### Cost Optimization
-
-### GPU, AI and machine learning workloads
 
 ## Next steps
 
