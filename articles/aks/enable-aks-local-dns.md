@@ -7,8 +7,7 @@ ms.topic: how-to
 ms.date: 06/05/2025
 ms.author: vaibhavarora
 
-# Customer intent
-As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
+# Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
 ---
 
 # Enable LocalDNS in Azure Kubernetes Service (Preview)
