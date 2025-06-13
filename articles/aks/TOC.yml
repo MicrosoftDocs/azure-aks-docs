@@ -490,7 +490,15 @@
                 - name: Deploy Strimzi and Kafka components  
                   href: kafka-deploy.md  
                 - name: Configure monitoring and networking for the Kafka cluster  
-                  href: kafka-configure.md  
+                  href: kafka-configure.md
+            - name: Deploy GitHub Actions with Azure Files
+              items:
+                - name: Overview
+                  href: github-actions-azure-files-overview.md
+                - name: Create GitHub Actions infrastructure
+                  href: github-actions-azure-files-create-infrastructure.md
+                - name: Deploy and test GitHub Actions
+                  href: github-actions-azure-files-deploy-test.md
         - name: AI and machine learning workloads
           items:
             - name: Overview
