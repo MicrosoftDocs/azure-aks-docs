@@ -15,7 +15,7 @@ In this article, you create the infrastructure needed to deploy a highly availab
 
 ## Before you begin
 
-* Review the [deployment overview](./github-actions-on-files-overview.md) and make sure you meet the prerequisites.
+* Review the [deployment overview](./github-actions-azure-files-overview.md) and make sure you meet the prerequisites.
 * [Set environment variables](#set-environment-variables) for use throughout this guide.
 * [Install the required extensions](#install-required-extensions).
 
