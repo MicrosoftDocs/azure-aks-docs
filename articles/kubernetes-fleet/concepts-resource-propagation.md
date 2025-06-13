@@ -345,18 +345,17 @@ These snapshots can be used with [staged rollout strategies][fleet-staged-rollou
 
 For more information, see the [documentation on snapshots][fleet-snapshots].
 
-## Encapsulating resources
-## Why Use Envelope Objects?
+## Encapsulating resources using envelope objects
 
-When propagating resources to member clusters using Fleet, it's important to understand that the hub cluster itself is also a Kubernetes cluster. Without envelope objects, any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:
+When propagating resources to member clusters following the [hub and spoke model](./concepts-multi-cluster-workload-management.md), it's important to understand that the hub cluster itself is also a Kubernetes cluster. Any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:
 
 1. **Unintended Side Effects**: Resources like ValidatingWebhookConfigurations, MutatingWebhookConfigurations, or Admission Controllers would become active on the hub cluster, potentially intercepting and affecting hub cluster operations.
 
 2. **Security Risks**: RBAC resources (Roles, ClusterRoles, RoleBindings, ClusterRoleBindings) intended for member clusters could grant unintended permissions on the hub cluster.
 
-3. **Resource Limitations**: ResourceQuotas, FlowSchema, or LimitRanges defined for member clusters would take effect on the hub cluster. While those side effects are generally not a critical issue, there might be cases where you want to avoid these constraints on the hub.
+3. **Resource Limitations**: ResourceQuotas, FlowSchema, or LimitRanges defined for member clusters would take effect on the hub cluster. While those side effects generally do no harm, there might be cases where you want to avoid these constraints on the hub cluster.
 
-Azure Kubernetes fleet manager provides custom resources to wrap objects to solve these problems. The envelope object itself is applied to the hub, but the resources it contains are only extracted and applied when they reach the member clusters. In this way, one can define resources that should be propagated without actually deploying their contents on the hub cluster. For a list of resource types and to understand how this feature works see our [envelope object documentation][envelope-object]
+To avoid those unnecessary side effects, Azure Kubernetes fleet manager provides custom resources to wrap objects to solve these problems. The envelope object itself is applied to the hub, but the resources it contains are only extracted and applied when they reach the member clusters. In this way, one can define resources that should be propagated without actually deploying their contents on the hub cluster. For more information, see the documentation on [envelope objects][envelope-object].
 
 ## Using Tolerations
 

@@ -34,7 +34,7 @@
       items:
         - name: Multi-cluster workload management overview
           href: concepts-multi-cluster-workload-management.md
-        - name: Managing worklods using cluster resource placement
+        - name: Managing workloads using cluster resource placement
           items:
           - name: Introduction to cluster resource placement
             href: concepts-resource-propagation.md
@@ -84,7 +84,7 @@
           href: intelligent-resource-placement.md
         - name: Use Automated Deployments to drive multi-cluster resource placement
           href: howto-automated-deployments.md
-        - name: Using envelope objects for reserved resource types
+        - name: Use envelope objects to place resources
           href: quickstart-envelope-reserved-resources.md
         - name: Use taints and tolerations for workload scheduling
           href: use-taints-tolerations.md

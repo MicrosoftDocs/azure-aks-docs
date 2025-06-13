@@ -20,7 +20,7 @@ Managing Kubernetes resources across multiple clusters presents significant chal
 
 ## Multi-cluster management challenges
 
-The transition from single-cluster to multi-cluster Kubernetes infrastructure introduces a new category of operational challenges that extend beyond traditional container orchestration. These challenges manifest differently for various stakeholder groups within an organization, each with distinct requirements and constraints.
+The transition from a few clusters to multi-cluster Kubernetes infrastructure introduces a new category of operational challenges that extend beyond traditional container orchestration. These challenges manifest differently for various stakeholder groups within an organization, each with distinct requirements and constraints.
 
 **Platform administrators** often need to deploy Kubernetes resources onto multiple clusters for various reasons, for example:
 
