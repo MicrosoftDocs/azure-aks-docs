@@ -161,6 +161,11 @@ kubectl apply -f service_proxy.yaml
 
 HTTP Proxy configuration can be enabled or updated on an existing cluster using the [`az aks update`][az-aks-update] command. The `--http-proxy-config` parameter should be set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values. Pods must be rotated for the apps to pick it up, because the environment variable values are injected by a mutating admission webhook. For components under Kubernetes, like containerd and the node itself, this doesn't take effect until a node image upgrade is performed.
 
+To rotate all pods:
+```bash
+kubectl delete --all pods --all-namespaces
+```
+
 For example, let's say you created a new file with the base64 encoded string of the new CA cert called *aks-proxy-config-2.json*. You can update the proxy configuration on your cluster with the following command:
 
 ```azurecli-interactive
