@@ -112,7 +112,7 @@ data:
 We apply our envelope objects on the hub cluster and then use a `ClusterResourcePlacement` object to propagate these resources from the hub to member clusters.
 
 ### Example CRP spec for propagating a ResourceEnvelope:
-Here is an example of a `ClusterResourcePlacement` (CRP) that propagates a `ResourceEnvelope` to a member cluster, please note that since the `ResourceEnvelope` is namespace-scoped, the CRP just needs to select the namespace that contains the envelope object:
+Here's an example of a `ClusterResourcePlacement` (CRP) that propagates a `ResourceEnvelope` to a member cluster, please note that since the `ResourceEnvelope` is namespace-scoped, the CRP just needs to select the namespace that contains the envelope object:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -135,7 +135,7 @@ spec:
 ```
 
 ### Example CRP spec for propagating a ClusterResourceEnvelope:
-Here is an example of a `ClusterResourcePlacement` (CRP) that propagates a `ClusterResourceEnvelope` to a member cluster, please note that since the `ClusterResourceEnvelope` is cluster-scoped, the CRP just needs to select the envelope object itself:
+Here's an example of a `ClusterResourcePlacement` (CRP) that propagates a `ClusterResourceEnvelope` to a member cluster, please note that since the `ClusterResourceEnvelope` is cluster-scoped, the ClusterResourcePlacement object just needs to select the envelope object itself:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -158,7 +158,7 @@ spec:
 ```
 
 ### Example CRP status for envelope resources:
-For the `ClusterResourcePlacement` that propagates a `ResourceEnvelope`, the status will include the selected namespace and the envelope object itself, but not the individual resources within the envelope. The status will look like this:
+For the `ClusterResourcePlacement` that propagates a `ResourceEnvelope`, the status includes the selected namespace and the envelope object itself, but not the individual resources within the envelope. The status looks like this:
 
 ```yaml
 status:
@@ -221,7 +221,7 @@ Upon inspection of the `selectedResources`, it indicates that the namespace `app
 
 ### Example CRP status with failed ResourceEnvelope resource:
 
-In the example below, within the `placementStatus` section for `kind-cluster-1`, the `failedPlacements` section provides details on a resource that failed to apply along with information about the envelope object which contained the resource.
+In the example below, within the `placementStatus` section for `kind-cluster-1`, the `failedPlacements` section provides details on a resource that failed to apply along with information about the envelope object, which contained the resource.
 
 ```yaml
 status:
