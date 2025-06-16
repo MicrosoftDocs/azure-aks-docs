@@ -2,7 +2,7 @@
 title: "Test and validate a highly available PostgreSQL database on AKS with Azure CLI"
 description: Inspect your newly created PostgreSQL database on AKS and learn how to conduct various day-2 operations
 ms.topic: how-to
-ms.date: 06/07/2024
+ms.date: 06/16/2025
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
