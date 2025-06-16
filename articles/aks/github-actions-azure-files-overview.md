@@ -49,7 +49,7 @@ In this guide, you learn how to:
 
 This reference architecture illustrates how to implement a GitHub Actions self-hosted runner solution using AKS and Azure File Share (SMB). The solution enables organizations to execute GitHub workflow jobs securely within their own Azure infrastructure while maintaining efficient storage management and scalability.
 
-:::image type="content" source="./media/github-actions-azure-files/github-actions-azure-files-architecture.png" alt-text="Screenshot of architecture diagram for GitHub Actions with Azure Files on AKS.":::
+:::image type="content" source="./media/github-actions-azure-files/github-actions-files-architecture.png" alt-text="Screenshot of architecture diagram for GitHub Actions with Azure Files on AKS." lightbox="media/github-actions-azure-files/github-actions-files-architecture.png":::
 
 The architecture consists of three main components:
 
