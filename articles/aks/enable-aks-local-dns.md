@@ -23,7 +23,7 @@ When you enable LocalDNS, AKS installs a localDNS cache on each node as a system
 ### Key Capabilities
 
 - **Reduced DNS resolution Latency:**  
-    Each AKS node runs a `localdns` systemd service. Workloads running on the node send DNS queries to this service, which resolves them locally. This helps reduce network hops and speeds up DNS lookups.
+    Each AKS node runs a `localdns` systemd service. Workloads running on the node send DNS queries to this service, which resolves them locally, reducing network hops and speeding up DNS lookups.
 
 - **Customizable DNS forwarding:**  
     You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
@@ -35,7 +35,7 @@ When you enable LocalDNS, AKS installs a localDNS cache on each node as a system
     The connection from the `localdns` cache to the cluster’s CoreDNS service uses Transmission Control Protocol (TCP). TCP allows for connection rebalancing and removes conntrack table entries when the server closes the connection (in contrast to UDP connections, which have a default 30-second timeout). Applications don't need changes, because the `localdns` service still listens for UDP traffic.
 
 - **Caching:**  
-    The localDNS cache plugin can be configured with serveStale and TTL settings. `serveStale`,`serveStaleDurationInSeconds` and `cacheDurationInSeconds` parameters can be configured to achieve DNS resiliency, even during an upstream DNS outage.
+    The localDNS cache plugin can be configured with serveStale and TTL settings. `serveStale`,`serveStaleDurationInSeconds` ,and `cacheDurationInSeconds` parameters can be configured to achieve DNS resiliency, even during an upstream DNS outage.
 
 - **Protocol control:**  
     You can set the DNS query protocol (such as PreferUDP or ForceTCP) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
@@ -93,7 +93,7 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 ```
 
 ## Current Limitations
-* Windows node pools are not supported
+* Windows node pools aren't supported
 * Kubernetes version 1.33+ is required to use localDNS
 
 ## Configure `localdnsconfig.json`
@@ -108,9 +108,9 @@ With localDNS, you can define custom server blocks and can use supported plugins
 }
 ```
 The `mode` for localDNS specified if localDNS is enabled or not. It allows three values:
-* `Required`: In this mode, LocalDNS is enforced, but it fails when incompatible. If any settings like node pool type don't meet the requirement for localDNS, it will automatically 
+* `Required`: In this mode, LocalDNS is enforced, but it fails if any settings in the configuration are invalid.
 * `Preferred`: 
-* `Disabled`: 
+* `Disabled`: Disables the local DNS feature, meaning DNS queries are not resolved locally within the AKS cluster.
 
 ### Defining a Server Block in localDNS
 With localDNS, you can respond to queries from pods using `dnsPolicy:default` using `vnetDNSOverrides` and pods using `dnsPolicy:ClusterFirst` using `kubeDNSOverrides`. Within each, you can define your own server block serving your domain and can use the server block `.` to work as a default.
