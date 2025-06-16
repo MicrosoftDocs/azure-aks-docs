@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 06/04/2025
-author: sachidesai
+ms.author: sachidesai
 
 #Customer intent: As a cluster administrator or AI app developer, I want to create an AKS cluster that can use high-performance AMD GPU-based VMs for compute-intensive graphics or AI workloads.
 ---
