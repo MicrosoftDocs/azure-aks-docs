@@ -5,7 +5,7 @@ ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 03/18/2025
+ms.date: 05/20/2025
 ---
 
 # Enable cost optimized add-on scaling on your Azure Kubernetes Service (AKS) cluster (Preview)
@@ -41,9 +41,9 @@ VPA currently supports the following modes for cost optimized add-on scaling:
 > * The cost optimized add-on scaling feature enables the [VPA add-on](./vertical-pod-autoscaler.md) to autoscale the supported AKS add-ons. It doesn't work with self-hosted VPA.
 > * AKS restarts the add-on pods when enabling cost optimized add-on scaling. CoreDNS is currently the only exception to avoid potential disruptions during the restart. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-behaviour-with-cost-optimized-add-on-scaling).
 
-> [!Warning]
-> Make sure you have enough compute resources on the system nodepool for your addons when you enable cost optimized add-on scaling. AKS recommends turning on [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-autoprovision.md) to ensure right sizing of your compute resources automatically. 
-> Monitor for pending add-on pods when using the cost-optimized add-on scaling feature. VPA may recommend resource requests that exceed available node capacity, potentially leading to unschedulable pods. You can control this behaviour by [customizing min/ max values](./customize-resource-configuration.md) for requests and limits of supported addons.
+> [!WARNING]
+> Make sure you have enough compute resources on the system node pool for your addons when you enable cost optimized add-on scaling. AKS recommends turning on the [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-autoprovision.md) to ensure right-sizing of your compute resources automatically. 
+> Monitor for pending add-on pods when using the cost-optimized add-on scaling feature. VPA might recommend resource requests that exceed available node capacity, potentially leading to unschedulable pods. You can control this behavior by [customizing min/max values](./customize-resource-configuration.md) for requests and limits of supported addons.
 
 ## Prerequisites
 

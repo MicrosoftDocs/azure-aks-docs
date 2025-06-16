@@ -5,7 +5,7 @@ ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 08/02/2024
+ms.date: 05/20/2025
 ---
 
 # Customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons

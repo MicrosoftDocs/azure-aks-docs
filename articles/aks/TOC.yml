@@ -535,7 +535,7 @@
               href: vertical-pod-autoscaler-api-reference.md
             - name: Cost optimized add-on scaling
               items:
-                - name: Enable Cost optimized add-on scaling
+                - name: Enable cost optimized add-on scaling
                   href: optimized-addon-scaling.md
                 - name: Customize resource configuration for managed add-ons
                   href: customize-resource-configuration.md
