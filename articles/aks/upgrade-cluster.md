@@ -61,7 +61,7 @@ Combine [Planned Maintenance Window][planned-maintenance], [Max Surge](./upgrade
 | `maxSurge=0`, `maxUnavailable=5` | N/A | 5 existing nodes drained for upgrade |
 
 > [!NOTE]
-> Before upgrading, check for API breaking changes and review the [AKS release notes](/azure/aks/release-notes) to avoid disruptions.
+> Before upgrading, check for API breaking changes and review the [AKS release notes](https://github.com/Azure/AKS/releases) to avoid disruptions.
 
 ## Validations used in the upgrade process
 
