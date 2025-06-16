@@ -78,7 +78,7 @@ Currently unsupported AKS channels:
 * **SecurityPatch**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 * **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).
 
-If you're using any of the channels that Fleet Manager doesn't support, it's recommended you leave those channels enabled on your AKS clusters. Fleet Manager is adding support for more channels in the future.
+If you're using any of the channels that Fleet Manager doesn't support, it's recommended you leave those channels enabled on your AKS clusters.
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
@@ -102,9 +102,9 @@ Fleet Manager update runs can be in a pending state for a number of reasons. You
 
 The two most common reasons for long pending states are:
 
-1. Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it will be out of sync with the rest of the member clusters in the update run.
+* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it will be out of sync with the rest of the member clusters in the update run.
 
-1. Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
+* Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
 
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
