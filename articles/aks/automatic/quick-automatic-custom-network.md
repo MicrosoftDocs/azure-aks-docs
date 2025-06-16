@@ -2,7 +2,7 @@
 title: 'Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
 description: Learn how to quickly deploy a Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview) in a custom virtual network.
 ms.topic: quickstart
-ms.date: 03/03/2025
+ms.date: 06/13/2025
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli
@@ -115,7 +115,8 @@ The following sample output resembles successful creation of the resource group:
 
 ## Create a virtual network
 
-Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command. 
+Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
+
 When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
 
 > [!WARNING]
