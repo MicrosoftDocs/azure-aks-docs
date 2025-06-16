@@ -187,12 +187,6 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
     kubectl get pods --selector app=samples-tf-mnist-demo
     ```
 
-1. To confirm that the appropriate AMD GPU device has been discovered, display the output of the GPU-enabled workload using the [`kubectl logs`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#logs) command.
-
-    ```bash
-    kubectl logs samples-tf-mnist-demo-smnr6
-    ```
-
 ## Clean up resources
 
 Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`](https://kubernetes.io/docs/reference/kubectl/) command.
