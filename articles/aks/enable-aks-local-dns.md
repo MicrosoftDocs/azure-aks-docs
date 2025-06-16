@@ -22,20 +22,20 @@ When you enable LocalDNS, AKS installs a localDNS cache on each node as a system
 
 ### Key Capabilities
 
-- **DNS resolution:**  
-    Each AKS node runs a `localdns` systemd service. Workloads on the node send DNS queries to this service, which resolves them locally. This setup reduces network hops and speeds up DNS lookups.
+- **Reduced DNS resolution Latency:**  
+    Each AKS node runs a `localdns` systemd service. Workloads running on the node send DNS queries to this service, which resolves them locally. This helps reduce network hops and speeds up DNS lookups.
 
 - **Customizable DNS forwarding:**  
     You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
 
-- **Reduced conntrack table exhaustion:**  
-    Pods send DNS queries to the `localdns` service on the same node. This approach doesn't create new entries in the conntrack table. It helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and prevents User Datagram Protocol (UDP) connections from filling up the table, which can cause dropped or rejected connections.
+- **Avoid conntrack races & conntrak table exhaustion:**  
+    Pods send DNS queries to the `localdns` service on the same node without creating new conntrack table entries. Skipping the connection tracking helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and avoids User Datagram Protocol (UDP) DNS entries from filling up conntrack tables. This prevents dropped and rejected connections caused by conntrack table exhaustion and race conditions.
 
-- **TCP upgrades:**  
+- **Connection upgraded to TCP:**  
     The connection from the `localdns` cache to the cluster’s CoreDNS service uses Transmission Control Protocol (TCP). TCP allows for connection rebalancing and removes conntrack table entries when the server closes the connection (in contrast to UDP connections, which have a default 30-second timeout). Applications don't need changes, because the `localdns` service still listens for UDP traffic.
 
-- **Failover and caching:**  
-    The local DNS proxy includes failover and caching features. Options like `serveStale`, `cacheDurationInSeconds`, and `forwardPolicy` help maintain DNS availability and performance, even during upstream DNS outages or high load.
+- **Caching:**  
+    The localDNS cache plugin can be configured with serveStale and TTL settings. `serveStale`,`serveStaleDurationInSeconds` and `cacheDurationInSeconds` parameters can be configured to achieve DNS resiliency, even during an upstream DNS outage.
 
 - **Protocol control:**  
     You can set the DNS query protocol (such as PreferUDP or ForceTCP) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
@@ -44,8 +44,8 @@ By using LocalDNS, you get faster and more reliable DNS resolution for your work
 
 ## Before you begin
 * This article assumes that you have an existing AKS cluster with Kubernetes versions 1.33+. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* This article requires version 2.74.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-* This article requires the `aks-preview` Azure CLI extension version 9.0.0b4 or later
+* This article requires version X.X.X or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+* This article requires the `aks-preview` Azure CLI extension version X.X.XXX or later
 
 ## Enable LocalDNS
 To modify the coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configure-localdnsconfigjson).
