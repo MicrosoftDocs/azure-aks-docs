@@ -1020,7 +1020,7 @@
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-kubernetes-event-driven-autoscaling-add-on?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Upgrade
       items:
-        - name: Upgrade options
+        - name: Upgrade options and recommendations
           href: upgrade-cluster.md
         - name: Perform manual upgrades
           items:
