@@ -148,6 +148,9 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 
 To create a private AKS Automatic cluster, use the [az aks create][az-aks-create] command. Note the use of the `--enable-private-cluster` flag.
 
+> [!NOTE]
+> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the clusters public FQDN and configuring the private DNS zone.
+
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-aks.sh" highlight="5,6,7,9" interactive="cloudshell-bash":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
@@ -294,6 +297,10 @@ az deployment group create --resource-group <resource-group> --template-file aks
 --parameters clusterSubnetId=<cluster subnet resource id> \
 --parameters uamiPrincipalId=<user assigned identity prinicipal id>
 ```
+
+> [!NOTE]
+> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the clusters public FQDN and configuring the private DNS zone.
+
 
 ## Connect to the cluster
 
@@ -472,6 +479,7 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[private-cluster]: ../private-clusters.md
 [connect-private-cluster]: ../private-clusters.md#options-for-connecting-to-the-private-cluster
 [virtual-network-peering]: ../private-clusters.md#virtual-network-peering
 [express-route-or-VPN]: ../private-clusters.md#express-route-or-VPN
