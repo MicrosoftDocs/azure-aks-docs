@@ -157,7 +157,14 @@ After a few minutes, the command completes and returns JSON-formatted informatio
 
 ## Connect to the cluster
 
-When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
+When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster:
+
+* Create a virtual machine in the same virtual network as the AKS Automatic cluster using the [`az vm create`][az-vm-create] command with the `--vnet-name` flag.
+* Use a virtual machine in a separate virtual network and set up [virtual network peering][virtual-network-peering].
+* Use an [Express Route or VPN][express-route-or-VPN] connection.
+* Use a [private endpoint][private-endpoint-service] connection.
+
+Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -282,6 +289,9 @@ az deployment group create --resource-group <resource-group> --template-file rol
 
 This Bicep file defines the AKS Automatic cluster.
 
+> [!NOTE]
+> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the clusters public FQDN and configuring the private DNS zone.
+
 :::code language="bicep" source="~/aks-samples/automatic/custom-network/private/bicep/aks.bicep" highlight="29,33,34,36,37,38,40,41,42,43,44,45":::
 
 Save the Bicep file **aks.bicep** to your local computer.
@@ -298,10 +308,6 @@ az deployment group create --resource-group <resource-group> --template-file aks
 --parameters uamiPrincipalId=<user assigned identity prinicipal id>
 ```
 
-> [!NOTE]
-> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the clusters public FQDN and configuring the private DNS zone.
-
-
 ## Connect to the cluster
 
 When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster:
@@ -310,9 +316,8 @@ When an AKS Automatic cluster is created as a private cluster, the API server en
 * Use a virtual machine in a separate virtual network and set up [virtual network peering][virtual-network-peering].
 * Use an [Express Route or VPN][express-route-or-VPN] connection.
 * Use a [private endpoint][private-endpoint-service] connection.
-* Use a [Cloud Shell][cloud-shell-vnet] instance deployed into a subnet that's connected to the API server for the cluster.
 
-Creating a VM in the same VNet as the AKS cluster is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
+Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -480,9 +485,9 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [private-cluster]: ../private-clusters.md
+[az-vm-create]: /cli/azure/vm#az-vm-create
 [connect-private-cluster]: ../private-clusters.md#options-for-connecting-to-the-private-cluster
 [virtual-network-peering]: ../private-clusters.md#virtual-network-peering
 [express-route-or-vpn]: /azure/expressroute/expressroute-about-virtual-network-gateways
 [private-endpoint-service]: ../private-apiserver-vnet-integration-cluster.md
-[cloud-shell-vnet]: ../private-clusters.md#cloud-shell-vnet
 [access-private-cluster]: ../access-private-cluster.md
