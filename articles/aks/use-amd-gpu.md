@@ -93,7 +93,7 @@ Your output should look similar to the following example output:
 
    ```output
     NAME                    STATUS   ROLES   AGE    VERSION
-    aks-gpunp-012345678-0   Ready    agent   2m4s   v1.31.7
+    aks-gpunp-00000000      Ready    agent   2m4s   v1.31.7
     ```
 
 
