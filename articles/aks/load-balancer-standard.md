@@ -629,7 +629,7 @@ This design means SLB infers node health from whichever **application pod** answ
 
 The **shared probe mode** (preview) solves these problems by moving to a *single HTTP probe* for all `externalTrafficPolicy: Cluster` Services:
 
-* SLB probes `http://<node‑ip>:10256/healthz`, the standard `kube‑proxy` health endpoint.
+* SLB probes `http://<node‑ip>:10356/healthz`, the standard `kube‑proxy` health endpoint.
 * A lightweight sidecar runs next to `kube‑proxy` to relay the probe and handle PROXY protocol when Private Link Service is enabled.
 
 The following table outlines **key benefits** of using shared probe mode:
