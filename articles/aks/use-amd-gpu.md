@@ -96,7 +96,6 @@ Your output should look similar to the following example output:
     aks-gpunp-00000000      Ready    agent   2m4s   v1.31.7
     ```
 
-
 ## Confirm that the AMD GPUs are schedulable
 
 After creating your node pool, confirm that GPUs are schedulable in your AKS cluster.
