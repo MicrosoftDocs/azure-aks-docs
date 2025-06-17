@@ -94,7 +94,6 @@ Your output should look similar to the following example output:
    ```output
     NAME                    STATUS   ROLES   AGE    VERSION
     aks-gpunp-00000000      Ready    agent   2m4s   v1.31.7
-    ```
 
 ## Confirm that the AMD GPUs are schedulable
 
