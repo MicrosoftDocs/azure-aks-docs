@@ -235,6 +235,8 @@ In your template, provide new values for `httpProxy`, `httpsProxy`, and `noProxy
 
 :::zone-end
 
+---
+
 ## Istio Add-On HTTP Proxy for External Services
 
 If you are using the [Istio-based service mesh add-on for AKS][istio-add-on-docs], you must create a Service Entry to enable your applications in the mesh to access non-cluster or external resources via the HTTP proxy. For example:
