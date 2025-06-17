@@ -12,7 +12,7 @@ ms.author: sachidesai
 
 # Use AMD GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS)
 
-AMD [GPU Virtual Machine (VM)](/azure/virtual-machines/sizes/overview.md#gpu-accelerated) sizes on Azure can provide flexibility in performance and cost, offering high compute capacity while allowing you to choose the right configuration for your workload requirements. AKS supports AMD GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads.
+AMD [GPU Virtual Machine (VM)](/azure/virtual-machines/sizes/overview#gpu-accelerated) sizes on Azure can provide flexibility in performance and cost, offering high compute capacity while allowing you to choose the right configuration for your workload requirements. AKS supports AMD GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads.
 
 This article helps you provision nodes with schedulable AMD GPUs on new and existing AKS clusters.
 
