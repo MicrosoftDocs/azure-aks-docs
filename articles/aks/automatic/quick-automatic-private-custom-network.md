@@ -22,7 +22,7 @@ In this quickstart, you learn to:
 - Connect to the private cluster.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
-If you don't have an Azure account, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
+If you don't have an Azure account, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
 ### Prerequisites
 
