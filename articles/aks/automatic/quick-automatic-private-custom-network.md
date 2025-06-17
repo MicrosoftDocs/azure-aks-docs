@@ -149,7 +149,7 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 To create a private AKS Automatic cluster, use the [az aks create][az-aks-create] command. Note the use of the `--enable-private-cluster` flag.
 
 > [!NOTE]
-> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the clusters public FQDN and configuring the private DNS zone.
+> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the cluster's public FQDN and configuring the private DNS zone.
 
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-aks.sh" highlight="5,6,7,9" interactive="cloudshell-bash":::
 
@@ -164,7 +164,7 @@ When an AKS Automatic cluster is created as a private cluster, the API server en
 * Use an [Express Route or VPN][express-route-or-VPN] connection.
 * Use a [private endpoint][private-endpoint-service] connection.
 
-Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
+Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. ExpressRoute and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
