@@ -1,11 +1,11 @@
 ---
 title: Configure Azure Kubernetes Service (AKS) nodes with an HTTP proxy
-description: Use the HTTP proxy configuration feature for Azure Kubernetes Service (AKS) nodes.
+description: Learn how to configure Azure Kubernetes Service (AKS) clusters to use an HTTP proxy for outbound internet access.
 ms.subservice: aks-networking
 ms.custom: devx-track-arm-template, devx-track-azurecli
 author: allyford
 ms.topic: how-to
-ms.date: 03/07/2025
+ms.date: 06/17/2025
 ms.author: allyford
 zone_pivot_groups: arm-azure-cli
 ---
@@ -45,7 +45,7 @@ To disable the injection of the proxy environment variables, you need to annotat
 
 [!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
 :::zone-end
-
+:::zone target="docs" pivot="azure-cli"
 ## Create a configuration file with http proxy values
 
 Create a file and provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If your environment requires it, provide a value for `trustedCa`.
@@ -88,7 +88,6 @@ Example input:
   "trustedCA": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUgvVENDQmVXZ0F3SUJB...b3Rpbk15RGszaWFyCkYxMFlscWNPbWVYMXVGbUtiZGkvWG9yR2xrQ29NRjNURHg4cm1wOURCaUIvCi0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0="
 }
 ```
-:::zone target="docs" pivot="azure-cli"
 ## Create a cluster with an HTTP proxy configuration using the Azure CLI
 
 You can configure an AKS cluster with an HTTP proxy configuration during cluster creation using the [`az aks create`][az-aks-create] command and passing in your configuration as a JSON file.
@@ -125,7 +124,7 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
 
 HTTP Proxy configuration can be disabled on an existing cluster using the [`az aks update`][az-aks-update] command. 
 
-### Install the aks-preview Azure CLI extension
+1. Install the aks-preview Azure CLI extension
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -141,7 +140,7 @@ Run the following command to update to the latest version of the extension relea
 az extension update --name aks-preview
 ```
 
-### Register the feature flags
+2. Register the feature flags
 
 To disable HTTP Proxy in preview, register the following flag using the [az feature register][az-feature-register] command.
 
@@ -161,23 +160,34 @@ When the status reflects *Registered*, refresh the registration of the *Microsof
 az provider register --namespace Microsoft.ContainerService
 ```
 
-### Update your cluster to disable HTTP proxy
+3. Update your cluster to disable HTTP proxy
 Use the [`az aks update`][az-aks-update] command with `--disable-http-proxy` to disable HTTP Proxy on your existing cluster.
 
 ```azurecli-interactive
 az aks update --name $clusterName --resource-group $resourceGroup --disable-http-proxy
 ```
-
 :::zone-end
 
 :::zone target="docs" pivot="arm"
-## Configure an HTTP proxy using an Azure Resource Manager (ARM) template
+## Configure an HTTP proxy configuration using an Azure Resource Manager (ARM) template
 
 You can deploy an AKS cluster with an HTTP proxy using an ARM template. 
 
-1. In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. 
+1. Review requirements for each parameter:
 
-The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
+* `httpProxy`: A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be `http`.
+* `httpsProxy`: A proxy URL to use for creating HTTPS connections outside the cluster. If not specified, then `httpProxy` is used for both HTTP and HTTPS connections.
+* `noProxy`: A list of destination domain names, domains, IP addresses, or other network CIDRs to exclude proxying.
+* `trustedCa`: A string containing the `base64 encoded` alternative CA certificate content. Currently only the `PEM` format is supported.
+
+> [!IMPORTANT]
+> For compatibility with Go-based components that are part of the Kubernetes system, the certificate **must** support `Subject Alternative Names(SANs)` instead of the deprecated Common Name certs.
+>
+> There are differences in applications on how to comply with the environment variable `http_proxy`, `https_proxy`, and `no_proxy`. Curl and Python don't support CIDR in `no_proxy`, but Ruby does.
+
+2. Create a template with HTTP proxy parameters
+
+In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
 
 ```json
 "properties": {
@@ -193,9 +203,35 @@ The same schema used for CLI deployment exists in the `Microsoft.ContainerServic
 }
 ```
 
-2. Deploy your ARM template with the HTTP Proxy configuration
+3. Deploy your ARM template with the HTTP Proxy configuration
 
 Next, you can deploy the template. Your cluster should initialize with your HTTP proxy configured on the nodes.
+
+## Update an HTTP proxy configuration using an Azure Resource Manager (ARM) template
+
+HTTP Proxy configuration can be enabled or updated on an existing cluster. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values.
+
+> [!NOTE]
+> If switching to a new proxy, the new proxy must already exist for the update to be successful. After the upgrade is completed, you can delete the old proxy.
+
+In your template, provide new values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
+
+```json
+"properties": {
+    ...,
+    "httpProxyConfig": {
+        "httpProxy": "string",
+        "httpsProxy": "string",
+        "noProxy": [
+            "string"
+        ],
+        "trustedCa": "string"
+    }
+}
+```
+
+> [!CAUTION]
+> AKS will automatically reimage all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage. 
 
 :::zone-end
 
