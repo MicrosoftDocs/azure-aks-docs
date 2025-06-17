@@ -39,7 +39,7 @@ VPA currently supports the following modes for cost optimized add-on scaling:
 > When enabling cost optimized add-on scaling, consider the following information:
 > * If you delete the Deployment, DaemonSet, or VPA custom resource, the changes revert back to the AKS add-on's initial configuration.
 > * The cost optimized add-on scaling feature enables the [VPA add-on](./vertical-pod-autoscaler.md) to autoscale the supported AKS add-ons. It doesn't work with self-hosted VPA.
-> * AKS restarts the add-on pods when enabling cost optimized add-on scaling. CoreDNS is currently the only exception to avoid potential disruptions during the restart. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-behaviour-with-cost-optimized-add-on-scaling).
+> * AKS restarts the add-on pods when enabling cost optimized add-on scaling. CoreDNS is currently the only exception to avoid potential disruptions during the restart. For more information, see [CoreDNS autoscaling behavior](./coredns-custom.md#coredns-vertical-pod-autoscaling-behavior.
 
 > [!WARNING]
 > Make sure you have enough compute resources on the system node pool for your addons when you enable cost optimized add-on scaling. AKS recommends turning on the [cluster autoscaler](./cluster-autoscaler-overview.md) or [node autoprovision](./node-autoprovision.md) to ensure right-sizing of your compute resources automatically. 
@@ -279,6 +279,9 @@ If your autoscaling enabled add-on pods are in a pending state, or you don't see
     * Add more nodes so that pods can be scheduled in nodes with lower resource usage.
     * Disable VPA for the target add-on pod by changing the update mode to *Off*, and then [manually update the requests/limits](./customize-resource-configuration.md) to the available resource values on the node. Be cautious when setting resource limits to extremely low values, as this may result in the pod encountering OOM kills or CPU throttling if it attempts to use more resources than are available on the node.
 
+## Next steps 
+
+* Configure [Cluster Autoscaler](cluster-autoscaler-overview.md) or [Node Autoprovisioning](node-autoprovision.md) in your cluster to automatically scale the cluster. 
 <!-- LINKS -->
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-aks-create]: /cli/azure/aks#az-aks-create
