@@ -90,7 +90,8 @@ The [AMD GPU Operator](https://instinct.docs.amd.com/projects/gpu-operator/en/la
     kubectl get nodes -o custom-columns=NAME:.metadata.name,GPUs:.status.capacity.'amd\.com/gpu'
     ```
 
-Your output should look similar to the following example output:
+    Your output should look similar to the following example output:
+
 
     ```output
     NAME                    STATUS   ROLES   AGE    VERSION
