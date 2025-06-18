@@ -5,6 +5,8 @@ ms.topic: tutorial
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 01/16/2025
+author: davidsmatlak
+ms.author: davidsmatlak
 # Customer intent: As a developer, I want to use Telepresence to debug and test microservices locally while connected to a remote Kubernetes cluster, so that I can make real-time updates and see changes without needing to redeploy the entire application.
 ---
 

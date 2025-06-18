@@ -10,6 +10,9 @@ ms.author: schaffererin
 
 # Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using Azure CLI
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=232193)
+
 Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you quickly deploy and manage clusters. In this article, you use Azure CLI to deploy an AKS cluster that runs Windows Server containers. You also deploy an ASP.NET sample application in a Windows Server container to the cluster.
 
 > [!NOTE]
@@ -170,6 +173,8 @@ az aks nodepool add \
     --name npwin \
     --node-count 1
 ```
+
+---
 
 ## Connect to the cluster
 

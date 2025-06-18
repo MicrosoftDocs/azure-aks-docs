@@ -3,8 +3,8 @@ title: Create virtual nodes in Azure Kubernetes Service (AKS) using the Azure po
 description: Learn how to use the Azure portal to create an Azure Kubernetes Services (AKS) cluster that uses virtual nodes to run pods.
 ms.topic: concept-article
 ms.date: 05/09/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: references_regions
 ms.subservice: aks-nodes

@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 09/25/2024
 ms.author: pgibson
+author: schaffererin
 ---
 
 # Install the Open Service Mesh (OSM) add-on using Azure CLI

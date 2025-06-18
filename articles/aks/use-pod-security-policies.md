@@ -5,6 +5,8 @@ ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.date: 08/01/2023
 ROBOTS: NOINDEX
+author: davidsmatlak
+ms.author: davidsmatlak
 # Customer intent: "As a Kubernetes administrator, I want to implement custom pod security policies in my AKS cluster, so that I can ensure the security and compliance of the pods deployed within my environment."
 ---
 

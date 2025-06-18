@@ -4,8 +4,8 @@ description: Learn how to create an Azure Dedicated Hosts Group and associate it
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 03/10/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: As a cloud architect, I want to configure Azure Dedicated Hosts for my AKS cluster, so that I can ensure hardware isolation and control maintenance events for sensitive applications.
 ---

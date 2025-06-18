@@ -32,7 +32,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * You need the Azure CLI version 2.72.2 or later installed and configured to use the `--gpu-driver` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* You need the Azure CLI version 9.0.0b5 or later installed and configured to use the `--driver-type` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* If you have the `aks-preview` Azure CLI extension installed, please update the version to 18.0.0b2 or later.
 
 ## Get the credentials for your cluster
 
@@ -218,7 +218,7 @@ You can deploy a DaemonSet for the Kubernetes DirectX device plugin, which runs 
             value: "gpu"
             effect: "NoSchedule"
           containers:
-          - image: mcr.microsoft.com/oss/nvidia/k8s-device-plugin:v0.14.1
+          - image: mcr.microsoft.com/aks/aks-windows-gpu-device-plugin:0.0.17
             name: nvidia-device-plugin-ctr
             securityContext:
               allowPrivilegeEscalation: false

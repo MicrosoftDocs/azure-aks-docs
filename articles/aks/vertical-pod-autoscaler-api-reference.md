@@ -4,8 +4,8 @@ description: Learn about the Vertical Pod Autoscaler API reference for Azure Kub
 ms.topic: concept-article
 ms.custom:
 ms.date: 09/26/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: As a Kubernetes administrator, I want to understand the Vertical Pod Autoscaler API in Azure Kubernetes Service, so that I can optimize resource allocation for my pods and improve overall cluster performance.
 ---
