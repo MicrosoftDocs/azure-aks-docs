@@ -90,7 +90,9 @@ Example input:
 ```
 ## Create a cluster with an HTTP proxy configuration using the Azure CLI
 
-You can configure an AKS cluster with an HTTP proxy configuration during cluster creation using the [`az aks create`][az-aks-create] command and passing in your configuration as a JSON file.
+You can configure an AKS cluster with an HTTP proxy configuration during cluster creation.
+
+1. Use the [`az aks create`][az-aks-create] command and pass in your configuration as a JSON file.
 
 ```azurecli-interactive
 az aks create \
@@ -101,9 +103,25 @@ az aks create \
 ```
 Your cluster should initialize with the HTTP proxy configured on the nodes.
 
+2. Verify that the HTTP Proxy configuration is on the pods and nodes by checking that the environment variables contains the appropriate values for http_proxy, https_proxy, and no_proxy.
+
+
 ## Update an HTTP Proxy configuration
 
-HTTP Proxy configuration can be enabled or updated on an existing cluster using the [`az aks update`][az-aks-update] command. 
+HTTP Proxy configurations can be updated on existing clusters. This includes:
+- Update an existing cluster to enable HTTP Proxy and add a new HTTP Proxy configuration
+- Update an existing cluster to change an HTTP Proxy configuration
+
+### HTTP Proxy update considerations
+
+The `--http-proxy-config` parameter should be set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values.
+
+> [!NOTE]
+> If switching to a new proxy, the new proxy must already exist for the update to be successful. After the upgrade is completed, you can delete the old proxy.
+
+### Update a cluster to update or enable HTTP Proxy
+
+1. HTTP Proxy configuration can be enabled or updated on an existing cluster using the [`az aks update`][az-aks-update] command. 
 
 For example, let's say you created a new file with the base64 encoded string of the new CA cert called *aks-proxy-config-2.json*. You can update the proxy configuration on your cluster with the following command:
 
@@ -113,16 +131,11 @@ az aks update --name $clusterName --resource-group $resourceGroup --http-proxy-c
 > [!CAUTION]
 > AKS will automatically reimage all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage. 
 
-### HTTP Proxy update considerations
-
-The `--http-proxy-config` parameter should be set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values.
-
-> [!NOTE]
-> If switching to a new proxy, the new proxy must already exist for the update to be successful. After the upgrade is completed, you can delete the old proxy.
+2. Verify that the HTTP Proxy configuration is on the pods and nodes by checking that the environment variables contains the appropriate values for http_proxy, https_proxy, and no_proxy.
 
 ## Disable HTTP Proxy on an existing cluster (preview)
 
-HTTP Proxy configuration can be disabled on an existing cluster using the [`az aks update`][az-aks-update] command. 
+HTTP Proxy configuration can be disabled on an existing cluster using the [`az aks update`][az-aks-update] command.
 
 1. Install the aks-preview Azure CLI extension
 
@@ -134,7 +147,7 @@ To install the aks-preview extension, run the following command:
 az extension add --name aks-preview
 ```
 
-Run the following command to update to the latest version of the extension released:
+Run the following command to update to the latest version of the extension released. Disable HTTP Proxy requires a minimum of 18.0.0b13:
 
 ```azurecli
 az extension update --name aks-preview
@@ -166,6 +179,9 @@ Use the [`az aks update`][az-aks-update] command with `--disable-http-proxy` to 
 ```azurecli-interactive
 az aks update --name $clusterName --resource-group $resourceGroup --disable-http-proxy
 ```
+
+4. Check that HTTP Proxy is disabled
+
 :::zone-end
 
 :::zone target="docs" pivot="arm"
