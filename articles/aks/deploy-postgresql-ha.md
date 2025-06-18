@@ -1,14 +1,14 @@
 ---
-title: 'Deploy a highly available PostgreSQL database on AKS with Azure CLI'
-description: In this article, you deploy a highly available PostgreSQL database on AKS using the CloudNativePG operator.
+title: 'Deploy a highly available PostgreSQL database on AKS'
+description: Deploy a highly available PostgreSQL database on Azure Kubernetes Service (AKS) using Azure CLI and the CloudNativePG operator.
 ms.topic: how-to
-ms.date: 06/16/2025
+ms.date: 06/18/2025
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
 ---
 
-# Deploy a highly available PostgreSQL database on AKS
+# Deploy a highly available PostgreSQL database on Azure Kubernetes Service (AKS)
 
 In this article, you deploy a highly available PostgreSQL database on AKS.
 
@@ -441,31 +441,31 @@ kubectl --namespace $PG_NAMESPACE \
     -o yaml
 ```
 
-#### Option A - Azure Monitor Workspace
+#### Option A - Azure Monitor workspace
 
 Once you have deployed the Postgres cluster and the pod monitor, you can view the metrics using the Azure portal in an Azure Monitor workspace.
 
-:::image source="./media/deploy-postgresql-ha/prometheus-metrics.png" alt-text="Screenshot showing metrics in an Azure Monitor workspace." lightbox="./media/deploy-postgresql-ha/prometheus-metrics.png":::
+:::image source="./media/deploy-postgresql-ha/prometheus-metrics.png" alt-text="Screenshot showing Postgres cluster metrics in an Azure Monitor workspace in the Azure portal." lightbox="./media/deploy-postgresql-ha/prometheus-metrics.png":::
 
 #### Option B - Managed Grafana
 
-Alternatively, Once you have deployed the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and click on the Endpoint link as shown here:
+Alternatively, Once you have deployed the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and select the Endpoint link as shown here:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-1.png" alt-text="Screenshot showing an Azure Managed Grafana instance." lightbox="./media/deploy-postgresql-ha/grafana-metrics-1.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-1.png" alt-text="Screenshot Postgres cluster metrics in an Azure Managed Grafana instance in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-1.png":::
 
-Clicking on the Endpoint link will cause a new browser window to open where you can create dashboards on the Managed Grafana instance. Following the instructions to [configure an Azure Monitor data source](/azure/azure-monitor/visualize/grafana-plugin#configure-an-azure-monitor-data-source-plug-in), you can then add visualizations to create a dashboard of metrics from the Postgres cluster. After setting up the data source connection, from the main menu, click the Data sources option and you should see a set of data source options for the data source connection as shown here:
+Selecting the Endpoint link opens a new browser window where you can create dashboards on the Managed Grafana instance. Following the instructions to [configure an Azure Monitor data source](/azure/azure-monitor/visualize/grafana-plugin#configure-an-azure-monitor-data-source-plug-in), you can then add visualizations to create a dashboard of metrics from the Postgres cluster. After setting up the data source connection, from the main menu, select the Data sources option. You should see a set of data source options for the data source connection as shown here:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-2.png" alt-text="Screenshot showing data source options." lightbox="./media/deploy-postgresql-ha/grafana-metrics-2.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-2.png" alt-text="Screenshot showing Azure Monitor data source options in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-2.png":::
 
-On the Managed Prometheus option, click the option to build a dashboard to open the dashboard editor. Once the editor window opens, click the Add visualization option then click the Managed Prometheus option to browse the metrics from the Postgres cluster. Once you have selected the metric you want to visualize, click the Run queries button to fetch the data for the visualization as shown here:
+On the Managed Prometheus option, select the option to build a dashboard to open the dashboard editor. Once the editor window opens, select the Add visualization option then select the Managed Prometheus option to browse the metrics from the Postgres cluster. Once you have selected the metric you want to visualize, select the Run queries button to fetch the data for the visualization as shown here:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-3.png" alt-text="Screenshot showing construct dashboard." lightbox="./media/deploy-postgresql-ha/grafana-metrics-3.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-3.png" alt-text="Screenshot showing a Managed Prometheus dashboard with Postgres cluster metrics." lightbox="./media/deploy-postgresql-ha/grafana-metrics-3.png":::
 
-Click the Save button to add the panel to your dashboard. You can add other panels by clicking the Add button in the dashboard editor and repeating this process to visualize other metrics. Adding the metrics visualizations, you should have something that looks like this:
+Select the Save icon to add the panel to your dashboard. You can add other panels by selecting the Add button in the dashboard editor and repeating this process to visualize other metrics. Adding the metrics visualizations, you should have something that looks like this:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-4.png" alt-text="Screenshot showing save dashboard." lightbox="./media/deploy-postgresql-ha/grafana-metrics-4.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-4.png" alt-text="Screenshot showing a saved Managed Prometheus dashboard in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-4.png":::
 
-Click the Save icon to save your dashboard.
+Select the Save icon to save your dashboard.
 
 ---
 

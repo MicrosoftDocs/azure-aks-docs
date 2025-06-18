@@ -1,14 +1,15 @@
 ---
-title: 'Overview of deploying a highly available PostgreSQL database on AKS with Azure CLI'
-description: Learn how to deploy a highly available PostgreSQL database on AKS using the CloudNativePG operator.
+title: 'Overview of deploying a highly available PostgreSQL database on AKS'
+description: Learn the prerequisites, deployment process, and architecture for deploying a highly available PostgreSQL cluster on Azure Kubernetes Service (AKS) using Azure CLI.
 ms.topic: overview
-ms.date: 06/16/2025
+ms.date: 06/18/2025
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'aks-related-content, stateful-workloads'
 #Customer intent: As a developer or cluster operator, I want to deploy a highly available PostgreSQL database on AKS so I can see how to run a stateful database workload using the managed Kubernetes service in Azure.
 ---
-# Deploy a highly available PostgreSQL database on AKS with Azure CLI
+
+# Overview of deploying a highly available PostgreSQL database on Azure Kubernetes Service (AKS)
 
 In this guide, you deploy a highly available PostgreSQL cluster that spans multiple Azure availability zones on AKS with Azure CLI.
 
@@ -53,7 +54,7 @@ This diagram illustrates a PostgreSQL cluster setup with one primary replica and
 
 Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing another way to restore the database in the event of an issue with streaming replication from the primary replica.
 
-:::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Diagram of CNPG architecture." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
+:::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Highly available PostgreSQL cluster on AKS architecture diagram." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
 
 > [!NOTE]
 > For applications that require data separation at the database level, you can add more databases with postInitSQL commands and similar. It is not currently possible with the CNPG operator to add more databases in a declarative way.

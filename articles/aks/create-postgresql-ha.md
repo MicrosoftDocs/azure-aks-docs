@@ -1,16 +1,16 @@
 ---
-title: 'Create infrastructure for deploying a highly available PostgreSQL database on AKS'
-description: Create the infrastructure needed to deploy a highly available PostgreSQL database on AKS using the CloudNativePG operator.
+title: 'Create infrastructure for deploying a PostgreSQL database on AKS'
+description: Create the infrastructure needed to deploy a highly available PostgreSQL cluster on Azure Kubernetes Service (AKS) using Azure CLI and the CloudNativePG operator.
 ms.topic: how-to
-ms.date: 06/16/2025
+ms.date: 06/18/2025
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
 ---
 
-# Create infrastructure for deploying a highly available PostgreSQL database on AKS
+# Create infrastructure for deploying a highly available PostgreSQL database on Azure Kubernetes Service (AKS)
 
-In this article, you create the infrastructure needed to deploy a highly available PostgreSQL database on AKS using the [CloudNativePG (CNPG)](https://cloudnative-pg.io/) operator.
+In this article, you create the infrastructure resources needed to deploy a highly available PostgreSQL database on AKS using the [CloudNativePG (CNPG)](https://cloudnative-pg.io/) operator.
 
 [!INCLUDE [open source disclaimer](./includes/open-source-disclaimer.md)]
 
