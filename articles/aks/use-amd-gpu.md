@@ -196,10 +196,12 @@ To see the AMD GPU in action, you can schedule a GPU-enabled workload with the a
 
 ## Clean up resources
 
-Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`](https://kubernetes.io/docs/reference/kubectl/) command.
+1. Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`](https://kubernetes.io/docs/reference/kubectl/) command.
 
-```bash
-kubectl delete jobs samples-tf-mnist-demo
+    ```bash
+    kubectl delete jobs samples-tf-mnist-demo
+    ```
+
 ## Next steps
 
 - Explore the [different storage options](concepts-storage.md) for your GPU-based application on AKS.
