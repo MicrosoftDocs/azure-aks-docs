@@ -379,7 +379,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
     ```
 
 > [!IMPORTANT]  
-> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it will enter a `CrashLoopBackOff` state because a new replica has been created on the new node without any data and CNPG cannot find the pgdata directory. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
+> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it enters a `CrashLoopBackOff` state because a new replica has been created on the new node without any data and CNPG can't find the pgdata directory. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
 >  
 > ```bash  
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
@@ -409,7 +409,7 @@ The CNPG operator automatically creates a PodMonitor for the primary instance us
     ...
     ```
 
-If you are using Azure Monitor for Managed Prometheus, you will need to add another pod monitor using the custom group name. Managed Prometheus does not pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. This allows pod monitors for Managed Prometheus to exist side-by-side those that use the community pod monitor. If you are not using Managed Prometheus, you can skip this. Create a new pod monitor:
+If you're using Azure Monitor for Managed Prometheus, you need to add another pod monitor using the custom group name. Managed Prometheus doesn't pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. This allows pod monitors for Managed Prometheus to exist side-by-side those that use the community pod monitor. If you're not using Managed Prometheus, you can skip this. Create a new pod monitor:
 
 ```bash
 cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE -f -

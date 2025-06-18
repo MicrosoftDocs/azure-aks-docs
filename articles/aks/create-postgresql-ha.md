@@ -55,7 +55,7 @@ az extension add --upgrade --name k8s-extension --yes --allow-preview false
 az extension add --upgrade --name amg --yes --allow-preview false
 ```
 
-As a prerequisite for utilizing kubectl, it is essential to first install [Krew][install-krew], followed by the installation of the [CNPG plugin][cnpg-plugin]. This will enable the management of the PostgreSQL operator using the subsequent commands.
+As a prerequisite for using kubectl, you need to first install [Krew][install-krew], followed by the installation of the [CNPG plugin][cnpg-plugin]. These installations enable the management of the PostgreSQL operator using the subsequent commands.
 
 ```bash
 (
@@ -152,7 +152,7 @@ The CNPG operator automatically generates a service account called *postgres* th
     ```
 
     > [!NOTE]
-    > If you encounter the error message: `The request may be blocked by network rules of storage account. Please check network rule set using 'az storage account show -n accountname --query networkRuleSet'. If you want to change the default action to apply when no rule matches, please use 'az storage account update'`. Please verify user permissions for Azure Blob Storage and, if **necessary**, elevate your role to `Storage Blob Data Owner` using the commands provided below and after retry the [`az storage container create`][az-storage-container-create] command.
+    > If you encounter the error message: `The request may be blocked by network rules of storage account. Please check network rule set using 'az storage account show -n accountname --query networkRuleSet'. If you want to change the default action to apply when no rule matches, please use 'az storage account update'`. Make sure to verify user permissions for Azure Blob Storage and, if **necessary**, elevate your role to `Storage Blob Data Owner` using the commands provided and after retry the [`az storage container create`][az-storage-container-create] command.
 
     ```bash
     export USER_ID=$(az ad signed-in-user show --query id --output tsv)
@@ -263,7 +263,7 @@ In this section, you create a multizone AKS cluster with a system node pool. The
 You also add a user node pool to the AKS cluster to host the PostgreSQL cluster. Using a separate node pool allows for control over the Azure VM SKUs used for PostgreSQL and enables the AKS system pool to optimize performance and costs. You apply a label to the user node pool that you can reference for node selection when deploying the CNPG operator later in this guide. This section might take some time to complete.
 
 > [!IMPORTANT]  
-> If you opt to use local NVMe as your PostgreSQL storage in the later parts of this guide, you need to choose a VM SKU that supports local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. Update `$USER_NODE_POOL_VMSKU` below accordingly.
+> If you opt to use local NVMe as your PostgreSQL storage in the later parts of this guide, you need to choose a VM SKU that supports local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. Update `$USER_NODE_POOL_VMSKU` accordingly.
 
 1. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
@@ -318,7 +318,7 @@ You also add a user node pool to the AKS cluster to host the PostgreSQL cluster.
     ```
 
 > [!NOTE]
-> If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, please wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
+> If you receive the error message `"(OperationNotAllowed) Operation is not allowed: Another operation (Updating) is in progress, please wait for it to finish before starting a new operation."` when adding the AKS node pool, wait a few minutes for the AKS cluster operations to complete and then run the `az aks nodepool add` command.
 
 ## Connect to the AKS cluster and create namespaces
 
@@ -340,11 +340,11 @@ In this section, you get the AKS cluster credentials, which serve as the keys th
     kubectl create namespace $PG_SYSTEM_NAMESPACE --context $AKS_PRIMARY_CLUSTER_NAME
     ```
 
-We will define another environment variable based on your desired storage option, which we will later reference when deploying PostgreSQL.
+You can now define another environment variable based on your desired storage option, which you reference later in the guide when deploying PostgreSQL.
 
 ### [Premium SSD](#tab/pv1)
 
-You can reference the default pre-installed Premium SSD Azure Disks CSI driver storage class:
+You can reference the default preinstalled Premium SSD Azure Disks CSI driver storage class:
 
 ```bash
 export POSTGRES_STORAGE_CLASS="managed-csi-premium"
@@ -381,7 +381,7 @@ To use Premium SSD v2, you can create a custom storage class.
 > [!IMPORTANT]  
 > Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
 
-1. Update AKS cluster to install Azure Container Storage on user nodepool
+1. Update AKS cluster to install Azure Container Storage on user node pool.
 
     ```bash
     az aks update \
@@ -393,7 +393,7 @@ To use Premium SSD v2, you can create a custom storage class.
         --azure-container-storage-nodepools $USER_NODE_POOL_NAME
     ```
 
-2. Use the provided Azure Container Storage storage class
+2. Use the provided Azure Container Storage storage class.
 
     ```bash
     cat <<EOF | kubectl apply -f -
