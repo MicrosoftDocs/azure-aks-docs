@@ -31,7 +31,7 @@ This article shows you how to enable the AI toolchain operator add-on and deploy
     > [!NOTE]
     > Your Azure subscription must have GPU VM quota recommended for your model deployment in the same Azure region as your AKS resources.
 
-* Azure CLI version 2.47.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* Azure CLI version 2.75.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 * The Kubernetes command-line client, kubectl, installed and configured. For more information, see [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
 ### Export environment variables
