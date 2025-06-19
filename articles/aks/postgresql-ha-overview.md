@@ -54,7 +54,7 @@ This diagram illustrates a PostgreSQL cluster setup with one primary replica and
 
 Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing another way to restore the database in the event of an issue with streaming replication from the primary replica.
 
-:::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Highly available PostgreSQL cluster on AKS architecture diagram." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
+:::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Architecture diagram of CNPG Kubernetes operator for self-hosting a highly available PostgreSQL database on AKS." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
 
 > [!NOTE]
 > For applications that require data separation at the database level, you can add more databases with postInitSQL commands and similar. It's currently not possible to add more databases in a declarative way with the CNPG operator. [Learn more](https://github.com/cloudnative-pg/cloudnative-pg) about the CNPG operator.
