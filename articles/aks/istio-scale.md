@@ -6,6 +6,7 @@ ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 03/19/2024
 ms.author: shalierxia
+author: schaffererin
 ---
 
 # Istio service mesh add-on performance and scaling
@@ -103,7 +104,7 @@ A comparison of data plane latency performance across Istio add-on and AKS versi
 
 ### Horizontal pod autoscaling customization
 
-[Horizontal pod autoscaling (HPA)][hpa] is enabled for the `istiod` and ingress gateway pods. The default configurations for `istiod` and the gateways are:
+[Horizontal pod autoscaling (HPA)][hpa] is enabled for the `istiod` and ingress/egress gateway deployments. The default configurations for `istiod` and the gateways are:
 - Min Replicas: 2
 - Max Replicas: 5
 - CPU Utilization: 80%

@@ -198,6 +198,7 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [install-azure-cli]:  /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases

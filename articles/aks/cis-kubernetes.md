@@ -6,6 +6,8 @@ ms.subservice: aks-security
 ms.topic: concept-article
 ms.custom:
   - build-2025
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Center for Internet Security (CIS) Kubernetes benchmark

@@ -5,6 +5,9 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 11/21/2023
+ms.author: allensu
+ms.service: azure-kubernetes-service
+author: asudbring
 ---
 
 # Advanced NGINX ingress controller and ingress configurations with the application routing add-on

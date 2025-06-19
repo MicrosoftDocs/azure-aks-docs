@@ -29,14 +29,16 @@ Before you begin, make sure you have the following resources and permissions:
 
 ### Limitations
 
-This feature is designed to simplify cluster access and is ***not designed for programmatic access***. If you have a program invoke Kubernetes using `Run command`, the following disadvantages apply:
+This feature is designed to simplify cluster access and is ***not designed for programmatic access***. You should leverage direct API access via Bastion, VPN, or Express Route for programmatic calls to your cluster.
+
+If you have a program invoke Kubernetes using `Run command`, the following disadvantages apply:
 
 * You only get *exitCode* and *text output*, and you lose API level details.
 * One extra hop introduces extra failure points.
 
-The pod created by the `Run command` is hard coded with a `200m CPU` and `500Mi memory` request, and a `500m CPU` and `1Gi memory` limit. In rare cases where all your node is packed, the pod can't be scheduled within the ARM API limitation of 60 seconds. This means that the `Run command` would fail, even if it's configured to autoscale.
+The pod created by the `Run command` has `200m CPU` and `500Mi memory` requests, and a `500m CPU` and `1Gi memory` limits. In cases where all your node is full or over committed, the pod might be unable to be scheduled within the ARM API timeout of 60 seconds. This means that the `Run command` invocation would fail.
 
-`command invoke` runs the commands from your cluster, so any commands run in this manner are subject to your configured networking restrictions and any other configured restrictions. Make sure there are enough nodes and resources in your cluster to schedule this command pod.
+`command invoke` runs the commands from your cluster, so any commands ran in this manner are subject to your configured networking restrictions and any other configured restrictions. Make sure there are enough nodes and resources in your cluster to schedule this command pod.
 
 > [!NOTE]
 > The output for `command invoke` is limited to 512kB in size. 
@@ -124,11 +126,12 @@ You can use the following kubectl commands with the `Run command` feature:
 4. Select the file(s) you want to attach and then select **Attach**.
 5. Enter the command you want to run and select **Run**.
 
+---
+
 ## Disable `Run command`
 
-Currently, the only way you can disable the `Run command` feature is by setting [`.properties.apiServerAccessProfile.disableRunCommand` to `true`](/rest/api/aks/managed-clusters/create-or-update).
+You can disable the `Run command` feature by setting [`.properties.apiServerAccessProfile.disableRunCommand` to `true`](/rest/api/aks/managed-clusters/create-or-update).
 
----
 
 ## Troubleshooting
 

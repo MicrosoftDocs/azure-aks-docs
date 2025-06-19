@@ -1,7 +1,7 @@
 ---
-title: "Introducing ClusterResourcePlacement API"
-description: This article describes the ClusterResourcePlacement API
-ms.date: 05/23/2025
+title: "Kubernetes resource placement from hub cluster to member clusters"
+description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
+ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -519,6 +519,7 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
+* [Cluster resource placement FAQs](./faq.md#cluster-resource-placement-faqs).
 
 <!-- LINKS - external -->
 [fleet-github]: https://kubefleet.dev/docs/

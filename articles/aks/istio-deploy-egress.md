@@ -20,7 +20,7 @@ The Istio add-on egress gateway also builds on top of and requires the [Static E
 
 ## Limitations and requirements
 
-- You can deploy a maximum of `500` Istio egress gateways per cluster. 
+- You can enable a maximum of `500` Istio add-on egress gateways per cluster. 
 - Istio add-on egress gateway names must be unique per namespace.
 - Istio add-on egress gateway names must be between `1-53` characters, must only consist of lowercase alphanumerical characters, '-' and '.,' and must start and end with an alphanumerical character. Names should also be a valid Domain Name System (DNS) name. The regex used for name validation is `^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`.
 - Gateway API is currently not supported for the Istio add-on egress gateway.
@@ -510,6 +510,7 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 ## Next steps
 
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
+* [Configure egress gateway Horizontal Pod Autoscaler (HPA)][istio-scaling-guide]
 
 > [!NOTE]
 > If there are any issues encountered with deploying the Istio egress gateway or configuring egress traffic routing, refer to [article on troubleshooting Istio add-on egress gateways][istio-egress-tsg]
@@ -521,6 +522,7 @@ Once you disable the Istio egress gateway, you should be able to delete the `Sta
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
 [shared-mesh-config]: istio-meshconfig.md
 [istio-telemetry-api]: istio-telemetry.md
+[istio-scaling-guide]: istio-scale.md#scaling
 [sidecar-cr]: https://istio.io/latest/docs/reference/config/networking/sidecar/#OutboundTrafficPolicy
 [envoy-access-logging]: https://istio.io/latest/docs/tasks/observability/logs/access-log/
 [istio-deploy-ingress]: istio-deploy-ingress.md

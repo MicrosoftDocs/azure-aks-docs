@@ -5,6 +5,8 @@ ms.topic: how-to
 ms.date: 11/06/2023
 ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Create and configure an Azure Kubernetes Services (AKS) cluster to use virtual nodes

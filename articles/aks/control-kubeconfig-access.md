@@ -5,6 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 03/28/2023
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Use Azure role-based access control to define access to the Kubernetes configuration file in Azure Kubernetes Service (AKS)

@@ -140,16 +140,9 @@
         "articles/aks/*": true,
         "articles/kubernetes-fleet/*": true
       },
-      "author": {
-        "articles/aks/**/*.md": "schaffererin"
-      },
       "manager": {
         "articles/aks/**/*.md": "rayoflores",
         "articles/aks/**/*.yml": "rayoflores"
-      },
-      "ms.reviewer": {
-        "articles/aks/**/*.md": "davidsmatlak",
-        "articles/aks/**/*.yml": "davidsmatlak"
       },
       "featureFlags": {
         "articles/**/*.md": [
@@ -160,9 +153,6 @@
         "articles/**/*.md": [
           "azure"
         ]
-      },
-      "ms.author": {
-        "articles/aks/**/*.md": "schaffererin"
       },
       "ms.service": {
         "articles/aks/**/*.md": "azure-kubernetes-service"
