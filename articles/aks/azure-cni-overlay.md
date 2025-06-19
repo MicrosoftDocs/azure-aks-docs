@@ -54,6 +54,9 @@ Like Azure CNI Overlay, Kubenet assigns IP addresses to pods from an address spa
 
 > [!IMPORTANT]
 > The private CIDR ranges available for the Pod CIDR are defined in [RFC 1918](https://tools.ietf.org/html/rfc1918). While we don't block the use of public IP ranges, they are considered out of Microsoft's support scope. We recommend using private IP ranges for pod CIDR.
+ 
+> [!IMPORTANT]
+> An overlap in pod CIDR with IP addresses that exist outside of the cluster may lead to the packets being captured by the overlay and never leave the cluster, making the external host become unreachable.
 
 ## Network security groups
 
