@@ -40,6 +40,8 @@
             href: concepts-resource-propagation.md
           - name: Defining a placement rollout strategy
             href: concepts-rollout-strategy.md
+          - name: Automated deployments overview
+            href: concepts-automated-deployments.md        
           - name: Controlling eviction and disruption
             href: concepts-eviction-disruption.md
           - name: Placement strategy and resource snapshots
@@ -47,9 +49,7 @@
           - name: Taking over existing workloads
             href: concepts-placement-takeover.md
           - name: Detecting and managing workload drift
-            href: concepts-placement-drift.md    
-        - name: Automated deployments overview
-          href: concepts-automated-deployments.md        
+            href: concepts-placement-drift.md        
     - name: Multi-cluster networking 
       items:
         - name: DNS-based load balancing across multiple clusters
