@@ -125,7 +125,7 @@ Next, publish a workload to the hub cluster so that it can be placed onto member
    kubectl create namespace test-app 
    ```
 
-1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md##encapsulating-resources-using-envelope-objects), you can deploy them without change.
+1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources-using-envelope-objects), you can deploy them without change.
 
    1. Save the following YAML into a file named `sample-workload.yaml`:
 
