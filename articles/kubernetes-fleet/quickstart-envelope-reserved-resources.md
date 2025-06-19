@@ -111,7 +111,7 @@ data:
 
 We apply our envelope objects on the hub cluster and then use a `ClusterResourcePlacement` object to propagate these resources from the hub to member clusters.
 
-### Example CRP spec for propagating a ResourceEnvelope:
+### Example ClusterResourcePlacement spec for propagating a ResourceEnvelope:
 Here's an example of a `ClusterResourcePlacement` (CRP) that propagates a `ResourceEnvelope` to a member cluster, please note that since the `ResourceEnvelope` is namespace-scoped, the CRP just needs to select the namespace that contains the envelope object:
 
 ```yaml

@@ -125,7 +125,7 @@ Next, publish a workload to the hub cluster so that it can be placed onto member
    kubectl create namespace test-app 
    ```
 
-1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources), you can deploy them without change.
+1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md##encapsulating-resources-using-envelope-objects), you can deploy them without change.
 
    1. Save the following YAML into a file named `sample-workload.yaml`:
 
@@ -176,7 +176,7 @@ With the workload definition deployed, it's now possible to test the intelligent
 
 ## Test workload placement policies
 
-You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#introducing-clusterresourceplacement), as guides to writing your own `ClusterResourcePlacement` object.
+You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#introducing-clusterresourceplacement-api), as guides to writing your own `ClusterResourcePlacement` object.
   
 > [!NOTE]
 > If you want to try out each sample policy, be sure to delete the previous `ClusterResourcePlacement` object.

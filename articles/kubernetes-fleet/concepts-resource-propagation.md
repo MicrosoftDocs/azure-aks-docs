@@ -26,7 +26,7 @@ Application developers often need to deploy Kubernetes resources onto multiple c
 It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet Manager provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Fleet Manager, you can create Kubernetes resources on a Fleet-managed hub cluster 
 and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`.
 
-Fleet Manager supports these custom resources based on the [CNCF project KubeFleet](./https://github.com/kubefleet-dev/kubefleet) which you can read more about on the [KubeFleet documentation site][fleet-github].
+Fleet Manager supports these custom resources based on the [CNCF project KubeFleet](https://github.com/kubefleet-dev/kubefleet) which you can read more about on the [KubeFleet documentation site][fleet-github].
 
 ## ClusterResourcePlacement API Overview
 
