@@ -18,7 +18,7 @@ LocalDNS is an advanced feature that improves Domain Name System (DNS) resolutio
 
 When you enable LocalDNS, AKS installs a localDNS cache on each node as a systemd service. Pods on the node send DNS queries to this local cache, which resolves them directly. This setup reduces network hops and speeds up DNS responses. Local resolution also helps prevent issues with conntrack table exhaustion, because fewer connections are tracked at the node level. LocalDNS can serve cached responses during upstream DNS outages, which keep pod traffic running for a set period.
 
-<!-- Add architecture diagram for LocalDNS here -->
+![LocalDNS architecture diagram](media/localdnsdiagram.png)
 
 ### Key Capabilities
 
@@ -56,14 +56,14 @@ To modify the coreDNS plugins and to add custom server blocks, refer to [Configu
 az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
  ```
 
-> [!IMPORTANT]
-> When you enable localDNS during cluster create, the configuration only applies to the nodes in the initial node pools. For future node pools, enable localDNS on each as outlined in the following sections
-
 ### Enable localDNS in an existing cluster
 
 ```console
 az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
+
+> [!IMPORTANT]
+> When you enable localDNS at a cluster level, the configuration only applies to the nodes in the existing node pools. For future node pools, enable localDNS on each new node pool
 
 ### Enable localDNS in a new node pool
 
