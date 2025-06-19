@@ -203,32 +203,32 @@ cat /etc/environment
     az aks update --name $clusterName --resource-group $resourceGroup --disable-http-proxy
     ```
 
-2. Verify HTTP proxy is disabled by validating the HTTP proxy configuration is no longer set on the pods and nodes using the `kubectl describe pod` command.
+2. Verify HTTP proxy is disabled by validating the HTTP proxy configuration isn't set on the pods and nodes using the `kubectl describe pod` command.
 
     ```bash
     kubectl describe {any pod} -n kube-system
     ```
 
-To validate proxy variables are not set in pods, you can check the environment variables present on the nodes. 
+To validate proxy variables aren't set in pods, you can check the environment variables present on the nodes. 
 
-```bash
-kubectl get nodes
-kubectl node-shell {node name}
-cat /etc/environment
-```
+    ```bash
+    kubectl get nodes
+    kubectl node-shell {node name}
+    cat /etc/environment
+    ```
 
-### Reenable HTTP proxy on an existing cluster
+### Re-enable HTTP proxy on an existing cluster
 
 When creating a cluster, HTTP proxy is enabled by default. Once you disable HTTP proxy on a cluster, you can no longer add HTTP proxy configurations to that cluster.
 
-To reenable HTTP proxy on an existing cluster, use the [`az aks update`][az-aks-update] command with the `--enable-http-proxy` flag.
+To re-enable HTTP proxy on an existing cluster, use the [`az aks update`][az-aks-update] command with the `--enable-http-proxy` flag.
 
-```azurecli-interactive
-az aks update --name $clusterName --resource-group $resourceGroup --enable-http-proxy
-```
+    ```azurecli-interactive
+    az aks update --name $clusterName --resource-group $resourceGroup --enable-http-proxy
+    ```
 
 > [!IMPORTANT]
-> If you had an HTTP proxy configuration on your cluster before disabling, the existing HTTP proxy configuration automatically applies when you reenable HTTP proxy on that cluster. We recommend verifying the configuration to ensure it meets your current requirements before proceeding. If you want to change your HTTP proxy configuration after reenabling HTTP proxy, follow the steps to [Update the HTTP proxy configuration on an existing cluster](#update-a-cluster-to-update-or-enable-http-proxy).
+> If you had an HTTP proxy configuration on your cluster before disabling, the existing HTTP proxy configuration automatically applies when you re-enable HTTP proxy on that cluster. We recommend verifying the configuration to ensure it meets your current requirements before proceeding. If you want to change your HTTP proxy configuration after re-enabling HTTP proxy, follow the steps to [Update the HTTP proxy configuration on an existing cluster](#update-a-cluster-to-update-or-enable-http-proxy).
 
 :::zone-end
 
@@ -251,24 +251,22 @@ You can deploy an AKS cluster with an HTTP proxy using an ARM template.
 
 2. Create a template with HTTP proxy parameters. In your template, provide values for `httpProxy`, `httpsProxy`, and `noProxy`. If necessary, provide a value for `trustedCa`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
 
-```json
-"properties": {
-    ...,
-    "httpProxyConfig": {
-       "enabled": "true",
-        "httpProxy": "string",
-        "httpsProxy": "string",
-        "noProxy": [
-            "string"
-        ],
-        "trustedCa": "string"
+    ```json
+    "properties": {
+        ...,
+        "httpProxyConfig": {
+          "enabled": "true",
+            "httpProxy": "string",
+            "httpsProxy": "string",
+            "noProxy": [
+                "string"
+            ],
+            "trustedCa": "string"
+        }
     }
-}
-```
+    ```
 
-3. Deploy your ARM template with the HTTP Proxy configuration.
-
-Next, you can deploy the template. Your cluster should initialize with your HTTP proxy configured on the nodes.
+3. Deploy your ARM template with the HTTP Proxy configuration. Your cluster should initialize with your HTTP proxy configured on the nodes.
 
 ## Update an HTTP proxy configuration
 	
@@ -316,11 +314,11 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
 
 To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
 
-```bash
-kubectl get nodes
-kubectl node-shell {node name}
-cat /etc/environment
-```
+    ```bash
+    kubectl get nodes
+    kubectl node-shell {node name}
+    cat /etc/environment
+    ```
 
 ## Disable HTTP proxy on an existing cluster using an ARM template (Preview)
 
@@ -374,25 +372,25 @@ cat /etc/environment
     ```
 
 2. Deploy your ARM template with HTTP Proxy disabled.
-3. Verify HTTP proxy is disabled by validating that the HTTP Proxy configuration is no longer set on the pods and nodes using the `kubectl describe pod` command.
+3. Verify HTTP proxy is disabled by validating that the HTTP Proxy configuration isn't set on the pods and nodes using the `kubectl describe pod` command.
 
     ```bash
     kubectl describe {any pod} -n kube-system
     ```
 
-To validate proxy variables are not set in pods, you can check the environment variables present on the nodes. 
+To validate proxy variables aren't set in pods, you can check the environment variables present on the nodes. 
 
-```bash
-kubectl get nodes
-kubectl node-shell {node name}
-cat /etc/environment
-```
+    ```bash
+    kubectl get nodes
+    kubectl node-shell {node name}
+    cat /etc/environment
+    ```
 
-### Reenable HTTP proxy on an existing cluster
+### Re-enable HTTP proxy on an existing cluster
 	
 When creating a cluster, HTTP proxy is enabled by default. Once you disable HTTP proxy on a cluster, you can no longer add HTTP proxy configurations to that cluster.
 
-If you want to reenable HTTP proxy, follow the steps to [Update an HTTP proxy configuration using an ARM template](#update-an-arm-template-to-configure-http-proxy).
+If you want to re-enable HTTP proxy, follow the steps to [Update an HTTP proxy configuration using an ARM template](#update-an-arm-template-to-configure-http-proxy).
 
 :::zone-end
 
@@ -400,30 +398,34 @@ If you want to reenable HTTP proxy, follow the steps to [Update an HTTP proxy co
 
 ## Istio add-on HTTP proxy for External Services
 
-If you are using the [Istio-based service mesh add-on for AKS][istio-add-on-docs], you must create a Service Entry to enable your applications in the mesh to access non-cluster or external resources via the HTTP proxy. For example:
-```yaml
-apiVersion: networking.istio.io/v1
-kind: ServiceEntry
-metadata:
-  name: proxy
-spec:
-  hosts:
-  - my-company-proxy.com # ignored
-  addresses:
-  - $PROXY_IP/32
-  ports:
-  - number: $PROXY_PORT
-    name: tcp
-    protocol: TCP
-  location: MESH_EXTERNAL
-```
+If you're using the [Istio-based service mesh add-on for AKS][istio-add-on-docs], you must create a Service Entry to enable your applications in the mesh to access noncluster or external resources via the HTTP proxy. 
+
+For example:
+
+    ```yaml
+    apiVersion: networking.istio.io/v1
+    kind: ServiceEntry
+    metadata:
+      name: proxy
+    spec:
+      hosts:
+      - my-company-proxy.com # ignored
+      addresses:
+      - $PROXY_IP/32
+      ports:
+      - number: $PROXY_PORT
+        name: tcp
+        protocol: TCP
+      location: MESH_EXTERNAL
+    ```
+
 1. Create a file and provide values for `PROXY_IP` and `PROXY_PORT`. 
 
 2. You can deploy the Service Entry using:
 
-```bash
-kubectl apply -f service_proxy.yaml
-```
+    ```bash
+    kubectl apply -f service_proxy.yaml
+    ```
 ---
 
 ## Monitoring add-on configuration
