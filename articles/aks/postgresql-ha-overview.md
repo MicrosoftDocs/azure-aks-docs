@@ -1,5 +1,5 @@
 ---
-title: 'Overview of deploying a highly available PostgreSQL database on AKS'
+title: 'Deploying a PostgreSQL Database on AKS with CloudNativePG'
 description: Learn the prerequisites, deployment process, and architecture for deploying a highly available PostgreSQL cluster on Azure Kubernetes Service (AKS) using Azure CLI.
 ms.topic: overview
 ms.date: 06/18/2025
