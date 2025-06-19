@@ -87,9 +87,9 @@ To create a public Kubernetes Fleet resource with a hub cluster, use the followi
 #### Private hub cluster
 When creating a private access mode Kubernetes Fleet resource with a hub cluster, some extra considerations apply:
 - Fleet requires you to provide the subnet on which the Fleet hub cluster's node VMs will be placed. This can be done by setting `subnetId` in the `agentProfile` within the Fleet's `hubProfile`.
--  The address prefix of the vnet **vnet_name** must not overlap with the AKS default service range of `10.0.0.0/16`.
+-  The address prefix of the vnet **vnetName** must not overlap with the AKS default service range of `10.0.0.0/16`.
 - When using an AKS private cluster, you have the ability to configure fully qualified domain names (FQDNs) and FQDN subdomains. This functionality doesn't apply to the private access mode type hub cluster.
-- Private access mode requires a `Network Contributor` role assignment on the agent subnet for Fleet's first party service principal. This is **NOT** needed when creating private fleet using the `az fleet create` command because the CLI automatically creates the role assignment.
+- Private access mode requires a `Network Contributor` role assignment on the agent subnet for Fleet's first party service principal (Fleet's first party service principal ID varies across different Entra tenants). This is **NOT** needed when creating private fleet using the `az fleet create` command because the CLI automatically creates the role assignment.
 
 ##### Fetch Fleet's service principal object ID:
 

@@ -33,7 +33,88 @@ You can create a Fleet resource to later group your AKS clusters as member clust
 
 ### [Kubernetes Fleet resource without hub cluster](#tab/without-hub-cluster)
 
-Fleet without a hub cluster can not be created using Terraform yet.
+To create a Fleet resource without a hub cluster, implement the following Terraform code
+
+#### Implement the Terraform code
+- Create a directory you can use to test the sample Terraform code and make it your current directory.
+
+- Create a file named `providers.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/providers.tf)]
+
+- Create a file named `main.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/main.tf)]
+
+- Create a file named `variables.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/variables.tf)]
+
+- Create a file named `outputs.tf` and insert the following code:
+    [!code-terraform[master](~/terraform_samples/quickstart/101-aks-fleet-hubless/outputs.tf)]
+
+> [!IMPORTANT]
+> If you're using the 4.x azurerm provider, you must [explicitly specify the Azure subscription ID](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/4.0-upgrade-guide#specifying-subscription-id-is-now-mandatory) to authenticate to Azure before running the Terraform commands.
+>
+> One way to specify the Azure subscription ID without putting it in the `providers` block is to specify the subscription ID in an environment variable named `ARM_SUBSCRIPTION_ID`.
+>
+> For more information, see the [Azure provider reference documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs#argument-reference).
+
+#### Initialize Terraform
+
+[!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
+
+#### Create a Terraform execution plan
+
+[!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
+
+#### Apply a Terraform execution plan
+
+[!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
+
+#### Verify the results
+
+##### [Azure CLI](#tab/azure-cli)
+
+1. Get the Azure resource group name.
+
+    ```console
+    resource_group_name=$(terraform output -raw resource_group_name)
+    ```
+
+1. Get the Fleet Manager name.
+
+    ```console
+    batch_name=$(terraform output -raw fleet_name)
+    ```
+
+1. Run [az fleet show](/cli/azure/fleet#az-fleet-show) to view the Azure Kubernetes Fleet Manager.
+
+    ```azurecli
+    az fleet show --resource-group $resource_group_name --name $fleet_name
+    ```
+
+##### [Azure PowerShell](#tab/azure-powershell)
+
+1. Get the Azure resource group name.
+
+    ```powershell
+    $resource_group_name=$(terraform output -raw resource_group_name)
+    ```
+
+1. Get the Fleet Manager name.
+
+    ```powershell
+    $batch_name=$(terraform output -raw fleet_name)
+    ```
+
+1. Run [Get-AzFleet](/powershell/module/az.fleet/get-azfleet) to view the Azure Kubernetes Fleet Manager.
+
+    ```azurepowershell
+    Get-AzFleet -ResourceGroupName $resource_group_name -Name $fleet_name
+    ```
+##### Clean up resources
+
+[!INCLUDE [terraform-plan-destroy.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan-destroy.md)]
+
+---
 
 ### [Kubernetes Fleet resource with hub cluster](#tab/with-hub-cluster)
 
@@ -42,31 +123,8 @@ If you want to use Fleet for Kubernetes object propagation and multi-cluster loa
 Kubernetes Fleet clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
 
 #### Public hub cluster
-To create a public Kubernetes Fleet resource with a hub cluster, implement the following Terraform code
 
-##### Implement the Terraform code
-- Create a directory you can use to test the sample Terraform code and make it your current directory.
-
-- Create a file named `providers.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/302-aks-fleet-public-hubful/providers.tf)]
-
-- Create a file named `main.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/302-aks-fleet-public-hubful/main.tf)]
-
-- Create a file named `variables.tf` and insert the following code:
-    [!code-terraform[master](~/terraform_samples/quickstart/302-aks-fleet-public-hubful/variables.tf)]
-
-##### Initialize Terraform
-
-[!INCLUDE [terraform-init.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-init.md)]
-
-##### Create a Terraform execution plan
-
-[!INCLUDE [terraform-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan.md)]
-
-##### Apply a Terraform execution plan
-
-[!INCLUDE [terraform-apply-plan.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-apply-plan.md)]
+Public hub cluster fleet can not be created using Terraform yet.
 
 #### Private hub cluster
 
