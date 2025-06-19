@@ -421,6 +421,8 @@
               href: resize-node-pool.md
             - name: Delete node pools
               href: delete-node-pool.md
+            - name: Stop and start node pools
+              href: start-stop-nodepools.md
         - name: Virtual nodes
           items:
             - name: Use virtual nodes
