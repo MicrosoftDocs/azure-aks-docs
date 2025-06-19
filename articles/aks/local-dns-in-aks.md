@@ -16,16 +16,16 @@ ms.author: vaibhavarora
 
 LocalDNS is an advanced feature that improves Domain Name System (DNS) resolution performance and reliability in Azure Kubernetes Service (AKS) clusters. LocalDNS deploys a DNS proxy on each node. This proxy reduces DNS query latency and lowers reliance on the cluster’s CoreDNS pods. LocalDNS is especially helpful for large clusters or environments with high DNS query volumes, where cluster DNS can become a bottleneck.
 
-When you enable LocalDNS, AKS installs a localDNS cache on each node as a systemd service. Pods on the node send DNS queries to this local cache, which resolves them directly. This setup reduces network hops and speeds up DNS responses. Local resolution also helps prevent issues with conntrack table exhaustion, because fewer connections are tracked at the node level. LocalDNS can serve cached responses during upstream DNS outages, which keep pod traffic running for a set period.
+When LocalDNS is enabled, AKS deploys a local DNS cache as a systemd service on each node. Pods on the node send their DNS queries to this local cache, enabling faster DNS resolution by reducing network hops. This approach also minimizes conntrack table usage, lowering the risk of table exhaustion. Additionally, if upstream DNS becomes unavailable, LocalDNS can continue serving cached responses for a configurable duration, helping maintain pod connectivity and service reliability.
 
-![LocalDNS architecture diagram](media/localdnsdiagram.png)
+![LocalDNS architecture diagram](./media/localdnsdiagram.png)
 
 ### Key Capabilities
 
 - **Reduced DNS resolution Latency:**
     Each AKS node runs a `localdns` systemd service. Workloads running on the node send DNS queries to this service, which resolves them locally, reducing network hops and speeding up DNS lookups.
 
-- **Customizable DNS forwarding:**
+- **Customizable DNS behavior:**
     You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
 
 - **Avoid conntrack races & conntrak table exhaustion:**
@@ -48,7 +48,7 @@ By using LocalDNS, you get faster and more reliable DNS resolution for your work
 * This article requires the `aks-preview` Azure CLI extension version X.X.XXX or later
 
 ## Enable LocalDNS
-To modify the coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configure-localdnsconfigjson).
+The following commands enable localDNS on your cluster or node pools. To modify the localDNS config file with coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configure-localdnsconfigjson).
 
 ### Enable localDNS in a new cluster
 
@@ -107,8 +107,6 @@ Here's an example of how to verify:
 ## Disable localDNS
 To disable localDNS, you need to update the `localdnsconfig.json` file to use `"mode":"Disabled"`. Once the file is updated, you can apply the configuration to the node pool to update with the change.
 
-### Disable localDNS in a node pool
-
 ```console
 az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
@@ -138,40 +136,6 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 ## Current Limitations
 * Windows node pools aren't supported
 * Kubernetes version 1.33+ is required to use localDNS
-
-## Troubleshooting LocalDNS
-
-### Common Issues and Solutions
-
-#### DNS resolution is slow or fails after enabling LocalDNS
-
-1. Verify LocalDNS is properly enabled as described in the [verification section](#verify-if-localdns-is-enabled).
-2. Check the systemd service status on the node:
-   ```console
-   # Run from a privileged pod with host network access or directly on the node
-   systemctl status localdns
-   ```
-3. Check LocalDNS logs:
-   ```console
-   # Run from a privileged pod with host network access or directly on the node
-   journalctl -u localdns
-   ```
-
-#### Nodes failed to join cluster after enabling LocalDNS
-
-If nodes are failing to join the cluster after enabling LocalDNS:
-
-1. Check the node provisioning logs for any errors related to DNS configuration.
-2. Verify that your JSON configuration is valid and correctly formatted.
-3. Consider using the `Preferred` mode instead of `Required` to allow the node to join even if some LocalDNS settings are invalid.
-
-#### DNS queries to specific domains are failing
-
-If DNS queries to specific domains are failing after enabling LocalDNS:
-
-1. Check if you have domain-specific overrides in your `localdnsconfig.json` that might be misconfigured.
-2. Temporarily try removing domain-specific overrides and using only the default "." configuration.
-3. Check if the issue occurs with both UDP and TCP protocols by adjusting the `protocol` setting.
 
 ## Configure `localdnsconfig.json`
 With localDNS, you can define custom server blocks and can use supported plugins for each. To set them up in your node pool, you need to create a `localdnsconfig.json` file with the configurations.
@@ -272,6 +236,39 @@ For example, if you have specific DNS needs when accessing bing.com, you could u
 }
 ```
 
+## Troubleshooting LocalDNS
+
+### Common Issues and Solutions
+
+#### DNS resolution is slow or fails after enabling LocalDNS
+
+1. Verify LocalDNS is properly enabled as described in the [verification section](#verify-if-localdns-is-enabled).
+2. Check the systemd service status on the node:
+   ```console
+   # Run from a privileged pod with host network access or directly on the node
+   systemctl status localdns
+   ```
+3. Check LocalDNS logs:
+   ```console
+   # Run from a privileged pod with host network access or directly on the node
+   journalctl -u localdns
+   ```
+
+#### Nodes failed to join cluster after enabling LocalDNS
+
+If nodes are failing to join the cluster after enabling LocalDNS:
+
+1. Check the node provisioning logs for any errors related to DNS configuration.
+2. Verify that your JSON configuration is valid and correctly formatted.
+3. Consider using the `Preferred` mode instead of `Required` to allow the node to join even if some LocalDNS settings are invalid.
+
+#### DNS queries to specific domains are failing
+
+If DNS queries to specific domains are failing after enabling LocalDNS:
+
+1. Check if you have domain-specific overrides in your `localdnsconfig.json` that might be misconfigured.
+2. Temporarily try removing domain-specific overrides and using only the default "." configuration.
+3. Check if the issue occurs with both UDP and TCP protocols by adjusting the `protocol` setting.
 
 ## Next steps
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coredns].
