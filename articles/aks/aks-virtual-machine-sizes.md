@@ -28,7 +28,7 @@ AKS also supports the following VM types and features:
 
 * [Confidential VMs (CVMs)](./use-cvm.md)
 * [Arm-based processor (Arm64) VMs](./use-arm64-vms.md)
-* [GPU-optimized VMs](/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated)
+* [GPU-optimized VMs](/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated)
 * [Trusted launch](./use-trusted-launch.md)
 
 ### Default behavior for supported VM sizes
@@ -70,7 +70,7 @@ Once you determine the appropriate node pools to take action on, you can [resize
 For more guidance on migrating from a retiring VM size, see the following migration guides:
 
 * [General-purpose sizes migration guide](/azure/virtual-machines/migration/sizes/d-ds-dv2-dsv2-ls-series-migration-guide)
-* [Storage-optimized sizes migration guide](/azure/virtual-machines/migration/sizes/ls-series-migration-guide)
+* [Storage-optimized sizes migration guide](/azure/virtual-machines/migration/sizes/d-ds-dv2-dsv2-ls-series-migration-guide)
 * [GPU-accelerated sizes migration guide](/azure/virtual-machines/migration/sizes/n-series-migration)
 * [Azure Dedicated Host SKU migration guide](/azure/virtual-machines/migration/dedicated-host-migration-guide)
 
