@@ -53,7 +53,7 @@ In this guide, you learn how to:
 This diagram illustrates a PostgreSQL cluster setup with one primary replica and two read replicas managed by the [CloudNativePG (CNPG)](https://cloudnative-pg.io/) operator. The architecture provides a highly available PostgreSQL running on an AKS cluster that can withstand a zone outage by failing over across replicas.
 
 Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing another way to restore the database in the event of an issue with streaming replication from the primary replica.
-
+You might choose to host PostgreSQL on AKS when you need full control over database configuration, extensions, and deployment architecture. It’s ideal for integrating tightly with Kubernetes-native tooling, optimizing costs at scale, and fine-tuning performance through custom resource allocation, caching strategies, and storage configurations tailored to your workload.
 :::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Architecture diagram of CNPG Kubernetes operator for self-hosting a highly available PostgreSQL database on AKS." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
 
 > [!NOTE]
