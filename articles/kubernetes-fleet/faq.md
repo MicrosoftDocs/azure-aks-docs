@@ -1,7 +1,7 @@
 ---
 title: "Frequently asked questions - Azure Kubernetes Fleet Manager"
 description: This article covers the frequently asked questions for Azure Kubernetes Fleet Manager
-ms.date: 06/16/2025
+ms.date: 06/19/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
@@ -40,7 +40,7 @@ az fleet member create \
     --member-cluster-id ${MEMBER_CLUSTER_ID}
 ```  
 
-### Relationship to Azure-Arc enabled Kubernetes
+### Relationship to Azure Arc-enabled Kubernetes
 
 Fleet Manager supports joining only AKS clusters as member clusters. 
 
@@ -56,13 +56,13 @@ Azure Kubernetes Fleet Manager helps you address at-scale and multi-cluster scen
 
 Creation and lifecycle management of new AKS clusters is on our roadmap. Provide [feedback](https://github.com/Azure/AKS/issues/3270) if support for cluster creation is an important scenario for you.
 
-### Do I need to update the Fleet Manager hub cluster?
+### Do I need to manage updates to the Fleet Manager hub cluster?
 
-No. Fleet Manager's hub cluster is a Microsoft-managed resource. Azure automatically updates the hub cluster to the latest version of Kubernetes and node images as they become available.
+No. Fleet Manager's hub cluster is a Microsoft-managed resource. Microsoft automatically updates the hub cluster to the latest version of Kubernetes or node image as they become available.
 
 If you attempt to update or modify the hub cluster (which is a single node AKS cluster named `hub`), a set of deny rules will block your changes from being applied.
 
-## Multi-cluster automated or manual updates FAQs
+## Multi-cluster updates - automated or manual FAQs
 
 ### What AKS update channels does Fleet Manager support?
 
@@ -126,7 +126,7 @@ AKS Automated Deployments supports only a single AKS cluster where the deployed 
 
 Fleet Manager Automated Deployments also requires the use of an existing Azure Container Registry (ACR) and Fleet Manager hub cluster namespace.
 
-### Can add connect to the same Git repository multiple times?
+### Can I connect to the same Git repository multiple times?
 
 Yes, you can connect to the same repository multiple times to allow you to deploy different resource or branches from the same repository.
 
