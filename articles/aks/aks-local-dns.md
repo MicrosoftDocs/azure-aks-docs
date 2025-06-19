@@ -18,7 +18,7 @@ LocalDNS is an advanced feature that improves Domain Name System (DNS) resolutio
 
 When LocalDNS is enabled, AKS deploys a local DNS cache as a systemd service on each node. Pods on the node send their DNS queries to this local cache, enabling faster DNS resolution by reducing network hops. This approach also minimizes conntrack table usage, lowering the risk of table exhaustion. Additionally, if upstream DNS becomes unavailable, LocalDNS can continue serving cached responses for a configurable duration, helping maintain pod connectivity and service reliability.
 
-![LocalDNS architecture diagram](./media/localdnsdiagram.png)
+![LocalDNS architecture diagram](./media/local-dns-diagram.png)
 
 ### Key Capabilities
 
