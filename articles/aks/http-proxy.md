@@ -105,6 +105,19 @@ Your cluster should initialize with the HTTP proxy configured on the nodes.
 
 2. Verify that the HTTP Proxy configuration is on the pods and nodes by checking that the environment variables contains the appropriate values for http_proxy, https_proxy, and no_proxy.
 
+To validate proxy variables are set in pods, you can use `kubectl describe pod`.
+
+```bash
+kubectl describe {any pod} -n kube-system
+```
+
+To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
+
+```bash
+kubectl get nodes
+kubectl node-shell {node name}
+cat /etc/environment
+```
 
 ## Update an HTTP Proxy configuration
 
@@ -114,7 +127,7 @@ HTTP Proxy configurations can be updated on existing clusters. This includes:
 
 ### HTTP Proxy update considerations
 
-The `--http-proxy-config` parameter should be set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values.
+The `--http-proxy-config` parameter should be set to a new JSON file with updated values for `httpProxy`, `httpsProxy`, `noProxy`, and `trustedCa` if necessary. The update injects new environment variables into pods with the new `httpProxy`, `httpsProxy`, or `noProxy` values. Pods must be rotated for the apps to pick it up, because the environment variable values are injected by a mutating admission webhook.
 
 > [!NOTE]
 > If switching to a new proxy, the new proxy must already exist for the update to be successful. After the upgrade is completed, you can delete the old proxy.
@@ -132,6 +145,20 @@ az aks update --name $clusterName --resource-group $resourceGroup --http-proxy-c
 > AKS will automatically reimage all node pools in the cluster when you update the proxy configuration on your cluster using the [`az aks update`][az-aks-update] command. You can use [Pod Disruption Budgets (PDBs)][operator-best-practices-scheduler] to safeguard disruption to critical pods during reimage. 
 
 2. Verify that the HTTP Proxy configuration is on the pods and nodes by checking that the environment variables contains the appropriate values for http_proxy, https_proxy, and no_proxy.
+
+To validate proxy variables are set in pods, you can use `kubectl describe pod`.
+
+```bash
+kubectl describe {any pod} -n kube-system
+```
+
+To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
+
+```bash
+kubectl get nodes
+kubectl node-shell {node name}
+cat /etc/environment
+```
 
 ## Disable HTTP Proxy on an existing cluster (preview)
 
@@ -181,6 +208,18 @@ az aks update --name $clusterName --resource-group $resourceGroup --disable-http
 ```
 
 4. Check that HTTP Proxy is disabled
+
+5. Enable HTTP Proxy after disable
+When creating a cluster, HTTP Proxy is set to enabled by default. Once you disable HTTP Proxy on a cluster, you will no longer be able to add HTTP Proxy configurations to that cluster.
+
+If you'd like to re-enable HTTP Proxy, you can use the [`az aks update`][az-aks-update] command with `--enable-http-proxy` to enable HTTP Proxy on your existing cluster.
+
+```azurecli-interactive
+az aks update --name $clusterName --resource-group $resourceGroup --enable-http-proxy
+```
+
+> [!IMPORTANT]
+> If you had an HTTP Proxy configuration on your cluster before disabling, when you re-enable the feature, the existing HTTP Proxy configuration will automatically apply. It is recommended to verify the configuration to ensure it meets your current requirements before proceeding. If you want to change your HTTP Proxy configuration after re-enabling HTTP Proxy, you can follow the steps above to update the HTTP Proxy configuration on an existing cluster.
 
 :::zone-end
 
