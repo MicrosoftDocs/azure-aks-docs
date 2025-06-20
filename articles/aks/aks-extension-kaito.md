@@ -15,7 +15,7 @@ In this article, you learn how to use the AI toolchain operator (KAITO) add-on i
 ## Prerequisites
 
 * The Azure Kubernetes Service (AKS) extension for Visual Studio Code needs to be installed to use the KAITO experience. For more information, see [Install the Azure Kubernetes Service (AKS) extension for Visual Studio Code][install-aks-vscode].
-* The cluster that you are deploying to is a Standard Cluster _(Kaito cannot currently be installed on Automatic clusters)_
+* The cluster that you are deploying to is a Standard Cluster _(Kaito cannot currently be installed on Automatic clusters)_.
 * Verify that your Azure subscription has GPU quota for your chosen model by checking the [KAITO model workspaces](https://github.com/kaito-project/kaito/tree/main/presets).
 
 ## Install KAITO on your cluster
