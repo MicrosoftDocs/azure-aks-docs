@@ -84,8 +84,21 @@ az aks create --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --kubernetes
 
 If you'd rather enable network isolation on an existing AKS cluster instead of creating a new cluster, use the [az aks update][az-aks-update] command.
 
+To enable the network isolated feature on an existing AKS cluster, first run the following command to update `bootstrap-artifact-source`:
+
 ```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --outbound-type none
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache  
+```
+Then you need to manually reimage all the exisiting nodepools:
+
+```azurecli-interactive
+az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
+```
+
+Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
+
+```azurecli-interactive
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
 ```
 
 After the feature is enabled, any newly added node can bootstrap successfully without egress. When you enable network isolation on an existing cluster, keep in mind that you need to manually reimage all existing node pools.
@@ -253,10 +266,21 @@ If you'd rather enable network isolation on an existing AKS cluster instead of c
 
 When creating the private endpoint and private DNS zone for the BYO ACR, use the existing virtual network and subnets of the existing AKS cluster. When you assign the **AcrPull** permission to the kubelet identity, use the existing kubelet identity of the existing AKS cluster.
 
-To enable the network isolated feature on an existing AKS cluster, use the following command:
+To enable the network isolated feature on an existing AKS cluster, first run the following command to update `bootstrap-artifact-source`:
 
 ```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID} --outbound-type none
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID} 
+```
+Then you need to manually reimage all the exisiting nodepools:
+
+```azurecli-interactive
+az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
+```
+
+Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
+
+```azurecli-interactive
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
 ```
 
 After the network isolated cluster feature is enabled, nodes in the newly added node pool can bootstrap successfully without egress. You must reimage existing node pools so that newly scaled node can bootstrap successfully. When you enable the feature on an existing cluster, you need to manually reimage all existing node pools.
