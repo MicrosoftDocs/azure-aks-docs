@@ -1,5 +1,5 @@
 ---
-title: Use AMD on GPUs Azure Kubernetes Service (AKS)
+title: Use AMD GPUs on Azure Kubernetes Service (AKS)
 description: Learn how to use AMD GPUs for high performance compute or AI workloads on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
@@ -206,6 +206,7 @@ kubectl delete jobs samples-tf-mnist-demo
 
 - Explore the [different storage options](concepts-storage.md) for your GPU-based application on AKS.
 - Learn more about [Ray clusters on AKS](ray-overview.md).
+- Use [NVIDIA GPUs](use-nvidia-gpu.md) for your compute-intensive AKS workloads.
 
 
 <!-- LINKS -->
