@@ -3,10 +3,10 @@ title: Create a network isolated AKS cluster
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure an Azure Kubernetes Service (AKS) cluster with outbound and inbound network restrictions.
 ms.subservice: aks-networking
-author: shashankbarsin
-ms.author: shasb
+author: charleswool
+ms.author: yuewu2
 ms.topic: how-to
-ms.date: 04/24/2025
+ms.date: 06/20/2025
 zone_pivot_groups: network-isolated-acr-type
 ---
 
@@ -95,9 +95,14 @@ Then you need to manually reimage all the exisiting nodepools:
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 > [!NOTE]
-> You need to ensurethe outbound exists until the first reimage completes.
+> You need to ensure the outbound exists until the first reimage completes.
+> To check if the reimage completes, run:
+>```azurecli-interactive
+>az aks nodepool wait --resource-group "${RESOURCE_GROUP}" --cluster-name "${AKS_NAME}" --name "$NODEPOOL" --updated
+>```
+> If the reimage completes, it should echo `Node pool $NODEPOOL upgrade succeeded`.
 
-Then run the following command to update `outbound-type`:
+Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
 
 ```azurecli-interactive
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
@@ -280,15 +285,14 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 ```
 
 > [!NOTE]
-> You need to ensure the cluster outbound exists until the first reimage completes.
+> You need to ensure the outbound exists until the first reimage completes.
+> To check if the reimage completes, run:
+>```azurecli-interactive
+>az aks nodepool wait --resource-group "${RESOURCE_GROUP}" --cluster-name "${AKS_NAME}" --name "$NODEPOOL" --updated
+>```
+> If the reimage completes, it should echo `Node pool $NODEPOOL upgrade succeeded`.
 
-Then run the following command to update `outbound-type`:
-
-```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
-```
-
-Keep in mind that you need to manually reimage all existing node pools again:
+Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
