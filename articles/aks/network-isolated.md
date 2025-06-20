@@ -95,12 +95,22 @@ Then you need to manually reimage all the exisiting nodepools:
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 > [!NOTE]
-> You need to ensure the outbound exists until the first reimage completes.
-> To check if the reimage completes, run:
+> You need to ensure the outbound exists until the first reimage completes. To check if the reimage completes, run:
 >```azurecli-interactive
->az aks nodepool wait --resource-group "${RESOURCE_GROUP}" --cluster-name "${AKS_NAME}" --name "$NODEPOOL" --updated
+>NODEPOOLS=$(az aks nodepool list \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--query "[].name" -o tsv)
+>for NODEPOOL in $NODEPOOLS; do
+>echo "Waiting for node pool $NODEPOOL to finish upgrading..."
+>az aks nodepool wait \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--name "$NODEPOOL" \
+>--updated
+>echo "Node pool $NODEPOOL upgrade succeeded."
+>done
 >```
-> If the reimage completes, it should echo `Node pool $NODEPOOL upgrade succeeded`.
 
 Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
 
@@ -288,9 +298,20 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 > You need to ensure the outbound exists until the first reimage completes.
 > To check if the reimage completes, run:
 >```azurecli-interactive
->az aks nodepool wait --resource-group "${RESOURCE_GROUP}" --cluster-name "${AKS_NAME}" --name "$NODEPOOL" --updated
+>NODEPOOLS=$(az aks nodepool list \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--query "[].name" -o tsv)
+>for NODEPOOL in $NODEPOOLS; do
+>echo "Waiting for node pool $NODEPOOL to finish upgrading..."
+>az aks nodepool wait \
+>--resource-group "${RESOURCE_GROUP}" \
+>--cluster-name "${AKS_NAME}" \
+>--name "$NODEPOOL" \
+>--updated
+>echo "Node pool $NODEPOOL upgrade succeeded."
+>done
 >```
-> If the reimage completes, it should echo `Node pool $NODEPOOL upgrade succeeded`.
 
 Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
 
