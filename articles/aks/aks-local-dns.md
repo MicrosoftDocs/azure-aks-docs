@@ -18,7 +18,7 @@ LocalDNS is an advanced feature that improves Domain Name System (DNS) resolutio
 
 When LocalDNS is enabled, AKS deploys a local DNS cache as a systemd service on each node. Pods on the node send their DNS queries to this local cache, enabling faster DNS resolution by reducing network hops. This approach also minimizes conntrack table usage, lowering the risk of table exhaustion. Additionally, if upstream DNS becomes unavailable, LocalDNS can continue serving cached responses for a configurable duration, helping maintain pod connectivity and service reliability.
 
-![LocalDNS architecture diagram](./media/local-dns-diagram.png)
+![LocalDNS architecture diagram](./media/local-dns-in-aks/local-dns-diagram.png)
 
 ### Key Capabilities
 
@@ -237,32 +237,7 @@ For example, if you have specific DNS needs when accessing bing.com, you could u
 ```
 
 ## Troubleshooting LocalDNS
-
-### Common Issues and Solutions
-
-#### DNS resolution is slow or fails after enabling LocalDNS
-
-1. Verify LocalDNS is properly enabled as described in the [verification section](#verify-if-localdns-is-enabled).
-2. Check the systemd service status on the node:
-   ```console
-   # Run from a privileged pod with host network access or directly on the node
-   systemctl status localdns
-   ```
-3. Check LocalDNS logs:
-   ```console
-   # Run from a privileged pod with host network access or directly on the node
-   journalctl -u localdns
-   ```
-
-#### Nodes failed to join cluster after enabling LocalDNS
-
-If nodes are failing to join the cluster after enabling LocalDNS:
-
-1. Check the node provisioning logs for any errors related to DNS configuration.
-2. Verify that your JSON configuration is valid and correctly formatted.
-3. Consider using the `Preferred` mode instead of `Required` to allow the node to join even if some LocalDNS settings are invalid.
-
-#### DNS queries to specific domains are failing
+### DNS queries to specific domains are failing
 
 If DNS queries to specific domains are failing after enabling LocalDNS:
 
