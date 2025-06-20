@@ -53,7 +53,7 @@ There are several reasons why certain VM sizes might not be available, including
 
 * **Quota limits**: All Azure services set default limits and quotas for resources and features. To learn more, see the following resources:
   * [Quotas and regional limits for Azure Kubernetes Service (AKS)](./quotas-skus-regions.md)
-  * [Check your quota usage](azure/virtual-machines/quotas)
+  * [Check your quota usage](/azure/virtual-machines/quotas)
   * [Request a quota increase through an Azure support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) (for **Issue type**, select **Quota**)
 * **VM sizes in preview**: VM sizes in preview might not be available to you if you haven't registered the preview flag for the VM size.
 * **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require additional testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
@@ -70,9 +70,9 @@ If you're using a VM size that's retiring/retired, we recommend [migrating your 
 
 ## Migrate node pools to a supported VM size
 
-Once you determine the appropriate node pools to take action on, you can [resize your node pools](./resize-node-pool.md). During the resizing process, a new node pool will be created and workloads will be migrated to the new node pool.
+Once you determine the appropriate node pools to take action on, you can [resize your node pools](./resize-node-pool.md). During the resizing process, a new node pool is created and workloads are migrated to the new node pool.
 
-For more guidance on migrating to a new VM size, see the following resources:
+For more information on migrating to a new VM size, see the following resources:
 
 * [Migrate from Gen 1 to Gen 2 VMs](#use-gen-2-vms-on-aks)
 * [General-purpose sizes migration guide](/azure/virtual-machines/migration/sizes/d-ds-dv2-dsv2-ls-series-migration-guide)
