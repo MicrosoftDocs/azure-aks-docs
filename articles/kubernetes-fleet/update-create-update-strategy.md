@@ -191,7 +191,7 @@ You can use an update strategy as part of a manual update run or an auto-upgrade
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
-* [Multi-cluster updates FAQs](./faq.md#multi-cluster-automated-or-manual-updates-faqs).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md
