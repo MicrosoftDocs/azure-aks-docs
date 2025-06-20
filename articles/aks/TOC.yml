@@ -14,6 +14,8 @@
       href: supported-kubernetes-versions.md
     - name: Long-term support
       href: long-term-support.md
+    - name: VM sizes, generations, and features
+      href: aks-virtual-machine-sizes.md
     - name: Add-ons, extensions, and other integrations
       href: integrations.md
       displayName: add-on, extensions, prometheus, grafana, openfaas, spark, istio, linkerd, consul, github, actions
@@ -405,8 +407,6 @@
               href: manage-node-pools.md
             - name: Reduce image pull time with Artifact Streaming on AKS
               href: artifact-streaming.md
-            - name: Use generation 2 VMs
-              href: generation-2-vm.md
             - name: Add an Azure Spot node pool
               href: spot-node-pool.md
             - name: Node pool snapshot
