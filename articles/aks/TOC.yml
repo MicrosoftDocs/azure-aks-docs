@@ -519,6 +519,8 @@
               href: use-nvidia-gpu.md
             - name: Use Windows GPUs
               href: use-windows-gpu.md
+            - name: Use AMD GPUs
+              href: use-amd-gpus.md
             - name: Multi-instance GPU node pool
               href: gpu-multi-instance.md
             - name: Monitor GPU metrics
