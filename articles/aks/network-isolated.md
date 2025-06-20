@@ -94,14 +94,16 @@ Then you need to manually reimage all the exisiting nodepools:
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
+> [!NOTE]
+> You need to ensurethe outbound exists until the first reimage completes.
 
-Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
+Then run the following command to update `outbound-type`:
 
 ```azurecli-interactive
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
 ```
 
-After the feature is enabled, any newly added node can bootstrap successfully without egress. When you enable network isolation on an existing cluster, keep in mind that you need to manually reimage all existing node pools.
+Keep in mind that you need to manually reimage all existing node pools again:
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
@@ -277,13 +279,16 @@ Then you need to manually reimage all the exisiting nodepools:
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
-Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
+> [!NOTE]
+> You need to ensure the cluster outbound exists until the first reimage completes.
+
+Then run the following command to update `outbound-type`:
 
 ```azurecli-interactive
 az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
 ```
 
-After the network isolated cluster feature is enabled, nodes in the newly added node pool can bootstrap successfully without egress. You must reimage existing node pools so that newly scaled node can bootstrap successfully. When you enable the feature on an existing cluster, you need to manually reimage all existing node pools.
+Keep in mind that you need to manually reimage all existing node pools again:
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
