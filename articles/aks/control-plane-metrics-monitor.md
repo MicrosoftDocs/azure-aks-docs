@@ -165,7 +165,7 @@ The `minimal ingestion profile` setting helps reduce the ingestion volume of met
 
 #### Ingest only specific metrics from some targets
 
-1. Download the ConfigMap file [ama-metrics-settings-configmap]((https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
+1. Download the ConfigMap file [ama-metrics-settings-configmap](https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml) and rename it to `configmap-controlplane.yaml`.
 1. Set `minimalingestionprofile = false`.
 1. Under `default-scrape-settings-enabled`, verify that the targets you want to scrape are set to `true`. The only targets you can specify here are `controlplane-apiserver`, `controlplane-cluster-autoscaler`, `controlplane-kube-scheduler`,`controlplane-kube-controller-manager`, and `controlplane-etcd`.
 1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets. For example:
