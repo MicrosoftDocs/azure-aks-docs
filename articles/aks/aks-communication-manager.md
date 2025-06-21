@@ -119,15 +119,25 @@ Query for Node OS auto upgrade notifications:
 
 6. Check an action group with the correct email address exists, to receive the notifications.
 
-7. Assign Managed System Identity: the alert should have a managed identiy assigned to it. You can use an existing one or let the system assign one.
+:::image type="content" source="./media/auto-upgrade-cluster/action-group.png" alt-text="The screenshot of entering appropriate email or SMS into an action group.":::
 
-:::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="The screenshot of where to assign Managed System Identity.":::
+7. Assign Managed System Identity: After you create the alert rule, assign a managed identity so it can access the necessary resources. This step is performed after the alert rule is created, not during initial setup. To assign a managed identity:
 
-8. Make sure to give the Read roles appropriately.
+   - In the Azure portal, go to **Monitor** > **Alerts** > **Alert rules**, then select your alert rule.
+   - In the alert rule pane, under **Settings**, select **Identity**.
+   - Set **System assigned managed identity** to **On**.
+   - Click **Save** to enable the managed identity for the alert rule.
 
-    Choose under alert rule, Settings -> Identity -> System assigned managed identity -> Azure role assignments -> Add role assignment
+   :::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="The screenshot of where to assign Managed System Identity.":::
 
-    Choose the role Reader and assign it to the resource group. Repeat "Add role assignment" for the subscription.
+   > [!TIP]
+   > If you don't see the Identity option, make sure your alert rule has been created and you have the necessary permissions. Assigning the managed identity is always a separate step after alert rule creation.
+
+8. Make sure to assign the appropriate Reader roles.
+
+    In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+
+    Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
 
 
 ### Verification
