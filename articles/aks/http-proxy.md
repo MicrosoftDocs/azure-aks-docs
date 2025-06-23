@@ -101,8 +101,7 @@ You can configure an AKS cluster with an HTTP proxy configuration during cluster
        --http-proxy-config aks-proxy-config.json \
        --generate-ssh-keys
     ```
-    --name $clusterName \
-    --resource-group $resourceGroup \
+
     Your cluster should initialize with the HTTP proxy configured on the nodes.
 
 2. Verify the HTTP proxy configuration is on the pods and nodes by checking that the environment variables contain the appropriate values for `http_proxy`, `https_proxy`, and `no_proxy` using the `kubectl describe pod` command.
@@ -221,7 +220,7 @@ To validate proxy variables aren't set in pods, you can check the environment va
 
 ### Re-enable HTTP proxy on an existing cluster
 
-When creating a cluster, HTTP proxy is enabled by default. Once you disable HTTP proxy on a cluster, the proxy configuration will be saved in the database but the proxy variables will be removed from the pods and nodes.
+When creating a cluster, HTTP proxy is enabled by default. Once you disable HTTP proxy on a cluster, the proxy configuration is saved in the database but the proxy variables are removed from the pods and nodes.
 
 To re-enable HTTP proxy on an existing cluster, use the [`az aks update`][az-aks-update] command with the `--enable-http-proxy` flag.
 
