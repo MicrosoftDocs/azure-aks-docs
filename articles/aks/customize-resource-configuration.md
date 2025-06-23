@@ -1,6 +1,6 @@
 ---
-title: Customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
-description: Learn how to customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons.
+title: Customize the resource configuration for managed add-ons
+description: Learn how to customize the resource configuration for managed add-ons.
 ms.author: schaffererin
 author: schaffererin
 ms.topic: how-to
@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-service
 ms.date: 05/20/2025
 ---
 
-# Customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons
+# Customize the resource configuration for managed add-ons
 
 This article provides an overview of how to customize the resource configuration for Azure Kubernetes Service (AKS) managed add-ons with [cost optimized add-on scaling (Preview)](./optimized-addon-scaling.md).
 

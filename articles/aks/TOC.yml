@@ -713,8 +713,6 @@
               href: use-pod-sandboxing.md
             - name: Secure pod traffic with network policies
               href: use-network-policies.md
-            - name: Pod security policies
-              href: use-pod-security-policies.md
             - name: Pod Security Admission
               href: use-psa.md
             - name: Secrets Store CSI Driver
