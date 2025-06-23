@@ -599,7 +599,11 @@
             "source_path_from_root": "/articles/aks/container-network-security-concepts.md",
             "redirect_url": "/azure/aks/advanced-container-networking-services-overview?tabs=cilium#container-network-security",
             "redirect_document_id": false 
-        }
-
+        },
+        {
+            "source_path_from_root": "/articles/aks/use-pod-security-policies.md",
+            "redirect_url": "/azure/aks/use-psa",
+            "redirect_document_id": false
+        }        
      ]
 }
