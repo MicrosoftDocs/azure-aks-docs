@@ -5,7 +5,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
 ms.custom: build-2025
-ms.date: 06/12/2025
+ms.date: 06/16/2025
 ms.service: azure-kubernetes-fleet-manager
 ---
 
@@ -275,6 +275,7 @@ During preview, to configure placement of your staged workload on to member clus
 
  * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
  * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
+ * [Automated Deployments FAQs](./faq.md#automated-deployments-faqs).
 
 [azure-portal]: https://portal.azure.com
 [portal-fleets]: https://portal.azure.com/#browse/Microsoft.ContainerService%2Ffleets

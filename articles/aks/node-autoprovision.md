@@ -16,7 +16,7 @@ When you deploy workloads onto AKS, you need to make a decision about the node p
 
 Node autoprovisioning (NAP) (preview) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
+NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter-provider-azure) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
 
 
 > [!IMPORTANT]

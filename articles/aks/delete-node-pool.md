@@ -71,7 +71,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
     az aks nodepool delete \
         --resource-group myResourceGroup \
         --cluster-name myAKSCluster \
-        --name nodepool1
+        --name nodepool1 \
         --ignore-pod-disruption-budget true
     ```
 
@@ -103,7 +103,7 @@ If your cluster has PodDisruptionBudgets that are preventing the deletion of the
     az aks nodepool delete-machines \
         --resource-group <resource-group-name> \
         --cluster-name <cluster-name> \
-        --name <node-pool-name>
+        --name <node-pool-name> \
         --machine-names <vm-name-1> <vm-name-2>
     ```
 
