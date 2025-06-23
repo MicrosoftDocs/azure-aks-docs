@@ -94,13 +94,15 @@ You can configure an AKS cluster with an HTTP proxy configuration during cluster
 
 1. Use the [`az aks create`][az-aks-create] command and pass in your configuration as a JSON file.
 
-```azurecli-interactive
-az aks create \
+   ```azurecli-interactive
+   az aks create \
+       --name $clusterName \
+       --resource-group $resourceGroup \
+       --http-proxy-config aks-proxy-config.json \
+       --generate-ssh-keys
+    ```
     --name $clusterName \
     --resource-group $resourceGroup \
-    --http-proxy-config aks-proxy-config.json \
-    --generate-ssh-keys
-```
     Your cluster should initialize with the HTTP proxy configured on the nodes.
 
 2. Verify the HTTP proxy configuration is on the pods and nodes by checking that the environment variables contain the appropriate values for `http_proxy`, `https_proxy`, and `no_proxy` using the `kubectl describe pod` command.
