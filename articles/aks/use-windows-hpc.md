@@ -1,12 +1,12 @@
 ---
 title: Use Windows HostProcess containers
 description: Learn how to use HostProcess & Privileged containers for Windows workloads on AKS
+author: schaffererin
 ms.author: schaffererin
 ms.date: 05/09/2023
 ms.topic: how-to
 ms.custom:
   - build-2025
-author: schaffererin
 # Customer intent: As a Kubernetes administrator managing Windows workloads, I want to deploy HostProcess containers, so that I can access host-level functionalities while maintaining the benefits of containerization for improved cluster management.
 ---
 

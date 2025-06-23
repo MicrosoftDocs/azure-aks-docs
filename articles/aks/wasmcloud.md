@@ -2,9 +2,9 @@
 title: Deploy wasmCloud to Azure Kubernetes Service (AKS) to run distributed WebAssembly (Wasm) workloads
 description: Learn how to deploy and use wasmCloud on an Azure Kubernetes Service (AKS) cluster to deploy distributed WebAssembly applications.
 author: protochron
+ms.author: schaffererin
 ms.topic: how-to
 ms.date: 11/07/2024
-ms.author: schaffererin
 # Customer intent: As a cloud developer, I want to deploy wasmCloud on Azure Kubernetes Service so that I can efficiently manage and run distributed WebAssembly applications in a containerized environment.
 ---
 
