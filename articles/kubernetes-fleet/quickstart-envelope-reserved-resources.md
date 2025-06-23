@@ -1,6 +1,6 @@
 ---
 title: "Use envelope objects to safely place resources"
-description: How to use envelope objects with the ClusterResourcePlacement API without unintended side effects on the hub cluster.
+description: How to use envelope objects with the ClusterResourcePlacement API to avoid unintended side effects on the Fleet Manager hub cluster.
 ms.topic: how-to
 ms.date: 11/22/2024
 author: sjwaight
@@ -14,7 +14,7 @@ ms.custom:
 
 # Use envelope objects to safely place resources
 
-[Envelope objects](./concepts-resource-propagation.md) are a pair of Kubernetes custom resources defined by the Azure Kubernetes Fleet Manager that allow users to package resources for propagation to member clusters without causing unintended side effects on the hub cluster.
+[Envelope objects](./concepts-resource-propagation.md#encapsulating-resources-using-envelope-objects) are a pair of Kubernetes custom resources defined by the Azure Kubernetes Fleet Manager that allow users to package resources for propagation to member clusters without causing unintended side effects on the hub cluster.
 
 This guide provides instructions on propagating a set of resources from the hub cluster to joined member clusters within an envelope object.
 
@@ -107,7 +107,7 @@ data:
             image: nginx
 ```
 
-## Propagating envelope objects from hub cluster to member cluster
+## Propagating enveloped objects from hub cluster to member cluster
 
 We apply our envelope objects on the hub cluster and then use a `ClusterResourcePlacement` object to propagate these resources from the hub to member clusters.
 
