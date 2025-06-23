@@ -5,8 +5,8 @@ description: Learn how to use Azure CLI to create an Azure Kubernetes Services (
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 08/28/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: references_regions, devx-track-azurecli
 ms.subservice: aks-nodes

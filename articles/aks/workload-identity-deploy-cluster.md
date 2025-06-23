@@ -1,12 +1,12 @@
 ---
 title: Deploy and configure an AKS cluster with workload identity
 description: In this Azure Kubernetes Service (AKS) article, you deploy an Azure Kubernetes Service cluster and configure it with a Microsoft Entra Workload ID.
-author: nickomang
+author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 05/28/2024
-ms.author: nickoman
+ms.author: davidsmatlak
 # Customer intent: As a cloud engineer, I want to deploy and configure an Azure Kubernetes Service cluster with workload identity so that my applications can securely authenticate to Azure resources without managing credentials directly.
 ---
 
@@ -262,7 +262,7 @@ The following example shows how to use the Azure role-based access control (Azur
 1. Assign yourself the RBAC [Key Vault Secrets Officer](/azure/role-based-access-control/built-in-roles/security#key-vault-secrets-officer) role so that you can create a secret in the new key vault:
 
     ```azurecli-interactive
-    export KEYVAULT_RESOURCE_ID=$(az keyvault show --resource-group "${KEYVAULT_RESOURCE_GROUP}" \
+    export KEYVAULT_RESOURCE_ID=$(az keyvault show --resource-group "${RESOURCE_GROUP}" \
         --name "${KEYVAULT_NAME}" \
         --query id \
         --output tsv)

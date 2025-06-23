@@ -14,7 +14,8 @@ In this article, you learn how to use the AI toolchain operator (KAITO) add-on i
 
 ## Prerequisites
 
-* The Azure Kubernetes Service (AKS) extension for Visual Studio Code downloaded. For more information, see [Install the Azure Kubernetes Service (AKS) extension for Visual Studio Code][install-aks-vscode].
+* The Azure Kubernetes Service (AKS) extension for Visual Studio Code needs to be installed to use the KAITO experience. For more information, see [Install the Azure Kubernetes Service (AKS) extension for Visual Studio Code][install-aks-vscode].
+* The cluster that you are deploying to is a Standard Cluster _(Kaito cannot currently be installed on Automatic clusters)_.
 * Verify that your Azure subscription has GPU quota for your chosen model by checking the [KAITO model workspaces](https://github.com/kaito-project/kaito/tree/main/presets).
 
 ## Install KAITO on your cluster
@@ -69,7 +70,7 @@ For more information, see [AKS extension for Visual Studio Code features][aks-vs
 ## Delete your model inference deployment
 
 1. Once you've finished testing the model(s) and you want to free up the allocated GPU resources on your cluster, go to the Kubernetes tab, and under **Clouds** > **Azure** > **your subscription** > **Deploy a LLM with KAITO**, right click on your cluster and select **Manage KAITO models**.
-2. For each deployed model, select **Delete Workspace** to clear all allocated resources created by the inferencing deployment.
+2. For each deployed model, select **Delete Workspace** to clear all allocated resources created by the inference deployment.
 
 ## Product support and feedback
     

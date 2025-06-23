@@ -4,7 +4,9 @@ description: Learn how to stop and start an Azure Kubernetes Service (AKS) clust
 ms.topic: how-to
 ms.date: 07/01/2024
 author: palma21
+ms.author: schaffererin
 # Customer intent: As a cloud administrator, I want to stop and start my Kubernetes clusters, so that I can optimize costs during idle periods without losing my configuration.
+
 ---
 
 # Stop and start an Azure Kubernetes Service (AKS) cluster

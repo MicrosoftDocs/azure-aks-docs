@@ -315,18 +315,18 @@ To deploy the application, you use a manifest file to create all the objects req
       type: LoadBalancer
     ```
 
-    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](../concepts-clusters-workloads.md#deployments-and-yaml-manifests).
+    For a breakdown of YAML manifest files, see [Deployments and YAML manifests](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
 
     If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 
-1. Open `main.bicep` in Visual Studio Code.
-1. Press <kbd>Ctrl+Shift+P</kbd> to open **Command Palette**.
-1. Search for **bicep**, and then select **Bicep: Import Kubernetes Manifest**.
+2. Open `main.bicep` in Visual Studio Code.
+3. Press <kbd>Ctrl+Shift+P</kbd> to open **Command Palette**.
+4. Search for **bicep**, and then select **Bicep: Import Kubernetes Manifest**.
 
     :::image type="content" source="./media/quick-kubernetes-deploy-bicep-kubernetes-extension/bicep-kubernetes-extension-import-kubernetes-manifest.png" alt-text="Screenshot of Visual Studio Code import Kubernetes Manifest." lightbox="./media/quick-kubernetes-deploy-bicep-kubernetes-extension/bicep-kubernetes-extension-import-kubernetes-manifest.png":::
 
-1. Select `aks-store-quickstart.yaml` from the prompt. This process creates an `aks-store-quickstart.bicep` file in the same folder.
-1. Open `main.bicep` and add the following Bicep at the end of the file to reference the newly created `aks-store-quickstart.bicep` module:
+5. Select `aks-store-quickstart.yaml` from the prompt. This process creates an `aks-store-quickstart.bicep` file in the same folder.
+6. Open `main.bicep` and add the following Bicep at the end of the file to reference the newly created `aks-store-quickstart.bicep` module:
 
     ```bicep
     module kubernetes './aks-store-quickstart.bicep' = {
@@ -337,7 +337,7 @@ To deploy the application, you use a manifest file to create all the objects req
     }
     ```
 
-1. Save both `main.bicep` and `aks-store-quickstart.bicep`.
+7. Save both `main.bicep` and `aks-store-quickstart.bicep`.
 
 ## Deploy the Bicep file
 

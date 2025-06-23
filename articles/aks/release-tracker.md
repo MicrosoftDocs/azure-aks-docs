@@ -3,8 +3,8 @@ title: AKS release tracker
 description: Learn how to determine which Azure regions have the weekly AKS release deployments rolled out in real time. 
 ms.topic: overview
 ms.date: 05/09/2024
-ms.author: nickoman
-author: nickomang
+ms.author: davidsmatlak
+author: davidsmatlak
 ms.custom: mvc, build-2023
 # Customer intent: "As a cloud administrator, I want to track the deployment status of AKS releases in real time by region, so that I can ensure my clusters are updated with the latest fixes and features promptly."
 ---

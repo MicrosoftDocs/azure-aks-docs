@@ -62,6 +62,8 @@
           href: upgrade-hub-cluster-type.md
         - name: Migrate preview instances to supported instances 
           href: howto-migrate-preview-to-ga-fleets.md
+        - name: View Fleet agent logs
+          href: view-fleet-agent-logs.md
     - name: Progressively upgrade Kubernetes and node images
       items:
         - name: Define reusable update strategies

@@ -4,8 +4,8 @@ description: Learn how to managed local accounts when integrating Microsoft Entr
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 04/20/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: devx-track-azurecli
 ---

@@ -4,6 +4,7 @@ description: How to troubleshoot the Open Service Mesh (OSM) add-on for Azure Ku
 ms.topic: troubleshooting
 ms.date: 09/25/2024
 ms.author: pgibson
+author: schaffererin
 ---
 
 # Troubleshoot the Open Service Mesh (OSM) add-on for Azure Kubernetes Service (AKS)
