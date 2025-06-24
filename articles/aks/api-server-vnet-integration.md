@@ -190,19 +190,20 @@ az group create --location <location> --name <resource-group>
 
 ## Convert an existing AKS cluster to API Server VNet Integration
 
->[!WARNING]
+> [!WARNING]
 > **API Server VNet Integration is a one-way, capacity-sensitive feature.**
 >
-> There's no current validation for capacity availability in the region when enabling API Server VNet Integration. If you enable the feature and regional capacity isn't available, you might be unable to start the cluster after stopping it.
-
-> **Recommended approach**  
-> Create a new cluster with the feature enabled at creation time. Verify successful provisioning, then migrate workloads. This approach avoids the risk of control plane downtime or outage when cluster is updating to enable the feature.
+> - **Manual restart required.**  
+>   After enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must immediately restart the cluster for the change to take effect. This restart is not automated. Delaying the restart increases the risk of capacity becoming unavailable, which can prevent the API server from starting.
 >
-> - **Manual restart required.**
-> If you decide to accept the risk and update an existing cluster, after enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must manually restart the cluster for the change to take effect. This restart isn't automated, and, like any restart, the cluster will be temporarily unavailable until it completes.
+> - **Capacity is validated, but not reserved.**  
+>   AKS validates regional capacity when you enable the feature, but this validation does not reserve capacity. If the restart is delayed and capacity becomes unavailable in the meantime, the cluster may fail to start after a stop or restart.
 >
-> - **Feature can't be disabled, and capacity isn't guaranteed**  
->   Once enabled, the feature is permanent. You can't disable it or revert to the previous configuration. This means if you enable the feature and capacity isn't available, you might be unable to start the cluster after stopping it.
+> - **Feature cannot be disabled.**  
+>   Once enabled, the feature is permanent. You cannot revert to the previous configuration.
+>
+> - **Clusters enabled before GA or without restart are at higher risk.**  
+>   Clusters that enabled this feature before general availability (GA), or that have not yet restarted since enablement, did not undergo capacity validation. These clusters are especially at risk of failure if capacity is unavailable during a future restart.
 
 This upgrade performs a node-image version upgrade on all node pools and restarts all workloads while they undergo a rolling image upgrade.
 
