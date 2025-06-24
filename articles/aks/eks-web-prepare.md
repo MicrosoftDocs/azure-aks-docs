@@ -1,8 +1,8 @@
 ---
 title: Prepare to deploy Amazon Web Services (AWS) web application workload to Azure
 description: Learn the steps to deploy your web application workload to Azure Kubernetes Service (AKS).
-author: paolosalvatori
-ms.author: paolos
+author: schaffererin
+ms.author: schaffererin
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
