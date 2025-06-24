@@ -82,7 +82,7 @@ az aks update \
 
 2. Verify that the migration was successful using the `az aks show` command:
 ```azurecli-interactive
-az aks update \
+az aks show \
     --name $clusterName \
     --resource-group $resourceGroup
 ```
