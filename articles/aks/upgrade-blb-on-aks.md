@@ -27,7 +27,7 @@ This process also will migrate your Basic IP to a Standard IP, while keeping the
 
 **Preparing for Migration**
 - Create a migration plan for planned downtime.
-- Once the migration is started, roll back is now allowed.
+- Once the migration is started, roll back is not allowed.
 
 ### Install the `aks-preview` CLI extension
 
