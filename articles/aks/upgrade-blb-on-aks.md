@@ -45,6 +45,29 @@ This process will also migrate your Basic IP to a Standard IP, while keeping the
     az extension update --name aks-preview
     ```
 
+
+### Register the `NodeAutoProvisioningPreview` feature flag
+
+1. Register the `BasicLBMigrationToStandardLBPreview` feature flag using the `az feature register` command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the `az feature show` command.
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the `az provider register` command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
 ### Run Command to Upgrade Basic load Balancer to Standard
 
 1. The following command initiates a script to upgrade your Basic load balancer to Standard using the `az aks update` command, and setting `--load-balancer-sku` to `Stanadard` and enabling the preview feature flag `BasicLBMigrationToStandardPreview`.
