@@ -56,6 +56,8 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 
 ### Install the `aks-preview` CLI extension
 
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
 1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
 
     ```azurecli-interactive
