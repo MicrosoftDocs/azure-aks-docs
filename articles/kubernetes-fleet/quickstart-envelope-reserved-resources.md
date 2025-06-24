@@ -215,7 +215,8 @@ status:
       type: ResourceApplied
 ```
 
-> [!NOTE] In the `selectedResources` section, we specifically display the propagated envelope object. We do not individually list all the resources contained within the envelope object in the status.
+> [!NOTE] 
+> In the `selectedResources` section, we specifically display the propagated envelope object. We do not individually list all the resources contained within the envelope object in the status.
 
 Upon inspection of the `selectedResources`, it indicates that the namespace `app` and the ResourceEnvelope `example` are successfully propagated. Users can further verify the successful propagation of resources contained within the envelope object by ensuring that the `failedPlacements` section in the `placementStatus` for the target cluster doesn't appear in the status.
 
