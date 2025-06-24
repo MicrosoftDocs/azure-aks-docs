@@ -1,5 +1,5 @@
 ---
-title: "Kubernetes resource management across multiple clusters using hub cluster as the control plane"
+title: "Azure Kubernetes fleet manager resource management across multiple clusters using hub cluster as the control plane"
 description: "This article describes the concept of Kubernetes resource management using hub clusters as the control plane with Azure Kubernetes Fleet Manager (Kubernetes Fleet)."
 ms.date: 06/09/2025
 author: zhangryan
@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 ---
 
-# Kubernetes resource management across multiple clusters using hub cluster as the control plane
+# Azure Kubernetes fleet manager resource management across multiple clusters using hub cluster as the control plane
 
 This article describes the concept of Kubernetes resource management using hub clusters as the control plane with Azure Kubernetes Fleet Manager.
 
@@ -42,32 +42,32 @@ The complexity of manual multi-cluster management becomes apparent when organiza
 - **Scalability limitations**: Manual processes that function adequately for small fleets become increasingly impractical as organizations scale to dozens or hundreds of clusters. The linear increase in management overhead eventually exceeds available administrative capacity.
 - **Lack of visibility**: Comprehensive tracking of resources versions, resource health, and operational metrics across multiple clusters requires significant coordination and custom tooling. Without centralized observability, teams struggle to maintain situational awareness and respond effectively to issues.
 
-## Overall Architecture for Multi-Cluster Resource Management
+## Overall architecture for multi-cluster resource management
 
 Azure Kubernetes Fleet Manager addresses the fundamental challenges of multi-cluster resource management through a comprehensive platform that is built on an [open source cloud-native project][kubefleet] and Kubernetes-native APIs. The solution utilizes the power and flexibility of Custom Resource Definitions (CRDs) to extend Kubernetes' declarative model to multi-cluster scenarios. This approach maintains the familiar Kubernetes operational model while extending its capabilities to handle fleet-scale operations. Here are some of the key principles and advantages of the solution:
 
-### Hub-and-Spoke Control Plane
+### Hub-and-spoke control plane
 
 The hub-and-spoke architecture designates a centralized hub cluster as the control plane, eliminating the need to manage each cluster independently. This architectural pattern provides:
 - **Centralized Management**: A single point of control for fleet-wide operations, reducing administrative overhead.
 - **Consistent API Experience**: Uniform interaction across the entire infrastructure, ensuring ease of use.
 - **Enhanced Observability**: Centralized monitoring and management capabilities for better situational awareness and faster issue resolution.
 
-### Kubernetes-Native Extension Model
+### Kubernetes-native extension model
 
 Built on the [CNCF project][kubefleet], the solution extends Kubernetes' declarative model through Custom Resource Definitions (CRDs) rather than replacing it. This ensures:
 - **Familiarity**: Kubernetes practitioners can leverage existing knowledge and tools.
 - **Compatibility**: Seamless integration with existing Kubernetes workflows and tooling.
 - **Cloud-Native Alignment**: Adherence to cloud-native principles and compatibility with the CNCF ecosystem.
 
-### Advanced Scheduling and Rollout Strategies
+### Advanced scheduling and rollout strategies
 
 The solution incorporates advanced scheduling mechanisms and progressive rollout strategies, enabling:
 - **Declarative Placement Policies**: Placement of workloads based on cluster characteristics such as cost, resource availability, and geographic location.
 - **Progressive Rollouts**: Controlled deployment of updates with safety mechanisms to minimize risks.
 - **Drift Management**: Ensures consistent resource versions and configurations across clusters, reducing operational inconsistencies.
 
-### Key Advantages
+### Key advantages
 
 By adopting Azure Kubernetes Fleet Manager, organizations can achieve:
 - **Scalability**: Efficiently manage fleets of any size, from a few clusters to hundreds.

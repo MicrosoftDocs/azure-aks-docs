@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 ---
 
-# Introducing ClusterResourcePlacement API
+# Introduce ClusterResourcePlacement API
 
 This article describes the ClusterResourcePlacement API, which enables [resource placement from hub clusters to member clusters](./concepts-multi-cluster-workload-management.md) using Azure Kubernetes Fleet Manager.
 
@@ -28,7 +28,7 @@ and propagate them to selected member clusters via Kubernetes Custom Resources: 
 
 Fleet Manager supports these custom resources based on the [CNCF project KubeFleet](https://github.com/kubefleet-dev/kubefleet) which you can read more about on the [KubeFleet documentation site][fleet-github].
 
-## ClusterResourcePlacement API Overview
+## ClusterResourcePlacement API overview
 
 A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
 

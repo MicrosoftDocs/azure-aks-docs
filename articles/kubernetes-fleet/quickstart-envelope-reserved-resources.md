@@ -22,8 +22,8 @@ This guide provides instructions on propagating a set of resources from the hub 
 
 Fleet now supports two types of envelope Custom Resource Definitions (CRDs) for propagating resources:
 
-1. **ClusterResourceEnvelope**: Used to wrap cluster-scoped resources for placement.
-2. **ResourceEnvelope**: Used to wrap namespace-scoped resources for placement.
+- **ClusterResourceEnvelope**: Used to wrap cluster-scoped resources for placement.
+- **ResourceEnvelope**: Used to wrap namespace-scoped resources for placement.
 
 These CRDs provide a more structured and Kubernetes-native way to package resources for propagation to member clusters without causing unintended side effects on the hub cluster.
 
@@ -215,7 +215,7 @@ status:
       type: ResourceApplied
 ```
 
-> **Note:** In the `selectedResources` section, we specifically display the propagated envelope object. We do not individually list all the resources contained within the envelope object in the status.
+> [!NOTE] In the `selectedResources` section, we specifically display the propagated envelope object. We do not individually list all the resources contained within the envelope object in the status.
 
 Upon inspection of the `selectedResources`, it indicates that the namespace `app` and the ResourceEnvelope `example` are successfully propagated. Users can further verify the successful propagation of resources contained within the envelope object by ensuring that the `failedPlacements` section in the `placementStatus` for the target cluster doesn't appear in the status.
 
