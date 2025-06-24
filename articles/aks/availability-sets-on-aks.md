@@ -52,7 +52,7 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 
 **Preparing for Migration**
 - Create a migration plan for planned downtime.
-- Once the migration is started, roll back is now allowed.
+- Once the migration is started, roll back is not allowed.
 
 ### Install the `aks-preview` CLI extension
 
