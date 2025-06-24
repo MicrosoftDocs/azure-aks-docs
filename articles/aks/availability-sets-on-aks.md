@@ -70,7 +70,7 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
     az extension update --name aks-preview
     ```
 
-### Register the `NodeAutoProvisioningPreview` feature flag
+### Register the `BasicLBMigrationToStandardLBPreview` feature flag
 
 1. Register the `BasicLBMigrationToStandardLBPreview` feature flag using the `az feature register` command.
 
