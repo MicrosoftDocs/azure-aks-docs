@@ -56,7 +56,7 @@ Metrics play an important role in cluster monitoring, identifying issues, and op
 
 - [List of default Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default)
 
-AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts. 
+AKS also exposes metrics from critical Control Plane components such as API server, ETCD, Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts.
 
 <a name="integrations"></a>
 [!INCLUDE [horz-monitor-custom-metrics](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-non-monitor-metrics.md)]
@@ -81,28 +81,28 @@ For the available resource log categories, their associated Log Analytics tables
 
 Control plane logs for AKS clusters are implemented as [resource logs](/azure/azure-monitor/essentials/resource-logs) in Azure Monitor. Resource logs aren't collected and stored until you create a diagnostic setting to route them to one or more locations. You typically send them to a Log Analytics workspace, which is where most of the data for Container insights is stored.
 
-See [Create diagnostic settings](/azure/azure-monitor/essentials/diagnostic-settings) for the detailed process for creating a diagnostic setting using the Azure portal, CLI, or PowerShell. When you create a diagnostic setting, you specify which categories of logs to collect. The categories for AKS are listed in [AKS monitoring data reference](monitor-aks-reference.md#resource-logs).
+To learn how to create a diagnostic setting by using the Azure portal, the Azure CLI, or Azure PowerShell, see [Create diagnostic settings](/azure/azure-monitor/essentials/diagnostic-settings). When you create a diagnostic setting, you specify which categories of logs to collect. The categories for AKS are listed in [AKS monitoring data reference](monitor-aks-reference.md#resource-logs).
 
 > [!IMPORTANT]
 > There can be substantial cost when collecting resource logs for AKS, particularly for *kube-audit* logs. Consider the following recommendations to reduce the amount of data collected:
 >
 > - Disable kube-audit logging when not required.
-> - Enable collection from *kube-audit-admin*, which excludes the get and list audit events. 
+> - Enable collection from *kube-audit-admin*, which excludes the get and list audit events.
 > - Enable resource-specific logs as described here and configure `AKSAudit` table as [basic logs](/azure/azure-monitor/logs/logs-table-plans).
 >
 > See [Monitor Kubernetes clusters using Azure services and cloud native tools](/azure/azure-monitor/containers/monitor-kubernetes) for further recommendations and [Cost optimization and Azure Monitor](/azure/azure-monitor/best-practices-cost) for further strategies to reduce your monitoring costs.
 
 AKS supports either [Azure diagnostics mode](/azure/azure-monitor/essentials/resource-logs#azure-diagnostics-mode) or [resource-specific mode](/azure/azure-monitor/essentials/resource-logs#resource-specific) for resource logs. This mode specifies the tables in the Log Analytics workspace where the data is sent. Azure diagnostics mode sends all data to the [AzureDiagnostics table](/azure/azure-monitor/reference/tables/azurediagnostics), while resource-specific mode sends data to [AKS Audit](/azure/azure-monitor/reference/tables/aksaudit), [AKS Audit Admin](/azure/azure-monitor/reference/tables/aksauditadmin), and [AKS Control Plane](/azure/azure-monitor/reference/tables/akscontrolplane) as shown in the table at [Resource logs](monitor-aks-reference.md#resource-logs).
 
-Resource-specific mode is recommended for AKS for the following reasons:
+We recommend that you use resource-specific mode for AKS for the following reasons:
 
 - Data is easier to query because it's in individual tables dedicated to AKS.
-- Supports configuration as [basic logs](/azure/azure-monitor/logs/logs-table-plans) for significant cost savings.
+- Resource-specific mode supports configuration as [basic logs](/azure/azure-monitor/logs/logs-table-plans) for significant cost savings.
 
-For more information on the difference between collection modes including how to change an existing setting, see [Select the collection mode](/azure/azure-monitor/essentials/resource-logs#select-the-collection-mode).
+For more information on the difference between collection modes, including how to change an existing setting, see [Select the collection mode](/azure/azure-monitor/essentials/resource-logs#select-the-collection-mode).
 
 > [!NOTE]
-> It is also possible to configure Diagnostic settings through the CLI. In these cases, it is not guaranteed to work successfully as it doesn't check for the cluster's provisioning state. Please make sure to check the diagnostic settings of the cluster to reflect after configuring it.
+>You can configure diagnostic settings by using the Azure CLI. In these cases, it is not guaranteed to work successfully as it doesn't check for the cluster's provisioning state. Please make sure to check the diagnostic settings of the cluster to reflect after configuring it.
 >
 > ```azurecli
 > az monitor diagnostic-settings create --name AKS-Diagnostics --resource /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myresourcegroup/providers/Microsoft.ContainerService/managedClusters/my-cluster --logs '[{"category": "kube-audit","enabled": true}, {"category": "kube-audit-admin", "enabled": true}, {"category": "kube-apiserver", "enabled": true}, {"category": "kube-controller-manager", "enabled": true}, {"category": "kube-scheduler", "enabled": true}, {"category": "cluster-autoscaler", "enabled": true}, {"category": "cloud-controller-manager", "enabled": true}, {"category": "guard", "enabled": true}, {"category": "csi-azuredisk-controller", "enabled": true}, {"category": "csi-azurefile-controller", "enabled": true}, {"category": "csi-snapshot-controller", "enabled": true}]'  --workspace /subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourcegroups/myresourcegroup/providers/microsoft.operationalinsights/workspaces/myworkspace --export-to-resource-specific true
@@ -111,7 +111,7 @@ For more information on the difference between collection modes including how to
 #### Sample log queries
 
 > [!IMPORTANT]
-> When you select **Logs** from the menu for an AKS cluster, Log Analytics is opened with the query scope set to the current cluster. This means that log queries will only include data from that resource. If you want to run a query that includes data from other clusters or data from other Azure services, select **Logs** from the **Azure Monitor** menu. See [Log query scope and time range in Azure Monitor Log Analytics](/azure/azure-monitor/logs/scope) for details.
+> When you select **Logs** from the menu for an AKS cluster, Log Analytics opens with the query scope set to the current cluster. Log queries  include data only from that resource. To run a query that includes data from other clusters or data from other Azure services, on the **Azure Monitor** menu, select **Logs**. For more information, see [Log query scope and time range in Log Analytics](/azure/azure-monitor/logs/scope).
 
 If the [diagnostic setting for your cluster](monitor-aks-reference.md#resource-logs) uses Azure diagnostics mode, the resource logs for AKS are stored in the [AzureDiagnostics](/azure/azure-monitor/reference/tables/azurediagnostics) table. You can distinguish different logs with the **Category** column. For a description of each category, see [AKS reference resource logs](monitor-aks-reference.md).
 
@@ -130,7 +130,7 @@ To access a set of prebuilt queries in the Log Analytics workspace, see the [Log
 
 Container Insights collect various types of telemetry data from containers and Kubernetes clusters to help you monitor, troubleshoot, and gain insights into your containerized applications running in your AKS clusters. For a list of tables and their detailed descriptions used by Container insights, see the [Azure Monitor table reference](/azure/azure-monitor/logs/manage-logs-tables). All these tables are available for [log queries](/azure/azure-monitor/logs/log-query-overview).
 
-[Cost optimization settings](/azure/azure-monitor/containers/container-insights-cost-config) allow you to customize and control the metrics data collected through the container insights agent. This feature supports the data collection settings for individual table selection, data collection intervals, and namespaces to exclude the data collection through [Azure Monitor Data Collection Rules (DCR)](/azure/azure-monitor/essentials/data-collection-rule-overview). These settings control the volume of ingestion and reduce the monitoring costs of container insights. Container insights Collected Data can be customized through the Azure portal, using the following options. Selecting any options other than **All (Default)** leads to the container insights experience becoming unavailable.
+Use [cost optimization settings](/azure/azure-monitor/containers/container-insights-cost-config) to customize and control the metrics data collected through the container insights agent. This feature supports the data collection settings for individual table selection, data collection intervals, and namespaces to exclude the data collection through [Azure Monitor Data Collection Rules (DCR)](/azure/azure-monitor/essentials/data-collection-rule-overview). These settings control the volume of ingestion and reduce the monitoring costs of container insights. Container insights Collected Data can be customized through the Azure portal, using the following options. Selecting any options other than **All (Default)** leads to the container insights experience becoming unavailable.
 
 | Grouping | Tables | Notes |
 | --- | --- | --- |
@@ -140,7 +140,7 @@ Container Insights collect various types of telemetry data from containers and K
 | Workloads, Deployments, and HPAs | InsightsMetrics, KubePodInventory, KubeEvents, ContainerInventory, ContainerNodeInventory, KubeNodeInventory, KubeServices | |
 | Persistent Volumes | InsightsMetrics, KubePVInventory | |
 
-The **Logs and events** grouping captures the logs from the _ContainerLog_ or _ContainerLogV2_, _KubeEvents_, _KubePodInventory_ tables, but not the metrics. The recommended path to collect metrics is to enable [Azure Monitor managed service Prometheus for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) from your AKS cluster and to use [Azure Managed Grafana](/azure/managed-grafana/overview) for data visualization. For more information, see [Manage an Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage).
+The **Logs and events** grouping captures the logs from the *ContainerLog* or *ContainerLogV2*, *KubeEvents*, *KubePodInventory* tables, but not the metrics. The recommended path to collect metrics is to enable [Azure Monitor managed service Prometheus for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) from your AKS cluster and to use [Azure Managed Grafana](/azure/managed-grafana/overview) for data visualization. For more information, see [Manage an Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage).
 
 #### ContainerLogV2 schema
 
@@ -156,7 +156,7 @@ ContainerLogV2 is the recommended approach and is the default schema for custome
 
 [!INCLUDE [horz-monitor-activity-log](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-activity-log.md)]
 
-## View Azure Kubernetes Service (AKS) container logs, events, and pod metrics in real time
+## View Azure Kubernetes Service container logs, events, and pod metrics in real time
 
 In this section, you learn how to use the *live data* feature in Container Insights to view Azure Kubernetes Service (AKS) container logs, events, and pod metrics in real time. This feature provides direct access to `kubectl logs -c`, `kubectl get` events, and `kubectl top pods` to help you troubleshoot issues in real time.
 
@@ -168,9 +168,9 @@ For help with setting up the *live data* feature, see [Configure live data in Co
 ### View AKS resource live logs
 
 > [!NOTE]
-> To access logs from a private cluster, you need to be on a machine on the same private network as the cluster.
+> To access logs from a private cluster, you must use a computer that's in the same private network as the cluster.
 
-1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. In the [Azure portal](https://portal.azure.com/), go to your AKS cluster.
 1. Under **Kubernetes resources**, select **Workloads**.
 1. Select the *Deployment*, *Pod*, *Replica Set*, *Stateful Set*, *Job*, or *Cron Job* that you want to view logs for, and then select **Live Logs**.
 1. Select the resource you want to view logs for.
@@ -183,10 +183,10 @@ For help with setting up the *live data* feature, see [Configure live data in Co
 
 You can view real time log data as the container engine generates it on the *Cluster*, *Nodes*, *Controllers*, or *Containers*.
 
-1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. In the [Azure portal](https://portal.azure.com/), go to your AKS cluster.
 1. Under **Monitoring**, select **Insights**.
-1. Select the *Cluster*, *Nodes*, *Controllers*, or *Containers* tab, and then select the object you want to view logs for.
-1. On the resource **Overview**, select **Live Logs**.
+1. Select the *Cluster*, *Nodes*, *Controllers*, or *Containers* tab, and then select the object to view logs for.
+1. On **Overview** for the resource, select **Live Logs**.
 
    > [!NOTE]
    > To view the data from your Log Analytics workspace, select **View Logs in Log Analytics**. To learn more about viewing historical logs, events, and metrics, see [How to query logs from Container Insights](/azure/azure-monitor/containers/container-insights-log-query).
@@ -199,7 +199,7 @@ You can view real time log data as the container engine generates it on the *Clu
 
 You can view real-time event data as the container engine generates it on the *Cluster*, *Nodes*, *Controllers*, or *Containers*.
 
-1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. In the [Azure portal](https://portal.azure.com/), go to your AKS cluster.
 1. Under **Monitoring**, select **Insights**.
 1. Select the *Cluster*, *Nodes*, *Controllers*, or *Containers* tab, and then select the object you want to view events for.
 1. On the resource **Overview** page, select **Live Events**.
@@ -215,10 +215,10 @@ You can view real-time event data as the container engine generates it on the *C
 
 You can view real-time metrics data as the container engine generates it on the *Nodes* or *Controllers* by selecting a *Pod* resource.
 
-1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+1. In the [Azure portal](https://portal.azure.com/), go to your AKS cluster.
 1. Under **Monitoring**, select **Insights**.
 1. Select the *Nodes* or *Controllers* tab, and then select the *Pod* object you want to view metrics for.
-1. On the resource **Overview** page, select **Live Metrics**.
+1. On the resource **Overview** pane, select **Live Metrics**.
 
    > [!NOTE]
    > To view the data from your Log Analytics workspace, select **View Events in Log Analytics**. To learn more about viewing historical logs, events, and metrics, see [How to query logs from Container Insights](/azure/azure-monitor/containers/container-insights-log-query).
@@ -231,14 +231,14 @@ You can view real-time metrics data as the container engine generates it on the 
 
 [!INCLUDE [horz-monitor-external-tools](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-external-tools.md)]
 
-### Monitoring overview page in Azure portal
+### Monitoring overview page in the Azure portal
 
 The **Monitoring** tab on the **Overview** page for your AKS cluster resource offers a quick way to start viewing monitoring data in the Azure portal. This tab includes graphs with common metrics for the cluster separated by node pool. You can select any of these graphs to further analyze the data in the [metrics explorer](/azure/azure-monitor/essentials/metrics-getting-started).
 
 The **Monitoring** tab also includes links to [Managed Prometheus](#integrations) and [Container Insights](#integrations) for the cluster. If you need to enable these tools, you can enable them here. You might also see a banner at the top of the screen recommending that you enable other features to improve monitoring of your cluster.
 
 > [!TIP]
-> You can access monitoring features for all AKS clusters in your subscription by selecting **Azure Monitor** on the Azure portal home page.
+> To access monitoring features for all AKS clusters in your subscription, on the Azure portal home page, select **Azure Monitor**.
 
 [!INCLUDE [horz-monitor-kusto-queries](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-kusto-queries.md)]
 
@@ -252,7 +252,8 @@ When you [enable collection of Prometheus metrics](#integrations) for your clust
 
 | Level | Alerts |
 |:---|:---|
-| Cluster level | KubeCPUQuotaOvercommit<br>KubeMemoryQuotaOvercommit<br>KubeContainerOOMKilledCount<br>KubeClientErrors<br>KubePersistentVolumeFillingUp<br>KubePersistentVolumeInodesFillingUp<br>KubePersistentVolumeErrors<br>KubeContainerWaiting<br>KubeDaemonSetNotScheduled<br>KubeDaemonSetMisScheduled<br>KubeQuotaAlmostFull |
+| Cluster level |
+KubeCPUQuotaOvercommit<br>KubeMemoryQuotaOvercommit<br>KubeContainerOOMKilledCount<br>KubeClientErrors<br>KubePersistentVolumeFillingUp<br>KubePersistentVolumeInodesFillingUp<br>KubePersistentVolumeErrors<br>KubeContainerWaiting<br>KubeDaemonSetNotScheduled<br>KubeDaemonSetMisScheduled<br>KubeQuotaAlmostFull |
 | Node level | KubeNodeUnreachable<br>KubeNodeReadinessFlapping |
 | Pod level | KubePVUsageHigh<br>KubeDeploymentReplicasMismatch<br>KubeStatefulSetReplicasMismatch<br>KubeHpaReplicasMismatch<br>KubeHpaMaxedOut<br>KubePodCrashLooping<br>KubeJobStale<br>KubePodContainerRestart<br>KubePodReadyStateLow<br>KubePodFailedState<br>KubePodNotReadyByController<br>KubeStatefulSetGenerationMismatch<br>KubeJobFailed<br>KubeContainerAverageCPUHigh<br>KubeContainerAverageMemoryHigh<br>KubeletPodStartUpLatencyHigh |
 
@@ -285,33 +286,35 @@ Starting with Kubernetes version 1.29, node network metrics are enabled by defau
 
 The following node network metrics are enabled by default and are aggregated per node. All metrics include the labels cluster and instance (node name). These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
 
-### Node-Level Metrics
+### Node-level metrics
 
 The following metrics are aggregated per node. All metrics include labels:
 
-* `cluster`
-* `instance` (Node name)
+- `cluster`
+- `instance` (Node name)
 
-#### [**Cilium**](#tab/cilium)
+#### [Cilium](#tab/cilium)
 
 For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux, Windows is currently not supported.
+
 Cilium exposes several metrics including the following used by Container Network Observability.
 
-| Metric Name                    | Description                  | Extra Labels          |Linux | Windows |
+| Metric name                    | Description                  | Extra labels          |Linux | Windows |
 |--------------------------------|------------------------------|-----------------------|-------|---------|
 | **cilium_forward_count_total** | Total forwarded packet count | `direction`           | ✅ | ❌ |
 | **cilium_forward_bytes_total** | Total forwarded byte count   | `direction`           | ✅ | ❌ |
 | **cilium_drop_count_total**    | Total dropped packet count   | `direction`, `reason` | ✅ | ❌ |
 | **cilium_drop_bytes_total**    | Total dropped byte count     | `direction`, `reason` | ✅ | ❌ |
 
-#### [**Non-Cilium**](#tab/non-cilium)
+#### [Non-Cilium](#tab/non-cilium)
 
 For non-Cilium data plane scenarios, Container Network Observability provides metrics for both Linux and Windows operating systems.
 The table below outlines the different metrics generated.
-> [!NOTE]
-> Due to an identified bug, TCP resets are temporarily not visible. As a result, the networkobservability_tcp_flag_counters metrics will not be published during this period. Our team is actively working on resolving this issue, and we will provide updates once the fix is implemented. We apologize for any inconvenience and appreciate your patience.
 
-| Metric Name                                    | Description | Extra Labels | Linux | Windows |
+> [!NOTE]
+> Because of an identified bug, TCP resets temporarily aren't visible. As a result, the **networkobservability_tcp_flag_counters** metrics are not published. We are actively working to resolve this issue. We will provide updates when the problem is resolved.
+
+| Metric name                                    | Description | Extra labels | Linux | Windows |
 |------------------------------------------------|-------------|--------------|-------|---------|
 | **networkobservability_forward_count**         | Total forwarded packet count | `direction` | ✅ | ✅ |
 | **networkobservability_forward_bytes**         | Total forwarded byte count | `direction` | ✅ | ✅ |
@@ -328,9 +331,9 @@ The table below outlines the different metrics generated.
 
 ---
 
-For detailed Pod-level and DNS metrics, explore our [Advanced Container Networking services](advanced-container-networking-services-overview.md) offering.
+For detailed pod-level and DNS metrics, explore our [Advanced Container Networking services](advanced-container-networking-services-overview.md) offering.
 
 ## Related content
 
-- See [Azure Kubernetes Service monitoring data reference](monitor-aks-reference.md) for a reference of the metrics, logs, and other important values created for AKS.
-- See [Monitoring Azure resources with Azure Monitor](/azure/azure-monitor/essentials/monitor-azure-resource) for general details on monitoring Azure resources.
+- For a reference of the metrics, logs, and other important values created for AKS, see [Azure Kubernetes Service monitoring data reference](monitor-aks-reference.md).
+- For general details on monitoring Azure resources, see [Monitor Azure resources with Azure Monitor](/azure/azure-monitor/essentials/monitor-azure-resource).
