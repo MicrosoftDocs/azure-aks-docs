@@ -8,7 +8,7 @@ ms.date: 06/30/2025
 # Customer intent: As an cloud engineer with Basic Load Balancer services, I need guidance and direction on migrating my workloads off Basic to Standard SKUs
 ---
 
-# Upgrading from Basic Load Balancer on AKS
+# Upgrading from Basic Load Balancer on AKS (preview)
 
 >[!Important]
 >On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. This article will help guide you through the upgrade process. 
@@ -30,6 +30,8 @@ This process also will migrate your Basic IP to a Standard IP, while keeping the
 - Once the migration is started, roll back is now allowed.
 
 ### Install the `aks-preview` CLI extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
 
