@@ -152,7 +152,7 @@ The `minimal ingestion profile` setting helps reduce the ingestion volume of met
 1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets. For example:
 
     ```yaml
-    controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds| apiserver_longrunning_requests"
+    controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds|apiserver_longrunning_requests"
     ```
 
 1. Apply the ConfigMap using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command.
@@ -171,7 +171,7 @@ The `minimal ingestion profile` setting helps reduce the ingestion volume of met
 1. Under `default-targets-metrics-keep-list`, specify the list of metrics for the `true` targets. For example:
 
     ```yaml
-    controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds| apiserver_longrunning_requests"
+    controlplane-apiserver= "apiserver_admission_webhook_admission_duration_seconds|apiserver_longrunning_requests"
     ```
 
 1. Apply the ConfigMap using the [`kubectl apply`](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply) command.
