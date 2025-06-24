@@ -48,7 +48,7 @@ This vulnerability only affects clusters where the DynamicResourceAllocation fea
 
 **Resolutions**
 
-- AKS does not support or enable the `DynamicResourceAllocation` feature in any supported version. Therefore, AKS clusters are not vulnerable to this issue.
+- AKS does not support or enable the `DynamicResourceAllocation` feature in any supported version. AKS clusters are not vulnerable to this issue.
 - Although AKS is not affected, the upstream fix will be included in the following AKS cluster versions:
   - AKS 1.32.6
   - AKS 1.33.2
