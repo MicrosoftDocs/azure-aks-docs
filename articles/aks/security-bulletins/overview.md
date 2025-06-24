@@ -24,6 +24,39 @@ These updates cover security information related to the following AKS components
 
 ---
 
+## AKS-2025-008 Nodes can bypass dynamic resource allocation authorization checks
+
+**Published Date**: June 19, 2025
+
+### Description
+
+A security issue has been identified in Kubernetes related to the DynamicResourceAllocation feature. When enabled, this feature may allow users with pod creation privileges to escalate privileges or access unauthorized resources on the node.
+
+This vulnerability only affects clusters where the DynamicResourceAllocation feature is explicitly enabled.
+
+### References
+
+- [CVE-2025-4563](https://github.com/kubernetes/kubernetes/issues/132151)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- None
+
+**Resolutions**
+
+- AKS does not support or enable the `DynamicResourceAllocation` feature in any supported version. AKS clusters are not vulnerable to this issue.
+- Although AKS is not affected, the upstream fix will be included in the following AKS cluster versions:
+  - AKS 1.32.6
+  - AKS 1.33.2
+- No customer action is required unless you are preparing for future use of this feature. Customers are encouraged to upgrade to the fixed versions once available.
+
+
+---
+
 ## AKS-2025-007 Important Security Update for Kubernetes Nginx Ingress Controller
 
 **Published Date**: March 24, 2025
