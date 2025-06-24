@@ -70,6 +70,28 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
     az extension update --name aks-preview
     ```
 
+### Register the `NodeAutoProvisioningPreview` feature flag
+
+1. Register the `BasicLBMigrationToStandardLBPreview` feature flag using the `az feature register` command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the `az feature show` command.
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the `az provider register` command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
 ### Run Migration Script for Availability Set Migration
 
 1. The following command initiates a script to migrate a cluster from using Availability Sets to Virtual Machines node pools using the `az aks update` command, and setting `--migrate-vmas-to-vms`and enabling the preview feature flag `BasicLBMigrationToStandardPreview`.
@@ -79,7 +101,6 @@ az aks update \
     --name $clusterName \
     --resource-group $resourceGroup \
     --migrate-vmas-to-vms \
-    --aks-custom-headers AKSHTTPCustomFeatures=Microsoft.ContainerService/BasicLBMigrationToStandardLBPreview
 ```
 
 2. Verify that the migration was successful using the `az aks show` command:
