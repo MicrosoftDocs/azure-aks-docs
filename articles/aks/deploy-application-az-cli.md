@@ -17,7 +17,7 @@ To deploy a Kubernetes application programmatically through Azure CLI, you selec
 
 First, you need to select the Kubernetes application that you want to deploy in the Azure portal. You'll also need to copy some of the details for later use.
 
-1. In the Azure portal, go to the [Marketplace page](https://ms.portal.azure.com/#view/Microsoft_Azure_Marketplace/MarketplaceOffersBlade/selectedMenuItemId/home/fromContext/AKS).
+1. In the Azure portal, go to the [Marketplace page](https://portal.azure.com/#view/Microsoft_Azure_Marketplace/MarketplaceOffersBlade/selectedMenuItemId/home/fromContext/AKS).
 1. Select your Kubernetes application.
 1. Select the required plan.
 1. Select the **Create** button.
