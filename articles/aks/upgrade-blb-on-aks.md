@@ -2,7 +2,6 @@
 title: Upgrading from Basic Load Balancer on AKS
 description: Upgrade guidance for migrating Basic Load Balancer to Standard Load Balancer on AKS.
 author: wdarko1
-ms.service: azure-kubernetes-services
 ms.author: wdarko1
 ms.topic: how-to
 ms.date: 06/30/2025
