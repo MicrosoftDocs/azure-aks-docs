@@ -6,7 +6,7 @@ ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
 ms.author: schaffererin
 author: schaffererin
-#Customer intent: As a cluster operator or developer, how to scale my cluster based on workload requirements and right size my nodes automatically
+
 # Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
 ---
 

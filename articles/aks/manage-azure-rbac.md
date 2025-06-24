@@ -8,7 +8,7 @@ ms.custom: devx-track-azurecli
 ms.date: 11/08/2024
 ms.author: jpalma
 author: palma21
-#Customer intent: As a cluster operator or developer, I want to learn how to leverage Azure RBAC permissions to authorize actions within the AKS cluster.
+
 # Customer intent: "As a cluster operator, I want to understand how to implement Azure RBAC for managing authorization within an AKS cluster, so that I can ensure secure and efficient access control for users and applications."
 ---
 

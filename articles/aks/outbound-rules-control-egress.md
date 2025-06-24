@@ -8,7 +8,7 @@ ms.topic: how-to
 ms.author: allensu
 ms.date: 12/11/2024
 author: asudbring
-#Customer intent: As an cluster operator, I want to learn the network and FQDNs rules to control egress traffic and improve security for my AKS clusters.
+
 # Customer intent: "As a Kubernetes cluster operator, I want to understand the outbound network and FQDN rules necessary to control egress traffic, so that I can enhance security and ensure proper functionality within my Azure Kubernetes Service deployment."
 ---
 
