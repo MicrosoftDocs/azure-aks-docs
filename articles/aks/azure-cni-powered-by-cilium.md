@@ -48,6 +48,7 @@ If you aren't sure which option to select, read ["Choosing a network model to us
 | 1.30 (LTS)         | 1.14.19        |
 | 1.31               | 1.16.6         |
 | 1.32               | 1.17.0         |
+| 1.33               | 1.17.0         |
 
 See [Supported Kubernetes Versions](./supported-kubernetes-versions.md) for more information on AKS versioning and release timelines.
 
@@ -157,6 +158,8 @@ az aks create \
     No, AKS manages the Cilium configuration and it can't be modified. We recommend that customers who require more control use [AKS BYO CNI](./use-byo-cni.md) and install Cilium manually.
 
 - **Can I use `CiliumNetworkPolicy` custom resources instead of Kubernetes `NetworkPolicy` resources?**
+
+    L3 and L4 `CiliumNetworkPolicy` are supported and can be used alongside Kubernetes `NetworkPolicy` resources.
 
     Customers may use FQDN filtering and Layer 7 Policies as part of the [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) feature bundle.
 
