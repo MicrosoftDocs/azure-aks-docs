@@ -197,7 +197,7 @@ az group create --location <location> --name <resource-group>
 >   After enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must immediately restart the cluster for the change to take effect. This restart is not automated. Delaying the restart increases the risk of capacity becoming unavailable, which can prevent the API server from starting.
 >
 > - **Capacity is validated, but not reserved.**  
->   AKS validates regional capacity when you enable the feature, but this validation does not reserve capacity. If the restart is delayed and capacity becomes unavailable in the meantime, the cluster may fail to start after a stop or restart.
+>   AKS validates regional capacity when you enable the feature on an existing cluster, but this validation does not reserve capacity. If the restart is delayed and capacity becomes unavailable in the meantime, the cluster may fail to start after a stop or restart. Clusters that enabled this feature before general availability (GA), or that have not yet restarted since enablement, will not undergo capacity validation.
 >
 > - **Feature cannot be disabled.**  
 >   Once enabled, the feature is permanent. You cannot revert to the previous configuration.
