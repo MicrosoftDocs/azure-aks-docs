@@ -111,79 +111,14 @@ To disable localDNS, you need to update the `localdnsconfig.json` file to use `"
 az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
 
-## Best Practices for LocalDNS Configuration
-
-When implementing LocalDNS in your AKS clusters, consider the following best practices:
-
-1. **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This allows you to validate that LocalDNS works as expected without breaking your cluster.
-
-2. **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
-   - For frequently changing records, use shorter `cacheDurationInSeconds` values.
-   - For stable records, use longer cache durations to reduce DNS queries.
-   - Enable `serveStale` with appropriate settings to maintain service during DNS outages.
-
-3. **Monitor DNS performance**: After enabling LocalDNS, monitor your application's DNS performance using:
-   - Application performance metrics
-   - Node metrics to detect reduced network pressure
-   - Log entries when `queryLogging` is set to `Log`
-
-4. **Follow least privilege principle**: When configuring DNS forwarding rules, only allow access to the required DNS servers and domains.
-
-5. **Test before production deployment**: Always test LocalDNS configuration in a non-production environment before rolling it out to production clusters.
-
-6. **Use Infrastructure as Code (IaC)**: Store your `localdnsconfig.json` file in your infrastructure repository and include it in your AKS deployment templates.
-
 ## Current Limitations
 * Windows node pools aren't supported
+* Clusters using Node autoprovisioning aren't supported
 * Kubernetes version 1.33+ is required to use localDNS
 
-## Configure `localdnsconfig.json`
-With localDNS, you can define custom server blocks and can use supported plugins for each. To set them up in your node pool, you need to create a `localdnsconfig.json` file with the configurations.
+## Configuring localDNS
+If you enable localDNS on your node pool without specifying a custom localdnsconfig.json file, AKS will apply a default configuration as follows:
 
-### Setting `Mode` for localDNS
-```json
-{
-  "localDNSProfile":{
-    "mode":"Preferred"
-  }
-}
-```
-The `mode` for localDNS specified if localDNS is enabled or not. It allows three values:
-* `Required`: In this mode, LocalDNS is enforced, but it fails if any settings in the configuration are invalid.
-* `Preferred`: LocalDNS is enabled, but the configuration proceeds even if some settings are invalid.
-* `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
-
-### Defining a Server Block in localDNS
-With localDNS, you can respond to queries from pods using `dnsPolicy:default` using `vnetDNSOverrides` and pods using `dnsPolicy:ClusterFirst` using `kubeDNSOverrides`. Within each, you can define your own server block serving your domain and can use the server block `.` to work as a default.
-
-For example, if you have specific DNS needs when accessing bing.com, you could use the following server block:
-```json
-"bing.com": {
-  "queryLogging": "Error",
-  "protocol": "ForceTCP",
-  "forwardDestination": "ClusterCoreDNS",
-  "forwardPolicy": "Sequential",
-  "maxConcurrent": 1000,
-  "cacheDurationInSeconds": 3600,
-  "serveStaleDurationInSeconds": 3600,
-  "serveStale": "Verify"
-}
-```
-
-### Supported Plugins
-
-| Plugin                        | Description                                                                                   | Allowed Inputs                      | Documentation Link                                    |
-|-------------------------------|-----------------------------------------------------------------------------------------------|------------------------------------|-------------------------------------------------------|
-| `queryLogging`                | Define the logging level for DNS queries.                                                     | `Error` `Log`                      | [Log Plugin](https://coredns.io/plugins/log/)         |
-| `protocol`                    | Sets the protocol used for DNS queries (UDP/TCP preference).                                  | `PreferUDP` `ForceTCP`             | [Forward Plugin](https://coredns.io/plugins/forward/) |
-| `forwardDestination`          | Specifies the DNS server to forward queries to.                                               | `VnetDNS` `ClusterCoreDNS`         | [Forward Plugin](https://coredns.io/plugins/forward/) |
-| `forwardPolicy`               | Determines the policy to use when selecting the upstream DNS server. Default is `random`      | `random` `round_robin` `Sequential`| [Forward Plugin](https://coredns.io/plugins/forward/) |
-| `maxConcurrent`               | Maximum number of concurrent DNS queries handled by the proxy.                                | Integer (default:`1000`)           | [Forward Plugin](https://coredns.io/plugins/forward/) |
-| `cacheDurationInSeconds`      | Maximum TTL (Time To Live) in seconds for which DNS responses are cached                      | Integer (default:`3600`)           | [Cache Plugin](https://coredns.io/plugins/cache)      |
-| `serveStaleDurationInSeconds` | Duration (in seconds) to serve stale DNS responses if upstream is unavailable.                | Integer (default:`3600`)           | [Cache Plugin](https://coredns.io/plugins/cache)      |
-| `serveStale`                  | Policy for serving stale DNS responses during upstream failures.                              | `verify` `immediate`               | [Cache Plugin](https://coredns.io/plugins/cache)      |
-
-### Sample `localdnsconfig.json` file
 ```json
 {
   "localDNSProfile": {
@@ -235,6 +170,70 @@ For example, if you have specific DNS needs when accessing bing.com, you could u
   }
 }
 ```
+
+### Setting the `mode` for localDNS
+As seen above, localDNS can be enabled in 3 possible modes which define the xetent of enforcement of localDNS for the workload:
+* `Preferred` (*default*): LocalDNS is enabled, but the configuration proceeds even if some settings are invalid.
+* `Required`: In this mode, LocalDNS is enforced, but it fails if any settings in the configuration are invalid.
+* `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
+
+### Server Blocks and Supported Plugins for localDNS 
+The default configuration applies to queries from pods using `dnsPolicy:default` (under `vnetDNSOverrides`) and pods using `dnsPolicy:ClusterFirst` (under `kubeDNSOverrides`). Within each, there are 2 default server blocks defined: `.` and  `cluster.local`. 
+
+* `.` represents all external DNS queries from pods which are trying to resolve public or non-cluster domains (for example, *microsoft.com*)
+* `cluster.local` represents all internal Kubernetes service discovery queries from pods trying to resolve kubernetes service names or internal cluster resources. These queries are routed through CoreDNS for resolution within the cluster.
+
+### Supported Plugins
+
+| Plugin                                                            | Description                                                                             | Default                                                              | Allowed Inputs                     | 
+|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------|----------------------------------------------------------------------|------------------------------------|
+| [`queryLogging`](https://coredns.io/plugins/log/)                 | Define the logging level for DNS queries.                                               | `Error`                                                              | `Error` `Log`                      | 
+| [`protocol`](https://coredns.io/plugins/forward/)                 | Sets the protocol used for DNS queries (UDP/TCP preference).                            | `ForceTCP` for cluster.local, else `PreferUDP`                       | `PreferUDP` `ForceTCP`             | 
+| [`forwardDestination`](https://coredns.io/plugins/forward/)       | Specifies the DNS server to forward queries to.                                         | `ClusterCoreDNS` for cluster.local & kubeDNS traffic, else `VnetDNS` | `VnetDNS` `ClusterCoreDNS`         |
+| [`forwardPolicy`](https://coredns.io/plugins/forward/)            | Determines the policy to use when selecting the upstream DNS server. Default is `random`| `sequential`                                                         | `random` `round_robin` `sequential`|
+| [`maxConcurrent`](https://coredns.io/plugins/forward/)            | Maximum number of concurrent DNS queries handled by the proxy.                          | `1000`                                                               | Integer                            | 
+| [`cacheDurationInSeconds`](https://coredns.io/plugins/cache)      | Maximum TTL (Time To Live) in seconds for which DNS responses are cached                | `3600`                                                               | Integer                            |
+| [`serveStaleDurationInSeconds`](https://coredns.io/plugins/cache) | Duration (in seconds) to serve stale DNS responses if upstream is unavailable.          | `3600`                                                               | Integer                            |
+| [`serveStale`](https://coredns.io/plugins/cache)                  | Policy for serving stale DNS responses during upstream failures.                        | `verify`                                                             | `verify` `immediate`               | 
+
+### Defining a custom server block in localDNS
+CoreDNS matches queries to a specific server block based on an exact match for domain being queried and not on partial matches. If you have the need for custom server blocks, you can add them to your localDNS configuration by creating a file called `localdnsconfig.json` with the added configurations.
+
+For example, if you have specific DNS needs when accessing microsoft.com, you could use the following server block:
+```json
+"microsoft.com": {
+  "queryLogging": "Error",
+  "protocol": "ForceTCP",
+  "forwardDestination": "ClusterCoreDNS",
+  "forwardPolicy": "Sequential",
+  "maxConcurrent": 1000,
+  "cacheDurationInSeconds": 3600,
+  "serveStaleDurationInSeconds": 3600,
+  "serveStale": "Verify"
+}
+```
+
+## Best Practices for LocalDNS Configuration
+
+When implementing LocalDNS in your AKS clusters, consider the following best practices:
+
+1. **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This allows you to validate that LocalDNS works as expected without breaking your cluster.
+
+2. **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
+   * For frequently changing records, use shorter `cacheDurationInSeconds` values.
+   * For stable records, use longer cache durations to reduce DNS queries.
+   * Enable `serveStale` with appropriate settings to maintain service during DNS outages.
+
+3. **Monitor DNS performance**: After enabling LocalDNS, monitor your application's DNS performance using:
+   * Application performance metrics
+   * Node metrics to detect reduced network pressure
+   * Log entries when `queryLogging` is set to `Log`
+
+4. **Follow least privilege principle**: When configuring DNS forwarding rules, only allow access to the required DNS servers and domains.
+
+5. **Test before production deployment**: Always test LocalDNS configuration in a non-production environment before rolling it out to production clusters.
+
+6. **Use Infrastructure as Code (IaC)**: Store your `localdnsconfig.json` file in your infrastructure repository and include it in your AKS deployment templates.
 
 ## Troubleshooting LocalDNS
 ### DNS queries to specific domains are failing
