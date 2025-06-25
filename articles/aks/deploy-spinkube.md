@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 11/11/2024
 author: ThorstenHans
 ms.author: schaffererin
+# Customer intent: As a cloud developer, I want to deploy SpinKube on Azure Kubernetes Service, so that I can efficiently run serverless WebAssembly workloads alongside existing applications without the overhead of containerization.
 ---
 
 # Deploy SpinKube to Azure Kubernetes Service (AKS) to run serverless WebAssembly (Wasm) workloads

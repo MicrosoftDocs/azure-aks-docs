@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.custom: build-2024, devx-track-azurecli
 ms.date: 04/25/2024
 ms.author: schaffererin
+# Customer intent: As a Kubernetes developer, I want to implement deployment safeguards in my AKS cluster, so that I can enforce best practices and prevent configuration issues that may compromise the stability of my applications.
 ---
 
 # Use deployment safeguards to enforce best practices in Azure Kubernetes Service (AKS) (Preview)

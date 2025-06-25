@@ -6,6 +6,7 @@ ms.date: 06/07/2024
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
+# Customer intent: "As a cloud architect, I want to deploy a highly available PostgreSQL database on AKS using Kubernetes operators, so that I can ensure scalability and reliability for my application workloads."
 ---
 
 # Deploy a highly available PostgreSQL database on AKS

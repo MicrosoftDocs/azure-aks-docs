@@ -7,6 +7,7 @@ ms.topic: concept-article
 ms.custom: devx-track-arm-template
 ms.subservice: aks-developer
 ms.date: 05/15/2023
+# Customer intent: "As a cloud developer, I want to deploy a Kubernetes application using an ARM template, so that I can automate the deployment process and manage resources efficiently in Azure."
 ---
 
 # Deploy an Azure Kubernetes application by using an ARM template
