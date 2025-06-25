@@ -5,7 +5,7 @@ ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 author: phillipgibson
-ms.author: phillipgibson
+ms.author: pgibson
 ms.custom:
   - pci-dss
   - compliance
