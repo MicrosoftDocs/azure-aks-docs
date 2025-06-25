@@ -149,14 +149,54 @@
           href: ./security-controls-policy.md
         - name: Compliance
           items:
-            - name: CIS Baseline overview
-              href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-            - name: CIS Kubernetes benchmark
-              href: cis-kubernetes.md
-            - name: CIS Azure Linux benchmark
-              href: cis-azure-linux.md
-            - name: CIS Windows Server benchmark
-              href: cis-windows.md
+            - name: Center for Internet Security (CIS)
+              items:
+                - name: CIS Baseline overview
+                  href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+                - name: CIS Kubernetes benchmark
+                  href: cis-kubernetes.md
+                - name: CIS Azure Linux benchmark
+                  href: cis-azure-linux.md
+                - name: CIS Windows Server benchmark
+                  href: cis-windows.md
+            - name: Payment Card Industry Data Security Standard (PCI DSS)
+              items:
+                - name: PCI DSS v4.0.1 overview
+                  href: pci-dss-intro.md
+                - name: Network security
+                  href: pci-dss-network.md
+                - name: Data protection
+                  href: pci-dss-data.md
+                - name: Cryptography and key management
+                  href: pci-dss-cryptography-key-management.md
+                - name: Identity and access management
+                  href: pci-dss-identity.md
+                - name: Enhanced MFA implementation
+                  href: pci-dss-enhanced-mfa-implementation.md
+                - name: Malware protection
+                  href: pci-dss-malware.md
+                - name: Monitoring and logging
+                  href: pci-dss-monitor.md
+                - name: Continuous security monitoring
+                  href: pci-dss-continuous-security-monitoring.md
+                - name: Security policies
+                  href: pci-dss-policy.md
+                - name: Risk assessment and code assets
+                  href: pci-dss-ra-code-assets.md
+                - name: Targeted risk analysis
+                  href: pci-dss-targeted-risk-analysis.md
+                - name: Security awareness training
+                  href: pci-dss-security-awareness-training.md
+                - name: Anti-phishing and social engineering
+                  href: pci-dss-anti-phishing-social-engineering.md
+                - name: Third-party and supply chain security
+                  href: pci-dss-third-party-supply-chain-security.md
+                - name: Customized approach guidance
+                  href: pci-dss-customized-approach-guidance.md
+                - name: Requirement mapping matrix
+                  href: pci-dss-requirement-mapping-matrix.md
+                - name: Summary
+                  href: pci-dss-summary.md
         - name: Container Network Security
           items:
             - name: FQDN based filtering
