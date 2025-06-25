@@ -200,10 +200,7 @@ az group create --location <location> --name <resource-group>
 >   AKS validates regional capacity when you enable the feature on an existing cluster, but this validation does not reserve capacity. If the restart is delayed and capacity becomes unavailable in the meantime, the cluster may fail to start after a stop or restart. Clusters that enabled this feature before general availability (GA), or that have not yet restarted since enablement, will not undergo capacity validation.
 >
 > - **Feature cannot be disabled.**  
->   Once enabled, the feature is permanent. You cannot revert to the previous configuration.
->
-> - **Clusters enabled before GA or without restart are at higher risk.**  
->   Clusters that enabled this feature before general availability (GA), or that have not yet restarted since enablement, did not undergo capacity validation. These clusters are especially at risk of failure if capacity is unavailable during a future restart.
+>   Once enabled, the feature is permanent. You cannot disable API Server VNet Integration.
 
 This upgrade performs a node-image version upgrade on all node pools and restarts all workloads while they undergo a rolling image upgrade.
 
