@@ -48,7 +48,7 @@ By using LocalDNS, you get faster and more reliable DNS resolution for your work
 * This article requires the `aks-preview` Azure CLI extension version X.X.XXX or later
 
 ## Enable LocalDNS
-The following commands enable localDNS on your cluster or node pools. To modify the localDNS config file with coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configure-localdnsconfigjson).
+The following commands enable localDNS on your cluster or node pools. To modify the localDNS config file with coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configuring-localdns).
 
 ### Enable localDNS in a new cluster
 
@@ -117,7 +117,7 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 * Kubernetes version 1.33+ is required to use localDNS
 
 ## Configuring localDNS
-If you enable localDNS on your node pool without specifying a custom localdnsconfig.json file, AKS will apply a default configuration as follows:
+If you enable localDNS on your node pool without specifying a custom localdnsconfig.json file, AKS applies a default configuration as follows:
 
 ```json
 {
@@ -172,16 +172,16 @@ If you enable localDNS on your node pool without specifying a custom localdnscon
 ```
 
 ### Setting the `mode` for localDNS
-As seen above, localDNS can be enabled in 3 possible modes which define the xetent of enforcement of localDNS for the workload:
+LocalDNS can be enabled in three possible modes which define the extent of enforcement of localDNS for the workload:
 * `Preferred` (*default*): LocalDNS is enabled, but the configuration proceeds even if some settings are invalid.
 * `Required`: In this mode, LocalDNS is enforced, but it fails if any settings in the configuration are invalid.
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
 
 ### Server Blocks and Supported Plugins for localDNS 
-The default configuration applies to queries from pods using `dnsPolicy:default` (under `vnetDNSOverrides`) and pods using `dnsPolicy:ClusterFirst` (under `kubeDNSOverrides`). Within each, there are 2 default server blocks defined: `.` and  `cluster.local`. 
+The default configuration applies to queries from pods using `dnsPolicy:default` (under `vnetDNSOverrides`) and pods using `dnsPolicy:ClusterFirst` (under `kubeDNSOverrides`). Within each, there are two default server blocks defined: `.` and  `cluster.local`. 
 
-* `.` represents all external DNS queries from pods which are trying to resolve public or non-cluster domains (for example, *microsoft.com*)
-* `cluster.local` represents all internal Kubernetes service discovery queries from pods trying to resolve kubernetes service names or internal cluster resources. These queries are routed through CoreDNS for resolution within the cluster.
+* `.` represents all external DNS queries from pods that are trying to resolve public or non cluster domains (for example, *microsoft.com*)
+* `cluster.local` represents all internal Kubernetes service discovery queries from pods that are trying to resolve kubernetes service names or internal cluster resources. These queries are routed through CoreDNS for resolution within the cluster.
 
 ### Supported Plugins
 
@@ -217,7 +217,7 @@ For example, if you have specific DNS needs when accessing microsoft.com, you co
 
 When implementing LocalDNS in your AKS clusters, consider the following best practices:
 
-1. **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This allows you to validate that LocalDNS works as expected without breaking your cluster.
+1. **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This setup allows you to validate that LocalDNS works as expected without breaking your cluster.
 
 2. **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
    * For frequently changing records, use shorter `cacheDurationInSeconds` values.
@@ -231,7 +231,7 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 
 4. **Follow least privilege principle**: When configuring DNS forwarding rules, only allow access to the required DNS servers and domains.
 
-5. **Test before production deployment**: Always test LocalDNS configuration in a non-production environment before rolling it out to production clusters.
+5. **Test before production deployment**: Always test LocalDNS configuration in a non production environment before rolling it out to production clusters.
 
 6. **Use Infrastructure as Code (IaC)**: Store your `localdnsconfig.json` file in your infrastructure repository and include it in your AKS deployment templates.
 
@@ -241,7 +241,7 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 If DNS queries to specific domains are failing after enabling LocalDNS:
 
 1. Check if you have domain-specific overrides in your `localdnsconfig.json` that might be misconfigured.
-2. Temporarily try removing domain-specific overrides and using only the default "." configuration.
+2. Temporarily try removing domain-specific overrides and using only the default `.` configuration.
 3. Check if the issue occurs with both UDP and TCP protocols by adjusting the `protocol` setting.
 
 ## Next steps
