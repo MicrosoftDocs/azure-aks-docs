@@ -13,8 +13,6 @@ ms.custom:
 
 # AKS regulated cluster for PCI DSS 4.0.1 - Customized approach guidance
 
-# PCI DSS 4.0.1 Customized Approach Guidance for AKS
-
 PCI DSS 4.0.1 introduces the "customized approach" for meeting requirements, allowing organizations to implement alternative controls if they meet the intent and rigor of the standard. This document provides guidance for documenting, justifying, and validating customized controls in Azure Kubernetes Service (AKS) environments.
 
 ## When to Use the Customized Approach
@@ -35,11 +33,11 @@ PCI DSS 4.0.1 introduces the "customized approach" for meeting requirements, all
 ## Integrated AKS Security Context
 
 This guidance should be used in conjunction with:
-- [pci-dss-policy.md](policy.md) for policy and governance
-- [pci-dss-identity.md](identity.md) for identity and access management
-- [pci-dss-monitor.md](monitor.md) for monitoring and alerting
+- [Security policies](pci-dss-policy.md) for policy and governance
+- [Identity and access management](pci-dss-identity.md) for identity and access management
+- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](https://learn.microsoft.com/azure/aks/).
+For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
 
 ## References
 - [PCI DSS 4.0.1 Customized Approach Guidance](https://www.pcisecuritystandards.org/)

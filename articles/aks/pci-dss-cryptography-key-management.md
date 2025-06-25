@@ -13,8 +13,6 @@ ms.custom:
 
 # AKS regulated cluster for PCI DSS 4.0.1 - Cryptography and key management
 
-# Cryptography and Key Management for PCI DSS 4.0.1 in AKS
-
 PCI DSS 4.0.1 updates requirements for strong cryptography, key management, and algorithm agility. This document provides guidance for implementing cryptographic controls and key management in AKS.
 
 
@@ -37,11 +35,11 @@ PCI DSS 4.0.1 updates requirements for strong cryptography, key management, and 
 ## Integrated AKS Security Context
 
 This control should be implemented alongside:
-- [pci-dss-network.md](network.md) for secure networking
-- [pci-dss-identity.md](identity.md) for identity and access management
-- [pci-dss-monitor.md](monitor.md) for monitoring and alerting
+- [Network security](pci-dss-network.md) for secure networking
+- [Identity and access management](pci-dss-identity.md) for identity and access management
+- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](https://learn.microsoft.com/azure/aks/).
+For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
 
 ## References
 - [PCI DSS 4.0.1 Cryptography](https://www.pcisecuritystandards.org/)

@@ -13,9 +13,6 @@ ms.custom:
 
 # AKS regulated cluster for PCI DSS 4.0.1 - Continuous security monitoring
 
-# Continuous Security and Monitoring for PCI DSS 4.0.1 in AKS
-
-
 PCI DSS 4.0.1 emphasizes continuous security, monitoring, and threat detection. This document outlines best practices for implementing real-time compliance monitoring and automated alerting in AKS environments.
 
 ## AKS Feature Support
@@ -48,11 +45,11 @@ PCI DSS 4.0.1 emphasizes continuous security, monitoring, and threat detection. 
 ## Integrated AKS Security Context
 
 This control should be implemented alongside:
-- [pci-dss-network.md](network.md) for secure networking
-- [pci-dss-identity.md](identity.md) for identity and access management
-- [pci-dss-policy.md](policy.md) for policy and governance
+- [Network security](pci-dss-network.md) for secure networking
+- [Identity and access management](pci-dss-identity.md) for identity and access management
+- [Security policies](pci-dss-policy.md) for policy and governance
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](https://learn.microsoft.com/azure/aks/).
+For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
 
 ## References
 - [PCI DSS 4.0.1 Continuous Monitoring](https://www.pcisecuritystandards.org/)

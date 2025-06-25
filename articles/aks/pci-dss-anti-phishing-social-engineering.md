@@ -13,9 +13,6 @@ ms.custom:
 
 # AKS regulated cluster for PCI DSS 4.0.1 - Anti-phishing and social engineering
 
-# Anti-Phishing and Social Engineering Controls for PCI DSS 4.0.1 in AKS
-
-
 PCI DSS 4.0.1 expands requirements for anti-phishing and social engineering protections. This document provides guidance for implementing these controls for AKS admin and developer access.
 
 ## AKS Feature Support
@@ -47,7 +44,7 @@ This control should be implemented alongside:
 - [AKS PCI Identity](./pci-dss-identity.md) for identity and access management
 - [AKS PCI Monitoring](./pci-dss-monitor.md) for monitoring and alerting
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](https://learn.microsoft.com/azure/aks/).
+For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
 
 ## References
 - [PCI DSS 4.0.1 Anti-Phishing](https://www.pcisecuritystandards.org/)
