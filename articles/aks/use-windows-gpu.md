@@ -140,6 +140,10 @@ When creating a Windows node pool with N-series (NVIDIA GPU) VM sizes in AKS, th
 
 AKS has automatic GPU driver installation enabled by default. In some cases, such as installing your own drivers, you may want to skip GPU driver installation.
 
+> [!NOTE]
+> The `gpu-driver` API field is a suggested alternative for customers previously using the `--skip-gpu-driver-install` node pool tag. 
+>- The `--skip-gpu-driver-install` node pool tag on AKS will be retired on 14 August 2025, please update your GPU-enabled node pools to set `--gpu-driver none` if you already have set the node pool tag. In order to retain the existing behavior of skipping automatic GPU driver installation, it is recommended that you upgrade these node pools and set the `--gpu-driver` field to `none`. After 14 August 2025, you will not be able to provision AKS GPU-enabled node pools with the `--skip-gpu-driver-install` node pool tag to bypass this default behavior. For more information, see [aka.ms/aks/skip-gpu-driver-tag-retirement](https://aka.ms/aks/skip-gpu-driver-tag-retirement).
+
 1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to `none` to skip automatic GPU driver installation.
 
     ```azurecli-interactive
