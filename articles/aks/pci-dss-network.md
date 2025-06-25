@@ -70,7 +70,7 @@ A formal process for approving and testing all network connections and changes t
 
 ##### Your responsibilities
 
-Don't implement configurations manually, such as by using the Azure portal or the Azure CLI directly. We recommend using Infrastructure as Code (IaC). With IaC, infrastructure is managed through a descriptive model that uses a versioning system. The IaC model generates the same environment every time it's applied. Common examples of IaC are Bicep, Azure Resource Manager templates (ARM templates), or Terraform. If IaC is not an option, have a well-documented process for tracking, implementing, and safely deploying firewall rule changes. More details are provided as part of [Requirement 11.2](./pci-dss-monitor.md#requirement-112).
+Don't implement configurations manually, such as by using the Azure portal or the Azure CLI directly. We recommend using Infrastructure as Code (IaC). With IaC, infrastructure is managed through a descriptive model that uses a versioning system. The IaC model generates the same environment every time it's applied. Common examples of IaC are Bicep, Azure Resource Manager templates (ARM templates), or Terraform. If IaC is not an option, have a well-documented process for tracking, implementing, and safely deploying firewall rule changes. More details are provided as part of [Requirement 11.2](pci-dss-monitor.md#requirement-112).
 
 You'll need to use a combination of various network controls, including Azure Firewall, network security groups (NSGs), and the Kubernetes `NetworkPolicy` resource.
 

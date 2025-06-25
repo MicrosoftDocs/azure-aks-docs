@@ -161,7 +161,9 @@
                   href: cis-windows.md
             - name: Payment Card Industry Data Security Standard (PCI DSS)
               items:
-                - name: PCI DSS v4.0.1 overview
+                - name: PCI DSS compliance overview
+                  href: /compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+                - name: Introduction to PCI DSS v4.0.1 on AKS
                   href: pci-dss-intro.md
                 - name: Network security
                   href: pci-dss-network.md
