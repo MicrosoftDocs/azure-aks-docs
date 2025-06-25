@@ -13,9 +13,6 @@ ms.custom:
 
 # AKS regulated cluster for PCI DSS 4.0.1 - Third-party and supply chain security
 
-# Third-Party and Supply Chain Security for PCI DSS 4.0.1 in AKS
-
-
 PCI DSS 4.0.1 expands requirements for managing third-party service providers and supply chain risk. This document provides guidance for managing dependencies, images, and providers in AKS.
 
 ## AKS Feature Support
@@ -43,11 +40,11 @@ PCI DSS 4.0.1 expands requirements for managing third-party service providers an
 ## Integrated AKS Security Context
 
 This control should be implemented alongside:
-- [pci-dss-policy.md](policy.md) for policy and governance
-- [pci-dss-identity.md](identity.md) for identity and access management
-- [pci-dss-monitor.md](monitor.md) for monitoring and alerting
+- [Security policies](pci-dss-policy.md) for policy and governance
+- [Identity and access management](pci-dss-identity.md) for identity and access management
+- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](https://learn.microsoft.com/azure/aks/).
+For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
 
 ## References
 - [PCI DSS 4.0.1 Third-Party Security](https://www.pcisecuritystandards.org/)

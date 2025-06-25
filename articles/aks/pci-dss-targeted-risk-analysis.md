@@ -13,9 +13,6 @@ ms.custom:
 
 # AKS regulated cluster for PCI DSS 4.0.1 - Targeted risk analysis
 
-# Targeted Risk Analysis for PCI DSS 4.0.1 in AKS
-
-
 PCI DSS 4.0.1 introduces targeted risk analysis for certain requirements. This document outlines how to perform and document risk analysis for AKS workloads.
 
 ## AKS Feature Support
@@ -45,11 +42,11 @@ PCI DSS 4.0.1 introduces targeted risk analysis for certain requirements. This d
 ## Integrated AKS Security Context
 
 This analysis should be performed alongside:
-- [pci-dss-policy.md](policy.md) for policy and governance
-- [pci-dss-identity.md](identity.md) for identity and access management
-- [pci-dss-monitor.md](monitor.md) for monitoring and alerting
+- [Security policies](pci-dss-policy.md) for policy and governance
+- [Identity and access management](pci-dss-identity.md) for identity and access management
+- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](https://learn.microsoft.com/azure/aks/).
+For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
 
 ## References
 - [PCI DSS 4.0.1 Targeted Risk Analysis](https://www.pcisecuritystandards.org/)

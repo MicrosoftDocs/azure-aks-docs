@@ -13,9 +13,6 @@ ms.custom:
 
 # AKS regulated cluster for PCI DSS 4.0.1 - Security awareness training
 
-# Security Awareness and Training for PCI DSS 4.0.1 in AKS
-
-
 PCI DSS 4.0.1 requires ongoing security awareness and training for all personnel. This document provides a checklist for required training for AKS operators and developers.
 
 ## AKS Feature Support
@@ -44,11 +41,11 @@ PCI DSS 4.0.1 requires ongoing security awareness and training for all personnel
 ## Integrated AKS Security Context
 
 This control should be implemented alongside:
-- [pci-dss-anti-phishing-social-engineering.md](anti-phishing-social-engineering.md) for anti-phishing controls
-- [pci-dss-identity.md](identity.md) for identity and access management
-- [pci-dss-monitor.md](monitor.md) for monitoring and alerting
+- [Anti-phishing and social engineering](pci-dss-anti-phishing-social-engineering.md) for anti-phishing controls
+- [Identity and access management](pci-dss-identity.md) for identity and access management
+- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](https://learn.microsoft.com/azure/aks/).
+For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
 
 ## References
 - [PCI DSS 4.0.1 Security Awareness](https://www.pcisecuritystandards.org/)
