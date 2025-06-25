@@ -59,7 +59,6 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 - An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
 - The Virtual Machines node pool feature is in preview. This feature is only available with API versions 2023-10-02-preview and greater, or with the Azure CLI extension versions 2.61.0 or greater.
-- If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
 - The minimum minor Kubernetes release version required for this feature is release 1.26.
 
 ## Create an AKS cluster with Virtual Machines node pools
