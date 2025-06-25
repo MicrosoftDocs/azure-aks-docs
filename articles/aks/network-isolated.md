@@ -8,6 +8,7 @@ ms.author: yuewu2
 ms.topic: how-to
 ms.date: 06/20/2025
 zone_pivot_groups: network-isolated-acr-type
+# Customer intent: As a cluster operator, I want to create a network isolated Kubernetes cluster, so that I can ensure compliance with strict security requirements by eliminating outbound dependencies during bootstrapping and reducing the risk of data exfiltration.
 ---
 
 # Create a network isolated Azure Kubernetes Service (AKS) cluster 

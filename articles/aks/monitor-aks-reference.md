@@ -7,6 +7,7 @@ ms.topic: reference
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-monitoring
+# Customer intent: As a cloud operations engineer, I want to reference supported metrics and logs for Azure Kubernetes Service monitoring, so that I can effectively collect and analyze data to ensure optimal performance and resource management in my environments.
 ---
 
 # Azure Kubernetes Service monitoring data reference
