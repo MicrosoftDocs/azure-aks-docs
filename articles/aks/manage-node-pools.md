@@ -7,6 +7,7 @@ ms.date: 07/19/2023
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-nodes
+# Customer intent: "As a Kubernetes administrator, I want to manage node pools in my AKS cluster, so that I can scale, upgrade, and configure resources to meet changing application demands effectively."
 ---
 
 # Manage node pools for a cluster in Azure Kubernetes Service (AKS)

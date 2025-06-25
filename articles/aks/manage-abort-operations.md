@@ -8,6 +8,7 @@ ms.author: davidsmatlak
 
 ms.subservice: aks-nodes
 ms.custom: devx-track-azurecli
+# Customer intent: As a cloud administrator managing an Azure Kubernetes Service (AKS) cluster, I want to abort long-running operations on node pools or clusters, so that I can regain control and ensure operational efficiency without being hindered by stalled tasks.
 ---
 
 # Terminate a long running operation on an Azure Kubernetes Service (AKS) cluster

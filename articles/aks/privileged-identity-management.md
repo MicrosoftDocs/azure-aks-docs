@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 08/26/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud administrator, I want to configure Privileged Identity Management for my AKS clusters, so that I can manage access control effectively with just-in-time permissions and ensure security compliance for different user roles.
 ---
 
 # Use Privileged Identity Management (PIM) to control access to your Azure Kubernetes Service (AKS) clusters

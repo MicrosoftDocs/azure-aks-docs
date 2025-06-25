@@ -6,6 +6,7 @@ ms.date: 01/03/2025
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As a cloud operations engineer, I want to implement node auto-drain in AKS, so that I can protect workloads from disruptions caused by scheduled VM maintenance events.
 ---
 
 # Azure Kubernetes Service (AKS) node auto-drain

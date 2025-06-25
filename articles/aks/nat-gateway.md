@@ -8,6 +8,7 @@ ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 01/10/2024
 ms.author: allensu
+# Customer intent: "As a cloud architect, I want to configure a managed or user-assigned NAT gateway for my AKS cluster, so that I can efficiently manage outbound traffic and improve network reliability."
 ---
 
 # Create a managed or user-assigned NAT gateway for your Azure Kubernetes Service (AKS) cluster

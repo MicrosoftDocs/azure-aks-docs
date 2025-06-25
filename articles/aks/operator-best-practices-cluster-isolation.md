@@ -6,6 +6,7 @@ ms.topic: best-practice
 ms.date: 05/25/2023
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: "As a cluster operator, I want to implement best practices for resource isolation in Azure Kubernetes Service, so that I can effectively manage multi-tenant environments while optimizing costs and maintaining security."
 ---
 
 # Best practices for cluster isolation in Azure Kubernetes Service (AKS)

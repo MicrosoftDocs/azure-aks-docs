@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 02/21/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: "As a Kubernetes administrator, I want to understand the available node images in Azure Kubernetes Service, so that I can select the appropriate OS version and ensure my clusters remain supported and secure."
 ---
 
 # Node images in Azure Kubernetes Service (AKS)
