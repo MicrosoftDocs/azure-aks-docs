@@ -1,4 +1,3 @@
-
 ---
 title: AKS regulated cluster for PCI DSS 4.0.1 - Network security
 description: Networking considerations for an AKS cluster configured in accordance with PCI DSS 4.0.1.
@@ -6,7 +5,7 @@ ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 author: phillipgibson
-ms.author: phillipgibson
+ms.author: pgibson
 ms.custom:
   - pci-dss
   - compliance

@@ -1,12 +1,10 @@
-
 ---
-title: Introduction to AKS regulated cluster for PCI DSS 4.0.1
 description: Get started on your architecture design by addressing the applicable PCI DSS 4.0.1 requirements as a tenant on the AKS environment.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 author: phillipgibson
-ms.author: phillipgibson
+ms.author: pgibson
 ms.custom:
   - pci-dss
   - compliance
