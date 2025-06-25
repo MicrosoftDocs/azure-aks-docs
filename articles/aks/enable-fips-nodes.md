@@ -6,6 +6,7 @@ ms.author: davidsmatlak
 ms.topic: how-to 
 ms.date: 02/29/2024
 ms.custom: template-how-to, linux-related-content
+# Customer intent: "As a cloud administrator, I want to enable FIPS compliance for AKS node pools, so that I can ensure the security of cryptographic modules and meet regulatory requirements while deploying applications."
 ---
 
 # Enable Federal Information Process Standard (FIPS) for Azure Kubernetes Service (AKS) node pools
