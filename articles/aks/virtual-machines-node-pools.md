@@ -3,15 +3,15 @@ title: Use Virtual Machines node pools in Azure Kubernetes Services (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 07/26/2024
+ms.date: 06/26/2025
 ms.author: wilsondarko
 author: wdarko1
 #Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
 ---
 
-# Use Virtual Machines node pools (preview) in Azure Kubernetes Service (AKS)
+# Use Virtual Machines node pools in Azure Kubernetes Service (AKS)
 
-In this article, you learn about the new Virtual Machines node pool type (preview) for AKS. 
+In this article, you learn about the new Virtual Machines node pool type for AKS. 
 
 With Virtual Machines node pools, AKS directly manages the provisioning and bootstrapping of every single node. For Virtual Machine Scale Sets node pools, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
 
@@ -62,50 +62,6 @@ The following table highlights how Virtual Machines node pools compare with stan
 - If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
 - The minimum minor Kubernetes release version required for this feature is release 1.26.
 
-### Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the aks-preview extension using the [`az extension add`][az extension add] command:
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the aks-preview extension using the [`az extension update`][az extension update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `VMsAgentPoolPreview` feature flag
-
-1. Select the subscription where you want to enable the feature flag using the [`az account set`][az account set] command.
-
-    ```azurecli-interactive
-    az account set --subscription <subscription-name>
-    ```
-
-2. Register the `VMsAgentPoolPreview` feature flag using the [`az feature registration create`][az feature registration create] command.
-
-    ```azurecli-interactive
-    az feature registration create --namespace Microsoft.ContainerService --name VMsAgentPoolPreview
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-3. Verify the registration status using the [`az feature show`][az feature show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "VMsAgentPoolPreview"
-    ```
-
-4. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az provider register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace "Microsoft.ContainerService"
-    ```
-
 ## Create an AKS cluster with Virtual Machines node pools
 
 > [!NOTE]
@@ -120,6 +76,7 @@ The following table highlights how Virtual Machines node pools compare with stan
         --resource-group myResourceGroup \
         --name myAKSCluster \
         --vm-set-type "VirtualMachines" \
+        --vm-sizes "Standard_D4s_v3" 
         --node-count 2 \
         --kubernetes-version 1.28.5
     ```
