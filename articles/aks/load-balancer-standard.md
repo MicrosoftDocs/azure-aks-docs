@@ -779,7 +779,7 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [az-extension-add]: /cli/azure/extension#az_extension_add
 [az-extension-update]: /cli/azure/extension#az_extension_update
 [use-multiple-node-pools]: use-multiple-node-pools.md
-[upgrade-blb-on-aks]: upgrade-blb-on-aks.md 
+[upgrade-blb-on-aks]: upgrade-basic-load-balancer-on-aks.md 
 [troubleshoot-snat]: #troubleshooting-snat
 [service-tags]: /azure/virtual-network/network-security-groups-overview#service-tags
 [maxcount]: ./cluster-autoscaler.md#enable-the-cluster-autoscaler-on-an-existing-cluster
