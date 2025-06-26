@@ -4,68 +4,25 @@ description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning (p
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
-ms.author: schaffererin
-author: schaffererin
+ms.author: wilsondarko
+author: wdarko1
 
 # Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
 ---
 
-# Node autoprovisioning (preview)
+# Node autoprovisioning
 
 When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
 
-Node autoprovisioning (NAP) (preview) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
+Node autoprovisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
 NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter-provider-azure) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
-
-
-> [!IMPORTANT]
-> Node autoprovisioning (NAP) for AKS is currently in PREVIEW.
-> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
 
 ## Before you begin
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
 - You need the [Azure CLI installed](/cli/azure/install-azure-cli).
-- [Install the `aks-preview` Azure CLI extension.  Minimum version 0.5.170](#install-the-aks-preview-cli-extension).
-- [Register the NodeAutoProvisioningPreviewfeature flag](#register-the-nodeautoprovisioningpreview-feature-flag).
-
-## Install the `aks-preview` CLI extension
-
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `NodeAutoProvisioningPreview` feature flag
-
-1. Register the `NodeAutoProvisioningPreview` feature flag using the `az feature register` command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "NodeAutoProvisioningPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the `az feature show` command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "NodeAutoProvisioningPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the `az provider register` command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Limitations
 
@@ -84,7 +41,6 @@ NAP is based on the open source [Karpenter](https://karpenter.sh) project, and t
 - [Start Stop mode](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
 - [OutboundType](./egress-outboundtype.md) mutation. All OutboundTypes are supported, however you can't change them after creation.
-- Private cluster (and bring your own private DNS)
 
 ### Networking configuration
 
@@ -140,7 +96,7 @@ The following networking configurations are currently *not* supported:
       "resources": [
         {
           "type": "Microsoft.ContainerService/managedClusters",
-          "apiVersion": "2023-09-02-preview",
+          "apiVersion": "2025-05-01",
           "sku": {
             "name": "Base",
             "tier": "Standard"
@@ -251,7 +207,7 @@ spec:
 | karpenter.azure.com/sku-storage-premium-capable | Whether the VM supports Premium IO storage | [true, false] |
 | karpenter.azure.com/sku-storage-ephemeralos-maxsize | Size limit for the Ephemeral OS disk in Gb | 92 |
 | topology.kubernetes.io/zone | The Availability Zone(s) | [uksouth-1,uksouth-2,uksouth-3] |
-| kubernetes.io/os | Operating System (Linux only during preview) | linux |
+| kubernetes.io/os | Operating System | linux |
 | kubernetes.io/arch | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
 
 To list the virtual machine SKU capabilities and allowed values, use the `vm list-skus` Azure CLI command.
@@ -263,8 +219,6 @@ az vm list-skus --resource-type virtualMachines --location <location> --query '[
 ## Node pool limits
 
 By default, node autoprovisioning attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
-
-
 
 ```
   # Resource limits constrain the total size of the cluster.
@@ -295,7 +249,6 @@ Kubernetes upgrades for node autoprovision nodes follows the control plane Kuber
 ### Node image updates
 
 By default NAP node pool virtual machines are automatically updated when a new image is available. If you wish to pin a node pool at a certain node image version, you can set the imageVersion on the node class:
-
 
 ```kubectl
 kubectl edit aksnodeclass default
@@ -353,6 +306,43 @@ You can remove a node manually using `kubectl delete node`, but node autoprovisi
     # You can choose to disable consolidation entirely by setting the string value 'Never'
     consolidateAfter: 30s
 ```
+
+## Retrieve Karpenter logs and status 
+
+You can retrieve logs and status updates from Node Autoprovisioning to help diagnose and debug Karpenter events. AKS manages Node autoprovisioning on your behalf and runs it in the managed control plane. You can enable control plane node to see the logs and operations from NAP through Azure Monitor, or the Diagnostic settings button in Azure Portal.
+
+### [Azure CLI](#tab/azure-cli)
+
+1. Set up a rule for resource logs to push Karpenter logs to Log Analytics using the [instructions here][aks-view-master-logs]. Make sure you check the box for `karpenter` when selecting options for **Logs**.
+1. Select the **Log** section on your cluster.
+1. Enter the following example query into Log Analytics:
+
+    ```kusto
+    AzureDiagnostics
+    | where Category == "karpenter"
+    ```
+1. View Node Autoprovisioning scale-up not triggered events on CLI.
+    ```bash
+    kubectl get events --field-selector source=Karpenter,reason=NotTriggerScaleUp
+    ```
+1. View Node Autoprovisioning warning events on CLI.
+    ```bash
+    kubectl get events --field-selector source=cluster-autoscaler,type=Warning
+    ```
+1. Node autoprovisioning also writes out the health status to a `configmap` named `karpenter-status`. You can retrieve these logs using the following `kubectl` command:
+    ```bash
+    kubectl get configmap -n kube-system karpenter-status -o yaml
+    ```
+### [Azure portal](#tab/azure-portal)
+1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
+2. In the service menu, under **Settings**, select **Node pools**.
+3. Select any of the tiles for **Karpenter events**, **Karpenter warnings**, or **Scale-up not triggered** to get more details.
+
+---
+
+## Node Auto-provisioning Metrics
+You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to access metrics for [Node Autoprovisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview). There is a default list of metrics that are scraped, and a larger list of metrics that can be accessed to capture more info as needed. 
+
 
 ## Monitoring selection events
 
@@ -430,7 +420,7 @@ Node autoprovisioning can only be disabled when:
       "resources": [
         {
           "type": "Microsoft.ContainerService/managedClusters",
-          "apiVersion": "2023-09-02-preview",
+          "apiVersion": "2025-05-01",
           "sku": {
             "name": "Base",
             "tier": "Standard"
