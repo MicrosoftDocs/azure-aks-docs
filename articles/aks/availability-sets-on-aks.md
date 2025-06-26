@@ -129,7 +129,7 @@ A successful migration can be verified when the cluster details using the `az ak
 <!-- LINKS - internal -->
 
 [turn-off-kms]: /azure/aks/use-kms-etcd-encryption#turn-off-kms
-[file-support-ticket]: azure/azure-portal/supportability/how-to-create-azure-support-request
+[file-support-ticket]: /azure-portal/supportability/how-to-create-azure-support-request
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [install-azure-cli]: /cli/azure/install-azure-cli
