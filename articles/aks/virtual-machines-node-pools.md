@@ -6,7 +6,7 @@ ms.custom: devx-track-azurecli
 ms.date: 06/26/2025
 ms.author: wilsondarko
 author: wdarko1
-#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
+#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types. I want to minimize capacity constraints by having greater flexibility in VM size selection.
 ---
 
 # Use Virtual Machines node pools in Azure Kubernetes Service (AKS)
@@ -58,8 +58,8 @@ The following table highlights how Virtual Machines node pools compare with stan
 ## Prerequisites
 
 - An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
-- Azure CLI version 2.32.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install azure cli]
-- This feature requires kubernetes version 1.26 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster](https://learn.microsoft.com/azure/aks/upgrade-aks-cluster)
+- Azure CLI version 2.73.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install azure cli]
+- This feature requires kubernetes version 1.27 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster](https://learn.microsoft.com/azure/aks/upgrade-aks-cluster)
 
 ## Create an AKS cluster with Virtual Machines node pools
 
@@ -140,7 +140,7 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
 
 ## Add a manual scale profile to a node pool
 
-- Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"`.
+- Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"` and the `node-count` set to 2.
 
     The following example adds a manual scale profile to node pool *myvmpool* in cluster *myAKSCluster*. The node pool includes two nodes with a VM SKU of *Standard_D2s_v3*:
 
