@@ -1,5 +1,5 @@
 ---
-title: 'Overview of deploying a highly available PostgreSQL database on AKS'
+title: 'Deploying a PostgreSQL Database on AKS with CloudNativePG'
 description: Learn the prerequisites, deployment process, and architecture for deploying a highly available PostgreSQL cluster on Azure Kubernetes Service (AKS) using Azure CLI.
 ms.topic: overview
 ms.date: 06/18/2025
@@ -56,7 +56,7 @@ Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing ano
 
 You might choose to host PostgreSQL on AKS when you need full control over database configuration, extensions, and deployment architecture. It’s ideal for integrating tightly with Kubernetes-native tooling, optimizing costs at scale, and fine-tuning performance through custom resource allocation, caching strategies, and storage configurations tailored to your workload.
 
-:::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Highly available PostgreSQL cluster on AKS architecture diagram." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
+:::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Architecture diagram of CNPG Kubernetes operator for self-hosting a highly available PostgreSQL database on AKS." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
 
 > [!NOTE]
 > For applications that require data separation at the database level, you can add more databases with postInitSQL commands and similar. It's currently not possible to add more databases in a declarative way with the CNPG operator. [Learn more](https://github.com/cloudnative-pg/cloudnative-pg) about the CNPG operator.
