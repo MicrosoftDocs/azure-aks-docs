@@ -47,7 +47,7 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 - The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
 - You need the [Azure CLI installed](/cli/azure/install-azure-cli).
 - [Install the `aks-preview` Azure CLI extension.  Minimum version 0.5.170](#install-the-aks-preview-cli-extension).
-- If the cluster is running Key Management Service with private key vault, this must be [disabled](https://learn.microsoft.com/en-us/azure/aks/use-kms-etcd-encryption#turn-off-kms) for the duration of the migration
+- If the cluster is running Key Management Service with private key vault, this must be [disabled](./azure/aks/use-kms-etcd-encryption#turn-off-kms) for the duration of the migration
 - If the cluster is using any ValidatingAdmissionWebhooks or MutatingAdmissionWebhooks, these must be disabled for the duration of the migration.
 
 **Preparing for Migration**
@@ -127,7 +127,9 @@ A successful migration can be verified when the cluster details using the `az ak
 ### Related content
 
 <!-- LINKS - internal -->
-[file-support-ticket]: /azure-portal/supportability/how-to-create-azure-support-request
+
+[]: 
+[file-support-ticket]: ./azure-portal/supportability/how-to-create-azure-support-request
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [install-azure-cli]: /cli/azure/install-azure-cli
