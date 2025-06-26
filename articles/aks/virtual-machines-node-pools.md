@@ -11,7 +11,7 @@ author: wdarko1
 
 # Use Virtual Machines node pools in Azure Kubernetes Service (AKS)
 
-In this article, you learn about the new Virtual Machines node pool type for AKS. 
+In this article, you'll learn about the new Virtual Machines node pool type for AKS. 
 
 With Virtual Machines node pools, AKS directly manages the provisioning and bootstrapping of every single node. For Virtual Machine Scale Sets node pools, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
 
@@ -59,7 +59,7 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 - An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
 - The Virtual Machines node pool feature is in preview. This feature is only available with API versions 2023-10-02-preview and greater, or with the Azure CLI extension versions 2.61.0 or greater.
-- The minimum minor Kubernetes release version required for this feature is release 1.26.
+- This feature requires kubernetes version 1.26 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster](https://learn.microsoft.com/azure/aks/upgrade-aks-cluster)
 
 ## Create an AKS cluster with Virtual Machines node pools
 
