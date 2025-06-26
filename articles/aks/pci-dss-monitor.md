@@ -283,7 +283,7 @@ External networks are out of scope for this documentation and must be evaluated 
 
 #### Your responsibilities
 
-This architecture and its implementation aren't designed to support on-premises or corporate network-to-cloud transactions over wireless connections. For considerations, refer to the guidance in the official PCI-DSS 3.2.1 standard.
+This architecture and its implementation aren't designed to support on-premises or corporate network-to-cloud transactions over wireless connections. For considerations, refer to the guidance in the official PCI DSS 4.0.1 standard.
 
 ### Requirement 11.2
 

@@ -84,7 +84,7 @@ In this architecture, the cluster has two user node pools and one system node po
 > An alternate approach for compute protection is Azure confidential computing. AKS supports confidential computing nodes that allow you to run sensitive workloads within a hardware-based trusted execution environment (TEE). For details, see [Confidential computing nodes on Azure Kubernetes Service](/azure/confidential-computing/confidential-nodes-aks-overview).
 >
 
-The PCI-DSS 3.2.1 requires isolation of the PCI workload from other workloads in terms of operations and connectivity.
+The PCI DSS 4.0.1 requires isolation of the PCI workload from other workloads in terms of operations and connectivity.
 
 - **In-scope:** The PCI workload, the environment in which it resides, and operations.
 
@@ -100,7 +100,7 @@ The baseline architecture used Traefik for ingress control. In this reference ar
 
 ### Private Kubernetes API server
 
-The baseline architecture deployed the AKS cluster in public mode. This means all communication with the AKS-managed Kubernetes API server is over the public internet. This is not acceptable in this architecture because PCI-DSS 3.2.1 prohibits public exposure to any system components. In this regulated architecture, the cluster is deployed as a private cluster. Network traffic to the Kubernetes API server is limited to your private network. The API server is exposed through a private endpoint in the cluster's network. The security is further enhanced with the use of network security groups and other built-in features. These are described in [Network configuration](#networking-configuration).
+The baseline architecture deployed the AKS cluster in public mode. This means all communication with the AKS-managed Kubernetes API server is over the public internet. This is not acceptable in this architecture because PCI DSS 4.0.1 prohibits public exposure to any system components. In this regulated architecture, the cluster is deployed as a private cluster. Network traffic to the Kubernetes API server is limited to your private network. The API server is exposed through a private endpoint in the cluster's network. The security is further enhanced with the use of network security groups and other built-in features. These are described in [Network configuration](#networking-configuration).
 
 ### Pod security
 
@@ -150,7 +150,7 @@ The ingress controller in this implementation uses a wildcard certificate to han
 
 > [!IMPORTANT]
 >
-> Any component that decrypts card holder data is considered to be in scope for PCI-DSS 3.2.1, and is subject the same level of scrutiny as the other components in the cardholder data environment. In this architecture, Azure Application Gateway is in scope because it inspects the payload as part of its WAF functionality. An alternate architecture option is to use Azure Firewall Premium as the ingress component, instead of WAF, to take advantage of Azure Firewall's signature-based IDPS capabilities. This will allow the first TLS termination to be in the cluster. However, without a dedicated WAF, you must use additional compensating controls to satisfy [Requirement 6.6](./pci-dss-malware.md#requirement-66).
+> Any component that decrypts card holder data is considered to be in scope for PCI DSS 4.0.1, and is subject the same level of scrutiny as the other components in the cardholder data environment. In this architecture, Azure Application Gateway is in scope because it inspects the payload as part of its WAF functionality. An alternate architecture option is to use Azure Firewall Premium as the ingress component, instead of WAF, to take advantage of Azure Firewall's signature-based IDPS capabilities. This will allow the first TLS termination to be in the cluster. However, without a dedicated WAF, you must use additional compensating controls to satisfy [Requirement 6.6](./pci-dss-malware.md#requirement-66).
 
 ### Azure Key Vault network restrictions
 
@@ -197,7 +197,7 @@ You can enforce those features through Azure Policy.
 
 If your workload requires in-cluster storage, have a robust and secure process for backup and recovery. Consider services such as Azure Backup (for Azure Disks and Azure Files), for backup and recovery of any `PersistentVolumeClaim`. There are advantages if the backup system supports native Kubernetes resources. You can supplement your primary method that reconciles the cluster to a well-known state, with the backup system for critical system recovery techniques. For example, it can help in drift detection and cataloging system state changes over time at the Kubernetes resource level.
 
-Backup processes need to classify data in the backup, whether that data came from the cluster or was external to the cluster. If the data is in scope for PCI DSS 3.2.1, extend your compliance boundaries to include the lifecycle and destination of the backup, which will be outside of the cluster. Backups can be an attack vector. When designing your backup, consider geographic restrictions, encryption at rest, access controls, roles and responsibilities, auditing, time-to-live, and tampering prevention.
+Backup processes need to classify data in the backup, whether that data came from the cluster or was external to the cluster. If the data is in scope for PCI DSS 4.0.1, extend your compliance boundaries to include the lifecycle and destination of the backup, which will be outside of the cluster. Backups can be an attack vector. When designing your backup, consider geographic restrictions, encryption at rest, access controls, roles and responsibilities, auditing, time-to-live, and tampering prevention.
 
 In-cluster backup systems are expected to run with high privileges during its operations. Evaluate the risk and benefit of bringing a backup agent into your cluster. Does the agent capability overlap with another management solution in the cluster? What is the minimum set of tools you need to accomplish this task without expanding the attack surface?
 

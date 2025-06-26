@@ -103,7 +103,7 @@ For details on network security, see [Network segmentation](./pci-dss-network.md
 
 ### Data security
 
-PCI-DSS 3.2.1 requires that all cardholder data (CHD) is never clear, whether in transit or in storage.
+PCI DSS 4.0.1 requires that all cardholder data (CHD) is never clear, whether in transit or in storage.
 
 Because this architecture and the implementation are focused on infrastructure and not the workload, data management is not demonstrated. Here are some well-architected recommendations.
 
@@ -179,7 +179,7 @@ Have a clear understanding of what constitutes the price of a service. Azure tra
 
 The cost associated with some resources, such as Azure Firewall, can be spread across multiple business units or applications. Another way to optimize cost might be to host a multitenant cluster within an organization, maximizing density with workload diversity. However, we do *not* recommend this approach for regulated workloads. Always prioritize compliance and segmentation over cost benefits.
 
-To keep within the budget constraints, some ways to control cost are by adjusting the Azure Application Gateway infrastructure, setting the instance count for autoscaling, and reducing the log output as long as they still meet the audit trail required by PCI-DSS 3.2.1. Always evaluate those choices against the tradeoffs on other aspects of the design that allow you to meet your SLA. For example, are you still able to scale appropriately to meet spikes in traffic?
+To keep within the budget constraints, some ways to control cost are by adjusting the Azure Application Gateway infrastructure, setting the instance count for autoscaling, and reducing the log output as long as they still meet the audit trail required by PCI DSS 4.0.1. Always evaluate those choices against the tradeoffs on other aspects of the design that allow you to meet your SLA. For example, are you still able to scale appropriately to meet spikes in traffic?
 
 As you create groups of Azure resources, apply tags so that they can be tracked for cost. Use cost management tools like [Azure Advisor](/azure/advisor/advisor-cost-recommendations) and [Microsoft Cost Management](/azure/cost-management-billing/costs/cost-mgt-best-practices) for tracking and analyzing cost.
 
@@ -195,11 +195,11 @@ Enforcing clear segregation of duties for regulated environments is key. Have de
 
 ### Workload isolation
 
-PCI-DSS 3.2.1 requires isolation of the PCI workload from other workloads in terms of operations. In this implementation, the in-scope and out-of-scope workloads are segmented in two separate user node pools. Application developers for in-scope and developers for out-of-scope workloads might have different sets of permissions. Also, there will be separate quality gates. For example, the in-scope code is subject to upholding compliance and attestation, whereas the out-of-scope code isn't. There's also a need to have separate build pipelines and release management processes.
+PCI DSS 4.0.1 requires isolation of the PCI workload from other workloads in terms of operations. In this implementation, the in-scope and out-of-scope workloads are segmented in two separate user node pools. Application developers for in-scope and developers for out-of-scope workloads might have different sets of permissions. Also, there will be separate quality gates. For example, the in-scope code is subject to upholding compliance and attestation, whereas the out-of-scope code isn't. There's also a need to have separate build pipelines and release management processes.
 
 ### Operational metadata
 
-Requirement 12 of the PCI DSS 3.2.1 standard requires you to maintain information about workload inventory and personnel access documentation. We strongly recommend using Azure tags because you can collate environment information with Azure resources, resource groups, and subscriptions.
+Requirement 12 of the PCI DSS 4.0.1 standard requires you to maintain information about workload inventory and personnel access documentation. We strongly recommend using Azure tags because you can collate environment information with Azure resources, resource groups, and subscriptions.
 
 Maintain information about approved solutions that are part of the infrastructure and workload. This includes a list of VM images, databases, and third-party solutions of your choice that you bring to the CDE. You can even automate that process by building a service catalog. It provides self-service deployment by using those approved solutions in a specific configuration, which adheres to ongoing platform operations.
 

@@ -195,7 +195,7 @@ In this architecture, the AKS cluster is a key component of the cardholder data 
 
 You can also choose a public cluster, but however, this design isn't recommended for clusters containing regulated workloads. The API server will be exposed to the internet. The DNS record will always be discoverable. So, you need to have controls to keep the cluster API protected from public access. If using a public cluster is required, then the recommended approach is to have tight controls through Kubernetes role-based access controls (RBAC), paired with the AKS Authorized IP ranges feature to restrict who can access the AKS API Server. However, this solution isn't recommended for clusters containing regulated workloads.
 
-When processing card holder data (CHD), the cluster needs to interact with networks that are considered to be trusted and untrusted. In this architecture, both the hub-spoke networks within the perimeter of PCI-DSS 3.2.1 workload are considered to be trusted networks.
+When processing card holder data (CHD), the cluster needs to interact with networks that are considered to be trusted and untrusted. In this architecture, both the hub-spoke networks within the perimeter of PCI DSS 4.0.1 workload are considered to be trusted networks.
 
 Untrusted networks are networks outside that perimeter. Untrusted networks include:
 
@@ -417,7 +417,7 @@ For wireless environments connected to the cardholder data environment or transm
 
 ##### Your responsibilities
 
-This architecture and the implementation aren't designed to do on-premises or corporate network to cloud transactions over wireless connections. For considerations, refer to the guidance in the official PCI-DSS 3.2.1 standard.
+This architecture and the implementation aren't designed to do on-premises or corporate network to cloud transactions over wireless connections. For considerations, refer to the guidance in the official PCI DSS 4.0.1 standard.
 
 ### Requirement 2.2
 
@@ -425,7 +425,7 @@ Develop configuration standards for all system components.
 
 #### Your responsibilities
 
-Implement the recommendations in the Microsoft cloud security benchmark. It provides a single, consolidated view of Azure security recommendations, covering industry frameworks such as CIS, NIST, PCI-DSS 3.2.1, and others. Use Microsoft Defender for Cloud features and Azure Policy to help track against the standards. Azure security benchmark is the default initiative for Microsoft Defender for Cloud. Consider building additional automated checks in Azure Policy and Azure Tenant Security Solution (AzTS).
+Implement the recommendations in the Microsoft cloud security benchmark. It provides a single, consolidated view of Azure security recommendations, covering industry frameworks such as CIS, NIST, PCI DSS 4.0.1, and others. Use Microsoft Defender for Cloud features and Azure Policy to help track against the standards. Azure security benchmark is the default initiative for Microsoft Defender for Cloud. Consider building additional automated checks in Azure Policy and Azure Tenant Security Solution (AzTS).
 
 Document the desired configuration state of all components in the CDE, especially for AKS nodes, jump box, build agents, and other components that interact with the cluster.
 
@@ -557,7 +557,7 @@ Protect stored cardholder data. Encrypt transmission of cardholder data across o
 ## Related resources
 
 - [Azure Kubernetes Service (AKS) architecture design](/azure/architecture/reference-architectures/containers/aks-start-here)
-- [Introduction of an AKS regulated cluster for PCI-DSS 3.2.1 (Part 1 of 9)](/azure/architecture/reference-architectures/containers/aks-pci/aks-pci-intro)
-- [Architecture of an AKS regulated cluster for PCI-DSS 3.2.1 (Part 2 of 9)](/azure/architecture/reference-architectures/containers/aks-pci/aks-pci-ra-code-assets)
+- [Introduction of an AKS regulated cluster for PCI DSS 4.0.1 (Part 1 of 9)](/azure/architecture/reference-architectures/containers/aks-pci/aks-pci-intro)
+- [Architecture of an AKS regulated cluster for PCI DSS 4.0.1 (Part 2 of 9)](/azure/architecture/reference-architectures/containers/aks-pci/aks-pci-ra-code-assets)
 - [Baseline architecture for an Azure Kubernetes Service (AKS) cluster](/azure/architecture/reference-architectures/containers/aks/secure-baseline-aks)
 - [AKS baseline for multiregion clusters](/azure/architecture/reference-architectures/containers/aks-multi-region/aks-multi-cluster)
