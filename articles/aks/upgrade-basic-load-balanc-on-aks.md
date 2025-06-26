@@ -105,5 +105,5 @@ az aks update \
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [load-balancer-upgrade-guidance]: /azure/load-balancer/load-balancer-basic-upgrade-guidance
 [load-balancer-basic-vs-standard]: azure/load-balancer/load-balancer-basic-upgrade-guidance#basic-load-balancer-sku-vs-standard-load-balancer-sku
-[availability-sets](availability-sets-on-aks.md)
-[More information on Virtual Machine node pools](virtual-machines-node-pools.md)
+[availability-sets]: availability-sets-on-aks.md
+[More information on Virtual Machine node pools]: virtual-machines-node-pools.md
