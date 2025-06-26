@@ -434,7 +434,6 @@ For example:
 HTTP proxy with the monitoring add-on supports the following configurations:
 
 * Outbound proxy without authentication
-* Outbound proxy with username & password authentication
 * Outbound proxy with trusted cert for Log Analytics endpoint
 
 The following configurations aren't supported:
