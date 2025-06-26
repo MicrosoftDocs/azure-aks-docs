@@ -35,7 +35,7 @@ Availability Sets support will be **fully deprecated by September 30, 2025**. We
 
 ### Automatic migration
 
-Starting September 30, 2025, we'll automatically migrate remaining Availability Sets node pools to Virtual Machines node pools. We recommend a planned migration to avoid downtime for your workloads.
+Starting September 30, 2025, we'll automatically migrate remaining Availability Sets node pools to Virtual Machines node pools. We recommend a planned migration using the Azure CLI command to minimize downtime for your workloads.
 
 ## Migrate from Availability Sets to Virtual Machines node pools (Preview)
 
@@ -103,11 +103,17 @@ az aks update \
     --migrate-vmas-to-vms \
 ```
 
-2. Verify that the migration was successful using the `az aks show` command:
+2. Verify that the migration was successful using the `az aks show` command, which will show the cluster details.
 ```azurecli-interactive
 az aks show \
     --name $clusterName \
     --resource-group $resourceGroup
+```
+
+A successful migration can be verified when the cluster details using the `az aks show` command include a `type` set to `VirtualMachines`, and `loadbalancerSku` set to `Standard`. 
+```azurecli-interactive
+    "type": "VirtualMachines"
+    "loadBalancerSku": "standard",
 ```
 
 3. Verify that all pods and services are running successfully using the `kubectl get pods` and `kubectl get svc` commands:
