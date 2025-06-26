@@ -12,7 +12,7 @@
       href: quickstart-create-fleet-and-members-portal.md
     - name: Use the Azure CLI
       href: quickstart-create-fleet-and-members.md
-    - name: Use ARM template
+    - name: Use an ARM template
       href: quickstart-create-fleet-and-members-arm-template.md
     - name: Use Bicep
       href: quickstart-create-fleet-and-members-bicep.md

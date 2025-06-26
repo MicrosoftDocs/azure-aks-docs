@@ -10,30 +10,30 @@ ms.devlang: azurecli
 ms.topic: quickstart
 ---
 
-# Quickstart: Create Azure Kubernetes Fleet Manager using Terraform
+# Quickstart: Create an Azure Kubernetes Fleet Manager resource using Terraform
 
-Get started with Azure Kubernetes Fleet Manager (Fleet) by using Terraform to create a Fleet resource.
+Get started with Azure Kubernetes Fleet Manager by using Terraform to create a Fleet resource.
 
 ## Prerequisites
 
 [!INCLUDE [free trial note](~/reusable-content/ce-skilling/azure/includes/quickstarts-free-trial-note.md)]
 
-* Read the [conceptual overview of this feature](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
+* Read the [conceptual overview of Fleet Manager](./concepts-fleet.md), which provides an explanation of fleets and member clusters referenced in this document.
 * An Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 * [Install and configure Terraform](/azure/developer/terraform/quickstart-configure).
 
-## Create a Fleet resource
+## Create a Fleet Manager resource
 
-You can create a Fleet resource to later group your AKS clusters as member clusters. When created via Azure CLI, by default, this resource enables member cluster grouping and update orchestration. If the Fleet hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters and L4 service load balancing across multiple member clusters. For more information, see the [conceptual overview of fleet types](./concepts-choosing-fleet.md), which provides a comparison of different fleet configurations.
+You can create a Fleet Manager resource to later group your AKS clusters as member clusters.  If the Fleet Manager hub is enabled, other preview features are enabled, such as Kubernetes object propagation to member clusters. For more information, see the [conceptual overview of Fleet Manager types](./concepts-choosing-fleet.md), which provides a comparison of different Fleet Manager configurations.
 
 
 > [!IMPORTANT]
-> Once a Kubernetes Fleet resource has been created, it's possible to upgrade a Kubernetes Fleet resource without a hub cluster to one with a hub cluster. For Kubernetes Fleet resources with a hub cluster, once private or public has been selected it cannot be changed.
+> Once a Fleet Manager resource has been created, it's possible to upgrade a Fleet Manager resource without a hub cluster to one with a hub cluster. For Fleet Manager resources with a hub cluster, once private or public has been selected it cannot be changed.
 
 
-### [Kubernetes Fleet resource without hub cluster](#tab/without-hub-cluster)
+### [Fleet Manager resource without hub cluster](#tab/without-hub-cluster)
 
-To create a Fleet resource without a hub cluster, implement the following Terraform code
+To create a Fleet Manager resource without a hub cluster, implement the following Terraform code
 
 #### Implement the Terraform code
 - Create a directory you can use to test the sample Terraform code and make it your current directory.
@@ -116,22 +116,12 @@ To create a Fleet resource without a hub cluster, implement the following Terraf
 
 [!INCLUDE [terraform-plan-destroy.md](~/azure-dev-docs-pr/articles/terraform/includes/terraform-plan-destroy.md)]
 
-### [Kubernetes Fleet resource with hub cluster](#tab/with-hub-cluster)
+### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
 
-If you want to use Fleet for Kubernetes object propagation and multi-cluster load balancing in addition to update orchestration, then you need to create the Fleet resource with the hub cluster.
-
-Kubernetes Fleet clusters with a hub cluster support both public and private modes for network access. For more information, see [Choose an Azure Kubernetes Fleet Manager option](./concepts-choosing-fleet.md#network-access-modes-for-hub-cluster).
-
-#### Public hub cluster
-
-Public hub cluster fleet can not be created using Terraform yet.
-
-#### Private hub cluster
-
-Private hub cluster fleet can not be created using Terraform yet.
+Public and Private hub cluster Fleet Manager resource can not be created using Terraform yet.
 
 ---
 
 ## Next steps
 
-* [Access Fleet hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
+* [Access Fleet Manager hub cluster Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md).
