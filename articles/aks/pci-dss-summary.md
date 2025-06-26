@@ -27,6 +27,14 @@ This guidance provided in this series incorporates Well-Architected principles i
 
 PCI DSS 4.0.1 workloads demand the rigor of being a well-architected solution. Although aligning the infrastructure with PCI requirements is critical, compliance doesn't stop at the hosting infrastructure. Not addressing the quality pillars, specifically security, can jeopardize compliance. Well-architected solutions combine both the infrastructure and workload perspectives to arrive at the rigor necessary for achieving compliant outcomes. PCI DSS 4.0.1 introduces new requirements for continuous compliance, risk-based scoping, enhanced monitoring, and secure software development, all of which are addressed in this guidance.
 
+Key enhancements in PCI DSS 4.0.1 relevant to cloud and container environments include:
+- **Customized Approach**: Flexibility to meet security objectives through alternative controls suitable for cloud-native architectures
+- **Enhanced Authentication**: Strengthened multi-factor authentication requirements for all access to the cardholder data environment
+- **Continuous Validation**: Ongoing monitoring and validation of security controls rather than point-in-time assessments
+- **Automated Security**: Integration of security into DevSecOps pipelines with automated vulnerability scanning and security testing
+- **Container Security**: Specific guidance for containerized workloads and ephemeral infrastructure
+- **Zero Trust Principles**: Emphasis on verify-first approaches and least privilege access
+
 ## Reliability
 
 The reliability of regulated environments needs to be predictable so that they can be explained consistently for auditing purposes. Follow the fundamental guidance provided in the [reliability principles](/azure/architecture/framework/resiliency/principles). Best practices for a regulated environment are summarized in these sections.
@@ -55,6 +63,10 @@ Follow the fundamental guidance provided in the [Security design principles](/az
 ### Governance
 
 The governance implementation is driven by the compliance requirements in PCI DSS 4.0.1. This influences the technical controls for maintaining segmentation, accessing resources, detecting vulnerabilities, and most importantly protecting customer data. PCI DSS 4.0.1 emphasizes shared responsibility, continuous monitoring, and the use of automated tools for inventory and configuration management in cloud and container environments.
+
+**Continuous Compliance Monitoring**: Unlike the periodic assessment approach of previous versions, PCI DSS 4.0.1 requires ongoing validation of security controls. This aligns well with cloud-native monitoring capabilities like Azure Monitor, Microsoft Defender for Cloud, and automated policy enforcement through Azure Policy.
+
+**Risk-Based Scoping**: The standard now allows for more dynamic scoping based on actual data flows and risk assessments, which is particularly relevant for containerized workloads where components may be ephemeral and dynamically orchestrated.
 
 #### Enterprise segmentation strategy
 
@@ -126,12 +138,13 @@ The standard also requires that sensitive authentication data (SAD) is not store
 
 #### Data in transit
 
-All communication with entities that interact with the CDE must be over encrypted channels.
+All communication with entities that interact with the CDE must be over encrypted channels. PCI DSS 4.0.1 strengthens encryption requirements with updated cipher suites and protocol standards.
 
 - Only HTTPS traffic must be allowed to flow into the CDE. In this architecture, Azure Application Gateway denies all traffic over port 80.
 - Preferably, don't encrypt and decrypt data outside the CDE. If you do, consider that entity to be a part of the CDE.
 - Within the CDE, provide secure communication between pods with mTLS. You can choose to implement a service mesh for this purpose.
-- Only allow secure ciphers and TLS 1.2 or later.
+- Only allow secure ciphers and TLS 1.2 or later. PCI DSS 4.0.1 provides updated guidance on acceptable encryption protocols and cipher suites.
+- **Enhanced Key Management**: PCI DSS 4.0.1 requires more rigorous key lifecycle management, including automated key rotation and hardware security module (HSM) integration where applicable.
 
 ### Identity
 
@@ -140,6 +153,8 @@ Follow these security principles when you're designing access policies:
 - Start with Zero-Trust policies. Make exceptions as needed.
 - Grant the least privileges--just enough to complete a task.
 - Minimize standing access.
+
+**Enhanced Authentication Requirements**: PCI DSS 4.0.1 significantly strengthens authentication requirements, mandating multi-factor authentication (MFA) for all access to the cardholder data environment, including administrative access and all non-console access.
 
 Kubernetes role-based access control (RBAC) manages permissions to the Kubernetes API. AKS supports those Kubernetes roles. AKS is fully integrated with Microsoft Entra ID. You can assign Microsoft Entra identities to the roles and also take advantage of other capabilities.
 
@@ -196,6 +211,14 @@ Enforcing clear segregation of duties for regulated environments is key. Have de
 ### Workload isolation
 
 PCI DSS 4.0.1 requires isolation of the PCI workload from other workloads in terms of operations. In this implementation, the in-scope and out-of-scope workloads are segmented in two separate user node pools. Application developers for in-scope and developers for out-of-scope workloads might have different sets of permissions. Also, there will be separate quality gates. For example, the in-scope code is subject to upholding compliance and attestation, whereas the out-of-scope code isn't. There's also a need to have separate build pipelines and release management processes.
+
+**Secure Software Development Lifecycle (SSDL)**: PCI DSS 4.0.1 introduces comprehensive requirements for secure software development, including:
+- Automated security testing integrated into CI/CD pipelines
+- Static and dynamic application security testing (SAST/DAST)
+- Container image vulnerability scanning before deployment
+- Dependency scanning for third-party components
+- Code review processes with security focus
+- Secure coding training for development teams
 
 ### Operational metadata
 
