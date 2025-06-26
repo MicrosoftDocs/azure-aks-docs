@@ -110,13 +110,13 @@ You can configure an AKS cluster with an HTTP proxy configuration during cluster
     kubectl describe {any pod} -n kube-system
     ```
 
-To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
+    To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
 
-```bash
-kubectl get nodes
-kubectl node-shell {node name}
-cat /etc/environment
-```
+    ```bash
+    kubectl get nodes
+    kubectl node-shell {node name}
+    cat /etc/environment
+    ```
 
 ## Update an HTTP proxy configuration
 
@@ -150,13 +150,13 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     kubectl describe {any pod} -n kube-system
     ```
 
-To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
+    To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
 
-```bash
-kubectl get nodes
-kubectl node-shell {node name}
-cat /etc/environment
-```
+    ```bash
+    kubectl get nodes
+    kubectl node-shell {node name}
+    cat /etc/environment
+    ```
 
 ## Disable HTTP proxy on an existing cluster (Preview)
 
@@ -178,19 +178,19 @@ cat /etc/environment
 
 ### Register `DisableHTTPProxyPreview` feature flag
 
-1. Register the `DisableHTTPProxyPreview` feature flag using the [`az feature register`][az-feature-register] command.
+1. Register the `DisableHTTPProxyPreview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
 
     ```azurecli-interactive
     az feature register --namespace Microsoft.ContainerService --name DisableHTTPProxyPreview
     ```
 
-2. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show *Registered*.
+2. Verify the registration status using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the status to show *Registered*.
 
     ```azurecli-interactive
     az feature show --namespace Microsoft.ContainerService --name DisableHTTPProxyPreview
     ```
 
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 
     ```azurecli-interactive
     az provider register --namespace Microsoft.ContainerService
@@ -210,7 +210,7 @@ cat /etc/environment
     kubectl describe {any pod} -n kube-system
     ```
 
-To validate proxy variables aren't set in pods, you can check the environment variables present on the nodes. 
+    To validate proxy variables aren't set in pods, you can check the environment variables present on the nodes. 
 
     ```bash
     kubectl get nodes
@@ -224,9 +224,8 @@ When creating a cluster, HTTP proxy is enabled by default. Once you disable HTTP
 
 To re-enable HTTP proxy on an existing cluster, use the [`az aks update`][az-aks-update] command with the `--enable-http-proxy` flag.
 
-    ```azurecli-interactive
-    az aks update --name $clusterName --resource-group $resourceGroup --enable-http-proxy
-    ```
+```azurecli-interactive
+az aks update --name $clusterName --resource-group $resourceGroup --enable-http-proxy
 
 > [!IMPORTANT]
 > If you had an HTTP proxy configuration on your cluster before disabling, the existing HTTP proxy configuration automatically applies when you re-enable HTTP proxy on that cluster. We recommend verifying the configuration to ensure it meets your current requirements before proceeding. If you want to change your HTTP proxy configuration after re-enabling HTTP proxy, follow the steps to [Update the HTTP proxy configuration on an existing cluster](#update-a-cluster-to-update-or-enable-http-proxy).
@@ -313,7 +312,7 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     kubectl describe {any pod} -n kube-system
     ```
 
-To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
+    To validate proxy variables are set in pods, you can check the environment variables present on the nodes. 
 
     ```bash
     kubectl get nodes
@@ -341,19 +340,19 @@ To validate proxy variables are set in pods, you can check the environment varia
 	
 ### Register `DisableHTTPProxyPreview` feature flag
 	
-1. Register the `DisableHTTPProxyPreview` feature flag using the [`az feature register`][az-feature-register] command.
+1. Register the `DisableHTTPProxyPreview` feature flag using the [`az feature register`](/cli/azure/feature#az-feature-register) command.
 	
     ```azurecli-interactive
     az feature register --namespace Microsoft.ContainerService --name DisableHTTPProxyPreview
     ```
 	
-2. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show *Registered*.
+2. Verify the registration status using the [`az feature show`](/cli/azure/feature#az-feature-show) command. It takes a few minutes for the status to show *Registered*.
 	
     ```azurecli-interactive
     az feature show --namespace Microsoft.ContainerService --name DisableHTTPProxyPreview
     ```
 	
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`](/cli/azure/provider#az-provider-register) command.
 	
     ```azurecli-interactive
     az provider register --namespace Microsoft.ContainerService
@@ -379,7 +378,7 @@ To validate proxy variables are set in pods, you can check the environment varia
     kubectl describe {any pod} -n kube-system
     ```
 
-To validate proxy variables aren't set in pods, you can check the environment variables present on the nodes. 
+    To validate proxy variables aren't set in pods, you can check the environment variables present on the nodes. 
 
     ```bash
     kubectl get nodes
