@@ -39,7 +39,7 @@ Starting September 30, 2025, we'll automatically migrate remaining Availability 
 
 ## Migrate from Availability Sets to Virtual Machines node pools (Preview)
 
-There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard, as well as the Basic IPs to Standard, while keeping the Public IP addresses the same.
+There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard, as well as the Basic IPs to Standard, while keeping the Public IP addresses the same. While
 
 ### Before You Begin
 
@@ -53,6 +53,7 @@ There is now a way to use a script to migrate your AKS cluster from using Availa
 **Preparing for Migration**
 - Create a migration plan for planned downtime.
 - Once the migration is started, roll back is not allowed.
+- While in preview, we recommend you start using this migration CLI command on your test environments. Should any issues arise, [file a support ticket][file-support-ticket].
 
 ### Install the `aks-preview` CLI extension
 
@@ -126,7 +127,7 @@ A successful migration can be verified when the cluster details using the `az ak
 ### Related content
 
 <!-- LINKS - internal -->
-
+[file-support-ticket]: /azure-portal/supportability/how-to-create-azure-support-request
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [install-azure-cli]: /cli/azure/install-azure-cli
