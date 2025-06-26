@@ -1,4 +1,7 @@
 ---
+title: Introduction to AKS regulated cluster for PCI DSS 4.0.1
+description: Get started on your architecture design by addressing the applicable PCI DSS 4.0.1 requirements as a tenant on the AKS environment.
+ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 author: phillipgibson
@@ -25,7 +28,7 @@ PCI DSS 4.0.1 introduces significant changes from previous versions, including:
 These changes are especially relevant for AKS and cloud-native architectures, where automation, dynamic scaling, and shared responsibility models are common. This guidance reflects the major updates in PCI DSS 4.0.1 and provides recommendations for leveraging Azure and AKS features to meet compliance objectives.
 
 
-It's *not* our goal to replace your demonstration of your compliance with this series. The intent is to assist merchants in getting started on architectural design by addressing the applicable PCI DSS 4.0.1 control objectives as a tenant on the AKS environment. The guidance covers compliance aspects of the environment including infrastructure, workload interactions, operations, management, and service integrations, with a focus on the new requirements and flexibility introduced in PCI DSS 4.0.1.
+It's *not* our goal to replace your configuration and/or setup of your compliance with this series. The intent is to assist customers in getting started on architectural design by addressing the applicable PCI DSS 4.0.1 control objectives as a tenant on the AKS environment. The guidance covers compliance aspects of the environment including infrastructure, workload interactions, operations, management, and service integrations, with a focus on the new requirements and flexibility introduced in PCI DSS 4.0.1.
 
 
 > [!IMPORTANT]

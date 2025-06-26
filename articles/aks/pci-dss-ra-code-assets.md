@@ -114,7 +114,7 @@ The hub-spokes are all deployed in separate virtual networks, each in their priv
 
 A combination of various Azure services and features and native Kubernetes constructs provide the required level of control. Here are some options used in this architecture.
 
-:::image type="content" border="false" source="media/pci-dss/network-topology.svg" alt-text="Diagram of the network configuration." lightbox="media/pci-dss/network-topology.svg":::
+:::image type="content" border="false" source="media/pci-dss/network-topology.svg" alt-text="Diagram showing the overall network topology and subnet architecture." lightbox="media/pci-dss/network-topology.svg":::
 
 ### Subnet security through network security groups (NSGs)
 
@@ -142,7 +142,7 @@ In certain cases, this is not practical for communication within the cluster. No
 
 The baseline architecture provides TLS-encrypted traffic until the ingress controller in the cluster, but pod-to-pod communication is in the clear. In this architecture, TLS extends to pods-to-pod traffic, with Certificate Authority (CA) validation. That TLS is provided by a service mesh, which enforces mTLS connections and verification before allowing communication.
 
-![Diagram of the network configuration.](media/pci-dss/flow.svg)
+![Diagram showing the network traffic flow and TLS encryption endpoints.](media/pci-dss/flow.svg)
 
 The implementation uses mTLS. mTLS support can be implemented with or without a service mesh. If you use a mesh, ensure that it's compatible with the certificate issuer of your choice. This implementation uses [Open Service Mesh](https://openservicemesh.io).
 
