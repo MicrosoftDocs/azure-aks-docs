@@ -6,7 +6,7 @@ ms.custom: build-2023, devx-track-azurecli, innovation-engine
 ms.author: kaarthis
 author: kaarthis
 ms.subservice: aks-upgrade
-ms.date: 04/06/2025
+ms.date: 06/27/2025
 ---
 
 # autoupgrade node OS images
@@ -26,8 +26,21 @@ It's best to use both cluster-level [autoupgrades][Autoupgrade] and the node OS 
 The selected channel determines the timing of upgrades. When making changes to node OS auto-upgrade channels, allow up to 24 hours for the changes to take effect.
 
 > [!NOTE]
-> - Once you change from one channel to another channel, **a reimage is triggered leading to rolling nodes**.
 > - Node OS image auto-upgrade won't affect the cluster's Kubernetes version. Starting with API version 2023-06-01, the default for any new cluster created is `NodeImage`. 
+
+### Node OS channel changes that cause a reimage
+
+The following node os channel transitions will trigger reimage on the nodes:
+
+|From|To
+|----|---|
+| Unmanaged | None |
+| Unspecified | Unmanaged |
+| SecurityPatch | Unmanaged |
+| NodeImage | Unmanaged |
+| None | Unmanaged |
+
+### Available node OS upgrade channels
 
 The following upgrade channels are available. You're allowed to choose one of these options:
 
