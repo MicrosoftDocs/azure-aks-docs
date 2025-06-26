@@ -1,5 +1,5 @@
 ---
-title: Configure Azure CNI for static allocation of CIDR blocks - (Preview)
+title: Configure Azure CNI for static allocation of CIDR blocks
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure Azure CNI Networking for static allocation of CIDR blocks in Azure Kubernetes Service (AKS)
 author: asudbring
@@ -11,7 +11,7 @@ ms.date: 03/18/2024
 ms.custom: references_regions, devx-track-azurecli
 ---
 
-# Configure Azure CNI Networking for static allocation of CIDR blocks and enhanced subnet support in Azure Kubernetes Service (AKS) - (Preview)
+# Configure Azure CNI Networking for static allocation of CIDR blocks and enhanced subnet support in Azure Kubernetes Service (AKS)
 
 A limitation of [Azure CNI Dynamic IP Allocation](configure-azure-cni-dynamic-ip-allocation.md) is the scalability of the pod subnet size beyond a /16 subnet. Even with a large subnet, large clusters may still be limited to 65k pods due to an Azure address mapping limit. 
 The new static block allocation capability in Azure CNI solves this problem by assigning CIDR blocks to Nodes rather than individual IPs.
@@ -34,9 +34,8 @@ This article shows you how to use Azure CNI Networking for static allocation of 
 - Review the [prerequisites][azure-cni-prereq] for configuring basic Azure CNI networking in AKS, as the same prerequisites apply to this article.
 - Review the [deployment parameters][azure-cni-deployment-parameters] for configuring basic Azure CNI networking in AKS, as the same parameters apply.
 - AKS Engine and DIY clusters aren't supported.
-- Azure CLI version `2.37.0` or later with extension aks-preview of version '2.0.0b2' or later
+- Azure CLI version `2.37.0` or later
 - If you have an existing cluster, you need to enable Container Insights for monitoring IP subnet usage. You can enable Container Insights using the [`az aks enable-addons`][az-aks-enable-addons] command, as shown in the following example:
-- Register the subscription-level feature flag for your subscription: 'Microsoft.ContainerService/AzureVnetScalePreview'
 
     ```azurecli-interactive
     az aks enable-addons --addons monitoring --name <cluster-name> --resource-group <resource-group-name>
@@ -81,47 +80,6 @@ The [deployment parameters][azure-cni-deployment-parameters] for configuring bas
 - The **vnet subnet id** parameter now refers to the subnet related to the cluster's nodes.
 - The parameter **pod subnet id** is used to specify the subnet whose IP addresses will be statically or dynamically allocated to pods in the node pool.
 - The **pod ip allocation mode** parameter specifies whether to use dynamic individual or static block allocation.
-
-## Before you begin
-
-- If using the Azure CLI, you need the `aks-preview` extension. See [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension).
-- If using ARM or the REST API, the AKS API version must be _2024-01-02-preview or later_.
-
-### Install the `aks-preview` Azure CLI extension
-
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command. The extension should have a version of '2.0..0b2' or later
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `AzureVnetScalePreview` feature flag
-
-1. Register the `AzureVnetScalePreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureVnetScalePreview"
-    ```
-
-    It takes a few minutes for the status to show _Registered_.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "AzureVnetScalePreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Configure networking with static allocation of CIDR blocks and enhanced subnet support - Azure CLI
 

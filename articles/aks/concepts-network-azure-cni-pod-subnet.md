@@ -49,7 +49,7 @@ IPs are allocated to nodes in batches of 16. Pod subnet IP allocation should be 
 
 IP address planning for Kubernetes services and Docker Bridge remain unchanged.
 
-## Static block allocation mode (Preview)
+## Static block allocation mode
 
 Static block allocation helps mitigate potential pod subnet sizing and Azure address mapping limitations by assigning CIDR blocks to nodes rather than individual IPs.
 
