@@ -55,7 +55,7 @@ az extension add --upgrade --name k8s-extension --yes --allow-preview false
 az extension add --upgrade --name amg --yes --allow-preview false
 ```
 
-As a prerequisite for using kubectl, you need to first install [Krew][install-krew], followed by the installation of the [CNPG plugin][cnpg-plugin]. These installations enable the management of the PostgreSQL operator using the subsequent commands.
+As a prerequisite for using `kubectl`, you need to first install [Krew][install-krew], followed by the installation of the [CNPG plugin][cnpg-plugin]. These installations enable the management of the PostgreSQL operator using the subsequent commands.
 
 ```bash
 (

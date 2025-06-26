@@ -54,6 +54,8 @@ This diagram illustrates a PostgreSQL cluster setup with one primary replica and
 
 Backups are stored on [Azure Blob Storage](/azure/storage/blobs/), providing another way to restore the database in the event of an issue with streaming replication from the primary replica.
 
+You might choose to host PostgreSQL on AKS when you need full control over database configuration, extensions, and deployment architecture. It’s ideal for integrating tightly with Kubernetes-native tooling, optimizing costs at scale, and fine-tuning performance through custom resource allocation, caching strategies, and storage configurations tailored to your workload.
+
 :::image source="./media/postgresql-ha-overview/postgres-architecture-diagram.png" alt-text="Highly available PostgreSQL cluster on AKS architecture diagram." lightbox="./media/postgresql-ha-overview/postgres-architecture-diagram.png":::
 
 > [!NOTE]
