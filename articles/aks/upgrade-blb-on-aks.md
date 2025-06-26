@@ -11,7 +11,7 @@ ms.date: 06/30/2025
 # Upgrading from Basic Load Balancer on AKS (preview)
 
 >[!Important]
->On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. This article will help guide you through the upgrade process. 
+>On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date to avoid a forced migration and unscheduled downtime. This article will help guide you through the upgrade process. 
 
 In this article, we discuss AKS-specific guidance for upgrading your Basic Load Balancer instances to Standard Load Balancer. Standard Load Balancer is recommended for all production instances and provides many [key differences](../azure/load-balancer/load-balancer-basic-upgrade-guidance.md#basic-load-balancer-sku-vs-standard-load-balancer-sku) to your infrastructure.
 This process will also migrate your Basic IP to a Standard IP, while keeping the IP addresses the same. For guidance on upgrading your Basic Load Balancer instances to Standard Load Balancer, see the [official guidance for Basic load balancer upgrade][load-balancer-upgrade-guidance]
