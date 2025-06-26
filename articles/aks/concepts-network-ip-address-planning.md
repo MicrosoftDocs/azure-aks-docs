@@ -97,4 +97,4 @@ You can define maximum pods per node when you create a new node pool. If you nee
 [azure-cni-pod-subnet]: concepts-network-azure-cni-pod-subnet.md
 [azure-upgrade-cluster]: upgrade-aks-cluster.md#customize-node-surge-upgrade
 [az-aks-create]: /cli/azure/aks#az_aks_create
-[pod-subnet-static-block-allocation]: concepts-network-azure-cni-pod-subnet.md#static-block-allocation-mode-preview
+[pod-subnet-static-block-allocation]: concepts-network-azure-cni-pod-subnet.md#static-block-allocation-mode
