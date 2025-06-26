@@ -805,7 +805,7 @@
             - name: Use a Standard Load Balancer
               href: load-balancer-standard.md
             - name: Upgrade Basic Load Balancer on AKS
-              href: upgrade-blb-on-aks.md
+              href: upgrade-basic-load-balancer-on-aks.md
             - name: Use kube-proxy configuration (IPVS)
               href: configure-kube-proxy.md
         - name: Security
