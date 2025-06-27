@@ -4,8 +4,8 @@ description: Learn about the add-ons, extensions, and open-source integrations y
 ms.topic: overview
 ms.subservice: aks-integration
 ms.date: 05/22/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: As a Kubernetes administrator, I want to integrate add-ons and extensions with my Azure Kubernetes Service cluster, so that I can enhance its functionality and streamline management of resources effectively.
 ---

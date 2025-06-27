@@ -37,37 +37,9 @@ API Server VNet Integration is supported for public or private clusters. You can
 > - Retry your request at a later time, as capacity may become available.
 > - Select an alternate region where this feature is currently supported.
 
-> [!CAUTION] 
-> Once API Server VNet Integration is enabled on a cluster, stopping your cluster de-allocates the control plane and releases the capacity. In regions experiencing capacity constraints, customers may be unable to start a stopped cluster. We do not recommend stopping mission critical workloads for this reason. 
-
 API Server VNet Integration is available in the following regions: 
 
-- australiacentral
-- australiacentral2
-- australiasoutheast
-- canadaeast
-- centraluseuap
-- eastus2euap
-- francecentral
-- francesouth
-- germanynorth
-- japaneast
-- japanwest
-- jioindiacentral
-- jioindiawest
-- koreacentral
-- koreasouth
-- northcentralus
-- norwayeast
-- southafricanorth
-- southcentralus
-- southindia
-- uaecentral
-- uaenorth
-- ukwest
-- westcentralus
-- westus
-- westus3
+australiacentral, australiacentral2, australiaeast, australiasoutheast, brazilsoutheast, canadacentral, canadaeast, centraluseuap, eastus2euap, francecentral, francesouth, germanynorth, indonesiacentral, israelcentral, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, mexicocentral, newzealandnorth, northcentralus, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southeastus, southindia, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, ukwest, westcentralus, westus, westus3
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
@@ -214,19 +186,17 @@ az group create --location <location> --name <resource-group>
 
 ## Convert an existing AKS cluster to API Server VNet Integration
 
->[!WARNING]
+> [!WARNING]
 > **API Server VNet Integration is a one-way, capacity-sensitive feature.**
 >
-> There's no current validation for capacity availability in the region when enabling API Server VNet Integration. If you enable the feature and regional capacity isn't available, you might be unable to start the cluster after stopping it.
-
-> **Recommended approach**  
-> Create a new cluster with the feature enabled at creation time. Verify successful provisioning, then migrate workloads. This approach avoids the risk of control plane downtime or outage when cluster is updating to enable the feature.
+> - **Manual restart required.**  
+>   After enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must immediately restart the cluster for the change to take effect. This restart is not automated. Delaying the restart increases the risk of capacity becoming unavailable, which can prevent the API server from starting.
 >
-> - **Manual restart required.**
-> If you decide to accept the risk and update an existing cluster, after enabling API Server VNet Integration using `az aks update --enable-apiserver-vnet-integration`, you must manually restart the cluster for the change to take effect. This restart isn't automated, and, like any restart, the cluster will be temporarily unavailable until it completes.
+> - **Capacity is validated, but not reserved.**  
+>   AKS validates regional capacity when you enable the feature on an existing cluster, but this validation does not reserve capacity. If the restart is delayed and capacity becomes unavailable in the meantime, the cluster may fail to start after a stop or restart. Clusters that enabled this feature before general availability (GA), or that have not yet restarted since enablement, will not undergo capacity validation.
 >
-> - **Feature can't be disabled, and capacity isn't guaranteed**  
->   Once enabled, the feature is permanent. You can't disable it or revert to the previous configuration. This means if you enable the feature and capacity isn't available, you might be unable to start the cluster after stopping it.
+> - **Feature cannot be disabled.**  
+>   Once enabled, the feature is permanent. You cannot disable API Server VNet Integration.
 
 This upgrade performs a node-image version upgrade on all node pools and restarts all workloads while they undergo a rolling image upgrade.
 
@@ -299,10 +269,10 @@ You can expose the API server endpoint of a private cluster with API Server VNet
 
 All traffic within the VNet is allowed by default. But if you have added NSG rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
-| Destination | Source | Protocol | Port | Use |
-|--- |--- |--- |--- |--- |
-| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communications between the Azure Load Balancer and the API Server Subnet CIDR. |
+| Destination           | Source              | Protocol | Port         | Use                                                                                                                                                                                     |
+|-----------------------|---------------------|----------|--------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| APIServer Subnet CIDR | Cluster Subnet      | TCP      | 443 and 4443 | Required to enable communication between Nodes and the API server.                                                                                                                      |
+| APIServer Subnet CIDR | Azure Load Balancer | TCP      | 9988         | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communications between the Azure Load Balancer and the API Server Subnet CIDR. |
 
 ## Next steps
 

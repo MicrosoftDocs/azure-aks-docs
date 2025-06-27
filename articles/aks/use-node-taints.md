@@ -84,7 +84,7 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
 ### Prerequisites and limitations
 
 * You need the Azure CLI version `3.0.0b3` or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* You can only apply initialization taints via cluster create or upgrade when using the AKS API. If using ARM templates, you can specify node initialization taints during node pool creation and update.
+* You can only apply initialization taints via cluster create or upgrade when using the AKS API. If using ARM template that will result in a Managed Cluster level operation, you can specify node initialization taints during node pool creation and update. Agentpool level operations are blocked when `NodeInitializationTaints` are present in the request body.
 * You can't apply initialization taints to Windows node pools using the Azure CLI.
 
 ### Get the credentials for your cluster

@@ -49,7 +49,6 @@ Istio-based service mesh add-on for AKS has the following limitations:
 * The add-on doesn't work on AKS clusters that are using [Open Service Mesh addon for AKS][open-service-mesh-about].
 * The add-on doesn't work on AKS clusters with self-managed installations of Istio.
 * The add-on doesn't support adding pods associated with virtual nodes to be added under the mesh.
-* The add-on doesn't yet support egress gateways for outbound traffic control.
 * The add-on doesn't yet support the sidecar-less Ambient mode. Microsoft is currently contributing to Ambient workstream under Istio open source. Product integration for Ambient mode is on the roadmap and is being continuously evaluated as the Ambient workstream evolves.
 * The add-on doesn't yet support multi-cluster deployments.
 * The add-on doesn't yet support Windows Server containers. Windows Server containers aren't yet supported in open source Istio right now. Issue tracking this feature ask can be found [here][istio-oss-windows-issue].

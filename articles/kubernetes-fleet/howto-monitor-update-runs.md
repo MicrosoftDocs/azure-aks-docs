@@ -22,7 +22,7 @@ In order to query your update run data, you need to use queries written using th
 
 To learn how to work with Azure Resource Graph and Fleet update run data, let's use the Azure Resource Graph Explorer to query update run data.
 
-1. Start by opening the [Azure Resource Graph Explorer](https://ms.portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure portal.
+1. Start by opening the [Azure Resource Graph Explorer](https://portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure portal.
 
 1. Select **Table** and then expand **aksresources**. Fleet Manager's resources have the prefix `microsoft.containerservice/fleets`.
 

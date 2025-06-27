@@ -5,6 +5,7 @@ ms.topic: overview
 ms.author: schaffererin
 author: schaffererin
 ms.date: 04/16/2024
+# Customer intent: As a cloud administrator, I want to delete an Azure Kubernetes Service (AKS) cluster, so that I can manage resources and costs effectively when the cluster is no longer needed.
 ---
 
 # Delete an Azure Kubernetes Service (AKS) cluster

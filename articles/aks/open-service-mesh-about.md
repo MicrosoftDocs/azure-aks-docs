@@ -4,6 +4,8 @@ description: Learn about the Open Service Mesh (OSM) add-on in Azure Kubernetes 
 ms.topic: concept-article
 ms.date: 09/25/2024
 ms.author: pgibson
+author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to enable the Open Service Mesh add-on in my AKS cluster, so that I can enhance service communication security and observability within my microservices architecture.
 ---
 
 # Open Service Mesh (OSM) add-on in Azure Kubernetes Service (AKS)
@@ -79,4 +81,3 @@ After enabling the OSM add-on using the [Azure CLI][osm-azure-cli] or a [Bicep t
 [osm-nginx]: https://release-v1-2.docs.openservicemesh.io/docs/demos/ingress_k8s_nginx
 [app-routing]: app-routing.md
 [istio-about]: istio-about.md
-

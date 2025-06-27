@@ -4,8 +4,8 @@ description: Learn how to view troubleshooting information in the kubelet logs f
 ms.topic: how-to
 ms.subservice: aks-monitoring
 ms.date: 05/09/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 
 #Customer intent: As a cluster operator, I want to view the logs for the kubelet that runs on each node in an AKS cluster to troubleshoot problems.

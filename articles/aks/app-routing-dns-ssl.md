@@ -5,6 +5,9 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 12/04/2023
+ms.author: allensu
+author: asudbring
+ms.service: azure-kubernetes-service
 ---
 
 # Set up a custom domain name and SSL certificate with the application routing add-on
