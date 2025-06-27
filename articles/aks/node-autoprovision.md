@@ -258,55 +258,6 @@ When you have multiple node pools defined, it's possible to set a preference of 
   weight: 10
 ```
 
-## Kubernetes and node image updates
-
-AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates for you by default.
-
-### Kubernetes upgrades
-
-Kubernetes upgrades for node autoprovision nodes follows the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning.
-
-### Node image updates
-
-By default NAP node pool virtual machines are automatically updated when a new image is available. If you wish to pin a node pool at a certain node image version, you can set the imageVersion on the node class:
-
-```kubectl
-kubectl edit aksnodeclass default
-```
-
-Within the node class definition, set the imageVersion to one of the published releases listed on the [AKS Release notes](https://github.com/Azure/AKS/blob/master/CHANGELOG.md).  You can also see the availability of images in regions by referring to the [AKS release tracker](https://releases.aks.azure.com/)
-
-The imageVersion is the date portion on the Node Image as only Ubuntu 22.04 is supported, for example, "AKSUbuntu-2204-202311.07.0" would be "202311.07.0"
-
-```yaml
-apiVersion: karpenter.azure.com/v1alpha2
-kind: AKSNodeClass
-metadata:
-  annotations:
-    kubernetes.io/description: General purpose AKSNodeClass for running Ubuntu2204
-      nodes
-    meta.helm.sh/release-name: aks-managed-karpenter-overlay
-    meta.helm.sh/release-namespace: kube-system
-  creationTimestamp: "2023-11-16T23:59:06Z"
-  generation: 1
-  labels:
-    app.kubernetes.io/managed-by: Helm
-    helm.toolkit.fluxcd.io/name: karpenter-overlay-main-adapter-helmrelease
-    helm.toolkit.fluxcd.io/namespace: 6556abcb92c4ce0001202e78
-  name: default
-  resourceVersion: "1792"
-  uid: 929a5b07-558f-4649-b78b-eb25e9b97076
-spec:
-  imageFamily: Ubuntu2204
-  imageVersion: 202311.07.0
-  osDiskSizeGB: 128
-  ```
-
-Removing the imageVersion spec would revert the node pool to be updated to the latest node image version.
-
-> [!IMPORTANT]
-> After you update the SSH key, AKS doesn't automatically update your nodes. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with Node Auto-provisioning enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
-
 ## Node disruption
 
 When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
@@ -326,6 +277,25 @@ You can remove a node manually using `kubectl delete node`, but node autoprovisi
     # You can choose to disable consolidation entirely by setting the string value 'Never'
     consolidateAfter: 30s
 ```
+
+## Kubernetes and node image updates
+
+AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates for you by default. You can also adjust the schedule of your Kubernetes and node image updates using planned maintenance windows during less busy periods for your workloads.
+
+### Kubernetes upgrades
+
+Kubernetes upgrades for node autoprovision nodes follows the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning. AKS recommends that you use `aksManagedAutoUpgradeSchedule` to schedule planned cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
+
+### Node image updates
+
+By default NAP node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place:
+
+- Maintenance Windows (recommended): You can set `aksManagedNodeOSUpgradeSchedule` on an AKS-managed, or self-managed schedule. For more information, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
+- Karpenter Node Disruption Budgets - Node-level disruption budgets can be set, and can be triggered when nodes move out of spec, known as Drift. 
+- Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file.
+
+> [!IMPORTANT]
+> After you update the SSH key, AKS doesn't automatically update your nodes. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with Node Auto-provisioning enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
 
 ## Retrieve Karpenter logs and status 
 
@@ -483,6 +453,7 @@ Node autoprovisioning can only be disabled when:
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[planned-maintenance#schedule-configuration-types-for-planned-maintenance]: /azure/aks/planned-maintenance#schedule-configuration-types-for-planned-maintenance
 
 <!-- LINKS - external -->
 [aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
