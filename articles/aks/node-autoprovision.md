@@ -7,7 +7,8 @@ ms.date: 06/13/2024
 ms.author: wilsondarko
 author: wdarko1
 
-# Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
+#Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
+
 ---
 
 # Node autoprovisioning
@@ -142,6 +143,25 @@ The following networking configurations are currently *not* supported:
     ```azurecli-interactive
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --node-provisioning-mode Auto --network-plugin azure --network-plugin-mode overlay --network-dataplane cilium
     ```
+
+## Custom Virtual Networks and Node Autoprovisioning
+
+### Create an AKS cluster with custom virtual network and node autoprovisioning enabled
+AKS allows you to add a cluster with node autoprovisioning enabled in a custom virtual network via the `--vent-subnet-id` parameter. In the following command, an AKS cluster is created as part of a custom virtual network. 
+    ```azurecli-interactive
+     	az aks create --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) --attach-acr $(AZURE_ACR_NAME) \
+    		--enable-managed-identity --node-count 3 --generate-ssh-keys -o none --network-dataplane cilium --network-plugin azure --network-plugin-mode overlay \
+    		--enable-oidc-issuer --enable-workload-identity \
+    		--vnet-subnet-id "/subscriptions/$(AZURE_SUBSCRIPTION_ID)/resourceGroups/$(AZURE_RESOURCE_GROUP)/providers/Microsoft.Network/virtualNetworks/$(CUSTOM_VNET_NAME)/subnets/$(CUSTOM_SUBNET_NAME)" \
+    		--node-provisioning-mode Auto
+    	az aks get-credentials --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) --overwrite-existing
+    	skaffold config set default-repo $(AZURE_ACR_NAME).azurecr.io/karpenter
+    ```
+In order to complete this process, permissions need to be added by granting a Network Contributor role to the cluster service principal. The following command assigns the role of `Network Contributor` to allow node autoprovisioning to function in a cluster in a custom virtual network.
+    ```azurecli-interactive
+    	$(eval CLUSTER_IDENTITY_ID=$(shell az aks show --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) | jq  -r ".identity.principalId"))
+    	az role assignment create --assignee $(CLUSTER_IDENTITY_ID) --scope /subscriptions/$(AZURE_SUBSCRIPTION_ID)/resourceGroups/$(AZURE_RESOURCE_GROUP) --role "Network Contributor"
+    ``` 
 
 ## Node pools
 
