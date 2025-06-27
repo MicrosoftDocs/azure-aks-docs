@@ -78,7 +78,7 @@ AKS uses node resources to help the nodes function as part of the cluster. This 
 
 ### OS
 
-AKS supports Ubuntu 22.04 and Azure Linux 2.0 as the node OS for Linux node pools. For Windows node pools, AKS supports Windows Server 2022 as the default OS. Windows Server 2019 is being retired after Kubernetes version 1.32 reaches end of life and isn't supported in future releases. If you need to upgrade your Windows OS version, see [Upgrade from Windows Server 2019 to Windows Server 2022][upgrade-2019-2022]. For more information on using Windows Server on AKS, see [Windows container considerations in Azure Kubernetes Service (AKS)][windows-considerations].
+AKS supports two linux distros: Ubuntu and Azure Linux. Ubuntu is the default Linux distro on AKS. Windows node pools are also supported on AKS with the [Long Term Servicing Channel (LTSC)][servicing-channels-comparison] as the default channel on AKS. For more information on default OS versions, see documentation on [node images][node-images].
 
 ### Container runtime
 
@@ -119,7 +119,7 @@ The following namespaces are created by default in an AKS cluster:
 | `default` | The [default][kubernetes-namespaces] namespace allows you to start using cluster resources without creating a new namespace. |
 | `kube-node-lease` | The [kube-node-lease][kubernetes-namespaces] namespace enables nodes to communicate their availability to the control plane. |
 | `kube-public` | The [kube-public][kubernetes-namespaces] namespace isn't typically used, but you can use it so that resources are visible across the whole cluster by any user. |
-| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. |
+| `kube-system` | The [kube-system][kubernetes-namespaces] namespace is used by Kubernetes to manage cluster resources, such as `coredns`, `konnectivity-agent`, and `metrics-server`. It is not recommended to deploy your own applications to this namespace. For rare cases where deploying your own applications to this namespace is necessary, see the [FAQ](faq.yml#can-admission-controller-webhooks-affect-kube-system-and-internal-aks-namespaces-) to learn how. |
 
 ![Screenshot that shows Kubernetes namespaces to logically divide resources and applications.](media/concepts-clusters-workloads/namespaces.png)
 
@@ -187,3 +187,5 @@ For information on more core concepts for AKS, see the following resources:
 [aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
 [windows-considerations]: ./windows-vs-linux-containers.md
 [upgrade-2019-2022]: ./upgrade-windows-os.md
+[node-images]: ./node-images.md
+[servicing-channels-comparison]: /windows-server/get-started/servicing-channels-comparison

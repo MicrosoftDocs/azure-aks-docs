@@ -4,9 +4,10 @@ description: This article contains important reference material you need when yo
 ms.date: 09/06/2024
 ms.custom: horz-monitor
 ms.topic: reference
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-monitoring
+# Customer intent: As a cloud operations engineer, I want to reference supported metrics and logs for Azure Kubernetes Service monitoring, so that I can effectively collect and analyze data to ensure optimal performance and resource management in my environments.
 ---
 
 # Azure Kubernetes Service monitoring data reference

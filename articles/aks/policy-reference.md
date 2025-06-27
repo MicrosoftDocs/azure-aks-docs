@@ -2,11 +2,12 @@
 title: Built-in policy definitions for Azure Kubernetes Service
 description: Lists Azure Policy built-in policy definitions for Azure Kubernetes Service. These built-in policy definitions provide common approaches to managing your Azure resources.
 ms.date: 02/06/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.topic: reference
 ms.custom: subject-policy-reference
+# Customer intent: "As a cloud administrator, I want to access built-in policy definitions for Azure Kubernetes Service, so that I can effectively manage and govern my Azure resources according to best practices and compliance standards."
 ---
 # Azure Policy built-in definitions for Azure Kubernetes Service
 

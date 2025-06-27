@@ -42,7 +42,14 @@ The following limitations apply when you create AKS clusters that support multip
 * All node pools must reside in the same virtual network.
 * When you create multiple node pools at cluster creation time, the Kubernetes versions for the node pools must match the version set for the control plane.
 
-## Create an AKS cluster
+## Set environment variables
+```bash
+export RESOURCE_GROUP_NAME="my-aks-rg"
+export LOCATION="eastus"
+export CLUSTER_NAME="my-aks-cluster"
+export NODE_POOL_NAME="mynodepool"
+```
+## Create an AKS cluster with a single node pool
 
 > [!IMPORTANT]
 > If you run a single system node pool for your AKS cluster in a production environment, we recommend you use at least three nodes for the node pool. If one node goes down, the redundancy is compromised. You can mitigate this risk by having more system node pool nodes.
@@ -53,7 +60,7 @@ The following limitations apply when you create AKS clusters that support multip
     az group create --name $RESOURCE_GROUP_NAME --location $LOCATION
     ```
 
-2. Create an AKS cluster with a single node pool using the [`az aks create`][az-aks-create] command.
+2. Create an AKS cluster with a single node pool using the [`az aks create`][az-aks-create] command. This step specifies two nodes in the single node pool.
 
     ```azurecli-interactive
     az aks create \
@@ -74,7 +81,7 @@ The following limitations apply when you create AKS clusters that support multip
     az aks get-credentials --resource-group $RESOURCE_GROUP_NAME --name $CLUSTER_NAME
     ```
 
-## Add a node pool
+## Add a second node pool
 
 The cluster created in the previous step has a single node pool. In this section, we add a second node pool to the cluster.
 
@@ -94,7 +101,7 @@ The cluster created in the previous step has a single node pool. In this section
     az aks nodepool list --resource-group $RESOURCE_GROUP_NAME --cluster-name $CLUSTER_NAME
     ```
 
-    The following example output shows *mynodepool* has been successfully created with three nodes. When the AKS cluster was created in the previous step, a default *nodepool1* was created with a node count of *2*.
+    The following condensed example output shows *mynodepool* has been successfully created with three nodes. When the AKS cluster was created in the previous step, a default *nodepool1* was created with a node count of *2*.
 
     ```output
     [
@@ -212,6 +219,8 @@ Beginning in Kubernetes version 1.20 and higher, you can specify `containerd` as
 * Upgrade a specific node pool from Docker to `containerd` using the [`az aks nodepool upgrade`][az-aks-nodepool-upgrade] command.
 
     ```azurecli-interactive
+    export CONTAINER_D_NODE_POOL_NAME="mywindowsnodepool"
+    
     az aks nodepool upgrade \
         --resource-group $RESOURCE_GROUP_NAME \
         --cluster-name $CLUSTER_NAME \
@@ -243,6 +252,8 @@ Beginning in Kubernetes version 1.20 and higher, you can specify `containerd` as
     >
 
     ```azurecli-interactive
+    export EPHEMERAL_NODE_POOL_NAME="mydiskpool"
+    
     az aks nodepool add --name $EPHEMERAL_NODE_POOL_NAME --cluster-name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME -s Standard_DS3_v2 --node-osdisk-type Ephemeral
     ```
 
@@ -267,6 +278,9 @@ If you no longer need a node pool, you can delete it and remove the underlying V
 ## Next steps
 
 In this article, you learned how to create multiple node pools in an AKS cluster. To learn about how to manage multiple node pools, see [Manage multiple node pools for a cluster in Azure Kubernetes Service (AKS)](manage-node-pools.md).
+
+> [!div class="nextstepaction"]
+> [Add a dedicated system node pool to an existing AKS cluster][use-system-pool]
 
 <!-- LINKS -->
 [aks-storage-concepts]: concepts-storage.md

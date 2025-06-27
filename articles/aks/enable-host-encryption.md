@@ -4,11 +4,12 @@ description: Learn how to configure a host-based encryption in an Azure Kubernet
 ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 07/17/2023 
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: devx-track-azurecli
 ms.devlang: azurecli
+# Customer intent: As a Kubernetes administrator, I want to enable host-based encryption on my AKS cluster, so that I can ensure the data stored on my VM hosts is encrypted at rest for enhanced security.
 ---
 
 # Host-based encryption on Azure Kubernetes Service (AKS)

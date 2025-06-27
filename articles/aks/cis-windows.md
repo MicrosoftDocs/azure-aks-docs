@@ -4,8 +4,8 @@ description: Learn how AKS applies the CIS benchmark to Windows Server 2022 imag
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 09/27/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: "As a security auditor, I want to verify the alignment of AKS Windows images with CIS benchmarks, so that I can ensure compliance with industry standards and reduce vulnerabilities in our cloud-based applications."
 ---

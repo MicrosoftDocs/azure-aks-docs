@@ -3,15 +3,15 @@ title: Concepts - Sustainable software engineering in Azure Kubernetes Services 
 description: Learn about sustainable software engineering in Azure Kubernetes Service (AKS).
 ms.topic: concept-article
 ms.date: 06/20/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 # Customer intent: As a software engineer, I want to apply sustainable engineering principles in my Azure Kubernetes Service (AKS) deployments so that I can minimize carbon emissions and enhance operational efficiency in my cloud applications.
 ---
 
 # Sustainable software engineering practices in Azure Kubernetes Service (AKS)
 
-The sustainable software engineering principles are a set of competencies to help you define, build, and run sustainable applications. The overall goal is to reduce the carbon footprint in every aspect of your application. The Azure Well-Architected Framework guidance for sustainability aligns with the [The Principles of Sustainable Software Engineering](https://principles.green/) from the [Green Software Foundation](https://greensoftware.foundation/) and provides an overview of the principles of sustainable software engineering.
+The sustainable software engineering principles are a set of competencies to help you define, build, and run sustainable applications. The overall goal is to reduce the carbon footprint in every aspect of your application. The Azure Well-Architected Framework guidance for sustainability aligns with the Principles of Sustainable Software Engineering from the [Green Software Foundation](https://greensoftware.foundation/) and provides an overview of the principles of sustainable software engineering.
 
 Sustainable software engineering is a shift in priorities and focus. In many cases, the way most software is designed and run highlights fast performance and low latency. Sustainable software engineering focuses on reducing as much carbon emission as possible.
 
