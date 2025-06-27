@@ -37,13 +37,9 @@ API Server VNet Integration is supported for public or private clusters. You can
 > - Retry your request at a later time, as capacity may become available.
 > - Select an alternate region where this feature is currently supported.
 
-> [!CAUTION] 
-> Once API Server VNet Integration is enabled on a cluster, stopping your cluster de-allocates the control plane and releases the capacity. In regions experiencing capacity constraints, customers may be unable to start a stopped cluster. We do not recommend stopping mission critical workloads for this reason. 
-
 API Server VNet Integration is available in the following regions: 
 
-australiacentral, australiacentral2, australiaeast, australiasoutheast, brazilsoutheast, canadacentral, canadaeast, centraluseuap, eastus2euap, francecentral, francesouth, germanynorth, indonesiacentral, israelcentral, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, newzealandnorth, northcentralus, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southeastus, southindia, spaincentral, swedencentral, swedensouth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, ukwest, westcentralus, westus, westus3
-
+australiacentral, australiacentral2, australiaeast, australiasoutheast, brazilsoutheast, canadacentral, canadaeast, centraluseuap, eastus2euap, francecentral, francesouth, germanynorth, indonesiacentral, israelcentral, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, mexicocentral, newzealandnorth, northcentralus, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southeastus, southindia, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, ukwest, westcentralus, westus, westus3
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 
