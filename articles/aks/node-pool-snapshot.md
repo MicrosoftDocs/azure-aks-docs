@@ -7,6 +7,7 @@ ms.date: 01/29/2024
 ms.author: allensu
 author: asudbring
 ms.subservice: aks-nodes
+# Customer intent: As a Kubernetes administrator, I want to create and manage snapshots of AKS node pools, so that I can maintain consistent configurations and quickly deploy new clusters or node pools based on those snapshots.
 ---
 
 # Azure Kubernetes Service (AKS) node pool snapshot

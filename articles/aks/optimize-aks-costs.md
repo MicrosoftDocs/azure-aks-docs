@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 02/27/2025
+# Customer intent: "As a cloud architect, I want to optimize Azure Kubernetes Service usage and costs, so that I can enhance resource efficiency and reduce operating expenses for my organization."
 ---
 
 # Optimize Azure Kubernetes Service (AKS) usage and costs

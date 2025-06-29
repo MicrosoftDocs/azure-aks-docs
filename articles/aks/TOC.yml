@@ -421,6 +421,8 @@
               href: resize-node-pool.md
             - name: Delete node pools
               href: delete-node-pool.md
+            - name: Stop and start node pools
+              href: start-stop-nodepools.md
         - name: Virtual nodes
           items:
             - name: Use virtual nodes
@@ -517,6 +519,8 @@
               href: use-nvidia-gpu.md
             - name: Use Windows GPUs
               href: use-windows-gpu.md
+            - name: Use AMD GPUs
+              href: use-amd-gpus.md
             - name: Multi-instance GPU node pool
               href: gpu-multi-instance.md
             - name: Monitor GPU metrics
@@ -533,6 +537,12 @@
               href: use-vertical-pod-autoscaler.md
             - name: Vertical Pod Autoscaler API reference
               href: vertical-pod-autoscaler-api-reference.md
+            - name: Cost optimized add-on scaling
+              items:
+                - name: Enable cost optimized add-on scaling
+                  href: optimized-addon-scaling.md
+                - name: Customize resource configuration for managed add-ons
+                  href: customize-resource-configuration.md
         - name: Configure Metrics Server VPA
           href: use-metrics-server-vertical-pod-autoscaler.md
         - name: Proximity placement groups
@@ -703,8 +713,6 @@
               href: use-pod-sandboxing.md
             - name: Secure pod traffic with network policies
               href: use-network-policies.md
-            - name: Pod security policies
-              href: use-pod-security-policies.md
             - name: Pod Security Admission
               href: use-psa.md
             - name: Secrets Store CSI Driver
@@ -796,6 +804,8 @@
               href: internal-lb.md
             - name: Use a Standard Load Balancer
               href: load-balancer-standard.md
+            - name: Upgrade Basic Load Balancer on AKS
+              href: upgrade-basic-load-balancer-on-aks.md
             - name: Use kube-proxy configuration (IPVS)
               href: configure-kube-proxy.md
         - name: Security
@@ -1020,7 +1030,7 @@
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-kubernetes-event-driven-autoscaling-add-on?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
     - name: Upgrade
       items:
-        - name: Upgrade options
+        - name: Upgrade options and recommendations
           href: upgrade-cluster.md
         - name: Perform manual upgrades
           items:

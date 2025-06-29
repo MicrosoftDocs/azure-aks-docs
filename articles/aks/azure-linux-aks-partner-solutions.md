@@ -472,7 +472,7 @@ Automate and standardize the system settings across your environments to enhance
 
 Corent MaaS provides scanning to identify workloads that can be containerized, and automatically containerizes on AKS.
 
-For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html).
+For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html) and [Corent on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/corent-technology-pvt.corent_migration_as_a_service?tab=Overview).
 
 ## Migration
 

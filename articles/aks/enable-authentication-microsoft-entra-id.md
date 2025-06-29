@@ -5,7 +5,9 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 02/08/2024
 ms.custom: devx-track-azurecli
-ms.author: miwithro
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: As an Azure Kubernetes Service administrator, I want to enable managed identity authentication for my AKS cluster, so that I can manage access securely and simplify the integration process for users relying on Microsoft Entra ID.
 ---
 
 # Enable Azure managed identity authentication for Kubernetes clusters with kubelogin
@@ -107,8 +109,8 @@ A successful activation of an AKS-managed Microsoft Entra ID cluster has the fol
 If your cluster uses legacy Microsoft Entra integration, you can upgrade to AKS-managed Microsoft Entra integration through the [`az aks update`][az-aks-update] command.
 
 > [!WARNING]
-> Free tier clusters may experience API server downtime during the upgrade. We recommend upgrading during your nonbusiness hours. 
-> After the upgrade, the kubeconfig content changes. You need to run `az aks get-credentials --resource-group <AKS resource group name> --name <AKS cluster name>` to merge the new credentials into the kubeconfig file. 
+> Free tier clusters may experience API server downtime during the upgrade. We recommend upgrading during your nonbusiness hours.
+> After the upgrade, the kubeconfig content changes. You need to run `az aks get-credentials --resource-group <AKS resource group name> --name <AKS cluster name>` to merge the new credentials into the kubeconfig file.
 
 ```azurecli-interactive
 az aks update --resource-group myResourceGroup --name myManagedCluster --enable-aad --aad-admin-group-object-ids <id> [--aad-tenant-id <id>]

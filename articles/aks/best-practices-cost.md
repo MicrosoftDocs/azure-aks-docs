@@ -110,7 +110,7 @@ Before configuring your autoscaling settings, you can use [Azure Load Testing](/
 
 #### Vertical pod autoscaling
 
-Requests and limits that are higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to fine-tune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. ***Best for applications with fluctuating resource demands***.
+Requests and limits that are higher than actual usage can result in overprovisioned workloads and wasted resources. In contrast, requests and limits that are too low can result in throttling and workload issues due to lack of memory. The [Vertical Pod Autoscaler (VPA)](./vertical-pod-autoscaler.md) allows you to fine-tune CPU and memory resources required by your pods. VPA provides recommended values for CPU and memory requests and limits based on historical container usage, which you can set manually or update automatically. ***Best for applications with fluctuating resource demands***. VPA’s recommendation-only _off mode_ allows teams to review resource suggestions without enforcing them automatically. This mode can be enabled during testing, and VPA recommendations can be used to set the CPU and memory request and limits for production environments.
 
 #### Horizontal pod autoscaling
 
@@ -121,7 +121,7 @@ The [Horizontal Pod Autoscaler (HPA)](./concepts-scale.md#horizontal-pod-autosca
 
 #### Kubernetes event-driven autoscaling
 
-The [Kubernetes Event-driven Autoscaler (KEDA) add-on](./keda-about.md) provides extra flexibility to scale based on various event-driven metrics that align with your application behavior. For example, for a web application, KEDA can monitor incoming HTTP request traffic and adjust the number of pod replicas to ensure the application remains responsive. For processing jobs, KEDA can scale the application based on message queue length. Managed support is provided for all [Azure Scalers](https://keda.sh/docs/2.13/scalers/).
+The [Kubernetes Event-driven Autoscaler (KEDA) add-on](./keda-about.md) provides extra flexibility to scale based on various event-driven metrics that align with your application behavior. For example, for a web application, KEDA can monitor incoming HTTP request traffic and adjust the number of pod replicas to ensure the application remains responsive. For processing jobs, KEDA can scale the application based on message queue length. Managed support is provided for all [Azure Scalers](https://keda.sh/docs/2.13/scalers/). KEDA also allows you to scale down to 0 replicas, especially helpful for sporadic event-driven workloads, periodic machine learning (ML) or GPU workloads, and dev/test or low traffic environments. 
 
 ### Enable infrastructure autoscaling
 

@@ -7,6 +7,7 @@ ms.author: davidsmatlak
 
 ms.topic: reference
 ms.custom: subject-policy-reference
+# Customer intent: "As a cloud administrator, I want to access built-in policy definitions for Azure Kubernetes Service, so that I can effectively manage and govern my Azure resources according to best practices and compliance standards."
 ---
 # Azure Policy built-in definitions for Azure Kubernetes Service
 
