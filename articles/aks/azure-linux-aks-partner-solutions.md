@@ -330,7 +330,7 @@ Ensure the integrity and confidentiality of applications and foster trust and co
 
 ### CrowdStrike
 
-:::image type="icon" source="./media/azure-linux-aks-partner-solutions/CS_Logo_2022_Stacked_Full-Red_RGB.png":::
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/cs-logo-2022-stacked-full-red-rgb.png":::
 
 | Solution | Categories |
 |----------|------------|
@@ -472,7 +472,7 @@ Automate and standardize the system settings across your environments to enhance
 
 Corent MaaS provides scanning to identify workloads that can be containerized, and automatically containerizes on AKS.
 
-For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html) and [Corent on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/corent-technology-pvt.surpaas_maas?tab=Overview).
+For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html).
 
 ## Migration
 
