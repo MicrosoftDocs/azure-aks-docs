@@ -330,7 +330,7 @@ Ensure the integrity and confidentiality of applications and foster trust and co
 
 ### CrowdStrike
 
-:::image type="icon" source="./media/azure-linux-aks-partner-solutions/cs-logo-2022-stacked-full-red-rgb.png":::
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/crowdstrike-logo.png":::
 
 | Solution | Categories |
 |----------|------------|
