@@ -102,9 +102,9 @@ Together, these tools provide real-time visibility and actionable insights, enab
 
 ## Limitations
 
-* Container Network Logs with Stored log mode only works with cilium dataplane currently. 
+* Container Network Logs with Stored log mode only works with Cilium dataplane currently. 
 * L7 Flow would be captured only when L7 policy support is enabled. To enable L7 policy support, refer [Configure L7 policy](./how-to-apply-l7-policies.md).
-* DNS flows and metrics would be captured only when cilium FQDN network policy is applied. To configure FQDN policy, refer [Configure FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* DNS flows and metrics would be captured only when Cilium FQDN network policy is applied. To configure FQDN policy, refer [Configure FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
 * Onboarding using Terraform is currently not supported.
 * Container Network Logs without Azure Log analytics would provide maximum 50 MB log storage. Beyond that old logs would roll over with new logs.  
 * If the table plan is set to Basic Logs, the pre-built Grafana dashboards do not work.
