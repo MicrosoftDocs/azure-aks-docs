@@ -16,11 +16,14 @@ ms.date: 06/30/2025
 In this article, we discuss AKS-specific guidance for upgrading your Basic Load Balancer instances to Standard Load Balancer. Standard Load Balancer is recommended for all production instances and provides many [key differences](/azure/load-balancer/load-balancer-basic-upgrade-guidance#basic-load-balancer-sku-vs-standard-load-balancer-sku) to your infrastructure.
 This process will also migrate your Basic IP to a Standard IP, while keeping the IP addresses the same. For guidance on upgrading your Basic Load Balancer instances to Standard Load Balancer, see the [official guidance for Basic load balancer upgrade][load-balancer-upgrade-guidance]
 
+>[!Note]
+>For clusters using both Availability Sets and the Basic Load Balancer, there is a separate script that must be used that will perform both migrations at once (Availability Sets to Virtual Machine node pools, and Basic Load Balancer to Standard Load Balancer). For steps on performing this migration, see the guidance for [Availability Sets migration][availability-sets].
+
 ### Before You Begin
 
 **Requirements**
 - The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
-- You need the [Azure CLI installed](/cli/azure/install-azure-cli).
+- You need the [Azure CLI installed](/cli/azure/install-azure-cli). Minimum version 2.72.0
 - [Install the `aks-preview` Azure CLI extension.  Minimum version 0.5.170](#install-the-aks-preview-cli-extension).
 - If the cluster is running Key Management Service with private key vault, this must be disabled for the duration of the migration
 - If the cluster is using any ValidatingAdmissionWebhooks or MutatingAdmissionWebhooks, these must be disabled for the duration of the migration.
@@ -77,7 +80,6 @@ az aks update \
     --name $clusterName \
     --resource-group $resourceGroup \
     ---load-balancer-sku=Standard \
-    --aks-custom-headers AKSHTTPCustomFeatures=Microsoft.ContainerService/BasicLBMigrationToStandardLBPreview
 ```
 
 2. Verify that the migration was successful using the `az aks show` command, and confirm the load-balancer type is set to Standard:
