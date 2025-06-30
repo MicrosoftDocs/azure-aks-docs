@@ -7,6 +7,7 @@ author: schaffererin
 ms.date: 09/23/2024
 ms.custom: references_regions, devx-track-azurecli
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud administrator, I want to deploy a private Azure Kubernetes Service cluster, so that I can ensure secure network traffic and enhanced control over my Kubernetes resources."
 ---
 
 # Create a private Azure Kubernetes Service (AKS) cluster

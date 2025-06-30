@@ -9,6 +9,7 @@ ms.service: azure-kubernetes-service
 ms.collection: 
  - migration
  - aws-to-azure
+# Customer intent: As a cloud engineer, I want to replicate an AWS web application protected by AWS WAF in Azure Kubernetes Service, so that I can maintain security and availability while migrating workloads to Azure.
 ---
 
 # Replicate an Amazon Web Services (AWS) web application with AWS WAF in Azure Kubernetes Service (AKS)

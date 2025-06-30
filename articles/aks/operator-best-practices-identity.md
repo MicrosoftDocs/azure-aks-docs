@@ -7,6 +7,7 @@ ms.subservice: aks-security
 ms.date: 02/16/2024
 author: davidsmatlak
 ms.author: davidsmatlak
+# Customer intent: "As a cluster operator, I want to implement best practices for managing authentication and authorization in Azure Kubernetes Service (AKS) so that I can secure access to cluster resources and ensure that user permissions are appropriately scoped and managed."
 ---
 
 # Best practices for authentication and authorization in Azure Kubernetes Service (AKS)

@@ -6,6 +6,7 @@ ms.date: 06/07/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: As a cloud administrator, I want to understand the differences between the Free, Standard, and Premium pricing tiers for Kubernetes cluster management, so that I can choose the most appropriate option for my organization's workload requirements and budget.
 ---
 
 # Free, Standard, and Premium pricing tiers for Azure Kubernetes Service (AKS) cluster management

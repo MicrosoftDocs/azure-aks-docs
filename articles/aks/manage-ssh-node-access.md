@@ -9,6 +9,7 @@ ms.date: 08/29/2024
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As a Kubernetes administrator, I want to manage SSH keys and access for AKS cluster nodes, so that I can enhance security and control access to the nodes effectively.
 ---
 
 # Manage SSH for secure access to Azure Kubernetes Service (AKS) nodes

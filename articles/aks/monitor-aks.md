@@ -7,6 +7,7 @@ ms.topic: concept-article
 author: xuhongl
 ms.author: xuhliu
 ms.subservice: aks-monitoring
+# Customer intent: As a cloud administrator, I want to implement comprehensive monitoring for Azure Kubernetes Service (AKS), so that I can ensure the performance and reliability of my critical applications and manage resource utilization effectively.
 ---
 
 # Monitor Azure Kubernetes Service (AKS)

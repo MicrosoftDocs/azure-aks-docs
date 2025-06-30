@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.author: alvinli
 author: alvinli
 ms.date: 05/09/2024
+# Customer intent: "As a cloud administrator managing an Azure Kubernetes Service cluster, I want to delete a node pool, so that I can optimize resource allocation and manage costs effectively."
 ---
 
 # Delete an Azure Kubernetes Service (AKS) node pool
