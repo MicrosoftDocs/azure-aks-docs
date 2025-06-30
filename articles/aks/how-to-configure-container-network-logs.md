@@ -277,7 +277,7 @@ Status:
 
 ### Azure managed Grafana
 
-If you do not have existing Grafana instance, you need to create one to visualise network flow logs pre-built dashboard. 
+If you do not have existing Grafana instance, you need to create one to visualize network flow logs pre-built dashboard. 
 #### Create Azure Managed Grafana instance
 
 Use [az grafana create](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the Grafana instance must be unique.
@@ -302,7 +302,7 @@ Ensure that your Grafana workspace can access and search all monitoring data in 
 
 2.	Select on Azure role assignments and then choose Add role assignments. 
 
-  :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing azure role assignments in grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
 
 3.	Add Scope to subscription, choose relevant subscription(s), choose role as Monitoring Reader and save. 
   
