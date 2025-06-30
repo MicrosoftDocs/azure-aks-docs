@@ -48,22 +48,7 @@ By using LocalDNS, you get faster and more reliable DNS resolution for your work
 * This article requires the `aks-preview` Azure CLI extension version X.X.XXX or later
 
 ## Enable LocalDNS
-The following commands enable localDNS on your cluster or node pools. To modify the localDNS config file with coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configuring-localdns).
-
-### Enable localDNS in a new cluster
-
-```console
-az aks create --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
- ```
-
-### Enable localDNS in an existing cluster
-
-```console
-az aks update --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
-```
-
-> [!IMPORTANT]
-> When you enable localDNS at a cluster level, the configuration only applies to the nodes in the existing node pools. For future node pools, enable localDNS on each new node pool
+The following commands enable localDNS on your node pools. To modify the localDNS config file with coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configuring-localdns).
 
 ### Enable localDNS in a new node pool
 
@@ -115,6 +100,7 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 * Windows node pools aren't supported
 * Clusters using Node autoprovisioning aren't supported
 * Kubernetes version 1.33+ is required to use localDNS
+* Ubuntu versions 18.04 and 20.04 aren't supported
 
 ## Configuring localDNS
 If you enable localDNS on your node pool without specifying a custom localdnsconfig.json file, AKS applies a default configuration as follows:
