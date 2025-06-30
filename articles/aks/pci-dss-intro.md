@@ -16,6 +16,7 @@ ms.custom:
 This reference architecture describes the considerations for an Azure Kubernetes Service (AKS) cluster designed to run a sensitive workload. The guidance is tied to the regulatory requirements of the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
 PCI DSS 4.0.1 introduces significant changes from previous versions, including:
+
 - The option to use a "customized approach" for meeting security objectives, allowing flexibility in cloud and container environments.
 - Enhanced multi-factor authentication (MFA) requirements for all access to the cardholder data environment (CDE), including administrative and non-console access.
 - Stronger requirements for cryptography, encryption, and key management.
@@ -27,18 +28,15 @@ PCI DSS 4.0.1 introduces significant changes from previous versions, including:
 
 These changes are especially relevant for AKS and cloud-native architectures, where automation, dynamic scaling, and shared responsibility models are common. This guidance reflects the major updates in PCI DSS 4.0.1 and provides recommendations for leveraging Azure and AKS features to meet compliance objectives.
 
-
-It's *not* our goal to replace your configuration and/or setup of your compliance with this series. The intent is to assist customers in getting started on architectural design by addressing the applicable PCI DSS 4.0.1 control objectives as a tenant on the AKS environment. The guidance covers compliance aspects of the environment including infrastructure, workload interactions, operations, management, and service integrations, with a focus on the new requirements and flexibility introduced in PCI DSS 4.0.1.
-
+It's ***not* our goal to replace your configuration and/or setup of your compliance** with this series. The intent is to assist customers in getting started on architectural design by addressing the applicable PCI DSS 4.0.1 control objectives as a tenant on the AKS environment. The guidance covers compliance aspects of the environment, including infrastructure, workload interactions, operations, management, and service integrations, with a focus on the new requirements and flexibility introduced in PCI DSS 4.0.1.
 
 > [!IMPORTANT]
 >
-> The reference architecture and implementation have not been certified by an official authority. By completing this series and deploying the code assets, you do not clear audit for PCI DSS 4.0.1. Acquire compliance attestations from a third-party auditor. Always consult with a Qualified Security Assessor (QSA) familiar with cloud and containerized environments.
+> The reference architecture and implementation haven't been certified by an official authority. By completing this series and deploying the code assets, you don't clear audit for PCI DSS 4.0.1. Acquire compliance attestations from a third-party auditor. Always consult with a Qualified Security Assessor (QSA) familiar with cloud and containerized environments.
 
+## Shared responsibility model
 
-## Before you begin
-
-[**Microsoft Trust Center**](https://www.microsoft.com/trust-center/product-overview) provides specific principles for compliance-related cloud deployments. The security assurances&mdash;provided by Azure as the cloud platform and AKS as the host container&mdash;are regularly audited and attested by third-party Qualified Security Assessors (QSAs) for PCI DSS 4.0.1 compliance.
+[**Microsoft Trust Center**](https://www.microsoft.com/trust-center/product-overview) provides specific principles for compliance-related cloud deployments. The security assurances, provided by Azure as the cloud platform and AKS as the host container, are regularly audited and attested by third-party Qualified Security Assessors (QSAs) for PCI DSS 4.0.1 compliance.
 
 ![Diagram of the shared responsibility model.](media/pci-dss/protection-everyone.svg)
 
@@ -54,10 +52,9 @@ It's *not* our goal to replace your configuration and/or setup of your complianc
 
   As a workload owner, you're ultimately responsible for your own PCI DSS 4.0.1 compliance. Have a clear understanding of your responsibilities by reading the PCI DSS 4.0.1 requirements to understand the intent, studying the [matrix for Azure](https://servicetrust.microsoft.com), and completing this series to understand the AKS nuances. This process will help prepare your implementation for a successful assessment under PCI DSS 4.0.1.
 
+## Before you begin
 
-### Recommended articles
-
-This series assumes:
+Before you begin this series, ensure that:
 
 - You're familiar with Kubernetes concepts and workings of an [AKS cluster](/azure/aks).
 - You've read the [AKS baseline reference architecture](/azure/architecture/reference-architectures/containers/aks/baseline-aks).
@@ -65,8 +62,7 @@ This series assumes:
 - You're familiar with the official [PCI DSS 4.0.1 specification](https://www.pcisecuritystandards.org/document_library?category=pcidss)
 - You've read the [Azure security baseline for Azure Kubernetes Service](/security/benchmark/azure/baselines/aks-security-baseline).
 
-
-### In this series
+## Series overview
 
 This series is split into several articles. Each article outlines the high-level PCI DSS 4.0.1 requirement followed by guidance about how to address the AKS-specific requirement, with a focus on the new and updated controls:
 
@@ -79,10 +75,9 @@ This series is split into several articles. Each article outlines the high-level
 |[Monitoring operations](pci-dss-monitor.md)|Maintain the security posture through automated and continuous monitoring operations, log integrity, and regular testing of your security design and implementation.|
 |[Policy management](pci-dss-policy.md)|Maintain thorough and updated documentation about your security processes and policies, including the use of the customized approach where applicable.|
 
-
 ## Next steps
 
-Start by understanding the regulated architecture and the design choices for PCI DSS 4.0.1.
+Start by reviewing the regulated architecture and design choices for PCI DSS 4.0.1.
 
 > [!div class="nextstepaction"]
 > [Architecture of an AKS regulated cluster for PCI DSS 4.0.1](pci-dss-ra-code-assets.md)

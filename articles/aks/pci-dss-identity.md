@@ -1,6 +1,6 @@
 ---
 title: AKS regulated cluster for PCI DSS 4.0.1 - Identity and access management
-description: Identity and access management guidance for AKS clusters.
+description: Identity and access management guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
@@ -11,28 +11,28 @@ ms.custom:
   - compliance
 ---
 
-# AKS regulated cluster for PCI DSS 4.0.1 - Identity and access management
+# Identity and access management for an AKS regulated cluster for PCI DSS 4.0.1
 
-This article describes the considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI-DSS 4.0.1).
+This article describes identity and access management considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI-DSS 4.0.1).
 
 > This article is part of a series. Read the [introduction](pci-dss-intro.md).
 
-Kubernetes has native role-based access control (RBAC) that manages permissions to the Kubernetes API. There are several built-in roles with specific permissions or actions on Kubernetes resources. Azure Kubernetes Service (AKS) supports those built-in roles and custom roles for granular control. Those actions can be authorized (or denied) to a user through Kubernetes RBAC.
-
+Kubernetes has native role-based access control (RBAC) that manages permissions to the Kubernetes API. There are several built-in roles with specific permissions or actions on Kubernetes resources. Azure Kubernetes Service (AKS) supports those built-in roles and custom roles for granular control. Those actions can be authorized or denied to a user through Kubernetes RBAC.
 
 This architecture and the implementation aren't designed to provide controls on physical access to on-premises resources or datacenters. One benefit of hosting your CDE in Azure, as opposed to your platform at the edge or in your datacenter, is that restricting physical access is mostly already handled through Azure datacenter security. There aren't any responsibilities for the organization in management of physical hardware.
 
-> **Note:** This article has been updated for PCI DSS 4.0.1. Major changes include support for the customized approach to controls, enhanced multi-factor authentication (MFA), updated cryptography requirements, expanded monitoring and logging, and a focus on continuous security and risk management. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
+> [!NOTE]
+> This article has been updated for PCI DSS 4.0.1. Major changes include support for the customized approach to controls, enhanced multi-factor authentication (MFA), updated cryptography requirements, expanded monitoring and logging, and a focus on continuous security and risk management. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
 
 > [!IMPORTANT]
 >
-> This guidance and the accompanying implementation build on the [AKS baseline architecture](/azure/architecture/reference-architectures/containers/aks/baseline-aks). That architecture is based on a hub-and-spoke topology. The hub virtual network contains the firewall to control egress traffic, gateway traffic from on-premises networks, and a third network for maintenance. The spoke virtual network contains the AKS cluster that provides the cardholder data environment (CDE) and hosts the PCI DSS workload.
+> The guidance and the accompanying implementation builds on the [AKS baseline architecture](/azure/architecture/reference-architectures/containers/aks/baseline-aks), which is based on a hub-spoke network topology. The hub virtual network contains the firewall to control egress traffic, gateway traffic from on-premises networks, and a third network for maintenance. The spoke virtual network contains the AKS cluster that provides the card-holder environment (CDE), and hosts the PCI DSS workload.
 >
-> ![Image of the GitHub logo.](media/pci-dss/github.png) **Reference Implementation Coming Soon**: The Azure Kubernetes Service (AKS) Baseline Cluster for Regulated Workloads reference implementation for PCI DSS 4.0.1 is currently being updated and will be available soon. This implementation will demonstrate the regulated infrastructure with identity and access management controls. This will provide a Microsoft Entra ID-backed, private cluster that supports just-in-time (JIT) access and conditional access models for illustrative purposes.
+> ![GitHub logo](media/pci-dss/github.png) **Reference Implementation Coming Soon**: The Azure Kubernetes Service (AKS) baseline cluster for regulated workloads reference implementation for PCI DSS 4.0.1 is currently being updated and will be available soon. This implementation will demonstrate the regulated infrastructure with identity and access management controls and will provide a Microsoft Entra ID-backed, private cluster that supports just-in-time (JIT) access and conditional access models for illustrative purposes. It will also include an application to demonstrate the interactions between the environment and a sample workload. The focus of this article is the infrastructure. The sample will not be indicative of an actual PCI-DSS 4.0.1 workload.
 
 ## Implement strong access control measures
 
-### Requirement 7 – Restrict access to cardholder data by business need to know
+### Requirement 7: Restrict access to cardholder data by business need to know
 
 #### AKS feature support
 
@@ -40,11 +40,11 @@ AKS is fully integrated with Microsoft Entra ID as the identity provider.
 
 You don't have to manage separate user identities and credentials for Kubernetes. You can add Microsoft Entra users for Kubernetes RBAC. This integration makes it possible to assign roles to Microsoft Entra users. By using Microsoft Entra identities, you can use a variety of built-in roles, such as viewer, writer, service administrator, and cluster administrator. You can also create custom roles for more granular control.
 
-By default, Azure RBAC is set to deny all access, so a resource cannot be accessed without permissions being granted. AKS limits SSH access to AKS worker nodes and uses AKS network policy to control access to workloads in the pods.
+By default, Azure RBAC is set to deny all access, so a resource can't be accessed without permissions being granted. AKS limits SSH access to AKS worker nodes and uses AKS network policy to control access to workloads in the pods.
 
-For more information, see [Use Azure RBAC for Kubernetes Authorization](/azure/aks/manage-azure-rbac) and [Secure your cluster with Azure Policy](/azure/aks/use-pod-security-on-azure-policy).
+For more information, see [Use Azure RBAC for Kubernetes authorization](/azure/aks/manage-azure-rbac) and [Secure your cluster with Azure Policy](/azure/aks/use-pod-security-on-azure-policy).
 
-#### Your responsibilities (PCI DSS 4.0.1)
+#### Your responsibilities
 
 |Requirement|Responsibility|
 |---|---|
@@ -60,9 +60,9 @@ Limit access to system components and cardholder data to only those individuals 
 
 #### Your responsibilities
 
-Here are some considerations:
+Consider the following best practices:
 
-- Make sure your implementation is aligned with the organization's requirements, and with compliance requirements about identity management.
+- Ensure your implementation is aligned with the organization's requirements, and with compliance requirements about identity management.
 - Minimize standing permissions especially for critical impact accounts.
 - Follow the principle of least-privilege access. Provide just enough access to complete the task.
 
@@ -72,7 +72,7 @@ PCI DSS 4.0.1 clarifies the need for continuous review and documentation of acce
 
 Define access needs for each role, including:
 
-- System components and data resources that each role needs to access for their job function
+- System components and data resources that each role needs to access for their job function.
 - Level of privilege required (for example, user, administrator, etc.) for accessing resources.
 
 ##### Your responsibilities
@@ -85,7 +85,7 @@ Define roles based on the tasks and responsibilities required for the in-scope c
 - Secret management
 - Build and deployment pipelines
 
-While the definition of roles and responsibilities around those areas might be associated with your team structure, focus on the requirement of the workload. For instance, determine who is responsible for maintaining security, isolation, deployment, and observability. Here are some examples:
+While the definition of roles and responsibilities around those areas might be associated with your team structure, focus on the requirement of the workload. For instance, determine who's responsible for maintaining security, isolation, deployment, and observability. Here are some examples of responsibilities:
 
 - Decide configurations for application security, Kubernetes RBAC, network policies, Azure policies, and communication with other services.
 - Configure and maintain Azure Firewall, web application firewall (WAF), network security groups (NSGs), and DNS.
@@ -93,17 +93,17 @@ While the definition of roles and responsibilities around those areas might be a
 - Set direction for use of RBAC, Microsoft Defender for Cloud, administrator protection strategy, and Azure Policy to govern Azure resources.
 - Identify the incident monitoring and response team. Investigate and remediate security incidents by using a security information and event management (SIEM) system like Microsoft Sentinel, or Microsoft Defender for Cloud.
 
-Then, formalize the definition by determining what level of access is required for the role with respect to the workload and the infrastructure. Here's a simple definition for illustrative purposes.
+Then, formalize the definition by determining what level of access is required for the role with respect to the workload and the infrastructure. The following table provides a few examples of roles, their responsibilities, and the access levels that might be required:
 
-|Role|Responsibilities|Access levels
+|Role|Responsibilities|Access levels|
 |---|---|---|
-|**Application owners**|Define and prioritize features aligning with business outcomes. They understand how features impact the compliance scoping of the workload, and balance customer data protection and ownership with business objectives.|Read access to logs and metrics emitted by the application. They don't need permissions to access to the workload or the cluster.|
-|**Application developers**|Develop the application. All application code is subject to training and quality gates upholding compliance, attestation, and release management processes. Might manage the build pipelines, but usually not deployment pipelines.|Read access to Kubernetes namespaces and Azure resources that are in scope of the workload. No write access for deploying or modifying any state of the system.|
-|**Application operators (or SRE)**|Have a deep understanding of the code base, observability, and operations. Do live-site triage and troubleshooting. Along with application developers, improve availability, scalability and performance of the application. Manage the "last-mile" deployment pipeline and help manage the build pipelines.|Highly privileged within the scope of the application that includes related Kubernetes namespaces and Azure resources. Likely have standing access to parts of the Kubernetes cluster.
-|**Infrastructure owners**| Design a cost-effective architecture, including its connectivity and the functionality of components. The scope can include cloud and on-premises services. Decide capabilities data retention, business continuity features, and others.|Access to platform logs and cost center data. No access is required within the cluster.|
-|**Infrastructure operators (or SRE)**|Operations related to the cluster and dependent services. Build, deploy, and bootstrap the pipeline for the cluster in which the workload is deployed. Set target node pools, and expected sizing and scale requirements. Monitor the health of the container hosting infrastructure and dependent services.|Read access to workload namespaces. Highly privileged access for the cluster.
-|**Policy, security owners**| Have security or regulation compliance expertise. Define policies that protect the security and regulatory compliance of the company employees, its assets, and those of the company's customers. Works with all other roles to ensure policy is applied and auditable through every phase.|Read access to the workload and the cluster. Also access to log and audit data.|
-|**Network operators**|Allocation of enterprise-wide virtual network and subnets. Configuration and maintenance of Azure Firewall, WAF, NSGs, and DNS configuration.|Highly privileged in the networking layer. No write permission within the cluster.|
+|**Application owners**| • Define and prioritize features aligning with business outcomes. <br> • Understand how features impact the compliance scoping of the workload and balance customer data protection and ownership with business objectives.|Read access to logs and metrics emitted by the application. They don't need permissions to access to the workload or the cluster.|
+|**Application developers**| • Develop the application. All application code is subject to training and quality gates upholding compliance, attestation, and release management processes. <br> • Might manage build pipelines, but usually not deployment pipelines.|Read access to Kubernetes namespaces and Azure resources that are in scope of the workload. No write access for deploying or modifying any state of the system.|
+|**Application operators (or SRE)**|• Have a deep understanding of the code base, observability, and operations. <br> • Perform live-site triage and troubleshooting. <br> • Along with application developers, improve availability, scalability, and performance of the application. <br> • Manage the "last-mile" deployment pipeline and help manage the build pipelines.|Highly privileged within the scope of the application that includes related Kubernetes namespaces and Azure resources. Likely have standing access to parts of the Kubernetes cluster. |
+|**Infrastructure owners**| • Design a cost-effective architecture, including its connectivity and the functionality of components. The scope can include cloud and on-premises services. <br> • Decide capabilities data retention, business continuity features, and others.|Access to platform logs and cost center data. No access is required within the cluster.|
+|**Infrastructure operators (or SRE)**| • Operations related to the cluster and dependent services. <br> • Build, deploy, and bootstrap the pipeline for the cluster in which the workload is deployed. <br> • Set target node pools, and expected sizing and scale requirements. <br> • Monitor the health of the container hosting infrastructure and dependent services.|Read access to workload namespaces. Highly privileged access for the cluster. |
+|**Policy, security owners**| • Have security or regulation compliance expertise. <br> • Define policies that protect the security and regulatory compliance of the company employees, its assets, and those of the company's customers. <br> • Work with all other roles to ensure policy is applied and auditable through every phase.|Read access to the workload and the cluster. Also access to log and audit data.|
+|**Network operators**| • Allocation of enterprise-wide virtual network and subnets. <br> • Configuration and maintenance of Azure Firewall, WAF, NSGs, and DNS configuration.|Highly privileged in the networking layer. No write permission within the cluster.|
 
 #### Requirement 7.1.2
 
@@ -113,7 +113,7 @@ Restrict access to privileged user IDs to least privileges necessary to perform 
 
 ##### Your responsibilities
 
-Based on the job functions, strive to minimize access without causing disruptions. Here are some best practices:
+Based on the job functions, strive to minimize access without causing disruptions. Consider the following best practices:
 
 - Reduce the access that each identity requires. An identity should have just enough access to complete their task.
 - Minimize standing permissions, especially on critical-impact identities that have access to in-scope components.
@@ -130,15 +130,15 @@ Assign access based on individual personnel's job classification and function.
 
 Determine permissions based on the clearly assigned job duties of the individual. Avoid parameters such as the system or the tenure of the employee. Give access rights to a single user or to a group.
 
-Here are some examples.
+Here are some example job classifications and their associated roles:
 
-|Job classification|Role|
+| Role | Job classification |
 |---|---|
-|A *product owner* defines the scope of the workload and prioritizes features. Balances customer data protection and ownership with business objectives. Needs access to reports, the cost center, or Azure dashboards. No access is needed for in-cluster or cluster-level permissions.|**Application owners**|
-|A *software engineer* designs, develops, and containerizes the application code. A group with standing read permissions within defined scopes within Azure (such as Application Insights) and the workload namespaces. These scopes and permissions might be different between preproduction and production environments.|**Application developer**|
-|A *site reliability engineer* does live-site triage, manages pipelines, and sets up application infrastructure.<p>Group A with full control within their allocated namespaces. Standing permissions aren't required.</p><p>Group B for day-to-day operations on the workload. It can have standing permissions within their allocated namespaces, but aren't highly privileged. </p> |**Application operators**|
-|A *cluster operator* designs and deploys a reliable and secure AKS cluster to the platform. Responsible for maintaining cluster up time. <p>Group A with full control within their allocated namespaces. Standing permissions aren't required.</p><p>Group B for day-to-day operations on the workload. It can have standing permissions within their allocated namespaces, but aren't highly privileged. </p> |**Infrastructure operators**|
-|A *network engineer* allocates of enterprise-wide virtual network and subnets, on-premises to cloud connectivity, and network security. |**Infrastructure operators**|
+| **Application owners** | A *product owner* defines the scope of the workload and prioritizes features. Balances customer data protection and ownership with business objectives. Needs access to reports, the cost center, or Azure dashboards. No access is needed for in-cluster or cluster-level permissions. |
+| **Application developers** | A *software engineer* designs, develops, and containerizes the application code. A group with standing read permissions within defined scopes within Azure (such as Application Insights) and the workload namespaces. These scopes and permissions might be different between pre-production and production environments. Needs access to the application code, development tools, and CI/CD pipelines. No access is needed for production environments. |
+| **Application operators** | A *site reliability engineer* does live-site triage, manages pipelines, and sets up application infrastructure. *Group A* has full control within their allocated namespaces. Standing permissions aren't required. *Group B* works on day-to-day operations on the workload and can have standing permissions within their allocated namespaces, but aren't highly privileged. |
+| **Infrastructure operators** | A *cluster operator* designs and deploys a reliable and secure AKS cluster to the platform. Responsible for maintaining cluster up time. *Group A* has full control within their allocated namespaces. Standing permissions aren't required. *Group B* works on day-to-day operations on the workload and can have standing permissions within their allocated namespaces, but aren't highly privileged. |
+| **Infrastructure operators** | A *network engineer* allocates of enterprise-wide virtual network and subnets, on-premises to cloud connectivity, and network security. |
 
 #### Requirement 7.1.4
 
@@ -160,46 +160,41 @@ Establish an access control system for systems components that restricts access 
 
 After following [Requirement 7.1](#requirement-71), you should have assessed roles and responsibilities that are applicable for your organization and the workload. All components in the architecture that are in-scope must have restricted access. This includes the AKS nodes that run the workload, data storage, network access, and all other services that participate in processing the card holder data (CHD).
 
-Based on roles and responsibilities, assign roles to the infrastructure's role-based access control (RBAC). That mechanism can be:
+Based on roles and responsibilities, assign roles to the infrastructure's role-based access control (RBAC) mechanism, such as:
 
-- **Kubernetes RBAC** is a native Kubernetes authorization model that controls access to the *Kubernetes control plane*, exposed through the Kubernetes API server. This set of permissions defines what you can do with the API server. For example, you can deny a user the permissions to create or even list pods.
-- **Azure RBAC** is a Microsoft Entra ID-based authorization model that controls access to the *Azure control plane*. This is an association of your Microsoft Entra tenant with your Azure subscription. With Azure RBAC you can grant permissions to create Azure resources, such as networks, an AKS cluster, and managed identities.
+- **Kubernetes RBAC**: A native Kubernetes authorization model that controls access to the *Kubernetes control plane*, exposed through the Kubernetes API server. This set of permissions defines what you can do with the API server. For example, you can deny a user the permissions to create or even list pods.
+- **Azure RBAC**: A Microsoft Entra ID-based authorization model that controls access to the *Azure control plane*. This is an association of your Microsoft Entra tenant with your Azure subscription. With Azure RBAC you can grant permissions to create Azure resources, such as networks, an AKS cluster, and managed identities.
 
-Suppose you need to give permissions to the cluster operators (mapped to the infrastructure operator role). All people who are assigned the infrastructure operator responsibilities belong to a Microsoft Entra group. As established in 7.1.1, this role requires the highest privilege in the cluster. Kubernetes has built-in RBAC roles, such as `cluster-admin`, that meets those requirements. You'll need to bind the Microsoft Entra group for infrastructure operator to `cluster-admin` by creating role bindings. There are two approaches. You can choose the built-in roles. Or, if the built-in roles don't meet your requirements (for example, they might be overly permissive), create custom roles for your bindings.
+Suppose you need to give permissions to the cluster operators (mapped to the infrastructure operator role). All people who are assigned the infrastructure operator responsibilities belong to a Microsoft Entra group. As established in 7.1.1, this role requires the highest privilege in the cluster. Kubernetes has built-in RBAC roles, such as `cluster-admin`, that meets those requirements. You'll need to bind the Microsoft Entra group for infrastructure operator to `cluster-admin` by creating role bindings by choosing the built-in roles. If the built-in roles don't meet your requirements (for example, they might be overly permissive), you can create custom roles for your bindings.
 
-The reference implementation demonstrates the preceding example by using native Kubernetes RBAC. The same association can be accomplished with Azure RBAC. For more information, see [Control access to cluster resources using Kubernetes role-based access control and Microsoft Entra identities in Azure Kubernetes Service](/azure/aks/azure-ad-rbac).
+The reference implementation demonstrates the preceding example by using native Kubernetes RBAC. The same association can be accomplished with Azure RBAC. For more information, see [Control access to cluster resources using Kubernetes role-based access control and Microsoft Entra identities in Azure Kubernetes Service (AKS)](/azure/aks/azure-ad-rbac).
 
 You can choose the scope of permission at the cluster level or at the namespace level. For roles that have scoped responsibilities, such as application operators, the permissions are assigned at the namespace level for the workload.
 
 In addition, the roles also need Azure RBAC permissions so that they are able to do their tasks. For example, the cluster operator needs to access Azure Monitor through the portal. So, the infrastructure operator role must have the appropriate RBAC assignment.
 
-Apart from people and their roles, Azure resources and even pods within the cluster have managed identities. Those identities need a set of permissions through Azure RBAC, and must be tightly scoped based on the expected tasks. For example, Azure Application Gateway must have permissions to get secrets (TLS certificates) from Azure Key Vault. It must not have permissions to modify secrets.
+Apart from people and their roles, Azure resources, and even pods within the cluster, have managed identities. Those identities need a set of permissions through Azure RBAC and must be tightly scoped based on the expected tasks. For example, Azure Application Gateway must have permissions to get secrets (TLS certificates) from Azure Key Vault. It must not have permissions to modify secrets.
 
-Here are some best practices:
+Here are some best practices to maintain access control measures:
 
 - Maintain meticulous documentation about each role and the assigned permissions, as well as the justifications. Keep clear distinctions about which permissions are JIT and which are standing.
-
 - Monitor the roles for changes, such as in assignment changes or role definitions. Create alerts on changes, even if they are expected, to gain visibility into intentions behind the changes.
 
 #### Requirement 7.2.1
 
 PCI DSS 4.0.1 requires that access control measures cover all system components, including cloud and hybrid environments, and that controls are continuously monitored for effectiveness.
 
-Coverage of all system components
-
 ##### Your responsibilities
 
-Here are some best practices to maintain access control measures:
+Consider the following best practices:
 
 - Don't have standing access. Consider using [Just-In-Time AD group membership](/azure/aks/managed-aad#configure-just-in-time-cluster-access-with-azure-ad-and-aks). This feature requires Microsoft Entra Privileged Identity Management.
-
-- Set up [conditional access policies in Microsoft Entra ID for your cluster](/azure/aks/access-control-managed-azure-ad#use-conditional-access-with-microsoft-entra-id-and-aks). This further puts restrictions on access to the Kubernetes control plane. With conditional access policies, you can require multifactor authentication, restrict authentication to devices that are managed by your Microsoft Entra tenant, or block non-typical sign-in attempts. Apply these policies to Microsoft Entra groups that are mapped to Kubernetes roles with high privilege.
+- Set up [conditional access policies in Microsoft Entra ID for your cluster](/azure/aks/access-control-managed-azure-ad#use-conditional-access-with-microsoft-entra-id-and-aks). This further restricts access to the Kubernetes control plane. With conditional access policies, you can require multifactor authentication, restrict authentication to devices that are managed by your Microsoft Entra tenant, or block non-typical sign-in attempts. Apply these policies to Microsoft Entra groups that are mapped to Kubernetes roles with high privilege.
 
   > [!NOTE]
   > Both JIT and conditional access technology choices require Microsoft Entra ID P1 or P2 licenses.
 
-- Ideally disable SSH access to the cluster nodes. This reference implementation doesn't generate SSH connection details for that purpose.
-
+- Ideally, disable SSH access to the cluster nodes. This reference implementation doesn't generate SSH connection details for that purpose.
 - Any additional compute, such as jump boxes, must be accessed by authorized users. Don't create generic logins available to the entire team.
 
 #### Requirement 7.2.2
@@ -223,20 +218,15 @@ Make sure the definitions are documented in governance documentation, policy, an
 
 #### Requirement 7.2.3
 
-PCI DSS 4.0.1 requires that the default "deny-all" setting be enforced and regularly validated through automated testing and monitoring.
-
-Default "deny-all" setting.
+PCI DSS 4.0.1 requires that the default "deny all" setting be enforced and regularly validated through automated testing and monitoring.
 
 ##### Your responsibilities
 
 When you start the configuration, start with zero-trust policies. Make exceptions as needed and document them in detail.
 
 - Kubernetes RBAC implements *deny all* by default. Don't override by adding highly permissive cluster role bindings that invert the deny all setting.
-
 - Azure RBAC also implements *deny all* by default. Don't override by adding RBAC assignments that invert the deny all setting.
-
 - All Azure services, including Azure Key Vault and Azure Container Registry, deny all permissions by default.
-
 - Any administrative access points, such as a jump box, should deny all access in the initial configuration. All elevated permissions must be defined explicitly to override the deny all rule.
 
 > [!NOTE]
@@ -254,13 +244,13 @@ Ensure that security policies and operational procedures for restricting access 
 
 It's critical that you maintain thorough documentation about the processes and policies. This includes Azure and Kubernetes RBAC policies and organizational governance policies. People operating regulated environments must be educated, informed, and incentivized to support the security assurances. This is particularly important for people who are part of the approval process from a policy perspective.
 
-### Requirement 8 – Identify and authenticate access to system components
+### Requirement 8: Identify and authenticate access to system components
 
 #### AKS feature support
 
 Because of AKS and Microsoft Entra integration, you can take advantage of identity management and authorization capabilities, including access management, identifier objects management, and others. For more information, see [AKS-managed Microsoft Entra integration](/azure/aks/managed-aad).
 
-#### Your responsibilities (PCI DSS 4.0.1)
+#### Your responsibilities
 
 |Requirement|Responsibility|
 |---|---|
@@ -279,42 +269,40 @@ PCI DSS 4.0.1 expands requirements for unique identification and authentication,
 
 Define and implement policies and procedures to ensure proper user identification management for non-consumer users and administrators on all system components as follows:
 
-- 8.1.1 Assign all users a unique ID before allowing them to access system components or cardholder data.
-- 8.1.2 Control addition, deletion, and modification of user IDs, credentials, and other identifier objects.
-- 8.1.3 Immediately revoke access for any terminated users.
-- 8.1.4 Remove/disable inactive user accounts within 90 days.
-- 8.1.5 Manage IDs used by third parties to access, support, or maintain system components via remote access as follows:
-  - Enabled only during the time period needed and disabled when not in use.
-  - Monitored when in use.
-- 8.1.6 Limit repeated access attempts by locking out the user ID after not more than six attempts.
-- 8.1.7 Set the lockout duration to a minimum of 30 minutes or until an administrator enables the user ID.
-- 8.1.8 If a session has been idle for more than 15 minutes, require the user to re-authenticate to re-activate the terminal or session.
+| Sub-requirement | Description |
+|---|---|
+| 8.1.1 | Assign all users a unique ID before allowing them to access system components or cardholder data. |
+| 8.1.2 | Control addition, deletion, and modification of user IDs, credentials, and other identifier objects. |
+| 8.1.3 | Immediately revoke access for any terminated users. |
+| 8.1.4 | Remove/disable inactive user accounts within 90 days. |
+| 8.1.5 | Manage IDs used by third parties to access, support, or maintain system components via remote access as follows: • Enabled only during the time period needed and disabled when not in use. <br> • Monitored when in use. |
+| 8.1.6 | Limit repeated access attempts by locking out the user ID after not more than six attempts. |
+| 8.1.7 | Set the lockout duration to a minimum of 30 minutes or until an administrator enables the user ID. |
+| 8.1.8 | If a session has been idle for more than 15 minutes, require the user to re-authenticate to re-activate the terminal or session. |
 
 #### Your responsibilities
 
 Here are overall considerations for this requirement:
 
-**APPLIES TO: 8.1.1, 8.1.2, 8.1.3**
+> **APPLIES TO: 8.1.1, 8.1.2, 8.1.3**
 
 Don't share or reuse identities for functionally different parts of the CDE. For example, don't use a team account to access data or cluster resources. Make sure the identity documentation is clear about not using shared accounts.
 
-Extend this identity principal to managed identity assignments in Azure. Don't share user-managed identities across Azure resources. Assign each Azure resource its own managed identity. Similarly, when you're using [Microsoft Entra Workload ID](/azure/aks/workload-identity-overview) in the AKS cluster, ensure that each component in your workload receives its own identity instead of using an identity that is broad in scope. Never share the same managed identity between production and non-production environments.
+Extend this identity principal to managed identity assignments in Azure. Don't share user-managed identities across Azure resources. Assign each Azure resource its own managed identity. Similarly, when you're using [Microsoft Entra Workload ID](/azure/aks/workload-identity-overview) in the AKS cluster, ensure that each component in your workload receives its own identity instead of using an identity that's broad in scope. Never share the same managed identity between production and non-production environments.
 
-Learn more about [Access and identity options for Azure Kubernetes Service (AKS)](/azure/aks/concepts-identity).
+For more information, see [Access and identity options for Azure Kubernetes Service (AKS)](/azure/aks/concepts-identity).
 
-**APPLIES TO: 8.1.2, 8.1.3, 8.1.4**
+> **APPLIES TO: 8.1.2, 8.1.3, 8.1.4**
 
 Use Microsoft Entra ID as the identity store. Because the cluster and all Azure resources use Microsoft Entra ID, disabling or revoking a principal's access applies to all resources automatically. If there are any components that aren't backed directly by Microsoft Entra ID, make sure you have a process to remove access. For example, SSH credentials for accessing a jump box might need to be explicitly removed if the user is no longer valid.
 
-**APPLIES TO: 8.1.5**
+> **APPLIES TO: 8.1.5**
 
 Take advantage of Microsoft Entra External ID that's designed to host third-party business-to-business (B2B) accounts, such as vendors and partners, as guest users. Grant the appropriate level of access by using conditional policies to protect corporate data. These accounts must have minimal standing permissions and mandatory expiry dates. For more information, see [B2B collaboration with external guests for your workforce](/entra/external-id/what-is-b2b).
 
 Your organization should have a clear and documented pattern of vendor and similar access.
 
-**APPLIES TO: 8.1.6, 8.1.7, 8.1.8**
-
-##### Your responsibilities
+> **APPLIES TO: 8.1.6, 8.1.7, 8.1.8**
 
 Microsoft Entra ID provides a [smart lockout feature](/entra/identity/authentication/howto-password-smart-lockout) to lock out users after failed sign-in attempts. The recommended way to implement lockouts is with Microsoft Entra conditional access policies.
 
@@ -324,22 +312,26 @@ AKS nodes aren't designed to be routinely accessed. Block direct SSH or Remote D
 
 ### Requirement 8.2
 
-PCI DSS 4.0.1 updates password and authentication requirements to align with modern security best practices, including longer minimum password lengths, complexity requirements, and support for passwordless authentication methods. Enhanced monitoring of authentication events is required.
+PCI DSS 4.0.1 updates password and authentication requirements to align with modern security best practices, including longer minimum password lengths, complexity requirements, and support for password-less authentication methods. Enhanced monitoring of authentication events is required.
 
-In addition to assigning a unique ID, ensure proper user-authentication management for non-consumer users and administrators on all system components by employing at least one of the following methods to authenticate all users: Something you know, such as a password or passphrase, Something you have, such as a token device or smart card, Something you are, such as a biometric.
+In addition to assigning a unique ID, ensure proper user-authentication management for non-consumer users and administrators on all system components by employing at least one of the following methods to authenticate all users:
 
-- 8.2.1 Using strong cryptography, render all authentication credentials (such as passwords/phrases) unreadable during transmission and storage on all system components.
-- 8.2.2 Verify user identity before modifying any authentication credential—for example, performing password resets, provisioning new tokens, or generating new keys.
-- 8.2.3 Passwords/phrases must meet the following:
-  - Require a minimum length of at least seven characters.
-  - Contain both numeric and alphabetic characters.
-- 8.2.4 Change user passwords/passphrases at least once every 90 days.
-- 8.2.5 Do not allow an individual to submit a new password/phrase that is the same as any of the last four passwords/phrases he or she has used.
-- 8.2.6 Set passwords/phrases for first-time use and upon reset to a unique value for each user, and change immediately after the first use.
+- Something you know, such as a password or passphrase.
+- Something you have, such as a token device or smart card.
+- Something you are, such as a biometric.
+
+| Sub-requirement | Description |
+|---|---|
+| 8.2.1 | Using strong cryptography, render all authentication credentials (such as passwords/phrases) unreadable during transmission and storage on all system components. |
+| 8.2.2 | Verify user identity before modifying any authentication credential, for example: performing password resets, provisioning new tokens, or generating new keys. |
+| 8.2.3 | Passwords/phrases must meet the following: • Require a minimum length of at least seven characters. <br> • Contain both numeric and alphabetic characters. |
+| 8.2.4 | Change user passwords/passphrases at least once every 90 days. |
+| 8.2.5 | Don't allow an individual to submit a new password/phrase that's the same as any of the last four passwords/phrases they've used. |
+| 8.2.6 | Set passwords/phrases for first-time use and upon reset to a unique value for each user, and change immediately after the first use. |
 
 #### Your responsibilities
 
-Set up [Conditional Access Policies in Microsoft Entra ID for your cluster](/azure/aks/managed-aad#use-conditional-access-with-azure-ad-and-aks). This further puts restrictions on access to the Kubernetes control plane.
+Set up [Conditional Access Policies in Microsoft Entra ID for your cluster](/azure/aks/managed-aad#use-conditional-access-with-azure-ad-and-aks). This further restricts access to the Kubernetes control plane.
 
 Several of the preceding set of requirements are automatically handled by Microsoft Entra ID. Here are some examples:
 
@@ -348,25 +340,25 @@ Several of the preceding set of requirements are automatically handled by Micros
     Microsoft Entra ID provides features that enforce the use of strong passwords. For example, weak passwords that belong to the global banned password list are blocked. This isn't sufficient protection. To create an organization-specific ban list, consider adding the Microsoft Entra Password Protection feature. A password policy is applied by default. Certain policies can't be modified and cover some of the preceding set of requirements. These include password expiration and allowed characters. For the complete list, see [Microsoft Entra password policies](/entra/identity/authentication/concept-sspr-policy#microsoft-entra-password-policies). Consider advanced enforcement by using conditional access policies, such as those based on user risk, which detect leaked username and password pairs. For more information, see [Conditional Access: User risk-based Conditional Access](/entra/identity/conditional-access/howto-conditional-access-policy-risk-user).
 
     > [!NOTE]
-    > We strongly recommend that you consider passwordless options. For more information, see [Plan a passwordless authentication deployment in Microsoft Entra ID](/entra/identity/authentication/howto-authentication-passwordless-deployment).
+    > We strongly recommend that you consider password-less options. For more information, see [Plan a password-less authentication deployment in Microsoft Entra ID](/entra/identity/authentication/howto-authentication-passwordless-deployment).
 
 - **User identity verification**
 
     You can apply the sign-in risk conditional access policy to detect if the authentication request was issued by the requesting identity. The request is validated against threat intelligence sources. These include password spray and IP address anomalies. For more information, see [Conditional Access: Sign-in risk-based Conditional Access](/entra/identity/conditional-access/howto-conditional-access-policy-risk).
 
-You might have components that don't use Microsoft Entra ID, such as access to jump boxes with SSH. For such cases, use public key encryption with at least RSA 2048 key size. Always specify a passphrase. Have a validation process that tracks known approved public keys. Systems that use public key access mustn't be exposed to the internet.  Instead, all SSH access should only be allowed through an intermediary, such as Azure Bastion, to reduce the impact of a private key leak. Disable direct password access and use an alternative passwordless solution.
+You might have components that don't use Microsoft Entra ID, such as access to jump boxes with SSH. For such cases, use public key encryption with at least RSA 2048 key size. Always specify a passphrase. Have a validation process that tracks known approved public keys. Systems that use public key access mustn't be exposed to the internet. Instead, all SSH access should only be allowed through an intermediary, such as Azure Bastion, to reduce the impact of a private key leak. Disable direct password access and use an alternative password-less solution.
 
 ### Requirement 8.3
 
 PCI DSS 4.0.1 mandates multi-factor authentication (MFA) for all access into the cardholder data environment (CDE), including internal users. MFA controls must be continuously monitored and tested for effectiveness.
 
-Secure all individual non-console administrative access and all remote access to the CDE using multi-factor authentication. Note: Multi-factor authentication requires that a minimum of two of the three authentication methods (see Requirement 8.2 for descriptions of authentication methods) be used for authentication. Using one factor twice (for example, using two separate passwords) is not considered multi-factor authentication.
+Secure all individual non-console administrative access and all remote access to the CDE using multi-factor authentication. **Note**: Multi-factor authentication requires that a minimum of two of the three authentication methods (see Requirement 8.2 for descriptions of authentication methods) be used for authentication. Using one factor twice (for example, using two separate passwords) isn't considered multi-factor authentication.
 
 #### Your responsibilities
 
 Use conditional access policies to enforce multifactor authentication, specifically on administrative accounts. These policies are recommended on several built-in roles. Apply these policies to Microsoft Entra groups that are mapped to Kubernetes roles with high privilege.
 
-This policy can be further hardened with additional policies. Here are some examples:
+This policy can be further hardened with additional policies, such as:
 
 - You can restrict authentication to devices that are managed by your Microsoft Entra tenant.
 - If the access originates from a network outside the cluster network, you can enforce multifactor authentication.
@@ -381,12 +373,12 @@ For more information, see:
 
 PCI DSS 4.0.1 requires that authentication procedures and policies are regularly reviewed, updated, and communicated to all users. Security awareness training must include guidance on authentication best practices and emerging threats.
 
-Document and communicate authentication procedures and policies and procedures to all users including:
+Document and communicate authentication procedures and policies and procedures to all users, including:
 
-- Guidance on selecting strong authentication credentials
-- Guidance for how users should protect their authentication credentials
-- Instructions not to reuse previously used passwords
-- Instructions to change passwords if there is any suspicion the password could be compromised.
+- Guidance on selecting strong authentication credentials.
+- Guidance for how users should protect their authentication credentials.
+- Instructions not to reuse previously used passwords.
+- Instructions to change passwords if there's any suspicion the password could be compromised.
 
 #### Your responsibilities
 
@@ -394,13 +386,13 @@ Maintain documentation about the enforced policies. As part of your identity onb
 
 ### Requirement 8.5
 
-PCI DSS 4.0.1 prohibits the use of group, shared, or generic IDs for any administrative or critical functions, and requires continuous monitoring for violations.
+PCI DSS 4.0.1 prohibits the use of group, shared, or generic IDs for any administrative or critical functions and requires continuous monitoring for violations.
 
-Do not use group, shared, or generic IDs, passwords, or other authentication methods as follows:
+Don't use group, shared, or generic IDs, passwords, or other authentication methods as follows:
 
 - Generic user IDs are disabled or removed.
-- Shared user IDs do not exist for system administration and other critical functions.
-- Shared and generic user IDs are not used to administer any system components.
+- Shared user IDs don't exist for system administration and other critical functions.
+- Shared and generic user IDs aren't used to administer any system components.
 
 #### Your responsibilities
 
@@ -410,7 +402,7 @@ Disable root users in the CDE. Disable usage of Kubernetes local accounts so tha
 
 ### Requirement 8.6
 
-PCI DSS 4.0.1 requires that all authentication mechanisms (such as tokens, smart cards, certificates) are assigned to individual accounts and are not shared. Physical and logical controls must be in place to ensure only the intended account can use the mechanism.
+PCI DSS 4.0.1 requires that all authentication mechanisms (such as tokens, smart cards, certificates) are assigned to individual accounts and aren't shared. Physical and logical controls must be in place to ensure only the intended account can use the mechanism.
 
 Where other authentication mechanisms are used (for example, physical or logical security tokens, smart cards, certificates, etc.), use of these mechanisms must be assigned as follows:
 
@@ -419,7 +411,7 @@ Where other authentication mechanisms are used (for example, physical or logical
 
 #### Your responsibilities
 
-Ensure that all access to the CDE is provided on per-user identities, and this is extended into any physical or virtual tokens. This includes any VPN access into the CDE network, ensuring that enterprise point-to-site access (if any) use per-user certificates as part of that authentication flow.
+Ensure that all access to the CDE is provided on per-user identities, and that it's extended into any physical or virtual tokens. This includes any VPN access into the CDE network, ensuring that enterprise point-to-site access (if any) use per-user certificates as part of that authentication flow.
 
 ### Requirement 8.7
 
@@ -447,7 +439,7 @@ Ensure that security policies and operational procedures for identification and 
 
 It's critical that you maintain thorough documentation about the processes and policies. Maintain documentation about the enforced policies. As part of your identity onboarding training, provide guidance for password reset procedures and organizational best practices about protecting assets. People operating regulated environments must be educated, informed, and incentivized to support the security assurances. This is particularly important for people who are part of the approval process from a policy perspective.
 
-### Requirement 9 – Restrict physical access to cardholder data
+### Requirement 9: Restrict physical access to cardholder data
 
 #### AKS feature support
 
@@ -466,9 +458,7 @@ Here are some suggestions for applying technical controls:
   - [Configurable token lifetimes in the Microsoft identity platform](/entra/identity-platform/configurable-token-lifetimes)
 
 - For cloud-hosted CDE, there aren't any responsibilities for managing physical access and hardware. Rely on corporate network physical and logical controls.
-
 - Minimize exporting of CHD backups to on-premises destinations. Use solutions hosted in Azure to limit physical access to backups.
-
 - Minimize backups to on-premises. If this is required, be aware that the on-premises destination will be in scope for audit.
 
 ## Next steps
