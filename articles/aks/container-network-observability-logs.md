@@ -34,21 +34,24 @@ To read more about throttling and Container insights, see the [Container insight
   - Unmanaged storage: When a custom resource is applied to enabled collection of logs, network flow logs are stored locally on the host nodes at the fixed mount location /var/log/acns/hubble. However, this storage location is temporary, as the node itself isn't a persistent storage solution. Additionally, once the log files reach a size of 50 MB, they're automatically rotated, which means older logs are overwritten. This storage solution is suitable for real-time monitoring but doesn't support long-term storage or retention. For users seeking more log management capabilities, non-Microsoft logging services such as an OpenTelemetry collector can be integrated. These options provide flexibility to manage logs outside of the Azure ecosystem and is useful for customers who already use specific log management platforms.
 
   - Managed storage: For long-term retention and advanced analytics, it's recommended to configure Azure monitoring within your AKS cluster to collect and store logs in an Azure Log Analytics workspace. This setup not only ensures secure and compliant log storage but also enables powerful capabilities such as anomaly detection, performance tuning, and historical data analysis. Using historical logs, users can identify trends, baseline behaviors, and proactively address recurring issues.
-For example, with Azure Managed Prometheus, users can configure alerts on both metrics and logs, enabling real-time monitoring and rapid detection of outliers.
 
-Workspace used for logs storage is the same, which is configured during onboarding. In context of supported plans for storage for this feature, both Analytics and Basic table plans are supported. For more detailed information on table plans, refer to the ([Azure Monitor Logs Documentation](/azure/azure-monitor/logs/data-platform-logs))
+    For example, with the managed service for Prometheus, you can configure alerts on both metrics and logs for real-time monitoring and rapid detection of outliers.
+
+    Workspace used for logs storage is the same, which is configured during onboarding. In context of supported plans for storage for this feature, both Analytics and Basic table plans are supported. For more detailed information on table plans, refer to the ([Azure Monitor Logs Documentation](/azure/azure-monitor/logs/data-platform-logs))
 
 - Simple visualization in Azure log analytics and Grafana dashboards: By presenting logs and data in grafana, dashboards simplify complex information, facilitate faster data comprehension, and enable quicker decision-making.
 
-### Visualization of Container Network logs in Azure portal
+### Visualization of logs in the Azure portal
 
-The user can visualize, query, and analyze flow logs in Azure portal in Azure log analytics workspace of their cluster:
+You can visualize, query, and analyze flow logs in the Azure portal in the Log Analytics workspace for your cluster.
 
-:::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Screenshot of Container Network Logs in Azure log analytics." lightbox="./media/advanced-container-networking-services/azure-log-analytics.png":::
+:::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Screenshot of container network logs in a Log Analytics workspace." lightbox="./media/advanced-container-networking-services/azure-log-analytics.png":::
 
-### Visualization of Container Network logs in Grafana dashboards
+### Visualization of logs in Grafana dashboards
 
-- Access in Azure Managed Grafana instances- To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as:
+- Access in Azure Managed Grafana instances.
+
+  To simplify the analysis of logs, we provide preconfigured two Azure Managed Grafana dashboards. You can find them as:
 
   - **Azure / Insights / Containers / Networking / Flow Logs** - This dashboard provides visualizations into which Kubernetes workloads are communicating with each other, including network requests, responses, drops, and errors. Currently, user has to import grafana dashboards with user ID to fetch flow logs dashboard in Azure portal. We understand it's is an interim solution.
 
@@ -58,33 +61,41 @@ The user can visualize, query, and analyze flow logs in Azure portal in Azure lo
 
     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 
-    For configuring Grafana, refer Setting up Azure Managed Grafana with Advanced Container Networking Services, see [Setting up Grafana](./how-to-configure-container-network-logs.md#visualization-using-azure-managed-grafana).
+    For more information, see [Set up Azure Managed Grafana with Advanced Container Networking Services](./how-to-configure-container-network-logs.md#visualization-using-azure-managed-grafana).
 
-- Access in the Azure portal with the "Dashboards with Grafana" option-
+- Access in the Azure portal via the **Dashboards with Grafana** option.
 
   :::image type="content" source="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png" alt-text="Screenshot of grafana dashboards in Azure monitor." lightbox="./media/advanced-container-networking-services/grafana-dashboard-in-monitor-resource.png":::
 
-  The users are able to see following major components in these dashboards:
+The dashboards have the following major components:
 
-- The dashboard provides a comprehensive overview of network health with key metrics such as total flow logs, unique requests, dropped requests, and forwarded requests, enabling quick anomaly detection and efficient troubleshooting. It categorizes statistics by protocol and behavior, including DNS dropped requests, HTTP 2xx responses, Layer 4 request and response rates, and dropped request counts. A service dependency graph visualizes application or cluster interactions, highlighting traffic flow, bottlenecks, and dependencies for performance optimization.
+- *A comprehensive overview of network health.*
 
-  :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Screenshot of Flow log stats and service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
+  You see key metrics, like total flow logs, unique requests, dropped requests, and forwarded requests for quick anomaly detection and efficient troubleshooting. The dashboard categorizes statistics by protocol and behavior, including DNS dropped requests, HTTP 2xx responses, Layer 4 request and response rates, and dropped request counts. A service dependency graph visualizes application or cluster interactions, highlighting traffic flow, bottlenecks, and dependencies for performance optimization.
 
-- Flow logs and error logs for quick analysis. The logs can be filtered for root-cause analysis. For example, for Domain Name Service (DNS) issues, you can filter error logs based on the DNS protocol.
+  :::image type="content" source="./media/advanced-container-networking-services/flow-log-stats.png" alt-text="Screenshot of flow log stats and a service dependency graph." lightbox="./media/advanced-container-networking-services/flow-log-stats.png":::
+
+- *Flow logs and error logs for quick analysis.*
+
+  You can filter flow logs for root-cause analysis. For example, for Domain Name Service (DNS) issues, filter error logs by the DNS protocol.
 
   :::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Screenshot of flow logs and error logs." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
 
-- You can filter out these logs just by expanding log and filter out the fields of their choice. Separating sections of flow logs and error logs helps in quicker analysis of issues. This organization allows users to quickly identify and address errors without sifting through unrelated information, improving efficiency in troubleshooting and debugging processes. Additionally, using clear labels and timestamps for each log entry can further enhance the ability to pinpoint specific events or errors within the system.
+  Separating sections of flow logs and error logs helps you more quickly analyze issues. You can quickly identify and address errors without sifting through unrelated information to improve efficiency in troubleshooting and debugging processes.
+
+  Use clear labels and timestamps for each log entry to more easily pinpoint specific events or errors in the system or processes.
 
   :::image type="content" source="./media/advanced-container-networking-services/flow-log-filters.png" alt-text="Screenshot of filters available." lightbox="./media/advanced-container-networking-services/flow-log-filters.png":::
 
-- The third section of the dashboard displays information like top namespaces, workloads, and DNS errors. The network flow log visualization is vital for monitoring and analyzing communication within a Kubernetes cluster. It provides insights into namespaces, workloads, port and query usage, and helps identify trends, detect bottlenecks, and diagnose issues. Spot significant network activity, drop requests, and assess protocol distribution (for example, TCP vs. UDP). This overview supports cluster health, resource optimization, and security by detecting unusual traffic patterns.
+- *Top namespaces, workloads, and DNS errors.*
 
-  :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Screenshot of top namespaces and pod." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
+  Network flow log visualization is vital for monitoring and analyzing communication in a Kubernetes cluster. It gives you insight into namespaces, workloads, and port and query usage, and it helps you identify trends, detect bottlenecks, and diagnose issues. Spot significant network activity, view drop requests, and assess protocol distribution (for example, TCP versus UDP). This overview section of the dashboard supports cluster health, resource optimization, and security by detecting and displaying unusual traffic patterns.
 
-## On demand
+  :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Screenshot of top namespaces and pod metrics." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
 
-Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without requiring prior configuration or persistent storage using Hubble CLI and Hubble UI. This mode for getting on-demand logs is in general availibility(GA).
+## On-demand
+
+Advanced Container Networking Services offers on-demand capture of network flow logs. Use the Hubble CLI and Hubble UI for real-time visibility without prior configuration or persistent storage. On-demand mode for for logs is in general availibility(GA).
 
 ### Hubble CLI
 

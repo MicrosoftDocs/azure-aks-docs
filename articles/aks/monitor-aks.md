@@ -52,11 +52,11 @@ For more information about the resource types for AKS, see [Azure Kubernetes Ser
 
 For a list of available metrics for AKS, see the [AKS monitoring data reference](monitor-aks-reference.md#metrics).
 
-Metrics play an important role in cluster monitoring, identifying issues, and optimizing performance in the AKS clusters. Platform metrics are captured by using the out-of-the-box metrics server installed in the kube-system namespace, which periodically scrapes metrics from all Kubernetes nodes served by Kubelet. You should also enable Azure Managed Prometheus metrics to collect container metrics and Kubernetes object metrics, such as object state of deployments. For more information, see [Collect Prometheus metrics from an AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana).
+Metrics play an important role in cluster monitoring, identifying issues, and optimizing performance in the AKS clusters. Platform metrics are captured by using the out-of-the-box metrics server installed in the kube-system namespace, which periodically scrapes metrics from all Kubernetes nodes served by Kubelet. You should also enable the Azure managed service for Prometheus metrics to collect container metrics and Kubernetes object metrics, such as object state of deployments. For more information, see [Collect Prometheus metrics from an AKS cluster](/azure/azure-monitor/containers/kubernetes-monitoring-enable#enable-prometheus-and-grafana).
 
 - [List of default Prometheus metrics](/azure/azure-monitor/containers/prometheus-metrics-scrape-default)
 
-AKS also exposes metrics from critical control plane components such as the API server, ETCD, and Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor AKS control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of Control Plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default and can be used for creating metrics-based alerts.
+AKS also exposes metrics from critical control plane components such as the API server, ETCD, and Scheduler through the Azure managed service for Prometheus. This feature is currently in preview. For more information, see [Monitor AKS control plane metrics (preview)](./monitor-control-plane-metrics.md). A subset of control plane metrics for the API server and ETCD are available free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). The metrics are collected by default. You can use the metrics to create metrics-based alerts.
 
 <a name="integrations"></a>
 [!INCLUDE [horz-monitor-custom-metrics](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-non-monitor-metrics.md)]
@@ -71,7 +71,7 @@ The following Azure services and features of Azure Monitor can be used for extra
 
 ### Monitor AKS control plane metrics (preview)
 
-AKS also exposes metrics from critical control plane components like the API server, ETCD, and Scheduler through Azure Managed Prometheus. This feature is currently in preview. For more information, see [Monitor Azure Kubernetes Service (AKS) control plane metrics (preview)](./control-plane-metrics-monitor.md). A subset of control plane metrics for the API server and ETCD are available for free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). These metrics are collected by default, and you can use them to create metrics-based alerts.
+AKS also exposes metrics from critical control plane components like the API server, ETCD, and Scheduler through the Azure managed service for Prometheus. This feature is currently in preview. For more information, see [Monitor AKS control plane metrics (preview)](./control-plane-metrics-monitor.md). A subset of control plane metrics for the API server and ETCD are available free through [Azure Monitor platform metrics](monitor-aks-reference.md#metrics). Thesmetrics are collected by default. You can use the metrics to create metrics-based alerts.
 
 [!INCLUDE [horz-monitor-resource-logs](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-resource-logs.md)]
 
@@ -136,11 +136,11 @@ Use [cost optimization settings](/azure/azure-monitor/containers/container-insig
 | --- | --- | --- |
 | **All (Default)** | All standard Container Insights tables | Required to enable the default Container Insights visualizations |
 | **Performance** | **Perf**, **InsightsMetrics** | |
-| **Logs and events** | **ContainerLog** or **ContainerLogV2**, **KubeEvents**, **KubePodInventory** | Recommended if you enabled managed Prometheus metrics |
+| **Logs and events** | **ContainerLog** or **ContainerLogV2**, **KubeEvents**, **KubePodInventory** | Recommended if you enabled managed service for Prometheus metrics |
 | **Workloads, Deployments, and HPAs** | **InsightsMetrics**, **KubePodInventory**, **KubeEvents**, **ContainerInventory**, **ContainerNodeInventory**, **KubeNodeInventory**, **KubeServices** | |
 | **Persistent Volumes** | **InsightsMetrics**, **KubePVInventory** | |
 
-The **Logs and events** grouping captures the logs from the **ContainerLog** or **ContainerLogV2**, **KubeEvents**, and **KubePodInventory** tables, but not the metrics. The recommended path to collect metrics is to enable [Azure Monitor managed service Prometheus for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) from your AKS cluster and use [Azure Managed Grafana](/azure/managed-grafana/overview) for data visualization. For more information, see [Manage an Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage).
+The **Logs and events** grouping captures the logs from the **ContainerLog** or **ContainerLogV2**, **KubeEvents**, and **KubePodInventory** tables, but not the metrics. The recommended path to collect metrics is to enable [Azure Monitor managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview) from your AKS cluster and use [Azure Managed Grafana](/azure/managed-grafana/overview) for data visualization. For more information, see [Manage an Azure Monitor workspace](/azure/azure-monitor/essentials/azure-monitor-workspace-manage).
 
 #### ContainerLogV2 schema
 
@@ -237,7 +237,7 @@ You can view real-time metrics data as the container engine generates it on the 
 
 The **Monitoring** tab on the **Overview** page for your AKS cluster resource offers a quick way to start viewing monitoring data in the Azure portal. This tab includes graphs with common metrics for the cluster separated by node pool. You can select any of these graphs to further analyze the data in the [metrics explorer](/azure/azure-monitor/essentials/metrics-getting-started).
 
-The **Monitoring** tab also includes links to [Managed Prometheus](#integrations) and [Container Insights](#integrations) for the cluster. If you need to enable these tools, you can enable them here. You might also see a banner at the top of the screen recommending that you enable other features to improve monitoring of your cluster.
+The **Monitoring** tab also includes links to the [Azure managed service for Prometheus](#integrations) and [Container insights](#integrations) for the cluster. If you need to enable these tools, you can enable them here. You might also see a banner at the top of the screen recommending that you enable other features to improve monitoring of your cluster.
 
 > [!TIP]
 > To access monitoring features for all AKS clusters in your subscription, on the Azure portal home page, select **Azure Monitor**.
@@ -248,24 +248,26 @@ The **Monitoring** tab also includes links to [Managed Prometheus](#integrations
 
 [!INCLUDE [horz-monitor-insights-alerts](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-recommended-alert-rules.md)]
 
-### Prometheus metrics based alerts
+### Prometheus metrics-based alerts
 
-When you [enable collection of Prometheus metrics](#integrations) for your cluster, you can download a collection of [recommended Prometheus alert rules](/azure/azure-monitor/containers/container-insights-metric-alerts#enable-prometheus-alert-rules). This download includes the following rules:
+When you [enable collection of Prometheus metrics](#integrations) for your cluster, you can download a collection of [recommended Prometheus alert rules](/azure/azure-monitor/containers/container-insights-metric-alerts#enable-prometheus-alert-rules).
+
+The download includes the following rules:
 
 | Level | Alerts |
 |:---|:---|
-| Cluster level |
-KubeCPUQuotaOvercommit<br>KubeMemoryQuotaOvercommit<br>KubeContainerOOMKilledCount<br>KubeClientErrors<br>KubePersistentVolumeFillingUp<br>KubePersistentVolumeInodesFillingUp<br>KubePersistentVolumeErrors<br>KubeContainerWaiting<br>KubeDaemonSetNotScheduled<br>KubeDaemonSetMisScheduled<br>KubeQuotaAlmostFull |
+| Cluster level | KubeCPUQuotaOvercommit<br>KubeMemoryQuotaOvercommit<br>KubeContainerOOMKilledCount<br>KubeClientErrors<br>KubePersistentVolumeFillingUp<br>KubePersistentVolumeInodesFillingUp<br>KubePersistentVolumeErrors<br>KubeContainerWaiting<br>KubeDaemonSetNotScheduled<br>KubeDaemonSetMisScheduled<br>KubeQuotaAlmostFull |
 | Node level | KubeNodeUnreachable<br>KubeNodeReadinessFlapping |
 | Pod level | KubePVUsageHigh<br>KubeDeploymentReplicasMismatch<br>KubeStatefulSetReplicasMismatch<br>KubeHpaReplicasMismatch<br>KubeHpaMaxedOut<br>KubePodCrashLooping<br>KubeJobStale<br>KubePodContainerRestart<br>KubePodReadyStateLow<br>KubePodFailedState<br>KubePodNotReadyByController<br>KubeStatefulSetGenerationMismatch<br>KubeJobFailed<br>KubeContainerAverageCPUHigh<br>KubeContainerAverageMemoryHigh<br>KubeletPodStartUpLatencyHigh |
 
-See [How to create log alerts from Container Insights](/azure/azure-monitor/containers/container-insights-log-alerts) and [How to query logs from Container Insights](/azure/azure-monitor/containers/container-insights-log-query).
-[Log alerts](/azure/azure-monitor/alerts/alerts-unified-log) can measure two different things, which can be used to monitor in different scenarios:
+See [Create log alerts from Container insights](/azure/azure-monitor/containers/container-insights-log-alerts) and [Query logs from Container insights](/azure/azure-monitor/containers/container-insights-log-query).
 
-- [Result count](/azure/azure-monitor/alerts/alerts-unified-log#result-count): Counts the number of rows returned by the query and can be used to work with events such as Windows event logs, Syslog, and application exceptions.
-- [Calculation of a value](/azure/azure-monitor/alerts/alerts-unified-log#calculation-of-a-value): Makes a calculation based on a numeric column and can be used to include any number of resources. An example is CPU percentage.
+[Log alerts](/azure/azure-monitor/alerts/alerts-unified-log) can measure two different types of information to help you monitor diverse scenarios:
 
-Depending on the alerting scenario required, log queries need to be created comparing a DateTime to the present time by using the `now` operator and going back one hour. To learn how to build log-based alerts, see [Create log alerts from Container insights](/azure/azure-monitor/containers/container-insights-log-alerts).
+- [Result count](/azure/azure-monitor/alerts/alerts-unified-log#result-count): Counts the number of rows returned by the query. Use this information to work with events like Windows event logs, syslog events, and application exceptions.
+- [Calculation of a value](/azure/azure-monitor/alerts/alerts-unified-log#calculation-of-a-value): Makes a calculation based on a numeric column. Use this information to include diverse resources. An example is CPU percentage.
+
+Most log queries compare a `DateTime` value to the present time by using the `now` operator and going back one hour. To learn how to build log-based alerts, see [Create log alerts from Container insights](/azure/azure-monitor/containers/container-insights-log-alerts).
 
 ### AKS alert rules
 
@@ -299,9 +301,9 @@ All metrics include these labels:
 
 #### [Cilium](#tab/cilium)
 
-For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux. Windows is currently not supported.
+For Cilium data plane scenarios, Container Network Observability provides metrics only for Linux. Currently, Windows isn't supported Container Network Observability metrics.
 
-Cilium exposes several metrics including the following used by Container Network Observability.
+Cilium exposes several metrics that Container Network Observability uses:
 
 | Metric name                    | Description                  | Extra labels          |Linux | Windows |
 |--------------------------------|------------------------------|-----------------------|-------|---------|
@@ -336,7 +338,7 @@ The following table outlines the generated metrics.
 
 ---
 
-For detailed pod-level and DNS metrics, explore [Advanced Container Networking services](advanced-container-networking-services-overview.md).
+For detailed pod-level and DNS metrics, see [Advanced Container Networking services](advanced-container-networking-services-overview.md).
 
 ## Related content
 

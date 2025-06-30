@@ -25,10 +25,10 @@ This article assumes you have an existing AKS cluster. If you need an AKS cluste
 ## Using kubectl raw
 
 You can quickly view any node kubelet logs by using the following command:
+
 ```bash
 kubectl get --raw "/api/v1/nodes/nodename/proxy/logs/messages"|grep kubelet
 ```
-
 
 ## Create an SSH connection
 
@@ -36,7 +36,7 @@ First, you need to create an SSH connection with the node you need to view *kube
 
 ## Get kubelet logs
 
-Once you connect to the node using `kubectl debug`, run the following command to pull the *kubelet* logs:
+After you connect to the node by using `kubectl debug`, run the following command to pull the *kubelet* logs:
 
 ```console
 chroot /host
@@ -76,7 +76,7 @@ I0508 12:28:48.321952    8672 kubelet_node_status.go:497] Using Node Hostname fr
 I0508 12:28:58.344656    8672 kubelet_node_status.go:497] Using Node Hostname from cloudprovider: "aks-agentpool-11482510-0"
 ```
 
-## Next steps
+## Related content
 
 If you need more troubleshooting information for the Kubernetes main, see [view Kubernetes main node logs in AKS][aks-main-logs].
 
@@ -87,4 +87,3 @@ If you need more troubleshooting information for the Kubernetes main, see [view 
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
 [azure-container-logs]: /azure/azure-monitor/containers/container-insights-overview
-

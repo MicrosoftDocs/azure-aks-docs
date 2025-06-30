@@ -9,24 +9,24 @@ ms.topic: concept-article
 ms.date: 05/10/2025
 ---
 
-# What is Container Network Metrics?
+# What are container network metrics?
 
 Advanced Container Networking Services in Azure Kubernetes Service (AKS) facilitates the collection of comprehensive container network metrics, providing valuable insights into the performance of containerized environments. This capability continuously captures essential metrics at the node level and pod level, including traffic volume, dropped packets, connection states, and Domain Name Service (DNS) resolution times for effective monitoring and optimizing network performance.
 
-The ability to capture these metrics is essential for understanding how containers communicate, how traffic flows between services, and where bottlenecks or disruptions might be occurring. Advanced Container Networking Services integrates seamlessly with monitoring tools like Prometheus and Grafana, providing users with a complete view of networking metrics that can be used for in-depth troubleshooting, network optimization, and performance tuning.
+The ability to capture these metrics is essential for understanding how containers communicate, how traffic flows between services, and where bottlenecks or disruptions might be occurring. Advanced Container Networking Services integrates seamlessly with monitoring tools like Prometheus and Grafana to give you a complete view of networking metrics. Use the metrics for in-depth troubleshooting, network optimization, and performance tuning.
 
 In today’s cloud-native world, maintaining a healthy and efficient network in a dynamic containerized environment is vital to ensuring that applications perform as expected. Without proper visibility into network traffic and its patterns, identifying potential issues or inefficiencies becomes challenging.
 
-### Key benefits
+## Key benefits
 
 - Deep visibility into network performance
 - Enhanced troubleshooting and optimization
 - Proactive anomaly detection
 - Better resource management and scaling
 - Capacity planning and compliance
-- Simplified Metrics Storage and Visualization Options. Choose between:
+- Simplified metrics storage and visualization options. Choose between:
 
-  - **Azure Managed Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
+  - **Azure managed service for Prometheus and Grafana**: Azure manages the infrastructure and maintenance, allowing users to focus on configuring metrics and visualizing metrics.
   - **Bring your own (BYO) Prometheus and Grafana**: Users deploy and configure their own instances and manage the underlying infrastructure.
 
 ## Types of metrics captured
@@ -109,7 +109,7 @@ For *incoming traffic*, a `destination` label that indicates the destination pod
 
 ### Scale
 
-Azure managed Prometheus and Grafana impose service-specific scale limitations. For more information, see [Scrape Prometheus metrics at scale in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-scrape-scale).
+The managed service for Prometheus and Grafana in Azure Monitor impose service-specific scale limitations. For more information, see [Scrape Prometheus metrics at scale in Azure Monitor](/azure/azure-monitor/essentials/prometheus-metrics-scrape-scale).
 
 ## Pricing
 

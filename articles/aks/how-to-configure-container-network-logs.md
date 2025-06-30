@@ -361,11 +361,11 @@ You can visualize container network flow logs for analysis by using two prebuilt
 
 1. To simplify log analysis, we provide preconfigured two Azure Managed Grafana dashboards:
 
-    * **Azure/Insights/Containers/Networking/Flow Logs:** This dashboard provides visualizations in which Kubernetes workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use ID [23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
+    * **Azure/Insights/Containers/Networking/Flow Logs:** This dashboard provides visualizations in which Kubernetes workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use [ID 23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
 
       :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard.png" alt-text="Screenshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard.png":::
 
-    * **Azure/Insights/Containers/Networking/Flow Logs (External Traffic):** This dashboard provides visualizations in which Kubernetes workloads send and receive communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. Use ID: [23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
+    * **Azure/Insights/Containers/Networking/Flow Logs (External Traffic):** This dashboard provides visualizations in which Kubernetes workloads send and receive communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. Use [ID 23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
 
     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 
