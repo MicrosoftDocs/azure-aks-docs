@@ -4,7 +4,7 @@ description: Learn how to access a private Azure Kubernetes Service (AKS) cluste
 ms.topic: concept-article
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli,innovation-engine
-ms.date: 05/06/2025
+ms.date: 06/13/2024
 author: schaffererin
 ms.author: schaffererin
 ---
