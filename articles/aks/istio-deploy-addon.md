@@ -15,6 +15,9 @@ This article shows you how to install the Istio-based service mesh add-on for Az
 
 For more information on Istio and the service mesh add-on, see [Istio-based service mesh add-on for Azure Kubernetes Service][istio-about].
 
+> [!TIP]
+> You can use Microsoft Copilot in Azure to help deploy Istio to your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#install-and-work-with-istio).
+
 ## Before you begin
 
 * The add-on requires Azure CLI version 2.57.0 or later installed. You can run `az --version` to verify version. To install or upgrade, see [Install Azure CLI][azure-cli-install].

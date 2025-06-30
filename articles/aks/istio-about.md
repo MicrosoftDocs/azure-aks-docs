@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 04/09/2023
 ms.author: shasb
 author: shashankbarsin
+ms.custom: copilot-scenario-highlight
 ---
 
 # Istio-based service mesh add-on for Azure Kubernetes Service

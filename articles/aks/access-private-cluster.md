@@ -3,7 +3,7 @@ title: Access a private Azure Kubernetes Service (AKS) cluster using the command
 description: Learn how to access a private Azure Kubernetes Service (AKS) cluster using the Azure CLI command invoke feature or the Azure portal Run command feature.
 ms.topic: concept-article
 ms.subservice: aks-security
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, copilot-scenario-highlight
 ms.date: 09/15/2023
 author: schaffererin
 ms.author: schaffererin
@@ -16,6 +16,9 @@ When you access a private AKS cluster, you need to connect to the cluster from t
 With the Azure CLI, you can use `command invoke` to access private clusters without the need to configure a VPN or Express Route. `command invoke` allows you to remotely invoke commands, like `kubectl` and `helm`, on your private cluster through the Azure API without directly connecting to the cluster. The `Microsoft.ContainerService/managedClusters/runcommand/action` and `Microsoft.ContainerService/managedclusters/commandResults/read` actions control the permissions for using `command invoke`.
 
 With the Azure portal, you can use the `Run command` feature to run commands on your private cluster. The `Run command` feature uses the same `command invoke` functionality to run commands on your cluster.
+
+> [!TIP]
+> You can use Microsoft Copilot in Azure to run `kubectl` commands in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#run-cluster-commands).
 
 The pod created by the `Run command` provides `kubectl` and `helm` for operating your cluster. `jq`, `xargs`, `grep`, and `awk` are available for Bash support.
 
