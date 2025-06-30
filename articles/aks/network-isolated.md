@@ -320,6 +320,12 @@ Wait and ensure the reimage completes, then run the following command to update 
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
+Keep in mind that you need to manually reimage all existing node pools again:
+
+```azurecli-interactive
+az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
+```
+
 >[!IMPORTANT]
 > Remember to reimage the cluster's node pools after you enable the network isolated cluster feature. Otherwise, the feature won't take effect for the cluster.
 
