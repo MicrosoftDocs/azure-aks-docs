@@ -2,39 +2,115 @@
 title: Use Confidential Virtual Machines (CVM) in Azure Kubernetes Service (AKS)
 description: Learn how to create Confidential Virtual Machines (CVM) node pools with Azure Kubernetes Service (AKS)
 ms.topic: how-to
-ms.date: 08/14/2023
-author: schaffererin
-ms.author: schaffererin
-
+ms.date: 06/26/2025
+author: allyford
+ms.author: allyford
 ---
 
 # Use Confidential Virtual Machines (CVM) in Azure Kubernetes Service (AKS) cluster
 
-You can use [confidential virtual machine (VM) sizes (DCav5/ECav5)][cvm-announce] to add a node pool to your AKS cluster with CVM. Confidential VMs with AMD SEV-SNP support bring a new set of security features to protect data-in-use with full VM memory encryption. These features enable node pools with CVM to target the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. The nodes in a node pool created with CVM use a customized Ubuntu 20.04 image specially configured for CVM. For more  on CVM, see [Confidential VM node pools support on AKS with AMD SEV-SNP confidential VMs][cvm].
+[Confidential Virtual Machines (CVM)][about-cvm] offer strong security and confidentiality for tenants. These features enable node pools with CVM to target the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. The nodes in a node pool created with CVM use a customized Ubuntu 20.04 image specially configured for CVM. 
+
+In this article, you learn how to create AKS node pools using Confidential VM sizes.
 
 > [!CAUTION]
 > In this article, there are references to a feature that may be using Ubuntu OS versions that are being deprecated for AKS
 >- Starting on 17 March 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+ to migrate to a supported Ubuntu version.
->For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues)
+>For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues).
 
-## Before you begin
+## AKS supported confidential VM sizes
+
+Azure offers a choice of Trusted Execution Environment (TEE) options from both AMD and Intel. These TEEs allow you to create Confidential VM environments with excellent price-to-performance ratios, all without requiring any code changes.
+- AMD-based Confidential VMs, use AMD SEV-SNP technology, which is introduced with 3rd Gen AMD EPYC™ processors. 
+- Intel-based Confidential VMs use Intel TDX, with 4th Gen Intel® Xeon® processors. 
+
+Both technologies have different implementations, however both provide similar protections from the cloud infrastructure stack. For more information, see [CVM VM sizes][CVM-sizes].
+
+## Security Features 
+
+CVMs offer the following security enhancements as compared to other virtual machine (VM) sizes:
+- Robust hardware-based isolation between virtual machines, hypervisor, and host management code.
+- Customizable attestation policies to ensure the host's compliance before deployment.
+- Cloud-based Confidential OS disk encryption before the first boot.
+- VM encryption keys that the platform or the customer (optionally) owns and manages.
+- Secure key release with cryptographic binding between the platform's successful attestation and the VM's encryption keys.
+- Dedicated virtual Trusted Platform Module (TPM) instance for attestation and protection of keys and secrets in the virtual machine.
+- Secure boot capability similar to Trusted launch for Azure VMs
+
+## How does it work?
+
+These security features allow for the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. The nodes in a node pool created with CVM use a [node image][./node-images] specially configured for CVM.
+
+### Supported OS Versions
+You can create CVM node pools on Linux OS types (Ubuntu and Azure Linux). However, not all OS versions support CVM node pools.
+
+This table includes the supported OS versions:
+
+|OS Type|OS SKU|CVM support|CVM default|
+|--|--|--|--|
+|Linux|Ubuntu|Supported|Ubuntu 20.04 is default for k8s version 1.24-1.33. Ubuntu 24.04 is default for k8s version 1.34-1.38.|
+|Linux|Azure Linux| Supported on Azure Linux 3.0| Azure Linux 3 is default for k8s version 1.28-1.36.|
+|Windows|Windows Server 2019| Not Supported|
+|Windows| Windows Server 2022| Not Supported|
+
+When requesting CVM using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version doesn't support CVM, AKS defaults to the most recent CVM-supported version of the OS. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 doesn't currently support CVM, AKS defaults to Ubuntu 20.04 for Linux CVM-enabled node pools.
+
+### Limitations
+
+The following limitations apply when adding a node pool with CVM to AKS:
+
+- You can't use FIPS, ARM64, Trusted Launch, or Pod Sandboxing.
+- You can't upgrade an existing node pool to use CVM.
+- You can use CVM with windows node pools.
+- CVM with Azure Linux is currently in preview.
+
+## Prerequisites
 
 Before you begin, make sure you have the following:
 
 - An existing AKS cluster.
-- The [DCasv5 and DCadsv5-series][cvm-subs-dc] or [ECasv5 and ECadsv5-series][cvm-subs-ec] SKUs available for your subscription.
+- CVM vm sizes must be available for your subscription in the region where the cluster is created. You must have sufficient quota to create a node pool with a CVM vm size.
+- If you're using Azure Linux os, you need to install the `aks-preview` extension, update the `aks-preview` extension, and register the preview feature flag. If you're using Ubuntu, you can skip these steps.
 
-## Limitations
+### Install `aks-preview` extension
 
-The following limitations apply when adding a node pool with CVM to AKS:
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
 
-- You can't use `--enable-fips-image`, ARM64, or Azure Linux.
-- You can't upgrade an existing node pool to use CVM.
-- The [DCasv5 and DCadsv5-series][cvm-subs-dc] or [ECasv5 and ECadsv5-series][cvm-subs-ec] SKUs must be available for your subscription in the region where the cluster is created.
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
-## Add a node pool with the CVM to AKS
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
 
-- Add a node pool with CVM to AKS using the [`az aks nodepool add`][az-aks-nodepool-add] command and set the `node-vm-size` to `Standard_DCa4_v5`.
+2. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **CVM for AzureLinux requires a minimum of 18.0.0b5**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+### Register `AzureLinux3CVMPreview` feature flag
+
+1. Register the `AzureLinux3CVMPreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinux3CVMPreview"
+    ```
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show *Registered*.
+
+    ```azurecli-interactive
+    az feature show --namespace Microsoft.ContainerService --name AzureLinux3CVMPreview
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+## Add a node pool with a CVM to your AKS cluster
+
+- Add a node pool with a CVM to your AKS cluster using the [`az aks nodepool add`][az-aks-nodepool-add] command and set the `node-vm-size` to a supported [VM size][CVM-sizes].
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -44,6 +120,8 @@ The following limitations apply when adding a node pool with CVM to AKS:
         --node-count 3 \
         --node-vm-size Standard_DC4as_v5 
     ```
+
+If you don't specify the `osSKU` or `osType`, AKS will default to `--os-type Linux` and `--os-sku Ubuntu`.
 
 ## Verify the node pool uses CVM
 
@@ -85,6 +163,8 @@ The following limitations apply when adding a node pool with CVM to AKS:
 In this article, you learned how to add a node pool with CVM to an AKS cluster. For more information about CVM, see [Confidential VM node pools support on AKS with AMD SEV-SNP confidential VMs][cvm].
 
 <!-- LINKS - Internal -->
+[about-cvm]: /azure/confidential-computing/confidential-vm-overview
+[cvm-sizes]: /azure/confidential-computing/virtual-machine-options
 [cvm]: /azure/confidential-computing/confidential-node-pool-aks
 [cvm-announce]: https://techcommunity.microsoft.com/t5/azure-confidential-computing/azure-confidential-vms-using-sev-snp-dcasv5-ecasv5-are-now/ba-p/3573747
 [cvm-subs-dc]: /azure/virtual-machines/dcasv5-dcadsv5-series
