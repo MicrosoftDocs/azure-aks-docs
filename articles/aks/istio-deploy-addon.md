@@ -2,12 +2,11 @@
 title: Deploy Istio-based service mesh add-on for Azure Kubernetes Service
 description: Deploy Istio-based service mesh add-on for Azure Kubernetes Service
 ms.topic: how-to
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, copilot-scenario-highlight
 ms.service: azure-kubernetes-service
 ms.date: 03/28/2024
 ms.author: shasb
 author: shashankbarsin
-ms.custom: copilot-scenario-highlight
 ---
 
 # Deploy Istio-based service mesh add-on for Azure Kubernetes Service
