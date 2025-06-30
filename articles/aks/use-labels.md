@@ -148,7 +148,7 @@ kubectl get nodes --show-labels | grep -e "costcenter=5000" -e "dept=HR"
 
 ## Updating labels on existing node pools
 
-You can update the labels on an existing node pool. Note: updating labels will overwrite the old labels.
+You can update the labels on an existing node pool. Note that updating labels will overwrite the old labels.
 
 ```bash
 az aks nodepool update \
