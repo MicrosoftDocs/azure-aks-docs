@@ -205,7 +205,7 @@ kubectl delete workspace workspace-phi-3-mini-adapter
 
 ## Next steps
 
-* Learn more on how to Fine tune language models with KAITO - AKS Engineering Blog
+* Learn more about fine-tuning language models with KAITO in this [AKS Engineering Blog](https://blog.aks.azure.com/2024/08/23/fine-tuning-language-models-with-kaito)!
 * Explore [MLOps for AI and machine learning workflows][concepts-ml-ops] and best practices on AKS
 * Learn about supported families of [GPUs on Azure Kubernetes Service][gpus-on-aks]
 
