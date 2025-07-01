@@ -13,22 +13,21 @@ ms.author: schaffererin
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303212)
 
-In this article, you learn how to use KAITO to efficiently self-host large language models on Kubernetes, reducing costs and resource complexity, enhancing customization, and maintaining full control over your data.
+In this article, you learn how to use the AI toolchain operator add-on to efficiently self-host large language models on Kubernetes, reducing costs and resource complexity, enhancing customization, and maintaining full control over your data.
 
 ## About KAITO
 
-Self-hosting large language models (LLMs) on Kubernetes is gaining momentum among organizations with high inference workloads, such as batch processing, chatbots, agents, and AI-driven applications. These organizations often have access to commercial-grade GPUs and are seeking alternatives to costly per-token API pricing models, which can quickly scale out of control. Many also require the ability to fine-tune or customize their models, a capability typically restricted by closed-source API providers. Additionally, companies handling sensitive or proprietary data - especially in regulated sectors such as finance, healthcare, or defense - prioritize self-hosting to maintain strict control over data and prevent exposure through third-party systems.
+Self-hosting large language models (LLMs) on Kubernetes is gaining momentum among organizations with inference workloads at scale, such as batch processing, chatbots, agents, and AI-driven applications. These organizations often have access to commercial-grade GPUs and are seeking alternatives to costly per-token API pricing models, which can quickly scale out of control. Many also require the ability to fine-tune or customize their models, a capability typically restricted by closed-source API providers. Additionally, companies handling sensitive or proprietary data - especially in regulated sectors such as finance, healthcare, or defense - prioritize self-hosting to maintain strict control over data and prevent exposure through third-party systems.
 
 To address these needs and more, the [Kubernetes AI Toolchain Operator (KAITO)](https://github.com/kaito-project/kaito), a Cloud Native Computing Foundation (CNCF) Sandbox project, simplifies the process of deploying and managing open-source LLM workloads on Kubernetes. KAITO integrates with vLLM, a high-throughput inference engine designed to serve large language models efficiently. vLLM as an inference engine helps reduce memory and GPU requirements without significantly compromising accuracy. 
 
-Supported in the AI toolchain operator managed add-on, KAITO offers a modular, plug-and-play setup that allows teams to quickly deploy models and expose them via production-ready APIs. It includes built-in features like OpenAI-compatible APIs, prompt formatting, batching, and streaming response support. When deployed on an AKS cluster, KAITO ensures data stays within the organization’s controlled environment, providing a secure, compliant alternative to cloud-hosted LLM APIs.
-
+Built on top of the open-source KAITO project, the AI toolchain operator managed add-on offers a modular, plug-and-play setup that allows teams to quickly deploy models and expose them via production-ready APIs. It includes built-in features like OpenAI-compatible APIs, prompt formatting, and streaming response support. When deployed on an AKS cluster, KAITO ensures data stays within your organization’s controlled environment, providing a secure, compliant alternative to cloud-hosted LLM APIs.
 
 ## Before you begin
 
 * This article assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for AKS](./concepts-clusters-workloads.md).
 * For ***all hosted model preset images*** and default resource configuration, see the [KAITO GitHub repository](https://github.com/kaito-project/kaito/tree/main/presets).
-* The AI toolchain operator add-on currently supports KAITO **version 0.4.4**, please make a note of this in considering your choice of model from the KAITO model repository.
+* The AI toolchain operator add-on currently supports KAITO **version 0.4.6**, please make a note of this in considering your choice of model from the KAITO model repository.
 
 ## Prerequisites
 
@@ -64,27 +63,21 @@ The following sections describe how to create an AKS cluster with the AI toolcha
     az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION
     ```
 
-2. Create an AKS cluster with the AI toolchain operator add-on enabled using the [az aks create][az-aks-create] command with the `--enable-ai-toolchain-operator` and `--enable-oidc-issuer` flags.
+2. Create an AKS cluster with the AI toolchain operator add-on enabled using the [az aks create][az-aks-create] command with the `--enable-ai-toolchain-operator` flag.
 
     ```azurecli-interactive
     az aks create --location $AZURE_LOCATION \
         --resource-group $AZURE_RESOURCE_GROUP \
         --name $CLUSTER_NAME \
-        --enable-oidc-issuer \
         --enable-ai-toolchain-operator \
         --generate-ssh-keys
     ```
-
-    > [!NOTE]
-    > AKS creates a managed identity once you enable the AI toolchain operator add-on. The managed identity is used to create GPU node pools in the managed AKS cluster. Proper permissions need to be set for it manually following the steps introduced in the following sections.
-    >
 
 3. On an existing AKS cluster, you can enable the AI toolchain operator add-on using the [az aks update][az-aks-update] command.
 
     ```azurecli-interactive
     az aks update --name $CLUSTER_NAME \
             --resource-group $AZURE_RESOURCE_GROUP \
-            --enable-oidc-issuer \
             --enable-ai-toolchain-operator
     ```
 
@@ -104,10 +97,10 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 
 ## Deploy a default hosted AI model
 
-1. Deploy the Falcon 7B-instruct model preset from the KAITO model repository using the `kubectl apply` command.
+1. Deploy the Falcon 7B-instruct model preset for inference from the KAITO model repository using the `kubectl apply` command.
 
     ```azurecli-interactive
-    kubectl apply -f https://raw.githubusercontent.com/Azure/kaito/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml
+    kubectl apply -f https://raw.githubusercontent.com/kaito-project/kaito/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml
     ```
 
 2. Track the live resource changes in your workspace using the `kubectl get` command.
@@ -169,10 +162,11 @@ After applying the KAITO model inference workspace, your resource readiness and 
 
 ## Next steps
 
-Learn more about [KAITO model deployment options](https://github.com/Azure/kaito) below:
+Learn more about KAITO model deployment options below:
 
+* [Monitor your KAITO inference workload][kaito-monitoring].
 * [Fine tune a model][kaito-fine-tune] with the AI toolchain operator add-on on AKS.
-* Learn about [MLOps best practices][mlops-best-practices] for your AI pipelines on AKS
+* Learn about [MLOps best practices][mlops-best-practices] for your AI pipelines on AKS.
 * Onboard a [custom model for KAITO inference](https://github.com/kaito-project/kaito/blob/main/docs/custom-model-integration/custom-model-integration-guide.md) on AKS.
 
 <!-- LINKS -->
@@ -192,3 +186,4 @@ Learn more about [KAITO model deployment options](https://github.com/Azure/kaito
 [mlops-best-practices]: ../aks/best-practices-ml-ops.md
 [delete-node-pool]: ../aks/delete-node-pool.md
 [kaito-fine-tune]: ./ai-toolchain-operator-fine-tune.md
+[kaito-monitoring]: ./ai-toolchain-operator-monitoring.md
