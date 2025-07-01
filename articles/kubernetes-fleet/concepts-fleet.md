@@ -6,7 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
-# Customer intent: "As a cloud administrator, I want to manage multiple AKS clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters efficiently."
+# Customer intent: "As a cloud administrator, I want to manage multiple AKS clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters."
 ---
 
 # Azure Kubernetes Fleet Manager and member clusters

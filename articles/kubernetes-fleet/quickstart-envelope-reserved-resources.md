@@ -10,7 +10,7 @@ ms.custom:
 - devx-track-azurecli
 - ignite-2023
 - build-2024
-# Customer intent: "As a Kubernetes administrator, I want to propagate reserved resources from a hub cluster to member clusters using envelope objects, so that I can manage resource allocation efficiently across my Kubernetes fleets."
+# Customer intent: "As a Kubernetes administrator, I want to propagate reserved resources from a hub cluster to member clusters using envelope objects, so that I can manage resource allocation across my Kubernetes fleets."
 ---
 
 # Use envelope objects to safely place resources

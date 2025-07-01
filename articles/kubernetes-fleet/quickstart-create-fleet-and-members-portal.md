@@ -8,7 +8,7 @@ ms.service: azure-kubernetes-fleet-manager
 ms.custom: template-quickstart, mode-other
 ms.devlang: azurecli
 ms.topic: quickstart
-# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager resource and join member clusters, so that I can efficiently manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
+# Customer intent: As a cloud architect, I want to create an Azure Kubernetes Fleet Manager resource and join member clusters, so that I can manage and orchestrate multiple Kubernetes clusters for improved scalability and application deployment.
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager resource and join member clusters using Azure portal

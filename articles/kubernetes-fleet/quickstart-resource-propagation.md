@@ -6,7 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: how-to
-# Customer intent: As a cloud architect managing multiple Kubernetes clusters, I want to efficiently deploy workloads across a fleet of clusters using resource placement strategies, so that I can optimize resource utilization and simplify application management.
+# Customer intent: As a cloud architect managing multiple Kubernetes clusters, I want to deploy workloads across a fleet of clusters using resource placement strategies, so that I can optimize resource utilization and simplify application management.
 ---
 
 # Use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across multiple clusters

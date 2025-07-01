@@ -6,7 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
-# Customer intent: As a platform admin, I want to efficiently propagate Kubernetes resources from a hub cluster to multiple member clusters, so that I can manage workloads and access control seamlessly across diverse environments.
+# Customer intent: As a platform admin, I want to propagate Kubernetes resources from a hub cluster to multiple member clusters, so that I can manage workloads and access control across diverse environments.
 ---
 
 # Introduce ClusterResourcePlacement API

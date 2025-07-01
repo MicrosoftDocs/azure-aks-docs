@@ -6,7 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
-# Customer intent: "As a platform administrator managing multiple Kubernetes clusters, I want to orchestrate safe and predictable updates across member clusters, so that I can efficiently maintain and upgrade the clusters without manual intervention and minimize downtime."
+# Customer intent: "As a platform administrator managing multiple Kubernetes clusters, I want to orchestrate safe and predictable updates across member clusters, so that I can maintain and upgrade the clusters without manual intervention and minimize downtime."
 ---
 
 # Update Kubernetes and node images across multiple member clusters

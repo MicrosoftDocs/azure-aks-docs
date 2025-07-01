@@ -6,7 +6,7 @@ ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-# Customer intent: "As a Kubernetes administrator, I want to customize cluster-scoped resources using the ClusterResourceOverride API, so that I can manage permissions and configurations consistently across my clusters."
+# Customer intent: "As a Kubernetes administrator, I want to customize cluster-scoped resources using the ClusterResourceOverride API, so that I can manage permissions and configurations across my clusters."
 ---
 
 # Customize cluster-scoped resources in Azure Kubernetes Fleet Manager with cluster resource overrides
