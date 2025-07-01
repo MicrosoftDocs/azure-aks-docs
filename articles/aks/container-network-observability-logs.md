@@ -95,7 +95,7 @@ The dashboards have the following major components:
 
 ## On-demand logs
 
-Advanced Container Networking Services offers on-demand capture of network flow logs. Use the Hubble CLI and the Hubble UI for real-time visibility without prior configuration or persistent storage. On-demand mode for logs is generally available.
+Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without prior configuration or persistent storage by using the Hubble CLI and the Hubble UI. This mode for getting on-demand logs is in general availibility (GA). To configure on-demand log storage, see [Configure the Hubble CLI and Hubble UI](./how-to-configure-container-network-logs.md#configuring-on-demand-mode).
 
 ### Hubble CLI
 
@@ -119,6 +119,16 @@ Together, these tools provide real-time visibility and actionable insights, enab
 - **Improved decision-making**: Visualizing network patterns in Azure Managed Grafana and applying service maps provides customers with clear insights into their application’s network behavior, for better infrastructure planning and optimization.
 - **Cost savings**: Efficient log aggregation and customizable logging scopes reduce storage and data ingestion costs, providing a cost-effective solution for long-term network monitoring.
 - **Streamlined compliance and security**: Persistent and comprehensive logs support audit trails, regulatory compliance, and quick identification of suspicious traffic, helping customers maintain a secure and compliant environment.
+
+## Limitations
+
+- Container network logs with stored logs mode currently works only with the Cilium data plane.
+- Layer 7 flow logs are captured only when Layer 7 policy support is enabled. For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
+- DNS flows and metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+- Onboarding by using Terraform currently is not supported.
+- When Log Analytics is not configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, older logs are overwritten by new entries.
+- If the table plan is set to basic logs, the pre-built Grafana dashboards do not work.
+- The auxiliary logs table plan is not supported.
 
 ## Pricing
 

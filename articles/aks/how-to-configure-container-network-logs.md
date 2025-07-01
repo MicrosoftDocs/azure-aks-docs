@@ -61,13 +61,22 @@ az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetwork
 
 When the feature shows **Registered**, refresh the registration of the `Microsoft.ContainerService` resource provider by using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
 
+## Limitations
+
+* Layer 7 flow data is captured only when Layer 7 policy support is enabled. For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
+* DNS flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* During the public preview phase, this feature can be configured only via the Azure CLI and Azure Resource Manager templates. Onboarding by using Terraform is not supported at this time.
+* When Log Analytics is not configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, older logs are overwritten by new entries.
+* If the log table plan is set to basic logs, the pre-built Grafana dashboards do not function as expected.
+* The auxiliary logs table plan is not supported.
+
 ### Enable Advanced Container Networking Services on a new cluster
 
 Use the `az aks create` command with the `--enable-acns` flag to create a new AKS cluster that has all Advanced Container Networking Services features. These features include:
 
 * **Container Network Observability:**  Provides insight into your network traffic. To learn more, see [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
 
-* **Container Network Security:** Offers security features like Fully Qualified Domain (FQDN) filtering. To learn more, see [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+* **Container Network Security:** Offers security features like FQDN filtering. To learn more, see [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 ```azurecli
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
@@ -301,7 +310,16 @@ Status:
 
 ### Azure Managed Grafana
 
+<<<<<<< HEAD
+
 #### Create an Azure Managed Grafana instance
+
+=======
+If you do not have existing Grafana instance, you need to create one to visualize network flow logs pre-built dashboard.
+
+#### Create Azure Managed Grafana instance
+>>>>>>>
+>>>>>>> e2e56179fc5d483cdfee3955958fc9babadf50da
 
 Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the Grafana instance must be unique.
 
@@ -315,6 +333,8 @@ az grafana create \
     --resource-group $RESOURCE_GROUP 
 ```
 
+<<<<<<< HEAD
+
 Verify the data source for the Grafana instance.
 
 You can verify the subscription for the data source for Grafana dashboards by checking the **Data source** tab in the Grafana instance.
@@ -325,6 +345,28 @@ You can verify the subscription for the data source for Grafana dashboards by ch
 > By default, the managed identity for Azure Managed Grafana has read access to the subscription in which it was created. No more configuration is required if both Azure Managed Grafana and the Log Analytics workspace are in the same subscription.
 >
 >If Azure Managed Grafana and the Log Analytics workspace are in *different* subscriptions, you must manually assign the Monitoring Reader role to the Grafana managed identity on the Log Analytics workspace. For more information, see [How to modify access permissions](/azure/managed-grafana/how-to-permissions).
+=======
+Ensure that your Grafana workspace can access and search all monitoring data in relevant subscription(s). This is mandatory for accessing pre-built dashboards for network flow logs.  
+
+**Use Case 1** - If you're a subscription Owner or a User Access Administrator: when a Grafana workspace is created, it comes with a Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources within the subscription. This means that the new Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription.
+
+**Use Case 2** - If you're not a subscription Owner/User Access Administrator or log analytics and garfana workspace are in different subscription – In either of the case, Grafana would not have access to log analytics and subscription. Grafana workspace must have Monitoring reader permission on relevant subscription(s) to get access to pre-built dashboards. Follow these steps to enable this -
+
+1.  Go to your Grafana workspace -> Settings -> Identity
+
+  :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of identity option in grafana setting." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
+
+2. Select on Azure role assignments and then choose Add role assignments.
+
+  :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
+
+3. Add Scope to subscription, choose relevant subscription(s), choose role as Monitoring Reader and save.
+  
+ :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
+
+Verify data source for grafana instance- The user can verify subscription for data source for grafana dashboards by checking data source tab in grafana instance as shown below -
+  :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking data source for grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
+>>>>>>> e2e56179fc5d483cdfee3955958fc9babadf50da
 
 ### Visualization in Grafana dashboards
 
