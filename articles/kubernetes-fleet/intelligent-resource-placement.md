@@ -6,6 +6,9 @@ ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+ms.custom:
+  - build-2024
+# Customer intent: "As an application developer, I want to utilize intelligent resource placement in Kubernetes across multiple clusters, so that I can optimize workload scheduling based on cost and resource availability efficiently."
 ---
 
 # Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager

@@ -6,6 +6,7 @@ ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a Kubernetes administrator, I want to customize namespace-scoped resources using the ResourceOverride API, so that I can enforce consistent configurations across my clusters efficiently.
 ---
 
 # Customize namespace-scoped resources in Azure Kubernetes Fleet Manager with resource overrides
