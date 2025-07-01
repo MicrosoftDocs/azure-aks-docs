@@ -2,7 +2,7 @@
 title: Monitor Azure Kubernetes Service (AKS)
 description: Start here to learn how to monitor Azure Kubernetes Service (AKS) as it supports your critical applications and business processes. 
 ms.date: 09/06/2024
-ms.custom: horz-monitor
+ms.custom: horz-monitor, copilot-scenario-highlight
 ms.topic: concept-article
 author: xuhongl
 ms.author: xuhliu
@@ -21,6 +21,9 @@ ms.subservice: aks-monitoring
 - For collecting metric data from Kubernetes clusters, see [Azure Monitor managed service for Prometheus](/azure/azure-monitor/essentials/prometheus-metrics-overview).
 - For collecting logs in Kubernetes clusters, see [Azure Monitor features for Kubernetes monitoring](/azure/azure-monitor/containers/container-insights-overview).
 - For data visualization, see [Azure Workbooks](/azure/azure-monitor/visualize/workbooks-overview) and [Monitor your Azure services in Grafana](/azure/azure-monitor/visualize/grafana-plugin).
+
+> [!TIP]
+> You can use Microsoft Copilot in Azure to configure monitoring on your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#configure-monitoring-on-clusters).
 
 [!INCLUDE [horz-monitor-insights](~/reusable-content/ce-skilling/azure/includes/azure-monitor/horizontals/horz-monitor-insights.md)]
 
