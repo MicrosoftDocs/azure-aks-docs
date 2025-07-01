@@ -224,9 +224,9 @@ To enable container network logs on an existing cluster:
      az aks disable-addons -a monitoring -g $RESOURCE_GROUP -n $CLUSTER_NAME
     ```
 
-   You complete this step because monitoring addons might already be enabled, but not for high scale. For more information, see [High Scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
+   You complete this step because monitoring addons might already be enabled, but not for high scale. For more information, see [High-scale mode](/azure/azure-monitor/containers/container-insights-high-scale).
 
-1. Set Azure Monitor with `enable-high-log-scale-mode`:
+1. Set Azure Monitor to `enable-high-log-scale-mode`:
 
     ```azurecli
      ### Use default Log Analytics workspace
@@ -312,23 +312,23 @@ Status:
 
 #### Create an Azure Managed Grafana instance
 
-Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the Grafana instance must be unique.
+Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the instance must be unique.
 
 ```azurecli
-# Set an environment variable for the Grafana name. Make sure that you replace the placeholder with your own value.
+# Set an environment variable for the Managed Grafana name. Make sure that you replace the placeholder with your own value.
 export GRAFANA_NAME="<grafana-name>"
 
-# Create Grafana instance
+# Create a Managed Grafana instance
 az grafana create \
     --name $GRAFANA_NAME \
     --resource-group $RESOURCE_GROUP 
 ```
 
-Verify the data source for the Grafana instance.
+Verify the data source for the Managed Grafana instance.
 
-You can verify the subscription for the data source for Grafana dashboards by checking the **Data source** tab in the Grafana instance.
+To verify the subscription for the data source for the Grafana dashboards, check the **Data source** tab in the Managed Grafana instance.
 
-:::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source for the Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
+:::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source for the Managed Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
   
 Ensure that your Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
 
@@ -336,7 +336,7 @@ Ensure that your Grafana workspace can access and search all monitoring data in 
 
 **Use case 2**:  If you're not a subscription Owner or User Access Administrator, or if your Log Analytics and Managed Garfana workspace are in different subscriptions, Grafana can't access Log Analytics and the subscription. The Grafana workspace must have the Monitoring Reader role in the relevant subscription to access to prebuilt Grafana dashboards. In this scenario, complete these steps to provide access:
 
-1. Go to your Managed Grafana workspace > **Settings** > **Identity**.
+1. In your Managed Grafana workspace, go to **Settings** > **Identity**.
 
   :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of the identity option in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
 
@@ -344,17 +344,17 @@ Ensure that your Grafana workspace can access and search all monitoring data in 
 
   :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in a Grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
 
-1. For **Scope**, enter **Subscription**. Select your subscription, set **Role** to **Monitoring Reader**, and then select **Save**.
+1. For **Scope**, enter **Subscription**. Select your subscription. Set **Role** to **Monitoring Reader**, and then select **Save**.
   
-    :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in a Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
 
-1. Verify the data source for the Managed Grafana instance. You can verify the subscription for the data source for Grafana dashboards by checking the **Data source** tab in the Grafana instance:
+1. Verify the data source for the Managed Grafana instance. To verify the subscription for the data source for the Grafana dashboards, check the **Data source** tab in the Managed Grafana instance:
 
-   :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source in a Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
 
 ### Visualization in Grafana dashboards
 
-You can visualize container network flow logs for analysis by using two prebuilt Grafana dashboards. You can access the dashboards either through  Azure Managed Grafana or in the Azure portal.
+You can visualize container network flow logs for analysis by using two prebuilt Grafana dashboards. You can access the dashboards either through Azure Managed Grafana or in the Azure portal.
 
 #### Visualization by using Azure Managed Grafana
 
