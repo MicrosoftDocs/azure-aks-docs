@@ -310,16 +310,7 @@ Status:
 
 ### Azure Managed Grafana
 
-<<<<<<< HEAD
-
 #### Create an Azure Managed Grafana instance
-
-=======
-If you do not have existing Grafana instance, you need to create one to visualize network flow logs pre-built dashboard.
-
-#### Create Azure Managed Grafana instance
->>>>>>>
->>>>>>> e2e56179fc5d483cdfee3955958fc9babadf50da
 
 Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the Grafana instance must be unique.
 
@@ -333,8 +324,6 @@ az grafana create \
     --resource-group $RESOURCE_GROUP 
 ```
 
-<<<<<<< HEAD
-
 Verify the data source for the Grafana instance.
 
 You can verify the subscription for the data source for Grafana dashboards by checking the **Data source** tab in the Grafana instance.
@@ -345,28 +334,27 @@ You can verify the subscription for the data source for Grafana dashboards by ch
 > By default, the managed identity for Azure Managed Grafana has read access to the subscription in which it was created. No more configuration is required if both Azure Managed Grafana and the Log Analytics workspace are in the same subscription.
 >
 >If Azure Managed Grafana and the Log Analytics workspace are in *different* subscriptions, you must manually assign the Monitoring Reader role to the Grafana managed identity on the Log Analytics workspace. For more information, see [How to modify access permissions](/azure/managed-grafana/how-to-permissions).
-=======
 Ensure that your Grafana workspace can access and search all monitoring data in relevant subscription(s). This is mandatory for accessing pre-built dashboards for network flow logs.  
 
-**Use Case 1** - If you're a subscription Owner or a User Access Administrator: when a Grafana workspace is created, it comes with a Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources within the subscription. This means that the new Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription.
+**Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Grafana workspace is created, it comes with a Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources within the subscription. This means that the new Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription.
 
-**Use Case 2** - If you're not a subscription Owner/User Access Administrator or log analytics and garfana workspace are in different subscription – In either of the case, Grafana would not have access to log analytics and subscription. Grafana workspace must have Monitoring reader permission on relevant subscription(s) to get access to pre-built dashboards. Follow these steps to enable this -
+**Use case 2**:  If you're not a subscription Owner/User Access Administrator, or your Log Analytics and Garfana workspace are in different subscription. In either case, Grafana doesn't have access to Log Analytics and the subscription. The Grafana workspace must have Monitoring reader permission on relevant subscription(s) to get access to pre-built dashboards. Follow these steps:
 
-1.  Go to your Grafana workspace -> Settings -> Identity
+1. Go to your Grafana workspace > **Settings** > **Identity**.
 
   :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of identity option in grafana setting." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
 
-2. Select on Azure role assignments and then choose Add role assignments.
+1. Select on Azure role assignments and then choose Add role assignments.
 
   :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
 
-3. Add Scope to subscription, choose relevant subscription(s), choose role as Monitoring Reader and save.
+1. Add Scope to subscription, choose relevant subscription(s), choose role as Monitoring Reader and save.
   
  :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
 
-Verify data source for grafana instance- The user can verify subscription for data source for grafana dashboards by checking data source tab in grafana instance as shown below -
-  :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking data source for grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
->>>>>>> e2e56179fc5d483cdfee3955958fc9babadf50da
+Verify data source for the Managed Grafana instance. The user can verify subscription for data source for Grafana dashboards by checking the **Data source** tab in the Grafana instance:
+
+:::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking data source for grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
 
 ### Visualization in Grafana dashboards
 
