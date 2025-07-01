@@ -290,49 +290,11 @@ Kubernetes upgrades for node autoprovision nodes follows the control plane Kuber
 
 By default NAP node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place:
 
-- Maintenance Windows (recommended): You can set `aksManagedNodeOSUpgradeSchedule` on an AKS-managed, or self-managed schedule. For more information, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
 - Karpenter Node Disruption Budgets - Node-level disruption budgets can be set, and can be triggered when nodes move out of spec, known as Drift. 
-- Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file.
+- Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file to determine when and which pods should be available for disruption. Node Auto-provisioning honors PDBs. 
 
 > [!IMPORTANT]
 > After you update the SSH key, AKS doesn't automatically update your nodes. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with Node Auto-provisioning enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
-
-## Retrieve Karpenter logs and status 
-
-You can retrieve logs and status updates from Node Autoprovisioning to help diagnose and debug Karpenter events. AKS manages Node autoprovisioning on your behalf and runs it in the managed control plane. You can enable control plane node to see the logs and operations from NAP through Azure Monitor, or the Diagnostic settings button in Azure Portal.
-
-### [Azure CLI](#tab/azure-cli)
-
-1. Set up a rule for resource logs to push Karpenter logs to Log Analytics using the [instructions here][aks-view-master-logs]. Make sure you check the box for `karpenter` when selecting options for **Logs**.
-1. Select the **Log** section on your cluster.
-1. Enter the following example query into Log Analytics:
-
-    ```kusto
-    AzureDiagnostics
-    | where Category == "karpenter"
-    ```
-1. View Node Autoprovisioning scale-up not triggered events on CLI.
-    ```bash
-    kubectl get events --field-selector source=Karpenter,reason=NotTriggerScaleUp
-    ```
-1. View Node Autoprovisioning warning events on CLI.
-    ```bash
-    kubectl get events --field-selector source=cluster-autoscaler,type=Warning
-    ```
-1. Node autoprovisioning also writes out the health status to a `configmap` named `karpenter-status`. You can retrieve these logs using the following `kubectl` command:
-    ```bash
-    kubectl get configmap -n kube-system karpenter-status -o yaml
-    ```
-### [Azure portal](#tab/azure-portal)
-1. In the [Azure portal](https://portal.azure.com/), navigate to your AKS cluster.
-2. In the service menu, under **Settings**, select **Node pools**.
-3. Select any of the tiles for **Karpenter events**, **Karpenter warnings**, or **Scale-up not triggered** to get more details.
-
----
-
-## Node Auto-provisioning Metrics
-You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to access metrics for [Node Autoprovisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview). There is a default list of metrics that are scraped, and a larger list of metrics that can be accessed to capture more info as needed. 
-
 
 ## Monitoring selection events
 
