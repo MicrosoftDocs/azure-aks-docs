@@ -95,7 +95,7 @@ The dashboards have the following major components:
 
 ## On-demand logs
 
-Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without prior configuration or persistent storage by using the Hubble CLI and the Hubble UI. This mode for getting on-demand logs is in general availibility (GA). To configure on-demand log storage, see [Configure the Hubble CLI and Hubble UI](./how-to-configure-container-network-logs.md#configuring-on-demand-mode).
+Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without prior configuration or persistent storage by using the Hubble CLI and the Hubble UI. This mode for getting on-demand logs is in general availibility (GA). To configure on-demand log storage, see [Configure the Hubble CLI and Hubble UI](./how-to-configure-container-network-logs.md#configure-on-demand-mode).
 
 ### Hubble CLI
 
