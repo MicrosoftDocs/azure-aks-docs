@@ -1,6 +1,6 @@
 ---
-title: "Set up container network logs"
-description: Learn how to enable container network flow logs with storage in Advanced Container Networking Services (Preview) in Azure Kubernetes Service (AKS)."
+title: "Set Up Container Network Logs"
+description: Learn how to set up container network flow logs with storage in Advanced Container Networking Services (preview) in Azure Kubernetes Service (AKS)."
 author: shaifaligargmsft
 ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
@@ -10,9 +10,9 @@ ms.date: 05/09/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up container network logs in Advanced Container Networking Services (Preview)
+# Set up container network logs in Advanced Container Networking Services (preview)
 
-In this article, complete the steps to configure and use the container network logs feature in Advanced Container Networking Services for Azure Kubernetes Service (AKS). These logs offer persistent network flow monitoring tailored to enhance visibility in containerized environments.
+In this article, you complete the steps to configure and use the container network logs feature in Advanced Container Networking Services for Azure Kubernetes Service (AKS). These logs offer persistent network flow monitoring tailored to enhance visibility in containerized environments.
 
 By capturing container network logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate container network logs for your system. For more information about container network logs Feature, see [Overview of container network logs](container-network-observability-logs.md)
 
@@ -70,14 +70,11 @@ Use the `az aks create` command with the `--enable-acns` flag to create a new AK
 * **Container Network Security:** Offers security features like Fully Qualified Domain (FQDN) filtering. To learn more, see [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 ```azurecli
-
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
-
 export CLUSTER_NAME="<aks-cluster-name>"
 export RESOURCE_GROUP="<aks-resource-group>"
 
 # Create an AKS cluster
-
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
@@ -181,24 +178,18 @@ Alternatively, you can integrate a third-party logging service like an OpenTelem
 #### Configure Azure Monitor Agent to scrape logs in the Log Analytics workspace for a new cluster (in managed storage)
 
 ```azurecli
-
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
-
   export CLUSTER_NAME="<aks-cluster-name>"
   export RESOURCE_GROUP="<aks-resource-group>"
 
 # Enable azure monitor with high log scale mode
-
     ### To use the default Log Analytics workspace
-
     az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME
 
     ### To use an existing Log Analytics workspace
-
     az aks enable-addons -a monitoring --enable-high-log-scale-mode -g $RESOURCE_GROUP -n $CLUSTER_NAME --workspace-resource-id <workspace-resource-id>
 
 # Update the AKS cluster with the enable-retina-flow-logs flag
-
   az aks update --enable-acns \
     --enable-retina-flow-logs \
     -g $RESOURCE_GROUP \
@@ -315,13 +306,10 @@ Status:
 Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the Grafana instance must be unique.
 
 ```azurecli
-
 # Set an environment variable for the Grafana name. Make sure that you replace the placeholder with your own value.
-
 export GRAFANA_NAME="<grafana-name>"
 
 # Create Grafana instance
-
 az grafana create \
     --name $GRAFANA_NAME \
     --resource-group $RESOURCE_GROUP 
@@ -395,13 +383,10 @@ The `az aks create` command with the Advanced Container Networking Services flag
 > Clusters that have the Cilium data plane support the Container Network Observability and Container Network Security features starting with Kubernetes version 1.29.
 
 ```azurecli
-
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
-
 export CLUSTER_NAME="<aks-cluster-name>"
 
 # Create an AKS cluster
-
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
@@ -423,13 +408,10 @@ az aks create \
 > The [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for non-Cilium clusters.
 
 ```azurecli
-
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
-
 export CLUSTER_NAME="<aks-cluster-name>"
 
 # Create an AKS cluster
-
 az aks create \
     --name $CLUSTER_NAME \
     --resource-group $RESOURCE_GROUP \
@@ -450,7 +432,6 @@ The [`az aks update`](/cli/azure/aks#az_aks_update) command with the  `--enable-
 > Only clusters that have the Cilium data plane support the Container Network Security features of Advanced Container Networking Services.
 
 ```azurecli
-
 az aks update \
     --resource-group $RESOURCE_GROUP \
     --name $CLUSTER_NAME \
@@ -470,14 +451,11 @@ az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
 Install the Hubble CLI to access the data it collects. Run the following commands:
 
 ```azurecli
-
 # Set environment variables
-
 export HUBBLE_VERSION=v1.16.3
 export HUBBLE_ARCH=amd64
 
 #Install the Hubble CLI
-
 if [ "$(uname -m)" = "aarch64" ]; then HUBBLE_ARCH=arm64; fi
 curl -L --fail --remote-name-all https://github.com/cilium/hubble/releases/download/$HUBBLE_VERSION/hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 sha256sum --check hubble-linux-${HUBBLE_ARCH}.tar.gz.sha256sum
@@ -508,14 +486,11 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 1. Mutual TLS (mTLS) ensures the security of the Hubble Relay server. To enable the Hubble client to retrieve flows, you must get the appropriate certificates and configure the client with them. Apply the certificates by using the following commands:
 
     ```azurecli
-
     #!/usr/bin/env bash
-    
-    set -euo pipefail
+        set -euo pipefail
     set -x
     
     # Directory where certificates will be stored
-
     CERT_DIR="$(pwd)/.certs"
     mkdir -p "$CERT_DIR"
     
@@ -530,13 +505,11 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
       JSONPATH="{.data['${FILE//./\\.}']}"
     
       # Retrieve the secret and decode it
-
       kubectl get secret hubble-relay-client-certs -n kube-system \
         -o jsonpath="${JSONPATH}" | \
         base64 -d > "$CERT_DIR/$FILE"
     
       # Set the appropriate hubble CLI config
-
       hubble config set "$KEY" "$CERT_DIR/$FILE"
     done
         
@@ -826,26 +799,26 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
    Trying to enable container network flow logs capability on a cluster without enabling Advanced Container Networking Services:
 
-    ```az aks update -g test-rg -n test-cluster --enable-retina-flow-logs```
+    `az aks update -g test-rg -n test-cluster --enable-retina-flow-logs`
 
    Results in an error message:
 
-    ```Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.```
+    `Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.`
 
 * If the cluster Kubernetes version is earlier than version 1.32.0, trying to enable '--enable-retina-flow-logs':
 
-    ```The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later.```
+    `The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later.`
 
-    Where the %s is replaced by the customer's K8s version
+    Where the `%s` is replaced by the customer's Kubernetes version.
 
-* If a customer tries to run '--enable-retina-flow-logs' on a subscription where the Azure Feature Exposure Control (AFEC) flag isn't enabled:
+* If a customer tries to run `--enable-retina-flow-logs` on a subscription where the Azure Feature Exposure Control (AFEC) flag isn't enabled:
 
-    ```Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.```
+    `Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.`
 
 * If a customer tries to apply a RetinaNetworkFlowLog custom resource on a cluster where Advanced Container Networking Services isn't enabled:
 
-   ```error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"```
-   ```ensure CRDs are installed first```
+   `error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"`
+   `ensure CRDs are installed first`
 
 ### Disable container network logs: stored logs mode on existing cluster
 
@@ -868,5 +841,5 @@ If you don't plan to use this application, delete the other resources you create
 
 ## Related content
 
-* For more information about [Advanced Container Networking Services for Azure Kubernetes Service](advanced-container-networking-services-overview.md).
-* Explore the [Container Network Observability features features](./advanced-container-networking-services-overview.md#container-network-observability) in Advanced Container Networking Services.
+* Get more information about [Advanced Container Networking Services for AKS](advanced-container-networking-services-overview.md).
+* Explore the [Container Network Observability feature](./advanced-container-networking-services-overview.md#container-network-observability) in Advanced Container Networking Services.
