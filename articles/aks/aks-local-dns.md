@@ -4,32 +4,33 @@ description: Learn how to improve your DNS resolution performance and resiliency
 ms.subservice: aks-networking
 author: vaibhavarora
 ms.topic: how-to
-ms.date: 06/05/2025
+ms.date: 07/01/2025
 ms.author: vaibhavarora
 
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
 ---
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 # LocalDNS in Azure Kubernetes Service (Preview)
 
 ## Overview
 
-LocalDNS is an advanced feature that improves Domain Name System (DNS) resolution performance and reliability in Azure Kubernetes Service (AKS) clusters. LocalDNS deploys a DNS proxy on each node. This proxy reduces DNS query latency and lowers reliance on the cluster’s CoreDNS pods. LocalDNS is especially helpful for large clusters or environments with high DNS query volumes, where cluster DNS can become a bottleneck.
+LocalDNS is an advanced feature in Azure Kubernetes Service (AKS) that deploys a Domain Name System (DNS) proxy on each node to provide highly resilient, low-latency DNS resolution. By handling DNS queries locally, this proxy reduces traffic to the CoreDNS addon pods, improving overall DNS reliability and performance in the cluster. LocalDNS is especially beneficial in large clusters or environments with high DNS query volumes, where centralized DNS resolution can become a bottleneck.
 
-When LocalDNS is enabled, AKS deploys a local DNS cache as a systemd service on each node. Pods on the node send their DNS queries to this local cache, enabling faster DNS resolution by reducing network hops. This approach also minimizes conntrack table usage, lowering the risk of table exhaustion. Additionally, if upstream DNS becomes unavailable, LocalDNS can continue serving cached responses for a configurable duration, helping maintain pod connectivity and service reliability.
+When LocalDNS is enabled, AKS deploys a local DNS cache as a `systemd` service on each node. Pods on the node send their DNS queries to this local cache, enabling faster resolution by reducing network hops. This approach also minimizes `conntrack` table usage, lowering the risk of table exhaustion. Additionally, if upstream DNS becomes unavailable, LocalDNS can continue serving cached responses for a configurable duration, helping maintain pod connectivity and service reliability.
 
-![LocalDNS architecture diagram](./media/local-dns-in-aks/local-dns-diagram.png)
+![LocalDNS architecture diagram](./media/aks-local-dns/local-dns-diagram.png)
 
 ### Key Capabilities
 
 - **Reduced DNS resolution Latency:**
-    Each AKS node runs a `localdns` systemd service. Workloads running on the node send DNS queries to this service, which resolves them locally, reducing network hops and speeding up DNS lookups.
+    Each AKS node runs a `localdns` `systemd` service. Workloads running on the node send DNS queries to this service, which resolves them locally, reducing network hops and speeding up DNS lookups.
 
 - **Customizable DNS behavior:**
     You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
 
 - **Avoid conntrack races & conntrak table exhaustion:**
-    Pods send DNS queries to the `localdns` service on the same node without creating new conntrack table entries. Skipping the connection tracking helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and avoids User Datagram Protocol (UDP) DNS entries from filling up conntrack tables. This prevents dropped and rejected connections caused by conntrack table exhaustion and race conditions.
+    Pods send DNS queries to the `localdns` service on the same node without creating new `conntrack` table entries. Skipping the connection tracking helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and avoids User Datagram Protocol (UDP) DNS entries from filling up `conntrack` tables. This prevents dropped and rejected connections caused by `conntrack` table exhaustion and race conditions.
 
 - **Connection upgraded to TCP:**
     The connection from the `localdns` cache to the cluster’s CoreDNS service uses Transmission Control Protocol (TCP). TCP allows for connection rebalancing and removes conntrack table entries when the server closes the connection (in contrast to UDP connections, which have a default 30-second timeout). Applications don't need changes, because the `localdns` service still listens for UDP traffic.
@@ -43,22 +44,24 @@ When LocalDNS is enabled, AKS deploys a local DNS cache as a systemd service on 
 By using LocalDNS, you get faster and more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain more control over DNS traffic in your AKS environment.
 
 ## Before you begin
+
 * This article assumes that you have an existing AKS cluster with Kubernetes versions 1.33+. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * This article requires version X.X.X or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
 * This article requires the `aks-preview` Azure CLI extension version X.X.XXX or later
 
 ## Enable LocalDNS
+
 The following commands enable localDNS on your node pools. To modify the localDNS config file with coreDNS plugins and to add custom server blocks, refer to [Configuring LocalDNS](#configuring-localdns).
 
 ### Enable localDNS in a new node pool
 
-```console
+```azure-cli-interactive
 az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
 
 ### Enable localDNS in an existing node pool
 
-```console
+```azure-cli-interactive
 az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
 
@@ -66,21 +69,28 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 > Enabling localDNS on a node pool triggers a reimage operation on the nodes for the new setting to take effect.
 
 ## Verify if localDNS is enabled
+
 Once LocalDNS is enabled, you can verify its operation by running DNS queries from pods in the specified node pool and inspecting the `SERVER` field in the responses to confirm LocalDNS addresses are returned (169.254.10.10 or 169.254.10.11).
+
+Before running the validation steps, ensure the following:
+1. You have `kubectl` installed and configured to access your AKS cluster.
+1. Your user account has sufficient permissions to create and exec into pods.
+1. The node pool where you want to validate LocalDNS is in a Ready state.
+1. The BusyBox image (`busybox:1.28`) is accessible from your cluster nodes.
 
 Here's an example of how to verify:
 
 1. Create a debug pod in the node pool where localDNS is enabled:
-   ```console
+   ```azure-cli-interactive
    kubectl run dnstest --image=busybox:1.28 -- sleep 3600
    ```
 
-2. Once the pod is running, execute the following command to check DNS resolution:
-   ```console
+1. Once the pod is running, execute the following command to check DNS resolution:
+   ```azure-cli-interactive
    kubectl exec -it dnstest -- nslookup kubernetes.default
    ```
 
-3. Check the output. If localDNS is working correctly, you should see a response with the server address of 169.254.10.10 or 169.254.10.11:
+1. Check the output. If localDNS is working correctly, you should see a response with the server address of 169.254.10.10 or 169.254.10.11:
    ```
    Server:    169.254.10.10
    Address 1: 169.254.10.10
@@ -90,20 +100,23 @@ Here's an example of how to verify:
    ```
 
 ## Disable localDNS
-To disable localDNS, you need to update the `localdnsconfig.json` file to use `"mode":"Disabled"`. Once the file is updated, you can apply the configuration to the node pool to update with the change.
 
-```console
+To disable localDNS, you need to update the _localdnsconfig.json_ file to use `"mode":"Disabled"`. Once the file is updated, you can apply the configuration to the node pool to update with the change.
+
+```azure-cli-interactive
 az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
 
 ## Current Limitations
+
 * Windows node pools aren't supported
 * Clusters using Node autoprovisioning aren't supported
 * Kubernetes version 1.33+ is required to use localDNS
-* Ubuntu versions 18.04 and 20.04 aren't supported
+* Only Ubuntu versions 22.04 and later are supported
 
 ## Configuring localDNS
-If you enable localDNS on your node pool without specifying a custom localdnsconfig.json file, AKS applies a default configuration as follows:
+
+If you enable localDNS on your node pool without specifying a custom _localdnsconfig.json_ file, AKS applies a default configuration as follows:
 
 ```json
 {
@@ -158,12 +171,14 @@ If you enable localDNS on your node pool without specifying a custom localdnscon
 ```
 
 ### Setting the `mode` for localDNS
+
 LocalDNS can be enabled in three possible modes which define the extent of enforcement of localDNS for the workload:
 * `Preferred` (*default*): LocalDNS is enabled, but the configuration proceeds even if some settings are invalid.
 * `Required`: In this mode, LocalDNS is enforced, but it fails if any settings in the configuration are invalid.
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
 
 ### Server Blocks and Supported Plugins for localDNS 
+
 The default configuration applies to queries from pods using `dnsPolicy:default` (under `vnetDNSOverrides`) and pods using `dnsPolicy:ClusterFirst` (under `kubeDNSOverrides`). Within each, there are two default server blocks defined: `.` and  `cluster.local`. 
 
 * `.` represents all external DNS queries from pods that are trying to resolve public or non cluster domains (for example, *microsoft.com*)
@@ -183,7 +198,8 @@ The default configuration applies to queries from pods using `dnsPolicy:default`
 | [`serveStale`](https://coredns.io/plugins/cache)                  | Policy for serving stale DNS responses during upstream failures.                        | `verify`                                                             | `verify` `immediate`               | 
 
 ### Defining a custom server block in localDNS
-CoreDNS matches queries to a specific server block based on an exact match for domain being queried and not on partial matches. If you have the need for custom server blocks, you can add them to your localDNS configuration by creating a file called `localdnsconfig.json` with the added configurations.
+
+CoreDNS matches queries to a specific server block based on an exact match for domain being queried and not on partial matches. If you have the need for custom server blocks, you can add them to your localDNS configuration by creating a file called _localdnsconfig.json_ with the added configurations.
 
 For example, if you have specific DNS needs when accessing microsoft.com, you could use the following server block:
 ```json
@@ -205,38 +221,40 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 
 1. **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This setup allows you to validate that LocalDNS works as expected without breaking your cluster.
 
-2. **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
+1. **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
    * For frequently changing records, use shorter `cacheDurationInSeconds` values.
    * For stable records, use longer cache durations to reduce DNS queries.
    * Enable `serveStale` with appropriate settings to maintain service during DNS outages.
 
-3. **Monitor DNS performance**: After enabling LocalDNS, monitor your application's DNS performance using:
+1. **Monitor DNS performance**: After enabling LocalDNS, monitor your application's DNS performance using:
    * Application performance metrics
    * Node metrics to detect reduced network pressure
    * Log entries when `queryLogging` is set to `Log`
 
-4. **Follow least privilege principle**: When configuring DNS forwarding rules, only allow access to the required DNS servers and domains.
+1. **Follow least privilege principle**: When configuring DNS forwarding rules, only allow access to the required DNS servers and domains.
 
-5. **Test before production deployment**: Always test LocalDNS configuration in a non production environment before rolling it out to production clusters.
+1. **Test before production deployment**: Always test LocalDNS configuration in a non production environment before rolling it out to production clusters.
 
-6. **Use Infrastructure as Code (IaC)**: Store your `localdnsconfig.json` file in your infrastructure repository and include it in your AKS deployment templates.
+1. **Use Infrastructure as Code (IaC)**: Store your _localdnsconfig.json_ file in your infrastructure repository and include it in your AKS deployment templates.
 
 ## Troubleshooting LocalDNS
+
 ### DNS queries to specific domains are failing
 
 If DNS queries to specific domains are failing after enabling LocalDNS:
 
-1. Check if you have domain-specific overrides in your `localdnsconfig.json` that might be misconfigured.
-2. Temporarily try removing domain-specific overrides and using only the default `.` configuration.
-3. Check if the issue occurs with both UDP and TCP protocols by adjusting the `protocol` setting.
+1. Check if you have domain-specific overrides in your _localdnsconfig.json_ that might be misconfigured.
+1. Temporarily try removing domain-specific overrides and using only the default `.` configuration.
+1. Check if the issue occurs with both UDP and TCP protocols by adjusting the `protocol` setting.
 
 ## Next steps
-For information on the CoreDNS project, see [the CoreDNS upstream project page][coredns].
+
+For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
 
 To learn more about core network concepts, see [Network concepts for applications in AKS][concepts-network].
 
 <!-- LINKS - external -->
-[coredns]: https://coredns.io/
+[coreDNS]: https://coredns.io/
 
 <!-- LINKS - internal -->
 [concepts-network]: concepts-network.md
