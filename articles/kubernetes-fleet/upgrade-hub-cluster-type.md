@@ -8,6 +8,7 @@ ms.author: shasb
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
+# Customer intent: "As a cloud administrator, I want to upgrade my Kubernetes Fleet resource from hubless to hubful using the CLI, so that I can enable centralized management features like workload orchestration and layer-4 load balancing across my member clusters."
 ---
 
 # Upgrade hub cluster type for Azure Kubernetes Fleet Manager resource

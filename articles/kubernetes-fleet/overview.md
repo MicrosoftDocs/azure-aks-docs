@@ -10,6 +10,7 @@ author: sjwaight
 ms.author: simonwaight
 description: "This article provides an overview of Azure Kubernetes Fleet Manager."
 keywords: "Kubernetes, Azure, multi-cluster, multi, containers"
+# Customer intent: "As a cloud administrator, I want to manage multiple Kubernetes clusters, so that I can streamline upgrades, deployments, and resource allocation across my organization's infrastructure."
 ---
 
 # What is Azure Kubernetes Fleet Manager?
