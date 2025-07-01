@@ -1,6 +1,6 @@
 ---
 title: AKS regulated cluster for PCI DSS 4.0.1 - Summary
-description: Summary guidance for AKS clusters.
+description: Summary guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
@@ -11,37 +11,42 @@ ms.custom:
   - compliance
 ---
 
-# AKS regulated cluster for PCI DSS 4.0.1 - Summary
+# AKS regulated cluster for PCI DSS 4.0.1 summary
+
+The guidance provided in this series incorporates well-architected principles in all design choices. This article summarizes those choices.
+
+> This article ends this series. Read the [introduction](pci-dss-intro.md).
+
+> ![GitHub logo](media/pci-dss/github.png) **Reference Implementation Coming Soon**: The Azure Kubernetes Service (AKS) baseline cluster for regulated workloads reference implementation for PCI DSS 4.0.1 is currently being updated and will be available soon. This implementation will demonstrate a regulated infrastructure that illustrates the use of various network and security controls within your CDE. This includes both network controls native to Azure and controls native to Kubernetes. It will also include an application to demonstrate the interactions between the environment and a sample workload. The focus of this article is the infrastructure. The sample will not be indicative of an actual PCI-DSS 4.0.1 workload.
+
+## Well-architected framework
 
 The [Microsoft Azure Well-Architected Framework](/azure/well-architected) is a set of guiding tenets that can be used to assess a solution through the quality pillars of architecture excellence:
 
 - [Reliability](#reliability)
 - [Security](#security)
-- [Cost Optimization](#cost-optimization)
-- [Operational Excellence](#operational-excellence)
-- [Performance Efficiency](#performance-efficiency)
-
-> This article ends this series. Read the [introduction](pci-dss-intro.md).
-
-This guidance provided in this series incorporates Well-Architected principles in all design choices. This article summarizes those choices. The Azure Kubernetes Service (AKS) Baseline Cluster for Regulated Workloads reference implementation for PCI DSS 4.0.1 is currently being updated and will be available soon to demonstrate those principles, as applicable.
+- [Cost optimization](#cost-optimization)
+- [Operational excellence](#operational-excellence)
+- [Performance efficiency](#performance-efficiency)
 
 PCI DSS 4.0.1 workloads demand the rigor of being a well-architected solution. Although aligning the infrastructure with PCI requirements is critical, compliance doesn't stop at the hosting infrastructure. Not addressing the quality pillars, specifically security, can jeopardize compliance. Well-architected solutions combine both the infrastructure and workload perspectives to arrive at the rigor necessary for achieving compliant outcomes. PCI DSS 4.0.1 introduces new requirements for continuous compliance, risk-based scoping, enhanced monitoring, and secure software development, all of which are addressed in this guidance.
 
 Key enhancements in PCI DSS 4.0.1 relevant to cloud and container environments include:
-- **Customized Approach**: Flexibility to meet security objectives through alternative controls suitable for cloud-native architectures
-- **Enhanced Authentication**: Strengthened multi-factor authentication requirements for all access to the cardholder data environment
-- **Continuous Validation**: Ongoing monitoring and validation of security controls rather than point-in-time assessments
-- **Automated Security**: Integration of security into DevSecOps pipelines with automated vulnerability scanning and security testing
-- **Container Security**: Specific guidance for containerized workloads and ephemeral infrastructure
-- **Zero Trust Principles**: Emphasis on verify-first approaches and least privilege access
+
+- **Customized approach**: Flexibility to meet security objectives through alternative controls suitable for cloud-native architectures.
+- **Enhanced authentication**: Strengthened multi-factor authentication requirements for all access to the cardholder data environment.
+- **Continuous validation**: Ongoing monitoring and validation of security controls rather than point-in-time assessments.
+- **Automated security**: Integration of security into DevSecOps pipelines with automated vulnerability scanning and security testing.
+- **Container security**: Specific guidance for containerized workloads and ephemeral infrastructure.
+- **Zero trust principles**: Emphasis on verify-first approaches and least privilege access.
 
 ## Reliability
 
-The reliability of regulated environments needs to be predictable so that they can be explained consistently for auditing purposes. Follow the fundamental guidance provided in the [reliability principles](/azure/architecture/framework/resiliency/principles). Best practices for a regulated environment are summarized in these sections.
+The reliability of regulated environments needs to be predictable so that they can be explained consistently for auditing purposes. Follow the fundamental guidance provided in the [reliability principles](/azure/architecture/framework/resiliency/principles). The following sections summarize reliability best practices for a regulated environment.
 
 ### Recovery targets and disaster recovery
 
-Due to the sensitive nature of the data handled in regulated workloads, recovery targets and recovery point objectives (RPOs) are critical to define. What is acceptable loss of CHD? Recovery efforts within the CDE are still subject to the standard requirements. Expect failures and have a clear recovery plan for those failures that align with roles, responsibilities, and justified data access. Live-site issues are not justification for deviating from any regulations. This is especially important in a full disaster recovery situation. Have clear disaster recovery documentation that adheres to the requirements and minimizes unexpected CDE or CHD access. After recovery, always review the recovery process steps to ensure that no unexpected access occurred. Document business justifications for those instances.
+Due to the sensitive nature of the data handled in regulated workloads, recovery targets and recovery point objectives (RPOs) are critical to define. What's acceptable loss of CHD? Recovery efforts within the CDE are still subject to the standard requirements. Expect failures and have a clear recovery plan for those failures that align with roles, responsibilities, and justified data access. Live-site issues aren't justification for deviating from any regulations. This is especially important in a full disaster recovery situation. Have clear disaster recovery documentation that adheres to the requirements and minimizes unexpected CDE or CHD access. After recovery, always review the recovery process steps to ensure that no unexpected access occurred. Document business justifications for those instances.
 
 ### Recovery
 
@@ -57,31 +62,30 @@ Reliability extends to all operational processes in and adjacent to the CDE. Wel
 
 ## Security
 
-Follow the fundamental guidance provided in the [Security design principles](/azure/architecture/framework/security/security-principles). Best practices for a regulated environment are summarized in these sections.
-
+Follow the fundamental guidance provided in the [Security design principles](/azure/architecture/framework/security/security-principles). The following sections summarize security best practices for a regulated environment.
 
 ### Governance
 
 The governance implementation is driven by the compliance requirements in PCI DSS 4.0.1. This influences the technical controls for maintaining segmentation, accessing resources, detecting vulnerabilities, and most importantly protecting customer data. PCI DSS 4.0.1 emphasizes shared responsibility, continuous monitoring, and the use of automated tools for inventory and configuration management in cloud and container environments.
 
-**Continuous Compliance Monitoring**: Unlike the periodic assessment approach of previous versions, PCI DSS 4.0.1 requires ongoing validation of security controls. This aligns well with cloud-native monitoring capabilities like Azure Monitor, Microsoft Defender for Cloud, and automated policy enforcement through Azure Policy.
+**Continuous compliance monitoring**: Unlike the periodic assessment approach of previous versions, PCI DSS 4.0.1 requires ongoing validation of security controls. This aligns well with cloud-native monitoring capabilities like Azure Monitor, Microsoft Defender for Cloud, and automated policy enforcement through Azure Policy.
 
-**Risk-Based Scoping**: The standard now allows for more dynamic scoping based on actual data flows and risk assessments, which is particularly relevant for containerized workloads where components may be ephemeral and dynamically orchestrated.
+**Risk-based scoping**: The standard now allows for more dynamic scoping based on actual data flows and risk assessments, which is particularly relevant for containerized workloads where components might be ephemeral and dynamically orchestrated.
 
 #### Enterprise segmentation strategy
 
-To maintain complete isolation, we recommend deploying the regulated infrastructure in a standalone subscription. If you have multiple subscriptions that are necessary for compliance, consider grouping them under a management group hierarchy that applies the relevant Azure policies uniformly across your in-scope subscriptions. Within the subscription, apply related Azure policies at a subscription level to capture the broad policies that should apply to all clusters in the cardholder data environment (CDE). Apply related Azure policies at the resource group level to capture policies that apply to a specific cluster instance. These policies build the core guardrails of a landing zone.
+To maintain complete isolation, we recommend deploying the regulated infrastructure in a standalone subscription. If you have multiple subscriptions that are necessary for compliance, consider grouping them under a management group hierarchy that uniformly applies the relevant Azure policies across your in-scope subscriptions. Within the subscription, apply related Azure policies at a subscription level to capture the broad policies that should apply to all clusters in the cardholder data environment (CDE). Apply related Azure policies at the resource group level to capture policies that apply to a specific cluster instance. These policies build the core guardrails of a landing zone.
 
-Isolate the PCI workload (in-scope) from other (out-of-scope) workloads in terms of operations and connectivity. You can create isolation by deploying separate clusters. Or, use segmentation strategies to maintain the separation. For example, the clusters use separate node pools so that workloads never share a node virtual machine (VM).
+Isolate the PCI workload (in-scope) from other (out-of-scope) workloads in terms of operations and connectivity. You can create isolation by deploying separate clusters or use segmentation strategies to maintain the separation. For example, the clusters use separate node pools so that workloads never share a node virtual machine (VM).
 
 #### Policy enforcement
 
 Enforce security controls by enabling Azure policies. For example, in this regulated architecture, you can prevent misconfiguration of the cardholder data environment. You can apply an Azure policy that doesn't allow public IP allocations on the VM nodes. Such allocations are detected and reported or blocked.
 
 For information about policies you can enable for AKS, see
-[Azure Policy built-in definitions for Azure Kubernetes Service](/azure/aks/policy-reference).
+[Azure Policy built-in definitions for Azure Kubernetes Service (AKS)](/azure/aks/policy-reference).
 
-Azure provides several built-in policies for most services. Review these [Azure Policy built-in policy definitions](/azure/governance/policy/samples/built-in-policies) and apply them as appropriate.
+Azure provides several built-in policies for most services. Review the [Azure Policy built-in policy definitions](/azure/governance/policy/samples/built-in-policies) and apply them as appropriate.
 
 #### Compliance monitoring
 
@@ -101,23 +105,23 @@ The AKS cluster forms the core of the CDE. It shouldn't be accessible from publi
 - Outbound traffic from the cluster.
 - In-cluster traffic between pods.
 
-To meet the requirements of a regulated environment, the cluster is deployed as a private cluster. In this mode, traffic to and from the public internet is restricted. Even communication with the AKS-managed Kubernetes API server is private. Security is further enhanced with strict network controls and IP firewall rules.
+To meet the requirements of a regulated environment, the cluster is deployed as a private cluster. In this mode, traffic to and from the public internet is restricted. Even communication with the AKS-managed Kubernetes API server is private. Security is further enhanced with strict network controls and IP firewall rules:
 
 - Network Security Groups (NSGs) to help secure communication between resources within a network.
 - Azure Firewall to filter any outbound traffic between cloud resources, the internet, and on-premises.
 - Azure Application Gateway integrated with Azure Web Application Framework to filter all inbound traffic from the internet that Azure Application Gateway intercepts.
-- Kubernetes NetworkPolicy to allow only certain paths between the pods in the cluster.
-- Azure Private Link to connect to other Azure platform as a service (PaaS) services, such as Azure Key Vault and Azure Container Registry for operational tasks.
+- Kubernetes `NetworkPolicy` to allow only certain paths between the pods in the cluster.
+- Azure Private Link to connect to other Azure platform as a service (PaaS) services, such as Azure Key Vault and Azure Container Registry, for operational tasks.
 
 Monitoring processes are in place to make sure that traffic flows as expected and that any anomaly is detected and reported.
 
-For details on network security, see [Network segmentation](./pci-dss-network.md).
+For more information on network security, see [Network segmentation](./pci-dss-network.md).
 
 ### Data security
 
 PCI DSS 4.0.1 requires that all cardholder data (CHD) is never clear, whether in transit or in storage.
 
-Because this architecture and the implementation are focused on infrastructure and not the workload, data management is not demonstrated. Here are some well-architected recommendations.
+Because this architecture and the implementation are focused on infrastructure and not the workload, data management isn't demonstrated. The following sections outline some well-architected recommendations.
 
 #### Data at rest
 
@@ -134,7 +138,7 @@ If you need to store data temporarily, apply the same considerations to that dat
 
 When you're choosing a storage technology, explore the retention features. Make sure all data is safely removed when the configured time expires.
 
-The standard also requires that sensitive authentication data (SAD) is not stored. Make sure that the data is not exposed in logs, file names, cache, and other data.
+The standard also requires that sensitive authentication data (SAD) isn't stored. Make sure that the data isn't exposed in logs, file names, cache, and other data.
 
 #### Data in transit
 
@@ -144,23 +148,23 @@ All communication with entities that interact with the CDE must be over encrypte
 - Preferably, don't encrypt and decrypt data outside the CDE. If you do, consider that entity to be a part of the CDE.
 - Within the CDE, provide secure communication between pods with mTLS. You can choose to implement a service mesh for this purpose.
 - Only allow secure ciphers and TLS 1.2 or later. PCI DSS 4.0.1 provides updated guidance on acceptable encryption protocols and cipher suites.
-- **Enhanced Key Management**: PCI DSS 4.0.1 requires more rigorous key lifecycle management, including automated key rotation and hardware security module (HSM) integration where applicable.
+- PCI DSS 4.0.1 requires more rigorous key lifecycle management, including automated key rotation and hardware security module (HSM) integration where applicable.
 
 ### Identity
 
 Follow these security principles when you're designing access policies:
 
-- Start with Zero-Trust policies. Make exceptions as needed.
-- Grant the least privileges--just enough to complete a task.
+- Start with zero-trust policies. Make exceptions as needed.
+- Grant the least privileges - just enough to complete a task.
 - Minimize standing access.
 
-**Enhanced Authentication Requirements**: PCI DSS 4.0.1 significantly strengthens authentication requirements, mandating multi-factor authentication (MFA) for all access to the cardholder data environment, including administrative access and all non-console access.
+PCI DSS 4.0.1 significantly strengthens authentication requirements, mandating multi-factor authentication (MFA) for all access to the cardholder data environment, including administrative access and all non-console access.
 
 Kubernetes role-based access control (RBAC) manages permissions to the Kubernetes API. AKS supports those Kubernetes roles. AKS is fully integrated with Microsoft Entra ID. You can assign Microsoft Entra identities to the roles and also take advantage of other capabilities.
 
-#### Zero-Trust access
+#### Zero-trust access
 
-Kubernetes RBAC, Azure RBAC, and Azure services implement *deny all* by default. Override that setting with caution, allowing access to only those entities who need it. Another area for implementing Zero-Trust is to disable SSH access to the cluster nodes.
+Kubernetes RBAC, Azure RBAC, and Azure services implement *deny all* by default. Override that setting with caution, allowing access to only those entities who need it. Another area for implementing zero-trust is to disable SSH access to the cluster nodes.
 
 ### Least privileges
 
@@ -176,19 +180,19 @@ Store secrets, certificates, keys, and passwords outside the CDE. You can use na
 
 Make sure access to the key store has a combination of network and access controls. When you enable managed identities, the cluster has to authenticate itself against Key Vault to get access. Also, the connectivity to the key store must not be over the public internet. Use a private network, such as Private Link.
 
-## Cost Optimization
+## Cost optimization
 
 Follow the fundamental guidance provided in the [Cost Optimization principles](/azure/architecture/framework/cost/overview).
 
-Because of the compliance requirements and strict security controls, a clear tradeoff is cost. We recommend that you establish initial estimates by using the [Pricing Calculator](https://azure.microsoft.com/pricing/calculator/).
+Because of the compliance requirements and strict security controls, a clear tradeoff is cost. We recommend that you establish initial estimates using the [Pricing Calculator](https://azure.microsoft.com/pricing/calculator/).
 
-Here's a high-level representation of the cost impact of the main resources that this architecture uses.
+The following diagram provides a high-level representation of the cost impact of the main resources that this architecture uses:
 
 ![Diagram of cost management in the architecture.](media/pci-dss/cost-analysis.png)
 
 The main drivers are the virtual machine scale sets that make up the node pools and Azure Firewall. Another contributor is Log Analytics. There are also incremental costs associated with Microsoft Defender for Cloud, depending on your choice of plans.
 
-Have a clear understanding of what constitutes the price of a service. Azure tracks metered usage. Here's a drilldown of Azure Firewall for this architecture.
+Have a clear understanding of what constitutes the price of a service. Azure tracks metered usage. The following diagram provides a breakdown of Azure Firewall for this architecture:
 
 ![Diagram that illustrates cost management in an Azure Firewall example.](media/pci-dss/firewall-cost.png)
 
@@ -200,9 +204,9 @@ As you create groups of Azure resources, apply tags so that they can be tracked 
 
 Consider enabling [AKS cost analysis](/azure/aks/cost-analysis) for granular cluster infrastructure cost allocation by Kubernetes specific constructs.
 
-## Operational Excellence
+## Operational excellence
 
-Follow the fundamental guidance provided in the [Operational Excellence principles](/azure/architecture/framework/devops/principles). Best practices for a regulated environment are summarized in these sections.
+Follow the fundamental guidance provided in the [Operational excellence principles](/azure/architecture/framework/devops/principles). The following sections summarize operational excellence best practices for a regulated environment.
 
 ### Separation of roles
 
@@ -212,13 +216,14 @@ Enforcing clear segregation of duties for regulated environments is key. Have de
 
 PCI DSS 4.0.1 requires isolation of the PCI workload from other workloads in terms of operations. In this implementation, the in-scope and out-of-scope workloads are segmented in two separate user node pools. Application developers for in-scope and developers for out-of-scope workloads might have different sets of permissions. Also, there will be separate quality gates. For example, the in-scope code is subject to upholding compliance and attestation, whereas the out-of-scope code isn't. There's also a need to have separate build pipelines and release management processes.
 
-**Secure Software Development Lifecycle (SSDL)**: PCI DSS 4.0.1 introduces comprehensive requirements for secure software development, including:
-- Automated security testing integrated into CI/CD pipelines
-- Static and dynamic application security testing (SAST/DAST)
-- Container image vulnerability scanning before deployment
-- Dependency scanning for third-party components
-- Code review processes with security focus
-- Secure coding training for development teams
+PCI DSS 4.0.1 introduces comprehensive requirements for secure software development, including:
+
+- Automated security testing integrated into CI/CD pipelines.
+- Static and dynamic application security testing (SAST/DAST).
+- Container image vulnerability scanning before deployment.
+- Dependency scanning for third-party components.
+- Code review processes with security focus.
+- Secure coding training for development teams.
 
 ### Operational metadata
 
@@ -238,9 +243,9 @@ The Azure monitoring services, Azure Monitor and Microsoft Defender for Cloud, c
 
 From the **Security alerts** view in Microsoft Defender for Cloud, you have access to all alerts that Microsoft Defender for Cloud detects on your resources. Have a triage process to address the issue. Work with your security team to understand how relevant alerts will be made available to the workload owners.
 
-## Performance Efficiency
+## Performance efficiency
 
-Follow the fundamental guidance provided in the [Performance Efficiency principles](/azure/architecture/framework/scalability/principles). Best practices for a regulated environment are summarized in these sections.
+Follow the fundamental guidance provided in the [Performance efficiency principles](/azure/architecture/framework/scalability/principles). The following sections summarize performance efficiency best practices for a regulated environment.
 
 ### Scaling
 
@@ -252,7 +257,7 @@ Partitioning is a key factor for performance efficiency in regulated workloads. 
 
 ### Shared-nothing architecture
 
-The shared-nothing architecture is designed to remove contention between colocated workloads. Also, this is a strategy for removing single points of failure. In a regulated environment, components are required to be isolated by logical or physical boundaries. This aligns with the shared-nothing architecture, resulting in scalability benefits. Also, it allows for targeting of relevant security controls and tighter auditing capabilities of the various components.
+The shared-nothing architecture is designed to remove contention between colocated workloads. Also, this is a strategy for removing single points of failure. In a regulated environment, components are required to be isolated by logical or physical boundaries. This aligns with the shared-nothing architecture, resulting in scalability benefits. It allows for targeting of relevant security controls and tighter auditing capabilities of the various components.
 
 ### Lightweight workloads
 

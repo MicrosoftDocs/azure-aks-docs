@@ -11,25 +11,26 @@ ms.custom:
   - compliance
 ---
 
-# AKS regulated cluster for PCI DSS 4.0.1 - Requirement mapping matrix
+# Requirement mapping matrix for an AKS regulated cluster for PCI DSS 4.0.1
 
 This document provides a mapping of AKS controls and documentation to PCI DSS 4.0.1 requirements, including customized approaches where applicable.
 
-| PCI DSS 4.0.1 Requirement | AKS Control/Document | Customized Approach | Notes |
-|--------------------------|---------------------|--------------------|-------|
-| MFA for admin access     | Enhanced MFA Implementation | Yes (if using Azure AD Conditional Access) |  |
-| Continuous monitoring    | Continuous Security and Monitoring | No |  |
-| Key management           | Cryptography and Key Management | No |  |
-| Third-party management   | Third-Party and Supply Chain Security | No |  |
-| Security awareness       | Security Awareness and Training | No |  |
+## AKS PCI DSS 4.0.1 requirement mapping matrix
 
+| PCI DSS 4.0.1 requirement | AKS control | Customized approach |
+|--------------------------|---------------------|--------------------|
+| MFA for admin access     | [Enhanced MFA implementation](./pci-dss-enhanced-mfa-implementation.md) | Yes (if using Azure AD Conditional Access) |
+| Continuous monitoring    | [Continuous security and monitoring](./pci-dss-continuous-security-monitoring.md) | No |
+| Key management           | [Cryptography and key management](./pci-dss-cryptography-key-management.md) | No |
+| Third-party management   | [Third-party and supply chain security](./pci-dss-third-party-supply-chain-security.md) | No |
+| Security awareness       | [Security awareness and training](./pci-dss-security-awareness-training.md) | No |
 
-## Integrated AKS Security Context
+## Integrated AKS security context
 
-This mapping should be used in conjunction with:
-- [Security policies](pci-dss-policy.md) for policy and governance
-- [Identity and access management](pci-dss-identity.md) for identity and access management
-- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting
+You should leverage the requirement mapping matrix as part of a broader security strategy that includes:
 
-For the latest AKS security features, see [Azure Kubernetes Service documentation](/azure/aks/).
+- [Security policies](pci-dss-policy.md) for policy and governance.
+- [Identity and access management](pci-dss-identity.md) for identity and access management.
+- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting.
 
+For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
