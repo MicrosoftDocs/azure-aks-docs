@@ -165,7 +165,7 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 [az-group-create]: /cli/azure/group#az-group-create
 [private-endpoint-keyvault]: /azure/key-vault/general/private-link-service
 [fqdns-for-keyvault]: outbound-rules-control-egress.md#azure-key-vault-provider-for-secrets-store-csi-driver
-[keyvault-object-types]: /key-vault/general/about-keys-secrets-certificates.md#object-types
+[keyvault-object-types]: /azure/key-vault/general/about-keys-secrets-certificates#object-types
 
 <!-- LINKS EXTERNAL -->
 [kube-csi]: https://kubernetes-csi.github.io/docs/
