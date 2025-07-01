@@ -330,12 +330,7 @@ You can verify the subscription for the data source for Grafana dashboards by ch
 
 :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source for the Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
   
-> [!NOTE]
-> By default, the managed identity for Azure Managed Grafana has read access to the subscription in which it was created. No more configuration is required if both Azure Managed Grafana and the Log Analytics workspace are in the same subscription.
->
->If Azure Managed Grafana and the Log Analytics workspace are in *different* subscriptions, you must manually assign the Monitoring Reader role to the Grafana managed identity on the Log Analytics workspace. For more information, see [Modify access permissions](/azure/managed-grafana/how-to-permissions).
->
-> Ensure that your Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
+Ensure that your Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
 
 **Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
 
