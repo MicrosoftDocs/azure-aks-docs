@@ -28,11 +28,11 @@ This document is designed to provide clear steps for configuring and utilizing C
 
 * If existing cluster is <= 1.32, upgrade the cluster to the latest available Kubernetes version.
 
+* The minimum version of the aks-preview Azure CLI extension is `18.0.0b2`.
+
 ### Install the `aks-preview` Azure CLI extension
 
 Install or update the Azure CLI preview extension using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
-
- The minimum version of the aks-preview Azure CLI extension is `18.0.0b2`.
 
 ```azurecli-interactive
 # Install the aks-preview extension
@@ -57,6 +57,14 @@ az feature show --namespace "Microsoft.ContainerService" --name "AdvancedNetwork
 
 Once the feature shows `Registered`, refresh the registration of the `Microsoft.ContainerService` resource provider using the [`az provider register`](/cli/azure/provider#az_provider_register) command.
 
+## Limitations
+
+* L7 flow data is captured only when L7 policy support is enabled. For guidance on enabling L7 policy support, refer to  [Configure L7 policy](./how-to-apply-l7-policies.md).
+* DNS flows and related metrics are captured only when a Cilium FQDN network policy is applied. To configure FQDN policies, see [Configure FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* During the public preview phase, this feature can be configured only via the CLI and ARM templates. Onboarding using Terraform is not supported at this time.
+* When Azure Log Analytics is not configured for log storage, Container Network Logs are limited to a maximum of 50 MB of storage. Once this limit is reached, older logs will be overwritten by new entries. 
+* If the log table plan is set to Basic Logs, the pre-built Grafana dashboards will not function as expected.
+* The Auxiliary Logs table plan is not supported.
 
 ### Enable Advanced Container Networking Services on a new cluster
 
@@ -269,6 +277,7 @@ Status:
 
 ### Azure managed Grafana
 
+If you do not have existing Grafana instance, you need to create one to visualize network flow logs pre-built dashboard. 
 #### Create Azure Managed Grafana instance
 
 Use [az grafana create](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the Grafana instance must be unique.
@@ -282,11 +291,25 @@ az grafana create \
     --name $GRAFANA_NAME \
     --resource-group $RESOURCE_GROUP 
 ```
-Verify data source for grafana instance- The user can verify subscription for data source for grafana dashboards vy checking data source tab in grafana instance as shown below -
-  :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking data source for grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
+Ensure that your Grafana workspace can access and search all monitoring data in relevant subscription(s). This is mandatory for accessing pre-built dashboards for network flow logs.  
+
+**Use Case 1** - If you're a subscription Owner or a User Access Administrator: when a Grafana workspace is created, it comes with a Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources within the subscription. This means that the new Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription.
+
+**Use Case 2** - If you're not a subscription Owner/User Access Administrator or log analytics and garfana workspace are in different subscription – In either of the case, Grafana would not have access to log analytics and subscription. Grafana workspace must have Monitoring reader permission on relevant subscription(s) to get access to pre-built dashboards. Follow these steps to enable this -
+1. 	Go to your Grafana workspace -> Settings -> Identity 
+
+  :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of identity option in grafana setting." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
+
+2.	Select on Azure role assignments and then choose Add role assignments. 
+
+  :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
+
+3.	Add Scope to subscription, choose relevant subscription(s), choose role as Monitoring Reader and save. 
   
-> [!NOTE]
-> By default, the managed identity for Azure Managed Grafana (AMG) has read access to the subscription in which it was created. This means no additional configuration is needed if both AMG and the Log Analytics workspace are in the same subscription. However, if they are in different subscriptions, the user must manually assign the 'Monitoring Reader' role to the Grafana managed identity on the Log Analytics workspace. Refer following link to know more ([How to modify access permissions](/azure/managed-grafana/how-to-permissions))
+ :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
+
+Verify data source for grafana instance- The user can verify subscription for data source for grafana dashboards by checking data source tab in grafana instance as shown below -
+  :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking data source for grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
 
 ### Visualization in Grafana dashboards
 
