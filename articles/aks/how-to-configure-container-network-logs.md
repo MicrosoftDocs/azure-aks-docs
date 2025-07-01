@@ -64,11 +64,11 @@ When the feature shows **Registered**, refresh the registration of the `Microsof
 ## Limitations
 
 * Layer 7 flow data is captured only when Layer 7 policy support is enabled. For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
-* DNS flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
-* During the public preview phase, this feature can be configured only via the Azure CLI and Azure Resource Manager templates. Onboarding by using Terraform is not supported at this time.
-* When Log Analytics is not configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, older logs are overwritten by new entries.
-* If the log table plan is set to basic logs, the pre-built Grafana dashboards do not function as expected.
-* The auxiliary logs table plan is not supported.
+* Domain Name Service (DNS) flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* During the public preview phase, this feature can be configured only via the Azure CLI and Azure Resource Manager templates. Onboarding by using Terraform isn't supported at this time.
+* When Log Analytics isn't configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, new entries overwrite older logs.
+* If the log table plan is set to basic logs, the prebuilt Grafana dashboards don't function as expected.
+* The auxiliary logs table plan isn't supported.
 
 ### Enable Advanced Container Networking Services on a new cluster
 
@@ -182,9 +182,9 @@ The following table describes the fields in the custom resource definition:
 
 Logs stored locally on host nodes are temporary because the host or node itself isn't a persistent storage solution. Also, logs on host nodes are rotated when their size reaches 50 MB. For longer-term storage and analysis, we recommend that you configure the Azure Monitor Agent on the cluster to collect and retain logs in the Log Analytics workspace.
 
-Alternatively, you can integrate a third-party logging service like an OpenTelemetry collector for more log management options.
+Alternatively, you can integrate a partner logging service like an OpenTelemetry collector for more log management options.
 
-#### Configure Azure Monitor Agent to scrape logs in the Log Analytics workspace for a new cluster (in managed storage)
+#### Configure the Azure Monitor Agent to scrape logs in the Log Analytics workspace for a new cluster (in managed storage)
 
 ```azurecli
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
@@ -248,7 +248,7 @@ To enable container network logs on an existing cluster:
 
 ### Get cluster credentials
 
-Next, get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command:
+Get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command:
 
 ```azurecli
 az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP
@@ -333,28 +333,29 @@ You can verify the subscription for the data source for Grafana dashboards by ch
 > [!NOTE]
 > By default, the managed identity for Azure Managed Grafana has read access to the subscription in which it was created. No more configuration is required if both Azure Managed Grafana and the Log Analytics workspace are in the same subscription.
 >
->If Azure Managed Grafana and the Log Analytics workspace are in *different* subscriptions, you must manually assign the Monitoring Reader role to the Grafana managed identity on the Log Analytics workspace. For more information, see [How to modify access permissions](/azure/managed-grafana/how-to-permissions).
-Ensure that your Grafana workspace can access and search all monitoring data in relevant subscription(s). This is mandatory for accessing pre-built dashboards for network flow logs.  
+>If Azure Managed Grafana and the Log Analytics workspace are in *different* subscriptions, you must manually assign the Monitoring Reader role to the Grafana managed identity on the Log Analytics workspace. For more information, see [Modify access permissions](/azure/managed-grafana/how-to-permissions).
+>
+> Ensure that your Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
 
-**Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Grafana workspace is created, it comes with a Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources within the subscription. This means that the new Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources, and any logs stored in Log Analytics workspaces in the subscription.
+**Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
 
-**Use case 2**:  If you're not a subscription Owner/User Access Administrator, or your Log Analytics and Garfana workspace are in different subscription. In either case, Grafana doesn't have access to Log Analytics and the subscription. The Grafana workspace must have Monitoring reader permission on relevant subscription(s) to get access to pre-built dashboards. Follow these steps:
+**Use case 2**:  If you're not a subscription Owner or User Access Administrator, or if your Log Analytics and Managed Garfana workspace are in different subscriptions, Grafana can't access Log Analytics and the subscription. The Grafana workspace must have the Monitoring Reader role in the relevant subscription to access to prebuilt Grafana dashboards. In this scenario, complete these steps to provide access:
 
-1. Go to your Grafana workspace > **Settings** > **Identity**.
+1. Go to your Managed Grafana workspace > **Settings** > **Identity**.
 
-  :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of identity option in grafana setting." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of the identity option in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
 
-1. Select on Azure role assignments and then choose Add role assignments.
+1. Select **Azure role assignments** > **Add role assignments**.
 
-  :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
+  :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in a Grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
 
-1. Add Scope to subscription, choose relevant subscription(s), choose role as Monitoring Reader and save.
+1. For **Scope**, enter **Subscription**. Select your subscription, set **Role** to **Monitoring Reader**, and then select **Save**.
   
- :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/grafana-subscription-selection.png" alt-text="Screenshot of entering subscription details in a Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-subscription-selection.png":::
 
-Verify data source for the Managed Grafana instance. The user can verify subscription for data source for Grafana dashboards by checking the **Data source** tab in the Grafana instance:
+1. Verify the data source for the Managed Grafana instance. You can verify the subscription for the data source for Grafana dashboards by checking the **Data source** tab in the Grafana instance:
 
-:::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking data source for grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source in a Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
 
 ### Visualization in Grafana dashboards
 
@@ -379,15 +380,15 @@ You can visualize container network flow logs for analysis by using two prebuilt
 
 1. To simplify log analysis, we provide preconfigured two Azure Managed Grafana dashboards:
 
-    * **Azure/Insights/Containers/Networking/Flow Logs:** This dashboard provides visualizations in which Kubernetes workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use [ID 23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
+    * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs**. This dashboard provides visualizations in which AKS workloads communicate with each other, including network requests, responses, drops, and errors. Currently, you must use [ID 23155](https://grafana.com/grafana/dashboards/23155-azure-insights-containers-networking-flow-logs//) to import these dashboards.
 
-      :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard.png" alt-text="Screenshot of Flow log Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard.png":::
+      :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard.png" alt-text="Screenshot of a flow log Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard.png":::
 
-    * **Azure/Insights/Containers/Networking/Flow Logs (External Traffic):** This dashboard provides visualizations in which Kubernetes workloads send and receive communications from outside a Kubernetes cluster, including network requests, responses, drops, and errors. Use [ID 23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
+    * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs (External Traffic)**. This dashboard provides visualizations in which AKS workloads send and receive communications from outside an AKS cluster, including network requests, responses, drops, and errors. Use [ID 23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
 
-    :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of Flow log (external) Grafana dashboard in grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
+    :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of a flow log (external) Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 
-   For more information about how to use this dashboard, see [Overview of Container Network logs](container-network-observability-logs.md).
+   For more information about how to use this dashboard, see [Overview of container network logs](container-network-observability-logs.md).
 
 #### Visualization of container network logs in the Azure portal
 
@@ -397,7 +398,7 @@ You can visualize, query, and analyze flow logs in the Azure portal. Go to the L
 
 ## Configure on-demand mode
 
-On-demand mode for network flows works with both Cilium and Non-Cilium Data planes.
+On-demand mode for network flows works with both Cilium and non-Cilium Data planes.
 
 To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
 
@@ -467,8 +468,6 @@ az aks update \
     --name $CLUSTER_NAME \
     --enable-acns
 ```
-
-## Get cluster credentials
 
 Next, get your cluster credentials by using the [`az aks get-credentials`](/cli/azure/aks#az_aks_get_credentials) command:
 
