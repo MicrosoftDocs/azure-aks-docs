@@ -163,7 +163,7 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 [az-keyvault-update]: /cli/azure/keyvault#az-keyvault-update.md
 [az-keyvault-secret-set]: /cli/azure/keyvault#az-keyvault-secret-set.md
 [az-group-create]: /cli/azure/group#az-group-create
-[private-endpoint-keyvault]: /key-vault/general/private-link-service
+[private-endpoint-keyvault]: /azure/key-vault/general/private-link-service
 [fqdns-for-keyvault]: outbound-rules-control-egress.md#azure-key-vault-provider-for-secrets-store-csi-driver
 [keyvault-object-types]: /key-vault/general/about-keys-secrets-certificates.md#object-types
 
