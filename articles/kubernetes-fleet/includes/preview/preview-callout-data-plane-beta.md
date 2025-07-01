@@ -4,6 +4,7 @@ ms.topic: include
 ms.date: 04/14/2025
 author: sjwaight
 ms.author: simonwaight
+# Customer intent: "As a cloud architect, I want to explore the preview features of Azure Kubernetes Fleet Manager, so that I can evaluate their potential for managing Kubernetes clusters in a flexible, self-service manner before full deployment."
 ---
 
 > [!IMPORTANT]
