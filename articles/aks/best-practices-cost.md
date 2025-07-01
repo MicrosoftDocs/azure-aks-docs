@@ -94,7 +94,7 @@ For more information, see [Azure Monitor best practices](/azure/azure-monitor/be
 
 ### Log Analytics
 
-For control plane logs, consider disabling the categories you don't need and/or using the Basic Logs API when applicable to reduce Log Analytics costs. For more information, see [Azure Kubernetes Service (AKS) control plane/resource logs](./monitor-aks.md#aks-control-planeresource-logs). For data plane logs, or *application logs*, consider adjusting the [cost optimization settings](./monitor-aks.md#aks-data-planecontainer-insights-logs).
+For control plane logs, consider disabling the categories you don't need and/or using the Basic Logs API when applicable to reduce Log Analytics costs. For more information, see [Azure Kubernetes Service (AKS) control plane/resource logs](./monitor-aks.md#aks-control-plane-resource-logs). For data plane logs, or *application logs*, consider adjusting the [cost optimization settings](./monitor-aks.md#aks-data-plane-container-insights-logs).
 
 ### Azure Advisor cost recommendations
 
