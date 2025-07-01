@@ -1,6 +1,6 @@
 ---
-title: Node autoprovisioning (preview)
-description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning (preview).
+title: Node autoprovisioning
+description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 06/30/2025
@@ -287,7 +287,7 @@ AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for node autoprovision nodes follows the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning. AKS recommends that you use `aksManagedAutoUpgradeSchedule` to schedule planned cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
+Kubernetes upgrades for node autoprovision nodes follows the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning.
 
 ### Node image updates
 
