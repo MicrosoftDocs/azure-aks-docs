@@ -4,9 +4,10 @@ description: Learn about upgrade options for Azure Kubernetes Service (AKS) clus
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.date: 02/08/2024
+ms.date: 06/10/2025
 author: kaarthis
 ms.author: kaarthis
+ms.custom: annual
 ---
 
 # Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
