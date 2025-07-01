@@ -13,9 +13,16 @@ ms.author: schaffererin
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://go.microsoft.com/fwlink/?linkid=2303212)
 
-The AI toolchain operator (KAITO) is a managed add-on that simplifies the experience of running open-source and private AI models on your AKS cluster. KAITO reduces the time to onboard models and provision resources, enabling faster AI model prototyping and development rather than infrastructure management.
+In this article, you learn how to use KAITO to efficiently self-host large language models on Kubernetes, reducing costs and resource complexity, enhancing customization, and maintaining full control over your data.
 
-This article shows you how to enable the AI toolchain operator add-on and deploy an AI model for inferencing on AKS.
+## About KAITO
+
+Self-hosting large language models (LLMs) on Kubernetes is gaining momentum among organizations with high inference workloads, such as batch processing, chatbots, agents, and AI-driven applications. These organizations often have access to commercial-grade GPUs and are seeking alternatives to costly per-token API pricing models, which can quickly scale out of control. Many also require the ability to fine-tune or customize their models, a capability typically restricted by closed-source API providers. Additionally, companies handling sensitive or proprietary data - especially in regulated sectors such as finance, healthcare, or defense - prioritize self-hosting to maintain strict control over data and prevent exposure through third-party systems.
+
+To address these needs and more, the [Kubernetes AI Toolchain Operator (KAITO)](https://github.com/kaito-project/kaito), a Cloud Native Computing Foundation (CNCF) Sandbox project, simplifies the process of deploying and managing open-source LLM workloads on Kubernetes. KAITO integrates with vLLM, a high-throughput inference engine designed to serve large language models efficiently. vLLM as an inference engine helps reduce memory and GPU requirements without significantly compromising accuracy. 
+
+Supported in the AI toolchain operator managed add-on, KAITO offers a modular, plug-and-play setup that allows teams to quickly deploy models and expose them via production-ready APIs. It includes built-in features like OpenAI-compatible APIs, prompt formatting, batching, and streaming response support. When deployed on an AKS cluster, KAITO ensures data stays within the organization’s controlled environment, providing a secure, compliant alternative to cloud-hosted LLM APIs.
+
 
 ## Before you begin
 
