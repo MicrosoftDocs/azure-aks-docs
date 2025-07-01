@@ -1,13 +1,16 @@
 ---
 title: Automate app deployment to Azure Kubernetes Service (AKS) with CI/CD via Automated deployments Automated deployments
 description: Learn how to use automated deployments to simplify the process of adding GitHub Actions or Azure DevOps Pipelines to your Azure Kubernetes Service (AKS) project.
-ms.author: qpetraroia
-ms.topic: how-to
-ms.custom: build-2023, build-2024
-ms.date: 05/10/2023
-ms.subservice: aks-developer
-ms.service: azure-kubernetes-service
 author: qpetraroia
+ms.author: qpetraroia
+ms.date: 05/10/2023
+ms.service: azure-kubernetes-service
+ms.subservice: aks-developer
+ms.topic: how-to
+ms.custom:
+  - build-2023
+  - build-2024
+  - build-2025
 ---
 
 # Automated deployments for Azure Kubernetes Service (AKS)

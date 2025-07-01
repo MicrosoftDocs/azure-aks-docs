@@ -1,7 +1,7 @@
 ---
 title: Monitor your AI inference service with the AI toolchain operator in Azure Kubernetes Service (AKS)
 description: Learn how to collect and visualize inference service metrics with Azure Managed Prometheus and Azure Managed Grafana.
-
+ms.author: schaffererin
 ms.topic: how-to
 author: sachidesai
 ms.service: azure-kubernetes-service
@@ -116,8 +116,8 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 
 ## Visualize KAITO inference metrics in Azure Managed Grafana
 
-1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html?h=grafan#import-dashboard) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html?h=grafan#import-dashboard) and copy the entire contents of the `grafana.json` file. 
 
+1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file. 
 
 
 

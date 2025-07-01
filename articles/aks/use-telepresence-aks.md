@@ -5,6 +5,8 @@ ms.topic: tutorial
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 01/16/2025
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Tutorial: Use Telepresence to develop and test microservices locally

@@ -9,7 +9,7 @@ ms.date: 10/05/2023
 author: schaffererin
 ms.author: schaffererin
 
-#Customer intent: As a cluster administrator, I want to know how to automatically apply Linux updates and reboot nodes in AKS for security and/or compliance
+# Customer intent: As a cluster administrator, I want to automate the upgrade of AKS nodes using GitHub Actions, so that I can ensure my cluster remains secure and compliant with minimal manual intervention.
 ---
 
 # Apply automatic security upgrades to Azure Kubernetes Service (AKS) nodes using GitHub Actions

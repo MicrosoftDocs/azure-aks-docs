@@ -4,9 +4,10 @@ description: Use Helm with AKS and Azure Container Registry to package and run a
 ms.topic: concept-article
 ms.custom: devx-track-azurecli, devx-track-azurepowershell
 ms.date: 01/25/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a developer, I want to use Helm to package and deploy applications on Azure Kubernetes Service, so that I can efficiently manage the lifecycle of my containerized applications in the cloud.
 ---
 
 # Quickstart: Develop on Azure Kubernetes Service (AKS) with Helm

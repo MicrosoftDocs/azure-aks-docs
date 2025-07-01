@@ -1,9 +1,9 @@
 ---
-author: nickomang
+author: davidsmatlak
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 11/02/2023
-ms.author: nickoman
+ms.author: davidsmatlak
 ---
 
 > [!NOTE]

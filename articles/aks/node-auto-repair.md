@@ -3,9 +3,10 @@ title: Automatically repair Azure Kubernetes Service (AKS) nodes
 description: Learn about node auto-repair functionality and how AKS fixes broken worker nodes.
 ms.topic: concept-article
 ms.date: 01/03/2025
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a DevOps engineer, I want to understand how automatic node repair works in Azure Kubernetes Service so that I can ensure high availability and minimize downtime for my applications.
 ---
 
 # Azure Kubernetes Service (AKS) node auto-repair

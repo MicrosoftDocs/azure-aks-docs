@@ -5,7 +5,8 @@ ms.topic: how-to
 ms.custom: devx-track-bicep
 ms.date: 09/25/2024
 ms.author: pgibson
-ms.editor: schaffererin
+author: schaffererin
+# Customer intent: As a cloud developer, I want to deploy the Open Service Mesh add-on to an Azure Kubernetes Service cluster using a Bicep template, so that I can efficiently manage microservices communication and ensure proper service mesh configurations.
 ---
 
 # Deploy the Open Service Mesh add-on using Bicep in Azure Kubernetes Service (AKS)
@@ -80,8 +81,8 @@ For deployment of a new AKS cluster, you enable the OSM add-on at cluster creati
     param sshPubKey string
     param location string
     param adminUsername string
-    
-    
+
+
     resource aksCluster 'Microsoft.ContainerService/managedClusters@2021-03-01' = {
       name: clusterName
       location: location
