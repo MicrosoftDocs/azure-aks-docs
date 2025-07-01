@@ -72,7 +72,7 @@ The following table lists the GitHub repositories for AKS and related services:
 
 :::image type="icon" source="./media/logos/updates-logo.png" alt-text="":::
 
-Learn about important product updates, roadmap, and announcements in [Azure Updates](https://azure.microsoft.com/updates/?searchterms=compute). For information about Azure Virtual Machines, see the [Azure blog](https://techcommunity.microsoft.com/tag/virtual%20machines?nodeId=board%3AAzureCompute).
+Learn about important product updates, roadmap, and announcements in [Azure Updates](https://azure.microsoft.com/updates/?searchterms=compute). For information about Azure Virtual Machines, see the [Azure blog](https://azure.microsoft.com/blog/product/virtual-machines/).
 
 ## Next steps
 
