@@ -6,6 +6,7 @@ ms.date: 05/31/2023
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As a Kubernetes administrator, I want to utilize Node Problem Detector to monitor node health and detect issues, so that I can maintain cluster stability and promptly address any underlying problems affecting performance.
 ---
 
 # Node Problem Detector (NPD) in Azure Kubernetes Service (AKS) nodes

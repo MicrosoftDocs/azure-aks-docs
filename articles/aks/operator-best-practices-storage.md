@@ -9,6 +9,7 @@ author: schaffererin
 ms.author: schaffererin
 
 
+# Customer intent: As a Kubernetes cluster operator, I want to implement best practices for storage and backup in AKS, so that I can optimize application performance, ensure data security, and facilitate efficient management of storage resources.
 ---
 
 # Best practices for storage and backups in Azure Kubernetes Service (AKS)

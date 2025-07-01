@@ -6,7 +6,8 @@ ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
 ms.author: schaffererin
 author: schaffererin
-#Customer intent: As a cluster operator or developer, how to scale my cluster based on workload requirements and right size my nodes automatically
+
+# Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
 ---
 
 # Node autoprovisioning (preview)
@@ -16,7 +17,7 @@ When you deploy workloads onto AKS, you need to make a decision about the node p
 
 Node autoprovisioning (NAP) (preview) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
+NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter-provider-azure) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
 
 
 > [!IMPORTANT]
@@ -330,6 +331,9 @@ spec:
 
 Removing the imageVersion spec would revert the node pool to be updated to the latest node image version.
 
+> [!IMPORTANT]
+> After you update the SSH key, AKS doesn't automatically update your nodes. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with Node Auto-provisioning enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
+
 ## Node disruption
 
 When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
@@ -361,7 +365,7 @@ kubectl get events -A --field-selector source=karpenter -w
 ## Disabling node autoprovisioning
 
 Node autoprovisioning can only be disabled when:
-- There are no existing NAP-managed nodes. Use `kubectl list nodes -l karpenter.sh/nodepool` to view NAP-managed nodes.
+- There are no existing NAP-managed nodes. Use `kubectl get nodes -l karpenter.sh/nodepool` to view NAP-managed nodes.
 - All existing karpenter.sh/NodePools have their `spec.limits.cpu` set to 0.
 
 ### Steps to disable node autoprovisioning
@@ -395,7 +399,7 @@ Node autoprovisioning can only be disabled when:
    capacity, some NAP-managed nodes will remain.
 3. Scale up existing fixed-size ManagedCluster AgentPools, or create new fixed-size AgentPools, to take the load from the NAP-managed nodes.
    As these nodes are added to the cluster the NAP-managed nodes are drained, and work is migrated to the fixed-scale nodes.
-4. Confirm that all NAP-managed nodes are deleted, using `kubectl list nodes -l karpenter.sh/nodepool`. If there are still NAP-managed
+4. Confirm that all NAP-managed nodes are deleted, using `kubectl get nodes -l karpenter.sh/nodepool`. If there are still NAP-managed
    nodes, it likely means that the cluster is out of fixed-scale capacity and needs more nodes so that the remaining workloads can be migrated.
 5. Update the node provisioning mode parameter of the ManagedCluster to `Manual`.
 

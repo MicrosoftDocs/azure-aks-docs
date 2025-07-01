@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 author: JnHs
 ms.author: jenhayes
+# Customer intent: "As a DevOps engineer, I want to deploy and manage extensions on Azure Kubernetes Service using the command line, so that I can streamline the configuration and maintenance of applications within the cluster."
 ---
 
 # Deploy and manage cluster extensions by using Azure CLI

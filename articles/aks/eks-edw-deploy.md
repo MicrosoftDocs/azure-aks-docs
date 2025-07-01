@@ -6,6 +6,7 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud engineer, I want to deploy an AWS event-driven workflow to Azure Kubernetes Service so that I can leverage the reliability and scalability of Azure for managing my event-driven applications."
 ---
 
 # Deploy an AWS event-driven workflow (EDW) workload to Azure

@@ -4,6 +4,7 @@ description: Learn how to deploy and use wasmCloud on an Azure Kubernetes Servic
 author: protochron
 ms.topic: how-to
 ms.date: 11/07/2024
+ms.author: schaffererin
 ---
 
 # Use wasmCloud on Azure Kubernetes Service (AKS)

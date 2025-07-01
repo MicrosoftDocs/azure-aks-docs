@@ -6,6 +6,7 @@ ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 09/30/2024
 ms.author: shalierxia
+author: schaffererin
 ---
 
 # Latency comparison across versions

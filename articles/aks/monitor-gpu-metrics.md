@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 03/27/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: "As a Kubernetes administrator, I want to monitor GPU metrics using NVIDIA DCGM Exporter with Managed Prometheus and Grafana, so that I can optimize resource utilization and ensure the performance of GPU-enabled workloads in my AKS cluster."
 ---
 
 # Monitor GPU metrics from NVIDIA DCGM exporter with Azure Managed Prometheus and Managed Grafana on Azure Kubernetes Service (AKS)

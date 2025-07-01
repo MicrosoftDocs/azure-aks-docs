@@ -8,6 +8,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 
 ms.custom: devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to manage local account access in AKS clusters using Microsoft Entra integration, so that I can enhance security by disabling unneeded access points and ensuring compliance with organizational policies.
 ---
 
 # Manage local accounts with AKS-managed Microsoft Entra integration

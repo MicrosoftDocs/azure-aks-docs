@@ -4,7 +4,9 @@ description: Learn the developer best practices for how to secure pods in Azure 
 ms.topic: best-practice
 ms.subservice: aks-security
 ms.date: 01/12/2024
-ms.author: magoedte
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: "As a developer deploying applications in Azure Kubernetes Service, I want to implement best practices for pod security, so that I can protect sensitive credentials and minimize security vulnerabilities in my applications."
 ---
 
 # Best practices for pod security in Azure Kubernetes Service (AKS)
@@ -112,4 +114,3 @@ This article focused on how to secure your pods. To implement some of these area
 [workload-identity-overview]: workload-identity-overview.md
 
 [aks-keyvault-csi-driver]: csi-secrets-store-driver.md
-

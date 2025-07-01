@@ -75,13 +75,27 @@ Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
 
 ### Limitations
 
+- `--os-sku Ubuntu2404` doesn't support [FIPS](./enable-fips-nodes.md) or [CVM](./use-cvm.md). 
 - `--os-sku Ubuntu2404` is supported in kubernetes version 1.32 to 1.38. 
 - `--os-sku Ubuntu2404` is intended for testing the new os version without upgrading your kubernetes version. You need to update your OS SKU to a supported OS option before upgrading your kubernetes version to 1.39+.
-- You need the Azure CLI version 18.0.0b5 or later installed and configured. To find your CLI version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+### Install `aks-preview` extension
 
-### Register the `Ubuntu2404Preview` feature flag
+1. Install the `aks-preview` Azure CLI extension using the [`az extension add`](/cli/azure/extension#az-extension-add) command.
+
+    [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+2. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **Ubuntu 24.04 requires a minimum of 18.0.0b5**.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+### Register `Ubuntu2404Preview` feature flag
 
 1. Register the `Ubuntu2404Preview` feature flag using the [`az feature register`][az-feature-register] command.
 
@@ -89,12 +103,10 @@ Ubuntu 24.04 is available in preview by specifying `--os-sku Ubuntu2404`.
     az feature register --namespace "Microsoft.ContainerService" --name "Ubuntu2404Preview"
     ```
 
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
+2. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show *Registered*.
 
     ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "Ubuntu2404Preview"
+    az feature show --namespace Microsoft.ContainerService --name Ubuntu2404Preview
     ```
 
 3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
@@ -154,6 +166,7 @@ Ubuntu 22.04 can be specified by using `--os-sku Ubuntu2204`.
 
 ### Limitations
 
+- `--os-sku Ubuntu2204` doesn't support [FIPS](./enable-fips-nodes.md) or [CVM](./use-cvm.md). 
 - `--os-sku Ubuntu2204` is supported in kubernetes version 1.25 to 1.33. 
 - `--os-sku Ubuntu2204` is intended for roll back to Ubuntu 22.04 on your current kubernetes version. You need to update your OS SKU to a supported OS option to upgrade your kubernetes version to 1.34+.
 
@@ -198,6 +211,7 @@ To learn more about node images, node pool upgrades, and node configurations on 
 [install-azure-cli]:  /cli/azure/install-azure-cli
 [az-feature-register]: /cli/azure/feature#az-feature-register
 [az-provider-register]: /cli/azure/provider#az-provider-register
+[az-feature-show]: /cli/azure/feature#az-feature-show
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases

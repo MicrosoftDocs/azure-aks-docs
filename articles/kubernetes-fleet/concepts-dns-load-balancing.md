@@ -5,7 +5,7 @@ ms.date: 05/05/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
 ---
 
 # Multi-cluster DNS-based load balancing with Azure Kubernetes Fleet Manager (preview)

@@ -5,6 +5,7 @@ author: josephyostos
 ms.topic: best-practice
 ms.date: 03/27/2024
 ms.author: josephyostos
+# Customer intent: As a Kubernetes administrator, I want to implement network policies in my Azure Kubernetes Service (AKS) environment, so that I can ensure secure and controlled communication between workloads while minimizing the risk of unauthorized access and data breaches.
 ---
 
 # Best practices for network policies in Azure Kubernetes Service (AKS)
