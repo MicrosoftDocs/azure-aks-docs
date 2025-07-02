@@ -130,22 +130,27 @@ Message: Drain node ... failed when evicting pod ... failed with Too Many Reques
         }
         ```
 
-* **[Preview]** The Blocked Node Tolerance feature (maxBlockedNodes) lets you specify how many nodes blocked by drain failures can be tolerated during upgrades or similar operations. This feature requires the Azure CLI `aks-preview` extension version 18.0.0b9 or later. It only works if `undrainableNodeBehavior` is set; otherwise, the command will return an error. Example command:
+* **[Preview]** The Max Blocked Nodes Allowed feature lets you specify how many nodes that fail to drain (blocked nodes) can be tolerated during upgrades or similar operations. This feature only works if the undrainable node behavior property is set; otherwise, the command will return an error.
 
-    ```azurecli-interactive
-    az aks nodepool update \
-      --cluster-name jizenMC1 \
-      --name nodepool1 \
-      --resource-group jizenTestMaxBlockedNodesRG \
-      --max-surge 1 \
-      --undrainable-node-behavior Cordon \
-      --max-blocked-nodes 2 \
-      --drain-timeout 5
-    ```
+> [!NOTE]
+> If you do not explicitly set Max Blocked Nodes Allowed, it defaults to the value of [Max Surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade). If Max Surge is not set, the default is typically 10%, so Max Blocked Nodes Allowed also defaults to 10%.
 
-    > [!NOTE]
-    > The `maxBlockedNodes` property sets the maximum number of nodes that can remain blocked (undrainable) during the upgrade. If `undrainableNodeBehavior` is not set, attempting to set `maxBlockedNodes` will result in an error.
+**Prerequisites**
 
+- Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use this feature.
+
+  Example command:
+
+  ```azurecli-interactive
+  az aks nodepool update \
+    --cluster-name jizenMC1 \
+    --name nodepool1 \
+    --resource-group jizenTestMaxBlockedNodesRG \
+    --max-surge 1 \
+    --undrainable-node-behavior Cordon \
+    --max-blocked-nodes 2 \
+    --drain-timeout 5
+  ```
 * Extend drain timeout if workloads need more time (default is *30 minutes*).
 * Test PDBs in staging, monitor upgrade events, and use blue-green deployments for critical workloads. [Learn more](/azure/architecture/guide/aks/blue-green-deployment-for-aks).
 
