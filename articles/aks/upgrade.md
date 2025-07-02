@@ -19,7 +19,7 @@ For Linux nodes, node image security patches and hotfixes may be performed witho
 
 The following table summarizes the details of updating each component:
 
-|Component name|Frequency of upgrade|Planned Maintenance supported|Supported operation methods|Support Operation Methods (Multi-Cluster)|Documentation link|
+|Component name|Frequency of upgrade|Planned Maintenance supported|Supported operation methods|Supported operation methods (Multi-Cluster)|Documentation link|
 |--|--|--|--|--|--|
 |Cluster Kubernetes version upgrade (minor)|Roughly every three months|Yes|Automatic, Manual|Automatic, Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade]|
 |Cluster Kubernetes version upgrade (patch)|Approximately weekly. To determine the latest applicable version in your region, see the [AKS release tracker][release-tracker]|Yes|Automatic, Manual|Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade]|
