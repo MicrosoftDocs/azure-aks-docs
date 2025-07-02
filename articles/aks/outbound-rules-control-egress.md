@@ -2,11 +2,10 @@
 title: Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters
 description: Learn what ports and addresses are required to control egress traffic in Azure Kubernetes Service (AKS)
 ms.subservice: aks-networking
-ms.custom:
-  - build-2024
+ms.custom: build-2024, quarterly
 ms.topic: how-to
 ms.author: allensu
-ms.date: 12/11/2024
+ms.date: 06/10/2025
 author: asudbring
 
 # Customer intent: "As a Kubernetes cluster operator, I want to understand the outbound network and FQDN rules necessary to control egress traffic, so that I can enhance security and ensure proper functionality within my Azure Kubernetes Service deployment."
