@@ -358,11 +358,13 @@ You can remove a node manually using `kubectl delete node`, but node autoprovisi
 
 ### Kubernetes and node image updates
 
-AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates for you by default. You can also adjust the schedule of your Kubernetes and node image updates using planned maintenance windows during less busy periods for your workloads.
+AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates of your nodes for you. You can adjust the schedule of your Kubernetes and node image updates using planned maintenance windows to target less busy periods for your workloads.
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for node autoprovision nodes follows the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning.
+Kubernetes upgrades for node autoprovision nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning. 
+
+AKS recommends coupling node autoprovision with a Kubernetes [Auto Upgrade](https://learn.microsoft.com/en-us/azure/aks/auto-upgrade-cluster?tabs=azure-cli#cluster-auto-upgrade-channels) channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
 
 ### Node image updates
 
