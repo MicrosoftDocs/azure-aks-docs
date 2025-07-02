@@ -1,5 +1,5 @@
 ---
-title: "Set Up Container Network Logs"
+title: Set Up Container Network Logs
 description: Learn how to set up container network flow logs with storage in Advanced Container Networking Services (preview) in Azure Kubernetes Service (AKS)."
 author: shaifaligargmsft
 ms.author: shaifaligarg
@@ -64,11 +64,11 @@ When the feature shows **Registered**, refresh the registration of the `Microsof
 ## Limitations
 
 * Layer 7 flow data is captured only when Layer 7 policy support is enabled. For more information, see [Configure a Layer 7 policy](./how-to-apply-l7-policies.md).
-* Domain Name Service (DNS) flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
-* During the public preview phase, this feature can be configured only via the Azure CLI and Azure Resource Manager templates. Onboarding by using Terraform isn't supported at this time.
+* Domain Name System (DNS) flows and related metrics are captured only when a Cilium Fully Qualified Domain (FQDN) network policy is applied. For more information, see [Configure an FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* During preview, you can configure this feature only via the Azure CLI and Azure Resource Manager templates (ARM templates). Onboarding by using Terraform isn't supported at this time.
 * When Log Analytics isn't configured for log storage, container network logs are limited to a maximum of 50 MB of storage. When this limit is reached, new entries overwrite older logs.
-* If the log table plan is set to basic logs, the prebuilt Grafana dashboards don't function as expected.
-* The auxiliary logs table plan isn't supported.
+* If the log table plan is set to Basic logs, the prebuilt Grafana dashboards don't function as expected.
+* The Auxiliary logs table plan isn't supported.
 
 ### Enable Advanced Container Networking Services on a new cluster
 
@@ -101,9 +101,9 @@ az aks create \
 
 #### Configure custom resources for log filtering  
 
-To configure container network logs in stored logs mode, you must define specific custom resources to set filters for log collection. When at least one custom resource is defined, logs are collected and stored on the host node at `/var/log/acns/hubble/events.log`.
+To configure container network logs in stored logs mode, you must define specific custom resources to set filters for logs collection. When at least one custom resource is defined, logs are collected and stored on the host node at `/var/log/acns/hubble/events.log`.
 
-To configure logging, you must define and apply the `RetinaNetworkFlowLog` type of custom resources. You set filters like namespace, pod, service, port, protocol, or verdict. Multiple custom resources can exist in a cluster simultaneously. If no custom resource is defined with nonempty filters, no logs are saved in the designated location.
+To configure logging, you must define and apply the `RetinaNetworkFlowLog` type of custom resource. You set filters like namespace, pod, service, port, protocol, and verdict. Multiple custom resources can exist in a cluster simultaneously. If no custom resource is defined with nonempty filters, no logs are saved in the designated location.
 
 The following sample definition demonstrates how to configure the `RetinaNetworkFlowLog` type of custom resource.
 
@@ -165,9 +165,9 @@ The following table describes the fields in the custom resource definition:
 | `filters.name`            | String           | The name of the filter.                                                                                                                | Optional    |
 | `filters.protocol`        | []string | The protocols to match for this filter. Valid values are `tcp`, `udp`, and `dns`. Because it's an optional parameter, if it isn't specified, logs with all protocols are included.                                                      | Optional     |
 | `filters.verdict`         | []string | The verdict of the flow to match. Valid values are `forwarded` and `dropped`. Because it's an optional parameter, if it isn't specified, logs with all verdicts are included.                                                        | Optional     |
-| `filters.from`            | Endpoint          | Specifies the source of the network flow. Can include IP addresses, label selectors, or namespace/pod pairs.                           | Optional    |
+| `filters.from`            | Endpoint          | Specifies the source of the network flow. Can include IP addresses, label selectors, and namespace/pod pairs.                           | Optional    |
 | `Endpoint.ip`         | []string | It can be a single IP or a CIDR.                                                                                                         | Optional     |
-| `Endpoint.labelSelector` | Object           | A label selector is a mechanism to filter and query resources based on labels, so you can identify specific subsets of resources. A label selector can include two components: `matchLabels` and `matchExpressions`. Use `matchLabels` for straightforward matching by specifying a key-value pair (for example, {"app": "frontend"}). For more advanced criteria, use `matchExpressions`, where you define a label key, an operator (such as `In`, `NotIn`, `Exists`, or `DoesNotExist`), and an optional list of values. Ensure that the conditions in both `matchLabels` and `matchExpressions` are met, because they're logically combined by `AND`. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
+| `Endpoint.labelSelector` | Object           | A label selector is a mechanism to filter and query resources based on labels, so you can identify specific subsets of resources. A label selector can include two components: `matchLabels` and `matchExpressions`. Use `matchLabels` for straightforward matching by specifying a key/value pair (for example, `{"app": "frontend"}`). For more advanced criteria, use `matchExpressions`, where you define a label key, an operator (such as `In`, `NotIn`, `Exists`, or `DoesNotExist`), and an optional list of values. Ensure that the conditions in both `matchLabels` and `matchExpressions` are met, because they're logically combined by `AND`. If no conditions are specified, the selector matches all resources. To match none, leave the selector null. Carefully define your label selector to target the correct set of resources.  | Optional     |
 | `Endpoint.namespacedPod` | []string | A list of namespace and pod pairs (formatted as `namespace/pod`) for matching the source. `name` should match the RegEx pattern `^.+$`.                                              | Optional     |
 | `filters.to`              | Endpoint           | Specifies the destination of the network flow. Can include IP addresses, label selectors, or namespace/pod pairs.                      | Optional    |
 | `Endpoint.ip`           | []string | It can be a single IP or a CIDR.         | Optional     |
@@ -312,7 +312,7 @@ Status:
 
 #### Create an Azure Managed Grafana instance
 
-Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Grafana instance. The name of the instance must be unique.
+Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Managed Grafana instance. The name of the instance must be unique.
 
 ```azurecli
 # Set an environment variable for the Managed Grafana name. Make sure that you replace the placeholder with your own value.
@@ -338,11 +338,11 @@ Ensure that your Grafana workspace can access and search all monitoring data in 
 
 1. In your Managed Grafana workspace, go to **Settings** > **Identity**.
 
-  :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of the identity option in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/grafana-identity.png" alt-text="Screenshot of the identity option in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/grafana-identity.png":::
 
 1. Select **Azure role assignments** > **Add role assignments**.
 
-  :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in a Grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
+   :::image type="content" source="./media/advanced-container-networking-services/azure-role-assignments.png" alt-text="Screenshot of choosing Azure role assignments in a Grafana instance." lightbox="./media/advanced-container-networking-services/azure-role-assignments.png":::
 
 1. For **Scope**, enter **Subscription**. Select your subscription. Set **Role** to **Monitoring Reader**, and then select **Save**.
   
@@ -381,9 +381,9 @@ You can visualize container network flow logs for analysis by using two prebuilt
 
     * Go to **Azure** > **Insights** > **Containers** > **Networking** > **Flow Logs (External Traffic)**. This dashboard provides visualizations in which AKS workloads send and receive communications from outside an AKS cluster, including network requests, responses, drops, and errors. Use [ID 23156](https://grafana.com/grafana/dashboards/23156-azure-insights-containers-networking-flow-logs-external-traffic//).
 
-    :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of a flow log (external) Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
+     :::image type="content" source="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png" alt-text="Screenshot of a flow log (external) Grafana dashboard in a Managed Grafana instance." lightbox="./media/advanced-container-networking-services/container-network-logs-dashboard-external.png":::
 
-   For more information about how to use this dashboard, see [Overview of container network logs](container-network-observability-logs.md).
+For more information about how to use this dashboard, see the [overview of container network logs](container-network-observability-logs.md).
 
 #### Visualization of container network logs in the Azure portal
 
@@ -391,9 +391,9 @@ You can visualize, query, and analyze flow logs in the Azure portal. Go to the L
 
 :::image type="content" source="./media/advanced-container-networking-services/azure-log-analytics.png" alt-text="Screenshot of container network logs in Log Analytics." lightbox="./media/advanced-container-networking-services/azure-log-analytics.png":::
 
-## Configure on-demand mode
+## Configure on-demand logs mode
 
-On-demand mode for network flows works with both Cilium and non-Cilium Data planes.
+On-demand logs mode for network flows works with both Cilium and non-Cilium data planes.
 
 To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
 
@@ -406,7 +406,7 @@ The `az aks create` command with the Advanced Container Networking Services flag
 #### [Cilium](#tab/cilium)
 
 > [!NOTE]
-> Clusters that have the Cilium data plane support the Container Network Observability and Container Network Security features starting with Kubernetes version 1.29.
+> Clusters that have the Cilium data plane support the Container Network Observability and Container Network Security features in Kubernetes version 1.29 and later.
 
 ```azurecli
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
@@ -819,9 +819,9 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
 ### Basic troubleshooting
 
-* Advanced Container Networking Services is a prerequisite to turn on the Azure Monitor Agent log collection feature:
+* Advanced Container Networking Services is a prerequisite to turn on the Azure Monitor Agent log collection feature.
 
-   Trying to enable container network flow logs capability on a cluster without enabling Advanced Container Networking Services:
+   Trying to enable the container network flow logs capability on a cluster without enabling Advanced Container Networking Services, for example:
 
     `az aks update -g test-rg -n test-cluster --enable-retina-flow-logs`
 
@@ -829,22 +829,23 @@ rm hubble-linux-${HUBBLE_ARCH}.tar.gz{,.sha256sum}
 
     `Flow logs requires '--enable-acns', advanced networking to be enabled, and the monitoring addon to be enabled.`
 
-* If the cluster Kubernetes version is earlier than version 1.32.0, trying to enable '--enable-retina-flow-logs':
+* If the cluster Kubernetes version is earlier than version 1.32.0, trying to run `--enable-retina-flow-logs` results in an error  message:
 
     `The specified orchestrator version %s is not valid. Advanced Networking Flow Logs is only supported on Kubernetes version 1.32.0 or later.`
 
-    Where the `%s` is replaced by the customer's Kubernetes version.
+    where `%s` is your Kubernetes version.
 
-* If a customer tries to run `--enable-retina-flow-logs` on a subscription where the Azure Feature Exposure Control (AFEC) flag isn't enabled:
+* If you try to run `--enable-retina-flow-logs` on a subscription where the Azure Feature Exposure Control (AFEC) flag isn't enabled, an error message appears:
 
     `Feature Microsoft.ContainerService/AdvancedNetworkingFlowLogsPreview is not enabled. Please see https://aka.ms/aks/previews for how to enable features.`
 
-* If a customer tries to apply a RetinaNetworkFlowLog custom resource on a cluster where Advanced Container Networking Services isn't enabled:
+* If you try to apply a `RetinaNetworkFlowLog` custom resource on a cluster where Advanced Container Networking Services isn't enabled, an error message appears:
 
    `error: resource mapping not found for <....>": no matches for kind "RetinaNetworkFlowLog" in version "acn.azure.com/v1alpha1"`
-   `ensure CRDs are installed first`
+  
+  Ensure that you install custom resources first.
 
-### Disable container network logs: stored logs mode on existing cluster
+### Disable container network logs: Stored logs mode on existing cluster
 
 If all custom resources are deleted, flow log collection stops because no filters are defined for collection.
 
@@ -857,7 +858,7 @@ To disable retina flow log collection by the Azure Monitor Agent, run:
 
 ## Clean up resources
 
-If you don't plan to use this application, delete the other resources you created in this article by using the [`az group delete`](/cli/azure/#az_group_delete) command.
+If you don't plan to use this example application, delete the resources you created in this article by using the [`az group delete`](/cli/azure/#az_group_delete) command.
 
 ```azurecli
   az group delete --name $RESOURCE_GROUP

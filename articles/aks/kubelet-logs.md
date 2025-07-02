@@ -11,7 +11,7 @@ ms.custom: innovation-engine,aks,logs,troubleshooting
 
 # Get kubelet logs from Azure Kubernetes Service cluster nodes
 
-When you operate an Azure Kubernetes Service (AKS) cluster, you might need to review logs to troubleshoot a problem. The Azure portal has a built-in capability that you can use to view logs for AKS [main components][aks-main-logs] and [cluster containers][azure-container-logs]. Occasionally, you might need to get *kubelet* logs from AKS nodes for troubleshooting purposes.
+You might need to review logs to troubleshoot a problem in your Azure Kubernetes Service (AKS) cluster. You can use tools in the Azure portal to view logs for AKS [main components][aks-main-logs] and [cluster containers][azure-container-logs]. Occasionally, you might need to get *kubelet* logs from AKS nodes to help you troubleshoot an issue.
 
 This article shows you how to use `journalctl` to view kubelet logs on an AKS node.
 
@@ -35,7 +35,7 @@ This command configures kubectl to use the credentials for your AKS cluster.
 
 ## Use the kubectl raw command
 
-You can quickly view any node kubelet logs by using the following command:
+You can quickly view any node's kubelet logs by using the following command:
 
 ```bash
 export NODE_NAME="aks-agentpool-xxxxxxx-0"
@@ -56,7 +56,7 @@ journalctl -u kubelet -o cat
 ```
 
 > [!NOTE]
-> For Windows nodes, the log data is in `C:\k` and can be viewed using the *more* command:
+> For Windows nodes, the log data is in `C:\k` and can be viewed by using the `more` command:
 >
 > ```console
 > more C:\k\kubelet.log
@@ -90,7 +90,7 @@ I0508 12:28:58.344656    8672 kubelet_node_status.go:497] Using Node Hostname fr
 
 ## Related content
 
-If you need more troubleshooting information for the Kubernetes main, see [View the Kubernetes main node logs in AKS][aks-main-logs].
+* [View the Kubernetes main node logs in AKS][aks-main-logs].
 
 <!-- LINKS - internal -->
 [aks-ssh]: ssh.md
