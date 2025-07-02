@@ -5,7 +5,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: overview
 ms.subservice: aks-upgrade
-ms.date: 01/26/2024
+ms.date: 07/01/2025
 ---
 
 # Upgrading Azure Kubernetes Service clusters and node pools
