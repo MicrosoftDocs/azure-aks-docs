@@ -290,6 +290,7 @@ az aks loadbalancer rebalance --resource-group $RESOURCE_GROUP --cluster-name $C
 | Backend pool type    | Create or update and existing cluster to use `nodeIP` backend pools.                       |
 | Autoscaler zeros     | A primary agent pool can’t scale to 0 nodes.                                               |
 | Rebalance disruption | Removing a node from a backend pool drops in‑flight connections. Plan maintenance windows. |
+| Configuration reload timing | After running `az aks loadbalancer`, changes may not take effect immediately. The AKS operation finishes quickly, but the cloud-controller-manager may take longer to apply updates. Wait for the `EnsuredLoadBalancer` event to confirm the changes are active. |
 
 ## Clean up resources
 
@@ -297,7 +298,7 @@ Delete the resource group when you’re finished to remove the cluster and load 
 
 ```azurecli-interactive
 az group delete --name $RESOURCE_GROUP --yes --no-wait
-```
+```z
 
 ## Next steps
 
