@@ -46,6 +46,23 @@ AKS supports two options for the Windows Server operating system: Long Term Serv
 
     Windows Annual Channel versions are based on the Kubernetes version of your node pool. To upgrade from one Annual Channel version to the next, [upgrade to a Kubernetes version](./upgrade-aks-cluster.md) that supports the next Annual Channel version. For more information, see [Windows Server Annual Channel for Containers on AKS][use-windows-annual].
 
+## Monitoring
+
+> **Best practice guidance**
+>
+> Windows Exporter is installed on all Windows nodes. With Managed Prometheus and Grafana, you can monitor default collectors included in Windows Exporter on AKS. For more information, see [default Prometheus metrics configured in Azure Monitor][default-prometheus].
+
+Windows Exporter allows customers to see their metrics through Managed Prometheus or Prometheus OSS deployments and enjoy enhanced observability around their node and pod performance, health, and resource usage. These metrics are also visible with Managed Grafana.
+- When enabling managed prometheus, add this required parameter for correct dashboard data presentation for windows: '--enable-windows-recording-rules'
+- Grafana includes dashboards for showing Windows resources, such as: 
+    - Kubernetes / Compute Resources / Cluster (Windows)
+    - Kubernetes / Compute Resources / Namespace (Windows)
+    - Kubernetes / Compute Resources / Pod (Windows)
+    - Kubernetes / USE Method / Cluster (Windows)
+    - Kubernetes / USE Method / Node (Windows)
+
+The default collectors included in Windows Exporter on AKS are: cpu, cpu_info, cs, container, logical_disk, memory, net, os, process, service, system, textfile. For more information on what metrics you can see using these collectors, please see [prometheus-community/windows_exporter](https://github.com/prometheus-community/windows_exporter#collectors).
+
 ## Networking
 
 ### Networking modes
@@ -129,6 +146,7 @@ To learn more about Windows containers on AKS, see the following resources:
 [upgrade-windows-workloads-aks]: ./upgrade-windows-2019-2022.md
 [windows-on-aks-partner-solutions]: ./windows-aks-partner-solutions.md
 [use-windows-annual]: ./windows-annual-channel.md
+[default-prometheus]: /azure/azure-monitor/containers/prometheus-metrics-scrape-default
 
 <!-- LINKS - external -->
 [aks-release-notes]: https://github.com/Azure/AKS/releases
