@@ -1,6 +1,6 @@
 ---
 title: Customize LocalDNS in Azure Kubernetes Service (AKS)
-description: Learn how to improve your DNS resolution performance and resiliency in AKS using localDNS.
+description: Learn how to improve your Domain Name System (DNS) resolution performance and resiliency in AKS using localDNS.
 ms.subservice: aks-networking
 author: vaibhavarora
 ms.topic: how-to
@@ -16,9 +16,9 @@ ms.author: vaibhavarora
 
 ## Introduction
 
-LocalDNS is a feature in Azure Kubernetes Service (AKS) designed to enhance DNS resolution performance and resiliency for workloads running in your cluster. By deploying a local DNS proxy on each node, LocalDNS reduces DNS query latency, improves reliability during network disruptions, and provides advanced configuration options for DNS caching and forwarding. This article explains how LocalDNS works, its configuration options, and how to enable, verify, and troubleshoot LocalDNS in your AKS clusters.
+LocalDNS is a feature in Azure Kubernetes Service (AKS) designed to enhance the Domain Name System (DNS) resolution performance and resiliency for workloads running in your cluster. By deploying a local DNS proxy on each node, LocalDNS reduces DNS query latency, improves reliability during network disruptions, and provides advanced configuration options for DNS caching and forwarding. This article explains how LocalDNS works, its configuration options, and how to enable, verify, and troubleshoot LocalDNS in your AKS clusters.
 
-To learn about what localDNS is, including architecture details, and key capabilities, refer to [DNS Resolution in Azure Kubernetes Service (AKS)](/articles/aks/dns-concepts.md).
+To learn about what localDNS is, including architecture details, and key capabilities, refer to [DNS Resolution in Azure Kubernetes Service (AKS)](./dns-concepts.md).
 
 ## Before you begin
 
@@ -30,7 +30,7 @@ To learn about what localDNS is, including architecture details, and key capabil
 * LocalDNS is only supported on node pools running Ubuntu 22.04 or newer.
 
 ## Enable LocalDNS
-LocalDNS is configured at the node pool level in AKS, meaning you can enable or disable LocalDNS independently for each node pool in your cluster. This allows you to tailor DNS resolution behavior based on the specific requirements of different workloads or environments. To enable LocalDNS on a node pool, you need to provide a configuration file: _localdnsconfig.json_ that defines how LocalDNS should operate for that node pool. If you do not specify a custom configuration file, AKS will automatically apply a default LocalDNS configuration. For details on default configurations and how to configure CoreDNS plugins and server blocks, refer to [Configuring LocalDNS](#configuring-localdns).
+LocalDNS is configured at the node pool level in AKS, meaning you can enable or disable LocalDNS independently for each node pool in your cluster. This tailors DNS resolution behavior based on the specific requirements of different workloads or environments. To enable LocalDNS on a node pool, you need to provide a configuration file: _localdnsconfig.json_ that defines how LocalDNS should operate for that node pool. If you don't specify a custom configuration file, AKS automatically applies a default LocalDNS configuration. For details on default configurations and how to configure CoreDNS plugins and server blocks, refer to [Configuring LocalDNS](#configuring-localdns).
 
 ### Enable localDNS in a new node pool
 
@@ -56,7 +56,7 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 LocalDNS uses a JSON-based configuration file _localdnsconfig.json_ to define DNS resolution behavior for each node pool. This file allows you to specify operational modes, server blocks for different DNS domains, and plugin settings such as caching, forwarding, and logging.
 
 ### Default LocalDNS Configuration
-The default LocalDNS configuration provides a balanced setup that optimizes both internal and external DNS resolution for most AKS workloads. You can use this as a starting point and customize the configuration to better suit your cluster's specific DNS requirements.
+The default LocalDNS configuration provides a balanced setup that optimizes both internal and external DNS resolution for most AKS workloads. You can use this configuration as a starting point and customize it to better suit your cluster's specific DNS requirements.
 
 ```json
 {
@@ -224,13 +224,13 @@ If DNS queries to specific domains are failing after enabling LocalDNS:
 
 1. Check if you have domain-specific overrides in your _localdnsconfig.json_ that might be misconfigured.
 1. Temporarily try removing domain-specific overrides and using only the default `.` configuration.
-1. Check if the issue occurs with both UDP and TCP protocols by adjusting the `protocol` setting.
+1. Check if the issue occurs with both User Datagram Protocol (UDP) and Transmission Control Protocol (TCP) by adjusting the `protocol` setting.
 
 ## Next steps
 
-For information on localDNS in AKS, see [LocalDNS in Azure Kubernetes Service (conceptual)](/articles/aks/dns-concepts.md).
+For information on localDNS in AKS, see [LocalDNS in Azure Kubernetes Service (conceptual)](./dns-concepts.md).
 
-For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](/articles/aks/coredns-custom.md).
+For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](./coredns-custom.md).
 
 For information on the CoreDNS project, see [the CoreDNS upstream project page][coreDNS].
 
