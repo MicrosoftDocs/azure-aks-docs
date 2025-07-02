@@ -3,7 +3,7 @@ title: DNS in Azure Kubernetes Service (AKS)
 description: Learn how DNS operates in AKS and how to boost performance and reliability with localDNS caching.
 ms.subservice: aks-networking
 author: vaibhavarora
-ms.topic: concepts
+ms.topic: concept-article
 ms.date: 07/01/2025
 ms.author: vaibhavarora
 
