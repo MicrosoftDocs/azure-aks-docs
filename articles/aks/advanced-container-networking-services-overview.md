@@ -1,6 +1,6 @@
 ---
 title: Advanced Container Networking Services Overview
-description: Discover how Advanced Container Networking Services empowers your Azure Kubernetes Service (AKS) clusters through the Container Network Observability and Container Network Security features.
+description: Discover how Advanced Container Networking Services gives you insight into your Azure Kubernetes Service (AKS) clusters through the Container Network Observability and Container Network Security features.
 author: Khushbu-Parekh
 ms.author: kparekh
 ms.service: azure-kubernetes-service
@@ -13,11 +13,11 @@ ms.date: 05/28/2024
 
 Advanced Container Networking Services is a suite of services designed to enhance the networking capabilities of Azure Kubernetes Service (AKS) clusters. The suite addresses challenges in modern containerized applications, such as observability, security, and compliance.
 
-With Advanced Container Networking Services, the focus is on delivering a seamless and integrated experience that enables you to maintain robust security postures and gain deep insights into your network traffic and application performance. It helps ensure that your containerized applications aren't only secure, but also that they meet or exceed your performance and reliability goals. It helps you confidently manage and scale your infrastructure.
+Advanced Container Networking Services focuses on delivering a seamless and integrated experience that helps you maintain robust security postures and gain deep insights into your network traffic and application performance. It helps ensure that your containerized applications aren't only secure, but also that they meet or exceed your performance and reliability goals. Advanced Container Networking Services helps you confidently manage and scale your infrastructure.
 
 ## What is included in Advanced Container Networking Services?
 
-Advanced Container Networking Services contains features split into two pillars:
+Advanced Container Networking Services offers two key features:
 
 - **Container Network Observability:** The inaugural feature of the Advanced Container Networking Services suite, bringing the power of Hubble’s control plane to both Cilium and non-Cilium Linux data planes. These features aim to provide visibility into networking and performance.
 
@@ -25,11 +25,11 @@ Advanced Container Networking Services contains features split into two pillars:
 
 ## Container Network Observability
 
-Container network observability in Azure Kubernetes Service (AKS) is a comprehensive feature set within Advanced Container Networking Services, designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. The feature uses eBPF to enhance scalability and performance by identifying potential bottlenecks and network congestion before applications are affected.
+Container Network Observability in Azure Kubernetes Service (AKS) is a comprehensive feature set within Advanced Container Networking Services, designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. The feature uses eBPF to enhance scalability and performance by identifying potential bottlenecks and network congestion before applications are affected.
 
-Key benefits include compatibility with all CNI variants in Azure, detailed visibility into node-level metrics, and Hubble metrics for Domain Name Service (DNS) resolution, pod-to-pod communication, and service interactions. Container network logs capture essential metadata such as IPs, ports, and traffic flow for troubleshooting, monitoring, and security enforcement.
+Key benefits include compatibility with all Container Networking Interface (CNI) variants in Azure, detailed visibility into node-level metrics, and Hubble metrics for Domain Name System (DNS) resolution, pod-to-pod communication, and service interactions. Container network logs capture essential metadata such as IPs, ports, and traffic flow for troubleshooting, monitoring, and security enforcement.
 
-Additionally, it integrates with the managed service for Prometheus in Azure Monitor and Azure Managed Grafana for simplified metrics storage and visualization. Whether you use managed services or your own infrastructure, this observability solution helps ensure a highly performant, secure, and compliant network environment for AKS workloads.
+It also integrates with the managed service for Prometheus in Azure Monitor and Azure Managed Grafana for simplified metrics storage and visualization. Whether you use managed services or your own infrastructure, this observability solution helps ensure a highly performant, secure, and compliant network environment for AKS workloads.
 
 :::image type="content" source="./media/advanced-container-networking-services/advanced-network-observability.png" alt-text="Diagram of the Container Network Observability architecture." lightbox="./media/advanced-container-networking-services/advanced-network-observability.png":::
 
@@ -76,11 +76,11 @@ For information about pricing, see [Advanced Container Networking Services - Pri
 
 - The minimum version of Azure CLI required for the steps in this article is 2.71.0. To find your version, run `az --version`. To install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-### Install the `aks-preview` Azure CLI extension
+### Install the aks-preview Azure CLI extension
 
 Install or update the Azure CLI preview extension by using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
 
-The minimum version of the aks-preview Azure CLI extension is 14.0.0b6.
+The minimum version of the `aks-preview` Azure CLI extension is `14.0.0b6`.
 
 ```azurecli
 # Install the aks-preview extension
@@ -123,16 +123,12 @@ az group create --name $RESOURCE_GROUP --location $LOCATION
 
 #### Create an AKS cluster that has Advanced Container Networking Services
 
-The `az aks create` command with the `--enable-acns` Advanced Container Networking Services flag creates a new AKS cluster that has all Advanced Container Networking Services features, including:
-
-- **Container Network Observability**:  Provides insights into your network traffic. For more information, see [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
-
-- **Container Network Security**: Offers security features like FQDN filtering. For more information, see [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
+The `az aks create` command with the `--enable-acns` Advanced Container Networking Services flag creates a new AKS cluster that has all Advanced Container Networking Services features, including [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
 ##### [Cilium](#tab/cilium)
 
 > [!NOTE]
-> Clusters that have the Cilium data plane support Container Network Observability and Container Network security starting with Kubernetes version 1.29.
+> Clusters that have the Cilium data plane support Container Network Observability and Container Network security in Kubernetes version 1.29 and later.
 >
 > When the `--acns-advanced-networkpolicies` parameter is set to `L7`, both L7 and FQDN filtering policies are enabled. If you want to enable only FQDN filtering, set the parameter to `FQDN`.
 >
@@ -157,7 +153,7 @@ az aks create \
 ##### [Non-Cilium](#tab/non-cilium)
 
 > [!NOTE]
-> The [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for non-Cilium clusters
+> The [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for non-Cilium clusters.
 
 ```azurecli
 # Set an environment variable for the AKS cluster name. Make sure you replace the placeholder with your own value.
@@ -251,7 +247,7 @@ az aks update \
 
 ---
 
-### Disable Container Network Security
+#### Disable Container Network Security
 
 To disable the Container Network Security feature without affecting other Advanced Container Networking Services features, run:
 
