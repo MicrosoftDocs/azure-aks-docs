@@ -1,17 +1,17 @@
 ---
-title: Create the infrastructure for deploying Apache Airflow on Azure Kubernetes Service (AKS)
-description: In this article, you create the infrastructure needed to deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
+title: Create infrastructure for deploying Apache Airflow on AKS
+description: Create the infrastructure needed to deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 12/19/2024
+ms.date: 07/02/2025
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
 ---
 
-# Create the infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)
+# Create infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)
 
-In this article, you create the infrastructure required to run Apache Airflow on Azure Kubernetes Service (AKS).
+In this article, you create the infrastructure resources needed to run Apache Airflow on Azure Kubernetes Service (AKS).
 
 ## Prerequisites
 
@@ -99,9 +99,9 @@ In this step, we create a user-assigned managed identity that the External Secre
     $MY_LOCATION   $MY_KEYVAULT_NAME     $MY_RESOURCE_GROUP_NAME
     ```
 
-## Create an Azure Container Registry
+## Create an Azure container registry
 
-* Create an Azure Container Registry to store and manage your container images using the [`az acr create`](/cli/azure/acr#az-acr-create) command.
+* Create an Azure container registry to store and manage your container images using the [`az acr create`](/cli/azure/acr#az-acr-create) command.
 
     ```azurecli-interactive
     az acr create \
