@@ -298,7 +298,7 @@ Delete the resource group when you’re finished to remove the cluster and load 
 
 ```azurecli-interactive
 az group delete --name $RESOURCE_GROUP --yes --no-wait
-```z
+```
 
 ## Next steps
 
