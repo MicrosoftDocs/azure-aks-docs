@@ -209,6 +209,10 @@
                   href: container-network-security-fqdn-filtering-concepts.md
                 - name: Layer 7 Policy
                   href: container-network-security-l7-policy-concepts.md
+        - name: DNS Concepts
+          items:
+            - name: Overview
+              href: dns-concepts.md
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -758,7 +762,7 @@
             - name: Customize CoreDNS
               href: coredns-custom.md
             - name: LocalDNS
-              href: aks-local-dns.md
+              href: localdns-custom.md
         - name: Egress
           items:
             - name: Configure outbound type for AKS
