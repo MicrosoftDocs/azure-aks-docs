@@ -130,7 +130,7 @@ Message: Drain node ... failed when evicting pod ... failed with Too Many Reques
         }
         ```
 
-* **[Preview]** Use the `maxBlockedNodes` feature to control how many blocked nodes from drain failures can be tolerated during upgrades or similar operations. This feature requires the Azure CLI `aks-preview` extension version 18.0.0b9 or later. It only works if `undrainableNodeBehavior` is set; otherwise, the command will error. Example command:
+* **[Preview]** The Blocked Node Tolerance feature (maxBlockedNodes) lets you specify how many nodes blocked by drain failures can be tolerated during upgrades or similar operations. This feature requires the Azure CLI `aks-preview` extension version 18.0.0b9 or later. It only works if `undrainableNodeBehavior` is set; otherwise, the command will return an error. Example command:
 
     ```azurecli-interactive
     az aks nodepool update \
@@ -144,7 +144,7 @@ Message: Drain node ... failed when evicting pod ... failed with Too Many Reques
     ```
 
     > [!NOTE]
-    > The `maxBlockedNodes` property allows you to specify the number of blocked nodes that can be tolerated during the upgrade. If `undrainableNodeBehavior` is not set, attempting to set `maxBlockedNodes` will result in an error.
+    > The `maxBlockedNodes` property sets the maximum number of nodes that can remain blocked (undrainable) during the upgrade. If `undrainableNodeBehavior` is not set, attempting to set `maxBlockedNodes` will result in an error.
 
 * Extend drain timeout if workloads need more time (default is *30 minutes*).
 * Test PDBs in staging, monitor upgrade events, and use blue-green deployments for critical workloads. [Learn more](/azure/architecture/guide/aks/blue-green-deployment-for-aks).
