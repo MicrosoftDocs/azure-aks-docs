@@ -29,11 +29,13 @@ The following table summarizes the details of updating each component:
 ## Multi-cluster upgrade
 When you have multiple clusters, an important practice that you should include as part of your upgrade process is remembering to follow commonly used deployment and testing patterns. Testing an upgrade in a development or test environment before deployment in production is an important step to ensure application functionality and compatibility with the target environment. It can help you identify and fix any errors, bugs, or issues that might affect the performance, security, or usability of the application or underlying infrastructure.
 
-[Azure Kubernetes Fleet Manager][fleet-manager] has built-in support for [multi-cluster upgrades][multi-cluster-upgrade] which implements the best practice above to minimize application disruptions caused by cluster upgrades.
+[Azure Kubernetes Fleet Manager][fleet-manager] has built-in support for [multi-cluster upgrades][multi-cluster-upgrade-concept] which implements the best practice above to minimize application disruptions caused by cluster upgrades. Besides allowing you to customize the order of upgrades of multiple clusters, it also allows you to use consistent node OS image versions across clusters in different regions.
 
 ## Automatic upgrades
 
 Automatic upgrades can be performed through [auto upgrade channels][auto-upgrade] or via [GitHub Actions][gh-actions-upgrade].
+
+[Automatic multi-cluster upgrades][auto-multi-cluster-upgrade] can be performed through [Azure Kubernetes Fleet Manager][fleet-manager] to adopt the best practice of testing and verifying an upgrade in a development or test environment before production.
 
 ## Planned maintenance
 
@@ -67,7 +69,9 @@ For more information what cluster operations may trigger specific upgrade events
 [operator-guide-patching]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 [supported-k8s-versions]: ./supported-kubernetes-versions.md#kubernetes-version-support-policy
 [fleet-manager]: /azure/kubernetes-fleet/overview
-[multi-cluster-upgrade]: /azure/kubernetes-fleet/concepts-update-orchestration
+[multi-cluster-upgrade-concept]: /azure/kubernetes-fleet/concepts-update-orchestration
+[multi-cluster-upgrade-strategy-howto]: /azure/kubernetes-fleet/update-create-update-strategy
+[auto-multi-cluster-upgrade]: /azure/kubernetes-fleet/update-automation
 [ts-nsg]: /troubleshoot/azure/azure-kubernetes/upgrade-fails-because-of-nsg-rules
 [ts-pod-drain]: /troubleshoot/azure/azure-kubernetes/error-code-poddrainfailure
 [ts-ip-limit]: /troubleshoot/azure/azure-kubernetes/error-code-publicipcountlimitreached
