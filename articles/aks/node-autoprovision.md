@@ -15,10 +15,9 @@ author: wdarko1
 
 When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
-
 Node autoprovisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
-aks
-NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
+
+NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. NAP automatically deploys, configures and manages Karpenter on your AKS clusters.
 
 ## Before you begin
 
@@ -158,26 +157,89 @@ The following networking configurations are currently *not* supported:
     ```
 
 ## Custom Virtual Networks and Node Autoprovisioning
+AKS allows you to add a cluster with node autoprovisioning enabled in a custom virtual network via the `--vent-subnet-id` parameter. The following sections details how to create a virtual network, create a managed identity with permissions over the virtual network, and create a NAP-enabled cluster in a custom virtual network. 
 
-### Create an AKS cluster with custom virtual network and node autoprovisioning enabled
-AKS allows you to add a cluster with node autoprovisioning enabled in a custom virtual network via the `--vent-subnet-id` parameter. In the following command, an AKS cluster is created as part of a custom virtual network. 
+### Create a virtual network
+
+Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
+
+When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
+
+> [!WARNING]
+> An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
+
+```azurecli-interactive
+az network vnet create --name ${VNET_NAME} \
+--resource-group ${RG_NAME} \
+--location ${LOCATION} \
+--address-prefixes 172.19.0.0/16
+
+az network vnet subnet create --resource-group ${RG_NAME} \
+--vnet-name ${VNET_NAME} \
+--name apiServerSubnet \
+--delegations Microsoft.ContainerService/managedClusters \
+--address-prefixes 172.19.0.0/28
+
+az network vnet subnet create --resource-group ${RG_NAME} \
+--vnet-name ${VNET_NAME} \
+--name clusterSubnet \
+--address-prefixes 172.19.1.0/24
+```
+
+### Network security group rules
+
+All traffic within the virtual network is allowed by default. But if you  added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
+
+| Destination | Source | Protocol | Port | Use |
+|--- |--- |--- |--- |--- |
+| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
+| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
+| Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
+| Node CIDR | Pod CIDR | All Protocols | All Ports | Required for Service traffic routing. |
+| Pod CIDR | Pod CIDR | All Protocols | All Ports | Required for Pod to Pod and Pod to Service traffic, including DNS. |
+
+### Create a managed identity and give it permissions on the virtual network
+
+Create a managed identity using the [`az identity create`][az-identity-create] command and retrieve the principal ID. Assign the **Network Contributor** role on virtual network to the managed identity using the [`az role assignment create`][az-role-assignment-create] command.
+
+```azurecli-interactive
+az identity create --resource-group ${RG_NAME} \
+--name ${IDENTITY_NAME} \
+--location ${LOCATION}
+IDENTITY_PRINCIPAL_ID=$(az identity show --resource-group ${RG_NAME} --name ${IDENTITY_NAME} \
+--query principalId -o tsv)
+
+az role assignment create --scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}" \
+--role "Network Contributor" \
+--assignee ${IDENTITY_PRINCIPAL_ID}
+```
+
+### Create an AKS cluster in a custom virtual network and with node autoprovisioning enabled
+In the following command, an AKS cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command.  
 
     ```azurecli-interactive
-     	az aks create --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) --attach-acr $(AZURE_ACR_NAME) \
-    		--enable-managed-identity --node-count 3 --generate-ssh-keys -o none --network-dataplane cilium --network-plugin azure --network-plugin-mode overlay \
-    		--enable-oidc-issuer --enable-workload-identity \
+     	az aks create --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) \
+    		--enable-managed-identity --generate-ssh-keys -o none --network-dataplane cilium --network-plugin azure --network-plugin-mode overlay \
     		--vnet-subnet-id "/subscriptions/$(AZURE_SUBSCRIPTION_ID)/resourceGroups/$(AZURE_RESOURCE_GROUP)/providers/Microsoft.Network/virtualNetworks/$(CUSTOM_VNET_NAME)/subnets/$(CUSTOM_SUBNET_NAME)" \
     		--node-provisioning-mode Auto
+   ```
+
+```azurecli-interactive
+az aks create --resource-group ${RG_NAME} \
+--name ${CLUSTER_NAME} \
+--location ${LOCATION} \
+--apiserver-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/apiServerSubnet" \
+--vnet-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/clusterSubnet" \
+--assign-identity "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${RG_NAME}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${IDENTITY_NAME}" \
+--node-provisioning-mode Auto
+```
+
+After a few minutes, the command completes and returns JSON-formatted information about the cluster.
+
+You can optionally inspect the custom resources (CRs) for your cluster
+   ```azurecli-interactive
     	az aks get-credentials --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) --overwrite-existing
-    	skaffold config set default-repo $(AZURE_ACR_NAME).azurecr.io/karpenter
-    ```
-
-In order to complete this process, permissions need to be added by granting a Network Contributor role to the cluster service principal. The following command assigns the role of `Network Contributor` to allow node autoprovisioning to function in a cluster in a custom virtual network.
-
-    ```azurecli-interactive
-    	$(eval CLUSTER_IDENTITY_ID=$(shell az aks show --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) | jq  -r ".identity.principalId"))
-    	az role assignment create --assignee $(CLUSTER_IDENTITY_ID) --scope /subscriptions/$(AZURE_SUBSCRIPTION_ID)/resourceGroups/$(AZURE_RESOURCE_GROUP) --role "Network Contributor"
-    ``` 
+   ```
 
 ## Node pools
 
@@ -418,7 +480,7 @@ Node autoprovisioning can only be disabled when:
             ],
             "nodeProvisioningProfile": {
               "mode": "Manual"
-            },
+            }
           }
         }
       ]
