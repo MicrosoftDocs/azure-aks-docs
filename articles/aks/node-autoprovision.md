@@ -507,7 +507,7 @@ Node autoprovisioning can only be disabled when:
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
-[auto-upgrade]: /auto-upgrade-cluster?tabs=azure-cli#cluster-auto-upgrade-channels
+[auto-upgrade]: /azure/aks/auto-upgrade-cluster#cluster-auto-upgrade-channels
 
 <!-- LINKS - external -->
 [aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
