@@ -30,11 +30,11 @@ By capturing container network logs, you can effectively track network traffic, 
 
 * If your existing cluster is <= **1.32**, upgrade the cluster to the latest available Kubernetes version.
 
+* The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `18.0.0b2`.
+
 ### Install the aks-preview Azure CLI extension
 
 Install or update the Azure CLI preview extension by using the [`az extension add`](/cli/azure/extension#az_extension_add) or [`az extension update`](/cli/azure/extension#az_extension_update) command.
-
-The minimum version of the `aks-preview` Azure CLI extension to complete the steps in this article is `18.0.0b2`.
 
 ```azurecli
 # Install the aks-preview extension
@@ -310,6 +310,8 @@ Status:
 
 ### Azure Managed Grafana
 
+If you don't have an existing Azure Managed Grafana instance, you must create one to visualize the network flow logs pre-built dashboard.
+
 #### Create an Azure Managed Grafana instance
 
 Use [`az grafana create`](/cli/azure/grafana#az-grafana-create) to create a Managed Grafana instance. The name of the instance must be unique.
@@ -324,13 +326,7 @@ az grafana create \
     --resource-group $RESOURCE_GROUP 
 ```
 
-Verify the data source for the Managed Grafana instance.
-
-To verify the subscription for the data source for the Grafana dashboards, check the **Data source** tab in the Managed Grafana instance.
-
-:::image type="content" source="./media/advanced-container-networking-services/check-datasource-grafana.png" alt-text="Screenshot of checking the data source for the Managed Grafana instance." lightbox="./media/advanced-container-networking-services/check-datasource-grafana.png":::
-  
-Ensure that your Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
+Ensure that your Managed Grafana workspace can access and search all monitoring data in the relevant subscription. This step is required to access prebuilt dashboards for network flow logs.  
 
 **Use case 1**: If you're a subscription Owner or a User Access Administrator, when a Managed Grafana workspace is created, it comes with the Monitoring Reader role granted on all Azure Monitor data and Log Analytics resources in the subscription. The new Managed Grafana workspace can access and search all monitoring data in the subscription. It can view the Azure Monitor metrics and logs from all resources and view any logs stored in Log Analytics workspaces in the subscription.
 

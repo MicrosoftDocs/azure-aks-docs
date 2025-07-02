@@ -42,6 +42,18 @@ export NODE_NAME="aks-agentpool-xxxxxxx-0"
 kubectl get --raw "/api/v1/nodes/$NODE_NAME/proxy/logs/messages" | grep kubelet
 ```
 
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```output
+I0508 12:26:17.905042    8672 kubelet_node_status.go:497] Using Node Hostname from cloudprovider: "aks-agentpool-xxxxxxx-0"
+I0508 12:26:27.943494    8672 kubelet_node_status.go:497] Using Node Hostname from cloudprovider: "aks-agentpool-xxxxxxx-0"
+I0508 12:26:28.920125    8672 server.go:796] GET /stats/summary: (10.370874ms) 200 [[Ruby] 10.244.0.x:52492]
+I0508 12:26:37.964650    8672 kubelet_node_status.go:497] Using Node Hostname from cloudprovider: "aks-agentpool-xxxxxxx-0"
+...
+```
+
 ## Create an SSH connection
 
 You must create a Secure Shell Protocol (SSH) connection with the node you need to view kubelet logs for. To create this connection, complete the steps that are described in [SSH into AKS cluster nodes][aks-ssh].
@@ -90,7 +102,7 @@ I0508 12:28:58.344656    8672 kubelet_node_status.go:497] Using Node Hostname fr
 
 ## Related content
 
-* [View the Kubernetes main node logs in AKS][aks-main-logs].
+* [View the Kubernetes main node logs in AKS][aks-main-logs]
 
 <!-- LINKS - internal -->
 [aks-ssh]: ssh.md
