@@ -139,7 +139,7 @@ The following networking configurations are currently *not* supported:
             ],
             "nodeProvisioningProfile": {
               "mode": "Auto"
-            },
+            }
           }
         }
       ]
@@ -217,12 +217,12 @@ az role assignment create --scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGro
 ### Create an AKS cluster in a custom virtual network and with node autoprovisioning enabled
 In the following command, an AKS cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command.  
 
-    ```azurecli-interactive
+```azurecli-interactive
      	az aks create --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) \
     		--enable-managed-identity --generate-ssh-keys -o none --network-dataplane cilium --network-plugin azure --network-plugin-mode overlay \
     		--vnet-subnet-id "/subscriptions/$(AZURE_SUBSCRIPTION_ID)/resourceGroups/$(AZURE_RESOURCE_GROUP)/providers/Microsoft.Network/virtualNetworks/$(CUSTOM_VNET_NAME)/subnets/$(CUSTOM_SUBNET_NAME)" \
     		--node-provisioning-mode Auto
-   ```
+```
 
 ```azurecli-interactive
 az aks create --resource-group ${RG_NAME} \
@@ -356,7 +356,7 @@ You can remove a node manually using `kubectl delete node`, but node autoprovisi
     consolidateAfter: 30s
 ```
 
-## Kubernetes and node image updates
+### Kubernetes and node image updates
 
 AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates for you by default. You can also adjust the schedule of your Kubernetes and node image updates using planned maintenance windows during less busy periods for your workloads.
 
