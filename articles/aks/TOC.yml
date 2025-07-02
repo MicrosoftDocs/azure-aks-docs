@@ -209,10 +209,8 @@
                   href: container-network-security-fqdn-filtering-concepts.md
                 - name: Layer 7 Policy
                   href: container-network-security-l7-policy-concepts.md
-        - name: DNS Concepts
-          items:
-            - name: Overview
-              href: dns-concepts.md
+        - name: DNS Resolution
+          href: dns-concepts.md
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -761,7 +759,7 @@
               href: static-ip.md
             - name: Customize CoreDNS
               href: coredns-custom.md
-            - name: LocalDNS
+            - name: Customize LocalDNS
               href: localdns-custom.md
         - name: Egress
           items:
