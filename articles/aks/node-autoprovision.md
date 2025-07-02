@@ -28,7 +28,7 @@ NAP is based on the open source [Karpenter](https://karpenter.sh) project, and t
 | Prerequisite                     | Notes                                                                 |
 |------------------------------|------------------------------------------------------------------------|
 | **Azure Subscription**              | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).|
-| **Azure CLI `aks-preview` extension**                | `13.0.0b3` or later. To find the version, run `az --version`. If you need to install or upgrade, see [Manage Azure CLI extensions][azure-cli-extensions]. |
+| **Azure CLI `aks-preview` extension**                | `13.0.0b3` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions]. |
 | **Required permission(s)**      | Cluster identity with a `Network Contributor` built-in role assignment on the API server subnet. |
 |                                  | Cluster identity with a `Network Contributor` built-in role assignment on the virtual network to support Node Auto Provisioning. |
 |                                  |  User identity creating the cluster with `Microsoft.Authorization/policyAssignments/write` and `Microsoft.Authorization/policyAssignments/read` permissions on the resource group. For more information, see [Azure Policy permissions][Azure-Policy-RBAC-permissions]. |
