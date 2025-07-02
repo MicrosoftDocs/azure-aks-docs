@@ -757,6 +757,8 @@
               href: static-ip.md
             - name: Customize CoreDNS
               href: coredns-custom.md
+            - name: LocalDNS
+              href: aks-local-dns.md
         - name: Egress
           items:
             - name: Configure outbound type for AKS
