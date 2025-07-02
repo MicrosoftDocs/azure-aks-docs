@@ -126,7 +126,7 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
 
 - Add a Virtual Machines node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
 
-    The following example adds a Virtual Machines node pool named *myvmpool* to the *myAKSCluster* cluster. The node pool has three nodes and a maximum VM SKU of *Standard_D4s_v3*:
+    The following example adds a Virtual Machines node pool named *myvmpool* to the *myAKSCluster* cluster. The node pool creates a ManualScaleProfile with `--vm-sizes` set to *Standard_D4s_v3* and a `--node-count` of 3:
 
     ```azurecli-interactive
     az aks nodepool add \
