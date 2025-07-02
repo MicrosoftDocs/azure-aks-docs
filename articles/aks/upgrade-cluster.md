@@ -4,7 +4,7 @@ description: Learn about upgrade options for Azure Kubernetes Service (AKS) clus
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.date: 06/10/2025
+ms.date: 07/01/2025
 author: kaarthis
 ms.author: kaarthis
 ms.custom: annual
@@ -25,16 +25,17 @@ This article covers upgrade options for AKS clusters and provides scenario-based
 Manual upgrades let you control when your cluster upgrades to a new Kubernetes version. Useful for testing or targeting a specific version.
 
 * [Upgrade an AKS cluster](./upgrade-aks-cluster.md)
+* [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
 * [Upgrade the node image](./node-image-upgrade.md)
 * [Customize node surge upgrade](./upgrade-aks-cluster.md#customize-node-surge-upgrade)
 * [Process node OS updates](./node-updates-kured.md)
-* [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
 
 ### Configure automatic upgrades
 
 Automatic upgrades keep your cluster on a supported version and up to date. This is when you want to set and forget. 
 
 * [Automatically upgrade an AKS cluster](./auto-upgrade-cluster.md)
+* [Automatically upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-automation)
 * [Use Planned Maintenance to schedule and control upgrades](./planned-maintenance.md)
 * [Stop AKS cluster upgrades automatically on API breaking changes (Preview)](./stop-cluster-upgrade-api-breaking-changes.md)
 * [Automatically upgrade AKS cluster node operating system images](./auto-upgrade-node-image.md)
