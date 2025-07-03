@@ -48,10 +48,11 @@ This table includes the supported OS versions:
 
 |OS Type|OS SKU|CVM support|CVM default|
 |--|--|--|--|
-|Linux|Ubuntu|Supported|Ubuntu 20.04 is default for k8s version 1.24-1.33. Ubuntu 24.04 is default for k8s version 1.34-1.38.|
-|Linux|Azure Linux| Supported on Azure Linux 3.0| Azure Linux 3 is default for k8s version 1.28-1.36.|
-|Windows|Windows Server 2019| Not Supported|
-|Windows| Windows Server 2022| Not Supported|
+|Linux|`Ubuntu`|Supported|Ubuntu 20.04 is default for k8s version 1.24-1.33. Ubuntu 24.04 is default for k8s version 1.34-1.38.|
+|Linux|`Ubuntu2204`|Not Supported|AKS does not support CVM for Ubuntu 22.04.|
+|Linux|`Ubuntu2404`|Supported| CVM is supported on `Ubuntu2404` in k8s 1.32-1.38. |
+|Linux|`AzureLinux`| Supported on Azure Linux 3.0| Azure Linux 3 is default when enabling CVM for k8s version 1.28-1.36.|
+|Windows|All Windows OS SKU| Not Supported|
 
 When requesting CVM using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version doesn't support CVM, AKS defaults to the most recent CVM-supported version of the OS. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 doesn't currently support CVM, AKS defaults to Ubuntu 20.04 for Linux CVM-enabled node pools.
 
@@ -61,7 +62,7 @@ The following limitations apply when adding a node pool with CVM to AKS:
 
 - You can't use FIPS, ARM64, Trusted Launch, or Pod Sandboxing.
 - You can't upgrade an existing node pool to use CVM.
-- You can use CVM with windows node pools.
+- You can use CVM with Windows node pools.
 - CVM with Azure Linux is currently in preview.
 
 ## Prerequisites
@@ -82,24 +83,24 @@ Before you begin, make sure you have the following:
     az extension add --name aks-preview
     ```
 
-2. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command. **CVM for AzureLinux requires a minimum of 18.0.0b5**.
+2. Update to the latest version of the extension using the [`az extension update`](/cli/azure/extension#az-extension-update) command.
 
     ```azurecli-interactive
     az extension update --name aks-preview
     ```
 
-### Register `AzureLinux3CVMPreview` feature flag
+### Register `AzureLinuxCVMPreview` feature flag
 
-1. Register the `AzureLinux3CVMPreview` feature flag using the [`az feature register`][az-feature-register] command.
+1. Register the `AzureLinuxCVMPreview` feature flag using the [`az feature register`][az-feature-register] command.
 
     ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinux3CVMPreview"
+    az feature register --namespace "Microsoft.ContainerService" --name "AzureLinuxCVMPreview"
     ```
 
 2. Verify the registration status using the [`az feature show`][az-feature-show] command. It takes a few minutes for the status to show *Registered*.
 
     ```azurecli-interactive
-    az feature show --namespace Microsoft.ContainerService --name AzureLinux3CVMPreview
+    az feature show --namespace Microsoft.ContainerService --name AzureLinuxCVMPreview
     ```
 
 3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
@@ -125,7 +126,7 @@ If you don't specify the `osSKU` or `osType`, AKS will default to `--os-type Lin
 
 ## Verify the node pool uses CVM
 
-- Verify a node pool uses CVM using the [`az aks nodepool show`][az-aks-nodepool-show] command and verify the `vmSize` is `Standard_DCa4_v5`.
+1. Verify a node pool uses CVM using the [`az aks nodepool show`][az-aks-nodepool-show] command and verify the `vmSize` is `Standard_DCa4_v5`.
 
     ```azurecli-interactive
     az aks nodepool show \
@@ -145,6 +146,28 @@ If you don't specify the `osSKU` or `osType`, AKS will default to `--os-type Lin
         --query 'vmSize'
 
     "Standard_DC4as_v5"
+    ```
+
+2. Verify a node pool uses a CVM image using the [`az aks nodepool list`][az-aks-nodepool-list] command.
+
+    ```azurecli-interactive
+    az aks nodepool list \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name cvmnodepool \
+        --query 'nodeImageVersion'
+    ```
+
+    The following example command and output shows the node pool uses an Ubuntu 20.04 CVM image:
+
+    ```output
+    az aks nodepool show \
+        --resource-group myResourceGroup \
+        --cluster-name myAKSCluster \
+        --name cvmnodepool \
+        --query 'nodeImageVersion'
+
+    "AKSUbuntu-2004cvmcontainerd-202507.02.0"
     ```
 
 ## Remove a node pool with CVM from an AKS cluster
