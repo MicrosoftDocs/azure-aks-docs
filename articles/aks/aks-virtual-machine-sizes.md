@@ -1,6 +1,6 @@
 ---
 title: Virtual machine (VM) sizes, generations, and features for Azure Kubernetes Service (AKS)
-description: Learn about the different VM sizes, generations, and features available for Azure Kubernetes Service (AKS) and learn how to check for available VM sizes, why certain VM sizes might not be available, and what happens when a VM size retires.
+description: Learn about VM fundamentals on AKS, like different VM sizes, generations, and features. When provisioning, learn about how to check for available VM sizes, understand why some VM sizes might not be available, and see behind the scenes when a VM size retires.
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.date: 06/20/2025
@@ -14,9 +14,19 @@ Azure Kubernetes Service (AKS) supports a variety of virtual machine (VM) sizes,
 
 ## VM generation support on AKS
 
-Azure supports both Generation 1 (Gen 1) and [Generation 2 (Gen 2) virtual machines (VMs)](/azure/virtual-machines/generation-2). Gen 2 VMs offer exclusive features over Gen 1 VMs, such as increased memory, improved CPU performance, support for NVMe disks, and support for [Trusted Launch](./use-trusted-launch.md). With some [exceptions](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v), we generally recommend [migrating to Generation 2 VMs](#use-gen-2-vms-on-aks) to take advantage of the newest features and functionalities in Azure VMs.
+Azure supports both Generation 1 (Gen 1) and [Generation 2 (Gen 2) virtual machines (VMs)](/azure/virtual-machines/generation-2). With some [exceptions](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v), we generally recommend [migrating to Generation 2 VMs](#use-gen-2-vms-on-aks) to take advantage of the newest features and functionalities in Azure VMs.
 
-The VM size and operating system (OS) system you select when creating an AKS node pool determines the VM generation used. Check the [list of supported sizes](/azure/virtual-machines/generation-2#generation-2-vm-sizes) to see if your SKU supports or requires Gen 2. Additionally, not all [VM images](./node-images.md) support Gen 2 VMs. On AKS, Gen 2 VMs use the AKS Ubuntu 22.04 or the AKS Windows Server 2022 image. These images support all Gen 2 SKUs and sizes.
+The VM size and operating system (OS) you select when creating an AKS node pool determines the VM generation and [node image](./node-images.md) used. Check the [list of supported sizes](/azure/virtual-machines/generation-2#generation-2-vm-sizes) to see if your SKU supports or requires Gen 2.
+
+### Limitations
+
+There are some limitations to take into account when choosing a VM generation and/or OS:
+
+- Trusted Launch can only be enabled on vm sizes that support Gen 2.
+- Confidential VM sizes always use Gen 2 on AKS.
+- Arm64 VM sizes always use Gen 2 on AKS.
+- Windows Server 2019 node pools don't support Gen 2 vm sizes.
+- Windows Server 2022 node pools require use of a custom header to use Gen 2.
 
 To use Gen 2 VMs on AKS, see [Use Gen 2 VMs](#use-gen-2-vms-on-aks).
 
@@ -26,10 +36,10 @@ For in-depth information about VM sizes available in Azure, see [Azure VM sizes]
 
 AKS also supports the following VM types and features:
 
-* [Confidential VMs (CVMs)](./use-cvm.md)
-* [Arm-based processor (Arm64) VMs](./use-arm64-vms.md)
-* [GPU-optimized VMs](/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated)
-* [Trusted launch](./use-trusted-launch.md)
+- [Confidential VMs (CVMs)](./use-cvm.md)
+- [Arm-based processor (Arm64) VMs](./use-arm64-vms.md)
+- [GPU-optimized VMs](/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated)
+- [Trusted Launch](./use-trusted-launch.md)
 
 ### Default behavior for supported VM sizes
 
@@ -51,16 +61,16 @@ az vm list-skus --location <your-location> --output table
 
 There are several reasons why certain VM sizes might not be available, including:
 
-* **Quota limits**: All Azure services set default limits and quotas for resources and features. To learn more, see the following resources:
-  * [Quotas and regional limits for Azure Kubernetes Service (AKS)](./quotas-skus-regions.md)
-  * [Check your quota usage](/azure/virtual-machines/quotas)
-  * [Request a quota increase through an Azure support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) (for **Issue type**, select **Quota**)
-* **VM sizes in preview**: VM sizes in preview might not be available to you if you haven't registered the preview flag for the VM size.
-* **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require additional testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
+- **Quota limits**: All Azure services set default limits and quotas for resources and features. To learn more, see the following resources:
+  - [Quotas and regional limits for Azure Kubernetes Service (AKS)](./quotas-skus-regions.md)
+  - [Check your quota usage](/azure/virtual-machines/quotas)
+  - [Request a quota increase through an Azure support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) (for **Issue type**, select **Quota**)
+- **VM sizes in preview**: VM sizes in preview might not be available to you if you haven't registered the preview flag for the VM size.
+- **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require additional testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
 
 ## What happens when a VM size retires?
 
-When a VM size or series reaches its retirement date, the VM is deallocated. VM deallocation causes your AKS node pools to experience breakage. To check the retirement status of a VM size, see [Retired Azure VM size series](/azure/virtual-machines/sizes/retirement/retired-sizes-list) or perform a search in [Azure Updates](https://azure.microsoft.com/updates). To check the VM size of your node pools, use the [`az aks nodepool list`][az-aks-nodepool-list] command and query for the `vmSize` property:
+When a VM size or series reaches its retirement date, the VM is deallocated. VM deallocation causes your AKS node pools to break. To check the retirement status of a VM size, see [Retired Azure VM size series](/azure/virtual-machines/sizes/retirement/retired-sizes-list) or perform a search in [Azure Updates](https://azure.microsoft.com/updates). To check the VM size of your node pools, use the [`az aks nodepool list`][az-aks-nodepool-list] command and query for the `vmSize` property:
 
 ```azurecli-interactive
 az aks nodepool list --resource-group <your-resource-group> --cluster-name <your-cluster-name> --query "[].{Name:name, VMSize:vmSize}" --output table
@@ -74,17 +84,21 @@ Once you determine the appropriate node pools to take action on, you can [resize
 
 For more information on migrating to a new VM size, see the following resources:
 
-* [Migrate from Gen 1 to Gen 2 VMs](#use-gen-2-vms-on-aks)
-* [General-purpose sizes migration guide](/azure/virtual-machines/migration/sizes/d-ds-dv2-dsv2-ls-series-migration-guide)
-* [Storage-optimized sizes migration guide](/azure/virtual-machines/migration/sizes/d-ds-dv2-dsv2-ls-series-migration-guide)
-* [GPU-accelerated sizes migration guide](/azure/virtual-machines/migration/sizes/n-series-migration)
-* [Azure Dedicated Host SKU migration guide](/azure/virtual-machines/migration/dedicated-host-migration-guide)
+- [Migrate from Gen 1 to Gen 2 VMs](#use-gen-2-vms-on-aks)
+- [General-purpose sizes migration guide](/azure/virtual-machines/migration/sizes/d-ds-dv2-dsv2-ls-series-migration-guide)
+- [Storage-optimized sizes migration guide](/azure/virtual-machines/migration/sizes/d-ds-dv2-dsv2-ls-series-migration-guide)
+- [GPU-accelerated sizes migration guide](/azure/virtual-machines/migration/sizes/n-series-migration)
+- [Azure Dedicated Host SKU migration guide](/azure/virtual-machines/migration/dedicated-host-migration-guide)
 
 ## Use Gen 2 VMs on AKS
 
+Gen 2 VMs are generally Azure's newer offerings and boast exclusive features over Gen 1 VMs, such as increased memory, improved CPU performance, support for NVMe disks, and support for [Trusted Launch](./use-trusted-launch.md).
+
+While we generally recommend running Gen 2 VMs, you should make sure that the generation you choose supports your requirements. Visit [this page](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v) to learn more about the differences between generations, and when one might make more sense than the other.
+
 ### Check available Gen 2 VM sizes
 
-Check available Gen 2 VM sizes using the [`az vm list-skus`][az-vm-list-skus] command.
+Refer to [this page](/azure/virtual-machines/generation-2) for a breakdown of what VM sizes support Gen 2 or check available Gen 2 VM sizes using the [`az vm list-skus`][az-vm-list-skus] command.
 
 ```azurecli-interactive
 az vm list-skus --location <location> --size <vm-size> --output table
@@ -136,8 +150,8 @@ Verify a successful node pool creation using the [`az aks nodepool show`][az-aks
 
 ## Next steps
 
-* To learn more about Gen 2 VMs, see [Support for Generation 2 VMs on Azure](/azure/virtual-machines/generation-2)
-* To learn more about supported Gen 2 node images, see [Node images](./node-images.md)
+- To learn more about Gen 2 VMs, see [Support for Generation 2 VMs on Azure](/azure/virtual-machines/generation-2)
+- To learn more about supported Gen 2 node images, see [Node images](./node-images.md)
 
 <!-- LINKS -->
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
