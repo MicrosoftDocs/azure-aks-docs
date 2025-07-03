@@ -22,6 +22,7 @@ Use this feature to:
 - Scale beyond 300 inbound rules without adding clusters.  
 - Isolate tenant or workload traffic by binding a dedicated SLB to its own agent pool.  
 - Distribute private‑link services across multiple SLBs when you approach the per‑SLB limit.
+
 ## Prerequisites
 
 - `aks-preview` extension 18.0.0b1 or later.
