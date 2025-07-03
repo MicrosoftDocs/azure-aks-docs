@@ -130,6 +130,8 @@ Message: Drain node ... failed when evicting pod ... failed with Too Many Reques
         }
         ```
 
+#### Max Blocked Nodes Allowed (Preview)
+
 * **[Preview]** The Max Blocked Nodes Allowed feature lets you specify how many nodes that fail to drain (blocked nodes) can be tolerated during upgrades or similar operations. This feature only works if the undrainable node behavior property is set; otherwise, the command will return an error.
 
 > [!NOTE]
