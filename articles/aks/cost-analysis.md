@@ -60,6 +60,7 @@ export RANDOM_SUFFIX=$(openssl rand -hex 3)
 export RESOURCE_GROUP="AKSCostRG$RANDOM_SUFFIX"
 export CLUSTER_NAME="AKSCostCluster$RANDOM_SUFFIX"
 export LOCATION="WestUS2"
+az group create --resource-group $RESOURCE_GROUP --location $LOCATION
 az aks create --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --location $LOCATION --enable-managed-identity --generate-ssh-keys --tier standard --enable-cost-analysis
 ```
 
