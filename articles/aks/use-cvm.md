@@ -14,17 +14,17 @@ ms.author: allyford
 In this article, you learn how to create AKS node pools using Confidential VM sizes.
 
 > [!CAUTION]
-> In this article, there are references to a feature that may be using Ubuntu OS versions that are being deprecated for AKS
+> In this article, there are references to a feature that is using Ubuntu OS versions that are being deprecated for AKS.
 >- Starting on 17 March 2027, AKS will no longer support Ubuntu 20.04. Existing node images will be deleted and AKS will no longer provide security updates. You'll no longer be able to scale your node pools. [Upgrade your node pools](./upgrade-aks-cluster.md) to kubernetes version 1.34+ to migrate to a supported Ubuntu version.
 >For more information on this retirement, see [AKS GitHub Issues](https://github.com/Azure/AKS/issues).
 
 ## AKS supported confidential VM sizes
 
 Azure offers a choice of Trusted Execution Environment (TEE) options from both AMD and Intel. These TEEs allow you to create Confidential VM environments with excellent price-to-performance ratios, all without requiring any code changes.
-- AMD-based Confidential VMs, use AMD SEV-SNP technology, which is introduced with 3rd Gen AMD EPYC™ processors. 
-- Intel-based Confidential VMs use Intel TDX, with 4th Gen Intel® Xeon® processors. 
+- AMD-based Confidential VMs, use AMD SEV-SNP technology, which is introduced with third Gen AMD EPYC™ processors. 
+- Intel-based Confidential VMs use Intel TDX, with fourth Gen Intel® Xeon® processors. 
 
-Both technologies have different implementations, however both provide similar protections from the cloud infrastructure stack. For more information, see [CVM VM sizes][CVM-sizes].
+Both technologies have different implementations. However both provide similar protections from the cloud infrastructure stack. For more information, see [CVM VM sizes][CVM-sizes].
 
 ## Security Features 
 
@@ -48,13 +48,13 @@ This table includes the supported OS versions:
 
 |OS Type|OS SKU|CVM support|CVM default|
 |--|--|--|--|
-|Linux|`Ubuntu`|Supported|Ubuntu 20.04 is default for k8s version 1.24-1.33. Ubuntu 24.04 is default for k8s version 1.34-1.38.|
-|Linux|`Ubuntu2204`|Not Supported|AKS does not support CVM for Ubuntu 22.04.|
-|Linux|`Ubuntu2404`|Supported| CVM is supported on `Ubuntu2404` in k8s 1.32-1.38. |
-|Linux|`AzureLinux`| Supported on Azure Linux 3.0| Azure Linux 3 is default when enabling CVM for k8s version 1.28-1.36.|
+|Linux|`Ubuntu`|Supported|Ubuntu 20.04 is default for K8s version 1.24-1.33. Ubuntu 24.04 is default for K8s version 1.34-1.38.|
+|Linux|`Ubuntu2204`|Not Supported|AKS doesn't support CVM for Ubuntu 22.04.|
+|Linux|`Ubuntu2404`|Supported| CVM is supported on `Ubuntu2404` in K8s 1.32-1.38. |
+|Linux|`AzureLinux`| Supported on Azure Linux 3.0| Azure Linux 3 is default when enabling CVM for K8s version 1.28-1.36.|
 |Windows|All Windows OS SKU| Not Supported|
 
-When requesting CVM using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version doesn't support CVM, AKS defaults to the most recent CVM-supported version of the OS. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 doesn't currently support CVM, AKS defaults to Ubuntu 20.04 for Linux CVM-enabled node pools.
+When using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version doesn't support CVM, AKS defaults to the most recent CVM-supported version of the OS. For example, Ubuntu 22.04 is default for Linux node pools. Since 22.04 doesn't currently support CVM, AKS defaults to Ubuntu 20.04 for Linux CVM-enabled node pools.
 
 ### Limitations
 
@@ -122,7 +122,7 @@ Before you begin, make sure you have the following:
         --node-vm-size Standard_DC4as_v5 
     ```
 
-If you don't specify the `osSKU` or `osType`, AKS will default to `--os-type Linux` and `--os-sku Ubuntu`.
+If you don't specify the `osSKU` or `osType`, AKS defaults to `--os-type Linux` and `--os-sku Ubuntu`.
 
 ## Verify the node pool uses CVM
 
@@ -183,7 +183,7 @@ If you don't specify the `osSKU` or `osType`, AKS will default to `--os-type Lin
 
 ## Next steps
 
-In this article, you learned how to add a node pool with CVM to an AKS cluster. For more information about CVM, see [Confidential VM node pools support on AKS with AMD SEV-SNP confidential VMs][cvm].
+In this article, you learned how to add a node pool with CVM to an AKS cluster. For more information about CVM, see [Confidential VM node pools support on AKS][cvm].
 
 <!-- LINKS - Internal -->
 [about-cvm]: /azure/confidential-computing/confidential-vm-overview
@@ -193,6 +193,7 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster. 
 [cvm-subs-dc]: /azure/virtual-machines/dcasv5-dcadsv5-series
 [cvm-subs-ec]: /azure/virtual-machines/ecasv5-ecadsv5-series
 [az-aks-nodepool-add]: /cli/azure/aks/nodepool#az_aks_nodepool_add
+[az-aks-nodepool-list]: /cli/azure/aks/nodepool#az_aks_nodepool_list
 [az-aks-nodepool-show]: /cli/azure/aks/nodepool#az_aks_nodepool_show
 [az-aks-nodepool-delete]: /cli/azure/aks/nodepool#az_aks_nodepool_delete
 
