@@ -21,9 +21,9 @@ The following table summarizes the details of updating each component:
 
 |Component name|Frequency of upgrade|Planned Maintenance supported|Supported operation methods|Supported operation methods (Multi-Cluster)|Documentation link|
 |--|--|--|--|--|--|
-|Cluster Kubernetes version upgrade (minor)|Roughly every three months|Yes|Automatic, Manual|Automatic, Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade]|
-|Cluster Kubernetes version upgrade (patch)|Approximately weekly. To determine the latest applicable version in your region, see the [AKS release tracker][release-tracker]|Yes|Automatic, Manual|Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade]|
-|Node image version upgrade|**Linux**: weekly<br>**Windows**: monthly|Yes|Automatic, Manual|Automatic, Manual|[AKS node image upgrade][node-image-upgrade], [Multi-cluster upgrade][multi-cluster-upgrade]|
+|Cluster Kubernetes version upgrade (minor)|Roughly every three months|Yes|Automatic, Manual|Automatic, Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade-concept]|
+|Cluster Kubernetes version upgrade (patch)|Approximately weekly. To determine the latest applicable version in your region, see the [AKS release tracker][release-tracker]|Yes|Automatic, Manual|Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade-concept]|
+|Node image version upgrade|**Linux**: weekly<br>**Windows**: monthly|Yes|Automatic, Manual|Automatic, Manual|[AKS node image upgrade][node-image-upgrade], [Multi-cluster upgrade][multi-cluster-upgrade-concept]|
 |Security patches and hot fixes for node images|As-necessary|||Unsupported|[AKS node security patches][node-security-patches]|
 
 ## Multi-cluster upgrade
@@ -70,7 +70,6 @@ For more information what cluster operations may trigger specific upgrade events
 [supported-k8s-versions]: ./supported-kubernetes-versions.md#kubernetes-version-support-policy
 [fleet-manager]: /azure/kubernetes-fleet/overview
 [multi-cluster-upgrade-concept]: /azure/kubernetes-fleet/concepts-update-orchestration
-[multi-cluster-upgrade-strategy-howto]: /azure/kubernetes-fleet/update-create-update-strategy
 [auto-multi-cluster-upgrade]: /azure/kubernetes-fleet/update-automation
 [ts-nsg]: /troubleshoot/azure/azure-kubernetes/upgrade-fails-because-of-nsg-rules
 [ts-pod-drain]: /troubleshoot/azure/azure-kubernetes/error-code-poddrainfailure
