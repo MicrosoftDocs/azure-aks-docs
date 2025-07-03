@@ -79,12 +79,12 @@ This process will also migrate your Basic IP to a Standard IP, while keeping the
 az aks update \
     --name $clusterName \
     --resource-group $resourceGroup \
-    ---load-balancer-sku=Standard \
+    --load-balancer-sku=Standard \
 ```
 
 2. Verify that the migration was successful using the `az aks show` command, and confirm the load-balancer type is set to Standard:
 ```azurecli-interactive
-az aks update \
+az aks show \
     --name $clusterName \
     --resource-group $resourceGroup
 ```
