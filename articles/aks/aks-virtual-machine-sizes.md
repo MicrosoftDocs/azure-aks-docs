@@ -40,6 +40,7 @@ AKS also supports the following VM types and features:
 - [Arm-based processor (Arm64) VMs](./use-arm64-vms.md)
 - [GPU-optimized VMs](/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist#gpu-accelerated)
 - [Trusted Launch](./use-trusted-launch.md)
+- [Federal Information Process Standard (FIPS)](./enable-fips-nodes.md)
 
 ### Default behavior for supported VM sizes
 
