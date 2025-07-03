@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a platform administrator managing multiple Kubernetes clusters, I want to orchestrate safe and predictable updates across member clusters, so that I can maintain and upgrade the clusters without manual intervention and minimize downtime."
 ---
 
 # Update Kubernetes and node images across multiple member clusters
@@ -167,7 +168,7 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 * [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
-* [Multi-cluster updates FAQs](./faq.md#multi-cluster-automated-or-manual-updates-faqs).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- INTERNAL LINKS -->
 [supported-kubernetes-versions]: /azure/aks/supported-kubernetes-versions

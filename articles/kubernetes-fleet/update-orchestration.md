@@ -10,6 +10,7 @@ ms.custom:
   - devx-track-azurecli
   - ignite-2023
   - build-2024
+# Customer intent: "As a platform admin managing multiple Kubernetes clusters, I want to orchestrate updates across those clusters, so that I can ensure safe and consistent upgrades while minimizing downtime and complexity."
 ---
 
 # Update Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager
@@ -349,7 +350,7 @@ The generated update run is not automatically started, allowing you to review it
 
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 * [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
-* [Multi-cluster updates FAQs](./faq.md#multi-cluster-automated-or-manual-updates-faqs).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md

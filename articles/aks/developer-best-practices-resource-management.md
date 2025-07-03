@@ -7,6 +7,7 @@ ms.date: 05/25/2023
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As an application developer, I want to define pod resource requests and limits in my deployments, so that I can optimize application performance and ensure proper resource allocation within Azure Kubernetes Service.
 ---
 
 # Best practices for application developers to manage resources in Azure Kubernetes Service (AKS)

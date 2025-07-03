@@ -6,6 +6,7 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud architect, I want to understand the operational differences between AWS and Azure for event-driven workflows, so that I can effectively replicate the workload in Azure and ensure proper management and access control."
 ---
 
 # Understand platform differences for the event-driven workflow (EDW) workload

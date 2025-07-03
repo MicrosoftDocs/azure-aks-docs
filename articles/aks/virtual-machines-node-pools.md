@@ -3,15 +3,15 @@ title: Use Virtual Machines node pools in Azure Kubernetes Services (AKS)
 description: Learn how to add multiple Virtual Machine types of a similar family to a node pool in an AKS cluster.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 07/26/2024
+ms.date: 06/26/2025
 ms.author: wilsondarko
 author: wdarko1
-#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types.
+#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types. I want to minimize capacity constraints by having greater flexibility in VM size selection.
 ---
 
-# Use Virtual Machines node pools (preview) in Azure Kubernetes Service (AKS)
+# Use Virtual Machines node pools in Azure Kubernetes Service (AKS)
 
-In this article, you learn about the new Virtual Machines node pool type (preview) for AKS. 
+In this article, you'll learn about the new Virtual Machines node pool type for AKS. 
 
 With Virtual Machines node pools, AKS directly manages the provisioning and bootstrapping of every single node. For Virtual Machine Scale Sets node pools, AKS manages the model of the Virtual Machine Scale Sets and uses it to achieve consistency across all nodes in the node pool. Virtual Machines node pools enable you to orchestrate your cluster with virtual machines that best fit your individual workloads.
 
@@ -21,10 +21,10 @@ With Virtual Machines node pools, AKS directly manages the provisioning and boot
 
 A node pool consists of a set of virtual machines, where different virtual machine sizes are designated to support different types of workloads. These virtual machine sizes, referred to as SKUs, are categorized into different families that are optimized for specific purposes. For more information, see [VM SKUs][vm-SKU].
 
-To enable scaling of multiple virtual machine sizes, the Virtual Machines node pool type uses a `ScaleProfile` that contains configurations indicating how the node pool can scale, specifically the desired list of virtual machine size and count. A `ManualScaleProfile` is a scale profile that specifies the desired virtual machine size and count. Only one virtual machine size is allowed in a `ManualScaleProfile`. You need to create a separate `ManualScaleProfile` for each virtual machine size in your node pool.
+To enable scaling of multiple virtual machine sizes, the Virtual Machines node pool type uses a `ScaleProfile` that contains configurations indicating how the node pool can scale, specifically the desired list of virtual machine size and the count of each size. A `ManualScaleProfile` is a scale profile that specifies one desired virtual machine size and the total count of that type in the nodepool. Only one virtual machine size is allowed in a `ManualScaleProfile`. You need to create a separate `ManualScaleProfile` for each virtual machine size in your node pool. When creating a new Virtual Machines node pool, you add an initial manual scale profile for a virtual machine size using the `vm-size` field and including a `node-count`, per the instructions below. You can also add additional manual scale profiles following the instructions for [adding manual scale profiles][#add-a-manual-scale-profile-to-a-node-pool].
  
 > [!NOTE]
-> When creating a new Virtual Machines node pool, you need at least one `ManualScaleProfile` in the `ScaleProfile`. A Virtual Machines node pool can have multiple manual scale profiles.
+> When creating a new Virtual Machines node pool, you can have multiple scale profiles, and you need at least one manual scale profile in your nodepool.
 
 ### Advantages
 
@@ -58,53 +58,8 @@ The following table highlights how Virtual Machines node pools compare with stan
 ## Prerequisites
 
 - An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
-- The Virtual Machines node pool feature is in preview. This feature is only available with API versions 2023-10-02-preview and greater, or with the Azure CLI extension versions 2.61.0 or greater.
-- If using the [Azure CLI][install azure cli], register the `aks-preview` extension or update the version of existing `aks-preview` to minimum version 4.0.0b4.
-- The minimum minor Kubernetes release version required for this feature is release 1.26.
-
-### Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-1. Install the aks-preview extension using the [`az extension add`][az extension add] command:
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the aks-preview extension using the [`az extension update`][az extension update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `VMsAgentPoolPreview` feature flag
-
-1. Select the subscription where you want to enable the feature flag using the [`az account set`][az account set] command.
-
-    ```azurecli-interactive
-    az account set --subscription <subscription-name>
-    ```
-
-2. Register the `VMsAgentPoolPreview` feature flag using the [`az feature registration create`][az feature registration create] command.
-
-    ```azurecli-interactive
-    az feature registration create --namespace Microsoft.ContainerService --name VMsAgentPoolPreview
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-3. Verify the registration status using the [`az feature show`][az feature show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "VMsAgentPoolPreview"
-    ```
-
-4. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az provider register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace "Microsoft.ContainerService"
-    ```
+- Azure CLI version 2.73.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install azure cli]
+- This feature requires kubernetes version 1.27 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster](https://learn.microsoft.com/azure/aks/upgrade-aks-cluster)
 
 ## Create an AKS cluster with Virtual Machines node pools
 
@@ -120,6 +75,7 @@ The following table highlights how Virtual Machines node pools compare with stan
         --resource-group myResourceGroup \
         --name myAKSCluster \
         --vm-set-type "VirtualMachines" \
+        --vm-sizes "Standard_D4s_v3" 
         --node-count 2 \
         --kubernetes-version 1.28.5
     ```
@@ -170,7 +126,7 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
 
 - Add a Virtual Machines node pool to an existing cluster using the [`az aks nodepool add`][az aks nodepool add] command with the `--vm-set-type` flag set to `"VirtualMachines"`.
 
-    The following example adds a Virtual Machines node pool named *myvmpool* to the *myAKSCluster* cluster. The node pool has three nodes and a maximum VM SKU of *Standard_D4s_v3*:
+    The following example adds a Virtual Machines node pool named *myvmpool* to the *myAKSCluster* cluster. The node pool creates a ManualScaleProfile with `--vm-sizes` set to *Standard_D4s_v3* and a `--node-count` of 3:
 
     ```azurecli-interactive
     az aks nodepool add \
@@ -184,7 +140,7 @@ Virtual Machine node pools are available in Windows enabled clusters. The follow
 
 ## Add a manual scale profile to a node pool
 
-- Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"`.
+- Add a manual scale profile to a node pool using the [`az aks nodepool manual-scale add`][az aks nodepool manual-scale add] with the `--vm-sizes` flag set to `"Standard_D2s_v3"` and the `node-count` set to 2.
 
     The following example adds a manual scale profile to node pool *myvmpool* in cluster *myAKSCluster*. The node pool includes two nodes with a VM SKU of *Standard_D2s_v3*:
 

@@ -6,6 +6,7 @@ ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a Kubernetes administrator, I want to define reusable update strategies for multiple clusters, so that I can streamline and manage update processes across my fleet.
 ---
 
 # Define reusable update strategies using Azure Kubernetes Fleet Manager
@@ -191,7 +192,7 @@ You can use an update strategy as part of a manual update run or an auto-upgrade
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
-* [Multi-cluster updates FAQs](./faq.md#multi-cluster-automated-or-manual-updates-faqs).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md

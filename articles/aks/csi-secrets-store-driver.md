@@ -5,8 +5,8 @@ author: davidsmatlak
 ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
-ms.date: 12/06/2023
-ms.custom: template-how-to, devx-track-azurecli
+ms.date: 06/10/2025
+ms.custom: template-how-to, devx-track-azurecli, biannual
 ---
 
 # Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster
@@ -25,15 +25,23 @@ The Azure Key Vault provider for Secrets Store CSI Driver allows for the integra
 
 ## Limitations
 
-A container using *subPath volume mount* doesn't receive secret updates when it's rotated. For more information, see [Secrets Store CSI Driver known limitations](https://secrets-store-csi-driver.sigs.k8s.io/known-limitations.html#secrets-not-rotated-when-using-subpath-volume-mount).
+- A container using a `ConfigMap` or `Secret` as a `subPath` volume mount does not receive automated updates when the secret is rotated. This is a Kubernetes limitation. To have the changes take effect, the application needs to reload the changed file by either watching for changes in the file system or by restarting the pod. For more information, see [Secrets Store CSI Driver known limitations](https://secrets-store-csi-driver.sigs.k8s.io/known-limitations.html#secrets-not-rotated-when-using-subpath-volume-mount).
+- The add-on creates a managed identity named `azurekeyvaultsecretsprovider-xxx` in the node resource group and assigns it to the Virtual Machine Scale Sets (VMSS) automatically. You can use this managed identity or your own managed identity to access the key vault. It's not supported to prevent creation of the identity.
 
 ## Prerequisites
 
 * If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
 * Check that your version of the Azure CLI is 2.30.0 or later. If it's an earlier version, [install the latest version](/cli/azure/install-azure-cli).
-* If you're restricting Ingress to the cluster, make sure ports **9808** and **8095** are open.
-* The minimum recommended Kubernetes version is based on the [rolling Kubernetes version support window][kubernetes-version-support]. Make sure you're running version *N-2* or later.
 
+### Network
+* If using network isolated clusters, it's recommended to [set up private endpoint to access Azure Key Vault][private-endpoint-keyvault].
+* If the cluster has outbound type `userDefinedRouting` and uses a firewall device that can control outbound traffic based on domain names, such as Azure Firewall, ensure the [required outbound network rules and FQDNs are allowed][fqdns-for-keyvault].
+* If you're restricting Ingress to the cluster, make sure ports **9808** and **8095** are open.
+
+### Roles
+* The identity used to with the `SecretProviderClass` needs to have `Key Vault Certificate User` to access `key` or `certificate` [object types][keyvault-object-types].
+* The identity used to with the `SecretProviderClass` needs to have `Key Vault Secrets User` to access `secret` [object type][keyvault-object-types].
+  
 ## Create an AKS cluster with Azure Key Vault provider for Secrets Store CSI Driver support
 
 1. Create an Azure resource group using the [`az group create`][az-group-create] command.
@@ -156,6 +164,9 @@ In this article, you learned how to use the Azure Key Vault provider for Secrets
 [az-keyvault-update]: /cli/azure/keyvault#az-keyvault-update.md
 [az-keyvault-secret-set]: /cli/azure/keyvault#az-keyvault-secret-set.md
 [az-group-create]: /cli/azure/group#az-group-create
+[private-endpoint-keyvault]: /azure/key-vault/general/private-link-service
+[fqdns-for-keyvault]: outbound-rules-control-egress.md#azure-key-vault-provider-for-secrets-store-csi-driver
+[keyvault-object-types]: /azure/key-vault/general/about-keys-secrets-certificates#object-types
 
 <!-- LINKS EXTERNAL -->
 [kube-csi]: https://kubernetes-csi.github.io/docs/
