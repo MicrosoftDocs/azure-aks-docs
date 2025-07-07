@@ -21,7 +21,7 @@ This article shows you how to use dual-stack networking with an AKS cluster. For
 * In Azure Linux node pools, service objects are only supported with `externalTrafficPolicy: Local`.
 * Dual-stack networking is required for the Azure virtual network and the pod CIDR.
   * Single stack IPv6-only isn't supported for node or pod IP addresses. Services can be provisioned on IPv4 or IPv6.
-* [Azure CNI Overlay](https://learn.microsoft.com/en-us/azure/aks/azure-cni-overlay?tabs=kubectl#dual-stack-networking) is required  
+* [Azure CNI Overlay](/azure/aks/azure-cni-overlay?tabs=kubectl#dual-stack-networking) is required  
 
 ## Prerequisites
 
