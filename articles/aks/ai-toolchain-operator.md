@@ -97,16 +97,16 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 
 ## Deploy a default hosted AI model
 
-1. Deploy the Falcon 7B-instruct model preset for inference from the KAITO model repository using the `kubectl apply` command.
+1. Deploy the [Phi-4-mini instruct](https://huggingface.co/microsoft/Phi-4-mini-instruct) model preset for inference from the KAITO model repository using the `kubectl apply` command.
 
     ```azurecli-interactive
-    kubectl apply -f https://raw.githubusercontent.com/kaito-project/kaito/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml
+    kubectl apply -f https://raw.githubusercontent.com/kaito-project/kaito/refs/heads/main/examples/inference/kaito_workspace_phi_4_mini.yaml
     ```
 
 2. Track the live resource changes in your workspace using the `kubectl get` command.
 
     ```azurecli-interactive
-    kubectl get workspace workspace-falcon-7b-instruct -w
+    kubectl get workspace workspace-phi-4-mini -w
     ```
 
     > [!NOTE]
@@ -115,16 +115,16 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 3. Check your inference service and get the service IP address using the `kubectl get svc` command.
 
     ```azurecli-interactive
-    export SERVICE_IP=$(kubectl get svc workspace-falcon-7b-instruct -o jsonpath='{.spec.clusterIP}')
+    export SERVICE_IP=$(kubectl get svc workspace-phi-4-mini -o jsonpath='{.spec.clusterIP}')
     ```
 
-4. Test the Falcon 7B-instruct inference service with a sample input of your choice using the [OpenAI chat completions API format](https://platform.openai.com/docs/api-reference/chat):
+4. Test the Phi-4-mini instruct inference service with a sample input of your choice using the [OpenAI chat completions API format](https://platform.openai.com/docs/api-reference/chat):
 
     ```azurecli-interactive
     kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/v1/completions -H "Content-Type: application/json" \
       -d '{
-            "model": "falcon-7b-instruct",
-            "prompt": "What is Kubernetes?",
+            "model": "Phi-4-mini-instruct",
+            "prompt": "How should I dress for the weather today?",
             "max_tokens": 10
            }'
     ```
@@ -136,10 +136,10 @@ If you no longer need these resources, you can delete them to avoid incurring ex
 1. Delete the KAITO workspace using the `kubectl delete workspace` command.
 
     ```azurecli-interactive
-    kubectl delete workspace workspace-falcon-7b-instruct
+    kubectl delete workspace workspace-phi-4-mini
     ```
 
-2. You need to manually delete the GPU node pools provisioned by the KAITO deployment. Use the node label created by [Falcon-7b instruct workspace](https://github.com/kaito-project/kaito/blob/main/examples/inference/kaito_workspace_falcon_7b-instruct.yaml) to get the node pool name using the [`az aks nodepool list`](/cli/azure/aks#az-aks-nodepool-list) command. In this example, the node label is "kaito.sh/workspace": "workspace-falcon-7b-instruct".
+2. You need to manually delete the GPU node pools provisioned by the KAITO deployment. Use the node label created by [Phi-4-mini instruct workspace](https://raw.githubusercontent.com/kaito-project/kaito/refs/heads/main/examples/inference/kaito_workspace_phi_4_mini.yaml) to get the node pool name using the [`az aks nodepool list`](/cli/azure/aks#az-aks-nodepool-list) command. In this example, the node label is "kaito.sh/workspace": "workspace-phi-4-mini".
 
     ```azurecli-interactive     
     az aks nodepool list --resource-group $AZURE_RESOURCE_GROUP --cluster-name $CLUSTER_NAME
