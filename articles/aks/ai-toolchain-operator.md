@@ -91,27 +91,21 @@ The following sections describe how to create an AKS cluster with the AI toolcha
     az group create --name $AZURE_RESOURCE_GROUP --location $AZURE_LOCATION
     ```
 
-2. Create an AKS cluster with the AI toolchain operator add-on enabled using the [az aks create][az-aks-create] command with the `--enable-ai-toolchain-operator` and `--enable-oidc-issuer` flags.
+2. Create an AKS cluster with the AI toolchain operator add-on enabled using the [az aks create][az-aks-create] command with the `--enable-ai-toolchain-operator` flag.
 
     ```azurecli-interactive
     az aks create --location $AZURE_LOCATION \
         --resource-group $AZURE_RESOURCE_GROUP \
         --name $CLUSTER_NAME \
-        --enable-oidc-issuer \
         --enable-ai-toolchain-operator \
         --generate-ssh-keys
     ```
-
-    > [!NOTE]
-    > AKS creates a managed identity once you enable the AI toolchain operator add-on. The managed identity is used to create GPU node pools in the managed AKS cluster. Proper permissions need to be set for it manually following the steps introduced in the following sections.
-    >
 
 3. On an existing AKS cluster, you can enable the AI toolchain operator add-on using the [az aks update][az-aks-update] command.
 
     ```azurecli-interactive
     az aks update --name $CLUSTER_NAME \
             --resource-group $AZURE_RESOURCE_GROUP \
-            --enable-oidc-issuer \
             --enable-ai-toolchain-operator
     ```
 
@@ -127,73 +121,6 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 
     ```azurecli-interactive
     kubectl get nodes
-    ```
-
-## Export environment variables
-
-* Export environment variables for the MC resource group, principal ID identity, and KAITO identity using the following commands:
-
-    ```azurecli-interactive
-    export MC_RESOURCE_GROUP=$(az aks show --resource-group $AZURE_RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --query nodeResourceGroup \
-        -o tsv)
-    export PRINCIPAL_ID=$(az identity show --name "ai-toolchain-operator-${CLUSTER_NAME}" \
-        --resource-group $MC_RESOURCE_GROUP \
-        --query 'principalId' \
-        -o tsv)
-    export KAITO_IDENTITY_NAME="ai-toolchain-operator-${CLUSTER_NAME}"
-    ```
-
-## Get the AKS OpenID Connect (OIDC) Issuer
-
-* Get the AKS OIDC Issuer URL and export it as an environment variable:
-
-    ```azurecli-interactive
-    export AKS_OIDC_ISSUER=$(az aks show --resource-group $AZURE_RESOURCE_GROUP \
-        --name $CLUSTER_NAME \
-        --query "oidcIssuerProfile.issuerUrl" \
-        -o tsv)
-    ```
-
-## Create role assignment for the service principal
-
-* Create a new role assignment for the service principal using the [az role assignment create][az-role-assignment-create] command.
-
-    ```azurecli-interactive
-    az role assignment create --role "Contributor" \
-        --assignee $PRINCIPAL_ID \
-        --scope "/subscriptions/$AZURE_SUBSCRIPTION_ID/resourcegroups/$AZURE_RESOURCE_GROUP"
-    ```
-
-## Establish a federated identity credential
-
-* Create the federated identity credential between the managed identity, AKS OIDC issuer, and subject using the [az identity federated-credential create][az-identity-federated-credential-create] command.
-
-    ```azurecli-interactive
-    az identity federated-credential create --name "kaito-federated-identity" \
-        --identity-name $KAITO_IDENTITY_NAME \
-        -g $MC_RESOURCE_GROUP \
-        --issuer $AKS_OIDC_ISSUER \
-        --subject system:serviceaccount:"kube-system:kaito-gpu-provisioner" \
-        --audience api://AzureADTokenExchange
-    ```
-
-    > [!NOTE]
-    > Before this step is complete, the `gpu-provisioner` controller pod will remain in a crash loop status. Once the federated credential is created, the `gpu-provisioner` controller pod will reach a running state and you will be able to verify that the deployment is running in the following steps.
-
-## Verify that your deployment is running
-
-1. Restart the KAITO GPU provisioner deployment on your pods using the `kubectl rollout restart` command:
-
-    ```azurecli-interactive
-    kubectl rollout restart deployment/kaito-gpu-provisioner -n kube-system
-    ```
-
-2. Verify that the GPU provisioner deployment is running using the `kubectl get` command:
-
-    ```azurecli-interactive
-    kubectl get deployment -n kube-system | grep kaito
     ```
 
 ## Deploy a default hosted AI model
