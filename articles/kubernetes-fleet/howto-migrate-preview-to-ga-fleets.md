@@ -7,6 +7,7 @@ ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: how-to
 
+# Customer intent: As a Kubernetes administrator, I want to migrate affected instances of Azure Kubernetes Fleet Manager to a supported state, so that I can ensure my clusters are updated and compliant with the latest API definitions.
 ---
 
 # Migrate Azure Kubernetes Fleet Manager preview instances to a supported state 

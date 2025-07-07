@@ -6,6 +6,7 @@ ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a platform admin managing multiple Kubernetes clusters, I want to automate upgrades of Kubernetes and node images using auto-upgrade profiles, so that I can ensure safe and consistent updates without manual intervention."
 ---
 
 # Automate upgrades of Kubernetes and node images across multiple clusters using Azure Kubernetes Fleet Manager

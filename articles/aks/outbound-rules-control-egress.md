@@ -2,11 +2,10 @@
 title: Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters
 description: Learn what ports and addresses are required to control egress traffic in Azure Kubernetes Service (AKS)
 ms.subservice: aks-networking
-ms.custom:
-  - build-2024
+ms.custom: build-2024, quarterly
 ms.topic: how-to
 ms.author: allensu
-ms.date: 12/11/2024
+ms.date: 06/10/2025
 author: asudbring
 
 # Customer intent: "As a Kubernetes cluster operator, I want to understand the outbound network and FQDN rules necessary to control egress traffic, so that I can enhance security and ensure proper functionality within my Azure Kubernetes Service deployment."
@@ -170,6 +169,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 | **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra Authentication. |
 | **`*.ods.opinsights.azure.com`** <br/> **`*.ods.opinsights.azure.us`** (Azure Government) <br/> **`*.ods.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Microsoft Defender to upload security events to the cloud.|
 | **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to authenticate with Log Analytics workspaces.|
+|**`*.cloud.defender.microsoft.com`**|**`HTTPS:443`**|NEW: Required for Microsoft Defender to upload security events to the cloud.|
 
 ### Azure Key Vault provider for Secrets Store CSI Driver
 
