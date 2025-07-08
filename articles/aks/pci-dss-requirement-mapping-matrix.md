@@ -33,4 +33,15 @@ You should leverage the requirement mapping matrix as part of a broader security
 - [Identity and access management](pci-dss-identity.md) for identity and access management.
 - [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting.
 
+## Next steps
+
+Review the complete summary of PCI DSS 4.0.1 implementation on AKS and next steps for compliance.
+
+> [!div class="nextstepaction"]
+> [Review summary and next steps](pci-dss-summary.md)
+
+## Related resources
+
+For more information, review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/).
+
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).

@@ -49,6 +49,13 @@ You should implement third-party and supply chain security as part of a broader 
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
+## Next steps
+
+Learn about implementing customized approaches for PCI DSS compliance when standard requirements don't apply.
+
+> [!div class="nextstepaction"]
+> [Learn about customized approach guidance](pci-dss-customized-approach-guidance.md)
+
 ## Related resources
 
 For more information, review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/).

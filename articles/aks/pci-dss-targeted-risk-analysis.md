@@ -52,6 +52,13 @@ You should implement targeted risk analysis as part of a broader security strate
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
+## Next steps
+
+Implement comprehensive security awareness training for all personnel with access to the cardholder data environment.
+
+> [!div class="nextstepaction"]
+> [Implement security awareness training](pci-dss-security-awareness-training.md)
+
 ## Related resources
 
 For more information, review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/).

@@ -44,6 +44,13 @@ You should implement the customized approach as part of a broader security strat
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
+## Next steps
+
+Review the complete mapping of PCI DSS requirements to AKS implementations and controls.
+
+> [!div class="nextstepaction"]
+> [Review requirement mapping matrix](pci-dss-requirement-mapping-matrix.md)
+
 ## Related resources
 
 For more information, review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/).

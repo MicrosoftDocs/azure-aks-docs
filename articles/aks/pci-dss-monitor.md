@@ -382,7 +382,7 @@ This is important for people who are part of the approval process from a policy 
 
 ## Next steps
 
-Maintain a policy that addresses information security for all personnel.
+Implement continuous security monitoring controls for ongoing compliance and threat detection.
 
 > [!div class="nextstepaction"]
-> [Maintain an information security policy](pci-dss-policy.md)
+> [Implement continuous security monitoring](pci-dss-continuous-security-monitoring.md)

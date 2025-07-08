@@ -310,7 +310,7 @@ People who are operating regulated environments must be educated, informed, and 
 
 ## Next steps
 
-Protect all systems against malware and regularly update antivirus software or programs. Develop and maintain secure systems and applications.
+Implement comprehensive cryptography and key management controls for protecting cardholder data at rest and in transit.
 
 > [!div class="nextstepaction"]
-> [Maintain a vulnerability management program](pci-dss-malware.md)
+> [Implement cryptography and key management](pci-dss-cryptography-key-management.md)

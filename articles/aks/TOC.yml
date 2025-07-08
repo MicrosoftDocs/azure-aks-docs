@@ -165,6 +165,8 @@
                   href: /compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
                 - name: Introduction to PCI DSS v4.0.1 on AKS
                   href: pci-dss-intro.md
+                - name: Risk assessment and code assets
+                  href: pci-dss-ra-code-assets.md
                 - name: Network security
                   href: pci-dss-network.md
                 - name: Data protection
@@ -183,8 +185,6 @@
                   href: pci-dss-continuous-security-monitoring.md
                 - name: Security policies
                   href: pci-dss-policy.md
-                - name: Risk assessment and code assets
-                  href: pci-dss-ra-code-assets.md
                 - name: Targeted risk analysis
                   href: pci-dss-targeted-risk-analysis.md
                 - name: Security awareness training

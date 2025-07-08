@@ -49,5 +49,7 @@ For more information about planning for operational compliance, see the followin
 
 ## Next steps
 
+Implement targeted risk analysis procedures for custom approaches and security assessments.
+
 > [!div class="nextstepaction"]
-> [Summary](pci-dss-summary.md)
+> [Implement targeted risk analysis](pci-dss-targeted-risk-analysis.md)

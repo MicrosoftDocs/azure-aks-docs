@@ -463,7 +463,7 @@ Here are some suggestions for applying technical controls:
 
 ## Next steps
 
-Track and monitor all access to network resources and cardholder data. Regularly test security systems and processes.
+Implement enhanced multi-factor authentication (MFA) requirements for secure access to the cardholder data environment.
 
 > [!div class="nextstepaction"]
-> [Regularly monitor and test networks](pci-dss-monitor.md)
+> [Implement enhanced MFA](pci-dss-enhanced-mfa-implementation.md)

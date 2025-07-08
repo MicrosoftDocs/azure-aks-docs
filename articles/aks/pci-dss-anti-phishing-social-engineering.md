@@ -49,6 +49,13 @@ You should implement anti-phishing and social engineering efforts as part of a b
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
+## Next steps
+
+Implement comprehensive third-party and supply chain security controls to protect against vendor-related risks.
+
+> [!div class="nextstepaction"]
+> [Implement third-party and supply chain security](pci-dss-third-party-supply-chain-security.md)
+
 ## Related resources
 
 For more information, review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/).
