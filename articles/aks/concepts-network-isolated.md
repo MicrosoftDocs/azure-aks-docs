@@ -2,10 +2,10 @@
 title: Network isolated AKS clusters
 titleSuffix: Azure Kubernetes Service
 description: Learn how network isolated AKS clusters work
-author: shashankbarsin
-ms.author: shasb
+author: charleswool
+ms.author: yuewu2
 ms.topic: concept-article
-ms.date: 04/24/2025
+ms.date: 07/08/2025
 
 ---
 
