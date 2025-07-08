@@ -179,12 +179,6 @@ If you no longer need these resources, you can delete them to avoid incurring ex
 
 After applying the KAITO model inference workspace, your resource readiness and workspace conditions might not update to `True` for the following reasons:
 
-* You might not have sufficient permissions to operate on the AKS cluster. Ensure that the `ai-toolchain-operator-$CLUSTER_NAME` identity has been assigned `Contributor` role to your Azure resource group. Run the [`az role assignment list`](/cli/azure/role/assignment#az-role-assignment-list) command and confirm that the result is non-empty:
-
-    ```azurecli-interactive   
-    az role assignment list --scope /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/$AZURE_RESOURCE_GROUP
-    ```
-
 * Your Azure subscription doesn't have quota for the minimum GPU instance type specified in your KAITO workspace. You'll need to [request a quota increase](/azure/quotas/quickstart-increase-quota-portal) for the GPU VM family in your Azure subscription.
 * The GPU instance type isn't available in your AKS region. Confirm the [GPU instance availability in your specific region](https://azure.microsoft.com/explore/global-infrastructure/products-by-region/?regions=&products=virtual-machines) and switch the Azure region if your GPU VM family isn't available.
 
