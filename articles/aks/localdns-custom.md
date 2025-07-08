@@ -1,5 +1,5 @@
 ---
-title: Customize LocalDNS in Azure Kubernetes Service (AKS)
+title: Configure LocalDNS in Azure Kubernetes Service (AKS)
 description: Learn how to improve your Domain Name System (DNS) resolution performance and resiliency in AKS using localDNS.
 ms.subservice: aks-networking
 author: vaibhavarora
@@ -10,7 +10,7 @@ ms.author: vaibhavarora
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.
 ---
 
-# Customize LocalDNS in Azure Kubernetes Service (Preview)
+# Configure LocalDNS in Azure Kubernetes Service (Preview)
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
@@ -29,10 +29,47 @@ To learn about what localDNS is, including architecture details, and key capabil
 * LocalDNS requires your AKS cluster to be running Kubernetes version 1.33 or later.
 * LocalDNS is only supported on node pools running Ubuntu 22.04 or newer.
 
-## Enable LocalDNS
+### Install the `aks-preview` Azure CLI extension
+
+1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+### Register the `LocalDNS` feature flag
+
+1. Register the `LocalDNS` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "LocalDNSPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command.
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "LocalDNSPreview"
+    ```
+
+3. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+## Create or Update an AKS Node Pool with LocalDNS
+
 LocalDNS is configured at the node pool level in AKS, meaning you can enable or disable LocalDNS independently for each node pool in your cluster. This tailors DNS resolution behavior based on the specific requirements of different workloads or environments. To enable LocalDNS on a node pool, you need to provide a configuration file: _localdnsconfig.json_ that defines how LocalDNS should operate for that node pool. If you don't specify a custom configuration file, AKS automatically applies a default LocalDNS configuration. For details on default configurations and how to configure CoreDNS plugins and server blocks, refer to [Configuring LocalDNS](#configuring-localdns).
 
-### Enable localDNS in a new node pool
+### Create a new node pool with LocalDNS enabled
 
 To enable LocalDNS during node pool creation, use the following command with your custom configuration file:
 
@@ -40,7 +77,7 @@ To enable LocalDNS during node pool creation, use the following command with you
 az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
 
-### Enable localDNS in an existing node pool
+### Update an existing node pool to enable LocalDNS
 
 To enable LocalDNS on an existing node pool, use the following command with your custom configuration file:
 
@@ -67,21 +104,21 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
         "queryLogging": "Error",
         "protocol": "PreferUDP",
         "forwardDestination": "VnetDNS",
-        "forwardPolicy": "sequential",
+        "forwardPolicy": "Sequential"
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "verify"
-      },
+        "serveStale": "Immediate",
+      }
       "cluster.local": {
         "queryLogging": "Error",
         "protocol": "ForceTCP",
         "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "sequential",
+        "forwardPolicy": "Sequential"
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "verify"
+        "serveStale": "Immediate",
       }
     },
     "kubeDNSOverrides": {
@@ -89,21 +126,21 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
         "queryLogging": "Error",
         "protocol": "PreferUDP",
         "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "sequential",
+	"forwardPolicy": "Sequential"
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "verify"
-      },
+        "serveStale": "Immediate",
+      }
       "cluster.local": {
         "queryLogging": "Error",
         "protocol": "ForceTCP",
         "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "sequential",
+        "forwardPolicy": "Sequential"
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "verify"
+        "serveStale": "Immediate",
       }
     }
   }
