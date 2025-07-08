@@ -2,10 +2,10 @@
 title: Network isolated AKS clusters
 titleSuffix: Azure Kubernetes Service
 description: Learn how network isolated AKS clusters work
-author: shashankbarsin
-ms.author: shasb
+author: charleswool
+ms.author: yuewu2
 ms.topic: concept-article
-ms.date: 04/24/2025
+ms.date: 07/08/2025
 
 ---
 
@@ -60,6 +60,7 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 
 * `SecurityPatch` channel of auto-upgrade for node OS images is not yet supported, `Unmanaged` channel is not supported.
 * Windows node pools are not yet supported.
+* kubenet networking is not supported.
 
 > [!Caution]
 > If you are using [Node Public IP][node-public-ip] in network isolated AKS clusters, it will allow outbound traffic with outbound type `none`.
