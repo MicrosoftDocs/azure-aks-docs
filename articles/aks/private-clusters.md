@@ -26,6 +26,24 @@ When you provision a private AKS cluster, AKS by default creates a private FQDN 
 
 Private clusters are available in public regions, Azure Government, and Microsoft Azure operated by 21Vianet regions where [AKS is supported][aks-supported-regions].
 
+## Managed subnet behavior change
+
+> [!NOTE]
+> Starting September 2025, new AKS clusters with managed virtual networks will have their subnets created as private subnets by default (`defaultOutboundAccess = false`). This change complements the private cluster functionality by providing subnet-level outbound access control in addition to API server privacy.
+
+For clusters with managed virtual networks created after September 2025:
+- The managed subnet blocks outbound access by default
+- Applications requiring internet access must use explicitly configured egress paths
+- Consider your connectivity requirements when choosing outbound types (loadBalancer, managedNATGateway, userDefinedRouting)
+
+### Connectivity considerations for managed VNet clusters
+
+When creating private clusters with managed virtual networks after September 2025, consider the following:
+
+- **Jumpbox VMs**: Traditional jumpbox VMs in the managed subnet will not have internet access by default
+- **Alternative access methods**: Use Azure Bastion, Cloud Shell, or configure peering/private endpoints for management access
+- **Application connectivity**: Ensure your applications use supported outbound types for external dependencies
+
 ## Prerequisites
 
 * The Azure CLI version 2.28.0 or higher. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
@@ -44,7 +62,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
 * There's no support for Azure DevOps Microsoft-hosted Agents with private clusters. Consider using [self-hosted agents](/azure/devops/pipelines/agents/agents).
 * If you need to enable Azure Container Registry to work with a private AKS cluster, [set up a private link for the container registry in the cluster virtual network][container-registry-private-link] or set up peering between the container registry's virtual network and the private cluster's virtual network.
 * Deleting or modifying the private endpoint in the customer subnet will cause the cluster to stop functioning.
-* Azure Private Link service is supported on Standard Azure Load Balancer only. Basic Azure Load Balancer isn't supported.  
+* Azure Private Link service is supported on Standard Azure Load Balancer only. Basic Azure Load Balancer isn't supported.
 
 ## Create a private AKS cluster
 
@@ -90,7 +108,7 @@ Private clusters are available in public regions, Azure Government, and Microsof
         --network-plugin azure \
         --vnet-subnet-id <subnet-id> \
         --dns-service-ip 10.2.0.10 \
-        --service-cidr 10.2.0.0/24 
+        --service-cidr 10.2.0.0/24
         --generate-ssh-keys
     ```
 
@@ -189,7 +207,7 @@ You can configure private DNS zones using the following parameters:
 
     ```azurecli-interactive
     # The custom private DNS zone name should be in the following format: "<subzone>.privatelink.<region>.azmk8s.io"
-    
+
     az aks create \
         --name <private-cluster-name> \
         --resource-group <private-cluster-resource-group> \
@@ -206,7 +224,7 @@ You can configure private DNS zones using the following parameters:
 
     ```azurecli-interactive
     # The custom private DNS zone name should be in one of the following formats: "privatelink.<region>.azmk8s.io" or "<subzone>.privatelink.<region>.azmk8s.io"
-    
+
     az aks create \
         --name <private-cluster-name> \
         --resource-group <private-cluster-resource-group> \
@@ -323,8 +341,8 @@ When deploying an AKS cluster into such a networking environment, there are some
 
 * When a private cluster is provisioned, a private endpoint (1) and a private DNS zone (2) are created in the cluster-managed resource group by default. The cluster uses an `A` record in the private zone to resolve the IP of the private endpoint for communication to the API server.
 * The private DNS zone is linked only to the VNet that the cluster nodes are attached to (3). This means that the private endpoint can only be resolved by hosts in that linked VNet. In scenarios where no custom DNS is configured on the VNet (default), this works without issue as hosts point at *168.63.129.16* for DNS that can resolve records in the private DNS zone because of the link.
-* If you keep the default private‑DNS‑zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.  
-  In spoke VNets that use custom DNS servers, this action can fail if the cluster’s managed identity lacks **Network Contributor** on the spoke VNet.  
+* If you keep the default private‑DNS‑zone behavior, AKS tries to link the zone directly to the spoke VNet that hosts the cluster even when the zone is already linked to a hub VNet.
+  In spoke VNets that use custom DNS servers, this action can fail if the cluster’s managed identity lacks **Network Contributor** on the spoke VNet.
   To prevent the failure, choose **one** of the following supported configurations:
 
   * **Custom private DNS zone** – Provide a pre‑created private zone and set `privateDNSZone` to its resource ID. Link that zone to the appropriate VNet (for example, the hub VNet) and set `publicDNS` to `false`.
@@ -416,7 +434,7 @@ Once the private DNS zone is created, create an `A` record, which associates the
 
 Once the `A` record is created, link the private DNS zone to the virtual network that will access the private cluster:
 
-1. Go to the private DNS zone you created in previous steps.  
+1. Go to the private DNS zone you created in previous steps.
 1. In the service menu, under **DNS Management**, select **Virtual Network Links** > **Add**.
 1. On the **Add Virtual Network Link** page, configure the following settings:
    * **Link name**: Enter a name for your virtual network link.

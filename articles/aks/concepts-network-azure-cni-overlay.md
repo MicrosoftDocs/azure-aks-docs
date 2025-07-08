@@ -16,6 +16,9 @@ With Azure CNI Overlay, the cluster nodes are deployed into an Azure Virtual Net
 
 ## Overview of Overlay networking
 
+> [!NOTE]
+> Starting September 2025, new AKS clusters with managed virtual networks will have their subnets created as private subnets by default (`defaultOutboundAccess = false`). Ensure your cluster has appropriate outbound connectivity configured for Azure CNI Overlay functionality.
+
 In Overlay networking, only the Kubernetes cluster nodes are assigned IPs from subnets. Pods receive IPs from a private CIDR provided at the time of cluster creation. Each node is assigned a `/24` address space carved out from the same CIDR. Extra nodes created when you scale out a cluster automatically receive `/24` address spaces from the same CIDR. Azure CNI assigns IPs to pods from this `/24` space.
 
 A separate routing domain is created in the Azure Networking stack for the pod's private CIDR space, which creates an Overlay network for direct communication between pods. There's no need to provision custom routes on the cluster subnet or use an encapsulation method to tunnel traffic between pods, which provides connectivity performance between pods on par with VMs in a VNet. Workloads running within the pods are not even aware that network address manipulation is happening.
@@ -50,7 +53,7 @@ A `/24` subnet can fit up to 251 nodes since the first three IP addresses are re
 
 ### Pods
 
-The Overlay solution assigns a `/24` address space for pods on every node from the private CIDR that you specify during cluster creation. The `/24` size is fixed and can't be increased or decreased. You can run up to 250 pods on a node. 
+The Overlay solution assigns a `/24` address space for pods on every node from the private CIDR that you specify during cluster creation. The `/24` size is fixed and can't be increased or decreased. You can run up to 250 pods on a node.
 
 When planning IP address space for pods, consider the following factors:
 
@@ -106,7 +109,7 @@ Azure CNI Overlay has the following limitations:
 
 - Virtual Machine Availability Sets (VMAS) aren't supported.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet Confidential Computing requirements, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
-- If you're using your own subnet to deploy the cluster, the names of the subnet, VNet, and resource group containing the VNet, must be 63 characters or less. These names will be used as labels in AKS worker nodes and are subject to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).  
+- If you're using your own subnet to deploy the cluster, the names of the subnet, VNet, and resource group containing the VNet, must be 63 characters or less. These names will be used as labels in AKS worker nodes and are subject to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
 
 <!-- LINKS - Internal -->
 [aks-egress]: limit-egress-traffic.md
