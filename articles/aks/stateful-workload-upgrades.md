@@ -20,17 +20,17 @@ Upgrade clusters running databases and stateful applications without data loss u
 
 | Database Type | Upgrade Pattern | Downtime | Complexity | Best For |
 |---------------|----------------|----------|------------|----------|
-| **PostgreSQL** | [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) | ~30 seconds | Medium | Production DBs |
+| **PostgreSQL** | [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) | ~30-second downtime | Medium | Production databases |
 | **Redis** | [Rolling Replace](#redis-cluster-rolling-replace) | None | Low | Cache layers |
-| **MongoDB** | [Stepdown Cascade](#mongodb-replica-set-stepdown) | ~10 seconds | Medium | Document DBs |
+| **MongoDB** | [Stepdown Cascade](#mongodb-replica-set-stepdown) | ~10-second downtime | Medium | Document databases |
 | **Elasticsearch** | [Shard Rebalancing](#elasticsearch-shard-rebalancing) | None | High | Search clusters |
-| **Any Database** | [Backup-Restore](#universal-backup-restore-pattern) | 2-5 minutes | Low | Simple setups |
+| **Any Database** | [Backup-Restore](#universal-backup-restore-pattern) | 2- to 5-minute downtime | Low | Simple setups |
 
 ## ⚡ Emergency Upgrade Checklist
 
-**Need to upgrade NOW due to security issues?**
+**Need to upgrade now due to security issues?**
 
-1. **Immediate Safety Check** (2 minutes)
+1. **Immediate Safety Check** (two minutes)
    ```bash
    # Verify all replicas are healthy
    kubectl get pods -l tier=database -o wide
@@ -42,15 +42,15 @@ Upgrade clusters running databases and stateful applications without data loss u
    kubectl get job backup-job -o jsonpath='{.status.completionTime}'
    ```
 
-2. **Choose Emergency Pattern** (1 minute)
-   - **PostgreSQL/MySQL**: Use [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) (30 sec downtime)
-   - **Redis/Memcached**: Use [Rolling Replace](#redis-cluster-rolling-replace) (zero downtime)
-   - **MongoDB/CouchDB**: Use [Stepdown Cascade](#mongodb-replica-set-stepdown) (10 sec downtime)
+2. **Choose Emergency Pattern** (one minute)
+   - **PostgreSQL/MySQL:** Use [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) (30-second downtime)
+   - **Redis/Memcached:** Use [Rolling Replace](#redis-cluster-rolling-replace) (zero downtime)
+   - **MongoDB/CouchDB:** Use [Stepdown Cascade](#mongodb-replica-set-stepdown) (10-second downtime)
 
-3. **Execute with Safety Net** (15-30 minutes)
-   - Always have tested rollback ready
+3. **Execute with Safety Net** (15 to 30 minutes)
+   - Always test rollback procedures in advance
    - Monitor application metrics during upgrade
-   - Keep database team on standby
+   - Keep the database team on standby
 
 ---
 
@@ -388,7 +388,7 @@ echo "Upgrade validation completed successfully"
 
 ## Redis Cluster Rolling Replace
 
-**Scenario:** 6-node Redis cluster (3 masters, 3 replicas) requiring zero downtime.
+**Scenario:** Six-node Redis cluster (three primaries, three replicas) requiring zero downtime.
 
 ### Implementation
 
@@ -443,7 +443,7 @@ echo "Redis cluster upgrade completed"
 
 ## MongoDB Replica Set Stepdown
 
-**Scenario:** 3-member MongoDB replica set requiring coordinated primary stepdown.
+**Scenario:** Three-member MongoDB replica set requiring coordinated primary stepdown.
 
 ### Implementation
 
@@ -866,9 +866,14 @@ spec:
 - **[Container Insights →](monitor-aks-reference.md)** - Application performance monitoring
 - **[Upgrade Notifications →](aks-communication-manager.md)** - Real-time upgrade alerts
 
+## Acronyms Used
+- **AKS:** Azure Kubernetes Service
+- **DB:** Database
+- **PDB:** Pod Disruption Budget
+
 ## Summary
 
-This article provides clear, step-by-step patterns for upgrading stateful workloads on AKS with minimal downtime and no data loss. Use the quick start, checklists, and validation steps to ensure a safe upgrade. Always test in a staging environment before production.
+This article provides clear, step-by-step patterns for upgrading stateful workloads on Azure Kubernetes Service (AKS) with minimal downtime and no data loss. Use the quick start, checklists, and validation steps to ensure a safe upgrade. Always test rollback procedures in advance and use a staging environment before production.
 
 ## Next Steps
 
