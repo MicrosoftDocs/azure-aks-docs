@@ -58,7 +58,7 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 
 ## Limitations
 
-* `SecurityPatch` channel of auto-upgrade for node OS images is not yet supported, `Unmanaged` channel is not supported.
+*  `Unmanaged` channel is not supported.
 * Windows node pools are not yet supported.
 * kubenet networking is not supported.
 
