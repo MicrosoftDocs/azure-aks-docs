@@ -1,6 +1,29 @@
 ---
 title: Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
 description: Learn about upgrade options for Azure Kubernetes Service (AKS) clusters, including scenario-based recommendations for common upgrade challenges.
+ms.topic: conceptual
+ms.service: azure-kubernetes-service
+ms.subservice: aks-upgrade
+ms.date: 07/09/2025
+author: kaarthis
+ms.author: kaarthis
+ms.custom: scenarios
+---
+
+# Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
+
+This article covers upgrade options for AKS clusters and provides scenario-based recommendations for common upgrade challenges.
+
+> **New to AKS upgrades?** Start with our [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) for guided, scenario-based assistance.
+
+## Quick upgrade guides
+
+* For a basic Kubernetes version upgrade, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md).
+* For clusters with multiple node pools or Windows Server nodes, see [Upgrade a node pool in AKS][nodepool-upgrade].
+* To upgrade a specific node pool without a full cluster upgrade, see [Upgrade a specific node pool][specific-nodepool].
+* **For production environments**, see [Production Upgrade Strategies](aks-production-upgrade-strategies.md).
+* **For stateful workloads**, see [Stateful Workload Upgrade Patterns](stateful-workload-upgrades.md). options and recommendations for Azure Kubernetes Service (AKS) clusters
+description: Learn about upgrade options for Azure Kubernetes Service (AKS) clusters, including scenario-based recommendations for common upgrade challenges.
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
