@@ -866,12 +866,16 @@ spec:
 - **[Container Insights →](monitor-aks-reference.md)** - Application performance monitoring
 - **[Upgrade Notifications →](aks-communication-manager.md)** - Real-time upgrade alerts
 
+## Summary
+
+This article provides clear, step-by-step patterns for upgrading stateful workloads on AKS with minimal downtime and no data loss. Use the quick start, checklists, and validation steps to ensure a safe upgrade. Always test in a staging environment before production.
+
 ## Next Steps
 
-1. **Assess Your Data**: Audit all stateful workloads and their backup/recovery capabilities
-2. **Test Patterns**: Practice upgrade patterns in staging with actual data volumes
-3. **Set Up Monitoring**: Implement database-specific monitoring before upgrades
-4. **Automate Safely**: Build automation with mandatory validation checkpoints
-5. **Document Procedures**: Create runbooks specific to your database configurations
+1. **Assess your data:** Review all stateful workloads and confirm backup and recovery plans.
+2. **Test patterns:** Practice upgrade patterns in a staging environment with real data volumes.
+3. **Set up monitoring:** Enable database-specific monitoring before starting upgrades.
+4. **Automate safely:** Use automation with required validation steps.
+5. **Document procedures:** Write clear runbooks for your database configurations.
 
-> **Critical databases?** Always test upgrade procedures with production-like data volumes and network latency. Consider [Azure Database services](/azure/postgresql/) for mission-critical applications requiring 99.99% uptime.
+> **Tip:** For critical databases, always test upgrade procedures with production-like data and network conditions. Consider [Azure Database services](/azure/postgresql/) for applications that require 99.99% uptime.
