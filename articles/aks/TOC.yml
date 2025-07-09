@@ -203,7 +203,7 @@
                   href: container-network-observability-metrics.md
                 - name: Logs
                   href: container-network-observability-logs.md
-            - name: Conatiner Network Security
+            - name: Container Network Security
               items:    
                 - name: FQDN based Filtering
                   href: container-network-security-fqdn-filtering-concepts.md
