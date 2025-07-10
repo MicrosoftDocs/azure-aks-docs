@@ -6,7 +6,6 @@ ms.author: schaffererin
 ms.date: 09/26/2023
 ms.service: azure-kubernetes-service
 ms.topic: how-to
-ms.date: 09/26/2023
 ms.custom:
   - devx-track-azurecli
   - build-2025
