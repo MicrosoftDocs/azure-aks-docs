@@ -26,24 +26,6 @@ When you provision a private AKS cluster, AKS by default creates a private FQDN 
 
 Private clusters are available in public regions, Azure Government, and Microsoft Azure operated by 21Vianet regions where [AKS is supported][aks-supported-regions].
 
-## Managed subnet behavior change
-
-> [!NOTE]
-> Starting September 2025, new AKS clusters with managed virtual networks will have their subnets created as private subnets by default (`defaultOutboundAccess = false`). This change complements the private cluster functionality by providing subnet-level outbound access control in addition to API server privacy.
-
-For clusters with managed virtual networks created after September 2025:
-- The managed subnet blocks outbound access by default
-- Applications requiring internet access must use explicitly configured egress paths
-- Consider your connectivity requirements when choosing outbound types (loadBalancer, managedNATGateway, userDefinedRouting)
-
-### Connectivity considerations for managed VNet clusters
-
-When creating private clusters with managed virtual networks after September 2025, consider the following:
-
-- **Jumpbox VMs**: Traditional jumpbox VMs in the managed subnet will not have internet access by default
-- **Alternative access methods**: Use Azure Bastion, Cloud Shell, or configure peering/private endpoints for management access
-- **Application connectivity**: Ensure your applications use supported outbound types for external dependencies
-
 ## Prerequisites
 
 * The Azure CLI version 2.28.0 or higher. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].

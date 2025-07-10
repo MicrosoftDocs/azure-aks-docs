@@ -19,9 +19,6 @@ One common solution to restricting outbound traffic from the cluster is to use a
 
 To reduce risk of data exfiltration, network isolated cluster allows for bootstrapping the AKS cluster without any outbound network dependencies, even for fetching cluster components/images from Microsoft Artifact Registry (MAR). The cluster operator could incrementally set up allowed outbound traffic for each scenario they want to enable. This article walks you through the steps of creating a network isolated cluster.
 
-> [!NOTE]
-> Starting September 2025, new AKS clusters with managed virtual networks will have their subnets created as private subnets by default (`defaultOutboundAccess = false`). This change provides subnet-level outbound access control that complements the network isolated cluster functionality described in this article.
-
 
 ## Before you begin
 

@@ -57,19 +57,8 @@ For more information on networking models in AKS, see [CNI Networking in AKS][ne
 
 AKS clusters are deployed on a virtual network and have outbound dependencies on services outside of that virtual network, which are almost entirely defined with fully qualified domain names (FQDNs). AKS provides several outbound configuration options which allow you to customize the way in which these external resources are accessed.
 
-### Managed subnet outbound access behavior
-
-> [!IMPORTANT]
-> **Behavior Change**: Starting September 2025, new AKS clusters with managed virtual networks will have their subnets created with `defaultOutboundAccess = false` by default. This makes the managed subnet a private subnet, blocking outbound connections from resources not configured with explicit egress paths.
-
-For clusters created after September 2025 with managed virtual networks:
-- The managed subnet is created as a private subnet by default
-- Only resources with explicitly configured outbound connectivity (via load balancer, NAT gateway, or user-defined routing) can access external resources
-- This change applies only to new clusters; existing clusters are not affected unless migrated
-
-For bring-your-own virtual network scenarios:
-- No change in behavior - you maintain full control over subnet configuration
-- You can manually configure subnet outbound access using `az network vnet subnet update --default-outbound false`
+> [!NOTE]
+> Starting September 2025, new AKS clusters with managed virtual networks will use [private subnets](/azure/virtual-network/ip-services/default-outbound-access#why-is-disabling-default-outbound-access-recommended) by default (subnets with `defaultOutboundAccess = false`). Private subnets provide enhanced security by requiring explicit outbound connectivity configuration. AKS automatically configures the necessary outbound connectivity (such as load balancer or NAT gateway) to ensure your clusters continue to function properly.
 
 ### Outbound configuration options
 

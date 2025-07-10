@@ -13,13 +13,8 @@ ms.date: 12/17/2024
 
 # Customize cluster egress with outbound types in Azure Kubernetes Service (AKS)
 
-> [!IMPORTANT]
-> **Managed Subnet Behavior Change**: Starting September 2025, new AKS clusters with managed virtual networks will have their subnets created with `defaultOutboundAccess = false` by default. This makes proper outbound type selection critical for cluster connectivity. This change does not affect bring-your-own virtual network scenarios.
-
-For clusters with managed virtual networks created after September 2025, choosing an appropriate outbound type is essential for:
-- Cluster node connectivity to required services
-- Application access to external dependencies
-- Container image pulls and system updates
+> [!NOTE]
+> Starting September 2025, new AKS clusters with managed virtual networks will use [private subnets](/azure/virtual-network/ip-services/default-outbound-access#why-is-disabling-default-outbound-access-recommended) by default (subnets with `defaultOutboundAccess = false`). Private subnets provide enhanced security by requiring explicit outbound connectivity configuration. AKS will continue to automatically configure appropriate outbound connectivity (such as load balancer or NAT gateway) to ensure clusters function properly.
 
 You can customize egress for an AKS cluster to fit specific scenarios. By default, AKS creates a Standard Load Balancer to be set up and used for egress. However, the default setup may not meet the requirements of all scenarios if public IPs are disallowed or extra hops are required for egress.
 
