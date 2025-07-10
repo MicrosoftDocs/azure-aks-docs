@@ -11,8 +11,7 @@ ms.custom: scenarios
 ---
 
 # Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
-
-This article covers upgrade options for AKS clusters and provides scenario-based recommendations for common upgrade challenges.
+This article gives you a technical foundation for AKS cluster upgrades, covering upgrade options and common scenarios. For in-depth guidance tailored to your needs, use the scenario-based navigation paths at the end of this article.
 
 ## 📖 What This Article Covers
 
