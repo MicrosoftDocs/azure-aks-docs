@@ -25,7 +25,7 @@ Advanced Container Networking Services offers two key features:
 
 ## Container Network Observability
 
-Container Network Observability in Azure Kubernetes Service (AKS) is a comprehensive feature set within Advanced Container Networking Services, designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. The feature uses eBPF to enhance scalability and performance by identifying potential bottlenecks and network congestion before applications are affected.
+Container Network Observability in AKS is a comprehensive feature set within Advanced Container Networking Services, designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. The feature uses eBPF to enhance scalability and performance by identifying potential bottlenecks and network congestion before applications are affected.
 
 Key benefits include compatibility with all Container Networking Interface (CNI) variants in Azure, detailed visibility into node-level metrics, and Hubble metrics for Domain Name System (DNS) resolution, pod-to-pod communication, and service interactions. Container network logs capture essential metadata such as IPs, ports, and traffic flow for troubleshooting, monitoring, and security enforcement.
 
