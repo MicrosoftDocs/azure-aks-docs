@@ -1,15 +1,15 @@
 ---
-title: 'Deploy a highly available PostgreSQL database on AKS with Azure CLI'
-description: In this article, you deploy a highly available PostgreSQL database on AKS using the CloudNativePG operator.
+title: 'Deploy a highly available PostgreSQL database on AKS'
+description: Deploy a highly available PostgreSQL database on Azure Kubernetes Service (AKS) using Azure CLI and the CloudNativePG operator.
 ms.topic: how-to
-ms.date: 06/07/2024
+ms.date: 06/18/2025
 author: kenkilty
 ms.author: kkilty
 ms.custom: 'innovation-engine, aks-related-content, stateful-workloads'
 # Customer intent: "As a cloud architect, I want to deploy a highly available PostgreSQL database on AKS using Kubernetes operators, so that I can ensure scalability and reliability for my application workloads."
 ---
 
-# Deploy a highly available PostgreSQL database on AKS
+# Deploy a highly available PostgreSQL database on Azure Kubernetes Service (AKS)
 
 In this article, you deploy a highly available PostgreSQL database on AKS.
 
@@ -380,7 +380,7 @@ PostgreSQL performance heavily depends on your cluster's underlying resources. T
     ```
 
 > [!IMPORTANT]  
-> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it will enter a `CrashLoopBackOff` state because a new replica has been created on the new node without any data and CNPG cannot find the pgdata directory. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
+> If you're using local NVMe with Azure Container Storage and your pod is stuck in the init state with a multi-attach error, it's likely still searching for the volume on a lost node. Once the pod starts running, it enters a `CrashLoopBackOff` state because a new replica has been created on the new node without any data and CNPG can't find the pgdata directory. To resolve this, you need to destroy the affected instance and bring up a new one. Run the following command:  
 >  
 > ```bash  
 > kubectl cnpg destroy [cnpg-cluster-name] [instance-number]  
@@ -410,7 +410,7 @@ The CNPG operator automatically creates a PodMonitor for the primary instance us
     ...
     ```
 
-If you are using Azure Monitor for Managed Prometheus, you will need to add another pod monitor using the custom group name. Managed Prometheus does not pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. This allows pod monitors for Managed Prometheus to exist side-by-side those that use the community pod monitor. If you are not using Managed Prometheus, you can skip this. Create a new pod monitor:
+If you're using Azure Monitor for Managed Prometheus, you need to add another pod monitor using the custom group name. Managed Prometheus doesn't pick up the custom resource definitions (CRDs) from the Prometheus community. Aside from the group name, the CRDs are the same. This allows pod monitors for Managed Prometheus to exist side-by-side those that use the community pod monitor. If you're not using Managed Prometheus, you can skip this. Create a new pod monitor:
 
 ```bash
 cat <<EOF | kubectl apply --context $AKS_PRIMARY_CLUSTER_NAME --namespace $PG_NAMESPACE -f -
@@ -442,31 +442,31 @@ kubectl --namespace $PG_NAMESPACE \
     -o yaml
 ```
 
-#### Option A - Azure Monitor Workspace
+#### Option A - Azure Monitor workspace
 
 Once you have deployed the Postgres cluster and the pod monitor, you can view the metrics using the Azure portal in an Azure Monitor workspace.
 
-:::image source="./media/deploy-postgresql-ha/prometheus-metrics.png" alt-text="Screenshot showing metrics in an Azure Monitor workspace." lightbox="./media/deploy-postgresql-ha/prometheus-metrics.png":::
+:::image source="./media/deploy-postgresql-ha/prometheus-metrics.png" alt-text="Screenshot showing Postgres cluster metrics in an Azure Monitor workspace in the Azure portal." lightbox="./media/deploy-postgresql-ha/prometheus-metrics.png":::
 
 #### Option B - Managed Grafana
 
-Alternatively, Once you have deployed the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and click on the Endpoint link as shown here:
+Alternatively, Once you have deployed the Postgres cluster and pod monitors, you can create a metrics dashboard on the Managed Grafana instance created by the deployment script to visualize the metrics exported to the Azure Monitor workspace. You can access the Managed Grafana via the Azure portal. Navigate to the Managed Grafana instance created by the deployment script and select the Endpoint link as shown here:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-1.png" alt-text="Screenshot showing an Azure Managed Grafana instance." lightbox="./media/deploy-postgresql-ha/grafana-metrics-1.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-1.png" alt-text="Screenshot Postgres cluster metrics in an Azure Managed Grafana instance in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-1.png":::
 
-Clicking on the Endpoint link will cause a new browser window to open where you can create dashboards on the Managed Grafana instance. Following the instructions to [configure an Azure Monitor data source](/azure/azure-monitor/visualize/grafana-plugin#configure-an-azure-monitor-data-source-plug-in), you can then add visualizations to create a dashboard of metrics from the Postgres cluster. After setting up the data source connection, from the main menu, click the Data sources option and you should see a set of data source options for the data source connection as shown here:
+Selecting the Endpoint link opens a new browser window where you can create dashboards on the Managed Grafana instance. Following the instructions to [configure an Azure Monitor data source](/azure/azure-monitor/visualize/grafana-plugin#configure-an-azure-monitor-data-source-plug-in), you can then add visualizations to create a dashboard of metrics from the Postgres cluster. After setting up the data source connection, from the main menu, select the Data sources option. You should see a set of data source options for the data source connection as shown here:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-2.png" alt-text="Screenshot showing data source options." lightbox="./media/deploy-postgresql-ha/grafana-metrics-2.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-2.png" alt-text="Screenshot showing Azure Monitor data source options in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-2.png":::
 
-On the Managed Prometheus option, click the option to build a dashboard to open the dashboard editor. Once the editor window opens, click the Add visualization option then click the Managed Prometheus option to browse the metrics from the Postgres cluster. Once you have selected the metric you want to visualize, click the Run queries button to fetch the data for the visualization as shown here:
+On the Managed Prometheus option, select the option to build a dashboard to open the dashboard editor. Once the editor window opens, select the Add visualization option then select the Managed Prometheus option to browse the metrics from the Postgres cluster. Once you have selected the metric you want to visualize, select the Run queries button to fetch the data for the visualization as shown here:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-3.png" alt-text="Screenshot showing construct dashboard." lightbox="./media/deploy-postgresql-ha/grafana-metrics-3.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-3.png" alt-text="Screenshot showing a Managed Prometheus dashboard with Postgres cluster metrics." lightbox="./media/deploy-postgresql-ha/grafana-metrics-3.png":::
 
-Click the Save button to add the panel to your dashboard. You can add other panels by clicking the Add button in the dashboard editor and repeating this process to visualize other metrics. Adding the metrics visualizations, you should have something that looks like this:
+Select the Save icon to add the panel to your dashboard. You can add other panels by selecting the Add button in the dashboard editor and repeating this process to visualize other metrics. Adding the metrics visualizations, you should have something that looks like this:
 
-:::image source="./media/deploy-postgresql-ha/grafana-metrics-4.png" alt-text="Screenshot showing save dashboard." lightbox="./media/deploy-postgresql-ha/grafana-metrics-4.png":::
+:::image source="./media/deploy-postgresql-ha/grafana-metrics-4.png" alt-text="Screenshot showing a saved Managed Prometheus dashboard in the Azure portal." lightbox="./media/deploy-postgresql-ha/grafana-metrics-4.png":::
 
-Click the Save icon to save your dashboard.
+Select the Save icon to save your dashboard.
 
 ---
 

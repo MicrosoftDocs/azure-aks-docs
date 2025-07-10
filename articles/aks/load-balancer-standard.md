@@ -713,6 +713,9 @@ For example, making blue/green deployments to migrate clusters is a common pract
 
 For more considerations on how to migrate clusters, visit [our documentation on migration considerations](aks-migration.md).
 
+>[!Important]
+>On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using the Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. For more information on how to upgrade your Basic load balancer on AKS, see our [documentation on Basic load balancer migration][upgrade-blb-on-aks] .
+
 ## Limitations
 
 The following limitations apply when you create and manage AKS clusters that support a load balancer with the *Standard* SKU:
@@ -776,6 +779,7 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [az-extension-add]: /cli/azure/extension#az_extension_add
 [az-extension-update]: /cli/azure/extension#az_extension_update
 [use-multiple-node-pools]: use-multiple-node-pools.md
+[upgrade-blb-on-aks]: upgrade-basic-load-balancer-on-aks.md 
 [troubleshoot-snat]: #troubleshooting-snat
 [service-tags]: /azure/virtual-network/network-security-groups-overview#service-tags
 [maxcount]: ./cluster-autoscaler.md#enable-the-cluster-autoscaler-on-an-existing-cluster

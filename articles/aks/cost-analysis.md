@@ -6,7 +6,8 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to
-ms.date: 04/06/2025
+ms.date: 06/10/2025
+ms.custom: quarterly
 ---
 
 # Azure Kubernetes Service (AKS) cost analysis

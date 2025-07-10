@@ -317,6 +317,12 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
 
 ```azurecli-interactive
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
+```
+
+Keep in mind that you need to manually reimage all existing node pools again:
+
+```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only
 ```
 
