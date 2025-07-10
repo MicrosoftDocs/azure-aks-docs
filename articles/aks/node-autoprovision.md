@@ -306,7 +306,7 @@ Within the node class definition, set the imageVersion to one of the published r
 The imageVersion is the date portion on the Node Image as only Ubuntu 22.04 is supported, for example, "AKSUbuntu-2204-202311.07.0" would be "202311.07.0"
 
 ```yaml
-apiVersion: karpenter.azure.com/v1alpha2
+apiVersion: karpenter.azure.com/v1beta1
 kind: AKSNodeClass
 metadata:
   annotations:
