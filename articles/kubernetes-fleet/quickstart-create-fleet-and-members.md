@@ -41,7 +41,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
 
 * Have the Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.5.2 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
