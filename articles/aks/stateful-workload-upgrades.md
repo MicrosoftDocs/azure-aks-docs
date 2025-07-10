@@ -14,17 +14,32 @@ ms.custom: stateful, databases, zero-downtime
 
 Upgrade clusters running databases and stateful applications without data loss using these proven patterns.
 
-> **Quick start:** [Emergency upgrade needed? →](#emergency-upgrade-checklist) | [PostgreSQL cluster? →](#the-ferris-wheel-pattern-postgresql) | [Redis cache? →](#redis-cluster-rolling-replace)
+## 📖 What This Article Covers
+
+This guide provides **database-specific upgrade patterns** for AKS clusters with stateful workloads:
+- **PostgreSQL Ferris Wheel pattern** for ~30-second downtime
+- **Redis rolling replacement** for zero-downtime cache upgrades
+- **MongoDB step-down cascades** for replica set safety
+- **Emergency upgrade checklists** for security responses
+- **Validation and rollback procedures** for data protection
+
+**Best for:** Database administrators, applications with persistent data, mission-critical stateful services.
+
+**Related guides:** [Production strategies](aks-production-upgrade-strategies.md) • [Basic upgrades](upgrade-aks-cluster.md) • [Scenario hub](upgrade-scenarios-hub.md)
+
+---
+
+> **Quick start:** [Emergency upgrade needed?→](#emergency-upgrade-checklist) | [PostgreSQL cluster?→](#the-ferris-wheel-pattern-postgresql) | [Redis cache?→](#redis-cluster-rolling-replace)
 
 ## 🎯 Choose Your Pattern
 
 | Database Type | Upgrade Pattern | Downtime | Complexity | Best For |
-|---------------|----------------|----------|------------|----------|
+|---------------|----------------|--------------------------|------------|----------|
 | **PostgreSQL** | [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) | ~30-second downtime | Medium | Production databases |
 | **Redis** | [Rolling Replace](#redis-cluster-rolling-replace) | None | Low | Cache layers |
-| **MongoDB** | [Stepdown Cascade](#mongodb-replica-set-stepdown) | ~10-second downtime | Medium | Document databases |
+| **MongoDB** | [Step-down Cascade](#mongodb-replica-set-step-down) | ~10-second downtime | Medium | Document databases |
 | **Elasticsearch** | [Shard Rebalancing](#elasticsearch-shard-rebalancing) | None | High | Search clusters |
-| **Any Database** | [Backup-Restore](#universal-backup-restore-pattern) | 2- to 5-minute downtime | Low | Simple setups |
+| **Any Database** | [Backup-Restore](#universal-backup-restore-pattern) | 2-minute to 5-minute downtime | Low | Simple setups |
 
 ## ⚡ Emergency Upgrade Checklist
 
@@ -34,10 +49,8 @@ Upgrade clusters running databases and stateful applications without data loss u
    ```bash
    # Verify all replicas are healthy
    kubectl get pods -l tier=database -o wide
-   
    # Check replication lag
    ./scripts/check-replica-health.sh
-   
    # Ensure recent backup exists
    kubectl get job backup-job -o jsonpath='{.status.completionTime}'
    ```
@@ -45,12 +58,12 @@ Upgrade clusters running databases and stateful applications without data loss u
 2. **Choose Emergency Pattern** (one minute)
    - **PostgreSQL/MySQL:** Use [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) (30-second downtime)
    - **Redis/Memcached:** Use [Rolling Replace](#redis-cluster-rolling-replace) (zero downtime)
-   - **MongoDB/CouchDB:** Use [Stepdown Cascade](#mongodb-replica-set-stepdown) (10-second downtime)
+   - **MongoDB/CouchDB:** Use [Step-down Cascade](#mongodb-replica-set-step-down) (10-second downtime)
 
-3. **Execute with Safety Net** (15 to 30 minutes)
-   - Always test rollback procedures in advance
-   - Monitor application metrics during upgrade
-   - Keep the database team on standby
+3. **Execute with Safety Net** (15-minute to 30-minute window)
+   - Always test rollback procedures in advance.
+   - Monitor application metrics during upgrade.
+   - Keep the database team on standby.
 
 ---
 
@@ -71,16 +84,12 @@ Step 3:  [NEW-PRIMARY] [NEW-NODE] [REPLICA-2] ← Complete rotation
 ```bash
 # 1. Add new node to cluster
 kubectl scale statefulset postgres-cluster --replicas=4
-
 # 2. Wait for new replica to sync
 kubectl wait --for=condition=ready pod postgres-cluster-3 --timeout=300s
-
 # 3. Promote new primary and failover (30-second downtime window)
 kubectl exec postgres-cluster-3 -- pg_ctl promote -D /var/lib/postgresql/data
-
 # 4. Update service endpoint
 kubectl patch service postgres-primary --patch '{"spec":{"selector":{"app":"postgres-cluster","role":"primary","pod":"postgres-cluster-3"}}}'
-
 # 5. Remove old primary node
 kubectl delete pod postgres-cluster-0
 ```
@@ -95,21 +104,17 @@ kubectl delete pod postgres-cluster-0
 # pre-upgrade-validation.sh
 
 echo "=== PostgreSQL Cluster Health Check ==="
-
 # Check replication status
 kubectl exec postgres-primary-0 -- psql -c "SELECT * FROM pg_stat_replication;"
-
 # Verify sync replication (must show 'sync' state)
 SYNC_COUNT=$(kubectl exec postgres-primary-0 -- psql -t -c "SELECT count(*) FROM pg_stat_replication WHERE sync_state='sync';")
 if [ "$SYNC_COUNT" -lt 2 ]; then
     echo "ERROR: Need at least 2 synchronous replicas"
     exit 1
 fi
-
 # Confirm recent backup exists
 LAST_BACKUP=$(kubectl get job postgres-backup -o jsonpath='{.status.completionTime}')
 echo "Last backup: $LAST_BACKUP"
-
 # Test failover capability in staging first
 echo "✅ Prerequisites validated"
 ```
@@ -131,10 +136,8 @@ kubectl patch statefulset postgres-cluster --patch '{
     }
   }
 }'
-
 # Monitor new pod startup
 kubectl get pods -l app=postgres-cluster -w
-
 # Verify new replica joins cluster
 kubectl exec postgres-cluster-3 -- psql -c "SELECT * FROM pg_stat_replication;"
 ```
@@ -146,23 +149,18 @@ kubectl exec postgres-cluster-3 -- psql -c "SELECT * FROM pg_stat_replication;"
 # controlled-failover.sh
 
 echo "=== Starting Controlled Failover ==="
-
-# Ensure minimal replication lag (< 100ms)
+# Ensure minimal replication lag (< 0.1-second)
 LAG=$(kubectl exec postgres-primary-0 -- psql -t -c "SELECT EXTRACT(EPOCH FROM now() - pg_last_xact_replay_timestamp());")
 if (( $(echo "$LAG > 0.1" | bc -l) )); then
     echo "ERROR: Replication lag too high ($LAG seconds)"
     exit 1
 fi
-
 # Pause application writes (use connection pool drain)
 kubectl patch configmap pgbouncer-config --patch '{"data":{"pgbouncer.ini":"[databases]\napp_db = host=postgres-primary port=5432 dbname=appdb pool_mode=statement max_db_connections=0"}}'
-
 # Wait for active transactions to complete
 sleep 10
-
 # Promote new primary (this is the 30-second downtime window)
 kubectl exec postgres-cluster-3 -- pg_ctl promote -D /var/lib/postgresql/data
-
 # Update service selector to new primary
 kubectl patch service postgres-primary --patch '{
   "spec": {
@@ -171,10 +169,8 @@ kubectl patch service postgres-primary --patch '{
     }
   }
 }'
-
 # Resume application writes
 kubectl patch configmap pgbouncer-config --patch '{"data":{"pgbouncer.ini":"[databases]\napp_db = host=postgres-primary port=5432 dbname=appdb pool_mode=statement"}}'
-
 echo "✅ Failover completed"
 ```
 
@@ -183,13 +179,10 @@ echo "✅ Failover completed"
 ```bash
 # Remove old primary node
 kubectl delete pod postgres-cluster-0 --force
-
 # Scale back to 3 replicas
 kubectl patch statefulset postgres-cluster --patch '{"spec":{"replicas":3}}'
-
 # Validate cluster health
 kubectl exec postgres-cluster-3 -- psql -c "SELECT * FROM pg_stat_replication;"
-
 # Test application connectivity
 kubectl run test-db-connection --image=postgres:15 --rm -it -- psql -h postgres-primary -U app_user -d app_db -c "SELECT version();"
 ```
@@ -198,7 +191,7 @@ kubectl run test-db-connection --image=postgres:15 --rm -it -- psql -h postgres-
 
 ### 🔧 Advanced Configuration
 
-For mission-critical databases requiring <10 second downtime:
+For mission-critical databases requiring <10-second downtime:
 
 ```yaml
 # Use synchronous replication with multiple standbys
@@ -217,37 +210,49 @@ synchronous_commit = 'remote_apply'
 
 ### 🚨 Emergency Rollback
 
-```bash
-# If issues detected, immediate rollback
-kubectl patch service postgres-primary --patch '{
-  "spec": {
-    "selector": {
-      "statefulset.kubernetes.io/pod-name": "postgres-cluster-1"
-    }
-  }
-}'
-```
+**For immediate issues (< 2 minutes):**
 
-**Expected Outcome:** ~30 seconds downtime, zero data loss, upgraded node running latest Kubernetes
+1. **Redirect traffic to previous primary**
+   ```bash
+   kubectl patch service postgres-primary --patch '{
+     "spec": {
+       "selector": {
+         "statefulset.kubernetes.io/pod-name": "postgres-cluster-1"
+       }
+     }
+   }'
+   ```
 
-echo "=== Step 2: Failover Primary (Node1 → Node2) ==="
+**For comprehensive failover recovery (5-10 minutes):**
 
-# Stop writes to current primary
-kubectl exec postgres-primary-0 -- psql -c "SELECT pg_reload_conf();"
-kubectl patch service postgres-primary --patch '{"spec":{"selector":{"statefulset.kubernetes.io/pod-name":"postgres-replica-1-0"}}}'
+1. **Stop writes to current primary**
+   ```bash
+   kubectl exec postgres-primary-0 -- psql -c "SELECT pg_reload_conf();"
+   ```
 
-# Promote replica-1 to primary
-kubectl exec postgres-replica-1-0 -- pg_ctl promote -D /var/lib/postgresql/data
+2. **Redirect service to healthy replica**
+   ```bash
+   kubectl patch service postgres-primary --patch '{"spec":{"selector":{"statefulset.kubernetes.io/pod-name":"postgres-replica-1-0"}}}'
+   ```
 
-# Wait for promotion to complete
-kubectl wait --for=condition=ready pod postgres-replica-1-0 --timeout=60s
+3. **Promote replica to new primary**
+   ```bash
+   kubectl exec postgres-replica-1-0 -- pg_ctl promote -D /var/lib/postgresql/data
+   kubectl wait --for=condition=ready pod postgres-replica-1-0 --timeout=60s
+   ```
 
-# Update connection strings
-kubectl patch configmap postgres-config --patch '{"data":{"primary-host":"postgres-replica-1-0.postgres"}}'
+4. **Update connection strings**
+   ```bash
+   kubectl patch configmap postgres-config --patch '{"data":{"primary-host":"postgres-replica-1-0.postgres"}}'
+   ```
 
-# Verify new primary is accepting writes
-kubectl exec postgres-replica-1-0 -- psql -c "CREATE TABLE upgrade_test (id serial, timestamp timestamp default now());"
-kubectl exec postgres-replica-1-0 -- psql -c "INSERT INTO upgrade_test DEFAULT VALUES;"
+5. **Verify new primary accepts writes**
+   ```bash
+   kubectl exec postgres-replica-1-0 -- psql -c "CREATE TABLE upgrade_test (id serial, timestamp timestamp default now());"
+   kubectl exec postgres-replica-1-0 -- psql -c "INSERT INTO upgrade_test DEFAULT VALUES;"
+   ```
+
+**Expected Outcome:** ~30-second downtime, zero data loss, upgraded node running latest Kubernetes
 ```
 
 #### Step 3: Upgrade Node1 (Former Primary)
@@ -441,446 +446,18 @@ echo "Redis cluster upgrade completed"
 
 ---
 
-## MongoDB Replica Set Stepdown
+## MongoDB Replica Set Step-down
 
-**Scenario:** Three-member MongoDB replica set requiring coordinated primary stepdown.
+**Scenario:** Three-member MongoDB replica set requiring coordinated primary step-down.
 
 ### Implementation
 
 ```bash
 #!/bin/bash
-# mongodb-upgrade.sh
+# MongoDB upgrade script
 
-echo "=== MongoDB Replica Set Upgrade ==="
+Echo "=== MongoDB Replica Set Upgrade ==="
 
 # Check replica set status
-kubectl exec mongo-0 -- mongo --eval "rs.status()"
-
-# Upgrade secondary members first
-for secondary in mongo-1 mongo-2; do
-    echo "Upgrading secondary: $secondary"
-    
-    # Remove from replica set temporarily
-    kubectl exec mongo-0 -- mongo --eval "rs.remove('$secondary.mongo:27017')"
-    
-    # Upgrade pod
-    kubectl delete pod $secondary
-    kubectl wait --for=condition=ready pod $secondary --timeout=180s
-    
-    # Re-add to replica set
-    kubectl exec mongo-0 -- mongo --eval "rs.add('$secondary.mongo:27017')"
-    
-    # Wait for sync
-    while ! kubectl exec mongo-0 -- mongo --eval "rs.status().members.find(m => m.name.includes('$secondary')).state" | grep -q "2"; do
-        echo "Waiting for $secondary to sync..."
-        sleep 10
-    done
-    
-    echo "Secondary $secondary upgraded"
-done
-
-# Step down primary and upgrade
-echo "Stepping down primary: mongo-0"
-kubectl exec mongo-0 -- mongo --eval "rs.stepDown(60)"
-
-# Wait for new primary election
-sleep 20
-
-# Upgrade former primary
-kubectl delete pod mongo-0
-kubectl wait --for=condition=ready pod mongo-0 --timeout=180s
-
-echo "MongoDB replica set upgrade completed"
+kubectl exec mongo-0 --mongo --eval "rs.status()"
 ```
-
----
-
-## Advanced Patterns
-
-### Elasticsearch Shard Rebalancing
-
-```yaml
-# elasticsearch-upgrade-policy.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: es-upgrade-config
-data:
-  upgrade.sh: |
-    #!/bin/bash
-    # Disable shard allocation
-    curl -X PUT "localhost:9200/_cluster/settings" -H 'Content-Type: application/json' -d'
-    {
-      "persistent": {
-        "cluster.routing.allocation.enable": "primaries"
-      }
-    }'
-    
-    # Perform rolling upgrade
-    for node in es-master-0 es-master-1 es-master-2; do
-        kubectl delete pod $node
-        kubectl wait --for=condition=ready pod $node --timeout=300s
-        
-        # Wait for node to rejoin cluster
-        while ! curl -s "localhost:9200/_cat/nodes" | grep -q $(kubectl get pod $node -o jsonpath='{.status.podIP}'); do
-            sleep 10
-        done
-    done
-    
-    # Re-enable shard allocation
-    curl -X PUT "localhost:9200/_cluster/settings" -H 'Content-Type: application/json' -d'
-    {
-      "persistent": {
-        "cluster.routing.allocation.enable": null
-      }
-    }'
-```
-
-### Kafka Broker Rotation
-
-```bash
-#!/bin/bash
-# kafka-upgrade.sh
-
-echo "=== Kafka Cluster Upgrade ==="
-
-# Upgrade brokers one by one
-for broker in kafka-0 kafka-1 kafka-2; do
-    echo "Upgrading broker: $broker"
-    
-    # Gracefully shutdown broker
-    kubectl exec $broker -- kafka-server-stop.sh
-    
-    # Wait for partition reassignment
-    kubectl exec kafka-0 -- kafka-reassign-partitions.sh \
-        --bootstrap-server kafka-0:9092 \
-        --verify \
-        --reassignment-json-file /tmp/reassignment.json
-    
-    # Upgrade pod
-    kubectl delete pod $broker
-    kubectl wait --for=condition=ready pod $broker --timeout=180s
-    
-    echo "Broker $broker upgraded"
-done
-```
-
----
-
-## Monitoring and Alerting
-
-### Custom Metrics for Stateful Workloads
-
-```yaml
-# stateful-monitoring.yaml
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: postgres-monitoring
-spec:
-  selector:
-    matchLabels:
-      app: postgres
-  endpoints:
-  - port: metrics
-    interval: 30s
-    path: /metrics
----
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  name: stateful-upgrade-rules
-spec:
-  groups:
-  - name: postgres.rules
-    rules:
-    - alert: PostgreSQLReplicationLag
-      expr: pg_stat_replication_lag_seconds > 10
-      for: 2m
-      annotations:
-        summary: "PostgreSQL replication lag is high"
-    
-    - alert: PostgreSQLPrimaryDown
-      expr: up{job="postgres-primary"} == 0
-      for: 1m
-      annotations:
-        summary: "PostgreSQL primary is down"
-  
-  - name: redis.rules  
-    rules:
-    - alert: RedisClusterDown
-      expr: redis_cluster_state != 1
-      for: 1m
-      annotations:
-        summary: "Redis cluster is not healthy"
-```
-
----
-
-## Disaster Recovery Procedures
-
-### Emergency Rollback for PostgreSQL
-
-```bash
-#!/bin/bash
-# emergency-rollback.sh
-
-echo "=== EMERGENCY ROLLBACK INITIATED ==="
-
-# Restore from latest backup
-kubectl apply -f - <<EOF
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: postgres-emergency-restore
-spec:
-  template:
-    spec:
-      containers:
-      - name: restore
-        image: postgres:13
-        command:
-        - /bin/bash
-        - -c
-        - |
-          pg_restore -h postgres-primary -U postgres -d production /backups/latest.dump
-      restartPolicy: Never
-EOF
-
-# Monitor restore progress
-kubectl logs job/postgres-emergency-restore -f
-
-echo "Emergency rollback completed"
-```
-
----
-
-## Pod Disruption Budget Configurations for Stateful Workloads
-
-### PostgreSQL PDB
-
-```yaml
-# postgres-pdb.yaml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: postgres-pdb
-spec:
-  selector:
-    matchLabels:
-      app: postgres
-  minAvailable: 2  # Always keep primary + 1 replica
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: postgres-primary-pdb
-spec:
-  selector:
-    matchLabels:
-      app: postgres
-      role: primary
-  minAvailable: 1  # Never allow primary to be disrupted without coordination
-```
-
-### Redis Cluster PDB
-
-```yaml
-# redis-cluster-pdb.yaml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: redis-masters-pdb
-spec:
-  selector:
-    matchLabels:
-      app: redis
-      role: master
-  minAvailable: 2  # Always keep majority of masters
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: redis-replicas-pdb
-spec:
-  selector:
-    matchLabels:
-      app: redis
-      role: replica
-  maxUnavailable: 1  # Can afford to lose one replica at a time
-```
-
-### MongoDB PDB
-
-```yaml
-# mongodb-pdb.yaml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: mongodb-pdb
-spec:
-  selector:
-    matchLabels:
-      app: mongodb
-  minAvailable: 2  # Maintain majority for replica set elections
-```
-
----
-
-## AKS-Specific Configurations
-
-### Node Pool Configuration for Stateful Workloads
-
-```azurecli-interactive
-# Create dedicated node pool for stateful workloads
-az aks nodepool add \
-  --resource-group production-rg \
-  --cluster-name aks-prod \
-  --name stateful-pool \
-  --node-count 3 \
-  --node-vm-size Standard_D4s_v5 \
-  --zones 1 2 3 \
-  --max-surge 0 \
-  --max-unavailable 1 \
-  --node-taints workload=stateful:NoSchedule \
-  --labels workload=stateful
-
-# Configure undrainable node behavior for careful orchestration
-az aks nodepool update \
-  --resource-group production-rg \
-  --cluster-name aks-prod \
-  --name stateful-pool \
-  --undrainable-node-behavior Cordon \
-  --max-blocked-nodes 1 \
-  --drain-timeout 10
-```
-
-### Storage Configuration
-
-```yaml
-# persistent-storage.yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: fast-ssd-retain
-provisioner: disk.csi.azure.com
-parameters:
-  skuName: Premium_LRS
-  kind: Managed
-  cachingmode: ReadOnly
-reclaimPolicy: Retain  # Important: Don't delete data on cluster upgrades
-volumeBindingMode: WaitForFirstConsumer
-allowedTopologies:
-- matchLabelExpressions:
-  - key: topology.disk.csi.azure.com/zone
-    values:
-    - eastus-1
-    - eastus-2
-    - eastus-3
-```
-
----
-
-## Best Practices Summary
-
-1. **Always upgrade replicas before primaries**
-2. **Maintain at least one healthy replica during upgrades**
-3. **Use synchronous replication for zero data loss**
-4. **Test failover procedures in staging environments**
-5. **Monitor replication lag throughout the process**
-6. **Have rollback procedures ready and tested**
-7. **Use pod disruption budgets appropriate for your topology**
-8. **Coordinate upgrades during low-traffic periods**
-9. **Use dedicated node pools with appropriate taints/tolerations**
-10. **Configure proper storage classes with retain policies**
-
----
-
-## Automation Scripts
-
-### Automated PostgreSQL Ferris Wheel
-
-```yaml
-# postgres-upgrade-job.yaml
-apiVersion: batch/v1
-kind: Job
-metadata:
-  name: postgres-ferris-wheel-upgrade
-spec:
-  template:
-    spec:
-      serviceAccountName: postgres-upgrade-sa
-      containers:
-      - name: upgrade-orchestrator
-        image: postgres-upgrade-orchestrator:latest
-        env:
-        - name: CLUSTER_NAME
-          value: "aks-prod"
-        - name: RESOURCE_GROUP
-          value: "production-rg"
-        - name: TARGET_VERSION
-          value: "1.29.0"
-        command:
-        - /bin/bash
-        - -c
-        - |
-          # Execute all ferris wheel steps
-          /scripts/01-validate-cluster.sh
-          /scripts/02-failover-primary.sh
-          /scripts/03-upgrade-nodes.sh
-          /scripts/04-validate-completion.sh
-        volumeMounts:
-        - name: upgrade-scripts
-          mountPath: /scripts
-      volumes:
-      - name: upgrade-scripts
-        configMap:
-          name: postgres-upgrade-scripts
-          defaultMode: 0755
-      restartPolicy: Never
-  backoffLimit: 1
-```
-
----
-
-## Related Resources
-
-### 🎯 Upgrade Strategies
-- **[Production Upgrade Strategies →](aks-production-upgrade-strategies.md)** - Blue-green, canary, and emergency patterns
-- **[Upgrade Scenarios Hub →](upgrade-scenarios-hub.md)** - Choose your upgrade approach
-- **[Basic AKS Upgrades →](upgrade-aks-cluster.md)** - Standard cluster version upgrades
-
-### 💾 Stateful Workload Management
-- **[Persistent Volumes →](concepts-storage.md)** - Storage concepts and configuration
-- **[Azure Disk CSI →](azure-disk-csi.md)** - High-performance block storage
-- **[Azure Files CSI →](azure-files-csi.md)** - Shared file system storage
-- **[Backup and Recovery →](ha-dr-overview.md)** - Disaster recovery strategies
-
-### 🔧 Database-Specific Guides
-- **[PostgreSQL on AKS →](postgresql-ha-overview.md)** - High-availability PostgreSQL
-- **[MongoDB on AKS →](mongodb-overview.md)** - MongoDB cluster management
-- **[Redis/Valkey on AKS →](valkey-overview.md)** - In-memory data store patterns
-
-### 📊 Monitoring and Operations
-- **[Monitoring AKS →](monitor-aks.md)** - Comprehensive monitoring setup
-- **[Container Insights →](monitor-aks-reference.md)** - Application performance monitoring
-- **[Upgrade Notifications →](aks-communication-manager.md)** - Real-time upgrade alerts
-
-## Acronyms Used
-- **AKS:** Azure Kubernetes Service
-- **DB:** Database
-- **PDB:** Pod Disruption Budget
-
-## Summary
-
-This article provides clear, step-by-step patterns for upgrading stateful workloads on Azure Kubernetes Service (AKS) with minimal downtime and no data loss. Use the quick start, checklists, and validation steps to ensure a safe upgrade. Always test rollback procedures in advance and use a staging environment before production.
-
-## Next Steps
-
-1. **Assess your data:** Review all stateful workloads and confirm backup and recovery plans.
-2. **Test patterns:** Practice upgrade patterns in a staging environment with real data volumes.
-3. **Set up monitoring:** Enable database-specific monitoring before starting upgrades.
-4. **Automate safely:** Use automation with required validation steps.
-5. **Document procedures:** Write clear runbooks for your database configurations.
-
-> **Tip:** For critical databases, always test upgrade procedures with production-like data and network conditions. Consider [Azure Database services](/azure/postgresql/) for applications that require 99.99% uptime.

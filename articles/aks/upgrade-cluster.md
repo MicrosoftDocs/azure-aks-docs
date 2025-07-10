@@ -14,32 +14,33 @@ ms.custom: scenarios
 
 This article covers upgrade options for AKS clusters and provides scenario-based recommendations for common upgrade challenges.
 
-> **New to AKS upgrades?** Start with our [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) for guided, scenario-based assistance.
+## 📖 What This Article Covers
 
-## Quick upgrade guides
+This **technical reference** provides comprehensive AKS upgrade fundamentals:
+- **Manual vs. automated upgrade options** and when to use each
+- **Common upgrade scenarios** with specific recommendations
+- **Optimization techniques** for performance and minimal disruption
+- **Troubleshooting guidance** for capacity, drain failures, and timing issues
+- **Validation processes** and pre-upgrade checks
 
-* For a basic Kubernetes version upgrade, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md).
-* For clusters with multiple node pools or Windows Server nodes, see [Upgrade a node pool in AKS][nodepool-upgrade].
-* To upgrade a specific node pool without a full cluster upgrade, see [Upgrade a specific node pool][specific-nodepool].
-* **For production environments**, see [Production Upgrade Strategies](aks-production-upgrade-strategies.md).
-* **For stateful workloads**, see [Stateful Workload Upgrade Patterns](stateful-workload-upgrades.md). options and recommendations for Azure Kubernetes Service (AKS) clusters
-description: Learn about upgrade options for Azure Kubernetes Service (AKS) clusters, including scenario-based recommendations for common upgrade challenges.
-ms.topic: concept-article
-ms.service: azure-kubernetes-service
-ms.subservice: aks-upgrade
-ms.date: 07/01/2025
-author: kaarthis
-ms.author: kaarthis
-ms.custom: annual
+**Best for:** Understanding upgrade mechanics, troubleshooting issues, optimizing upgrade settings, technical implementation details.
+
+**Related guides:** [Production strategies](aks-production-upgrade-strategies.md) • [Stateful workloads](stateful-workload-upgrades.md) • [Scenario hub](upgrade-scenarios-hub.md)
+
 ---
 
-# Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
+> **New to AKS upgrades?** Start with our [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) for guided, scenario-based assistance.
 
-This article covers upgrade options for AKS clusters and provides scenario-based recommendations for common upgrade challenges.
+## 🎯 Quick Navigation
 
-* For a basic Kubernetes version upgrade, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md).
-* For clusters with multiple node pools or Windows Server nodes, see [Upgrade a node pool in AKS][nodepool-upgrade].
-* To upgrade a specific node pool without a full cluster upgrade, see [Upgrade a specific node pool][specific-nodepool].
+| Your Situation | Recommended Path |
+|----------------|------------------|
+| **Production cluster needing upgrade** | [Production Upgrade Strategies](aks-production-upgrade-strategies.md) |
+| **Database/stateful workloads** | [Stateful Workload Patterns](stateful-workload-upgrades.md) |
+| **First-time upgrade or basic cluster** | [Basic AKS cluster upgrade](./upgrade-aks-cluster.md) |
+| **Multiple environments or fleet** | [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) |
+| **Node pools or Windows nodes** | [Node pool upgrades][nodepool-upgrade] |
+| **Specific node pool only** | [Single node pool upgrade][specific-nodepool] |
 
 ## Upgrade options
 
@@ -260,6 +261,27 @@ Surge nodes require additional IPs. If the subnet is near capacity, node provisi
 * Reduce `maxPods` per node, clean up orphaned load balancer IPs, and plan subnet sizing for high-scale clusters.
 
 ---
+
+## Now Choose Your Upgrade Path
+
+This article provided the technical foundation - now select your scenario-based path:
+
+### 🚀 Ready to Execute?
+
+| If you have... | Then go to... |
+|----------------|---------------|
+| **Production environment** | [Production Upgrade Strategies](aks-production-upgrade-strategies.md) - Battle-tested patterns for zero-downtime upgrades |
+| **Databases or stateful apps** | [Stateful Workload Patterns](stateful-workload-upgrades.md) - Safe upgrade patterns for data persistence |
+| **Multiple environments** | [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) - Decision tree for complex setups |
+| **Basic cluster** | [Upgrade an AKS cluster](./upgrade-aks-cluster.md) - Step-by-step cluster upgrade |
+
+### 🔍 Still Deciding?
+
+Visit the [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) for a guided decision tree that considers your:
+- Downtime tolerance
+- Environment complexity  
+- Risk profile
+- Timeline constraints
 
 ## Next steps
 

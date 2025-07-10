@@ -14,6 +14,21 @@ ms.custom: scenarios, production-ready
 
 Upgrade your production AKS clusters safely using these proven patterns. Each strategy is optimized for specific business constraints and risk tolerance.
 
+## 📖 What This Article Covers
+
+This guide provides **battle-tested upgrade patterns** for production AKS clusters, focusing on:
+- **Blue-green deployments** for zero-downtime upgrades
+- **Staged fleet upgrades** across multiple environments  
+- **Safe Kubernetes version adoption** with validation gates
+- **Emergency security patching** for rapid CVE response
+- **Application resilience patterns** for seamless upgrades
+
+**Best for:** Production environments, SREs, platform teams requiring minimal downtime and maximum safety.
+
+**Related guides:** [Stateful workloads](stateful-workload-upgrades.md) • [Basic upgrades](upgrade-aks-cluster.md) • [Scenario hub](upgrade-scenarios-hub.md)
+
+---
+
 > **Quick start:** [Emergency upgrade needed? →](#scenario-4-fastest-security-patch-deployment) | [Have stateful workloads? →](stateful-workload-upgrades.md)
 
 ## 🎯 Choose Your Strategy

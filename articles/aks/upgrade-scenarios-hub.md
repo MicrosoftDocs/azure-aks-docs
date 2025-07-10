@@ -14,6 +14,21 @@ ms.custom: scenarios, decision-tree
 
 Upgrading Azure Kubernetes Service (AKS) clusters safely requires the right strategy for your specific situation. Use this hub to quickly identify your scenario and get targeted guidance.
 
+## 📖 What This Article Covers
+
+This **decision hub** helps you choose the right AKS upgrade approach based on:
+- **Quick scenario finder** with time constraints and priorities
+- **Emergency upgrade paths** for critical security responses
+- **Strategy matrix** comparing downtime tolerance and complexity
+- **Role-based guidance** for SREs, DBAs, developers, and security teams
+- **Decision trees** for complex multi-environment setups
+
+**Best for:** First-time upgraders, teams evaluating options, complex environments requiring tailored approaches.
+
+**Related guides:** [Production strategies](aks-production-upgrade-strategies.md) • [Stateful workloads](stateful-workload-upgrades.md) • [Basic upgrades](upgrade-aks-cluster.md)
+
+---
+
 ## 🎯 Quick Scenario Finder
 
 **What's your primary concern?** Click your answer:
