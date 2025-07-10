@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a cloud operations engineer, I want to define a customized rollout strategy for managing cluster resource placements in Fleet Manager, so that I can minimize service interruptions and optimize resource deployment across multiple clusters."
 ---
 
 # Defining a rollout strategy for Azure Kubernetes Fleet Manager cluster resource placement

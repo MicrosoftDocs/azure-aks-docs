@@ -4,9 +4,10 @@ titleSuffix: Azure Kubernetes Service
 description: Recommendations and best practices for optimizing costs in Azure Kubernetes Service (AKS).
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
-ms.date: 02/21/2024
+ms.date: 06/10/2025
 author: schaffererin
 ms.author: schaffererin
+ms.custom: biannual
 ---
 
 # Best practices for cost optimization in Azure Kubernetes Service (AKS)
@@ -95,6 +96,8 @@ For more information, see [Azure Monitor best practices](/azure/azure-monitor/be
 ### Log Analytics
 
 For control plane logs, consider disabling the categories you don't need and/or using the Basic Logs API when applicable to reduce Log Analytics costs. For more information, see [Azure Kubernetes Service (AKS) control plane/resource logs](./monitor-aks.md#aks-control-planeresource-logs). For data plane logs, or *application logs*, consider adjusting the [cost optimization settings](./monitor-aks.md#aks-data-planecontainer-insights-logs).
+
+You can also use [Transformations in Azure Monitor](/azure/azure-monitor/data-collection/data-collection-transformations) to filter or modify control plane and data plane logs before they are sent to a Log Analytics workspace. For more information on how to create a transformation see [Create a transformation in Azure Monitor](/azure/azure-monitor/data-collection/data-collection-transformations-create?tabs=portal). 
 
 ### Azure Advisor cost recommendations
 

@@ -11,7 +11,7 @@ ms.date:  05/16/2025
 
 # Overview of Container Network Logs (Preview)
 
-Container Network Logs for Azure Kubernetes Service (AKS) in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) provide deep visibility into network traffic within the cluster. These logs capture essential metadata including source and destination IP addresses, pod/service names, ports, protocols, and traffic direction, offering detailed insights into network behavior. Container Network Logs captures Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic. This enables effective monitoring of connectivity, troubleshooting, network topology visualization, and security policy enforcement. There can be two modes of using this capability - stored logs and on-demand logs . 
+Container Network Logs for Azure Kubernetes Service (AKS) in [Advanced Container Networking Services](advanced-container-networking-services-overview.md) provide deep visibility into network traffic within the cluster. These logs capture essential metadata including source and destination IP addresses, pod/service names, ports, protocols, and traffic direction, offering detailed insights into network behavior. Container Network Logs captures Layer 3 (IP), Layer 4 (TCP/UDP), and Layer 7 (HTTP/gRPC/Kafka) traffic. This enables effective monitoring of connectivity, troubleshooting, network topology visualization, and security policy enforcement. There can be two modes of using this capability - stored logs and on-demand logs. 
 
 ## Stored logs
 
@@ -75,7 +75,7 @@ The users are able to see following major components in these dashboards:
 
 ## On-demand
 
-Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without requiring prior configuration or persistent storage using Hubble CLI and Hubble UI. This mode for getting on-demand logs is in general availibility(GA).
+Advanced Container Networking Services enables the on-demand capture of network flow logs, providing real-time visibility without requiring prior configuration or persistent storage using Hubble CLI and Hubble UI. This mode for getting on-demand logs is in general availibility(GA). To Configure On-demand log storage, refer [Configure Hubble CLI and UI](./how-to-configure-container-network-logs.md#configuring-on-demand-mode)
 
 ### Hubble CLI
 
@@ -100,7 +100,16 @@ Together, these tools provide real-time visibility and actionable insights, enab
 - **Cost savings**: Efficient log aggregation and customizable logging scopes reduce storage and data ingestion costs, providing a cost-effective solution for long-term network monitoring.
 - **Streamlined compliance and security**: Persistent and comprehensive logs support audit trails, regulatory compliance, and quick identification of suspicious traffic, helping customers maintain a secure and compliant environment.
 
+## Limitations
 
+* Container Network Logs with Stored log mode only works with Cilium dataplane currently. 
+* L7 Flow would be captured only when L7 policy support is enabled. To enable L7 policy support, refer [Configure L7 policy](./how-to-apply-l7-policies.md).
+* DNS flows and metrics would be captured only when Cilium FQDN network policy is applied. To configure FQDN policy, refer [Configure FQDN policy](./how-to-apply-fqdn-filtering-policies.md).
+* Onboarding using Terraform is currently not supported.
+* Container Network Logs without Azure Log analytics would provide maximum 50 MB log storage. Beyond that old logs would roll over with new logs.  
+* If the table plan is set to Basic Logs, the pre-built Grafana dashboards do not work.
+* The Auxiliary logs table plan is not supported.
+ 
 ## Pricing
 
 > [!IMPORTANT]

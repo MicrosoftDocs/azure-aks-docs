@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a cloud architect, I want to choose the appropriate Azure Kubernetes Fleet Manager option, so that I can optimize resource management and orchestration capabilities based on my organization's specific needs and security requirements."
 ---
 
 # Choosing an Azure Kubernetes Fleet Manager option
