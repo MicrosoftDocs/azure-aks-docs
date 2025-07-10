@@ -118,7 +118,7 @@ To create a Fleet Manager resource without a hub cluster, implement the followin
 
 ### [Fleet Manager resource with hub cluster](#tab/with-hub-cluster)
 
-Public and Private hub cluster Fleet Manager resource can not be created using Terraform yet.
+Public and Private hub cluster Fleet Manager resource cannot be created using Terraform yet.
 
 ---
 
