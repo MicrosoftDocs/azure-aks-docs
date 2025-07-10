@@ -14,7 +14,7 @@ ms.custom: template-how-to-pattern, devx-track-azurecli
 
 In this article, you complete the steps to configure and use the container network logs feature in Advanced Container Networking Services for Azure Kubernetes Service (AKS). These logs offer persistent network flow monitoring tailored to enhance visibility in containerized environments.
 
-By capturing container network logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate container network logs for your system. For more information about container network logs Feature, see [Overview of container network logs](container-network-observability-logs.md)
+By capturing container network logs, you can effectively track network traffic, detect anomalies, optimize performance, and ensure compliance with established policies. Follow the detailed instructions provided to set up and integrate container network logs for your system. For more information about the container network logs feature, see [Overview of container network logs](container-network-observability-logs.md).
 
 ## Prerequisites
 
@@ -287,7 +287,7 @@ Validate that the `RetinaNetworkFlowLog` custom resource is applied:
    kubectl describe retinanetworkflowlogs <cr-name>
 ```
 
-Expect to see a `Spec` node that contains `Include filters` and a `Status` node. The value for `Status` > `State` should be **CONFIGURED** (not **FAILED**).
+Expect to see a `Spec` node that contains `Include filters` and a `Status` node. The value for `Status` > `State` should be `CONFIGURED` (not `FAILED`).
 
 ```shell
 Spec:
