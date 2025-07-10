@@ -108,7 +108,7 @@ The Azure portal dashboards have the following major components:
 
 ## On-demand logs
 
-Advanced Container Networking Services offers on-demand capture of network flow logs. Get real-time visibility without prior configuration or persistent storage by using the Hubble CLI and the Hubble UI. This mode for getting on-demand logs is availible. To learn how to set up on-demand logs storage, see [Configure the Hubble CLI and Hubble UI](./how-to-configure-container-network-logs.md#configure-on-demand-logs-mode).
+Advanced Container Networking Services offers on-demand capture of network flow logs. Get real-time visibility without prior configuration or persistent storage by using the Hubble CLI and the Hubble UI. This mode for getting on-demand logs is available. To learn how to set up on-demand logs storage, see [Configure the Hubble CLI and Hubble UI](./how-to-configure-container-network-logs.md#configure-on-demand-logs-mode).
 
 ### Hubble CLI
 
