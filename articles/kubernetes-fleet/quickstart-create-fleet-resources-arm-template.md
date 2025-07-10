@@ -85,7 +85,7 @@ To create a public Fleet Manager resource with a hub cluster, use the following 
 
 #### Private hub cluster
 
-[!INCLUDE [private-fleet-prereqs.md](./includes/private-fleet/private-fleet-prereqs.md)]
+[!INCLUDE [private-fleet-prerequisites.md](./includes/private-fleet/private-fleet-prerequisites.md)]
 
 
 1. Fetch Fleet Manager's service principal object ID:
