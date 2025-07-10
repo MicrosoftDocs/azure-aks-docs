@@ -12,6 +12,12 @@
       href: quickstart-create-fleet-and-members-portal.md
     - name: Use the Azure CLI
       href: quickstart-create-fleet-and-members.md
+    - name: Use an ARM template
+      href: quickstart-create-fleet-resources-arm-template.md
+    - name: Use Bicep
+      href: quickstart-create-fleet-resources-bicep.md
+    - name: Use Terraform
+      href: quickstart-create-fleet-resources-terraform.md
 - name: Concepts
   items:
     - name: Kubernetes Fleet Manager fundamentals
