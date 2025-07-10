@@ -6,8 +6,8 @@ ms.topic: concept-article
 ms.author: schaffererin
 author: schaffererin
 ms.subservice: aks-integration
-ms.custom: devx-track-azurecli
-ms.date: 02/13/2023
+ms.custom: devx-track-azurecli, annual
+ms.date: 06/10/2025
 ---
 
 # Use Kubernetes role-based access control with Microsoft Entra ID in Azure Kubernetes Service

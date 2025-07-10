@@ -5,8 +5,7 @@ ms.topic: concept-article
 ms.date: 05/21/2024
 author: schaffererin
 ms.author: schaffererin
-
-ms.custom: references_regions
+ms.custom: references_regions, innovation-engine
 # Customer intent: "As a Kubernetes administrator, I want to understand Azure CNI Pod Subnet networking options, so that I can effectively manage IP address allocation and optimize network performance in my AKS clusters."
 ---
 
@@ -24,11 +23,42 @@ Azure CNI Pod Subnet assigns IP addresses to pods from a separate subnet from yo
 - AKS Engine and DIY clusters aren't supported.
 - Azure CLI version `2.37.0` or later and the `aks-preview` extension version `2.0.0b2` or later.
 - Register the subscription-level feature flag for your subscription: 'Microsoft.ContainerService/AzureVnetScalePreview'.
-- If you have an existing cluster, you need to enable the Container Insights for monitoring IP subnet usage add-on. You can enable Container Insights using the [`az aks enable-addons`][az-aks-enable-addons] command, as shown in the following example:
 
-    ```azurecli-interactive
-    az aks enable-addons --addons monitoring --name <cluster-name> --resource-group <resource-group-name>
-    ```
+## Enable Container Insights (AKS monitoring)
+
+If you have an existing cluster, you can enable Container Insights (AKS monitoring) using the following command **only if your cluster was created with monitoring enabled or is associated with a valid Log Analytics Workspace in the same region**. Otherwise, refer to Microsoft Docs for additional workspace setup requirements.
+
+```azurecli-interactive
+az aks enable-addons --addons monitoring --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME
+```
+
+Results: 
+
+<!-- expected_similarity=0.3 --> 
+
+```output
+{
+  "addons": [
+    {
+      "addonType": "Monitoring",
+      "enabled": true,
+      "identity": {
+        "clientId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "objectId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "resourceId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.ManagedIdentity/userAssignedIdentities/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      },
+      "name": "omsagent",
+      "config": {
+        ...
+      }
+    },
+    ...
+  ],
+  "name": "my-aks-cluster",
+  "resourceGroup": "my-aks-rg",
+  ...
+}
+```
 
 ## Dynamic IP allocation mode
 
@@ -82,7 +112,6 @@ CIDR blocks of /28 (16 IPs) are allocated to nodes based on your `--max-pods` co
 While planning your IPs, it's important to define your `--max-pods` configuration using the following calculation: `max_pods_per_node = (16 * N) - 1`, where `N` is any positive integer greater than `0`.
 
 Ideal values with no IP wastage would require the max pods value to conform to the above expression.
-
 
 See the following example cases: 
 

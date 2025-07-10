@@ -14,6 +14,7 @@ ms.custom:
   - build-2024
   - build-2025
 ms.devlang: azurecli
+# Customer intent: "As a cloud architect, I want to create an Azure Kubernetes Fleet Manager and join member clusters using the Azure CLI, so that I can manage and orchestrate multiple Kubernetes clusters from a centralized resource."
 ---
 
 # Quickstart: Create an Azure Kubernetes Fleet Manager and join member clusters using Azure CLI
@@ -40,7 +41,7 @@ Get started with Azure Kubernetes Fleet Manager by using the Azure CLI to create
 
 * Have the Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.5.2 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet

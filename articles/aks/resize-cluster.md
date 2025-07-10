@@ -2,11 +2,12 @@
 title: Resize Azure Kubernetes Service (AKS) clusters
 description: In this article, you learn about the importance of right-sizing your AKS clusters and how you can right-size them to optimize costs and performance.
 ms.topic: how-to
-ms.date: 12/18/2024
+ms.date: 06/13/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
 # Customer intent: As a cluster operator, I want to resize my cluster so I can scale my workloads based on demand.
+ms.custom: innovation-engine, devx-track-azurecli, aks, scaling, cluster-management
 ---
 
 # Resize Azure Kubernetes Service (AKS) clusters
@@ -71,11 +72,34 @@ When you decrease the size of a cluster, the following changes occur:
 
 * Resize an AKS cluster using the [`az aks scale`][az-aks-scale] command with the `--node-count` and `--nodepool-name` parameters.
 
-    ```azurecli-interactive
-    az aks scale --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --node-count $NUM_NODES --nodepool-name $NODE_POOL_NAME
-    ```
+Before running the resize command, set the required environment variables with your own values. The example values should be substituted with your actual resource group, cluster, desired node count, and node pool name.
 
-    Repeat this command for each node pool in the cluster that you want to resize. If your cluster has only one node pool, you can omit the `--nodepool-name` parameter.
+```azurecli-interactive
+az aks scale --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --node-count $NUM_NODES --nodepool-name $NODE_POOL_NAME
+```
+
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```output
+{
+  "agentPoolProfiles": [
+    {
+      "count": 4,
+      "maxCount": null,
+      "minCount": null,
+      "name": "nodepool1",
+      ...
+    }
+  ],
+  "dnsPrefix": "xxxxx",
+  "fqdn": "xxxxx.xxxxx.xxxxxx.cloudapp.azure.com",
+  ...
+}
+```
+
+Repeat this command for each node pool in the cluster that you want to resize. If your cluster has only one node pool, you can omit the `--nodepool-name` parameter.
 
 ### [Azure portal](#tab/azure-portal)
 

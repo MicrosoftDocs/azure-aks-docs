@@ -2,7 +2,7 @@
 title: Deploy Istio-based service mesh add-on for Azure Kubernetes Service
 description: Deploy Istio-based service mesh add-on for Azure Kubernetes Service
 ms.topic: how-to
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, copilot-scenario-highlight
 ms.service: azure-kubernetes-service
 ms.date: 03/28/2024
 ms.author: shasb
@@ -14,6 +14,9 @@ author: shashankbarsin
 This article shows you how to install the Istio-based service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
 For more information on Istio and the service mesh add-on, see [Istio-based service mesh add-on for Azure Kubernetes Service][istio-about].
+
+> [!TIP]
+> You can use Microsoft Copilot in Azure to help deploy Istio to your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#install-and-work-with-istio).
 
 ## Before you begin
 

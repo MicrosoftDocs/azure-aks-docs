@@ -6,6 +6,7 @@ ms.date: 04/28/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a cloud architect, I want to configure multi-cluster DNS load balancing for applications in Azure Kubernetes Fleet Manager, so that I can achieve high availability and optimal resource utilization across multiple member clusters."
 ---
 
 # Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters (preview)

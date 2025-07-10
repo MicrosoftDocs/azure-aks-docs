@@ -4,7 +4,8 @@ description: Learn about the features of Azure Kubernetes Service (AKS) and how 
 ms.topic: overview
 ms.author: schaffererin
 author: schaffererin
-ms.date: 04/17/2024
+ms.date: 06/09/2025
+ms.custom: annual
 ---
 
 # What is Azure Kubernetes Service (AKS)?
