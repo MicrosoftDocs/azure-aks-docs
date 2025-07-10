@@ -58,6 +58,14 @@ When LocalDNS is enabled, AKS deploys a local DNS cache as a `systemd` service o
 - **Protocol control:**
   You can set the DNS query protocol (such as PreferUDP or ForceTCP) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
 
+### Other Benefits and Considerations
+
+| Benefits | Considerations |
+|----------|----------------|
+| **Better scalability**: Reduces load on centralized CoreDNS pods | **Minimal resource overhead**: Uses a small amount of CPU and memory on each node |
+| **Seamless integration**: Does not require changes to existing application connections |  **Configuration changes**: Updates require node image upgrades, which can cause temporary disruptions |
+| **Block invalid search domains**: Prevents invalid DNS queries at the node level |
+
 By using LocalDNS, you get faster and more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain more control over DNS traffic in your AKS environment.
 
 ## Next steps
