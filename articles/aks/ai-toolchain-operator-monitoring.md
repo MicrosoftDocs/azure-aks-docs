@@ -140,7 +140,7 @@ The vLLM project provides a Grafana dashboard configuration named [grafana.json]
 
 * [Monitor and visualize](./monitor-aks.md) your AKS deployments at scale.
 * [Fine-tune an AI model](./ai-toolchain-operator-fine-tune.md) by using the AI toolchain operator add-on in AKS.
-* Learn about AKS GPU workload deployment options on [Linux](./gpu-cluster.md) and [Windows](./use-windows-gpu.md)
+* Learn about AKS GPU workload deployment options on [Linux](./gpu-cluster.md) and [Windows](./use-windows-gpu.md).
 
 <!-- Links -->
 
