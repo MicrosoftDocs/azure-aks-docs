@@ -1,6 +1,6 @@
 ---
 title: Set Up Container Network Logs
-description: Learn how to set up container network flow logs with storage in Advanced Container Networking Services (preview) in Azure Kubernetes Service (AKS)."
+description: Learn how to set up container network flow logs with storage with Advanced Container Networking Services (preview) in Azure Kubernetes Service (AKS)."
 author: shaifaligargmsft
 ms.author: shaifaligarg
 ms.service: azure-kubernetes-service
@@ -10,7 +10,7 @@ ms.date: 05/09/2025
 ms.custom: template-how-to-pattern, devx-track-azurecli
 ---
 
-# Set up container network logs in Advanced Container Networking Services (preview)
+# Set up container network logs with Advanced Container Networking Services (preview)
 
 In this article, you complete the steps to configure and use the container network logs feature in Advanced Container Networking Services for Azure Kubernetes Service (AKS). These logs offer persistent network flow monitoring tailored to enhance visibility in containerized environments.
 
