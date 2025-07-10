@@ -1,13 +1,13 @@
 ---
 title: DNS in Azure Kubernetes Service (AKS)
-description: Learn how DNS operates in AKS and how to boost performance and reliability with localDNS caching.
+description: Learn how DNS operates in AKS and how to boost performance and reliability with LocalDNS caching.
 ms.subservice: aks-networking
 author: vaibhavarora
 ms.topic: concept-article
 ms.date: 07/01/2025
 ms.author: vaibhavarora
 
-# Customer intent: As a cluster operator or developer, I want to understand the defaults for DNS resolution in AKS and how I can use localDNS to improve my DNS resolution performance.
+# Customer intent: As a cluster operator or developer, I want to understand the defaults for DNS resolution in AKS and how I can use LocalDNS to improve my DNS resolution performance.
 ---
 # DNS Resolution in Azure Kubernetes Service (AKS)
 
@@ -40,23 +40,23 @@ When LocalDNS is enabled, AKS deploys a local DNS cache as a `systemd` service o
 
 ### Key Capabilities
 
-- **Reduced DNS resolution Latency:**
-    Each AKS node runs a `localdns` `systemd` service. Workloads running on the node send DNS queries to this service, which resolves them locally, reducing network hops and speeding up DNS lookups.
+- **Reduced DNS resolution latency:**
+  Each AKS node runs a `localdns` `systemd` service. Workloads running on the node send DNS queries to this service, which resolves them locally, reducing network hops and speeding up DNS lookups.
 
 - **Customizable DNS behavior:**
-    You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
+  You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
 
 - **Avoid conntrack races & conntrack table exhaustion:**
-    Pods send DNS queries to the `localdns` service on the same node without creating new `conntrack` table entries. Skipping the connection tracking helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and avoids User Datagram Protocol (UDP) DNS entries from filling up `conntrack` tables. This optimization prevents dropped and rejected connections caused by `conntrack` table exhaustion and race conditions.
+  Pods send DNS queries to the `localdns` service on the same node without creating new `conntrack` table entries. Skipping the connection tracking helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and avoids User Datagram Protocol (UDP) DNS entries from filling up `conntrack` tables. This optimization prevents dropped and rejected connections caused by `conntrack` table exhaustion and race conditions.
 
 - **Connection upgraded to TCP:**
     The connection from the `localdns` cache to the cluster’s CoreDNS service uses Transmission Control Protocol (TCP). TCP allows for connection rebalancing and removes `conntrack` table entries when the server closes the connection (in contrast to UDP connections, which have a default 30-second timeout). Applications don't need changes, because the `localdns` service still listens for UDP traffic.
 
 - **Caching:**
-    The localDNS cache plugin can be configured with serveStale and Time to Live (TTL) settings. `serveStale`,`serveStaleDurationInSeconds` , and `cacheDurationInSeconds` parameters can be configured to achieve DNS resiliency, even during an upstream DNS outage.
+  The LocalDNS cache plugin can be configured with serveStale and Time to Live (TTL) settings. `serveStale`, `serveStaleDurationInSeconds`, and `cacheDurationInSeconds` parameters can be configured to achieve DNS resiliency, even during an upstream DNS outage.
 
 - **Protocol control:**
-    You can set the DNS query protocol (such as PreferUDP or ForceTCP) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
+  You can set the DNS query protocol (such as PreferUDP or ForceTCP) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
 
 By using LocalDNS, you get faster and more reliable DNS resolution for your workloads, reduce the risk of DNS-related outages, and gain more control over DNS traffic in your AKS environment.
 
