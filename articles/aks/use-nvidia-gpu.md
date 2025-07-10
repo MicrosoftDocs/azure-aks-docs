@@ -8,12 +8,12 @@ ms.date: 04/10/2023
 author: schaffererin
 ms.author: schaffererin
 
-#Customer intent: As a cluster administrator or developer, I want to create an AKS cluster that can use high-performance GPU-based VMs for compute-intensive workloads.
+# Customer intent: As a cluster administrator or developer, I want to provision an Azure Kubernetes Service (AKS) cluster with GPU-enabled node pools, so that I can run high-performance, compute-intensive workloads effectively.
 ---
 
 # Use GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS)
 
-Graphical processing units (GPUs) are often used for compute-intensive workloads, such as graphics and visualization workloads. AKS supports GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads. 
+Graphical processing units (GPUs) are often used for compute-intensive workloads, such as graphics and visualization workloads. AKS supports GPU-enabled Linux node pools to run compute-intensive Kubernetes workloads.
 
 This article helps you provision nodes with schedulable GPUs on new and existing AKS clusters.
 
@@ -40,6 +40,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * You need the Azure CLI version 2.72.2 or later installed to set the `--gpu-driver` field. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* If you have the `aks-preview` Azure CLI extension installed, please update the version to 18.0.0b2 or later.
 
 ## Get the credentials for your cluster
 
@@ -92,7 +93,7 @@ To use the default OS SKU, you create the node pool without specifying an OS SKU
     * `--max-count`: Configures the cluster autoscaler to maintain a maximum of three nodes in the node pool.
 
     > [!NOTE]
-    > Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time. 
+    > Taints and VM sizes can only be set for node pools during node pool creation, but you can update autoscaler settings at any time.
 
 ##### [Azure Linux node pool](#tab/add-azure-linux-gpu-node-pool)
 
@@ -127,13 +128,13 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
 
 ---
 
-2. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
+1. Create a namespace using the [`kubectl create namespace`][kubectl-create] command.
 
     ```bash
     kubectl create namespace gpu-resources
     ```
 
-3. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
+1. Create a file named *nvidia-device-plugin-ds.yaml* and paste the following YAML manifest provided as part of the [NVIDIA device plugin for Kubernetes project][nvidia-github]:
 
     ```yaml
     apiVersion: apps/v1
@@ -163,7 +164,7 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
           # See https://kubernetes.io/docs/tasks/administer-cluster/guaranteed-scheduling-critical-addon-pods/
           priorityClassName: "system-node-critical"
           containers:
-          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.0
+          - image: nvcr.io/nvidia/k8s-device-plugin:v0.17.2
             name: nvidia-device-plugin-ctr
             env:
               - name: FAIL_ON_INIT_ERROR
@@ -181,18 +182,22 @@ To use Azure Linux, you specify the OS SKU by setting `os-sku` to `AzureLinux` d
               path: /var/lib/kubelet/device-plugins
     ```
 
-4. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
+1. Create the DaemonSet and confirm the NVIDIA device plugin is created successfully using the [`kubectl apply`][kubectl-apply] command.
 
     ```bash
     kubectl apply -f nvidia-device-plugin-ds.yaml
     ```
 
-5. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
+1. Now that you successfully installed the NVIDIA device plugin, you can check that your [GPUs are schedulable](#confirm-that-gpus-are-schedulable) and [run a GPU workload](#run-a-gpu-enabled-workload).
 
 
 ### Skip GPU driver installation
 
 If you want to control the installation of the NVIDIA drivers or use the [NVIDIA GPU Operator](https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/getting-started.html), you can skip the default GPU driver installation. Microsoft **doesn't support or manage** the maintenance and compatibility of the NVIDIA drivers as part of the node image deployment.
+
+> [!NOTE]
+> The `gpu-driver` API field is a suggested alternative for customers previously using the `--skip-gpu-driver-install` node pool tag. 
+>- The `--skip-gpu-driver-install` node pool tag on AKS will be retired on 14 August 2025. To retain the existing behavior of skipping automatic GPU driver installation, upgrade your node pools to the latest node image version and set the `--gpu-driver` field to `none`. After 14 August 2025, you will not be able to provision AKS GPU-enabled node pools with the `--skip-gpu-driver-install` node pool tag to bypass this default behavior. For more information, see [`skip-gpu-driver` tag retirement](https://aka.ms/aks/skip-gpu-driver-tag-retirement).
 
 1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and set `--gpu-driver` field to `none` to skip default GPU driver installation.
 
@@ -211,7 +216,9 @@ If you want to control the installation of the NVIDIA drivers or use the [NVIDIA
 
     Setting the `--gpu-driver` API field to `none` during node pool creation skips the automatic GPU driver installation. Any existing nodes aren't changed. You can scale the node pool to zero and then back up to make the change take effect.
 
-3. You can optionally install the NVIDIA GPU Operator following [these steps][nvidia-gpu-operator].
+    If you get the error `unrecognized arguments: --gpu-driver none` then [update the Azure CLI version](/cli/azure/update-azure-cli). For more information, see [Before you begin](#before-you-begin).
+
+1. You can optionally install the NVIDIA GPU Operator following [these steps][nvidia-gpu-operator].
 
 ## Confirm that GPUs are schedulable
 
@@ -230,7 +237,7 @@ After creating your cluster, confirm that GPUs are schedulable in Kubernetes.
     aks-gpunp-28993262-0   Ready    agent   13m   v1.20.7
     ```
 
-2. Confirm the GPUs are schedulable using the [`kubectl describe node`][kubectl-describe] command.
+1. Confirm the GPUs are schedulable using the [`kubectl describe node`][kubectl-describe] command.
 
     ```console
     kubectl describe node aks-gpunp-28993262-0
@@ -289,7 +296,7 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
             effect: "NoSchedule"
     ```
 
-2. Run the job using the [`kubectl apply`][kubectl-apply] command, which parses the manifest file and creates the defined Kubernetes objects.
+1. Run the job using the [`kubectl apply`][kubectl-apply] command, which parses the manifest file and creates the defined Kubernetes objects.
 
     ```console
     kubectl apply -f samples-tf-mnist-demo.yaml
@@ -312,15 +319,15 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
     samples-tf-mnist-demo   1/1   3m10s   3m36s
     ```
 
-2. Exit the `kubectl --watch` process with *Ctrl-C*.
+1. Exit the `kubectl --watch` process with *Ctrl-C*.
 
-3. Get the name of the pod using the [`kubectl get pods`][kubectl-get] command.
+1. Get the name of the pod using the [`kubectl get pods`][kubectl-get] command.
 
     ```console
     kubectl get pods --selector app=samples-tf-mnist-demo
     ```
 
-4. View the output of the GPU-enabled workload using the [`kubectl logs`][kubectl-logs] command.
+1. View the output of the GPU-enabled workload using the [`kubectl logs`][kubectl-logs] command.
 
     ```console
     kubectl logs samples-tf-mnist-demo-smnr6
@@ -330,7 +337,7 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 
     ```console
     2019-05-16 16:08:31.258328: I tensorflow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 FMA
-    2019-05-16 16:08:31.396846: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1030] Found device 0 with properties: 
+    2019-05-16 16:08:31.396846: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1030] Found device 0 with properties:
     name: Tesla K80 major: 3 minor: 7 memoryClockRate(GHz): 0.8235
     pciBusID: 2fd7:00:00.0
     totalMemory: 11.17GiB freeMemory: 11.10GiB
@@ -372,11 +379,11 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 
 ## Clean up resources
 
-* Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`][kubectl delete] command.
+Remove the associated Kubernetes objects you created in this article using the [`kubectl delete job`][kubectl delete] command.
 
-    ```console
-    kubectl delete jobs samples-tf-mnist-demo
-    ```
+```console
+kubectl delete jobs samples-tf-mnist-demo
+```
 
 ## Next steps
 
@@ -423,4 +430,3 @@ To see the GPU in action, you can schedule a GPU-enabled workload with the appro
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [NVadsA10]: /azure/virtual-machines/nva10v5-series
-

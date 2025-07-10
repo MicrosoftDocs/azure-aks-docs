@@ -8,6 +8,7 @@ author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
 ms.custom: 'stateful-workloads'
+# Customer intent: As a database administrator, I want to monitor the performance and health of my MongoDB cluster on Azure Kubernetes Service, so that I can quickly identify and resolve issues to ensure optimal operation and prevent downtime.
 ---
 
 # Monitoring for MongoDB cluster on Azure Kubernetes Service (AKS)

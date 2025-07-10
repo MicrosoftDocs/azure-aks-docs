@@ -2,10 +2,11 @@
 title: "Define reuseable update strategies for multi-clusters updates using Azure Kubernetes Fleet Manager"
 description: See how you can define staged update strategies that can be reused across multiple update runs and auto-upgrade profiles in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 04/28/2025
+ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a Kubernetes administrator, I want to define reusable update strategies for multiple clusters, so that I can streamline and manage update processes across my fleet.
 ---
 
 # Define reusable update strategies using Azure Kubernetes Fleet Manager
@@ -191,6 +192,7 @@ You can use an update strategy as part of a manual update run or an auto-upgrade
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- LINKS -->
 [fleet-quickstart]: quickstart-create-fleet-and-members.md

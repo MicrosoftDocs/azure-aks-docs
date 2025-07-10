@@ -1,16 +1,19 @@
 ---
-title: autoupgrade Node OS Images 
+title: Autoupgrade Node OS Images 
 description: Learn how to choose an upgrade channel that best supports your needs for cluster's node OS security and maintenance. 
 ms.topic: how-to
 ms.custom: build-2023, devx-track-azurecli, innovation-engine
 ms.author: kaarthis
 author: kaarthis
 ms.subservice: aks-upgrade
-ms.date: 04/06/2025
+ms.date: 06/27/2025
 # Customer intent: As a cloud administrator, I want to select the appropriate node OS auto-upgrade channel for my Kubernetes cluster, so that I can ensure timely security updates and manage maintenance effectively while minimizing disruptions.
 ---
 
-# autoupgrade node OS images
+# Autoupgrade node OS images
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321852)
 
 AKS provides multiple autoupgrade channels dedicated to timely node-level OS security updates. This channel is different from cluster-level Kubernetes version upgrades and supersedes it.
 
@@ -24,8 +27,22 @@ It's best to use both cluster-level [autoupgrades][Autoupgrade] and the node OS 
 The selected channel determines the timing of upgrades. When making changes to node OS auto-upgrade channels, allow up to 24 hours for the changes to take effect.
 
 > [!NOTE]
-> - Once you change from one channel to another channel, **a reimage is triggered leading to rolling nodes**.
-> - Node OS image auto-upgrade won't affect the cluster's Kubernetes version. Starting with API version 2023-06-01, the default for any new cluster created is `NodeImage`. 
+> - Node OS image auto-upgrade don't affect the cluster's Kubernetes version. 
+> - Starting with API version 2023-06-01, the default for any new AKS cluster is `NodeImage`. 
+
+### Node OS channel changes that cause a reimage
+
+The following node os channel transitions will trigger reimage on the nodes:
+
+|From|To
+|----|---|
+| Unmanaged | None |
+| Unspecified | Unmanaged |
+| SecurityPatch | Unmanaged |
+| NodeImage | Unmanaged |
+| None | Unmanaged |
+
+### Available node OS upgrade channels
 
 The following upgrade channels are available. You're allowed to choose one of these options:
 
@@ -34,7 +51,7 @@ The following upgrade channels are available. You're allowed to choose one of th
 | `None`| Your nodes don't have security updates applied automatically. This means you're solely responsible for your security updates.|N/A|
 | `Unmanaged`|OS updates are applied automatically through the OS built-in patching infrastructure. Newly allocated machines are unpatched initially. The OS's infrastructure patches them at some point.|Ubuntu and Azure Linux (CPU node pools) apply security patches through unattended upgrade/dnf-automatic roughly once per day around 06:00 UTC. Windows doesn't automatically apply security patches, so this option behaves equivalently to `None`. You need to manage the reboot process by using a tool like [kured][kured].|
 | `SecurityPatch`|OS security patches, which are AKS-tested, fully managed, and applied with safe deployment practices. AKS regularly updates the node's virtual hard disk (VHD) with patches from the image maintainer labeled "security only." There might be disruptions when the security patches are applied to the nodes. However AKS is limiting disruptions by only reimaging your nodes only when necessary, such as for certain kernel security packages. When the patches are applied, the VHD is updated and existing machines are upgraded to that VHD, honoring maintenance windows and surge settings. If AKS decides that reimaging nodes isn't necessary, it patches nodes live without draining pods and performs no VHD update. This option incurs the extra cost of hosting the VHDs in your node resource group. If you use this channel, Linux [unattended upgrades][unattended-upgrades] are disabled by default.|Azure Linux doesn't support this channel on GPU-enabled VMs. `SecurityPatch` works on kubernetes patch versions that are deprecated, so long as the minor Kubernetes version is still supported.|
-| `NodeImage`|AKS updates the nodes with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option. If you use this channel, Linux [unattended upgrades][unattended-upgrades] are disabled by default. Node image upgrades are supported as long as cluster k8s minor version is still in support. Node images are AKS-tested, fully managed, and applied with safe deployment practices.| 
+| `NodeImage`|AKS updates the nodes with a newly patched VHD containing security fixes and bug fixes on a weekly cadence. The update to the new VHD is disruptive, following maintenance windows and surge settings. No extra VHD cost is incurred when choosing this option. If you use this channel, Linux [unattended upgrades][unattended-upgrades] are disabled by default. Node image upgrades are supported as long as cluster Kubernetes minor version is still in support. Node images are AKS-tested, fully managed, and applied with safe deployment practices.| 
 
 ## What to choose - SecurityPatch Channel or NodeImage Channel?
 
@@ -42,7 +59,7 @@ There are two important considerations for you to choose between `SecurityPatch`
 
 |Property|NodeImage Channel|SecurityPatch Channel|Recommended Channel|
 |---|---|---|---|
-| `Speed of shipping`|The typical build, test, release, and rollout timelines for a new VHD can take approximately 2 weeks following safe deployment practices. Although in the event of CVEs, accelerated rollouts can occur on a case by case basis. The exact timing when a new VHD hits a region can be monitored via [release-tracker]. | SecurityPatch releases are relatively faster than `NodeImage`, even with safe deployment practices. SecurityPatch has the advantage of 'Live-patching' in Linux environments, where patching leads to selective 'reimaging' and does not reimage every time a patch gets applied. Re-image if it happens is controlled by maintenance windows. |`SecurityPatch`|
+| `Speed of shipping`|The typical build, test, release, and rollout timelines for a new VHD can take approximately two weeks following safe deployment practices. Although in the event of CVEs, accelerated rollouts can occur on a case by case basis. The exact timing when a new VHD hits a region can be monitored via [release-tracker]. | SecurityPatch releases are relatively faster than `NodeImage`, even with safe deployment practices. SecurityPatch has the advantage of 'Live-patching' in Linux environments, where patching leads to selective 'reimaging' and doesn't reimage every time a patch gets applied. Re-image if it happens is controlled by maintenance windows. |`SecurityPatch`|
 | `Bugfixes`| Carries bug fixes in addition to security fixes.| Strictly carries only security fixes.| `NodeImage`|
 
 ## Set the node OS autoupgrade channel on a new cluster
@@ -132,7 +149,7 @@ The default cadence means there's no planned maintenance window applied.
 | `NodeImage`|AKS-tested, fully managed, and applied with safe deployment practices. For more real time information on releases, look up [AKS Node Images in Release tracker][release-tracker] |Weekly.|
 
 > [!NOTE]
-> While Windows security updates are released on a monthly basis, using the `Unmanaged` channel will not automatically apply these updates to Windows nodes. If you choose the `Unmanaged` channel, you need to manage the reboot process for Windows nodes. 
+> While Windows security updates are released on a monthly basis, using the `Unmanaged` channel won't automatically apply these updates to Windows nodes. If you choose the `Unmanaged` channel, you need to manage the reboot process for Windows nodes. 
 
 ## Node channel known limitations
 
@@ -181,11 +198,11 @@ To view the status of your node OS auto upgrades, look up [activity logs][monito
 
 ### Why is `SecurityPatch` recommended over `Unmanaged` channel?
 
-On the `Unmanaged` channel, AKS has no control over how and when the security updates are delivered. With `SecurityPatch`, the security updates are fully tested and follow safe deployment practices. `SecurityPatch` also honors maintenance windows. For more details, see [Increased security and resiliency of Canonical workloads on Azure][Blog].
+On the `Unmanaged` channel, AKS has no control over how and when the security updates are delivered. With `SecurityPatch`, the security updates are fully tested and follow safe deployment practices. `SecurityPatch` also honors maintenance windows. For more information, see [Increased security and resiliency of Canonical workloads on Azure][Blog].
 
 ### Does `SecurityPatch` always lead to a reimage of my nodes?
 
-AKS limits reimages to only when absolutely necessary, such as certain kernel packages that may require a reimage to get fully applied. `SecurityPatch` is designed to minimize disruptions as much as possible. If AKS decides reimaging nodes isn't necessary, it will patch nodes live without draining pods and no VHD update is performed in such cases.
+AKS limits reimages to only when necessary, such as certain kernel packages that may require a reimage to get fully applied. `SecurityPatch` is designed to minimize disruptions as much as possible. If AKS decides reimaging nodes isn't necessary, it patches nodes live without draining pods and no VHD update is performed in such cases.
 
 ### Why does `SecurityPatch` channel requires to reach `snapshot.ubuntu.com` endpoint?
 

@@ -1,11 +1,13 @@
 ---
 title: Introduction to Azure Kubernetes Service (AKS) Automatic (preview)
-description: Learn the features and benefits of Azure Kubernetes Service Automatic to deploy and manage container-based applications in Azure.
+description: Simplify deployment and management of container-based applications in Azure by learning about the features and benefits of Azure Kubernetes Service Automatic.
 ms.topic: overview
-ms.custom: build-2024
-ms.date: 05/21/2024
+ms.custom: build-2024, biannual
+ms.date: 06/13/2025
 author: sabbour
 ms.author: asabbour
+
+#Customer intent: As a cluster administrator or developer, I want to simplify AKS cluster management and deployment by using preconfigured settings, built-in best practices, and automated features for production-ready applications.
 
 ---
 
@@ -23,9 +25,11 @@ Azure Kubernetes Service (AKS) Automatic offers an experience that makes the mos
 
 ## AKS Automatic and Standard feature comparison
 
-The following table provides a comparison of options that are available, preconfigured, and default in both AKS Automatic and AKS Standard. For more information on whether specific features are available in Automatic, you may need to check the documentation for that feature.
+The following table provides a comparison of options that are available, preconfigured, and default in both AKS Automatic and AKS Standard. For more information on whether specific features are available in Automatic, you can check the documentation for that feature.
 
-**Pre-configured** features are always enabled and you can't disable or change their settings. **Default** features are configured for you but can be changed. **Optional** features are available for you to configure and are not enabled by default. 
+**Pre-configured** features are always enabled and you can't disable or change their settings. **Default** features are configured for you but can be changed. **Optional** features are available for you to configure and aren't enabled by default.
+
+When enabling optional features, you can follow the linked feature documentation. When you reach a step for cluster creation, follow steps to create an [AKS Automatic cluster][quickstart-aks-automatic] instead of creating an AKS Standard cluster.
 
 ### Application deployment, monitoring, and observability
 
@@ -43,7 +47,7 @@ Node management is automatically handled without the need for manual node pool c
 | Option                    | AKS Automatic   	| AKS Standard  	|
 |---	                    |---	            |---	            |
 | Node management 	        | **Pre-configured:** AKS Automatic manages the node pools using [Node Autoprovisioning][node-autoprovisioning]. | **Default:** You create and manage system and user node pools <br/> **Optional:** AKS Standard manages user node pools using [Node Autoprovisioning][node-autoprovisioning]. |
-| Scaling   	            | **Pre-configured:** AKS Automatic creates nodes based on workload requests using [Node Autoprovisioning][node-autoprovisioning]. <br/>Horizontal Pod Autoscaler (HPA), [Kubernetes Event Driven Autoscaling (KEDA)][keda], and [Vertical Pod Autoscaler (VPA)][vpa] are enabled on the cluster. | **Default:** Manual scaling of node pools. <br/>  **Optional:** <ul><li>[Cluster autoscaler][cluster-autoscaler]</li><li>[Node Autoprovisioning][node-autoprovisioning]</li><li>[Kubernetes Event Driven Autoscaling (KEDA)][keda]</li><li>[Vertical Pod Autoscaler (VPA)][vpa]</li></ul>|
+| Scaling   	            | **Pre-configured:** AKS Automatic creates nodes based on workload requests using [Node Autoprovisioning][node-autoprovisioning]. <br/>[Horizontal Pod Autoscaler (HPA)][aks-hpa], [Kubernetes Event Driven Autoscaling (KEDA)][keda], and [Vertical Pod Autoscaler (VPA)][vpa] are enabled on the cluster. | **Default:** Manual scaling of node pools. <br/>  **Optional:** <ul><li>[Cluster autoscaler][cluster-autoscaler]</li><li>[Node Autoprovisioning][node-autoprovisioning]</li><li>[Kubernetes Event Driven Autoscaling (KEDA)][keda]</li><li>[Vertical Pod Autoscaler (VPA)][vpa]</li></ul>|
 | Cluster tier	        | **Pre-configured:** Standard tier cluster with up to 5,000 nodes and a [cluster uptime Service Level Agreement (SLA)][uptime-sla]. |  **Default:** Free tier cluster with 10 nodes but can support up to 1,000 nodes. <br/> **Optional:** <ul><li>Standard tier cluster with up to 5,000 nodes and a [cluster uptime SLA][uptime-sla].</li><li>Premium tier cluster with up to 5,000 nodes, [cluster uptime Service Level Agreement (SLA)][uptime-sla], and [long term support][long-term-support].</li></ul> |
 | Node operating system 	        | **Pre-configured:** [Azure Linux][azure-linux] | **Default:** Ubuntu <br/> **Optional:** <ul><li>[Azure Linux][azure-linux]</li><li>[Windows Server][windows-server]</li></ul> |
 | Node resource group 	        | **Pre-configured:** Fully managed node resource group to prevent accidental or intentional changes to cluster resources. | **Default:** Unrestricted <br/> **Optional:** [Read only][nrg-lockdown]  with node resource group lockdown (preview) |
@@ -66,12 +70,12 @@ Cluster authentication and authorization use [Azure Role-based Access Control (R
 
 ### Networking
 
-AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay with Cilium][azure-cni-powered-by-cilium] for high-performance networking and robust security. Ingress is handled by [managed NGINX using the application routing add-on][app-routing], integrating seamlessly with Azure DNS and Azure Key Vault. Egress uses a [managed NAT gateway][managed-nat-gateway] for scalable outbound connections. Additionally, you have the flexibility to enable [Azure Service Mesh (Istio) ingress][istio-mesh] or bring your own service mesh.
+AKS Automatic clusters use [managed Virtual Network powered by Azure CNI Overlay with Cilium][azure-cni-powered-by-cilium] for high-performance networking and robust security. Ingress is handled by [managed NGINX using the application routing add-on][app-routing], integrating seamlessly with Azure DNS and Azure Key Vault. Egress uses a [managed NAT gateway][managed-nat-gateway] for scalable outbound connections. Additionally, you have the flexibility to enable [Istio-based service mesh add-on for AKS][istio-mesh] or bring your own service mesh.
 
 | Option                    | AKS Automatic   	| AKS Standard  	|
 |---	                    |---	            |---	            |
 | Virtual network	        | **Default:** [Managed Virtual Network using Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium] combines the robust control plane of Azure CNI with the data plane of Cilium to provide high-performance networking and security. <br/> **Optional:** <ul><li>[Custom virtual network][automatic-custom-network]</li><li>[Custom virtual network][automatic-private-custom-network] with private cluster.</li></ul> | **Default:** [Managed Virtual Network with kubenet][kubenet] <br/> **Optional:** <ul><li>[Azure CNI][azure-cni]</li><li>[Azure CNI Overlay][azure-cni-overlay]</li><li>[Azure CNI Overlay powered by Cilium][azure-cni-powered-by-cilium]</li><li>[Bring your own CNI][use-byo-cni]</li></ul> |
-| Ingress	        | **Pre-configured:** [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault. <br/> **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> | **Optional:** <ul><li>[Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault.</li><li>[Azure Service Mesh (Istio)][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> |
+| Ingress	        | **Pre-configured:** [Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault. <br/> **Optional:** <ul><li>[Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> | **Optional:** <ul><li>[Managed NGINX using the application routing add-on][app-routing] with integrations for Azure DNS  and Azure Key Vault.</li><li>[Istio-based service mesh add-on for AKS][istio-deploy-ingress] ingress gateway</li><li>Bring your own ingress or gateway.</li></ul> |
 | Egress	        | **Pre-configured:** [AKS managed NAT gateway][managed-nat-gateway] for a scalable outbound connection flows when used with managed virtual network <br/> **Optional (with custom virtual network):** <ul><li> [Azure Load Balancer][egress-load-balancer]</li><li>[User-assigned NAT gateway][managed-nat-gateway]</li><li>[User-defined routing (UDR)][udr]</li> | **Default:** [Azure Load Balancer][egress-load-balancer] <br/> **Optional:** <ul><li>[User-assigned NAT gateway][managed-nat-gateway]</li><li>[AKS managed NAT gateway][userassigned-nat-gateway]</li><li>[User-defined routing (UDR)][udr]</li></ul> |
 | Service mesh	        | **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-mesh]</li><li>Bring your own service mesh.</li></ul> | **Optional:** <ul><li>[Azure Service Mesh (Istio)][istio-mesh]</li><li>Bring your own service mesh.</li></ul> |
 
@@ -83,6 +87,7 @@ To learn more about AKS Automatic, follow the quickstart to create a cluster.
 > [Quickstart: Deploy an Azure Kubernetes Service (AKS) Automatic cluster (preview)][quickstart-aks-automatic]
 
 <!-- LINKS - internal -->
+[aks-hpa]: tutorial-kubernetes-scale.md#autoscale-pods
 [node-autoprovisioning]: node-autoprovision.md
 [cluster-autoscaler]: cluster-autoscaler-overview.md
 [vpa]: vertical-pod-autoscaler.md

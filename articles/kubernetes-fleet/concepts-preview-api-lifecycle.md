@@ -1,12 +1,13 @@
 ---
 title: Azure Kubernetes Fleet Manager Preview API lifecycle
 description: Learn about the Azure Kubernetes Fleet Manager preview API lifecycle.
-ms.date: 04/16/2025
+ms.date: 05/29/2025
 ms.topic: concept-article
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 
+# Customer intent: As a Kubernetes administrator, I want to monitor and update my Azure Kubernetes Fleet Manager API versions, so that I can ensure continued functionality and take advantage of new features without interruption.
 ---
 
 # Azure Kubernetes Fleet Manager Preview API lifecycle
@@ -22,7 +23,7 @@ After an API version is deprecated, it will no longer function. We recommend you
 
 You should perform these updates at a minimum every 6-9 months. If you fail to do so, you'll be notified that you're using a soon-to-be deprecated API version as deprecation approaches.
 
-This article covers Azure Kubernetes Fleet Manager API deprecations. For Azure Kubernetes Service (AKS) API deprecations see [AKS preview API lifecycle](/azure/aks/concepts-preview-api-life-cycle).
+This article covers Azure Kubernetes Fleet Manager API deprecations. For Azure Kubernetes Service (AKS) API deprecations, see [AKS preview API lifecycle](/azure/aks/concepts-preview-api-life-cycle).
 
 ## Upcoming API deprecations
 
@@ -91,10 +92,12 @@ resource "azapi_resource" "symbolicname" {
 
 ---
 
-## How to update to a newer API version
+## How to update tools and SDKs
+
+> [!IMPORTANT]
+> The Azure CLI and `fleet` extension **must** be updated to the latest version by using `az upgrade` and `az extension update --name fleet`.
 
 - For Azure SDKs: Use a newer API version by updating to a [newer version of the SDK](https://azure.github.io/azure-sdk/releases/latest/index.html?search=containerservicefleet).
-- For Azure CLI: Update the CLI itself and the fleet extension to the latest version by running `az upgrade` and `az extension update --name fleet`.
 - For Terraform: Update to the latest version of the AzureRM Terraform module. To find out what version of the API a particular Terraform release is using,
   check the [Terraform release notes](/azure/developer/terraform/provider-version-history-azurerm) or 
   git log [this file](https://github.com/hashicorp/terraform-provider-azurerm/blob/main/internal/services/containers/client/client.go).

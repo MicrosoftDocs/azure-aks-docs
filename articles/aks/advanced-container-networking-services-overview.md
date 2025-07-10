@@ -26,9 +26,25 @@ Advanced Container Networking Services contains features split into two pillars:
 
 ## Container Network Observability
  
-Container Network Observability equips you with network related monitoring and diagnostics tools, providing  visibility into your containerized workloads. It unlocks Hubble metrics, Hubble’s command line interface (CLI) and the Hubble user interface (UI) on your AKS clusters providing deep, actionable insights into your containerized workloads allowing you to detect and determine the root causes of network-related issues in AKS. These features ensure that your containerized applications are secure and compliant in order to enable you to confidently manage your infrastructure.
+Container network observability in Azure Kubernetes Service (AKS) is a comprehensive feature set within Advanced Container Networking Services, designed to provide deep insights into network traffic and performance across containerized environments. It works seamlessly across both Cilium and non-Cilium data planes, offering flexibility for diverse networking needs. Leveraging eBPF, this feature enhances scalability and performance by identifying potential bottlenecks and network congestion before impacting applications.
 
-For more information about Container Network Observability, see [What is Container Network Observability?](container-network-observability-concepts.md).
+Key benefits include compatibility with all Azure CNI variants, detailed visibility into node-level metrics, and Hubble metrics for DNS resolution, pod-to-pod communication, and service interactions. Container Network Logs capture essential metadata such as IPs, ports, and traffic flow, enabling troubleshooting, monitoring, and security enforcement.
+
+Additionally, it integrates with Azure Managed Prometheus and Grafana for simplified metrics storage and visualization. Whether using managed services or user-controlled infrastructure, this observability solution ensures a highly performant, secure, and compliant network environment for AKS workloads.
+
+:::image type="content" source="./media/advanced-container-networking-services/advanced-network-observability.png" alt-text="Diagram of container network observability architecture." lightbox="./media/advanced-container-networking-services/advanced-network-observability.png":::
+
+### Container Network Metrics
+
+This feature collects node-level metrics, including CPU, memory, and network performance, to monitor the health of cluster nodes. For deeper insights, Hubble metrics provide data on DNS resolution times, service-to-service communication, and pod-level network behavior. These metrics enable users to analyze application performance, detect anomalies, and optimize workloads.
+
+To learn more, see [Metrics Overview](container-network-observability-metrics.md) documentation.
+
+### Container Network Logs
+
+Container Network Logs provides detailed insights into traffic within and across clusters by capturing metadata like source/destination IPs, ports, protocols, and flow direction. These logs enable monitoring network behavior, troubleshooting connectivity issues, and enforcing security policies. Persistent and real-time logging options ensure comprehensive, actionable network observability.
+
+To learn more, see [Container Network Logs Overview](container-network-observability-logs.md) documentation.
 
 ## Container Network Security
 
@@ -104,7 +120,7 @@ az group create --name $RESOURCE_GROUP --location $LOCATION
 #### Create an AKS cluster with Advanced Container Networking Services
 
 The `az aks create` command with the Advanced Container Networking Services flag, `--enable-acns`, creates a new AKS cluster with all Advanced Container Networking Services features. These features encompass:
-* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./container-network-observability-concepts.md).
+* **Container Network Observability:**  Provides insights into your network traffic. To learn more visit [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability).
 
 * **Container Network Security:** Offers security features like FQDN filtering. To learn more visit  [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security).
 
@@ -154,7 +170,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./container-network-observability-concepts.md) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
 
 ##### [**Cilium**](#tab/cilium)
 
@@ -229,8 +245,6 @@ az aks update \
 
 ### Disable Container Network Security 
 
-#### [**Cilium**](#tab/cilium)
-
 To disable Container Network Security features without affecting other Advanced Container Networking Services features, use `--enable-acns`  and  `--disable-acns-security`
 
 ```azurecli-interactive
@@ -240,15 +254,10 @@ az aks update \
     --enable-acns \
     --disable-acns-security
 ```
-
-#### [**Non-Cilium**](#tab/non-cilium)
-
-Container Network Security is currently not supported on non-Cilium clusters. To leverage this feature and enable Azure CNI powered by Cilium, please refer to [Azure CNI powered by Cilium documentation](./azure-cni-powered-by-cilium.md)
-
 ---
 
 ## Next steps
 
-* For more information about Container Network Observability and its capabilities, see [What is Container Network Observability?](container-network-observability-concepts.md).
+* For more information about Container Network Observability and its capabilities, see [What is Container Network Observability?](./advanced-container-networking-services-overview.md#container-network-observability)
 
-* For more information on Container Network Security and its capabilities, see [What  is Container Network Security?](container-network-security-concepts.md).
+* For more information on Container Network Security and its capabilities, see [What  is Container Network Security?](container-network-security-concepts.md)

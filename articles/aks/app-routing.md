@@ -2,10 +2,10 @@
 title: Azure Kubernetes Service (AKS) managed NGINX ingress with the application routing add-on
 description: Use the application routing add-on to securely access applications deployed on Azure Kubernetes Service (AKS).
 ms.subservice: aks-networking
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, biannual
 author: asudbring
 ms.topic: how-to
-ms.date: 11/21/2023
+ms.date: 06/10/2025
 ms.author: allensu
 # Customer intent: As a cloud engineer, I want to deploy and configure NGINX ingress on Azure Kubernetes Service using the application routing add-on, so that I can efficiently manage HTTP/HTTPS traffic to my applications while ensuring secure access and integration with Azure DNS.
 ---

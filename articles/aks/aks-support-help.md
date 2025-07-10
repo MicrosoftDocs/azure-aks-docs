@@ -2,9 +2,9 @@
 title: Support and troubleshooting for Azure Kubernetes Service (AKS)
 description: This article provides support and troubleshooting options for Azure Kubernetes Service (AKS).
 ms.topic: troubleshooting
-ms.date: 09/27/2023
-author: nickomang
-ms.author: nickoman
+ms.date: 06/30/2025
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ms.custom: support-help-page
 # Customer intent: As a Kubernetes administrator, I want to access support and troubleshooting resources for Azure Kubernetes Service, so that I can quickly diagnose and resolve deployment issues and ensure the efficient operation of my applications.
@@ -33,9 +33,9 @@ The following table lists the tags for AKS and related services:
 | [Azure Kubernetes Service](intro-kubernetes.md) | [azure-kubernetes-service](/answers/topics/azure-kubernetes-service.html)|
 | [Azure Container Registry](/azure/container-registry/container-registry-intro) | [azure-container-registry](/answers/topics/azure-container-registry.html)|
 | [Azure storage accounts](/azure/storage/common/storage-account-overview) | [azure-storage-accounts](/answers/topics/azure-storage-accounts.html)|
-| [Azure Managed Identities](/azure/active-directory/managed-identities-azure-resources/overview) | [azure-managed-identity](/answers/topics/azure-managed-identity.html) |
+| [Azure Managed Identities](/azure/active-directory/managed-identities-azure-resources/overview) | [azure-managed-identity](/answers/tags/814/microsoft-security-identity-manager) |
 | [Azure RBAC](/azure/role-based-access-control/overview) | [azure-rbac](/answers/topics/azure-rbac.html)|
-| [Microsoft Entra ID](/azure/active-directory/fundamentals/active-directory-whatis) | [Microsoft Entra ID](/answers/topics/azure-active-directory.html)|
+| [Microsoft Entra ID](/azure/active-directory/fundamentals/active-directory-whatis) | [Microsoft Entra ID](/answers/tags/455/microsoft-security-entra-entra-id)|
 | [Azure Policy](/azure/governance/policy/overview) | [azure-policy](/answers/topics/azure-policy.html)|
 | [Azure Virtual Machine Scale Sets](/azure/virtual-machine-scale-sets/overview) | [virtual-machine-scale-sets](/answers/topics/123/azure-virtual-machines-scale-set.html)|
 | [Azure Virtual Network](/azure/virtual-network/network-overview) | [azure-virtual-network](/answers/topics/azure-virtual-network.html)|
@@ -73,9 +73,8 @@ The following table lists the GitHub repositories for AKS and related services:
 
 :::image type="icon" source="./media/logos/updates-logo.png" alt-text="":::
 
-Learn about important product updates, roadmap, and announcements in [Azure Updates](https://azure.microsoft.com/updates/?category=compute). For information about Azure Virtual Machines, see the [Azure blog](https://azure.microsoft.com/blog/topics/virtual-machines/).
+Learn about important product updates, roadmap, and announcements in [Azure Updates](https://azure.microsoft.com/updates/?searchterms=compute). For information about Azure Virtual Machines, see the [Azure blog](https://azure.microsoft.com/blog/product/virtual-machines/).
 
 ## Next steps
 
 Visit the [Azure Kubernetes Service (AKS) documentation](./index.yml).
-

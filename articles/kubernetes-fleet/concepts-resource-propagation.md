@@ -1,16 +1,17 @@
 ---
 title: "Kubernetes resource placement from hub cluster to member clusters"
 description: This article describes the concept of Kubernetes resource propagation from hub cluster to member clusters.
-ms.date: 03/20/2025
+ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a platform admin, I want to propagate Kubernetes resources from a hub cluster to multiple member clusters, so that I can manage workloads and access control across diverse environments.
 ---
 
-# Kubernetes resource placement from hub cluster to member clusters
+# Introduce ClusterResourcePlacement API
 
-This article describes the concept of Kubernetes resource placement from hub clusters to member clusters using Azure Kubernetes Fleet Manager (Kubernetes Fleet).
+This article describes the ClusterResourcePlacement API, which enables [resource placement from hub clusters to member clusters](./concepts-multi-cluster-workload-management.md) using Azure Kubernetes Fleet Manager.
 
 Platform admins often need to deploy Kubernetes resources onto multiple clusters for various reasons, for example:
 
@@ -23,28 +24,21 @@ Application developers often need to deploy Kubernetes resources onto multiple c
 * Deploying a shopping cart application into two paired regions for customers to continue to shop during a single region outage.
 * Deploying a batch compute application into clusters with inexpensive spot node pools available.
 
-It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Kubernetes Fleet, you can create Kubernetes resources in the hub cluster and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`.
+It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. Fleet Manager provides Kubernetes resource propagation to enable at-scale management of Kubernetes resources. With Fleet Manager, you can create Kubernetes resources on a Fleet-managed hub cluster 
+and propagate them to selected member clusters via Kubernetes Custom Resources: `MemberCluster` and `ClusterResourcePlacement`.
 
-Kubernetes Fleet supports these custom resources based on an open-source cloud-native solution which you can read more about on the [open source Fleet documentation][fleet-github].
+Fleet Manager supports these custom resources based on the [CNCF project KubeFleet](https://github.com/kubefleet-dev/kubefleet) which you can read more about on the [KubeFleet documentation site][fleet-github].
 
-## Introducing ClusterResourcePlacement
+## ClusterResourcePlacement API overview
 
 A `ClusterResourcePlacement` object is used to tell the fleet scheduler how to place a given set of cluster-scoped objects from the fleet hub cluster onto member clusters. Namespace-scoped objects like Deployments, StatefulSets, DaemonSets, ConfigMaps, Secrets, and PersistentVolumeClaims are included when their containing namespace is selected.
 
 With `ClusterResourcePlacement`, you can:
 
-* Select which cluster-scoped Kubernetes resources to propagate to member clusters.
-* Specify placement policies to manually or automatically select member clusters as target clusters.
+* Select which resources to propagate. These can be cluster-scoped Kubernetes resources defined using [Kubernetes Group Version Kind (GVK)](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.33/#api-groups) references, or a namespace, which propagates the namespace and all its resources.
+* Specify placement policies to select member clusters. These policies can explicitly select clusters by names, or dynamically select clusters based on cluster labels and properties. 
 * Specify rollout strategies to safely roll out any updates of the selected Kubernetes resources to multiple target clusters.
-* View the propagation progress towards each target cluster.
-
-An example is shown in the following diagram.
-
-[![Diagram that shows how Kubernetes resource are propagated to member clusters.](./media/conceptual-resource-propagation.png)](./media/conceptual-resource-propagation.png#lightbox)
-
-### Encapsulating resources
-
-`ClusterResourcePlacement` supports using ConfigMap to envelope certain Kubernetes resource types so they can be staged on the hub cluster without any unintended side effects on the hub cluster. For a list of resource types and to understand how this feature works see our [envelope object documentation][envelope-object]
+* View the propagation progress for each target cluster.
 
 ## Placement types
 
@@ -180,7 +174,7 @@ spec:
       whenUnsatisfiable: ScheduleAnyway
 ```
 
-For more information, see the [open-source Fleet documentation topology spread constraints][crp-topo].
+For more information, see the [KubeFleet documentation on topology spread constraints][crp-topo].
 
 ## Placement policy options
 
@@ -218,7 +212,7 @@ The following properties are available for use as part of placement policies.
 
 CPU and memory properties are represented as [Kubernetes resource units](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#resource-units-in-kubernetes).
 
-Cost properties are decimals which represent a per-hour cost in US Dollars for the Azure compute utilized for nodes within the cluster. Cost is based on Azure public pricing.
+Cost properties are decimals, which represent a per-hour cost in US Dollars for the Azure compute utilized for nodes within the cluster. Cost is based on Azure public pricing.
 
 | Property Name | Description |
 |----------|-------------|
@@ -254,7 +248,7 @@ When using cluster properties in a policy criteria, you specify:
 Fleet evaluates each cluster based on the properties specified in the condition. Failure to satisfy conditions listed under `requiredDuringSchedulingIgnoredDuringExecution` excludes this member cluster from resource placement.
 
 > [!NOTE]
-> If a member cluster does not possess the property expressed in the condition, it will automatically fail the condition.
+> If a member cluster doesn't possess the property expressed in the condition, it will automatically fail the condition.
 
 Here's an example placement policy to select only clusters with five or more nodes.
 
@@ -345,6 +339,18 @@ These snapshots can be used with [staged rollout strategies][fleet-staged-rollou
 
 For more information, see the [documentation on snapshots][fleet-snapshots].
 
+## Encapsulating resources using envelope objects
+
+When propagating resources to member clusters following the [hub and spoke model](./concepts-multi-cluster-workload-management.md), it's important to understand that the hub cluster itself is also a Kubernetes cluster. Any resource you want to propagate would first be applied directly to the hub cluster, which can lead to some potential side effects:
+
+1. **Unintended Side Effects**: Resources like ValidatingWebhookConfigurations, MutatingWebhookConfigurations, or Admission Controllers would become active on the hub cluster, potentially intercepting and affecting hub cluster operations.
+
+2. **Security Risks**: RBAC resources (Roles, ClusterRoles, RoleBindings, ClusterRoleBindings) intended for member clusters could grant unintended permissions on the hub cluster.
+
+3. **Resource Limitations**: ResourceQuotas, FlowSchema, or LimitRanges defined for member clusters would take effect on the hub cluster. While those side effects generally do no harm, there might be cases where you want to avoid these constraints on the hub cluster.
+
+To avoid those unnecessary side effects, Azure Kubernetes fleet manager provides custom resources to wrap objects to solve these problems. The envelope object itself is applied to the hub, but the resources it contains are only extracted and applied when they reach the member clusters. In this way, one can define resources that should be propagated without actually deploying their contents on the hub cluster. For more information, see the documentation on [envelope objects][envelope-object].
+
 ## Using Tolerations
 
 `ClusterResourcePlacement` objects support the specification of tolerations, which apply to the `ClusterResourcePlacement` object. Each toleration object consists of the following fields:
@@ -354,7 +360,7 @@ For more information, see the [documentation on snapshots][fleet-snapshots].
 * `effect`: The effect of the toleration, such as `NoSchedule`.
 * `operator`: The operator of the toleration, such as `Exists` or `Equal`.
 
-Each toleration is used to tolerate one or more specific taint applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once created.
+Each toleration is used to tolerate one or more specific taints applied on the `ClusterResourcePlacement`. Once all taints on a [`MemberCluster`](./concepts-fleet.md#what-are-member-clusters) are tolerated, the scheduler can then propagate resources to the cluster. You can't update or remove tolerations from a `ClusterResourcePlacement` object once created.
 
 For more information, see the [documentation on tolerations][fleet-tolerations].
 
@@ -507,17 +513,19 @@ The Fleet scheduler prioritizes the stability of existing workload placements. T
 
 Resource-only changes (updating the resources or updating the `ResourceSelector` in the `ClusterResourcePlacement` object) roll out gradually in existing placements but do **not** trigger rescheduling of the workload.
 
+
 ## Next steps
 
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
+* [Cluster resource placement FAQs](./faq.md#cluster-resource-placement-faqs).
 
 <!-- LINKS - external -->
-[fleet-github]: https://github.com/Azure/fleet
-[envelope-object]: https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md#envelope-object
-[crp-topo]: https://github.com/Azure/fleet/blob/main/docs/howtos/topology-spread-constraints.md
+[fleet-github]: https://kubefleet.dev/docs/
+[envelope-object]: ./quickstart-envelope-reserved-resources.md
+[crp-topo]: https://kubefleet.dev/docs/how-tos/topology-spread-constraints/
 [fleet-rollout]: ./concepts-rollout-strategy.md
 [fleet-staged-rollout]: ./concepts-rollout-strategy.md#staged-update-strategy-preview
 [fleet-tolerations]: ./use-taints-tolerations.md

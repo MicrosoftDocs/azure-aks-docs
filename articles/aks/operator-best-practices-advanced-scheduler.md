@@ -4,7 +4,9 @@ titleSuffix: Azure Kubernetes Service
 description: Learn the cluster operator best practices for using advanced scheduler features such as taints and tolerations, node selectors and affinity, or inter-pod affinity and anti-affinity in Azure Kubernetes Service (AKS)
 ms.topic: best-practice
 ms.date: 11/11/2022
- 
+ms.author: schaffererin
+author: schaffererin
+# Customer intent: "As a Kubernetes cluster operator, I want to implement advanced scheduling strategies using taints, tolerations, and node affinity, so that I can effectively manage workload distribution and resource allocation across my AKS clusters."
 ---
 
 # Best practices for advanced scheduler features in Azure Kubernetes Service (AKS)
@@ -94,9 +96,9 @@ You can [taint a node pool][taint-node-pool] from the AKS API to have newly scal
 
 Let's assume:
 
-1. You begin with a two-node cluster: *node1* and *node2*. 
+1. You begin with a two-node cluster: *node1* and *node2*.
 1. You upgrade the node pool.
-1. Two other nodes are created: *node3* and *node4*. 
+1. Two other nodes are created: *node3* and *node4*.
 1. The taints are passed on respectively.
 1. The original *node1* and *node2* are deleted.
 
@@ -104,13 +106,13 @@ Let's assume:
 
 Again, let's assume:
 
-1. You have a two-node cluster: *node1* and *node2*. 
+1. You have a two-node cluster: *node1* and *node2*.
 1. You upgrade the node pool.
 1. An extra node is created: *node3*.
 1. The taints from *node1* are applied to *node3*.
 1. *node1* is deleted.
 1. A new *node1* is created to replace to original *node1*.
-1. The *node2* taints are applied to the new *node1*. 
+1. The *node2* taints are applied to the new *node1*.
 1. *node2* is deleted.
 
 In essence, *node1* becomes *node3*, and *node2* becomes the new *node1*.

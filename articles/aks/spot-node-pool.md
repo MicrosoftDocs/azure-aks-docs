@@ -10,6 +10,9 @@ ms.subservice: aks-nodes
 
 # Add an Azure Spot node pool to an Azure Kubernetes Service (AKS) cluster
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321851)
+
 In this article, you add a secondary Spot node pool to an existing Azure Kubernetes Service (AKS) cluster.
 
 A Spot node pool is a node pool backed by an [Azure Spot Virtual Machine scale set][vmss-spot]. With Spot VMs in your AKS cluster, you can take advantage of unutilized Azure capacity with significant cost savings. The amount of available unutilized capacity varies based on many factors, such as node size, region, and time of day.

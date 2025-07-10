@@ -1,11 +1,12 @@
 ---
 title: "Defining a rollout strategy for Azure Kubernetes Fleet Manager cluster resource placement"
 description: This article describes how to define a rollout strategy for Fleet Manager's cluster resource placement.
-ms.date: 03/11/2025
+ms.date: 06/10/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a cloud operations engineer, I want to define a customized rollout strategy for managing cluster resource placements in Fleet Manager, so that I can minimize service interruptions and optimize resource deployment across multiple clusters."
 ---
 
 # Defining a rollout strategy for Azure Kubernetes Fleet Manager cluster resource placement
@@ -129,7 +130,7 @@ spec:
 1. Configure the cluster resource placement to use a strategy of type `External` as shown. When you submit the CRP to your Fleet hub cluster no placement is undertaken.
 
     ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1
+    apiVersion: placement.kubernetes-fleet.io/v1beta1
     kind: ClusterResourcePlacement
     metadata:
       name: crp-staged-update-sample
@@ -156,7 +157,7 @@ spec:
       name: example-staged-update-run
     spec:
       placementName: crp-staged-update-sample
-      resourceSnapshotIndex: "1"
+      resourceSnapshotIndex: "0"
       stagedRolloutStrategyName: example-staged-strategy
     ```
 
@@ -173,8 +174,8 @@ kubectl get clusterStagedUpdateRun example-staged-update-run
 We can see the staged rollout has been initialized and has been running for 44 seconds.
 
 ```output
-NAME                        PLACEMENT                  RESOURCE-SNAPSHOT   POLICY-SNAPSHOT   INITIALIZED   SUCCEEDED   AGE
-example-staged-update-run   crp-staged-update-sample   1                   0                 True                      44s
+NAME                        PLACEMENT                  RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-staged-update-run   crp-staged-update-sample   0                         0                       True                      13s
 ```
 
 Determine the detailed status by using the following command.
@@ -194,7 +195,7 @@ metadata:
   ...
 spec:
   placementName: crp-staged-update-sample
-  resourceSnapshotIndex: "1"
+  resourceSnapshotIndex: "0"
   stagedRolloutStrategyName: example-staged-strategy
 status:
   conditions:
@@ -205,38 +206,42 @@ status:
     status: "True"           # the updateRun is initialized successfully
     type: Initialized
   - lastTransitionTime: ...
-    message: ""
+    message: The update run is making progress
     observedGeneration: 1
-    reason: UpdateRunStarted
+    reason: UpdateRunProgressing
     status: "True"
     type: Progressing        # the updateRun is still running
   deletionStageStatus:
     clusters: []             # no clusters need to be cleaned up
     stageName: kubernetes-fleet.io/deleteStage
-  policyObservedClusterCount: 3     # number of clusters to be updated
+  policyObservedClusterCount: 3     # number of clusters to be updated 
   policySnapshotIndexUsed: "0"
   stagedUpdateStrategySnapshot:     # snapshot of the strategy
     stages:
     - afterStageTasks:
       - type: TimedWait
-        waitTime: 1h
+        waitTime: 1h0m0s
       labelSelector:
         matchLabels:
           environment: staging
       name: staging
-      sortingLabelKey: name
     - afterStageTasks:
       - type: Approval
       labelSelector:
         matchLabels:
           environment: canary
       name: canary
+      sortingLabelKey: name
+    - labelSelector:
+        matchLabels:
+          environment: production
+      name: production
       sortingLabelKey: order
   stagesStatus:                # detailed status for each stage
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: Wait time elapsed
         observedGeneration: 1
         reason: AfterStageTaskWaitTimeElapsed
         status: "True"         # the wait after-stage task has completed
@@ -246,26 +251,26 @@ status:
     - clusterName: member-cluster-02    # stage staging contains member-cluster-02 cluster only
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: Cluster update started
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: Cluster update completed successfully
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
         status: "True"                  # member-cluster-02 is updated successfully
         type: Succeeded
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: All clusters in the stage are updated and after-stage tasks are completed
       observedGeneration: 1
-      reason: StageUpdatingWaiting
+      reason: StageUpdatingSucceeded
       status: "False"
       type: Progressing
     - lastTransitionTime: ...
-      message: ""
+      message: Stage update completed successfully
       observedGeneration: 1
       reason: StageUpdatingSucceeded
       status: "True"                    # stage staging has completed successfully
@@ -277,36 +282,38 @@ status:
     - approvalRequestName: example-staged-update-run-canary # ClusterApprovalRequest name for this stage
       type: Approval
     clusters:
-    - clusterName: member-cluster-03         # according the labelSelector and sortingLabelKey, member-cluster-03 is selected first in this stage
+    - clusterName: member-cluster-01         # according the labelSelector and sortingLabelKey, member-cluster-01 is selected first in this stage
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: Cluster update started
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"
         type: Started
       - lastTransitionTime: ...
-        message: ""
+        message: Cluster update completed successfully
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
-        status: "True"                      # member-cluster-03 update is completed
+        status: "True"                      # member-cluster-01 update is completed
         type: Succeeded
-    - clusterName: member-cluster-01        # member-cluster-01 is selected after member-cluster-03 because of order=2 label
+    - clusterName: member-cluster-03        # member-cluster-03 is selected after member-cluster-01 because of name label
       conditions:
       - lastTransitionTime: ...
-        message: ""
+        message: Cluster update started
         observedGeneration: 1
         reason: ClusterUpdatingStarted
         status: "True"                      # member-cluster-01 update has not finished yet
         type: Started
     conditions:
     - lastTransitionTime: ...
-      message: ""
+      message: Clusters in the stage started updating
       observedGeneration: 1
       reason: StageUpdatingStarted
       status: "True"                        # stage canary is still executing
       type: Progressing
     stageName: canary
+    startTime: ...
+  ...
 ```
 
 ### Submit approvals for staged updates
@@ -349,7 +356,7 @@ Approval payloads are a JSON object using the following format.
 1. Submit a patch request to approve.
 
     ```bash
-    kubectl patch clusterapprovalrequests example-staged-update-run-canary --type=merge -p {"status":{"conditions":[{"type":"Approved","status":"True","reason":"tested as OK","message":"lgtm","lastTransitionTime":"'$(date --utc +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}} --subresource=status
+    kubectl patch clusterapprovalrequests example-staged-update-run-canary --type=merge -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"testPassed","message":"lgtm","lastTransitionTime":"'$(date --utc +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}}' --subresource=status
     ```
     
     A successful submission with advice that the patch has been applied.

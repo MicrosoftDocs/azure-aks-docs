@@ -4,10 +4,11 @@ titleSuffix: Azure Kubernetes Service
 description: Learn how to use planned maintenance to schedule and control cluster and node image upgrades in Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 01/29/2024
-ms.author: nickoman
+ms.date: 05/29/2024
+ms.author: kaarthis
 ms.subservice: aks-upgrade
-author: nickomang
+author: kaarthis
+# Customer intent: "As a Kubernetes administrator, I want to configure planned maintenance for my AKS cluster, so that I can schedule and control upgrades without impacting my workloads."
 ---
 
 # Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service cluster
@@ -85,10 +86,18 @@ An `aksManagedAutoUpgradeSchedule` or `aksManagedNodeOSUpgradeSchedule` maintena
 |`notAllowedDates`|A range of dates that maintenance can't run, determined by `start` and `end` child properties. It's applicable only when you're creating the maintenance window by using a configuration file.|Not applicable|
 
 ### Schedule types
+Four schedule types are supported—`Daily`, `Weekly`, `AbsoluteMonthly`, and `RelativeMonthly`.  
+The table below shows which types are available for each maintenance-configuration option.
 
-Four available schedule types are available: `Daily`, `Weekly`, `AbsoluteMonthly`, and `RelativeMonthly`.
+> **Note**  
+> Starting June 2025, the `Daily` schedule type will also be supported for `aksManagedClusterAutoUpgradeSchedule`.
 
-`Weekly`, `AbsoluteMonthly`, and `RelativeMonthly` schedule types are applicable only to `aksManagedClusterAutoUpgradeSchedule` and `aksManagedNodeOSUpgradeSchedule` configurations. `Daily` schedules are applicable only to `aksManagedNodeOSUpgradeSchedule` configurations.
+| Schedule type   | `default` | `aksManagedClusterAutoUpgradeSchedule` | `aksManagedNodeOSUpgradeSchedule` |
+|-----------------|:---------:|:--------------------------------------:|:---------------------------------:|
+| Daily           | ❌        | ✅ (after Jun 2025)                    | ✅                                 |
+| Weekly          | ✅        | ✅                                     | ✅                                 |
+| AbsoluteMonthly | ✅        | ✅                                     | ✅                                 |
+| RelativeMonthly | ✅        | ✅                                     | ✅                                 |
 
 All of the fields shown for each schedule type are required.
 

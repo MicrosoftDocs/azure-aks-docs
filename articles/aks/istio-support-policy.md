@@ -27,10 +27,11 @@ New minor revisions and patches are rolled out as part of AKS releases. Announce
 | asm-1-19 | Sept 2023 | Jan 2024 | Jun 2024 | 1.25, 1.26, 1.27, 1.28 |
 | asm-1-20 | Nov 2023 | Feb 2024 | Sept 2024 | 1.25, 1.26, 1.27, 1.28, 1.29 |
 | asm-1-21 | Mar 2024 | Apr 2024 | Oct 2024 | 1.26, 1.27, 1.28, 1.29, 1.30 |
-| asm-1-22 | May 2024 | Jul 2024 | ~Feb 2025 (expected) | 1.27, 1.28, 1.29, 1.30 |
-| asm-1-23 | Aug 2024 | Sept 2024 | ~June 2025 (expected) | 1.27, 1.28, 1.29, 1.30, 1.31, 1.32 |
+| asm-1-22 | May 2024 | Jul 2024 | March 2025 | 1.27, 1.28, 1.29, 1.30 |
+| asm-1-23 | Aug 2024 | Sept 2024 | June 2025 | 1.27, 1.28, 1.29, 1.30, 1.31, 1.32 |
 | asm-1-24 | Nov 2024 | Feb 2025 | ~Sep 2025 (expected) | 1.28, 1.29, 1.30, 1.31, 1.32, 1.33 |
 | asm-1-25 | Mar 2025 | May 2025 | ~Jan 2026 (expected) | 1.29, 1.30, 1.31, 1.32, 1.33 |
+| asm-1-26 | May 2025 | July 2025 | ~Feb 2026 (expected) | 1.29, 1.30, 1.31, 1.32, 1.33 |
 
 ### Supported revisions
 - **Minor revision**:

@@ -8,6 +8,7 @@ author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
 
+# Customer intent: As a cloud engineer, I want to configure and deploy a Valkey cluster on a Kubernetes environment, so that I can ensure high availability and redundancy for my applications.
 ---
 
 # Configure and deploy a Valkey cluster on Azure Kubernetes Service (AKS)

@@ -1,10 +1,13 @@
 ---
-title: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS) 
+title: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
 description: Learn how to deploy an application that uses OpenAI on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.date: 10/02/2023
-ms.custom: template-how-to, devx-track-azurecli 
+ms.custom: template-how-to, devx-track-azurecli
 ms.subservice: aks-developer
+author: schaffererin
+ms.author: schaffererin
+# Customer intent: As a developer, I want to deploy an application using OpenAI on a Kubernetes service, so that I can leverage AI capabilities for functionalities such as automated content generation in my application.
 ---
 
 # Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
@@ -216,13 +219,13 @@ Now that the application is deployed, you can deploy the Python-based microservi
             ports:
             - containerPort: 5001
             env:
-            - name: USE_AZURE_OPENAI 
+            - name: USE_AZURE_OPENAI
               value: "True"
-            - name: AZURE_OPENAI_DEPLOYMENT_NAME 
+            - name: AZURE_OPENAI_DEPLOYMENT_NAME
               value: ""
-            - name: AZURE_OPENAI_ENDPOINT 
+            - name: AZURE_OPENAI_ENDPOINT
               value: ""
-            - name: OPENAI_API_KEY 
+            - name: OPENAI_API_KEY
               value: ""
             resources:
               requests:
@@ -291,9 +294,9 @@ Now that the application is deployed, you can deploy the Python-based microservi
             env:
             - name: USE_AZURE_OPENAI
               value: "False"
-            - name: OPENAI_API_KEY 
+            - name: OPENAI_API_KEY
               value: ""
-            - name: OPENAI_ORG_ID 
+            - name: OPENAI_ORG_ID
               value: ""
             resources:
               requests:
@@ -371,7 +374,7 @@ Now that the application is deployed, you can deploy the Python-based microservi
 
     ```output
     NAME          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
-    store-admin   LoadBalancer   10.0.142.228   40.64.86.161    80:32494/TCP   50m    
+    store-admin   LoadBalancer   10.0.142.228   40.64.86.161    80:32494/TCP   50m
     ```
 
     Repeat the same step for the service named `store-front``.
@@ -417,7 +420,7 @@ To learn more about generative AI use cases, see the following resources:
 [miyagi]: https://github.com/Azure-Samples/miyagi
 
 <!-- Links internal -->
-[azure-resource-group]: /azure/azure-resource-manager/management/overview 
+[azure-resource-group]: /azure/azure-resource-manager/management/overview
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

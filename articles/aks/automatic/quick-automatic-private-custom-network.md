@@ -2,7 +2,7 @@
 title: 'Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network'
 description: Learn how to quickly deploy a private Kubernetes cluster and deploy an application in Azure Kubernetes Service (AKS) Automatic (preview) in a custom virtual network.
 ms.topic: quickstart
-ms.date: 03/03/2025
+ms.date: 06/13/2025
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli
@@ -13,7 +13,7 @@ zone_pivot_groups: bicep-azure-cli
 
 **Applies to:** :heavy_check_mark: AKS Automatic (preview)
 
-[Azure Kubernetes Service (AKS) Automatic (preview)][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. 
+[Azure Kubernetes Service (AKS) Automatic (preview)][what-is-aks-automatic] provides the easiest managed Kubernetes experience for developers, DevOps engineers, and platform engineers. Ideal for modern and AI applications, AKS Automatic automates AKS cluster setup and operations and embeds best practice configurations. Users of any skill level can benefit from the security, performance, and dependability of AKS Automatic for their applications. This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts]. 
 
 In this quickstart, you learn to:
 
@@ -23,32 +23,28 @@ In this quickstart, you learn to:
 - Connect to the private cluster.
 - Run a sample multi-container application with a group of microservices and web front ends simulating a retail scenario.
 
-## Before you begin
+If you don't have an Azure account, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
-This quickstart assumes a basic understanding of Kubernetes concepts. For more information, see [Kubernetes core concepts for Azure Kubernetes Service (AKS)][kubernetes-concepts].
+### Prerequisites
 
-[!INCLUDE [azure-cli-prepare-your-environment-no-header.md](~/reusable-content/azure-cli/azure-cli-prepare-your-environment-no-header.md)]
+| Prerequisite                     | Notes                                                                 |
+|------------------------------|------------------------------------------------------------------------|
+| **Azure CLI**                | `2.68.0` or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli]. |
+| **Azure CLI `aks-preview` extension**                | `13.0.0b3` or later. To find the version, run `az --version`. If you need to install or upgrade, see [Manage Azure CLI extensions][azure-cli-extensions]. |
+| **Feature Flag(s)**             | `AutomaticSKUPreview` must be [registered on the subscription](#register-the-feature-flags) to use AKS Automatic.    |
+| **Required permission(s)**      | Cluster identity with a `Network Contributor` built-in role assignment on the API server subnet. |
+|                                  | Cluster identity with a `Network Contributor` built-in role assignment on the virtual network to support Node Auto Provisioning. |
+|                                  |  User identity creating the cluster with `Microsoft.Authorization/policyAssignments/write` and `Microsoft.Authorization/policyAssignments/read` permissions on the resource group. For more infomation, see [Azure Policy permissions][Azure-Policy-RBAC-permissions]. |
+|                                  | Users identity accessing the cluster with [`Azure Kubernetes Service Cluster User Role`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-cluster-user-role) and [`Azure Kubernetes Service RBAC Writer`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-writer) | 
+| **Network requirements**         | A virtual network with a dedicated API server subnet of at least `*/28` size that is delegated to `Microsoft.ContainerService/managedClusters` |
+|                                   | If there is a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication. |
+|                                  | If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed. |
 
-- This article requires version **2.68** or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-- This article requires the `aks-preview` Azure CLI extension version **13.0.0b3** or later.
-- If you have multiple Azure subscriptions, select the appropriate subscription ID in which the resources should be billed using the [az account set](/cli/azure/account#az-account-set) command.
-- Register the `AutomaticSKUPreview` feature in your Azure subscription.
-- The identity creating the cluster should also have the [following permissions on the resource group][Azure-Policy-RBAC-permissions]:
-    - `Microsoft.Authorization/policyAssignments/write`
-    - `Microsoft.Authorization/policyAssignments/read`
+## Limitations
 - AKS Automatic clusters with custom virtual networks only support user assigned managed identity.
 - AKS Automatic clusters with custom virtual networks don't support the Managed NAT Gateway outbound type.
-- AKS Automatic clusters require deployment in Azure regions that support at least three [availability zones][availability-zones].
-:::zone target="docs" pivot="bicep"
-- To deploy a Bicep file, you need to write access on the resources you create and access to all operations on the `Microsoft.Resources/deployments` resource type. For example, to create a virtual machine, you need `Microsoft.Compute/virtualMachines/write` and `Microsoft.Resources/deployments/*` permissions. For a list of roles and permissions, see [Azure built-in roles](/azure/role-based-access-control/built-in-roles).
-:::zone-end
-
-When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
-
-The cluster identity needs **Network Contributor** permissions on the virtual network. Lack of permissions at the API server subnet can cause a provisioning failure. Lack of permissions at the virtual network can cause Node Auto Provisioning scaling failure.
-
-> [!WARNING]
-> An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
+- AKS Automatic clusters require deployment in Azure regions that support at least [three availability zones][availability-zones] and [API Server VNet integration][api-server-vnet-integration-availability].
+- AKS Automatic clusters do not support using the [`command invoke` or Run command feature][access-private-cluster] to remotely invoke commands, like `kubectl` through the Azure API without directly connecting to the cluster.
 
 > [!IMPORTANT]
 > AKS Automatic tries to dynamically select a virtual machine size for the `system` node pool based on the capacity available in the subscription. Make sure your subscription has quota for 16 vCPUs of any of the following sizes in the region you're deploying the cluster to: [Standard_D4pds_v5](/azure/virtual-machines/sizes/general-purpose/dpsv5-series), [Standard_D4lds_v5](/azure/virtual-machines/sizes/general-purpose/dldsv5-series), [Standard_D4ads_v5](/azure/virtual-machines/sizes/general-purpose/dadsv5-series), [Standard_D4ds_v5](/azure/virtual-machines/sizes/general-purpose/ddsv5-series), [Standard_D4d_v5](/azure/virtual-machines/sizes/general-purpose/ddv5-series), [Standard_D4d_v4](/azure/virtual-machines/sizes/general-purpose/ddv4-series), [Standard_DS3_v2](/azure/virtual-machines/sizes/general-purpose/dsv3-series), [Standard_DS12_v2](/azure/virtual-machines/sizes/memory-optimized/dv2-dsv2-series-memory). You can [view quotas for specific VM-families and submit quota increase requests](/azure/quotas/per-vm-quota-requests) through the Azure portal.
@@ -122,9 +118,16 @@ The following sample output resembles successful creation of the resource group:
 
 ## Create a virtual network
 
-Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command. The API subnet needs a delegation to `Microsoft.ContainerService/managedClusters`.
+Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
-:::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-vnet.sh" interactive="cloudshell-bash":::
+When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
+
+> [!WARNING]
+> An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
+
+:::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-vnet.sh" interactive="cloudshell-bash":::### Network security group rules
+
+### Network security group rules
 
 All traffic within the virtual network is allowed by default. But if you  added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
@@ -132,6 +135,9 @@ All traffic within the virtual network is allowed by default. But if you  added 
 |--- |--- |--- |--- |--- |
 | APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
 | APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
+| Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
+| Node CIDR | Pod CIDR | All Protocols | All Ports | Required for Service traffic routing. |
+| Pod CIDR | Pod CIDR | All Protocols | All Ports | Required for Pod to Pod and Pod to Service traffic, including DNS. |
 
 ## Create a managed identity and give it permissions on the virtual network
 
@@ -143,13 +149,23 @@ Create a managed identity using the [`az identity create`][az-identity-create] c
 
 To create a private AKS Automatic cluster, use the [az aks create][az-aks-create] command. Note the use of the `--enable-private-cluster` flag.
 
+> [!NOTE]
+> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the cluster's public FQDN and configuring the private DNS zone.
+
 :::code language="azurecli" source="~/aks-samples/automatic/custom-network/private/sh/create-aks.sh" highlight="5,6,7,9" interactive="cloudshell-bash":::
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
 ## Connect to the cluster
 
-When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
+When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster:
+
+* Create a virtual machine in the same virtual network as the AKS Automatic cluster using the [`az vm create`][az-vm-create] command with the `--vnet-name` flag.
+* Use a virtual machine in a separate virtual network and set up [virtual network peering][virtual-network-peering].
+* Use an [Express Route or VPN][express-route-or-VPN] connection.
+* Use a [private endpoint][private-endpoint-service] connection.
+
+Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. ExpressRoute and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -274,6 +290,9 @@ az deployment group create --resource-group <resource-group> --template-file rol
 
 This Bicep file defines the AKS Automatic cluster.
 
+> [!NOTE]
+> You can refer to the [private cluster][private-cluster] documentation for configuring additional options like disabling the clusters public FQDN and configuring the private DNS zone.
+
 :::code language="bicep" source="~/aks-samples/automatic/custom-network/private/bicep/aks.bicep" highlight="29,33,34,36,37,38,40,41,42,43,44,45":::
 
 Save the Bicep file **aks.bicep** to your local computer.
@@ -292,7 +311,14 @@ az deployment group create --resource-group <resource-group> --template-file aks
 
 ## Connect to the cluster
 
-When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
+When an AKS Automatic cluster is created as a private cluster, the API server endpoint has no public IP address. To manage the API server, for example via `kubectl`, you need to connect through a machine that has access to the  cluster's Azure virtual network. There are several options for establishing network connectivity to the private cluster:
+
+* Create a virtual machine in the same virtual network as the AKS Automatic cluster using the [`az vm create`][az-vm-create] command with the `--vnet-name` flag.
+* Use a virtual machine in a separate virtual network and set up [virtual network peering][virtual-network-peering].
+* Use an [Express Route or VPN][express-route-or-VPN] connection.
+* Use a [private endpoint][private-endpoint-service] connection.
+
+Creating a virtual machine in the same virtual network as the AKS cluster is the easiest option. Express Route and VPNs add costs and require additional networking complexity. Virtual network peering requires you to plan your network CIDR ranges to ensure there are no overlapping ranges. Refer to [Options for connecting to the private cluster][connect-private-cluster] for more information.
 
 To manage a Kubernetes cluster, use the Kubernetes command-line client, [kubectl][kubectl]. `kubectl` is already installed if you use Azure Cloud Shell. To install `kubectl` locally, run the [az aks install-cli][az-aks-install-cli] command. AKS Automatic clusters are configured with [Microsoft Entra ID for Kubernetes role-based access control (RBAC)][aks-entra-rbac].
 
@@ -418,7 +444,7 @@ az group delete --name <resource-group> --yes --no-wait
 
 ## Next steps
 
-In this quickstart, you deployed a private Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] in a custom virtual network and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
+In this quickstart, you deployed a private Kubernetes cluster using [AKS Automatic][what-is-aks-automatic] inside a custom virtual network and then deployed a simple multi-container application to it. This sample application is for demo purposes only and doesn't represent all the best practices for Kubernetes applications. For guidance on creating full solutions with AKS for production, see [AKS solution guidance][aks-solution-guidance].
 
 To learn more about AKS Automatic, continue to the introduction.
 
@@ -432,6 +458,10 @@ To learn more about AKS Automatic, continue to the introduction.
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 
 <!-- LINKS - internal -->
+[outbound-rules-control-egress]: ../outbound-rules-control-egress.md
+[api-server-vnet-integration-availability]: ../api-server-vnet-integration.md#limited-availability
+[install-azure-cli]: /cli/azure/install-azure-cli
+[azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
 [kubernetes-concepts]: ../concepts-clusters-workloads.md
 [aks-tutorial]: ../tutorial-kubernetes-prepare-app.md
 [azure-resource-group]: /azure/azure-resource-manager/management/overview
@@ -443,7 +473,6 @@ To learn more about AKS Automatic, continue to the introduction.
 [node-auto-provisioning]: ../node-autoprovision.md
 [kubernetes-deployment]: ../concepts-clusters-workloads.md#deployments-and-yaml-manifests
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-[baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [az-feature-register]: /cli/azure/feature#az_feature_register
 [az-feature-show]: /cli/azure/feature#az_feature_show
 [az-provider-register]: /cli/azure/provider#az_provider_register
@@ -456,4 +485,10 @@ To learn more about AKS Automatic, continue to the introduction.
 [az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
 [az-identity-create]: /cli/azure/identity#az-identity-create
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[private-cluster]: ../private-clusters.md
+[az-vm-create]: /cli/azure/vm#az-vm-create
 [connect-private-cluster]: ../private-clusters.md#options-for-connecting-to-the-private-cluster
+[virtual-network-peering]: ../private-clusters.md#virtual-network-peering
+[express-route-or-vpn]: /azure/expressroute/expressroute-about-virtual-network-gateways
+[private-endpoint-service]: ../private-apiserver-vnet-integration-cluster.md
+[access-private-cluster]: ../access-private-cluster.md

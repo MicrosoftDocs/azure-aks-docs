@@ -5,7 +5,8 @@ ms.date: 05/05/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
+# Customer intent: As a cloud administrator, I want to set up DNS-based load balancing across multiple Kubernetes clusters using Fleet Manager, so that I can efficiently manage traffic distribution for public-facing workloads.
 ---
 
 # Multi-cluster DNS-based load balancing with Azure Kubernetes Fleet Manager (preview)

@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a Kubernetes administrator, I want to manage the eviction and disruption budgets of resources in my cluster, so that I can ensure key workloads remain stable while removing unnecessary resources as needed.
 ---
 
 # Controlling eviction and disruption budgets for Azure Kubernetes Fleet Manager cluster resource placement (preview)
