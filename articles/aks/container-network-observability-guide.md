@@ -11,9 +11,8 @@ ms.date: 05/28/2025
 
 # Use Advanced Container Networking Services for diagnosing and resolving network issues
 
-This guide helps you navigate [Advanced Container Networking Services](./advanced-container-networking-services-overview.md#container-network-observability) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, [Container Network Logs](./container-network-observability-logs.md), metrics, and visualization tools to diagnose and resolve issues effectively.
-
-[Container Network Logs](./container-network-observability-logs.md) is the **recommended and fully supported solution** for network observability in AKS, providing comprehensive logging with both stored logs mode (for continuous monitoring with Log Analytics integration) and on-demand logs mode (for real-time troubleshooting). Throughout this guide, you'll see how Container Network Logs complements the metrics and dashboards to provide complete network visibility through KQL queries, flow analysis, and detailed packet inspection.
+This guide helps you navigate [Advanced Container Networking Services](./advanced-container-networking-services-overview.md#container-network-observability) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, [Container Network Logs](./container-network-observability-logs.md), [Container Network Metrics](./container-network-observability-metrics.md), and visualization tools to diagnose and resolve issues effectively.
+Advanced Container Networking Services provides comprehensive observability features that enable you to monitor, analyze, and troubleshoot network traffic in your Azure Kubernetes Service (AKS) clusters. It includes pre-built Grafana dashboards, real-time metrics, and detailed logs that help you gain insights into network performance, identify issues, and optimize your container networking environment.
 
 ## Overview of Advanced Container Networking Services dashboards
 
@@ -48,19 +47,19 @@ Retina is a cloud-agnostic, open-source Kubernetes network observability platfor
 - **Distributed packet capture**: On-demand packet captures across multiple nodes for deep troubleshooting
 - **Open-source flexibility**: Deploy and customize Retina according to your specific requirements with full source code access
 
-### Key differences between Container Network Logs, free Retina, and paid ACNS
+### Key differences between free Retina and paid ACNS
 
-| Feature | Container Network Logs (Recommended) | Free Retina | Advanced Container Networking Services (ACNS) |
-|---------|-------------------------------------|-------------|-----------------------------------------------|
-| **Cost** | Included with ACNS subscription | Free and open-source | Paid Azure service |
-| **Support** | Microsoft enterprise support | Community support | Microsoft enterprise support |
-| **Integration** | Native Azure integration | Manual setup and configuration | Fully managed Azure integration |
-| **Dashboards** | Pre-built Azure portal & Grafana dashboards | Basic Grafana dashboards | Pre-built, optimized Azure dashboards |
-| **Log Storage** | Azure Log Analytics with retention policies | Local storage with rotation limits | Comprehensive log management |
-| **Real-time Analysis** | On-demand logs mode | Real-time eBPF capture | Real-time metrics and logs |
-| **Historical Analysis** | Stored logs mode with long-term retention | Limited local storage | Advanced analytics with AI insights |
-| **Scalability** | Azure-managed auto-scaling | Self-managed scaling | Azure-managed auto-scaling |
-| **Maintenance** | Fully managed by Microsoft | Self-maintained | Fully managed by Microsoft |
+| Feature | Free Retina | Advanced Container Networking Services (ACNS) |
+|---------|-------------|-----------------------------------------------|
+| **Cost** | Free and open-source | Paid Azure service |
+| **Support** | Community support | Microsoft enterprise support |
+| **Integration** | Manual setup and configuration | Fully managed Azure integration |
+| **Dashboards** | Basic Grafana dashboards | Pre-built, optimized Azure dashboards |
+| **Log Storage** | Local storage with rotation limits | Comprehensive log management |
+| **Real-time Analysis** | Real-time eBPF capture | Real-time metrics and logs |
+| **Historical Analysis** | Limited local storage | Advanced analytics with AI insights |
+| **Scalability** | Self-managed scaling | Azure-managed auto-scaling |
+| **Maintenance** | Self-maintained | Fully managed by Microsoft |
 
 ### Getting started with free Retina
 
