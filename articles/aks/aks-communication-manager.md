@@ -20,7 +20,7 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 - Create a [planned maintenance window][planned-maintenance] for your autoupgrade configuration.
 
 > [!NOTE]
-> Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation. 
+> Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation.
 
 ## How to set up communication manager
 
@@ -109,11 +109,11 @@ Query for Node OS auto upgrade notifications:
     properties
 | order by eventTime asc
  ```
-4. Configuration for alert Conditions. For measurement, select Measure by "Table rows", and for Aggregation, select "Count" and aggregation granularity "30 minutes". Keep Threshold value at 0. For Split by dimesions, select "status" and "Include all future values".
+4. Configuration for alert Conditions. For measurement, select Measure by "Table rows", and for Aggregation, select "Count" and aggregation granularity "30 minutes". Keep Threshold value at 0. For Split by dimensions, select "status" and "Include all future values".
 
 :::image type="content" source="./media/auto-upgrade-cluster/edit-alert-rule.jpg" alt-text="The screenshot of the configuration options for alert conditions.":::
 
-5. The only values that appear are Scheduled, Started, Completed, Canceled, Failed. However, they wont show if the cluster never had an auto upgrade operation.
+5. The only values that appear are Scheduled, Started, Completed, Canceled, Failed. However, they won't show if the cluster never had an auto upgrade operation.
 
 :::image type="content" source="./media/auto-upgrade-cluster/by-dimension.jpg" alt-text="The screenshot of the split by dimensions drop down.":::
 
@@ -138,7 +138,6 @@ Query for Node OS auto upgrade notifications:
     In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
 
     Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
-
 
 ### Verification
 
