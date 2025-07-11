@@ -28,6 +28,56 @@ The suite of dashboards includes:
 - **L7 Flows (Namespace)**: Shows HTTP, Kafka, and gRPC packet flows to/from the specified namespace (i.e. Pods in the Namespace) when a Layer 7 based policy is applied. *This is available only for clusters with Cilium data plane*.
 - **L7 Flows (Workload)**: Shows HTTP, Kafka, and gRPC flows to/from the specified workload (for example, Pods of a Deployment or DaemonSet) when a Layer 7 based policy is applied. *This is available only for clusters with Cilium data plane*.
 
+## Free network observability with Retina
+
+While Advanced Container Networking Services is a paid offering that provides comprehensive network observability capabilities, Microsoft also offers **Retina**, an open-source network observability platform that you can use for free. Retina provides essential network monitoring capabilities that can help you get started with network observability before upgrading to the full ACNS experience.
+
+### What Retina offers for free
+
+Retina is a cloud-agnostic, open-source Kubernetes network observability platform that provides the following capabilities at no cost:
+
+- **Network flow monitoring**: Capture and analyze network traffic flows, including packet forwarding, TCP/UDP connections, and interface statistics
+- **DNS request tracking**: Monitor DNS queries and responses with detailed metrics including query types, response codes, and error analysis
+- **Packet drop detection**: Identify and analyze dropped packets with detailed drop reasons (e.g., iptable rules, connection tracking, unknown drops)
+- **Hubble integration**: Leverage Hubble control plane for enhanced flow logs and network insights across any CNI and OS (Linux/Windows)
+- **Prometheus metrics integration**: Export comprehensive network metrics to Prometheus with configurable metric modes (basic, advanced pod-level)
+- **Distributed packet capture**: On-demand packet captures across multiple nodes for deep troubleshooting
+- **Open-source flexibility**: Deploy and customize Retina according to your specific requirements with full source code access
+
+### Key differences between free Retina and paid ACNS
+
+| Feature | Free Retina | Advanced Container Networking Services (ACNS) |
+|---------|-------------|-----------------------------------------------|
+| **Cost** | Free and open-source | Paid Azure service |
+| **Support** | Community support | Microsoft enterprise support |
+| **Integration** | Manual setup and configuration | Fully managed Azure integration |
+| **Dashboards** | Basic Grafana dashboards | Pre-built, optimized Azure dashboards |
+| **Scalability** | Self-managed scaling | Azure-managed auto-scaling |
+| **Advanced features** | Core observability features | Enhanced analytics, AI-powered insights |
+| **Maintenance** | Self-maintained | Fully managed by Microsoft |
+
+### Getting started with free Retina
+
+To get started with the free Retina offering:
+
+1. **Deploy Retina on your cluster**: Install Retina using Helm charts or Kubernetes manifests from the [official Retina repository](https://github.com/microsoft/retina)
+2. **Configure basic monitoring**: Set up Prometheus and Grafana to visualize Retina metrics
+3. **Enable network flow collection**: Configure Retina to capture network flows based on your requirements
+4. **Create custom dashboards**: Build Grafana dashboards tailored to your monitoring needs
+
+### When to consider upgrading to ACNS
+
+Consider upgrading from free Retina to Advanced Container Networking Services when you need:
+
+- **Enterprise-grade support**: Professional support from Microsoft for mission-critical workloads
+- **Seamless Azure integration**: Native integration with Azure Monitor, Log Analytics, and other Azure services
+- **Pre-built dashboards**: Ready-to-use, optimized dashboards without manual configuration
+- **Managed scaling**: Automatic scaling and management of observability infrastructure
+- **Enhanced security**: Enterprise security features and compliance certifications
+
+> [!TIP]
+> You can start with free Retina to evaluate network observability capabilities and later migrate to ACNS for enhanced features and enterprise support.
+
 ## Use case 1: Interpret domain name server (DNS) issues for root cause analysis (RCA)
 
 DNS issues at the pod level can cause failed service discovery, slow application responses, or communication failures between pods. These problems frequently arise from misconfigured DNS policies, limited query capacity, or latency in resolving external domains. For instance, if the CoreDNS service is overloaded or an upstream DNS server stops responding, it might lead to failures in dependent pods. Resolving these issues requires not just identification but deep visibility into DNS behavior within the cluster.
