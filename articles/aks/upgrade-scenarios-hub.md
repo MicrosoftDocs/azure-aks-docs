@@ -47,7 +47,7 @@ This **decision hub** helps you choose the right AKS upgrade approach based on:
 **Critical security patch needed NOW?**
 
 1. **Immediate Action**: [Automated Security Patching →](aks-production-upgrade-strategies.md#scenario-4-fastest-security-patch-deployment)
-2. **With Stateful Workloads**: [Database Safety Patterns →](stateful-workload-upgrades.md#emergency-upgrade-checklist)
+2. **With Stateful Workloads**: [Database Safety Patterns →](stateful-workload-upgrades.md#-emergency-upgrade-checklist)
 3. **Rollback Ready**: [Quick Recovery Guide →](aks-production-upgrade-strategies.md#emergency-rollback-procedures)
 
 ## 📊 Upgrade Strategy Matrix
@@ -110,4 +110,4 @@ Find your ideal approach based on business constraints:
 Choose your scenario above, or start with our most popular guide:
 **[Production Upgrade Strategies →](aks-production-upgrade-strategies.md)**
 
-> **Need help?** Check our [AKS support options](aks-support-help.md) or [troubleshooting guide](./upgrade-cluster.md#troubleshooting).
+> **Need help?** Check our [AKS support options](aks-support-help.md) or [troubleshooting guide](./upgrade-cluster.md#common-upgrade-scenarios-and-recommendations).

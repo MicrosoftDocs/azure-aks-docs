@@ -261,6 +261,45 @@ Surge nodes require additional IPs. If the subnet is near capacity, node provisi
 
 ---
 
+## ❓ Frequently Asked Questions
+
+### Can I use open-source tools for validation?
+
+Yes! Many open-source tools integrate well with AKS upgrade processes:
+
+- **[kube-no-trouble (kubent)](https://github.com/doitintl/kube-no-trouble)** - Scans for deprecated APIs before upgrades
+- **[Trivy](https://aquasecurity.github.io/trivy/)** - Security scanning for container images and Kubernetes configurations
+- **[Sonobuoy](https://sonobuoy.io/)** - Kubernetes conformance testing and cluster validation
+- **[kube-bench](https://github.com/aquasecurity/kube-bench)** - Security benchmark checks against CIS standards
+- **[Polaris](https://github.com/FairwindsOps/polaris)** - Validation of Kubernetes best practices
+- **[kubectl-neat](https://github.com/itaysk/kubectl-neat)** - Clean up Kubernetes manifests for validation
+
+### How do I validate API compatibility before upgrading?
+
+Run deprecation checks using tools like kubent:
+
+```bash
+# Install and run API deprecation scanner
+kubectl apply -f https://github.com/doitintl/kube-no-trouble/releases/latest/download/knt-full.yaml
+
+# Check for deprecated APIs in your cluster
+kubectl run knt --image=doitintl/knt:latest --rm -it --restart=Never -- \
+  -c /kubeconfig -o json > api-deprecation-report.json
+
+# Review findings
+cat api-deprecation-report.json | jq '.[] | select(.deprecated==true)'
+```
+
+### What makes AKS upgrades different from other Kubernetes platforms?
+
+AKS provides several unique advantages:
+
+- **Native Azure integration** with Traffic Manager, Load Balancer, and networking
+- **Azure Fleet Manager** for coordinated multi-cluster upgrades
+- **Automatic node image patching** without manual node management
+- **Built-in validation** for quota, networking, and credentials
+- **Azure support** for upgrade-related issues
+
 ## Now Choose Your Upgrade Path
 
 This article provided the technical foundation - now select your scenario-based path:

@@ -29,7 +29,7 @@ This guide provides **database-specific upgrade patterns** for AKS clusters with
 
 ---
 
-> **Quick start:** [Emergency upgrade needed?→](#emergency-upgrade-checklist) | [PostgreSQL cluster?→](#the-ferris-wheel-pattern-postgresql) | [Redis cache?→](#redis-cluster-rolling-replace)
+> **Quick start:** [Emergency upgrade needed?→](#-emergency-upgrade-checklist) | [PostgreSQL cluster?→](#the-ferris-wheel-pattern-postgresql) | [Redis cache?→](#redis-cluster-rolling-replace)
 
 ## 🎯 Choose Your Pattern
 
@@ -38,8 +38,8 @@ This guide provides **database-specific upgrade patterns** for AKS clusters with
 | **PostgreSQL** | [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) | ~30-second downtime | Medium | Production databases |
 | **Redis** | [Rolling Replace](#redis-cluster-rolling-replace) | None | Low | Cache layers |
 | **MongoDB** | [Step-down Cascade](#mongodb-replica-set-step-down) | ~10-second downtime | Medium | Document databases |
-| **Elasticsearch** | [Shard Rebalancing](#elasticsearch-shard-rebalancing) | None | High | Search clusters |
-| **Any Database** | [Backup-Restore](#universal-backup-restore-pattern) | 2-minute to 5-minute downtime | Low | Simple setups |
+| **Elasticsearch** | Shard Rebalancing *(coming soon)* | None | High | Search clusters |
+| **Any Database** | Backup-Restore *(coming soon)* | 2-minute to 5-minute downtime | Low | Simple setups |
 
 ## ⚡ Emergency Upgrade Checklist
 
