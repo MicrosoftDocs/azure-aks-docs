@@ -1,13 +1,13 @@
 ---
 title: Center for Internet Security (CIS) Kubernetes benchmark
 description: Learn how AKS applies the CIS Kubernetes benchmark.
-ms.date: 05/14/2025
+ms.date: 07/11/2025
 ms.subservice: aks-security
 ms.topic: concept-article
 ms.custom:
   - build-2025
-author: davidsmatlak
-ms.author: davidsmatlak
+author: allyford
+ms.author: allyford
 ---
 
 # Center for Internet Security (CIS) Kubernetes benchmark
@@ -16,7 +16,7 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 ## Kubernetes CIS benchmark
 
-The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.9.0][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.27.x through AKS 1.29.x, with 1.29.x reaching its end of support in March 2025.
+The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.11.1][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.32.x.
 
 ### Security levels
 
@@ -76,7 +76,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Equivalent control implemented |
 | 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | Equivalent Control implemented |
 | 1.2.4 | Ensure that the `--kubelet-client-certificate` and `--kubelet-client-key` arguments are set as appropriate | Automated | L1 | Pass | |
-| 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | |
+| 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | Kubelet's api-server uses self-signed certificate |
 | 1.2.6 | Ensure that the `--authorization-mode` argument isn't set to `AlwaysAllow` | Automated | L1 | Pass | |
 | 1.2.7 | Ensure that the `--authorization-mode` argument includes Node | Automated | L1 | Pass | |
 | 1.2.8 | Ensure that the `--authorization-mode` argument includes RBAC | Automated | L1 | Pass | |
@@ -101,6 +101,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.27 | Ensure that the `--encryption-provider-config` argument is set as appropriate | Manual | L1 | Depends on Environment | |
 | 1.2.28 | Ensure that encryption providers are appropriately configured | Manual | L1 | Depends on Environment | |
 | 1.2.29 | Ensure that the API Server only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | |
+| 1.2.30 | Ensure that the `--service-account-extend-token-expiration` parameter is set to false | Automated | L1 | Depends on Environment | |
 | 1.3 | Controller Manager | | | | |
 | 1.3.1 | Ensure that the `--terminated-pod-gc-threshold` argument is set as appropriate | Manual | L1 | Pass | |
 | 1.3.2 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
@@ -114,12 +115,13 @@ Recommendations can have one of the following attestation statuses:
 | 1.4.2 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | |
 | 2 | `etcd` | | | | |
 | 2.1 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.2 | Ensure that the `--client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.3 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | |
-| 2.4 | Ensure that the `--peer-cert-file` and `--peer-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
-| 2.5 | Ensure that the `--peer-client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.6 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | |
-| 2.7 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | |
+| 2.2 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
+| 2.3 | Ensure that the `--client-cert-auth` argument is set to true | Automated | L1 | Pass | |
+| 2.4 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | |
+| 2.5 | Ensure that the `--peer-cert-file` and `--peer-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
+| 2.6 | Ensure that the `--peer-client-cert-auth` argument is set to true | Automated | L1 | Pass | |
+| 2.7 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | |
+| 2.8 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | |
 | 3 | Control Plane Configuration | | | | |
 | 3.1 | Authentication and Authorization | | | | |
 | 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | |
@@ -155,7 +157,7 @@ Recommendations can have one of the following attestation statuses:
 | 4.2.12 | Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | |
 | 4.2.13 | Ensure that a limit is set on pod PIDs | Manual | L1 | Pass | |
 | 4.3 | kube-proxy | | | | |
-| 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Fail | Operational impact |
+| 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Pass | |
 | 5 | Policies | | | | |
 | 5.1 | RBAC and Service Accounts| | | | |
 | 5.1.1 | Ensure that the cluster-admin role is only used where required | Automated | L1 | Depends on Environment | |
