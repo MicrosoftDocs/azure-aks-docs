@@ -226,6 +226,7 @@ To re-enable HTTP proxy on an existing cluster, use the [`az aks update`][az-aks
 
 ```azurecli-interactive
 az aks update --name $clusterName --resource-group $resourceGroup --enable-http-proxy
+```
 
 > [!IMPORTANT]
 > If you had an HTTP proxy configuration on your cluster before disabling, the existing HTTP proxy configuration automatically applies when you re-enable HTTP proxy on that cluster. We recommend verifying the configuration to ensure it meets your current requirements before proceeding. If you want to change your HTTP proxy configuration after re-enabling HTTP proxy, follow the steps to [Update the HTTP proxy configuration on an existing cluster](#update-a-cluster-to-update-or-enable-http-proxy).
@@ -402,22 +403,22 @@ If you're using the [Istio-based service mesh add-on for AKS][istio-add-on-docs]
 
 For example:
 
-    ```yaml
-    apiVersion: networking.istio.io/v1
-    kind: ServiceEntry
-    metadata:
-      name: proxy
-    spec:
-      hosts:
-      - my-company-proxy.com # ignored
-      addresses:
-      - $PROXY_IP/32
-      ports:
-      - number: $PROXY_PORT
+```yaml
+apiVersion: networking.istio.io/v1
+kind: ServiceEntry
+metadata:
+    name: proxy
+spec:
+    hosts:
+    - my-company-proxy.com # ignored
+    addresses:
+    - $PROXY_IP/32
+    ports:
+    - number: $PROXY_PORT
         name: tcp
         protocol: TCP
-      location: MESH_EXTERNAL
-    ```
+    location: MESH_EXTERNAL
+```
 
 1. Create a file and provide values for `PROXY_IP` and `PROXY_PORT`. 
 
