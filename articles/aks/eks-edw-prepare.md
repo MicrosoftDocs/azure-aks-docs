@@ -6,6 +6,7 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud architect deploying workloads, I want to configure and deploy an event-driven workflow to Azure Kubernetes Service, so that I can utilize Azure's infrastructure and tools efficiently in my projects."
 ---
 
 # Prepare to deploy the event-driven workflow (EDW) workload to Azure

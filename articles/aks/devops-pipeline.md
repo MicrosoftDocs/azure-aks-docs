@@ -6,6 +6,7 @@ ms.author: jukullam
 author: juliakm
 ms.date: 01/30/2025
 ms.custom: devops-pipelines-deploy, devx-track-azurepowershell
+# Customer intent: "As a DevOps engineer, I want to set up a CI/CD pipeline to deploy my application to Azure Kubernetes Service, so that I can automate the build and deployment process and improve efficiency in delivering updates."
 ---
 
 # Build and deploy to Azure Kubernetes Service with Azure Pipelines

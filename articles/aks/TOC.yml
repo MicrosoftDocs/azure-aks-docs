@@ -106,7 +106,7 @@
       href: core-aks-concepts.md
     - name: Pricing tiers for AKS
       href: free-standard-pricing-tiers.md
-    - name: Maintain and upgrade an AKS cluster
+    - name: Maintain and upgrade clusters
       href: upgrade.md
     - name: Availability zones
       href: availability-zones-overview.md
@@ -203,7 +203,7 @@
                   href: container-network-observability-metrics.md
                 - name: Logs
                   href: container-network-observability-logs.md
-            - name: Conatiner Network Security
+            - name: Container Network Security
               items:    
                 - name: FQDN based Filtering
                   href: container-network-security-fqdn-filtering-concepts.md
@@ -421,6 +421,8 @@
               href: resize-node-pool.md
             - name: Delete node pools
               href: delete-node-pool.md
+            - name: Stop and start node pools
+              href: start-stop-nodepools.md
         - name: Virtual nodes
           items:
             - name: Use virtual nodes
@@ -517,6 +519,8 @@
               href: use-nvidia-gpu.md
             - name: Use Windows GPUs
               href: use-windows-gpu.md
+            - name: Use AMD GPUs
+              href: use-amd-gpus.md
             - name: Multi-instance GPU node pool
               href: gpu-multi-instance.md
             - name: Monitor GPU metrics
@@ -533,6 +537,12 @@
               href: use-vertical-pod-autoscaler.md
             - name: Vertical Pod Autoscaler API reference
               href: vertical-pod-autoscaler-api-reference.md
+            - name: Cost optimized add-on scaling
+              items:
+                - name: Enable cost optimized add-on scaling
+                  href: optimized-addon-scaling.md
+                - name: Customize resource configuration for managed add-ons
+                  href: customize-resource-configuration.md
         - name: Configure Metrics Server VPA
           href: use-metrics-server-vertical-pod-autoscaler.md
         - name: Proximity placement groups
@@ -703,8 +713,6 @@
               href: use-pod-sandboxing.md
             - name: Secure pod traffic with network policies
               href: use-network-policies.md
-            - name: Pod security policies
-              href: use-pod-security-policies.md
             - name: Pod Security Admission
               href: use-psa.md
             - name: Secrets Store CSI Driver
@@ -796,6 +804,8 @@
               href: internal-lb.md
             - name: Use a Standard Load Balancer
               href: load-balancer-standard.md
+            - name: Upgrade Basic Load Balancer on AKS
+              href: upgrade-basic-load-balancer-on-aks.md
             - name: Use kube-proxy configuration (IPVS)
               href: configure-kube-proxy.md
         - name: Security
@@ -1026,7 +1036,7 @@
           items:
           - name: Upgrade an AKS cluster
             href: upgrade-aks-cluster.md
-          - name: Orchestrate upgrade across multiple clusters
+          - name: Upgrade multiple AKS clusters
             href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Upgrade node OS images
             href: node-image-upgrade.md
@@ -1040,6 +1050,8 @@
           items:
             - name: Automatically upgrade an AKS cluster
               href: auto-upgrade-cluster.md
+            - name: Automatically upgrade multiple AKS clusters
+              href: /azure/kubernetes-fleet/update-automation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
             - name: Use Planned Maintenance to schedule and control upgrades
               href: planned-maintenance.md
             - name: Automatically upgrade AKS cluster node OS images

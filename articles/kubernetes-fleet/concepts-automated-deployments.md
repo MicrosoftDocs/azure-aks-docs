@@ -3,10 +3,11 @@ title: Azure Kubernetes Fleet Manager Automated Deployments conceptual overview
 description: Learn about the concepts behind Fleet Manager Automated Deployments which simplify the process of building and deploying your application from Git.
 author: sjwaight
 ms.author: simonwaight
-ms.topic: conceptual
+ms.topic: overview
 ms.custom: build-2025
 ms.date: 04/22/2025
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a DevOps engineer, I want to automate deployments from my GitHub repository to multiple AKS clusters using Fleet Manager, so that I can streamline application updates and reduce manual intervention during the deployment process."
 ---
 
 # Azure Kubernetes Fleet Manager Automated Deployments (Preview)

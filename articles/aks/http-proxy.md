@@ -157,6 +157,12 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     kubectl node-shell {node name}
     cat /etc/environment
     ```
+    
+3.  Upgrade AKS node images
+
+After configuring the proxy, you must upgrade the node image to apply the changes. The node image upgrade process is the only way to update the OS files required for proxy configuration updates. The node image upgrade process is a rolling upgrade that updates the OS image on each node in the node pool. The AKS control plane handles the upgrade process, which is nondisruptive to running applications.
+
+To upgrade AKS node images, see [Upgrade Azure Kubernetes Service (AKS) node images](./node-image-upgrade.md).
 
 ## Disable HTTP proxy on an existing cluster (Preview)
 
@@ -196,7 +202,7 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     az provider register --namespace Microsoft.ContainerService
     ```
 
-### Update cluster to disable HTTP proxy
+### Update cluster to disable HTTP proxy (preview)
 
 1. Update your cluster to disable HTTP proxy using the [`az aks update`][az-aks-update] command with `--disable-http-proxy` flag.
 
@@ -218,15 +224,27 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     cat /etc/environment
     ```
 
+3. Upgrade AKS node images
+
+After configuring the proxy, you must upgrade the node image to apply the changes. The node image upgrade process is the only way to update the OS files required for proxy configuration updates. The node image upgrade process is a rolling upgrade that updates the OS image on each node in the node pool. The AKS control plane handles the upgrade process, which is nondisruptive to running applications.
+
+To upgrade AKS node images, see [Upgrade Azure Kubernetes Service (AKS) node images](./node-image-upgrade.md).
+
 ### Re-enable HTTP proxy on an existing cluster
 
 When you create a cluster, HTTP proxy is enabled by default. Once you disable HTTP proxy on a cluster, the proxy configuration is saved in the database but the proxy variables are removed from the pods and nodes.
 
-To re-enable HTTP proxy on an existing cluster, use the [`az aks update`][az-aks-update] command with the `--enable-http-proxy` flag.
+1. To re-enable HTTP proxy on an existing cluster, use the [`az aks update`][az-aks-update] command with the `--enable-http-proxy` flag.
 
 ```azurecli-interactive
 az aks update --name $clusterName --resource-group $resourceGroup --enable-http-proxy
 ```
+
+2. Upgrade AKS node images
+
+After configuring the proxy, you must upgrade the node image to apply the changes. The node image upgrade process is the only way to update the OS files required for proxy configuration updates. The node image upgrade process is a rolling upgrade that updates the OS image on each node in the node pool. The AKS control plane handles the upgrade process, which is nondisruptive to running applications.
+
+To upgrade AKS node images, see [Upgrade Azure Kubernetes Service (AKS) node images](./node-image-upgrade.md).
 
 > [!IMPORTANT]
 > If you had an HTTP proxy configuration on your cluster before disabling, the existing HTTP proxy configuration automatically applies when you re-enable HTTP proxy on that cluster. We recommend verifying the configuration to ensure it meets your current requirements before proceeding. If you want to change your HTTP proxy configuration after re-enabling HTTP proxy, follow the steps to [Update the HTTP proxy configuration on an existing cluster](#update-a-cluster-to-update-or-enable-http-proxy).
@@ -234,6 +252,7 @@ az aks update --name $clusterName --resource-group $resourceGroup --enable-http-
 :::zone-end
 
 :::zone target="docs" pivot="arm"
+
 ## Configure an HTTP proxy configuration using an Azure Resource Manager (ARM) template
 
 You can deploy an AKS cluster with an HTTP proxy using an ARM template. 
@@ -320,6 +339,11 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     kubectl node-shell {node name}
     cat /etc/environment
     ```
+3.  Upgrade AKS node images
+
+After configuring the proxy, you must upgrade the node image to apply the changes. The node image upgrade process is the only way to update the OS files required for proxy configuration updates. The node image upgrade process is a rolling upgrade that updates the OS image on each node in the node pool. The AKS control plane handles the upgrade process, which is nondisruptive to running applications.
+
+To upgrade AKS node images, see [Upgrade Azure Kubernetes Service (AKS) node images](./node-image-upgrade.md).
 
 ## Disable HTTP proxy on an existing cluster using an ARM template (Preview)
 
@@ -386,6 +410,12 @@ The `--http-proxy-config` parameter should be set to a new JSON file with update
     kubectl node-shell {node name}
     cat /etc/environment
     ```
+    
+4.  Upgrade AKS node images
+
+After configuring the proxy, you must upgrade the node image to apply the changes. The node image upgrade process is the only way to update the OS files required for proxy configuration updates. The node image upgrade process is a rolling upgrade that updates the OS image on each node in the node pool. The AKS control plane handles the upgrade process, which is nondisruptive to running applications.
+
+To upgrade AKS node images, see [Upgrade Azure Kubernetes Service (AKS) node images](./node-image-upgrade.md).
 
 ### Re-enable HTTP proxy on an existing cluster
 	

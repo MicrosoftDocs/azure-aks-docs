@@ -6,6 +6,7 @@ ms.date: 06/27/2023
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As a cluster operator, I want to implement best practices for scanning and updating container images, so that I can minimize security risks and ensure my applications run on the latest secure environments in Azure Kubernetes Service.
 ---
 
 # Best practices for container image management and security in Azure Kubernetes Service (AKS)

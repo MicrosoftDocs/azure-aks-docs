@@ -40,7 +40,10 @@ We recommend enabling the [auto-upgrade patch channel](auto-upgrade-cluster.md) 
 
 ## Enable long-term support
 
-**Enabling LTS requires moving your cluster to the Premium tier and explicitly selecting the LTS support plan**. While it's possible to enable LTS when the cluster is in *community support, you're  charged once you enable the Premium tier.
+**Enabling LTS requires moving your cluster to the Premium tier and explicitly selecting the LTS support plan**. While it's possible to enable LTS when the cluster is in *community support*, you're charged once you enable the Premium tier.
+
+> [!NOTE]
+> We strongly recommend enabling the patch auto-upgrade channel to ensure your cluster always receives the latest supported patches. LTS only supports the last two patch versions for each minor version. Clusters not on the latest patches may lose support.
 
 ### Enable LTS on a new cluster
 
@@ -55,6 +58,7 @@ We recommend enabling the [auto-upgrade patch channel](auto-upgrade-cluster.md) 
         --tier premium \
         --k8s-support-plan AKSLongTermSupport \
         --kubernetes-version 1.27 \
+        --auto-upgrade-channel patch \
         --generate-ssh-keys
     ```
 
@@ -63,8 +67,11 @@ We recommend enabling the [auto-upgrade patch channel](auto-upgrade-cluster.md) 
 * Enable LTS on an existing cluster using the [`az aks update`][az-aks-update] command.
 
     ```azurecli-interactive
-    az aks update --resource-group <resource-group-name> --name <cluster-name> --tier premium --k8s-support-plan AKSLongTermSupport
+    az aks update --resource-group <resource-group-name> --name <cluster-name> --tier premium --k8s-support-plan AKSLongTermSupport --auto-upgrade-channel patch
     ```
+
+> [!TIP]
+> To see which Kubernetes versions you can upgrade to, use the [AKS release tracker](https://releases.aks.azure.com/webpage/index.html) or run `az aks get-upgrades --resource-group <resource-group-name> --name <cluster-name>`.
 
 ## Migrate to the latest LTS version
 
@@ -113,7 +120,6 @@ The following table provides a list of add-ons and features that aren't supporte
 |  Add-on / Feature | Reason it's unsupported |
 |---|---|
 | Istio |  The Istio support cycle is short (six months), and there are no maintenance releases for supported LTS versions. |
-| Keda | Unable to guarantee future version compatibility for supported LTS versions. |
 | Calico  |  Requires Calico Enterprise agreement past community support. |
 | Key Management Service (KMS) | KMSv2 replaces KMS during this LTS cycle. |
 | Dapr | AKS extensions aren't supported. |
@@ -157,10 +163,6 @@ Yes, AKS ensures that all supported Kubernetes versions are eligible for Long-Te
 ### What is the pricing model for LTS?
 
 LTS is available on the Premium tier refer to the [Premium tier pricing](https://azure.microsoft.com/pricing/details/kubernetes-service/) for more information.
-
-### After enabling LTS, my cluster's autoUpgradeChannel changed to patch channel
-
-This is expected. If there was no defined autoUpgradeChannel for the AKS cluster, it defaults to `patch` with LTS.
 
 <!-- LINKS -->
 [az-aks-create]: /cli/azure/aks#az-aks-create

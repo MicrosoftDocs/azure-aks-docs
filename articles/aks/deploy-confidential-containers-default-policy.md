@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: devx-track-azurecli, ignite-fall-2023, mode-api
+# Customer intent: As a cloud architect, I want to deploy an Azure Kubernetes Service (AKS) cluster with Confidential Containers, so that I can ensure secure application environments for sensitive workloads using confidential computing.
 ---
 
 # Deploy an AKS cluster with Confidential Containers and an automatically generated policy
