@@ -34,7 +34,7 @@ This article shows you how to use Azure CNI Networking for static allocation of 
 - Review the [prerequisites][azure-cni-prereq] for configuring basic Azure CNI networking in AKS, as the same prerequisites apply to this article.
 - Review the [deployment parameters][azure-cni-deployment-parameters] for configuring basic Azure CNI networking in AKS, as the same parameters apply.
 - AKS Engine and DIY clusters aren't supported.
-- Azure CLI version `2.37.0` or later
+- Azure CLI version `2.75.0` or later
 - If you have an existing cluster, you need to enable Container Insights for monitoring IP subnet usage. You can enable Container Insights using the [`az aks enable-addons`][az-aks-enable-addons] command, as shown in the following example:
 
     ```azurecli-interactive
@@ -46,7 +46,7 @@ This article shows you how to use Azure CNI Networking for static allocation of 
 Below are some of the limitations of using Azure CNI Static Block allocation:
 - Minimum Kubernetes Version required is 1.28
 - Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs
-- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot be use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
+- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
 - Only supported in new clusters or when adding node pools with a different subnet to existing clusters. Migrating or updating existing clusters or node pools is not supported.
 - Across all the CIDR blocks assigned to a node in the node pool, one IP will be selected as the primary IP of the node. Thus, for network administrators selecting the `--max-pods` value try to use the calculation below to best serve your needs and have optimal usage of IPs in the subnet:  
 `max_pods` = `(N * 16) - 1`  
@@ -56,7 +56,7 @@ where N is any positive integer and N > 0
 
 Planning your IP addressing is more flexible and granular. Since the nodes and pods scale independently, their address spaces can also be planned separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
 
-In this scenario, CIDR blocks of /28 (16 IPs) are allocated to nodes based on your '--max-pod' configuration for your node pool which defines the maximum number of pods per node. 1 IP is reserved on each node from all the available IPs on that node for internal purposes. 
+In this scenario, CIDR blocks of /28 (16 IPs) are allocated to nodes based on your '--max-pods' configuration for your node pool which defines the maximum number of pods per node. 1 IP is reserved on each node from all the available IPs on that node for internal purposes. 
 
 Thus while determining and planning your IPs it is essential to define your '--max-pods' configuration and it can be calculated best as below:
 `max_pods_per_node = (16 * N) - 1`
@@ -68,14 +68,14 @@ Ideal values with no IP wastage would require the max pods value to conform to t
 - **Example 2:** max_pods = 31, CIDR Blocks allocated per node = 2, Total IPs available for pods = (16 * 2) - 1 = 32 - 1 = 31, IP wastage per node = 31 - 31 = 0 **[Ideal Case]**
 - **Example 3:** max_pods = 32, CIDR Blocks allocated per node = 3, Total IPs available for pods = (16 * 3) - 1 = 48 - 1 = 47, IP wastage per node = 47 - 32 = 15 **[High Wastage - Not Recommended Case]**
 
-The planning of IPs for Kubernetes services remain unchanged.
+The planning of IPs for Kubernetes services remains unchanged.
 
 > [!NOTE]
 > Ensure your VNet has a sufficiently large and contiguous address space to support your cluster's scale.
 
 ## Deployment parameters
 
-The [deployment parameters][azure-cni-deployment-parameters] for configuring basic Azure CNI networking in AKS are all valid, with two exceptions:
+The [deployment parameters][azure-cni-deployment-parameters] for configuring basic Azure CNI networking in AKS are all valid, with exceptions:
 
 - The **vnet subnet id** parameter now refers to the subnet related to the cluster's nodes.
 - The parameter **pod subnet id** is used to specify the subnet whose IP addresses will be statically or dynamically allocated to pods in the node pool.
@@ -137,6 +137,31 @@ az aks nodepool add --cluster-name $clusterName -g $resourceGroup  -n newnodepoo
     --pod-ip-allocation-mode StaticBlock \
     --no-wait
 ```
+
+## Migrating from Dynamic IP Allocation to Static Block Allocation
+
+If you have an existing AKS cluster using dynamic IP allocation and want to migrate to static block allocation, follow these steps:
+
+### Steps for Migration
+
+1. **Plan for a new subnet to be used for Static Block agent pools**
+   - Create a new subnet in your existing VNet that will be dedicated to the static block allocation mode
+   - Ensure the subnet size follows the planning guidelines outlined in the [Plan IP addressing](#plan-ip-addressing) section
+
+2. **Add an agent pool to your existing cluster with Static Block mode and the new subnet**
+   - Use the `az aks nodepool add` command to create a new node pool with static block allocation
+   - Reference the new subnet using `--pod-subnet-id` and set `--pod-ip-allocation-mode` to `StaticBlock`
+
+3. **Cordon off your existing agent pool so that all your deployments and traffic move over to the new agent pool**
+   - Use `kubectl cordon` to mark existing nodes as unschedulable
+   - Gradually drain workloads from the old node pool to the new static block node pool
+
+4. **Once all the workloads have moved over to the new agent pool, delete the existing non-static block agent pool**
+   - Verify all workloads are running successfully on the new node pool
+   - Remove the old node pool using `az aks nodepool delete`
+
+> [!IMPORTANT]
+> Migration requires careful planning and testing. Ensure you have adequate capacity in the new node pool before cordoning off the existing nodes. Test the migration process in a non-production environment first.
 
 ## Static allocation of CIDR blocks and enhanced subnet support FAQs
 
