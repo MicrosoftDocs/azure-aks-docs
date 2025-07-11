@@ -1,49 +1,10 @@
 ---
 title: AKS Production Upgrade Strategies
-description: Battle-tested patterns for upgrading Azure Kubernetes Service clusters in production with minimal downtime an### ⚠️ Common Pitfalls
-<details>
-<summary><strong>Expand for troubleshooting tips</strong></summary>
-
-- **DNS propagation is slow:** Use low TTLs before upgrade, and validate DNS cache flush.
-- **Pods stuck terminating:** Check for finalizers, lon### ⚠️ Common Pitfalls
-<details>
-<summary><strong>Expand for troubleshooting tips</strong></summary>
-
-- **Stage fails due to quota:** Pre-check regional quotas for all clusters in the fleet.
-- **Validation scripts fail:** Ensure test scripts are idempotent and have clear pass/fail output.
-- **Manual approval delays:** Use automation for non-prod, require manual only for prod.
-
-</details>
-
-### ❓ Frequently Asked Questions
-<details>
-<summary><strong>Expand for quick answers</strong></summary>
-
-- **Q: Can I use OSS tools for validation?**
-  - Yes! Integrate [Sonobuoy](https://sonobuoy.io/) for conformance, [kube-bench](https://github.com/aquasecurity/kube-bench) for security.
-- **Q: What's unique to AKS?**
-  - Azure Fleet enables true staged rollouts and validation gates natively.
-
-</details>oks, or PDBs with `maxUnavailable: 0`.
-- **Traffic not shifting:** Validate load balancer/Traffic Manager config and health probes.
-- **Rollback fails:** Always keep blue cluster ready until green is fully validated.
-
-</details>
-
-### ❓ Frequently Asked Questions
-<details>
-<summary><strong>Expand for quick answers</strong></summary>
-
-- **Q: Can I use OSS tools for validation?**
-  - Yes! Use [kube-no-trouble](https://github.com/doitintl/kube-no-trouble) for API checks, [Trivy](https://aquasecurity.github.io/trivy/) for image scanning.
-- **Q: What's unique to AKS?**
-  - Native integration with Azure Traffic Manager, Fleet, and node image patching for zero-downtime upgrades.
-
-</details>ty.
+description: Battle-tested patterns for upgrading Azure Kubernetes Service clusters in production with minimal downtime and maximum safety.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.date: 07/09/2025
+ms.date: 07/11/2025
 author: kaarthis
 ms.author: kaarthis
 ms.custom: scenarios, production-ready
@@ -464,7 +425,7 @@ read approval
 
 **Strategy:** Multi-phase validation with canary deployment
 
-> 💡 **Learn more:** [Canary deployments in AKS](/azure/architecture/guide/aks/canary-deployment-for-aks) | [API deprecation policies](https://kubernetes.io/docs/reference/using-api/deprecation-policy/)
+> 💡 **Learn more:** [Canary deployments](/azure/architecture/reference-architectures/containers/aks-microservices/aks-microservices-advanced#deployment-strategies) | [API deprecation policies](https://kubernetes.io/docs/reference/using-api/deprecation-policy/)
 
 ### Implementation Steps
 
@@ -833,7 +794,7 @@ spec:
 
 ## Troubleshooting Guide
 
-> 💡 **Learn more:** [AKS troubleshooting guide](/azure/aks/troubleshooting) | [Node and pod troubleshooting](./node-access.md) | [Upgrade failures](./upgrade-aks-cluster.md#troubleshoot-the-upgrade-process)
+> 💡 **Learn more:** [AKS troubleshooting guide](/azure/aks/troubleshooting) | [Node and pod troubleshooting](./node-access.md) | [Upgrade error messages](./upgrade-aks-cluster.md#troubleshoot-aks-cluster-upgrade-error-messages)
 
 ### Common Issues and Solutions
 
