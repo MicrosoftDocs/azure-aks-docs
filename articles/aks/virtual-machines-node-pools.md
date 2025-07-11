@@ -59,7 +59,7 @@ The following table highlights how Virtual Machines node pools compare with stan
 
 - An Azure subscription. If you don't have one, you can [create a free account](https://azure.microsoft.com/free).
 - Azure CLI version 2.73.0 or later installed and configured. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][install azure cli]
-- This feature requires kubernetes version 1.27 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster](https://learn.microsoft.com/azure/aks/upgrade-aks-cluster)
+- This feature requires kubernetes version 1.27 or greater. To upgrade your kubernetes version, see [Upgrade AKS cluster][upgrade-aks-cluster]
 
 ## Create an AKS cluster with Virtual Machines node pools
 
@@ -217,5 +217,6 @@ In this article, you learned how to use Virtual Machines node pools in AKS. To l
 [az extension update]: /cli/azure/extension#az-extension-update
 [az account set]: /cli/azure/account#az-account-set
 [create node pools]: create-node-pools.md
+[upgrade-aks-cluster]: upgrade-aks-cluster.md
 [windows-server-password]: /windows/security/threat-protection/security-policy-settings/password-must-meet-complexity-requirements#reference
 [VMSS orchestrate]: /azure/virtual-machine-scale-sets/virtual-machine-scale-sets-orchestration-modes
