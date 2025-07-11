@@ -82,6 +82,8 @@
           href: access-fleet-hub-cluster-kubernetes-api.md
         - name: Multi-cluster resource placement using cluster resource placement
           href: quickstart-resource-propagation.md
+        - name: Understand the placement status
+          href: howto-understand-placement.md
         - name: Intelligent multi-cluster resource placement using cluster properties
           href: intelligent-resource-placement.md
         - name: Use Automated Deployments to drive multi-cluster resource placement
