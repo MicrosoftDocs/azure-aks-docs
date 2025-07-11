@@ -88,7 +88,7 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 ```
 
 > [!IMPORTANT]
-> Enabling localDNS on a node pool initiates a reimage operation on all nodes within that pool. This process can cause temporary disruption to running workloads and may lead to application downtime if not properly managed. You should plan for potential service interruptions and ensure that their applications are configured for high availability or have appropriate disruption budgets in place before enabling this setting.
+> Enabling LocalDNS on a node pool initiates a reimage operation on all nodes within that pool. This process can cause temporary disruption to running workloads and may lead to application downtime if not properly managed. You should plan for potential service interruptions and ensure that their applications are configured for high availability or have appropriate disruption budgets in place before enabling this setting.
 
 ## Configuring LocalDNS
 
@@ -106,21 +106,21 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
         "queryLogging": "Error",
         "protocol": "PreferUDP",
         "forwardDestination": "VnetDNS",
-        "forwardPolicy": "Sequential"
+        "forwardPolicy": "Sequential",
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate",
-      }
+        "serveStale": "Immediate"
+      },
       "cluster.local": {
         "queryLogging": "Error",
         "protocol": "ForceTCP",
         "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "Sequential"
+        "forwardPolicy": "Sequential",
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate",
+        "serveStale": "Immediate"
       }
     },
     "kubeDNSOverrides": {
@@ -128,35 +128,35 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
         "queryLogging": "Error",
         "protocol": "PreferUDP",
         "forwardDestination": "ClusterCoreDNS",
-	"forwardPolicy": "Sequential"
+        "forwardPolicy": "Sequential",
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate",
-      }
+        "serveStale": "Immediate"
+      },
       "cluster.local": {
         "queryLogging": "Error",
         "protocol": "ForceTCP",
         "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "Sequential"
+        "forwardPolicy": "Sequential",
         "maxConcurrent": 1000,
         "cacheDurationInSeconds": 3600,
         "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate",
+        "serveStale": "Immediate"
       }
     }
   }
 }
 ```
 
-### Setting the `mode` for localDNS
+### Setting the `mode` for LocalDNS
 
-LocalDNS can be enabled in three possible modes that define the extent of enforcement of localDNS for the workload:
-* `Preferred` (default): In this mode, LocalDNS is enabled if the node pool is running Kubernetes version 1.33 or later. If the version requirement isn't met, LocalDNS won't be activated, but the configuration is still added to the image and validated for correctness.
+LocalDNS can be enabled in three possible modes that define the extent of enforcement of LocalDNS for the workload:
+* `Preferred` (default): In this mode, LocalDNS is enabled if the node pool is running Kubernetes version 1.33 or later. If the version requirement isn't met, LocalDNS won't be enabled, but the configuration is still added to the image and validated for correctness.
 * `Required`: In this mode, LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
 
-### Server Blocks and Supported Plugins for localDNS 
+### Server Blocks and Supported Plugins for LocalDNS 
 
 The default configuration applies to queries from pods using `dnsPolicy:default` (under `vnetDNSOverrides`) and pods using `dnsPolicy:ClusterFirst` (under `kubeDNSOverrides`). Within each, there are two default server blocks defined: `.` and  `cluster.local`. 
 
@@ -174,7 +174,7 @@ The default configuration applies to queries from pods using `dnsPolicy:default`
 | [`maxConcurrent`](https://coredns.io/plugins/forward/)            | Maximum number of concurrent DNS queries handled by the proxy.                          | `1000`                                                               | Integer                            | 
 | [`cacheDurationInSeconds`](https://coredns.io/plugins/cache)      | Maximum TTL (Time To Live) in seconds for which DNS responses are cached                | `3600`                                                               | Integer                            |
 | [`serveStaleDurationInSeconds`](https://coredns.io/plugins/cache) | Duration (in seconds) to serve stale DNS responses if upstream is unavailable.          | `3600`                                                               | Integer                            |
-| [`serveStale`](https://coredns.io/plugins/cache)                  | Policy for serving stale DNS responses during upstream failures.                        | `verify`                                                             | `verify` `immediate`               | 
+| [`serveStale`](https://coredns.io/plugins/cache)                  | Policy for serving stale DNS responses during upstream failures.                        | `immediate`                                                             | `verify` `immediate`               | 
 
 ### Configuration Validation Rules
 
@@ -187,9 +187,9 @@ When creating your LocalDNS configuration, be aware of these validation rules to
 > [!NOTE]
 > These validation rules are enforced during configuration deployment. Violating them will cause the LocalDNS configuration to fail validation. 
 
-### Defining a custom server block in localDNS
+### Defining a custom server block in LocalDNS
 
-CoreDNS matches queries to a specific server block based on an exact match for domain being queried and not on partial matches. If you have the need for custom server blocks, you can add them to your localDNS configuration by creating a file called _localdnsconfig.json_ with the added configurations.
+CoreDNS matches queries to a specific server block based on an exact match for domain being queried and not on partial matches. If you have the need for custom server blocks, you can add them to your LocalDNS configuration by creating a file called _localdnsconfig.json_ with the added configurations.
 
 For example, if you have specific DNS needs when accessing microsoft.com, you could use the following server block:
 
@@ -202,11 +202,11 @@ For example, if you have specific DNS needs when accessing microsoft.com, you co
   "maxConcurrent": 1000,
   "cacheDurationInSeconds": 3600,
   "serveStaleDurationInSeconds": 3600,
-  "serveStale": "Verify"
+  "serveStale": "immediate"
 }
 ```
 
-## Verify if localDNS is enabled
+## Verify if LocalDNS is enabled
 
 Once LocalDNS is enabled, you can verify its operation by running DNS queries from pods in the specified node pool and inspecting the `SERVER` field in the responses to confirm LocalDNS addresses are returned (169.254.10.10 or 169.254.10.11).
 
@@ -218,7 +218,7 @@ Before running the validation steps, ensure the following conditions are met:
 
 Here's an example of how to verify:
 
-1. Create a debug pod in the node pool where localDNS is enabled:
+1. Create a debug pod in the node pool where LocalDNS is enabled:
    ```azure-cli-interactive
    kubectl run dnstest --image=busybox:1.28 -- sleep 3600
    ```
@@ -237,9 +237,9 @@ Here's an example of how to verify:
    Address 1: 10.0.0.1 kubernetes.default.svc.cluster.local
    ```
 
-## Disable localDNS
+## Disable LocalDNS
 
-To disable localDNS for a node pool, you must update your _localdnsconfig.json_ file by setting the `"mode"` property to `"Disabled"`. This change instructs AKS to turn off the local DNS proxy on all nodes in the specified pool, reverting DNS resolution to the default cluster behavior. After updating the configuration file, apply it to the node pool using the Azure CLI to ensure the change takes effect.
+To disable LocalDNS for a node pool, you must update your _localdnsconfig.json_ file by setting the `"mode"` property to `"Disabled"`. This change instructs AKS to turn off the local DNS proxy on all nodes in the specified pool, reverting DNS resolution to the default cluster behavior. After updating the configuration file, apply it to the node pool using the Azure CLI to ensure the change takes effect.
 
 ```azure-cli-interactive
 az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
@@ -298,7 +298,7 @@ This process ensures the AKS Resource Provider is aware of the DNS changes and a
 
 ## Next steps
 
-For information on localDNS in AKS, see [LocalDNS in Azure Kubernetes Service (conceptual)](./dns-concepts.md).
+For information on LocalDNS in AKS, see [LocalDNS in Azure Kubernetes Service (conceptual)](./dns-concepts.md).
 
 For details on how to customize CoreDNS in AKS, refer to the [CoreDNS customization guide](./coredns-custom.md).
 
