@@ -20,7 +20,7 @@ In this article, you learn how to create AKS node pools using Confidential VM si
 
 ## AKS supported confidential VM sizes
 
-Azure offers a choice of Trusted Execution Environment (TEE) options from both AMD and Intel. These TEEs allow you to create Confidential VM environments with excellent price-to-performance ratios, all without requiring any code changes.
+Azure offers a choice of [Trusted Execution Environment (TEE)][TEE] options from both AMD and Intel. These TEEs allow you to create Confidential VM environments with excellent price-to-performance ratios, all without requiring any code changes.
 - AMD-based Confidential VMs, use AMD SEV-SNP technology, which is introduced with third Gen AMD EPYC™ processors. 
 - Intel-based Confidential VMs use Intel TDX, with fourth Gen Intel® Xeon® processors. 
 
@@ -62,7 +62,7 @@ The following limitations apply when adding a node pool with CVM to AKS:
 
 - You can't use FIPS, ARM64, Trusted Launch, or Pod Sandboxing.
 - You can't upgrade an existing node pool to use CVM.
-- You can use CVM with Windows node pools.
+- You can't use CVM with Windows node pools.
 - CVM with Azure Linux is currently in preview.
 
 ## Prerequisites
@@ -187,6 +187,7 @@ In this article, you learned how to add a node pool with CVM to an AKS cluster. 
 
 <!-- LINKS - Internal -->
 [about-cvm]: /azure/confidential-computing/confidential-vm-overview
+[TEE]: /azure/confidential-computing/trusted-execution-environment
 [cvm-sizes]: /azure/confidential-computing/virtual-machine-options
 [cvm]: /azure/confidential-computing/confidential-node-pool-aks
 [cvm-announce]: https://techcommunity.microsoft.com/t5/azure-confidential-computing/azure-confidential-vms-using-sev-snp-dcasv5-ecasv5-are-now/ba-p/3573747
