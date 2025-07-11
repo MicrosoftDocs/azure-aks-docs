@@ -16,7 +16,7 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 ## Kubernetes CIS benchmark
 
-The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.11.1][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.32.x.
+The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.11.1][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.29.x through AKS 1.32.x, with 1.32.x. For support timelines, see [supported kubernetes versions][supported-kubernetes-versions].
 
 ### Security levels
 
@@ -224,3 +224,4 @@ For more information about AKS security, see the following articles:
 <!-- INTERNAL LINKS -->
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark
 [security-concepts-aks-apps-clusters]: concepts-security.md
+[supported-kubernetes-versions]: ./supported-kubernetes-versions.md
