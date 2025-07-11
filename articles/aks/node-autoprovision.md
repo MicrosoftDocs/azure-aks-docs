@@ -75,6 +75,8 @@ The following networking configurations are currently *not* supported:
 
 ### Enable node autoprovisioning on a new cluster
 
+NAP is enabled by setting the field `--node-provisioning-mode` to [Auto](https://learn.microsoft.com/en-us/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
+
 ### [Azure CLI](#tab/azure-cli)
 
 - Enable node autoprovisioning on a new cluster using the `az aks create` command and set `--node-provisioning-mode` to `Auto`. You also need to set the `--network-plugin` to `azure`, `--network-plugin-mode` to `overlay`, and `--network-dataplane` to `cilium`.
@@ -92,7 +94,7 @@ The following networking configurations are currently *not* supported:
 
 ### [ARM template](#tab/arm)
 
-- Enable node autoprovisioning on a new cluster using the `az deployment group create` command and specify the `--template-file` parameter with the path to the ARM template file.
+- Enable node autoprovisioning on a new cluster using the `az deployment group create` command and specify the `--template-file` parameter with the path to the ARM template file. The ARM template includes the `mode` field in `nodeProvisioningProfile` set to `Auto`, which enabled node autoprovisioning. 
 
     ```azurecli-interactive
     az deployment group create --resource-group $RESOURCE_GROUP_NAME --template-file ./nap.json
@@ -338,6 +340,10 @@ When you have multiple node pools defined, it's possible to set a preference of 
 
 ## Node disruption
 
+### Disruption Controls
+Node Disruption can be controlled using different methods, including Consolidation or Drift. 
+
+### Consolidation
 When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
 You can remove a node manually using `kubectl delete node`, but node autoprovision can also control when it should optimize your nodes based on your specifications.
@@ -356,8 +362,8 @@ You can remove a node manually using `kubectl delete node`, but node autoprovisi
     consolidateAfter: 30s
 ```
 
-### Kubernetes and node image updates
-
+### Disruption Controls
+Node Disruption can be controlled using different methods, including Consolidation or Drift. 
 AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates of your nodes for you. You can adjust the schedule of your Kubernetes and node image updates using planned maintenance windows to target less busy periods for your workloads.
 
 ### Kubernetes upgrades
@@ -370,11 +376,11 @@ AKS recommends coupling node autoprovision with a Kubernetes [Auto Upgrade][auto
 
 By default NAP node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place:
 
-- Karpenter Node Disruption Budgets - Node-level disruption budgets can be set, and can be triggered when nodes move out of spec, known as Drift. 
+- Karpenter Node Disruption Budgets - Node-level disruption budgets can be set, and can be triggered when nodes move out of specified state, known as Drift. 
 - Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file to determine when and which pods should be available for disruption. Node Auto-provisioning honors PDBs. 
 
-> [!IMPORTANT]
-> After you update the SSH key, AKS doesn't automatically update your nodes. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with Node Auto-provisioning enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
+>[!NOTE]
+>[Node OS Upgrade Channel settings][node-os-upgrade-channel] do not impact NAP-managed nodes, as there is a similar automated node image upgrade method.  
 
 ## Monitoring selection events
 
@@ -490,6 +496,129 @@ Node autoprovisioning can only be disabled when:
     ```
 ---
 
+## FAQ
+
+### How does NAP differ from the Cluster Autoscaler?
+- **Direct VM management**: NAP provisions VMs directly rather than scaling VM Scale Sets
+- **Faster provisioning**: No need to pre-create VM Scale Sets for every combination of instance type and zone
+- **Better bin packing**: Considers multiple instance types and zones simultaneously
+- **More flexible**: Supports diverse instance types, zones, and capacity types without complex configuration
+
+## Installation and Configuration
+
+### Can I use NAP with existing AKS clusters?
+Yes, NAP can be installed on existing AKS clusters.
+
+### Do I need to remove Cluster Autoscaler before installing NAP?
+It's recommended to remove or disable Cluster Autoscaler prior to enabling Node autoprovisioning. 
+
+## Node Management
+
+### Which Azure VM sizes does NAP support?
+NAP supports most Azure Virtual Machine sizes that are:
+- Available in AKS
+- Have 2 or more vCPUs
+- Support standard Azure managed disks
+- Are available in your region and availability zones
+
+### Can I use custom virtual machine images with NAP?
+Yes, you can specify custom VM images through the `AKSNodeClass` configuration. Custom images must include the necessary AKS components and configurations.
+
+### How does NAP handle spot VMs?
+NAP supports Azure Spot VMs for cost savings. When using spot instances, be aware that they are subject to eviction policies. 
+
+### Can I mix spot and regular VMs in the same NodePool?
+Yes, you can specify both `spot` and `on-demand` in the capacity type requirements. NAP will prefer spot instances when available.
+
+## Networking and Security
+
+### How does NAP handle network security groups?
+NAP uses the network security groups configured for your AKS cluster. It doesn't create or modify NSG rules.
+
+### Can I use private AKS clusters with NAP?
+Yes, NAP works with private AKS clusters. Ensure the Karpenter controller can reach Azure APIs through private endpoints or NAT gateway.
+
+## Troubleshooting
+
+### Why aren't my pods being scheduled?
+Common reasons include:
+- No NodePool matches the pod's requirements
+- NodePool limits have been reached
+- Insufficient Azure quota or capacity
+- Pod has unsatisfiable constraints
+
+Check: `kubectl describe pod <pod-name>` and `kubectl logs -n karpenter deployment/karpenter`
+
+### Why is NAP not terminating underutilized nodes?
+Possible causes:
+- Pods without proper tolerations
+- DaemonSets preventing node drain
+- Pod disruption budgets blocking eviction
+- Nodes marked with `do-not-disrupt` annotation
+
+### How can I debug NAP issues?
+1. Check Karpenter controller logs:
+   ```bash
+   kubectl logs -n karpenter deployment/karpenter -f
+   ```
+
+2. Examine NodePool and AKSNodeClass status:
+   ```bash
+   kubectl describe nodepool <name>
+   kubectl describe aksnodeclass <name>
+   ```
+
+3. Review node and pod events:
+   ```bash
+   kubectl get events --sort-by='.lastTimestamp'
+   ```
+
+## Cost Optimization
+
+### How much can NAP save compared to static node groups?
+Savings vary by workload but typically range from 20-60% through:
+- Right-sizing instances to actual needs
+- Using spot instances when appropriate  
+- Removing idle capacity quickly
+- Better bin packing efficiency
+
+### Does NAP support Azure Reserved Instances?
+NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn't directly manage reservations. Purchase reservations for your expected baseline capacity.
+
+### How can I optimize costs with NAP?
+- Use spot instances for fault-tolerant workloads
+- Set appropriate expiration times for security updates
+- Configure consolidation policies
+- Use resource limits to prevent unexpected scaling
+- Monitor and tune your NodePool configurations
+
+## Integration and Compatibility
+
+### Can I use NAP with Azure Container Instances (ACI)?
+NAP manages VM-based nodes only. For serverless containers, consider using AKS virtual nodes with ACI alongside NAP.
+
+### Does NAP work with Azure Policy?
+Yes, VMs provisioned by NAP are subject to Azure Policy rules applied to the resource group and subscription.
+
+### Can I use NAP with GitOps tools?
+Yes, NAP resources (NodePools, AKSNodeClasses) can be managed through GitOps tools like ArgoCD or Flux.
+
+### Does NAP support Windows nodes?
+NAP currently supports on Linux nodes through Ubuntu and Azure Linux 3. Windows node support may be considered for future releases.
+
+## Getting Help
+
+### Where can I find more information?
+- [GitHub Repository: AKS Karpenter Provider][aks-karpenter-provider]
+- [Karpenter on Azure Documentation](https://azure.github.io/karpenter-provider-azure/)
+
+
+### How do I report bugs or request features?
+Create an issue in the [GitHub repository](https://github.com/Azure/karpenter-provider-azure/issues) with:
+- Detailed description of the issue
+- Steps to reproduce
+- Karpenter version and configuration
+- Relevant logs and error messages
 
 <!-- LINKS - internal -->
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
@@ -508,6 +637,8 @@ Node autoprovisioning can only be disabled when:
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
 [auto-upgrade]: /azure/aks/auto-upgrade-cluster#cluster-auto-upgrade-channels
+[auto-mode]: /azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile
+[node-os-upgrade-channel]: /azure/aks/auto-upgrade-node-os-image#available-node-os-upgrade-channels
 
 <!-- LINKS - external -->
 [aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
