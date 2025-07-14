@@ -11,11 +11,15 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Migrate to Fleet Manager update runs from Terragrunt and Terraform for Kubernetes upgrades
 
-Operators of multi-cluster Kubernetes environments often use Terragrunt and Terraform to manage upgrades across their clusters, ensuring ordering of updates of clusters through use of a folder structure held in a Git repository. In smaller scale environments this can be manageable, but as the number and size of clusters grows, so does the complexity of managing updates, especially in highly regulated environments requiring frequent updates. Long-running update processes place an overhead on the operations team as they are required to monitor the progress of updates across multiple clusters, using multiple tools and processes.
+Operators of multi-cluster Kubernetes environments often use Terragrunt and Terraform to manage upgrades across their clusters. Ordering of updates of clusters is maintained through use of a folder structure held in a Git repository and ordering in any script-based orchestration.
 
-Azure Kubernetes Fleet Manager provides a more efficient way to manage updates across multiple clusters, allowing you to define update strategies and safely run updates across your fleet of clusters in a single operation. Update Runs allow large environment updates with confidence, handling hundreds of clusters that can take multiple hours, days or even weeks to complete updating.
+In smaller scale environments this approach can be manageable, but as the number and size of clusters grows, so does the complexity of this process. Long-running update processes place an overhead on the operations team as they are required to monitor the progress of updates across multiple clusters, using multiple tools and processes. 
 
-This article explains how to migrate from a process based on Terragrunt and Terraform to one use Azure Kubernetes Fleet Manager Update Runs with auto-upgrade.
+Over time, these challenges result in less frequent updates, leading to clusters running out of support, or facing impactful updates due to breaking changes or urgent timelines that could have been avoided with a more regular update cadence.
+
+Azure Kubernetes Fleet Manager provides a more efficient way to manage updates across multiple clusters, allowing you to define update strategies and safely run updates across your fleet of clusters in a single operation. Update Runs support large environment updates with confidence, handling hundreds of clusters that can take multiple days or even weeks to update.
+
+This article explains how to migrate to Azure Kubernetes Fleet Manager Update Runs with auto-upgrade from an existing process based on Terragrunt and Terraform.
 
 ## Benefits of using Fleet Manager Update Runs
 
@@ -50,7 +54,7 @@ We will use a simple example of a multi-cluster environment using Terragrunt and
         └── main.tf
 ```
 
-Fist, we have our Terraform definition for our Azure Kubernetes Service (AKS) cluster. This is a simplified example of how you might define an AKS cluster using Terraform.
+Fist, we have our Terraform definition for creation of an Azure Kubernetes Service (AKS) cluster.
 
 ```terraform
 # main.tf
@@ -81,7 +85,7 @@ resource "azurerm_kubernetes_cluster" "aks" {
 }
 ```
 
-Next, we have our Terragrunt configuration that uses the above Terraform module to create an AKS cluster.
+Next, we have our development cluster Terragrunt configuration.
 
 ```terraform
 # dev/aks/terragrunt.hcl
@@ -99,7 +103,7 @@ inputs = {
 }
 ```
 
-Our production definition is similar, but with different values for the cluster name, resource group, and tags.
+Our production Terragrunt definition is similar, but with different values for the cluster name, resource group, and tags.
 
 ```terraform
 # prod/aks/terragrunt.hcl
@@ -117,13 +121,13 @@ inputs = {
 }
 ```
 
-Let's go ahead and deploy all the clusters using Terragrunt.
+Let's go ahead and deploy the clusters using Terragrunt.
 
 ```bash
 terragrunt apply-all
 ```
 
-We now have two AKS clusters deployed, one named and tagged as `dev` and one as `prod`, with each having the Kubernetes version set to `1.30.2` (the default value).
+Two AKS clusters are deployed, one named and tagged as `dev` and one as `prod`, with each having the Kubernetes version set to `1.30.2` (the default value).
 
 ### Update the Kubernetes version using Terragrunt
 
@@ -141,7 +145,7 @@ inputs = {
     cluster_name        = "aks-dev-cluster-01"
     location            = "Australia East"
     resource_group_name = "rg-dev-aks"
-    kubernetes_version  = "1.31.0"
+    kubernetes_version  = "1.31.0"  # <-- Updated version
     tags = {
         environment = "dev"
     }
@@ -157,7 +161,17 @@ cd environments/dev/aks
 terragrunt apply
 ```
 
-Once the development cluster has been tested, I can then apply the same update to the production cluster by using the same process.
+Once the development cluster has been tested, we can update our production cluster using the same process.
+
+While we could have edited the main Terraform module to change the default Kubernetes version there is always a risk that the ordering of the change is applied incorrectly, or that an automation provisions a new clusters using the new Kubernetes version before it has been tested in development.
+
+## Migrating to Fleet Manager Update Runs
+
+First we need to create a Fleet Manager resource and add our clusters as members.
+
+This can be done using the Azure CLI, Azure PowerShell, or Terraform. Once the Fleet Manager resource is created, we can migrate our existing clusters to use Update Runs.
+
+
 
 
 ## Related content
@@ -167,9 +181,3 @@ Once the development cluster has been tested, I can then apply the same update t
 
 <!-- LINKS -->
 [learn-update-run]: ./update-orchestration.md
-[rest-api-statuses]: /rest/api/fleet/update-runs/get#updatestate
-[kusto-query-docs]: /kusto/query
-[kusto-mv-expand]: /kusto/query/mv-expand-operator
-[kusto-json-parse]: /kusto/query/parse-json-function
-[monitor-log-search]: /azure/azure-monitor/alerts/alerts-create-log-alert-rule
-[monitor-set-up-action-group]: /azure/azure-monitor/alerts/action-groups#create-an-action-group-in-the-azure-portal

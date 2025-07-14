@@ -82,7 +82,7 @@
           href: update-automation.md
         - name: Configure monitoring and alerting of update runs
           href: howto-monitor-update-runs.md
-        - name: Migrate to Fleet Manager update runs from Terragrunt and Terraform
+        - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
           href: howto-migrate-to-update-runs-from-terraform.md        
     - name: Place and manage workloads on multiple clusters
       items:
