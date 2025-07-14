@@ -114,7 +114,8 @@ Ideal values with no IP wastage would require the max pods value to conform to t
 
 See the following example cases: 
 
-[!Note] The examples assume /28 CIDR blocks (16 IPs each) 
+> [!Note] 
+> The examples assume /28 CIDR blocks (16 IPs each).
 
 | Example case | `max_pods` | CIDR Blocks allocated per node | Total IP available for pods | IP wastage for node |
 | --- | --- | --- | --- | --- |
