@@ -29,9 +29,9 @@ Using Fleet Manager Update Runs to manage updates across your clusters provides 
 - **Define the order of updates**: build reusable strategies that define the order in which clusters are updated. Update strategies provide confidence that lower order environments are updated first, limiting the blast radius of unexpected issues.
 - **Add new clusters easily**: new clusters can be included in update runs by populating the upgrade group for a cluster. If the group is already defined in the update run strategy, the cluster is automatically included in the next update run. You can move (or remove) clusters from update runs by updating the upgrade group at any time.
 - **Durable across days and weeks**: update runs are designed to handle long-running updates, allowing you to update hundreds of clusters that can take multiple days or even weeks to complete.
-- **Update more than just Kubernetes**: update runs can be used to update more than just Kubernetes, allowing you to also update the node image version your clusters.
+- **Update more than just Kubernetes**: update runs can be used to update more than just Kubernetes, allowing you to also update the node image version of your clusters.
 - **Honor maintenance windows**: update runs automatically respect the maintenance windows defined for each cluster, ensuring updates are only applied when it's safe to.
-- **Monitoring and alerting**: built-in monitoring and alerting capabilities allow operators to track the progress of update runs and receive notifications when updates fail or complete.
+- **Monitoring and alerting**: [built-in monitoring and alerting capabilities][update-run-alerts] allow you to track the progress of update runs and receive notifications when updates fail or complete.
 
 > [!NOTE]
 > If you aren't already familiar with Fleet Manager Update Runs, read the [Update Run documentation][learn-update-run] before reading this article.
@@ -287,9 +287,12 @@ Once you're familiar with update runs, you can [enable auto-upgrade][fleet-auto-
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
+* [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- LINKS -->
 [learn-update-run]: ./update-orchestration.md
 [update-run-portal-cli]: ./update-orchestration.md#update-clusters-using-groups-and-stages
 [manage-update-run]: ./update-orchestration.md#manage-an-update-run
 [fleet-auto-upgrade]: ./update-automation.md
+[update-run-alerts]: ./howto-monitor-update-runs.md
