@@ -95,7 +95,7 @@ terraform {
 
 inputs = {
     cluster_name        = "aks-dev-cluster-01"
-    location            = "Australia East"
+    location            = "australiaeast"
     resource_group_name = "rg-dev-aks"
     tags = {
         environment = "dev"
@@ -113,7 +113,7 @@ terraform {
 
 inputs = {
     cluster_name        = "aks-prod-cluster-01"
-    location            = "Australia East"
+    location            = "australiaeast"
     resource_group_name = "rg-prod-aks"
     tags = {
         environment = "prod"
@@ -143,7 +143,7 @@ terraform {
 
 inputs = {
     cluster_name        = "aks-dev-cluster-01"
-    location            = "Australia East"
+    location            = "australiaeast"
     resource_group_name = "rg-dev-aks"
     kubernetes_version  = "1.31.1"  # <-- Updated version
     tags = {
@@ -186,7 +186,7 @@ provider "azurerm" {
 }
 
 resource "azurerm_kubernetes_fleet_manager" "fleet_demo_01" {
-    location            = "Australia East"
+    location            = "australiaeast"
     name                = "flt-demo-01"
     resource_group_name = "rg-fleet-01"
 }
