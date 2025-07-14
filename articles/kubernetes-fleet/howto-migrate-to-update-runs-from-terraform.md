@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
 
-Operators of multi-cluster Kubernetes environments often use Terragrunt and Terraform to manage upgrades across their clusters. Order in which clusters are updated is maintained through a folder structure in a Git repository or in configuration files or script.
+Operators of multi-cluster environments often use Terragrunt and Terraform to manage Kubernetes upgrades across their clusters. The order in which clusters are updated is maintained through a folder structure in a Git repository or in configuration files or script, using Terragrunt as the orchestration tool.
 
 In smaller scale environments this approach can be manageable, but as the number and size of clusters grows, so does the complexity of this process. Long-running update processes place an overhead on the operations team as they're required to monitor the progress of updates across multiple clusters, using multiple tools and processes. 
 
