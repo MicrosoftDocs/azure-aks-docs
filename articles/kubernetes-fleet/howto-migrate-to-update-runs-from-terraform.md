@@ -15,7 +15,7 @@ Operators of multi-cluster Kubernetes environments often use Terragrunt and Terr
 
 In smaller scale environments this approach can be manageable, but as the number and size of clusters grows, so does the complexity of this process. Long-running update processes place an overhead on the operations team as they're required to monitor the progress of updates across multiple clusters, using multiple tools and processes. 
 
-Over time, this complexity results in less frequent updates, leading to clusters running out of support or requiring multi-version updates. This problems can be avoided with a more regular update cadence.
+Over time, this complexity results in less frequent updates, leading to clusters running out of support or requiring multi-version updates. These problems can be avoided with a more regular update cadence.
 
 Azure Kubernetes Fleet Manager provides a more efficient way to manage updates across multiple clusters, allowing you to define update strategies and safely run updates across your fleet of clusters in a single operation. Update Runs support large environment updates with confidence, handling hundreds of clusters that can take multiple days or even weeks to update.
 
@@ -25,9 +25,9 @@ This article explains how to migrate to Azure Kubernetes Fleet Manager Update Ru
 
 Using Fleet Manager Update Runs to manage updates across your clusters provides the following benefits:
 
-- **Manual and automated updates**: update runs can be used to manually update clusters at any time, or you can automate the update process using auto-upgrade. Auto-upgrade creates and executes update runs automatically when new Kubernetes versions are released by AKS.
+- **Manual and automated updates**: update runs can be used to manually update clusters at any time, or you can automate the update process using auto-upgrade. Auto-upgrade creates and executes update runs automatically when AKS releases new Kubernetes versions.
 - **Define the order of updates**: build reusable strategies that define the order in which clusters are updated. Update strategies provide confidence that lower order environments are updated first, limiting the blast radius of unexpected issues.
-- **Add new clusters easily**: new clusters can be included in update runs by populating the upgrade group for a cluster when it's added. If the group is already defined in the update run strategy, the cluster is automatically included in the next update run. You can move (or remove) clusters from update runs by updating the upgrade group at any time.
+- **Add new clusters easily**: new clusters can be included in update runs by populating the upgrade group for a cluster. If the group is already defined in the update run strategy, the cluster is automatically included in the next update run. You can move (or remove) clusters from update runs by updating the upgrade group at any time.
 - **Durable across days and weeks**: update runs are designed to handle long-running updates, allowing you to update hundreds of clusters that can take multiple days or even weeks to complete.
 - **Update more than just Kubernetes**: update runs can be used to update more than just Kubernetes, allowing you to also update the node image version your clusters.
 - **Honor maintenance windows**: update runs automatically respect the maintenance windows defined for each cluster, ensuring updates are only applied when it's safe to.
@@ -38,7 +38,7 @@ Using Fleet Manager Update Runs to manage updates across your clusters provides 
 
 ## Example multi-cluster environment using Terragrunt and Terraform
 
-We'll use an example of a multi-cluster environment using Terragrunt and Terraform to manage an Azure Kubernetes Service (AKS) cluster. The following folder structure is used to hold the Terraform and Terragrunt configuration files.
+We use an example of a multi-cluster environment using Terragrunt and Terraform to manage an Azure Kubernetes Service (AKS) cluster. The following folder structure is used to hold the Terraform and Terragrunt configuration files.
 
 ```
 ├── environments/
@@ -174,7 +174,7 @@ Let's look at how we can move our existing approach to use Fleet Manager update 
 If you prefer to use the Azure portal, you can follow the [update clusters using groups and stages][update-run-portal-cli] documentation.
 
 > [!NOTE]
-> It's recommended that once you start using Fleet Manager Update Runs, you should remove version support from your Terragrunt and Terraform configurations. You may retain version information for cluster creation, but you shouldn't use it to manage updates.
+> Once you start using Fleet Manager Update Runs, you should remove Kubernetes version update support from your Terragrunt and Terraform configurations.
 
 ### Create a Fleet Manager resource and add clusters as members
 
@@ -229,7 +229,7 @@ resource "azurerm_kubernetes_fleet_member" "prod_cluster_member" {
 
 Next, we need to create an update strategy that defines the order in which clusters are updated. Update strategies can be reused across multiple update runs. As an example, you can do Kubernetes and node image updates separately, but using the same strategy.
 
-The strategy can be defined using a `azurerm_kubernetes_fleet_update_strategy` resource. Stages are executed sequentially, groups within a stage are executed in parallel. The `after_stage_wait_in_seconds` property allows you to define a wait time after the stage has completed before the next stage starts. This is useful for allowing time for testing or validation before proceeding to the next stage.
+The strategy can be defined using a `azurerm_kubernetes_fleet_update_strategy` resource. Stages are executed sequentially and groups within a stage are executed in parallel. The `after_stage_wait_in_seconds` property allows you to define a wait time on stage completion before the next stage starts, which is useful for testing or validation before proceeding to the next stage.
 
 ```terraform
 resource "azurerm_kubernetes_fleet_update_strategy" "tg_migration_strategy" {
@@ -281,9 +281,7 @@ Terraform doesn't provide an inbuilt way to execute the update run, so the simpl
 Once you're familiar with update runs, you can [enable auto-upgrade][fleet-auto-upgrade] for your clusters. Auto-upgrade automatically creates and executes update runs when new Kubernetes versions are released by AKS. This means you no longer need to monitor for new Kubernetes versions and manually create update runs.
 
 > [!NOTE]
-> Auto-upgrade supports Stable and Rapid Kubernetes release channels today, and automatically increments the Kubernetes minor when a new minor is released. If you want to remain on a specific Kubernetes minor, you shouldn't currently use auto-upgrade. Support for target Kubernetes version for auto-upgrade is under development, see the [Fleet Manager roadmap item](https://github.com/Azure/AKS/issues/4603) to track its availability.
-
-
+> Auto-upgrade supports Stable and Rapid Kubernetes release channels today, and automatically increments the Kubernetes minor when a new minor is released. If you want to remain on a specific Kubernetes minor, you shouldn't currently use auto-upgrade. Support for target Kubernetes version for auto-upgrade is under development. See the [Fleet Manager roadmap item](https://github.com/Azure/AKS/issues/4603) to track its availability.
 
 ## Related content
 
