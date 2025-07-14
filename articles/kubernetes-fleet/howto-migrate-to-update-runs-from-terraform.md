@@ -13,13 +13,13 @@ ms.service: azure-kubernetes-fleet-manager
 
 Operators of multi-cluster environments often use Terragrunt and Terraform to manage Kubernetes upgrades across their clusters. The order in which clusters are updated is maintained through a folder structure in a Git repository or in configuration files or script, using Terragrunt as the orchestration tool.
 
-In smaller scale environments this approach can be manageable, but as the number and size of clusters grows, so does the complexity of this process. Long-running update processes place an overhead on the operations team as they're required to monitor the progress of updates across multiple clusters, using multiple tools and processes. 
+In smaller scale environments this approach can be manageable, but as the number and size of clusters grows, so does the complexity of this process. Long-running update processes place a burden on the operations team as they're required to monitor the progress of updates across multiple clusters, using disconnected tools and processes. 
 
-Over time, this complexity results in less frequent updates, leading to clusters running out of support or requiring multi-version updates. These problems can be avoided with a more regular update cadence.
+Over time, this overhead to managing updates results in less frequent updates resulting in clusters run out of support or facing complicated multi-version updates.
 
-Azure Kubernetes Fleet Manager provides a more efficient way to manage updates across multiple clusters, allowing you to define update strategies and safely run updates across your fleet of clusters in a single operation. Update Runs support large environment updates with confidence, handling hundreds of clusters that can take multiple days or even weeks to update.
+Azure Kubernetes Fleet Manager provides a more efficient way to manage regular updates across multiple clusters, allowing you to define update strategies and safely run updates across your fleet of clusters in a single operation. Update Runs support large environments, handling hundreds of clusters running updates over multiple days or weeks.
 
-This article explains how to migrate to Azure Kubernetes Fleet Manager Update Runs with auto-upgrade from an existing process based on Terragrunt and Terraform.
+This article explains how to migrate to Azure Kubernetes Fleet Manager Update Runs from an existing process based on Terragrunt and Terraform.
 
 ## Benefits of using Fleet Manager Update Runs
 
