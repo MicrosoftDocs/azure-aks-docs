@@ -131,7 +131,7 @@ Two AKS clusters are deployed, one named and tagged as `dev` and one as `prod`, 
 
 ### Update the Kubernetes version using Terragrunt
 
-Let's upgrade the Kubernetes version of both clusters to `1.31.0` using Terragrunt.
+Let's upgrade the Kubernetes version of both clusters to `1.31.1` using Terragrunt.
 
 We want to make sure we apply the update to our development cluster before production. Additionally, we want to track the state of our cluster configurations, so we add a `kubernetes_version` variable to our Terragrunt configuration files rather than supplying it as a command line argument.
 
@@ -145,7 +145,7 @@ inputs = {
     cluster_name        = "aks-dev-cluster-01"
     location            = "Australia East"
     resource_group_name = "rg-dev-aks"
-    kubernetes_version  = "1.31.0"  # <-- Updated version
+    kubernetes_version  = "1.31.1"  # <-- Updated version
     tags = {
         environment = "dev"
     }
@@ -163,13 +163,18 @@ terragrunt apply
 
 Once the development cluster has been tested, we can update our production cluster using the same process.
 
-You can also update the individual hcl files and then `apply-all`, using Terragrunt `dependencies` or `dependency` blocks to control the ordering of clusters.
+We can also update all individual hcl files (or the main.tf file) and then `apply-all`, using Terragrunt `dependencies` or `dependency` blocks to control the ordering of clusters.
 
 However, more that a small number of clusters or environments means the complexity of the folder structure and configuration files can become unwieldy and prone to human error. It also becomes hard to visualize the actual state of your clusters compared to the desired state held in your Git repository.
 
 ## Migrating to Fleet Manager Update Runs
 
-Let's look at how we can move our existing approach to use Fleet Manager update runs, then enable automated upgrades. 
+Let's look at how we can move our existing approach to use Fleet Manager update runs, then enable automated upgrades. For the purpose of this article, let's perform the same upgrade we just did, but using Fleet Manager Update Runs instead of Terragrunt and Terraform.
+
+If you prefer to use the Azure portal, you can follow the [update clusters using groups and stages][update-run-portal-cli] documentation.
+
+> [!NOTE]
+> It is recommended that once you start using Fleet Manager Update Runs, you should remove version support from your Terragrunt and Terraform configurations. You may retain version information for cluster creation, but you should not use it to manage updates.
 
 ### Create a Fleet Manager resource and add clusters as members
 
@@ -181,9 +186,9 @@ provider "azurerm" {
 }
 
 resource "azurerm_kubernetes_fleet_manager" "fleet_demo_01" {
-    location            = azurerm_resource_group.fleet_rg.location
+    location            = "Australia East"
     name                = "flt-demo-01"
-    resource_group_name = azurerm_resource_group.fleet_rg.name
+    resource_group_name = "rg-fleet-01"
 }
 ```
 
@@ -257,7 +262,7 @@ resource "azurerm_kubernetes_fleet_update_run" "update_run_tg_migration_131" {
     managed_cluster_update {
         upgrade {
             type               = "Full"
-            kubernetes_version = "1.30"
+            kubernetes_version = "1.31.1"
         }
         node_image_selection {
             type = "Consistent"
@@ -269,11 +274,16 @@ resource "azurerm_kubernetes_fleet_update_run" "update_run_tg_migration_131" {
 
 ### Execute the update run
 
-Terraform doesn't provide an inbuilt way to execute the update run, so we can use the Azure portal or Azure CLI to start the update run. For further information, see [Manage an update run][manage-update-run].
+Terraform doesn't provide an inbuilt way to execute the update run, so the simplest way is to use the Azure portal or Azure CLI to start the update run. For further information, see [Manage an update run][manage-update-run].
 
 ### Enable auto-upgrade
 
-tbc.
+Once you are familiar with update runs, you can [enable auto-upgrade][fleet-auto-upgrade] for your clusters. Auto-upgrade automatically creates and executes update runs when new Kubernetes versions are released by AKS. This means you no longer need to monitor for new Kubernetes versions and manually create update runs.
+
+> [!NOTE]
+> Auto-upgrade supports Stable and Rapid Kubernetes release channels today, and automatically increments the Kubernetes minor when a new minor is released. If you want to remain on a specific Kubernetes minor, you shouldn't currently use auto-upgrade. Support for target Kubernetes version for auto-upgrade is under development, please see the [Fleet Manager roadmap item](https://github.com/Azure/AKS/issues/4603) to track its availability.
+
+
 
 ## Related content
 
@@ -282,4 +292,6 @@ tbc.
 
 <!-- LINKS -->
 [learn-update-run]: ./update-orchestration.md
+[update-run-portal-cli]: ./update-orchestration#update-clusters-using-groups-and-stages
 [manage-update-run]: ./update-orchestration.md#manage-an-update-run
+[fleet-auto-upgrade]: ./update-automation.md
