@@ -19,6 +19,10 @@ Node autoprovisioning (NAP) uses pending pod resource requirements to decide the
 
 NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. NAP automatically deploys, configures and manages Karpenter on your AKS clusters.
 
+## How Node Auto-provisioning Works
+
+Node Autoprovision provisions, scales, and manages virtual machines, or nodes in a cluster in response to pending pod pressure. NAP is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want NAP to handle your workloads. For more information on configuring your CRDs, see our documentation on [Configuring NAP with Custom Resource Definitions]. NAP then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
+
 ## Before you begin
 
 - You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
