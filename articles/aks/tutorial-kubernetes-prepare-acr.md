@@ -83,7 +83,7 @@ Before creating an ACR instance, you need a resource group. An Azure resource gr
     > [!NOTE]
     > For this step, there isn't an equivalent Azure PowerShell cmdlet that performs this task.
     >
-    > In the following example, we won't build the `product-service` image. This image can take a long time to build, and since there is a container image already available in the GitHub Container Registry (GHCR), you can use the [`az acr import`][az-acr-import] command to import the image from the GHCR to your ACR instance. We also don't build the `rabbitmq` image. This image is available from the Docker Hub public repository and doesn't need to be built or pushed to your ACR instance.
+    > In the following example, we don't build the `product-service` image. This image can take a long time to build, and there's a container image already available in the GitHub Container Registry (GHCR). You can use the [`az acr import`][az-acr-import] command to import the image from the GHCR to your ACR instance. We also don't build the `rabbitmq` image. This image is available from the Docker Hub public repository and doesn't need to be built or pushed to your ACR instance.
 
     ```azurecli-interactive
     az acr import --name $ACRNAME --source ghcr.io/azure-samples/aks-store-demo/product-service:latest --image aks-store-demo/product-service:latest
