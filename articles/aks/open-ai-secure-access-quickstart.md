@@ -254,7 +254,7 @@ To use Microsoft Entra Workload ID on AKS, you need to make a few changes to the
     ```
 
 4. Open a web browser and navigate to the IP address from the previous step.
-5. Click the **Products** link. You should be able to add a new product and get a description for it using Azure OpenAI.
+5. Select **Products**. You should be able to add a new product and get a description for it using Azure OpenAI.
 
 ## Next steps
 
