@@ -163,26 +163,27 @@ terragrunt apply
 
 Once the development cluster has been tested, we can update our production cluster using the same process.
 
-There are other ways to achieve this upgrade that allows a global `apply-all` by using Terragrunt `dependencies` or `dependency` blocks to control the order. However, once there are more that a small number of clusters or environments, the complexity of the folder structure and configuration files can become unwieldy and prone to human error. It also becomes hard to visualize the state of your clusters compared to the configuration held in your Git repository.
+You can also update the individual hcl files and then `apply-all`, using Terragrunt `dependencies` or `dependency` blocks to control the ordering of clusters.
+
+However, more that a small number of clusters or environments means the complexity of the folder structure and configuration files can become unwieldy and prone to human error. It also becomes hard to visualize the actual state of your clusters compared to the desired state held in your Git repository.
 
 ## Migrating to Fleet Manager Update Runs
 
 Let's look at how we can move our existing approach to use Fleet Manager update runs, then enable automated upgrades. 
 
-### Create a Fleet Manager resource
+### Create a Fleet Manager resource and add clusters as members
 
 Define a Fleet Manager resource using Terraform. The Fleet Manager resource an be in any resource group or Azure subscription as long as the Entra ID tenant is the same as the clusters you want to manage.
 
 ```terraform
-# main.tf
 provider "azurerm" {
   features {}
 }
 
 resource "azurerm_kubernetes_fleet_manager" "fleet_demo_01" {
-  location            = azurerm_resource_group.fleet_rg.location
-  name                = coalesce(var.fleet_name, random_string.fleet_name.result)
-  resource_group_name = azurerm_resource_group.fleet_rg.name
+    location            = azurerm_resource_group.fleet_rg.location
+    name                = "flt-demo-01"
+    resource_group_name = azurerm_resource_group.fleet_rg.name
 }
 ```
 
@@ -192,34 +193,87 @@ Next, we need to add our clusters as members of the Fleet Manager resource. We c
 
 # We're assuming all resources are in the same Azure subscription
 
-data "azurerm_kubernetes_cluster" "dev_cluster" {
-  name                = "aks-dev-cluster-01"
-  resource_group_name = "rg-dev-aks"
+# Reference existing AKS clusters
+resource "azurerm_kubernetes_cluster" "dev_cluster" {
+    name                = "aks-dev-cluster-01"
+    resource_group_name = "rg-dev-aks"
 }
 
-data "azurerm_kubernetes_cluster" "prod_cluster" {
+resource "azurerm_kubernetes_cluster" "prod_cluster" {
     name                = "aks-prod-cluster-01"
     resource_group_name = "rg-prod-aks"
 }
 
-# Add dev cluster as member, assign 'dev' update group
+# Create member clusters and assign update groups
 resource "azurerm_kubernetes_fleet_member" "dev_cluster_member" {
     kubernetes_cluster_id = dev_cluster.id
     kubernetes_fleet_id   = fleet_demo_01.id
-    name                  = "member-dev-cluster-01"
+    name                  = "mbr-dev-cluster-01"
     group                 = "dev"
 }
 
-# Add prod cluster as member, assign 'dev' update group
 resource "azurerm_kubernetes_fleet_member" "prod_cluster_member" {
     kubernetes_cluster_id = prod_cluster.id
     kubernetes_fleet_id   = fleet_demo_01.id
-    name                  = "member-prod-cluster-01"
+    name                  = "mbr-prod-cluster-01"
     group                 = "prod"
 }
 ```    
 
+### Create an update strategy
 
+Next, we need to create an update strategy that defines the order in which clusters are updated. Update strategies can be re-used across multiple update runs. As an example, you can do Kubernetes and node image updates separately, but using the same strategy.
+
+The strategy can be defined using a `azurerm_kubernetes_fleet_update_strategy` resource. Stages are executed sequentially, groups within a stage are executed in parallel. The `after_stage_wait_in_seconds` property allows you to define a wait time after the stage has completed before the next stage starts. This is useful for allowing time for testing or validation before proceeding to the next stage.
+
+```terraform
+resource "azurerm_kubernetes_fleet_update_strategy" "tg_migration_strategy" {
+    name                        = "tg-migration-strategy"
+    kubernetes_fleet_manager_id = azurerm_kubernetes_fleet_manager.fleet_demo_01.id
+    stage {
+        name = "stg-pre-prod"
+        group {
+            name = "dev"
+        }
+        after_stage_wait_in_seconds = 3600
+    }
+    stage {
+        name = "stg-prod"
+        group {
+          name = "prod"
+        }
+    }
+}
+```
+
+### Create an update run
+
+Now we can create an update run that uses the strategy we just defined. The `azurerm_kubernetes_fleet_update_run` resource allows us to specify the strategy and the clusters to be updated.
+
+```terraform
+resource "azurerm_kubernetes_fleet_update_run" "update_run_tg_migration_131" {
+    name                        = "example"
+    kubernetes_fleet_manager_id = azurerm_kubernetes_fleet_manager.example.id
+    managed_cluster_update {
+        upgrade {
+            type               = "Full"
+            kubernetes_version = "1.30"
+        }
+        node_image_selection {
+            type = "Consistent"
+        }
+    }
+    fleet_update_strategy_id = azurerm_kubernetes_fleet_update_strategy.tg_migration_strategy.id
+}
+```
+
+### Execute the update run
+
+Terraform doesn't provide an inbuilt way to execute the update run, so we can use the Azure portal or Azure CLI to start the update run. For further information, see [Manage an update run][manage-update-run].
+
+### Enable auto-upgrade
+
+tbc.
 
 ## Related content
 
@@ -228,3 +282,4 @@ resource "azurerm_kubernetes_fleet_member" "prod_cluster_member" {
 
 <!-- LINKS -->
 [learn-update-run]: ./update-orchestration.md
+[manage-update-run]: ./update-orchestration.md#manage-an-update-run
