@@ -81,9 +81,9 @@
         - name: Automate updates of Kubernetes and node images
           href: update-automation.md
         - name: Configure monitoring and alerting of update runs
-          href: howto-monitor-update-runs.md
-        - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
-          href: howto-migrate-to-update-runs-from-terraform.md        
+          href: howto-monitor-update-runs.md       
+    - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
+      href: howto-migrate-to-update-runs-from-terraform.md 
     - name: Place and manage workloads on multiple clusters
       items:
         - name: Access Fleet hub cluster API
