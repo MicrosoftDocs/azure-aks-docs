@@ -163,14 +163,61 @@ terragrunt apply
 
 Once the development cluster has been tested, we can update our production cluster using the same process.
 
-While we could have edited the main Terraform module to change the default Kubernetes version there is always a risk that the ordering of the change is applied incorrectly, or that an automation provisions a new clusters using the new Kubernetes version before it has been tested in development.
+There are other ways to achieve this upgrade that allows a global `apply-all` by using Terragrunt `dependencies` or `dependency` blocks to control the order. However, once there are more that a small number of clusters or environments, the complexity of the folder structure and configuration files can become unwieldy and prone to human error. It also becomes hard to visualize the state of your clusters compared to the configuration held in your Git repository.
 
 ## Migrating to Fleet Manager Update Runs
 
-First we need to create a Fleet Manager resource and add our clusters as members.
+Let's look at how we can move our existing approach to use Fleet Manager update runs, then enable automated upgrades. 
 
-This can be done using the Azure CLI, Azure PowerShell, or Terraform. Once the Fleet Manager resource is created, we can migrate our existing clusters to use Update Runs.
+### Create a Fleet Manager resource
 
+Define a Fleet Manager resource using Terraform. The Fleet Manager resource an be in any resource group or Azure subscription as long as the Entra ID tenant is the same as the clusters you want to manage.
+
+```terraform
+# main.tf
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_kubernetes_fleet_manager" "fleet_demo_01" {
+  location            = azurerm_resource_group.fleet_rg.location
+  name                = coalesce(var.fleet_name, random_string.fleet_name.result)
+  resource_group_name = azurerm_resource_group.fleet_rg.name
+}
+```
+
+Next, we need to add our clusters as members of the Fleet Manager resource. We can do this by creating a `azurerm_kubernetes_fleet_member` resource for each cluster. Note that we also assign an update group when creating the member. The update group is optional, but allows the cluster to be included in update runs that use strategies.
+
+```terraform
+
+# We're assuming all resources are in the same Azure subscription
+
+data "azurerm_kubernetes_cluster" "dev_cluster" {
+  name                = "aks-dev-cluster-01"
+  resource_group_name = "rg-dev-aks"
+}
+
+data "azurerm_kubernetes_cluster" "prod_cluster" {
+    name                = "aks-prod-cluster-01"
+    resource_group_name = "rg-prod-aks"
+}
+
+# Add dev cluster as member, assign 'dev' update group
+resource "azurerm_kubernetes_fleet_member" "dev_cluster_member" {
+    kubernetes_cluster_id = dev_cluster.id
+    kubernetes_fleet_id   = fleet_demo_01.id
+    name                  = "member-dev-cluster-01"
+    group                 = "dev"
+}
+
+# Add prod cluster as member, assign 'dev' update group
+resource "azurerm_kubernetes_fleet_member" "prod_cluster_member" {
+    kubernetes_cluster_id = prod_cluster.id
+    kubernetes_fleet_id   = fleet_demo_01.id
+    name                  = "member-prod-cluster-01"
+    group                 = "prod"
+}
+```    
 
 
 
