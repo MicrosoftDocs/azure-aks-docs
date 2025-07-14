@@ -19,7 +19,7 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 
 - Create a [planned maintenance window][planned-maintenance] for your autoupgrade configuration.
 
-> [!NOTE]
+> [!NOTE]  
 > Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation.
 
 ## How to set up communication manager
