@@ -3,7 +3,7 @@ title: Deploy Apache Airflow on AKS with Helm
 description: Learn the high-level architecture of deploying production-ready Apache Airflow on Azure Kubernetes Service (AKS) and the available Airflow executors.
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 07/02/2025
+ms.date: 07/14/2025
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'

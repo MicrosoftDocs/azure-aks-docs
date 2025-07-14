@@ -1,9 +1,9 @@
 ---
 title: Configure and deploy Apache Airflow on AKS using Helm
-description: Configure and deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
+description: Configure storage and secrets to deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 07/02/2025
+ms.date: 07/14/2025
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
