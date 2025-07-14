@@ -156,5 +156,5 @@ In the next tutorial, you learn how to deploy a Kubernetes cluster in Azure.
 [new-azcontainerregistry]: /powershell/module/az.containerregistry/new-azcontainerregistry
 [get-azcontainerregistryrepository]: /powershell/module/az.containerregistry/get-azcontainerregistryrepository
 [acr-tasks]: /azure/container-registry/container-registry-tasks-overview
-[az-acr-build]: /cli/azure/acr?view=azure-cli-latest#az-acr-build
-[az-acr-import]: /cli/azure/acr?view=azure-cli-latest#az-acr-import
+[az-acr-build]: /cli/azure/acr#az-acr-build
+[az-acr-import]: /cli/azure/acr#az-acr-import
