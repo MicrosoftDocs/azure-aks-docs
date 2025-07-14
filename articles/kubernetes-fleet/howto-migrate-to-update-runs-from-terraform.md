@@ -38,7 +38,7 @@ Using Fleet Manager Update Runs to manage updates across your clusters provides 
 
 ## Example multi-cluster environment using Terragrunt and Terraform
 
-We use an example of a multi-cluster environment using Terragrunt and Terraform to manage an Azure Kubernetes Service (AKS) cluster. The following folder structure is used to hold the Terraform and Terragrunt configuration files.
+To help illustrate how to migrate to Fleet Manager we have an example multi-cluster environment using Terragrunt and Terraform to manage Azure Kubernetes Service (AKS) clusters. The following folder structure is used to hold the Terraform and Terragrunt configuration files.
 
 ```
 ├── environments/
@@ -90,7 +90,7 @@ Next, we have our development cluster Terragrunt configuration.
 ```terraform
 # dev/aks/terragrunt.hcl
 terraform {
-    source = "../../modules/aks"
+    source = "../../../modules/aks"
 }
 
 inputs = {
@@ -108,7 +108,7 @@ Our production Terragrunt definition is similar, but with different values for t
 ```terraform
 # prod/aks/terragrunt.hcl
 terraform {
-    source = "../../modules/aks"
+    source = "../../../modules/aks"
 }
 
 inputs = {
@@ -138,7 +138,7 @@ We want to make sure we apply the update to our development cluster before produ
 ```terraform
 # dev/aks/terragrunt.hcl
 terraform {
-    source = "../../modules/aks"
+    source = "../../../modules/aks"
 }
 
 inputs = {
