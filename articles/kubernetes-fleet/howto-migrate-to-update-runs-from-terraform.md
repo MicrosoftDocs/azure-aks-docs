@@ -17,7 +17,7 @@ In smaller scale environments this approach can be manageable, but as the number
 
 Over time, this overhead to managing updates results in less frequent updates resulting in clusters run out of support or facing complicated multi-version updates.
 
-Azure Kubernetes Fleet Manager provides a more efficient way to manage regular updates across multiple clusters, allowing you to define update strategies and safely run updates across your fleet of clusters in a single operation. Update Runs support large environments, handling hundreds of clusters running updates over multiple days or weeks.
+Azure Kubernetes Fleet Manager Update Runs provide a more efficient way to manage regular updates across multiple clusters, allowing operators to define update strategies to ensure safe updates across clusters in a single operation. Update Runs support large environments, handling hundreds of clusters running updates over multiple days or weeks.
 
 This article explains how to migrate to Azure Kubernetes Fleet Manager Update Runs from an existing process based on Terragrunt and Terraform.
 
