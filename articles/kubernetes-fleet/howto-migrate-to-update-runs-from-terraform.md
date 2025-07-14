@@ -1,5 +1,5 @@
 ---
-title: "Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform"
+title: "Migrate Kubernetes updates to Azure Kubernetes Fleet Manager from Terragrunt and Terraform"
 description: "Learn how to migrate Kubernetes upgrades from Terragrunt and Terraform to Azure Kubernetes Fleet Manager Update Runs."  
 ms.topic: how-to
 ms.date: 07/14/2025
@@ -9,7 +9,7 @@ ms.service: azure-kubernetes-fleet-manager
 # Customer intent: "As a fleet administrator, I want to migrate my Kubernetes upgrades from Terragrunt and Terraform to Azure Kubernetes Fleet Manager Update Runs, so that I can manage updates more efficiently."
 ---
 
-# Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
+# Migrate Kubernetes updates to Azure Kubernetes Fleet Manager from Terragrunt and Terraform
 
 Operators of multi-cluster environments often use Terragrunt and Terraform to manage Kubernetes upgrades across their clusters. The order in which clusters are updated is maintained through a folder structure in a Git repository or in configuration files or script, using Terragrunt as the orchestration tool.
 
