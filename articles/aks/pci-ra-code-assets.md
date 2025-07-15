@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes risk assessment and code asset considerations for an Azure Kubernetes Service (AKS) cluster that runs a workload in compliance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 The recommendations and examples are extracted from this accompanying reference implementation:
 
@@ -124,7 +124,7 @@ The ingress controller in this implementation uses a wildcard certificate to han
 
 > [!IMPORTANT]
 >
-> Any component that decrypts card holder data is considered to be in scope for PCI DSS 4.0.1 and is subject the same level of scrutiny as the other components in the cardholder data environment. In this architecture, Azure Application Gateway is in scope because it inspects the payload as part of its WAF functionality. An alternate architecture option is to use Azure Firewall Premium as the ingress component, instead of WAF, to take advantage of Azure Firewall's signature-based IDPS capabilities. This will allow the first TLS termination to be in the cluster. However, without a dedicated WAF, you must use additional compensating controls to satisfy [Requirement 6.6](./pci-dss-malware.md#requirement-66).
+> Any component that decrypts card holder data is considered to be in scope for PCI DSS 4.0.1 and is subject the same level of scrutiny as the other components in the cardholder data environment. In this architecture, Azure Application Gateway is in scope because it inspects the payload as part of its WAF functionality. An alternate architecture option is to use Azure Firewall Premium as the ingress component, instead of WAF, to take advantage of Azure Firewall's signature-based IDPS capabilities. This will allow the first TLS termination to be in the cluster. However, without a dedicated WAF, you must use additional compensating controls to satisfy [Requirement 6.6](./pci-malware.md#requirement-66).
 
 ### Azure Key Vault network restrictions
 
@@ -239,4 +239,4 @@ Here are links to feature documentation of some key components of this architect
 Install and maintain a firewall configuration to protect cardholder data. Don't use vendor-supplied defaults for system passwords and other security parameters.
 
 > [!div class="nextstepaction"]
-> [Build and maintain a secure network and systems](pci-dss-network.md)
+> [Build and maintain a secure network and systems](pci-network.md)

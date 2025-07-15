@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes cryptography and key management considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 This architecture and the implementation are focused on infrastructure and not the workload. This article provides general considerations and best practices to help you make design decisions. Follow the requirements in the official PCI-DSS 4.0.1 standard and use this article as additional information, where applicable.
 
@@ -61,11 +61,11 @@ Additional requirement for service providers only: Maintain a documented descrip
 
 If you're a service provider, maintain comprehensive documentation of your cryptographic architecture. This documentation should include:
 
-- All cryptographic algorithms used for cardholder data protection
-- Protocols implemented for secure communication
-- Key management procedures and key lifecycle management
-- Integration points with Azure Key Vault and other cryptographic services
-- Compliance with current industry standards and PCI DSS requirements
+- All cryptographic algorithms used for cardholder data protection.
+- Protocols implemented for secure communication.
+- Key management procedures and key lifecycle management.
+- Integration points with Azure Key Vault and other cryptographic services.
+- Compliance with current industry standards and PCI DSS requirements.
 
 Use Azure Key Vault to centralize key management and maintain audit trails of all cryptographic operations. Document the integration between AKS workloads and Azure Key Vault, including authentication methods using managed identities.
 
@@ -77,11 +77,11 @@ Restrict access to plaintext cryptographic keys to the fewest number of custodia
 
 Implement the principle of least privilege for cryptographic key access:
 
-- Use Azure Key Vault access policies and Azure RBAC to restrict access to cryptographic keys
-- Implement managed identities for AKS workloads to access Key Vault without storing credentials
-- Regularly review and audit access to cryptographic keys
-- Implement proper separation of duties for key management operations
-- Use Azure Key Vault's built-in logging and monitoring capabilities to track key access
+- Use Azure Key Vault access policies and Azure RBAC to restrict access to cryptographic keys.
+- Implement managed identities for AKS workloads to access Key Vault without storing credentials.
+- Regularly review and audit access to cryptographic keys.
+- Implement proper separation of duties for key management operations.
+- Use Azure Key Vault's built-in logging and monitoring capabilities to track key access.
 
 Configure Azure Key Vault with appropriate access policies that limit access to only the necessary principals. Use Azure RBAC roles such as "Key Vault Crypto Officer" and "Key Vault Crypto User" to implement granular access controls.
 
@@ -93,10 +93,10 @@ Store secret and private keys used to encrypt/decrypt cardholder data in one (or
 
 Ensure that all secret and private keys are stored securely using one of the approved methods:
 
-- **In a cryptographic device (such as a hardware security module (HSM) or PCI-approved point-of-interaction device)**: Use Azure Key Vault Premium tier with HSM-backed keys for FIPS 140-2 Level 3 compliance
-- **In a secure cryptographic token (such as a hardware token)**: Implement hardware-based key storage solutions
-- **Encrypted by a key-encrypting key**: Use Azure Key Vault's envelope encryption capabilities
-- **Split knowledge and dual control**: Implement multi-person control mechanisms for sensitive operations
+- **In a cryptographic device (such as a hardware security module (HSM) or PCI-approved point-of-interaction device)**: Use Azure Key Vault Premium tier with HSM-backed keys for FIPS 140-2 Level 3 compliance.
+- **In a secure cryptographic token (such as a hardware token)**: Implement hardware-based key storage solutions.
+- **Encrypted by a key-encrypting key**: Use Azure Key Vault's envelope encryption capabilities.
+- **Split knowledge and dual control**: Implement multi-person control mechanisms for sensitive operations.
 
 Azure Key Vault integrates with AKS through the CSI Secret Store driver, allowing secure retrieval of keys and secrets directly into pod filesystems or environment variables.
 
@@ -125,11 +125,11 @@ Generation of strong cryptographic keys.
 
 Implement strong key generation practices:
 
-- Use Azure Key Vault's cryptographically secure random number generation
-- Follow industry standards for key strength (minimum 2048-bit RSA, 256-bit AES)
-- Implement proper entropy sources for key generation
-- Use HSM-backed keys in Azure Key Vault Premium for enhanced security
-- Document key generation procedures and ensure they meet PCI DSS requirements
+- Use Azure Key Vault's cryptographically secure random number generation.
+- Follow industry standards for key strength (minimum 2048-bit RSA, 256-bit AES).
+- Implement proper entropy sources for key generation.
+- Use HSM-backed keys in Azure Key Vault Premium for enhanced security.
+- Document key generation procedures and ensure they meet PCI DSS requirements.
 
 Configure Azure Key Vault to generate keys with appropriate algorithms and key sizes. Use the Azure Key Vault REST API or Azure CLI to create keys with specific parameters.
 
@@ -141,11 +141,11 @@ Secure cryptographic key distribution.
 
 Implement secure key distribution mechanisms:
 
-- Use Azure Key Vault's secure key distribution capabilities
-- Implement managed identities for AKS workloads to securely access keys
-- Use TLS 1.2+ for all key distribution communications
-- Implement proper authentication and authorization for key access
-- Monitor and log all key distribution activities
+- Use Azure Key Vault's secure key distribution capabilities.
+- Implement managed identities for AKS workloads to securely access keys.
+- Use TLS 1.2+ for all key distribution communications.
+- Implement proper authentication and authorization for key access.
+- Monitor and log all key distribution activities.
 
 Configure the CSI Secret Store driver in AKS to securely distribute keys from Azure Key Vault to workloads. Use pod identities or workload identities to authenticate with Key Vault.
 
@@ -157,11 +157,11 @@ Secure cryptographic key storage.
 
 Ensure secure storage of cryptographic keys:
 
-- Store all keys in Azure Key Vault with appropriate access controls
-- Use HSM-backed keys for enhanced security
-- Implement proper backup and recovery procedures for keys
-- Use Azure Key Vault's soft delete and purge protection features
-- Regularly review and audit key storage configurations
+- Store all keys in Azure Key Vault with appropriate access controls.
+- Use HSM-backed keys for enhanced security.
+- Implement proper backup and recovery procedures for keys.
+- Use Azure Key Vault's soft delete and purge protection features.
+- Regularly review and audit key storage configurations.
 
 Configure Azure Key Vault with appropriate security settings, including firewall rules, private endpoints, and access policies. Enable logging and monitoring for all key storage operations.
 
@@ -173,11 +173,11 @@ Cryptographic key changes for keys that have reached the end of their cryptoperi
 
 Implement key rotation procedures:
 
-- Define appropriate cryptoperiods for different types of keys
-- Implement automated key rotation using Azure Key Vault's capabilities
-- Document key rotation procedures and schedules
-- Test key rotation procedures regularly
-- Monitor key expiration and ensure timely rotation
+- Define appropriate cryptoperiods for different types of keys.
+- Implement automated key rotation using Azure Key Vault's capabilities.
+- Document key rotation procedures and schedules.
+- Test key rotation procedures regularly.
+- Monitor key expiration and ensure timely rotation.
 
 Use Azure Key Vault's automatic key rotation features and set up alerts for key expiration. Implement application logic to handle key rotation seamlessly.
 
@@ -189,11 +189,11 @@ Retirement or replacement of keys as deemed necessary when the integrity of the 
 
 Implement key compromise response procedures:
 
-- Define procedures for key compromise detection and response
-- Implement immediate key replacement capabilities
-- Document key compromise response procedures
-- Test key compromise response procedures regularly
-- Monitor for signs of key compromise
+- Define procedures for key compromise detection and response.
+- Implement immediate key replacement capabilities.
+- Document key compromise response procedures.
+- Test key compromise response procedures regularly.
+- Monitor for signs of key compromise.
 
 Configure Azure Key Vault to support rapid key replacement and implement monitoring to detect potential key compromise.
 
@@ -203,10 +203,10 @@ Configure Azure Key Vault to support rapid key replacement and implement monitor
 
 AKS provides several features to help you meet PCI DSS 4.0.1 data transmission requirements:
 
-- **TLS termination:** AKS ingress controllers support TLS 1.2+ termination
-- **Service mesh:** Integration with service mesh solutions like Istio for mutual TLS (mTLS)
-- **Network policies:** Kubernetes network policies for secure internal communications
-- **Azure Front Door:** Integration with Azure Front Door for enhanced security and performance
+- **TLS termination:** AKS ingress controllers support TLS 1.2+ termination.
+- **Service mesh:** Integration with service mesh solutions like Istio for mutual TLS (mTLS).
+- **Network policies:** Kubernetes network policies for secure internal communications.
+- **Azure Front Door:** Integration with Azure Front Door for enhanced security and performance.
 
 #### Your responsibilities
 
@@ -223,11 +223,11 @@ Ensure that security policies and operational procedures for protecting cardhold
 
 Document and implement comprehensive cryptographic policies for data transmission:
 
-- Define approved cryptographic standards and protocols (TLS 1.2+)
-- Document procedures for certificate management and renewal
-- Implement proper key management for TLS certificates
-- Train staff on secure transmission procedures
-- Regularly review and update cryptographic policies
+- Define approved cryptographic standards and protocols (TLS 1.2+).
+- Document procedures for certificate management and renewal.
+- Implement proper key management for TLS certificates.
+- Train staff on secure transmission procedures.
+- Regularly review and update cryptographic policies.
 
 Use Azure Key Vault to manage TLS certificates and integrate with AKS ingress controllers for automatic certificate provisioning and renewal.
 
@@ -239,11 +239,11 @@ Strong cryptography and security protocols are used to safeguard sensitive cardh
 
 Implement strong cryptographic protection for data in transit:
 
-- Use TLS 1.2 or higher for all cardholder data transmission
-- Implement proper certificate validation and hostname verification
-- Configure secure cipher suites and disable weak protocols
-- Implement mutual TLS (mTLS) for internal service communication
-- Monitor and log all secure transmission activities
+- Use TLS 1.2 or higher for all cardholder data transmission.
+- Implement proper certificate validation and hostname verification.
+- Configure secure cipher suites and disable weak protocols.
+- Implement mutual TLS (mTLS) for internal service communication.
+- Monitor and log all secure transmission activities.
 
 Configure AKS ingress controllers to enforce TLS 1.2+ and implement service mesh solutions for internal mTLS communication.
 
@@ -252,7 +252,7 @@ Configure AKS ingress controllers to enforce TLS 1.2+ and implement service mesh
 Implement comprehensive identity and access management controls including enhanced MFA requirements.
 
 > [!div class="nextstepaction"]
-> [Implement identity and access management](pci-dss-identity.md)
+> [Implement identity and access management](pci-identity.md)
 
 ## Related resources
 

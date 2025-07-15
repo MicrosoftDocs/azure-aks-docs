@@ -43,9 +43,9 @@ AKS provides several features to help you meet PCI DSS 4.0.1 anti-phishing and s
 
 You should implement anti-phishing and social engineering efforts as part of a broader security strategy that includes:
 
-- [Security awareness training](./pci-dss-security-awareness-training.md) for user training.
-- [Identity](./pci-dss-identity.md) for identity and access management.
-- [Monitoring](./pci-dss-monitor.md) for monitoring and alerting.
+- [Security awareness training](./pci-security-awareness-training.md) for user training.
+- [Identity](./pci-identity.md) for identity and access management.
+- [Monitoring](./pci-monitor.md) for monitoring and alerting.
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
@@ -54,7 +54,7 @@ For the latest AKS security features, see the [Azure Kubernetes Service (AKS) do
 Implement comprehensive third-party and supply chain security controls to protect against vendor-related risks.
 
 > [!div class="nextstepaction"]
-> [Implement third-party and supply chain security](pci-dss-third-party-supply-chain-security.md)
+> [Implement third-party and supply chain security](pci-third-party-supply-chain-security.md)
 
 ## Related resources
 

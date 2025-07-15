@@ -68,16 +68,16 @@ This series is split into several articles. Each article outlines the high-level
 
 |Area of responsibility|Description|
 |---|---|
-|[Network segmentation](pci-dss-network.md)|Protect cardholder data with firewall configuration and other network controls. Remove vendor-supplied defaults. Address dynamic segmentation and risk-based scoping as required by PCI DSS 4.0.1.|
-|[Data protection](pci-dss-data.md)|Encrypt all information, storage objects, containers, and physical media. Add security controls for data in transit and at rest, using updated cryptographic standards.|
-|[Vulnerability management](pci-dss-malware.md)|Run antivirus software, file integrity monitoring tools, and container scanners as part of your vulnerability detection and secure SDLC.|
-|[Access controls](pci-dss-identity.md)|Secure access through identity controls, including enhanced MFA and zero trust principles, for all access to the CDE.|
-|[Monitoring operations](pci-dss-monitor.md)|Maintain the security posture through automated and continuous monitoring operations, log integrity, and regular testing of your security design and implementation.|
-|[Policy management](pci-dss-policy.md)|Maintain thorough and updated documentation about your security processes and policies, including the use of the customized approach where applicable.|
+|[Network segmentation](pci-network.md)|Protect cardholder data with firewall configuration and other network controls. Remove vendor-supplied defaults. Address dynamic segmentation and risk-based scoping as required by PCI DSS 4.0.1.|
+|[Data protection](pci-data.md)|Encrypt all information, storage objects, containers, and physical media. Add security controls for data in transit and at rest, using updated cryptographic standards.|
+|[Vulnerability management](pci-malware.md)|Run antivirus software, file integrity monitoring tools, and container scanners as part of your vulnerability detection and secure SDLC.|
+|[Access controls](pci-identity.md)|Secure access through identity controls, including enhanced MFA and zero trust principles, for all access to the CDE.|
+|[Monitoring operations](pci-monitor.md)|Maintain the security posture through automated and continuous monitoring operations, log integrity, and regular testing of your security design and implementation.|
+|[Policy management](pci-policy.md)|Maintain thorough and updated documentation about your security processes and policies, including the use of the customized approach where applicable.|
 
 ## Next steps
 
 Start by reviewing the regulated architecture and design choices for PCI DSS 4.0.1.
 
 > [!div class="nextstepaction"]
-> [Architecture of an AKS regulated cluster for PCI DSS 4.0.1](pci-dss-ra-code-assets.md)
+> [Architecture of an AKS regulated cluster for PCI DSS 4.0.1](pci-ra-code-assets.md)

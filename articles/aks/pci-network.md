@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes the networking considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 The main theme of the PCI DSS 4.0.1 standard is security, with expanded requirements for network segmentation, risk-based scoping, and continuous monitoring. The hub-spoke topology is a natural choice for setting up a regulated network environment. It's easier to create an infrastructure that allows secure communications. Network controls are placed in both hub-spoke networks and follow the Microsoft zero-trust model. The controls can be tuned with least-privilege to secure traffic, giving access on a need-to-know basis. In addition, you can apply several defense-in-depth approaches by adding controls at each network hop and layer.
 
@@ -65,7 +65,7 @@ A formal process for approving and testing all network connections and changes t
 
 ##### Your responsibilities
 
-Don't implement configurations manually, such as by using the Azure portal or the Azure CLI directly. We recommend using Infrastructure as Code (IaC). With IaC, infrastructure is managed through a descriptive model that uses a versioning system. The IaC model generates the same environment every time it's applied. Common examples of IaC are Bicep, Azure Resource Manager templates (ARM templates), or Terraform. If IaC isn't an option, have a well-documented process for tracking, implementing, and safely deploying firewall rule changes. More details are provided as part of [Requirement 11.2](pci-dss-monitor.md#requirement-112).
+Don't implement configurations manually, such as by using the Azure portal or the Azure CLI directly. We recommend using Infrastructure as Code (IaC). With IaC, infrastructure is managed through a descriptive model that uses a versioning system. The IaC model generates the same environment every time it's applied. Common examples of IaC are Bicep, Azure Resource Manager templates (ARM templates), or Terraform. If IaC isn't an option, have a well-documented process for tracking, implementing, and safely deploying firewall rule changes. More details are provided as part of [Requirement 11.2](pci-monitor.md#requirement-112).
 
 You'll need to use a combination of various network controls, including Azure Firewall, network security groups (NSGs), and the Kubernetes `NetworkPolicy` resource.
 
@@ -212,13 +212,13 @@ Restrict inbound and outbound traffic to that which is necessary for the cardhol
 
 By design, Azure virtual networks can't be directly reached from the public internet. All inbound (or *ingress*) traffic must go through an intermediate traffic router. However, by default, all components in the network can reach public endpoints. You can disable that behavior by [configuring a private subnet](/azure/virtual-network/ip-services/default-outbound-access#utilize-the-private-subnet-parameter) or by using a UDR to send all outbound traffic through a firewall. That outbound (or *egress*) traffic must be explicitly secured to allow only secure ciphers and TLS 1.2 or later.
 
--  Azure Application Gateway's integrated WAF intercepts all HTTP(S) ingress traffic and routes inspected traffic to the cluster.
+- Azure Application Gateway's integrated WAF intercepts all HTTP(S) ingress traffic and routes inspected traffic to the cluster.
 
    This traffic can originate from trusted or untrusted networks. Application Gateway is provisioned in a subnet of the spoke network and secured by an NSG. As traffic flows in, WAF rules allow or deny, and Application Gateway routes traffic to the configured backend. For example, Application Gateway protects the CDE by denying the following types of traffic:
 
-   - All traffic that's not TLS-encrypted.
-   - Traffic outside the port range for control plane communication from the Azure infrastructure.
-   - Health probe requests that are sent by entities other than the internal load balancer in the cluster.
+  - All traffic that's not TLS-encrypted.
+  - Traffic outside the port range for control plane communication from the Azure infrastructure.
+  - Health probe requests that are sent by entities other than the internal load balancer in the cluster.
 
 - Azure Firewall secures all outbound (egress) traffic from trusted and untrusted networks.
 
@@ -551,4 +551,4 @@ If complete compute isolation is desired at the Azure infrastructure level, you 
 Protect stored cardholder data. Encrypt transmission of cardholder data across open, public networks.
 
 > [!div class="nextstepaction"]
-> [Protect cardholder data](pci-dss-data.md)
+> [Protect cardholder data](pci-data.md)

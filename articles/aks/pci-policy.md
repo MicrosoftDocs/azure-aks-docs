@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes security policy considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 ## Maintain an information security policy
 
@@ -52,4 +52,4 @@ For more information about planning for operational compliance, see the followin
 Implement targeted risk analysis procedures for custom approaches and security assessments.
 
 > [!div class="nextstepaction"]
-> [Implement targeted risk analysis](pci-dss-targeted-risk-analysis.md)
+> [Implement targeted risk analysis](pci-targeted-risk-analysis.md)

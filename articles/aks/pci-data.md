@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes data protection considerations for an Azure Kubernetes Service (AKS) cluster that runs a workload in compliance with the Payment Card Industry Data Security Standard (PCI-DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 This architecture and the implementation are focused on infrastructure and not the workload. This article provides general considerations and best practices to help you make design decisions. Follow the requirements in the official PCI-DSS 4.0.1 standard and use this article as additional information, where applicable.
 
@@ -241,7 +241,7 @@ Ensure that security policies and operational procedures for protecting stored c
 
 Create documentation as a general statement plus a series of up-to-date role guides for all personas. Perform new-hire training and ongoing training.
 
-It's critical that you maintain thorough documentation about the processes and policies. Several teams participate in making sure data is protected at rest and in transit. In your documentation, provide role guidance for all personas. The roles should include SRE, customer support, sales, network operations, security operations, software engineers, database administrators, and others. Personnel should be trained in NIST guidance and data-at-rest strategies to keep their skill set up to date. Training requirements are addressed in [Requirement 6.5](./pci-dss-malware.md#requirement-65) and [Requirement 12.6](./pci-dss-policy.md).
+It's critical that you maintain thorough documentation about the processes and policies. Several teams participate in making sure data is protected at rest and in transit. In your documentation, provide role guidance for all personas. The roles should include SRE, customer support, sales, network operations, security operations, software engineers, database administrators, and others. Personnel should be trained in NIST guidance and data-at-rest strategies to keep their skill set up to date. Training requirements are addressed in [Requirement 6.5](./pci-malware.md#requirement-65) and [Requirement 12.6](./pci-policy.md).
 
 ### Requirement 4: Encrypt transmission of cardholder data across open, public networks
 
@@ -313,4 +313,4 @@ People who are operating regulated environments must be educated, informed, and 
 Implement comprehensive cryptography and key management controls for protecting cardholder data at rest and in transit.
 
 > [!div class="nextstepaction"]
-> [Implement cryptography and key management](pci-dss-cryptography-key-management.md)
+> [Implement cryptography and key management](pci-cryptography-key-management.md)

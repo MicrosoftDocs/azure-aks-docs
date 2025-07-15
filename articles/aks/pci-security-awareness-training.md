@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes security awareness training considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 PCI DSS 4.0.1 requires comprehensive security awareness and training for all personnel with access to the cardholder data environment (CDE). This architecture and the implementation are focused on infrastructure and not the workload. This article provides general considerations and best practices to help you make design decisions. Follow the requirements in the official PCI-DSS 4.0.1 standard and use this article as additional information, where applicable.
 
@@ -62,16 +62,18 @@ A formal security awareness training program is implemented to make all personne
 Implement a comprehensive security awareness training program that covers all aspects of AKS security and PCI DSS compliance:
 
 **Core training components:**
-- **PCI DSS fundamentals**: Understanding the standard, compliance requirements, and business impact
-- **Cloud security principles**: Azure security model, shared responsibility, and cloud-specific threats
-- **Container security**: Docker security, Kubernetes security, and container image vulnerability management
-- **Data protection**: Cardholder data handling, encryption requirements, and data lifecycle management
-- **Network security**: AKS networking, private clusters, and network policy implementation
-- **Identity and access management**: Azure AD integration, MFA requirements, and privilege management
+
+- **PCI DSS fundamentals**: Understanding the standard, compliance requirements, and business impact.
+- **Cloud security principles**: Azure security model, shared responsibility, and cloud-specific threats.
+- **Container security**: Docker security, Kubernetes security, and container image vulnerability management.
+- **Data protection**: Cardholder data handling, encryption requirements, and data lifecycle management.
+- **Network security**: AKS networking, private clusters, and network policy implementation.
+- **Identity and access management**: Azure AD integration, MFA requirements, and privilege management.
 
 **Implementation steps:**
 
-1. **Develop role-specific training curricula**:
+1. Develop role-specific training curricula:
+
    ```yaml
    # Example training matrix for different roles
    TrainingMatrix:
@@ -103,14 +105,16 @@ Implement a comprehensive security awareness training program that covers all as
        - Forensic_Analysis
    ```
 
-2. **Create AKS-specific training modules**:
-   - **AKS cluster security configuration**: Private clusters, network policies, and security contexts
-   - **Container image security**: Vulnerability scanning, image signing, and secure base images
-   - **Secret management**: Azure Key Vault integration, secret rotation, and secure secret injection
-   - **Monitoring and logging**: Security event detection, log analysis, and incident investigation
-   - **Compliance automation**: Azure Policy implementation, continuous compliance monitoring
+2. Create AKS-specific training modules:
 
-3. **Implement training delivery mechanisms**:
+   - **AKS cluster security configuration**: Private clusters, network policies, and security contexts.
+   - **Container image security**: Vulnerability scanning, image signing, and secure base images.
+   - **Secret management**: Azure Key Vault integration, secret rotation, and secure secret injection.
+   - **Monitoring and logging**: Security event detection, log analysis, and incident investigation.
+   - **Compliance automation**: Azure Policy implementation, continuous compliance monitoring.
+
+3. Implement training delivery mechanisms:
+
    ```powershell
    # Example PowerShell script for tracking training completion
    # This integrates with Azure AD and a learning management system
@@ -152,15 +156,17 @@ The security awareness training program is reviewed at least once every 12 month
 Establish processes for regular review and updates of your security awareness training program:
 
 **Annual review process:**
-- **Threat landscape assessment**: Review current threats affecting AKS and containerized environments
-- **Compliance updates**: Incorporate changes in PCI DSS requirements and Azure security features
-- **Incident analysis**: Review security incidents from the past year and update training accordingly
-- **Technology updates**: Update training for new AKS features and security capabilities
-- **Effectiveness evaluation**: Assess training effectiveness through testing and incident response performance
+
+- **Threat landscape assessment**: Review current threats affecting AKS and containerized environments.
+- **Compliance updates**: Incorporate changes in PCI DSS requirements and Azure security features.
+- **Incident analysis**: Review security incidents from the past year and update training accordingly.
+- **Technology updates**: Update training for new AKS features and security capabilities.
+- **Effectiveness evaluation**: Assess training effectiveness through testing and incident response performance.
 
 **Implementation steps:**
 
-1. **Create annual training review schedule**:
+1. Create annual training review schedule:
+
    ```yaml
    # Annual training review calendar
    TrainingReviewSchedule:
@@ -182,7 +188,8 @@ Establish processes for regular review and updates of your security awareness tr
        - Schedule_Mandatory_Refresher_Training
    ```
 
-2. **Implement training effectiveness metrics**:
+2. Implement training effectiveness metrics:
+
    ```kusto
    // KQL query to track training effectiveness
    PCITrainingCompliance
@@ -198,11 +205,12 @@ Establish processes for regular review and updates of your security awareness tr
    | render timechart
    ```
 
-3. **Establish feedback mechanisms**:
-   - **Post-training surveys**: Collect feedback on training content and delivery
-   - **Incident correlation**: Analyze whether security incidents correlate with training gaps
-   - **Skills assessments**: Regular testing to ensure knowledge retention
-   - **Continuous improvement**: Update training based on feedback and changing requirements
+3. Establish feedback mechanisms:
+
+   - **Post-training surveys**: Collect feedback on training content and delivery.
+   - **Incident correlation**: Analyze whether security incidents correlate with training gaps.
+   - **Skills assessments**: Regular testing to ensure knowledge retention.
+   - **Continuous improvement**: Update training based on feedback and changing requirements.
 
 #### Requirement 12.6.3
 
@@ -213,14 +221,16 @@ Personnel acknowledge that they have read and understood the security policy and
 Implement formal acknowledgment processes to ensure personnel understand their security responsibilities:
 
 **Documentation and acknowledgment requirements:**
-- **Security policy acknowledgment**: Formal written acknowledgment of security policies
-- **Role-specific procedures**: Acknowledgment of specific procedures relevant to their role
-- **Training completion certificates**: Formal certification of training completion
-- **Periodic re-acknowledgment**: Regular renewal of policy acknowledgments
+
+- **Security policy acknowledgment**: Formal written acknowledgment of security policies.
+- **Role-specific procedures**: Acknowledgment of specific procedures relevant to their role.
+- **Training completion certificates**: Formal certification of training completion.
+- **Periodic re-acknowledgment**: Regular renewal of policy acknowledgments.
 
 **Implementation steps:**
 
-1. **Create digital acknowledgment system**:
+1. Create digital acknowledgment system:
+
    ```json
    {
      "acknowledgmentRecord": {
@@ -254,8 +264,9 @@ Implement formal acknowledgment processes to ensure personnel understand their s
    }
    ```
 
-2. **Implement compliance tracking**:
-   ```bash
+2. Implement compliance tracking:
+
+   ```azurecli-interactive
    # Azure CLI script to track policy acknowledgments
    #!/bin/bash
    
@@ -308,20 +319,23 @@ Security awareness training addresses how to identify and report security incide
 Ensure all personnel are trained on incident identification and reporting procedures specific to AKS environments:
 
 **Incident identification training:**
-- **AKS-specific threats**: Container escape, privilege escalation, and resource exhaustion attacks
-- **Anomaly detection**: Unusual network traffic, unexpected resource usage, and suspicious user behavior
-- **Log analysis**: Interpreting AKS audit logs, container logs, and security alerts
-- **Threat indicators**: Recognizing signs of compromise in containerized environments
+
+- **AKS-specific threats**: Container escape, privilege escalation, and resource exhaustion attacks.
+- **Anomaly detection**: Unusual network traffic, unexpected resource usage, and suspicious user behavior.
+- **Log analysis**: Interpreting AKS audit logs, container logs, and security alerts.
+- **Threat indicators**: Recognizing signs of compromise in containerized environments.
 
 **Incident reporting procedures:**
-- **Immediate response**: Who to contact and how to escalate security incidents
-- **Documentation requirements**: What information to collect and how to preserve evidence
-- **Communication protocols**: Internal and external communication during incidents
-- **Post-incident activities**: Lessons learned and process improvements
+
+- **Immediate response**: Who to contact and how to escalate security incidents.
+- **Documentation requirements**: What information to collect and how to preserve evidence.
+- **Communication protocols**: Internal and external communication during incidents.
+- **Post-incident activities**: Lessons learned and process improvements.
 
 **Implementation steps:**
 
-1. **Develop incident response training scenarios**:
+1. Develop incident response training scenarios:
+
    ```yaml
    # Example incident response training scenarios
    IncidentScenarios:
@@ -359,7 +373,8 @@ Ensure all personnel are trained on incident identification and reporting proced
          - "Activate incident response team"
    ```
 
-2. **Create incident reporting templates**:
+2. Create incident reporting templates:
+
    ```markdown
    # Security Incident Report Template
    
@@ -403,7 +418,7 @@ Ensure all personnel are trained on incident identification and reporting proced
 Implement comprehensive anti-phishing and social engineering controls to protect against human-factor security threats.
 
 > [!div class="nextstepaction"]
-> [Implement anti-phishing and social engineering controls](pci-dss-anti-phishing-social-engineering.md)
+> [Implement anti-phishing and social engineering controls](pci-anti-phishing-social-engineering.md)
 
 ## Related resources
 

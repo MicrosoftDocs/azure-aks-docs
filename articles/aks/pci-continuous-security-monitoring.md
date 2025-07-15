@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes continuous security monitoring considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 PCI DSS 4.0.1 significantly emphasizes continuous security, monitoring, and threat detection as fundamental components of maintaining compliance. This architecture and the implementation are focused on infrastructure and not the workload. This article provides general considerations and best practices to help you make design decisions. Follow the requirements in the official PCI-DSS 4.0.1 standard and use this article as additional information, where applicable.
 
@@ -68,6 +68,7 @@ Document comprehensive logging and monitoring procedures for your AKS environmen
 **Implementation steps:**
 
 1. Create a comprehensive logging policy document that includes:
+
    ```yaml
    # Example Azure Policy for AKS logging requirements
    apiVersion: policy.azure.com/v1
@@ -98,7 +99,8 @@ Document comprehensive logging and monitoring procedures for your AKS environmen
    ```
 
 2. Implement comprehensive logging for AKS clusters:
-   ```bash
+
+   ```azurecli-interactive
    # Enable diagnostic settings for AKS cluster
    az monitor diagnostic-settings create \
      --resource "/subscriptions/{subscription-id}/resourcegroups/{resource-group}/providers/Microsoft.ContainerService/managedClusters/{cluster-name}" \
@@ -140,14 +142,15 @@ Roles and responsibilities for performing activities in Requirement 10 are docum
 
 Define and assign clear roles and responsibilities for monitoring activities:
 
-- **Security Operations Center (SOC) team**: Primary responsibility for monitoring and responding to security events
-- **Platform team**: Responsible for maintaining logging infrastructure and ensuring log collection
-- **Development teams**: Responsible for implementing application-level logging and monitoring
-- **Compliance team**: Responsible for ensuring monitoring meets PCI DSS requirements
+- **Security Operations Center (SOC) team**: Primary responsibility for monitoring and responding to security events.
+- **Platform team**: Responsible for maintaining logging infrastructure and ensuring log collection.
+- **Development teams**: Responsible for implementing application-level logging and monitoring.
+- **Compliance team**: Responsible for ensuring monitoring meets PCI DSS requirements.
 
 **Implementation steps:**
 
 1. Create a RACI matrix for monitoring responsibilities:
+
    ```markdown
    | Activity | SOC Team | Platform Team | Dev Team | Compliance Team |
    |----------|----------|---------------|----------|-----------------|
@@ -158,7 +161,8 @@ Define and assign clear roles and responsibilities for monitoring activities:
    ```
 
 2. Implement Azure RBAC for monitoring access:
-   ```bash
+
+   ```azurecli-interactive
    # Assign monitoring roles
    az role assignment create \
      --assignee-object-id {soc-team-group-id} \
@@ -181,11 +185,11 @@ Audit logs are implemented to support the detection of anomalies and suspicious 
 |---|---|
 |[Requirement 10.2.1](#requirement-1021)|Audit logs capture all individual user access to cardholder data.|
 |[Requirement 10.2.2](#requirement-1022)|Audit logs capture all actions taken by any individual with administrative access, including any application, system, or cloud access.|
-|[Requirement 10.2.3](#requirement-1023)|Audit logs capture all access to audit logs.|
-|[Requirement 10.2.4](#requirement-1024)|Audit logs capture all invalid logical access attempts.|
-|[Requirement 10.2.5](#requirement-1025)|Audit logs capture all changes to identification and authentication credentials.|
-|[Requirement 10.2.6](#requirement-1026)|Audit logs capture all initialization of audit logs.|
-|[Requirement 10.2.7](#requirement-1027)|Audit logs capture all creation and deletion of system-level objects.|
+|Requirement 10.2.3|Audit logs capture all access to audit logs.|
+|Requirement 10.2.4|Audit logs capture all invalid logical access attempts.|
+|Requirement 10.2.5|Audit logs capture all changes to identification and authentication credentials.|
+|Requirement 10.2.6|Audit logs capture all initialization of audit logs.|
+|Requirement 10.2.7|Audit logs capture all creation and deletion of system-level objects.|
 
 #### Requirement 10.2.1
 
@@ -195,15 +199,16 @@ Audit logs capture all individual user access to cardholder data.
 
 Implement comprehensive logging for cardholder data access:
 
-- **Enable application-level logging**: Ensure applications log all cardholder data access with user identification
-- **Implement audit logging in pods**: Use structured logging to capture data access events
-- **Configure log aggregation**: Collect application logs centrally for analysis
-- **Monitor data access patterns**: Implement automated detection of unusual access patterns
+- **Enable application-level logging**: Ensure applications log all cardholder data access with user identification.
+- **Implement audit logging in pods**: Use structured logging to capture data access events.
+- **Configure log aggregation**: Collect application logs centrally for analysis.
+- **Monitor data access patterns**: Implement automated detection of unusual access patterns.
 
 **Implementation steps:**
 
 1. Configure Container Insights for comprehensive application monitoring:
-   ```bash
+
+   ```azurecli-interactive
    # Enable Container Insights on AKS cluster
    az aks enable-addons \
      --resource-group {resource-group} \
@@ -213,6 +218,7 @@ Implement comprehensive logging for cardholder data access:
    ```
 
 2. Implement structured logging in applications:
+
    ```yaml
    # Example logging configuration for applications
    apiVersion: v1
@@ -243,14 +249,15 @@ Audit logs capture all actions taken by any individual with administrative acces
 
 Implement comprehensive administrative access logging:
 
-- **Enable Azure AD audit logging**: Capture all administrative actions in Azure AD
-- **Configure Kubernetes audit logging**: Enable comprehensive audit logging for the Kubernetes API server
-- **Monitor privileged operations**: Track all privileged operations within the cluster
-- **Implement cloud access logging**: Log all administrative access to Azure resources
+- **Enable Azure AD audit logging**: Capture all administrative actions in Azure AD.
+- **Configure Kubernetes audit logging**: Enable comprehensive audit logging for the Kubernetes API server.
+- **Monitor privileged operations**: Track all privileged operations within the cluster.
+- **Implement cloud access logging**: Log all administrative access to Azure resources.
 
 **Implementation steps:**
 
 1. Configure comprehensive Kubernetes audit logging:
+
    ```yaml
    # Audit policy for comprehensive administrative logging
    apiVersion: audit.k8s.io/v1
@@ -275,6 +282,7 @@ Implement comprehensive administrative access logging:
    ```
 
 2. Set up Azure Monitor queries for administrative access:
+
    ```kusto
    // Monitor administrative access to AKS
    AzureActivity
@@ -297,7 +305,7 @@ Audit logs are protected from destruction and unauthorized modifications.
 |[Requirement 10.3.1](#requirement-1031)|Read access to audit logs is limited to those with a job-related need.|
 |[Requirement 10.3.2](#requirement-1032)|Write access to audit logs is limited to those with a job-related need.|
 |[Requirement 10.3.3](#requirement-1033)|Audit logs are backed up to a secure, centralized internal log server or media.|
-|[Requirement 10.3.4](#requirement-1034)|File integrity monitoring and/or change-detection mechanisms are deployed on logs to ensure that existing log data cannot be changed without generating alerts.|
+|Requirement 10.3.4|File integrity monitoring and/or change-detection mechanisms are deployed on logs to ensure that existing log data cannot be changed without generating alerts.|
 
 #### Requirement 10.3.1
 
@@ -307,15 +315,16 @@ Read access to audit logs is limited to those with a job-related need.
 
 Implement strict access controls for audit log reading:
 
-- **Use Azure RBAC**: Implement role-based access control for Log Analytics workspaces
-- **Implement resource-level permissions**: Grant access only to specific log categories based on job requirements
-- **Regular access reviews**: Conduct periodic reviews of who has access to audit logs
-- **Audit log access**: Monitor and log all access to audit logs themselves
+- **Use Azure RBAC**: Implement role-based access control for Log Analytics workspaces.
+- **Implement resource-level permissions**: Grant access only to specific log categories based on job requirements.
+- **Regular access reviews**: Conduct periodic reviews of who has access to audit logs.
+- **Audit log access**: Monitor and log all access to audit logs themselves.
 
 **Implementation steps:**
 
 1. Configure granular RBAC for log access:
-   ```bash
+
+   ```azurecli-interactive
    # Create custom role for SOC team with limited log access
    az role definition create --role-definition '{
      "Name": "PCI DSS Log Reader",
@@ -339,6 +348,7 @@ Implement strict access controls for audit log reading:
    ```
 
 2. Implement log access monitoring:
+
    ```kusto
    // Monitor access to audit logs
    AzureActivity
@@ -357,15 +367,16 @@ Write access to audit logs is limited to those with a job-related need.
 
 Strictly control who can modify or delete audit logs:
 
-- **Implement immutable storage**: Use Azure Storage immutable policies for long-term log retention
-- **Restrict administrative access**: Limit write access to only essential personnel
-- **Use managed services**: Leverage Azure-managed logging services that provide built-in protection
-- **Implement approval workflows**: Require approval for any log configuration changes
+- **Implement immutable storage**: Use Azure Storage immutable policies for long-term log retention.
+- **Restrict administrative access**: Limit write access to only essential personnel.
+- **Use managed services**: Leverage Azure-managed logging services that provide built-in protection.
+- **Implement approval workflows**: Require approval for any log configuration changes.
 
 **Implementation steps:**
 
 1. Configure immutable storage for log retention:
-   ```bash
+  
+   ```azurecli-interactive
    # Create storage account with immutable policy
    az storage account create \
      --name {storage-account-name} \
@@ -383,7 +394,8 @@ Strictly control who can modify or delete audit logs:
    ```
 
 2. Configure Log Analytics workspace with strict access controls:
-   ```bash
+
+   ```azurecli-interactive
    # Lock the Log Analytics workspace to prevent accidental deletion
    az lock create \
      --name "pci-dss-logs-lock" \
@@ -401,15 +413,16 @@ Audit logs are backed up to a secure, centralized internal log server or media.
 
 Implement comprehensive backup and archival for audit logs:
 
-- **Configure log export**: Set up automatic export of logs to secure storage
-- **Implement geo-redundant storage**: Use Azure Storage with geo-redundancy for log backups
-- **Establish retention policies**: Define appropriate retention periods for different types of logs
-- **Test backup recovery**: Regularly test the ability to restore logs from backups
+- **Configure log export**: Set up automatic export of logs to secure storage.
+- **Implement geo-redundant storage**: Use Azure Storage with geo-redundancy for log backups.
+- **Establish retention policies**: Define appropriate retention periods for different types of logs.
+- **Test backup recovery**: Regularly test the ability to restore logs from backups.
 
 **Implementation steps:**
 
 1. Configure automated log export:
-   ```bash
+
+   ```azurecli-interactive
    # Create data export rule for critical logs
    az monitor log-analytics workspace data-export create \
      --resource-group {resource-group} \
@@ -421,7 +434,8 @@ Implement comprehensive backup and archival for audit logs:
    ```
 
 2. Set up geo-redundant storage for log backups:
-   ```bash
+
+   ```azurecli-interactive
    # Create geo-redundant storage for log backups
    az storage account create \
      --name {backup-storage-account-name} \
@@ -443,7 +457,7 @@ Audit logs are reviewed to identify anomalies or suspicious activity.
 |---|---|
 |[Requirement 10.4.1](#requirement-1041)|The following audit logs are reviewed at least once daily.|
 |[Requirement 10.4.2](#requirement-1042)|Logs of all other system components are reviewed periodically.|
-|[Requirement 10.4.3](#requirement-1043)|Exceptions and anomalies identified during the review process are addressed.|
+|Requirement 10.4.3|Exceptions and anomalies identified during the review process are addressed.|
 
 #### Requirement 10.4.1
 
@@ -453,14 +467,15 @@ The following audit logs are reviewed at least once daily.
 
 Implement daily review processes for critical audit logs:
 
-- **Automate daily log reviews**: Use Azure Monitor workbooks and alerts for daily log analysis
-- **Focus on high-risk activities**: Prioritize review of administrative access, failed logins, and data access
-- **Implement anomaly detection**: Use machine learning-based anomaly detection for automated analysis
-- **Document review findings**: Maintain records of daily log reviews and any actions taken
+- **Automate daily log reviews**: Use Azure Monitor workbooks and alerts for daily log analysis.
+- **Focus on high-risk activities**: Prioritize review of administrative access, failed logins, and data access.
+- **Implement anomaly detection**: Use machine learning-based anomaly detection for automated analysis.
+- **Document review findings**: Maintain records of daily log reviews and any actions taken.
 
 **Implementation steps:**
 
 1. Create automated daily log review workbook:
+
    ```kusto
    // Daily security review query
    let StartTime = ago(1d);
@@ -492,7 +507,8 @@ Implement daily review processes for critical audit logs:
    ```
 
 2. Set up automated daily alerts:
-   ```bash
+
+   ```azurecli-interactive
    # Create action group for daily alerts
    az monitor action-group create \
      --name "pci-dss-daily-alerts" \
@@ -521,14 +537,15 @@ Logs of all other system components are reviewed periodically.
 
 Establish periodic review processes for all system logs:
 
-- **Create review schedules**: Define weekly, monthly, and quarterly review cycles for different log types
-- **Automate periodic analysis**: Use Azure Monitor workbooks for automated periodic log analysis
-- **Implement trending analysis**: Track security metrics over time to identify patterns
-- **Document review procedures**: Maintain procedures for periodic log reviews
+- **Create review schedules**: Define weekly, monthly, and quarterly review cycles for different log types.
+- **Automate periodic analysis**: Use Azure Monitor workbooks for automated periodic log analysis.
+- **Implement trending analysis**: Track security metrics over time to identify patterns.
+- **Document review procedures**: Maintain procedures for periodic log reviews.
 
 **Implementation steps:**
 
 1. Create weekly security trend analysis:
+
    ```kusto
    // Weekly security trends
    let WeeklyData = AzureActivity
@@ -546,7 +563,8 @@ Establish periodic review processes for all system logs:
    ```
 
 2. Set up monthly compliance reporting:
-   ```bash
+
+   ```azurecli-interactive
    # Create monthly compliance report automation
    az automation runbook create \
      --automation-account-name {automation-account-name} \
@@ -574,15 +592,16 @@ Audit logs are protected from destruction and unauthorized modifications.
 
 Implement comprehensive protection for audit logs:
 
-- **Use immutable storage**: Implement write-once-read-many (WORM) storage for critical logs
-- **Implement file integrity monitoring**: Use Azure Security Center for file integrity monitoring
-- **Configure log forwarding**: Forward logs to external SIEM systems for additional protection
-- **Implement cryptographic protection**: Use digital signatures or checksums for log integrity
+- **Use immutable storage**: Implement write-once-read-many (WORM) storage for critical logs.
+- **Implement file integrity monitoring**: Use Azure Security Center for file integrity monitoring.
+- **Configure log forwarding**: Forward logs to external SIEM systems for additional protection.
+- **Implement cryptographic protection**: Use digital signatures or checksums for log integrity.
 
 **Implementation steps:**
 
 1. Configure file integrity monitoring:
-   ```bash
+
+   ```azurecli-interactive
    # Enable file integrity monitoring in Microsoft Defender for Cloud
    az security workspace-setting create \
      --name default \
@@ -591,6 +610,7 @@ Implement comprehensive protection for audit logs:
    ```
 
 2. Set up log forwarding to external SIEM:
+
    ```yaml
    # Example Fluentd configuration for log forwarding
    apiVersion: v1
@@ -655,7 +675,7 @@ Implement comprehensive protection for audit logs:
 Implement comprehensive security policies and operational procedures to maintain and govern your PCI DSS compliance framework.
 
 > [!div class="nextstepaction"]
-> [Implement security policies](pci-dss-policy.md)
+> [Implement security policies](pci-policy.md)
 
 ## Related resources
 

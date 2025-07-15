@@ -38,9 +38,9 @@ The customized approach is appropriate when:
 
 You should implement the customized approach as part of a broader security strategy that includes:
 
-- [Security policies](pci-dss-policy.md) for policy and governance.
-- [Identity and access management](pci-dss-identity.md) for identity and access management.
-- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting.
+- [Security policies](pci-policy.md) for policy and governance.
+- [Identity and access management](pci-identity.md) for identity and access management.
+- [Monitoring and logging](pci-monitor.md) for monitoring and alerting.
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
@@ -49,7 +49,7 @@ For the latest AKS security features, see the [Azure Kubernetes Service (AKS) do
 Review the complete mapping of PCI DSS requirements to AKS implementations and controls.
 
 > [!div class="nextstepaction"]
-> [Review requirement mapping matrix](pci-dss-requirement-mapping-matrix.md)
+> [Review requirement mapping matrix](pci-requirement-mapping-matrix.md)
 
 ## Related resources
 

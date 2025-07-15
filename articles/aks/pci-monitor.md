@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes monitoring and logging considerations for an Azure Kubernetes Service (AKS) cluster that runs a workload in compliance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 > [!IMPORTANT]
 >
@@ -306,7 +306,7 @@ Have a clear and agreed-upon definition of significant changes with respect to y
 
 > **APPLIES TO: 11.2.1**
 
-The quarterly scan for vulnerabilities must be run by skilled personnel with deep understanding of Azure networking and Kubernetes networking concepts. Map the results to [Requirement 6.1](./pci-dss-malware.md#requirement-61) with severity levels and resolve high-priority items. If there are significant changes, run the scans before the scheduled quarterly scan. This helps you detect new vulnerabilities so that you can proactively fix issues.
+The quarterly scan for vulnerabilities must be run by skilled personnel with deep understanding of Azure networking and Kubernetes networking concepts. Map the results to [Requirement 6.1](./pci-malware.md#requirement-61) with severity levels and resolve high-priority items. If there are significant changes, run the scans before the scheduled quarterly scan. This helps you detect new vulnerabilities so that you can proactively fix issues.
 
 This scan must also include in-cluster (pod-to-pod) networks.
 
@@ -385,4 +385,4 @@ This is important for people who are part of the approval process from a policy 
 Implement continuous security monitoring controls for ongoing compliance and threat detection.
 
 > [!div class="nextstepaction"]
-> [Implement continuous security monitoring](pci-dss-continuous-security-monitoring.md)
+> [Implement continuous security monitoring](pci-continuous-security-monitoring.md)

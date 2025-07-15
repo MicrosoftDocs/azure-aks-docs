@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes enhanced multifactor authentication (MFA) considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 PCI DSS 4.0.1 significantly expands MFA requirements for all access to the cardholder data environment (CDE) and cloud administrative access. This architecture and the implementation are focused on infrastructure and not the workload. This article provides general considerations and best practices to help you make design decisions. Follow the requirements in the official PCI-DSS 4.0.1 standard and use this article as additional information, where applicable.
 
@@ -69,15 +69,17 @@ Implement MFA for all administrative access to your AKS clusters:
 **Implementation steps:**
 
 1. Enable Azure AD integration for your AKS cluster:
-   ```bash
-   az aks update -g myResourceGroup -n myAKSCluster --enable-aad --aad-admin-group-object-ids <admin-group-object-id>
+
+   ```azurecli-interactive
+   az aks update --resource-group myResourceGroup --name myAKSCluster --enable-aad --aad-admin-group-object-ids <admin-group-object-id>
    ```
 
 2. Create a Conditional Access policy requiring MFA for AKS administrators:
-   - Navigate to Azure AD > Security > Conditional Access
-   - Create a new policy targeting users with AKS administrative roles
-   - Set conditions for cloud apps (Azure Kubernetes Service)
-   - Require MFA as an access control
+
+   - Navigate to **Azure AD** > **Security** > **Conditional Access**.
+   - Create a new policy targeting users with AKS administrative roles.
+   - Set conditions for cloud apps (Azure Kubernetes Service).
+   - Require MFA as an access control.
 
 3. Assign appropriate Azure RBAC roles to users and groups for AKS access.
 
@@ -97,6 +99,7 @@ Extend MFA requirements to all users accessing the CDE, not just administrators:
 **Implementation steps:**
 
 1. Create Conditional Access policies for all CDE access:
+
    ```powershell
    # Example PowerShell script to create a Conditional Access policy
    $policy = @{
@@ -118,7 +121,8 @@ Extend MFA requirements to all users accessing the CDE, not just administrators:
    ```
 
 2. Configure workload identity for AKS applications:
-   ```bash
+
+   ```azurecli-interactive
    # Enable workload identity on AKS cluster
    az aks update -g myResourceGroup -n myAKSCluster --enable-workload-identity
    
@@ -143,12 +147,14 @@ Ensure MFA is enforced for all remote access to AKS resources:
 **Implementation steps:**
 
 1. Configure location-based Conditional Access policies:
-   - Define named locations in Azure AD for trusted network ranges
-   - Create policies that require MFA for access from untrusted locations
-   - Apply policies to all AKS-related cloud applications
+
+   - Define named locations in Azure AD for trusted network ranges.
+   - Create policies that require MFA for access from untrusted locations.
+   - Apply policies to all AKS-related cloud applications.
 
 2. Implement private cluster configuration for enhanced security:
-   ```bash
+
+   ```azurecli-interactive
    # Create private AKS cluster
    az aks create \
      --resource-group myResourceGroup \
@@ -159,7 +165,8 @@ Ensure MFA is enforced for all remote access to AKS resources:
    ```
 
 3. Configure Azure Private Link for secure remote access:
-   ```bash
+
+   ```azurecli-interactive
    # Enable private endpoint for AKS
    az aks update \
      --resource-group myResourceGroup \
@@ -194,6 +201,7 @@ Ensure MFA cannot be bypassed and is enforced before granting access:
 **Implementation steps:**
 
 1. Configure session controls in Conditional Access:
+
    ```json
    {
      "sessionControls": {
@@ -211,7 +219,6 @@ Ensure MFA cannot be bypassed and is enforced before granting access:
    ```
 
 2. Use Azure AD Identity Protection to detect and respond to anomalous access patterns.
-
 3. Implement continuous access evaluation for real-time policy enforcement.
 
 ## Additional MFA considerations for AKS
@@ -244,6 +251,7 @@ Implement comprehensive monitoring for MFA compliance:
 **Implementation steps for monitoring:**
 
 1. Configure Azure Monitor workbooks for MFA reporting:
+
    ```kusto
    SigninLogs
    | where TimeGenerated > ago(30d)
@@ -254,6 +262,7 @@ Implement comprehensive monitoring for MFA compliance:
    ```
 
 2. Set up Azure Monitor alerts for MFA compliance:
+
    ```json
    {
      "criteria": {
@@ -277,7 +286,7 @@ Implement comprehensive monitoring for MFA compliance:
 Implement comprehensive malware protection controls for all systems and regularly update antivirus software or programs.
 
 > [!div class="nextstepaction"]
-> [Implement malware protection](pci-dss-malware.md)
+> [Implement malware protection](pci-malware.md)
 
 ## Related resources
 

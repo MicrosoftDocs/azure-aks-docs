@@ -46,9 +46,9 @@ AKS provides several features to help you meet PCI DSS 4.0.1 targeted risk analy
 
 You should implement targeted risk analysis as part of a broader security strategy that includes:
 
-- [Security policies](pci-dss-policy.md) for policy and governance.
-- [Identity and access management](pci-dss-identity.md) for identity and access management.
-- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting.
+- [Security policies](pci-policy.md) for policy and governance.
+- [Identity and access management](pci-identity.md) for identity and access management.
+- [Monitoring and logging](pci-monitor.md) for monitoring and alerting.
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
@@ -57,7 +57,7 @@ For the latest AKS security features, see the [Azure Kubernetes Service (AKS) do
 Implement comprehensive security awareness training for all personnel with access to the cardholder data environment.
 
 > [!div class="nextstepaction"]
-> [Implement security awareness training](pci-dss-security-awareness-training.md)
+> [Implement security awareness training](pci-security-awareness-training.md)
 
 ## Related resources
 

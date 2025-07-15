@@ -43,9 +43,9 @@ AKS provides several features to help you meet PCI DSS 4.0.1 third-party and sup
 
 You should implement third-party and supply chain security as part of a broader security strategy that includes:
 
-- [Security policies](pci-dss-policy.md) for policy and governance.
-- [Identity and access management](pci-dss-identity.md) for identity and access management.
-- [Monitoring and logging](pci-dss-monitor.md) for monitoring and alerting.
+- [Security policies](pci-policy.md) for policy and governance.
+- [Identity and access management](pci-identity.md) for identity and access management.
+- [Monitoring and logging](pci-monitor.md) for monitoring and alerting.
 
 For the latest AKS security features, see the [Azure Kubernetes Service (AKS) documentation](/azure/aks/).
 
@@ -54,7 +54,7 @@ For the latest AKS security features, see the [Azure Kubernetes Service (AKS) do
 Learn about implementing customized approaches for PCI DSS compliance when standard requirements don't apply.
 
 > [!div class="nextstepaction"]
-> [Learn about customized approach guidance](pci-dss-customized-approach-guidance.md)
+> [Learn about customized approach guidance](pci-customized-approach-guidance.md)
 
 ## Related resources
 

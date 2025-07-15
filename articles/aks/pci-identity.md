@@ -15,7 +15,7 @@ ms.custom:
 
 This article describes identity and access management considerations for an Azure Kubernetes Service (AKS) cluster that's configured in accordance with the Payment Card Industry Data Security Standard (PCI-DSS 4.0.1).
 
-> This article is part of a series. Read the [introduction](pci-dss-intro.md).
+> This article is part of a series. Read the [introduction](pci-intro.md).
 
 Kubernetes has native role-based access control (RBAC) that manages permissions to the Kubernetes API. There are several built-in roles with specific permissions or actions on Kubernetes resources. Azure Kubernetes Service (AKS) supports those built-in roles and custom roles for granular control. Those actions can be authorized or denied to a user through Kubernetes RBAC.
 
@@ -79,11 +79,11 @@ Define access needs for each role, including:
 
 Define roles based on the tasks and responsibilities required for the in-scope components and their interaction with Azure resources. You can start with broad categories, such as:
 
-- Scope by Azure management groups, subscriptions, or resource groups
-- Azure Policy for the workload or subscription
-- Container operations
-- Secret management
-- Build and deployment pipelines
+- Scope by Azure management groups, subscriptions, or resource groups.
+- Azure Policy for the workload or subscription.
+- Container operations.
+- Secret management.
+- Build and deployment pipelines.
 
 While the definition of roles and responsibilities around those areas might be associated with your team structure, focus on the requirement of the workload. For instance, determine who's responsible for maintaining security, isolation, deployment, and observability. Here are some examples of responsibilities:
 
@@ -466,4 +466,4 @@ Here are some suggestions for applying technical controls:
 Implement enhanced multi-factor authentication (MFA) requirements for secure access to the cardholder data environment.
 
 > [!div class="nextstepaction"]
-> [Implement enhanced MFA](pci-dss-enhanced-mfa-implementation.md)
+> [Implement enhanced MFA](pci-enhanced-mfa-implementation.md)
