@@ -195,7 +195,7 @@ Protect container images and other OCI artifacts because they contain the organi
 
 ## Kubernetes API Server operational access
 
-:::image type="content" border="false" source="media/pci-dss/aks-jumpbox.svg" alt-text="Diagram of Kubernetes API Server operational access with a jump box." lightbox="media/pci-dss/aks-jumpbox.svg":::
+:::image type="content" border="false" source="media/pci-dss/aks-jump-box.svg" alt-text="Diagram of Kubernetes API Server operational access with a jump box." lightbox="media/pci-dss/aks-jump-box.svg":::
 
 You can limit commands executed against the cluster without necessarily building an operational process based around jump boxes. If you have an IAM-gated IT automation platform, make use of the predefined actions to control and audit the type of actions.
 
