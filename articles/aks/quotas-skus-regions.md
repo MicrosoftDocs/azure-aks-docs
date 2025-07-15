@@ -62,7 +62,7 @@ Each node in an AKS cluster contains a fixed amount of compute resources such as
 For user nodepools, VM sizes with fewer than two vCPUs and two GBs of RAM (memory) may not be used.
 
 ### System nodepools
-For system nodepools, VM sizes with fewer than two vCPUs and four GBs of RAM (memory) may not be used. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, it is recommonded to **not use any [B series VMs][b-series-vm] and [Av1 series VMs][a-series-vm]**.
+For system nodepools, VM sizes with fewer than two vCPUs and four GBs of RAM (memory) may not be used. To ensure that the required *kube-system* pods and your applications can reliably be scheduled, it is recommended to **not use any [B series VMs][b-series-vm] and [Av1 series VMs][a-series-vm]**.
 
 For more information on VM types and their compute resources, see [Sizes for virtual machines in Azure][vm-skus].
 
