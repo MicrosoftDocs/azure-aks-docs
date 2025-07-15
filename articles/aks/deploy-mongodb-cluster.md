@@ -679,6 +679,11 @@ To connect to Percona Server for MongoDB, you need to construct the MongoDB conn
 
 3. Decode the Base64-encoded login name and password and export the connection string to the environment variable using the following commands:
 
+> [!IMPORTANT]
+>
+> Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application, and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable. 
+>
+
     ```bash
     export databaseAdmin=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGODB_DATABASE_ADMIN_USER}" | base64 --decode)
     export databaseAdminPassword=$(kubectl get secret ${AKS_MONGODB_SECRETS_NAME} -n ${AKS_MONGODB_NAMESPACE} -o jsonpath="{.data.MONGODB_DATABASE_ADMIN_PASSWORD}" | base64 --decode)
