@@ -1,6 +1,6 @@
 ---
-title: Node autoprovisioning
-description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning.
+title: Node auto-provisioning
+description: Learn about Azure Kubernetes Service (AKS) node auto-provisioning.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 06/30/2025
@@ -11,17 +11,17 @@ author: wdarko1
 
 ---
 
-# Node autoprovisioning
+# Node auto-provisioning
 
 When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
-Node autoprovisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
+Node auto-provisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
 NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. NAP automatically deploys, configures and manages Karpenter on your AKS clusters.
 
 ## How Node Auto-provisioning Works
 
-Node Autoprovision provisions, scales, and manages virtual machines, or nodes in a cluster in response to pending pod pressure. NAP is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want NAP to handle your workloads. For more information on configuring your CRDs, see our documentation on [Configuring NAP with Custom Resource Definitions]. NAP then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
+Node auto-provision provisions, scales, and manages virtual machines, or nodes in a cluster in response to pending pod pressure. NAP is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want NAP to handle your workloads. For more information on configuring your CRDs, see our documentation on [Configuring NAP with Custom Resource Definitions]. NAP then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
 
 ## Before you begin
 
@@ -61,7 +61,7 @@ Node Autoprovision provisions, scales, and manages virtual machines, or nodes in
 
 ### Networking configuration
 
-The recommended network configurations for clusters enabled with Node Autoprovisioning are the following:
+The recommended network configurations for clusters enabled with Node Auto-provisioning are the following:
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
 - [Azure CNI](configure-azure-cni.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
@@ -75,15 +75,15 @@ The following networking configurations are currently *not* supported:
 - Dynamic IP Allocation
 - Static Allocation of CIDR blocks
 
-## Enable node autoprovisioning
+## Enable node auto-provisioning
 
-### Enable node autoprovisioning on a new cluster
+### Enable node auto-provisioning on a new cluster
 
 NAP is enabled by setting the field `--node-provisioning-mode` to [Auto](https://learn.microsoft.com/en-us/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
 
 ### [Azure CLI](#tab/azure-cli)
 
-- Enable node autoprovisioning on a new cluster using the `az aks create` command and set `--node-provisioning-mode` to `Auto`. You also need to set the `--network-plugin` to `azure`, `--network-plugin-mode` to `overlay`, and `--network-dataplane` to `cilium`.
+- Enable node auto-provisioning on a new cluster using the `az aks create` command and set `--node-provisioning-mode` to `Auto`. You also need to set the `--network-plugin` to `azure`, `--network-plugin-mode` to `overlay`, and `--network-dataplane` to `cilium`.
 
     ```azurecli-interactive
     az aks create \
@@ -98,7 +98,7 @@ NAP is enabled by setting the field `--node-provisioning-mode` to [Auto](https:/
 
 ### [ARM template](#tab/arm)
 
-- Enable node autoprovisioning on a new cluster using the `az deployment group create` command and specify the `--template-file` parameter with the path to the ARM template file. The ARM template includes the `mode` field in `nodeProvisioningProfile` set to `Auto`, which enabled node autoprovisioning. 
+- Enable node auto-provisioning on a new cluster using the `az deployment group create` command and specify the `--template-file` parameter with the path to the ARM template file. The ARM template includes the `mode` field in `nodeProvisioningProfile` set to `Auto`, which enabled node auto-provisioning. 
 
     ```azurecli-interactive
     az deployment group create --resource-group $RESOURCE_GROUP_NAME --template-file ./nap.json
@@ -154,22 +154,22 @@ NAP is enabled by setting the field `--node-provisioning-mode` to [Auto](https:/
 
 ---
 
-### Enable node autoprovisioning on an existing cluster
+### Enable node auto-provisioning on an existing cluster
 
-- Enable node autoprovisioning on an existing cluster using the `az aks update` command and set `--node-provisioning-mode` to `Auto`.
+- Enable node auto-provisioning on an existing cluster using the `az aks update` command and set `--node-provisioning-mode` to `Auto`.
 
     ```azurecli-interactive
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --node-provisioning-mode Auto
     ```
 
-## Custom Virtual Networks and Node Autoprovisioning
-AKS allows you to add a cluster with node autoprovisioning enabled in a custom virtual network via the `--vent-subnet-id` parameter. The following sections details how to create a virtual network, create a managed identity with permissions over the virtual network, and create a NAP-enabled cluster in a custom virtual network. 
+## Custom Virtual Networks and Node auto-provisioning
+AKS allows you to add a cluster with node auto-provisioning enabled in a custom virtual network via the `--vent-subnet-id` parameter. The following sections details how to create a virtual network, create a managed identity with permissions over the virtual network, and create a NAP-enabled cluster in a custom virtual network. 
 
 ### Create a virtual network
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
-When using a custom virtual network with AKS Autoprovisioning, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
+When using a custom virtual network with node auto-provisioning, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
 
 > [!WARNING]
 > An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
@@ -220,7 +220,7 @@ az role assignment create --scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGro
 --assignee ${IDENTITY_PRINCIPAL_ID}
 ```
 
-### Create an AKS cluster in a custom virtual network and with node autoprovisioning enabled
+### Create an AKS cluster in a custom virtual network and with node auto-provisioning enabled
 In the following command, an AKS cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command.  
 
 ```azurecli-interactive
@@ -249,7 +249,7 @@ You can optionally inspect the custom resources (CRs) for your cluster
 
 ## Node pools
 
-Node autoprovisioning uses a list of VM SKUs as a starting point to decide which SKU is best suited for the workloads that are in a pending state. Having control over what SKU you want in the initial pool allows you to specify specific SKU families or virtual machine types and the maximum number of resources a provisioner uses. You can also reference different specifications in the node pool file, such as specifying *spot* or *on-demand* instances, multiple architectures, and more. 
+Node auto-provisioning uses a list of VM SKUs as a starting point to decide which SKU is best suited for the workloads that are in a pending state. Having control over what SKU you want in the initial pool allows you to specify specific SKU families or virtual machine types and the maximum number of resources a provisioner uses. You can also reference different specifications in the node pool file, such as specifying *spot* or *on-demand* instances, multiple architectures, and more. 
 
 If you have specific virtual machine sizes that are reserved instances, for example, you may wish to only use those virtual machines as the starting pool.
 
@@ -322,7 +322,7 @@ az vm list-skus --resource-type virtualMachines --location <location> --query '[
 
 ## Node pool limits
 
-By default, node autoprovisioning attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
+By default, node auto-provisioning attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
 
 ```
   # Resource limits constrain the total size of the cluster.
@@ -348,9 +348,9 @@ When you have multiple node pools defined, it's possible to set a preference of 
 Node Disruption, including Consolidation or Drift, can be controlled using different methods. 
 
 ### Consolidation
-When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
+When the workloads on your nodes scale down, node auto-provisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
-You can remove a node manually using `kubectl delete node`, but node autoprovision can also control when it should optimize your nodes based on your specifications.
+You can remove a node manually using `kubectl delete node`, but node auto-provision can also control when it should optimize your nodes based on your specifications.
 
 ```yaml
   disruption:
@@ -367,7 +367,7 @@ You can remove a node manually using `kubectl delete node`, but node autoprovisi
 ```
 
 ### Disruption Controls
-AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates of your nodes for you through Drift. 
+AKS with node auto-provisioning manages the Kubernetes version upgrades and VM OS disk updates of your nodes for you through Drift. 
 
 These can be regulated through multiple controls:
 - Karpenter Node Disruption Budgets - Node-level disruption budgets can be set on your NodePool custom resources, and will limit node disruptions based on schedule and concurrent thresholds. These can be set directly for Drift, Disruption as a whole and/or other Karpenter disruption actions. 
@@ -377,9 +377,9 @@ With [Auto Upgrade][auto-upgrade] enabled on your cluster, you can also adjust t
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for node autoprovision nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your node autoprovision nodes are automatically updated to follow the same versioning. 
+Kubernetes upgrades for node auto-provision nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your node auto-provision nodes are automatically updated to follow the same versioning. 
 
-AKS recommends coupling node autoprovision with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
+AKS recommends coupling node auto-provision with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
 
 ### Node image updates
 
@@ -391,19 +391,19 @@ By default NAP node pool virtual machines are automatically updated when a new i
 
 ## Monitoring selection events
 
-Node autoprovision produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
+Node auto-provision produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
 
 ```
 kubectl get events -A --field-selector source=karpenter -w
 ```
 
-## Disabling node autoprovisioning
+## Disabling node auto-provisioning
 
-Node autoprovisioning can only be disabled when:
+Node auto-provisioning can only be disabled when:
 - There are no existing NAP-managed nodes. Use `kubectl get nodes -l karpenter.sh/nodepool` to view NAP-managed nodes.
 - All existing karpenter.sh/NodePools have their `spec.limits.cpu` set to 0.
 
-### Steps to disable node autoprovisioning
+### Steps to disable node auto-provisioning
 
 1. Set all karpenter.sh/NodePools `spec.limits.cpu` field to 0. This prevents new nodes from being created, but doesn't disrupt currently running nodes.
 
@@ -517,7 +517,7 @@ Node autoprovisioning can only be disabled when:
 Yes, NAP can be installed on existing AKS clusters.
 
 ### Do I need to remove Cluster Autoscaler before installing NAP?
-Yes, you must remove or disable Cluster Autoscaler prior to enabling Node autoprovisioning. 
+Yes, you must remove or disable Cluster Autoscaler prior to enabling Node auto-provisioning. 
 
 ## Node Management
 
@@ -529,7 +529,7 @@ NAP supports most Azure Virtual Machine sizes that are:
 - Are available in your region and availability zones
 
 ### Can I use custom virtual machine images with NAP?
-No, you can specify custom VM images for Node autoprovisioning
+No, you can specify custom VM images for Node auto-provisioning
 
 ### How does NAP handle spot VMs?
 NAP supports Azure Spot VMs for cost savings. When using spot instances, be aware that they are subject to eviction policies. 
