@@ -262,7 +262,7 @@ metadata:
   name: default
 spec:
   disruption:
-    consolidationPolicy: WhenUnderutilized
+    consolidationPolicy: WhenEmpty
     expireAfter: Never
   template:
     spec:
@@ -348,15 +348,15 @@ When you have multiple node pools defined, it's possible to set a preference of 
 Node Disruption, including Consolidation or Drift, can be controlled using different methods. 
 
 ### Consolidation
-When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
+When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
 You can remove a node manually using `kubectl delete node`, but node autoprovision can also control when it should optimize your nodes based on your specifications.
 
 ```yaml
   disruption:
     # Describes which types of Nodes NAP should consider for consolidation
-    consolidationPolicy: WhenUnderutilized | WhenEmpty
-    # 'WhenUnderutilized', NAP will consider all nodes for consolidation and attempt to remove or replace Nodes when it discovers that the Node is underutilized and could be changed to reduce cost
+    consolidationPolicy: WhenEmptyorUnderutilized | WhenEmpty
+    # 'WhenEmptyUnderutilized', NAP will consider all nodes for consolidation and attempt to remove or replace Nodes when it discovers that the Node is empty or underutilized and could be changed to reduce cost
 
     #  `WhenEmpty`, NAP will only consider nodes for consolidation that contain no workload pods
     
