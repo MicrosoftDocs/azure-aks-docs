@@ -2,11 +2,11 @@
 title: Use Kubernetes events for troubleshooting
 description: Learn about Kubernetes events, which provide details on pods, nodes, and other Kubernetes objects.
 ms.topic: how-to
-ms.author: davidsmatlak
-author: davidsmatlak
+ms.author: nickoman
+author: nickomang
 ms.subservice: aks-monitoring
-ms.date: 09/07/2023
-# Customer intent: As a Kubernetes administrator, I want to monitor and troubleshoot issues using Kubernetes events, so that I can maintain the health and performance of my Azure Kubernetes Service (AKS) clusters effectively.
+ms.date: 06/13/2024
+ms.custom: innovation-engine
 ---
 
 # Use Kubernetes events for troubleshooting in Azure Kubernetes Service (AKS)
@@ -40,19 +40,58 @@ For more information, see the official [Kubernetes documentation][k8s-events].
 
 ### [Azure CLI](#tab/azure-cli)
 
-* List all events in your cluster using the `kubectl get events` command.
+List all events in your cluster using the `kubectl get events` command.
 
-    ```bash
-    kubectl get events
-    ```
+Assuming your cluster is already created and available (per doc prerequisites), get credentials (note the `--overwrite-existing` flag is set to avoid kubeconfig errors):
 
-* Look at a specific pod's events by first finding the name of the pod and then using the `kubectl describe pod` command.
+```bash
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --overwrite-existing
+```
 
-    ```bash
-    kubectl get pods
-    
-    kubectl describe pod <pod-name>
-    ```
+Now list all events in your cluster:
+
+```bash
+kubectl get events
+```
+
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```output
+LAST SEEN   TYPE      REASON              OBJECT                      MESSAGE
+xxm         Normal    Scheduled           pod/my-pod-xxxxx            Successfully assigned default/my-pod-xxxxx to aks-nodepoolxx-xxxxxxx-vmss000000
+xxm         Normal    Pulled              pod/my-pod-xxxxx            Container image "nginx" already present on machine
+xxm         Normal    Created             pod/my-pod-xxxxx            Created container nginx
+xxm         Normal    Started             pod/my-pod-xxxxx            Started container nginx
+...
+```
+
+Look at a specific pod's events by first finding the name of the pod and then using the `kubectl describe pod` command.
+
+List the pods in the current namespace:
+
+```bash
+kubectl get pods
+```
+
+Results:
+
+<!-- expected_similarity=0.3 -->
+
+```output
+NAME                             READY   STATUS    RESTARTS   AGE
+my-pod-xxxxx                     1/1     Running   0          xxm
+nginx-deployment-xxxxx           1/1     Running   0          xxm
+...
+```
+
+Replace `<pod-name>` below with your actual pod name. For automation, here's an example for the first pod in the list:
+
+```shell
+POD_NAME=$(kubectl get pods -o jsonpath="{.items[0].metadata.name}")
+kubectl describe pod $POD_NAME
+```
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -68,10 +107,10 @@ For more information, see the official [Kubernetes documentation][k8s-events].
 
 You might have various namespaces and services running in your AKS cluster. Filtering events based on object type, namespace, or reason can help narrow down the results to the most relevant information.
 
-For example, you can use the following command to filter events within a specific namespace:
+For example, you can use the following command to filter events within the default namespace:
 
 ```bash
-kubectl get events --namespace <namespace-name>
+kubectl get events --namespace default
 ```
 
 ### Automating event notifications

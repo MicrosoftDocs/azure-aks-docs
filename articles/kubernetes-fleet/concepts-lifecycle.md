@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a cloud operations manager, I want to understand how Azure Kubernetes Fleet Manager manages hub cluster lifecycle, so that I can ensure my clusters are securely maintained and up-to-date with essential updates and patches.
 ---
 
 # Fleet hub cluster overview

@@ -1,20 +1,18 @@
 ---
-title: "Azure Kubernetes fleet manager resource management across multiple clusters using hub cluster as the control plane"
-description: "This article describes the concept of Kubernetes resource management using hub clusters as the control plane with Azure Kubernetes Fleet Manager (Kubernetes Fleet)."
-ms.date: 06/09/2025
+title: "Azure Kubernetes Fleet Manager resource management across multiple clusters using hub cluster as the control plane"
+description: "This article describes the concept of Kubernetes resource management using hub clusters as the control plane with Azure Kubernetes Fleet Manager."
+ms.date: 07/08/2025
 author: zhangryan
 ms.author: zhangryan
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
 ---
 
-# Azure Kubernetes fleet manager resource management across multiple clusters using hub cluster as the control plane
+# Azure Kubernetes Fleet Manager resource management across multiple clusters using hub cluster as the control plane
 
 This article describes the concept of Kubernetes resource management using hub clusters as the control plane with Azure Kubernetes Fleet Manager.
 
 ## Overview
-
-As Azure customers increasingly adopt Kubernetes at scale, the operational paradigm evolves from managing single clusters to orchestrating complex multi-cluster environments. This architectural shift is driven by fundamental business requirements including geographic distribution, regulatory compliance, disaster recovery, and resource optimization. However, this evolution introduces significant complexity that existing Kubernetes tooling wasn't designed to address.
 
 Managing Kubernetes resources across multiple clusters presents significant challenges for both platform administrators and application developers. As organizations scale their Kubernetes infrastructure beyond a single cluster, they often encounter complexities related to resource distribution, consistency maintenance, and manual management overhead. The traditional approach of managing each cluster independently creates operational silos that become increasingly difficult to maintain as the fleet size grows.
 
