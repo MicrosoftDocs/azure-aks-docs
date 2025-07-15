@@ -106,7 +106,7 @@ When you create a cluster using the Azure portal, you can choose a preset config
 |**Secrets store CSI driver**|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|-|-|:::image type="icon" source="./media/quotas-skus-regions/yes-icon.svg":::|
 |**Network configuration**|Azure CNI Overlay|Azure CNI Overlay|Azure CNI Overlay|Azure CNI Overlay|
 |**Network policy**|None|None|None|None|
-|**Authentication and Authorization**|Local accounts with Kubernetes RBAC|Local accounts with Kubernetes RBAC|Microsoft Entra ID Authentication with Azure RBAC|Microsoft Entra ID authentication with Azure RBAC|
+|**Authentication and Authorization**|Local accounts with Kubernetes role-based access control (RBAC)|Local accounts with Kubernetes RBAC|Microsoft Entra ID Authentication with Azure role-based access control (Azure RBAC)|Microsoft Entra ID authentication with Azure RBAC|
 
 
 ## Next steps
