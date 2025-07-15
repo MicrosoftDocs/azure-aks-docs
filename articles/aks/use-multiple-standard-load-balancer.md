@@ -103,6 +103,27 @@ When a LoadBalancer Service is created or updated:
 1. SLBs that have allowServicePlacement=false or that would exceed Azure limits (300 rules or 8 private-link services) are excluded.
 1. Among valid options, the SLB with the fewest rules is chosen.
 
+### externalTrafficPolicy (ETP) behavior
+
+AKS handles Services differently depending on the value of `externalTrafficPolicy`.
+
+| Mode | How load balancer selection works | How backend pool membership is built | Notes |
+|------|-----------------------------------|--------------------------------------|-------|
+| **Cluster** (default) | The controller follows the standard placement rules described above. A single load-balancing rule targets the shared **kubernetes** backend pool on the chosen SLB. | All nodes in that SLB’s `kubernetes` pool are healthy targets. Nodes without matching Pods are removed automatically by health probes. | Same behavior as today in single-SLB clusters. |
+| **Local** | The controller still uses the selector-based algorithm to pick an SLB, but **creates a dedicated backend pool per Service** instead of using the shared pool. | Membership is synced from the Service’s `EndpointSlice` objects, so **only nodes that actually host ready Pods are added**. Health probes continue to use `healthCheckNodePort` to drop unhealthy nodes. | Guarantees client IP preservation and avoids routing through nodes that lack Pods, even when nodes are sharded across multiple SLBs. |
+
+> **Why a dedicated pool for ETP Local?**  
+> In multi-SLB mode, nodes that host Pods for a given Service may reside on different SLBs from the client-facing VIP. A shared backend pool would often contain zero eligible nodes, breaking traffic. By allocating a per-Service pool and syncing it from `EndpointSlice`, AKS ensures the Service’s SLB always points at the correct nodes.
+
+**Impact on quotas**
+
+- Each ETP Local Service adds one backend pool and one load-balancing rule to its SLB.  
+- These count toward the 300-rule limit, so monitor rule usage when you have many ETP Local Services.
+
+**No change to outbound traffic**
+
+Outbound SNAT still flows through the first SLB’s `aksOutboundBackendPool` when `outboundType` is `loadBalancer`, independent of ETP settings.
+
 #### Optional: Rebalancing
 
 You can manually rebalance node distribution later using `az aks loadbalancer rebalance`.
@@ -290,6 +311,7 @@ az aks loadbalancer rebalance --resource-group $RESOURCE_GROUP --cluster-name $C
 | Outbound SNAT        | Always uses the first SLB; outbound flows aren’t sharded.                                  |
 | Backend pool type    | Create or update and existing cluster to use `nodeIP` backend pools.                       |
 | Autoscaler zeros     | A primary agent pool can’t scale to 0 nodes.                                               |
+| ETP `local` Rule Growth| Each ETP `local` Service uses it's own rule and backend pool, so rule counts can grow faster than with `cluster` mode.| 
 | Rebalance disruption | Removing a node from a backend pool drops in‑flight connections. Plan maintenance windows. |
 | Configuration reload timing | After running `az aks loadbalancer`, changes may not take effect immediately. The AKS operation finishes quickly, but the cloud-controller-manager may take longer to apply updates. Wait for the `EnsuredLoadBalancer` event to confirm the changes are active. |
 
