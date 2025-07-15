@@ -23,8 +23,8 @@ To learn about what LocalDNS is, including architecture details, and key capabil
 ## Before you begin
 
 * This article assumes that you have an existing AKS cluster with Kubernetes versions 1.31+. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
-* This article requires version X.X.X or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-* This article requires the `aks-preview` Azure CLI extension version X.X.XXX or later
+* This article requires version 2.61.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
+* This article requires the `aks-preview` Azure CLI extension version 18.0.0b19 or later
 * Your AKS cluster can't have node autoprovisioning enabled to use LocalDNS.
 * LocalDNS requires your AKS cluster to be running Kubernetes version 1.31 or later.
 * LocalDNS is only supported on node pools running Ubuntu 22.04 or newer.
@@ -154,7 +154,7 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
 LocalDNS can be enabled in three possible modes that define the extent of enforcement of LocalDNS for the workload:
 * `Required`: In this mode, LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
-* `Preferred` (default): In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but whether LocalDNS is actually installed and running depends on the kubernetes version.
+* `Preferred` (default): During public preview, In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS is not enabled.
 
 The following table summarizes LocalDNS behavior for each mode and Kubernetes version:
 
