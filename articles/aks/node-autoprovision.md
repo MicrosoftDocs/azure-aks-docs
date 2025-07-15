@@ -169,7 +169,7 @@ AKS allows you to add a cluster with node autoprovisioning enabled in a custom v
 
 Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
-When using a custom virtual network with AKS Automatic, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
+When using a custom virtual network with AKS Autoprovisioning, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
 
 > [!WARNING]
 > An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
@@ -194,7 +194,7 @@ az network vnet subnet create --resource-group ${RG_NAME} \
 
 ### Network security group rules
 
-All traffic within the virtual network is allowed by default. But if you  added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
+All traffic within the virtual network is allowed by default. But if you added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
 
 | Destination | Source | Protocol | Port | Use |
 |--- |--- |--- |--- |--- |
@@ -345,7 +345,7 @@ When you have multiple node pools defined, it's possible to set a preference of 
 ## Node disruption
 
 ### Disruption Controls
-Node Disruption can be controlled using different methods, including Consolidation or Drift. 
+Node Disruption, including Consolidation or Drift, can be controlled using different methods. 
 
 ### Consolidation
 When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
@@ -367,8 +367,13 @@ You can remove a node manually using `kubectl delete node`, but node autoprovisi
 ```
 
 ### Disruption Controls
-Node Disruption can be controlled using different methods, including Consolidation or Drift. 
-AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates of your nodes for you. You can adjust the schedule of your Kubernetes and node image updates using planned maintenance windows to target less busy periods for your workloads.
+AKS with node autoprovisioning manages the Kubernetes version upgrades and VM OS disk updates of your nodes for you through Drift. 
+
+These can be regulated through multiple controls:
+- Karpenter Node Disruption Budgets - Node-level disruption budgets can be set on your NodePool custom resources, and will limit node disruptions based on schedule and concurrent thresholds. These can be set directly for Drift, Disruption as a whole and/or other Karpenter disruption actions. 
+- Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file to determine when and which pods should be available for disruption. Node Auto-provisioning honors PDBs. 
+
+With [Auto Upgrade][auto-upgrade] enabled on your cluster, you can also adjust the schedule of your Kubernetes updates using planned maintenance windows to target less busy periods for your workloads.
 
 ### Kubernetes upgrades
 
@@ -380,11 +385,9 @@ AKS recommends coupling node autoprovision with a Kubernetes [Auto Upgrade][auto
 
 By default NAP node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place:
 
-- Karpenter Node Disruption Budgets - Node-level disruption budgets can be set, and can be triggered when nodes move out of specified state, known as Drift. 
-- Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file to determine when and which pods should be available for disruption. Node Auto-provisioning honors PDBs. 
 
 >[!NOTE]
->[Node OS Upgrade Channel settings][node-os-upgrade-channel] do not impact NAP-managed nodes, as there is a similar automated node image upgrade method.  
+>[Node OS Upgrade Channel settings][node-os-upgrade-channel] of Auto Upgrade do not impact NAP-managed nodes. NAP has its own automated method for ensuring node image upgrades. 
 
 ## Monitoring selection events
 
@@ -514,7 +517,7 @@ Node autoprovisioning can only be disabled when:
 Yes, NAP can be installed on existing AKS clusters.
 
 ### Do I need to remove Cluster Autoscaler before installing NAP?
-It's recommended to remove or disable Cluster Autoscaler prior to enabling Node autoprovisioning. 
+Yes, you must remove or disable Cluster Autoscaler prior to enabling Node autoprovisioning. 
 
 ## Node Management
 
@@ -526,7 +529,7 @@ NAP supports most Azure Virtual Machine sizes that are:
 - Are available in your region and availability zones
 
 ### Can I use custom virtual machine images with NAP?
-Yes, you can specify custom VM images through the `AKSNodeClass` configuration. Custom images must include the necessary AKS components and configurations.
+No, you can specify custom VM images for Node autoprovisioning
 
 ### How does NAP handle spot VMs?
 NAP supports Azure Spot VMs for cost savings. When using spot instances, be aware that they are subject to eviction policies. 
@@ -558,7 +561,7 @@ Possible causes:
 - Pods without proper tolerations
 - DaemonSets preventing node drain
 - Pod disruption budgets blocking eviction
-- Nodes marked with `do-not-disrupt` annotation
+- Nodes or Pods marked with `do-not-disrupt` annotation
 
 ### How can I debug NAP issues?
 1. Check Karpenter controller logs:
@@ -608,7 +611,7 @@ Yes, VMs provisioned by NAP are subject to Azure Policy rules applied to the res
 Yes, NAP resources (NodePools, AKSNodeClasses) can be managed through GitOps tools like ArgoCD or Flux.
 
 ### Does NAP support Windows nodes?
-NAP currently supports on Linux nodes through Ubuntu and Azure Linux 3. Windows node support may be considered for future releases.
+NAP currently supports Linux nodes through Ubuntu22.04 and AzureLinux (v2 and v3 based on the cluster's kubernetes version). Windows node support may be considered for future releases.
 
 ## Getting Help
 
