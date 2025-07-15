@@ -4,7 +4,7 @@ description: Learn how to improve your Domain Name System (DNS) resolution perfo
 ms.subservice: aks-networking
 author: vaibhavarora
 ms.topic: how-to
-ms.date: 07/01/2025
+ms.date: 07/31/2025
 ms.author: vaibhavarora
 
 # Customer intent: As a cluster operator or developer, I want to improve my DNS resolution performance and resiliency for my AKS cluster.

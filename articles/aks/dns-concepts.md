@@ -4,7 +4,7 @@ description: Learn how DNS operates in AKS and how to boost performance and reli
 ms.subservice: aks-networking
 author: vaibhavarora
 ms.topic: concept-article
-ms.date: 07/01/2025
+ms.date: 07/31/2025
 ms.author: vaibhavarora
 
 # Customer intent: As a cluster operator or developer, I want to understand the defaults for DNS resolution in AKS and how I can use LocalDNS to improve my DNS resolution performance.
