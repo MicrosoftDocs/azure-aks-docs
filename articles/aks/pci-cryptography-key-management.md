@@ -113,9 +113,9 @@ Fully document and implement all key-management processes and procedures for cry
 |[Requirement 3.6.3](#requirement-363)|Secure cryptographic key storage.|
 |[Requirement 3.6.4](#requirement-364)|Cryptographic key changes for keys that have reached the end of their cryptoperiod.|
 |[Requirement 3.6.5](#requirement-365)|Retirement or replacement of keys as deemed necessary when the integrity of the key has been weakened or keys are suspected of being compromised.|
-|[Requirement 3.6.6](#requirement-366)|If manual clear-text cryptographic key-management operations are used, these operations are managed using split knowledge and dual control.|
-|[Requirement 3.6.7](#requirement-367)|Prevention of unauthorized substitution of cryptographic keys.|
-|[Requirement 3.6.8](#requirement-368)|Replacement of cryptographic keys if the key is known or suspected to be compromised.|
+|Requirement 3.6.6|If manual clear-text cryptographic key-management operations are used, these operations are managed using split knowledge and dual control.|
+|Requirement 3.6.7|Prevention of unauthorized substitution of cryptographic keys.|
+|Requirement 3.6.8|Replacement of cryptographic keys if the key is known or suspected to be compromised.|
 
 #### Requirement 3.6.1
 
