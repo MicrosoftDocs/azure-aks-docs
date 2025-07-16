@@ -49,7 +49,7 @@ Node auto-provision provisions, scales, and manages virtual machines, or nodes i
    > You can use either a system-assigned or user-assigned managed identity.
 - Disk encryption sets
 - CustomCATrustCertificates
-- [Start Stop mode](./start-stop-cluster.md)
+- Clusters with node autoprovisioning can't be [stopped](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
 - [OutboundType](./egress-outboundtype.md) mutation. All OutboundTypes are supported, however you can't change them after creation.
 
