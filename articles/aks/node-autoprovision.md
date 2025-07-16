@@ -53,7 +53,7 @@ Node auto-provision provisions, scales, and manages virtual machines, or nodes i
 - [HTTP proxy](./http-proxy.md)
 - All cluster egress [outbound types](./egress-outboundtype.md) are supported, however the type can't be changed after the cluster is created
 
-### Networking configuration
+## Networking configuration
 
 The recommended network configurations for clusters enabled with node auto provisioning are the following:
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
@@ -371,7 +371,7 @@ With [Auto Upgrade][auto-upgrade] enabled on your cluster, you can also adjust t
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for node auto-provision nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your node auto-provision nodes are automatically updated to follow the same versioning. 
+Kubernetes upgrades for node auto-provision nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your nodes are automatically updated to follow the same versioning. 
 
 AKS recommends coupling node auto-provision with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
 
