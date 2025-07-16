@@ -39,7 +39,7 @@ API Server VNet Integration is supported for public or private clusters. You can
 
 API Server VNet Integration is available in the following regions: 
 
-australiacentral, australiacentral2, australiaeast, australiasoutheast, brazilsouth, brazilsoutheast, canadacentral, canadaeast, centralindia, centraluseuap, eastus2euap, francecentral, francesouth, germanynorth, germanywestcentral, indonesiacentral, israelcentral, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, mexicocentral, newzealandnorth, northcentralus, northeurope, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southeastus, southindia, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, uksouth, ukwest, westcentralus, westeurope, westus, westus2, westus3
+australiacentral, australiacentral2, australiaeast, australiasoutheast, brazilsouth, brazilsoutheast, canadacentral, canadaeast, centralindia, centraluseuap, eastasia, eastus2euap, francecentral, francesouth, germanynorth, germanywestcentral, indonesiacentral, israelcentral, italynorth, japaneast, japanwest, jioindiacentral, jioindiawest, koreacentral, koreasouth, mexicocentral, newzealandnorth, northcentralus, northeurope, norwayeast, norwaywest, polandcentral, southafricanorth, southafricawest, southcentralus, southeastasia, southeastus, southindia, spaincentral, swedencentral, swedensouth, switzerlandnorth, switzerlandwest, taiwannorth, taiwannorthwest, uaecentral, uaenorth, uksouth, ukwest, westcentralus, westeurope, westus, westus2, westus3
 
 ## Create an AKS cluster with API Server VNet Integration using managed VNet
 

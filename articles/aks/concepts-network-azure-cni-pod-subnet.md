@@ -79,7 +79,7 @@ IPs are allocated to nodes in batches of 16. Pod subnet IP allocation should be 
 
 IP address planning for Kubernetes services and Docker Bridge remain unchanged.
 
-## Static block allocation mode (Preview)
+## Static block allocation mode
 
 Static block allocation helps mitigate potential pod subnet sizing and Azure address mapping limitations by assigning CIDR blocks to nodes rather than individual IPs.
 
@@ -94,9 +94,9 @@ The static block allocation mode offers the following benefits:
 ### Limitations
 
 Below are some of the limitations of using Azure CNI Static Block allocation:
-- Minimum Kubernetes Version required is 1.28
-- Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs
-- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot be use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
+- Minimum Kubernetes Version required is 1.28.
+- Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs.
+- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
 - Only supported in new clusters or when adding node pools with a different subnet to existing clusters. Migrating or updating existing clusters or node pools is not supported.
 - Across all the CIDR blocks assigned to a node in the node pool, one IP will be selected as the primary IP of the node. Thus, for network administrators selecting the `--max-pods` value try to use the calculation below to best serve your needs and have optimal usage of IPs in the subnet:
 
@@ -113,6 +113,9 @@ While planning your IPs, it's important to define your `--max-pods` configuratio
 Ideal values with no IP wastage would require the max pods value to conform to the above expression.
 
 See the following example cases: 
+
+> [!Note] 
+> The examples assume /28 CIDR blocks (16 IPs each).
 
 | Example case | `max_pods` | CIDR Blocks allocated per node | Total IP available for pods | IP wastage for node |
 | --- | --- | --- | --- | --- |

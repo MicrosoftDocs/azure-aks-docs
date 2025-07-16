@@ -203,7 +203,7 @@
                   href: container-network-observability-metrics.md
                 - name: Logs
                   href: container-network-observability-logs.md
-            - name: Conatiner Network Security
+            - name: Container Network Security
               items:    
                 - name: FQDN based Filtering
                   href: container-network-security-fqdn-filtering-concepts.md
@@ -808,6 +808,8 @@
               href: upgrade-basic-load-balancer-on-aks.md
             - name: Use kube-proxy configuration (IPVS)
               href: configure-kube-proxy.md
+            - name: Use multiple Standard Load Balancers
+              href: use-multiple-standard-load-balancer.md
         - name: Security
           items:
             - name: Use API Server VNet Integration
@@ -1032,10 +1034,16 @@
       items:
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: Upgrade scenarios hub
+          href: upgrade-scenarios-hub.md
         - name: Perform manual upgrades
           items:
           - name: Upgrade an AKS cluster
             href: upgrade-aks-cluster.md
+          - name: Production upgrade strategies
+            href: aks-production-upgrade-strategies.md
+          - name: Stateful workload upgrades
+            href: stateful-workload-upgrades.md
           - name: Upgrade multiple AKS clusters
             href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Upgrade node OS images

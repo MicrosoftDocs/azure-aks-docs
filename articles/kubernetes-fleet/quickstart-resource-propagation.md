@@ -254,7 +254,8 @@ If you no longer want to use your cluster resource placement, you can delete it 
 
 To learn more about resource propagation, see the following resources:
 
-* [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md)
+* [Understanding resource placement status output](./howto-understand-placement.md).
+* [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
 * [Cluster resource placement FAQs](./faq.md#cluster-resource-placement-faqs).
