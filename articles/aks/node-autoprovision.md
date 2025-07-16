@@ -29,17 +29,11 @@ Node auto-provision provisions, scales, and manages virtual machines, or nodes i
 
 ### Prerequisites
 
-| Prerequisite                     | Notes                                                                 |
-|------------------------------|------------------------------------------------------------------------|
-| **Azure Subscription**              | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).|
-| **Azure CLI `aks-preview` extension**                | `13.0.0b3` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions]. |
-| **Required permission(s)**      | Cluster identity with a `Network Contributor` built-in role assignment on the API server subnet. |
-|                                  | Cluster identity with a `Network Contributor` built-in role assignment on the virtual network to support Node Auto Provisioning. |
-|                                  |  User identity creating the cluster with `Microsoft.Authorization/policyAssignments/write` and `Microsoft.Authorization/policyAssignments/read` permissions on the resource group. For more information, see [Azure Policy permissions][Azure-Policy-RBAC-permissions]. |
-|                                  | User identity accessing the cluster with [`Azure Kubernetes Service Cluster User Role`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-cluster-user-role) and [`Azure Kubernetes Service RBAC Writer`](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-rbac-writer) | 
-| **Network requirements**         | A virtual network with a dedicated API server subnet of at least `*/28` size that is delegated to `Microsoft.ContainerService/managedClusters` |
-|                                   | If there is a Network Security Group (NSG) attached to subnets, ensure that the [rules permit the following traffic](#network-security-group-rules) between the nodes and the API server, the Azure Load Balancer and the API server, and pod to pod communication. |
-|                                  | If there's an Azure Firewall or other outbound restriction method or appliance, ensure the [required outbound network rules and FQDNs][outbound-rules-control-egress] are allowed. |
+| Prerequisite                         | Notes                                                                                                        |
+|--------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| **Azure Subscription**               | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).  |
+| **Azure CLI `aks-preview` extension**| `18.0.0b14` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions].               |
+| **Required permission(s)**           |                                                                                                              |                          
 
 ## Limitations
 
