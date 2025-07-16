@@ -29,6 +29,11 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 * For ***all hosted model preset images*** and default resource configuration, see the [KAITO GitHub repository](https://github.com/kaito-project/kaito/tree/main/presets).
 * The AI toolchain operator add-on currently supports KAITO **version 0.4.6**, please make a note of this in considering your choice of model from the KAITO model repository.
 
+## Limitations
+
+* `AzureLinux` and `Windows` OS SKU are not currently supported.
+* AMD GPU VM sizes are not supported `instanceType` in a KAITO workspace.
+
 ## Prerequisites
 
 * If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free/?WT.mc_id=A261C142F) before you begin.
@@ -37,7 +42,7 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
     > [!NOTE]
     > Your Azure subscription must have GPU VM quota recommended for your model deployment in the same Azure region as your AKS resources.
 
-* Azure CLI version 2.75.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
+* Azure CLI version 2.76.0 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 * The Kubernetes command-line client, kubectl, installed and configured. For more information, see [Install kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
 
 ### Export environment variables
@@ -97,6 +102,8 @@ The following sections describe how to create an AKS cluster with the AI toolcha
 
 ## Deploy a default hosted AI model
 
+KAITO offers a range of small to large language models hosted as public container images, which can be deployed in one step using a KAITO workspace. You can browse the preset LLM images available in the [KAITO model registry](https://github.com/kaito-project/kaito/tree/main/presets). In this section, we'll use the high-performant multimodal [Microsoft Phi-4-mini](https://techcommunity.microsoft.com/blog/educatordeveloperblog/welcome-to-the-new-phi-4-models---microsoft-phi-4-mini--phi-4-multimodal/4386037) language model as an example:
+
 1. Deploy the [Phi-4-mini instruct](https://huggingface.co/microsoft/Phi-4-mini-instruct) model preset for inference from the KAITO model repository using the `kubectl apply` command.
 
     ```azurecli-interactive
@@ -129,6 +136,10 @@ The following sections describe how to create an AKS cluster with the AI toolcha
            }'
     ```
 
+## Deploy a custom or domain-specific LLM
+
+Open-source LLMs are often trained in different contexts and domains, and the hosted model presets may not always fit the requirements of your application or data. In this case, KAITO also supports inference deployment of newer or domain-specific language models from [HuggingFace](https://huggingface.co/). Try out a custom model inference deployment with KAITO by following [this article](./kaito-custom-inference-model.md).
+
 ## Clean up resources
 
 If you no longer need these resources, you can delete them to avoid incurring extra Azure compute charges.
@@ -158,10 +169,10 @@ After applying the KAITO model inference workspace, your resource readiness and 
 
 Learn more about KAITO model deployment options below:
 
+* Deploy LLMs with your application on AKS using [KAITO in Visual Studio Code][kaito-vs-code].
 * [Monitor your KAITO inference workload][kaito-monitoring].
 * [Fine tune a model][kaito-fine-tune] with the AI toolchain operator add-on on AKS.
 * Learn about [MLOps best practices][mlops-best-practices] for your AI pipelines on AKS.
-* Onboard a [custom model for KAITO inference](https://github.com/kaito-project/kaito/blob/main/docs/custom-model-integration/custom-model-integration-guide.md) on AKS.
 
 <!-- LINKS -->
 
@@ -181,3 +192,4 @@ Learn more about KAITO model deployment options below:
 [delete-node-pool]: ../aks/delete-node-pool.md
 [kaito-fine-tune]: ./ai-toolchain-operator-fine-tune.md
 [kaito-monitoring]: ./ai-toolchain-operator-monitoring.md
+[kaito-vs-code]: ./aks-extension-kaito.md
