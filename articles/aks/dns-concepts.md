@@ -38,7 +38,7 @@ When LocalDNS is enabled, AKS deploys a local DNS cache as a `systemd` service o
 
 ![LocalDNS architecture diagram](./media/dns-concepts/local-dns-diagram.png)
 
-### Key Capabilities
+### Key capabilities
 
 - **Reduced DNS resolution latency:**
   Each AKS node runs a LocalDNS `systemd` service. Workloads running on the node send DNS queries to this service, which resolves them locally, reducing network hops and speeding up DNS lookups.
@@ -46,7 +46,7 @@ When LocalDNS is enabled, AKS deploys a local DNS cache as a `systemd` service o
 - **Customizable DNS behavior:**
   You can use `kubeDNSOverrides` and `vnetDNSOverrides` to control DNS behavior in the cluster.
 
-- **Avoid conntrack races & conntrack table exhaustion:**
+- **Avoid conntrack races and conntrack table exhaustion:**
   Pods send DNS queries to the LocalDNS service on the same node without creating new `conntrack` table entries. Skipping the connection tracking helps reduce [conntrack races](https://github.com/kubernetes/kubernetes/issues/56903) and avoids User Datagram Protocol (UDP) DNS entries from filling up `conntrack` tables. This optimization prevents dropped and rejected connections caused by `conntrack` table exhaustion and race conditions.
 
 - **Connection upgraded to TCP:**
@@ -58,7 +58,7 @@ When LocalDNS is enabled, AKS deploys a local DNS cache as a `systemd` service o
 - **Protocol control:**
   You can set the DNS query protocol (such as PreferUDP or ForceTCP) for each domain. This flexibility lets you optimize DNS traffic for specific domains or meet network requirements.
 
-### Other Benefits and Considerations
+### Other benefits and considerations
 
 | Benefits | Considerations |
 |----------|----------------|
