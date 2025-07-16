@@ -6,7 +6,7 @@ ms.date: 07/14/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-# Customer intent: "As a fleet administrator, I want to migrate my Kubernetes upgrades from Terragrunt and Terraform to Azure Kubernetes Fleet Manager Update Runs, so that I can manage updates more efficiently."
+# Customer intent: "As a fleet administrator, I want to migrate my Kubernetes update process from Terragrunt and Terraform to Azure Kubernetes Fleet Manager Update Runs, so that I can manage updates more efficiently."
 ---
 
 # Migrate Kubernetes updates to Azure Kubernetes Fleet Manager from Terragrunt and Terraform
@@ -17,13 +17,13 @@ In smaller environments this approach can be manageable, but as the number and s
 
 Over time, the overhead of managing updates results in less frequent updates resulting in clusters out of support or facing complicated multi-version Kubernetes updates.
 
-Azure Kubernetes Fleet Manager Update Runs provide operators with a safe way reduce the complexity of multi-cluster updates. Update Runs allow operators to define update strategies to ensure safe ordering of updates across clusters in a single operation. Update Runs support large environments that have hundreds of clusters which can take multiple days or weeks to complete.
+Azure Kubernetes Fleet Manager [Update Runs][learn-update-run] provide operators with a safe way to reduce the complexity of multi-cluster updates. Update Runs allow operators to define update strategies to ensure safe ordering of updates across clusters in a single operation. Update Runs support large environments that have hundreds of clusters which can take multiple days or weeks to complete.
 
 This article explains how to migrate to Azure Kubernetes Fleet Manager Update Runs from an existing Kubernetes update process based on Terragrunt and Terraform.
 
 ## Benefits of using Fleet Manager Update Runs
 
-Using Fleet Manager Update Runs to manage updates across your clusters provides the following benefits:
+Using Fleet Manager Update Runs to manage Kubernetes updates across your clusters provides the following benefits:
 
 - **Automated or manual updates**: update runs can be used to manually update clusters at any time, or you can automate the update process using auto-upgrade. Auto-upgrade creates and executes update runs automatically when AKS releases new Kubernetes versions.
 - **Define the order of updates**: build reusable strategies that define the order for cluster updates. Update strategies provide confidence that lower environments are updated first, limiting the blast radius of unexpected issues.
