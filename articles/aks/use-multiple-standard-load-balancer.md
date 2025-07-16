@@ -311,7 +311,7 @@ az aks loadbalancer rebalance --resource-group $RESOURCE_GROUP --cluster-name $C
 | Outbound SNAT        | Always uses the first SLB; outbound flows aren’t sharded.                                  |
 | Backend pool type    | Create or update and existing cluster to use `nodeIP` backend pools.                       |
 | Autoscaler zeros     | A primary agent pool can’t scale to 0 nodes.                                               |
-| ETP `local` Rule Growth| Each ETP `local` Service uses it's own rule and backend pool, so rule counts can grow faster than with `cluster` mode.| 
+| ETP `local` Rule Growth| Each ETP `local` Service uses its own rule and backend pool, so rule counts can grow faster than with `cluster` mode.| 
 | Rebalance disruption | Removing a node from a backend pool drops in‑flight connections. Plan maintenance windows. |
 | Configuration reload timing | After running `az aks loadbalancer`, changes may not take effect immediately. The AKS operation finishes quickly, but the cloud-controller-manager may take longer to apply updates. Wait for the `EnsuredLoadBalancer` event to confirm the changes are active. |
 
