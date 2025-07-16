@@ -51,7 +51,7 @@ Node auto-provision provisions, scales, and manages virtual machines, or nodes i
 - CustomCATrustCertificates
 - Clusters with node autoprovisioning can't be [stopped](./start-stop-cluster.md)
 - [HTTP proxy](./http-proxy.md)
-- [OutboundType](./egress-outboundtype.md) mutation. All OutboundTypes are supported, however you can't change them after creation.
+- All cluster egress [outbound types](./egress-outboundtype.md) are supported, however the type can't be changed after the cluster is created
 
 ### Networking configuration
 
