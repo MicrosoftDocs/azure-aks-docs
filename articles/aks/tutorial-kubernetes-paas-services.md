@@ -191,6 +191,27 @@ In previous tutorials, you used a RabbitMQ container to store orders submitted b
               limits:
                 cpu: 75m
                 memory: 128Mi
+            startupProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 20
+              periodSeconds: 10
+            readinessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 3
+              initialDelaySeconds: 3
+              periodSeconds: 5
+            livenessProbe:
+              httpGet:
+                path: /health
+                port: 3000
+              failureThreshold: 5
+              initialDelaySeconds: 3
+              periodSeconds: 3
     ```
 
     > [!NOTE]
