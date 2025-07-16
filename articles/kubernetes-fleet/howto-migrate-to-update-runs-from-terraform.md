@@ -11,13 +11,13 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Migrate Kubernetes updates to Azure Kubernetes Fleet Manager from Terragrunt and Terraform
 
-Operators of multi-cluster environments often use Terragrunt and Terraform to manage Kubernetes upgrades across their clusters. The order in which clusters are updated is maintained through a folder structure in a Git repository or in configuration files or script, using Terragrunt as the orchestration tool.
+Operators of multi-cluster environments often use Terragrunt and Terraform to manage Kubernetes upgrades across their clusters. The order in which clusters are updated is maintained through a folder structure in a Git repository or in configuration files or scripts, using Terragrunt as the orchestration tool.
 
 In smaller scale environments this approach can be manageable, but as the number and size of clusters grows, so does the complexity of this process. Long-running update processes place a burden on the operations team as they're required to monitor the progress of updates across multiple clusters, using disconnected tools and processes. 
 
 Over time, this overhead to managing updates results in less frequent updates resulting in clusters run out of support or facing complicated multi-version updates.
 
-Azure Kubernetes Fleet Manager Update Runs provide a more efficient way to manage regular updates across multiple clusters, allowing operators to define update strategies to ensure safe updates across clusters in a single operation. Update Runs support large environments, handling hundreds of clusters running updates over multiple days or weeks.
+Azure Kubernetes Fleet Manager Update Runs provide operators with a way reduce the complexity of safe multi-cluster updates. Update Runs allow you to define update strategies to ensure safe updates across clusters in a single operation, supporting large environments that have hundreds of clusters being updated over multiple days or weeks.
 
 This article explains how to migrate to Azure Kubernetes Fleet Manager Update Runs from an existing process based on Terragrunt and Terraform.
 
@@ -25,7 +25,7 @@ This article explains how to migrate to Azure Kubernetes Fleet Manager Update Ru
 
 Using Fleet Manager Update Runs to manage updates across your clusters provides the following benefits:
 
-- **Manual and automated updates**: update runs can be used to manually update clusters at any time, or you can automate the update process using auto-upgrade. Auto-upgrade creates and executes update runs automatically when AKS releases new Kubernetes versions.
+- **Automated or manual updates**: update runs can be used to manually update clusters at any time, or you can automate the update process using auto-upgrade. Auto-upgrade creates and executes update runs automatically when AKS releases new Kubernetes versions.
 - **Define the order of updates**: build reusable strategies that define the order in which clusters are updated. Update strategies provide confidence that lower order environments are updated first, limiting the blast radius of unexpected issues.
 - **Add new clusters easily**: new clusters can be included in update runs by populating the upgrade group for a cluster. If the group is already defined in the update run strategy, the cluster is automatically included in the next update run. You can move (or remove) clusters from update runs by updating the upgrade group at any time.
 - **Durable across days and weeks**: update runs are designed to handle long-running updates, allowing you to update hundreds of clusters that can take multiple days or even weeks to complete.
@@ -161,7 +161,7 @@ cd environments/dev/aks
 terragrunt apply
 ```
 
-Once the development cluster is tested, we can update our production cluster using the same process.
+Once the development cluster is updated and we have tested it works, we can update our production cluster using the same process.
 
 We can also update all individual hcl files (or the main.tf file) and then `apply-all`, using Terragrunt `dependencies` or `dependency` blocks to control the ordering of clusters.
 
@@ -185,7 +185,7 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_kubernetes_fleet_manager" "fleet_demo_01" {
+resource "azurerm_kubernetes_fleet_manager" "fleet" {
     location            = "australiaeast"
     name                = "flt-demo-01"
     resource_group_name = "rg-fleet-01"
@@ -234,7 +234,7 @@ The strategy can be defined using a `azurerm_kubernetes_fleet_update_strategy` r
 ```terraform
 resource "azurerm_kubernetes_fleet_update_strategy" "tg_migration_strategy" {
     name                        = "tg-migration-strategy"
-    kubernetes_fleet_manager_id = azurerm_kubernetes_fleet_manager.fleet_demo_01.id
+    kubernetes_fleet_manager_id = azurerm_kubernetes_fleet_manager.fleet.id
     stage {
         name = "stg-pre-prod"
         group {
@@ -257,8 +257,8 @@ Now we can create an update run that uses the strategy we defined. The `azurerm_
 
 ```terraform
 resource "azurerm_kubernetes_fleet_update_run" "update_run_tg_migration_131" {
-    name                        = "example"
-    kubernetes_fleet_manager_id = azurerm_kubernetes_fleet_manager.example.id
+    name                        = "update_run_tg_migration_131"
+    kubernetes_fleet_manager_id = azurerm_kubernetes_fleet_manager.fleet.id
     managed_cluster_update {
         upgrade {
             type               = "Full"
@@ -274,7 +274,20 @@ resource "azurerm_kubernetes_fleet_update_run" "update_run_tg_migration_131" {
 
 ### Execute the update run
 
-Terraform doesn't provide an inbuilt way to execute the update run, so the simplest way is to use the Azure portal or Azure CLI to start the update run. For more information, see [Manage an update run][manage-update-run].
+You can use Terraform execute the update run via a `null_resource` with a `local-exec` provisioner as shown. Depending on your configuration, you will need to change the arguments being passed in.
+
+```terraform
+resource "null_resource" "trigger_update_run" {
+  provisioner "local-exec" {
+    command = "az fleet updaterun start --resource-group ${azurerm_kubernetes_fleet_manager.fleet.resource_group_name} --fleet-name ${azurerm_kubernetes_fleet_manager.fleet.name} --name ${azurerm_kubernetes_fleet_update_run.update_run_tg_migration_131.name}"
+  }
+
+  depends_on = [azurerm_kubernetes_fleet_update_run.update_run_tg_migration_131]
+}
+
+```
+
+You can also use the Azure portal or Azure CLI to start the update run. For more information, see [Manage an update run][manage-update-run].
 
 ### Enable auto-upgrade
 
