@@ -270,7 +270,7 @@ In the next tutorial, you learn how to use PaaS services for stateful workloads 
 > [Use PaaS services for stateful workloads in AKS][aks-tutorial-paas]
 
 <!-- LINKS - external -->
-[azure-rg]:https://ms.portal.azure.com/#browse/resourcegroups
+[azure-rg]:https://portal.azure.com/#browse/resourcegroups
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
 

@@ -1,5 +1,5 @@
 ---
-title: Configure Static Egress Gateway in Azure Kubernetes Service (AKS) - Preview
+title: Configure Static Egress Gateway in Azure Kubernetes Service (AKS)
 titleSuffix: Azure Kubernetes Service
 description: Learn how to configure Static Egress Gateway in Azure Kubernetes Service (AKS) to manage egress traffic from a constant IP address.
 author: asudbring
@@ -15,11 +15,11 @@ Static Egress Gateway in AKS provides a streamlined solution for configuring fix
 
 This article provides step-by-step instructions to set up a Static Egress Gateway node pool in your AKS cluster, enabling you to configure fixed source IP addresses for outbound traffic from your Kubernetes workloads.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Limitations and considerations
 
 - Static Egress Gateway isn't supported in clusters with [Azure CNI Pod Subnet][azure-cni-pod-subnet].
+- Static Egress Gateway does not support Private IP's assigned to the gateway node pool. The gateway node pool must have a public IP prefix assigned to it.
 - Kubernetes network policies won't apply to traffic leaving the cluster through the gateway node pool.
   - This shouldn't affect cluster traffic control as **only** egress traffic from annotated pods **routed to the gateway node pool** are affected.  
 
@@ -27,46 +27,6 @@ This article provides step-by-step instructions to set up a Static Egress Gatewa
 - Windows node pools can't be used as gateway node pools.
 - hostNetwork pods **cannot** be annotated to use the gateway node pool.
 - Pods can only use a gateway node pool if they are in the same namespace as the `StaticGatewayConfiguration` resource.
-
-## Before you begin
-
-- If using the Azure CLI, you need the `aks-preview` extension. See [Install the `aks-preview` Azure CLI extension](#install-the-aks-preview-azure-cli-extension).
-
-### Install the `aks-preview` Azure CLI extension
-
-1. Install the `aks-preview` extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update to the latest version of the extension using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `StaticEgressGatewayPreview` feature flag
-
-1. Register the `StaticEgressGatewayPreview` feature flag using the [`az feature register`][az-feature-register] command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "StaticEgressGatewayPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the [`az feature show`][az-feature-show] command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "StaticEgressGatewayPreview"
-    ```
-
-3. When the status reflects _Registered_, refresh the registration of the _Microsoft.ContainerService_ resource provider using the [`az provider register`][az-provider-register] command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
 
 ## Create or update an AKS cluster with Static Egress Gateway
 

@@ -1,12 +1,13 @@
 ---
-title: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS) 
+title: Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
 description: Learn how to deploy an application that uses OpenAI on Azure Kubernetes Service (AKS).
 ms.topic: how-to
 ms.date: 10/02/2023
-ms.custom: template-how-to, devx-track-azurecli 
+ms.custom: template-how-to, devx-track-azurecli
 ms.subservice: aks-developer
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a developer, I want to deploy an application using OpenAI on a Kubernetes service, so that I can leverage AI capabilities for functionalities such as automated content generation in my application.
 ---
 
 # Deploy an application that uses OpenAI on Azure Kubernetes Service (AKS)
@@ -40,41 +41,41 @@ To access the GitHub codebase for the sample application, see [AKS Store Demo][a
 
 An [Azure resource group][azure-resource-group] is a logical group in which you deploy and manage Azure resources. When you create a resource group, you're prompted to specify a location. This location is the storage location of your resource group metadata and where your resources run in Azure if you don't specify another region during resource creation.
 
-The following example creates a resource group named *myResourceGroup* in the *eastus* location.
+The following example creates a resource group named _myResourceGroup_ in the _eastus_ location.
 
 - Create a resource group using the [`az group create`][az-group-create] command.
 
-    ```azurecli-interactive
-    az group create --name myResourceGroup --location eastus
-    ```
+  ```azurecli-interactive
+  az group create --name myResourceGroup --location eastus
+  ```
 
-    The following example output shows successful creation of the resource group:
+  The following example output shows successful creation of the resource group:
 
-    ```output
-    {
-      "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
-      "location": "eastus",
-      "managedBy": null,
-      "name": "myResourceGroup",
-      "properties": {
-        "provisioningState": "Succeeded"
-      },
-      "tags": null,
-      "type": "Microsoft.Resources/resourceGroups"
-    }
-    ```
+  ```output
+  {
+    "id": "/subscriptions/<guid>/resourceGroups/myResourceGroup",
+    "location": "eastus",
+    "managedBy": null,
+    "name": "myResourceGroup",
+    "properties": {
+      "provisioningState": "Succeeded"
+    },
+    "tags": null,
+    "type": "Microsoft.Resources/resourceGroups"
+  }
+  ```
 
 ## Create an AKS cluster
 
-The following example creates a cluster named *myAKSCluster* in *myResourceGroup*.
+The following example creates a cluster named _myAKSCluster_ in _myResourceGroup_.
 
 - Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
-    ```azurecli-interactive
-    az aks create --resource-group myResourceGroup --name myAKSCluster --generate-ssh-keys
-    ```
+  ```azurecli-interactive
+  az aks create --resource-group myResourceGroup --name myAKSCluster --generate-ssh-keys
+  ```
 
-    After a few minutes, the command completes and returns JSON-formatted information about the cluster.
+  After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
 ## Connect to the cluster
 
@@ -82,38 +83,38 @@ To manage a Kubernetes cluster, you use the Kubernetes command-line client, [kub
 
 1. Install `kubectl` locally using the [`az aks install-cli`][az-aks-install-cli] command.
 
-    ```azurecli-interactive
-    az aks install-cli
-    ```
+   ```azurecli-interactive
+   az aks install-cli
+   ```
 
-    > [!NOTE]
-    > If your Linux-based system requires elevated permissions, you can use the `sudo az aks install-cli` command.
+   > [!NOTE]
+   > If your Linux-based system requires elevated permissions, you can use the `sudo az aks install-cli` command.
 
 2. Configure `kubectl` to connect to your Kubernetes cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
 
-    This command executes the following operations:
+   This command executes the following operations:
 
-    - Downloads credentials and configures the Kubernetes CLI to use them.
-    - Uses `~/.kube/config`, the default location for the [Kubernetes configuration file][kubeconfig-file]. Specify a different location for your Kubernetes configuration file using *--file* argument.
+   - Downloads credentials and configures the Kubernetes CLI to use them.
+   - Uses `~/.kube/config`, the default location for the [Kubernetes configuration file][kubeconfig-file]. Specify a different location for your Kubernetes configuration file using _--file_ argument.
 
-    ```azurecli-interactive
-    az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
-    ```
+   ```azurecli-interactive
+   az aks get-credentials --resource-group myResourceGroup --name myAKSCluster
+   ```
 
 3. Verify the connection to your cluster using the [`kubectl get`][kubectl-get] command. This command returns a list of the cluster nodes.
 
-    ```azurecli-interactive
-    kubectl get nodes
-    ```
+   ```azurecli-interactive
+   kubectl get nodes
+   ```
 
-    The following example output shows the nodes created in the previous steps. Make sure the node status is *Ready*.
+   The following example output shows the nodes created in the previous steps. Make sure the node status is _Ready_.
 
-    ```output
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-31469198-vmss000000   Ready    agent   3h29m   v1.25.6
-    aks-nodepool1-31469198-vmss000001   Ready    agent   3h29m   v1.25.6
-    aks-nodepool1-31469198-vmss000002   Ready    agent   3h29m   v1.25.6
-    ```
+   ```output
+   NAME                                STATUS   ROLES   AGE     VERSION
+   aks-nodepool1-31469198-vmss000000   Ready    agent   3h29m   v1.25.6
+   aks-nodepool1-31469198-vmss000001   Ready    agent   3h29m   v1.25.6
+   aks-nodepool1-31469198-vmss000002   Ready    agent   3h29m   v1.25.6
+   ```
 
 > [!NOTE]
 > For private clusters, the nodes might be unreachable if you try to connect to them through the public IP address. In order to fix this, you need to create an endpoint within the same VNET as the cluster to connect from. Follow the instructions to [Create a private AKS cluster][create-private-cluster] and then connect to it.
@@ -140,30 +141,30 @@ The [AKS Store application][aks-store-demo] manifest includes the following Kube
 1. Review the [YAML manifest](https://github.com/Azure-Samples/aks-store-demo/blob/main/aks-store-all-in-one.yaml) for the application.
 2. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
 
-    ```azurecli-interactive
-    kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/aks-store-all-in-one.yaml
-    ```
+   ```azurecli-interactive
+   kubectl apply -f https://raw.githubusercontent.com/Azure-Samples/aks-store-demo/main/aks-store-all-in-one.yaml
+   ```
 
-    The following example output shows the successfully created deployments and services:
+   The following example output shows the successfully created deployments and services:
 
-    ```output
-    deployment.apps/mongodb created
-    service/mongodb created
-    deployment.apps/rabbitmq created
-    service/rabbitmq created
-    deployment.apps/order-service created
-    service/order-service created
-    deployment.apps/makeline-service created
-    service/makeline-service created
-    deployment.apps/product-service created
-    service/product-service created
-    deployment.apps/store-front created
-    service/store-front created
-    deployment.apps/store-admin created
-    service/store-admin created
-    deployment.apps/virtual-customer created
-    deployment.apps/virtual-worker created
-    ```
+   ```output
+   deployment.apps/mongodb created
+   service/mongodb created
+   deployment.apps/rabbitmq created
+   service/rabbitmq created
+   deployment.apps/order-service created
+   service/order-service created
+   deployment.apps/makeline-service created
+   service/makeline-service created
+   deployment.apps/product-service created
+   service/product-service created
+   deployment.apps/store-front created
+   service/store-front created
+   deployment.apps/store-admin created
+   service/store-admin created
+   deployment.apps/virtual-customer created
+   deployment.apps/virtual-worker created
+   ```
 
 ## Deploy OpenAI
 
@@ -171,12 +172,10 @@ You can either use Azure OpenAI or OpenAI and run your application on AKS.
 
 ### [Azure OpenAI](#tab/aoai)
 
-1. Enable Azure OpenAI on your Azure subscription by filling out the [Request Access to Azure OpenAI Service][aoai-access] form.
 1. In the Azure portal, create an Azure OpenAI instance.
-1. Select the Azure OpenAI instance you created.
-1. Select **Keys and Endpoints** to generate a key.
-1. Select **Model Deployments** > **Managed Deployments** to open the [Azure OpenAI studio][aoai-studio].
-1. Create a new deployment using the **gpt-35-turbo** model.
+1. Navigate to the Azure OpenAI instance you created.
+1. From the **Overview** blade, navigate to the [Azure AI Foundry portal][aoai-studio].
+1. Create a new **Chat** deployment using the **gpt-4o-mini** base model.
 
 For more information on how to create a deployment in Azure OpenAI, see [Get started generating text using Azure OpenAI Service][aoai-get-started].
 
@@ -195,78 +194,78 @@ Now that the application is deployed, you can deploy the Python-based microservi
 
 1. Create a file named `ai-service.yaml` and copy in the following manifest:
 
-    ```yaml
-    apiVersion: apps/v1
-    kind: Deployment
-    metadata:
-      name: ai-service
-    spec:
-      replicas: 1
-      selector:
-        matchLabels:
-          app: ai-service
-      template:
-        metadata:
-          labels:
-            app: ai-service
-        spec:
-          nodeSelector:
-            "kubernetes.io/os": linux
-          containers:
-          - name: ai-service
-            image: ghcr.io/azure-samples/aks-store-demo/ai-service:latest
-            ports:
-            - containerPort: 5001
-            env:
-            - name: USE_AZURE_OPENAI 
-              value: "True"
-            - name: AZURE_OPENAI_DEPLOYMENT_NAME 
-              value: ""
-            - name: AZURE_OPENAI_ENDPOINT 
-              value: ""
-            - name: OPENAI_API_KEY 
-              value: ""
-            resources:
-              requests:
-                cpu: 20m
-                memory: 50Mi
-              limits:
-                cpu: 50m
-                memory: 128Mi
-    ---
-    apiVersion: v1
-    kind: Service
-    metadata:
-      name: ai-service
-    spec:
-      type: ClusterIP
-      ports:
-      - name: http
-        port: 5001
-        targetPort: 5001
-      selector:
-        app: ai-service
-    ```
+   ```yaml
+   apiVersion: apps/v1
+   kind: Deployment
+   metadata:
+     name: ai-service
+   spec:
+     replicas: 1
+     selector:
+       matchLabels:
+         app: ai-service
+     template:
+       metadata:
+         labels:
+           app: ai-service
+       spec:
+         nodeSelector:
+           "kubernetes.io/os": linux
+         containers:
+           - name: ai-service
+             image: ghcr.io/azure-samples/aks-store-demo/ai-service:latest
+             ports:
+               - containerPort: 5001
+             env:
+               - name: USE_AZURE_OPENAI
+                 value: "True"
+               - name: AZURE_OPENAI_DEPLOYMENT_NAME
+                 value: ""
+               - name: AZURE_OPENAI_ENDPOINT
+                 value: ""
+               - name: OPENAI_API_KEY
+                 value: ""
+             resources:
+               requests:
+                 cpu: 20m
+                 memory: 50Mi
+               limits:
+                 cpu: 50m
+                 memory: 128Mi
+   ---
+   apiVersion: v1
+   kind: Service
+   metadata:
+     name: ai-service
+   spec:
+     type: ClusterIP
+     ports:
+       - name: http
+         port: 5001
+         targetPort: 5001
+     selector:
+       app: ai-service
+   ```
 
 2. Set the environment variable `USE_AZURE_OPENAI` to `"True"`.
-3. Get your Azure OpenAI deployment name from [Azure OpenAI studio][aoai-studio] and fill in the `AZURE_OPENAI_DEPLOYMENT_NAME` value.
+3. Get your Azure OpenAI deployment name from [Azure AI Foundry][aoai-studio] and fill in the `AZURE_OPENAI_DEPLOYMENT_NAME` value.
 4. Get your Azure OpenAI endpoint and Azure OpenAI API key from the Azure portal by selecting **Keys and Endpoint** in the left blade of the resource. Update the `AZURE_OPENAI_ENDPOINT` and `OPENAI_API_KEY` in the YAML accordingly.
 5. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
 
-    ```azurecli-interactive
-    kubectl apply -f ai-service.yaml
-    ```
+   ```azurecli-interactive
+   kubectl apply -f ai-service.yaml
+   ```
 
-    The following example output shows the successfully created deployments and services:
+   The following example output shows the successfully created deployments and services:
 
-    ```output
-      deployment.apps/ai-service created
-      service/ai-service created
-    ```
+   ```output
+     deployment.apps/ai-service created
+     service/ai-service created
+   ```
 
 ### [OpenAI](#tab/openai)
 
-1. Create a file named `ai-service.yaml` and copy in the following manifest:
+1.  Create a file named `ai-service.yaml` and copy in the following manifest:
 
     ```yaml
     apiVersion: apps/v1
@@ -286,24 +285,24 @@ Now that the application is deployed, you can deploy the Python-based microservi
           nodeSelector:
             "kubernetes.io/os": linux
           containers:
-          - name: ai-service
-            image: ghcr.io/azure-samples/aks-store-demo/ai-service:latest
-            ports:
-            - containerPort: 5001
-            env:
-            - name: USE_AZURE_OPENAI
-              value: "False"
-            - name: OPENAI_API_KEY 
-              value: ""
-            - name: OPENAI_ORG_ID 
-              value: ""
-            resources:
-              requests:
-                cpu: 20m
-                memory: 50Mi
-              limits:
-                cpu: 50m
-                memory: 128Mi
+            - name: ai-service
+              image: ghcr.io/azure-samples/aks-store-demo/ai-service:latest
+              ports:
+                - containerPort: 5001
+              env:
+                - name: USE_AZURE_OPENAI
+                  value: "False"
+                - name: OPENAI_API_KEY
+                  value: ""
+                - name: OPENAI_ORG_ID
+                  value: ""
+              resources:
+                requests:
+                  cpu: 20m
+                  memory: 50Mi
+                limits:
+                  cpu: 50m
+                  memory: 128Mi
     ---
     apiVersion: v1
     kind: Service
@@ -312,17 +311,17 @@ Now that the application is deployed, you can deploy the Python-based microservi
     spec:
       type: ClusterIP
       ports:
-      - name: http
-        port: 5001
-        targetPort: 5001
+        - name: http
+          port: 5001
+          targetPort: 5001
       selector:
         app: ai-service
     ```
 
-2. Set the environment variable `USE_AZURE_OPENAI` to `"False"`.
-3. Set the environment variable `OPENAI_API_KEY` by pasting in the OpenAI key you generated in the [last step](#deploy-openai).
-4. [Find your OpenAI organization ID][open-ai-org-id], copy the value, and set the `OPENAI_ORG_ID` environment variable.
-5. Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
+2.  Set the environment variable `USE_AZURE_OPENAI` to `"False"`.
+3.  Set the environment variable `OPENAI_API_KEY` by pasting in the OpenAI key you generated in the [last step](#deploy-openai).
+4.  [Find your OpenAI organization ID][open-ai-org-id], copy the value, and set the `OPENAI_ORG_ID` environment variable.
+5.  Deploy the application using the [`kubectl apply`][kubectl-apply] command and specify the name of your YAML manifest.
 
     ```azurecli-interactive
     kubectl apply -f ai-service.yaml
@@ -344,53 +343,53 @@ Now that the application is deployed, you can deploy the Python-based microservi
 
 1. Check the status of the deployed pods using the [kubectl get pods][kubectl-get] command.
 
-    ```azurecli-interactive
-    kubectl get pods
-    ```
+   ```azurecli-interactive
+   kubectl get pods
+   ```
 
-    Make sure all the pods are *Running* before continuing to the next step.
+   Make sure all the pods are _Running_ before continuing to the next step.
 
-    ```output
-    NAME                                READY   STATUS    RESTARTS   AGE
-    makeline-service-7db94dc7d4-8g28l   1/1     Running   0          99s
-    mongodb-78f6d95f8-nptbz             1/1     Running   0          99s
-    order-service-55cbd784bb-6bmfb      1/1     Running   0          99s
-    product-service-6bf4d65f74-7cbvk    1/1     Running   0          99s
-    rabbitmq-9855984f9-94nlm            1/1     Running   0          99s
-    store-admin-7f7d768c48-9hn8l        1/1     Running   0          99s
-    store-front-6786c64d97-xq5s9        1/1     Running   0          99s
-    virtual-customer-79498f8667-xzsb7   1/1     Running   0          99s
-    virtual-worker-6d77fff4b5-7g7rj     1/1     Running   0          99s
-    ```
+   ```output
+   NAME                                READY   STATUS    RESTARTS   AGE
+   makeline-service-7db94dc7d4-8g28l   1/1     Running   0          99s
+   mongodb-78f6d95f8-nptbz             1/1     Running   0          99s
+   order-service-55cbd784bb-6bmfb      1/1     Running   0          99s
+   product-service-6bf4d65f74-7cbvk    1/1     Running   0          99s
+   rabbitmq-9855984f9-94nlm            1/1     Running   0          99s
+   store-admin-7f7d768c48-9hn8l        1/1     Running   0          99s
+   store-front-6786c64d97-xq5s9        1/1     Running   0          99s
+   virtual-customer-79498f8667-xzsb7   1/1     Running   0          99s
+   virtual-worker-6d77fff4b5-7g7rj     1/1     Running   0          99s
+   ```
 
 2. Get the IP of the store admin web application and store front web application using the `kubectl get service` command.
 
-    ```azurecli-interactive
-    kubectl get service store-admin
-    ```
+   ```azurecli-interactive
+   kubectl get service store-admin
+   ```
 
-    The application exposes the Store Admin site to the internet via a public load balancer provisioned by the Kubernetes service. This process can take a few minutes to complete. **EXTERNAL IP** initially shows *pending* until the service comes up and shows the IP address.
+   The application exposes the Store Admin site to the internet via a public load balancer provisioned by the Kubernetes service. This process can take a few minutes to complete. **EXTERNAL IP** initially shows _pending_ until the service comes up and shows the IP address.
 
-    ```output
-    NAME          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
-    store-admin   LoadBalancer   10.0.142.228   40.64.86.161    80:32494/TCP   50m    
-    ```
+   ```output
+   NAME          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+   store-admin   LoadBalancer   10.0.142.228   40.64.86.161    80:32494/TCP   50m
+   ```
 
-    Repeat the same step for the service named `store-front``.
+   Repeat the same step for the service named `store-front``.
 
-3. Open a web browser and browse to the external IP address of your service. In the example shown here, open *40.64.86.161* to see Store Admin in the browser. Repeat the same step for Store Front.
+3. Open a web browser and browse to the external IP address of your service. In the example shown here, open _40.64.86.161_ to see Store Admin in the browser. Repeat the same step for Store Front.
 4. In store admin, select the products tab, then select **Add Products**.
 5. When the `ai-service`` is running successfully, you should see the Ask OpenAI button next to the description field. Fill in the name, price, and keywords, then generate a product description by selecting **Ask OpenAI** > **Save product**.
 
-    :::image type="content" source="media/ai-walkthrough/ai-generate-description.png" alt-text="Screenshot of how to use openAI to generate a product description.":::
+   :::image type="content" source="media/ai-walkthrough/ai-generate-description.png" alt-text="Screenshot of how to use openAI to generate a product description.":::
 
-6. You can now see the new product you created on Store Admin used by sellers. In the picture, you can see Jungle Monkey Chew Toy is added.
+6. You can now see the new product you created on Store Admin used by sellers. In the picture, you can see Dog Smart Collar is added.
 
-    :::image type="content" source="media/ai-walkthrough/new-product-store-admin.png" alt-text="Screenshot viewing the new product in the store admin page.":::
+   :::image type="content" source="media/ai-walkthrough/new-product-store-admin.png" alt-text="Screenshot viewing the new product in the store admin page.":::
 
-7. You can also see the new product you created on Store Front used by buyers. In the picture, you can see Jungle Monkey Chew Toy is added. Remember to get the IP address of store front using the [`kubectl get service`][kubectl-get] command.
+7. You can also see the new product you created on Store Front used by buyers. In the picture, you can see Dog Smart Collar is added. Remember to get the IP address of store front using the [`kubectl get service`][kubectl-get] command.
 
-    :::image type="content" source="media/ai-walkthrough/new-product-store-front.png" alt-text="Screenshot viewing the new product in the store front page.":::
+   :::image type="content" source="media/ai-walkthrough/new-product-store-front.png" alt-text="Screenshot viewing the new product in the store front page.":::
 
 ## Next steps
 
@@ -404,6 +403,7 @@ To learn more about generative AI use cases, see the following resources:
 - [Project Miyagi - Envisioning sample for Copilot stack][miyagi]
 
 <!-- Links external -->
+
 [aks-store-demo]: https://github.com/Azure-Samples/aks-store-demo
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [kubeconfig-file]: https://kubernetes.io/docs/concepts/configuration/organize-cluster-access-kubeconfig/
@@ -419,7 +419,8 @@ To learn more about generative AI use cases, see the following resources:
 [miyagi]: https://github.com/Azure-Samples/miyagi
 
 <!-- Links internal -->
-[azure-resource-group]: /azure/azure-resource-manager/management/overview 
+
+[azure-resource-group]: /azure/azure-resource-manager/management/overview
 [az-group-create]: /cli/azure/group#az-group-create
 [az-aks-create]: /cli/azure/aks#az-aks-create
 [az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli

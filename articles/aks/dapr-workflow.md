@@ -9,6 +9,7 @@ ms.topic: how-to
 ms.date: 08/02/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli
+# Customer intent: As a developer, I want to deploy and run Dapr Workflows on Azure Kubernetes Service, so that I can efficiently orchestrate microservices and handle state management in my applications.
 ---
 
 # Deploy and run workflows with the Dapr extension for Azure Kubernetes Service (AKS)

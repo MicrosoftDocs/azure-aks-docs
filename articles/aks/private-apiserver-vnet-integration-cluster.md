@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/19/2025
 ms.custom: devx-track-azurecli
+# Customer intent: As a network administrator, I want to connect to a private API server in an AKS cluster from a separate virtual network using Private Link, so that I can securely manage and interact with the cluster without exposing it to the public internet.
 ---
 
 # Connect to an API Server VNet Integration cluster by using Azure Private Link

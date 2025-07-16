@@ -5,6 +5,7 @@ ms.topic: how-to
 ms.date: 04/25/2023
 author: qpetraroia
 ms.author: qpetraroia
+ms.custom: copilot-scenario-highlight
 # Customer intent: As a cloud administrator, I want to start and stop node pools in my Kubernetes cluster, so that I can manage compute costs effectively while maintaining the performance of my workloads.
 ---
 
@@ -20,6 +21,8 @@ You might not need to continuously run your AKS workloads. For example, you migh
 * The cluster and node pool must be running.
 * You can't stop node pools from clusters which use the [Node Autoprovisioning (NAP)](node-autoprovision.md) feature.
 
+> [!TIP]
+> You can use Microsoft Copilot in Azure to stop and start your node pools in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#start-and-stop-node-pools).
 
 ## Before you begin
 

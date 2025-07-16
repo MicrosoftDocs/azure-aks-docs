@@ -106,7 +106,7 @@
       href: core-aks-concepts.md
     - name: Pricing tiers for AKS
       href: free-standard-pricing-tiers.md
-    - name: Maintain and upgrade an AKS cluster
+    - name: Maintain and upgrade clusters
       href: upgrade.md
     - name: Availability zones
       href: availability-zones-overview.md
@@ -203,12 +203,14 @@
                   href: container-network-observability-metrics.md
                 - name: Logs
                   href: container-network-observability-logs.md
-            - name: Conatiner Network Security
+            - name: Container Network Security
               items:    
                 - name: FQDN based Filtering
                   href: container-network-security-fqdn-filtering-concepts.md
                 - name: Layer 7 Policy
                   href: container-network-security-l7-policy-concepts.md
+        - name: DNS Resolution
+          href: dns-concepts.md
     - name: AI and machine learning
       items:
         - name: Small and large language models
@@ -757,6 +759,8 @@
               href: static-ip.md
             - name: Customize CoreDNS
               href: coredns-custom.md
+            - name: Configure LocalDNS
+              href: localdns-custom.md
         - name: Egress
           items:
             - name: Configure outbound type for AKS
@@ -804,8 +808,12 @@
               href: internal-lb.md
             - name: Use a Standard Load Balancer
               href: load-balancer-standard.md
+            - name: Upgrade Basic Load Balancer on AKS
+              href: upgrade-basic-load-balancer-on-aks.md
             - name: Use kube-proxy configuration (IPVS)
               href: configure-kube-proxy.md
+            - name: Use multiple Standard Load Balancers
+              href: use-multiple-standard-load-balancer.md
         - name: Security
           items:
             - name: Use API Server VNet Integration
@@ -1030,11 +1038,17 @@
       items:
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: Upgrade scenarios hub
+          href: upgrade-scenarios-hub.md
         - name: Perform manual upgrades
           items:
           - name: Upgrade an AKS cluster
             href: upgrade-aks-cluster.md
-          - name: Orchestrate upgrade across multiple clusters
+          - name: Production upgrade strategies
+            href: aks-production-upgrade-strategies.md
+          - name: Stateful workload upgrades
+            href: stateful-workload-upgrades.md
+          - name: Upgrade multiple AKS clusters
             href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Upgrade node OS images
             href: node-image-upgrade.md
@@ -1048,6 +1062,8 @@
           items:
             - name: Automatically upgrade an AKS cluster
               href: auto-upgrade-cluster.md
+            - name: Automatically upgrade multiple AKS clusters
+              href: /azure/kubernetes-fleet/update-automation?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
             - name: Use Planned Maintenance to schedule and control upgrades
               href: planned-maintenance.md
             - name: Automatically upgrade AKS cluster node OS images

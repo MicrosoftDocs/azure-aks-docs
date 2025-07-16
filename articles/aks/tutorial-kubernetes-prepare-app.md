@@ -309,3 +309,4 @@ In the next tutorial, you learn how to create a cluster using the `azd` template
 [aks-tutorial-prepare-acr]: ./tutorial-kubernetes-prepare-acr.md
 [aks-tutorial-deploy-cluster]: ./tutorial-kubernetes-deploy-cluster.md
 [azd]: /azure/developer/azure-developer-cli/install-azd
+[azd-init]: /azure/developer/azure-developer-cli/reference#azd-init

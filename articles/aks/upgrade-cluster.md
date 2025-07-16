@@ -1,22 +1,46 @@
 ---
 title: Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
 description: Learn about upgrade options for Azure Kubernetes Service (AKS) clusters, including scenario-based recommendations for common upgrade challenges.
-ms.topic: concept-article
+ms.topic: conceptual
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.date: 02/08/2024
+ms.date: 07/09/2025
 author: kaarthis
 ms.author: kaarthis
+ms.custom: scenarios
 # Customer intent: "As a cloud administrator, I want to evaluate various upgrade options for Azure Kubernetes Service clusters so that I can implement a strategy that minimizes disruptions and ensures my workloads remain updated and compliant with best practices."
 ---
 
 # Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
+This article gives you a technical foundation for AKS cluster upgrades, covering upgrade options and common scenarios. For in-depth guidance tailored to your needs, use the scenario-based navigation paths at the end of this article.
 
-This article covers upgrade options for AKS clusters and provides scenario-based recommendations for common upgrade challenges.
+## 📖 What This Article Covers
 
-* For a basic Kubernetes version upgrade, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md).
-* For clusters with multiple node pools or Windows Server nodes, see [Upgrade a node pool in AKS][nodepool-upgrade].
-* To upgrade a specific node pool without a full cluster upgrade, see [Upgrade a specific node pool][specific-nodepool].
+This **technical reference** provides comprehensive AKS upgrade fundamentals:
+- **Manual vs. automated upgrade options** and when to use each
+- **Common upgrade scenarios** with specific recommendations
+- **Optimization techniques** for performance and minimal disruption
+- **Troubleshooting guidance** for capacity, drain failures, and timing issues
+- **Validation processes** and pre-upgrade checks
+
+**Best for:** Understanding upgrade mechanics, troubleshooting issues, optimizing upgrade settings, technical implementation details.
+
+**Related guides:** [Production strategies](aks-production-upgrade-strategies.md) • [Stateful workloads](stateful-workload-upgrades.md) • [Scenario hub](upgrade-scenarios-hub.md)
+
+---
+
+> **New to AKS upgrades?** Start with our [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) for guided, scenario-based assistance.
+
+## 🎯 Quick Navigation
+
+| Your Situation | Recommended Path |
+|----------------|------------------|
+| **Production cluster needing upgrade** | [Production Upgrade Strategies](aks-production-upgrade-strategies.md) |
+| **Database/stateful workloads** | [Stateful Workload Patterns](stateful-workload-upgrades.md) |
+| **First-time upgrade or basic cluster** | [Basic AKS cluster upgrade](./upgrade-aks-cluster.md) |
+| **Multiple environments or fleet** | [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) |
+| **Node pools or Windows nodes** | [Node pool upgrades][nodepool-upgrade] |
+| **Specific node pool only** | [Single node pool upgrade][specific-nodepool] |
 
 ## Upgrade options
 
@@ -25,16 +49,17 @@ This article covers upgrade options for AKS clusters and provides scenario-based
 Manual upgrades let you control when your cluster upgrades to a new Kubernetes version. Useful for testing or targeting a specific version.
 
 * [Upgrade an AKS cluster](./upgrade-aks-cluster.md)
+* [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
 * [Upgrade the node image](./node-image-upgrade.md)
 * [Customize node surge upgrade](./upgrade-aks-cluster.md#customize-node-surge-upgrade)
 * [Process node OS updates](./node-updates-kured.md)
-* [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
 
 ### Configure automatic upgrades
 
 Automatic upgrades keep your cluster on a supported version and up to date. This is when you want to set and forget. 
 
 * [Automatically upgrade an AKS cluster](./auto-upgrade-cluster.md)
+* [Automatically upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-automation)
 * [Use Planned Maintenance to schedule and control upgrades](./planned-maintenance.md)
 * [Stop AKS cluster upgrades automatically on API breaking changes (Preview)](./stop-cluster-upgrade-api-breaking-changes.md)
 * [Automatically upgrade AKS cluster node operating system images](./auto-upgrade-node-image.md)
@@ -131,6 +156,29 @@ Message: Drain node ... failed when evicting pod ... failed with Too Many Reques
         }
         ```
 
+#### Max Blocked Nodes Allowed (Preview)
+
+* **[Preview]** The Max Blocked Nodes Allowed feature lets you specify how many nodes that fail to drain (blocked nodes) can be tolerated during upgrades or similar operations. This feature only works if the undrainable node behavior property is set; otherwise, the command will return an error.
+
+> [!NOTE]
+> If you do not explicitly set Max Blocked Nodes Allowed, it defaults to the value of [Max Surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade). If Max Surge is not set, the default is typically 10%, so Max Blocked Nodes Allowed also defaults to 10%.
+
+**Prerequisites**
+
+- Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use this feature.
+
+  Example command:
+
+  ```azurecli-interactive
+  az aks nodepool update \
+    --cluster-name jizenMC1 \
+    --name nodepool1 \
+    --resource-group jizenTestMaxBlockedNodesRG \
+    --max-surge 1 \
+    --undrainable-node-behavior Cordon \
+    --max-blocked-nodes 2 \
+    --drain-timeout 5
+  ```
 * Extend drain timeout if workloads need more time (default is *30 minutes*).
 * Test PDBs in staging, monitor upgrade events, and use blue-green deployments for critical workloads. [Learn more](/azure/architecture/guide/aks/blue-green-deployment-for-aks).
 
@@ -213,6 +261,66 @@ Surge nodes require additional IPs. If the subnet is near capacity, node provisi
 * Reduce `maxPods` per node, clean up orphaned load balancer IPs, and plan subnet sizing for high-scale clusters.
 
 ---
+
+## ❓ Frequently Asked Questions
+
+### Can I use open-source tools for validation?
+
+Yes! Many open-source tools integrate well with AKS upgrade processes:
+
+- **[kube-no-trouble (kubent)](https://github.com/doitintl/kube-no-trouble)** - Scans for deprecated APIs before upgrades
+- **[Trivy](https://aquasecurity.github.io/trivy/)** - Security scanning for container images and Kubernetes configurations
+- **[Sonobuoy](https://sonobuoy.io/)** - Kubernetes conformance testing and cluster validation
+- **[kube-bench](https://github.com/aquasecurity/kube-bench)** - Security benchmark checks against CIS standards
+- **[Polaris](https://github.com/FairwindsOps/polaris)** - Validation of Kubernetes best practices
+- **[kubectl-neat](https://github.com/itaysk/kubectl-neat)** - Clean up Kubernetes manifests for validation
+
+### How do I validate API compatibility before upgrading?
+
+Run deprecation checks using tools like kubent:
+
+```bash
+# Install and run API deprecation scanner
+kubectl apply -f https://github.com/doitintl/kube-no-trouble/releases/latest/download/knt-full.yaml
+
+# Check for deprecated APIs in your cluster
+kubectl run knt --image=doitintl/knt:latest --rm -it --restart=Never -- \
+  -c /kubeconfig -o json > api-deprecation-report.json
+
+# Review findings
+cat api-deprecation-report.json | jq '.[] | select(.deprecated==true)'
+```
+
+### What makes AKS upgrades different from other Kubernetes platforms?
+
+AKS provides several unique advantages:
+
+- **Native Azure integration** with Traffic Manager, Load Balancer, and networking
+- **Azure Fleet Manager** for coordinated multi-cluster upgrades
+- **Automatic node image patching** without manual node management
+- **Built-in validation** for quota, networking, and credentials
+- **Azure support** for upgrade-related issues
+
+## Now Choose Your Upgrade Path
+
+This article provided the technical foundation - now select your scenario-based path:
+
+### 🚀 Ready to Execute?
+
+| If you have... | Then go to... |
+|----------------|---------------|
+| **Production environment** | [Production Upgrade Strategies](aks-production-upgrade-strategies.md) - Battle-tested patterns for zero-downtime upgrades |
+| **Databases or stateful apps** | [Stateful Workload Patterns](stateful-workload-upgrades.md) - Safe upgrade patterns for data persistence |
+| **Multiple environments** | [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) - Decision tree for complex setups |
+| **Basic cluster** | [Upgrade an AKS cluster](./upgrade-aks-cluster.md) - Step-by-step cluster upgrade |
+
+### 🔍 Still Deciding?
+
+Visit the [Upgrade Scenarios Hub](upgrade-scenarios-hub.md) for a guided decision tree that considers your:
+- Downtime tolerance
+- Environment complexity  
+- Risk profile
+- Timeline constraints
 
 ## Next steps
 
