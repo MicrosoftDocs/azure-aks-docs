@@ -24,19 +24,19 @@ In this article, you create the infrastructure needed to deploy a highly availab
 Set the following environment variables for use throughout this guide:
 
 ```bash
-export AKS_AND_STORAGE_ACCOUNT_RG="aks-files-actions" 
-export AKS_CLUSTER_NAME="aks-actions" 
-export STORAGE_ACCOUNT_NAME="metadatacaching11" 
-export AKS_STORAGE_ACCOUNT_LOCATION="westus3" 
-export GITHUB_CONFIG_URL="https://github.com/jorgearteiro/azurefiles-actions-aks" 
+export AKS_AND_STORAGE_ACCOUNT_RG="aks-files-actions"
+export AKS_CLUSTER_NAME="aks-actions"
+export STORAGE_ACCOUNT_NAME=""
+export AKS_STORAGE_ACCOUNT_LOCATION="westus3"
+export GITHUB_CONFIG_URL="azure-files-samples/Workloads/azurefiles-actions-aks at master · Azure-Samples/azure-files-samples"
 
 # Optional. Changes might require additional changes on ./install/*.yaml files.
 
-export NAMESPACE_ARC_CONTROLLER="arc-systems" 
-export ARC_CONTROLLER_NAME="arc-controller" 
-export NAMESPACE_ARC_RUNNERS="arc-runners" 
-export ARC_RUNNER_SCALESET_NAME="arc-runner-set" 
-export ARC_RUNNER_GITHUB_SECRET_NAME="arc-runner-github-secret"
+export NAMESPACE_ARC_CONTROLLER="arc-systems"
+export ARC_CONTROLLER_NAME="arc-controller"
+export NAMESPACE_ARC_RUNNERS="arc-runners"
+export ARC_RUNNER_SCALESET_NAME="arc-runner-set"
+export ARC_RUNNER_GITHUB_SECRET_NAME=""
 ```
 
 Make sure to replace the values for the following **required** variables:
@@ -339,4 +339,5 @@ helm upgrade --install "${ARC_RUNNER_SCALESET_NAME}" \
 * Jorge Arterio | Senior Cloud Advocate
 * Jeff Patterson | Principal Product Manager
 * Rena Shah | Senior Product Manager
+* Shekhar Singh Sorot | Product Manager 2
 * Erin Schaffer | Content Developer 2

@@ -71,4 +71,5 @@ To learn more about deploying open-source software on Azure Kubernetes Service (
 * Jorge Arterio | Senior Cloud Advocate
 * Jeff Patterson | Principal Product Manager
 * Rena Shah | Senior Product Manager
+* Shekhar Singh Sorot | Product Manager 2
 * Erin Schaffer | Content Developer 2

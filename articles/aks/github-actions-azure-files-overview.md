@@ -114,6 +114,7 @@ The AKS cluster is organized into two namespaces for separation of concerns: **a
 * Jorge Arterio | Senior Cloud Advocate
 * Jeff Patterson | Principal Product Manager
 * Rena Shah | Senior Product Manager
+* Shekhar Singh Sorot | Product Manager 2
 * Erin Schaffer | Content Developer 2
 
 <!---LINKS--->
