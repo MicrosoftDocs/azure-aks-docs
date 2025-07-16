@@ -36,7 +36,7 @@ LocalDNS is an advanced feature in Azure Kubernetes Service (AKS) that deploys a
 
 When LocalDNS is enabled, AKS deploys a local DNS cache as a `systemd` service on each node. Pods on the node send their DNS queries to this local cache, enabling faster resolution by reducing network hops. This approach also minimizes `conntrack` table usage, lowering the risk of table exhaustion. Additionally, if upstream DNS becomes unavailable, LocalDNS can continue serving cached responses for a configurable duration, helping maintain pod connectivity and service reliability.
 
-![LocalDNS architecture diagram](./media/dns-concepts/local-dns-diagram.png)
+![Diagram that shows LocalDNS architecture.](./media/dns-concepts/local-dns-diagram.png)
 
 ### Key capabilities
 

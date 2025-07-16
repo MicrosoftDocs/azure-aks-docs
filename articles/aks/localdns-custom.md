@@ -24,7 +24,7 @@ To learn about what LocalDNS is, including architecture details, and key capabil
 
 * This article assumes that you have an existing AKS cluster with Kubernetes versions 1.31+. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * This article requires version 2.61.0 or later of the Azure CLI. If you're using Azure Cloud Shell, the latest version is already installed there.
-* This article requires the `aks-preview` Azure CLI extension version 18.0.0b19 or later
+* This article requires the `aks-preview` Azure CLI extension version 18.0.0b19 or later.
 * Your AKS cluster can't have node autoprovisioning enabled to use LocalDNS.
 * LocalDNS requires your AKS cluster to be running Kubernetes version 1.31 or later.
 * LocalDNS is only supported on node pools running Ubuntu 22.04 or newer.
@@ -167,7 +167,7 @@ The following table summarizes LocalDNS behavior for each mode and Kubernetes ve
 
 The default configuration applies to queries from pods using `dnsPolicy:default` (under `vnetDNSOverrides`) and pods using `dnsPolicy:ClusterFirst` (under `kubeDNSOverrides`). Within each, there are two default server blocks defined: `.` and  `cluster.local`. 
 
-* `.` represents all external DNS queries from pods that are trying to resolve public or non cluster domains (for example, *microsoft.com*)
+* `.` represents all external DNS queries from pods that are trying to resolve public or non cluster domains (for example, *microsoft.com*).
 * `cluster.local` represents all internal Kubernetes service discovery queries from pods that are trying to resolve kubernetes service names or internal cluster resources. These queries are routed through CoreDNS for resolution within the cluster.
 
 ### Supported plugins
@@ -177,9 +177,9 @@ The default configuration applies to queries from pods using `dnsPolicy:default`
 | [`queryLogging`](https://coredns.io/plugins/log/)                 | Define the logging level for DNS queries.                                               | `Error`                                                              | `Error` `Log`                      | 
 | [`protocol`](https://coredns.io/plugins/forward/)                 | Sets the protocol used for DNS queries (UDP/TCP preference).                            | `ForceTCP` for cluster.local, else `PreferUDP`                       | `PreferUDP` `ForceTCP`             | 
 | [`forwardDestination`](https://coredns.io/plugins/forward/)       | Specifies the DNS server to forward queries to.                                         | `ClusterCoreDNS` for cluster.local and kubeDNS traffic, else `VnetDNS` | `VnetDNS` `ClusterCoreDNS`         |
-| [`forwardPolicy`](https://coredns.io/plugins/forward/)            | Determines the policy to use when selecting the upstream DNS server. Default is `random`| `sequential`                                                         | `random` `round_robin` `sequential`|
+| [`forwardPolicy`](https://coredns.io/plugins/forward/)            | Determines the policy to use when selecting the upstream DNS server. Default is `random`.| `sequential`                                                         | `random` `round_robin` `sequential`|
 | [`maxConcurrent`](https://coredns.io/plugins/forward/)            | Maximum number of concurrent DNS queries handled by the proxy.                          | `1000`                                                               | Integer                            | 
-| [`cacheDurationInSeconds`](https://coredns.io/plugins/cache)      | Maximum TTL (Time To Live) in seconds for which DNS responses are cached                | `3600`                                                               | Integer                            |
+| [`cacheDurationInSeconds`](https://coredns.io/plugins/cache)      | Maximum TTL (Time To Live) in seconds for which DNS responses are cached.                | `3600`                                                               | Integer                            |
 | [`serveStaleDurationInSeconds`](https://coredns.io/plugins/cache) | Duration (in seconds) to serve stale DNS responses if upstream is unavailable.          | `3600`                                                               | Integer                            |
 | [`serveStale`](https://coredns.io/plugins/cache)                  | Policy for serving stale DNS responses during upstream failures.                        | `immediate`                                                             | `verify` `immediate`               | 
 
@@ -265,9 +265,9 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
   - Enable `serveStale` with appropriate settings to maintain service during DNS outages.
 
 - **Monitor DNS performance**: After enabling LocalDNS, monitor your application's DNS performance using:
-  - Application performance metrics
-  - Node metrics to detect reduced network pressure
-  - Log entries when `queryLogging` is set to `Log`
+  - Application performance metrics.
+  - Node metrics to detect reduced network pressure.
+  - Log entries when `queryLogging` is set to `Log`.
 
 - **Follow least privilege principle**: When configuring DNS forwarding rules, only allow access to the required DNS servers and domains.
 
