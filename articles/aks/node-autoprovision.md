@@ -19,13 +19,9 @@ Node auto provisioning (NAP) uses pending pod resource requirements to decide th
 
 Node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. node auto provisioning automatically deploys, configures and manages Karpenter on your AKS clusters.
 
-## How Node auto provisioning works
+## How node auto provisioning works
 
-Node auto-provision provisions, scales, and manages virtual machines, or nodes in a cluster in response to pending pod pressure. Node auto provisioning is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. For more information on configuring your CRDs, see our documentation on [Configuring node auto provisioning with Custom Resource Definitions]. Node auto provisioning then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
-
-## Before you begin
-
-- You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
+Node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. Node auto provisioning is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. NodeClaims are managed by node auto provisioning, and can be monitored to view current node state. Node auto provisioning then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
 
 ### Prerequisites
 
@@ -42,7 +38,6 @@ Node auto-provision provisions, scales, and manages virtual machines, or nodes i
 ### Unsupported features
 
 - Windows node pools
-- Applying custom configuration to the node kubelet
 - IPv6 clusters
 - [Service Principals](./kubernetes-service-principal.md)
    > [!NOTE]
@@ -56,9 +51,9 @@ Node auto-provision provisions, scales, and manages virtual machines, or nodes i
 ## Networking configuration
 
 The recommended network configurations for clusters enabled with node auto provisioning are the following:
-- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
+- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
-- [Azure CNI](configure-azure-cni.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
+- [Azure CNI](configure-azure-cni.md) with [Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI](configure-azure-cni.md)
 
 Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md). 
@@ -73,7 +68,7 @@ The following networking configurations are currently *not* supported:
 
 ### Enable node auto provisioning on a new cluster
 
-node auto provisioning is enabled by setting the field `--node-provisioning-mode` to [Auto](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
+Node auto provisioning is enabled by setting the field `--node-provisioning-mode` to [Auto](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -148,6 +143,8 @@ node auto provisioning is enabled by setting the field `--node-provisioning-mode
 
 ---
 
+
+
 ### Enable node auto provisioning on an existing cluster
 
 - Enable node auto provisioning on an existing cluster using the `az aks update` command and set `--node-provisioning-mode` to `Auto`.
@@ -157,11 +154,11 @@ node auto provisioning is enabled by setting the field `--node-provisioning-mode
     ```
 
 ## Custom Virtual Networks and Node auto provisioning
-AKS allows you to add a cluster with node auto provisioning enabled in a custom virtual network via the `--vent-subnet-id` parameter. The following sections details how to create a virtual network, create a managed identity with permissions over the virtual network, and create a node auto provisioning-enabled cluster in a custom virtual network. 
+AKS allows you to add a cluster with node auto provisioning enabled in a custom virtual network via the `--vnet-subnet-id` parameter. The following sections details how to create a virtual network, create a managed identity with permissions over the virtual network, and create a node auto provisioning-enabled cluster in a custom virtual network. 
 
 ### Create a virtual network
 
-Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create an API server subnet and cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
+Create a virtual network using the [`az network vnet create`][az-network-vnet-create] command. Create a cluster subnet using the [`az network vnet subnet create`][az-network-vnet-subnet-create] command.
 
 When using a custom virtual network with node auto provisioning, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
 
@@ -176,15 +173,12 @@ az network vnet create --name ${VNET_NAME} \
 
 az network vnet subnet create --resource-group ${RG_NAME} \
 --vnet-name ${VNET_NAME} \
---name apiServerSubnet \
+--name clusterSubnet \
 --delegations Microsoft.ContainerService/managedClusters \
 --address-prefixes 172.19.0.0/28
-
-az network vnet subnet create --resource-group ${RG_NAME} \
---vnet-name ${VNET_NAME} \
---name clusterSubnet \
---address-prefixes 172.19.1.0/24
 ```
+>[!NOTE]
+>
 
 ### Network security group rules
 
@@ -215,7 +209,7 @@ az role assignment create --scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGro
 ```
 
 ### Create an AKS cluster in a custom virtual network and with node auto provisioning enabled
-In the following command, an AKS cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command.  
+In the following command, an AKS cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command. To create a customer virtual network
 
 ```azurecli-interactive
      	az aks create --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) \
@@ -228,7 +222,6 @@ In the following command, an AKS cluster is created as part of a custom virtual 
 az aks create --resource-group ${RG_NAME} \
 --name ${CLUSTER_NAME} \
 --location ${LOCATION} \
---apiserver-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/apiServerSubnet" \
 --vnet-subnet-id "/subscriptions/${SUBSCRIPTION_ID}/resourceGroups/${RG_NAME}/providers/Microsoft.Network/virtualNetworks/${VNET_NAME}/subnets/clusterSubnet" \
 --assign-identity "/subscriptions/${SUBSCRIPTION_ID}/resourcegroups/${RG_NAME}/providers/Microsoft.ManagedIdentity/userAssignedIdentities/${IDENTITY_NAME}" \
 --node-provisioning-mode Auto
@@ -236,10 +229,17 @@ az aks create --resource-group ${RG_NAME} \
 
 After a few minutes, the command completes and returns JSON-formatted information about the cluster.
 
-You can optionally inspect the custom resources (CRs) for your cluster
-   ```azurecli-interactive
-    	az aks get-credentials --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) --overwrite-existing
-   ```
+Configure `kubectl` to connect to your Kubernetes cluster using the [az aks get-credentials][az-aks-get-credentials] command. This command downloads credentials and configures the Kubernetes CLI to use them.
+
+```azurecli-interactive
+az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME}
+```
+
+Verify the connection to your cluster using the [kubectl get][kubectl-get] command. This command returns a list of the cluster nodes.
+
+```bash
+kubectl get nodes
+```
 
 ## Node pools
 
@@ -286,7 +286,9 @@ spec:
         - D
 ```
 
-### Supported node provisioner requirements
+### Supported node pool requirements
+
+You can use labels to define constraints for your node pool custom resource file.
 
 #### SKU selectors with well known labels
 
@@ -344,7 +346,7 @@ Node Disruption, including Consolidation or Drift, can be controlled using diffe
 ### Consolidation
 When the workloads on your nodes scale down, node auto provisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
-You can remove a node manually using `kubectl delete node`, but node auto-provision can also control when it should optimize your nodes based on your specifications.
+You can remove a node manually using `kubectl delete node`, but node auto-provisioning can also control when it should optimize your nodes based on your specifications.
 
 ```yaml
   disruption:
@@ -371,9 +373,9 @@ With [Auto Upgrade][auto-upgrade] enabled on your cluster, you can also adjust t
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for node auto-provision nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your nodes are automatically updated to follow the same versioning. 
+Kubernetes upgrades for node auto-provisioning nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your nodes are automatically updated to follow the same versioning. 
 
-AKS recommends coupling node auto-provision with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
+AKS recommends coupling node auto-provisioning with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
 
 ### Node image updates
 
@@ -384,7 +386,7 @@ By default node auto provisioning node pool virtual machines are automatically u
 
 ## Monitoring selection events
 
-Node auto-provision produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
+node auto-provisioning produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
 
 ```
 kubectl get events -A --field-selector source=karpenter -w
@@ -654,6 +656,9 @@ Yes, node auto provisioning resources (NodePools, AKSNodeClasses) can be managed
 ### Does node auto provisioning support Windows nodes?
 node auto provisioning currently supports Linux nodes through Ubuntu22.04 and AzureLinux (v2 and v3 based on the cluster's kubernetes version). Windows node support may be considered for future releases.
 
+### Can I create nodes in my cluster that are not managed by node auto provisioning?
+Yes, you can manually create nodes or nodepools in your cluster that are not managed by node auto provisioning. For existing clusters that enable node auto provisioning, you can keep existing nodes or nodepools in tact, though they will not be managed by node auto provisioning and 
+
 ## Getting Help
 
 ### Where can I find more information?
@@ -666,7 +671,7 @@ Learn how to [File An Azure support ticket][azure-support] with:
 - Steps to reproduce
 - Relevant events and error messages
 
-For feature reqeusts, file a feature request issue through the [AKS Karpenter Provider][aks-karpenter-provider-issues], which node auto-provision is based on. 
+For feature reqeusts, file a feature request issue through the [AKS Karpenter Provider][aks-karpenter-provider-issues], which node auto-provisioning is based on. 
 
 <!-- LINKS - internal -->
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
@@ -693,3 +698,6 @@ For feature reqeusts, file a feature request issue through the [AKS Karpenter Pr
 <!-- LINKS - external -->
 [aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
 [aks-karpenter-provider-issues]: https://github.com/Azure/karpenter-provider-azure/issues
+[kubectl]: https://kubernetes.io/docs/reference/kubectl/
+[kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
+[kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
