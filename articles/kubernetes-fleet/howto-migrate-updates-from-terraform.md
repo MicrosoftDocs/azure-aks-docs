@@ -27,7 +27,7 @@ Using Fleet Manager Update Runs to manage Kubernetes updates across your cluster
 
 - **Automated or manual updates**: update runs can be used to manually update clusters at any time, or you can automate the update process using auto-upgrade. Auto-upgrade creates and executes update runs automatically when AKS releases new Kubernetes versions.
 - **Define the order of updates**: build reusable strategies that define the order for cluster updates. Update strategies provide confidence that lower environments are updated first, limiting the blast radius of unexpected issues.
-- **Add new clusters easily**: new clusters can be included in update runs by populating the update group for a cluster. If the group is already defined in the update run strategy, the cluster is automatically included in the next update run. You can move (or remove) clusters from update runs by updating the update group at any time.
+- **Add new clusters easily**: new clusters can be included in update runs by populating the update group for a cluster. If the group is already defined in the update strategy, the cluster is automatically included in the next update run. You can move (or remove) clusters from update runs by modifying the update group at any time.
 - **Durable across days and weeks**: update runs are designed to handle long-running updates, allowing you to update hundreds of clusters that can take multiple days or even weeks to complete.
 - **Update more than just Kubernetes**: update runs can be used to update more than just Kubernetes, allowing you to also update the node image version of your clusters.
 - **Honor maintenance windows**: update runs automatically respect the maintenance windows defined for each cluster, ensuring updates are only applied when it's safe to.
@@ -165,7 +165,7 @@ Once the development cluster is updated and tested as working, we can update our
 
 We can also update all individual hcl files (or the main.tf file) and then `apply-all`, using Terragrunt `dependencies` or `dependency` blocks to control the ordering of clusters.
 
-However, more that few clusters or environments means the complexity of the folder structure and configuration files can become unwieldy and prone to human error. It also becomes hard to visualize the actual state of your clusters compared to the desired state held in your Git repository.
+However, more than a few clusters or environments means the folder structure, configuration files and process can become unwieldy and prone to human error. It also becomes hard to visualize the actual state of your clusters compared to the desired state held in your config files and Git repository.
 
 ## Migrating to Fleet Manager Update Runs
 
