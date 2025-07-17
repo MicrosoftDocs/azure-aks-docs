@@ -25,7 +25,7 @@ This solution leverages KubeRay to orchestrate Ray clusters on AKS, with BlobFus
 
 The following diagram shows a Ray cluster deployed on AKS, with persistent volumes provisioned using BlobFuse. BlobFuse connects Azure Blob Storage to the cluster, enabling fast, POSIX-compliant access to large datasets. This architecture ensures high throughput for distributed tuning jobs, allowing multiple Ray workers to efficiently read and write data in parallel, which accelerates model training and hyperparameter optimization.
 
-:::image type="content" source="./media/deploy-ray-tuning/ray-blobfuse-architecture.png" alt-text="Ray cluster architecture on Azure Kubernetes Service with BlobFuse":::
+:::image type="content" source="./media/deploy-ray-tuning/ray-cluster-architecture.png" alt-text="Ray cluster architecture on Azure Kubernetes Service with BlobFuse":::
 
 *Figure 1: Ray cluster deployed on AKS with BlobFuse providing scalable, high-throughput storage for distributed tuning jobs.*
 
