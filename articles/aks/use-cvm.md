@@ -9,7 +9,7 @@ ms.author: allyford
 
 # Use Confidential Virtual Machines (CVM) in Azure Kubernetes Service (AKS) cluster
 
-[Confidential Virtual Machines (CVM)][about-cvm] offer strong security and confidentiality for tenants. These features enable node pools with CVM to target the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. Workloads that require enhanced confidentiality and integrity would particularly benefit from these security feature. The nodes in a node pool created with CVM use a customized [node image][./node-images] specially configured for CVM. 
+[Confidential Virtual Machines (CVM)][about-cvm] offer strong security and confidentiality for tenants. These features enable node pools with CVM to target the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS.
 
 In this article, you learn how to create AKS node pools using Confidential VM sizes.
 
@@ -39,7 +39,7 @@ CVMs offer the following security enhancements as compared to other virtual mach
 
 ## How does it work?
 
-These security features allow for the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. The nodes in a node pool created with CVM use a [node image][./node-images] specially configured for CVM.
+If you're running a workload that requires enhanced confidentiality and integrity, you can benefit from memory encryption and enhanced security without code changes in your application. All pods on your CVM node are part of the same trust boundary. The nodes in a node pool created with CVM use a customized [node image][./node-images] specially configured for CVM. 
 
 ### Supported OS Versions
 You can create CVM node pools on Linux OS types (Ubuntu and Azure Linux). However, not all OS versions support CVM node pools.
