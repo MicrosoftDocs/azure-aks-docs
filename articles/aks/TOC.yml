@@ -761,7 +761,7 @@
               href: static-ip.md
             - name: Customize CoreDNS
               href: coredns-custom.md
-            - name: COnfigure LocalDNS
+            - name: Configure LocalDNS
               href: localdns-custom.md
         - name: Egress
           items:
