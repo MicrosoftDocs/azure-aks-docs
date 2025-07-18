@@ -33,9 +33,10 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 
 3. In the opened "Search query" box, paste one of the following custom queries and click "Review+Create" button.
 
-Query for cluster auto upgrade notifications:
+### Query for cluster auto upgrade notifications
 
- ```arg("").containerserviceeventresources
+```kusto
+containerserviceeventresources
 | where type == "microsoft.containerservice/managedclusters/scheduledevents"
 | where id contains "/subscriptions/subid/resourcegroups/rgname/providers/Microsoft.ContainerService/managedClusters/clustername"
 | where properties has "eventStatus"
@@ -68,12 +69,16 @@ Query for cluster auto upgrade notifications:
     eventTime,
     upgradeType,
     status,
-    properties
+    properties,
+    name,
+    details
 | order by eventTime asc
- ```
-Query for Node OS auto upgrade notifications:
+```
 
- ```arg("").containerserviceeventresources
+### Query for Node OS auto upgrade notifications
+
+```kusto
+containerserviceeventresources
 | where type == "microsoft.containerservice/managedclusters/scheduledevents"
 | where id contains "/subscriptions/subid/resourcegroups/rgname/providers/Microsoft.ContainerService/managedClusters/clustername"
 | where properties has "eventStatus"
@@ -106,14 +111,24 @@ Query for Node OS auto upgrade notifications:
     eventTime,
     upgradeType,
     status,
-    properties
+    properties,
+    name,
+    details
 | order by eventTime asc
- ```
-4. Configuration for alert Conditions. For measurement, select Measure by "Table rows", and for Aggregation, select "Count" and aggregation granularity "30 minutes". Keep Threshold value at 0. For Split by dimensions, select "status" and "Include all future values".
+```
+4. Configure the alert conditions with the following settings:
+   - **Measurement**: Select "Table rows"
+   - **Aggregation**: Select "Count" 
+   - **Aggregation granularity**: Select "30 minutes"
+   - **Threshold value**: Keep at 0
+   - **Split by dimensions**: Select "status" and choose "Include all future values"
 
 :::image type="content" source="./media/auto-upgrade-cluster/edit-alert-rule.jpg" alt-text="The screenshot of the configuration options for alert conditions.":::
 
-5. The only values that appear are Scheduled, Started, Completed, Canceled, Failed. However, they won't show if the cluster never had an auto upgrade operation.
+5. When selecting "status" in the **Split by dimensions** dropdown, the available values are: Scheduled, Started, Completed, Canceled, and Failed. 
+
+   > [!NOTE]
+   > These status values will only appear if your cluster has previously executed auto upgrade operations. For new clusters or clusters that haven't undergone auto upgrades yet, the dropdown may appear empty or show no available dimensions. Once your cluster performs its first auto upgrade, these status values will become available for selection.
 
 :::image type="content" source="./media/auto-upgrade-cluster/by-dimension.jpg" alt-text="The screenshot of the split by dimensions drop down.":::
 
