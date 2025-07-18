@@ -42,7 +42,7 @@ In this guide, you learn how to:
 * Use Azure CLI to create a multizone AKS cluster.
 * Deploy an Azure file share to use in AKS persistent volumes.
 * Install the GitHub Actions Runner Controller (ARC) on AKS.
-* Install an ARC runner scale set and mount the file share on AKS.
+* Install an ARC runners scale set and mount the file share on AKS.
 * Run a sample workflow using GitHub Actions.
 
 ## Deployment architecture
@@ -59,48 +59,17 @@ The architecture consists of three main components:
 
 ### GitHub integration layer
 
-GitHub repositories contain workflow definitions that are processed by the GitHub App and routed to the appropriate self-hosted runners. Communication occurs via:
-
-* **`githubusercontent.com`**: Content delivery between GitHub and runners.
-* **`api.github.com`**: Control plane operations and job coordination.
+The GitHub integration layer connects workflows from GitHub repositories to your Azure infrastructure. Workflow jobs are dispatched from GitHub via `api.github.com` and `githubusercontent.com` to self-hosted runners.
 
 ### AKS cluster orchestration layer
 
-The AKS cluster is organized into two namespaces for separation of concerns: **arc-controller** and **arc-runners**.
+The AKS cluster orchestration layer manages the containerized runner instances and their lifecycle. The cluster is split into two namespaces: `arc-controller` and `arc-runners`.
 
-#### arc-controller namespace
-
-* **ARC controller**: Core pod that manages the overall runner infrastructure.
-* **ARC runner set listener**: Pod responsible for receiving and queuing jobs from GitHub workflows.
-
-#### arc-runners namespace
-
-**Secret management**:
-
-* **GitHub app secret**: Stores authentication credentials.
-* **Storage key secret**: Contains access keys for Azure storage.
-* **PVC Azure file share secrets**: Manages access to persistent volumes.
-
-**Access control**:
-
-* **ServiceAccount**: Identity for runner pods.
-* **Role**: Permission setting for the runners.
-
-**Persistent volumes**:
-
-* Multiple PVs connected to Azure File Share NUGET (`ReadWriteMany`).
-* Multiple worker PVs for runner operation data.
-
-**Runner pods**:
-
-* Containerized instances (*Runner-1* to *Runner-N*) executing GitHub workflow jobs.
-  * Each instance has dedicated ephemeral storage.
+`arc-controller` manages runner infrastructure and job listeners. `arc-runners` handles secrets, access control, and runner pods. Runners are containerized, use ephemeral storage, and connect to shared and dedicated volumes.
 
 ### Storage layer
 
-* **NUGET Azure file share**: Central repository with `ReadWriteMany` access for shared dependencies.
-* **Ephemeral Azure file shares**: Dedicated storage instances for each runner.
-* **Storage**: Backend implementation for persistent volume claims (PVCs).
+The Azure File Shares storage layer provides both NUGET file share with `ReadWriteMany` access for shared dependencies and ephemeral storage for runners, all backed by persistent volume claims.
 
 ## Next step
 

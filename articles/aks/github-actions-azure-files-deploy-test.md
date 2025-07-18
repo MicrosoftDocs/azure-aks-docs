@@ -30,7 +30,7 @@ Once the workflow is running, it requests a runner to ARC running on the AKS clu
 When you're ready, you can delete all the resources created in this guide using the following commands:
 
 ```bash
-# Delete ARC runner scale sets 
+# Delete ARC runners scale sets 
 
 helm delete "${ARC_RUNNER_SCALESET_NAME}" -n "${NAMESPACE_ARC_RUNNERS}" --wait 
 

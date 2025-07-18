@@ -225,7 +225,7 @@ We use the Azure Files file share in the following ways:
     kubectl apply -f ./install/arc-runners-storage-class-files.yaml --wait 
     ```
 
-### Install the ARC runner scale set
+### Install the ARC runners scale set
 
 The following code snippet is from the `arc-runners-set-values.yaml` file in the install folder that you can customize before installing the runner set Helm chart.
 
@@ -283,19 +283,19 @@ kubectl apply -f ./install/arc-runners-set-container-pod-spec.yaml
 
 ### ARC runners scale set Helm chart parameters
 
-The ARC runner scale set Helm chart provides a few parameters. The following parameters are the most important ones when installing a scale set with Azure File share volume mount on AKS:
+The ARC runners scale set Helm chart provides a few parameters. The following parameters are the most important ones when installing a scale set with Azure File share volume mount on AKS:
 
 * `githubConfigUrl`: Your GitHub organization or repository.
 * `githubConfigSecret`: The GitHub app secret to access GitHub from the self-hosted runner.
 * `minRunners`: Minimum number of runners on the scale set waiting for new jobs from GitHub.
 * `maxRunners`: Maximum number of runners running jobs or waiting for new jobs from GitHub.
-* `runnerGroup`: GitHub runner group used by the ARC runner set.
+* `runnerGroup`: GitHub runner group used by the ARC runners set.
 
-You can download the ARC runner scale set Helm chart [here](https://github.com/actions/actions-runner-controller/pkgs/container/actions-runner-controller-charts%2Fgha-runner-scale-set/).
+[Download the ARC runners scale set Helm chart](https://github.com/actions/actions-runner-controller/pkgs/container/actions-runner-controller-charts%2Fgha-runner-scale-set/).
 
 ### Install the Helm chart on AKS
 
-Install the ARC runner scale set Helm chart on AKS using the `helm install` command.
+Install the ARC runners scale set Helm chart on AKS using the `helm install` command.
 
 ```bash
 helm install "${ARC_RUNNER_SCALESET_NAME}" \ 
@@ -312,7 +312,7 @@ helm install "${ARC_RUNNER_SCALESET_NAME}" \
 
 ### Upgrade a runner scale set installation
 
-If you want to upgrade any configuration on the ARC runner scale set, you can use the `helm upgrade --install` command with the same parameters you used to install the scale set. For example, if you want to change the `minRunners` parameter from *1* to *2*, you can run the following command:
+If you want to upgrade any configuration on the ARC runners scale set, you can use the `helm upgrade --install` command with the same parameters you used to install the scale set. For example, if you want to change the `minRunners` parameter from *1* to *2*, you can run the following command:
 
 ```bash
 helm upgrade --install "${ARC_RUNNER_SCALESET_NAME}" \
