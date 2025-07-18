@@ -49,7 +49,7 @@ This process will also migrate your Basic IP to a Standard IP, while keeping the
     ```
 
 
-### Register the `NodeAutoProvisioningPreview` feature flag
+### Register the `BasicLBMigrationToStandardLBPreview` feature flag
 
 1. Register the `BasicLBMigrationToStandardLBPreview` feature flag using the `az feature register` command.
 
