@@ -20,18 +20,25 @@ ms.author: davidsmatlak
 
 Node conditions indicate a permanent problem that makes the node unavailable. AKS uses the following node conditions from NPD to expose permanent problems on the node. NPD also emits corresponding Kubernetes events.
 
-|Problem Daemon type| NodeCondition | Reason |  
-|---|---|---|
-|CustomPluginMonitor| FilesystemCorruptionProblem | FilesystemCorruptionDetected |
-|CustomPluginMonitor| KubeletProblem | KubeletIsDown |
-|CustomPluginMonitor| ContainerRuntimeProblem | ContainerRuntimeIsDown |
-|CustomPluginMonitor| VMEventScheduled | VMEventScheduled |
-|CustomPluginMonitor| FrequentUnregisterNetDevice | UnregisterNetDevice|
-|CustomPluginMonitor|FrequentKubeletRestart|FrequentKubeletRestart|
-|CustomPluginMonitor|FrequentContainerdRestart|FrequentContainerdRestart|
-|CustomPluginMonitor|FrequentDockerRestart|FrequentDockerRestart|
-|SystemLogMonitor|KernelDeadlock|DockerHung|
-|SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly|
+|Problem Daemon type| NodeCondition | Reason | Compute type | 
+|---|---|---|--|
+|CustomPluginMonitor| FilesystemCorruptionProblem | FilesystemCorruptionDetected | General purpose |
+|CustomPluginMonitor| KubeletProblem | KubeletIsDown |  General purpose |
+|CustomPluginMonitor| ContainerRuntimeProblem | ContainerRuntimeIsDown |  General purpose |
+|CustomPluginMonitor| VMEventScheduled | VMEventScheduled |  General purpose |
+|CustomPluginMonitor| FrequentUnregisterNetDevice | UnregisterNetDevice|  General purpose |
+|CustomPluginMonitor|FrequentKubeletRestart|FrequentKubeletRestart|  General purpose |
+|CustomPluginMonitor|FrequentContainerdRestart|FrequentContainerdRestart|  General purpose |
+|CustomPluginMonitor|FrequentDockerRestart|FrequentDockerRestart| General purpose |
+|CustomPluginMonitor|GPUMissing|Observed GPU count does not match expected GPU count| GPU only |
+|CustomPluginMonitor|NVLinkStatusInactive|NVLinkStatusInactive| GPU only |
+|CustomPluginMonitor|XIDErrors|XID errors present in kernel log| GPU only |
+|CustomPluginMonitor|IBLinkFlapping|Intermittent InfiniBand device connectivity| GPU only |
+|SystemLogMonitor|KernelDeadlock|DockerHung| General purpose |
+|SystemLogMonitor|ReadonlyFilesystem |FilesystemIsReadOnly| General purpose |
+
+> [!NOTE]
+> The `GPU only` node conditions currently apply to AKS node pools with `Standard_ND96asr_v4` or `Standard_ND96isr_H100_v5` VM size, and are supported on [MIG-enabled GPU node pools](./gpu-multi-instance.md).
 
 ## Events
 
