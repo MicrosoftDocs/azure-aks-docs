@@ -4,8 +4,8 @@ description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning (p
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
-ms.author: schaffererin
-author: schaffererin
+ms.author: bsoghigian
+author: bsoghigian
 
 # Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
 ---
@@ -88,19 +88,12 @@ NAP is based on the open source [Karpenter](https://karpenter.sh) project, and t
 
 ### Networking configuration
 
-The recommended network configurations for clusters enabled with Node Autoprovisioning are the following:
-- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
-- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
-- [Azure CNI](configure-azure-cni.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
-- [Azure CNI](configure-azure-cni.md)
+For detailed networking configuration requirements and recommendations, see [Node autoprovisioning networking configuration](node-autoprovision-networking.md).
 
-Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md). 
-
-The following networking configurations are currently *not* supported:
-
-- Calico network policy
-- Dynamic IP Allocation
-- Static Allocation of CIDR blocks
+Key networking considerations:
+- Azure CNI Overlay with Cilium is recommended
+- Standard Load Balancer is required
+- Private clusters are not currently supported
 
 ## Enable node autoprovisioning
 
@@ -189,100 +182,13 @@ The following networking configurations are currently *not* supported:
 
 ## Node pools
 
-Node autoprovisioning uses a list of VM SKUs as a starting point to decide which SKU is best suited for the workloads that are in a pending state. Having control over what SKU you want in the initial pool allows you to specify specific SKU families or virtual machine types and the maximum number of resources a provisioner uses. You can also reference different specifications in the node pool file, such as specifying *spot* or *on-demand* instances, multiple architectures, and more. 
+For detailed node pool configuration including SKU selectors, limits, and weights, see [Node autoprovisioning node pools configuration](node-autoprovision-node-pools.md).
 
-If you have specific virtual machine sizes that are reserved instances, for example, you may wish to only use those virtual machines as the starting pool.
-
-You can have multiple node pool definitions in a cluster, but AKS deploys a default node pool definition that you can modify:
-
-```yaml
-apiVersion: karpenter.sh/v1
-kind: NodePool
-metadata:
-  name: default
-spec:
-  disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter: Never
-  template:
-    spec:
-      nodeClassRef:
-        name: default
-
-      # Requirements that constrain the parameters of provisioned nodes.
-      # These requirements are combined with pod.spec.affinity.nodeAffinity rules.
-      # Operators { In, NotIn, Exists, DoesNotExist, Gt, and Lt } are supported.
-      # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#operators
-      requirements:
-      - key: kubernetes.io/arch
-        operator: In
-        values:
-        - amd64
-      - key: kubernetes.io/os
-        operator: In
-        values:
-        - linux
-      - key: karpenter.sh/capacity-type
-        operator: In
-        values:
-        - on-demand
-      - key: karpenter.azure.com/sku-family
-        operator: In
-        values:
-        - D
-```
-
-### Supported node provisioner requirements
-
-#### SKU selectors with well known labels
-
-| Selector | Description | Example |
-|--|--|--|
-| karpenter.azure.com/sku-family | VM SKU Family | D, F, L etc. |
-| karpenter.azure.com/sku-name | Explicit SKU name | Standard_A1_v2 |
-| karpenter.azure.com/sku-version | SKU version (without "v", can use 1) | 1 , 2 |
-| karpenter.sh/capacity-type | VM allocation type (Spot / On Demand) | spot or on-demand |
-| karpenter.azure.com/sku-cpu | Number of CPUs in VM | 16 |
-| karpenter.azure.com/sku-memory | Memory in VM in MiB | 131072 |
-| karpenter.azure.com/sku-gpu-name | GPU name | A100 |
-| karpenter.azure.com/sku-gpu-manufacturer | GPU manufacturer | nvidia |
-| karpenter.azure.com/sku-gpu-count | GPU count per VM | 2 |
-| karpenter.azure.com/sku-networking-accelerated | Whether the VM has accelerated networking | [true, false] |
-| karpenter.azure.com/sku-storage-premium-capable | Whether the VM supports Premium IO storage | [true, false] |
-| karpenter.azure.com/sku-storage-ephemeralos-maxsize | Size limit for the Ephemeral OS disk in Gb | 92 |
-| topology.kubernetes.io/zone | The Availability Zone(s) | [uksouth-1,uksouth-2,uksouth-3] |
-| kubernetes.io/os | Operating System (Linux only during preview) | linux |
-| kubernetes.io/arch | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
-
-To list the virtual machine SKU capabilities and allowed values, use the `vm list-skus` Azure CLI command.
-
-```azurecli-interactive
-az vm list-skus --resource-type virtualMachines --location <location> --query '[].name' --output table
-```
-
-## Node pool limits
-
-By default, node autoprovisioning attempts to schedule your workloads within the Azure quota you have available. You can also specify the upper limit of resources that is used by a node pool, specifying limits within the node pool spec.
-
-
-
-```
-  # Resource limits constrain the total size of the cluster.
-  # Limits prevent Karpenter from creating new instances once the limit is exceeded.
-  limits:
-    cpu: "1000"
-    memory: 1000Gi
-```
-
-## Node pool weights
-
-When you have multiple node pools defined, it's possible to set a preference of where a workload should be scheduled. Define the relative weight on your Node pool definitions.
-
-```
-  # Priority given to the node pool when the scheduler considers which to select. Higher weights indicate higher priority when comparing node pools.
-  # Specifying no weight is equivalent to specifying a weight of 0.
-  weight: 10
-```
+Node autoprovisioning uses VM SKU requirements to decide the best virtual machine for pending workloads. You can configure:
+- SKU families and specific instance types
+- Resource limits and priorities
+- Spot vs on-demand instances
+- Architecture and capabilities requirements
 
 ## Kubernetes and node image updates
 
@@ -336,31 +242,22 @@ Removing the imageVersion spec would revert the node pool to be updated to the l
 
 ## Node disruption
 
-When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenUnderUtilized`, `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
+For detailed information about node disruption policies, consolidation, and disruption budgets, see [Node autoprovisioning disruption policies](node-autoprovision-disruption.md).
 
-You can remove a node manually using `kubectl delete node`, but node autoprovision can also control when it should optimize your nodes based on your specifications.
+Node autoprovisioning optimizes your cluster by:
+- Removing or replacing underutilized nodes
+- Consolidating workloads to reduce costs
+- Respecting disruption budgets and maintenance windows
+- Providing manual control when needed
 
-```yaml
-  disruption:
-    # Describes which types of Nodes NAP should consider for consolidation
-    consolidationPolicy: WhenUnderutilized | WhenEmpty
-    # 'WhenUnderutilized', NAP will consider all nodes for consolidation and attempt to remove or replace Nodes when it discovers that the Node is underutilized and could be changed to reduce cost
+## Monitoring
 
-    #  `WhenEmpty`, NAP will only consider nodes for consolidation that contain no workload pods
-    
-    # The amount of time NAP should wait after discovering a consolidation decision
-    # This value can currently only be set when the consolidationPolicy is 'WhenEmpty'
-    # You can choose to disable consolidation entirely by setting the string value 'Never'
-    consolidateAfter: 30s
-```
+For comprehensive monitoring guidance and troubleshooting, see [Monitor node autoprovisioning](node-autoprovision-monitoring.md).
 
-## Monitoring selection events
-
-Node autoprovision produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
-
-```
-kubectl get events -A --field-selector source=karpenter -w
-```
+Key monitoring capabilities:
+- Real-time event streaming with kubectl
+- Provisioning and scheduling decision visibility
+- Consolidation and cost optimization tracking
 
 ## Disabling node autoprovisioning
 
