@@ -447,6 +447,30 @@ accountname.file.core.windows.net:/accountname/pvc-fa72ec43-ae64-42e4-a8a2-55660
 > [!NOTE]
 > Note that because the NFS file share is in a Premium account, the minimum file share size is 100 GiB. If you create a PVC with a small storage size, you might encounter an error similar to the following: *failed to create file share ... size (5)...*.
 
+### Encryption in Transit for NFS file shares (Preview)
+
+[Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read & writes to the NFS file shares within the VNET are encrypted providing an additional layer of security.
+By setting encryptInTransit: "true" in the storage class parameters, you can enable data encryption in transit for NFS Azure file volumes.
+
+```yml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile-csi-nfs
+provisioner: file.csi.azure.com
+allowVolumeExpansion: true
+parameters:
+  protocol: nfs
+  encryptInTransit: true
+mountOptions:
+  - nconnect=4
+  - noresvport
+  - actimeo=30
+```
+
+> [!NOTE]
+> EiT Preview is supported starting from AKS 1.33.
+
 ## Windows containers
 
 The Azure Files CSI driver also supports Windows nodes and containers. To use Windows containers, follow the [Windows containers quickstart](./learn/quick-windows-container-deploy-cli.md) to add a Windows node pool.
