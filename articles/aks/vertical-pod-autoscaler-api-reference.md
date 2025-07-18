@@ -4,8 +4,8 @@ description: Learn about the Vertical Pod Autoscaler API reference for Azure Kub
 ms.topic: concept-article
 ms.custom:
 ms.date: 09/26/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 

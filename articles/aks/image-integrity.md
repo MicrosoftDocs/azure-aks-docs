@@ -3,10 +3,12 @@ title: Use Image Integrity to validate signed images before deploying them to yo
 description: Learn how to use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters.
 author: schaffererin
 ms.author: schaffererin
-ms.service: azure-kubernetes-service
-ms.custom: devx-track-azurecli
-ms.topic: how-to
 ms.date: 09/26/2023
+ms.service: azure-kubernetes-service
+ms.topic: how-to
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
 ---
 
 # Use Image Integrity to validate signed images before deploying them to your Azure Kubernetes Service (AKS) clusters (Preview)
@@ -123,7 +125,7 @@ In this article, we use a self-signed CA cert from the official Ratify documenta
 
     ```YAML
     apiVersion: config.ratify.deislabs.io/v1beta1
-    kind: CertificateStore
+    kind: KeyManagementProvider
     metadata:
       name: certstore-inline
     spec:
@@ -215,18 +217,20 @@ If you want to use your own images, see the [guidance for image signing](/azure/
 
 ## Disable Image Integrity
 
-* Disable Image Integrity on your cluster using the [`az aks update`][az-aks-update] command with the `--disable-image-integrity` flag.
-
-    ```azurecli-interactive
-    az aks update --resource-group myResourceGroup --name MyManagedCluster --disable-image-integrity
-    ```
-
 ### Remove policy initiative
 
-* Remove the policy initiative using the [`az policy assignment delete`][az-policy-assignment-delete] command.
+* First you should remove the policy initiative using the [`az policy assignment delete`][az-policy-assignment-delete] command.
 
     ```azurecli-interactive
     az policy assignment delete --name 'deploy-trustedimages'
+    ```
+
+### Diable add-on
+
+* Then disable Image Integrity add-on on your cluster using the [`az aks update`][az-aks-update] command with the `--disable-image-integrity` flag.
+
+    ```azurecli-interactive
+    az aks update --resource-group myResourceGroup --name MyManagedCluster --disable-image-integrity
     ```
 
 ## Next steps

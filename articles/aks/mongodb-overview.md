@@ -5,7 +5,8 @@ ms.topic: overview
 ms.date: 01/07/2025
 author: fossygirl
 ms.author: carols
-ms.custom: aks-related-content
+ms.custom: 'aks-related-content, stateful-workloads'
+# Customer intent: "As a cloud architect, I want to deploy a MongoDB cluster on Kubernetes, so that I can effectively manage large datasets while ensuring high availability and fault tolerance in my applications."
 ---
 
 # Deploy a MongoDB cluster on Azure Kubernetes Service (AKS)

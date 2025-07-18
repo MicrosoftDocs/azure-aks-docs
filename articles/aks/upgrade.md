@@ -1,11 +1,11 @@
 ---
 title: Overview of upgrading Azure Kubernetes Service (AKS) clusters and components
 description: Learn about the various upgradeable components of an Azure Kubernetes Service (AKS) cluster and how to maintain them.
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.topic: overview
 ms.subservice: aks-upgrade
-ms.date: 01/26/2024
+ms.date: 07/01/2025
 ---
 
 # Upgrading Azure Kubernetes Service clusters and node pools
@@ -19,18 +19,23 @@ For Linux nodes, node image security patches and hotfixes may be performed witho
 
 The following table summarizes the details of updating each component:
 
-|Component name|Frequency of upgrade|Planned Maintenance supported|Supported operation methods|Documentation link|
-|--|--|--|--|--|
-|Cluster Kubernetes version (minor) upgrade|Roughly every three months|Yes|Automatic, Manual|[Upgrade an AKS cluster][upgrade-cluster]|
-|Cluster Kubernetes version upgrade to supported patch version|Approximately weekly. To determine the latest applicable version in your region, see the [AKS release tracker][release-tracker]|Yes|Automatic, Manual|[Upgrade an AKS cluster][upgrade-cluster]|
-|Node image version upgrade|**Linux**: weekly<br>**Windows**: monthly|Yes|Automatic, Manual|[AKS node image upgrade][node-image-upgrade]|
-|Security patches and hot fixes for node images|As-necessary|||[AKS node security patches][node-security-patches]|
+|Component name|Frequency of upgrade|Planned Maintenance supported|Supported operation methods|Supported operation methods (Multi-Cluster)|Documentation link|
+|--|--|--|--|--|--|
+|Cluster Kubernetes version upgrade (minor)|Roughly every three months|Yes|Automatic, Manual|Automatic, Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade-concept]|
+|Cluster Kubernetes version upgrade (patch)|Approximately weekly. To determine the latest applicable version in your region, see the [AKS release tracker][release-tracker]|Yes|Automatic, Manual|Manual|[Upgrade an AKS cluster][upgrade-cluster], [Multi-cluster upgrade][multi-cluster-upgrade-concept]|
+|Node image version upgrade|**Linux**: weekly<br>**Windows**: monthly|Yes|Automatic, Manual|Automatic, Manual|[AKS node image upgrade][node-image-upgrade], [Multi-cluster upgrade][multi-cluster-upgrade-concept]|
+|Security patches and hot fixes for node images|As-necessary|||Unsupported|[AKS node security patches][node-security-patches]|
 
-An important practice that you should include as part of your upgrade process is remembering to follow commonly used deployment and testing patterns. Testing an upgrade in a development or test environment before deployment in production is an important step to ensure application functionality and compatibility with the target environment. It can help you identify and fix any errors, bugs, or issues that might affect the performance, security, or usability of the application or underlying infrastructure.
+## Multi-cluster upgrade
+When you have multiple clusters, an important practice that you should include as part of your upgrade process is remembering to follow commonly used deployment and testing patterns. Testing an upgrade in a development or test environment before deployment in production is an important step to ensure application functionality and compatibility with the target environment. It can help you identify and fix any errors, bugs, or issues that might affect the performance, security, or usability of the application or underlying infrastructure.
+
+[Azure Kubernetes Fleet Manager][fleet-manager] has built-in support for [multi-cluster upgrades][multi-cluster-upgrade-concept] which implements the best practice above to minimize application disruptions caused by cluster upgrades. Besides allowing you to customize the order of upgrades of multiple clusters, it also allows you to use consistent node OS image versions across clusters in different regions.
 
 ## Automatic upgrades
 
 Automatic upgrades can be performed through [auto upgrade channels][auto-upgrade] or via [GitHub Actions][gh-actions-upgrade].
+
+[Automatic multi-cluster upgrades][auto-multi-cluster-upgrade] can be performed through [Azure Kubernetes Fleet Manager][fleet-manager] to adopt the best practice of testing and verifying an upgrade in a development or test environment before production.
 
 ## Planned maintenance
 
@@ -63,6 +68,9 @@ For more information what cluster operations may trigger specific upgrade events
 [gh-actions-upgrade]: ./node-upgrade-github-actions.md 
 [operator-guide-patching]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
 [supported-k8s-versions]: ./supported-kubernetes-versions.md#kubernetes-version-support-policy
+[fleet-manager]: /azure/kubernetes-fleet/overview
+[multi-cluster-upgrade-concept]: /azure/kubernetes-fleet/concepts-update-orchestration
+[auto-multi-cluster-upgrade]: /azure/kubernetes-fleet/update-automation
 [ts-nsg]: /troubleshoot/azure/azure-kubernetes/upgrade-fails-because-of-nsg-rules
 [ts-pod-drain]: /troubleshoot/azure/azure-kubernetes/error-code-poddrainfailure
 [ts-ip-limit]: /troubleshoot/azure/azure-kubernetes/error-code-publicipcountlimitreached

@@ -6,6 +6,8 @@ ms.date: 11/08/2024
 ms.tool: azure-cli, azure-powershell
 ms.devlang: azurecli
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
+author: davidsmatlak
+ms.author: davidsmatlak
 ---
 
 # Authenticate with Azure Container Registry (ACR) from Azure Kubernetes Service (AKS)

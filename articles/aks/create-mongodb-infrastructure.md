@@ -5,7 +5,7 @@ ms.topic: how-to
 ms.date: 01/07/2025
 author: fossygirl
 ms.author: carols
-ms.custom: aks-related-content
+ms.custom: 'aks-related-content, stateful-workloads'
 zone_pivot_groups: azure-cli-or-terraform
 ---
 

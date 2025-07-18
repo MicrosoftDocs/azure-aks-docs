@@ -31,7 +31,7 @@ To view supported GPU-enabled VMs, see [GPU-optimized VM sizes in Azure][gpu-sku
 
 * This article assumes you have an existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * You need the Azure CLI version 2.72.2 or later installed and configured to use the `--gpu-driver` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* You need the Azure CLI version 9.0.0b5 or later installed and configured to use the `--driver-type` field with the `az aks nodepool add` command. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* If you have the `aks-preview` Azure CLI extension installed, please update the version to 18.0.0b2 or later.
 
 ## Get the credentials for your cluster
 
@@ -140,6 +140,10 @@ When creating a Windows node pool with N-series (NVIDIA GPU) VM sizes in AKS, th
 
 AKS has automatic GPU driver installation enabled by default. In some cases, such as installing your own drivers, you may want to skip GPU driver installation.
 
+> [!NOTE]
+> The `gpu-driver` API field is a suggested alternative for customers previously using the `--skip-gpu-driver-install` node pool tag. 
+>- The `--skip-gpu-driver-install` node pool tag on AKS will be retired on 14 August 2025. To retain the existing behavior of skipping automatic GPU driver installation, upgrade your node pools to the latest node image version and set the `--gpu-driver` field to `none`. After 14 August 2025, you won't be able to provision AKS GPU-enabled node pools with the `--skip-gpu-driver-install` node pool tag to bypass this default behavior. For more information, see [`skip-gpu-driver` tag retirement](https://aka.ms/aks/skip-gpu-driver-tag-retirement).
+
 1. Create a node pool using the [`az aks nodepool add`][az-aks-nodepool-add] command and setting the API field `--gpu-driver` to `none` to skip automatic GPU driver installation.
 
     ```azurecli-interactive
@@ -217,7 +221,7 @@ You can deploy a DaemonSet for the Kubernetes DirectX device plugin, which runs 
             value: "gpu"
             effect: "NoSchedule"
           containers:
-          - image: mcr.microsoft.com/oss/nvidia/k8s-device-plugin:v0.14.1
+          - image: mcr.microsoft.com/aks/aks-windows-gpu-device-plugin:0.0.17
             name: nvidia-device-plugin-ctr
             securityContext:
               allowPrivilegeEscalation: false

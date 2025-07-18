@@ -6,9 +6,10 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 08/29/2024
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a Kubernetes administrator, I want to manage SSH keys and access for AKS cluster nodes, so that I can enhance security and control access to the nodes effectively.
 ---
 
 # Manage SSH for secure access to Azure Kubernetes Service (AKS) nodes
@@ -117,7 +118,7 @@ The following are examples of this command:
     ```
 
 > [!IMPORTANT]
-> After you update the SSH key, AKS doesn't automatically update your node pool. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete.
+> After you update the SSH key, AKS doesn't automatically update your node pool. At any time, you can choose to perform a [nodepool update operation][node-image-upgrade]. The update SSH keys operation takes effect after a node image update is complete. For clusters with [Node Auto-provisioning][node auto-provisioning] enabled, a node image update can be performed by applying a new label to the Kubernetes NodePool custom resource.
 
 ## Disable SSH overview
 
@@ -317,6 +318,7 @@ To help troubleshoot any issues with SSH connectivity to your clusters nodes, yo
 [view-kubelet-logs]: kubelet-logs.md
 [view-master-logs]: monitor-aks-reference.md#resource-logs
 [node-image-upgrade]: node-image-upgrade.md
+[node auto-provisioning]: node-autoprovision.md
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az-aks-nodepool-upgrade
 [network-security-group-rules-overview]: concepts-security.md#azure-network-security-groups
 [kubelet-debug-node-access]: node-access.md

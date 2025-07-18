@@ -8,6 +8,7 @@ author: schaffererin
 ms.author: schaffererin
 ms.collection: 
  - migration
+ms.custom: 'stateful-workloads'
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)

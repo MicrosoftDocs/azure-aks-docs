@@ -6,6 +6,7 @@ ms.date: 03/05/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a fleet administrator, I want to configure alerts for Azure Kubernetes Fleet Manager update runs, so that I can monitor long-running updates and take actions based on their status."
 ---
 
 # Configure monitoring and alerting of Update Runs for Azure Kubernetes Fleet Manager
@@ -22,7 +23,7 @@ In order to query your update run data, you need to use queries written using th
 
 To learn how to work with Azure Resource Graph and Fleet update run data, let's use the Azure Resource Graph Explorer to query update run data.
 
-1. Start by opening the [Azure Resource Graph Explorer](https://ms.portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure portal.
+1. Start by opening the [Azure Resource Graph Explorer](https://portal.azure.com/#view/HubsExtension/ArgQueryBlade) in the Azure portal.
 
 1. Select **Table** and then expand **aksresources**. Fleet Manager's resources have the prefix `microsoft.containerservice/fleets`.
 

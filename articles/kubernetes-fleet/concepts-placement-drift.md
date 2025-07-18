@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a Kubernetes administrator, I want to manage workload drift using resource placement strategies, so that I can ensure consistent application configurations across multiple clusters and prevent potential outages during deployments."
 ---
 
 # Detecting and managing workload drift with Azure Kubernetes Fleet Manager cluster resource placement (preview)

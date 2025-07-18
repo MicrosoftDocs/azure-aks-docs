@@ -6,6 +6,7 @@ ms.date: 04/28/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a cloud architect, I want to configure multi-cluster DNS load balancing for applications in Azure Kubernetes Fleet Manager, so that I can achieve high availability and optimal resource utilization across multiple member clusters."
 ---
 
 # Set up DNS load balancing across Azure Kubernetes Fleet Manager member clusters (preview)
@@ -28,7 +29,7 @@ Follow the steps in this document to set up DNS-based load balancing for multi-c
 
 * The user completing the configuration has permissions to perform Azure role assignments and to access the Fleet Manager hub cluster Kubernetes API. For more information, see [Access the Kubernetes API](./access-fleet-hub-cluster-kubernetes-api.md) for more details.
 
-* An existing Azure resource group which will host the provisioned Azure Traffic Manager resource. 
+* An existing Azure resource group, which hosts the provisioned Azure Traffic Manager resource. 
 
 * Set the following environment variables:
 
@@ -76,12 +77,12 @@ In order to complete this step, you must create your Fleet Manager with managed 
     }
     ```
 
-* Assign the `Traffic Manager Contributor` role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group where the Traffic Manager resource is created.
+* Assign the `Azure Kubernetes Fleet Manager Hub Agent` role to the Fleet Manager hub cluster identity, limiting the scope to the existing resource group where the Traffic Manager resource is created.
 
     ```azurecli-interactive
     az role assignment create \
         --assignee "<FLEET-PRINCIPAL-ID>" \
-        --role "Traffic Manager Contributor" \
+        --role "de2b316d-7a2c-4143-b4cd-c148f6a355a1" \
         --scope ${TRAFFIC_MANAGER_RG_ID}
     ```
 
@@ -321,7 +322,7 @@ In order to complete this step, you must create your Fleet Manager with managed 
     Address: 173.X.X.164
     ```
 
-1. Use a web browser to visit the URL and see how Kuard responds. Try flushing your DNS and retrying to see if you're served another service instance from another cluster.
+1. Use a web browser to visit the URL and see how Kuard responds. Try flushing your DNS and retrying to see if the request is served by another service instance from another cluster.
 
 :::image type="content" source="./media/howto-dns-load-balancing/fleet-dns-load-balance-kuard-sample.png" alt-text="A screenshot of a web page displaying details from the Kuard demo application." lightbox="./media/howto-dns-load-balancing/fleet-dns-load-balance-kuard-sample.png":::
 

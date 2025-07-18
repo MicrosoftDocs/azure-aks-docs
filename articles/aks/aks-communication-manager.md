@@ -19,6 +19,7 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 
 - Create a [planned maintenance window][planned-maintenance] for your autoupgrade configuration.
 
+
 > [!NOTE]  
 > Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation.
 
@@ -153,6 +154,110 @@ containerserviceeventresources
     In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
 
     Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
+=======
+> [!NOTE]
+> After Communication Manager is set up, it sends advance notices one week before maintenance starts and one day before maintenance starts. It also sends you timely alerts during the maintenance operation.
+
+## Set up Communication Manager
+
+1. Go to the resource, select **Monitoring**, select **Alerts**, and then select **Alert Rules**.
+
+1. On the **Condition** tab, for **Signal name**, select **Custom log search**.
+
+     :::image type="content" source="./media/auto-upgrade-cluster/custom-log-search.jpg" alt-text="Screenshot that shows the custom log search in the alert rule pane.":::
+
+1. In the **Search query** box, paste one of the following custom queries and then select the **Review+Create** button.
+
+   The following query is for cluster autoupgrade notifications:
+
+   ```console
+    arg("").containerserviceeventresources
+       | where type == "microsoft.containerservice/managedclusters/scheduledevents"
+       | where id contains "/subscriptions/subid/resourcegroups/rgname/providers/Microsoft.ContainerService/managedClusters/clustername"
+       | where properties has "eventStatus"
+       | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+       | extend status = substring(status, 0, indexof(status, ",") - 1)
+       | where status != ""
+       | where properties has "eventDetails"
+       | extend upgradeType = case(
+                                  properties has "K8sVersionUpgrade",
+                                  "K8sVersionUpgrade",
+                                  properties has "NodeOSUpgrade",
+                                  "NodeOSUpgrade",
+                                  status == "Completed" or status == "Failed",
+                                  case(
+           properties has '"type":1',
+           "K8sVersionUpgrade",
+           properties has '"type":2',
+           "NodeOSUpgrade",
+           ""
+       ),
+                                  ""
+                              )
+       | where properties has "lastUpdateTime"
+       | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+       | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+       | extend eventTime = todatetime(tostring(eventTime))
+       | where eventTime >= ago(2h)
+       | where upgradeType == "K8sVersionUpgrade"
+       | project
+           eventTime,
+           upgradeType,
+           status,
+           properties
+       | order by eventTime asc
+   ```
+
+   The following query is for Node OS autoupgrade notifications:
+
+   ```console
+    arg("").containerserviceeventresources
+       | where type == "microsoft.containerservice/managedclusters/scheduledevents"
+       | where id contains "/subscriptions/subid/resourcegroups/rgname/providers/Microsoft.ContainerService/managedClusters/clustername"
+       | where properties has "eventStatus"
+       | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+       | extend status = substring(status, 0, indexof(status, ",") - 1)
+       | where status != ""
+       | where properties has "eventDetails"
+       | extend upgradeType = case(
+                                  properties has "K8sVersionUpgrade",
+                                  "K8sVersionUpgrade",
+                                  properties has "NodeOSUpgrade",
+                                  "NodeOSUpgrade",
+                                  status == "Completed" or status == "Failed",
+                                  case(
+           properties has '"type":1',
+           "K8sVersionUpgrade",
+           properties has '"type":2',
+           "NodeOSUpgrade",
+           ""
+       ),
+                                  ""
+                              )
+       | where properties has "lastUpdateTime"
+       | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+       | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+       | extend eventTime = todatetime(tostring(eventTime))
+       | where eventTime >= ago(2h)
+       | where upgradeType == "K8sVersionUpgrade"
+       | project
+           eventTime,
+           upgradeType,
+           status,
+           properties
+       | order by eventTime asc
+   ```
+
+1. The interval should be 30 minutes, and the threshold should be 1.
+
+1. Make sure that an action group with the correct email address exists, so that you can receive the notifications.
+
+1. Make sure to give the **Read** role to the resource group and to the subscription to the managed identity of the log search alert rule.
+
+1. Go to the alert rule: **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+
+1. Select the **Reader** role and assign it to the resource group. Repeat **Add role assignment** for the subscription.
+
 
 ### Verification
 

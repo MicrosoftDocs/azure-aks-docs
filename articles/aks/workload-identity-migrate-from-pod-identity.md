@@ -5,8 +5,8 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 07/31/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
 ---
 

@@ -2,12 +2,11 @@
 title: Secure pod traffic with network policies
 titleSuffix: Azure Kubernetes Service
 description: Learn how to secure traffic that flows in and out of pods by using Kubernetes network policies in Azure Kubernetes Service (AKS).
-ms.topic: how-to
-ms.custom: devx-track-azurecli
-ms.date: 03/28/2024
 author: schaffererin
 ms.author: schaffererin
-
+ms.date: 06/10/2025
+ms.topic: how-to
+ms.custom: devx-track-azurecli, build-2025, biannual
 ---
 
 # Secure traffic between pods by using network policies in AKS
@@ -44,7 +43,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 | Supported platforms                      | Linux, Windows Server 2022 (Preview).                     | Linux, Windows Server 2019 and 2022.  | Linux.
 | Supported networking options             | Azure Container Networking Interface (CNI).                  | Azure CNI (Linux, Windows Server 2019 and 2022) and kubenet (Linux). | Azure CNI.
 | Compliance with Kubernetes specification | All policy types supported | All policy types are supported. | All policy types are supported.
-| Other features                           | None.                       | Extended policy model consisting of Global Network Policy, Global Network Set, and Host Endpoint. For more information on using the `calicoctl` CLI to manage these extended features, see [calicoctl user reference][calicoctl]. | None.
+| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md) and [L7](./container-network-security-l7-policy-concepts.md)
 | Support                                  | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team.
 
 ## Limitations of Azure Network Policy Manager
@@ -71,6 +70,12 @@ In some rare cases, there's a chance of hitting a race condition that might resu
 If this race condition occurs for a node, the Azure NPM pod on that node enters a state where it can't update security rules, which might lead to unexpected connectivity for new connections to/from pods on the impacted node. To mitigate the issue, the Azure NPM pod automatically restarts ~15 seconds after entering this state. While Azure NPM is rebooting on the impacted node, it deletes all security rules, then reapplies security rules for all network policies. While all the security rules are being reapplied, there's a chance of temporary, unexpected connectivity for new connections to/from pods on the impacted node.
 
 To limit the chance of hitting this race condition, you can reduce the size of the network policy. This issue is most likely to happen for a network policy with several `ipBlock` sections. A network policy with *four or less* `ipBlock` sections is less likely to hit the issue.
+
+### Filtering load balancer or service traffic
+
+Kubernetes service routing for both inbound and outbound services often involves rewriting the source and destination IPs on traffic that is being processed, including traffic that comes into the cluster from a LoadBalancer service. This rewrite behavior means that traffic being received from or sent to an external service may not be properly processed by network policies (see the [Kubernetes Network Policies documentation][kubernetes-network-policies] for more details).
+
+To restrict what sources can send traffic to a load balancer service, use the `spec.loadBalancerSourceRanges` to configure traffic blocking that is applied before any rewrites occur. More information is available in the [AKS standard load balancer](/azure/aks/load-balancer-standard#restrict-inbound-traffic-to-specific-ip-ranges) documentation.
 
 ## Before you begin
 
@@ -259,7 +264,7 @@ Example command to install Calico:
 > - In Kubenet clusters with Calico enabled, Calico is used as both a CNI and network policy engine.  
 > - In Azure CNI clusters, Calico is used only for network policy enforcement, not as a CNI. This can cause a short delay between when the pod starts and when Calico allows outbound traffic from the pod.
 >
->  It is recommended to use Cilium instead of Calico to avoid this issue. Learn more about Cilium at [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md)
+>  AKS recommends using Cilium instead of Calico to avoid this issue. Learn more about Cilium at [Azure CNI Powered by Cilium](./azure-cni-powered-by-cilium.md)
 >  
 
 ```azurecli

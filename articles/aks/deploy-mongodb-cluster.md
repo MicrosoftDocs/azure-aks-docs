@@ -5,8 +5,9 @@ ms.topic: how-to
 ms.date: 01/07/2025
 author: fossygirl
 ms.author: carols
-ms.custom: aks-related-content
+ms.custom: 'aks-related-content, stateful-workloads'
 zone_pivot_groups: azure-cli-or-terraform
+# Customer intent: As a cloud engineer, I want to configure and deploy a MongoDB cluster on Azure Kubernetes Service, so that I can ensure high availability and manage data efficiently in a cloud-native environment.
 ---
 
 # Configure and deploy a MongoDB cluster on Azure Kubernetes Service (AKS)
