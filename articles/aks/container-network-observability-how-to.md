@@ -25,14 +25,6 @@ Container Network Observability is one of the features of Advanced Container Net
 
 * The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
-* AKS currently supports Ubuntu 20.04 FIPS with kernel 5.4. However, ACNS uses Retina (non-Cilium dataplane) with pod-level metrics that require kernel >5.8. As a result, Retina pods won’t run on Ubuntu 20.04 FIPS nodes.Ubuntu 22.04 FIPS support in AKS is targeted for August 2025. FIPS support matrix for Advanced Container Networking Services as follows -
-
-    | Operating System   | Supports FIPS |
-    |--------------------|---------------|
-    | Azure Linux 3.0    | Yes           |
-    | Azure Linux 2.0    | Yes           |
-    | Ubuntu 20.04*      | No            |
-
 
 ### Enable Advanced Container Networking Services
 
@@ -72,6 +64,14 @@ az aks create \
 
 > [!NOTE]
 > [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature is not available for Non-cilium clusters
+> When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support is not available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857).
+Refer to the FIPS support matrix below:
+
+    | Operating System   | Supports FIPS |
+    |--------------------|---------------|
+    | Azure Linux 3.0    | Yes           |
+    | Azure Linux 2.0    | Yes           |
+    | Ubuntu 20.04       | No            |
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.

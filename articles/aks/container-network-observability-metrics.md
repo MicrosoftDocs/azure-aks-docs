@@ -99,13 +99,15 @@ For *incoming traffic*, there will be a `destination` label with destination pod
 * For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network policies (CNP) configured on their clusters.
 * Flow logs are not currently available in the air gapped cloud.
 * Hubble relay may crash if one of the Hubble node agents goes down and may cause interruptions to Hubble CLI.
-* AKS currently supports Ubuntu 20.04 FIPS with kernel 5.4. However, ACNS uses Retina (non-Cilium dataplane) with pod-level metrics that require kernel >5.8. As a result, Retina pods won’t run on Ubuntu 20.04 FIPS nodes.Ubuntu 22.04 FIPS support in AKS is targeted for August 2025. FIPS support matrix for Advanced Container Networking Services as follows -
+* When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support is not available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857).
+Refer to the FIPS support matrix below:
 
     | Operating System   | Supports FIPS |
     |--------------------|---------------|
     | Azure Linux 3.0    | Yes           |
     | Azure Linux 2.0    | Yes           |
-    | Ubuntu 20.04*      | No            |
+    | Ubuntu 20.04       | No            |
+This limitation does not apply when ACNS is running on Cilium data planes.
 
 ### Scale
 
