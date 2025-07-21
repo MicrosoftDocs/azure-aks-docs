@@ -365,7 +365,7 @@ AKS recommends coupling node auto provisioning with a Kubernetes [Auto Upgrade][
 By default node auto provisioning node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place, including Karpenter or Node Disruption Budgets, and Pod Disruption Budgets.
 
 >[!NOTE]
->[Node OS Upgrade Channel settings][node-os-upgrade-channel] of Auto Upgrade do not impact node auto provisioning-managed nodes. node auto provisioning has its own automated method for ensuring node image upgrades. 
+>[Node OS Upgrade Channel settings][node-os-upgrade-channel] of Auto Upgrade don't impact node auto provisioning-managed nodes. node auto provisioning has its own automated method for ensuring node image upgrades. 
 
 ## Monitoring selection events
 
@@ -391,7 +391,7 @@ node auto provisioning can only be disabled when:
 >
 > **Skipping steps 2 and 3 is not recommended, as it might leave some pods pending and doesn't honor PDBs.**
 >
-> **Do not run `kubectl delete node` on any nodes that are not managed by node auto provisioning.**
+> **Don't run `kubectl delete node` on any nodes that aren't managed by node auto provisioning.**
 
 2. Add the `karpenter.azure.com/disable:NoSchedule` taint to every karpenter.sh/NodePool.
    ```yaml
@@ -507,13 +507,13 @@ node auto provisioning supports most Azure Virtual Machine sizes that are:
 - Are available in your region and availability zones
 
 ### Can I use custom virtual machine images with node auto provisioning?
-No, you cannot specify custom VM images for node auto provisioning.
+No, you can't specify custom VM images for node auto provisioning.
 
 ### Does node auto provisioning handle spot VMs?
-node auto provisioning supports Azure Spot VMs for cost savings. When using spot instances, be aware that they are subject to eviction policies.
+node auto provisioning supports Azure Spot VMs for cost savings. When using spot instances, be aware that they're subject to eviction policies.
 
 ### Can I mix spot and regular VMs in the same NodePool?
-Yes, you can specify both `spot` and `on-demand` in the capacity type requirements. Weights can be applied in the pod spec to have an affinity for spot VMs, with a fall back of on-demand instances.
+Yes, you can specify both `spot` and `on-demand` in the capacity type requirements. Weights can be applied in the pod spec to have an affinity for spot VMs, with a fall-back of on-demand instances.
 
 **Networking and Security**
 
@@ -623,8 +623,8 @@ Yes, node auto provisioning resources (NodePools, AKSNodeClasses) can be managed
 ### Does node auto provisioning support Windows nodes?
 node auto provisioning currently supports Linux nodes through Ubuntu22.04 and AzureLinux (v2 and v3 based on the cluster's kubernetes version). Windows node support may be considered for future releases.
 
-### Can I create nodes in my cluster that are not managed by node auto provisioning?
-Yes, you can manually create nodes or nodepools in your cluster that are not managed by node auto provisioning. For existing clusters that enable node auto provisioning, you can keep existing nodes or nodepools in tact, though they will not be managed by node auto provisioning. 
+### Can I create nodes in my cluster which aren't managed by node auto provisioning?
+Yes, you can manually create nodes or node pools in your cluster which aren't managed by node auto provisioning. For existing clusters that enable node auto provisioning, you can keep existing nodes or nodepools intact, though they won't be managed by node auto provisioning. 
 
 ### How do I  get help?
 Learn how to [File An Azure support ticket][azure-support] with:
