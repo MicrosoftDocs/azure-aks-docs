@@ -17,7 +17,7 @@ When you deploy workloads onto AKS, you need to make a decision about the node p
 
 Node auto provisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-Node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. node auto provisioning automatically deploys, configures, and manages Karpenter on your AKS clusters.
+Node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. Node auto provisioning automatically deploys, configures, and manages Karpenter on your AKS clusters.
 
 ## How node auto provisioning works
 
@@ -67,7 +67,7 @@ The following networking configurations are currently *not* supported:
 
 ### Enable node auto provisioning on a new cluster
 
-node auto provisioning is enabled by setting the field `--node-provisioning-mode` to [Auto](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
+Node auto provisioning is enabled by setting the field `--node-provisioning-mode` to [Auto](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -367,7 +367,7 @@ AKS recommends coupling node auto provisioning with a Kubernetes [Auto Upgrade][
 By default node auto provisioning node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place, including Karpenter or Node Disruption Budgets, and Pod Disruption Budgets.
 
 >[!NOTE]
->[Node OS Upgrade Channel settings][node-os-upgrade-channel] of Auto Upgrade don't impact node auto provisioning-managed nodes. node auto provisioning has its own automated method for ensuring node image upgrades. 
+>[Node OS Upgrade Channel settings][node-os-upgrade-channel] of Auto Upgrade don't impact node auto provisioning-managed nodes. Node auto provisioning has its own automated method for ensuring node image upgrades. 
 
 ## Monitoring selection events
 
