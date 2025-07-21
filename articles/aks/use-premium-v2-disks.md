@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.subservice: aks-storage
+# Customer intent: As a Kubernetes cluster operator, I want to enable Premium SSD v2 disks in my AKS deployment, so that I can optimize performance and storage management for high IO-intensive workloads.
 ---
 
 # Use Azure Premium SSD v2 disks on Azure Kubernetes Service

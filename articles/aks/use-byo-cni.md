@@ -7,6 +7,7 @@ ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 06/20/2023
+# Customer intent: As an advanced Kubernetes user, I want to deploy an AKS cluster with no preinstalled CNI plugin, so that I can use a custom CNI solution that aligns with my on-premises environment.
 ---
 
 # Bring your own Container Network Interface (CNI) plugin with Azure Kubernetes Service (AKS)

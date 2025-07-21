@@ -6,6 +6,7 @@ ms.topic: concept-article
 ms.date: 09/26/2023
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: "As a cloud developer, I want to integrate partner solutions for Windows containers on AKS, so that I can optimize application deployment, enhance security, and improve observability across my Windows-based applications."
 ---
 
 # Windows AKS partner solutions

@@ -64,4 +64,3 @@ To learn more about containerized AI and machine learning workloads on AKS, see 
 [kaito-repo]: https://github.com/Azure/kaito/tree/main/presets
 [language-models]: ./concepts-ai-ml-language-models.md
 [qlora]: https://huggingface.co/blog/4bit-transformers-bitsandbytes#:~:text=We%20present%20QLoRA%2C%20an%20efficient%20finetuning%20approach%20that,pretrained%20language%20model%20into%20Low%20Rank%20Adapters~%20%28LoRA%29.
-[kaito-fine-tuning]: https://github.com/Azure/kaito/tree/main/docs/tuning

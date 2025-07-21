@@ -63,7 +63,7 @@ In this example, you collect metrics for the [Qwen-2.5-coder-7B-instruct languag
 
 ## Surface KAITO inference metrics to the managed service for Prometheus
 
-Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](https://github.com/kaito-project/kaito/blob/main/docs/inference/Monitoring.md#prometheus-metrics).
+Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](https://github.com/kaito-project/kaito/tree/main).
 
 1. Add the following label to your KAITO inference service so that a Kubernetes `ServiceMonitor` deployment can detect it:
 
