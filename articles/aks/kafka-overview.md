@@ -7,6 +7,7 @@ ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
 ms.custom: 'stateful-workloads'
+# Customer intent: "As a cloud architect, I want to deploy a Kafka cluster on Azure Kubernetes Service using an automated operator, so that I can efficiently manage and scale our event streaming workloads in a robust and cost-effective manner."
 ---
 
 # Deploy a Kafka cluster on Azure Kubernetes Service (AKS) using Strimzi

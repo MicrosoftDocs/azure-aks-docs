@@ -6,6 +6,7 @@ ms.topic: best-practice
 ms.date: 04/22/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: "As a Kubernetes cluster operator, I want to implement best practices for deployment and cluster reliability, so that I can ensure high availability and performance of my workloads in Azure Kubernetes Service."
 ---
 
 # Deployment and cluster reliability best practices for Azure Kubernetes Service (AKS)

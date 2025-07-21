@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 05/22/2024
+# Customer intent: As a cloud architect, I want to configure kubenet networking for my AKS cluster within an existing virtual network, so that I can optimize IP address management and support my application demands efficiently.
 ---
 
 # Use kubenet networking with your own IP address ranges in Azure Kubernetes Service (AKS)

@@ -7,6 +7,7 @@ ms.author: davidsmatlak
 
 ms.topic: reference
 ms.custom: subject-policy-reference
+# Customer intent: "As a cloud administrator, I want to access built-in policy definitions for Azure Kubernetes Service, so that I can effectively manage and govern my Azure resources according to best practices and compliance standards."
 ---
 # Azure Policy built-in definitions for Azure Kubernetes Service
 
@@ -20,13 +21,13 @@ the link in the **Version** column to view the source on the
 
 ## Initiatives
 
-[!INCLUDE [azure-policy-reference-policysets-kubernetes](~/azure-docs-pr/includes/policy/reference/bycat/policysets-kubernetes.md)]
+[!INCLUDE [azure-policy-reference-policysets-kubernetes](~/azure-policy-autogen-docs/includes/policy/reference/bycat/policysets-kubernetes.md)]
 
 ## Policy definitions
 
 ### Microsoft.ContainerService
 
-[!INCLUDE [azure-policy-reference-rp-aks-containerservice](~/azure-docs-pr/includes/policy/reference/byrp/microsoft.containerservice.md)]
+[!INCLUDE [azure-policy-reference-rp-aks-containerservice](~/azure-policy-autogen-docs/includes/policy/reference/byrp/microsoft.containerservice.md)]
 
 ## Next steps
 

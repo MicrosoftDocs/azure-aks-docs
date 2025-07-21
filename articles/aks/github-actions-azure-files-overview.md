@@ -19,6 +19,21 @@ In this guide, you deploy a highly available GitHub Actions controller and self-
 
 [Actions Runner Controller (ARC)][about-arc] is a Kubernetes operator that orchestrates and scales self-hosted runners for GitHub Actions. ARC relies on persistent volumes (PVs) to share job information between the runner pod and the container job pod. For more information, see [About Actions Runner Controller](https://docs.github.com/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/about-actions-runner-controller).
 
+## Why use self-hosted GitHub Actions on AKS?
+
+Self-hosting GitHub Actions runners on AKS provides organizations with greater control, scalability, and security over their CI/CD infrastructure. Instead of relying on GitHub-hosted runners, which are shared and ephemeral, self-hosted runners offer:
+
+* **Custom environments**: Tailor runners to match specific build, test, or deployment requirements.
+* **Performance gains**: Leverage persistent storage and caching to reduce build times and improve reliability.
+* **Cost efficiency at scale**: Dynamically scale runners within your own infrastructure, optimizing for frequent or long-running workflows.
+* **Enhanced security & isolation**: Maintain full control over infrastructure and data, which is ideal for regulated industries or sensitive workloads.
+
+### Common use cases
+
+* **Enterprise CI/CD pipelines**: For teams needing consistent, secure, and scalable build environments.
+* **Large monorepos or ML pipelines**: Where caching or artifact persistence is critical.
+* **Performance optimization**: Using Azure Files premium SMB shares to reduce metadata latency and increase IOPS.
+
 ## Prerequisites
 
 * This guide assumes a basic understanding of [core Kubernetes concepts][core-kubernetes-concepts].

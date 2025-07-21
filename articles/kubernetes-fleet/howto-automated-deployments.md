@@ -5,8 +5,9 @@ author: sjwaight
 ms.author: simonwaight
 ms.topic: how-to
 ms.custom: build-2025
-ms.date: 06/12/2025
+ms.date: 06/16/2025
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a DevOps engineer, I want to configure automated deployments using a multi-cluster strategy, so that I can build and deploy applications across multiple Kubernetes clusters while maintaining security and resource optimization.
 ---
 
 # Use Azure Kubernetes Fleet Manager Automated Deployments to drive multi-cluster resource placement (Preview)
@@ -275,6 +276,7 @@ During preview, to configure placement of your staged workload on to member clus
 
  * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
  * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
+ * [Automated Deployments FAQs](./faq.md#automated-deployments-faqs).
 
 [azure-portal]: https://portal.azure.com
 [portal-fleets]: https://portal.azure.com/#browse/Microsoft.ContainerService%2Ffleets

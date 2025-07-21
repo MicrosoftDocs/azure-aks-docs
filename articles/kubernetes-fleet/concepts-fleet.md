@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: "As a cloud administrator, I want to manage multiple AKS clusters as a single entity using a fleet resource, so that I can orchestrate updates and maintain consistency across clusters."
 ---
 
 # Azure Kubernetes Fleet Manager and member clusters
@@ -43,7 +44,7 @@ Member clusters support the specification of taints, which apply to the `MemberC
 * `value`: The value of the taint.
 * `effect`: The effect of the taint, such as `NoSchedule`.
 
-Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introducing-clusterresourceplacement) to the `MemberCluster`.
+Once a `MemberCluster` is tainted, it lets the [scheduler](./concepts-scheduler-scheduling-framework.md) know that the cluster shouldn't receive resources as part of the [resource propagation](./concepts-resource-propagation.md) from the hub cluster. The `NoSchedule` effect is a signal to the scheduler to avoid scheduling resources from a [`ClusterResourcePlacement`](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api) to the `MemberCluster`.
 
 For more information, see the [KubeFleet components documentation](https://kubefleet.dev/docs/concepts/components/).
 

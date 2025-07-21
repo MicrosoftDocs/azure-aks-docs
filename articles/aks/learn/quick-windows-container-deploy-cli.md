@@ -6,6 +6,7 @@ ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud developer, I want to deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using the command line, so that I can efficiently manage containerized applications in a scalable environment.
 ---
 
 # Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using Azure CLI
@@ -257,7 +258,7 @@ spec:
     app: sample
 ```
 
-For a breakdown of YAML manifest files, see [Deployments and YAML manifests](../concepts-clusters-workloads.md#deployments-and-yaml-manifests).
+For a breakdown of YAML manifest files, see [Deployments and YAML manifests](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
 
 If you create and save the YAML file locally, then you can upload the manifest file to your default directory in CloudShell by selecting the **Upload/Download files** button and selecting the file from your local file system.
 

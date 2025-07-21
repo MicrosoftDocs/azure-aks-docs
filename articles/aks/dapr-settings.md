@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.custom: build-2023, devx-track-azurecli, linux-related-content
 ms.subservice: aks-developer
 ms.date: 12/06/2024
+# Customer intent: "As a Kubernetes developer, I want to configure the Dapr extension for Azure Kubernetes Service, so that I can enable high availability, manage mTLS certificates, and customize settings for better service communication and security."
 ---
 
 # Configure the Dapr extension for your Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes project

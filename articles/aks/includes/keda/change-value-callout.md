@@ -3,7 +3,8 @@ author: qpetraroia, wangamanda
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 06/04/2025
-ms.author: qpetraroia, wangamanda
+ms.author: qpetraroia
+# Customer intent: "As a Kubernetes operator, I want to be informed about the limitations of the KEDA add-on for AKS regarding CPU requests and limits, so that I can effectively manage resource allocation without running into issues."
 ---
 
 > [!IMPORTANT]

@@ -6,6 +6,7 @@ ms.custom: devx-track-azurecli, devx-track-bicepW
 ms.date: 02/07/2025
 author: sabbour
 ms.author: asabbour
+# Customer intent: As a developer, I want to automate the deployment of my application to an Azure Kubernetes Service cluster from a code repository, so that I can streamline my CI/CD process and improve the efficiency of my deployment workflows.
 ---
 
 # Quickstart: Deploy an application to a new Azure Kubernetes Service (AKS) Automatic cluster (preview) from a code repository

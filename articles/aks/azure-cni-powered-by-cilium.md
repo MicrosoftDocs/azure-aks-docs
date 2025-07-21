@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli, build-2023
 ms.date: 04/06/2025
+# Customer intent: As a cloud architect, I want to configure an AKS cluster with Azure CNI Powered by Cilium, so that I can achieve high-performance networking and enhanced security for my containerized applications.
 ---
 
 # Configure Azure CNI Powered by Cilium in Azure Kubernetes Service (AKS)

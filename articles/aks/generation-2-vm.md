@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service, devx-track-azurecli, linux-related-content
 ms.date: 05/03/2024
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: As a cloud engineer, I want to create and manage node pools using Generation 2 virtual machines in Azure Kubernetes Service, so that I can leverage advanced features and improve resource efficiency in my deployments.
 ---
 
 # Use generation 2 virtual machines in Azure Kubernetes Service (AKS)

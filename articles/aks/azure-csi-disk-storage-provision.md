@@ -8,6 +8,7 @@ ms.subservice: aks-storage
 ms.date: 06/28/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to create and manage persistent volumes using Azure Disks in AKS, so that I can efficiently provide storage for my applications with necessary performance and redundancy features.
 ---
 
 # Create and use a volume with Azure Disks in Azure Kubernetes Service (AKS)

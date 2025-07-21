@@ -6,7 +6,8 @@ ms.custom: devx-track-azurecli
 ms.date: 06/13/2024
 ms.author: schaffererin
 author: schaffererin
-#Customer intent: As a cluster operator or developer, how to scale my cluster based on workload requirements and right size my nodes automatically
+
+# Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
 ---
 
 # Node autoprovisioning (preview)
@@ -16,7 +17,7 @@ When you deploy workloads onto AKS, you need to make a decision about the node p
 
 Node autoprovisioning (NAP) (preview) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
+NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter-provider-azure) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
 
 
 > [!IMPORTANT]
@@ -305,7 +306,7 @@ Within the node class definition, set the imageVersion to one of the published r
 The imageVersion is the date portion on the Node Image as only Ubuntu 22.04 is supported, for example, "AKSUbuntu-2204-202311.07.0" would be "202311.07.0"
 
 ```yaml
-apiVersion: karpenter.azure.com/v1alpha2
+apiVersion: karpenter.azure.com/v1beta1
 kind: AKSNodeClass
 metadata:
   annotations:

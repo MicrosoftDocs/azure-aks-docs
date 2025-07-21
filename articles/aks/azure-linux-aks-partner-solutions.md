@@ -8,6 +8,7 @@ ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.custom: linux-related-content
 ms.date: 12/02/2024
+# Customer intent: As a cloud engineer, I want to explore partner solutions for managing and monitoring my Azure Linux AKS environment, so that I can optimize deployment, enhance security, and improve observability of my applications.
 ---
 
 # Azure Linux AKS Container Host partner solutions
@@ -21,7 +22,7 @@ The third party partners featured in this article have introduction guides to he
 | **DevOps** | • [Advantech](#advantech) <br> • [Akuity](#akuity) <br> • [Anchore](#anchore) <br> • [Hashicorp](#hashicorp) <br> • [Kong](#kong) <br> • [Kubecost](#kubecost) <br> • [NetApp](#netapp) <br> • [Sysdig](#sysdig) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Networking** | • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Solo.io](#soloio) <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) |
 | **Observability** | • [Buoyant](#buoyant) <br> • [Dynatrace](#dynatrace) <br> • [Isovalent](#isovalent) <br> • [Kubecost](#kubecost) <br> • [New Relic](#new-relic) <br> • [Solo.io](#soloio) <br> • [Tigera](#tigera-inc) <br> • [VictoriaMetrics](#victoriametrics) |
-| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
+| **Security** | • [Anchore](#anchore) <br> • [Buoyant](#buoyant) <br> • [CrowdStrike](#crowdstrike) <br> • [Isovalent](#isovalent) <br> • [Kong](#kong) <br> • [Palo Alto Networks](#palo-alto-networks) <br> • [Qualys](#qualys) <br> • [Solo.io](#soloio) <br> • [Sysdig](#sysdig)  <br> • [Tetrate](#tetrate) <br> • [Tigera](#tigera-inc) <br> • [Wiz](#wiz) |
 | **Storage** | • [Catalogic](#catalogic) <br> • [Veeam](#veeam) <br> • [VictoriaMetrics](#victoriametrics) |
 | **Config management** | • [Corent](#corent) <br> • [Sysdig](#sysdig) |
 | **Migration** | • [Catalogic](#catalogic) |
@@ -328,6 +329,28 @@ For more information, see [New Relic Solutions](https://newrelic.com/solutions/p
 
 Ensure the integrity and confidentiality of applications and foster trust and compliance across your infrastructure.
 
+### CrowdStrike
+
+:::image type="icon" source="./media/azure-linux-aks-partner-solutions/crowdstrike-logo.png":::
+
+| Solution | Categories |
+|----------|------------|
+| Falcon   | Security   |
+
+Our solution is designed to be easy to use, with a simple and intuitive interface that makes it easy to manage your applications. Our software solution is also highly scalable, allowing you to easily add new resources as your business grows.
+
+<details> <summary> See more </summary><br>
+
+Finally, our software solution is highly secure, with built-in security features that protect your applications from unauthorized access. With Contoso's software solution, you can rest assured that your applications are always safe and secure."
+
+Powered by the CrowdStrike Security Cloud and world-class AI, the CrowdStrike Falcon® platform leverages real-time indicators of attack, threat intelligence, evolving adversary tradecraft and enriched telemetry from across the enterprise to deliver hyper-accurate detections, automated protection and remediation, elite threat hunting and prioritized observability of vulnerabilities.
+
+Purpose-built in the cloud with a single lightweight-agent architecture, the Falcon platform delivers rapid and scalable deployment, superior protection and performance, reduced complexity and immediate time-to-value.
+
+</details>
+
+For more information, see [CrowdStrike](https://crowdstrike.com).
+
 ### Palo Alto Networks
 
 :::image type="icon" source="./media/azure-linux-aks-partner-solutions/palo-alto-networks.png":::
@@ -450,7 +473,7 @@ Automate and standardize the system settings across your environments to enhance
 
 Corent MaaS provides scanning to identify workloads that can be containerized, and automatically containerizes on AKS.
 
-For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html) and [Corent on Azure Marketplace](https://azuremarketplace.microsoft.com/marketplace/apps/corent-technology-pvt.surpaas_maas?tab=Overview).
+For more information, see [Corent Solutions](https://www.corenttech.com/SurPaaS_MaaS_Product.html).
 
 ## Migration
 

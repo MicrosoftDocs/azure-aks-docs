@@ -7,6 +7,7 @@ author: fossygirl
 ms.author: carols
 ms.custom: 'aks-related-content, stateful-workloads'
 zone_pivot_groups: azure-cli-or-terraform
+# Customer intent: As a cloud architect, I want to establish the infrastructure needed to run a MongoDB cluster on Azure Kubernetes Service (AKS) so that I can ensure scalable, reliable data management in containerized applications.
 ---
 
 # Create the infrastructure for running a MongoDB cluster on Azure Kubernetes Service (AKS)
@@ -316,6 +317,9 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
     ```
 :::zone-end
 
+> [!NOTE]
+> In AKS, the keepalive time (the duration of inactivity after which the first keepalive probe is sent) default duration is [7200 seconds or 2 hours by default](/azure/aks/improve-network-fault-tolerance-in-aks-using-tcp-keepalive#configuring-tcp-keepalive-on-aks). For MongoDB, you will generally experience better results with a shorter keepalive value, on the order of [120 seconds or 2 minutes](https://www.mongodb.com/docs/manual/faq/diagnostics/#does-tcp-keepalive-time-affect-mongodb-deployments-).
+
 ## Connect to the AKS cluster
 
 * Configure `kubectl` to connect to your AKS cluster using the [`az aks get-credentials`](/cli/azure/aks#az-aks-get-credentials) command.
@@ -323,7 +327,6 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
     ```azurecli-interactive
     az aks get-credentials --resource-group $MY_RESOURCE_GROUP_NAME --name $MY_CLUSTER_NAME --overwrite-existing --output table
     ```
-
 
 
 ## Next step

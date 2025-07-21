@@ -8,6 +8,7 @@ ms.author: davidsmatlak
 
 
 #Customer intent: As a cluster operator or developer, I want to understand what AKS components I need to manage, what components are managed by Microsoft (including security patches), and networking and preview features.
+# Customer intent: As a cluster operator, I want to understand the support policies and shared responsibilities for Azure Kubernetes Service (AKS), so that I can effectively manage my clusters and ensure compliance with Microsoft’s guidelines while leveraging the right features for my workloads.
 ---
 
 # Support policies for Azure Kubernetes Service

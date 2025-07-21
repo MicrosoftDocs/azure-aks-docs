@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: fasttrack-edit
+# Customer intent: "As a Kubernetes administrator, I want to implement Azure CNI Overlay networking in my AKS cluster, so that I can efficiently manage IP addresses while scaling to a larger number of pods and maintain optimal intra-cluster communication performance."
 ---
 
 # Azure Container Networking Interface (CNI) Overlay networking

@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to
 ms.date: 01/30/2025
+# Customer intent: "As a cloud engineer managing Azure Kubernetes clusters, I want to monitor idle costs and resource utilization, so that I can optimize cluster performance and reduce unnecessary expenses."
 ---
 
 # Understand Azure Kubernetes Service (AKS) idle costs

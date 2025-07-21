@@ -8,6 +8,7 @@ ms.topic: concept-article
 ms.date: 10/10/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
+# Customer intent: As a Kubernetes administrator, I want to install the Azure App Configuration extension on my AKS cluster, so that I can centrally manage application settings and feature flags for my applications running in Kubernetes.
 ---
 
 # Install Azure App Configuration AKS extension

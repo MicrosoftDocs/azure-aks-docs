@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service, devx-track-azurecli
 ms.date: 04/16/2024
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to deploy a fully managed resource group with node resource group lockdown, so that I can prevent unauthorized changes to cluster resources and ensure stable operations within my AKS environment.
 ---
 
 # Deploy a fully managed resource group using node resource group lockdown (preview) in Azure Kubernetes Service (AKS)

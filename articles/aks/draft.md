@@ -7,6 +7,7 @@ ms.topic: concept-article
 ms.date: 06/22/2023
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, build-spring-2022
+# Customer intent: "As a developer using Azure Kubernetes Service, I want to automate the creation of Dockerfiles and deployment workflows with Draft, so that I can streamline my application development and deployment processes."
 ---
 
 # Draft for Azure Kubernetes Service (AKS) (preview)

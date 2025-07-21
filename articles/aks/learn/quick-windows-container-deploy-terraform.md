@@ -11,6 +11,7 @@ content_well_notification:
   - AI-contribution
 ai-usage: ai-assisted
 #customer intent: As a Terraform user, I want to see how to create an Azure Kubernetes cluster with a Windows node pool.
+# Customer intent: As a Terraform user, I want to create a Windows-based Azure Kubernetes Service (AKS) cluster, so that I can efficiently manage and deploy containerized applications with Windows support.
 ---
 
 # Quickstart: Create a Windows-based Azure Kubernetes Service (AKS) cluster using Terraform

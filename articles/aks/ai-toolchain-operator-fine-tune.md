@@ -6,6 +6,7 @@ ms.author: schaffererin
 author: sachidesai
 ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
+# Customer intent: "As a data scientist, I want to fine-tune and deploy a language model on a Kubernetes cluster, so that I can enhance its performance and utilize it for inferencing tasks effectively."
 ---
 
 # Fine-tune and deploy an AI model for inferencing on Azure Kubernetes Service (AKS) with the AI toolchain operator (Preview)
@@ -82,7 +83,7 @@ tuning:
       imagePushSecret: myregistrysecret
 ```
 
-This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/Azure/kaito/tree/main/docs/tuning) specification to adjust the input to pull an image from your ACR.
+This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/kaito-project/kaito/tree/main) specification to adjust the input to pull an image from your ACR.
 
 > [!NOTE]
 > The choice of GPU SKU is critical since model fine-tuning normally requires more GPU memory compared to model inference. To avoid GPU Out-Of-Memory errors, we recommend using NVIDIA A100 or higher tier GPUs.

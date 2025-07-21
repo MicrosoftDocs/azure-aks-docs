@@ -8,6 +8,7 @@ ms.date: 10/15/2024
 ms.service: azure-kubernetes-service
 ms.subservice: aks-developer
 ms.custom: ignite-fall-2022, references_regions
+# Customer intent: As a cloud architect, I want to deploy Kubernetes applications from an online marketplace, so that I can efficiently manage resources and utilize pre-built solutions for my projects.
 ---
 
 # Deploy and manage a Kubernetes application from Azure Marketplace

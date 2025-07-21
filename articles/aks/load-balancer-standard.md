@@ -9,6 +9,7 @@ ms.date: 01/23/2024
 ms.author: allensu
 author: asudbring
 #Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an Azure Load Balancer with a Standard SKU.
+# Customer intent: "As a Kubernetes administrator, I want to configure a public load balancer with a Standard SKU in AKS, so that I can expose services for reliable scalability and management of inbound and outbound network traffic."
 ---
 
 # Use a public standard load balancer in Azure Kubernetes Service (AKS)
@@ -629,7 +630,7 @@ This design means SLB infers node health from whichever **application pod** answ
 
 The **shared probe mode** (preview) solves these problems by moving to a *single HTTP probe* for all `externalTrafficPolicy: Cluster` Services:
 
-* SLB probes `http://<node‑ip>:10256/healthz`, the standard `kube‑proxy` health endpoint.
+* SLB probes `http://<node‑ip>:10356/healthz`, the standard `kube‑proxy` health endpoint.
 * A lightweight sidecar runs next to `kube‑proxy` to relay the probe and handle PROXY protocol when Private Link Service is enabled.
 
 The following table outlines **key benefits** of using shared probe mode:
@@ -713,6 +714,9 @@ For example, making blue/green deployments to migrate clusters is a common pract
 
 For more considerations on how to migrate clusters, visit [our documentation on migration considerations](aks-migration.md).
 
+>[!Important]
+>On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using the Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. For more information on how to upgrade your Basic load balancer on AKS, see our [documentation on Basic load balancer migration][upgrade-blb-on-aks] .
+
 ## Limitations
 
 The following limitations apply when you create and manage AKS clusters that support a load balancer with the *Standard* SKU:
@@ -776,6 +780,7 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [az-extension-add]: /cli/azure/extension#az_extension_add
 [az-extension-update]: /cli/azure/extension#az_extension_update
 [use-multiple-node-pools]: use-multiple-node-pools.md
+[upgrade-blb-on-aks]: upgrade-basic-load-balancer-on-aks.md 
 [troubleshoot-snat]: #troubleshooting-snat
 [service-tags]: /azure/virtual-network/network-security-groups-overview#service-tags
 [maxcount]: ./cluster-autoscaler.md#enable-the-cluster-autoscaler-on-an-existing-cluster

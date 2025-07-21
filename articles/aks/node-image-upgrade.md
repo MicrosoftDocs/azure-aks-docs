@@ -8,6 +8,7 @@ ms.service: azure-kubernetes-service
 ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to upgrade node images in my AKS cluster so that I can leverage the latest features and ensure optimal performance and security for my containerized applications.
 ---
 
 # Upgrade Azure Kubernetes Service (AKS) node images

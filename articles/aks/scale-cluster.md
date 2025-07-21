@@ -6,6 +6,7 @@ ms.date: 01/22/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to manually scale the nodes in my AKS cluster, so that I can optimize resource allocation based on my application's performance needs.
 ---
 
 # Manually scale the node count in an Azure Kubernetes Service (AKS) cluster

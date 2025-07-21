@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.date: 05/30/2025
 ms.author: yuewu2
+# Customer intent: As a Kubernetes administrator, I want to restrict pod access to the Azure Instance Metadata Service (IMDS) endpoint, so that I can enhance the security of my AKS cluster and prevent sensitive information leaks.
 ---
 
 # Block pod access to the Azure Instance Metadata Service (IMDS) endpoint (preview)
