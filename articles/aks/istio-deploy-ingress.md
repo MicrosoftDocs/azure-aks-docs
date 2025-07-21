@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 author: shashankbarsin
 ms.date: 08/07/2023
 ms.author: shasb
+# Customer intent: "As a Kubernetes administrator, I want to deploy external and internal ingress gateways for the Istio service mesh on my cluster, so that I can efficiently manage application traffic routing both inside and outside my Kubernetes environment."
 ---
 
 # Deploy ingress gateways for Istio service mesh add-on for Azure Kubernetes Service
