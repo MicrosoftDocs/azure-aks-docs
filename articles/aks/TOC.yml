@@ -838,7 +838,9 @@
             - name: Overview
               href: ray-overview.md
             - name: Configure and deploy a Ray cluster
-              href: deploy-ray.md 
+              href: deploy-ray.md
+            - name: Configure and deploy a Ray cluster for tuning
+              href: deploy-ray-tuning.md
         - name: AI toolchain operator (KAITO)
           items:
             - name: Deploy an AI model
