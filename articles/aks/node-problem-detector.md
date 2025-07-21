@@ -20,8 +20,8 @@ ms.author: davidsmatlak
 
 Node conditions indicate a permanent problem that makes the node unavailable. AKS uses the following node conditions from NPD to expose permanent problems on the node. NPD also emits corresponding Kubernetes events.
 
-|Problem Daemon type| NodeCondition | Reason | Compute type | 
-|---|---|---|--|
+|Problem Daemon type|NodeCondition| Reason|Compute type| 
+|---|---|---|---|
 |CustomPluginMonitor| FilesystemCorruptionProblem | FilesystemCorruptionDetected | General purpose |
 |CustomPluginMonitor| KubeletProblem | KubeletIsDown |  General purpose |
 |CustomPluginMonitor| ContainerRuntimeProblem | ContainerRuntimeIsDown |  General purpose |
@@ -45,7 +45,7 @@ Node conditions indicate a permanent problem that makes the node unavailable. AK
 NPD emits events with relevant information to help you diagnose underlying issues.
 
 |Problem Daemon type| Reason  |  Frequency  |  Description | Action |
-|---|---| ---| --| --|
+|---|---|---|---|---|
 |CustomPluginMonitor|EgressBlocked|30 min| This event checks for connectivity to external [endpoints](#egressblocked) | Check if a firewall or NSG blocking the connectivity to the endpoint getting flagged|
 |CustomPluginMonitor|FilesystemCorruptionDetected|5min| This checks for filesystem corruption surfaced by docker | |
 |CustomPluginMonitor|KubeletIsDown|30s| This checks if kubelet service is running and healthy | |
@@ -172,4 +172,3 @@ problem_gauge{reason="VMEventScheduled",type="VMEventScheduled"} 0
 ## Next steps
 
 For more information on NPD, see [kubernetes/node-problem-detector](https://github.com/kubernetes/node-problem-detector).
-
