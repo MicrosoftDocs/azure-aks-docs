@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: fasttrack-edit
+# Customer intent: As a cloud architect, I want to evaluate CNI networking options in Azure Kubernetes Service, so that I can choose the most suitable networking model for my cluster's scaling, connectivity, and resource management needs.
 ---
 
 # Azure Kubernetes Service (AKS) CNI networking overview

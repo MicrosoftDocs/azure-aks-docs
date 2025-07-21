@@ -8,6 +8,7 @@ ms.date: 04/25/2025
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to implement and manage Azure Files using the CSI driver in AKS, so that I can efficiently handle persistent storage requirements for my containerized applications."
 ---
 
 # Use Azure Files Container Storage Interface (CSI) driver in Azure Kubernetes Service (AKS)

@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.date: 03/28/2024
 ms.author: kochhars
 author: sanyakochhar
+# Customer intent: "As a Kubernetes administrator, I want to uninstall the Istio-based service mesh add-on from my AKS cluster, so that I can effectively remove its control plane and related resources when transitioning to a different service mesh or simplifying my architecture."
 ---
 
 # Uninstall Istio-based service mesh add-on for Azure Kubernetes Service

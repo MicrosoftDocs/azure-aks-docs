@@ -7,6 +7,7 @@ ms.date: 12/19/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud developer, I want to set up the necessary infrastructure for deploying Apache Airflow on Kubernetes, so that I can efficiently manage and orchestrate workflows within my applications.
 ---
 
 # Create the infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)

@@ -4,6 +4,7 @@ ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 02/09/2024
 ms.author: haiche
+# Customer intent: As a developer, I want to create a single Azure SQL Database with the correct configurations, so that my application can connect to it without encountering issues related to network access or server idle states.
 ---
 
 To create an Azure SQL Database single database for use with your app, follow the steps in [Quickstart: Create a single database in Azure SQL Database](/azure/azure-sql/database/single-database-create-quickstart). Carefully note the following differences:

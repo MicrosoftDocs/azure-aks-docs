@@ -6,9 +6,7 @@ ms.custom: build-2024, biannual
 ms.date: 06/13/2025
 author: sabbour
 ms.author: asabbour
-
 #Customer intent: As a cluster administrator or developer, I want to simplify AKS cluster management and deployment by using preconfigured settings, built-in best practices, and automated features for production-ready applications.
-
 ---
 
 # What is Azure Kubernetes Service (AKS) Automatic (preview)?

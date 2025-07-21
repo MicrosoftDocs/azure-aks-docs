@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.subservice: aks-monitoring
 ms.date: 03/10/2023
 ms.author: rongzhang
+# Customer intent: "As a DevOps engineer managing AKS clusters, I want to access diagnostic tools for troubleshooting, so that I can quickly identify and resolve issues to maintain high availability and performance of mission-critical workloads."
 ---
 
 # Azure Kubernetes Service Diagnose and Solve Problems overview

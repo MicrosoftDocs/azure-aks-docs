@@ -8,6 +8,7 @@ ms.topic: how-to
 ms.date: 12/24/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-wls, devx-track-javaee-wls-aks, devx-track-extended-java
+# Customer intent: As a developer, I want to deploy a Java application using WebLogic Server on Azure Kubernetes Service, so that I can take advantage of containerization and cloud scalability for my application.
 ---
 
 # Deploy a Java application with WebLogic Server on an Azure Kubernetes Service (AKS) cluster

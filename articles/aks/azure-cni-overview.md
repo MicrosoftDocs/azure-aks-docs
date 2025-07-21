@@ -9,6 +9,7 @@ ms.topic: concept-article
 ms.date: 02/29/2024
 
 #CustomerIntent: As a network administrator, I want learn about Azure CNI networking so that I can deploy Azure CNI networking in an AKS cluster.
+# Customer intent: As a network administrator, I want to understand the requirements and limitations of Azure CNI networking in AKS, so that I can effectively plan and deploy networking configurations for my Kubernetes clusters.
 ---
 
 # Azure CNI networking in Azure Kubernetes Service (AKS) overview

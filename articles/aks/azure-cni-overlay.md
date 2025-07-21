@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
 ms.date: 08/16/2024
+# Customer intent: "As a Kubernetes administrator, I want to understand how to configure Azure CNI Overlay networking in AKS so that I can efficiently manage IP address allocation and scale my containerized applications without running into address exhaustion issues."
 ---
 
 # Configure Azure CNI Overlay networking in Azure Kubernetes Service (AKS)

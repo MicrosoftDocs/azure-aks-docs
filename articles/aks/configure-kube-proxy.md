@@ -9,6 +9,7 @@ ms.date: 09/25/2023
 ms.author: allensu
 author: asudbring
 #Customer intent: As a cluster operator, I want to utilize a different kube-proxy configuration.
+# Customer intent: "As a cluster operator, I want to configure kube-proxy settings in my AKS environment so that I can optimize load balancing for my Kubernetes services."
 ---
 
 # Configure `kube-proxy` in Azure Kubernetes Service (AKS) (Preview)

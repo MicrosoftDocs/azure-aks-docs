@@ -6,8 +6,9 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to
-ms.date: 06/10/2025
 ms.custom: quarterly
+ms.date: 06/10/2025
+# Customer intent: As a cloud operations manager, I want to enable cost analysis on my AKS cluster so that I can gain detailed insights into resource allocation and optimize my Kubernetes spending effectively.
 ---
 
 # Azure Kubernetes Service (AKS) cost analysis

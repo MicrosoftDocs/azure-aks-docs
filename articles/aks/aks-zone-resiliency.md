@@ -7,6 +7,7 @@ ms.date: 06/05/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a cloud architect, I want to implement zone resiliency in my Kubernetes clusters, so that my applications remain available and performance is maintained during infrastructure failures."
 ---
 
 # Zone resiliency considerations for Azure Kubernetes Service (AKS)
