@@ -658,7 +658,7 @@ For feature reqeusts, file a feature request issue through the [AKS Karpenter Pr
 [auto-mode]: /azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile
 [node-os-upgrade-channel]: /azure/aks/auto-upgrade-node-os-image#available-node-os-upgrade-channels
 [azure-support]: /azure/azure-portal/supportability/how-to-create-azure-support-request
-[azure-reserved-instances]: azure.microsoft.com/pricing/reserved-vm-instances/
+[azure-reserved-instances]: https://azure.microsoft.com/pricing/reserved-vm-instances/
 [vm-overview]: /azure/virtual-machines/sizes/overview
 [network-security-group]: /azure/virtual-network/network-security-groups-overview
 
