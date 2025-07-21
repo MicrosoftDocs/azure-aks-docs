@@ -7,6 +7,7 @@ ms.author: yuewu2
 ms.topic: concept-article
 ms.date: 07/08/2025
 
+# Customer intent: "As a Kubernetes administrator, I want to configure a network isolated AKS cluster, so that I can enhance security by eliminating egress traffic and reducing risks of data exfiltration while managing my cluster's dependencies privately."
 ---
 
 # Network isolated Azure Kubernetes Service (AKS) clusters 
@@ -58,7 +59,7 @@ You also need to ensure the egress path for your AKS cluster are controlled and 
 
 ## Limitations
 
-* `SecurityPatch` channel of auto-upgrade for node OS images is not yet supported, `Unmanaged` channel is not supported.
+*  `Unmanaged` channel is not supported.
 * Windows node pools are not yet supported.
 * kubenet networking is not supported.
 

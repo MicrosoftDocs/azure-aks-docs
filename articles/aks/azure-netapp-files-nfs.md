@@ -8,6 +8,7 @@ ms.date: 05/08/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to provision Azure NetApp Files NFS volumes for my applications, so that I can efficiently manage storage for containerized workloads in Azure Kubernetes Service."
 ---
 
 # Provision Azure NetApp Files NFS volumes for Azure Kubernetes Service

@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli
 ms.date: 06/12/2025
 author: davidsmatlak
 ms.author: davidsmatlak
+# Customer intent: "As a DevOps engineer, I want to enable Group Managed Service Accounts for my Windows Server nodes in Azure Kubernetes Service, so that I can secure and manage access to my services effectively."
 ---
 
 # Enable Group Managed Service Accounts (GMSA) for your Windows Server nodes on your Azure Kubernetes Service (AKS) cluster

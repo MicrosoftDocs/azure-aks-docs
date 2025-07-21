@@ -7,6 +7,7 @@ ms.author: kaarthis
 author: kaarthis
 ms.subservice: aks-upgrade
 ms.date: 06/27/2025
+# Customer intent: As a cloud administrator, I want to select the appropriate node OS auto-upgrade channel for my Kubernetes cluster, so that I can ensure timely security updates and manage maintenance effectively while minimizing disruptions.
 ---
 
 # Autoupgrade node OS images

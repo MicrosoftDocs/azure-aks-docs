@@ -6,6 +6,7 @@ ms.date: 05/02/2024
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-storage
+# Customer intent: As a cloud architect, I want to understand storage options in Azure Kubernetes Service so that I can effectively manage data persistence and access for my applications running in the cluster.
 ---
 
 # Storage options for applications in Azure Kubernetes Service (AKS)

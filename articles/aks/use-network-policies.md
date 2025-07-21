@@ -6,7 +6,11 @@ author: schaffererin
 ms.author: schaffererin
 ms.date: 06/10/2025
 ms.topic: how-to
-ms.custom: devx-track-azurecli, build-2025, biannual
+ms.custom:
+  - devx-track-azurecli
+  - build-2025
+  - biannual
+# Customer intent: As a DevOps engineer, I want to implement network policies in Azure Kubernetes Service, so that I can control and secure pod traffic by restricting communication according to the principle of least privilege.
 ---
 
 # Secure traffic between pods by using network policies in AKS

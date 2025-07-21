@@ -7,6 +7,7 @@ ms.date: 05/21/2024
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli-portal
+# Customer intent: As a DevOps engineer, I want to create and manage an Azure Kubernetes Service (AKS) Automatic cluster, so that I can efficiently deploy and operate containerized applications with best practice configurations automatically.
 ---
 
 # Quickstart: Create an Azure Kubernetes Service (AKS) Automatic cluster (preview)

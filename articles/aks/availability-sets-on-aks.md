@@ -5,6 +5,7 @@ ms.topic: overview
 ms.date: 06/30/2025
 ms.author: wilsondarko
 author: wdarko1
+# Customer intent: As a Kubernetes administrator, I want to migrate my workloads from Virtual Machine Availability Sets to Virtual Machine Node Pools, so that I can ensure ongoing support and take advantage of enhanced management features before the deprecation deadline.
 ---
 
 #  Migrate from Availability Sets in Azure Kubernetes Service (AKS)
