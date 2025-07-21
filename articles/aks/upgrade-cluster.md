@@ -8,6 +8,7 @@ ms.date: 07/09/2025
 author: kaarthis
 ms.author: kaarthis
 ms.custom: scenarios
+# Customer intent: "As a cloud administrator, I want to evaluate various upgrade options for Azure Kubernetes Service clusters so that I can implement a strategy that minimizes disruptions and ensures my workloads remain updated and compliant with best practices."
 ---
 
 # Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters

@@ -8,6 +8,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: template-how-to
+# Customer intent: "As a Kubernetes administrator, I want to apply security policies to my AKS clusters using Azure Policy, so that I can enforce organizational standards and ensure compliance across my container deployments."
 ---
 
 # Secure your Azure Kubernetes Service (AKS) clusters with Azure Policy

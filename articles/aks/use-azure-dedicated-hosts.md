@@ -7,6 +7,7 @@ ms.date: 03/10/2023
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As a cloud architect, I want to configure Azure Dedicated Hosts for my AKS cluster, so that I can ensure hardware isolation and control maintenance events for sensitive applications.
 ---
 
 # Add Azure Dedicated Host to an Azure Kubernetes Service (AKS) cluster

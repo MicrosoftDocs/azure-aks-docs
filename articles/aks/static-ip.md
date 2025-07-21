@@ -9,6 +9,7 @@ ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 06/03/2024
 #Customer intent: As a cluster operator or developer, I want to create and manage static IP address resources in Azure that I can use beyond the lifecycle of an individual Kubernetes service deployed in an AKS cluster.
+# Customer intent: As a Kubernetes cluster operator, I want to create and associate a static public IP address with a load balancer in Azure Kubernetes Service, so that I can retain control over IP assignments across service deployments beyond the lifecycle of any individual service.
 ---
 
 # Use a static public IP address and DNS label with the Azure Kubernetes Service (AKS) load balancer

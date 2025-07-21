@@ -8,6 +8,7 @@ ms.date: 09/12/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud operations engineer, I want to upgrade the OS version for Windows workloads on Azure Kubernetes Service, so that I can ensure my applications use the latest features and security enhancements while maintaining compatibility and performance."
 ---
 
 # Upgrade the OS version for your Azure Kubernetes Service (AKS) Windows workloads
