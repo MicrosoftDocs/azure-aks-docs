@@ -175,7 +175,7 @@ For more information on managed identities, see [Use managed identities](use-man
             - containerPort: 80
           nodeSelector:
             kubernetes.io/role: agent
-            beta.kubernetes.io/os: linux
+            kubernetes.io/os: linux
             type: virtual-kubelet
           tolerations:
           - key: virtual-kubelet.io/provider

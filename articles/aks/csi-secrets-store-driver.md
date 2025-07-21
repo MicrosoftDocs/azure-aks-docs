@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 06/10/2025
 ms.custom: template-how-to, devx-track-azurecli, biannual
+# Customer intent: As a Kubernetes administrator, I want to integrate Azure Key Vault with my AKS cluster using the Secrets Store CSI Driver, so that I can securely manage and access secrets, keys, and certificates within my applications.
 ---
 
 # Use the Azure Key Vault provider for Secrets Store CSI Driver in an Azure Kubernetes Service (AKS) cluster

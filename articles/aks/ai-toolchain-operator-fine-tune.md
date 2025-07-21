@@ -6,6 +6,7 @@ ms.author: schaffererin
 author: sachidesai
 ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
+# Customer intent: "As a data scientist, I want to fine-tune and deploy a language model on a Kubernetes cluster, so that I can enhance its performance and utilize it for inferencing tasks effectively."
 ---
 
 # Fine-tune and deploy an AI model for inferencing on Azure Kubernetes Service (AKS) with the AI toolchain operator (Preview)

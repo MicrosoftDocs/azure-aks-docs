@@ -6,6 +6,7 @@ ms.date: 11/21/2023
 ms.author: schaffererin
 author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: As a cluster operator, I want to implement best practices for managing applications on Kubernetes, so that I can ensure security, performance, and reliability in our deployments.
 ---
 
 # Cluster operator and developer best practices to build and manage applications on Azure Kubernetes Service (AKS)

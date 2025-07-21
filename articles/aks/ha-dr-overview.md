@@ -6,6 +6,7 @@ ms.author: schaffererin
 ms.topic: concept-article
 ms.service: azure-kubernetes-service
 ms.date: 01/30/2024
+# Customer intent: "As a DevOps engineer managing applications on Azure Kubernetes Service, I want to implement high availability and disaster recovery solutions, so that I can ensure business continuity and minimize downtime during disruptions."
 ---
 
 # High availability and disaster recovery overview for Azure Kubernetes Service (AKS)

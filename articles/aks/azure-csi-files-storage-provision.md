@@ -9,6 +9,7 @@ ms.date: 4/25/2025
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to create and manage persistent volumes using Azure Files, so that I can enable concurrent access for multiple pods within an Azure Kubernetes Service cluster.
 ---
 
 # Create and use a volume with Azure Files in Azure Kubernetes Service (AKS)

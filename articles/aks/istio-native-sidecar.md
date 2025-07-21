@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli
 ms.date: 05/07/2024
 ms.author: fuyuanbie
 author: biefy
+# Customer intent: "As a Kubernetes user managing an Istio-based service mesh, I want to enable native sidecar mode on AKS, so that I can improve the efficiency, reliability, and simplicity of my application deployments."
 ---
 
 # Enable native sidecar mode for Istio-based service mesh add-on in Azure Kubernetes Service (AKS) (preview)

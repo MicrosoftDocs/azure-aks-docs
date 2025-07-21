@@ -8,6 +8,7 @@ ms.custom: mvc, mode-ui
 ms.author: schaffererin
 author: schaffererin
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run and monitor applications using the managed Kubernetes service in Azure.
+# Customer intent: As a developer or cluster operator, I want to quickly deploy a Kubernetes cluster and run a sample application, so that I can evaluate how to manage applications using a managed Kubernetes service.
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure portal

@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 05/10/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to set up Container Network Observability for my Azure Kubernetes Service cluster using managed Prometheus and Grafana, so that I can monitor and visualize network traffic and application health effectively.
 ---
 
 # Set up Container Network Observability for Azure Kubernetes Service (AKS) - Azure managed Prometheus and Grafana
