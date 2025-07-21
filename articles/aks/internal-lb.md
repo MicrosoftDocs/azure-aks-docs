@@ -10,6 +10,7 @@ ms.date: 03/25/2025
 
 
 #Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an internal Azure load balancer for enhanced security and without an external endpoint.
+# Customer intent: As a cluster operator or developer, I want to configure an internal load balancer within my Azure Kubernetes Service environment, so that I can control access to my applications and improve security by ensuring they are exposed only on a private network.
 ---
 
 # Use an internal load balancer with Azure Kubernetes Service (AKS)

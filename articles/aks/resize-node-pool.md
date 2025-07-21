@@ -9,6 +9,7 @@ ms.author: schaffererin
 
 ms.subservice: aks-nodes
 #Customer intent: As a cluster operator, I want to resize my node pools so that I can run more or larger workloads.
+# Customer intent: As a Kubernetes cluster operator, I want to resize my node pools by cordoning and draining, so that I can efficiently manage resources and support increasing workloads.
 ---
 
 # Resize node pools in Azure Kubernetes Service (AKS)

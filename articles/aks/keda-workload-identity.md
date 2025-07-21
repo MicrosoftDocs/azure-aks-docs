@@ -7,6 +7,7 @@ ms.author: qpetraroia
 ms.topic: how-to
 ms.date: 07/08/2024
 ms.custom: template-how-to
+# Customer intent: As a cloud engineer, I want to securely scale applications using KEDA and workload identity in Azure Kubernetes Service, so that I can efficiently manage workloads based on real-time demand without compromising security.
 ---
 
 # Securely scale your applications using the KEDA add-on and workload identity on Azure Kubernetes Service (AKS)

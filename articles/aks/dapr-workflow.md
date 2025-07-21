@@ -200,10 +200,6 @@ Notice that the workflow status is marked as completed.
 [kubectl]: ./tutorial-kubernetes-deploy-cluster.md#connect-to-cluster-using-kubectl
 
 <!-- Links External -->
-[dapr-workflow-sample]: https://github.com/Azure/dapr-workflows-aks-sample
-[dapr-program]: https://github.com/Azure/dapr-workflows-aks-sample/blob/main/Program.cs
-[dapr-workflow-dir]: https://github.com/Azure/dapr-workflows-aks-sample/tree/main/Workflows
-[dapr-activities-dir]: https://github.com/Azure/dapr-workflows-aks-sample/tree/main/Activities
 [dapr-workflow-preview]: https://docs.dapr.io/operations/support/support-preview-features/#current-preview-features
 [deployment-yaml]: https://github.com/Azure/dapr-workflows-aks-sample/blob/main/Deploy/deployment.yaml
 [docker]: https://docs.docker.com/get-docker/

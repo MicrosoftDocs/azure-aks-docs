@@ -8,6 +8,7 @@ ms.author: schaffererin
 ms.custom: mvc, devx-track-extended-azdevcli
 
 #Customer intent: As a developer, I want to learn how to build a container-based application so that I can deploy the app to Azure Kubernetes Service.
+# Customer intent: "As a developer, I want to learn how to prepare and test a multi-container application using Docker Compose, so that I can deploy it to Azure Kubernetes Service."
 ---
 
 # Tutorial - Prepare an application for Azure Kubernetes Service (AKS)
@@ -308,3 +309,4 @@ In the next tutorial, you learn how to create a cluster using the `azd` template
 [aks-tutorial-prepare-acr]: ./tutorial-kubernetes-prepare-acr.md
 [aks-tutorial-deploy-cluster]: ./tutorial-kubernetes-deploy-cluster.md
 [azd]: /azure/developer/azure-developer-cli/install-azd
+[azd-init]: /azure/developer/azure-developer-cli/reference#azd-init

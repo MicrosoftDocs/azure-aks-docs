@@ -9,6 +9,7 @@ ms.author: schaffererin
 ms.collection: 
  - migration
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud architect, I want to understand how to deploy stateful workloads on Azure Kubernetes Service, so that I can ensure data persistence and reliability for critical applications in a scalable environment.
 ---
 
 # Stateful workloads in Azure Kubernetes Service (AKS)

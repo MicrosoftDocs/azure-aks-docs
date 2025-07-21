@@ -6,6 +6,7 @@ ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a Kubernetes administrator, I want to manage taints and tolerations on member clusters and resource placements, so that I can control the propagation of resources in my Kubernetes Fleet environment."
 ---
 
 # Use taints on member clusters and tolerations on cluster resource placements

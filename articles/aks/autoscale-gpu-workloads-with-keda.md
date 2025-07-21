@@ -6,6 +6,7 @@ ms.author: sachidesai
 ms.date: 05/16/2025
 ms.topic: how-to
 ms.service: azure-kubernetes-service
+# Customer intent: As a cloud engineer, I want to autoscale GPU workloads on Azure Kubernetes Service using KEDA and NVIDIA metrics, so that I can optimize resource usage and manage operational costs efficiently in response to real-time workload demands.
 ---
 
 # Autoscale GPU Workloads on AKS Using DCGM Metrics and KEDA

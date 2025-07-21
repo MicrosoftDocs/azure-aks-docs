@@ -351,6 +351,7 @@ These can be regulated through multiple controls:
 - Karpenter Node Disruption Budgets - Node-level disruption budgets can be set on your NodePool custom resources, and will limit node disruptions based on schedule and concurrent thresholds. These can be set directly for Drift, Disruption as a whole and/or other Karpenter disruption actions. 
 - Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file to determine when and which pods should be available for disruption. node auto provisioning honors PDBs. 
 
+
 With [Auto Upgrade][auto-upgrade] enabled on your cluster, you can also adjust the schedule of your Kubernetes updates using planned maintenance windows to target less busy periods for your workloads.
 
 ### Kubernetes upgrades

@@ -8,6 +8,7 @@ ms.date: 02/27/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud developer, I want to deploy and manage Azure Linux container hosts on AKS, so that I can ensure reliable and efficient container workloads with reduced maintenance and enhanced security."
 ---
 
 # Use the Azure Linux container host for Azure Kubernetes Service (AKS)

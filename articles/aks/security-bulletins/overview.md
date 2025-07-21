@@ -6,6 +6,7 @@ author: bahe
 ms.author: bahe
 ms.topic: concept-article
 ms.subservice: aks-security
+# Customer intent: "As a Kubernetes administrator, I want to access updated security bulletins for Azure Kubernetes Service, so that I can address vulnerabilities and ensure the security of my clusters and applications."
 ---
 
 # Security bulletins for Azure Kubernetes Service (AKS)

@@ -5,8 +5,8 @@ ms.topic: concept-article
 ms.date: 05/21/2024
 author: schaffererin
 ms.author: schaffererin
-
-ms.custom: references_regions
+ms.custom: references_regions, innovation-engine
+# Customer intent: "As a Kubernetes administrator, I want to understand Azure CNI Pod Subnet networking options, so that I can effectively manage IP address allocation and optimize network performance in my AKS clusters."
 ---
 
 # Azure Container Networking Interface (CNI) Pod Subnet
@@ -23,11 +23,42 @@ Azure CNI Pod Subnet assigns IP addresses to pods from a separate subnet from yo
 - AKS Engine and DIY clusters aren't supported.
 - Azure CLI version `2.37.0` or later and the `aks-preview` extension version `2.0.0b2` or later.
 - Register the subscription-level feature flag for your subscription: 'Microsoft.ContainerService/AzureVnetScalePreview'.
-- If you have an existing cluster, you need to enable the Container Insights for monitoring IP subnet usage add-on. You can enable Container Insights using the [`az aks enable-addons`][az-aks-enable-addons] command, as shown in the following example:
 
-    ```azurecli-interactive
-    az aks enable-addons --addons monitoring --name <cluster-name> --resource-group <resource-group-name>
-    ```
+## Enable Container Insights (AKS monitoring)
+
+If you have an existing cluster, you can enable Container Insights (AKS monitoring) using the following command **only if your cluster was created with monitoring enabled or is associated with a valid Log Analytics Workspace in the same region**. Otherwise, refer to Microsoft Docs for additional workspace setup requirements.
+
+```azurecli-interactive
+az aks enable-addons --addons monitoring --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME
+```
+
+Results: 
+
+<!-- expected_similarity=0.3 --> 
+
+```output
+{
+  "addons": [
+    {
+      "addonType": "Monitoring",
+      "enabled": true,
+      "identity": {
+        "clientId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "objectId": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+        "resourceId": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/xxxxxxxx/providers/Microsoft.ManagedIdentity/userAssignedIdentities/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+      },
+      "name": "omsagent",
+      "config": {
+        ...
+      }
+    },
+    ...
+  ],
+  "name": "my-aks-cluster",
+  "resourceGroup": "my-aks-rg",
+  ...
+}
+```
 
 ## Dynamic IP allocation mode
 
@@ -49,7 +80,7 @@ IPs are allocated to nodes in batches of 16. Pod subnet IP allocation should be 
 
 IP address planning for Kubernetes services and Docker Bridge remain unchanged.
 
-## Static block allocation mode (Preview)
+## Static block allocation mode
 
 Static block allocation helps mitigate potential pod subnet sizing and Azure address mapping limitations by assigning CIDR blocks to nodes rather than individual IPs.
 
@@ -64,9 +95,9 @@ The static block allocation mode offers the following benefits:
 ### Limitations
 
 Below are some of the limitations of using Azure CNI Static Block allocation:
-- Minimum Kubernetes Version required is 1.28
-- Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs
-- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot be use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
+- Minimum Kubernetes Version required is 1.28.
+- Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs.
+- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
 - Only supported in new clusters or when adding node pools with a different subnet to existing clusters. Migrating or updating existing clusters or node pools is not supported.
 - Across all the CIDR blocks assigned to a node in the node pool, one IP will be selected as the primary IP of the node. Thus, for network administrators selecting the `--max-pods` value try to use the calculation below to best serve your needs and have optimal usage of IPs in the subnet:
 
@@ -82,8 +113,10 @@ While planning your IPs, it's important to define your `--max-pods` configuratio
 
 Ideal values with no IP wastage would require the max pods value to conform to the above expression.
 
-
 See the following example cases: 
+
+> [!Note] 
+> The examples assume /28 CIDR blocks (16 IPs each).
 
 | Example case | `max_pods` | CIDR Blocks allocated per node | Total IP available for pods | IP wastage for node |
 | --- | --- | --- | --- | --- |

@@ -9,6 +9,7 @@ ms.author: schaffererin
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell, devx-track-extended-azdevcli
 
 #Customer intent: As a developer or IT pro, I want to learn how to create an Azure Kubernetes Service (AKS) cluster so that I can deploy and run my own applications.
+# Customer intent: As a developer or IT professional, I want to create a Kubernetes cluster on Azure, so that I can deploy and manage containerized applications efficiently.
 ---
 
 # Tutorial - Create an Azure Kubernetes Service (AKS) cluster

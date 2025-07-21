@@ -7,6 +7,7 @@ ms.date: 10/30/2024
 ms.topic: concept-article
 ms.custom:
   - build-2025
+# Customer intent: "As a Kubernetes administrator, I want to understand the supported Kubernetes version lifecycle in Azure Kubernetes Service, so that I can ensure my clusters remain compliant and up-to-date with security patches and feature releases."
 ---
 
 # Supported Kubernetes versions in Azure Kubernetes Service (AKS)

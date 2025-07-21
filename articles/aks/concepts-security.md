@@ -6,6 +6,7 @@ ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 04/03/2025
 ms.author: shasb
+# Customer intent: "As a cloud security engineer, I want to implement comprehensive security practices for Azure Kubernetes Service, so that I can safeguard applications and clusters against vulnerabilities and unauthorized access throughout the development and deployment pipeline."
 ---
 
 # Security concepts for applications and clusters in Azure Kubernetes Service (AKS)
