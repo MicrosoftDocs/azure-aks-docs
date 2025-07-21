@@ -8,6 +8,7 @@ ms.date: 11/01/2024
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-monitoring
+# Customer intent: "As a cloud operations engineer, I want to implement proactive monitoring for my Kubernetes clusters, so that I can minimize downtime and improve application reliability through timely alerts and performance insights."
 ---
 
 # Proactive monitoring best practices for Azure Kubernetes Service (AKS)

@@ -7,6 +7,7 @@ ms.date: 03/18/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a cloud architect, I want to implement Confidential Containers on an Azure Kubernetes Service cluster so that I can enhance the security and privacy of sensitive workloads while meeting compliance requirements.
 ---
 
 # Confidential Containers (preview) with Azure Kubernetes Service (AKS)
