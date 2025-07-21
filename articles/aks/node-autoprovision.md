@@ -1,5 +1,5 @@
 ---
-title: Node auto provisioning
+title: node auto provisioning
 description: Learn about Azure Kubernetes Service (AKS) node auto provisioning.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
@@ -11,17 +11,17 @@ author: wdarko1
 
 ---
 
-# Node auto provisioning
+# node auto provisioning
 
 When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
-Node auto provisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
+node auto provisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-Node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. node auto provisioning automatically deploys, configures and manages Karpenter on your AKS clusters.
+node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. node auto provisioning automatically deploys, configures and manages Karpenter on your AKS clusters.
 
 ## How node auto provisioning works
 
-Node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. Node auto provisioning is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. NodeClaims are managed by node auto provisioning, and can be monitored to view current node state. Node auto provisioning then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
+node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. node auto provisioning is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. NodeClaims are managed by node auto provisioning, and can be monitored to view current node state. node auto provisioning then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
 
 ### Prerequisites
 
@@ -68,7 +68,7 @@ The following networking configurations are currently *not* supported:
 
 ### Enable node auto provisioning on a new cluster
 
-Node auto provisioning is enabled by setting the field `--node-provisioning-mode` to [Auto](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
+node auto provisioning is enabled by setting the field `--node-provisioning-mode` to [Auto](/azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile), which sets the Node Provisioning Profile to Auto. The default setting for this field is `Manual`. 
 
 ### [Azure CLI](#tab/azure-cli)
 
@@ -153,7 +153,7 @@ Node auto provisioning is enabled by setting the field `--node-provisioning-mode
     az aks update --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAME --node-provisioning-mode Auto
     ```
 
-## Custom Virtual Networks and Node auto provisioning
+## Custom Virtual Networks and node auto provisioning
 AKS allows you to add a cluster with node auto provisioning enabled in a custom virtual network via the `--vnet-subnet-id` parameter. The following sections details how to create a virtual network, create a managed identity with permissions over the virtual network, and create a node auto provisioning-enabled cluster in a custom virtual network. 
 
 ### Create a virtual network
@@ -243,7 +243,7 @@ kubectl get nodes
 
 ## Node pools
 
-Node auto provisioning uses a list of VM SKUs as a starting point to decide which SKU is best suited for the workloads that are in a pending state. Having control over what SKU you want in the initial pool allows you to specify specific SKU families or virtual machine types and the maximum number of resources a provisioner uses. You can also reference different specifications in the node pool file, such as specifying *spot* or *on-demand* instances, multiple architectures, and more. 
+node auto provisioning uses a list of VM SKUs as a starting point to decide which SKU is best suited for the workloads that are in a pending state. Having control over what SKU you want in the initial pool allows you to specify specific SKU families or virtual machine types and the maximum number of resources a provisioner uses. You can also reference different specifications in the node pool file, such as specifying *spot* or *on-demand* instances, multiple architectures, and more. 
 
 If you have specific virtual machine sizes that are reserved instances, for example, you may wish to only use those virtual machines as the starting pool.
 
@@ -365,7 +365,7 @@ AKS with node auto provisioning manages the Kubernetes version upgrades and VM O
 
 These can be regulated through multiple controls:
 - Karpenter Node Disruption Budgets - Node-level disruption budgets can be set on your NodePool custom resources, and will limit node disruptions based on schedule and concurrent thresholds. These can be set directly for Drift, Disruption as a whole and/or other Karpenter disruption actions. 
-- Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file to determine when and which pods should be available for disruption. Node auto provisioning honors PDBs. 
+- Pod Disruption Budgets (PDBs) - pod disruption budgets can be set in your application deployment file to determine when and which pods should be available for disruption. node auto provisioning honors PDBs. 
 
 With [Auto Upgrade][auto-upgrade] enabled on your cluster, you can also adjust the schedule of your Kubernetes updates using planned maintenance windows to target less busy periods for your workloads.
 
@@ -392,7 +392,7 @@ kubectl get events -A --field-selector source=karpenter -w
 
 ## Disabling node auto provisioning
 
-Node auto provisioning can only be disabled when:
+node auto provisioning can only be disabled when:
 - There are no existing node auto provisioning-managed nodes. Use `kubectl get nodes -l karpenter.sh/nodepool` to view node auto provisioning-managed nodes.
 - All existing karpenter.sh/NodePools have their `spec.limits.cpu` set to 0.
 
@@ -510,12 +510,12 @@ Node auto provisioning can only be disabled when:
 Yes, node auto provisioning can be installed on existing AKS clusters.
 
 ### Do I need to remove Cluster Autoscaler before installing node auto provisioning?
-Yes, you must remove or disable Cluster Autoscaler prior to enabling Node auto provisioning. 
+Yes, you must remove or disable Cluster Autoscaler prior to enabling node auto provisioning. 
 
 **Node Management**
 
 ### Which Azure VM sizes does node auto provisioning support?
-Node auto provisioning supports most Azure Virtual Machine sizes that are:
+node auto provisioning supports most Azure Virtual Machine sizes that are:
 - Available in AKS
 - Have 2 or more vCPUs
 - Support standard Azure managed disks
@@ -525,7 +525,7 @@ Node auto provisioning supports most Azure Virtual Machine sizes that are:
 No, you can specify custom VM images for node auto provisioning.
 
 ### Does node auto provisioning handle spot VMs?
-Node auto provisioning supports Azure Spot VMs for cost savings. When using spot instances, be aware that they are subject to eviction policies.
+node auto provisioning supports Azure Spot VMs for cost savings. When using spot instances, be aware that they are subject to eviction policies.
 
 ### Can I mix spot and regular VMs in the same NodePool?
 Yes, you can specify both `spot` and `on-demand` in the capacity type requirements. Weights can be applied in the pod spec to have an affinity for spot VMs, with a fall back of on-demand instances.
