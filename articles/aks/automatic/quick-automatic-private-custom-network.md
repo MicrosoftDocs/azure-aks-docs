@@ -6,6 +6,7 @@ ms.date: 06/13/2025
 author: sabbour
 ms.author: asabbour
 zone_pivot_groups: bicep-azure-cli
+# Customer intent: As a cloud engineer, I want to deploy a private Kubernetes cluster in a custom virtual network using managed services, so that I can ensure secure and efficient management of modern applications in Azure.
 ---
 
 # Quickstart: Create a private Azure Kubernetes Service (AKS) Automatic cluster (preview) in a custom virtual network

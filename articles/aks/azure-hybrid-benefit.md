@@ -6,6 +6,7 @@ ms.topic: concept-article
 ms.date: 02/09/2024
 ms.author: viniap
 author: vrapolinario
+# Customer intent: "As a cloud administrator, I want to enable Azure Hybrid Benefit for my Azure Kubernetes Service cluster, so that I can reduce costs by utilizing my existing Windows Server licenses."
 ---
 
 # What is Azure Hybrid Benefit for Azure Kubernetes Service?

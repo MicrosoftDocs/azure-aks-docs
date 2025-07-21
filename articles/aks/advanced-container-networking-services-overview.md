@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: overview
 ms.date: 05/28/2024
+# Customer intent: "As a cloud engineer, I want to implement Advanced Container Networking Services in my AKS clusters, so that I can enhance network observability and security for my containerized applications, ensuring they are secure, compliant, and perform optimally."
 ---
 
 # What is Advanced Container Networking Services?

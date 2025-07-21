@@ -8,6 +8,7 @@ ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 11/16/2023
 ms.subservice: aks-nodes
+# Customer intent: As a DevOps engineer, I want to enable Artifact Streaming on Azure Kubernetes Service, so that I can reduce image pull times and improve the efficiency of my workload deployments.
 ---
 
 # Reduce image pull time with Artifact Streaming on Azure Kubernetes Service (AKS) (Preview)
