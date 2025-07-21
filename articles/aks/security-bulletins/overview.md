@@ -25,15 +25,16 @@ These updates cover security information related to the following AKS components
 ---
 ## AKS-2025-009 Important Security Update for Calico Users
 
-**Published Date**: June 25, 2025
+**Published Date**: July 21, 2025
 
 ### Description
-This bulletin provides an update on the security patching model for Calico in Azure Kubernetes Service (AKS). AKS-managed Calico is now fully aligned with upstream [Calico releases](https://github.com/projectcalico/calico/releases). This means that AKS will no longer independently patch Calico images but will instead mirror upstream Calico builds directly. 
+This bulletin provides an update on the security patching model for Calico in Azure Kubernetes Service (AKS). AKS-managed Calico and Tigera Operator are now fully aligned with upstream [Calico releases](https://github.com/projectcalico/calico/releases) and [Tigera Operator releases](https://github.com/tigera/operator/releases). This means that AKS will no longer independently patch Calico and Tigera operator images but will instead mirror upstream builds directly. 
 
-As a result, CVEs affecting Calico will remain unpatched in AKS until a fix is available upstream. This change ensures consistency with upstream behavior and improves transparency in patch timelines.
+As a result, CVEs affecting Calico and Tigera Operator will remain unpatched in AKS until a fix is available upstream. This change ensures consistency with upstream behavior and improves transparency in patch timelines.
 
 ### References
-[Calico Release](https://github.com/projectcalico/calico/releases)
+- [Calico Release](https://github.com/projectcalico/calico/releases)
+- [Tigera Operator Release](https://github.com/tigera/operator/releases)
 
 ### Affected Components
 
@@ -43,7 +44,8 @@ As a result, CVEs affecting Calico will remain unpatched in AKS until a fix is a
 - All AKS supported versions using AKS managed Calico
 
 **Resolutions**
-No immediate action is required. Customers are encouraged to monitor upstream Calico releases and the [AKS CVE Status Tracker](https://releases.aks.azure.com/webpage/index.html) for updates.
+- No immediate action is required. Customers are encouraged to monitor upstream Calico releases and the [AKS CVE Status Tracker](https://releases.aks.azure.com/webpage/index.html) for updates.
+- If this creates an unreasonable security burden, you may [remove calico](https://learn.microsoft.com/en-us/azure/aks/use-network-policies#uninstall-azure-network-policy-manager-or-calico) by setting network-policy to none.  
 
 ---
 
