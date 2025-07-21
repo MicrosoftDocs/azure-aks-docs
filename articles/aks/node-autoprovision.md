@@ -310,11 +310,7 @@ You can use labels to define constraints for your node pool custom resource file
 | kubernetes.io/os | Operating System | linux |
 | kubernetes.io/arch | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
 
-To list the virtual machine SKU capabilities and allowed values, use the `vm list-skus` Azure CLI command.
-
-```azurecli-interactive
-az vm list-skus --resource-type virtualMachines --location <location> --query '[].name' --output table
-```
+To learn more about virtual machine SKU capabilities, visit our [Virtual machine documentation][vm-overview].
 
 ## Node pool limits
 
@@ -332,11 +328,13 @@ By default, node auto provisioning attempts to schedule your workloads within th
 
 When you have multiple node pools defined, it's possible to set a preference of where a workload should be scheduled. Define the relative weight on your Node pool definitions.
 
-```
+```yaml
   # Priority given to the node pool when the scheduler considers which to select. Higher weights indicate higher priority when comparing node pools.
   # Specifying no weight is equivalent to specifying a weight of 0.
   weight: 10
 ```
+>{!NOTE}
+> AKS recommends avoiding weights in favor of using labels and other scheduling requirements to ensure your workload qualifies for unique NodePools and is scheduled exactly where you want the pod to be scheduled.
 
 ## Node disruption
 
@@ -506,7 +504,7 @@ Node auto provisioning can only be disabled when:
 - **Better bin packing**: Considers multiple instance types and zones simultaneously
 - **More flexible**: Supports diverse instance types, zones, and capacity types without complex configuration
 
-## Installation and Configuration
+**Installation and Configuration**
 
 ### Can I use node auto provisioning with existing AKS clusters?
 Yes, node auto provisioning can be installed on existing AKS clusters.
@@ -514,7 +512,7 @@ Yes, node auto provisioning can be installed on existing AKS clusters.
 ### Do I need to remove Cluster Autoscaler before installing node auto provisioning?
 Yes, you must remove or disable Cluster Autoscaler prior to enabling Node auto provisioning. 
 
-## Node Management
+**Node Management**
 
 ### Which Azure VM sizes does node auto provisioning support?
 Node auto provisioning supports most Azure Virtual Machine sizes that are:
@@ -532,7 +530,7 @@ Node auto provisioning supports Azure Spot VMs for cost savings. When using spot
 ### Can I mix spot and regular VMs in the same NodePool?
 Yes, you can specify both `spot` and `on-demand` in the capacity type requirements. Weights can be applied in the pod spec to have an affinity for spot VMs, with a fall back of on-demand instances.
 
-## Networking and Security
+**Networking and Security**
 
 ### How does NAP handle network security groups?
 NAP uses the network security groups configured for your AKS cluster. It doesn't create or modify NSG rules.
@@ -559,6 +557,7 @@ Mitigation:
 Possible causes:
 - Pods without proper tolerations
 - DaemonSets preventing node drain
+- Node disruption budgets blocking eviction
 - Pod disruption budgets blocking eviction
 - Nodes or Pods marked with `do-not-disrupt` annotation
 
@@ -575,18 +574,17 @@ Possible causes:
    kubectl get events --sort-by='.lastTimestamp'
    ```
 
-## Cost Optimization
+**Cost Optimization**
 
 ### Does NAP support Azure Reserved Instances?
-NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn't directly manage reservations. You can configure a weighted NodePool file to include the VM sizes that are your Reserved Instances, with a separate NodePool for other on-demand or spot instances. When your reserved VMs run out of quota, node auto provisioning will fall back to a different NodePool config file's VM sizes. You can also configure your reserved instance NodePool limits to match the limits of capacity for reserved instances you have. [Purchase reservations][azure-reserved-instances] for your expected baseline capacity.
+NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn't directly manage reservations. You can configure a NodePool file to include the VM sizes that are your Reserved Instances, with a separate NodePool for other on-demand or spot instances. When your reserved VMs run out of quota, node auto provisioning will fall back to a different NodePool config file's VM sizes. You can also configure your reserved instance NodePool limits to match the limits of capacity for reserved instances you have. [Purchase reservations][azure-reserved-instances] for your expected baseline capacity. The following example shows three NodePools: a NodePool for reserved instances, spot VMs, and on-demand 
 
 ```yaml
          apiVersion: karpenter.sh/v1
          kind: NodePool
          metadata:
-           name: default-spot
+           name: default-on-demand
          spec:
-           weight: 50
            template:
              spec:
                requirements:
@@ -598,14 +596,16 @@ NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn'
                  values: ["amd64"]
                - key: karpenter.azure.com/sku-family
                  operator: In
-                 values: ["D", "E"]
+                 values: ["D", "E", "F"]
+               - key: karpenter.azure.com/sku-name
+                 operator: NotIn
+                 values: ["Standard_D2s_v3", "Standard_F2s_v2"]
          ---
          apiVersion: karpenter.sh/v1
          kind: NodePool
          metadata:
            name: reserved-vms
          spec:
-           weight: 70
            template:
              spec:
                requirements:
@@ -615,24 +615,6 @@ NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn'
               - key: karpenter.azure.com/sku-name
                 operator: In
                 values: ["Standard_D2s_v3","Standard_F2s_v2"]
-         apiVersion: karpenter.sh/v1
-         kind: NodePool
-         metadata:
-           name: default-on-demand
-         spec:
-           weight: 30
-           template:
-             spec:
-               requirements:
-               - key: karpenter.sh/capacity-type
-                 operator: In
-                 values: ["on-demand"]
-               - key: kubernetes.io/arch
-                 operator: In
-                 values: ["amd64"]
-               - key: karpenter.azure.com/sku-family
-                 operator: In
-                 values: ["D"]
 ```
 
 ### How can I optimize costs with node auto provisioning?
@@ -642,7 +624,7 @@ NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn'
 - Use resource limits to prevent unexpected scaling
 - Monitor and tune your NodePool configurations 
 
-## Integration and Compatibility
+**Integration and Compatibility**
 
 ### Can I use node auto provisioning with Azure Container Instances (ACI)?
 node auto provisioning manages VM-based nodes only. For serverless containers, consider using AKS virtual nodes with ACI alongside node auto provisioning.
@@ -659,17 +641,12 @@ node auto provisioning currently supports Linux nodes through Ubuntu22.04 and Az
 ### Can I create nodes in my cluster that are not managed by node auto provisioning?
 Yes, you can manually create nodes or nodepools in your cluster that are not managed by node auto provisioning. For existing clusters that enable node auto provisioning, you can keep existing nodes or nodepools in tact, though they will not be managed by node auto provisioning and 
 
-## Getting Help
-
-### Where can I find more information?
-- [GitHub Repository: AKS Karpenter Provider][aks-karpenter-provider]
-
-
-### How do I report bugs or request features?
+### How do I  get help, report bugs or request features?
 Learn how to [File An Azure support ticket][azure-support] with:
 - Detailed description of the issue
 - Steps to reproduce
 - Relevant events and error messages
+- To file tickets for self-hosted Karpenter on Azure, visit our [GitHub Repository: AKS Karpenter Provider][aks-karpenter-provider]
 
 For feature reqeusts, file a feature request issue through the [AKS Karpenter Provider][aks-karpenter-provider-issues], which node auto-provisioning is based on. 
 
@@ -694,6 +671,7 @@ For feature reqeusts, file a feature request issue through the [AKS Karpenter Pr
 [node-os-upgrade-channel]: /azure/aks/auto-upgrade-node-os-image#available-node-os-upgrade-channels
 [azure-support]: /azure/azure-portal/supportability/how-to-create-azure-support-request
 [azure-reserved-instances]: /pricing/reserved-vm-instances/
+[vm-overview]: /azure/virtual-machines/sizes/overview
 
 <!-- LINKS - external -->
 [aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
