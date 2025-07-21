@@ -52,8 +52,8 @@ Currently, NPD conducts health checks on GPU nodes provisioned with the `Standar
 
 Yes, NPD health monitoring is supported on [MIG-enabled AKS node pools](./gpu-multi-instance.md).
 
-# Next Steps
+## Next Steps
 
-* Provision GPUs on [Linux](./use-nvidia-gpu.md) or [Windows](./use-windows-gpu.md) node pools in your AKS cluster
-* Learn more about the [types of node conditions and events](./node-problem-detector.md) set by NPD on AKS
-* [Monitor general GPU metrics](./monitor-gpu-metrics.md) using a self-managed metrics exporter
+* Provision GPUs on [Linux](./use-nvidia-gpu.md) or [Windows](./use-windows-gpu.md) node pools in your AKS cluster.
+* Learn more about the [types of node conditions and events](./node-problem-detector.md) set by NPD on AKS.
+* [Monitor general GPU metrics](./monitor-gpu-metrics.md) using a self-managed metrics exporter.
