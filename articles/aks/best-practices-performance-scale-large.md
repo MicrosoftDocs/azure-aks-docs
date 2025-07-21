@@ -7,6 +7,7 @@ ms.date: 01/18/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a cloud architect, I want to implement performance and scaling best practices for large workloads in Kubernetes, so that I can ensure optimal resource utilization and reliability of the applications deployed in Azure Kubernetes Service.
 ---
 
 # Best practices for performance and scaling for large workloads in Azure Kubernetes Service (AKS)

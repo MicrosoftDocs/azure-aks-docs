@@ -6,6 +6,7 @@ ms.date: 04/12/2025
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.subservice: aks-storage
+# Customer intent: As a Kubernetes administrator, I want to migrate my existing Persistent Volumes from in-tree storage classes to CSI drivers in an Azure Kubernetes Service cluster, so that I can leverage improved storage management and ensure a seamless transition without data loss.
 ---
 
 # Migrate from in-tree storage class to CSI drivers on Azure Kubernetes Service (AKS)

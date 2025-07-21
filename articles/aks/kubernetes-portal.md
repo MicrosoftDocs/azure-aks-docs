@@ -52,10 +52,11 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
 
     ```yaml
     apiVersion: apps/v1
-    kind: Deployment
+    kind: StatefulSet
     metadata:
       name: rabbitmq
     spec:
+      serviceName: rabbitmq
       replicas: 1
       selector:
         matchLabels:
@@ -68,36 +69,36 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
           nodeSelector:
             "kubernetes.io/os": linux
           containers:
-          - name: rabbitmq
-            image: mcr.microsoft.com/mirror/docker/library/rabbitmq:3.10-management-alpine
-            ports:
-            - containerPort: 5672
-              name: rabbitmq-amqp
-            - containerPort: 15672
-              name: rabbitmq-http
-            env:
-            - name: RABBITMQ_DEFAULT_USER
-              value: "username"
-            - name: RABBITMQ_DEFAULT_PASS
-              value: "password"
-            resources:
-              requests:
-                cpu: 10m
-                memory: 128Mi
-              limits:
-                cpu: 250m
-                memory: 256Mi
-            volumeMounts:
-            - name: rabbitmq-enabled-plugins
-              mountPath: /etc/rabbitmq/enabled_plugins
-              subPath: enabled_plugins
+            - name: rabbitmq
+              image: mcr.microsoft.com/azurelinux/base/rabbitmq-server:3.13
+              ports:
+                - containerPort: 5672
+                  name: rabbitmq-amqp
+                - containerPort: 15672
+                  name: rabbitmq-http
+              env:
+                - name: RABBITMQ_DEFAULT_USER
+                  value: "username"
+                - name: RABBITMQ_DEFAULT_PASS
+                  value: "password"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 128Mi
+                limits:
+                  cpu: 250m
+                  memory: 256Mi
+              volumeMounts:
+                - name: rabbitmq-enabled-plugins
+                  mountPath: /etc/rabbitmq/enabled_plugins
+                  subPath: enabled_plugins
           volumes:
-          - name: rabbitmq-enabled-plugins
-            configMap:
-              name: rabbitmq-enabled-plugins
-              items:
-              - key: rabbitmq_enabled_plugins
-                path: enabled_plugins
+            - name: rabbitmq-enabled-plugins
+              configMap:
+                name: rabbitmq-enabled-plugins
+                items:
+                  - key: rabbitmq_enabled_plugins
+                    path: enabled_plugins
     ---
     apiVersion: v1
     data:
@@ -140,41 +141,41 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
           nodeSelector:
             "kubernetes.io/os": linux
           containers:
-          - name: order-service
-            image: ghcr.io/azure-samples/aks-store-demo/order-service:latest
-            ports:
-            - containerPort: 3000
-            env:
-            - name: ORDER_QUEUE_HOSTNAME
-              value: "rabbitmq"
-            - name: ORDER_QUEUE_PORT
-              value: "5672"
-            - name: ORDER_QUEUE_USERNAME
-              value: "username"
-            - name: ORDER_QUEUE_PASSWORD
-              value: "password"
-            - name: ORDER_QUEUE_NAME
-              value: "orders"
-            - name: FASTIFY_ADDRESS
-              value: "0.0.0.0"
-            resources:
-              requests:
-                cpu: 1m
-                memory: 50Mi
-              limits:
-                cpu: 75m
-                memory: 128Mi
+            - name: order-service
+              image: ghcr.io/azure-samples/aks-store-demo/order-service:latest
+              ports:
+                - containerPort: 3000
+              env:
+                - name: ORDER_QUEUE_HOSTNAME
+                  value: "rabbitmq"
+                - name: ORDER_QUEUE_PORT
+                  value: "5672"
+                - name: ORDER_QUEUE_USERNAME
+                  value: "username"
+                - name: ORDER_QUEUE_PASSWORD
+                  value: "password"
+                - name: ORDER_QUEUE_NAME
+                  value: "orders"
+                - name: FASTIFY_ADDRESS
+                  value: "0.0.0.0"
+              resources:
+                requests:
+                  cpu: 1m
+                  memory: 50Mi
+                limits:
+                  cpu: 100m
+                  memory: 256Mi
           initContainers:
-          - name: wait-for-rabbitmq
-            image: busybox
-            command: ['sh', '-c', 'until nc -zv rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done;']
-            resources:
-              requests:
-                cpu: 1m
-                memory: 50Mi
-              limits:
-                cpu: 75m
-                memory: 128Mi
+            - name: wait-for-rabbitmq
+              image: busybox
+              command: ["sh", "-c", "until nc -zv rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done;"]
+              resources:
+                requests:
+                  cpu: 1m
+                  memory: 50Mi
+                limits:
+                  cpu: 100m
+                  memory: 256Mi
     ---
     apiVersion: v1
     kind: Service
@@ -183,9 +184,9 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
     spec:
       type: ClusterIP
       ports:
-      - name: http
-        port: 3000
-        targetPort: 3000
+        - name: http
+          port: 3000
+          targetPort: 3000
       selector:
         app: order-service
     ---
@@ -206,17 +207,17 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
           nodeSelector:
             "kubernetes.io/os": linux
           containers:
-          - name: product-service
-            image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
-            ports:
-            - containerPort: 3002
-            resources:
-              requests:
-                cpu: 1m
-                memory: 1Mi
-              limits:
-                cpu: 1m
-                memory: 7Mi
+            - name: product-service
+              image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
+              ports:
+                - containerPort: 3002
+              resources:
+                requests:
+                  cpu: 1m
+                  memory: 1Mi
+                limits:
+                  cpu: 2m
+                  memory: 20Mi
     ---
     apiVersion: v1
     kind: Service
@@ -225,9 +226,9 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
     spec:
       type: ClusterIP
       ports:
-      - name: http
-        port: 3002
-        targetPort: 3002
+        - name: http
+          port: 3002
+          targetPort: 3002
       selector:
         app: product-service
     ---
@@ -248,23 +249,23 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
           nodeSelector:
             "kubernetes.io/os": linux
           containers:
-          - name: store-front
-            image: ghcr.io/azure-samples/aks-store-demo/store-front:latest
-            ports:
-            - containerPort: 8080
-              name: store-front
-            env:
-            - name: VUE_APP_ORDER_SERVICE_URL
-              value: "http://order-service:3000/"
-            - name: VUE_APP_PRODUCT_SERVICE_URL
-              value: "http://product-service:3002/"
-            resources:
-              requests:
-                cpu: 1m
-                memory: 200Mi
-              limits:
-                cpu: 1000m
-                memory: 512Mi
+            - name: store-front
+              image: ghcr.io/azure-samples/aks-store-demo/store-front:latest
+              ports:
+                - containerPort: 8080
+                  name: store-front
+              env:
+                - name: VUE_APP_ORDER_SERVICE_URL
+                  value: "http://order-service:3000/"
+                - name: VUE_APP_PRODUCT_SERVICE_URL
+                  value: "http://product-service:3002/"
+              resources:
+                requests:
+                  cpu: 1m
+                  memory: 200Mi
+                limits:
+                  cpu: 1000m
+                  memory: 512Mi
     ---
     apiVersion: v1
     kind: Service
@@ -272,8 +273,8 @@ To deploy the Azure Store application, you need to connect to your AKS cluster. 
       name: store-front
     spec:
       ports:
-      - port: 80
-        targetPort: 8080
+        - port: 80
+          targetPort: 8080
       selector:
         app: store-front
       type: LoadBalancer

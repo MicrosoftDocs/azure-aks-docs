@@ -8,6 +8,7 @@ ms.custom:
   - build-2025
 author: davidsmatlak
 ms.author: davidsmatlak
+# Customer intent: "As a security compliance officer, I want to understand how Azure Kubernetes Service implements the CIS Kubernetes benchmark, so that I can ensure our container orchestration complies with necessary security standards."
 ---
 
 # Center for Internet Security (CIS) Kubernetes benchmark
