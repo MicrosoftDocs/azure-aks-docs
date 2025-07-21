@@ -84,7 +84,7 @@ The AKS cluster orchestration layer manages the containerized runner instances a
 
 ### Storage layer
 
-The Azure File Shares storage layer provides both NUGET file share with `ReadWriteMany` access for shared dependencies and ephemeral storage for runners, all backed by persistent volume claims.
+The Azure File Shares storage layer provides both NuGet file share with `ReadWriteMany` access for shared dependencies and ephemeral storage for runners, all backed by persistent volume claims.
 
 ## Next step
 

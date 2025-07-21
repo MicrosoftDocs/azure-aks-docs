@@ -198,7 +198,7 @@ Azure Files requires that you create a secret on AKS with the storage key used t
 You can mount an Azure Files file share in multiple pods at same time using `AccessMode: ReadWriteMany` to mount the same file share in all pods created by the ARC Kubernetes replica set.
 We use the Azure Files file share in the following ways:
 
-* As a **persistent SMB file share** to cache NUGET packages used by the .NET sample application. The *[arc-runners-set-pv-pvc.yaml](https://github.com/jorgearteiro/azurefiles-actions-aks/blob/main/install/arc-runners-set-pv.yaml)* file creates the required PV and PVC to mount the Azure Files file share in the ARC runners scale set pods. We recommend Azure File Premium for this first option. Please customize `volumeAttributes` and any namespaces parameters on both PV and PVC manifests as shown in the following example:
+* As a **persistent SMB file share** to cache NuGet packages used by the .NET sample application. The *[arc-runners-set-pv-pvc.yaml](https://github.com/jorgearteiro/azurefiles-actions-aks/blob/main/install/arc-runners-set-pv.yaml)* file creates the required PV and PVC to mount the Azure Files file share in the ARC runners scale set pods. We recommend Azure File Premium for this first option. Please customize `volumeAttributes` and any namespaces parameters on both PV and PVC manifests as shown in the following example:
 
     ```yaml
     volumeAttributes: 
@@ -266,7 +266,7 @@ template:
         claimName: azurefile 
 ```
 
-In this example, we use a customized version the Kubernetes `containerMode` to include Azure File file share volume mountings to NUGET packages and to the ephemeral _work folder volume.
+In this example, we use a customized version the Kubernetes `containerMode` to include Azure File file share volume mountings to NuGet packages and to the ephemeral _work folder volume.
 
 The following parameters aren't mandatory to change:
 
