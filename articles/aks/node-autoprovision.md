@@ -13,11 +13,11 @@ author: wdarko1
 
 # node auto provisioning
 
-When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
+When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the Virtual Machine (VM) size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
 node auto provisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. node auto provisioning automatically deploys, configures and manages Karpenter on your AKS clusters.
+node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. node auto provisioning automatically deploys, configures, and manages Karpenter on your AKS clusters.
 
 ## How node auto provisioning works
 
@@ -328,7 +328,7 @@ Node Disruption, including Consolidation or Drift, can be controlled using diffe
 ### Consolidation
 When the workloads on your nodes scale down, node auto provisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
-You can remove a node manually using `kubectl delete node`, but node auto-provisioning can also control when it should optimize your nodes based on your specifications.
+You can remove a node manually using `kubectl delete node`, but node auto provisioning can also control when it should optimize your nodes based on your specifications.
 
 ```yaml
   disruption:
@@ -356,9 +356,9 @@ With [Auto Upgrade][auto-upgrade] enabled on your cluster, you can also adjust t
 
 ### Kubernetes upgrades
 
-Kubernetes upgrades for node auto-provisioning nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your nodes are automatically updated to follow the same versioning. 
+Kubernetes upgrades for node auto provisioning nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your nodes are automatically updated to follow the same versioning. 
 
-AKS recommends coupling node auto-provisioning with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
+AKS recommends coupling node auto provisioning with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
 
 ### Node image updates
 
@@ -369,7 +369,7 @@ By default node auto provisioning node pool virtual machines are automatically u
 
 ## Monitoring selection events
 
-node auto-provisioning produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
+node auto provisioning produces cluster events that can be used to monitor deployment and scheduling decisions being made. You can view events through the Kubernetes events stream.
 
 ```
 kubectl get events -A --field-selector source=karpenter -w
@@ -407,9 +407,9 @@ node auto provisioning can only be disabled when:
            - key: karpenter.azure.com/disable,
              effect: NoSchedule
    ```
-   This will start the process of migrating the workloads on the node auto provisioning-managed nodes to non-node auto provisioning nodes, honoring PDBs
-   and disruption limits. Pods will migrate to non-node auto provisioning nodes if they can fit. If there isn't enough fixed-size
-   capacity, some node auto provisioning-managed nodes will remain.
+   This starts the process of migrating the workloads on the node auto provisioning-managed nodes to non-node auto provisioning nodes, honoring PDBs
+   and disruption limits. Pods migrates to non-node auto provisioning nodes if they can fit. If there isn't enough fixed-size
+   capacity, some node auto provisioning-managed nodes remains.
 3. Scale up existing fixed-size ManagedCluster AgentPools, or create new fixed-size AgentPools, to take the load from the node auto provisioning-managed nodes.
    As these nodes are added to the cluster the node auto provisioning-managed nodes are drained, and work is migrated to the fixed-scale nodes.
 4. Confirm that all node auto provisioning-managed nodes are deleted, using `kubectl get nodes -l karpenter.sh/nodepool`. If there are still node auto provisioning-managed
@@ -485,7 +485,7 @@ node auto provisioning can only be disabled when:
 
 ### How does node auto provisioning differ from the cluster autoscaler?
 - **Direct VM management**: node auto provisioning provisions VMs directly rather than scaling VM Scale Sets
-- **Faster provisioning**: No need to pre-create VM Scale Sets for every combination of instance type and zone
+- **Faster provisioning**: No need to precreate VM Scale Sets for every combination of instance type and zone
 - **Better bin packing**: Considers multiple instance types and zones simultaneously
 - **More flexibility**: Supports diverse instance types, zones, and capacity types without complex configuration
 
@@ -562,7 +562,7 @@ Possible causes:
 **Cost Optimization**
 
 ### Does NAP support Azure Reserved Instances?
-NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn't directly manage reservations. You can configure a NodePool file to include the VM sizes that are your Reserved Instances, with a separate NodePool for other on-demand or spot instances. When your reserved VMs run out of quota, node auto provisioning will fall back to a different NodePool config file's VM sizes. You can also configure your reserved instance NodePool limits to match the limits of capacity for reserved instances you have. [Purchase reservations][azure-reserved-instances] for your expected baseline capacity. The following example shows two NodePools: a NodePool for reserved instances, and spot VMs
+NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn't directly manage reservations. You can configure a NodePool file to include the VM sizes that are your Reserved Instances, with a separate NodePool for other on-demand or spot instances. When your reserved VMs run out of quota, node auto provisioning falls back to a different NodePool config file's VM sizes. You can also configure your reserved instance NodePool limits to match the limits of capacity for reserved instances you have. [Purchase reservations][azure-reserved-instances] for your expected baseline capacity. The following example shows two NodePools: a NodePool for reserved instances, and spot VMs
 
 ```yaml
          apiVersion: karpenter.sh/v1
@@ -636,7 +636,7 @@ Learn how to [File An Azure support ticket][azure-support] with:
 - You can submit feature requests for node auto provisioning to our [AKS Github Repo: Issues][AKS-repo]
 - To file tickets for self-hosted Karpenter on Azure, visit our [GitHub Repository: AKS Karpenter Provider][aks-karpenter-provider]
 
-For feature reqeusts, file a feature request issue through the [AKS Karpenter Provider][aks-karpenter-provider-issues], which node auto-provisioning is based on. 
+For feature reqeusts, file a feature request issue through the [AKS Karpenter Provider][aks-karpenter-provider-issues], which node auto provisioning is based on. 
 
 <!-- LINKS - internal -->
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
