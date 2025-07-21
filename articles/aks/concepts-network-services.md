@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.custom: fasttrack-edit
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: As a developer working with Azure Kubernetes Service, I want to understand the different types of Kubernetes Services available, so that I can choose the appropriate service type for managing network connectivity and traffic flow in my applications.
 ---
 
 # Kubernetes Services in AKS

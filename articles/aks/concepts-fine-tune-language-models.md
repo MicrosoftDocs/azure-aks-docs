@@ -5,6 +5,7 @@ ms.topic: concept-article
 ms.date: 07/15/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a data scientist, I want to fine-tune pre-trained language models on specific tasks using Kubernetes, so that I can enhance the performance of my AI and machine learning workflows cost-effectively and efficiently.
 ---
 
 # Concepts - Fine-tuning language models for AI and machine learning workflows

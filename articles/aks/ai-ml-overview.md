@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 01/06/2024
 author: schaffererin
 ms.author: colinmixon
+# Customer intent: As a data scientist, I want to deploy and manage AI and ML workloads on a container orchestration platform, so that I can optimize performance and reduce complexity while leveraging existing tools and frameworks for my applications.
 ---
 
 # AI and ML workloads in Azure Kubernetes Service (AKS)

@@ -9,6 +9,7 @@ ms.author: davidsmatlak
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
 
 #Customer intent: As a cluster operator, I want to understand how to create a service principal and delegate permissions for AKS to access required resources. In large enterprise environments, the user that deploys the cluster (or CI/CD system), may not have permissions to create this service principal automatically when the cluster is created.
+# Customer intent: As an AKS cluster operator, I want to learn how to create and manage a service principal, so that I can securely delegate permissions for my cluster to access necessary Azure resources.
 ---
 
 # Use a service principal with Azure Kubernetes Service (AKS)

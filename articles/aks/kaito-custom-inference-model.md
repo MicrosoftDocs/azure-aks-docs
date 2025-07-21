@@ -6,6 +6,7 @@ ms.custom: azure-kubernetes-service
 ms.date: 03/27/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As an AI engineer, I want to onboard custom models for inferencing on Azure Kubernetes Service using the AI toolchain operator, so that I can efficiently deploy and manage AI workloads without having to maintain custom images.
 ---
 
 # Onboard custom models for inferencing with the AI toolchain operator (KAITO) on Azure Kubernetes Service (AKS)

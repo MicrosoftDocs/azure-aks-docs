@@ -6,6 +6,7 @@ ms.topic: concept-article
 ms.date: 04/08/2024
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a developer managing Kubernetes clusters, I want to use the AKS extension for my code editor, so that I can efficiently view and manage my clusters directly from my development environment."
 ---
 
 # Use the Azure Kubernetes Service (AKS) extension for Visual Studio Code

@@ -6,6 +6,7 @@ ms.custom: devx-track-azurecli
 ms.date: 10/14/2024
 ms.author: pahealy
 author: phealy
+# Customer intent: As a DevOps engineer, I want to configure instance-level public IPs for nodes in Azure Kubernetes Service, so that I can ensure direct connectivity for workloads, such as gaming applications, to minimize latency and optimize performance.
 ---
 
 # Use instance-level public IPs in Azure Kubernetes Service (AKS)

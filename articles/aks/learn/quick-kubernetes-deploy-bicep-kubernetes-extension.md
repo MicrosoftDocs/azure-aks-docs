@@ -9,6 +9,7 @@ ms.date: 01/11/2024
 ms.author: schaffererin
 
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+# Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster using Bicep so that I can quickly set up a managed Kubernetes environment and test my applications in Azure.
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using the Bicep Kubernetes extension (preview)

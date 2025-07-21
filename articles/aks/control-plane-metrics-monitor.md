@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: aritraghosh
 ms.subservice: aks-monitoring
 ms.service: azure-kubernetes-service
+# Customer intent: As a Kubernetes administrator, I want to monitor control plane metrics for my Azure Kubernetes Service (AKS) cluster, so that I can ensure operational excellence and maintain the performance and availability of critical control plane components.
 ---
 
 # Monitor Azure Kubernetes Service control plane metrics (preview)

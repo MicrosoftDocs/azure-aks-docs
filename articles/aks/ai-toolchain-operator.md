@@ -7,6 +7,7 @@ ms.date: 04/30/2025
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a data scientist, I want to deploy AI models on a Kubernetes cluster using a managed operator, so that I can streamline model management and focus on development rather than infrastructure setup."
 ---
 
 # Deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on

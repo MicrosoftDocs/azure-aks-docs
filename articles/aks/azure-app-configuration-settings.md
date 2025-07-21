@@ -7,6 +7,7 @@ ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 09/10/2024
+# Customer intent: As a Kubernetes administrator, I want to configure the Azure App Configuration extension for my AKS cluster, so that I can optimize settings like replica count and log verbosity to meet my application’s performance and monitoring needs.
 ---
 
 # Configure the Azure App Configuration extension for your Azure Kubernetes Service

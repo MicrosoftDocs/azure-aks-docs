@@ -8,6 +8,7 @@ ms.date: 02/01/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to use customer-managed keys to encrypt managed disks in Azure Kubernetes Service, so that I can enhance the security and control over my data at rest.
 ---
 
 # Bring your own keys (BYOK) with Azure managed disks in Azure Kubernetes Service (AKS)

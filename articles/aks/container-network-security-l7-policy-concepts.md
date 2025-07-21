@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
 ms.date:  03/14/2024
+# Customer intent: As a Kubernetes administrator, I want to implement Layer 7 policies in my cluster, so that I can enhance application security and traffic management by controlling communication at a granular level based on application-specific attributes.
 ---
 
 # Overview of Layer 7 (L7) policy (Preview) 

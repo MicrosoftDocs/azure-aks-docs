@@ -6,6 +6,7 @@ ms.date: 05/21/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: references_regions, innovation-engine
+# Customer intent: "As a Kubernetes administrator, I want to understand Azure CNI Pod Subnet networking options, so that I can effectively manage IP address allocation and optimize network performance in my AKS clusters."
 ---
 
 # Azure Container Networking Interface (CNI) Pod Subnet

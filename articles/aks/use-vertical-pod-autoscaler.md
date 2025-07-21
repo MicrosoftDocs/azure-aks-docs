@@ -7,6 +7,7 @@ ms.date: 02/22/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
+# Customer intent: "As a Kubernetes administrator, I want to deploy and configure the Vertical Pod Autoscaler in my AKS cluster, so that I can automatically optimize resource requests for my workloads and improve application performance while reducing operational costs."
 ---
 
 # Use the Vertical Pod Autoscaler in Azure Kubernetes Service (AKS)

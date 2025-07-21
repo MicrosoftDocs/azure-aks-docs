@@ -9,6 +9,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 07/09/2024
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to configure Azure CNI for dynamic IP allocation and enhanced subnet support in AKS, so that I can efficiently manage IP addresses and improve the scalability and performance of my Kubernetes clusters.
 ---
 
 # Configure Azure CNI networking for dynamic allocation of IPs and enhanced subnet support in Azure Kubernetes Service (AKS)
