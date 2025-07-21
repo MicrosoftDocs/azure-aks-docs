@@ -28,12 +28,11 @@ node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 | Prerequisite                         | Notes                                                                                                        |
 |--------------------------------------|--------------------------------------------------------------------------------------------------------------|
 | **Azure Subscription**               | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).  |
-| **Azure CLI `aks-preview` extension**| `18.0.0b14` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions].               |
-| **Required permission(s)**           |                                                                                                              |                          
+| **Azure CLI `aks-preview` extension**| `18.0.0b14` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions].               |                      
 
 ## Limitations
 
-- You can't enable in a cluster where node pools have cluster autoscaler enabled
+- You can't enable node auto provisioning in a cluster where node pools have cluster autoscaler enabled
 
 ### Unsupported features
 
@@ -72,7 +71,7 @@ node auto provisioning is enabled by setting the field `--node-provisioning-mode
 
 ### [Azure CLI](#tab/azure-cli)
 
-- Enable node auto provisioning on a new cluster using the `az aks create` command and set `--node-provisioning-mode` to `Auto`. You also need to set the `--network-plugin` to `azure`, `--network-plugin-mode` to `overlay`, and `--network-dataplane` to `cilium`.
+- Enable node auto provisioning on a new cluster using the `az aks create` command and set `--node-provisioning-mode` to `Auto`. You can also set the `--network-plugin` to `azure`, `--network-plugin-mode` to `overlay` (optional), and `--network-dataplane` to `cilium` (optional).
 
     ```azurecli-interactive
     az aks create \
@@ -162,9 +161,6 @@ Create a virtual network using the [`az network vnet create`][az-network-vnet-cr
 
 When using a custom virtual network with node auto provisioning, you must create and delegate an API server subnet to `Microsoft.ContainerService/managedClusters`, which grants the AKS service permissions to inject the API server pods and internal load balancer into that subnet. You can't use the subnet for any other workloads, but you can use it for multiple AKS clusters located in the same virtual network. The minimum supported API server subnet size is a */28*.
 
-> [!WARNING]
-> An AKS cluster reserves at least 9 IPs in the subnet address space. Running out of IP addresses may prevent API server scaling and cause an API server outage.
-
 ```azurecli-interactive
 az network vnet create --name ${VNET_NAME} \
 --resource-group ${RG_NAME} \
@@ -177,20 +173,8 @@ az network vnet subnet create --resource-group ${RG_NAME} \
 --delegations Microsoft.ContainerService/managedClusters \
 --address-prefixes 172.19.0.0/28
 ```
->[!NOTE]
->
 
-### Network security group rules
-
-All traffic within the virtual network is allowed by default. But if you added Network Security Group (NSG) rules to restrict traffic between different subnets, ensure that the NSG security rules permit the following types of communication:
-
-| Destination | Source | Protocol | Port | Use |
-|--- |--- |--- |--- |--- |
-| APIServer Subnet CIDR   | Cluster Subnet | TCP           | 443 and 4443      | Required to enable communication between Nodes and the API server.|
-| APIServer Subnet CIDR   | Azure Load Balancer |  TCP           | 9988      | Required to enable communication between Azure Load Balancer and the API server. You can also enable all communication between the Azure Load Balancer and the API Server Subnet CIDR. |
-| Node CIDR | Node CIDR | All Protocols | All Ports | Required to enable communication between Nodes. |
-| Node CIDR | Pod CIDR | All Protocols | All Ports | Required for Service traffic routing. |
-| Pod CIDR | Pod CIDR | All Protocols | All Ports | Required for Pod to Pod and Pod to Service traffic, including DNS. |
+All traffic within the virtual network is allowed by default. But if you added Network Security Group (NSG) rules to restrict traffic between different subnets, see our [Network Security Group documentation][network-security-group] for the proper permissions.  
 
 ### Create a managed identity and give it permissions on the virtual network
 
@@ -377,7 +361,7 @@ AKS recommends coupling node auto-provisioning with a Kubernetes [Auto Upgrade][
 
 ### Node image updates
 
-By default node auto provisioning node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place, including Karpenter or Node Disruption Budgets, Pod Disruption Budgets.
+By default node auto provisioning node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place, including Karpenter or Node Disruption Budgets, and Pod Disruption Budgets.
 
 >[!NOTE]
 >[Node OS Upgrade Channel settings][node-os-upgrade-channel] of Auto Upgrade do not impact node auto provisioning-managed nodes. node auto provisioning has its own automated method for ensuring node image upgrades. 
@@ -502,7 +486,7 @@ node auto provisioning can only be disabled when:
 - **Direct VM management**: node auto provisioning provisions VMs directly rather than scaling VM Scale Sets
 - **Faster provisioning**: No need to pre-create VM Scale Sets for every combination of instance type and zone
 - **Better bin packing**: Considers multiple instance types and zones simultaneously
-- **More flexible**: Supports diverse instance types, zones, and capacity types without complex configuration
+- **More flexibility**: Supports diverse instance types, zones, and capacity types without complex configuration
 
 **Installation and Configuration**
 
@@ -522,7 +506,7 @@ node auto provisioning supports most Azure Virtual Machine sizes that are:
 - Are available in your region and availability zones
 
 ### Can I use custom virtual machine images with node auto provisioning?
-No, you can specify custom VM images for node auto provisioning.
+No, you cannot specify custom VM images for node auto provisioning.
 
 ### Does node auto provisioning handle spot VMs?
 node auto provisioning supports Azure Spot VMs for cost savings. When using spot instances, be aware that they are subject to eviction policies.
@@ -639,13 +623,16 @@ Yes, node auto provisioning resources (NodePools, AKSNodeClasses) can be managed
 node auto provisioning currently supports Linux nodes through Ubuntu22.04 and AzureLinux (v2 and v3 based on the cluster's kubernetes version). Windows node support may be considered for future releases.
 
 ### Can I create nodes in my cluster that are not managed by node auto provisioning?
-Yes, you can manually create nodes or nodepools in your cluster that are not managed by node auto provisioning. For existing clusters that enable node auto provisioning, you can keep existing nodes or nodepools in tact, though they will not be managed by node auto provisioning and 
+Yes, you can manually create nodes or nodepools in your cluster that are not managed by node auto provisioning. For existing clusters that enable node auto provisioning, you can keep existing nodes or nodepools in tact, though they will not be managed by node auto provisioning. 
 
-### How do I  get help, report bugs or request features?
+### How do I  get help?
 Learn how to [File An Azure support ticket][azure-support] with:
 - Detailed description of the issue
 - Steps to reproduce
 - Relevant events and error messages
+
+### How do I request features for node-auto provisioning?
+- You can submit feature requests for node auto provisioning to our [AKS Github Repo: Issues][AKS-repo]
 - To file tickets for self-hosted Karpenter on Azure, visit our [GitHub Repository: AKS Karpenter Provider][aks-karpenter-provider]
 
 For feature reqeusts, file a feature request issue through the [AKS Karpenter Provider][aks-karpenter-provider-issues], which node auto-provisioning is based on. 
@@ -672,6 +659,7 @@ For feature reqeusts, file a feature request issue through the [AKS Karpenter Pr
 [azure-support]: /azure/azure-portal/supportability/how-to-create-azure-support-request
 [azure-reserved-instances]: /pricing/reserved-vm-instances/
 [vm-overview]: /azure/virtual-machines/sizes/overview
+[network-security-group]: /azure/virtual-network/network-security-groups-overview
 
 <!-- LINKS - external -->
 [aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
@@ -679,3 +667,4 @@ For feature reqeusts, file a feature request issue through the [AKS Karpenter Pr
 [kubectl]: https://kubernetes.io/docs/reference/kubectl/
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
 [kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[AKS-repo]: https://github.com/Azure/AKS/issues
