@@ -561,13 +561,13 @@ Possible causes:
 **Cost Optimization**
 
 ### Does NAP support Azure Reserved Instances?
-NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn't directly manage reservations. You can configure a NodePool file to include the VM sizes that are your Reserved Instances, with a separate NodePool for other on-demand or spot instances. When your reserved VMs run out of quota, node auto provisioning will fall back to a different NodePool config file's VM sizes. You can also configure your reserved instance NodePool limits to match the limits of capacity for reserved instances you have. [Purchase reservations][azure-reserved-instances] for your expected baseline capacity. The following example shows three NodePools: a NodePool for reserved instances, spot VMs, and on-demand 
+NAP can provision VMs that benefit from Reserved Instance pricing, but it doesn't directly manage reservations. You can configure a NodePool file to include the VM sizes that are your Reserved Instances, with a separate NodePool for other on-demand or spot instances. When your reserved VMs run out of quota, node auto provisioning will fall back to a different NodePool config file's VM sizes. You can also configure your reserved instance NodePool limits to match the limits of capacity for reserved instances you have. [Purchase reservations][azure-reserved-instances] for your expected baseline capacity. The following example shows two NodePools: a NodePool for reserved instances, and spot VMs
 
 ```yaml
          apiVersion: karpenter.sh/v1
          kind: NodePool
          metadata:
-           name: default-on-demand
+           name: default-spot
          spec:
            template:
              spec:
