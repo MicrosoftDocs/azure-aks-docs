@@ -318,7 +318,7 @@ To deploy the infrastructure using Terraform, we're going to use the [Azure Veri
 :::zone-end
 
 > [!NOTE]
-> In AKS, the keepalive time (the duration of inactivity after which the first keepalive probe is sent) default duration is [7200 seconds or 2 hours by default](/azure/aks/improve-network-fault-tolerance-in-aks-using-tcp-keepalive#configuring-tcp-keepalive-on-aks). For MongoDB, you will generally experience better results with a shorter keepalive value, on the order of [120 seconds or 2 minutes](https://www.mongodb.com/docs/manual/faq/diagnostics/#does-tcp-keepalive-time-affect-mongodb-deployments-).
+> In AKS, the keepalive time (the duration of inactivity after which the first keepalive probe is sent) default duration is [7200 seconds or 2 hours](/azure/aks/improve-network-fault-tolerance-in-aks-using-tcp-keepalive#configuring-tcp-keepalive-on-aks). For MongoDB, you will generally experience better results with a shorter keepalive value, on the order of [120 seconds or 2 minutes](https://www.mongodb.com/docs/manual/faq/diagnostics/#does-tcp-keepalive-time-affect-mongodb-deployments-).
 
 ## Connect to the AKS cluster
 
