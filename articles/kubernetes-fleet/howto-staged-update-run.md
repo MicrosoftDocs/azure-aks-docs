@@ -450,3 +450,64 @@ metadata:
   namespace: test-namespace
   ...
 ```
+
+## Deploy a second ClusterStagedUpdateRun to rollback to a previous version
+
+Now suppose the workload admin wants to rollback the configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new ClusterStagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterStagedUpdateRun
+metadata:
+  name: example-run-2
+spec:
+  placementName: example-placement
+  resourceSnapshotIndex: "0"
+  stagedRolloutStrategyName: example-strategy
+```
+
+Let's check the new `ClusterStagedUpdateRun`:
+
+```bash
+kubectl get csur -A
+NAME            PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
+example-run     example-placement   1                         0                       True          True        13m
+example-run-2   example-placement   0                         0                       True                      9s
+```
+
+After some time has elasped we should see the `ClusterStagedApproval` object created for the new `ClusterStagedUpdateRun`:
+
+```bash
+kubectl get clusterapprovalrequest -A
+NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-canary   example-run-2   canary                                 75s
+example-run-canary     example-run     canary   True       True               14m
+```
+
+Let's reuse the same approval.json file to patch the new `ClusterStagedApproval` object to approve it:
+```
+kubectl patch clusterapprovalrequests example-run-2-canary --type='merge' --subresource=status --patch-file approval.json
+```
+
+Verify if the new object is approved,
+
+```bash
+kubectl get clusterapprovalrequest -A                                                                                    
+NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
+example-run-2-canary   example-run-2   canary   True       True               2m7s
+example-run-canary     example-run     canary   True       True               15m
+```
+
+The configmap test-cm should be deployed on all 3 member clusters, with latest data set to `value1`:
+
+```yaml
+apiVersion: v1
+data:
+  key: value1
+kind: ConfigMap
+metadata:
+  ...
+  name: test-cm
+  namespace: test-namespace
+  ...
+```
