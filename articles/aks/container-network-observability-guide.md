@@ -11,7 +11,8 @@ ms.date: 05/28/2025
 
 # Use Advanced Container Networking Services for diagnosing and resolving network issues
 
-This guide helps you navigate [Advanced Container Networking Services](./advanced-container-networking-services-overview.md#container-network-observability) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, flow logs, and visualization tools like Hubble UI and CLI to diagnose and resolve issues effectively.
+This guide helps you navigate [Advanced Container Networking Services](./advanced-container-networking-services-overview.md#container-network-observability) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, [Container Network Logs](./container-network-observability-logs.md), [Container Network Metrics](./container-network-observability-metrics.md), and visualization tools to diagnose and resolve issues effectively.
+Advanced Container Networking Services provides comprehensive observability features that enable you to monitor, analyze, and troubleshoot network traffic in your Azure Kubernetes Service (AKS) clusters. It includes pre-built Grafana dashboards, real-time metrics, and detailed logs that help you gain insights into network performance, identify issues, and optimize your container networking environment.
 
 ## Overview of Advanced Container Networking Services dashboards
 
@@ -19,7 +20,9 @@ We created sample dashboards for Advanced Container Networking Services to help 
 
 The suite of dashboards includes:
 
-- **Clusters**: Shows node-level metrics for your clusters.
+-  **Flow Logs**: Shows network traffic flows between pods, namespaces, and external endpoints.
+-  **Flow Logs (External Traffic)**: Shows network traffic flows between pods and external endpoints.
+-  **Clusters**: Shows node-level metrics for your clusters.
 - **DNS (Cluster)**: Shows DNS metrics on a cluster or selection of nodes.
 - **DNS (Workload)**: Shows DNS metrics for the specified workload (for example, Pods of a DaemonSet or Deployment such as CoreDNS).
 - **Drops (Workload)**: Shows drops to/from the specified workload (for example, Pods of a Deployment or DaemonSet).
@@ -27,6 +30,64 @@ The suite of dashboards includes:
 - **Pod Flows (Workload)**: Shows L4/L7 packet flows to/from the specified workload (for example, Pods of a Deployment or DaemonSet).
 - **L7 Flows (Namespace)**: Shows HTTP, Kafka, and gRPC packet flows to/from the specified namespace (i.e. Pods in the Namespace) when a Layer 7 based policy is applied. *This is available only for clusters with Cilium data plane*.
 - **L7 Flows (Workload)**: Shows HTTP, Kafka, and gRPC flows to/from the specified workload (for example, Pods of a Deployment or DaemonSet) when a Layer 7 based policy is applied. *This is available only for clusters with Cilium data plane*.
+
+## Free network observability with Retina
+
+While Advanced Container Networking Services is a paid offering that provides comprehensive network observability capabilities, Microsoft also offers [**Retina**](https://retina.sh/), an open-source network observability platform that you can use for free. Retina provides essential network monitoring capabilities that can help you get started with network observability before upgrading to the full ACNS experience.
+
+### What Retina offers for free
+
+Retina is a cloud-agnostic, open-source Kubernetes network observability platform that provides the following capabilities at no cost:
+
+- **Network flow monitoring**: Capture and analyze network traffic flows, including packet forwarding, TCP/UDP connections, and interface statistics
+- **DNS request tracking**: Monitor DNS queries and responses with detailed metrics including query types, response codes, and error analysis
+- **Packet drop detection**: Identify and analyze dropped packets with detailed drop reasons (e.g., iptable rules, connection tracking, unknown drops)
+- **Hubble integration**: Leverage Hubble control plane for enhanced flow logs and network insights across any CNI and OS (Linux/Windows)
+- **Prometheus metrics integration**: Export comprehensive network metrics to Prometheus with configurable metric modes (basic, advanced pod-level)
+- **Distributed packet capture**: On-demand packet captures across multiple nodes for deep troubleshooting
+- **Open-source flexibility**: Deploy and customize Retina according to your specific requirements with full source code access
+
+### Key differences between free Retina and paid ACNS
+
+| Feature | Free Retina | Advanced Container Networking Services (ACNS) |
+|---------|-------------|-----------------------------------------------|
+| **Cost** | Free and open-source | Paid Azure service |
+| **Support** | Community support | Microsoft enterprise support |
+| **Integration** | Manual setup and configuration | Fully managed Azure integration |
+| **Dashboards** | Basic Grafana dashboards | Pre-built, optimized Azure dashboards |
+| **Log Storage** | Local storage with rotation limits | Comprehensive log management |
+| **Real-time Analysis** | Real-time eBPF capture | Real-time metrics and logs |
+| **Historical Analysis** | Limited local storage | Advanced analytics with AI insights |
+| **Scalability** | Self-managed scaling | Azure-managed auto-scaling |
+| **Maintenance** | Self-maintained | Fully managed by Microsoft |
+
+### Getting started with free Retina
+
+To get started with the free Retina offering:
+
+1. **Deploy Retina on your cluster**: Install Retina using Helm charts or Kubernetes manifests from the [official Retina repository](https://github.com/microsoft/retina)
+2. **Configure basic monitoring**: Set up Prometheus and Grafana to visualize Retina metrics
+3. **Enable network flow collection**: Configure Retina to capture network flows based on your requirements
+4. **Create custom dashboards**: Build Grafana dashboards tailored to your monitoring needs
+
+### When to consider free Retina
+
+Consider free Retina only for:
+
+- **Development and testing environments**: Non-production workloads where enterprise support isn't required
+- **Learning and evaluation**: Understanding network observability concepts before moving to production solutions
+- **Cost-sensitive scenarios**: When budget constraints prevent using paid solutions
+- **Multi-cloud deployments**: When you need consistent tooling across different cloud providers
+
+### When to upgrade to full ACNS
+
+Consider upgrading from Container Network Logs to the complete Advanced Container Networking Services when you need:
+
+- **Enhanced security features**: Additional network security capabilities beyond observability
+- **Advanced network policies**: Layer 7 policies and advanced traffic management
+- **Comprehensive platform**: Complete container networking solution with security and observability
+- **Production-grade support**: Enterprise-grade support for mission-critical workloads
+- **AI-powered insights**: Advanced analytics and recommendations for network optimization (upcoming fetaure)
 
 ## Use case 1: Interpret domain name server (DNS) issues for root cause analysis (RCA)
 
@@ -77,37 +138,43 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
 
     :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-workload.png" alt-text="Diagram of top pods with most DNS errors. " lightbox="./media/advanced-container-networking-services/acns-dashboard/top-pods-with-dns-errors-in-workload.png":::
 
-### Step 2: Debug DNS resolution of a pod with Hubble flow logs
+### Step 2: Analyze DNS resolution issues with Container Network Logs
 
-1. You can leverage the Hubble CLI tool to inspect flows in real time. Continuing from the final step from the previous section, you'd have list of pods causing most DNS errors. You can then use the `hubble observe` command to see DNS flows on each pod. This command filters DNS-related traffic for the specified pod, showing details like DNS queries, responses, and latency.
+1. Container Network Logs provide detailed insights into DNS queries and their responses in both stored and on-demand modes. With Container Network Logs, you can analyze DNS-related traffic for specific pods, showing details like DNS queries, responses, error codes, and latency. To view DNS flows in your Log Analytics workspace, use the following KQL query:
 
-    ```bash
-    hubble observe --dns --pod <pod-name>
+    ```kusto
+    RetinaNetworkFlowLogs
+    | where FlowType == "DNS" 
+    | where SourcePodName == "<pod-name>"
+    | project TimeGenerated, SourcePodName, DestinationPodName, FlowType, SourceNamespace, DestinationNamespace
+    | order by TimeGenerated desc
     ```
 
-    In the following example output, you can see the query is getting refused:
+    Container Network Logs provide comprehensive insights into DNS queries and their responses, which can help diagnosing and troubleshooting DNS-related issues. Each log entry includes information such as the query type (for example, *A* or *AAAA*), the queried domain name, the DNS response code (for example, *Query Refused*, *Non-Existent Domain*, or *Server Failure*), and the source and destination of the DNS request.
 
-    :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png" alt-text="Diagram of one of the commands for hubble CLI. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-dns-response-combined.png":::
+2. **Identify the query status**: Examine the **Verdict** field for responses like *DROPPED* or *FORWARDED*, which indicates issues with network connectivity or policy enforcement.
+3. **Verify the source and destination**: Ensure the pod names listed in the **SourcePodName** and **DestinationPodName** fields are correct and the communication path is expected.
+4. **Track traffic patterns**: Look at the **Verdict** field to understand whether requests were forwarded or dropped. Disruptions in forwarding might indicate networking or configuration problems.
+5. **Analyze timestamps**: Use the **TimeGenerated** field to correlate specific DNS issues with other events in your system for a comprehensive diagnosis.
+6. **Filter by pods and namespaces**: Use fields like **SourcePodName**, **DestinationPodName**, and **SourceNamespace** to focus on specific workloads experiencing issues.
 
-    Hubble logs provide detailed insights into DNS queries and their responses, which can help diagnosing and troubleshooting DNS-related issues. Each log entry includes information such as the query type (for example, *A* or *AAAA*), the queried domain name, the DNS response code (for example, *Query Refused*, *Non-Existent Domain*, or *Server Failure*), and the source and destination of the DNS request.
+### Step 3: Visualize DNS traffic with Container Network Logs dashboards
 
-2. **Identify the query status**: Examine the **DNS Answer RCode** field for responses like *Query Refused* or *Server Failure, which indicates issues with the DNS server or configuration.
-3. **Verify the queried domain**: Ensure the domain name listed (for example, *example.com*) is correct and exists. For *Non-Existent Domain* errors, confirm the domain is valid and resolvable.
-4. **Track forwarding behavior**: Look at forwarding details to understand whether the query was successfully forwarded to the DNS server or endpoint. Disruptions in this process might indicate networking or configuration problems.
-5. **Analyze timestamps**: Use timestamps to correlate specific DNS issues with other events in your system for a comprehensive diagnosis.
-6. **Cross-check IDs**: Match the ID fields for requests and responses to ensure continuity and check for anomalies in query processing.
+Container Network Logs provides rich visualization capabilities through Azure portal dashboards and Azure Managed Grafana. The service dependency graph and flow logs visualization complement the detailed log analysis by providing visual insights into DNS-related traffic and dependencies:
 
-### Step 3: Visualize dependencies using Hubble service graphs
+- **Service dependency graphs**: Visualize which pods or services are sending high volumes of DNS queries and their relationships
+- **Flow logs dashboards**: Monitor DNS request patterns, error rates, and response times in real-time
+- **Traffic flow analysis**: Identify dropped DNS packets and communication paths to CoreDNS or external DNS services
 
-The Hubble UI service graph complements CLI insights by visualizing DNS-related traffic and dependencies. Filtering the service graph for DNS traffic on the affected nodes reveals:
+ :::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Screenshot of flow logs and error logs." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
 
-- Which pods or services are sending high volumes of DNS queries.
-- The flow of traffic to CoreDNS or external DNS services.
-- Dropped packets flows, often marked in red.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-service-map.png" alt-text="Diagram of Hubble UI service map. " lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-service-map.png":::
+You can access these visualizations through:
+- **Azure portal**: Navigate to your AKS cluster → Insights → Networking → Flow Logs
+- **Azure Managed Grafana**: Use the pre-configured "Flow Logs" and "Flow Logs (External Traffic)" dashboards
 
-With the combined capabilities of the grafana dashboards, Hubble CLI, and Hubble UI, you can identify DNS issues and perform root cause analysis effectively.
+
+With the combined capabilities of Grafana dashboards, Container Network Logs stored mode for historical analysis, and on-demand logs for real-time troubleshooting, you can identify DNS issues and perform root cause analysis effectively.
 
 ## Use case 2: Identify packet drops at cluster and pod level due to misconfigured network policy or network connectivity issues
 
@@ -145,23 +212,51 @@ In addition to policy enforcement issues, network connectivity problems can caus
 
     :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png" alt-text="Diagram of total outgoing drops by source pods. " lightbox="./media/advanced-container-networking-services/acns-dashboard/total-outgoing-drops-by-source-pods.png":::
 
-### Step 2: Investigate with Hubble CLI
+### Step 2: Analyze packet drops with Container Network Logs
 
-Using Hubble CLI, you can identify packet drops caused by misconfigured network policies with detailed, real-time data. Hubble CLI provides granular, real-time insights into dropped packets. By observing traffic, focusing on policy denied drops, and analyzing patterns, you can identify the misconfigured network policies and validate fixes.
+Container Network Logs provides comprehensive insights into packet drops caused by misconfigured network policies with detailed, real-time and historical data. You can analyze dropped packets by examining specific drop reasons, patterns, and affected workloads.
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-cli-logs-for-drop-flow.png" alt-text="Diagram of Hubble CLI for drop flows." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-cli-logs-for-drop-flow.png":::
+Use the following KQL query in your Log Analytics workspace to identify packet drops:
 
-### Step 3: Observe the Hubble UI
+```kusto
+RetinaNetworkFlowLogs
+| where Verdict == "DROPPED" 
+| summarize DropCount = count() by SourcePodName, DestinationPodName, SourceNamespace, bin(TimeGenerated, 5m)
+| order by TimeGenerated desc, DropCount desc
+```
 
-Another useful tool is the Hubble UI, which provides a visual representation of traffic flows within a namespace. For example, in the *agnhost* namespace, the UI displays interactions between pods within the same namespace, pods in other namespaces, and even packets originating from outside the cluster. Additionally, the interface highlights dropped packets and provides detailed information, such as the source and destination pod names, along with pod and namespace labels. This data can be instrumental in reviewing the network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies.
+For real-time analysis of dropped packets, you can also filter by specific pods or namespaces:
 
-:::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png" alt-text="Diagram of Hubble UI for dropped packets." lightbox="./media/advanced-container-networking-services/acns-dashboard/hubble-ui-for-drop-flow.png":::
+```kusto
+RetinaNetworkFlowLogs
+| where Verdict == "DROPPED" 
+| where SourceNamespace == "<namespace-name>"
+| project TimeGenerated, SourcePodName, DestinationPodName, SourceNamespace, DestinationNamespace
+| order by TimeGenerated desc
+```
+
+Container Network Logs provides granular insights into dropped packets, helping you identify misconfigured network policies and validate fixes. The logs include detailed information about drop reasons, affected pods, and traffic patterns that can guide your troubleshooting efforts.
+
+
+### Step 3: Visualize packet drops with Container Network Logs dashboards
+
+Container Network Logs provides visual representation of traffic flows and dropped packets through Azure portal dashboards and Azure Managed Grafana. The Flow Logs dashboards display interactions between pods within the same namespace, pods in other namespaces, and traffic from outside the cluster.
+
+Key visualization features include:
+- **Drop analysis by reason**: Identify why packets are being dropped (policy denied, connection tracking, etc.)
+- **Traffic flow maps**: Visual representation of allowed and denied traffic flows
+- **Namespace and pod-level insights**: Detailed views of source and destination relationships
+- **Time-series analysis**: Historical trends of packet drops and their causes
+
+ :::image type="content" source="./media/advanced-container-networking-services/top-namespaces.png" alt-text="Screenshot of top namespaces and pod metrics." lightbox="./media/advanced-container-networking-services/top-namespaces.png":::
+
+This data is instrumental in reviewing network policies applied in the cluster, allowing administrators to swiftly identify and address any misconfigured or problematic policies through comprehensive log analysis and visual representations.
 
 ## Use case 3: Identify traffic imbalances within workloads and namespaces
 
 Traffic imbalances occur when certain pods or services within a workload or namespace handle a disproportionately high volume of network traffic compared to others. This can lead to resource contention, degraded performance for overloaded pods, and underutilization of others. Such imbalances often arise due to misconfigured services, uneven traffic distribution by load balancers, or unanticipated usage patterns. Without observability, it's challenging to identify which pods or namespaces are overloaded or underutilized. Advanced Container Networking Services can help by monitoring real-time traffic patterns at the pod level, providing metrics on bandwidth usage, request rates, and latency, making it easy to pinpoint imbalances.
 
-> Let's say you have an online retail platform running on an AKS cluster. The platform consists of multiple microservices, including a product search service, a user authentication service, and an order processing service, all deployed within the same namespace. During a seasonal sale, the product search service experiences a surge in traffic, while the other services remain idle. The load balancer inadvertently directs more requests to a subset of pods within the product search deployment, leading to congestion and increased latency for search queries. Meanwhile, other pods in the same deployment are underutilized.
+> Let's say you have an online retail platform running on an AKS cluster. The platform consists of multiple microservices, including a product search service, a user authentication service, and an order processing service that communicates through Kafka. During a seasonal sale, the product search service experiences a surge in traffic, while the other services remain idle. The load balancer inadvertently directs more requests to a subset of pods within the product search deployment, leading to congestion and increased latency for search queries. Meanwhile, other pods in the same deployment are underutilized.
 
 ### Step 1. Investigate pod traffic by Grafana dashboard
 
@@ -198,7 +293,34 @@ Traffic imbalances occur when certain pods or services within a workload or name
 
     :::image type="content" source="./media/advanced-container-networking-services/acns-dashboard/stacked-incoming-tcp-reset-by-destination-pods.png" alt-text="Snapshot of Total Incoming TCP reset by destination pods." lightbox="./media/advanced-container-networking-services/acns-dashboard/stacked-incoming-tcp-reset-by-destination-pods.png":::
 
-## Use case 4: Real time monitoring of cluster’s network health and performance
+### Analyzing traffic imbalances with Container Network Logs
+
+In addition to using Grafana dashboards, you can use Container Network Logs to analyze traffic patterns and identify imbalances through KQL queries:
+
+```kusto
+// Identify pods with high traffic volume (potential imbalances)
+RetinaNetworkFlowLogs
+| where TimeGenerated > ago(1h)
+| extend TCP = parse_json(Layer4).TCP
+| extend SourcePort = TCP.source_port, DestinationPort = TCP.destination_port
+| summarize TotalConnections = count() by SourcePodName, SourceNamespace
+| top 10 by TotalConnections desc
+```
+
+```kusto
+// Analyze TCP reset patterns to identify connection issues
+RetinaNetworkFlowLogs
+| where TimeGenerated > ago(1h)
+| extend TCP = parse_json(Layer4).TCP
+| extend Flags = TCP.flags
+| where Flags contains "RST"
+| summarize ResetCount = count() by SourcePodName, DestinationPodName, bin(TimeGenerated, 5m)
+| order by TimeGenerated desc, ResetCount desc
+```
+
+These queries help identify traffic imbalances and connection issues that might not be immediately visible in the dashboard visualizations.
+
+## Use case 4: Real time monitoring of cluster's network health and performance
 
 Presenting a cluster's network health metrics at a high level is essential for ensuring the overall stability and performance of the system. High-level metrics provide a quick and comprehensive view of the cluster’s network performance, allowing administrators to easily identify potential bottlenecks, failures, or inefficiencies without delving into granular details. These metrics, such as latency, throughput, packet loss, and error rates, offer a snapshot of the cluster’s health, enabling proactive monitoring and rapid troubleshooting.
 
@@ -266,6 +388,51 @@ L7 traffic observability addresses critical application-layer networking issues 
 4. **Policy enforcement and configuration**: Evaluate network policies, service discovery mechanisms, and load balancing settings for misconfigurations.
 5. **Heatmaps and flow metrics**: Use visualizations like heatmaps to quickly identify error-heavy pods or traffic anomalies.
 
+### Analyzing L7 traffic with Container Network Logs
+
+Container Network Logs provides comprehensive L7 traffic analysis capabilities through both stored logs and visual dashboards. Use the following KQL queries to analyze HTTP, gRPC, and other application-layer traffic:
+
+```kusto
+// Analyze HTTP response codes and error rates
+RetinaNetworkFlowLogs
+| where TimeGenerated > ago(1h)
+| where FlowType == "L7_HTTP"
+| extend HTTP = parse_json(Layer4).HTTP
+| extend StatusCode = HTTP.status_code
+| summarize RequestCount = count() by StatusCode, SourcePodName, bin(TimeGenerated, 5m)
+| order by TimeGenerated desc
+```
+
+```kusto
+// Identify pods with high HTTP 4xx or 5xx error rates
+RetinaNetworkFlowLogs
+| where TimeGenerated > ago(1h)
+| where FlowType == "L7_HTTP"
+| extend HTTP = parse_json(Layer4).HTTP
+| extend StatusCode = tostring(HTTP.status_code)
+| where StatusCode startswith "4" or StatusCode startswith "5"
+| summarize ErrorCount = count(), UniqueErrors = dcount(StatusCode) by SourcePodName, DestinationPodName
+| top 10 by ErrorCount desc
+```
+
+```kusto
+// Monitor gRPC traffic and response times
+RetinaNetworkFlowLogs
+| where TimeGenerated > ago(1h)
+| where FlowType == "L7_GRPC"
+| extend GRPC = parse_json(Layer4).GRPC
+| extend Method = GRPC.method
+| summarize RequestCount = count() by SourcePodName, DestinationPodName, Method
+| order by RequestCount desc
+```
+
+These queries complement the visual dashboards by providing detailed insights into application-layer performance, error patterns, and traffic distribution across your microservices architecture.
+
 ## Next steps
 
-For more information about Advanced Container Networking Services for Azure Kubernetes Service (AKS), see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md)
+To get started with network observability in AKS:
+
+- **Set up Container Network Logs**: Learn how to configure [Container Network Logs for comprehensive network observability](./how-to-configure-container-network-logs.md)
+- **Explore Advanced Container Networking Services**: For more information about the complete platform, see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md)
+- **Configure monitoring**: Set up [Azure Managed Grafana integration](./how-to-configure-container-network-logs.md#visualization-by-using-azure-managed-grafana) for advanced visualizations
+- **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
