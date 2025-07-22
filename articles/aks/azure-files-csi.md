@@ -449,7 +449,7 @@ accountname.file.core.windows.net:/accountname/pvc-fa72ec43-ae64-42e4-a8a2-55660
 
 ### Encryption in Transit for NFS file shares (Preview)
 
-[Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read & writes to the NFS file shares within the VNET are encrypted providing an additional layer of security.
+**[Preview]** [Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read & writes to the NFS file shares within the VNET are encrypted providing an additional layer of security.
 By setting encryptInTransit: "true" in the storage class parameters, you can enable data encryption in transit for NFS Azure file volumes.
 
 ```yml
@@ -461,7 +461,7 @@ provisioner: file.csi.azure.com
 allowVolumeExpansion: true
 parameters:
   protocol: nfs
-  encryptInTransit: true
+  encryptInTransit: "true"
 mountOptions:
   - nconnect=4
   - noresvport
@@ -469,7 +469,9 @@ mountOptions:
 ```
 
 > [!NOTE]
-> EiT Preview is supported starting from AKS 1.33.
+> The EiT feature is now available in preview starting with AKS version 1.33. Please note that ARM64 nodes are not currently supported.
+>
+> Please find the EiT supported [Linux distributions](/azure/storage/files/encryption-in-transit-for-nfs-shares#overview), and [supported regions](/azure/storage/files/encryption-in-transit-for-nfs-shares#supported-regions), for those regions currently running preview, you must register your subscription follow [the instructions](/azure/storage/files/encryption-in-transit-for-nfs-shares#register-for-preview-not-needed-for-ga-regions) to use EiT in preview regions.
 
 ## Windows containers
 
