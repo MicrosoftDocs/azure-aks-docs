@@ -19,7 +19,7 @@ This article shows you how to create and execute staged update runs to deploy wo
 
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
-* Read the [conceptual overview of staged rollout strategies](./concepts-rollout-strategy.md#staged-update-strategy-preview) to understand the concepts and terminology used in this article.
+* To understand the concepts and terminology used in this article, read the [conceptual overview of staged rollout strategies](./concepts-rollout-strategy.md#staged-update-strategy-preview).
 
 * You must have a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
@@ -54,7 +54,7 @@ This article shows you how to create and execute staged update runs to deploy wo
 
 ## Set up the demo environment
 
-This tutorial demonstrates staged update runs using a demo fleet environment with 3 member clusters that have the following labels:
+This tutorial demonstrates staged update runs using a demo fleet environment with three member clusters that have the following labels:
 
 | cluster name | labels                      |
 |--------------|-----------------------------|
@@ -75,7 +75,7 @@ kubectl create ns test-namespace
 kubectl create cm test-cm --from-literal=key=value1 -n test-namespace
 ```
 
-Create a ClusterResourcePlacement to deploy the resources:
+To deploy the resources, create a ClusterResourcePlacement:
 
 > [!NOTE]
 > The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
@@ -97,7 +97,7 @@ spec:
     type: External
 ```
 
-All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we haven't created a `ClusterStagedUpdateRun`.
+All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we didn't create a `ClusterStagedUpdateRun`.
 
 Verify the placement is scheduled:
 
@@ -124,7 +124,7 @@ NAME                           GEN   AGE   LABELS
 example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 ```
 
-We only have one version of the snapshot. It is the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
+We only have one version of the snapshot. It's the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
 ### Create a new resource snapshot
 
@@ -150,7 +150,7 @@ metadata:
   uid: ...
 ```
 
-Now you should see 2 versions of resource snapshots with index 0 and 1 respectively:
+Now you should see two versions of resource snapshots with index 0 and 1 respectively:
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
@@ -159,7 +159,7 @@ example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapsh
 example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
 ```
 
-The latest label set to example-placement-1-snapshot which contains the latest configmap data:
+The latest label is set to example-placement-1-snapshot, which contains the latest configmap data:
 
 ```bash
 kubectl get clusterresourcesnapshots example-placement-1-snapshot -o yaml
@@ -233,9 +233,9 @@ spec:
         - type: Approval
 ```
 
-## Deploy a ClusterStagedUpdateRun to rollout latest change
+## Deploy a ClusterStagedUpdateRun to roll out latest change
 
-A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our CRP, we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
+A `ClusterStagedUpdateRun` executes the rollout of a `ClusterResourcePlacement` following a `ClusterStagedUpdateStrategy`. To trigger the staged update run for our ClusterResourcePlacement (CRP), we create a `ClusterStagedUpdateRun` specifying the CRP name, updateRun strategy name, and the latest resource snapshot index ("1"):
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -256,7 +256,7 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True                      7s
 ```
 
-A more detailed look at the status after some time has elasped:
+A more detailed look at the status after some time has elapsed:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -403,7 +403,7 @@ status:
     startTime: "2025-07-22T21:29:23Z"
 ```
 
-We can see that the TimedWait for staging has elasped and we also see that the `ClusterApprovalRequest` object has also been created, We can check the generated ClusterApprovalRequest and see that it's not approved yet
+We can see that the TimedWait for staging has elapsed and we also see that the `ClusterApprovalRequest` object was created. We can check the generated ClusterApprovalRequest and see that it's not approved yet
 
 ```bash
 kubectl get clusterapprovalrequest
@@ -434,7 +434,7 @@ EOF
 kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
-Then verify it's approved:
+Then verify that it's approved:
 
 ```bash
 kubectl get clusterapprovalrequest
@@ -450,7 +450,7 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True          True        5m28s
 ```
 
-The `ClusterResourcePlacement` also shows rollout has completed and resources are available on all member clusters:
+The `ClusterResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
 ```
 kubectl get crp example-placement
@@ -458,7 +458,7 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1               True        1               8m55s
 ```
 
-The configmap test-cm should be deployed on all 3 member clusters, with latest data:
+The configmap test-cm should be deployed on all three member clusters, with latest data:
 
 ```yaml
 apiVersion: v1
@@ -472,9 +472,9 @@ metadata:
   ...
 ```
 
-## Deploy a second ClusterStagedUpdateRun to rollback to a previous version
+## Deploy a second ClusterStagedUpdateRun to roll back to a previous version
 
-Now suppose the workload admin wants to rollback the configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new ClusterStagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
+Now suppose the workload admin wants to roll back the configmap change, reverting the value `value2` back to `value1`. Instead of manually updating the configmap from hub, they can create a new ClusterStagedUpdateRun with a previous resource snapshot index, "0" in our context and they can reuse the same strategy:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -496,7 +496,7 @@ example-run     example-placement   1                         0                 
 example-run-2   example-placement   0                         0                       True                      9s
 ```
 
-After some time has elasped we should see the `ClusterStagedApproval` object created for the new `ClusterStagedUpdateRun`:
+After some time has elapsed, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
 
 ```bash
 kubectl get clusterapprovalrequest -A
@@ -505,7 +505,7 @@ example-run-2-canary   example-run-2   canary                                 75
 example-run-canary     example-run     canary   True       True               14m
 ```
 
-Let's reuse the same approval.json file to patch the new `ClusterStagedApproval` object to approve it:
+To approve the new `ClusterApprovalRequest` object, let's reuse the same approval.json file to patch it:
 ```
 kubectl patch clusterapprovalrequests example-run-2-canary --type='merge' --subresource=status --patch-file approval.json
 ```
@@ -519,7 +519,7 @@ example-run-2-canary   example-run-2   canary   True       True               2m
 example-run-canary     example-run     canary   True       True               15m
 ```
 
-The configmap `test-cm` should now be deployed on all 3 member clusters, with the data reverted to `value1`:
+The configmap `test-cm` should now be deployed on all three member clusters, with the data reverted to `value1`:
 
 ```yaml
 apiVersion: v1
