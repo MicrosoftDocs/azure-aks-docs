@@ -114,7 +114,7 @@ All metrics include labels:
 Refer to the FIPS support matrix below:
 
   | Operating System    |  FIPS Support |
-  |---------------------|:-------------:|
+  |---------------------|-------------|
   | Azure Linux 3.0     | Yes           |
   | Azure Linux 2.0     | Yes           |
   | Ubuntu 20.04        | No            |
