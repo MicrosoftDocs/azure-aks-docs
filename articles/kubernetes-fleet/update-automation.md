@@ -168,7 +168,7 @@ az fleet autoupgradeprofile create \
   --target-kubernetes-version "1.33"
 ```
 
-Setup to automatically update member clusters to latest patch of Kubernetes version 1.29 with Long-Term Support (LTS) enabled in the auto upgrade profile. Assuming 1.33 is the latest Kubernetes minor version, notice how you need to enable `long-term-support` on the auto upgrade profile.
+Setup to automatically update member clusters to latest patch of Kubernetes version 1.29. Assuming 1.33 is the latest Kubernetes minor version, notice how you need to enable `longTermSupport` on the auto upgrade profile.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile create \

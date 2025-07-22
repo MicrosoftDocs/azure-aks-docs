@@ -146,8 +146,8 @@ Example:
 The TargetKubernetesVersion channel allows you to specify an exact target Kubernetes minor version that you want your clusters to upgrade to. When you configure this channel, you must specify the target Kubernetes version in the format "{major version}.{minor version}" (for example, "1.33"). Fleet Autoupgrade automatically upgrades member clusters to the latest patch release of the specified target Kubernetes version when it becomes available.
 
 Examples:
-* You create an auto upgrade profile with TargetKubernetesVersion channel and specify a target Kubernetes version of "1.30". A new patch version 1.30.5 is published for Kubernetes 1.30. Update run is automatically created and target 1.30.5.
-* You enable LTS for a target Kubernetes version of "1.29" when the latest supported minor version is "1.33" (making 1.29 out of N-2 version window). A new patch version 1.29.5 is published for Kubernetes 1.29. If Kubernetes 1.29 supports LTS, update run is automatically created and target 1.29.5.
+* You create an auto upgrade profile with TargetKubernetesVersion channel and specify a target Kubernetes version of "1.30". A new patch version 1.30.5 is published. Update run is automatically created and target 1.30.5.
+* You create an auto upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable `longTermSupport` in the auto upgrade profile. The latest supported minor version at that moment is "1.33" (making 1.29 out of N-2 version window). A new patch version 1.29.5 is published. Since Kubernetes version 1.29 supports LTS, update run is automatically created and target 1.29.5.
 
 
 ### Minor version skipping behavior
