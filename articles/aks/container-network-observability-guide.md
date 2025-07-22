@@ -33,7 +33,7 @@ The suite of dashboards includes:
 
 ## Free network observability with Retina
 
-While Advanced Container Networking Services is a paid offering that provides comprehensive network observability capabilities, Microsoft also offers [**Retina**](https://retina.sh/), an open-source network observability platform that you can use for free. Retina provides essential network monitoring capabilities that can help you get started with network observability before upgrading to the full ACNS experience. If you have enables azure monitor analytics , Retina's Basic mode get enabled by default, which provides basic network observability features. You can also enable the Advanced mode for more detailed insights.
+While Advanced Container Networking Services is a paid offering that provides comprehensive network observability capabilities, Microsoft also offers [**Retina**](https://retina.sh/), an open-source network observability platform that you can use for free. Retina provides essential network monitoring capabilities that can help you get started with network observability before upgrading to the full ACNS experience.
 
 ### What Retina offers for free
 
@@ -172,6 +172,7 @@ Container Network Logs provides rich visualization capabilities through Azure po
 You can access these visualizations through:
 - **Azure portal**: Navigate to your AKS cluster → Insights → Networking → Flow Logs
 - **Azure Managed Grafana**: Use the pre-configured "Flow Logs" and "Flow Logs (External Traffic)" dashboards
+
 
 With the combined capabilities of Grafana dashboards, Container Network Logs stored mode for historical analysis, and on-demand logs for real-time troubleshooting, you can identify DNS issues and perform root cause analysis effectively.
 
@@ -397,7 +398,7 @@ RetinaNetworkFlowLogs
 | where TimeGenerated > ago(1h)
 | where FlowType == "L7_HTTP"
 | extend HTTP = parse_json(Layer4).HTTP
-| extend StatusCode = tostring(HTTP.status_code)
+| extend StatusCode = HTTP.status_code
 | summarize RequestCount = count() by StatusCode, SourcePodName, bin(TimeGenerated, 5m)
 | order by TimeGenerated desc
 ```
@@ -420,7 +421,7 @@ RetinaNetworkFlowLogs
 | where TimeGenerated > ago(1h)
 | where FlowType == "L7_GRPC"
 | extend GRPC = parse_json(Layer4).GRPC
-| extend Method = tostring(GRPC.method)
+| extend Method = GRPC.method
 | summarize RequestCount = count() by SourcePodName, DestinationPodName, Method
 | order by RequestCount desc
 ```
