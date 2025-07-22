@@ -23,7 +23,7 @@ Deployment Safeguards offer two levels of configuration:
   * `Warn`: Displays warning messages in the code terminal to alert you of any noncompliant cluster configurations but still allows the request to go through.
   * `Enforce`: Enforces compliant configurations by denying and mutating deployments if they don't follow best practices.
 
-After you configure Deployment Safeguards for 'Warn' or 'Enforce', Deployment Safeguards programmatically assess your clusters at creation or update time for compliance. Deployment Safeguards also display aggregated compliance information across your workloads at a per resource level via Azure Policy's compliance dashboard in the [Azure portal][Azure-Policy-compliance-portal] or in your CLI or terminal. Running a noncompliant workload indicates that your cluster isn't following best practices and that workloads on your cluster are at risk of experiencing issues caused by your cluster configuration.
+After you configure Deployment Safeguards for 'Warn' or 'Enforce', Deployment Safeguards programmatically assess your Kubernetes resources at creation or update time for compliance. Deployment Safeguards also display aggregated compliance information across your workloads at a per resource level via Azure Policy's compliance dashboard in the [Azure portal][Azure-Policy-compliance-portal] or in your CLI or terminal. Running a noncompliant workload indicates that your cluster isn't following best practices and that workloads on your cluster are at risk of experiencing issues caused by your cluster configuration.
 
 ## Prerequisites
 > [!NOTE]
@@ -57,10 +57,10 @@ If you want to submit an idea or request for Deployment Safeguards, open an issu
 
 ### Enable Deployment Safeguards on an existing cluster
 
-Enable Deployment Safeguards on an existing cluster that has the Azure Policy add-on enabled using the `az aks safeguard update` command with the `--level` flag. If you want to receive noncompliance warnings, set the `--level` to `Warn`. If you want to deny or mutate all noncompliant deployments, set it to `Enforce`.
+Enable Deployment Safeguards on an existing cluster that has the Azure Policy add-on enabled using the `az aks safeguard create` command with the `--level` flag. If you want to receive noncompliance warnings, set the `--level` to `Warn`. If you want to deny or mutate all noncompliant deployments, set it to `Enforce`.
 
 ```azurecli-interactive
-az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Enforcement 
+az aks safeguards create --resource-group <resource-group-name> --name <cluster-name> --level Enforcement 
 ```
 
 If you want to update the Deployment Safeguards level of an existing cluster, run the following command with the new value for `--level`.
@@ -73,10 +73,10 @@ az aks safeguards update --resource-group <resource-group-name> --name <cluster-
 
 You can also exclude certain namespaces from Deployment Safeguards. When you exclude a namespace, activity in that namespace is unaffected by Deployment Safeguards warnings or enforcement.
 
-For example, to exclude the namespaces `ns1` and `ns2`, use a comma-separated list of namespaces with the `--excluded-ns` flag, as shown in the following example:
+For example, to exclude the namespaces `ns1` and `ns2`, use a space separated list of namespaces with the `--excluded-ns` flag, as shown in the following example:
 
 ```azurecli-interactive
-az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warning --excluded-ns ns1,ns2 
+az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warning --excluded-ns ns1 ns2 
 ```
 
 ### Update your deployment safeguard version
@@ -103,7 +103,6 @@ With deployment safeguard mutations, the `Enforce` level mutates your Kubernetes
 
 ```
 $ kubectl apply -f deployment.yaml 
-Warning: [azurepolicy-k8sazurev2customcontainerallow-8a11c7579763b41302d2] Container image safeguardsTest for container web has not been allowed.
 Error from server (Forbidden): error when creating "deployment.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [azurepolicy-k8sazurev1antiaffinityrules-ceffa082711831ebffd1] Deployment with 2 replicas should have either podAntiAffinity or topologySpreadConstraints set to avoid disruptions due to nodes crashing
 ```
 
