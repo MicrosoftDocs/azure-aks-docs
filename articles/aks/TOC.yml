@@ -1031,6 +1031,14 @@
               href: kafka-deploy.md  
             - name: Configure monitoring and networking for the Kafka cluster  
               href: kafka-configure.md
+        - name: Deploy GitHub Actions using Azure Files
+          items:
+            - name: Overview
+              href: github-actions-azure-files-overview.md
+            - name: Prepare GitHub Actions infrastructure
+              href: github-actions-azure-files-create-infrastructure.md
+            - name: Deploy and test GitHub Actions
+              href: github-actions-azure-files-deploy-test.md
     - name: Migrate workloads
       items:
         - name: Plan and execute a migration
