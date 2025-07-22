@@ -1,16 +1,25 @@
 ---
-title: "How to use ClusterStagedUpdateRun"
-description: Learn how to use ClusterStagedUpdateRun to rollout resources to member clusters in a staged manner and rollback resources to a previous versionFleet Manager.
+title: "How to use ClusterStagedUpdateRun to orchestrate staged rollouts"
+description: Learn how to use ClusterStagedUpdateRun to rollout resources to member clusters in a staged manner and rollback resources to a previous version in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
 ms.date: 07/18/2025
 author: arvindth
 ms.author: arvindth
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: "As a DevOps engineer, I want to use staged update runs to control how workloads are deployed across multiple clusters, so that I can minimize risk and ensure reliable rollouts through progressive deployment strategies."
 ---
+
+# Use ClusterStagedUpdateRun to orchestrate staged rollouts across member clusters
+
+Azure Kubernetes Fleet Manager staged update runs provide a controlled approach to deploying workloads across multiple member clusters using a stage-by-stage process. This approach allows you to minimize risk by deploying to subsets of clusters sequentially, with optional wait times and approval gates between stages.
+
+This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
 
 ## Prerequisites
 
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
+
+* Read the [conceptual overview of staged rollout strategies](./concepts-rollout-strategy.md#staged-update-strategy-preview) to understand the concepts and terminology used in this article.
 
 * You must have a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
@@ -43,52 +52,54 @@ ms.service: azure-kubernetes-fleet-manager
   az fleet get-credentials --resource-group $GROUP --name $FLEET
   ```
 
-* `ClusterStagedUpdateRun` CR is used to deploy resources from hub cluster to member clusters with `ClusterResourcePlacement` (or CRP) in a stage by stage manner. This tutorial is based on a demo fleet environment with 3 member clusters with the following labels: 
+## Set up the demo environment
 
-    | cluster name | labels                      |
-    |--------------|-----------------------------|
-    | member1      | environment=canary, order=2 |
-    | member2      | environment=staging         |
-    | member3      | environment=canary, order=1 |
+This tutorial demonstrates staged update runs using a demo fleet environment with 3 member clusters that have the following labels:
+
+| cluster name | labels                      |
+|--------------|-----------------------------|
+| member1      | environment=canary, order=2 |
+| member2      | environment=staging         |
+| member3      | environment=canary, order=1 |
+
+These labels allow us to create stages that group clusters by environment and control the deployment order within each stage.
 
 ## Prepare workloads for placement
 
-Next, publish workloads to the hub cluster so that it can be placed onto member clusters:
+Next, publish workloads to the hub cluster so that they can be placed onto member clusters.
 
-Create a namespace, configmap for the workload on the hub cluster:
+Create a namespace and configmap for the workload on the hub cluster:
 
 ```bash
 kubectl create ns test-namespace
 kubectl create cm test-cm --from-literal=key=value1 -n test-namespace
 ```
 
-Now we create a ClusterResourcePlacement to deploy the resources, 
+Create a ClusterResourcePlacement to deploy the resources:
 
 > [!NOTE]
-> spec.strategy.type is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
-
-Create ClusterResourcePlacement to deploy the resources:
+> The `spec.strategy.type` is set to `External` to allow rollout triggered with a `ClusterStagedUpdateRun`.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterResourcePlacement
 metadata:
-name: example-placement
+  name: example-placement
 spec:
-resourceSelectors:
-- group: ""
-    kind: Namespace
-    name: test-namespace
-    version: v1
-policy:
-placementType: PickAll
-strategy:
-type: External
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: test-namespace
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: External
 ```
 
-All three clusters should be scheduled since we use the `PickAll` policy but at the moment no resource should be deployed on the member clusters because we haven't created a `ClusterStagedUpdateRun` yet.
+All three clusters should be scheduled since we use the `PickAll` policy, but no resources should be deployed on the member clusters yet because we haven't created a `ClusterStagedUpdateRun`.
 
-Your output should look similar to the following example:
+Verify the placement is scheduled:
 
 ```bash
 kubectl get crp example-placement
@@ -96,10 +107,14 @@ NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN 
 example-placement   1     True        1                                           51s
 ```
 
-## Check Resource snapshot versions
+## Work with resource snapshots
+
+Fleet Manager creates resource snapshots when resources change. Each snapshot has a unique index that you can use to reference specific versions of your resources.
 
 > [!TIP]
 > For more information about resource snapshots and how they work, see [Understanding resource snapshots](./howto-understand-placement.md#understanding-resource-snapshots).
+
+### Check current resource snapshots
 
 To check current resource snapshots:
 
@@ -109,13 +124,19 @@ NAME                           GEN   AGE   LABELS
 example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 ```
 
-We only have one version of the snapshot. It is the current latest (kubernetes-fleet.io/is-latest-snapshot=true) and has resource-index 0 (kubernetes-fleet.io/resource-index=0).
+We only have one version of the snapshot. It is the current latest (`kubernetes-fleet.io/is-latest-snapshot=true`) and has resource-index 0 (`kubernetes-fleet.io/resource-index=0`).
 
-Now we modify the our configmap with a new value set to value2:
+### Create a new resource snapshot
+
+Now modify the configmap with a new value:
 
 ```bash
 kubectl edit cm test-cm -n test-namespace
+```
 
+Update the value from `value1` to `value2`:
+
+```bash
 kubectl get configmap test-cm -n test-namespace -o yaml
 apiVersion: v1
 data:
@@ -129,10 +150,10 @@ metadata:
   uid: ...
 ```
 
-now we should see 2 versions of resource snapshots with index 0 and 1 respectively:
+Now you should see 2 versions of resource snapshots with index 0 and 1 respectively:
 
 ```bash
- kubectl get clusterresourcesnapshots --show-labels
+kubectl get clusterresourcesnapshots --show-labels
 NAME                           GEN   AGE    LABELS
 example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
@@ -498,7 +519,7 @@ example-run-2-canary   example-run-2   canary   True       True               2m
 example-run-canary     example-run     canary   True       True               15m
 ```
 
-The configmap test-cm should be deployed on all 3 member clusters, with latest data set to `value1`:
+The configmap `test-cm` should now be deployed on all 3 member clusters, with the data reverted to `value1`:
 
 ```yaml
 apiVersion: v1
@@ -511,3 +532,31 @@ metadata:
   namespace: test-namespace
   ...
 ```
+
+## Clean up resources
+
+When you're finished with this tutorial, you can clean up the resources you created:
+
+```bash
+# Delete the staged update runs
+kubectl delete clusterstagedupaterun example-run example-run-2
+
+# Delete the staged update strategy
+kubectl delete clusterstagedupdatestrategy example-strategy
+
+# Delete the cluster resource placement
+kubectl delete clusterresourceplacement example-placement
+
+# Delete the test namespace (this will also delete the configmap)
+kubectl delete namespace test-namespace
+```
+
+## Next steps
+
+In this article, you learned how to use ClusterStagedUpdateRun to orchestrate staged rollouts across member clusters. You created staged update strategies, executed progressive rollouts, and performed rollbacks to previous versions.
+
+To learn more about staged update runs and related concepts, see the following resources:
+
+* [Defining a rollout strategy for cluster resource placement](./concepts-rollout-strategy.md)
+* [How to understand the status of ClusterResourcePlacement](./howto-understand-placement.md)
+* [How to configure monitoring and alerting for update runs](./howto-monitor-update-runs.md)

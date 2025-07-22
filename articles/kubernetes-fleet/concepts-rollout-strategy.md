@@ -198,8 +198,12 @@ Staged update strategies are ideal when you need:
 
 For simpler scenarios where percentage-based rollouts suffice, consider using the inline rolling update strategy instead.
 
+> [!TIP]
+> To learn how to implement staged update runs step-by-step, see [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
+
 ## Next steps
 
+* [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).
