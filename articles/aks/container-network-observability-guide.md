@@ -170,9 +170,8 @@ Container Network Logs provides rich visualization capabilities through Azure po
 
 
 You can access these visualizations through:
-1. **Azure portal**: Navigate to your AKS cluster → Insights → Networking → Flow Logs
-2. **Azure Managed Grafana**: Use the pre-configured "Flow Logs" and "Flow Logs (External Traffic)" dashboards
-
+- **Azure portal**: Navigate to your AKS cluster → Insights → Networking → Flow Logs
+- **Azure Managed Grafana**: Use the pre-configured "Flow Logs" and "Flow Logs (External Traffic)" dashboards
 
 With the combined capabilities of Grafana dashboards, Container Network Logs stored mode for historical analysis, and on-demand logs for real-time troubleshooting, you can identify DNS issues and perform root cause analysis effectively.
 
@@ -432,7 +431,7 @@ These queries complement the visual dashboards by providing detailed insights in
 
 To get started with network observability in AKS:
 
-1. **Set up Container Network Logs**: Learn how to configure [Container Network Logs for comprehensive network observability](./how-to-configure-container-network-logs.md)
-2. **Explore Advanced Container Networking Services**: For more information about the complete platform, see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md)
-3. **Configure monitoring**: Set up [Azure Managed Grafana integration](./how-to-configure-container-network-logs.md#visualization-by-using-azure-managed-grafana) for advanced visualizations
-4. **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
+- **Set up Container Network Logs**: Learn how to configure [Container Network Logs for comprehensive network observability](./how-to-configure-container-network-logs.md)
+- **Explore Advanced Container Networking Services**: For more information about the complete platform, see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md)
+- **Configure monitoring**: Set up [Azure Managed Grafana integration](./how-to-configure-container-network-logs.md#visualization-by-using-azure-managed-grafana) for advanced visualizations
+- **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
