@@ -129,12 +129,12 @@ spec:
           environment: staging
       afterStageTasks:
         - type: TimedWait
-          waitTime: 30m
+          waitTime: 1h
     - name: canary
       labelSelector:
         matchLabels:
           environment: canary
-      sortingLabelKey: priority
+      sortingLabelKey: name
       afterStageTasks:
         - type: Approval
     - name: production
