@@ -81,7 +81,7 @@ When creating a cluster, enabling vTPM or Secure Boot will automatically set up 
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters` definition under `"properties"`, as shown in the following example:
+In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/agentpoolProfiles` definition under `"properties"`, as shown in the following example:
 
     ```json
     "properties": {
@@ -125,7 +125,7 @@ az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/AgentpoolProfiles` definition under `"properties"`, as shown in the following example:
+In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/agentpoolProfiles` definition under `"properties"`, as shown in the following example:
 
     ```json
     "properties": {
@@ -178,12 +178,12 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/AgentpoolProfiles` definition under `"properties"`, as shown in the following example:
+In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/agentpoolProfiles` definition under `"properties"`, as shown in the following example:
 
     ```json
     "properties": {
         ...,
-        "SecurityProfile": {
+        "securityProfile": {
             "enableVTPM": "true",
             "enableSecureBoot": "true",
         }
@@ -234,7 +234,7 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/AgentpoolProfiles` definition under `"properties"`, as shown in the following example:
+In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/agentpoolProfiles` definition under `"properties"`, as shown in the following example:
 
     ```json
     "properties": {
