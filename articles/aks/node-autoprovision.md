@@ -17,11 +17,14 @@ When you deploy workloads onto AKS, you need to make a decision about the node p
 
 Node auto provisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-Node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. Node auto provisioning automatically deploys, configures, and manages Karpenter on your AKS clusters.
+Node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider], which is also open source. Node auto provisioning automatically deploys, configures, and manages Karpenter on your AKS clusters.
 
 ## How node auto provisioning works
 
-Node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. Node auto provisioning is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. NodeClaims are managed by node auto provisioning, and can be monitored to view current node state. Node auto provisioning then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
+Node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. Node auto provisioning manages this functionality based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. Node auto provisioning manages NodeClaims, and you can monitor them to view current node state. Node auto provisioning uses these components to provision the most efficient nodes:
+- Definitions in NodePools and AKSNodeClass
+- Current NodeClaims state
+- Specifications in your workload deployment file 
 
 ### Prerequisites
 
@@ -50,8 +53,8 @@ Node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 
 ## Networking configuration
 
-The recommended network configurations for clusters enabled with node auto provisioning are the following:
-- [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Cilium](azure-cni-powered-by-cilium.md)
+The following network configurations are recommended for clusters enabled with node auto provisioning:
+- [Azure Container Network Interface (CNI) Overlay](concepts-network-azure-cni-overlay.md) with [Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
 - [Azure CNI](configure-azure-cni.md) with [Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI](configure-azure-cni.md)
@@ -61,7 +64,7 @@ For detailed networking configuration requirements and recommendations, see [Nod
 Key networking considerations:
 - Azure CNI Overlay with Cilium is recommended
 - Standard Load Balancer is required
-- Private clusters are not currently supported
+- Private clusters aren't currently supported
 
 ## Enable node auto provisioning
 
@@ -153,7 +156,10 @@ Node auto provisioning is enabled by setting the field `--node-provisioning-mode
     ```
 
 ## Custom Virtual Networks and node auto provisioning
-AKS allows you to add a cluster with node auto provisioning enabled in a custom virtual network via the `--vnet-subnet-id` parameter. The following sections detail how to create a virtual network, create a managed identity with permissions over the virtual network, and create a node auto provisioning-enabled cluster in a custom virtual network. 
+AKS allows you to add a cluster with node auto provisioning enabled in a custom virtual network via the `--vnet-subnet-id` parameter. The following sections detail how to:
+- Create a virtual network
+- Create a managed identity with permissions over the virtual network  
+- Create a node auto provisioning-enabled cluster in a custom virtual network 
 
 ### Create a virtual network
 
@@ -194,7 +200,7 @@ az role assignment create --scope "/subscriptions/${SUBSCRIPTION_ID}/resourceGro
 
 ### Create an AKS cluster in a custom virtual network and with node auto provisioning enabled
 
-In the following command, an AKS cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command. To create a customer virtual network
+In the following command, an Azure Kubernetes Service (AKS) cluster is created as part of a custom virtual network using the [az aks create][az-aks-create] command. To create a customer virtual network
 
 ```azurecli-interactive
      	az aks create --name $(AZURE_CLUSTER_NAME) --resource-group $(AZURE_RESOURCE_GROUP) \
@@ -242,7 +248,7 @@ Node autoprovisioning uses VM SKU requirements to decide the best virtual machin
 Node Disruption, including Consolidation or Drift, can be controlled using different methods. 
 
 ### Consolidation
-When the workloads on your nodes scale down, node auto provisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
+When workloads on your nodes scale down, node auto provisioning uses disruption rules. These rules decide when and how to remove nodes and reschedule workloads for better efficiency. Node auto provisioning primarily uses *consolidation* to delete or replace nodes for optimal pod placement. The state-based consideration uses `ConsolidationPolicy` such as `WhenEmpty`, or `WhenEmptyOrUnderUtilized` to trigger consolidation. `consolidateAfter` is a time-based condition that can be set to allow buffer time between actions.
 
 You can remove a node manually using `kubectl delete node`, but node auto provisioning can also control when it should optimize your nodes based on your specifications.
 
@@ -274,7 +280,7 @@ For detailed information about node disruption policies, upgrade mechanisms thro
 
 Kubernetes upgrades for node auto provisioning nodes follow the control plane Kubernetes version. If you perform a cluster upgrade, your nodes are automatically updated to follow the same versioning. 
 
-AKS recommends coupling node auto provisioning with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which will automatically take care of all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
+AKS recommends coupling node auto provisioning with a Kubernetes [Auto Upgrade][auto-upgrade] channel for the cluster, which automatically handles all your cluster's Kubernetes upgrades. Pairing the Auto Upgrade channel with an `aksManagedAutoUpgradeSchedule` planned maintenance window, you can schedule your cluster upgrades during optimal times for your workloads. For more information on planning cluster upgrades, visit our [documentation on planned maintenance][planned-maintenance#schedule-configuration-types-for-planned-maintenance]
 
 ### Node image updates
 
@@ -297,17 +303,17 @@ kubectl get events -A --field-selector source=karpenter -w
 Node auto provisioning can only be disabled when:
 
 - There are no existing node auto provisioning-managed nodes. Use `kubectl get nodes -l karpenter.sh/nodepool` to view node auto provisioning-managed nodes.
-- All existing karpenter.sh/NodePools have their `spec.limits.cpu` set to 0.
+- All existing karpenter.sh/NodePools have their `spec.limits.cpu` field set to 0.
 
 ### Steps to disable node auto provisioning
 
-1. Set all karpenter.sh/NodePools `spec.limits.cpu` field to 0. This prevents new nodes from being created, but doesn't disrupt currently running nodes.
+1. Set all karpenter.sh/NodePools `spec.limits.cpu` field to 0. This action prevents new nodes from being created, but doesn't disrupt currently running nodes.
 
 > [!NOTE]
 > If you don't care about ensuring that every pod that was running on a node auto provisioning node is migrated safely to a non-node auto provisioning node,
 > you can skip steps 2 and 3 and instead use the `kubectl delete node` command for each node auto provisioning-managed node.
 >
-> **Skipping steps 2 and 3 is not recommended, as it might leave some pods pending and doesn't honor PDBs.**
+> **Skipping steps 2 and 3 is not recommended, as it might leave some pods pending and doesn't honor Pod Disruption Budgets (PDBs).**
 >
 > **Don't run `kubectl delete node` on any nodes that aren't managed by node auto provisioning.**
 
@@ -326,13 +332,11 @@ Node auto provisioning can only be disabled when:
              effect: NoSchedule
    ```
    
-   This starts the process of migrating the workloads on the node auto provisioning-managed nodes to non-node auto provisioning nodes, honoring PDBs
-   and disruption limits. Pods migrate to non-node auto provisioning nodes if they can fit. If there isn't enough fixed-size capacity, some node auto provisioning-managed nodes remains.
+   This action starts the process of migrating the workloads on the node auto provisioning-managed nodes to non-node auto provisioning nodes, honoring Pod Disruption Budgets (PDBs) and disruption limits. Pods migrate to non-node auto provisioning nodes if they can fit. If there isn't enough fixed-size capacity, some node auto provisioning-managed nodes remains.
    
 4. Scale up existing fixed-size ManagedCluster AgentPools, or create new fixed-size AgentPools, to take the load from the node auto provisioning-managed nodes.
    As these nodes are added to the cluster the node auto provisioning-managed nodes are drained, and work is migrated to the fixed-scale nodes.
-5. Confirm that all node auto provisioning-managed nodes are deleted, using `kubectl get nodes -l karpenter.sh/nodepool`. If there are still node auto provisioning-managed
-   nodes, it likely means that the cluster is out of fixed-scale capacity and needs more nodes so that the remaining workloads can be migrated.
+5. Confirm that all node auto provisioning-managed nodes are deleted, using `kubectl get nodes -l karpenter.sh/nodepool`. If node auto provisioning-managed nodes still exist, the cluster likely lacks fixed-scale capacity. Add more nodes so the remaining workloads can be migrated.
 6. Update the node provisioning mode parameter of the ManagedCluster to `Manual`.
 
     #### [Azure CLI](#tab/azure-cli)
