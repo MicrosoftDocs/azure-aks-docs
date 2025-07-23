@@ -1032,10 +1032,16 @@
       items:
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: Upgrade scenarios hub
+          href: upgrade-scenarios-hub.md
         - name: Perform manual upgrades
           items:
           - name: Upgrade an AKS cluster
             href: upgrade-aks-cluster.md
+          - name: Production upgrade strategies
+            href: aks-production-upgrade-strategies.md
+          - name: Stateful workload upgrades
+            href: stateful-workload-upgrades.md
           - name: Upgrade multiple AKS clusters
             href: /azure/kubernetes-fleet/update-orchestration?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
           - name: Upgrade node OS images
