@@ -33,7 +33,7 @@ The following networking configurations are currently *not* supported with node 
 - **Dynamic IP Allocation** - Not supported yet
 - **Static Allocation of CIDR blocks** - Not supported yet
 
-PodSubnetID is not a supported or respected field for karpenter nodes.
+PodSubnetID is not a supported or respected field for Karpenter nodes.
 
 ## Cluster Setup with Custom VNet and Subnets
 
@@ -364,9 +364,9 @@ Be aware of these potential conflicts:
 # Service CIDR:     10.0.0.0/16  
 # Custom Subnet:    10.1.0.0/24   ✅ NO CONFLICT
 ```
-You are responsible for configuring the vnetSubnetID for the nodeclass without arm validation validating that subnet has enough ips and isn't overlapping with any other cidrs.
+You are responsible for configuring the vnetSubnetID for the nodeclass. ARM validation doesn't verify that the subnet has enough IPs and isn't overlapping with any other CIDRs.
 
-# Bring Your Own CNI (BYO CNI) Support Policy
+## Bring Your Own CNI (BYO CNI) Support Policy
 
 Karpenter for Azure supports bring-your-own CNI configurations, following the same support policy as Azure Kubernetes Service (AKS).
 
@@ -399,7 +399,7 @@ Karpenter for Azure supports bring-your-own CNI configurations, following the sa
 
 ## Next steps
 
-- [Enable node autoprovisioning](node-autoprovision.md#enable-node-autoprovisioning)
+- [Enable node autoprovisioning](node-autoprovision.md#enable-node-auto-provisioning)
 - [Configure node pools](node-autoprovision-node-pools.md)
 - [Learn about Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
 - [Learn about Cilium networking](azure-cni-powered-by-cilium.md)

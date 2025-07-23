@@ -88,7 +88,7 @@ Drift handles changes to the NodePool/AKSNodeClass. For Drift, values in the Nod
 
 #### Special Cases on Drift
 
-In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to CRDs, or where CRD changes do not result in drift. For example, if a NodeClaim has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the NodeClaim will not be drifted because its value is still compatible with the new requirements. Conversely, if a NodeClaim is using a NodeClaim imageFamily, but the `spec.imageFamily` field is changed, karpetner will detect the NodeClaim as driftedand rotate the node to meet that specification
+In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to CRDs, or where CRD changes do not result in drift. For example, if a NodeClaim has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the NodeClaim will not be drifted because its value is still compatible with the new requirements. Conversely, if a NodeClaim is using a NodeClaim imageFamily, but the `spec.imageFamily` field is changed, Karpenter will detect the NodeClaim as drifted and rotate the node to meet that specification
 
 ##### NodePool
 | Fields         |
@@ -96,7 +96,9 @@ In special cases, drift can correspond to multiple values and must be handled di
 | spec.template.spec.requirements   |
 
 ##### AKSNodeClass
-Some example cases
+
+Some example cases:
+
 | Fields                        |
 |-------------------------------|
 | spec.vnetSubnetID             |
@@ -363,6 +365,6 @@ spec:
 
 ## Next steps
 
-- [Monitor node autoprovisioning events](node-autoprovision-monitoring.md)
 - [Configure node pools](node-autoprovision-node-pools.md)
+- [Learn about networking configuration](node-autoprovision-networking.md)
 - [Learn about Pod Disruption Budgets](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/)

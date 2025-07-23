@@ -58,12 +58,12 @@ spec:
 
 ## Image family configuration
 
-The `imageFamily` field dictates the default VM image and bootstrapping logic for nodes provisioned through this AKSNodeClass. If not specified, the default is `Ubuntu2204`. GPUs are supported with both image families on compatible VM sizes.
+The `imageFamily` field dictates the default virtual machine (VM) image and bootstrapping logic for nodes provisioned through this AKSNodeClass. If not specified, the default is `Ubuntu2204`. GPUs are supported with both image families on compatible VM sizes.
 
 ### Supported image families
 
-- **`Ubuntu2204`** - [Ubuntu 22.04 LTS](https://learn.microsoft.com/azure/aks/cluster-configuration) is the default Linux distribution for AKS nodes
-- **`AzureLinux`** - [Azure Linux](https://learn.microsoft.com/azure/aks/cluster-configuration) is Microsoft's alternative Linux distribution for AKS workloads
+- **`Ubuntu2204`** - Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes
+- **`AzureLinux`** - Azure Linux is Microsoft's alternative Linux distribution for AKS workloads
 
 Example configuration:
 
@@ -74,7 +74,7 @@ spec:
 
 ## Virtual network subnet configuration
 
-The `vnetSubnetID` field specifies which Azure Virtual Network subnet should be used for provisioning node network interfaces. This field is optional; if not specified, Karpenter will use the default subnet configured in the Karpenter installation.
+The `vnetSubnetID` field specifies which Azure Virtual Network subnet should be used for provisioning node network interfaces. This field is optional; if not specified, Karpenter uses the default subnet configured in the Karpenter installation.
 
 ### Subnet ID format
 
@@ -87,7 +87,7 @@ spec:
 
 ### Default subnet behavior
 
-When `vnetSubnetID` is not specified, Karpenter automatically uses the default subnet configured during Karpenter installation. This creates a fallback mechanism where:
+When `vnetSubnetID` isn't specified, Karpenter automatically uses the default subnet configured during Karpenter installation. This fallback mechanism works as follows:
 
 - **With vnetSubnetID specified**: Karpenter provisions nodes in the specified custom subnet
 - **Without vnetSubnetID specified**: Karpenter provisions nodes in the cluster's default subnet
@@ -97,7 +97,7 @@ When `vnetSubnetID` is not specified, Karpenter automatically uses the default s
 The specified subnet must:
 - Be in the same region as your AKS cluster
 - Have sufficient IP addresses available for node provisioning
-- Be configured with appropriate Network Security Group rules to allow cluster communication
+- Allow cluster communication through appropriate Network Security Group rules
 
 ## OS disk size configuration
 
@@ -110,12 +110,12 @@ spec:
 
 Consider larger OS disk sizes for workloads that:
 - Store significant data locally
-- Require additional space for container images
+- Require extra space for container images
 - Have high disk I/O requirements
 
 ## Maximum pods configuration
 
-The `maxPods` field specifies the maximum number of pods that can be scheduled on a node. This affects both cluster density and network configuration.
+The `maxPods` field specifies the maximum number of pods that can be scheduled on a node. This setting affects both cluster density and network configuration.
 
 ### Default behavior
 
@@ -129,11 +129,11 @@ spec:
   maxPods: 50  # Allow up to 50 pods per node
 ```
 
-With Azure CNI in standard mode, each pod gets an IP address from the subnet, so the maxPods setting is limited by available subnet IP addresses. With overlay networking, pods use a separate IP space allowing for much higher pod density.
+With Azure Container Networking Interface (CNI) in standard mode, each pod gets an IP address from the subnet, so the maxPods setting is limited by available subnet IP addresses. With overlay networking, pods use a separate IP space allowing for higher pod density.
 
 ## Kubelet configuration
 
-The `kubelet` section allows you to configure various kubelet parameters that affect node behavior. THe azure provider doesn't do anything special, these are just typical kubelet args.
+The `kubelet` section allows you to configure various kubelet parameters that affect node behavior. The Azure provider doesn't do anything special; these parameters are typical kubelet arguments.
 
 ### CPU management
 
@@ -146,7 +146,7 @@ spec:
 ```
 
 - `cpuManagerPolicy`: Controls how the kubelet allocates CPU resources. Set to "static" for CPU pinning in latency-sensitive workloads
-- `cpuCFSQuota`: Enables CPU CFS quota enforcement for containers that specify CPU limits
+- `cpuCFSQuota`: Enables CPU Completely Fair Scheduler (CFS) quota enforcement for containers that specify CPU limits
 - `cpuCFSQuotaPeriod`: Sets the CPU CFS quota period
 
 ### Image garbage collection
@@ -177,7 +177,7 @@ The topology manager helps coordinate resource allocation for latency-sensitive 
 ```yaml
 spec:
   kubelet:
-    allowedUnsafeSysctls: 
+    allowedUnsafeSysctls:
       - "kernel.msg*"
       - "net.ipv4.route.min_pmtu"
     containerLogMaxSize: "50Mi"
@@ -185,14 +185,14 @@ spec:
     podPidsLimit: 4096
 ```
 
-- `allowedUnsafeSysctls`: Whitelist of unsafe sysctls that pods can use
+- `allowedUnsafeSysctls`: List of permitted unsafe sysctls that pods can use
 - `containerLogMaxSize`: Maximum size of container log files before rotation
 - `containerLogMaxFiles`: Maximum number of container log files to retain
 - `podPidsLimit`: Maximum number of processes allowed in any pod
 
 ## Azure resource tags
 
-The `tags` field allows you to specify Azure resource tags that will be applied to all VM instances created using this AKSNodeClass. This is useful for cost tracking, resource organization, and compliance requirements.
+The `tags` field allows you to specify Azure resource tags that apply to all VM instances created using this AKSNodeClass. Tags are useful for cost tracking, resource organization, and compliance requirements.
 
 ```yaml
 spec:
@@ -207,9 +207,9 @@ spec:
 
 - Azure resource tags have a limit of 50 tags per resource
 - Tag names are case-insensitive but tag values are case-sensitive
-- Some tag names are reserved by Azure and cannot be used
+- Azure reserves some tag names that can't be used
 
-**Configure kubelet settings carefully**: Test kubelet configuration changes in non-production environments first
+**Configure kubelet settings carefully**: Test kubelet configuration changes in nonproduction environments first
 
 ## Next steps
 

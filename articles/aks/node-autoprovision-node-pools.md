@@ -14,16 +14,16 @@ This article explains how to configure node pools for Azure Kubernetes Service (
 
 ## Node pool overview
 
-NodePools set constraints on the nodes that Node Auto Provisioning can create and the pods that can run on those nodes. When you first installed node autoprovisioning, you set up a default NodePool. You can change your NodePool or add other NodePools to Node Auto Provisioning.
+NodePools set constraints on the nodes that Node Auto Provisioning creates and the pods that run on those nodes. When you first install node autoprovisioning, a default NodePool is created. You can modify this NodePool or add additional NodePools.
 
 Key behaviors of NodePools:
-- Node Auto Provisioning won't do anything if there is not at least one NodePool configured
-- Each NodePool that is configured is looped through by Node Auto Provisioning
-- If Node Auto Provisioning encounters a taint in the NodePool that is not tolerated by a pod, Node Auto Provisioning won't use that NodePool to provision the pod
-- If Node Auto Provisioning encounters a startup taint in the NodePool, it will be applied to nodes that are provisioned, but pods do not need to tolerate the taint
-- It is recommended to create NodePools that are mutually exclusive. If multiple NodePools are matched, Node Auto Provisioning will use the NodePool with the highest weight
+- Node Auto Provisioning requires at least one NodePool to function
+- Node Auto Provisioning evaluates each configured NodePool
+- NodePools with taints not tolerated by a pod are skipped for that pod
+- Startup taints apply to provisioned nodes but don't require pod toleration
+- Create mutually exclusive NodePools for best results. When multiple NodePools match, the one with highest weight is used
 
-Node autoprovisioning uses VM SKU requirements to decide which virtual machine is best suited for pending workloads. You can configure specific SKU families, virtual machine types, spot vs on-demand instances, multiple architectures, and resource limits.
+Node autoprovisioning uses VM SKU requirements to select the best virtual machine for pending workloads. Configure SKU families, VM types, spot or on-demand instances, architectures, and resource limits.
 
 ## Default node pool configuration
 
@@ -68,7 +68,9 @@ spec:
         - D
 ```
 
-As well as a `system-surge` nodepool that will autoscale your systempool nodes. 
+A `system-surge` node pool is also created to autoscale system pool nodes.
+
+### Controlling default NodePool creation
 
 The `--node-provisioning-default-pools` flag controls which default Node Auto Provisioning NodePools are created:
 
@@ -76,19 +78,11 @@ The `--node-provisioning-default-pools` flag controls which default Node Auto Pr
 - **`None`**: No default NodePools are created - you must define your own
 
 > [!WARNING]
-> **Changing from Auto to None**: If you change this setting from `Auto` to `None` on an existing cluster, the default NodePools aren't deleted by default.
-
-The `--node-provisioning-default-pools` flag controls which default Node Auto Provisioning NodePools are created:
-
-- **`Auto`** (default): Creates two standard NodePools for immediate use
-- **`None`**: No default NodePools are created - you must define your own
-
-> [!WARNING]
-> **Changing from Auto to None**: If you change this setting from `Auto` to `None` on an existing cluster, the default NodePools aren't deleted by default.
+> **Changing from Auto to None**: If you change this setting from `Auto` to `None` on an existing cluster, the default NodePools aren't deleted automatically. You must manually delete them if desired.
 
 ## Supported node provisioner requirements
 
-Kubernetes defines the following [Well-Known Labels](https://kubernetes.io/docs/reference/labels-annotations-taints/), and Azure implements them. They are defined at the "spec.requirements" section of the NodePool API.
+Kubernetes defines [Well-Known Labels](https://kubernetes.io/docs/reference/labels-annotations-taints/) that Azure implements. Define these in the "spec.requirements" section of the NodePool API.
 
 In addition to the well-known labels from Kubernetes, Node Auto Provisioning supports Azure-specific labels for more advanced scheduling.
 
@@ -284,5 +278,5 @@ spec:
 ## Next steps
 
 - [Configure node disruption policies](node-autoprovision-disruption.md)
-- [Monitor node autoprovisioning](node-autoprovision-monitoring.md)
 - [Learn about networking configuration](node-autoprovision-networking.md)
+- [Configure AKSNodeClass settings](node-autoprovision-aksnodeclass.md)
