@@ -27,9 +27,7 @@ Node autoprovisioning uses VM SKU requirements to decide which virtual machine i
 
 ## Default node pool configuration
 
-
-
-#### Understanding Default NodePools
+### Understanding Default NodePools
 
 AKS creates a default node pool configuration that you can customize:
 

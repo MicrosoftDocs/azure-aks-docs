@@ -122,7 +122,7 @@ The `maxPods` field specifies the maximum number of pods that can be scheduled o
 The default behavior depends on the network plugin configuration:
 - **Azure CNI with standard networking**: Default is 30 pods per node
 - **Azure CNI with overlay networking**: Default is 250 pods per node  
-- **kubenet**: Default is 110 pods per node
+- **Default**: Default is 110 pods per node
 
 ```yaml
 spec:
@@ -133,7 +133,7 @@ With Azure CNI in standard mode, each pod gets an IP address from the subnet, so
 
 ## Kubelet configuration
 
-The `kubelet` section allows you to configure various kubelet parameters that affect node behavior.
+The `kubelet` section allows you to configure various kubelet parameters that affect node behavior. THe azure provider doesn't do anything special, these are just typical kubelet args.
 
 ### CPU management
 

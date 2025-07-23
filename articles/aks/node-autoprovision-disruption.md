@@ -12,6 +12,34 @@ author: bsoghigian
 
 This article explains how to configure node disruption policies for Azure Kubernetes Service (AKS) node autoprovisioning (NAP) to optimize resource utilization and cost efficiency.
 
+## Example disruption configuration
+
+Here's a typical disruption configuration for a NodePool that balances cost optimization with stability:
+
+```yaml
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: default
+spec:
+  disruption:
+    # Consolidate underutilized nodes to optimize costs
+    consolidationPolicy: WhenEmptyOrUnderutilized
+    
+    # Wait 30 seconds before consolidating
+    consolidateAfter: 30s
+    
+    # Replace nodes every 7 days to get fresh instances
+    expireAfter: 168h
+    
+    # Rate limit disruptions
+    budgets:
+    - nodes: "10%"        # Allow 10% of nodes to be disrupted at once
+    - nodes: "0"          # Block all disruptions during business hours
+      schedule: "0 9 * * 1-5"
+      duration: 8h
+```
+
 ## Node disruption overview
 
 When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. This is primarily done through *consolidation*, which deletes or replaces nodes to bin-pack your pods in an optimal configuration.
@@ -56,7 +84,68 @@ Consolidation has three mechanisms performed in order:
 
 ### Drift
 
-NAP marks nodes as drifted and disrupts nodes that have drifted from their desired specification when NodePool or AKSNodeClass configurations change.
+Drift handles changes to the NodePool/AKSNodeClass. For Drift, values in the NodePool/AKSNodeClass are reflected in the NodeClaimTemplateSpec/AKSNodeClassSpec in the same way that they're set. A NodeClaim will be detected as drifted if the values in its owning NodePool/AKSNodeClass do not match the values in the NodeClaim. Similar to the upstream `deployment.spec.template` relationship to pods, Karpenter will annotate the owning NodePool and AKSNodeClass with a hash of the NodeClaimTemplateSpec to check for drift. Some special cases will be discovered either from Karpenter or through the CloudProvider interface, triggered by NodeClaim/Instance/NodePool/AKSNodeClass changes.
+
+#### Special Cases on Drift
+
+In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to CRDs, or where CRD changes do not result in drift. For example, if a NodeClaim has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the NodeClaim will not be drifted because its value is still compatible with the new requirements. Conversely, if a NodeClaim is using a NodeClaim imageFamily, but the `spec.imageFamily` field is changed, karpetner will detect the NodeClaim as driftedand rotate the node to meet that specification
+
+##### NodePool
+| Fields         |
+|----------------|
+| spec.template.spec.requirements   |
+
+##### AKSNodeClass
+Some example cases
+| Fields                        |
+|-------------------------------|
+| spec.vnetSubnetID             |
+| spec.imageFamily              |
+
+###### VNet Subnet ID Drift
+
+**⚠️ Important**: The `spec.vnetSubnetID` field can trigger drift detection, but modifying this field from one valid subnet to another valid subnet is **NOT a supported operation**. This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet IDs during initial configuration.
+
+Unlike traditional AKS NodePools created through ARM templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides. **Customers are responsible for understanding their cluster's CIDR ranges and ensuring no conflicts occur when configuring `vnetSubnetID`.**
+
+**Validation Differences**: 
+- **ARM Template NodePools**: Include comprehensive CIDR conflict detection and network validation
+- **Karpenter CRDs**: Apply changes instantly without automatic validation - requires customer due diligence
+
+**Customer Responsibility**: Before modifying `vnetSubnetID`, customers must verify:
+- Custom subnets don't conflict with cluster Pod CIDR, Service CIDR, or Docker Bridge CIDR
+- Sufficient IP address capacity for scaling requirements  
+- Proper network connectivity and routing configuration
+
+**Supported Use Case**: Fixing invalid subnet IDs only
+- Correcting malformed subnet references that prevent node provisioning
+- Updating subnet IDs that point to non-existent or inaccessible subnets
+
+**Unsupported Use Case**: Subnet migration between valid subnets
+- Moving nodes between subnets for network reorganization
+- Changing subnet configurations for capacity or performance reasons
+
+**Support Policy**: Microsoft will not provide support for issues arising from subnet-to-subnet migrations via `vnetSubnetID` modifications.
+
+#### Behavioral Fields
+
+Behavioral Fields are treated as over-arching settings on the NodePool to dictate how Karpenter behaves. These fields don't correspond to settings on the NodeClaim or instance. They're set by the user to control Karpenter's Provisioning and disruption logic. Since these don't map to a desired state of NodeClaims, __behavioral fields are not considered for Drift__.
+
+##### NodePool
+
+| Fields              |
+|---------------------|
+| spec.weight         |
+| spec.limits         |
+| spec.disruption.*   |
+
+Read the [Drift Design](https://github.com/aws/karpenter-core/blob/main/designs/drift.md) for more.
+
+To enable the drift feature flag, refer to the Feature Gates section in the settings documentation.
+
+Karpenter will add the `Drifted` status condition on NodeClaims if the NodeClaim is drifted from its owning NodePool. Karpenter will also remove the `Drifted` status condition if either:
+1. The `Drift` feature gate is not enabled but the NodeClaim is drifted, Karpenter will remove the status condition.
+2. The NodeClaim isn't drifted, but has the status condition, Karpenter will remove it.
 
 ## Disruption configuration
 
@@ -66,7 +155,7 @@ Configure disruption through the NodePool's `spec.disruption` section:
 spec:
   disruption:
     # Consolidation policy
-    consolidationPolicy: WhenUnderutilized | WhenEmpty
+    consolidationPolicy: WhenEmptyOrUnderutilized | WhenEmpty
     
     # Time to wait after discovering consolidation opportunity
     consolidateAfter: 30s
@@ -84,14 +173,14 @@ spec:
 
 ## Consolidation policies
 
-### WhenUnderutilized
+### WhenEmptyOrUnderutilized
 
-NAP considers all nodes for consolidation and attempts to remove or replace nodes when they are underutilized:
+NAP considers all nodes for consolidation and attempts to remove or replace nodes when they are underutilized or empty
 
 ```yaml
 spec:
   disruption:
-    consolidationPolicy: WhenUnderutilized
+    consolidationPolicy: WhenEmptyOrUnderutilized
     expireAfter: Never
 ```
 
@@ -104,6 +193,21 @@ spec:
   disruption:
     consolidationPolicy: WhenEmpty
     consolidateAfter: 30s
+```
+
+## Termination Grace Period
+Configure how long Karpenter waits for pods to terminate gracefully.
+This setting takes precedence over a pod's terminationGracePeriodSeconds and bypasses PodDisruptionBudgets and the karpenter.sh/do-not-disrupt annotation
+
+```yaml
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: default
+spec:
+  template:
+    spec:
+      terminationGracePeriod: 30s
 ```
 
 ## Disruption budgets
@@ -146,17 +250,6 @@ spec:
 ### Schedule and duration
 
 **Schedule** uses cronjob syntax with special macros like `@yearly`, `@monthly`, `@weekly`, `@daily`, `@hourly`:
-
-```bash
-# ┌───────────── minute (0 - 59)
-# │ ┌───────────── hour (0 - 23)
-# │ │ ┌───────────── day of the month (1 - 31)
-# │ │ │ ┌───────────── month (1 - 12)
-# │ │ │ │ ┌───────────── day of the week (0 - 6)
-# │ │ │ │ │
-# * * * * *
-```
-
 **Duration** allows compound durations like `10h5m`, `30m`, or `160h`. Duration and Schedule must be defined together.
 
 ### Budget configuration examples
@@ -267,89 +360,6 @@ spec:
       annotations:
         karpenter.sh/do-not-disrupt: "true"
 ```
-
-## Example disruption configurations
-
-### Conservative consolidation with budget
-
-Only remove empty nodes with rate limiting:
-
-```yaml
-spec:
-  disruption:
-    consolidationPolicy: WhenEmpty
-    consolidateAfter: 2m
-    expireAfter: Never
-    budgets:
-    - nodes: "10%"
-```
-
-### Aggressive cost optimization with maintenance window
-
-Consolidate underutilized nodes but protect business hours:
-
-```yaml
-spec:
-  disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter: Never
-    budgets:
-    - nodes: "0"
-      schedule: "0 9 * * 1-5"  # Block 9 AM - 5 PM weekdays
-      duration: 8h
-    - nodes: "25%"             # Allow 25% disruption otherwise
-```
-
-### Node rotation with controlled rollout
-
-Daily node rotation with gradual budget increase:
-
-```yaml
-spec:
-  disruption:
-    consolidationPolicy: WhenUnderutilized
-    expireAfter: 24h
-    budgets:
-    - nodes: "2"
-      schedule: "0 2 * * *"    # Start with 2 nodes at 2 AM
-      duration: 1h
-    - nodes: "5"
-      schedule: "0 3 * * *"    # Increase to 5 nodes at 3 AM
-      duration: 3h
-    - nodes: "10%"             # Default to 10% otherwise
-```
-
-## Best practices
-
-1. **Start conservative**: Begin with `WhenEmpty` policy and restrictive budgets
-2. **Set appropriate buffers**: Use `consolidateAfter` to prevent rapid node cycling
-3. **Use maintenance windows**: Configure budgets to protect critical business hours
-4. **Monitor impact**: Track the impact of consolidation on your workloads
-5. **Test disruption scenarios**: Validate that your workloads handle node disruption gracefully
-6. **Implement PDBs**: Use Pod Disruption Budgets alongside NAP budgets for comprehensive protection
-
-## Troubleshooting
-
-### Nodes not being consolidated
-
-- Check if the consolidation policy allows the current node state
-- Verify that `consolidateAfter` hasn't been set to `Never`
-- Ensure disruption budgets aren't blocking consolidation
-- Check for active maintenance windows in budget schedules
-
-### Workloads experiencing disruption
-
-- Implement proper readiness and liveness probes
-- Use Pod Disruption Budgets (PDBs)
-- Consider increasing `consolidateAfter` timing
-- Use the `karpenter.sh/do-not-disrupt` annotation for sensitive workloads
-- Review and adjust disruption budgets
-
-### Budget conflicts
-
-- Review overlapping budget schedules
-- Ensure percentage and absolute values align with cluster size
-- Check for overly restrictive budget combinations
 
 ## Next steps
 

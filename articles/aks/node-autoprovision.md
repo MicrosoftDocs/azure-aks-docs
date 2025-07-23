@@ -1,71 +1,34 @@
 ---
-title: Node autoprovisioning (preview)
-description: Learn about Azure Kubernetes Service (AKS) node autoprovisioning (preview).
+title: Node auto provisioning
+description: Learn about Azure Kubernetes Service (AKS) node auto provisioning.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 06/13/2024
-ms.author: bsoghigian
-author: bsoghigian
+ms.date: 07/23/2025
+ms.author: wilsondarko
+author: wdarko1
 
-# Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
+#Customer intent: As a cluster operator or developer, I want to automatically provision and manage the optimal VM configuration for my AKS workloads, so that I can efficiently scale my cluster while minimizing resource costs and complexities.
+
 ---
 
-# Node autoprovisioning (preview)
+# Node auto provisioning
 
-When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the VM size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
+When you deploy workloads onto AKS, you need to make a decision about the node pool configuration regarding the Virtual Machine (VM) size needed. As your workloads become more complex, and require different CPU, memory, and capabilities to run, the overhead of having to design your VM configuration for numerous resource requests becomes difficult.
 
+Node auto provisioning (NAP) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
 
-Node autoprovisioning (NAP) (preview) uses pending pod resource requirements to decide the optimal virtual machine configuration to run those workloads in the most efficient and cost-effective manner.
+Node auto provisioning is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS Karpenter provider][aks-karpenter-provider] which is also open source. Node auto provisioning automatically deploys, configures, and manages Karpenter on your AKS clusters.
 
-NAP is based on the open source [Karpenter](https://karpenter.sh) project, and the [AKS provider](https://github.com/Azure/karpenter-provider-azure) is also open source. NAP automatically deploys and configures and manages Karpenter on your AKS clusters.
+## How node auto provisioning works
 
+Node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. Node auto provisioning is able to manage this based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. NodeClaims are managed by node auto provisioning, and can be monitored to view current node state. Node auto provisioning then uses definitions in the NodePools, AKSNodeClass, and NodeClaims, followed by any specifications in your workload deployment file to provision the most efficient nodes in your cluster. 
 
-> [!IMPORTANT]
-> Node autoprovisioning (NAP) for AKS is currently in PREVIEW.
-> See the [Supplemental Terms of Use for Microsoft Azure Previews](https://azure.microsoft.com/support/legal/preview-supplemental-terms/) for legal terms that apply to Azure features that are in beta, preview, or otherwise not yet released into general availability.
+### Prerequisites
 
-## Before you begin
-
-- You need an Azure subscription. If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).
-- You need the [Azure CLI installed](/cli/azure/install-azure-cli).
-- [Install the `aks-preview` Azure CLI extension.  Minimum version 0.5.170](#install-the-aks-preview-cli-extension).
-- [Register the NodeAutoProvisioningPreviewfeature flag](#register-the-nodeautoprovisioningpreview-feature-flag).
-
-## Install the `aks-preview` CLI extension
-
-1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
-
-    ```azurecli-interactive
-    az extension add --name aks-preview
-    ```
-
-2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
-
-    ```azurecli-interactive
-    az extension update --name aks-preview
-    ```
-
-### Register the `NodeAutoProvisioningPreview` feature flag
-
-1. Register the `NodeAutoProvisioningPreview` feature flag using the `az feature register` command.
-
-    ```azurecli-interactive
-    az feature register --namespace "Microsoft.ContainerService" --name "NodeAutoProvisioningPreview"
-    ```
-
-    It takes a few minutes for the status to show *Registered*.
-
-2. Verify the registration status using the `az feature show` command.
-
-    ```azurecli-interactive
-    az feature show --namespace "Microsoft.ContainerService" --name "NodeAutoProvisioningPreview"
-    ```
-
-3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the `az provider register` command.
-
-    ```azurecli-interactive
-    az provider register --namespace Microsoft.ContainerService
-    ```
+| Prerequisite                         | Notes                                                                                                        |
+|--------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| **Azure Subscription**               | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).  |
+| **Azure CLI `aks-preview` extension**| `18.0.0b14` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions].               |   
 
 ## Limitations
 
@@ -250,15 +213,6 @@ Node autoprovisioning optimizes your cluster by:
 - Respecting disruption budgets and maintenance windows
 - Providing manual control when needed
 
-## Monitoring
-
-For comprehensive monitoring guidance and troubleshooting, see [Monitor node autoprovisioning](node-autoprovision-monitoring.md).
-
-Key monitoring capabilities:
-- Real-time event streaming with kubectl
-- Provisioning and scheduling decision visibility
-- Consolidation and cost optimization tracking
-
 ## Disabling node autoprovisioning
 
 Node autoprovisioning can only be disabled when:
@@ -365,5 +319,34 @@ Node autoprovisioning can only be disabled when:
     ```
 ---
 
+<!-- LINKS - internal -->
+[aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
+[azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
+[planned-maintenance#schedule-configuration-types-for-planned-maintenance]: /azure/aks/planned-maintenance#schedule-configuration-types-for-planned-maintenance
+[Azure-Policy-RBAC-permissions]: /azure/governance/policy/overview#azure-rbac-permissions-in-azure-policy
+[aks-entra-rbac]: /azure/aks/manage-azure-rbac
+[aks-entra-rbac-builtin-roles]: /azure/aks/manage-azure-rbac#create-role-assignments-for-users-to-access-the-cluster
+[az-network-vnet-create]: /cli/azure/network/vnet#az-network-vnet-create
+[az-network-vnet-subnet-create]: /cli/azure/network/vnet/subnet#az-network-vnet-subnet-create
+[az-identity-create]: /cli/azure/identity#az-identity-create
+[az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
+[az-aks-create]: /cli/azure/aks#az-aks-create
+[az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[az-aks-install-cli]: /cli/azure/aks#az-aks-install-cli
+[auto-upgrade]: /azure/aks/auto-upgrade-cluster#cluster-auto-upgrade-channels
+[auto-mode]: /azure/templates/microsoft.containerservice/managedclusters?pivots=deployment-language-bicep#managedclusternodeprovisioningprofile
+[node-os-upgrade-channel]: /azure/aks/auto-upgrade-node-os-image#available-node-os-upgrade-channels
+[azure-support]: /azure/azure-portal/supportability/how-to-create-azure-support-request
+[azure-reserved-instances]: https://azure.microsoft.com/pricing/reserved-vm-instances/
+[vm-overview]: /azure/virtual-machines/sizes/overview
+[network-security-group]: /azure/virtual-network/network-security-groups-overview
+
+<!-- LINKS - external -->
+[aks-karpenter-provider]: https://github.com/Azure/karpenter-provider-azure
+[aks-karpenter-provider-issues]: https://github.com/Azure/karpenter-provider-azure/issues
+[kubectl]: https://kubernetes.io/docs/reference/kubectl/
+[kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
+[kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[AKS-repo]: https://github.com/Azure/AKS/issues
