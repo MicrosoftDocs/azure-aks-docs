@@ -16,9 +16,9 @@ This article explains how to configure Azure-specific settings for Azure Kuberne
 
 AKSNodeClass enables configuration of Azure-specific settings for node autoprovisioning. Each NodePool must reference an AKSNodeClass using `spec.template.spec.nodeClassRef`. Multiple NodePools may point to the same AKSNodeClass, allowing you to share common Azure configurations across different node pools.
 
-## Basic AKSNodeClass configuration
+## Comprehensive AKSNodeClass configuration
 
-Here's a basic example showing how to configure an AKSNodeClass:
+Here's a comprehensive example showing all available AKSNodeClass configuration options with their defaults:
 
 ```yaml
 apiVersion: karpenter.sh/v1
@@ -31,29 +31,86 @@ spec:
       nodeClassRef:
         apiVersion: karpenter.azure.com/v1beta1
         kind: AKSNodeClass
-        name: default
+        name: comprehensive-example
 ---
 apiVersion: karpenter.azure.com/v1beta1
 kind: AKSNodeClass
 metadata:
-  name: default
+  name: comprehensive-example
 spec:
-  # Optional, configures the VM image family to use
+  # Image family configuration
+  # Default: Ubuntu2204
+  # Valid values: Ubuntu2204, AzureLinux
   imageFamily: Ubuntu2204
 
-  # Optional, configures the VNET subnet to use for node network interfaces
+  # Virtual network subnet configuration (optional)
+  # If not specified, uses the default --vnet-subnet-id from Karpenter installation
   vnetSubnetID: "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/my-rg/providers/Microsoft.Network/virtualNetworks/my-vnet/subnets/my-subnet"
 
-  # Optional, configures the OS disk size in GB
+  # OS disk size configuration
+  # Default: 128 GB
+  # Minimum: 30 GB
   osDiskSizeGB: 128
 
-  # Optional, configures the maximum number of pods per node
+  # Maximum pods per node configuration
+  # Default behavior depends on network plugin:
+  # - Azure CNI with standard networking: 30 pods
+  # - Azure CNI with overlay networking: 250 pods
+  # - Other configurations: 110 pods
+  # Range: 10-250
   maxPods: 30
 
-  # Optional, propagates tags to underlying Azure resources
+  # Azure resource tags (optional)
+  # Applied to all VM instances created with this AKSNodeClass
   tags:
-    team: team-a
-    app: team-a-app
+    Environment: "production"
+    Team: "platform-team"
+    Application: "web-service"
+    CostCenter: "engineering"
+
+  # Kubelet configuration (optional)
+  # All fields are optional with sensible defaults
+  kubelet:
+    # CPU management policy
+    # Default: "none"
+    # Valid values: none, static
+    cpuManagerPolicy: "static"
+
+    # CPU CFS quota enforcement
+    # Default: true
+    cpuCFSQuota: true
+
+    # CPU CFS quota period
+    # Default: "100ms"
+    cpuCFSQuotaPeriod: "100ms"
+
+    # Image garbage collection thresholds
+    # imageGCHighThresholdPercent must be greater than imageGCLowThresholdPercent
+    # Range: 0-100
+    imageGCHighThresholdPercent: 85
+    imageGCLowThresholdPercent: 80
+
+    # Topology manager policy
+    # Default: "none"
+    # Valid values: none, restricted, best-effort, single-numa-node
+    topologyManagerPolicy: "best-effort"
+
+    # Allowed unsafe sysctls (optional)
+    # Comma-separated list of unsafe sysctls or patterns
+    allowedUnsafeSysctls:
+      - "kernel.msg*"
+      - "net.ipv4.route.min_pmtu"
+
+    # Container log configuration
+    # containerLogMaxSize default: "50Mi"
+    containerLogMaxSize: "50Mi"
+    
+    # containerLogMaxFiles default: 5, minimum: 2
+    containerLogMaxFiles: 5
+
+    # Pod process limits
+    # Default: -1 (unlimited)
+    podPidsLimit: 4096
 ```
 
 ## Image family configuration
@@ -120,9 +177,14 @@ The `maxPods` field specifies the maximum number of pods that can be scheduled o
 ### Default behavior
 
 The default behavior depends on the network plugin configuration:
-- **Azure CNI with standard networking**: Default is 30 pods per node
-- **Azure CNI with overlay networking**: Default is 250 pods per node  
-- **Default**: Default is 110 pods per node
+- **Azure CNI with standard networking (v1 or NodeSubnet)**: 30 pods per node
+- **Azure CNI with overlay networking**: 250 pods per node
+- **None (no network plugin)**: 250 pods per node
+- **Other configurations**: 110 pods per node (standard Kubernetes default)
+
+### Valid range
+- **Minimum**: 10 pods per node
+- **Maximum**: 250 pods per node
 
 ```yaml
 spec:
