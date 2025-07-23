@@ -74,7 +74,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2 | API Server | | | | |
 | 1.2.1 | Ensure that the `--anonymous-auth` argument is set to false | Manual | L1 | Pass | |
 | 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Auto-rotated by AKS, currently parameter is set |
-| 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | New requirement, AKS does not currently set this parameter |
+| 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | Customers can use Azure Policy for kubernetes to deny services with External IP. |
 | 1.2.4 | Ensure that the `--kubelet-client-certificate` and `--kubelet-client-key` arguments are set as appropriate | Automated | L1 | Pass | |
 | 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | Kubelet's api-server uses self-signed certificate |
 | 1.2.6 | Ensure that the `--authorization-mode` argument isn't set to `AlwaysAllow` | Automated | L1 | Pass | |
@@ -83,7 +83,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.9 | Ensure that the admission control plugin EventRateLimit is set | Manual | L1 | Fail | Operational impact |
 | 1.2.10 | Ensure that the admission control plugin AlwaysAdmit isn't set | Automated | L1 | Pass | |
 | 1.2.11 | Ensure that the admission control plugin AlwaysPullImages is set | Manual | L1 | Fail | Operational impact |
-| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Fail | Equivalent Control | PodSecurity Policy was deprecated in k8s 1.21, and removed in 1.25. AKS supports [Pod Security Admission](use-psa) |
+| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Pass | Equivalent Control | PodSecurity Policy was deprecated in k8s 1.21, and removed in 1.25. AKS supports [Pod Security Admission](use-psa) |
 | 1.2.13 | Ensure that the admission control plugin NamespaceLifecycle is set | Automated | L2 | Pass | |
 | 1.2.14 | Ensure that the admission control plugin NodeRestriction is set | Automated | L2 | Pass | |
 | 1.2.15 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
@@ -106,8 +106,8 @@ Recommendations can have one of the following attestation statuses:
 | 1.3.1 | Ensure that the `--terminated-pod-gc-threshold` argument is set as appropriate | Manual | L1 | Pass | AKS sets the default value to 6000 instead of 12500|
 | 1.3.2 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
 | 1.3.3 | Ensure that the `--use-service-account-credentials` argument is set to true | Automated | L1 | Pass| |
-| 1.3.4 | Ensure that the `--service-account-private-key-file` argument is set as appropriate | Automated | L1 | Pass | Enabled when ssl is enabled |
-| 1.3.5 | Ensure that the `--root-ca-file` argument is set as appropriate | Automated | L1 | Pass | Enabled when ssl is enabled  |
+| 1.3.4 | Ensure that the `--service-account-private-key-file` argument is set as appropriate | Automated | L1 | Pass |  |
+| 1.3.5 | Ensure that the `--root-ca-file` argument is set as appropriate | Automated | L1 | Pass |  |
 | 1.3.6 | Ensure that the RotateKubeletServerCertificate argument is set to true | Automated | L2 | Pass | Parameter is set to true, see [Kubelet Serving Certificate Rotation](kscr) |
 | 1.3.7 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | Pod's IP is used|
 | 1.4 | Scheduler | | | | |
@@ -157,7 +157,7 @@ Recommendations can have one of the following attestation statuses:
 | 4.2.12 | Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | |
 | 4.2.13 | Ensure that a limit is set on pod PIDs | Manual | L1 | Pass | |
 | 4.3 | kube-proxy | | | | |
-| 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Pass | |
+| 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Fail | AKS has central prometheus scraping for kube-proxy and applies alert and auto-remediation when `KubeProxyStale` is detected. The `metrics-bind-address` is set for that purpose. |
 | 5 | Policies | | | | |
 | 5.1 | RBAC and Service Accounts| | | | |
 | 5.1.1 | Ensure that the cluster-admin role is only used where required | Automated | L1 | Depends on Environment | |
