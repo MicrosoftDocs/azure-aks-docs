@@ -73,7 +73,7 @@ spec:
 ### Consolidation
 
 NAP works to actively reduce cluster cost by identifying when:
-- Nodes can be removed because they are empty
+- Nodes can be removed because they're empty
 - Nodes can be removed as their workloads run on other nodes
 - Nodes can be replaced with lower priced variants
 
@@ -88,7 +88,7 @@ Drift handles changes to the NodePool/AKSNodeClass. For Drift, values in the Nod
 
 #### Special Cases on Drift
 
-In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to Custom Resource Definitions (CRDs), or where CRD changes don't result in drift. For example, if a NodeClaim has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the NodeClaim won't be drifted because its value is still compatible with the new requirements. Conversely, if a NodeClaim is using a NodeClaim imageFamily, but the `spec.imageFamily` field is changed, Karpenter detects the NodeClaim as drifted and rotates the node to meet that specification
+In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to Custom Resource Definitions (CRDs), or where CRD changes don't result in drift. For example, if a NodeClaim has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the NodeClaim isn't drifted because its value is still compatible with the new requirements. Conversely, if a NodeClaim is using a NodeClaim imageFamily, but the `spec.imageFamily` field is changed, Karpenter detects the NodeClaim as drifted and rotates the node to meet that specification
 
 ##### NodePool
 | Fields         |
@@ -119,7 +119,7 @@ Unlike traditional AKS NodePools created through ARM templates, Karpenter applie
 - Sufficient IP address capacity for scaling requirements  
 - Proper network connectivity and routing configuration
 
-**Supported Use Case**: Fixing invalid subnet IDs only
+**Supported Use Case**: Fixing invalid subnet identifiers (IDs) only
 - Correcting malformed subnet references that prevent node provisioning
 - Updating subnet identifiers that point to nonexistent or inaccessible subnets
 
@@ -127,7 +127,7 @@ Unlike traditional AKS NodePools created through ARM templates, Karpenter applie
 - Moving nodes between subnets for network reorganization
 - Changing subnet configurations for capacity or performance reasons
 
-**Support Policy**: Microsoft won't provide support for issues arising from subnet-to-subnet migrations via `vnetSubnetID` modifications.
+**Support Policy**: Microsoft doesn't provide support for issues arising from subnet to subnet migrations via `vnetSubnetID` modifications.
 
 #### Behavioral Fields
 
