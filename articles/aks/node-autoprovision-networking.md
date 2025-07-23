@@ -14,7 +14,7 @@ This article covers the networking configuration requirements and recommendation
 
 ## Supported networking configurations
 
-The recommended network configurations for clusters enabled with Node Autoprovisioning are the following:
+The following network configurations are recommended for clusters enabled with Node Autoprovisioning:
 
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md) with [Powered by Cilium](azure-cni-powered-by-cilium.md)
 - [Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
@@ -29,15 +29,15 @@ Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md
 
 The following networking configurations are currently *not* supported with node autoprovisioning:
 
-- **Calico network policy** - Will not be supported with NAP
+- **Calico network policy** - Won't be supported with NAP
 - **Dynamic IP Allocation** - Not supported yet
-- **Static Allocation of CIDR blocks** - Not supported yet
+- **Static Allocation of Classless Inter-Domain Routing (CIDR) blocks** - Not supported yet
 
-PodSubnetID is not a supported or respected field for Karpenter nodes.
+PodSubnetID isn't a supported or respected field for Karpenter nodes.
 
 ## Cluster Setup with Custom VNet and Subnets
 
-Karpenter supports custom networking configurations that allow you to specify different subnets for your nodes. This is particularly useful when you need to place nodes in specific subnets for compliance, security, or network segmentation requirements.
+Karpenter supports custom networking configurations that allow you to specify different subnets for your nodes. This approach is useful when you need to place nodes in specific subnets for compliance, security, or network segmentation requirements.
 ### Creating VNet and Subnets
 
 First, create a VNet with two subnets for your AKS cluster:
@@ -106,13 +106,13 @@ Karpenter is automatically installed when using `--node-provisioning-mode Auto` 
 ## Prerequisites
 
 - Azure CLI installed and authenticated
-- An AKS cluster with Karpenter installed (created above)
-- Custom subnets in your VNet (created above)
-- Appropriate RBAC permissions for subnet access
+- An AKS cluster with Karpenter installed (from previous steps)
+- Custom subnets in your VNet (from previous steps)
+- Appropriate Role-Based Access Control (RBAC) permissions for subnet access
 
 ## VNet Subnet Configuration
 
-You can configure custom subnet IDs in your AKSNodeClass using the `vnetSubnetID` field:
+You can configure custom subnet identifiers in your AKSNodeClass using the `vnetSubnetID` field:
 
 ```yaml
 apiVersion: karpenter.azure.com/v1beta1
@@ -127,20 +127,20 @@ spec:
 
 The `vnetSubnetID` field in AKSNodeClass is optional. When not specified, Karpenter automatically uses the default subnet configured during Karpenter installation via the `--vnet-subnet-id` CLI parameter or `VNET_SUBNET_ID` environment variable.
 
-This default subnet is typically the same subnet specified during AKS cluster creation with the `--vnet-subnet-id` flag in the `az aks create` command. This creates a fallback mechanism where:
+This default subnet is typically the same subnet specified during AKS cluster creation with the `--vnet-subnet-id` flag in the `az aks create` command. This fallback mechanism works as follows:
 
 - **With vnetSubnetID specified**: Karpenter provisions nodes in the specified custom subnet
 - **Without vnetSubnetID specified**: Karpenter provisions nodes in the cluster's default subnet (from `--vnet-subnet-id`)
 
-This allows you to have a mix of NodeClasses - some using custom subnets for specific workloads, and others using the cluster's default subnet configuration.
+This approach allows you to have a mix of NodeClasses - some using custom subnets for specific workloads, and others using the cluster's default subnet configuration.
 
 ## RBAC Configuration
 
-When using custom subnet configurations, Karpenter needs appropriate permissions to read subnet information and join nodes to the specified subnets. There are two recommended approaches for configuring these permissions.
+When using custom subnet configurations, Karpenter requires appropriate permissions to read subnet information and join nodes to the specified subnets. There are two recommended approaches for configuring these permissions.
 
 ### Approach A: Broad VNet Permissions
 
-This approach grants the cluster identity permissions to read and join any subnet within the main VNet, as well as overall network contributor. Its very permissive, investigate the "Network Contributor" role before applying this to your production cluster. 
+This approach grants the cluster identity permissions to read and join any subnet within the main VNet and provides network contributor access. It's very permissive, investigate the "Network Contributor" role before applying this approach to your production cluster. 
 
 #### Required Permissions
 
@@ -161,16 +161,16 @@ az role assignment create \
 ```
 
 #### Benefits
-- Simplified permission management
-- No need to update permissions when adding new subnets
+- Simplifies permission management
+- Eliminates the need to update permissions when adding new subnets
 - Works well for single-tenant environments
-- In cases where a subscription has reached the maximium number of custom roles, this approach works
+- Functions when a subscription reaches the maximum number of custom roles
 
 #### Example Script
 For a complete example of setting up custom networking with Approach A permissions, see this [sample setup script](https://gist.github.com/Bryce-Soghigian/a4259d6224db0c55081718caa7b37268).
 
 #### Considerations
-- Broader permissions than strictly necessary
+- Provides broader permissions than strictly necessary
 - May not meet strict security requirements
 
 ### Approach B: Scoped Subnet Permissions
@@ -233,9 +233,9 @@ az role assignment create \
 > **Note**: The condition parameter limits the Network Contributor role to only read and join operations on subnets, excluding write and delete permissions.
 
 #### Benefits
-- Principle of least privilege
-- Granular access control
-- Better compliance with security policies
+- Follows principle of least privilege
+- Provides granular access control
+- Ensures better compliance with security policies
 
 #### Example Script
 For a complete example of setting up custom networking with Approach B permissions, see this [scoped subnet permissions script](https://gist.github.com/Bryce-Soghigian/fc3de3a796b20dbed8fe5d2ca0c85dd4).
@@ -272,7 +272,7 @@ spec:
 ```
 ## Subnet Drift Behavior
 
-Karpenter monitors subnet configuration changes and will detect drift when the `vnetSubnetID` in an AKSNodeClass is modified. Understanding this behavior is critical when managing custom networking configurations.
+Karpenter monitors subnet configuration changes and detects drift when the `vnetSubnetID` in an AKSNodeClass is modified. Understanding this behavior is critical when managing custom networking configurations.
 
 ### ⚠️ Unsupported Configuration Path
 
@@ -283,29 +283,29 @@ Karpenter monitors subnet configuration changes and will detect drift when the `
 The `vnetSubnetID` field can be modified only in these scenarios:
 - Correcting a malformed subnet ID that prevents node provisioning
 - Fixing an invalid subnet reference that causes configuration errors
-- Updating a subnet ID that points to a non-existent or inaccessible subnet
+- Updating a subnet identifier that points to a nonexistent or inaccessible subnet
 
 ### Unsupported Use Case: Subnet Migration
 
-**DO NOT** use this field to migrate nodes between valid subnets. This includes:
+**DO NOT** use this field to migrate nodes between valid subnets. The drift detection includes:
 - Moving nodes from one subnet to another for network reorganization
 - Changing subnet configurations for capacity or performance reasons
 - Migrating between subnets as part of infrastructure changes
 
-**Support Policy**: Microsoft will not provide support for issues arising from subnet-to-subnet migrations via `vnetSubnetID` modifications. Support tickets related to such operations will be declined.
+**Support Policy**: Microsoft won't provide support for issues arising from subnet-to-subnet migrations via `vnetSubnetID` modifications. Support tickets related to such operations are declined.
 
 ### What Happens When You Modify vnetSubnetID
 
 If you modify the field (even for unsupported use cases):
 
 1. **Drift Detection**: Karpenter detects the subnet mismatch and marks nodes for replacement
-2. **Node Disruption**: Existing nodes will be cordoned, drained, and terminated
+2. **Node Disruption**: Existing nodes are cordoned, drained, and terminated
 3. **Potential Issues**: Network connectivity problems, workload disruptions, and unpredictable behavior
-4. **No Support**: Microsoft support will not assist with issues from this configuration path
+4. **No Support**: Microsoft support won't assist with issues from this configuration path
 
 ### Recommended Approach for Subnet Changes
 
-For legitimate subnet migration needs:
+For legitimate subnet migration needs, follow these steps:
 1. Create a new AKSNodeClass with the desired subnet
 2. Create a new NodePool referencing the new AKSNodeClass  
 3. Gradually migrate workloads to the new NodePool
@@ -313,14 +313,14 @@ For legitimate subnet migration needs:
 
 This approach provides controlled migration with proper testing and rollback capabilities.
 
-## Understanding AKS Cluster CIDR Ranges
+## Understanding AKS Cluster Classless Inter-Domain Routing (CIDR) Ranges
 
-When configuring custom networking with `vnetSubnetID`, customers are responsible for understanding and managing their cluster's CIDR ranges to avoid network conflicts. Unlike traditional AKS NodePools created through ARM templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides.
+When configuring custom networking with `vnetSubnetID`, you're responsible for understanding and managing your cluster's Classless Inter-Domain Routing (CIDR) ranges to avoid network conflicts. Unlike traditional AKS NodePools created through ARM templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides.
 
 ### Key CIDR Considerations
 
 **Custom Subnet Requirements**: When using `vnetSubnetID`, ensure your custom subnets:
-- Do not overlap with cluster, service, or use any of the reserved addresses 
+- Don't overlap with cluster, service, or use any of the reserved addresses
 - Have sufficient IP addresses for expected node and pod scaling
 
 ### Validation Differences
@@ -332,16 +332,16 @@ When configuring custom networking with `vnetSubnetID`, customers are responsibl
 - Extended provisioning time with validation checks
 
 **Karpenter CRD Application**: Custom resources apply immediately:
-- **⚠️ No automatic CIDR conflict detection**
+- **⚠️ No automatic Classless Inter-Domain Routing (CIDR) conflict detection**
 - **⚠️ No subnet capacity pre-validation**
 - **⚠️ Instant application without extended validation**
-- Faster provisioning but requires pre-planning
+- Faster provisioning but requires preplanning
 
 ### Customer Responsibilities
 
 When configuring `vnetSubnetID`, you must:
 
-1. **Verify CIDR Compatibility**: Ensure custom subnets don't conflict with existing cluster CIDRs
+1. **Verify CIDR Compatibility**: Ensure custom subnets don't conflict with existing cluster Classless Inter-Domain Routing (CIDR) ranges
 2. **Plan IP Capacity**: Calculate required IP addresses for expected scaling
 3. **Validate Connectivity**: Test network routes and security group rules
 4. **Monitor Usage**: Track subnet utilization and plan for growth
@@ -364,29 +364,29 @@ Be aware of these potential conflicts:
 # Service CIDR:     10.0.0.0/16  
 # Custom Subnet:    10.1.0.0/24   ✅ NO CONFLICT
 ```
-You are responsible for configuring the vnetSubnetID for the nodeclass. ARM validation doesn't verify that the subnet has enough IPs and isn't overlapping with any other CIDRs.
+You're responsible for configuring the vnetSubnetID for the node class. ARM validation doesn't verify that the subnet has enough IP addresses and isn't overlapping with any other CIDR ranges.
 
 ## Bring Your Own CNI (BYO CNI) Support Policy
 
-Karpenter for Azure supports bring-your-own CNI configurations, following the same support policy as Azure Kubernetes Service (AKS).
+Karpenter for Azure supports bring-your-own Container Network Interface (CNI) configurations, following the same support policy as Azure Kubernetes Service (AKS).
 
 ### Support Scope
 
-**Supported**: Karpenter-specific functionality and integration issues when using BYO CNI configurations.
+**Supported**: Karpenter-specific functionality and integration issues when using bring-your-own (BYO) CNI configurations.
 
 **Not Supported**: CNI-specific networking issues, configuration problems, or troubleshooting when using third-party CNI plugins.
 
 ### Support Policy Details
 
-- **BYO CNI is supported** for use with Karpenter, but follows AKS BYO CNI support boundaries
+- **Bring-your-own (BYO) CNI is supported** for use with Karpenter, but follows AKS BYO CNI support boundaries
 - **Networking issues** related to the CNI plugin itself are outside the scope of Karpenter support
-- **Karpenter-specific problems** (node provisioning, scaling, lifecycle management) will be supported regardless of CNI choice
+- **Karpenter-specific problems** (node provisioning, scaling, lifecycle management) are supported regardless of CNI choice
 - **CNI configuration and troubleshooting** should be directed to the respective CNI vendor or community
 
 ### When to Contact Support for BYO CNI
 
 **Contact Karpenter Support for**:
-- Node provisioning failures with BYO CNI
+- Node provisioning failures with bring-your-own (BYO) CNI
 - Karpenter controller issues when using custom CNI
 - Integration problems between Karpenter and CNI plugins
 - AKSNodeClass configuration issues
