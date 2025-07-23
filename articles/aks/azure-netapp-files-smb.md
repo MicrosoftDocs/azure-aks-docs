@@ -8,6 +8,7 @@ ms.date: 05/08/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to provision Azure NetApp Files SMB volumes for my AKS workloads, so that I can efficiently manage and scale storage for my containerized applications."
 ---
 
 # Provision Azure NetApp Files SMB volumes for Azure Kubernetes Service

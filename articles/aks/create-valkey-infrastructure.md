@@ -8,6 +8,7 @@ author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud architect, I want to set up the infrastructure for a Valkey cluster on a Kubernetes service, so that I can deploy and manage stateful applications efficiently in a scalable environment.
 ---
 
 # Create the infrastructure for running a Valkey cluster on Azure Kubernetes Service (AKS)

@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.date: 03/07/2025
+# Customer intent: As a Kubernetes administrator, I want to install custom certificate authorities on my AKS cluster nodes so that I can ensure secure connections to private registries and maintain the trustworthiness of the node's trust store.
 ---
 
 # Custom certificate authority (CA) in Azure Kubernetes Service (AKS)

@@ -6,8 +6,9 @@ ms.author: schaffererin
 ms.service: azure-kubernetes-service
 ms.subservice: aks-monitoring
 ms.topic: how-to
-ms.date: 06/10/2025
 ms.custom: quarterly
+ms.date: 06/10/2025
+# Customer intent: As a cloud operations manager, I want to enable cost analysis on my AKS cluster so that I can gain detailed insights into resource allocation and optimize my Kubernetes spending effectively.
 ---
 
 # Azure Kubernetes Service (AKS) cost analysis
@@ -60,6 +61,7 @@ export RANDOM_SUFFIX=$(openssl rand -hex 3)
 export RESOURCE_GROUP="AKSCostRG$RANDOM_SUFFIX"
 export CLUSTER_NAME="AKSCostCluster$RANDOM_SUFFIX"
 export LOCATION="WestUS2"
+az group create --resource-group $RESOURCE_GROUP --location $LOCATION
 az aks create --resource-group $RESOURCE_GROUP --name $CLUSTER_NAME --location $LOCATION --enable-managed-identity --generate-ssh-keys --tier standard --enable-cost-analysis
 ```
 

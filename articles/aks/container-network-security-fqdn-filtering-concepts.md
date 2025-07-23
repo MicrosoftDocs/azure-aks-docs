@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-networking
 ms.topic: concept-article
 ms.date: 07/30/2024
+# Customer intent: As a security administrator managing a Kubernetes cluster, I want to implement FQDN filtering for network policies, so that I can enhance security by simplifying policy management and maintaining compliance without frequent updates due to changing IP addresses.
 ---
 
 # Overview of FQDN filtering

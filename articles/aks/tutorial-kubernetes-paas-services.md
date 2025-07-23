@@ -7,6 +7,7 @@ ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
 ms.author: schaffererin
 author: schaffererin
 #Customer intent: As a developer, I want to learn how to use PaaS services with an Azure Kubernetes Service (AKS) cluster so that I can deploy and manage my applications.
+# Customer intent: As a developer, I want to integrate Azure Service Bus with my Kubernetes application, so that I can enable reliable messaging and improve the management of my application's order processing workflow.
 ---
 
 # Tutorial - Use PaaS services with an Azure Kubernetes Service (AKS) cluster

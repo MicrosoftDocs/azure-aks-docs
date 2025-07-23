@@ -6,6 +6,7 @@ ms.author: rayoflores
 ms.topic: how-to
 ms.date: 06/10/2024
 ms.custom: innovation-engine, devx-track-azurecli, linux-related-content, kubernetes, aks
+# Customer intent: As an AKS cluster operator, I want to understand how to use labels for node pools so that I can effectively manage scheduling and resource allocation within my Kubernetes environment.
 ---
 
 # Use labels in an Azure Kubernetes Service (AKS) cluster

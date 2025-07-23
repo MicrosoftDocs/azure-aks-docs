@@ -6,6 +6,7 @@ ms.date: 02/25/2025
 author: allyford
 ms.author: allyford
 
+# Customer intent: As a cloud architect, I want to implement Arm64 virtual machines in an existing Kubernetes cluster, so that I can optimize costs while maintaining performance for scalable workloads.
 ---
 
 # Use Arm-based processor (Arm64) Virtual Machines (VMs) in an Azure Kubernetes Service (AKS) cluster for cost effectiveness

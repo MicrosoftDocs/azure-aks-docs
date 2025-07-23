@@ -7,6 +7,7 @@ ms.subservice: aks-integration
 ms.custom: devx-track-azurecli
 ms.date: 02/21/2024
 ms.author: miwithro
+# Customer intent: "As a cloud administrator, I want to configure user authentication for my Kubernetes cluster using identity management, so that I can control access based on user roles and directory group memberships."
 ---
 
 # Integrate Microsoft Entra ID with Azure Kubernetes Service (AKS) using the Azure CLI (legacy)

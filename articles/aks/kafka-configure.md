@@ -7,6 +7,7 @@ ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
 ms.custom: 'stateful-workloads'
+# Customer intent: "As a cloud engineer, I want to configure monitoring and networking for a Kafka cluster on Kubernetes using open-source tools, so that I can ensure reliable performance and client connectivity without the complexity of managing infrastructure."
 ---
 
 # Configure monitoring and networking for a Kafka cluster on Azure Kubernetes Service (AKS)  

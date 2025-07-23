@@ -6,6 +6,7 @@ ms.date: 06/03/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: fasttrack-edit
+# Customer intent: As a cloud developer, I want to understand networking concepts in Azure Kubernetes Service (AKS) so that I can effectively manage application connectivity, security, and load balancing within my microservices architecture.
 ---
 
 # Networking concepts for applications in Azure Kubernetes Service (AKS)

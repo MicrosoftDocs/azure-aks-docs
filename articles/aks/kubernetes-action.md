@@ -8,6 +8,7 @@ ms.author: davidsmatlak
 
 ms.custom: github-actions-azure
 ms.subservice: aks-developer
+# Customer intent: As a developer, I want to automate the process of building, testing, and deploying containerized applications to Azure Kubernetes Service using GitHub Actions, so that I can streamline my CI/CD workflows and ensure consistent deployments.
 ---
 
 # Build, test, and deploy containers to Azure Kubernetes Service (AKS) using GitHub Actions

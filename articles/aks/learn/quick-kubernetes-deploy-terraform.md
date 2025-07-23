@@ -11,6 +11,7 @@ content_well_notification:
 ai-usage: ai-assisted
 zone_pivot_groups: aks-azure-developer-cli
 #Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run applications using the managed Kubernetes service in Azure.
+# Customer intent: As a developer, I want to deploy a Kubernetes cluster using Terraform, so that I can efficiently manage and run applications in a cloud environment.
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Terraform
