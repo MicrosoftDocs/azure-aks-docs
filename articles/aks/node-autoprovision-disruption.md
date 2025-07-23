@@ -235,7 +235,7 @@ metadata:
   name: default
 spec:
   disruption:
-    consolidationPolicy: WhenUnderutilized
+    consolidationPolicy: WhenEmptyOrUnderutilized
     expireAfter: 720h # 30 * 24h = 720h
     budgets:
     - nodes: "20%"      # Allow 20% of nodes to be disrupted
