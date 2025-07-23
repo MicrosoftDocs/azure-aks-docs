@@ -139,6 +139,11 @@ Update the value from `value1` to `value2`:
 
 ```bash
 kubectl get configmap test-cm -n test-namespace -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
 apiVersion: v1
 data:
   key: value2 # value updated here, old value: value1
@@ -275,7 +280,7 @@ example-run   example-placement   1                         0                   
 A more detailed look at the status after the one minute `TimedWait` has elapsed:
 
 ```bash
-kubectl get csur example-run -o YAML
+kubectl get csur example-run -o yaml
 ```
 
 Your output should look similar to the following example:
@@ -560,11 +565,12 @@ example-run-canary     example-run     canary   True       True               14
 ```
 
 To approve the new `ClusterApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
-```
+
+```bash
 kubectl patch clusterapprovalrequests example-run-2-canary --type='merge' --subresource=status --patch-file approval.json
 ```
 
-Verify if the new object is approved,
+Verify if the new object is approved:
 
 ```bash
 kubectl get clusterapprovalrequest -A                                                                                    
