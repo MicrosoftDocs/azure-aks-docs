@@ -492,13 +492,14 @@
             href: configure-azure-cni.md
           - name: Bring your own CNI
             href: use-byo-cni.md
-          - name: Use Azure CNI for dynamic IP allocation
-            href: configure-azure-cni-dynamic-ip-allocation.md
-          - name: Use Azure CNI VNet - Static Block Allocation (Preview)
-            href: configure-azure-cni-static-block-allocation.md
           - name: Use Azure CNI Powered by Cilium
             href: azure-cni-powered-by-cilium.md
           - name: Use Azure CNI Pod Subnet
+            items:
+              - name: Use Azure CNI Pod Subnet -  Dynamic IP Allocation
+                href: configure-azure-cni-dynamic-ip-allocation.md
+              - name: Use Azure CNI Pod Subnet - Static Block Allocation
+                href: configure-azure-cni-static-block-allocation.md
             href: concepts-network-azure-cni-pod-subnet.md
           - name: Upgrade Azure CNI IPAM and dataplane
             href: upgrade-azure-cni.md
