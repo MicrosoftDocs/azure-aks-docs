@@ -152,6 +152,8 @@
                   href: istio-upgrade.md
                 - name: Support policy
                   href: istio-support-policy.md
+                - name: Migration from open source Istio
+                  href: migration-from-open-source-istio-to-addon.md
                 - name: Uninstall
                   href: istio-uninstall-addon.md
             - name: Traffic management
@@ -249,7 +251,7 @@
         - name: Add a Virtual Machines node pool
           href: virtual-machines-node-pools.md
         - name: Availability Sets deprecation
-          href: availability-sets-on-aks.md  
+          href: availability-sets-on-aks.md
         - name: Use system node pools
           href: use-system-pools.md
         - name: Resize node pools
@@ -507,7 +509,7 @@
             href: configure-dual-stack.md
           - name: Azure CNI Overlay
             items:
-              - name: Overview 
+              - name: Overview
                 href: concepts-network-azure-cni-overlay.md
               - name: Use Azure CNI Overlay
                 href: azure-cni-overlay.md
@@ -1022,15 +1024,15 @@
               href: airflow-create-infrastructure.md
             - name: Configure and deploy Airflow
               href: airflow-deploy.md
-        - name: Deploy Apache Kafka using Strimzi 
+        - name: Deploy Apache Kafka using Strimzi
           items:
             - name: Overview
               href: kafka-overview.md
-            - name: Prepare Kafka infrastructure  
-              href: kafka-infrastructure.md  
-            - name: Deploy Strimzi and Kafka components  
-              href: kafka-deploy.md  
-            - name: Configure monitoring and networking for the Kafka cluster  
+            - name: Prepare Kafka infrastructure
+              href: kafka-infrastructure.md
+            - name: Deploy Strimzi and Kafka components
+              href: kafka-deploy.md
+            - name: Configure monitoring and networking for the Kafka cluster
               href: kafka-configure.md
         - name: Deploy GitHub Actions using Azure Files
           items:
