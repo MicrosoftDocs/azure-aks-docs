@@ -29,9 +29,9 @@ This hub is best for helping you to understand upgrade mechanics, troubleshoot i
 
 For more information, see these related articles:
 
-- [Production strategies](aks-production-upgrade-strategies.md)
-- [Stateful workloads](stateful-workload-upgrades.md)
-- [Scenario hub](upgrade-scenarios-hub.md)
+- To upgrade your production AKS clusters, see [AKS production upgrade strategies](aks-production-upgrade-strategies.md).
+- To get upgrade patterns for AKS clusters with stateful workloads, see [Stateful workload upgrade patterns](stateful-workload-upgrades.md).
+- To use the scenario hub to help you choose the right AKS upgrade approach, see [AKS upgrade scenarios: Choose your path](upgrade-scenarios-hub.md).
 
 ---
 
@@ -330,7 +330,7 @@ Use the [upgrade scenarios hub](upgrade-scenarios-hub.md) for a guided decision 
 - Risk profile
 - Timeline constraints
 
-## Related content
+## Next steps
 
 * Review [AKS patch and upgrade guidance][upgrade-operators-guide] for best practices and planning tips before you start any upgrade.
 * Always check for [API breaking changes](https://aka.ms/aks/breakingchanges) and validate your workload's compatibility with the target Kubernetes version.

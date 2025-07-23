@@ -16,7 +16,7 @@ Upgrading Azure Kubernetes Service (AKS) clusters safely requires the right stra
 
 ## What this article covers
 
-This *decision hub* helps you choose the right AKS upgrade approach based on:
+This decision hub helps you choose the right AKS upgrade approach based on:
 
 - A quick scenario finder with time constraints and priorities.
 - Emergency upgrade paths for critical security responses.
@@ -28,9 +28,9 @@ This hub is best for first-time upgraders, teams that need to evaluate options, 
 
 For more information, see these related articles:
 
-- [Production strategies](aks-production-upgrade-strategies.md)
-- [Stateful workloads](stateful-workload-upgrades.md)
-- [Basic upgrades](upgrade-aks-cluster.md)
+- To upgrade your production AKS clusters, see [AKS production upgrade strategies](aks-production-upgrade-strategies.md).
+- To get upgrade patterns for AKS clusters with stateful workloads, see [Stateful workload upgrade patterns](stateful-workload-upgrades.md).
+- To check for and apply basic upgrades to your AKS cluster, see [Upgrade an Azure Kubernetes Service (AKS) cluster](upgrade-aks-cluster.md).
 
 ---
 
