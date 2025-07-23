@@ -282,20 +282,20 @@ status:
     message: ClusterStagedUpdateRun initialized successfully
     observedGeneration: 1
     reason: UpdateRunInitializedSuccessfully
-    status: "True"
+    status: "True" # the updateRun is initialized successfully
     type: Initialized
   - lastTransitionTime: "2025-07-22T21:29:53Z"
     message: The updateRun is waiting for after-stage tasks in stage canary to complete
     observedGeneration: 1
     reason: UpdateRunWaiting
-    status: "False"
+    status: "False" # the updateRun is still progressing and waiting for approval
     type: Progressing
   deletionStageStatus:
-    clusters: []
+    clusters: [] # no clusters need to be cleaned up
     stageName: kubernetes-fleet.io/deleteStage
-  policyObservedClusterCount: 3
+  policyObservedClusterCount: 3 # number of clusters to be updated
   policySnapshotIndexUsed: "0"
-  stagedUpdateStrategySnapshot:
+  stagedUpdateStrategySnapshot: # snapshot of the strategy used for this update run
     stages:
     - afterStageTasks:
       - type: TimedWait
@@ -311,18 +311,18 @@ status:
           environment: canary
       name: canary
       sortingLabelKey: order
-  stagesStatus:
+  stagesStatus: # detailed status for each stage
   - afterStageTaskStatus:
     - conditions:
       - lastTransitionTime: "2025-07-22T21:29:23Z"
         message: Wait time elapsed
         observedGeneration: 1
         reason: AfterStageTaskWaitTimeElapsed
-        status: "True"
+        status: "True" # the wait after-stage task has completed
         type: WaitTimeElapsed
       type: TimedWait
     clusters:
-    - clusterName: member2
+    - clusterName: member2 # stage staging contains member2 cluster only
       conditions:
       - lastTransitionTime: "2025-07-22T21:28:08Z"
         message: Cluster update started
@@ -334,7 +334,7 @@ status:
         message: Cluster update completed successfully
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
-        status: "True"
+        status: "True" # member2 is updated successfully
         type: Succeeded
     conditions:
     - lastTransitionTime: "2025-07-22T21:28:23Z"
@@ -347,13 +347,13 @@ status:
       message: Stage update completed successfully
       observedGeneration: 1
       reason: StageUpdatingSucceeded
-      status: "True"
+      status: "True" # stage staging has completed successfully
       type: Succeeded
     endTime: "2025-07-22T21:29:23Z"
     stageName: staging
     startTime: "2025-07-22T21:28:08Z"
   - afterStageTaskStatus:
-    - approvalRequestName: example-run-canary
+    - approvalRequestName: example-run-canary # ClusterApprovalRequest name for this stage
       conditions:
       - lastTransitionTime: "2025-07-22T21:29:53Z"
         message: ClusterApprovalRequest is created
@@ -363,7 +363,7 @@ status:
         type: ApprovalRequestCreated
       type: Approval
     clusters:
-    - clusterName: member3
+    - clusterName: member3 # according to the labelSelector and sortingLabelKey, member3 is selected first in this stage
       conditions:
       - lastTransitionTime: "2025-07-22T21:29:23Z"
         message: Cluster update started
@@ -375,9 +375,9 @@ status:
         message: Cluster update completed successfully
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
-        status: "True"
+        status: "True" # member3 update is completed
         type: Succeeded
-    - clusterName: member1
+    - clusterName: member1 # member1 is selected after member3 because of order=2 label
       conditions:
       - lastTransitionTime: "2025-07-22T21:29:38Z"
         message: Cluster update started
@@ -389,7 +389,7 @@ status:
         message: Cluster update completed successfully
         observedGeneration: 1
         reason: ClusterUpdatingSucceeded
-        status: "True"
+        status: "True" # member1 update is completed
         type: Succeeded
     conditions:
     - lastTransitionTime: "2025-07-22T21:29:53Z"
@@ -397,7 +397,7 @@ status:
         to complete
       observedGeneration: 1
       reason: StageUpdatingWaiting
-      status: "False"
+      status: "False" # stage canary is waiting for approval task completion
       type: Progressing
     stageName: canary
     startTime: "2025-07-22T21:29:23Z"
