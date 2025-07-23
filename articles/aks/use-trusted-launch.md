@@ -197,20 +197,10 @@ In your template, provide values for `enableVTPM` and `enableSecureBoot`. The sa
 
 You can constrain a pod and restrict it to run on a specific node or nodes, or preference to nodes with trusted launch enabled. You can control this using the following node pool selector in your pod manifest.
 
-For a node pool running vTPM, apply the following:
-
 ```yml
 spec:
   nodeSelector:
         kubernetes.azure.com/trusted-launch: true
-```
-
-For a node pool running Secure Boot, apply the following:
-
-```yml
-spec:
-  nodeSelector:
-        kubernetes.azure.com/secure-boot: true
 ```
 
 ## Disable vTPM or secure boot on an existing trusted launch node pool
