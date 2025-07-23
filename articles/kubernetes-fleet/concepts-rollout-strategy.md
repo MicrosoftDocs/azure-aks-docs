@@ -169,7 +169,7 @@ Fleet Manager processes stages sequentially:
 
 1. All clusters in a stage receive updates according to their sort order
 2. After all clusters in a stage are successfully updated, any configured after-stage tasks execute
-3. The next stage begins only after all previous stage tasks complete
+3. The next stage begins only after all previous after stage tasks complete
 
 For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest` resource that must be approved before continuing to the next stage.
 

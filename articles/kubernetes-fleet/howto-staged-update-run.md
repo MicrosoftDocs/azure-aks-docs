@@ -21,8 +21,6 @@ This article shows you how to create and execute staged update runs to deploy wo
 
 * To understand the concepts and terminology used in this article, read the [conceptual overview of staged rollout strategies](./concepts-rollout-strategy.md#staged-update-strategy-preview).
 
-* You must have a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
-
 * You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 * If you don't have the Kubernetes CLI (kubectl) already, you can install it by using this command:
@@ -43,7 +41,9 @@ This article shows you how to create and execute staged update runs to deploy wo
   az extension update --name fleet
   ```
 
-## Configure the member clusters
+## Configure the Demo environment
+
+You must have a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
 This tutorial demonstrates staged update runs using a demo fleet environment with three member clusters that have the following labels:
 
@@ -272,11 +272,13 @@ NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDE
 example-run   example-placement   1                         0                       True                      7s
 ```
 
-A more detailed look at the status after some time has elapsed:
+A more detailed look at the status after the one minute `TimedWait` has elapsed:
 
 ```bash
 kubectl get csur example-run -o YAML
 ```
+
+Your output should look similar to the following example:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -426,7 +428,7 @@ status:
 We can see that the TimedWait for staging has elapsed and we also see that the `ClusterApprovalRequest` object was created. We can check the generated ClusterApprovalRequest and see that it's not approved yet
 
 ```bash
-kubectl get clusterapprovalrequest
+kubectl get clusterapprovalrequest -A
 ```
 
 Your output should look similar to the following example:
@@ -464,7 +466,7 @@ kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subres
 Then verify that it's approved:
 
 ```bash
-kubectl get clusterapprovalrequest
+kubectl get clusterapprovalrequest -A
 ```
 
 Your output should look similar to the following example:
@@ -543,7 +545,7 @@ example-run     example-placement   1                         0                 
 example-run-2   example-placement   0                         0                       True                      9s
 ```
 
-After some time has elapsed, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
+After the one minute `TimedWait` has elapsed, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
 
 ```bash
 kubectl get clusterapprovalrequest -A
@@ -557,7 +559,7 @@ example-run-2-canary   example-run-2   canary                                 75
 example-run-canary     example-run     canary   True       True               14m
 ```
 
-To approve the new `ClusterApprovalRequest` object, let's reuse the same approval.json file to patch it:
+To approve the new `ClusterApprovalRequest` object, let's reuse the same `approval.json` file to patch it:
 ```
 kubectl patch clusterapprovalrequests example-run-2-canary --type='merge' --subresource=status --patch-file approval.json
 ```
