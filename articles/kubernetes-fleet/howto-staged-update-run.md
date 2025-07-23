@@ -23,9 +23,6 @@ This article shows you how to create and execute staged update runs to deploy wo
 
 * You must have a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
-  > [!TIP]
-  > Ensure that your AKS member clusters are configured so that you can test placement by using the cluster properties that interest you (location, node count, resources, or cost).
-
 * You need Azure CLI version 2.58.0 or later installed to complete this article. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
 * If you don't have the Kubernetes CLI (kubectl) already, you can install it by using this command:
@@ -46,13 +43,7 @@ This article shows you how to create and execute staged update runs to deploy wo
   az extension update --name fleet
   ```
 
-* Authorize kubectl to connect to the Fleet Manager hub cluster:
-
-  ```azurecli-interactive
-  az fleet get-credentials --resource-group $GROUP --name $FLEET
-  ```
-
-## Set up the demo environment
+## Configure the member clusters
 
 This tutorial demonstrates staged update runs using a demo fleet environment with three member clusters that have the following labels:
 
@@ -103,6 +94,11 @@ Verify the placement is scheduled:
 
 ```bash
 kubectl get crp example-placement
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
 example-placement   1     True        1                                           51s
 ```
@@ -120,6 +116,11 @@ To check current resource snapshots:
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                           GEN   AGE   LABELS
 example-placement-0-snapshot   1     60s   kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 ```
@@ -154,6 +155,11 @@ Now you should see two versions of resource snapshots with index 0 and 1 respect
 
 ```bash
 kubectl get clusterresourcesnapshots --show-labels
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                           GEN   AGE    LABELS
 example-placement-0-snapshot   1     2m6s   kubernetes-fleet.io/is-latest-snapshot=false,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=0
 example-placement-1-snapshot   1     10s    kubernetes-fleet.io/is-latest-snapshot=true,kubernetes-fleet.io/parent-CRP=example-placement,kubernetes-fleet.io/resource-index=1
@@ -163,6 +169,11 @@ The latest label is set to example-placement-1-snapshot, which contains the late
 
 ```bash
 kubectl get clusterresourcesnapshots example-placement-1-snapshot -o yaml
+```
+
+Your output should look similar to the following example:
+
+```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
 kind: ClusterResourceSnapshot
 metadata:
@@ -252,11 +263,20 @@ The staged update run is initialized and running:
 
 ```bash
 kubectl get csur example-run
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
 example-run   example-placement   1                         0                       True                      7s
 ```
 
 A more detailed look at the status after some time has elapsed:
+
+```bash
+kubectl get csur example-run -o YAML
+```
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -407,6 +427,11 @@ We can see that the TimedWait for staging has elapsed and we also see that the `
 
 ```bash
 kubectl get clusterapprovalrequest
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-canary   example-run   canary                                 2m39s
 ```
@@ -421,7 +446,7 @@ cat << EOF > approval.json
             "lastTransitionTime": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "message": "lgtm",
             "observedGeneration": 1,
-            "reason": "lgtm",
+            "reason": "testPassed",
             "status": "True",
             "type": "Approved"
         }
@@ -429,6 +454,8 @@ cat << EOF > approval.json
 }
 EOF
 ```
+
+Submit a patch request to approve using the JSON file created.
 
 ```bash
 kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subresource=status --patch-file approval.json
@@ -438,6 +465,11 @@ Then verify that it's approved:
 
 ```bash
 kubectl get clusterapprovalrequest
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                 UPDATE-RUN    STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-canary   example-run   canary   True       True               3m35s
 ```
@@ -446,14 +478,24 @@ The `ClusterStagedUpdateRun` now is able to proceed and complete:
 
 ```bash
 kubectl get csur example-run
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME          PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
 example-run   example-placement   1                         0                       True          True        5m28s
 ```
 
 The `ClusterResourcePlacement` also shows the rollout completed and resources are available on all member clusters:
 
-```
+```bash
 kubectl get crp example-placement
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                GEN   SCHEDULED   SCHEDULED-GEN   AVAILABLE   AVAILABLE-GEN   AGE
 example-placement   1     True        1               True        1               8m55s
 ```
@@ -491,6 +533,11 @@ Let's check the new `ClusterStagedUpdateRun`:
 
 ```bash
 kubectl get csur -A
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME            PLACEMENT           RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
 example-run     example-placement   1                         0                       True          True        13m
 example-run-2   example-placement   0                         0                       True                      9s
@@ -500,6 +547,11 @@ After some time has elapsed, we should see the `ClusterApprovalRequest` object c
 
 ```bash
 kubectl get clusterapprovalrequest -A
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-2-canary   example-run-2   canary                                 75s
 example-run-canary     example-run     canary   True       True               14m
@@ -514,6 +566,11 @@ Verify if the new object is approved,
 
 ```bash
 kubectl get clusterapprovalrequest -A                                                                                    
+```
+
+Your output should look similar to the following example:
+
+```output
 NAME                   UPDATE-RUN      STAGE    APPROVED   APPROVALACCEPTED   AGE
 example-run-2-canary   example-run-2   canary   True       True               2m7s
 example-run-canary     example-run     canary   True       True               15m
@@ -539,13 +596,13 @@ When you're finished with this tutorial, you can clean up the resources you crea
 
 ```bash
 # Delete the staged update runs
-kubectl delete clusterstagedupaterun example-run example-run-2
+kubectl delete csur example-run example-run-2
 
 # Delete the staged update strategy
-kubectl delete clusterstagedupdatestrategy example-strategy
+kubectl delete csus example-strategy
 
 # Delete the cluster resource placement
-kubectl delete clusterresourceplacement example-placement
+kubectl delete crp example-placement
 
 # Delete the test namespace (this will also delete the configmap)
 kubectl delete namespace test-namespace
@@ -560,3 +617,8 @@ To learn more about staged update runs and related concepts, see the following r
 * [Defining a rollout strategy for cluster resource placement](./concepts-rollout-strategy.md)
 * [How to understand the status of ClusterResourcePlacement](./howto-understand-placement.md)
 * [How to configure monitoring and alerting for update runs](./howto-monitor-update-runs.md)
+
+<!-- INTERNAL LINKS -->
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md
+[azure-cli-install]: /cli/azure/install-azure-cli
+[az-extension-update]: /cli/azure/extension#az-extension-update
