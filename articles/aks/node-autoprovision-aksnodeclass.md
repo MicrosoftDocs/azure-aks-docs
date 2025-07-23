@@ -170,6 +170,57 @@ Consider larger OS disk sizes for workloads that:
 - Require extra space for container images
 - Have high disk I/O requirements
 
+### Ephemeral OS disk configuration
+
+Node autoprovisioning automatically uses ephemeral OS disks when available and suitable for the requested disk size. Ephemeral OS disks provide better performance and lower cost compared to managed disks.
+
+#### How ephemeral disk selection works
+
+The system automatically chooses ephemeral disks when:
+- The VM instance type supports ephemeral OS disks
+- The ephemeral disk capacity is greater than or equal to the requested `osDiskSizeGB`
+- The VM has sufficient ephemeral storage capacity
+
+If these conditions aren't met, the system falls back to using managed disks.
+
+#### Ephemeral disk placement priority
+
+Azure VMs can have different types of ephemeral storage. The system uses this priority order:
+1. **NVMe disks** (highest performance)
+2. **Cache disks** (balanced performance)
+3. **Resource disks** (basic performance)
+
+#### Selecting VMs with ephemeral disk support
+
+You can use node pool requirements to ensure nodes have sufficient ephemeral disk capacity:
+
+```yaml
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: ephemeral-disk-pool
+spec:
+  template:
+    spec:
+      requirements:
+        - key: karpenter.azure.com/sku-storage-ephemeral-os-maxsize
+          operator: Gt
+          values: ["128"]  # Require ephemeral disk larger than 128 GB
+      nodeClassRef:
+        apiVersion: karpenter.azure.com/v1beta1
+        kind: AKSNodeClass
+        name: my-node-class
+---
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: my-node-class
+spec:
+  osDiskSizeGB: 128  # This will use ephemeral disk if available and large enough
+```
+
+This configuration ensures that only VM instance types with ephemeral disks larger than 128 GB are selected, guaranteeing ephemeral disk usage for the specified OS disk size.
+
 ## Maximum pods configuration
 
 The `maxPods` field specifies the maximum number of pods that can be scheduled on a node. This setting affects both cluster density and network configuration.
