@@ -14,16 +14,16 @@ This article explains how to configure node pools for Azure Kubernetes Service (
 
 ## Node pool overview
 
-NodePools set constraints on the nodes that Node Auto Provisioning creates and the pods that run on those nodes. When you first install node autoprovisioning, a default NodePool is created. You can modify this NodePool or add additional NodePools.
+NodePools set constraints on the nodes that Node Auto Provisioning creates and the pods that run on those nodes. When you first install node autoprovisioning, a default NodePool is created. You can modify this NodePool or add more NodePools.
 
 Key behaviors of NodePools:
 - Node Auto Provisioning requires at least one NodePool to function
 - Node Auto Provisioning evaluates each configured NodePool
-- NodePools with taints not tolerated by a pod are skipped for that pod
-- Startup taints apply to provisioned nodes but don't require pod toleration
-- Create mutually exclusive NodePools for best results. When multiple NodePools match, the one with highest weight is used
+- Node Auto Provisioning skips NodePools with taints not tolerated by a pod
+- Node Auto Provisioning applies startup taints to provisioned nodes but doesn't require pod toleration
+- Node Auto Provisioning works best with mutually exclusive NodePools. When multiple NodePools match, the one with highest weight is used
 
-Node autoprovisioning uses VM SKU requirements to select the best virtual machine for pending workloads. Configure SKU families, VM types, spot or on-demand instances, architectures, and resource limits.
+Node autoprovisioning uses virtual machine (VM) Stock Keeping Unit (SKU) requirements to select the best virtual machine for pending workloads. Configure SKU families, VM types, spot or on-demand instances, architectures, and resource limits.
 
 ## Default node pool configuration
 
@@ -72,7 +72,7 @@ A `system-surge` node pool is also created to autoscale system pool nodes.
 
 ### Controlling default NodePool creation
 
-The `--node-provisioning-default-pools` flag controls which default Node Auto Provisioning NodePools are created:
+The `--node-provisioning-default-pools` flag controls the default Node Auto Provisioning NodePools that are created:
 
 - **`Auto`** (default): Creates two standard NodePools for immediate use
 - **`None`**: No default NodePools are created - you must define your own
@@ -212,7 +212,7 @@ spec:
 
 ## Supported node provisioner requirements
 
-Kubernetes defines [Well-Known Labels](https://kubernetes.io/docs/reference/labels-annotations-taints/) that Azure implements. Define these in the "spec.requirements" section of the NodePool API.
+Kubernetes defines [Well-Known Labels](https://kubernetes.io/docs/reference/labels-annotations-taints/) that Azure implements. Define these labels in the "spec.requirements" section of the NodePool API.
 
 In addition to the well-known labels from Kubernetes, Node Auto Provisioning supports Azure-specific labels for more advanced scheduling.
 
@@ -268,7 +268,7 @@ requirements:
 ```
 
 ##### SKU Name Examples
-The `karpenter.azure.com/sku-name` selector allows you to specify exact VM SKUs:
+The `karpenter.azure.com/sku-name` selector allows you to specify the exact VM instance type:
 ```yaml
 requirements:
 - key: karpenter.azure.com/sku-name
@@ -295,7 +295,7 @@ requirements:
 - **value example**: `eastus-1`
 - **value list**: Use `az account list-locations --output table` to see available zones
 
-Node Auto Provisioning can be configured to create nodes in a particular zone. Note that the Availability Zone `eastus-1` for your Azure subscription might not have the same phyisical location as `eastus-1` for another Azure subscription.
+Node Auto Provisioning can be configured to create nodes in a particular zone. The Availability Zone `eastus-1` for your Azure subscription might not have the same physical location as `eastus-1` for another Azure subscription.
 
 #### Architecture
 
