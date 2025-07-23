@@ -76,7 +76,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Auto-rotated by AKS, currently parameter is set |
 | 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | Customers can use Azure Policy for kubernetes to deny services with External IP. |
 | 1.2.4 | Ensure that the `--kubelet-client-certificate` and `--kubelet-client-key` arguments are set as appropriate | Automated | L1 | Pass | |
-| 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | Kubelet's api-server uses self-signed certificate |
+| 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | Kubelet serving certificate uses self-signed certificate |
 | 1.2.6 | Ensure that the `--authorization-mode` argument isn't set to `AlwaysAllow` | Automated | L1 | Pass | |
 | 1.2.7 | Ensure that the `--authorization-mode` argument includes Node | Automated | L1 | Pass | |
 | 1.2.8 | Ensure that the `--authorization-mode` argument includes RBAC | Automated | L1 | Pass | |
