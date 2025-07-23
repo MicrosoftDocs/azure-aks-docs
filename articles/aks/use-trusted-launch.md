@@ -86,7 +86,7 @@ In your template, provide values for `enableVTPM` and `enableSecureBoot`. The sa
     ```json
     "properties": {
         ...,
-        "SecurityProfile": {
+        "securityProfile": {
             "enableVTPM": "true",
             "enableSecureBoot": "true",
         }
@@ -130,7 +130,7 @@ In your template, provide values for `enableVTPM` and `enableSecureBoot`. The sa
     ```json
     "properties": {
         ...,
-        "SecurityProfile": {
+        "securityProfile": {
             "enableVTPM": "true",
             "enableSecureBoot": "true",
         }
@@ -200,7 +200,7 @@ You can constrain a pod and restrict it to run on a specific node or nodes, or p
 ```yml
 spec:
   nodeSelector:
-        kubernetes.azure.com/trusted-launch: true
+        kubernetes.azure.com/security-type = "TrustedLaunch"
 ```
 
 ## Disable vTPM or secure boot on an existing trusted launch node pool
