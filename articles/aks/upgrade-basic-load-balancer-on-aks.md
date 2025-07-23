@@ -22,7 +22,7 @@ This process will also migrate your Basic IP to a Standard IP, while keeping the
 ### Before You Begin
 
 >[!Important]
->Downtime occurs during migration. We recommend the user test the migration in dev/test environment before trying it out with a production cluster.
+>Downtime occurs during migration. We recommend you test the migration in a development or test environment before trying it out with a production cluster.
 
 **Requirements**
 - The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
