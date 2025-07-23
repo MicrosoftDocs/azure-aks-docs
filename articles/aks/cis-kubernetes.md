@@ -50,31 +50,31 @@ Recommendations can have one of the following attestation statuses:
 | --- | --- | --- | --- | --- | --- |
 | 1 | Control Plane Components| | | | |
 | 1.1 | Control Plane Node Configuration Files| | | | |
-| 1.1.1 | Ensure that the API server pod specification file permissions are set to 600 or more restrictive | Automated | L1 | N/A | |
-| 1.1.2 | Ensure that the API server pod specification file ownership is set to ``root: root`` | Automated | L1 | N/A | |
-| 1.1.3 | Ensure that the controller manager pod specification file permissions are set to 600 or more restrictive | Automated | L1 | N/A | |
-| 1.1.4 | Ensure that the controller manager pod specification file ownership is set to `root: root` | Automated | L1 | N/A | |
-| 1.1.5 | Ensure that the scheduler pod specification file permissions are set to 600 or more restrictive | Automated | L1 | N/A | |
-| 1.1.6 | Ensure that the scheduler pod specification file ownership is set to `root: root` | Automated | L1 | N/A | |
-| 1.1.7 | Ensure that the etcd pod specification file permissions are set to 600 or more restrictive | Automated | L1| N/A | |
-| 1.1.8 | Ensure that the etcd pod specification file ownership is set to `root: root` | Automated | L1 | N/A | |
-| 1.1.9 | Ensure that the Container Network Interface file permissions are set to 600 or more restrictive |Manual | L1 | N/A | |
-| 1.1.10 | Ensure that the Container Network Interface file ownership is set to `root: root` | Manual | L1 | N/A | |
-| 1.1.11 | Ensure that the etcd data directory permissions are set to 700 or more restrictive | Automated | L1 | N/A | |
-| 1.1.12 | Ensure that the etcd data directory ownership is set to `etcd:etcd` | Automated | L1 | N/A | |
-| 1.1.13 | Ensure that the admin.conf file permissions are set to 600 or more restrictive | Automated | L1 | N/A | |
-| 1.1.14 | Ensure that the admin.conf file ownership is set to `root: root` | Automated | L1 | N/A | |
-| 1.1.15 | Ensure that the scheduler.conf file permissions are set to 600 or more restrictive | Automated | L1 | N/A | |
-| 1.1.16 | Ensure that the scheduler.conf file ownership is set to `root: root` | Automated | L1 | N/A | |
-| 1.1.17 | Ensure that the controller-manager.conf file permissions are set to 600 or more restrictive | Automated | L1 | N/A | |
-| 1.1.18 | Ensure that the controller-manager.conf file ownership is set to `root: root` | Automated | L1 | N/A | |
-| 1.1.19 | Ensure that the Kubernetes PKI directory and file ownership are set to `root: root` | Automated |L1 | N/A | |
-| 1.1.20 | Ensure that the Kubernetes PKI certificate file permissions are set to 600 or more restrictive | Manual | L1 | N/A | |
-| 1.1.21 | Ensure that the Kubernetes PKI key file permissions are set to 600 | Manual | L1 | N/A | |
+| 1.1.1 | Ensure that the API server pod specification file permissions are set to 600 or more restrictive | Automated | L1 | N/A |N/A because AKS is a managed solution |
+| 1.1.2 | Ensure that the API server pod specification file ownership is set to ``root: root`` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.3 | Ensure that the controller manager pod specification file permissions are set to 600 or more restrictive | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.4 | Ensure that the controller manager pod specification file ownership is set to `root: root` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.5 | Ensure that the scheduler pod specification file permissions are set to 600 or more restrictive | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.6 | Ensure that the scheduler pod specification file ownership is set to `root: root` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.7 | Ensure that the etcd pod specification file permissions are set to 600 or more restrictive | Automated | L1| N/A | N/A because AKS is a managed solution |
+| 1.1.8 | Ensure that the etcd pod specification file ownership is set to `root: root` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.9 | Ensure that the Container Network Interface file permissions are set to 600 or more restrictive |Manual | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.10 | Ensure that the Container Network Interface file ownership is set to `root: root` | Manual | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.11 | Ensure that the etcd data directory permissions are set to 700 or more restrictive | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.12 | Ensure that the etcd data directory ownership is set to `etcd:etcd` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.13 | Ensure that the admin.conf file permissions are set to 600 or more restrictive | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.14 | Ensure that the admin.conf file ownership is set to `root: root` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.15 | Ensure that the scheduler.conf file permissions are set to 600 or more restrictive | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.16 | Ensure that the scheduler.conf file ownership is set to `root: root` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.17 | Ensure that the controller-manager.conf file permissions are set to 600 or more restrictive | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.18 | Ensure that the controller-manager.conf file ownership is set to `root: root` | Automated | L1 | N/A | N/A because AKS is a managed solution |
+| 1.1.19 | Ensure that the Kubernetes PKI directory and file ownership are set to `root: root` | Automated |L1 | N/A |N/A because AKS is a managed solution  |
+| 1.1.20 | Ensure that the Kubernetes PKI certificate file permissions are set to 600 or more restrictive | Manual | L1 | N/A |N/A because AKS is a managed solution |
+| 1.1.21 | Ensure that the Kubernetes PKI key file permissions are set to 600 | Manual | L1 | N/A |N/A because AKS is a managed solution |
 | 1.2 | API Server | | | | |
 | 1.2.1 | Ensure that the `--anonymous-auth` argument is set to false | Manual | L1 | Pass | |
-| 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Equivalent control implemented |
-| 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | Equivalent Control implemented |
+| 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Auto-rotated by AKS, currently parameter is set |
+| 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | New requirement, AKS does not currently set this parameter |
 | 1.2.4 | Ensure that the `--kubelet-client-certificate` and `--kubelet-client-key` arguments are set as appropriate | Automated | L1 | Pass | |
 | 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | Kubelet's api-server uses self-signed certificate |
 | 1.2.6 | Ensure that the `--authorization-mode` argument isn't set to `AlwaysAllow` | Automated | L1 | Pass | |
@@ -83,50 +83,50 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.9 | Ensure that the admission control plugin EventRateLimit is set | Manual | L1 | Fail | Operational impact |
 | 1.2.10 | Ensure that the admission control plugin AlwaysAdmit isn't set | Automated | L1 | Pass | |
 | 1.2.11 | Ensure that the admission control plugin AlwaysPullImages is set | Manual | L1 | Fail | Operational impact |
-| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Fail | Equivalent control implemented |
+| 1.2.12 | Ensure that the admission control plugin ServiceAccount is set | Automated | L2 | Fail | Equivalent Control | PodSecurity Policy was deprecated in k8s 1.21, and removed in 1.25. AKS supports [Pod Security Admission](use-psa) |
 | 1.2.13 | Ensure that the admission control plugin NamespaceLifecycle is set | Automated | L2 | Pass | |
 | 1.2.14 | Ensure that the admission control plugin NodeRestriction is set | Automated | L2 | Pass | |
 | 1.2.15 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
 | 1.2.16 | Ensure that the `--audit-log-path` argument is set | Automated | L1 | Pass | |
-| 1.2.17 | Ensure that the `--audit-log-maxage` argument is set to 30 or as appropriate | Automated | L1 | Equivalent Control | |
-| 1.2.18 | Ensure that the `--audit-log-maxbackup` argument is set to 10 or as appropriate | Automated | L1 | Equivalent Control | |
+| 1.2.17 | Ensure that the `--audit-log-maxage` argument is set to 30 or as appropriate | Automated | L1 | Equivalent Control | AKS stores audit log for 14 days, Deployment.yaml has value of 0.|
+| 1.2.18 | Ensure that the `--audit-log-maxbackup` argument is set to 10 or as appropriate | Automated | L1 | Equivalent Control | AKS stores audit log for 14 days, Deployment.yaml has value of 0.|
 | 1.2.19 | Ensure that the `--audit-log-maxsize` argument is set to 100 or as appropriate | Automated | L1 | Pass | |
-| 1.2.20 | Ensure that the `--request-timeout` argument is set as appropriate | Manual | L1 | Pass | |
-| 1.2.21 | Ensure that the `--service-account-lookup` argument is set to true | Automated | L1 | Pass | |
+| 1.2.20 | Ensure that the `--request-timeout` argument is set as appropriate | Manual | L1 | Pass | Parameter is not set, which will set default value = 60s (which is compliant) |
+| 1.2.21 | Ensure that the `--service-account-lookup` argument is set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as true (which is compliant) |
 | 1.2.22 | Ensure that the `--service-account-key-file` argument is set as appropriate | Automated | L1 | Pass | |
 | 1.2.23 | Ensure that the `--etcd-certfile` and `--etcd-keyfile` arguments are set as appropriate | Automated | L1 | Pass | |
 | 1.2.24 | Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
 | 1.2.25 | Ensure that the `--client-ca-file` argument is set as appropriate | Automated | L1 | Pass | |
 | 1.2.26 | Ensure that the `--etcd-cafile` argument is set as appropriate | Automated | L1 | Pass | |
-| 1.2.27 | Ensure that the `--encryption-provider-config` argument is set as appropriate | Manual | L1 | Depends on Environment | |
-| 1.2.28 | Ensure that encryption providers are appropriately configured | Manual | L1 | Depends on Environment | |
-| 1.2.29 | Ensure that the API Server only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | |
-| 1.2.30 | Ensure that the `--service-account-extend-token-expiration` parameter is set to false | Automated | L1 | Depends on Environment | |
+| 1.2.27 | Ensure that the `--encryption-provider-config` argument is set as appropriate | Manual | L1 | Depends on Environment | Argument is set when [Azure KMS](azure-kms) is enabled|
+| 1.2.28 | Ensure that encryption providers are appropriately configured | Manual | L1 | Depends on Environment | Argument is set when [Azure KMS](azure-kms) is enabled |
+| 1.2.29 | Ensure that the API Server only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | AKS supports a subset of 4 Strong Ciphersuites out of 21 recommended ones from CIS |
+| 1.2.30 | Ensure that the `--service-account-extend-token-expiration` parameter is set to false | Automated | L1 | Depends on Environment | This parameter is set to false when [OIDC](OIDC) is enabled on the cluster |
 | 1.3 | Controller Manager | | | | |
-| 1.3.1 | Ensure that the `--terminated-pod-gc-threshold` argument is set as appropriate | Manual | L1 | Pass | |
+| 1.3.1 | Ensure that the `--terminated-pod-gc-threshold` argument is set as appropriate | Manual | L1 | Pass | AKS sets the default value to 6000 instead of 12500|
 | 1.3.2 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
 | 1.3.3 | Ensure that the `--use-service-account-credentials` argument is set to true | Automated | L1 | Pass| |
-| 1.3.4 | Ensure that the `--service-account-private-key-file` argument is set as appropriate | Automated | L1 | Pass | |
-| 1.3.5 | Ensure that the `--root-ca-file` argument is set as appropriate | Automated | L1 | Pass | |
-| 1.3.6 | Ensure that the RotateKubeletServerCertificate argument is set to true | Automated | L2 | Pass | |
-| 1.3.7 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | |
+| 1.3.4 | Ensure that the `--service-account-private-key-file` argument is set as appropriate | Automated | L1 | Pass | Enabled when ssl is enabled |
+| 1.3.5 | Ensure that the `--root-ca-file` argument is set as appropriate | Automated | L1 | Pass | Enabled when ssl is enabled  |
+| 1.3.6 | Ensure that the RotateKubeletServerCertificate argument is set to true | Automated | L2 | Pass | Parameter is set to true, see [Kubelet Serving Certificate Rotation](kscr) |
+| 1.3.7 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | Pod's IP is used|
 | 1.4 | Scheduler | | | | |
 | 1.4.1 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
-| 1.4.2 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | |
+| 1.4.2 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | Pod's IP is used|
 | 2 | `etcd` | | | | |
 | 2.1 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
 | 2.2 | Ensure that the `--cert-file` and `--key-file` arguments are set as appropriate | Automated | L1 | Pass | |
 | 2.3 | Ensure that the `--client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.4 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | |
+| 2.4 | Ensure that the `--auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
 | 2.5 | Ensure that the `--peer-cert-file` and `--peer-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
 | 2.6 | Ensure that the `--peer-client-cert-auth` argument is set to true | Automated | L1 | Pass | |
-| 2.7 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | |
-| 2.8 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | |
+| 2.7 | Ensure that the `--peer-auto-tls` argument isn't set to true | Automated | L1 | Pass | Parameter is not set, which will set the default value as false (which is compliant) |
+| 2.8 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | `--client-ca-file` for api-server is different from `--trusted-ca-file` for etcd|
 | 3 | Control Plane Configuration | | | | |
 | 3.1 | Authentication and Authorization | | | | |
-| 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | |
-| 3.1.2 | Service account token authentication shouldn't be used for users | Manual | L1 | Pass | |
-| 3.1.3 | Bootstrap token authentication shouldn't be used for users | Manual | L1 | Pass | |
+| 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | Cluster admin should use AAD Auth only|
+| 3.1.2 | Service account token authentication shouldn't be used for users | Manual | L1 | Pass | AKS provides support for AAD Auth (which supports OIDC). The usage of service acccount tokens is left up to the customer (to enforce a a best practice, as needed) |
+| 3.1.3 | Bootstrap token authentication shouldn't be used for users | Manual | L1 | Pass | AKS provides support for AAD Auth (which supports OIDC). The usage of service acccount tokens is left up to the customer (to enforce a a best practice, as needed) |
 | 3.2 | Logging | | | | |
 | 3.2.1 | Ensure that a minimal audit policy is created | Manual | L1 | Pass | |
 | 3.2.2 | Ensure that the audit policy covers key security concerns | Manual | L2 | Pass | |
@@ -225,3 +225,7 @@ For more information about AKS security, see the following articles:
 [cis-benchmarks]: /compliance/regulatory/offering-CIS-Benchmark
 [security-concepts-aks-apps-clusters]: concepts-security.md
 [supported-kubernetes-versions]: ./supported-kubernetes-versions.md
+[use-psa]: ./use-psa.md
+[azure-kms]: ./use-kms-etcd-encryption.md
+[oidc]: ./use-oidc-issuer.md
+[kscr]: ./certificate-rotation.md
