@@ -29,7 +29,7 @@ Our recommended network policy engine is [Cilium](azure-cni-powered-by-cilium.md
 
 The following networking configurations are currently *not* supported with node autoprovisioning:
 
-- **Calico network policy** - Won't be supported with NAP
+- **Calico network policy** - Not supported with NAP
 - **Dynamic IP Allocation** - Not supported yet
 - **Static Allocation of Classless Inter-Domain Routing (CIDR) blocks** - Not supported yet
 
@@ -136,11 +136,11 @@ This approach allows you to have a mix of NodeClasses - some using custom subnet
 
 ## RBAC Configuration
 
-When using custom subnet configurations, Karpenter requires appropriate permissions to read subnet information and join nodes to the specified subnets. There are two recommended approaches for configuring these permissions.
+Custom subnet configurations require Karpenter to have appropriate permissions to read subnet information and join nodes to the specified subnets. There are two recommended approaches for configuring these permissions.
 
 ### Approach A: Broad VNet Permissions
 
-This approach grants the cluster identity permissions to read and join any subnet within the main VNet and provides network contributor access. It's very permissive, investigate the "Network Contributor" role before applying this approach to your production cluster. 
+This approach grants the cluster identity permissions to read and join any subnet within the main VNet and provides network contributor access. It's permissive. Investigate the "Network Contributor" role before applying this approach to your production cluster. 
 
 #### Required Permissions
 
@@ -276,7 +276,7 @@ Karpenter monitors subnet configuration changes and detects drift when the `vnet
 
 ### ⚠️ Unsupported Configuration Path
 
-**Modifying `vnetSubnetID` from one valid subnet to another valid subnet is NOT a supported operation.** This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet IDs during initial configuration.
+**Modifying `vnetSubnetID` from one valid subnet to another valid subnet is NOT a supported operation.** This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet identifiers (IDs) during initial configuration.
 
 ### Supported Use Case: Fixing Invalid Subnet IDs
 
@@ -292,7 +292,7 @@ The `vnetSubnetID` field can be modified only in these scenarios:
 - Changing subnet configurations for capacity or performance reasons
 - Migrating between subnets as part of infrastructure changes
 
-**Support Policy**: Microsoft won't provide support for issues arising from subnet-to-subnet migrations via `vnetSubnetID` modifications. Support tickets related to such operations are declined.
+**Support Policy**: Microsoft doesn't provide support for issues arising from subnet to subnet migrations via `vnetSubnetID` modifications. Support tickets related to such operations are declined.
 
 ### What Happens When You Modify vnetSubnetID
 
@@ -301,7 +301,7 @@ If you modify the field (even for unsupported use cases):
 1. **Drift Detection**: Karpenter detects the subnet mismatch and marks nodes for replacement
 2. **Node Disruption**: Existing nodes are cordoned, drained, and terminated
 3. **Potential Issues**: Network connectivity problems, workload disruptions, and unpredictable behavior
-4. **No Support**: Microsoft support won't assist with issues from this configuration path
+4. **No Support**: Microsoft support doesn't assist with issues from this configuration path
 
 ### Recommended Approach for Subnet Changes
 
