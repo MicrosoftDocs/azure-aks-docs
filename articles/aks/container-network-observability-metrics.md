@@ -104,12 +104,22 @@ All metrics include labels:
 
 ### Limitations
 
-- Pod-level metrics are available only on Linux.
-- The Cilium data plane is supported in Kubernetes version 1.29 and later.
-- Metric labels have subtle differences between Cilium and non-Cilium clusters.
-- For Cilium-based clusters, DNS metrics are available only for pods that have Cilium Network Policies (CNPs) configured on their clusters.
-- Flow logs currently aren't available in an air-gapped cloud.
-- If a Hubble node agent fails, Hubble Relay might crash. It might cause interruptions in using the Hubble CLI.
+* Pod-level metrics are available only on Linux.
+* Cilium data plane is supported starting with Kubernetes version 1.29.
+* Metric labels have subtle differences between Cilium and non-Cilium clusters.
+* For Cilium based clusters, DNS metrics are only available for pods that have Cilium Network policies (CNP) configured on their clusters.
+* Flow logs are not currently available in the air gapped cloud.
+* Hubble relay may crash if one of the Hubble node agents goes down and may cause interruptions to Hubble CLI.
+* When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support isn't available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857).
+Refer to the FIPS support matrix below:
+
+| Operating System    |  FIPS Support |
+|---------------------|---------------|
+| Azure Linux 3.0     | Yes           |
+| Azure Linux 2.0     | Yes           |
+| Ubuntu 20.04        | No            |
+
+This limitation does not apply when ACNS is running on Cilium data planes.
 
 ### Scale
 
