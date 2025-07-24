@@ -35,9 +35,15 @@ NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies
   * The driver misprograms the GPU.
   * There's a corruption in the command stream sent to the GPU.
   * A hardware failure or instability affects GPU operation.
+
+  For more information, see [XID errors on NVIDIA GPUs](https://docs.nvidia.com/deploy/xid-errors/index.html).
+
 * **NVLink Status**: For NVIDIA VM SKUs that support NVLink, this condition confirms that NVLink is active and functioning.
   * NVLink is a high-speed interconnect used to facilitate data transfer between multiple GPUs.
   * If NVLink is inactive or degraded, multi-GPU workloads might experience reduced performance or communication bottlenecks.
+
+  For more information, see [NVIDIA NVLink](https://www.nvidia.com/data-center/nvlink/).
+
 * **InfiniBand Link Flapping**: NPD monitors for InfiniBand (IB) link flapping, or intermittent connectivity of the IB network device.
   * Link flapping shouldn't occur under normal operating conditions and might result in degraded inter-node communication for distributed workloads.
   * It can also signal physical layer issues, misconfigured firmware, or driver instability.
