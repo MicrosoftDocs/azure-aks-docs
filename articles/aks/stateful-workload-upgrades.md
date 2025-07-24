@@ -227,7 +227,7 @@ To validate your progress, use the following checklist:
 
 For immediate issues (<2 minutes):
 
-Redirect traffic to the previous primary:
+Redirect traffic to the previous primary.
 
    ```bash
    kubectl patch service postgres-primary --patch '{
@@ -241,34 +241,34 @@ Redirect traffic to the previous primary:
 
 For comprehensive failover recovery (5-10 minutes):
 
-1. Stop writes to the current primary:
+1. Stop writes to the current primary.
    ```bash
    kubectl exec postgres-primary-0 -- psql -c "SELECT pg_reload_conf();"
    ```
 
-1. Redirect service to a healthy replica:
+1. Redirect service to a healthy replica.
    ```bash
    kubectl patch service postgres-primary --patch '{"spec":{"selector":{"statefulset.kubernetes.io/pod-name":"postgres-replica-1-0"}}}'
    ```
 
-1. Promote a replica to the new primary:
+1. Promote a replica to the new primary.
    ```bash
    kubectl exec postgres-replica-1-0 -- pg_ctl promote -D /var/lib/postgresql/data
    kubectl wait --for=condition=ready pod postgres-replica-1-0 --timeout=60s
    ```
 
-1. Update connection strings:
+1. Update connection strings.
    ```bash
    kubectl patch configmap postgres-config --patch '{"data":{"primary-host":"postgres-replica-1-0.postgres"}}'
    ```
 
-1. Verify that the new primary accepts writes:
+1. Verify that the new primary accepts writes.
    ```bash
    kubectl exec postgres-replica-1-0 -- psql -c "CREATE TABLE upgrade_test (id serial, timestamp timestamp default now());"
    kubectl exec postgres-replica-1-0 -- psql -c "INSERT INTO upgrade_test DEFAULT VALUES;"
    ```
 
-**Expected outcome:** ~30-second downtime, zero data loss, upgraded node that runs the latest Kubernetes.
+**Expected outcome:** Approximately 30-second downtime, zero data loss, and an upgraded node that runs the current version of Kubernetes.
 
 #### Step 3: Upgrade Node1 (former primary)
 

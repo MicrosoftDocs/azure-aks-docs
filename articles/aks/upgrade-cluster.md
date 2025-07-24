@@ -62,7 +62,7 @@ Manual upgrades let you control when your cluster upgrades to a new Kubernetes v
 
 ### Configure automatic upgrades
 
-Automatic upgrades keep your cluster on a supported version and up to date. Use these upgrades when you want to set and forget.
+Automatic upgrades keep your cluster on a supported version and up to date. Use these upgrades when you want to automate your settings:
 
 * [Automatically upgrade an AKS cluster](./auto-upgrade-cluster.md)
 * [Automatically upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-automation)
@@ -73,18 +73,20 @@ Automatic upgrades keep your cluster on a supported version and up to date. Use 
 
 ### Special considerations for node pools that span multiple availability zones
 
-AKS uses best-effort zone balancing in node groups. During an upgrade surge, the zones for surge nodes in virtual machine scale sets are unknown ahead of time, which can temporarily cause an unbalanced zone configuration. AKS deletes surge nodes after the upgrade and restores the original zone balance. To keep zones balanced, set surge to a multiple of three nodes. Persistent volume claims that use Azure locally redundant storage disks are zone bound and might cause downtime if surge nodes are in a different zone. Use a [pod disruption budget (PDB)](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) to maintain high availability during drains.
+AKS uses best-effort zone balancing in node groups. During an upgrade surge, the zones for surge nodes in virtual machine scale sets are unknown ahead of time, which can temporarily cause an unbalanced zone configuration. AKS deletes surge nodes after the upgrade and restores the original zone balance. 
+
+To keep zones balanced, set surge to a multiple of three nodes. Persistent volume claims that use Azure locally redundant storage disks are zone bound and might cause downtime if surge nodes are in a different zone. Use a [pod disruption budget (PDB)](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) to maintain high availability during drains.
 
 ### Optimize upgrades to improve performance and minimize disruptions
 
 Combine [planned maintenance window][planned-maintenance], [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade), [PDB][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] to increase the likelihood of successful, low-disruption upgrades.
 
-* [Planned maintenance window][planned-maintenance]: Schedule autoupgrade during low-traffic periods. (We recommend at least four hours.)
+* [Planned maintenance window][planned-maintenance]: Schedule autoupgrade during low-traffic periods. We recommend at least four hours.
 * [Max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade): Higher values speed upgrades but might disrupt workloads. We recommend 33% for production.
 * [Max unavailable](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade): Use when capacity is limited.
 * [Pod disruption budget][pdb-spec]: Set to limit pods down during upgrades. Validate for your service.
-* [Node drain timeout][drain-timeout]: Configure pod eviction wait duration. (Default is 30 minutes.)
-* [Node soak time][soak-time]: Stagger upgrades to minimize downtime. (Default is 0 minutes.)
+* [Node drain timeout][drain-timeout]: Configure pod eviction wait duration. Default is 30 minutes.
+* [Node soak time][soak-time]: Stagger upgrades to minimize downtime. Default is 0 minutes.
 
 |Upgrade settings|How extra nodes are used|Expected behavior|
 |-|-|-|
@@ -330,7 +332,7 @@ Use the [upgrade scenarios hub](upgrade-scenarios-hub.md) for a guided decision 
 - Risk profile
 - Timeline constraints
 
-## Next steps
+## Next tasks
 
 * Review [AKS patch and upgrade guidance][upgrade-operators-guide] for best practices and planning tips before you start any upgrade.
 * Always check for [API breaking changes](https://aka.ms/aks/breakingchanges) and validate your workload's compatibility with the target Kubernetes version.

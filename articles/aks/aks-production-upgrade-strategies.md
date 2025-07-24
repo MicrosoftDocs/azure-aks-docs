@@ -1,6 +1,6 @@
 ---
 title: AKS Production Upgrade Strategies
-description: Battle-tested patterns for upgrading Azure Kubernetes Service clusters in production with minimal downtime and maximum safety.
+description: Proven patterns to use for upgrading Azure Kubernetes Service clusters in production with minimal downtime and maximum safety.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
@@ -36,7 +36,7 @@ For more information, see these related articles:
 
 For a quick start, select a link for instructions:
 
-- [Emergency upgrade needed?](#scenario-4-fastest-security-patch-deployment)
+- [Is an emergency upgrade needed?](#scenario-4-fastest-security-patch-deployment)
 - [Have stateful workloads?](stateful-workload-upgrades.md)
 
 ## Choose your strategy
@@ -51,13 +51,13 @@ For a quick start, select a link for instructions:
 
 ---
 
-#### Role-based quick start
+#### Role-based quickstart
 
 | Role | Start here |
 |------|------------|
-| SRE/Platform | [Scenario 1](#scenario-1-minimal-downtime-production-upgrades), [Scenario 2](#scenario-2-staging-upgrades-across-environments) |
-| DBA/Data Eng | [Stateful workload patterns](stateful-workload-upgrades.md) |
-| App Dev | [Scenario 5](#scenario-5-application-architecture-for-seamless-upgrades) |
+| Site reliability engineer/Platform | [Scenario 1](#scenario-1-minimal-downtime-production-upgrades), [Scenario 2](#scenario-2-staging-upgrades-across-environments) |
+| Database administrator/Data engineer | [Stateful workload patterns](stateful-workload-upgrades.md) |
+| App development | [Scenario 5](#scenario-5-application-architecture-for-seamless-upgrades) |
 | Security | [Scenario 4](#scenario-4-fastest-security-patch-deployment) |
 
 ---
@@ -86,7 +86,7 @@ kubectl apply -f ./production-manifests/
 # Run your application-specific health checks here
 # Examples: API endpoint tests, database connectivity, dependency checks
 
-# 4. Switch traffic (< 30 seconds downtime)
+# 4. Switch traffic (<30-second downtime)
 az network traffic-manager endpoint update \
   --profile-name prod-tm --name green-endpoint --weight 100
 az network traffic-manager endpoint update \
@@ -182,14 +182,14 @@ curl https://api.mycompany.com/metrics | grep http_requests_total
 <details>
 <summary><strong>Expand for quick troubleshooting and tips</strong></summary>
 
-- **Domain Name System (DNS) propagation is slow:** Use low time-to-live values before upgrade, and validate DNS cache flush.
+- **Domain Name System (DNS) propagation is slow:** Use low time-to-live values before upgrade, and validate the DNS cache flush.
 - **Pods stuck terminating:** Check for finalizers, long shutdown hooks, or pod disruption budgets (PDBs) with `maxUnavailable: 0`.
 - **Traffic not shifting:** Validate Azure Load Balancer/Azure Traffic Manager configuration and health probes.
 - **Rollback fails:** Always keep the blue cluster ready until the green cluster is fully validated.
-- **Q: Can I use open-source solftware tools for validation?**
-  - Yes. Use [kube-no-trouble](https://github.com/doitintl/kube-no-trouble) for API checks and [Trivy](https://aquasecurity.github.io/trivy/) for image scanning.
+- **Q: Can I use open-source software tools for validation?**
+    - **A:** Yes. Use [kube-no-trouble](https://github.com/doitintl/kube-no-trouble) for API checks and [Trivy](https://aquasecurity.github.io/trivy/) for image scanning.
 - **Q: What's unique to AKS?**
-  - Native integration with Traffic Manager, Azure Kubernetes Fleet Manager, and node image patching for zero-downtime upgrades.
+    - **A:** Native integration with Traffic Manager, Azure Kubernetes Fleet Manager, and node image patching for zero-downtime upgrades.
 
 </details>
 
@@ -230,7 +230,8 @@ az network dns record-set cname set-record \
   --cname myapp-blue.eastus2.cloudapp.azure.com
 ```
 
-**Expected outcome:** <2 minutes total downtime, zero data loss, full rollback capability
+**Expected outcome:** Less than 2-minute total downtime, zero data loss, and full rollback capability.
+
 ```
 az aks create \
   --resource-group production-rg \
@@ -242,14 +243,14 @@ az aks create \
   --planned-maintenance-config ./maintenance-window.json
 ```
 
-#### Step 1:  Verify cluster readiness
+## Verify cluster readiness
 
 ```
 az aks get-credentials --resource-group production-rg --name aks-green-cluster
 kubectl get nodes
 ```
 
-#### Step 2: Deploy the application to a green cluster
+#### Step 2: Deploy application to a green cluster
 
 ```bash
 # Deploy application stack
@@ -304,7 +305,7 @@ az aks delete --resource-group production-rg --name aks-blue-cluster --yes
 
 **Strategy:** Use Azure Kubernetes Fleet Manager with staged rollouts.
 
-To learn more, see the [Azure Fleet Manager overview](/azure/kubernetes-fleet/overview) and [Update orchestration](/azure/kubernetes-fleet/update-orchestration).
+To learn more, see the [Azure Kubernetes Fleet Manager overview](/azure/kubernetes-fleet/overview) and [Update orchestration](/azure/kubernetes-fleet/update-orchestration).
 
 ### Prerequisites
 
@@ -425,13 +426,13 @@ read approval
 <details>
 <summary><strong>Expand for quick troubleshooting and tips</strong></summary>
 
-- **Stage fails due to quota:** Precheck regional quotas for all clusters in the fleet.
+- **Stage fails because of quota:** Precheck regional quotas for all clusters in the fleet.
 - **Validation scripts fail:** Ensure that test scripts are idempotent and have clear pass/fail output.
 - **Manual approval delays:** Use automation for nonproduction. Require manual only for production.
-- **Q: Can I use OSS tools for validation?**
-  - Yes. Integrate [Sonobuoy](https://sonobuoy.io/) for conformance and [kube-bench](https://github.com/aquasecurity/kube-bench) for security.
+- **Q: Can I use open-source software tools for validation?**
+  - **A:** Yes. Integrate [Sonobuoy](https://sonobuoy.io/) for conformance and [kube-bench](https://github.com/aquasecurity/kube-bench) for security.
 - **Q: What's unique to AKS?**
-  - Azure Kubernetes Fleet Manager enables true staged rollouts and validation gates natively.
+  - **A:** Azure Kubernetes Fleet Manager enables true staged rollouts and validation gates natively.
 
 </details>
 
@@ -441,7 +442,7 @@ read approval
 
 **Challenge:** "I need to adopt Kubernetes 1.30 without breaking existing workloads or APIs."
 
-**Strategy:** Multiphase validation with canary deployment
+**Strategy:** Use multiphase validation with canary deployment.
 
 To learn more, see [Canary deployments](/azure/architecture/reference-architectures/containers/aks-microservices/aks-microservices-advanced#deployment-strategies) and [API deprecation policies](https://kubernetes.io/docs/reference/using-api/deprecation-policy/).
 
@@ -821,10 +822,10 @@ To learn more, see the [AKS troubleshooting guide](/azure/aks/troubleshooting), 
 
 | Issue | Symptoms | Solution |
 |-------|----------|----------|
-| Stuck node drain | Pods won't evict | Check PDB configuration, increase drain timeout |
-| High error rates | 5xx responses increasing | Verify health checks, check resource limits |
-| Slow upgrades | Taking >2 hours | Increase `maxSurge`, optimize container startup |
-| DNS resolution | Service discovery failing | Verify `CoreDNS` pods, check service endpoints |
+| Stuck node drain | Pods won't evict. | Check PDB configuration, increase drain timeout. |
+| High error rates | 5xx responses are increasing. | Verify health checks, check resource limits. |
+| Slow upgrades | Takes >2 hours. | Increase `maxSurge`, optimize container startup. |
+| DNS resolution | Service discovery is failing. | Verify `CoreDNS` pods, check service endpoints. |
 
 ### Emergency rollback procedures
 
@@ -867,13 +868,13 @@ echo "Rollback completed in $(date)"
 - [Security guidelines](operator-best-practices-cluster-security.md): Use secure upgrade practices.
 - [Support policies](support-policies.md): Understand upgrade support windows.
 
-## Next steps
+## Next tasks
 
-1. **Set up monitoring**: Configure [upgrade notifications](aks-communication-manager.md) before your first upgrade.
-1. **Practice safely**: Test scenarios in staging by using [cluster snapshots](node-pool-snapshot.md).
-1. **Automate gradually**: Start with [autoupgrade channels](auto-upgrade-cluster.md) for nonproduction.
-1. **Handle stateful data**: Review [stateful workload patterns](stateful-workload-upgrades.md) if you run databases.
+- **Set up monitoring:** Configure [upgrade notifications](aks-communication-manager.md) before your first upgrade.
+- **Practice safely:** Test scenarios in staging by using [cluster snapshots](node-pool-snapshot.md).
+- **Automate gradually:** Start with [autoupgrade channels](auto-upgrade-cluster.md) for nonproduction.
+- **Handle stateful data:** Review [stateful workload patterns](stateful-workload-upgrades.md) if you run databases.
 
 ## Related content
 
-For more help, see [AKS support options](aks-support-help.md) or review [common upgrade scenarios](./upgrade-cluster.md#common-upgrade-scenarios-and-recommendations).
+- For more help, see [AKS support options](aks-support-help.md) or review [common upgrade scenarios](./upgrade-cluster.md#common-upgrade-scenarios-and-recommendations).
