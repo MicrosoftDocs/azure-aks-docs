@@ -35,6 +35,7 @@ A pod security context can also define additional capabilities or permissions fo
 * **allowPrivilegeEscalation** defines if the pod can assume *root* privileges. Design your applications so this setting is always set to *false*.
 * **Linux capabilities** let the pod access underlying node processes. Take care with assigning these capabilities. Assign the least number of privileges needed. For more information, see [Linux capabilities][linux-capabilities].
 * **SELinux labels** is a Linux kernel security module that lets you define access policies for services, processes, and filesystem access. Again, assign the least number of privileges needed. For more information, see [SELinux options in Kubernetes][selinux-labels]
+* **hostUsers: false** the pod runs using a user-namespace, a Linux kernel feature. This significatly improves the host isolation and limits the lateral movement in case of container breakouts. This improvements are significant whether the container is running as root or not.
 
 The following example pod YAML manifest sets security context settings to define:
 
@@ -60,7 +61,11 @@ spec:
           add: ["NET_ADMIN", "SYS_TIME"]
 ```
 
-Work with your cluster operator to determine what security context settings you need. Try to design your applications to minimize additional permissions and access the pod requires. There are additional security features to limit access using AppArmor and seccomp (secure computing) that can be implemented by cluster operators. For more information, see [Secure container access to resources][apparmor-seccomp].
+Work with your cluster operator to determine what security context settings you need. Try to design your applications to minimize additional permissions and access the pod requires. There are additional security features to limit access using AppArmor and seccomp (secure computing) that can be implemented by cluster operators.
+
+The use of **hostUsers: false** requires Linux and specific Kubernetes and OS versions.
+
+For more information, see [Secure container access to resources][apparmor-seccomp].
 
 ## Limit credential exposure
 
