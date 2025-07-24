@@ -26,6 +26,7 @@ Container Network Observability is one of the features of Advanced Container Net
 
 * The minimum version of Azure CLI required for the steps in this article is 2.56.0. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI](/cli/azure/install-azure-cli).
 
+
 ### Enable Advanced Container Networking Services
 
 To proceed, you must have an AKS cluster with [Advanced Container Networking Services](./advanced-container-networking-services-overview.md) enabled.
@@ -63,7 +64,16 @@ az aks create \
 #### [**Non-Cilium**](#tab/non-cilium)
 
 > [!NOTE]
-> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature is not available for Non-cilium clusters
+> [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature isn't available for clusters that do not use the Cilium data plane.
+ >
+ > When using Advanced Container Networking Services (ACNS) on non-Cilium data planes, FIPS support isn't available on Ubuntu 20.04 nodes due to kernel restrictions. To enable FIPS in this scenario, you must use an Azure Linux node pool. This limitation is expected to be resolved with the release of Ubuntu 22 FIPS. For updates, see the [AKS issue tracker](https://github.com/Azure/AKS/issues/4857). Refer to the FIPS support matrix below:
+ >
+ 
+ > | Operating System | FIPS Support 
+ > |--------------------|-------------|
+ > | Azure Linux 3.0 | Yes |
+ > | Azure Linux 2.0 | Yes |
+ > | Ubuntu 20.04 | No |
 
 ```azurecli-interactive
 # Set an environment variable for the AKS cluster name. Make sure to replace the placeholder with your own value.
@@ -84,7 +94,7 @@ az aks create \
 
 ### Enable Advanced Container Networking Services on an existing cluster
 
-The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features which includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
+The [`az aks update`](/cli/azure/aks#az_aks_update) command with the Advanced Container Networking Services flag, `--enable-acns`, updates an existing AKS cluster with all Advanced Container Networking Services features that includes [Container Network Observability](./advanced-container-networking-services-overview.md#container-network-observability) and the [Container Network Security](./advanced-container-networking-services-overview.md#container-network-security) feature.
 
 
 > [!NOTE]
@@ -182,7 +192,7 @@ Skip this step if using BYO Grafana
 
 > [!NOTE]
 > The `hubble_flows_processed_total` metric isn't scraped by default due to high metric cardinality in large scale clusters. 
-> Because of this, the *Pods Flows* dashboards have panels with missing data. To enable this metric and populate the missing data, you need to modify the ama-metrics-settings-configmap. Specifically, update the default-targets-metrics-keep-list section. Follow the below steps to update the configmap :
+> Because of this, the *Pods Flows* dashboards have panels with missing data. To enable this metric and populate the missing data, you need to modify the ama-metrics-settings-configmap. Specifically, update the default-targets-metrics-keep-list section. Follow the below steps to update the configmap:
 > 1. Get the latest ama-metrics-settings-configmap.(https://github.com/Azure/prometheus-collector/blob/main/otelcollector/configmaps/ama-metrics-settings-configmap.yaml)  
 > 1. Locate the networkobservabilityHubble = "" 
 > 1. Change it to networkobservabilityHubble = "hubble.*"
@@ -213,11 +223,11 @@ Skip this step if using BYO Grafana
 1. We have created sample dashboards. They can be found under the **Dashboards > Azure Managed Prometheus** folder. They have names like **"Kubernetes / Networking / `<name>`"**. The suite of dashboards includes:
       * **Clusters:** shows Node-level metrics for your clusters.
       * **DNS (Cluster):** shows DNS metrics on a cluster or selection of Nodes.
-      * **DNS (Workload):** shows DNS metrics for the specified workload (e.g. Pods of a DaemonSet or Deployment such as CoreDNS).
-      * **Drops (Workload):** shows drops to/from the specified workload (e.g. Pods of a Deployment or DaemonSet).
+      * **DNS (Workload):** shows DNS metrics for the specified workload (for example, Pods of a DaemonSet or Deployment such as CoreDNS).
+      * **Drops (Workload):** shows drops to/from the specified workload (for example, Pods of a Deployment or DaemonSet).
       * **Pod Flows (Namespace):** shows L4/L7 packet flows to/from the specified namespace (i.e. Pods in the
       Namespace).
-      * **Pod Flows (Workload):** shows L4/L7 packet flows to/from the specified workload (e.g. Pods of a Deployment or DaemonSet).
+      * **Pod Flows (Workload):** shows L4/L7 packet flows to/from the specified workload (for example, Pods of a Deployment or DaemonSet).
 
 ### Visualization using BYO Grafana
 
@@ -255,15 +265,15 @@ Skip this step if using Azure managed Grafana
 1. Sign in to Grafana and import following example dashboards using the following IDs:
       * **Clusters:** shows Node-level metrics for your clusters. (ID: [18814](https://grafana.com/grafana/dashboards/18814-kubernetes-networking-clusters/))
       * **DNS (Cluster):** shows DNS metrics on a cluster or selection of Nodes.(ID: [20925](https://grafana.com/grafana/dashboards/20925-kubernetes-networking-dns-cluster/))
-      * **DNS (Workload):** shows DNS metrics for the specified workload (e.g. Pods of a DaemonSet or Deployment such as CoreDNS). (ID: [20926] https://grafana.com/grafana/dashboards/20926-kubernetes-networking-dns-workload/)
-      * **Drops (Workload):** shows drops to/from the specified workload (e.g. Pods of a Deployment or DaemonSet).(ID: [20927](https://grafana.com/grafana/dashboards/20927-kubernetes-networking-drops-workload/)). 
+      * **DNS (Workload):** shows DNS metrics for the specified workload (for example, Pods of a DaemonSet or Deployment such as CoreDNS). (ID: [20926] https://grafana.com/grafana/dashboards/20926-kubernetes-networking-dns-workload/)
+      * **Drops (Workload):** shows drops to/from the specified workload (for example, Pods of a Deployment or DaemonSet).(ID: [20927](https://grafana.com/grafana/dashboards/20927-kubernetes-networking-drops-workload/)). 
       * **Pod Flows (Namespace):** shows L4/L7 packet flows to/from the specified namespace (i.e. Pods in the
       Namespace). (ID: [20928](https://grafana.com/grafana/dashboards/20928-kubernetes-networking-pod-flows-namespace/))
-      * **Pod Flows (Workload):** shows L4/L7 packet flows to/from the specified workload (e.g. Pods of a Deployment or DaemonSet).(ID: [20929](https://grafana.com/grafana/dashboards/20929-kubernetes-networking-pod-flows-workload/))
+      * **Pod Flows (Workload):** shows L4/L7 packet flows to/from the specified workload (for example, Pods of a Deployment or DaemonSet). (ID: [20929](https://grafana.com/grafana/dashboards/20929-kubernetes-networking-pod-flows-workload/))
 
     > [!NOTE] 
-    > * Depending on your Prometheus/Grafana instances’ settings, some dashboard panels may require tweaks to display all data.
-    > * Cilium does not currently support DNS metrics/dashboards.
+    > * Depending on your Prometheus/Grafana instances’ settings, some dashboard panels require specific tweaks to display all data.
+    > * Cilium doesn't currently support DNS metrics/dashboards.
 
 ## Clean up resources
 

@@ -152,6 +152,8 @@
                   href: istio-upgrade.md
                 - name: Support policy
                   href: istio-support-policy.md
+                - name: Migration from open source Istio
+                  href: migration-from-open-source-istio-to-addon.md
                 - name: Uninstall
                   href: istio-uninstall-addon.md
             - name: Traffic management
@@ -249,7 +251,7 @@
         - name: Add a Virtual Machines node pool
           href: virtual-machines-node-pools.md
         - name: Availability Sets deprecation
-          href: availability-sets-on-aks.md  
+          href: availability-sets-on-aks.md
         - name: Use system node pools
           href: use-system-pools.md
         - name: Resize node pools
@@ -456,10 +458,6 @@
                 href: app-routing-migration.md
               - name: Use Application Gateway Ingress Controller add-on
                 href: /azure/application-gateway/tutorial-ingress-controller-add-on-existing?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-              - name: Use Istio gateway with Istio Service Mesh add-on
-                href: istio-deploy-ingress.md
-              - name: Deploy secure Istio ingress gateway
-                href: istio-secure-gateway.md
       - name: Egress
         items:
           - name: Outbound network and FQDN rules for AKS clusters
@@ -484,6 +482,8 @@
             href: limit-egress-traffic.md
           - name: Configure Static Egress Gateway
             href: configure-static-egress-gateway.md
+          - name: Deploy Istio egress gateways (preview)
+            href: istio-deploy-egress.md
       - name: CNI
         items:
           - name: CNI networking overview
@@ -492,13 +492,14 @@
             href: configure-azure-cni.md
           - name: Bring your own CNI
             href: use-byo-cni.md
-          - name: Use Azure CNI for dynamic IP allocation
-            href: configure-azure-cni-dynamic-ip-allocation.md
-          - name: Use Azure CNI VNet - Static Block Allocation (Preview)
-            href: configure-azure-cni-static-block-allocation.md
           - name: Use Azure CNI Powered by Cilium
             href: azure-cni-powered-by-cilium.md
           - name: Use Azure CNI Pod Subnet
+            items:
+              - name: Use Azure CNI Pod Subnet -  Dynamic IP Allocation
+                href: configure-azure-cni-dynamic-ip-allocation.md
+              - name: Use Azure CNI Pod Subnet - Static Block Allocation
+                href: configure-azure-cni-static-block-allocation.md
             href: concepts-network-azure-cni-pod-subnet.md
           - name: Upgrade Azure CNI IPAM and dataplane
             href: upgrade-azure-cni.md
@@ -506,7 +507,7 @@
             href: configure-dual-stack.md
           - name: Azure CNI Overlay
             items:
-              - name: Overview 
+              - name: Overview
                 href: concepts-network-azure-cni-overlay.md
               - name: Use Azure CNI Overlay
                 href: azure-cni-overlay.md
@@ -1021,15 +1022,15 @@
               href: airflow-create-infrastructure.md
             - name: Configure and deploy Airflow
               href: airflow-deploy.md
-        - name: Deploy Apache Kafka using Strimzi 
+        - name: Deploy Apache Kafka using Strimzi
           items:
             - name: Overview
               href: kafka-overview.md
-            - name: Prepare Kafka infrastructure  
-              href: kafka-infrastructure.md  
-            - name: Deploy Strimzi and Kafka components  
-              href: kafka-deploy.md  
-            - name: Configure monitoring and networking for the Kafka cluster  
+            - name: Prepare Kafka infrastructure
+              href: kafka-infrastructure.md
+            - name: Deploy Strimzi and Kafka components
+              href: kafka-deploy.md
+            - name: Configure monitoring and networking for the Kafka cluster
               href: kafka-configure.md
         - name: Deploy GitHub Actions using Azure Files
           items:

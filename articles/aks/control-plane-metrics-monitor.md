@@ -117,6 +117,7 @@ Default targets include the following values:
 ```yaml
 controlplane-apiserver = true
 controlplane-cluster-autoscaler = false
+controlplace-node-auto-provisioning = false
 controlplane-kube-scheduler = false
 controlplane-kube-controller-manager = false
 controlplane-etcd = true
@@ -146,6 +147,7 @@ You can customize an ingestion file for collected metrics. For more information,
 
    * `controlplane-apiserver`
    * `controlplane-cluster-autoscaler`
+   * `controlplace-node-auto-provisioning`
    * `controlplane-kube-scheduler`
    * `controlplane-kube-controller-manager`
    * `controlplane-etcd`
@@ -174,6 +176,7 @@ Using the `minimalingestionprofile` setting helps reduce the ingestion volume of
 
    * `controlplane-apiserver`
    * `controlplane-cluster-autoscaler`
+   * `controlplane-node-auto-provisioning`
    * `controlplane-kube-scheduler`
    * `controlplane-kube-controller-manager`
    * `controlplane-etcd`
@@ -208,6 +211,7 @@ After you apply the configuration, it takes several minutes for the metrics from
 
    * `controlplane-apiserver`
    * `controlplane-cluster-autoscaler`
+   * `controlplane-node-auto-provisioning`
    * `controlplane-kube-scheduler`
    * `controlplane-kube-controller-manager`
    * `controlplane-etcd`

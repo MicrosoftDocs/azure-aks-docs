@@ -47,7 +47,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 | Supported platforms                      | Linux, Windows Server 2022 (Preview).                     | Linux, Windows Server 2019 and 2022.  | Linux.
 | Supported networking options             | Azure Container Networking Interface (CNI).                  | Azure CNI (Linux, Windows Server 2019 and 2022) and kubenet (Linux). | Azure CNI.
 | Compliance with Kubernetes specification | All policy types supported | All policy types are supported. | All policy types are supported.
-| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md) and [L7](./container-network-security-l7-policy-concepts.md)
+| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md)
 | Support                                  | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team.
 
 ## Limitations of Azure Network Policy Manager
