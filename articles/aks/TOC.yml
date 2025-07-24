@@ -344,6 +344,8 @@
               href: node-upgrade-github-actions.md
             - name: Stop cluster upgrades automatically on API breaking changes
               href: stop-cluster-upgrade-api-breaking-changes.md
+        - name: Upgrade FAQs
+          href: upgrade-aks-faq.yml
     - name: Add-ons, extensions, and integrations
       items:
         - name: Overview of add-ons, extensions, and integrations
