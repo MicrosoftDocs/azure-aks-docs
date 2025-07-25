@@ -7,8 +7,9 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: devx-track-azurepowershell
-#Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy a Windows Server container so that I can see how to run applications running on a Windows Server container using the managed Kubernetes service in Azure.
-# Customer intent: "As a developer or Kubernetes operator, I want to deploy an Azure Kubernetes Service (AKS) cluster with Windows Server containers and an ASP.NET application using PowerShell, so that I can quickly test and manage applications in a containerized Windows environment."
+
+# Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy a Windows Server container so that I can see how to run applications running on a Windows Server container using the managed Kubernetes service in Azure.
+
 ---
 
 # Deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using PowerShell
