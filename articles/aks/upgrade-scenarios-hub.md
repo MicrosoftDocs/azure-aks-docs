@@ -36,14 +36,14 @@ For more information, see these related articles:
 
 ## Quick scenario finder
 
-What's your primary concern? Select your answer from the following table:
+What's your primary concern? Select your answer from the following table.
 
 | My priority | Time constraint | Go to |
 |-------------|----------------|-------|
 | Zero production downtime | Upgrade needed within hours | [Production upgrade strategies](aks-production-upgrade-strategies.md#scenario-1-minimal-downtime-production-upgrades) |
-| Multi-environment safety | Planned windows | [Staged fleet upgrades](aks-production-upgrade-strategies.md#scenario-2-staging-upgrades-across-environments) |
+| Multi-environment safety | Planned windows | [Staged fleet upgrades](aks-production-upgrade-strategies.md#scenario-2-stage-upgrades-across-environments) |
 | New Kubernetes version risk | Safety-first approach | [Safe version intake](aks-production-upgrade-strategies.md#scenario-3-safe-kubernetes-version-intake) |
-| Security compliance | Common vulnerabilities and exposures response required | [Fast security patching](aks-production-upgrade-strategies.md#scenario-4-fastest-security-patch-deployment) |
+| Security compliance | Response required for common vulnerabilities and exposures  | [Fast security patching](aks-production-upgrade-strategies.md#scenario-4-fastest-security-patch-deployment) |
 | Database/stateful apps | Running databases | [Stateful workload patterns](stateful-workload-upgrades.md) |
 | Architecture planning | Design for upgrades | [Seamless architecture](aks-production-upgrade-strategies.md#scenario-5-application-architecture-for-seamless-upgrades) |
 
@@ -52,7 +52,7 @@ What's your primary concern? Select your answer from the following table:
 If you need a critical security patch now, select a link for instructions:
 
 - **Immediate action:** [Automated security patching](aks-production-upgrade-strategies.md#scenario-4-fastest-security-patch-deployment)
-- **With stateful workloads:** [Database safety patterns](stateful-workload-upgrades.md#-emergency-upgrade-checklist)
+- **With stateful workloads:** [Database safety patterns](stateful-workload-upgrades.md#emergency-upgrade-checklist)
 - **Rollback ready:** [Quick recovery guide](aks-production-upgrade-strategies.md#emergency-rollback-procedures)
 
 ## Upgrade strategy matrix
@@ -78,7 +78,7 @@ Find your ideal approach based on business constraints.
 
 - [Scenario-based production upgrades](aks-production-upgrade-strategies.md)
 - [Stateful workload upgrade patterns](stateful-workload-upgrades.md)
-- [Cross-environment upgrade staging](aks-production-upgrade-strategies.md#scenario-2-staging-upgrades-across-environments)
+- [Cross-environment upgrade staging](aks-production-upgrade-strategies.md#scenario-2-stage-upgrades-across-environments)
 
 ### Advanced topics
 
@@ -99,10 +99,10 @@ Immediate actions that you can take:
 
 If you're new to AKS upgrades, follow this learning sequence:
 
-1. **Learn:** [Kubernetes concepts](core-aks-concepts.md) and [Upgrade overview](upgrade-cluster.md)
-1. **Practice:** [Tutorial: Upgrade cluster](tutorial-kubernetes-upgrade-cluster.md)
-1. **Production:** [Production strategies](aks-production-upgrade-strategies.md)
-1. **Optimize:** [Stateful patterns](stateful-workload-upgrades.md)
+1. **Learn:** Learn about [Kubernetes concepts](core-aks-concepts.md) and read the [Upgrade overview](upgrade-cluster.md).
+1. **Practice:** Take the tutorial on how to [upgrade an AKS cluster](tutorial-kubernetes-upgrade-cluster.md).
+1. **Production:** Use the [production strategies](aks-production-upgrade-strategies.md).
+1. **Optimize:** Find out about [stateful patterns](stateful-workload-upgrades.md).
 
 ## Pro tips
 

@@ -36,26 +36,26 @@ For more information, see these related articles:
 
 For a quick start, select a link for instructions:
 
-- [Is an emergency upgrade needed?](#scenario-4-fastest-security-patch-deployment)
-- [Have stateful workloads?](stateful-workload-upgrades.md)
+- [Do you need an emergency upgrade?](#scenario-4-fastest-security-patch-deployment)
+- [Do you have stateful workloads?](stateful-workload-upgrades.md)
 
 ## Choose your strategy
 
 | Your priority | Best pattern | Downtime | Time to complete |
 |---------------|-------------|----------|------------------|
 | Zero downtime | [Blue-green deployment](#scenario-1-minimal-downtime-production-upgrades) | <2 minutes | 45-60 minutes |
-| Multi-environment safety | [Staged fleet upgrades](#scenario-2-staging-upgrades-across-environments) | Planned windows | 2-4 hours |
+| Multi-environment safety | [Staged fleet upgrades](#scenario-2-stage-upgrades-across-environments) | Planned windows | 2-4 hours |
 | New version safety | [Canary with validation](#scenario-3-safe-kubernetes-version-intake) | Low risk | 3-6 hours |
 | Security patches | [Automated patching](#scenario-4-fastest-security-patch-deployment) | <4 hours | 30-90 minutes |
 | Future-proof apps | [Resilient architecture](#scenario-5-application-architecture-for-seamless-upgrades) | Zero impact | Ongoing |
 
 ---
 
-#### Role-based quickstart
+#### Role-based quick start
 
 | Role | Start here |
 |------|------------|
-| Site reliability engineer/Platform | [Scenario 1](#scenario-1-minimal-downtime-production-upgrades), [Scenario 2](#scenario-2-staging-upgrades-across-environments) |
+| Site reliability engineer/Platform | [Scenario 1](#scenario-1-minimal-downtime-production-upgrades), [Scenario 2](#scenario-2-stage-upgrades-across-environments) |
 | Database administrator/Data engineer | [Stateful workload patterns](stateful-workload-upgrades.md) |
 | App development | [Scenario 5](#scenario-5-application-architecture-for-seamless-upgrades) |
 | Security | [Scenario 4](#scenario-4-fastest-security-patch-deployment) |
@@ -96,13 +96,13 @@ az network traffic-manager endpoint update \
 <details>
 <summary><strong> Detailed step-by-step guide</strong></summary>
 
-#### Prerequisites checklist
+#### Prerequisites
 
-- [ ] Secondary cluster capacity planned.
-- [ ] Application supports horizontal scaling.
-- [ ] Database connections use connection pooling.
-- [ ] Health checks configured (`/health`, `/ready`).
-- [ ] Rollback procedure tested in staging.
+- Secondary cluster capacity planned.
+- Application supports horizontal scaling.
+- Database connections use connection pooling.
+- Health checks configured (`/health`, `/ready`).
+- Rollback procedure tested in staging.
 
 #### Step 1: Prepare the blue-green infrastructure
 
@@ -214,10 +214,10 @@ spec:
 
 To validate your progress, use the following checklist:
 
-- [ ] Application responds within two seconds.
-- [ ] No 5xx errors are in logs.
-- [ ] Database connections are stable.
-- [ ] User sessions are preserved.
+- Application responds within two seconds.
+- No 5xx errors are in logs.
+- Database connections are stable.
+- User sessions are preserved.
 
 ### Emergency rollback (if needed)
 
@@ -250,7 +250,9 @@ az aks get-credentials --resource-group production-rg --name aks-green-cluster
 kubectl get nodes
 ```
 
-#### Step 2: Deploy application to a green cluster
+### Implementation steps
+
+#### Step 1: Deploy the application to a green cluster
 
 ```bash
 # Deploy application stack
@@ -264,7 +266,7 @@ kubectl wait --for=condition=ready pod --all --timeout=300s
 curl -f http://green-cluster-ingress/health
 ```
 
-#### Step 3: Run traffic shift
+#### Step 2: Run traffic shift
 
 ```azurecli-interactive
 # Update DNS or load balancer to point to green cluster
@@ -278,7 +280,7 @@ az network dns record-set a update \
 watch kubectl top pods -n production
 ```
 
-#### Step 4: Validate and clean up
+#### Step 3: Validate and clean up
 
 ```bash
 # Verify zero errors in application logs
@@ -554,7 +556,7 @@ az aks maintenance-configuration create \
   --duration 4
 ```
 
-To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Autoupgrade channels](./auto-upgrade-cluster.md#configure-auto-upgrade-channel).
+To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Autoupgrade channels](./auto-upgrade-cluster.md#configure-autoupgrade-channel).
 
 #### Step 2: Automated security scanning
 

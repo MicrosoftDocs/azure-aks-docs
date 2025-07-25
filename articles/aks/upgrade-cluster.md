@@ -52,7 +52,7 @@ If you're new to AKS upgrades, start with the [upgrade scenarios hub](upgrade-sc
 
 ### Perform manual upgrades
 
-Manual upgrades let you control when your cluster upgrades to a new Kubernetes version. These upgrades are useful for testing or targeting a specific version.
+Manual upgrades let you control when your cluster upgrades to a new Kubernetes version. These upgrades are useful for testing or targeting a specific version:
 
 * [Upgrade an AKS cluster](./upgrade-aks-cluster.md)
 * [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
@@ -79,14 +79,14 @@ To keep zones balanced, set surge to a multiple of three nodes. Persistent volum
 
 ### Optimize upgrades to improve performance and minimize disruptions
 
-Combine [planned maintenance window][planned-maintenance], [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade), [PDB][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] to increase the likelihood of successful, low-disruption upgrades.
+Combine [planned maintenance window][planned-maintenance], [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade), [PDB][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] to increase the likelihood of successful, low-disruption upgrades:
 
 * [Planned maintenance window][planned-maintenance]: Schedule autoupgrade during low-traffic periods. We recommend at least four hours.
 * [Max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade): Higher values speed upgrades but might disrupt workloads. We recommend 33% for production.
 * [Max unavailable](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade): Use when capacity is limited.
 * [Pod disruption budget][pdb-spec]: Set to limit pods down during upgrades. Validate for your service.
-* [Node drain timeout][drain-timeout]: Configure pod eviction wait duration. Default is 30 minutes.
-* [Node soak time][soak-time]: Stagger upgrades to minimize downtime. Default is 0 minutes.
+* [Node drain timeout][drain-timeout]: Configure pod eviction wait duration. The default is 30 minutes.
+* [Node soak time][soak-time]: Stagger upgrades to minimize downtime. The default is 0 minutes.
 
 |Upgrade settings|How extra nodes are used|Expected behavior|
 |-|-|-|
@@ -166,7 +166,7 @@ Message: Drain node ... failed when evicting pod ... failed with Too Many Reques
 
 #### Max Blocked Nodes Allowed (preview)
 
-The Max Blocked Nodes Allowed [preview] feature lets you specify how many nodes that fail to drain (blocked nodes) are tolerated during upgrades or similar operations. This feature works only if the undrainable node behavior property is set. Otherwise, the command returns an error.
+The Max Blocked Nodes Allowed (preview) feature lets you specify how many nodes that fail to drain (blocked nodes) are tolerated during upgrades or similar operations. This feature works only if the undrainable node behavior property is set. Otherwise, the command returns an error.
 
 > [!NOTE]
 > If you don't explicitly set Max Blocked Nodes Allowed, it defaults to the value of [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade). If max surge isn't set, the default is typically 10%, so Max Blocked Nodes Allowed also defaults to 10%.
@@ -238,7 +238,7 @@ Common causes of slow upgrades include:
 
 * Low `maxSurge` or `maxUnavailable` values (limits parallelism).
 * High soak times (long waits between node upgrades).
-* Drain failures (see [Node drain failures](#scenario-2-node-drain-failures-and-pdbs)]).
+* Drain failures (see [Node drain failures](#scenario-2-node-drain-failures-and-pdbs)).
 
 #### Recommendations to prevent or resolve
 
@@ -253,8 +253,7 @@ Surge nodes require more IPs. If the subnet is near capacity, node provisioning 
 
 #### Recommendations to prevent or resolve
 
-* Ensure that your subnet has enough IPs for all nodes, surge nodes, and pods:
-  * Formula: `Total IPs = (Number of nodes + maxSurge) * (1 + maxPods)`
+* Ensure that your subnet has enough IPs for all nodes, surge nodes, and pods. The formula is `Total IPs = (Number of nodes + maxSurge) * (1 + maxPods)`.
 * Reclaim unused IPs or expand the subnet (for example, from /24 to /22).
 * Lower `maxSurge` if subnet expansion isn't possible:
 
