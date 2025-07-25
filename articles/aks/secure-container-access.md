@@ -109,6 +109,7 @@ Bear in mind the list isn't exhaustive, it's just a selection of CVEs with high 
 * [CVE 2022-0492][cve-2022-0492]: Score 7.8 (HIGH)
 * [CVE-2021-25741][cve-2021-25741]: Score: 8.1 (HIGH) / 8.8 (HIGH)
 * [CVE-2017-1002101][cve-2017-1002101]: Score: 9.6 (CRITICAL) / 8.8(HIGH)
+To learn more, read this [blog post](https://kubernetes.io/blog/2025/04/25/userns-enabled-by-default/) with additional information around user-namespaces. 
 
 ## App Armor
 
