@@ -7,8 +7,9 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: mvc, devx-track-azurepowershell
-#Customer intent: As a developer or IT pro, I want to learn how to upgrade an Azure Kubernetes Service (AKS) cluster so that I can use the latest version of Kubernetes and features.
-# Customer intent: "As a developer or IT administrator, I want to upgrade my Azure Kubernetes Service cluster to the latest Kubernetes version so that I can utilize new features and improvements for my applications."
+
+# Customer intent: As a developer or IT pro, I want to learn how to upgrade an Azure Kubernetes Service (AKS) cluster so that I can use the latest version of Kubernetes and features.
+
 ---
 
 # Tutorial - Upgrade an Azure Kubernetes Service (AKS) cluster
