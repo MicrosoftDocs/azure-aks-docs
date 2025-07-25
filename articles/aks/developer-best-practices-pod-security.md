@@ -63,7 +63,6 @@ spec:
 
 Work with your cluster operator to determine what security context settings you need. Try to design your applications to minimize additional permissions and access the pod requires. There are additional security features to limit access using AppArmor, seccomp (secure computing), and user-namespaces that can be implemented by cluster operators.
 
-The use of **hostUsers: false** requires Linux and specific Kubernetes and OS versions.
 
 For more information, see [Secure container access to resources][apparmor-seccomp].
 
