@@ -81,7 +81,7 @@ To keep zones balanced, set surge to a multiple of three nodes. Persistent volum
 
 Combine [planned maintenance window][planned-maintenance], [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade), [PDB][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] to increase the likelihood of successful, low-disruption upgrades:
 
-* [Planned maintenance window][planned-maintenance]: Schedule autoupgrade during low-traffic periods. We recommend at least four hours.
+* [Planned maintenance window][planned-maintenance]: Schedule auto-upgrade during low-traffic periods. We recommend at least four hours.
 * [Max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade): Higher values speed upgrades but might disrupt workloads. We recommend 33% for production.
 * [Max unavailable](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade): Use when capacity is limited.
 * [Pod disruption budget][pdb-spec]: Set to limit pods down during upgrades. Validate for your service.

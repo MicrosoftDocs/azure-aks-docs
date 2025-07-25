@@ -36,7 +36,7 @@ For more information, see these related articles:
 
 For a quick start, select a link for instructions:
 
-- [Do you need an emergency upgrade?](#-emergency-upgrade-checklist)
+- [Do you need an emergency upgrade?](#emergency-upgrade-checklist)
 - [Do you need help with a PostgreSQL cluster?](#the-ferris-wheel-pattern-postgresql)
 - [Do you need a Redis cache rolling replace?](#redis-cluster-rolling-replace)
 

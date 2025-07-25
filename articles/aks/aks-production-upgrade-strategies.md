@@ -531,7 +531,7 @@ data:
 
 **Strategy:** Use automated node image patching with minimal disruption.
 
-To learn more, see [Node image upgrade strategies](./node-image-upgrade.md), [Autoupgrade channels](./auto-upgrade-cluster.md), and [Security patching best practices](/azure/aks/operator-best-practices-cluster-security).
+To learn more, see [Node image upgrade strategies](./node-image-upgrade.md), [Auto-upgrade channels](./auto-upgrade-cluster.md), and [Security patching best practices](/azure/aks/operator-best-practices-cluster-security).
 
 ### Implementation steps
 
@@ -556,7 +556,7 @@ az aks maintenance-configuration create \
   --duration 4
 ```
 
-To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Autoupgrade channels](./auto-upgrade-cluster.md#configure-autoupgrade-channel).
+To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Auto-upgrade channels](./auto-upgrade-cluster.md#configure-auto-upgrade-channel).
 
 #### Step 2: Automated security scanning
 
@@ -753,7 +753,7 @@ data:
 
 ## Monitoring and alerting setup
 
-To learn more, see the [AKS monitoring overview](./monitor-aks.md), [Container insights](/azure/azure-monitor/containers/container-insights-overview), and [Prometheus metrics](/azure/azure-monitor/essentials/prometheus-metrics-overview).
+To learn more, see the [AKS monitoring overview](./monitor-aks.md), [Container Insights](/azure/azure-monitor/containers/container-insights-overview), and [Prometheus metrics](/azure/azure-monitor/essentials/prometheus-metrics-overview).
 
 ### Essential metrics to monitor
 
@@ -860,7 +860,7 @@ echo "Rollback completed in $(date)"
 
 ### Supporting tools
 
-- [Autoupgrade configuration](auto-upgrade-cluster.md): Use automated upgrade channels.
+- [Auto-upgrade configuration](auto-upgrade-cluster.md): Use automated upgrade channels.
 - [Maintenance windows](planned-maintenance.md): Schedule upgrade windows.
 - [Upgrade monitoring](aks-communication-manager.md): Use real-time upgrade alerts.
 
@@ -874,7 +874,7 @@ echo "Rollback completed in $(date)"
 
 - **Set up monitoring:** Configure [upgrade notifications](aks-communication-manager.md) before your first upgrade.
 - **Practice safely:** Test scenarios in staging by using [cluster snapshots](node-pool-snapshot.md).
-- **Automate gradually:** Start with [autoupgrade channels](auto-upgrade-cluster.md) for nonproduction.
+- **Automate gradually:** Start with [auto-upgrade channels](auto-upgrade-cluster.md) for nonproduction.
 - **Handle stateful data:** Review [stateful workload patterns](stateful-workload-upgrades.md) if you run databases.
 
 ## Related content

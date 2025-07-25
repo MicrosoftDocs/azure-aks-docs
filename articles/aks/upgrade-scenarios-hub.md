@@ -72,7 +72,7 @@ Find your ideal approach based on business constraints.
 
 - [Basic cluster upgrade process](upgrade-aks-cluster.md)
 - [Node pool upgrade strategies](upgrade-cluster.md)
-- [Autoupgrade configuration](auto-upgrade-cluster.md)
+- [Auto-upgrade configuration](auto-upgrade-cluster.md)
 
 ### Production-ready strategies
 
