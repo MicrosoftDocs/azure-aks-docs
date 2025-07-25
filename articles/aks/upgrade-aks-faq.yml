@@ -13,7 +13,7 @@ summary: |
 
 
 sections:
-  - name: Single section - ignored
+  - name: Upgrade process and requirements
     questions:
       - question: |
           Can I upgrade my AKS cluster directly to a newer Kubernetes version, or do I need to upgrade sequentially?
@@ -24,67 +24,11 @@ sections:
 
           - [Upgrade an Azure Kubernetes Service (AKS) cluster](./upgrade-aks-cluster.md)
           - [Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters](./upgrade-cluster.md)
-          
+
       - question: |
           What happens if I skip minor versions during an AKS upgrade?
         answer: |
           Skipping minor versions during an upgrade is only allowed when upgrading from an unsupported version to a supported one. Check [Kubernetes version upgrades](./upgrade-aks-cluster.md#kubernetes-version-upgrades) for specific considerations which should be taken into account when performing an upgrade from an unsupported version that skips two or more minor versions.
-          
-      - question: |
-          Are Beta Kubernetes APIs supported in AKS clusters after upgrading to version 1.30 or above?
-        answer: |
-          Beta APIs are disabled by default in AKS clusters starting with Kubernetes versions 1.30 and 1.27 LTS, consistent with AKS support policies. Furthermore, as of November 30th, 2024, Beta APIs will also be disabled in AKS clusters created with Kubernetes versions 1.28 and 1.29. For more information, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md).
-          
-      - question: |
-          Will upgrading my AKS cluster cause downtime or disruption to running applications?
-        answer: |
-          The AKS cluster upgrade process involves the rolling update of worker nodes, which is based on node draining and pod eviction, and can therefore cause brief periods of unavailability in deployed workloads. You can minimize downtime during an AKS cluster upgrade through proper workload configuration. By leveraging several AKS/Kubernetes native features, you can guarantee a sufficient number of adequately distributed pod replicas exist at any given moment during the upgrade. 
-
-          For more information and best practices around workload configuration for minimizing impact during upgrade operations, see the following articles:
-
-          - [Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters](./upgrade-cluster.md#optimize-upgrades-to-improve-performance-and-minimize-disruptions)
-          - [Deployment and cluster reliability best practices for Azure Kubernetes Service (AKS)](./best-practices-app-cluster-reliability.md)
-          
-      - question: |
-          Is rollback supported if the AKS upgrade fails or causes issues?
-        answer: |
-          Rollback of AKS cluster upgrade operations isn't supported. If an upgrade operation fails or doesn't successfully complete for some reason the path forward for the cluster is to:
-
-          - Address whatever issue prevented the upgrade from succeeding. See the [AKS troubleshooting documentation](/troubleshoot/azure/azure-kubernetes/welcome-azure-kubernetes) for guidance on resolving specific issues which might occur during upgrades.
-          - Retry the cluster upgrade operation.
-
-          If an upgrade is successfully completed but introduces workload issues, such as API compatibility issues, the recommended solution is to recreate the cluster in the previous version and restore the workloads from previously created backups. AKS recommends:
-
-          - Thoroughly verifying workload compatibility with the new AKS version in lower environments (e.g. development, test) before proceeding with the upgrade in production environments.
-          - Backing up your workloads and configurations before initiating an upgrade. See [AKS Backup](/azure/backup/azure-kubernetes-service-backup-overview) for detailed guidance on backup/restore strategies for AKS using Azure Backup. 
-
-          AKS also recommends implementing a blue-green deployment strategy, which allows phased introduction of new AKS versions while maintaining service availability. See [Blue-green deployment of AKS clusters](/azure/architecture/guide/aks/blue-green-deployment-for-aks) for more information on using this approach. 
-
-      - question: |
-          What backup strategies are recommended before upgrading an AKS cluster?
-        answer: |
-          While backing up your AKS cluster before every upgrade isn't mandatory, having appropriate backup and recovery capabilities in place is an essential part of any organization's operational and disaster recovery strategy. You can use tools like Velero and AKS Backup to back up cluster resources and data and guarantee that service resumes as quickly as possible. See the following articles for detailed guidance on setting up backup and restore for your AKS cluster:
-
-          - [Backup and recovery for AKS](/azure/architecture/operator-guides/aks/aks-backup-and-recovery)
-          - [What is Azure Kubernetes Service backup?](/azure/backup/azure-kubernetes-service-backup-overview)
-
-      - question: |
-          What Azure RBAC permissions or roles are required to perform an AKS cluster upgrade?
-        answer: |
-          To trigger an AKS cluster upgrade a user must have the Azure Kubernetes Service Contributor role assigned at the cluster resource level. See the following articles for a detailed description of this role and further guidance on providing users with granular access to AKS resources:
-
-          - [Azure built-in roles for Containers](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-contributor-role)
-          - [Access and identity options for Azure Kubernetes Service (AKS)](./concepts-identity.md#azure-rbac-to-authorize-access-to-the-aks-resource)
-          
-      - question: |
-          How long can I continue running unsupported AKS Kubernetes versions, and what's the grace period for upgrades?
-        answer: |
-          AKS provides a 30-day grace period after every version removal, during which you will still receive support for your cluster. We highly recommended you monitor AKS deprecation notices to ensure your clusters remain within the supported version range. Once the grace period ends, running unsupported versions might lead to a lack of support and potential exposure to security vulnerabilities. See the following resources for detailed information on AKS version deprecations, release calendars and release notes:
-
-          - [Supported Kubernetes versions in Azure Kubernetes Service (AKS)](./supported-kubernetes-versions.md)
-          - [Releases - AKS/AKS](https://github.com/Azure/AKS/releases)
-
-          AKS also provides a long-term support (LTS) option, which extends the support window for a Kubernetes version to give you more time to plan and test upgrades to newer Kubernetes versions. See [Long-term support for AKS versions](./long-term-support.md) for more information on using AKS LTS.
 
       - question: |
           How do I handle deprecated Kubernetes APIs used by workloads before upgrading AKS?
@@ -95,55 +39,7 @@ sections:
 
           - [Stop Azure Kubernetes Service (AKS) cluster upgrades automatically on API breaking changes](./stop-cluster-upgrade-api-breaking-changes.md#remove-usage-of-deprecated-apis-recommended)
           - [Deprecated API Migration Guide](https://kubernetes.io/docs/reference/using-api/deprecation-guide/)
-          
-      - question: |
-          Can I use Terraform to upgrade the AKS cluster or change SKU tiers?
-        answer: |
-          While support is guaranteed in Azure CLI for all generally available (GA) AKS features, support in Terraform for some GA features might lag behind and is subject to Terraform Provider development constraints. We recommend checking [Terraform Azure provider documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) for the support status of specific features.
 
-      - question: |
-          Will the AKS auto-upgrade channel upgrade my cluster to the latest patch version automatically?
-        answer: |
-          Yes, setting the auto-upgrade channel to `Patch` automatically upgrades the cluster to the latest available patch version, typically during previously defined maintenance windows. This ensures that your cluster remains up to date with the latest security and stability patches without manual intervention. See the following articles for guidance on configuring auto-upgrade channels and using planned maintenance windows with your AKS cluster:
-
-          - [Automatically upgrade an Azure Kubernetes Service (AKS) cluster](./auto-upgrade-cluster.md)
-          - [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service (AKS) cluster](./planned-maintenance.md)
-      
-      - question: |
-          Does the AKS cluster upgrade process restart or reimage nodes?
-        answer: |
-          During an AKS cluster upgrade, nodes are reimaged rather than just restarted. Reimaging ensures that nodes run the updated Kubernetes version and configurations. This process helps maintain cluster consistency and health. See [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster) for a detailed description of the AKS node upgrade process.
-
-          AKS also provides the option to use the [OS Security Patch Channel](./auto-upgrade-node-os-image.md#available-node-os-upgrade-channels), which guarantees worker nodes get the latest operating system security updates with minimum disruption. See [Enhancing Your Operating System’s Security with OS Security Patches in AKS](https://blog.aks.azure.com/2025/04/22/Enhance-security-OS-Security-Patch) for more information on using OS Security Patch Channel and its benefits. 
-
-      - question: |
-          Is standby or proactive Microsoft support available during AKS cluster upgrades?
-        answer: |
-          No, Microsoft provides only reactive support for AKS cluster upgrades. If you require proactive or standby support during upgrades, you need to engage Azure Event Management services, which are separate and might involve additional costs. See [Azure support plans](https://azure.microsoft.com/support/plans/) for more information on Azure support options.
-      
-      - question: |
-         Does upgrading AKS from the Free SKU to Standard SKU cause downtime? 
-        answer: |
-          You shouldn't experience any downtime while updating your cluster tier from Free to Standard. The process is designed to transition smoothly without interrupting running applications. See [Update the tier of an existing AKS cluster](./free-standard-pricing-tiers.md#update-the-tier-of-an-existing-aks-cluster) for more guidance on updating your AKS cluster tier.
-      
-      - question: |
-          How are StatefulSet pods and persistent volumes affected during an AKS cluster upgrade?
-        answer: |
-          During an AKS cluster upgrade, StatefulSet Pods (like all other pods) are evicted and rescheduled as part of the node upgrade process. The CSI driver running on the nodes is responsible for seamlessly reattaching persistent volumes to the new nodes, which ensures data integrity and availability. This process minimizes disruption to stateful applications. See [Stateful workloads in AKS](./stateful-workloads-overview.md) for more information on using stateful applications and persistent volumes with AKS.
-      
-      - question: |
-          Are Helm versions compatible with newer AKS Kubernetes versions?
-        answer: |
-          Yes, Helm version 3 is compatible with all supported AKS Kubernetes versions. We recommend using Helm v3 for deploying and managing applications on AKS clusters to ensure compatibility and access to the latest features. See the following resources for guidance on using Helm with AKS:
-
-          - [Quickstart: Develop on Azure Kubernetes Service (AKS) with Helm](./quickstart-helm.md)
-          - [Helm documentation](https://helm.sh/docs/)
-      
-      - question: |
-          Who creates inbound NSG rules for AKS clusters, and why are they required?
-        answer: |
-          AKS automatically manages Network Security Group (NSG) configuration according to the services deployed in the cluster to allow internet access to the public IPs associated with these workloads. The inbound rules AKS configures are essential for enabling external access to services deployed on the cluster. Manually modifying the managed NSG configuration might impact service availability. See [Networking concepts for applications in AKS](./concepts-network.md) for more on AKS networking concepts.
-      
       - question: |
           Can I upgrade an AKS cluster control plane and only some node pools?
         answer: |
@@ -151,6 +47,24 @@ sections:
 
           - [Manage node pools for a cluster in Azure Kubernetes Service (AKS)](./manage-node-pools.md#validation-rules-for-upgrades)
           - [Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/)
+
+  - name: Impact and mitigation
+    questions:
+
+      - question: |
+          Will upgrading my AKS cluster cause downtime or disruption to running applications?
+        answer: |
+          The AKS cluster upgrade process involves the rolling update of worker nodes, which is based on node draining and pod eviction, and can therefore cause brief periods of unavailability in deployed workloads. You can minimize downtime during an AKS cluster upgrade through proper workload configuration. By leveraging several AKS/Kubernetes native features, you can guarantee a sufficient number of adequately distributed pod replicas exist at any given moment during the upgrade. 
+
+          For more information and best practices around workload configuration for minimizing impact during upgrade operations, see the following articles:
+
+          - [Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters](./upgrade-cluster.md#optimize-upgrades-to-improve-performance-and-minimize-disruptions)
+          - [Deployment and cluster reliability best practices for Azure Kubernetes Service (AKS)](./best-practices-app-cluster-reliability.md)
+
+      - question: |
+          How are StatefulSet pods and persistent volumes affected during an AKS cluster upgrade?
+        answer: |
+          During an AKS cluster upgrade, StatefulSet Pods (like all other pods) are evicted and rescheduled as part of the node upgrade process. The CSI driver running on the nodes is responsible for seamlessly reattaching persistent volumes to the new nodes, which ensures data integrity and availability. This process minimizes disruption to stateful applications. See [Stateful workloads in AKS](./stateful-workloads-overview.md) for more information on using stateful applications and persistent volumes with AKS.
 
       - question: |
           How to plan AKS upgrade to minimize workload disruption?
@@ -169,6 +83,95 @@ sections:
           - [Deployment and cluster reliability best practices for Azure Kubernetes Service (AKS)](./best-practices-app-cluster-reliability.md)
 
       - question: |
+         Does upgrading AKS from the Free SKU to Standard SKU cause downtime? 
+        answer: |
+          You shouldn't experience any downtime while updating your cluster tier from Free to Standard. The process is designed to transition smoothly without interrupting running applications. See [Update the tier of an existing AKS cluster](./free-standard-pricing-tiers.md#update-the-tier-of-an-existing-aks-cluster) for more guidance on updating your AKS cluster tier.
+
+  - name: Permissions
+    questions:
+
+      - question: |
+          What Azure RBAC permissions or roles are required to perform an AKS cluster upgrade?
+        answer: |
+          To trigger an AKS cluster upgrade a user must have the Azure Kubernetes Service Contributor role assigned at the cluster resource level. See the following articles for a detailed description of this role and further guidance on providing users with granular access to AKS resources:
+
+          - [Azure built-in roles for Containers](/azure/role-based-access-control/built-in-roles/containers#azure-kubernetes-service-contributor-role)
+          - [Access and identity options for Azure Kubernetes Service (AKS)](./concepts-identity.md#azure-rbac-to-authorize-access-to-the-aks-resource)
+
+  - name: Backup and rollback
+    questions:
+
+      - question: |
+          What backup strategies are recommended before upgrading an AKS cluster?
+        answer: |
+          While backing up your AKS cluster before every upgrade isn't mandatory, having appropriate backup and recovery capabilities in place is an essential part of any organization's operational and disaster recovery strategy. You can use tools like Velero and AKS Backup to back up cluster resources and data and guarantee that service resumes as quickly as possible. See the following articles for detailed guidance on setting up backup and restore for your AKS cluster:
+
+          - [Backup and recovery for AKS](/azure/architecture/operator-guides/aks/aks-backup-and-recovery)
+          - [What is Azure Kubernetes Service backup?](/azure/backup/azure-kubernetes-service-backup-overview)
+
+      - question: |
+          Is rollback supported if the AKS upgrade fails or causes issues?
+        answer: |
+          Rollback of AKS cluster upgrade operations isn't supported. If an upgrade operation fails or doesn't successfully complete for some reason the path forward for the cluster is to:
+
+          - Address whatever issue prevented the upgrade from succeeding. See the [AKS troubleshooting documentation](/troubleshoot/azure/azure-kubernetes/welcome-azure-kubernetes) for guidance on resolving specific issues which might occur during upgrades.
+          - Retry the cluster upgrade operation.
+
+          If an upgrade is successfully completed but introduces workload issues, such as API compatibility issues, the recommended solution is to recreate the cluster in the previous version and restore the workloads from previously created backups. AKS recommends:
+
+          - Thoroughly verifying workload compatibility with the new AKS version in lower environments (e.g. development, test) before proceeding with the upgrade in production environments.
+          - Backing up your workloads and configurations before initiating an upgrade. See [AKS Backup](/azure/backup/azure-kubernetes-service-backup-overview) for detailed guidance on backup/restore strategies for AKS using Azure Backup. 
+
+          AKS also recommends implementing a blue-green deployment strategy, which allows phased introduction of new AKS versions while maintaining service availability. See [Blue-green deployment of AKS clusters](/azure/architecture/guide/aks/blue-green-deployment-for-aks) for more information on using this approach.
+
+  - name: Auto-upgrade and maintenance
+    questions:
+
+      - question: |
+          Will the AKS auto-upgrade channel upgrade my cluster to the latest patch version automatically?
+        answer: |
+          Yes, setting the auto-upgrade channel to `Patch` automatically upgrades the cluster to the latest available patch version, typically during previously defined maintenance windows. This ensures that your cluster remains up to date with the latest security and stability patches without manual intervention. See the following articles for guidance on configuring auto-upgrade channels and using planned maintenance windows with your AKS cluster:
+
+          - [Automatically upgrade an Azure Kubernetes Service (AKS) cluster](./auto-upgrade-cluster.md)
+          - [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service (AKS) cluster](./planned-maintenance.md)
+
+      - question: |
+          Does the AKS cluster upgrade process restart or reimage nodes?
+        answer: |
+          During an AKS cluster upgrade, nodes are reimaged rather than just restarted. Reimaging ensures that nodes run the updated Kubernetes version and configurations. This process helps maintain cluster consistency and health. See [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster) for a detailed description of the AKS node upgrade process.
+
+          AKS also provides the option to use the [OS Security Patch Channel](./auto-upgrade-node-os-image.md#available-node-os-upgrade-channels), which guarantees worker nodes get the latest operating system security updates with minimum disruption. See [Enhancing Your Operating System’s Security with OS Security Patches in AKS](https://blog.aks.azure.com/2025/04/22/Enhance-security-OS-Security-Patch) for more information on using OS Security Patch Channel and its benefits.
+
+      - question: |
+          What is AKS Planned Maintenance, and how can I use it to control AKS auto-upgrade behavior?
+        answer: |
+          To minimize impact on running workloads, AKS Planned Maintenance allows defining specific schedules for upgrade operations triggered by cluster and node OS image auto-upgrade channels. Clusters can have one or more planned maintenance configurations pertaining to different upgrade scenarios, using specific recurrence and duration settings. 
+
+          See the following articles for more information on using AKS Planned Maintenance and auto-upgrade channels with your cluster:
+
+          - [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service (AKS) cluster](./planned-maintenance.md)
+          - [Automatically upgrade an Azure Kubernetes Service (AKS) cluster](./auto-upgrade-cluster.md)
+          - [Auto-upgrade node OS images](./auto-upgrade-node-os-image.md)
+
+      - question: |
+          How can I monitor maintenance activity in my cluster?
+        answer: |
+          AKS Communication Manager allows you to receive alerts before and during maintenance events, including auto-upgrade operation results and guidance in case of failure. See [AKS Communication Manager](./aks-communication-manager.md) for more information on how to set up maintenance related notifications for your AKS cluster.
+
+  - name: Support and deprecation
+    questions:
+
+      - question: |
+          How long can I continue running unsupported AKS Kubernetes versions, and what's the grace period for upgrades?
+        answer: |
+          AKS provides a 30-day grace period after every version removal, during which you will still receive support for your cluster. We highly recommended you monitor AKS deprecation notices to ensure your clusters remain within the supported version range. Once the grace period ends, running unsupported versions might lead to a lack of support and potential exposure to security vulnerabilities. See the following resources for detailed information on AKS version deprecations, release calendars and release notes:
+
+          - [Supported Kubernetes versions in Azure Kubernetes Service (AKS)](./supported-kubernetes-versions.md)
+          - [Releases - AKS/AKS](https://github.com/Azure/AKS/releases)
+
+          AKS also provides a long-term support (LTS) option, which extends the support window for a Kubernetes version to give you more time to plan and test upgrades to newer Kubernetes versions. See [Long-term support for AKS versions](./long-term-support.md) for more information on using AKS LTS.
+
+      - question: |
           What are the best practices for upgrading AKS clusters running unsupported or significantly outdated versions?
         answer: |
           For AKS clusters running unsupported or significantly outdated Kubernetes versions, the recommended best practices include:
@@ -180,17 +183,32 @@ sections:
           5. **Perform thorough testing** in a staging environment to identify and resolve any compatibility issues.
 
       - question: |
-          What is AKS Planned Maintenance, and how can I use it to control AKS auto-upgrade behavior?
+          Is standby or proactive Microsoft support available during AKS cluster upgrades?
         answer: |
-          To minimize impact on running workloads, AKS Planned Maintenance allows defining specific schedules for upgrade operations triggered by cluster and node OS image auto-upgrade channels. Clusters can have one or more planned maintenance configurations pertaining to different upgrade scenarios, using specific recurrence and duration settings. 
-
-          See the following articles for more information on using AKS Planned Maintenance and auto-upgrade channels with your cluster:
-
-          - [Use planned maintenance to schedule and control upgrades for your Azure Kubernetes Service (AKS) cluster](./planned-maintenance.md)
-          - [Automatically upgrade an Azure Kubernetes Service (AKS) cluster](./auto-upgrade-cluster.md)
-          - [Autoupgrade node OS images](./auto-upgrade-node-os-image.md)
+          No, Microsoft provides only reactive support for AKS cluster upgrades. If you require proactive or standby support during upgrades, you need to engage Azure Event Management services, which are separate and might involve additional costs. See [Azure support plans](https://azure.microsoft.com/support/plans/) for more information on Azure support options.
 
       - question: |
-          How can I monitor maintenance activity in my cluster?
+          Are Helm versions compatible with newer AKS Kubernetes versions?
         answer: |
-          AKS Communication Manager allows you to receive alerts before and during maintenance events, including auto-upgrade operation results and guidance in case of failure. See [AKS Communication Manager](./aks-communication-manager.md) for more information on how to set up maintenance related notifications for your AKS cluster.
+          Yes, Helm version 3 is compatible with all supported AKS Kubernetes versions. We recommend using Helm v3 for deploying and managing applications on AKS clusters to ensure compatibility and access to the latest features. See the following resources for guidance on using Helm with AKS:
+
+          - [Quickstart: Develop on Azure Kubernetes Service (AKS) with Helm](./quickstart-helm.md)
+          - [Helm documentation](https://helm.sh/docs/)
+
+      - question: |
+          Can I use Terraform to upgrade the AKS cluster or change SKU tiers?
+        answer: |
+          While support is guaranteed in Azure CLI for all generally available (GA) AKS features, support in Terraform for some GA features might lag behind and is subject to Terraform Provider development constraints. We recommend checking [Terraform Azure provider documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_cluster) for the support status of specific features.
+
+      - question: |
+          Are Beta Kubernetes APIs supported in AKS clusters after upgrading to version 1.30 or above?
+        answer: |
+          Beta APIs are disabled by default in AKS clusters starting with Kubernetes versions 1.30 and 1.27 LTS, consistent with AKS support policies. Furthermore, as of November 30th, 2024, Beta APIs will also be disabled in AKS clusters created with Kubernetes versions 1.28 and 1.29. For more information, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md).
+
+  - name: Networking and security
+    questions:
+      
+      - question: |
+          Who creates inbound NSG rules for AKS clusters, and why are they required?
+        answer: |
+          AKS automatically manages Network Security Group (NSG) configuration according to the services deployed in the cluster to allow internet access to the public IPs associated with these workloads. The inbound rules AKS configures are essential for enabling external access to services deployed on the cluster. Manually modifying the managed NSG configuration might impact service availability. See [Networking concepts for applications in AKS](./concepts-network.md) for more on AKS networking concepts.
