@@ -556,7 +556,7 @@ az aks maintenance-configuration create \
   --duration 4
 ```
 
-To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Auto-upgrade channels](./auto-upgrade-cluster.md#configure-auto-upgrade-channel).
+To learn more, see [Planned maintenance configuration](./planned-maintenance.md) and [Auto-upgrade channels](./auto-upgrade-cluster.md#cluster-auto-upgrade-channels).
 
 #### Step 2: Automated security scanning
 
