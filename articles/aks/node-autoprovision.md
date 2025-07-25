@@ -296,7 +296,6 @@ Node auto provisioning produces cluster events that can be used to monitor deplo
 ```
 kubectl get events -A --field-selector source=karpenter -w
 ```
->>>>>>> main
 
 ## Disabling node auto provisioning
 
