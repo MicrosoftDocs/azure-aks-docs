@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Use ClusterStagedUpdateRun to orchestrate staged rollouts across member clusters
 
-Azure Kubernetes Fleet Manager staged update runs provide a controlled approach to deploying workloads across multiple member clusters using a stage-by-stage process. This approach allows you to minimize risk by deploying to subsets of clusters sequentially, with optional wait times and approval gates between stages.
+Azure Kubernetes Fleet Manager staged update runs provide a controlled approach to deploying workloads across multiple member clusters using a stage-by-stage process. This approach allows you to minimize risk by deploying to targeted clusters sequentially, with optional wait times and approval gates between stages.
 
 This article shows you how to create and execute staged update runs to deploy workloads progressively and roll back to previous versions when needed.
 
@@ -43,7 +43,7 @@ This article shows you how to create and execute staged update runs to deploy wo
 
 ## Configure the Demo environment
 
-You must have a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
+This demo runs on a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
 This tutorial demonstrates staged update runs using a demo fleet environment with three member clusters that have the following labels:
 
@@ -224,7 +224,7 @@ spec:
 
 ## Deploy a ClusterStagedUpdateStrategy
 
-A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages:
+A `ClusterStagedUpdateStrategy` defines the orchestration pattern that groups clusters into stages and specifies the rollout sequence. It selects member clusters by labels. For our demonstration, we create one with two stages, staging and canary:
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
@@ -289,16 +289,9 @@ Your output should look similar to the following example:
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateRun
 metadata:
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"placement.kubernetes-fleet.io/v1beta1","kind":"ClusterStagedUpdateRun","metadata":{"annotations":{},"name":"example-run"},"spec":{"placementName":"example-placement","resourceSnapshotIndex":"1","stagedRolloutStrategyName":"example-strategy"}}
-  creationTimestamp: "2025-07-22T21:28:08Z"
-  finalizers:
-  - kubernetes-fleet.io/stagedupdaterun-finalizer
-  generation: 1
+  ...
   name: example-run
-  resourceVersion: "21461"
-  uid: 7db13885-3230-4892-89b5-a7eb70baac94
+  ...
 spec:
   placementName: example-placement
   resourceSnapshotIndex: "1"
@@ -430,10 +423,10 @@ status:
     startTime: "2025-07-22T21:29:23Z"
 ```
 
-We can see that the TimedWait for staging has elapsed and we also see that the `ClusterApprovalRequest` object was created. We can check the generated ClusterApprovalRequest and see that it's not approved yet
+We can see that the TimedWait period for staging stage has elapsed and we also see that the `ClusterApprovalRequest` object for the approval task in canary stage was created. We can check the generated ClusterApprovalRequest and see that it's not approved yet
 
 ```bash
-kubectl get clusterapprovalrequest -A
+kubectl get clusterapprovalrequest
 ```
 
 Your output should look similar to the following example:
@@ -471,7 +464,7 @@ kubectl patch clusterapprovalrequests example-run-canary --type='merge' --subres
 Then verify that it's approved:
 
 ```bash
-kubectl get clusterapprovalrequest -A
+kubectl get clusterapprovalrequest
 ```
 
 Your output should look similar to the following example:
@@ -539,7 +532,7 @@ spec:
 Let's check the new `ClusterStagedUpdateRun`:
 
 ```bash
-kubectl get csur -A
+kubectl get csur
 ```
 
 Your output should look similar to the following example:
@@ -553,7 +546,7 @@ example-run-2   example-placement   0                         0                 
 After the one minute `TimedWait` has elapsed, we should see the `ClusterApprovalRequest` object created for the new `ClusterStagedUpdateRun`:
 
 ```bash
-kubectl get clusterapprovalrequest -A
+kubectl get clusterapprovalrequest
 ```
 
 Your output should look similar to the following example:
@@ -573,7 +566,7 @@ kubectl patch clusterapprovalrequests example-run-2-canary --type='merge' --subr
 Verify if the new object is approved:
 
 ```bash
-kubectl get clusterapprovalrequest -A                                                                                    
+kubectl get clusterapprovalrequest                                                                            
 ```
 
 Your output should look similar to the following example:

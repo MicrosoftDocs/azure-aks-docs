@@ -93,7 +93,7 @@ Staged updates use three custom resources:
 
 * **ClusterResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
 * **ClusterStagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules
-* **ClusterStagedUpdateRun** - Executes the strategy against a specific CRP and resource snapshot
+* **ClusterStagedUpdateRun** - Executes the clusterStagedUpdateStrategy against a specific CRP and resource snapshot
 
 #### ClusterResourcePlacement with external strategy
 
@@ -111,7 +111,7 @@ spec:
   policy:
     placementType: PickAll
   strategy:
-    type: External  # Enables staged update strategy
+    type: External  # Rollout is controlled by ClusterStagedUpdateRun, ClusterStagedUpdateStrategy.
 ```
 
 #### ClusterStagedUpdateStrategy
@@ -144,6 +144,12 @@ spec:
       sortingLabelKey: order
 ```
 
+Each stage in the strategy can specify:
+
+* **Label selector** to determine which clusters belong to the stage
+* **Sorting order** for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
+* **After-stage tasks** either timed wait or approval requirement (optional, up to 2 tasks per stage, maximum one of each type)
+
 #### ClusterStagedUpdateRun
 
 ```yaml
@@ -152,16 +158,10 @@ kind: ClusterStagedUpdateRun
 metadata:
   name: my-app-rollout
 spec:
-  placementName: my-app-placement
-  resourceSnapshotIndex: "0"
-  stagedRolloutStrategyName: three-stage-strategy
+  placementName: my-app-placement # ClusterResourcePlacement name the update run is applied to.
+  resourceSnapshotIndex: "0" # Resource snapshot index of the selected resources to be updated across clusters.
+  stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
 ```
-
-Each stage in the strategy can specify:
-
-* **Label selectors** to determine which clusters belong to the stage
-* **Sorting order** for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
-* **After-stage tasks** such as timed waits or approval requirements (up to 2 tasks per stage, maximum one of each type)
 
 ### Stage progression
 
@@ -191,9 +191,8 @@ This pattern allows you to:
 Staged update strategies are ideal when you need:
 
 * **Environment-based rollouts** (dev → staging → production)
-* **Manual approval gates** between critical deployment phases
+* **Validation Delays** and **Approval gates** between stages
 * **Deterministic ordering** of cluster updates within stages
-* **Time-based delays** for observation between stages
 * **Reusable deployment patterns** across multiple cluster resource placements
 
 For simpler scenarios where percentage-based rollouts suffice, consider using the inline rolling update strategy instead.
