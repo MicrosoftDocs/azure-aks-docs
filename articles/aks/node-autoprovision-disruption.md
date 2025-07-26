@@ -3,14 +3,14 @@ title: Node autoprovisioning disruption policies
 description: Learn how to configure node disruption policies for Azure Kubernetes Service (AKS) node autoprovisioning to optimize resource utilization.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 06/13/2024
+ms.date: 07/25/2025
 ms.author: bsoghigian
 author: bsoghigian
 ---
 
-# Node autoprovisioning disruption policies
+# Node auto provisioning disruption policies
 
-This article explains how to configure node disruption policies for Azure Kubernetes Service (AKS) node autoprovisioning (NAP) to optimize resource utilization and cost efficiency.
+This article explains how to configure node disruption policies for Azure Kubernetes Service (AKS) node auto provisioning (NAP) to optimize resource utilization and cost efficiency.
 
 ## Example disruption configuration
 
@@ -42,7 +42,7 @@ spec:
 
 ## Node disruption overview
 
-When the workloads on your nodes scale down, node autoprovisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. Node autoprovisioning primarily uses *consolidation* to delete or replace nodes for optimal pod placement.
+When the workloads on your nodes scale down, node auto provisioning uses disruption rules on the node pool specification to decide when and how to remove those nodes and potentially reschedule your workloads to be more efficient. Node auto provisioning primarily uses *consolidation* to delete or replace nodes for optimal pod placement.
 
 Node autoprovisioning can automatically control when it should optimize your nodes based on your specifications, or you can manually remove nodes using `kubectl delete node`.
 
@@ -106,7 +106,8 @@ Some example cases:
 
 ###### VNet Subnet ID Drift
 
-**⚠️ Important**: The `spec.vnetSubnetID` field can trigger drift detection, but modifying this field from one valid subnet to another valid subnet is **NOT a supported operation**. This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet identifiers during initial configuration.
+>[!Important] 
+>The `spec.vnetSubnetID` field can trigger drift detection, but modifying this field from one valid subnet to another valid subnet is **NOT a supported operation**. This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet identifiers during initial configuration.
 
 Unlike traditional AKS NodePools created through ARM templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides. **Customers are responsible for understanding their cluster's Classless Inter-Domain Routing (CIDR) ranges and ensuring no conflicts occur when configuring `vnetSubnetID`.**
 
@@ -143,7 +144,6 @@ Behavioral Fields are treated as over-arching settings on the NodePool to dictat
 
 Read the [Drift Design](https://github.com/aws/karpenter-core/blob/main/designs/drift.md) for more.
 
-To enable the drift feature flag, refer to the Feature Gates section in the settings documentation.
 
 Karpenter adds the `Drifted` status condition on NodeClaims if the NodeClaim is drifted from its owning NodePool. Karpenter also removes the `Drifted` status condition if either:
 1. The `Drift` feature gate isn't enabled but the NodeClaim is drifted, Karpenter removes the status condition.

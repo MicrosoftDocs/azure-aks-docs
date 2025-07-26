@@ -42,7 +42,7 @@ Karpenter supports custom networking configurations that allow you to specify di
 
 First, create a VNet with two subnets for your AKS cluster:
 
-```bash
+```azurecli-interactive
 # Set variables
 RESOURCE_GROUP="my-aks-rg"
 LOCATION="eastus"
@@ -79,7 +79,7 @@ az network vnet subnet create \
 
 Create the AKS cluster using the cluster subnet:
 
-```bash
+```azurecli-interactive
 # Get subnet ID for cluster creation
 CLUSTER_SUBNET_ID=$(az network vnet subnet show \
   --resource-group $RESOURCE_GROUP \
@@ -99,14 +99,14 @@ az aks create \
   --generate-ssh-keys
 ```
 
-### Karpenter Installation
+### Node auto provisioning Installation
 
-Karpenter is automatically installed when using `--node-provisioning-mode Auto` during cluster creation.
+Node auto provisioning is automatically enabled when using `--node-provisioning-mode Auto` during cluster creation.
 
 ## Prerequisites
 
 - Azure CLI installed and authenticated
-- An AKS cluster with Karpenter installed (from previous steps)
+- An AKS cluster with node auto provisioning installed (from previous steps)
 - Custom subnets in your VNet (from previous steps)
 - Appropriate Role-Based Access Control (RBAC) permissions for subnet access
 
@@ -274,7 +274,7 @@ spec:
 
 Karpenter monitors subnet configuration changes and detects drift when the `vnetSubnetID` in an AKSNodeClass is modified. Understanding this behavior is critical when managing custom networking configurations.
 
-### ⚠️ Unsupported Configuration Path
+### Unsupported Configuration Path
 
 **Modifying `vnetSubnetID` from one valid subnet to another valid subnet is NOT a supported operation.** This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet identifiers (IDs) during initial configuration.
 

@@ -3,23 +3,23 @@ title: Node autoprovisioning node pools configuration
 description: Learn how to configure node pools for Azure Kubernetes Service (AKS) node autoprovisioning, including SKU selectors, limits, and weights.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 06/13/2024
+ms.date: 07/25/2025
 ms.author: bsoghigian
 author: bsoghigian
 ---
 
 # Node autoprovisioning node pools configuration
 
-This article explains how to configure node pools for Azure Kubernetes Service (AKS) node autoprovisioning (NAP), including SKU selectors, resource limits, and priority weights.
+This article explains how to configure node pools for Azure Kubernetes Service (AKS) node auto provisioning (NAP), including SKU selectors, resource limits, and priority weights.
 
 ## Node pool overview
 
 NodePools set constraints on the nodes that Node Auto Provisioning creates and the pods that run on those nodes. When you first install node autoprovisioning, a default NodePool is created. You can modify this NodePool or add more NodePools.
 
 Key behaviors of NodePools:
-- Node Auto Provisioning requires at least one NodePool to function
-- Node Auto Provisioning evaluates each configured NodePool
-- Node Auto Provisioning skips NodePools with taints not tolerated by a pod
+- Node auto provisioning requires at least one NodePool to function
+- Node auto provisioning evaluates each configured NodePool
+- Node auto provisioning skips NodePools with taints not tolerated by a pod
 - Node Auto Provisioning applies startup taints to provisioned nodes but doesn't require pod toleration
 - Node Auto Provisioning works best with mutually exclusive NodePools. When multiple NodePools match, the one with highest weight is used
 

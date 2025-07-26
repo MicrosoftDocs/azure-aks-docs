@@ -3,18 +3,18 @@ title: Node autoprovisioning AKSNodeClass configuration
 description: Learn how to configure Azure-specific settings for Azure Kubernetes Service (AKS) node autoprovisioning using AKSNodeClass.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
-ms.date: 06/13/2024
+ms.date: 07/25/2025
 ms.author: bsoghigian
 author: bsoghigian
 ---
 
 # Node autoprovisioning AKSNodeClass configuration
 
-This article explains how to configure Azure-specific settings for Azure Kubernetes Service (AKS) node autoprovisioning using AKSNodeClass resources.
+This article explains how to configure Azure-specific settings for Azure Kubernetes Service (AKS) [node auto provisioning](node-autoprovision.md) using AKSNodeClass resources.
 
 ## AKSNodeClass overview
 
-AKSNodeClass enables configuration of Azure-specific settings for node autoprovisioning. Each NodePool must reference an AKSNodeClass using `spec.template.spec.nodeClassRef`. Multiple NodePools may point to the same AKSNodeClass, allowing you to share common Azure configurations across different node pools.
+AKSNodeClass enables configuration of Azure-specific settings for node auto provisioning. Each NodePool must reference an AKSNodeClass using `spec.template.spec.nodeClassRef`. Multiple NodePools may point to the same AKSNodeClass, allowing you to share common Azure configurations across different node pools.
 
 ## Comprehensive AKSNodeClass configuration
 
@@ -120,7 +120,7 @@ The `imageFamily` field dictates the default virtual machine (VM) image and boot
 ### Supported image families
 
 - **`Ubuntu2204`** - Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes
-- **`AzureLinux`** - Azure Linux is Microsoft's alternative Linux distribution for AKS workloads
+- **`AzureLinux`** - Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more info on Azure Linux, [visit our documentation](/azure/aks/use-azure-linux.md)
 
 Example configuration:
 
@@ -131,7 +131,7 @@ spec:
 
 ## Virtual network subnet configuration
 
-The `vnetSubnetID` field specifies which Azure Virtual Network subnet should be used for provisioning node network interfaces. This field is optional; if not specified, Karpenter uses the default subnet configured in the Karpenter installation.
+The `vnetSubnetID` field specifies which Azure Virtual Network subnet should be used for provisioning node network interfaces. This field is optional; if not specified, node auto provisioning uses the default subnet configured when initially enabled.
 
 ### Subnet ID format
 
@@ -146,15 +146,15 @@ spec:
 
 When `vnetSubnetID` isn't specified, Karpenter automatically uses the default subnet configured during Karpenter installation. This fallback mechanism works as follows:
 
-- **With vnetSubnetID specified**: Karpenter provisions nodes in the specified custom subnet
-- **Without vnetSubnetID specified**: Karpenter provisions nodes in the cluster's default subnet
+- **With vnetSubnetID specified**: node auto provisioning provisions nodes in the specified custom subnet
+- **Without vnetSubnetID specified**: node auto provisioning provisions nodes in the cluster's default subnet
 
 ### Subnet requirements
 
 The specified subnet must:
 - Be in the same region as your AKS cluster
 - Have sufficient IP addresses available for node provisioning
-- Allow cluster communication through appropriate Network Security Group rules
+- Allow cluster communication through appropriate [Network Security Group][network-security-group] rules
 
 ## OS disk size configuration
 
@@ -172,7 +172,7 @@ Consider larger OS disk sizes for workloads that:
 
 ### Ephemeral OS disk configuration
 
-Node autoprovisioning automatically uses ephemeral OS disks when available and suitable for the requested disk size. Ephemeral OS disks provide better performance and lower cost compared to managed disks.
+Node auto provisioning automatically uses ephemeral OS disks when available and suitable for the requested disk size. Ephemeral OS disks provide better performance and lower cost compared to managed disks.
 
 #### How ephemeral disk selection works
 
@@ -326,6 +326,11 @@ spec:
 
 ## Next steps
 
-- [Configure node pools](node-autoprovision-node-pools.md)
-- [Configure disruption policies](node-autoprovision-disruption.md)
-- [Learn about networking configuration](node-autoprovision-networking.md)
+Learn more about [how to configure Node Pool files][nap-nodepools] for node auto provisioning. 
+
+<!-- LINKS - internal -->
+
+[nap-nodepools]: node-autoprovision-node-pools.md
+[nap-disruption-policies]: node-autoprovision-disruption.md
+[nap-networking-config]: node-autoprovision-networking.md
+[network-security-group]: /azure/virtual-network/network-security-groups-overview
