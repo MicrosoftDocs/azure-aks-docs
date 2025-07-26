@@ -8,7 +8,7 @@ ms.author: bsoghigian
 author: bsoghigian
 ---
 
-# Node autoprovisioning node pools configuration
+# Node auto provisioning node pools configuration
 
 This article explains how to configure node pools for Azure Kubernetes Service (AKS) node auto provisioning (NAP), including SKU selectors, resource limits, and priority weights.
 
