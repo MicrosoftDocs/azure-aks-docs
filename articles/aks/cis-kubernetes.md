@@ -16,7 +16,7 @@ As a secure service, Azure Kubernetes Service (AKS) complies with SOC, ISO, PCI 
 
 ## Kubernetes CIS benchmark
 
-The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.11.1][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.29.x through AKS 1.32.x. For support timelines, see [supported kubernetes versions][supported-kubernetes-versions].
+The following are the results from the [CIS Kubernetes V1.27 Benchmark v1.11.1][cis-benchmark-kubernetes] recommendations on AKS. The results are applicable to AKS 1.29.x through AKS 1.32.x. For support timelines, see [supported Kubernetes versions][supported-kubernetes-versions].
 
 ### Security levels
 
@@ -74,7 +74,7 @@ Recommendations can have one of the following attestation statuses:
 | 1.2 | API Server | | | | |
 | 1.2.1 | Ensure that the `--anonymous-auth` argument is set to false | Manual | L1 | Pass | |
 | 1.2.2 | Ensure that the `--token-auth-file` parameter isn't set | Automated | L1 | Fail | Auto-rotated by AKS, currently parameter is set |
-| 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | Customers can use Azure Policy for kubernetes to deny services with External IP. |
+| 1.2.3 | Ensure that `--DenyServiceExternalIPs` isn't set |Manual | L1 | Fail | Customers can use Azure Policy for Kubernetes to deny services with External IP. |
 | 1.2.4 | Ensure that the `--kubelet-client-certificate` and `--kubelet-client-key` arguments are set as appropriate | Automated | L1 | Pass | |
 | 1.2.5 | Ensure that the `--kubelet-certificate-authority` argument is set as appropriate | Automated | L1 | Fail | Kubelet serving certificate uses self-signed certificate |
 | 1.2.6 | Ensure that the `--authorization-mode` argument isn't set to `AlwaysAllow` | Automated | L1 | Pass | |
@@ -157,7 +157,7 @@ Recommendations can have one of the following attestation statuses:
 | 4.2.12 | Ensure that the Kubelet only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | |
 | 4.2.13 | Ensure that a limit is set on pod PIDs | Manual | L1 | Pass | |
 | 4.3 | kube-proxy | | | | |
-| 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Fail | AKS has central prometheus scraping for kube-proxy and applies alert and auto-remediation when `KubeProxyStale` is detected. The `metrics-bind-address` is set for that purpose. |
+| 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Fail | AKS has central Prometheus scraping for kube-proxy and applies alert and auto-remediation when `KubeProxyStale` is detected. The `metrics-bind-address` is set for that purpose. |
 | 5 | Policies | | | | |
 | 5.1 | RBAC and Service Accounts| | | | |
 | 5.1.1 | Ensure that the cluster-admin role is only used where required | Automated | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service  |
