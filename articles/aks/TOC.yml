@@ -96,8 +96,8 @@
               href: learn/quick-windows-container-deploy-terraform.md
     - name: Plan clusters for running workloads
       items:
-        - name: Zone resiliency considerations
-          href: aks-zone-resiliency.md
+        - name: Zone resiliency recommendations
+          href: reliability-zone-resiliency-recommendations.md
         - name: AKS best practices
           href: best-practices.md
         - name: Well-architected considerations
@@ -238,8 +238,6 @@
           href: create-node-pools.md
         - name: Manage node pools
           href: manage-node-pools.md
-        - name: Use availability zones
-          href: availability-zones-overview.md
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
@@ -810,6 +808,24 @@
           href: azure-hpc-cache.md
         - name: NFS Server - static
           href: azure-nfs-volume.md
+- name: Reliability
+  items:
+    - name: Reliability in Azure Kubernetes Service
+      href: /azure/reliability/reliability-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Zone resiliency recommendations 
+      href: reliability-zone-resiliency-recommendations.md
+    - name: Configure availability zones
+      href: reliability-availability-zones-configure.md
+    - name: Multi-region deployment models
+      href: reliability-multi-region-deployment-models.md
+    - name: Multi-region recommended solutions
+      items:
+      - name: Active-active
+        href: active-active-solution.md
+      - name: Active-passive
+        href: active-passive-solution.md
+      - name: Passive-cold
+        href: passive-cold-solution.md
 - name: AI and machine learning
   items:
     - name: Machine learning operations (MLOps)
@@ -1094,20 +1110,6 @@
             href: deploy-spinkube.md
           - name: Deploy wasmCloud to AKS to run distributed Wasm workloads
             href: wasmcloud.md
-    - name: High availability disaster recovery
-      items:
-        - name: Overview
-          href: ha-dr-overview.md
-          required: yes
-          limit: 1
-        - name: Solutions
-          items:
-            - name: Active-active
-              href: active-active-solution.md
-            - name: Active-passive
-              href: active-passive-solution.md
-            - name: Passive-cold
-              href: passive-cold-solution.md
     - name: DevOps
       items:
         - name: Azure DevOps Project
