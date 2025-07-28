@@ -28,7 +28,7 @@ The following table shows the node events for AKS node auto-drain and describes 
 
 
 > [!NOTE]
-> The above set of events and the corresponding actions is the default behaviour. This doesnt require any configuration from the user and cannot be disabled
+> The set of events shown in the table and the corresponding actions are the default behavior. The default behavior doesn't require and configuration by the user and can't be disabled.
 
 ## Next steps
 
