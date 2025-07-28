@@ -121,5 +121,5 @@ For more information, see the following articles:
 - [Reliability in AKS](/azure/reliability/reliability-aks)
 - [About AKS backup using Azure Backup (preview)](/azure/backup/azure-kubernetes-service-backup-overview)
 - [Back up AKS using Azure Backup (preview)](/azure/backup/azure-kubernetes-service-cluster-backup)
-- [Business continuity, high availability, and disaster recovery](/azure/reliaility/concept-business-continuity-high-availability-disaster-recovery)
+- [Business continuity, high availability, and disaster recovery](/azure/reliability/concept-business-continuity-high-availability-disaster-recovery)
 
