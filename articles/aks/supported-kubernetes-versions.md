@@ -41,18 +41,19 @@ Always use the latest patch release for your current minor version. For example,
 Check the AKS Kubernetes release calendar for upcoming version releases. To see real-time updates of region release status and version release notes, visit the [AKS release status webpage][aks-release]. To learn more about the release status webpage, see [AKS release tracker][aks-tracker].
 
 > [!NOTE]
-> AKS follows 12 months of support for a generally available (GA) Kubernetes version. To read more about our support policy for Kubernetes versioning, read our [FAQ](./supported-kubernetes-versions.md#faq).
+> [!NOTE]
+> AKS follows a 12-month support policy for generally available (GA) Kubernetes versions. To learn more about our Kubernetes version support policy, see the [FAQ](./supported-kubernetes-versions.md#faq). Unless an explicit date is provided, the End of Life (EOL) date is the last day of the specified month. For example, "Mar 2026" indicates March 31st, 2026.
 
 For the past release history, see [Kubernetes history](https://github.com/kubernetes/kubernetes/releases).
 
 |  K8s version | Upstream release  | AKS preview  | AKS GA  | End of life | Platform support |
 |--------------|-------------------|--------------|---------|-------------|-----------------------|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Until 1.33 GA |
-| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Until 1.34 GA |
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Until 1.35 GA |
+| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22nd, 2025 | Until 1.34 GA |
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 21st, 2025 | Until 1.35 GA |
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Until 1.36 GA |
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Until 1.37 GA |
-
+| 1.34 |  Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Until 1.38 GA |
 
 ### LTS Versions
 
@@ -66,10 +67,11 @@ Long-term support (LTS) needs to be enabled in order to get extended support. Yo
 | 1.27 | Apr 2023 | Jun 2023 | Jul 2023 | Jul 2024 | Jul 2025|
 | 1.28 | Aug 2023 | Sep 2023 | Nov 2023 | Jan 2025 | Feb 2026|
 | 1.29 | Dec 2023 | Feb 2024 | Mar 2024 | Mar 2025 | Apr 2026|
-| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Jul 2025 | Jul 2026|
-| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 2025 | Nov 2026|
+| 1.30 | Apr 2024 | Jun 2024 | Jul 2024 | Aug 22nd, 2025 | Jul 2026|
+| 1.31 | Aug 2024 | Oct 2024 | Nov 2024 | Nov 21st, 2025 | Nov 2026|
 | 1.32 | Dec 2024 | Feb 2025 | Apr 2025 | Mar 2026 | Mar 2027|
 | 1.33 | Apr 2025 | May 2025 | Jun 2025 | Jun 2026 | Jun 2027|
+| 1.34 | Aug 2025 | Aug 2025 | Sep 2025 | Sep 2026 | Sep 2026 |
 
 ### AKS Kubernetes release schedule Gantt chart
 
