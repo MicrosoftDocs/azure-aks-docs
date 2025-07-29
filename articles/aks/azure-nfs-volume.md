@@ -8,6 +8,7 @@ ms.date: 01/24/2024
 ms.subservice: aks-storage
 ms.custom: linux-related-content
 ms.author: schaffererin
+# Customer intent: "As a Kubernetes operator, I want to manually set up a Linux NFS server with my AKS cluster so that I can provide persistent shared storage for my containerized applications."
 ---
 
 # Manually create and use a Linux NFS (Network File System) Server with Azure Kubernetes Service (AKS)

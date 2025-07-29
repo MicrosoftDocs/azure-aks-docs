@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.date: 03/07/2025
+# Customer intent: As a Kubernetes administrator, I want to install custom certificate authorities on my AKS cluster nodes so that I can ensure secure connections to private registries and maintain the trustworthiness of the node's trust store.
 ---
 
 # Custom certificate authority (CA) in Azure Kubernetes Service (AKS)
@@ -14,6 +15,9 @@ ms.date: 03/07/2025
 Custom Certificate Authority (CA) allows you to add up to 10 base64-encoded certificates to your node's trust store. This feature is often needed when CAs are required to be present on the node, for example when connecting to a private registry.  
 
 This article shows you how to create custom CAs and apply them to your AKS clusters. 
+
+> [!NOTE]
+> The Custom CA Trust feature adds your custom certificates to the AKS node's trust store. Certificates added with this feature won't be available to containers running in pods. If the certificates are also needed inside containers, you still need to add them separately, by either adding them to the image used by your pods or at run time via scripting and a secret.
 
 ## Prerequisites
 

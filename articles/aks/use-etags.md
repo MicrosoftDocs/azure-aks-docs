@@ -7,6 +7,7 @@ author: reginalin
 ms.author: reginalin
 ms.custom: innovation-engine, aks, etag, concurrency-control
 ms.subservice: aks-nodes
+# Customer intent: As a cloud engineer, I want to implement eTags for entity-level concurrency control in Azure Kubernetes Service, so that I can prevent conflicting requests and ensure data integrity during resource updates.
 ---
 
 # Enhance concurrency control with entity tags (eTags) in Azure Kubernetes Service 

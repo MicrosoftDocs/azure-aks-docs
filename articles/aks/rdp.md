@@ -8,6 +8,7 @@ ms.author: mattmcinnes
 ms.date: 04/26/2023
 author: schaffererin
 #Customer intent: As a cluster operator, I want to learn how to use RDP to connect to nodes in an AKS cluster to perform maintenance or troubleshoot a problem.
+# Customer intent: As an AKS cluster operator, I want to establish an RDP connection to Windows Server nodes for maintenance and troubleshooting, so that I can effectively manage and resolve issues within my Kubernetes environment.
 ---
 
 # Connect with RDP to Azure Kubernetes Service (AKS) cluster Windows Server nodes for maintenance or troubleshooting

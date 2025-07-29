@@ -7,6 +7,7 @@ ms.author: rhulrai
 author: rahulrai-in
 ms.subservice: aks-networking
 ms.date: 11/30/2024
+# Customer intent: "As a cloud application developer, I want to implement TCP keepalive in Azure Kubernetes Service, so that I can enhance network fault tolerance and prevent connection timeouts during long-running requests."
 ---
 
 # Improve network fault tolerance in Azure Kubernetes Service using TCP keepalive

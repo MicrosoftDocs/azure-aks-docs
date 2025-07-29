@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: aritraghosh
 ms.subservice: aks-monitoring
 ms.service: azure-kubernetes-service
+# Customer intent: As a Kubernetes administrator, I want to monitor control plane metrics for my Azure Kubernetes Service (AKS) cluster, so that I can ensure operational excellence and maintain the performance and availability of critical control plane components.
 ---
 
 # Monitor Azure Kubernetes Service control plane metrics (preview)
@@ -116,6 +117,7 @@ Default targets include the following values:
 ```yaml
 controlplane-apiserver = true
 controlplane-cluster-autoscaler = false
+controlplace-node-auto-provisioning = false
 controlplane-kube-scheduler = false
 controlplane-kube-controller-manager = false
 controlplane-etcd = true
@@ -145,6 +147,7 @@ You can customize an ingestion file for collected metrics. For more information,
 
    * `controlplane-apiserver`
    * `controlplane-cluster-autoscaler`
+   * `controlplace-node-auto-provisioning`
    * `controlplane-kube-scheduler`
    * `controlplane-kube-controller-manager`
    * `controlplane-etcd`
@@ -173,6 +176,7 @@ Using the `minimalingestionprofile` setting helps reduce the ingestion volume of
 
    * `controlplane-apiserver`
    * `controlplane-cluster-autoscaler`
+   * `controlplane-node-auto-provisioning`
    * `controlplane-kube-scheduler`
    * `controlplane-kube-controller-manager`
    * `controlplane-etcd`
@@ -207,6 +211,7 @@ After you apply the configuration, it takes several minutes for the metrics from
 
    * `controlplane-apiserver`
    * `controlplane-cluster-autoscaler`
+   * `controlplane-node-auto-provisioning`
    * `controlplane-kube-scheduler`
    * `controlplane-kube-controller-manager`
    * `controlplane-etcd`

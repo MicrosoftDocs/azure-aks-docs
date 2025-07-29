@@ -6,7 +6,9 @@ ms.custom: devx-track-azurecli
 ms.date: 03/18/2024
 author: schaffererin
 ms.author: schaffererin
-#Customer intent: As a cluster administrator or developer, I want to create an AKS cluster that can use high-performance GPU-based VMs for compute-intensive workloads using a Windows os.
+
+# Customer intent: As a cluster administrator or developer, I want to create an AKS cluster that can use high-performance GPU-based VMs for compute-intensive workloads using a Windows os.
+
 ---
 
 # Use Windows GPUs for compute-intensive workloads on Azure Kubernetes Service (AKS) (preview)

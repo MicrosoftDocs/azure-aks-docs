@@ -7,6 +7,7 @@ ms.date: 12/19/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: "As a data scientist, I want to deploy a Ray cluster on Kubernetes, so that I can efficiently scale and manage my machine learning workloads for training models and processing data."
 ---
 
 # Deploy a Ray cluster on Azure Kubernetes Service (AKS) overview

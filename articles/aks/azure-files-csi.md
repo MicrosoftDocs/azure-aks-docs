@@ -8,6 +8,7 @@ ms.date: 04/25/2025
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to implement and manage Azure Files using the CSI driver in AKS, so that I can efficiently handle persistent storage requirements for my containerized applications."
 ---
 
 # Use Azure Files Container Storage Interface (CSI) driver in Azure Kubernetes Service (AKS)
@@ -446,6 +447,32 @@ accountname.file.core.windows.net:/accountname/pvc-fa72ec43-ae64-42e4-a8a2-55660
 
 > [!NOTE]
 > Note that because the NFS file share is in a Premium account, the minimum file share size is 100 GiB. If you create a PVC with a small storage size, you might encounter an error similar to the following: *failed to create file share ... size (5)...*.
+
+### Encryption in Transit for NFS file shares (Preview)
+
+**[Preview]** [Encryption in Transit (EiT)](/azure/storage/files/encryption-in-transit-for-nfs-shares) ensures that all read & writes to the NFS file shares within the VNET are encrypted providing an additional layer of security.
+By setting encryptInTransit: "true" in the storage class parameters, you can enable data encryption in transit for NFS Azure file volumes.
+
+```yml
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile-csi-nfs
+provisioner: file.csi.azure.com
+allowVolumeExpansion: true
+parameters:
+  protocol: nfs
+  encryptInTransit: "true"
+mountOptions:
+  - nconnect=4
+  - noresvport
+  - actimeo=30
+```
+
+> [!NOTE]
+> The EiT feature is now available in preview starting with AKS version 1.33. Please note that ARM64 nodes are not currently supported.
+>
+> Please find the EiT supported [Linux distributions](/azure/storage/files/encryption-in-transit-for-nfs-shares#overview), and [supported regions](/azure/storage/files/encryption-in-transit-for-nfs-shares#supported-regions), for those regions currently running preview, you must register your subscription follow [the instructions](/azure/storage/files/encryption-in-transit-for-nfs-shares#register-for-preview-not-needed-for-ga-regions) to use EiT in preview regions.
 
 ## Windows containers
 
