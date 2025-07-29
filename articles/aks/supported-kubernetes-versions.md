@@ -56,6 +56,8 @@ For the past release history, see [Kubernetes history](https://github.com/kubern
 
 ### LTS Versions
 
+Please note that LTS needs to be enabled in order to get extended support. You can find more information on [Enable long-term support](/azure/aks/long-term-support#enable-long-term-support).
+
 > [!NOTE]
 > Azure Linux 2.0 goes End of Life during the LTS period of AKS v1.28–v1.31. For more information on upgrading to Azure Linux 3.0 on AKS v1.28–v1.31, read the [Azure Linux AKS LTS Releases](/azure/azure-linux/support-cycle#aks-lts-releases) section.
 
