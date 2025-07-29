@@ -157,7 +157,7 @@ Update to a specific target Kubernetes version that you define. You define the K
 >
 > * The `--long-term-support` (LTS) flag is only available when using the `TargetKubernetesVersion` channel. For other channels, this flag must be set to False.
 > * You can't set the target Kubernetes version to a {major}.{minor} that is not released.
-> * You can only the target Kubernetes version to a {major}.{minor} that is earlier than N-2 (where N is the latest supported minor version) if you enable longTermSupport in the auto-upgrade profile.
+> * You can only the target Kubernetes version to a {major}.{minor} that is earlier than N-2 (where N is the latest supported minor version) if you enable LongTermSupport in the auto-upgrade profile.
 
 Set up to automatically update member clusters to latest patch of Kubernetes version 1.33. 
 
@@ -170,7 +170,7 @@ az fleet autoupgradeprofile create \
   --target-kubernetes-version "1.33"
 ```
 
-Set up to automatically update member clusters to latest patch of Kubernetes version 1.29. Assuming 1.33 is the latest Kubernetes minor version, notice how you need to enable `longTermSupport` on the auto upgrade profile.
+Set up to automatically update member clusters to latest patch of Kubernetes version 1.29. Assuming 1.33 is the latest Kubernetes minor version, notice how you need to enable `LongTermSupport` in the auto upgrade profile.
 
 ```azurecli-interactive
 az fleet autoupgradeprofile create \

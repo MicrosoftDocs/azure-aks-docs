@@ -150,7 +150,7 @@ The TargetKubernetesVersion channel allows you to specify an exact target Kubern
 
 Examples:
 * You create an auto upgrade profile with TargetKubernetesVersion channel and specify a target Kubernetes version of "1.30". A new patch version 1.30.5 is published. Update run is automatically created with the target of 1.30.5.
-* You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable Long Term Support (LTS) using `longTermSupport` in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. **Note**: if your update run target includes managed clusters that don't support LTS, it will fail.
+* You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable LongTermSupport (LTS) in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. **Note**: if your update run target includes managed clusters that don't support LTS, it will fail.
 
 ### Minor version skipping behavior
 
