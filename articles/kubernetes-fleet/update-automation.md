@@ -154,9 +154,10 @@ Update to a specific target Kubernetes version that you define. You define the K
 
 > [!NOTE]
 > * When using the `TargetKubernetesVersion` channel, you must specify the `--target-kubernetes-version` parameter. For other channels (Rapid, Stable, NodeImage), this parameter is not supported.
+>
 > * The `--long-term-support` (LTS) flag is only available when using the `TargetKubernetesVersion` channel. For other channels, this flag must be set to False.
-> * You can't set the target Kubernetes version to a <major>.<minor> that is not released.
-> * You can only the target Kubernetes version to a <major>.<minor> that is earlier than N-2 (where N is the latest supported minor version) if you enable longTermSupport in the auto-upgrade profile.
+> * You can't set the target Kubernetes version to a {major}.{minor} that is not released.
+> * You can only the target Kubernetes version to a {major}.{minor} that is earlier than N-2 (where N is the latest supported minor version) if you enable longTermSupport in the auto-upgrade profile.
 
 Set up to automatically update member clusters to latest patch of Kubernetes version 1.33. 
 
