@@ -72,11 +72,10 @@ Supported AKS update channels:
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
-* **TargetKubernetesVersion**: Updates to a specific target Kubernetes version that you define. When you configure this channel, you must specify the target Kubernetes version in the format "{major version}.{minor version}" (for example, "1.30"). Fleet Autoupgrade will automatically upgrade member clusters to the latest patch release of the specified target version when it becomes available.
+* **TargetKubernetesVersion** (preview): Upgrades clusters to the latest patch release of the specified target version when the patch is available.
 
 Currently unsupported AKS channels:
 
-* **Patch**: Updates for Kubernetes patch releases (y) for a specified AKS-supported Kubernetes minor (N) release (1.N.y).
 * **SecurityPatch**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 * **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).
 
