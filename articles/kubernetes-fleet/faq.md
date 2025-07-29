@@ -85,7 +85,7 @@ If you're using any of the channels that Fleet Manager doesn't support, it's rec
 
 In this scenario, for fleet auto-upgrade to keep working, you must enable LongTermSupport (LTS) in the auto-upgrade profile and on all managed clusters in your fleet.
 
-For information on how to enable LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on how to enable LTS on managed clusters, see [Long Term Support](/articles/aks/long-term-support).
+For information on how to enable LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on how to enable LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
