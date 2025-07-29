@@ -9,7 +9,7 @@ ms.author: allyford
 
 # Use Confidential Virtual Machines (CVM) in Azure Kubernetes Service (AKS) cluster
 
-[Confidential Virtual Machines (CVM)][about-cvm] offer strong security and confidentiality for tenants. These features enable node pools with CVM to target the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. For example, you may require CVM if you have the following:
+[Confidential Virtual Machines (CVM)][about-cvm] offer strong security and confidentiality for tenants. CVMs offer VM based Hardware Trusted Execution Environment (TEE) that leverage SEV-SNP security features to deny the hypervisor and other host management code access to VM memory and state, providing defense in depth protections against operator access. These features enable node pools with CVM to target the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. For example, you may require CVM if you have the following:
 * Workloads that handle security critical data and/or sensitive customer data
 * Services that are required to meet various compliance requirements, especially for gov contracts. Without a scalable solution for securing data, this could potentially lead to the loss of accreditations and contracts.
 
@@ -63,7 +63,7 @@ When using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version do
 The following limitations apply when adding a node pool with CVM to AKS:
 
 - You can't use FIPS, ARM64, Trusted Launch, or Pod Sandboxing.
-- You can't update an existing node pool to migrate to a CVM vm size. To migrate, you'll need to [resize your node pool](resize-your-nodepool).
+- You can't update an existing node pool to migrate to a CVM size. To migrate, you'll need to [resize your node pool](resize-your-nodepool).
 - You can't use CVM with Windows node pools.
 - CVM with Azure Linux is currently in preview.
 
@@ -72,7 +72,7 @@ The following limitations apply when adding a node pool with CVM to AKS:
 Before you begin, make sure you have the following:
 
 - An existing AKS cluster.
-- CVM vm sizes must be available for your subscription in the region where the cluster is created. You must have sufficient quota to create a node pool with a CVM vm size.
+- CVM sizes must be available for your subscription in the region where the cluster is created. You must have sufficient quota to create a node pool with a CVM size.
 - If you're using Azure Linux os, you need to install the `aks-preview` extension, update the `aks-preview` extension, and register the preview feature flag. If you're using Ubuntu, you can skip these steps.
 
 ### Install `aks-preview` extension
