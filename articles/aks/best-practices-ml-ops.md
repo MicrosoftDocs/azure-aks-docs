@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 10/07/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a machine learning engineer, I want to implement MLOps best practices in my AI workflows on Kubernetes, so that I can ensure consistent, scalable, and secure deployment and management of machine learning models.
 ---
 
 # Machine learning operations (MLOps) best practices in Azure Kubernetes Service (AKS)

@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.date: 07/15/2024
 ms.author: qpetraroia
 ms.service: azure-kubernetes-service
+# Customer intent: As a developer using Visual Studio Code, I want to attach my Azure Container Registry to an AKS cluster, so that I can streamline my container deployment process and manage my resources efficiently.
 ---
 
 # Attach to Azure Container Registry (ACR) using the Azure Kubernetes Service (AKS) extension for Visual Studio Code

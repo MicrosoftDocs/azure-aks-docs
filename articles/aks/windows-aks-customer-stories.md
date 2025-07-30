@@ -7,6 +7,7 @@ ms.date: 11/29/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a cloud architect, I want to learn how various companies are utilizing Windows containers on Kubernetes for their applications, so that I can assess best practices and integration strategies for my own organization's cloud infrastructure.
 ---
 
 # Windows AKS customer stories 

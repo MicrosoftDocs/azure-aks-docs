@@ -11,6 +11,7 @@ ms.custom:
   - build-2023
   - build-2024
   - build-2025
+# Customer intent: "As a developer implementing CI/CD, I want to automate the deployment of my application to Azure Kubernetes Service, so that I can ensure seamless updates and simplify the management of containerized applications."
 ---
 
 # Automated deployments for Azure Kubernetes Service (AKS)

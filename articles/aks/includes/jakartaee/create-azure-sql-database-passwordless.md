@@ -4,6 +4,7 @@ ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 11/01/2024
 ms.author: haiche
+# Customer intent: As a database administrator, I want to configure an Azure SQL Database with managed identity authentication, so that I can securely connect and manage database access without exposing credentials.
 ---
 
 <!-- The content of this file is part of /azure-dev-docs/blob/main/articles/java/ee/how-to-configure-passwordless-datasource.md. Ensure any changes made here are also applied to the original file. -->

@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.date: 03/17/2025
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: "As a Kubernetes administrator, I want to configure a custom certificate authority for the Istio service mesh in Azure Kubernetes Service, so that I can enhance security by managing trusted certificates and keys according to my organization's policies."
 ---
 
 # Plug in CA certificates for Istio-based service mesh add-on on Azure Kubernetes Service

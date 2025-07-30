@@ -7,6 +7,7 @@ ms.date: 12/19/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: As a data engineer, I want to deploy Apache Airflow on Azure Kubernetes Service using Helm, so that I can effectively manage and scale complex data workflows in a production environment.
 ---
 
 # Deploy Apache Airflow on Azure Kubernetes Service (AKS) overview

@@ -7,7 +7,8 @@ ms.topic: how-to
 ms.date: 05/09/2023
 ms.author: davidsmatlak
 
-#Customer intent: As a cluster operator or developer, I want to learn how to deploy Helm into an AKS cluster and then install and manage applications using Helm charts.
+# Customer intent: As a cluster operator or developer, I want to learn how to deploy Helm into an AKS cluster and then install and manage applications using Helm charts.
+
 ---
 
 # Install existing applications with Helm in Azure Kubernetes Service (AKS)
@@ -60,7 +61,7 @@ This article shows you how to configure and use Helm in a Kubernetes cluster on 
     The following condensed example output shows some of the Helm charts available for use:
 
     ```output
-    NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
+    NAME                            CHART VERSION   APP VERSION     DESCRIPTION
     ingress-nginx/ingress-nginx     4.7.0           1.8.0           Ingress controller for Kubernetes using NGINX a...
     ```
 
@@ -231,4 +232,3 @@ For more information about managing Kubernetes application deployments with Helm
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
 [taints]: operator-best-practices-advanced-scheduler.md
-

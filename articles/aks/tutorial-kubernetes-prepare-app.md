@@ -7,7 +7,8 @@ author: schaffererin
 ms.author: schaffererin
 ms.custom: mvc, devx-track-extended-azdevcli
 
-#Customer intent: As a developer, I want to learn how to build a container-based application so that I can deploy the app to Azure Kubernetes Service.
+# Customer intent: As a developer, I want to learn how to build a container-based application so that I can deploy the app to Azure Kubernetes Service.
+
 ---
 
 # Tutorial - Prepare an application for Azure Kubernetes Service (AKS)

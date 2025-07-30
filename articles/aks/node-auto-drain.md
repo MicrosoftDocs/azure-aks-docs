@@ -26,6 +26,10 @@ The following table shows the node events for AKS node auto-drain and describes 
 | Preempt | The spot VM is being deleted. The VM's ephemeral disks are lost. | Cordon and drain |
 | Terminate | The VM is scheduled for deletion.| Cordon and drain. |
 
+
+> [!NOTE]
+> The set of events shown in the table and the corresponding actions are the default behavior. The default behavior doesn't require and configuration by the user and can't be disabled.
+
 ## Next steps
 
 Use [availability zones][availability-zones] to increase high availability with your AKS cluster workloads.
