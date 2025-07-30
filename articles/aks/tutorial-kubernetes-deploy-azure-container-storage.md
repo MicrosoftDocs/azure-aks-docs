@@ -7,7 +7,8 @@ author: khdownie
 ms.author: kendownie
 ms.custom: mvc, devx-track-azurecli
 
-#Customer intent: As a developer or IT pro, I want to learn how to use Azure Container Storage with Azure Kubernetes Service (AKS) so that I can deploy container-native storage for stateful applications.
+# Customer intent: As a developer or IT pro, I want to learn how to use Azure Container Storage with Azure Kubernetes Service (AKS) so that I can deploy container-native storage for stateful applications.
+
 ---
 
 # Tutorial - Deploy Azure Container Storage on an AKS cluster

@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: fasttrack-edit
+# Customer intent: "As a Kubernetes administrator, I want to understand legacy container networking options in AKS, so that I can effectively manage pod IP address management and select the appropriate networking model for my deployment scenario."
 ---
 
 # AKS Legacy Container Networking Interfaces (CNI)

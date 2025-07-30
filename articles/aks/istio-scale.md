@@ -5,8 +5,9 @@ ms.topic: concept-article
 ms.custom:
 ms.service: azure-kubernetes-service
 ms.date: 03/19/2024
-ms.author: shalierxia
 author: schaffererin
+ms.author: shalierxia
+# Customer intent: "As a Kubernetes administrator, I want to evaluate the performance and scaling capabilities of the Istio service mesh add-on, so that I can optimize resource usage and ensure efficient management of sidecar proxies in my Azure Kubernetes Service environments."
 ---
 
 # Istio service mesh add-on performance and scaling

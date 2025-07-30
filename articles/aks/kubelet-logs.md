@@ -7,6 +7,7 @@ ms.date: 06/08/2024
 author: nickoman
 ms.author: nickoman
 ms.custom: innovation-engine,aks,logs,troubleshooting
+# Customer intent: As a cluster operator, I want to access kubelet logs on AKS nodes, so that I can effectively troubleshoot issues within my Kubernetes environment.
 ---
 
 # Get kubelet logs from Azure Kubernetes Service cluster nodes

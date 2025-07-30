@@ -8,6 +8,7 @@ author: schaffererin
 ms.author: schaffererin
 zone_pivot_groups: azure-cli-or-terraform
 ms.custom: 'stateful-workloads'
+# Customer intent: "As a cloud engineer, I want to deploy a MongoDB client application on Azure Kubernetes Service, so that I can easily manage and interact with my MongoDB cluster for effective data handling and application development."
 ---
 
 # Deploy a client application to connect to a MongoDB cluster on Azure Kubernetes Service (AKS)

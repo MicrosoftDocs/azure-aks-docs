@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 ms.custom: fasttrack-edit
+# Customer intent: As an AKS administrator, I want to plan and allocate IP addresses for my clusters, so that I can ensure sufficient resources for scaling and upgrading while optimizing my network configuration.
 ---
 
 # IP address planning for your Azure Kubernetes Service (AKS) clusters

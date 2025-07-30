@@ -8,6 +8,7 @@ ms.date: 07/15/2025
 author: allyford
 ms.author: allyford
 zone_pivot_groups: arm-azure-cli
+# Customer intent: "As a Kubernetes administrator, I want to implement trusted launch on AKS clusters, so that I can enhance the security of my nodes against malware and ensure the integrity of the boot process."
 ---
 
 # Trusted launch for Azure Kubernetes Service (AKS)

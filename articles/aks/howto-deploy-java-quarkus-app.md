@@ -10,6 +10,7 @@ ms.date: 12/16/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-quarkus, devx-track-javaee-quarkus-aks, devx-track-extended-java, devx-track-azurecli
 # external contributor: danieloh30
+# Customer intent: As a developer, I want to deploy a Quarkus application on Azure Kubernetes Service, so that I can leverage cloud-native features for my Java applications.
 ---
 
 # Deploy a Java application with Quarkus on an Azure Kubernetes Service cluster

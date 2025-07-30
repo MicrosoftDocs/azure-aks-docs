@@ -7,6 +7,7 @@ ms.date: 08/15/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud architect, I want to deploy a Valkey cluster on Azure Kubernetes Service, so that I can ensure high availability and scalability similar to the Azure Cache for Redis Premium tier while effectively utilizing availability zones.
 ---
 
 # Deploy a Valkey cluster on Azure Kubernetes Service (AKS)

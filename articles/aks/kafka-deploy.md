@@ -7,6 +7,7 @@ ms.date: 03/31/2025
 author: senavar
 ms.author: senavar
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud engineer, I want to deploy the Strimzi Operator and a Kafka cluster on Azure Kubernetes Service, so that I can manage scalable and highly available Kafka messaging systems effectively.
 ---
 
 # Configure and deploy Strimzi and Kafka components on Azure Kubernetes Service (AKS)  

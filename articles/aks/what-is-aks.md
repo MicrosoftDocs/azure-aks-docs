@@ -6,6 +6,7 @@ ms.author: schaffererin
 author: schaffererin
 ms.date: 06/09/2025
 ms.custom: annual
+# Customer intent: "As a platform administrator, I want to understand the features and use cases of managed Kubernetes services, so that I can effectively deploy and manage containerized applications with reduced complexity and operational overhead."
 ---
 
 # What is Azure Kubernetes Service (AKS)?

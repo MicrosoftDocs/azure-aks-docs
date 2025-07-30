@@ -1,7 +1,7 @@
 ---
-title: Configure Azure CNI for static allocation of CIDR blocks
+title: Configure Azure CNI Pod Subnet - Static Block Allocation
 titleSuffix: Azure Kubernetes Service
-description: Learn how to configure Azure CNI Networking for static allocation of CIDR blocks in Azure Kubernetes Service (AKS)
+description: Learn how to configure Azure CNI Pod Subnet - Static Block Allocation in Azure Kubernetes Service (AKS)
 author: asudbring
 ms.author: allensu
 ms.service: azure-kubernetes-service
@@ -9,12 +9,13 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 03/18/2024
 ms.custom: references_regions, devx-track-azurecli
+# Customer intent: "As a Kubernetes operator, I want to configure static CIDR block allocation in Azure CNI so that I can enhance pod scalability and manage IP allocation more efficiently for large clusters."
 ---
 
-# Configure Azure CNI Networking for static allocation of CIDR blocks and enhanced subnet support in Azure Kubernetes Service (AKS)
+# Configure Azure CNI Pod Subnet - Static Block Allocation and enhanced subnet support in Azure Kubernetes Service (AKS)
 
-A limitation of [Azure CNI Dynamic IP Allocation](configure-azure-cni-dynamic-ip-allocation.md) is the scalability of the pod subnet size beyond a /16 subnet. Even with a large subnet, large clusters may still be limited to 65k pods due to an Azure address mapping limit. 
-The new static block allocation capability in Azure CNI solves this problem by assigning CIDR blocks to Nodes rather than individual IPs.
+A limitation of [Azure CNI Pod Subnet - Dynamic IP Allocation](configure-azure-cni-dynamic-ip-allocation.md) is the scalability of the pod subnet size beyond a /16 subnet. Even with a large subnet, large clusters may still be limited to 65k pods due to an Azure address mapping limit. 
+The Pod Subnet - Static Block Allocation in Azure CNI solves this problem by assigning CIDR blocks to Nodes rather than individual IPs.
 
 It offers the following benefits:
 
@@ -24,12 +25,12 @@ It offers the following benefits:
 - **Separate VNet policies for pods**: Since pods have a separate subnet, you can configure separate VNet policies for them that are different from node policies. This enables many useful scenarios such as allowing internet connectivity only for pods and not for nodes, fixing the source IP for pod in a node pool using an Azure NAT Gateway, and using NSGs to filter traffic between node pools.  
 - **Kubernetes network policies**: Cilium, Azure NPM, and Calico work with this new solution.
 
-This article shows you how to use Azure CNI Networking for static allocation of CIDRs and enhanced subnet support in AKS.
+This article shows you how to use Azure CNI Pod Subnet - Static Block Allocation and enhanced subnet support in AKS.
 
 ## Prerequisites
 
 > [!NOTE]
-> When using static block allocation of CIDRs, exposing an application as a Private Link Service using a Kubernetes Load Balancer Service isn't supported.
+> When using Pod Subnet - Static Block Allocation, exposing an application as a Private Link Service using a Kubernetes Load Balancer Service isn't supported.
 
 - Review the [prerequisites][azure-cni-prereq] for configuring basic Azure CNI networking in AKS, as the same prerequisites apply to this article.
 - Review the [deployment parameters][azure-cni-deployment-parameters] for configuring basic Azure CNI networking in AKS, as the same parameters apply.
@@ -43,10 +44,10 @@ This article shows you how to use Azure CNI Networking for static allocation of 
 
 ## Limitations
 
-Below are some of the limitations of using Azure CNI Static Block allocation:
+Below are some of the limitations of using Azure CNI Pod Subnet - Static Block Allocation:
 - Minimum Kubernetes Version required is 1.28
 - Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs
-- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
+- Only a single mode of operation can be used per subnet. If a subnet uses Static Block Allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
 - Only supported in new clusters or when adding node pools with a different subnet to existing clusters. Migrating or updating existing clusters or node pools is not supported.
 - Across all the CIDR blocks assigned to a node in the node pool, one IP will be selected as the primary IP of the node. Thus, for network administrators selecting the `--max-pods` value try to use the calculation below to best serve your needs and have optimal usage of IPs in the subnet:  
 `max_pods` = `(N * 16) - 1`  
@@ -79,11 +80,11 @@ The [deployment parameters][azure-cni-deployment-parameters] for configuring bas
 
 - The **vnet subnet id** parameter now refers to the subnet related to the cluster's nodes.
 - The parameter **pod subnet id** is used to specify the subnet whose IP addresses will be statically or dynamically allocated to pods in the node pool.
-- The **pod ip allocation mode** parameter specifies whether to use dynamic individual or static block allocation.
+- The **pod ip allocation mode** parameter specifies whether to use `DynamicIndividual` (Dynamic IP Allocation) or `StaticBlock` (Static Block Allocation).
 
 ## Configure networking with static allocation of CIDR blocks and enhanced subnet support - Azure CLI
 
-Using static allocation of CIDR blocks in your cluster is similar to the default method for configuring a cluster Azure CNI for dynamic IP allocation. The following example walks through creating a new virtual network with a subnet for nodes and a subnet for pods and creating a cluster that uses Azure CNI with static allocation of CIDR blocks. Be sure to replace variables such as `$subscription` with your values.
+Using Pod Subnet - Static Block Allocation in your cluster is similar to the default method for configuring a cluster with Pod Subnet - Dynamic IP Allocation. The following example walks through creating a new virtual network with a subnet for nodes and a subnet for pods and creating a cluster that uses Azure CNI Pod Subnet - Static Block Allocation. Be sure to replace variables such as `$subscription` with your values.
 
 Create the virtual network with two subnets.
 
@@ -138,25 +139,25 @@ az aks nodepool add --cluster-name $clusterName -g $resourceGroup  -n newnodepoo
     --no-wait
 ```
 
-## Migrating from Dynamic IP Allocation to Static Block Allocation
+## Migrating from Pod Subnet - Dynamic IP Allocation to Pod Subnet - Static Block Allocation
 
-If you have an existing AKS cluster using dynamic IP allocation and want to migrate to static block allocation, follow these steps:
+If you have an existing AKS cluster using dynamic IP allocation for pod subnet and want to migrate to Pod Subnet - Static Block Allocation, follow these steps:
 
 ### Steps for Migration
 
 1. **Plan for a new subnet to be used for Static Block agent pools**
-   - Create a new subnet in your existing VNet that will be dedicated to the static block allocation mode
+   - Create a new subnet in your existing VNet that will be dedicated to the Static Block mode
    - Ensure the subnet size follows the planning guidelines outlined in the [Plan IP addressing](#plan-ip-addressing) section
 
 2. **Add an agent pool to your existing cluster with Static Block mode and the new subnet**
-   - Use the `az aks nodepool add` command to create a new node pool with static block allocation
+   - Use the `az aks nodepool add` command to create a new node pool with Static Block Allocation
    - Reference the new subnet using `--pod-subnet-id` and set `--pod-ip-allocation-mode` to `StaticBlock`
 
 3. **Cordon off your existing agent pool so that all your deployments and traffic move over to the new agent pool**
    - Use `kubectl cordon` to mark existing nodes as unschedulable
-   - Gradually drain workloads from the old node pool to the new static block node pool
+   - Gradually drain workloads from the old node pool to the new Static Block node pool
 
-4. **Once all the workloads have moved over to the new agent pool, delete the existing non-static block agent pool**
+4. **Once all the workloads have moved over to the new agent pool, delete the existing non-Static Block agent pool**
    - Verify all workloads are running successfully on the new node pool
    - Remove the old node pool using `az aks nodepool delete`
 
@@ -173,7 +174,7 @@ If you have an existing AKS cluster using dynamic IP allocation and want to migr
 
   No, the pod subnet should be from the same VNet as the cluster.  
 
-- **Can some node pools in a cluster use Dynamic IP allocation while others use the new Static Block allocation?**
+- **Can some node pools in a cluster with pod subnet IPAM use Dynamic IP Allocation while others use the new Static Block allocation?**
 
   Yes, different node pools can use different allocation modes. However, once a subnet is used in one allocation mode it can only be used in the same allocation mode across all the node pools it is associated.
 

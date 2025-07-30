@@ -6,7 +6,7 @@ ms.custom: devx-track-azurecli
 ms.date: 06/26/2025
 ms.author: wilsondarko
 author: wdarko1
-#Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types. I want to minimize capacity constraints by having greater flexibility in VM size selection.
+# Customer intent: As a cluster operator or developer, I want to learn how to enable my cluster to create node pools with multiple Virtual Machine types. I want to minimize capacity constraints by having greater flexibility in VM size selection.
 ---
 
 # Use Virtual Machines node pools in Azure Kubernetes Service (AKS)

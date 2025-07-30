@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.subservice: aks-nodes
 author: davidsmatlak
 ms.author: davidsmatlak
+# Customer intent: "As a DevOps engineer, I want to configure virtual nodes in my Kubernetes cluster, so that I can quickly scale application workloads without waiting for VM deployment."
 ---
 
 # Create and configure an Azure Kubernetes Services (AKS) cluster to use virtual nodes
