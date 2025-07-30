@@ -125,7 +125,7 @@ Recommendations can have one of the following attestation statuses:
 | 3.1 | Authentication and Authorization | | | | |
 | 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | When you deploy an AKS cluster, local accounts are enabled by default. You can [disable local accounts][disable-local-accounts] to disable client certificates for authentication. |
 | 3.1.2 | Service account token authentication shouldn't be used for users | Manual | L1 | Pass | AKS provides support for [Microsoft Entra authentication][entra-auth] for requests sent to the cluster control plane. The usage of service acccount tokens is left up to the customer (to enforce a a best practice, as needed) |
-| 3.1.3 | Bootstrap token authentication shouldn't be used for users | Manual | L1 | Pass | AKS provides support for AAD Auth (which supports OIDC). The usage of service acccount tokens is left up to the customer (to enforce a a best practice, as needed) |
+| 3.1.3 | Bootstrap token authentication shouldn't be used for users | Manual | L1 | Pass | Bootstrap tokens can't be used by users |
 | 3.2 | Logging | | | | |
 | 3.2.1 | Ensure that a minimal audit policy is created | Manual | L1 | Pass | |
 | 3.2.2 | Ensure that the audit policy covers key security concerns | Manual | L2 | Pass | |
