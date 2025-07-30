@@ -1,11 +1,9 @@
 ---
 title: Center for Internet Security (CIS) Kubernetes benchmark
 description: Learn how AKS applies the CIS Kubernetes benchmark.
-ms.date: 07/11/2025
+ms.date: 07/30/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-ms.custom:
-  - build-2025
 author: allyford
 ms.author: allyford
 ---
@@ -124,8 +122,8 @@ Recommendations can have one of the following attestation statuses:
 | 2.8 | Ensure that a unique Certificate Authority is used for `etcd` | Manual | L2 | Pass | `--client-ca-file` for api-server is different from `--trusted-ca-file` for etcd|
 | 3 | Control Plane Configuration | | | | |
 | 3.1 | Authentication and Authorization | | | | |
-| 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | Cluster admin should use AAD Auth only|
-| 3.1.2 | Service account token authentication shouldn't be used for users | Manual | L1 | Pass | AKS provides support for AAD Auth (which supports OIDC). The usage of service acccount tokens is left up to the customer (to enforce a a best practice, as needed) |
+| 3.1.1 | Client certificate authentication shouldn't be used for users | Manual | L1 | Pass | When you deploy an AKS cluster, local accounts are enabled by default. You can [disable local accounts][disable-local-accounts] to disable client certificates for authentication. |
+| 3.1.2 | Service account token authentication shouldn't be used for users | Manual | L1 | Pass | AKS provides support for [Microsoft Entra authentication][entra-auth] for requests sent to the cluster control plane. The usage of service acccount tokens is left up to the customer (to enforce a a best practice, as needed) |
 | 3.1.3 | Bootstrap token authentication shouldn't be used for users | Manual | L1 | Pass | AKS provides support for AAD Auth (which supports OIDC). The usage of service acccount tokens is left up to the customer (to enforce a a best practice, as needed) |
 | 3.2 | Logging | | | | |
 | 3.2.1 | Ensure that a minimal audit policy is created | Manual | L1 | Pass | |
@@ -229,3 +227,5 @@ For more information about AKS security, see the following articles:
 [oidc]: ./use-oidc-issuer.md
 [kscr]: ./certificate-rotation.md
 [azure-policies]: ./policy-reference.md
+[entra-auth]: ./enable-authentication-microsoft-entra-id.md
+[disable-local-accounts]: ./manage-local-accounts-managed-azure-ad.md
