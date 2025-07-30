@@ -11,13 +11,13 @@ ms.date: 07/28/2025
 
 # Multi-region deployment models for Azure Kubernetes Service (AKS)
 
-Azure Kubernetes Service (AKS) provides a managed Kubernetes environment for deploying, managing, and scaling containerized applications. To ensure high availability (HA) and disaster recovery (DR) for your applications running on AKS, you can implement various deployment models in a multi-region solution. This article provides an overview of these models, their pros and cons, and best practices for maintaining application uptime.
+Azure Kubernetes Service (AKS) provides a managed Kubernetes environment for deploying, managing, and scaling containerized applications. To provide resiliency to regional outages for your applications running on AKS, you can implement various multi-region deployment models. This article provides an overview of these models, their pros and cons, and best practices for maintaining application uptime.
 
-For more information on AKS multi-region deployments, see [Reliability in AKS](/azure/reliability/reliability-aks#multi-region-support).
+AKS provides a range of capabilities that support both high availability (HA) and disaster recovery (DR) for your cluster and the applications running on AKS. For more information on how AKS supports reliability requirements, see [Reliability in AKS](/azure/reliability/reliability-aks#multi-region-support).
 
 ## Multi-region deployment model implementations
 
-The following table summarizes the three main multi-region deployment models for high availability and disaster recovery in AKS, along with their pros and cons:
+The following table summarizes the three main multi-region deployment models in AKS, along with their pros and cons:
 
 |Deployment model|Pros|Cons|
 |----------------|----|----|

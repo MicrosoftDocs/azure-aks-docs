@@ -13,7 +13,7 @@ ms.author: dabossch
 
 [Availability zones](/azure/reliability/availability-zones-overview) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
 
-Using Azure Kubernetes Service (AKS) with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones doesn't incur additional costs. For more information on AKS reliability features, including production deployment recommendations, best practices, availability zones, multi-region configurations, and backup, see [Reliability in AKS](/azure/reliability/reliability-aks).
+Using Azure Kubernetes Service (AKS) with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones doesn't incur additional costs. For more information on AKS reliability features including availability zones, multi-region configurations, reliability during service maintenance, and backup, see [Reliability in AKS](/azure/reliability/reliability-aks).
 
 This article shows you how to configure AKS resources to use availability zones.
 

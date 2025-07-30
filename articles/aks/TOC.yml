@@ -812,14 +812,16 @@
   items:
     - name: Reliability in Azure Kubernetes Service
       href: /azure/reliability/reliability-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-    - name: Zone resiliency recommendations 
-      href: reliability-zone-resiliency-recommendations.md
-    - name: Configure availability zones
-      href: reliability-availability-zones-configure.md
-    - name: Multi-region deployment models
-      href: reliability-multi-region-deployment-models.md
-    - name: Multi-region recommended solutions
+    - name: Availability zones
       items:
+      - name: Zone resiliency recommendations
+        href: reliability-zone-resiliency-recommendations.md
+      - name: Configure availability zones
+        href: reliability-availability-zones-configure.md
+    - name: Multi-region
+      items:
+      - name: Multi-region deployment models
+        href: reliability-multi-region-deployment-models.md
       - name: Active-active
         href: active-active-solution.md
       - name: Active-passive

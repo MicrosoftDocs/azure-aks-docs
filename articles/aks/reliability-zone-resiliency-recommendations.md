@@ -15,7 +15,7 @@ ms.service: azure-kubernetes-service
 Zone resiliency is a key part of running production-grade Kubernetes clusters. With scalability at its core, Kubernetes takes full advantage of independent infrastructure in data centers without incurring additional costs by provisioning new nodes only when necessary. 
 
 >[!IMPORTANT]
-> Simply scaling up or down the number of nodes in a cluster isn't enough to ensure application resiliency. You must gain a deeper understanding of your application and its dependencies to better plan for resiliency. AKS allows you to set up availability zones (AZs) for your clusters and node pools to ensure that your applications are resilient to failures and can continue to serve traffic even if an entire zone goes down. For more information on availability zone support features in AKS, see [Reliability in Azure Kubernetes Service (AKS)](/azure/reliability/reliability-aks).
+> Scaling a cluster in and out, by adding or removing nodes, isn't enough to ensure application resiliency. You must gain a deeper understanding of your application and its dependencies to better plan for resiliency. AKS allows you to set up availability zones (AZs) for your clusters and node pools to ensure that your applications are resilient to failures and can continue to serve traffic even if an entire zone goes down. For more information on availability zone support features in AKS, see [Reliability in Azure Kubernetes Service (AKS)](/azure/reliability/reliability-aks).
 
 
 In this article, you learn about the various recommendations for zone resiliency in Azure Kubernetes Service (AKS), including how to:
