@@ -136,11 +136,9 @@ containerserviceeventresources
 
 8.  Make sure to assign the appropriate Reader roles.
 
-        In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+    In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
 
-        Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
-
-    =======
+    Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
 
     > [!NOTE]
     > After Communication Manager is set up, it sends advance notices one week before maintenance starts and one day before maintenance starts. It also sends you timely alerts during the maintenance operation.
