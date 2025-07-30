@@ -7,6 +7,7 @@ ms.date: 01/31/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As an application administrator, I want to migrate and modernize legacy applications to Windows containers on Kubernetes, so that I can leverage cloud-native benefits and improve our deployment efficiency."
 ---
 
 # Migration and modernization solutions for Windows AKS 

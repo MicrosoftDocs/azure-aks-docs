@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a cloud administrator, I want to manage multiple Azure Kubernetes Service clusters through a centralized fleet, so that I can streamline updates, resource propagation, and load balancing across various clusters.
 ---
 
 # Frequently Asked Questions - Azure Kubernetes Fleet Manager

@@ -3,11 +3,12 @@ title: Integrate Azure Container Registry with Azure Kubernetes Service (AKS)
 description: Learn how to integrate Azure Kubernetes Service (AKS) with Azure Container Registry (ACR).
 ms.topic: concept-article
 ms.date: 11/08/2024
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.tool: azure-cli, azure-powershell
 ms.devlang: azurecli
 ms.custom: devx-track-azurepowershell, devx-track-azurecli
-author: davidsmatlak
-ms.author: davidsmatlak
+# Customer intent: As a cloud administrator, I want to integrate Azure Container Registry with Azure Kubernetes Service, so that I can streamline the deployment of container images and manage access permissions efficiently.
 ---
 
 # Authenticate with Azure Container Registry (ACR) from Azure Kubernetes Service (AKS)

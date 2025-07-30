@@ -8,6 +8,7 @@ author: senavar
 ms.author: senavar
 zone_pivot_groups: azure-cli-or-terraform
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud architect, I want to prepare the infrastructure for deploying a Kafka cluster on Azure Kubernetes Service, so that I can ensure high availability and efficient resource management for my data workloads.
 ---
 
 # Prepare the infrastructure for deploying Kafka on Azure Kubernetes Service (AKS)  

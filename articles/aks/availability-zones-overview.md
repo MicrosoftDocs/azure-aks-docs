@@ -6,6 +6,7 @@ ms.topic: concept-article
 ms.date: 02/03/2025
 author: danbosscher
 ms.author: dabossch
+# Customer intent: "As a cloud architect, I want to configure Azure Kubernetes Service to utilize availability zones, so that I can enhance the reliability and availability of my applications against datacenter failures."
 ---
 
 # Availability zones in Azure Kubernetes Service (AKS)

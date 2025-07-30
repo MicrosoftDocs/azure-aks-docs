@@ -8,6 +8,7 @@ ms.subservice: aks-security
 ms.service: azure-kubernetes-service
 ms.date: 11/08/2024
 ms.author: allyford
+# Customer intent: As a cloud security administrator, I want to implement least privilege access for containers in Kubernetes so that I can minimize risks of unauthorized actions and potential attacks on our resources.
 ---
 
 # Security container access to resources using built-in Linux security features
@@ -266,6 +267,7 @@ To see seccomp in action, create a filter that prevents changing permissions on 
     chmod-prevented           0/1       Error     0          7s
     ```
 
+For help troubleshooting your seccomp profile see the article [Troubleshoot seccomp profile configuration in Azure Kubernetes Service](/troubleshoot/azure/azure-kubernetes/security/troubleshoot-seccomp-profiles).
 ## Seccomp security profile options
 
 Seccomp security profiles are a set of defined syscalls that are allowed or restricted. Most container runtimes have a default seccomp profile that is similar if not the same as the one Docker uses. For more information about available profiles, see [Docker][seccomp] or [containerD](https://github.com/containerd/containerd/blob/f0a32c66dad1e9de716c9960af806105d691cd78/contrib/seccomp/seccomp_default.go#L51) default seccomp profiles.
@@ -354,4 +356,5 @@ For associated best practices, see [Best practices for cluster security and upgr
 [pod-security-contexts]: https://kubernetes.io/docs/concepts/security/pod-security-standards/
 [node-access]: node-access.md
 [security-container-access]: secure-container-access.md
+[troubleshoot-seccomp-profiles]: support\azure\azure-kubernetes\security\troubleshoot-seccomp-profiles.md
 

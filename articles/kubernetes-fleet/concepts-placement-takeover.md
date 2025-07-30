@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a Kubernetes administrator managing multi-cluster environments, I want to control how existing workloads are handled during workload placement, so that I can safely take over existing deployments while minimizing conflicts and ensuring consistency across clusters.
 ---
 
 # Taking over existing workloads with Azure Kubernetes Fleet Manager cluster resource placement (preview)

@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: how-to
+# Customer intent: As a cloud architect managing multiple Kubernetes clusters, I want to deploy workloads across a fleet of clusters using resource placement strategies, so that I can optimize resource utilization and simplify application management.
 ---
 
 # Use Azure Kubernetes Fleet Manager cluster resource placement to deploy workloads across multiple clusters
@@ -253,7 +254,8 @@ If you no longer want to use your cluster resource placement, you can delete it 
 
 To learn more about resource propagation, see the following resources:
 
-* [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md)
+* [Understanding resource placement status output](./howto-understand-placement.md).
+* [Intelligent cross-cluster Kubernetes resource placement based on member clusters' properties](./intelligent-resource-placement.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Defining a rollout strategy for a cluster resource placement](./concepts-rollout-strategy.md).
 * [Cluster resource placement FAQs](./faq.md#cluster-resource-placement-faqs).

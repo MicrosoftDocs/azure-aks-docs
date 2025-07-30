@@ -7,6 +7,7 @@ ms.date: 09/27/2023
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: "As a security auditor, I want to verify the alignment of AKS Windows images with CIS benchmarks, so that I can ensure compliance with industry standards and reduce vulnerabilities in our cloud-based applications."
 ---
 
 # Azure Kubernetes Service (AKS) Windows image alignment with Center for Internet Security (CIS) benchmark

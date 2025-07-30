@@ -2,10 +2,11 @@
 title: Scaling options for applications in Azure Kubernetes Service (AKS)
 description: Learn about scaling in Azure Kubernetes Service (AKS), including the horizontal pod autoscaler, cluster autoscaler, and Azure Container Instances.
 ms.topic: concept-article
-ms.date: 03/18/2024
+ms.date: 06/10/2025
 author: davidsmatlak
 ms.author: davidsmatlak
-
+ms.custom: biannual
+# Customer intent: As a cloud architect, I want to understand the scaling options in Kubernetes, so that I can efficiently manage application performance and resource allocation in Azure Kubernetes Service (AKS).
 ---
 
 # Scaling options for applications in Azure Kubernetes Service (AKS)

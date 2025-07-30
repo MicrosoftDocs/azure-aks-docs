@@ -5,6 +5,8 @@ ms.topic: how-to
 ms.date: 06/26/2025
 author: allyford
 ms.author: allyford
+# Customer intent: "As a cloud engineer, I want to add a Confidential Virtual Machines node pool to my existing Kubernetes cluster, so that I can securely handle sensitive container workloads without requiring code changes."
+
 ---
 
 # Use Confidential Virtual Machines (CVM) in Azure Kubernetes Service (AKS) cluster

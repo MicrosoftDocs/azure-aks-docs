@@ -10,6 +10,7 @@ ms.date: 11/14/2024
 ms.subservice: aks-developer
 keywords: java, jakartaee, javaee, microprofile, open-liberty, websphere-liberty, aks, kubernetes
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-liberty, devx-track-javaee-liberty-aks, devx-track-javaee-websphere, build-2023, devx-track-extended-java
+# Customer intent: As a developer, I want to deploy a Java application using Open Liberty or WebSphere Liberty on an Azure Kubernetes Service (AKS) cluster, so that I can leverage containerized environment benefits for scalable application management.
 ---
 
 # Deploy a Java application with Open Liberty or WebSphere Liberty on an Azure Kubernetes Service (AKS) cluster

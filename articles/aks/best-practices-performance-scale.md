@@ -7,6 +7,7 @@ ms.date: 11/03/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a Kubernetes administrator, I want to implement best practices for performance and scaling of small to medium workloads, so that I can optimize resource utilization and ensure high availability for my applications in Azure Kubernetes Service."
 ---
 
 # Best practices for performance and scaling for small to medium workloads in Azure Kubernetes Service (AKS)

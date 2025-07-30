@@ -7,6 +7,7 @@ ms.service: azure-kubernetes-service
 ms.custom: fasttrack-edit
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: As a developer working with Azure Kubernetes Service, I want to understand the different types of Kubernetes Services available, so that I can choose the appropriate service type for managing network connectivity and traffic flow in my applications.
 ---
 
 # Kubernetes Services in AKS
@@ -36,6 +37,8 @@ The following Service types are available in AKS: [`ClusterIP`](#clusterip), [`N
 :::image type="content" source="./media/concepts-network/aks-load-balancer.png" alt-text="Screenshot of a diagram showing Load Balancer traffic flow in an AKS cluster.":::
 
 For HTTP load balancing of inbound traffic, you can also use an [Ingress controller][ingress-controllers].
+
+You can also use the `LoadBalancer` type to create multiple public load balancers in a single AKS cluster. This is useful for large clusters or port-heavy workloads that can quickly exhaust the limits of a single load balancer. For more information, see [Use multiple public load balancers in Azure Kubernetes Service (preview)](use-multiple-standard-load-balancer.md).
 
 ## ExternalName
 

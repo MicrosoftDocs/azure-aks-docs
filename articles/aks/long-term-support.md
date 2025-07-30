@@ -8,7 +8,7 @@ ms.topic: concept-article
 ms.custom:
   - devx-track-azurecli
   - build-2025
-# Customer intent: As a cluster operator or developer, I want to understand how long-term support for Kubernetes on AKS works.
+# Customer intent: As a cluster operator or developer, I want to understand long-term support for Kubernetes versions in AKS, so that I can effectively manage upgrade timelines and maintain application stability.
 ---
 
 # Long-term support for Azure Kubernetes Service (AKS) versions
@@ -120,7 +120,6 @@ The following table provides a list of add-ons and features that aren't supporte
 |  Add-on / Feature | Reason it's unsupported |
 |---|---|
 | Istio |  The Istio support cycle is short (six months), and there are no maintenance releases for supported LTS versions. |
-| Keda | Unable to guarantee future version compatibility for supported LTS versions. |
 | Calico  |  Requires Calico Enterprise agreement past community support. |
 | Key Management Service (KMS) | KMSv2 replaces KMS during this LTS cycle. |
 | Dapr | AKS extensions aren't supported. |

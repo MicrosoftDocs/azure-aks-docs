@@ -1,6 +1,11 @@
 {
   "redirections": [
     {
+      "source_path": "articles/aks/use-wasi-node-pools.md",
+      "redirect_url": "/previous-versions/azure/aks/use-wasi-node-pools",
+      "redirect_document_id": false
+    },
+    {
       "source_path": "articles/aks/http-application-routing.md",
       "redirect_url": "/previous-versions/azure/aks/http-application-routing",
       "redirect_document_id": false
