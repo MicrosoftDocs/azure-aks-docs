@@ -24,20 +24,20 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 Starting in September 2025, Azure Kubernetes Service will begin rolling out a change to enable quota for all current and new AKS customers. This rollout is expected to take place over a period of 4-6 weeks.
 
-AKS quota will represent a limit of the maximum number of managed clusters (AKS clusters) that an Azure subscription can consume per region. 
+AKS quota will represent a limit of the maximum number of managed clusters (AKS clusters) that an Azure subscription can create per region. 
 
-**Existing AKS customer subscriptions** will be given a default limit at or above their current usage depending on the available regional capacity. **Newly created Azure subscriptions** will be given a default limit upon new subscription creation.
+**Existing AKS customer subscriptions** will be given a default limit at or above their current usage depending on the available regional capacity. **Existing subscriptions using AKS for the first time and new subscriptions** will be given a default limit.
 
 Before rollout is complete, there may be a period of time when quota limits are visible in the Portal Quotas blade, but current usage is not visible, and the limits are not yet enforced.
 
-Once quota rollout is complete, customers can [view quota limits and usage](https://learn.microsoft.com/en-us/azure/quotas/view-quotas) and [request additional quota](https://learn.microsoft.com/en-us/azure/quotas/quickstart-increase-quota-portal) via the Azure portal Quotas page or via the [Quotas REST API](https://learn.microsoft.com/en-us/rest/api/reserved-vm-instances/quotaapi). At that time, quota limits will be enforced. 
+Once quota rollout is complete, customers can [view quota limits and usage](https://learn.microsoft.com/azure/quotas/view-quotas) and [request additional quota](https://learn.microsoft.com/azure/quotas/quickstart-increase-quota-portal) via the Azure portal Quotas page or via the [Quotas REST API](https://learn.microsoft.com/rest/api/reserved-vm-instances/quotaapi). At that time, quota limits will be enforced. 
 
 ![Quotas Page](./media/quotas-skus-regions/portal-quotas-page.png)
 
-When Managed Clusters Quota is rolled out, customers will receive the following error if they attempt to create and are out of quota. To remedy this, customers can [request additional quota in the Azure portal Quotas page](https://learn.microsoft.com/azure/quotas/view-quotas) or via the [Quotas REST API](https://learn.microsoft.com/en-us/rest/api/reserved-vm-instances/quotaapi).
+When Managed Clusters Quota is rolled out, customers will receive the following error if they attempt to create and are out of quota. To remedy this, customers can [request additional quota in the Azure portal Quotas page](https://learn.microsoft.com/azure/quotas/view-quotas) or via the [Quotas REST API](https://learn.microsoft.com/rest/api/reserved-vm-instances/quotaapi).
 
 ```
-ManagedClusterCountExceedsQuotaLimit: Operation results in exceeding quota limits for managed clusters. Maximum allowed: %d, Current usage: %d, Additional requested: %d. Consider deleting unused clusters or requesting a quota increase. To request a quota increase, follow the instructions here: https://learn.microsoft.com/en-us/azure/quotas/quickstart-increase-quota-portal.
+ManagedClusterCountExceedsQuotaLimit: Operation results in exceeding quota limits for managed clusters. Maximum allowed: %d, Current usage: %d, Additional requested: %d. Consider deleting unused clusters or requesting a quota increase. To request a quota increase, follow the instructions here: https://learn.microsoft.com/azure/quotas/quickstart-increase-quota-portal.
 ```
 
 #### AKS Managed Clusters Quota Limits
