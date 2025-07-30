@@ -1,7 +1,7 @@
 ---
 title: AKS Communication Manager
 description: Learn how to set up and receive notices in Azure Resource Notifications for Azure Kubernetes Service maintenance events.
-ms.date: 07/11/2025
+ms.date: 07/30/2025
 ms.custom: aks communication manager
 ms.topic: concept-article
 author: kaarthis
