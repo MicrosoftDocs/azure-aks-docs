@@ -41,7 +41,7 @@ This article shows you how to create and execute staged update runs to deploy wo
   az extension update --name fleet
   ```
 
-## Configure the Demo environment
+## Configure the demo environment
 
 This demo runs on a Fleet Manager with a hub cluster and three member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 

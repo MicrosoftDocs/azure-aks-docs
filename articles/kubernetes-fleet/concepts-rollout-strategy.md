@@ -177,7 +177,7 @@ For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest`
 
 The following diagram illustrates a typical three-stage deployment pattern:
 
-:::image type="content" source="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png" alt-text="A placement staged update strategy containing three stages - staging, canary, and production. Each stage contains multiple clusters, with canary and production apply a sort order on cluster based on labels. There's a 1 hour wait between staging and canary, and an approval is required to transition from canary to production stages." lightbox="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png":::
+:::image type="content" source="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png" alt-text="Three-stage deployment pattern with staging, canary, and production stages with wait times and approval gates." lightbox="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png":::
 
 This pattern allows you to:
 
