@@ -1,5 +1,5 @@
 ---
-title: "Migrate from Network Policy Manager (NPM) to Cilium Network Policy Manager" 
+title: "Migrate from Network Policy Manager (NPM) to Cilium Network Policy " 
 description: This is a comprehensive guide to plan, execute, and validate the migration from Network Policy Manager (NPM) to Cilium Network Policy
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -8,7 +8,7 @@ author: josephyostos
 ms.author: josephyostos
 ---
 
-# Migrate from Network Policy Manager (NPM) to Cilium Network Policy Manager 
+# Migrate from Network Policy Manager (NPM) to Cilium Network Policy 
 
 In this article, we provide a comprehensive guide to plan, execute, and validate the migration from Network Policy Manager (NPM) to Cilium Network Policy. The goal is to ensure policy parity, minimize service disruption, and align with Azure CNI’s strategic direction toward eBPF-based networking and enhanced observability.
 
