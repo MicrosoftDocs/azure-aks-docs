@@ -11,55 +11,45 @@ ms.author: sachidesai
 
 # GPU best practices for Azure Kubernetes Service (AKS)
 
-## Overview
-
 Running GPU workloads on an AKS cluster requires proper setup and continuous validation to ensure that compute resources are accessible, secure, and optimally utilized. This article outlines best practices for managing GPU-enabled nodes, validating configurations, and troubleshooting common issues using vendor-specific diagnostic commands.
 
-GPU workloads like AI model training, real-time inference, simulations, and video processing often depend on:
+GPU workloads, like AI model training, real-time inference, simulations, and video processing, often depend on the following configurations:
 
-* Correct GPU driver and runtime compatibility
-* Accurate scheduling of GPU resources
-* Access to GPU hardware devices inside containers
+* Correct GPU driver and runtime compatibility.
+* Accurate scheduling of GPU resources.
+* Access to GPU hardware devices inside containers.
 
 Misconfigurations can lead to high costs, unexpected job failures, or GPU underutilization.
 
-## Best Practices
 
-1. Ensure that a taint such as `[gpu-vendor].com/gpu: NoSchedule` is applied to your GPU nodes, where `gpu-vendor` may be `nvidia`, `amd`, etc. This taint prevents any pod from running on the node unless the GPU workload pod has a matching toleration.
+## Apply specific rules and limits to GPU nodes
+
+Apply a taint, such as `[gpu-vendor].com/gpu: NoSchedule` (where `gpu-vendor` might be `nvidia`, `amd`, etc.), to your GPU nodes. This taint prevents any pod from running on the node unless the GPU workload pod has a matching toleration.
 
 The scheduler will attempt to run your pods on any node that has enough CPU and memory, unless told otherwise.
 
 Without setting a specific rule: 
 
-* A GPU workload may land on a non-GPU node and fail to start.
+* A GPU workload might land on a non-GPU node and fail to start.
 * A general-purpose workload (like a web service) might land on a GPU node and consume expensive GPU resources.
 
-Setting a resource limit like:
+To guarantee that your GPU workload deployment pod is placed on a GPU node and receives access to the GPU, you can set a resource limit such as:
 
 ```bash
 resources:
   limits:
     [gpu-vendor].com/gpu: 1
-```
 
-Together with a toleration such as:
+## Verify readiness of GPU node pools before deploying production workloads
 
-```bash
-tolerations:
-- key: "[gpu-vendor].com/gpu"
-  operator: "Exists"
-  effect: "NoSchedule"
-```
+Before deploying production GPU workloads, always validate that your GPU node pools are:
 
-Guarantees that your GPU workload deployment pod is placed on a GPU node and receives access to the GPU.
-
-2. Before deploying production GPU workloads, always validate that your GPU node pools are:
-
-* Equipped with compatible GPU drivers
-* Hosting a healthy Kubernetes Device Plugin DaemonSet
-* Exposing `[gpu-vendor].com/gpu` as a schedulable resource
+* Equipped with compatible GPU drivers.
+* Hosting a healthy Kubernetes Device Plugin DaemonSet.
+* Exposing `[gpu-vendor].com/gpu` as a schedulable resource.
 
 You can confirm the current driver version running on your GPU node pools by deploying a simple diagnostic pod that uses a system management interface associated with the GPU vendor. The following example manifest runs the `nvidia-smi` command once to verify driver installation and runtime readiness on an NVIDIA GPU-enabled node pool:
+
 
 ```yaml
 apiVersion: v1
@@ -85,9 +75,9 @@ kubectl get pods
 kubectl logs nvidia-smi-test
 ```
 
-The expected output should look like:
+Your output should resemble the following example output:
 
-```bash
+```output
 +-----------------------------------------------------------------------------+
 |NVIDIA-SMI 570.xx.xx    Driver Version: 570.xx.xx    CUDA Version: 12.x|
 ...
@@ -103,63 +93,76 @@ The expected output should look like:
 
 You can track AKS node image releases using [AKS release tracker](https://releases.aks.azure.com/).
 
-4. If multiple teams (like ML, data science, video processing, etc.) are using a shared AKS cluster with GPU node pools, their workloads should be separated to:
+## Separate GPU workloads when using shared clusters
 
-* Avoid accidental access to or block the usage of each other’s resources
-* Improve security and compliance
-* Make it easier to manage and monitor which team is consuming GPU resources
+If multiple teams (like ML, data science, video processing, etc.) are using a shared AKS cluster with GPU node pools, their workloads should be separated to:
 
-GPU workloads on a single AKS cluster should be separated using namespaces and network policies. This makes it easier to apply usage limits, quotas, and logging per namespace.
+* Avoid accidental access to or block the usage of each other’s resources.
+* Improve security and compliance.
+* Make it easier to manage and monitor which team is consuming GPU resources.
 
-For example, the following two teams are deploying GPU workloads which do not require cross-node communication with each other:
+You can separate GPU workloads on a single AKS cluster using namespaces and network policies. This separation makes it easier to apply usage limits, quotas, and logging per namespace.
 
-* Team A (ML researchers) running training jobs
-* Team B (Computer vision team) running real-time inference
+### Example scenario
 
-Start by creating dedicated namespaces per team:
+For example, the following two teams are deploying GPU workloads that don't require cross-node communication with each other:
 
-```bash
-kubectl create namespace team-a-gpu
-kubectl create namespace team-b-gpu
-```
+* Team A: ML research team running training jobs.
+* Team B: Computer vision team running real-time inference.
 
-Label GPU workload deployment pods by team, where an example pod spec may look like:
+You can use the following steps to separate the two workloads:
 
-```yaml
-metadata:
-  namespace: team-a-gpu
-  labels:
-    team: ml
-```
+1. Create dedicated namespaces per team using the `kubectl create namespace` command.
 
-Add network policies to isolate traffic. The following manifest blocks cross-namespace traffic, except what is explicitly allowed:
+    ```bash
+    kubectl create namespace team-a-gpu
+    kubectl create namespace team-b-gpu
+    ```
 
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: deny-other-namespaces
-  namespace: team-a-gpu
-spec:
-  podSelector: {}
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress: []
-  egress: []
-```
+2. Label GPU workload deployment pods by team, as shown in the following pod spec:
 
-This policy:
+    ```yaml
+    metadata:
+      namespace: team-a-gpu
+      labels:
+        team: ml
+    ```
 
-* Applies to all pods in `team-a-gpu`
-* Blocks all inbound and outbound traffic by default
+3. Add network policies to isolate traffic, as shown in the following manifest that blocks cross-namespace traffic (except for what's explicitly allowed):
 
-Exceptions can be added as needed (e.g., allow traffic to a shared metrics service or to an internal API)
+    ```yaml
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: deny-other-namespaces
+      namespace: team-a-gpu
+    spec:
+      podSelector: {}
+      policyTypes:
+      - Ingress
+      - Egress
+      ingress: []
+      egress: []
+    ```
 
-5. Different GPU workloads range in memory requirements, and smaller deployments may not need an entire GPU (e.g., NVIDIA A100 40GB). However, a single workload by default monopolizes the GPU resource even when underutilized. Azure Kubernetes Service supports resource optimization on GPU nodes by splitting them into smaller slices using multi-instance GPU (MIG), so that teams can schedule smaller jobs more efficiently. Learn more about the supported GPU sizes and how to get started with [multi-instance GPU on AKS](./gpu-multi-instance.md).
+    This policy:
+
+    * Applies to all pods in `team-a-gpu`.
+    * Blocks all inbound and outbound traffic by default.
+
+You can add exceptions (e.g. allow traffic to a shared metrics service or to an internal API) as needed.
 
 
-## Next Steps
+## Optimize resource usage on GPU nodes using multi-instance GPU (MIG)
+
+Different GPU workloads range in memory requirements, and smaller deployments (e.g. NVIDIA A100 40GB) might not need an entire GPU. However, a single workload by default monopolizes the GPU resource even when underutilized. 
+
+AKS supports resource optimization on GPU nodes by splitting them into smaller slices using multi-instance GPU (MIG), so that teams can schedule smaller jobs more efficiently. Learn more about the supported GPU sizes and how to get started with [multi-instance GPU on AKS](./gpu-multi-instance.md).
+
+
+## Next steps
+
+For more information on GPU workloads on AKS, see the following articles:
 
 * [Create a GPU-enabled node pool](./use-nvidia-gpu.md) on your AKS cluster.
 * Monitor GPU workloads using [self-managed NVIDIA DCGM exporter](./monitor-gpu-metrics.md).
