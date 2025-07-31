@@ -55,7 +55,7 @@ The Kubernetes implementation has some key benefits:
 
  * **Unprivileged container setup**: Most of the container creation and setup doesn't run as root on the host, which significantly limits the impact of many CVEs.
 
-None of these things are true when user-namespaces aren't used. If the container runs as root, when user-namespaces aren't used, the process is running as root on the host, the capabilities are valid on the host if there's an escape, the container creation, and setup runs as root on the host, etc.
+None of these things are true when user-namespaces aren't used. If the container runs as root, when user-namespaces aren't used, the process is running as root on the host, the capabilities are valid on the host and the container setup is done as root on the host.
 
 ### Requirements
 
