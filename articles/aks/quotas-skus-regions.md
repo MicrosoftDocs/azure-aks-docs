@@ -24,7 +24,7 @@ This article details the default resource limits for Azure Kubernetes Service (A
 
 Starting in September 2025, Azure Kubernetes Service will begin rolling out a change to enable quota for all current and new AKS customers. This rollout is expected to take place over a period of 4-6 weeks.
 
-AKS quota will represent a limit of the maximum number of managed clusters (AKS clusters) that an Azure subscription can create per region. 
+AKS quota will represent a limit of the maximum number of managed clusters (AKS clusters) that an Azure subscription can create per region. Once managed cluster quota is released, customers will need both quota for managed clusters and quota for their nodes (VM skus) in order to create an AKS cluster.
 
 **Existing AKS customer subscriptions** will be given a default limit at or above their current usage depending on the available regional capacity. **Existing subscriptions using AKS for the first time and new subscriptions** will be given a default limit.
 
