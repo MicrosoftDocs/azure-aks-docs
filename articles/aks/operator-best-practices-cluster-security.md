@@ -86,7 +86,7 @@ spec:
 
 In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access.
 
-Using user-namespaces, you improve the host isolation and limit the lateral movement in case of container breakouts. This improvements are significant whether the pod is running as root or not.
+Using user-namespaces, you improve the host isolation and limit the lateral movement in case of container breakouts. These improvements are significant whether the pod is running as root or not.
 
 For even more granular control of container actions, you can also use built-in Linux security features such as *AppArmor* and *seccomp*.
 

@@ -21,7 +21,7 @@ In the same way that you should grant users or groups the minimum privileges req
 
 You can use built-in Kubernetes *pod security contexts* to define more permissions, such as the user or group to run as, the Linux capabilities to expose, or setting `allowPrivilegeEscalation: false` in the pod manifest. For more best practices, see [Secure pod access to resources][pod-security-contexts].
 
-To further improve the host isolation and decrease lateral movement on Linux, you can use user-namespaces.
+To improve the host isolation and decrease lateral movement on Linux, you can use user-namespaces.
 
 For even more granular control of container actions, you can use built-in Linux security features such as *AppArmor* and *seccomp*.
 
@@ -39,17 +39,17 @@ Built-in Linux security features are only available on Linux nodes and pods.
 
 ## User-namespaces
 
-Linux pods run using several namespaces by default: a network namespaces, to isolate the network identity; a PID namespace to isolate the processes, etc. A [user-namespace][userns-man] isolates the users inside the container from the users on the host. Furthermore, it also limits the scope of capabilities and the interactions of the pod with the rest of the system.
+Linux pods run using several namespaces by default: a network namespaces, to isolate the network identity, a PID namespace to isolate the processes. A [user-namespace][userns-man] isolates the users inside the container from the users on the host. It also limits the scope of capabilities and the pod's interactions with the rest of the system
 
-The UIDs and GIDs inside the container are mapped to unprivileged users on the host, so all interaction with the rest of the host happen as that UID/GID. For example, root inside the container (UID 0) can be mapped to user 65536 on the host. Kubernetes creates the mapping to guarantee it doesn't overlap with other pods using user-namespaces on the system.
+The UIDs and GIDs inside the container are mapped to unprivileged users on the host, so all interaction with the rest of the host happen as that UID and GID. For example, root inside the container (UID 0) can be mapped to user 65536 on the host. Kubernetes creates the mapping to guarantee it doesn't overlap with other pods using user-namespaces on the system.
 
 The Kubernetes implementation has some key benefits:
 
- * **Increased host isolation**: If a container escapes the pod boundaries, even if it runs as root inside the container, it has no privileges on the host. The reason is because the UIDs and GIDs of the container are mapped to unprivileged users on the host. Therefore, if there's a container escape, user-namespaces greatly protects what host files a container can read/write, which process it can send signals to, etc. Furthermore, capabilities granted are only valid inside the user namespace and not on the host, limiting the impact a container escape can have.
+ * **Increased host isolation**: If a container escapes the pod boundaries, even if it runs as root inside the container, it has no privileges on the host. The reason is because the UIDs and GIDs of the container are mapped to unprivileged users on the host. If there's a container escape, user-namespaces greatly protects what host files a container can read/write, which process it can send signals to. Capabilities granted are only valid inside the user namespace and not on the host, limiting the impact a container escape can have.
 
- * **Prevention of lateral movement**: As the UIDs and GIDs for different containers are mapped to different, nonoverlapping UIDs and GIDs on the host, containers have a harder time attacking each other, even if they escape the pod boundaries. For example, suppose container A runs with different UIDs and GIDs on the host than container B. In that case, the operations it can do on container B's files and processes are limited: only read/write what a file allows to others. But not even that ends up being possible, as there's an extra prevention on the parent directory of the pod root volume to make sure only the pod UID/GID can access it.
+ * **Prevention of lateral movement**: As the UIDs and GIDs for different containers are mapped to different, nonoverlapping UIDs and GIDs on the host, containers have a harder time attacking each other, even if they escape the pod boundaries. For example, suppose container A runs with different UIDs and GIDs on the host than container B. In that case, the operations it can do on container B's files and processes are limited: only read/write what a file allows to others. But not even that ends up being possible, as there's an extra prevention on the parent directory of the pod root volume to make sure only the pod GID can access it.
 
- * **Honor Least-privilege principle**: As the UIDs and GIDs are mapped to unprivileged users on the host, only users that need the privilege on the host (and disable user namespaces) get it. Without user namespaces, there's no separation between container’s users and host’s users. Therefore we can’t avoid giving privileges on the host to processes that don't need it, when they need privilege just inside the container.
+ * **Honor Least-privilege principle**: As the UIDs and GIDs are mapped to unprivileged users on the host, only users that need the privilege on the host (and disable user namespaces) get it. Without user namespaces, there's no separation between container’s users and host’s users. We can’t avoid giving privileges on the host to processes that don't need it, when they need privilege just inside the container.
 
  * **Enablement of new use cases**: User namespaces allow containers to gain certain capabilities inside their own user namespace without affecting the host. The capabilities granted restricted to the pod unlocks new possibilities, such as running applications that require privileged operations without granting full root access on the host. Common new use-cases that can be implemented securely are: running nested containers and unprivileged container builds.
 
@@ -59,11 +59,11 @@ None of these things are true when user-namespaces aren't used. If the container
 
 ### Requirements
 
-The cluster needs to be running AKS 1.33 or higher for the control plane and the worker nodes. The worker nodes need to run Azure Linux or [Ubuntu 24.04][ubuntu-2404] or greater, as they come with all the [stack requirements][userns-requirements].
+The cluster needs to run AKS 1.33 or higher for the control plane and the worker nodes. The worker nodes need to run Azure Linux or [Ubuntu 24.04][ubuntu-2404] or greater, as they come with all the [stack requirements][userns-requirements].
 
 ### How to use
 
-There are no configurations needed to use this feature. If using the right AKS version, everything works out of the box.
+There are no configurations needed to use this feature. If using the required AKS version, everything works out of the box.
 
 Let's create an example pod. It needs to have the field `hostUsers: false`, to use user-namespces.
 
@@ -80,7 +80,7 @@ spec:
     image: debian
 ```
 
-Save it to mypod.yaml and run `kubectl apply -f mypod.yaml`. Check the pod state, until it's running: `kubectl get pods`.
+Save it to _mypod.yaml_ and run `kubectl apply -f mypod.yaml`. Check the pod state, until it's running: `kubectl get pods`.
 
 Then, exec into the pod to check `/proc/self/uid_map`:
 
@@ -92,7 +92,7 @@ cat /proc/self/uid_map
 
 The output should have 65536 in the last column. For example:
 
-```
+```output
 0  833617920      65536
 ```
 
@@ -100,7 +100,7 @@ Don't hesitate to check the [Kubernetes documentation for user namespaces][k8s-u
 
 ### CVEs mitigated
 
-Here are some CVEs that are completely/partially mitigated with user-namespaces. It's expected more CVEs not yet discovered will be mitigated too.
+Here are some CVEs that are completely/partially mitigated with user-namespaces.
 
 Bear in mind the list isn't exhaustive, it's just a selection of CVEs with high score that are mitigated:
 
