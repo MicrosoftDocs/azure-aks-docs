@@ -30,7 +30,12 @@ AKS quota will represent a limit of the maximum number of managed clusters (AKS 
 
 Once quota rollout is complete, customers can [view quota limits and usage](https://learn.microsoft.com/azure/quotas/view-quotas) and [request additional quota](https://learn.microsoft.com/azure/quotas/quickstart-increase-quota-portal) via the Azure portal Quotas page or via the [Quotas REST API](https://learn.microsoft.com/rest/api/reserved-vm-instances/quotaapi). At that time, quota limits will be enforced. Prior to rollout completion, quota limits and usage may be visible in the Portal Quotas blade and customers will be able to request quota —however, the limits will not be enforced until rollout is complete. 
 
-![Quotas Page](./media/quotas-skus-regions/portal-quotas-page.png)
+:::image type="complex" source="./media/quotas-skus-regions/portal-quotas-page-inline.png" alt-text="Screenshot of the Azure portal Quotas page.":::
+Screenshot of the Azure portal Quotas page. On the Quotas page, the customer has selected the view for a particular subscription and the Provider Azure Kubernetes Service. The Quotas page shows the number of managed clusters that the customer is using against their quota limit for each region within a subscription.
+lightbox="./media/quotas-skus-regions/portal-quotas-page-expanded.png"
+:::image-end:::
+
+
 
 When Managed Clusters Quota is rolled out, customers will receive the following error if they attempt to create a new cluster and are out of quota:
 
