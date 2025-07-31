@@ -135,7 +135,7 @@ When you deploy the Open Service Mesh (OSM) add-on for Azure Kubernetes Service 
 
 ### Check for the service and CA bundle of the Mutating webhook
 
-* Check for the service and CA bundle of the OSM Mutating Webhook using the `kubectl get ValidatingWebhookConfiguration` command with `aks-osm-validator-mesh-osm` and `jq '.webhooks[0].clientConfig.service'`.
+* Check for the service and CA bundle of the OSM Mutating Webhook using the `kubectl get MutatingWebhookConfiguration` command with `aks-osm-validator-mesh-osm` and `jq '.webhooks[0].clientConfig.service'`.
 
     ```azurecli-interactive
     kubectl get MutatingWebhookConfiguration aks-osm-webhook-osm -o json | jq '.webhooks[0].clientConfig.service'
