@@ -94,7 +94,7 @@ The expected output should look like:
 ...
 ```
 
-3. Upgrade your GPU node pools to the latest recommended node OS image released by AKS. These images are:
+3. [Upgrade your GPU node pools](./node-image-upgrade.md) to the latest recommended node OS image released by AKS. These images are:
 
 * Pre-configured with up-to-date GPU drivers, upgraded from EOL driver branches
 * Tested against the your current Kubernetes version
