@@ -1,6 +1,6 @@
 ---
 title: Multi-region deployment models for Azure Kubernetes Service (AKS)
-description: Learn about multi-regiondeployment models for Azure Kubernetes Service (AKS)
+description: Learn about multi-region deployment models for Azure Kubernetes Service (AKS)
 author: schaffererin
 ms.author: schaffererin
 ms.topic: concept-article
@@ -14,6 +14,37 @@ ms.date: 07/28/2025
 Azure Kubernetes Service (AKS) provides a managed Kubernetes environment for deploying, managing, and scaling containerized applications. To provide resiliency to regional outages for your applications running on AKS, you can implement various multi-region deployment models. This article provides an overview of these models, their pros and cons, and best practices for maintaining application uptime.
 
 AKS provides a range of capabilities that support both high availability (HA) and disaster recovery (DR) for your cluster and the applications running on AKS. For more information on how AKS supports reliability requirements, see [Reliability in AKS](/azure/reliability/reliability-aks#multi-region-support).
+
+## Considerations
+
+Below are some important considerations when implementing multi-region deployment models in AKS:
+
+### Regional and global resources
+
+**Regional resources** are provisioned as part of a *deployment stamp* to a single Azure region. These resources share nothing with resources in other regions, and they can be independently removed or replicated to other regions. For more information, see [Regional resources](/azure/architecture/reference-architectures/containers/aks-mission-critical/mission-critical-intro#regional-resources).
+
+**Global resources** share the lifetime of the system, and they can be globally available within the context of a multi-region deployment. For more information, see [Global resources](/azure/architecture/reference-architectures/containers/aks-mission-critical/mission-critical-intro#global-resources).
+
+
+### Global load balancing
+
+Global load balancing services distribute traffic across regional backends, clouds, or hybrid on-premises services. These services route end-user traffic to the closest available backend. They also react to changes in service reliability or performance to maximize availability and performance. The following Azure services provide global load balancing:
+
+- [Azure Front Door](/azure/frontdoor/front-door-overview)
+- [Azure Traffic Manager](/azure/traffic-manager/traffic-manager-overview)
+- [Cross-region Azure Load Balancer](/azure/load-balancer/cross-region-overview)
+- [Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/overview)
+
+
+### Scope definition
+
+Application uptime becomes important as you manage AKS clusters. By default, AKS provides high availability by using multiple nodes in a [Virtual Machine Scale Set](/azure/virtual-machine-scale-sets/overview), but these nodes don’t protect your system from a region failure. To maximize your uptime, plan ahead to maintain business continuity and prepare for disaster recovery using the following best practices:
+
+- Plan for AKS clusters in multiple regions.
+- Route traffic across multiple clusters using Azure Traffic Manager.
+- Use geo-replication for your container image registries.
+- Plan for application state across multiple clusters.
+- Replicate storage across multiple regions.
 
 ## Multi-region deployment model implementations
 
