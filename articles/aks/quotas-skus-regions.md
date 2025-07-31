@@ -35,8 +35,6 @@ Screenshot of the Azure portal Quotas page. On the Quotas page, the customer has
 lightbox="./media/quotas-skus-regions/portal-quotas-page-expanded.png"
 :::image-end:::
 
-
-
 When Managed Clusters Quota is rolled out, customers will receive the following error if they attempt to create a new cluster and are out of quota:
 
 ```
