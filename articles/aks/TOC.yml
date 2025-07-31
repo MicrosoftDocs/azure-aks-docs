@@ -312,12 +312,16 @@
           href: upgrade.md
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: AKS component versioning
+          href: aks-component-versioning.md
         - name: Upgrade scenarios hub
           href: upgrade-scenarios-hub.md
         - name: Perform manual upgrades
           items:
             - name: Upgrade an AKS cluster
               href: upgrade-aks-cluster.md
+            - name: View AKS component versions (preview)
+              href: view-aks-component-versions.md
             - name: Production upgrade strategies
               href: aks-production-upgrade-strategies.md
             - name: Stateful workload upgrade patterns
