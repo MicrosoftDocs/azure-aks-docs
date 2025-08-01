@@ -70,7 +70,7 @@ Before you begin, make sure you have the following:
 * User-namespaces is a linux kernel feature and is not supported for Windows node pools.
 * Don't hesitate to check the [Kubernetes documentation for user namespaces][k8s-userns], in particular the limitations section.
 
-
+### Enable user-namespaces
 ### How to use
 
 There are no configurations needed to use this feature. If using the required AKS version, everything works out of the box.
