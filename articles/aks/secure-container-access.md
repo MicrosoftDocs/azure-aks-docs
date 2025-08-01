@@ -45,7 +45,7 @@ The UIDs and GIDs inside the container are mapped to unprivileged users on the h
 
 The Kubernetes implementation has some key benefits:
 
- * **Increased host isolation**: If a container escapes the pod boundaries, even if it runs as root inside the container, it has no privileges on the host. The reason is because the UIDs and GIDs of the container are mapped to unprivileged users on the host. If there's a container escape, user-namespaces greatly protects what host files a container can read/write, which process it can send signals to. Capabilities granted are only valid inside the user namespace and not on the host.
+ * **Increased host isolation**: If a container escapes the pod boundaries, even if it runs as root inside the container, it has no privileges on the host. The reason is because the UIDs and GIDs of the container are mapped to unprivileged users on the host. If there's a container escape, user-namespaces greatly protects what files on the host a container can read/write, which process it can send signals to. Capabilities granted are only valid inside the user namespace and not on the host.
 
  * **Prevention of lateral movement**: As the UIDs and GIDs for different containers are mapped to different, nonoverlapping UIDs and GIDs on the host, containers have a harder time attacking each other. For example, suppose container A runs with different UIDs and GIDs on the host than container B. In case of a container breakout, the operations it can do on container B's files and processes are limited: only read/write what a file allows to others. But not even that ends up being possible, as there's an extra prevention on the parent directory of the pod root volume to make sure only the pod GID can access it.
 
@@ -76,20 +76,20 @@ There are no configurations needed to use this feature. If using the required AK
 
 1. Create a file named `mypod.yaml` and copy in the following manifest:
 
-To use user-namespaces, the yaml needs to have the field `hostUsers: false`.
+   To use user-namespaces, the yaml needs to have the field `hostUsers: false`.
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: userns
-spec:
-  hostUsers: false
-  containers:
-  - name: shell
-    command: ["sleep", "infinity"]
-    image: debian
-```
+   ```yaml
+   apiVersion: v1
+   kind: Pod
+   metadata:
+     name: userns
+   spec:
+     hostUsers: false
+     containers:
+     - name: shell
+       command: ["sleep", "infinity"]
+       image: debian
+   ```
 
 2. Deploy the application using the `kubectl apply` command and specify the name of your YAML manifest. 
 
@@ -105,18 +105,17 @@ spec:
 
 4. Exec into the pod to check `/proc/self/uid_map` by using the `kubectl exec` command:
 
-```
-kubectl exec -ti userns -- bash
-# Now inside the pod run
-cat /proc/self/uid_map
-```
+   ```console
+   kubectl exec -ti userns -- bash
+   # Now inside the pod run
+   cat /proc/self/uid_map
+   ```
 
 The output should have 65536 in the last column. For example:
 
-```output
-0  833617920      65536
-```
-
+   ```output
+   0  833617920      65536
+   ```
 
 ### CVEs mitigated
 
@@ -129,6 +128,7 @@ Bear in mind the list isn't exhaustive, it's just a selection of CVEs with high 
 * [CVE 2022-0492][cve-2022-0492]: Score 7.8 (HIGH)
 * [CVE-2021-25741][cve-2021-25741]: Score: 8.1 (HIGH) / 8.8 (HIGH)
 * [CVE-2017-1002101][cve-2017-1002101]: Score: 9.6 (CRITICAL) / 8.8(HIGH)
+
 To learn more, read this [blog post](https://kubernetes.io/blog/2025/04/25/userns-enabled-by-default/) with additional information around user-namespaces. 
 
 ## App Armor
@@ -465,4 +465,4 @@ For associated best practices, see [Best practices for cluster security and upgr
 [aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
 [aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
 [aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
-[upgrade-aks-cluster: ./upgrade-aks-cluster.md
+[upgrade-aks-cluster]: ./upgrade-aks-cluster.md
