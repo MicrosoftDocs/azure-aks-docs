@@ -416,9 +416,9 @@
           href: operator-best-practices-advanced-scheduler.md
         - name: Managed Namespaces
           items:
-            - name: Overview of Managed Namespaces
+            - name: Overview
               href: managed-namespaces.md
-            - name: Use Managed Namespaces
+            - name: Use managed namespaces
               href: use-managed-namespaces.md  
     - name: Configure backup
       items:
