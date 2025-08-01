@@ -18,33 +18,40 @@ This article explains the versioning approach for each layer of AKS components a
 
 ## Quick reference
 
+| Component Layer | Update Frequency | Customer Control | Update Method |
+|--------|--------|---------|---------|
+| **Control Plane** | Security patches: 2-3 days<br/>Minor versions: With K8s releases | Yes - manual or automatic | [Cluster upgrade][upgrade-cluster] |
+| **Layer 1: Node Infrastructure** | Weekly with new VHDs | Yes - manual or automatic | [Node image upgrade][node-image-upgrade] |
+| **Layer 2A: Managed Add-ons** | Monthly with AKS releases | No - automatic only | Applied with AKS releases |
+| **Layer 2B: Customer Workloads** | As needed | Yes - fully manual | Pod restart required |
+
+### Version tracking commands
+
 | Action | Method | Impact |
 |--------|--------|---------|
-| **Check current versions** | [Component Insights][component-insights] or `az aks show --query currentKubernetesVersion` | No downtime |
-| **Enable security patches** | [Auto-upgrade patches only][auto-upgrade] | Minimal downtime (~2-5 minutes per node) |
-| **Check for breaking changes** | [AKS release tracker][aks-release-tracker], [Kubernetes deprecation guide](https://kubernetes.io/docs/reference/using-api/deprecation-guide/), or use [Diagnose and solve problems](https://portal.azure.com/#blade/Microsoft_Azure_Support/AzureSupportCenterBlade/overview) to check deprecated APIs | Prevention |
+| **View current Kubernetes version** | `az aks show --query currentKubernetesVersion` | No downtime |
+| **Check all component versions** | [Component Insights][component-insights] | No downtime |
+| **List available Kubernetes versions** | `az aks get-versions --location <region>` | No downtime |
+| **Review release notes** | [AKS release tracker][aks-release-tracker] | Planning tool |
 
 ## AKS architecture overview
 
 AKS consists of multiple layers, each with distinct versioning patterns:
 
-:::image type="content" source="media/aks-component-versioning/aks-component-architecture.jpeg" alt-text="Architecture diagram showing AKS control plane and node components across different layers including node image, AKS features and add-ons, and customer pod sidecars." lightbox="media/aks-component-versioning/aks-component-architecture.jpeg":::
+:::image type="content" source="media/aks-component-versioning/aks-component-architecture.png" alt-text="Architecture diagram showing AKS control plane and node components across different layers including node image, AKS features and add-ons, and customer pod sidecars." lightbox="media/aks-component-versioning/aks-component-architecture.png":::
 
 The architecture includes:
-- **AKS Control Plane**: Managed Kubernetes API server, etcd, and controllers
-- **AKS Node**: Three distinct layers of components with different update cycles
-- **Customer Applications**: Your workloads and any associated sidecars
+- **Kubernetes cluster control plane hosted by AKS**: Managed Kubernetes API server, etcd, and controllers
+- **Layer 1 - Node Infrastructure**: Operating system, container runtime, and core Kubernetes node components
+- **Layer 2 - Pod Categories**: Two categories of pods running on the same layer:
+  - **AKS managed features/add-ons/extensions**: Platform-managed pods (left side)
+  - **Customer workload pods**: User-managed application pods and sidecars (right side)
 
 ## AKS control plane versioning
 
 The AKS control plane includes core Kubernetes components that follow upstream Kubernetes versioning:
-
 ### Core components
-- **etcd**: Distributed key-value store for cluster state
-- **kube-apiserver**: Kubernetes API server
-- **kube-controller-manager**: Core control loops
-- **kube-scheduler**: Pod scheduling logic
-- **cloud-controller-manager**: Azure-specific control plane logic
+The Kubernetes control plane hosted by Microsoft includes components such as etcd, kube-apiserver, kube-controller-manager, kube-scheduler, and cloud-controller-manager.
 
 ### Patching strategy
 - **Security patches**: Applied within 2-3 days of upstream Kubernetes CVE fixes
@@ -52,20 +59,19 @@ The AKS control plane includes core Kubernetes components that follow upstream K
 - **Tracking**: Monitor updates through the [AKS release tracker][aks-release-tracker]
 
 ### Version upgrades
-- **Minor versions**: Only available with new Kubernetes versions following [semantic versioning][semver]
+- **Minor versions**: Control plane minor version upgrades only occur when upstream Kubernetes releases new minor versions (e.g., 1.28 to 1.29)
 - **Release cycle**: Follows upstream Kubernetes preview and GA timeline
 - **Upgrade process**: See [Upgrade an AKS cluster][upgrade-cluster] for procedures
 - **Automation**: Configure [automatic cluster upgrades][auto-upgrade] to keep control plane versions current
 - **Release calendar**: Track [upstream Kubernetes releases](https://kubernetes.io/releases/) and [AKS release calendar][aks-release-tracker]
 
-
 For detailed support timelines, review the [Kubernetes version support policy][support-policy].
 
 ## AKS node component versioning
 
-Node components are organized into three distinct layers, each with different update frequencies and responsibilities.
+Node components are organized into two distinct layers with different categories and update responsibilities.
 
-### Layer 1: Node image and VHD components
+### Layer 1: Node infrastructure components
 
 The foundation layer contains the operating system and core Kubernetes node components.
 
@@ -84,9 +90,13 @@ The foundation layer contains the operating system and core Kubernetes node comp
 - **Manual**: Trigger updates through [node image upgrades][node-image-upgrade]
 - **Timing**: Use [planned maintenance windows][planned-maintenance] to control update timing
 
-### Layer 2: AKS managed features and add-ons
+### Layer 2: Pod categories
 
-The middle layer consists of AKS-managed components running as pods on your nodes.
+The pod layer consists of two categories of workloads running on your nodes, each with different update responsibilities.
+
+#### Category A: AKS managed features and add-ons
+
+Platform-managed components running as pods on your nodes.
 
 #### Example components
 - **coredns**: Cluster DNS resolution
@@ -96,27 +106,31 @@ The middle layer consists of AKS-managed components running as pods on your node
 - **Other add-ons**: See [AKS extensions and add-ons][aks-extensions] for the complete list including Azure Policy, Azure CNI, monitoring agents, and more
 
 #### Update frequency
-- **Cadence**: Monthly, or up to twice per month with AKS releases
-- **Content**: CVE fixes, feature updates, and bug fixes
+- **Cadence**: Approximately every 3 weeks with AKS releases
+- **Content**: Security patches (CVEs) and bug fixes are applied automatically to all clusters. New features and functionality are tied to Kubernetes minor versions and only applied during cluster upgrades.
 - **Documentation**: Changes documented in [AKS release tracker][aks-release-tracker] with upstream references
 #### Customer control
 - **Automatic**: Updates applied automatically during AKS releases
 - **No direct control**: Managed add-ons are updated as part of the AKS platform with no customer-controlled versioning
+- **Update timing**: While add-on versions are automatic, you can control when updates are applied to your cluster using [planned maintenance windows][planned-maintenance]
 - **No rollback**: Rollback options are not available for managed add-ons
 
-### Layer 3: Sidecar containers in customer pods
+#### Category B: Customer workload pods
 
-The top layer includes sidecar containers injected into your application pods.
+User-managed application pods and sidecar containers.
 
 #### Example sidecars
 - **Istio sidecar proxies**: Service mesh data plane
-- **Auto-instrumentation**: Observability sidecars
 - **Custom sidecars**: Application-specific containers
+
+#### Example workloads
+- **Application containers**: Your main business logic
+- **Init containers**: Setup and initialization containers
+- **Sidecar containers**: Supporting containers injected into pods
 #### Update responsibility
-- **AKS-managed control plane**: For sidecars like Istio, AKS automatically manages patching and upgrades of control plane components such as istiod, istio-ingress gateway, and Istio CNI
-- **Customer-managed sidecars**: You are responsible for updating sidecar containers injected into your application pods
-- **Disruptive updates**: Sidecar updates require pod restarts, which you must coordinate
-- **Coordination required**: While AKS handles the control plane updates, you must ensure your sidecars are compatible and schedule pod restarts aligned with your application deployment cycles
+- **Full ownership**: You control all aspects of your application containers and sidecars
+- **No automatic updates**: AKS cannot update customer pods as this requires pod restarts, which may disrupt running applications
+- **Your responsibility**: Coordinate updates with your deployment cycles and maintenance windows
 
 #### Update triggers
 When AKS updates managed components (like istiod or istio-ingress), related sidecars may need updates:
@@ -125,20 +139,21 @@ When AKS updates managed components (like istiod or istio-ingress), related side
 - **Coordination**: Plan pod restarts during maintenance windows to minimize service disruption
 
 > [!NOTE]
-> **Sidecar update process**: When control plane components update, you typically have a grace period to update sidecars. Check your service mesh documentation for specific compatibility windows.
+> **Pod update process**: When control plane components update, you typically have a grace period to update your workload pods. Check your service mesh documentation for specific compatibility windows and update your application containers and sidecars accordingly.
 
 ## Version management best practices
 
 ### Choosing your update strategy
 
 **For production clusters:**
-- Enable automatic patch updates for security
-- Use manual control for minor version upgrades
+- Consider automatic patch updates for timely security fixes
+- Choose between automatic or manual minor version upgrades based on your operational needs
 - Test all changes in staging environments first
 
 **For development clusters:**
-- Consider full automatic updates for convenience
-- Accept higher risk for faster feature access
+- Enable automatic updates for both control plane and node pools to stay current with latest features
+- Choose appropriate channels based on your development and testing needs (see [automatic cluster upgrades][auto-upgrade] and [node image auto-upgrade][node-image-auto-upgrade] for channel options)
+- Use as a testing ground for production update strategies
 
 > [!IMPORTANT]
 > **Security consideration**: Enable automatic patch updates to ensure CVE fixes are applied within 2-3 days. Choose the auto-upgrade channel that best fits your cluster's requirements and risk tolerance.
@@ -185,12 +200,12 @@ Both control plane and node components support manual and automatic update optio
 - **Configuration**: See [node image auto-upgrade][node-image-auto-upgrade] for configuration options
 
 #### Layer-specific update behavior
-- **Layer 1 (Node image)**: Follows your node update configuration (automatic or manual)
-- **Layer 2 (Managed add-ons)**: Automatic with AKS releases, no customer control
-- **Layer 3 (Customer sidecars)**: Manual coordination required with application deployments
+- **Layer 1 (Node infrastructure)**: Follows your node update configuration (automatic or manual)
+- **Layer 2A (Managed add-ons)**: Automatic with AKS releases, no customer control
+- **Layer 2B (Customer workloads)**: Manual coordination required with application deployments
 
 > [!TIP]
-> **Recommended approach**: Enable automatic updates for Layers 1-2 in development environments, but use manual control in production for better change management.
+> **Recommended approach**: Choose the update strategy that best fits your operational requirements. Automatic updates provide timely security patches and reduce operational overhead, while manual updates offer precise control over timing and change management.
 
 ## Semantic versioning in AKS
 
