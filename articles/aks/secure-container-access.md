@@ -103,7 +103,7 @@ spec:
     kubectl get pods
     ```
 
-Then, exec into the pod to check `/proc/self/uid_map`:
+4. Exec into the pod to check `/proc/self/uid_map` by using the `kubectl exec` command:
 
 ```
 kubectl exec -ti userns -- bash
