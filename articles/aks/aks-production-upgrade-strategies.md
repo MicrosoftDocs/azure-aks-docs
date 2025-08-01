@@ -720,7 +720,7 @@ breaker.on('open', () => console.log('Circuit breaker opened'));
 breaker.on('halfOpen', () => console.log('Circuit breaker half-open'));
 ```
 
-To learn more, see [Circuit breaker pattern](/azure/architecture/patterns/circuit-breaker), [Retry pattern](/azure/architecture/patterns/retry), and [Application resilience](https://docs.microsoft.com/azure/architecture/framework/resiliency/).
+To learn more, see [Circuit breaker pattern](/azure/architecture/patterns/circuit-breaker), [Retry pattern](/azure/architecture/patterns/retry), and [Application resilience](/azure/well-architected/reliability/).
 
 #### Step 4: Database connection resilience
 
