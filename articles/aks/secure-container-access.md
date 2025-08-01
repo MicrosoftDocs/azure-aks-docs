@@ -70,7 +70,6 @@ Before you begin, make sure you have the following:
 * User-namespaces is a linux kernel feature and is not supported for Windows node pools.
 * Don't hesitate to check the [Kubernetes documentation for user namespaces][k8s-userns], in particular the limitations section.
 
-The cluster needs to run AKS 1.33 or higher for the control plane and the worker nodes. The worker nodes need to run Azure Linux or [Ubuntu 24.04][ubuntu-2404] or greater, as they come with all the [stack requirements][userns-requirements].
 
 ### How to use
 
