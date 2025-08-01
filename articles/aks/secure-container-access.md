@@ -117,7 +117,6 @@ The output should have 65536 in the last column. For example:
 0  833617920      65536
 ```
 
-Don't hesitate to check the [Kubernetes documentation for user namespaces][k8s-userns], in particular the limitations section.
 
 ### CVEs mitigated
 
