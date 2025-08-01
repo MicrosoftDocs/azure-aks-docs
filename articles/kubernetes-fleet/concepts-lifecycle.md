@@ -19,9 +19,9 @@ A Fleet Manager hub cluster is a fully managed Azure Kubernetes Service (AKS) cl
 
 - **Cluster name and location:** the hub cluster is always named `hub` and is created in the same Azure region as the Fleet Manager.
 - **Azure Resource Group for hub cluster:** the hub cluster AKS resource is created in a managed resource group with the naming format `FL_{fleet_manager_resource_group}_{fleet_manager_name}_{azure_region}`.
-- **Azure Resource Group for hub cluster resources:** like any AKS cluster, the hub cluster has Azure resources such as an agent node pool VMSS and virtual network which are created in a managed resource group with the naming format `MC_FL_{fleet_manager_resource_group}_{fleet_manager_name}_{azure_region}`.
+- **Azure Resource Group for hub cluster resources:** like any AKS cluster, the hub cluster has Azure resources such as an agent node pool VMSS and virtual network that are created in a managed resource group with the naming format `MC_FL_{fleet_manager_resource_group}_{fleet_manager_name}_{azure_region}`.
 - **Hub cluster node:** The hub cluster has a node pool with a single node running Azure Linux. The node doesn't run any pods and doesn't affect hub cluster performance. When creating a hub cluster from the Azure CLI, you can choose the node Virtual Machine (VM) SKU type by using the `--vm-size` parameter. 
-- **Network configuration:** public hub clusters have a public API server, with an associated public IP address. When configured for private access, the API server is only accessible via the Azure virtual network to which it's attached.
+- **Network configuration:** public hub clusters have a public API server, with an associated public IP address. When configured for private access, the API server is only accessible via an Azure virtual network.
 
 ## Hub cluster restrictions
 
