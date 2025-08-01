@@ -75,3 +75,5 @@ landingContent:
             url: best-practices-cost.md
           - text: Windows container considerations
             url: windows-vs-linux-containers.md
+          - text: Managed namespaces (preview)
+            url: managed-namespaces.md
