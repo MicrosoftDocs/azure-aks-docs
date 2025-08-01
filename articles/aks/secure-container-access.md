@@ -74,7 +74,9 @@ Before you begin, make sure you have the following:
 
 There are no configurations needed to use this feature. If using the required AKS version, everything works out of the box.
 
-Let's create an example pod. It needs to have the field `hostUsers: false`, to use user-namespces.
+1. Create a file named `mypod.yaml` and copy in the following manifest:
+
+To use user-namespaces, the yaml needs to have the field `hostUsers: false`.
 
 ```yaml
 apiVersion: v1
