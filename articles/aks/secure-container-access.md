@@ -39,7 +39,7 @@ Built-in Linux security features are only available on Linux nodes and pods.
 
 ## User-namespaces
 
-Linux pods run using several namespaces by default: a network namespaces, to isolate the network identity, a PID namespace to isolate the processes. A [user-namespace][userns-man] isolates the users inside the container from the users on the host. It also limits the scope of capabilities and the pod's interactions with the rest of the system
+Linux pods run using several namespaces by default: a network namespaces to isolate the network identity and a PID namespace to isolate the processes. A [user-namespace][userns-man] isolates the users inside the container from the users on the host. It also limits the scope of capabilities and the pod's interactions with the rest of the system.
 
 The UIDs and GIDs inside the container are mapped to unprivileged users on the host, so all interaction with the rest of the host happen as those unprivileged UID and GID. For example, root inside the container (UID 0) can be mapped to user 65536 on the host. Kubernetes creates the mapping to guarantee it doesn't overlap with other pods using user-namespaces on the system.
 
