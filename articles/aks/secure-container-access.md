@@ -57,7 +57,18 @@ The Kubernetes implementation has some key benefits:
 
 None of these things are true when user-namespaces aren't used. If the container runs as root, when user-namespaces aren't used, the process is running as root on the host, the capabilities are valid on the host and the container setup is done as root on the host.
 
-### Requirements
+### Before you begin
+
+Before you begin, make sure you have the following:
+
+* An existing AKS cluster. If you don't have a cluster, create one using the [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
+* Minimum kubernetes version 1.33 for the control plane and worker nodes. If you're not using kubernetes version 1.33 or higher, you'll need to [upgrade your kubernetes version][upgrade-aks-cluster].
+* Worker nodes running Azure Linux 3.0 or Ubuntu 24.04. If you're not using these OS versions, you will not have the minimum [stack requirements][userns-requirements] to enable user-namespaces. You'll need to [upgrade your OS version][upgrade-os-version].
+
+### Limitations
+
+* User-namespaces is a linux kernel feature and is not supported for Windows node pools.
+* Don't hesitate to check the [Kubernetes documentation for user namespaces][k8s-userns], in particular the limitations section.
 
 The cluster needs to run AKS 1.33 or higher for the control plane and the worker nodes. The worker nodes need to run Azure Linux or [Ubuntu 24.04][ubuntu-2404] or greater, as they come with all the [stack requirements][userns-requirements].
 
