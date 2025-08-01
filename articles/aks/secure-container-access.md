@@ -91,7 +91,17 @@ spec:
     image: debian
 ```
 
-Save it to _mypod.yaml_ and run `kubectl apply -f mypod.yaml`. Check the pod state, until it's running: `kubectl get pods`.
+2. Deploy the application using the `kubectl apply` command and specify the name of your YAML manifest. 
+
+    ```console
+    kubectl apply -f mypod.yaml
+    ```
+
+3. Check the status of the deployed pods using the `kubectl get pods` command. 
+
+    ```console
+    kubectl get pods
+    ```
 
 Then, exec into the pod to check `/proc/self/uid_map`:
 
