@@ -461,4 +461,8 @@ For associated best practices, see [Best practices for cluster security and upgr
 [node-access]: node-access.md
 [security-container-access]: secure-container-access.md
 [troubleshoot-seccomp-profiles]: support\azure\azure-kubernetes\security\troubleshoot-seccomp-profiles.md
-[ubuntu-2404]: upgrade-os-version.md
+[upgrade-os-version]: upgrade-os-version.md
+[aks-quickstart-cli]: ./learn/quick-kubernetes-deploy-cli.md
+[aks-quickstart-portal]: ./learn/quick-kubernetes-deploy-portal.md
+[aks-quickstart-powershell]: ./learn/quick-kubernetes-deploy-powershell.md
+[upgrade-aks-cluster: ./upgrade-aks-cluster.md
