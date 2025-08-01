@@ -21,7 +21,7 @@ In the same way that you should grant users or groups the minimum privileges req
 
 You can use built-in Kubernetes *pod security contexts* to define more permissions, such as the user or group to run as, the Linux capabilities to expose, or setting `allowPrivilegeEscalation: false` in the pod manifest. For more best practices, see [Secure pod access to resources][pod-security-contexts].
 
-To improve the host isolation and decrease lateral movement on Linux, you can use user-namespaces.
+To improve the host isolation and decrease lateral movement on Linux, you can use *user-namespaces*.
 
 For even more granular control of container actions, you can use built-in Linux security features such as *AppArmor* and *seccomp*.
 
