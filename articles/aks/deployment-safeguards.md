@@ -60,7 +60,13 @@ If you want to submit an idea or request for Deployment Safeguards, open an issu
 Enable Deployment Safeguards on an existing cluster that has the Azure Policy add-on enabled using the `az aks safeguard create` command with the `--level` flag. If you want to receive noncompliance warnings, set the `--level` to `Warn`. If you want to deny or mutate all noncompliant deployments, set it to `Enforce`.
 
 ```azurecli-interactive
-az aks safeguards create --resource-group <resource-group-name> --name <cluster-name> --level Enforcement 
+az aks safeguards create --resource-group <resource-group-name> --name <cluster-name> --level Enforce 
+```
+
+You can also enable Deployment Safeguards by using the `--cluster` flag and specifying the cluster resource ID.
+
+```azurecli-interactive
+az aks safeguards create --cluster <ID> --level Enforce
 ```
 
 If you want to update the Deployment Safeguards level of an existing cluster, run the following command with the new value for `--level`.
@@ -76,7 +82,7 @@ You can also exclude certain namespaces from Deployment Safeguards. When you exc
 For example, to exclude the namespaces `ns1` and `ns2`, use a space separated list of namespaces with the `--excluded-ns` flag, as shown in the following example:
 
 ```azurecli-interactive
-az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warning --excluded-ns ns1 ns2 
+az aks safeguards update --resource-group <resource-group-name> --name <cluster-name> --level Warn --excluded-ns ns1 ns2 
 ```
 
 ### Update your deployment safeguard version
