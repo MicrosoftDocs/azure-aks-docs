@@ -63,7 +63,6 @@ spec:
 
 Work with your cluster operator to determine which security context settings you need. Design your applications to minimize other permissions and access the pod requires. There are other security features to limit access using AppArmor, seccomp (secure computing), and user-namespaces that can be implemented by cluster operators.
 
-
 For more information, see [Secure container access to resources][apparmor-seccomp].
 
 ## Limit credential exposure
