@@ -99,51 +99,49 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
 
 ```json
 {
-  "localDNSProfile": {
-    "mode": "Preferred",
-    "vnetDNSOverrides": {
-      ".": {
-        "queryLogging": "Error",
-        "protocol": "PreferUDP",
-        "forwardDestination": "VnetDNS",
-        "forwardPolicy": "Sequential",
-        "maxConcurrent": 1000,
-        "cacheDurationInSeconds": 3600,
-        "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate"
-      },
-      "cluster.local": {
-        "queryLogging": "Error",
-        "protocol": "ForceTCP",
-        "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "Sequential",
-        "maxConcurrent": 1000,
-        "cacheDurationInSeconds": 3600,
-        "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate"
-      }
+  "mode": "Required",
+  "vnetDNSOverrides": {
+    ".": {
+      "queryLogging": "Error",
+      "protocol": "PreferUDP",
+      "forwardDestination": "VnetDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
     },
-    "kubeDNSOverrides": {
-      ".": {
-        "queryLogging": "Error",
-        "protocol": "PreferUDP",
-        "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "Sequential",
-        "maxConcurrent": 1000,
-        "cacheDurationInSeconds": 3600,
-        "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate"
-      },
-      "cluster.local": {
-        "queryLogging": "Error",
-        "protocol": "ForceTCP",
-        "forwardDestination": "ClusterCoreDNS",
-        "forwardPolicy": "Sequential",
-        "maxConcurrent": 1000,
-        "cacheDurationInSeconds": 3600,
-        "serveStaleDurationInSeconds": 3600,
-        "serveStale": "Immediate"
-      }
+    "cluster.local": {
+      "queryLogging": "Error",
+      "protocol": "ForceTCP",
+      "forwardDestination": "ClusterCoreDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
+    }
+  },
+  "kubeDNSOverrides": {
+    ".": {
+      "queryLogging": "Error",
+      "protocol": "PreferUDP",
+      "forwardDestination": "ClusterCoreDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
+    },
+    "cluster.local": {
+      "queryLogging": "Error",
+      "protocol": "ForceTCP",
+      "forwardDestination": "ClusterCoreDNS",
+      "forwardPolicy": "Sequential",
+      "maxConcurrent": 1000,
+      "cacheDurationInSeconds": 3600,
+      "serveStaleDurationInSeconds": 3600,
+      "serveStale": "Immediate"
     }
   }
 }
