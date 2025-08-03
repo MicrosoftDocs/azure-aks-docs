@@ -152,11 +152,11 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
 LocalDNS can be enabled in three possible modes that define the extent of enforcement of LocalDNS for the workload:
 * `Required`: In this mode, LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
-* `Preferred` (default): In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS is not enabled unless the correct Kubernetes version is used.
+* `Preferred`: In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS is not enabled unless the correct Kubernetes version is used.
 
 The following table summarizes LocalDNS behavior for each mode and Kubernetes version:
 
-| Kubernetes Version | Preferred (default)                | Required                              | Disabled                          |
+| Kubernetes Version | Preferred                | Required                              | Disabled                          |
 |--------------------|------------------------------------|---------------------------------------|-----------------------------------|
 | < 1.31             | Not supported                      | Not supported                         | Not supported                     |
 | > 1.31             | Config validated, not installed    | Installed and enforced                | Config validated, not installed   |
