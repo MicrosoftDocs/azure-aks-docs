@@ -88,7 +88,7 @@ az aks nodepool update --name mynodepool1 --cluster-name myAKSCluster --resource
 ```
 
 > [!IMPORTANT]
-> Enabling LocalDNS on a node pool initiates a reimage operation on all nodes within that pool. This process can cause temporary disruption to running workloads and may lead to application downtime if not properly managed. You should plan for potential service interruptions and ensure that their applications are configured for high availability or have appropriate disruption budgets in place before enabling this setting.
+> Enabling LocalDNS on a node pool initiates a reimage operation on all nodes within that pool. This process can cause temporary disruption to running workloads and may lead to application downtime if not properly managed. You should plan for potential service interruptions and ensure that the applications are configured for high availability or have appropriate disruption budgets in place before enabling this setting.
 
 ## Configure LocalDNS
 
@@ -175,11 +175,11 @@ The default configuration applies to queries from pods using `dnsPolicy:default`
 | [`queryLogging`](https://coredns.io/plugins/log/)                 | Define the logging level for DNS queries.                                               | `Error`                                                              | `Error` `Log`                      | 
 | [`protocol`](https://coredns.io/plugins/forward/)                 | Sets the protocol used for DNS queries (UDP/TCP preference).                            | `ForceTCP` for cluster.local, else `PreferUDP`                       | `PreferUDP` `ForceTCP`             | 
 | [`forwardDestination`](https://coredns.io/plugins/forward/)       | Specifies the DNS server to forward queries to.                                         | `ClusterCoreDNS` for cluster.local and kubeDNS traffic, else `VnetDNS` | `VnetDNS` `ClusterCoreDNS`         |
-| [`forwardPolicy`](https://coredns.io/plugins/forward/)            | Determines the policy to use when selecting the upstream DNS server. Default is `random`.| `sequential`                                                         | `random` `round_robin` `sequential`|
-| [`maxConcurrent`](https://coredns.io/plugins/forward/)            | Maximum number of concurrent DNS queries handled by the proxy.                          | `1000`                                                               | Integer                            | 
+| [`forwardPolicy`](https://coredns.io/plugins/forward/)            | Determines the policy to use when selecting the upstream DNS server. | `Sequential`                                                         | `Random` `RoundRobin` `Sequential`|
+| [`maxConcurrent`](https://coredns.io/plugins/forward/)            | Maximum number of concurrent DNS queries handled by LocalDNS.                          | `1000`                                                               | Integer                            | 
 | [`cacheDurationInSeconds`](https://coredns.io/plugins/cache)      | Maximum TTL (Time To Live) in seconds for which DNS responses are cached.                | `3600`                                                               | Integer                            |
 | [`serveStaleDurationInSeconds`](https://coredns.io/plugins/cache) | Duration (in seconds) to serve stale DNS responses if upstream is unavailable.          | `3600`                                                               | Integer                            |
-| [`serveStale`](https://coredns.io/plugins/cache)                  | Policy for serving stale DNS responses during upstream failures.                        | `immediate`                                                             | `verify` `immediate`               | 
+| [`serveStale`](https://coredns.io/plugins/cache)                  | Policy for serving stale DNS responses during upstream failures.                        | `Immediate`                                                             | `Verify` `Immediate` `Disabled`               | 
 
 ### Configuration validation rules
 
@@ -187,7 +187,7 @@ When creating your LocalDNS configuration, be aware of these validation rules to
 
 - **Root zone (`.`) restrictions**: Under `vnetDNSOverrides`, the `forwardDestination` for the root zone cannot be `ClusterCoreDNS`.
 - **Cluster.local zone restrictions**: Under both `vnetDNSOverrides` and `kubeDNSOverrides`, the `forwardDestination` for `cluster.local` cannot be `VnetDNS`.
-- **Protocol and serveStale compatibility**: When `protocol` is set to `ForceTCP`, `serveStale` cannot be set to `verify`. Use `immediate` instead.
+- **Protocol and serveStale compatibility**: When `protocol` is set to `ForceTCP`, `serveStale` cannot be set to `Verify`. Use `Immediate` instead.
 
 > [!NOTE]
 > These validation rules are enforced during configuration deployment. Violating them will cause the LocalDNS configuration to fail validation. 
@@ -207,7 +207,7 @@ For example, if you have specific DNS needs when accessing microsoft.com, you co
   "maxConcurrent": 1000,
   "cacheDurationInSeconds": 3600,
   "serveStaleDurationInSeconds": 3600,
-  "serveStale": "immediate"
+  "serveStale": "Immediate"
 }
 ```
 
@@ -258,9 +258,10 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 - **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This setup allows you to validate that LocalDNS works as expected without breaking your cluster.
 
 - **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
-  - For frequently changing records, use shorter `cacheDurationInSeconds` values.
+  - For frequently changing records, use shorter `cacheDurationInSeconds` values. When doing so, it is important to note that cacheDurationInSeconds acts as a cap on the DNS record TTL but will not increase it. The resulting TTL will be the smaller of what is returned from upstream or what it is set to in the cache plugin.
   - For stable records, use longer cache durations to reduce DNS queries.
   - Enable `serveStale` with appropriate settings to maintain service during DNS outages.
+  - Caching with LocalDNS operates on a best effort basis and does not guarantee stale responses. The cache is divided into 256 shards and with a default maximum of 10000 entries, allowing each shard to hold about 39 entries. When a shard is full and a new entry needs to be added, one of the existing entries will be chosen at random to be evicted. There is no preference for older or expires entries. As a result, a stale record might not always be available, especially under high query volume.
 
 - **Monitor DNS performance**: After enabling LocalDNS, monitor your application's DNS performance using:
   - Application performance metrics.
