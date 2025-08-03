@@ -521,10 +521,14 @@
             href: concepts-network-legacy-cni.md
       - name: DNS
         items:
+          - name: DNS Resolution
+            href: dns-concepts.md
           - name: Use a static IP address and DNS label
             href: static-ip.md
           - name: Customize CoreDNS
             href: coredns-custom.md
+          - name: Configure LocalDNS
+            href: localdns-custom.md
       - name: Load balancing
         items:
           - name: Create an internal load balancer
