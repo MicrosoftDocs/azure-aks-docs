@@ -29,7 +29,7 @@ To learn about what LocalDNS is, including architecture details, and key capabil
 * LocalDNS requires your AKS cluster to be running Kubernetes version 1.31 or later.
 * LocalDNS is only supported on node pools running Ubuntu 22.04 or newer.
 * LocalDNS only supports Virtual Machine Scale Set node pools.
-* The VM SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
+* The Virtual Machine (VM) SKU used for your node pool must have at least 4 vCPUs (cores) to support LocalDNS.
 
 ### Install the `aks-preview` Azure CLI extension
 
@@ -71,7 +71,7 @@ To learn about what LocalDNS is, including architecture details, and key capabil
 
 LocalDNS is configured at the node pool level in AKS, meaning you can enable or disable LocalDNS independently for each node pool in your cluster. This tailors DNS resolution behavior based on the specific requirements of different workloads or environments. To enable LocalDNS on a node pool, you need to provide a configuration file: _localdnsconfig.json_ that defines how LocalDNS should operate for that node pool. If you don't specify a custom configuration file, AKS automatically applies a default LocalDNS configuration. For details on default configurations and how to configure CoreDNS plugins and server blocks, refer to [Configuring LocalDNS](#configure-localdns).
 
-### Create a new node pool with LocalDNS enabled
+### Enable LocalDNS on a new node pool
 
 To enable LocalDNS during node pool creation, use the following command with your custom configuration file:
 
@@ -79,7 +79,7 @@ To enable LocalDNS during node pool creation, use the following command with you
 az aks nodepool add --name mynodepool1 --cluster-name myAKSCluster --resource-group myResourceGroup --localdns-config ./localdnsconfig.json
 ```
 
-### Update an existing node pool to enable LocalDNS
+### Enable LocalDNS on an existing node pool
 
 To enable LocalDNS on an existing node pool, use the following command with your custom configuration file:
 
@@ -152,7 +152,7 @@ The default LocalDNS configuration provides a balanced setup that optimizes both
 LocalDNS can be enabled in three possible modes that define the extent of enforcement of LocalDNS for the workload:
 * `Required`: In this mode, LocalDNS is enforced on the node pool if all prerequisites are satisfied. If the requirements aren't met, the deployment fails.
 * `Disabled`: Disables the local DNS feature, meaning DNS queries aren't resolved locally within the AKS cluster.
-* `Preferred`: In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS is not enabled unless the correct Kubernetes version is used.
+* `Preferred`: In this mode, AKS manages LocalDNS enablement based on the Kubernetes version of the node pool. The configuration is always validated and included, but LocalDNS isn't enabled unless the correct Kubernetes version is used.
 
 The following table summarizes LocalDNS behavior for each mode and Kubernetes version:
 
@@ -185,9 +185,9 @@ The default configuration applies to queries from pods using `dnsPolicy:default`
 
 When creating your LocalDNS configuration, be aware of these validation rules to avoid deployment failures:
 
-- **Root zone (`.`) restrictions**: Under `vnetDNSOverrides`, the `forwardDestination` for the root zone cannot be `ClusterCoreDNS`.
-- **Cluster.local zone restrictions**: Under both `vnetDNSOverrides` and `kubeDNSOverrides`, the `forwardDestination` for `cluster.local` cannot be `VnetDNS`.
-- **Protocol and serveStale compatibility**: When `protocol` is set to `ForceTCP`, `serveStale` cannot be set to `Verify`. Use `Immediate` instead.
+- **Root zone (`.`) restrictions**: Under `vnetDNSOverrides`, the `forwardDestination` for the root zone can't be `ClusterCoreDNS`.
+- **Cluster.local zone restrictions**: Under both `vnetDNSOverrides` and `kubeDNSOverrides`, the `forwardDestination` for `cluster.local` can't be `VnetDNS`.
+- **Protocol and serveStale compatibility**: When `protocol` is set to `ForceTCP`, `serveStale` can't be set to `Verify`. Use `Immediate` instead.
 
 > [!NOTE]
 > These validation rules are enforced during configuration deployment. Violating them will cause the LocalDNS configuration to fail validation. 
@@ -258,10 +258,10 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 - **Start with a minimal configuration**: Begin with a simple configuration that uses the `Preferred` mode before moving to `Required` mode. This setup allows you to validate that LocalDNS works as expected without breaking your cluster.
 
 - **Implement proper caching strategies**: Configure cache settings based on your workload characteristics:
-  - For frequently changing records, use shorter `cacheDurationInSeconds` values. When doing so, it is important to note that cacheDurationInSeconds acts as a cap on the DNS record TTL but will not increase it. The resulting TTL will be the smaller of what is returned from upstream or what it is set to in the cache plugin.
+  - For frequently changing records, use shorter `cacheDurationInSeconds` values. When doing so, it is important to note that cacheDurationInSeconds acts as a cap on the DNS record TTL but doesn't increase it. The resulting TTL is the smaller of what is returned from upstream or what it's set to in the cache plugin.
   - For stable records, use longer cache durations to reduce DNS queries.
   - Enable `serveStale` with appropriate settings to maintain service during DNS outages.
-  - Caching with LocalDNS operates on a best effort basis and does not guarantee stale responses. The cache is divided into 256 shards and with a default maximum of 10000 entries, allowing each shard to hold about 39 entries. When a shard is full and a new entry needs to be added, one of the existing entries will be chosen at random to be evicted. There is no preference for older or expires entries. As a result, a stale record might not always be available, especially under high query volume.
+  - Caching with LocalDNS operates on a best effort basis and doesn't guarantee stale responses. The cache is divided into 256 shards and with a default maximum of 10,000 entries, allowing each shard to hold about 39 entries. When a shard is full and a new entry needs to be added, one of the existing entries is chosen at random to be evicted. There's no preference for older or expires entries. As a result, a stale record might not always be available, especially under high query volume.
 
 - **Monitor DNS performance**: After enabling LocalDNS, monitor your application's DNS performance using:
   - Application performance metrics.
@@ -276,7 +276,7 @@ When implementing LocalDNS in your AKS clusters, consider the following best pra
 
 - **Network configuration for TCP forwarding**: When using TCP for DNS forwarding to VnetDNS, ensure that your Network Security Groups (NSGs), firewalls, or Network Virtual Appliances (NVAs) don't block TCP traffic between CoreDNS/LocalDNS and VnetDNS servers.
 
-- **Avoid enabling both NodeLocal DNSCache and LocalDNS**: It is not recommended to enable both the upstream Kubernetes NodeLocal DNSCache and LocalDNS in your node pool. While AKS does not block this configuration, all DNS traffic will be routed through LocalDNS, which may lead to unexpected behavior or reduced benefits from NodeLocal DNSCache.
+- **Avoid enabling both NodeLocal DNSCache and LocalDNS**: It isn't recommended to enable both the upstream Kubernetes NodeLocal DNSCache and LocalDNS in your node pool. While AKS doesn't block this configuration, all DNS traffic is routed through LocalDNS, which may lead to unexpected behavior or reduced benefits from NodeLocal DNSCache.
 
 ## Troubleshoot LocalDNS
 
@@ -290,12 +290,12 @@ If DNS queries to specific domains are failing after enabling LocalDNS:
 
 ### Update VNet DNS servers for LocalDNS
 
-After updating custom VNet DNS servers directly in the VNet configuration (using the Azure portal or CLI), DNS changes aren't reflected in your AKS cluster nodes. This happens because modifying DNS servers at the VNet level only updates the Network Resource Provider (NRP) and doesn't notify the AKS Resource Provider, so AKS nodes continue using the old DNS settings.
+After updating custom VNet DNS servers directly in the VNet configuration (using the Azure portal or CLI), DNS changes aren't reflected in your AKS cluster nodes. This is because modifying DNS servers at the VNet level only updates the Network Resource Provider (NRP) and doesn't notify the AKS Resource Provider, so AKS nodes continue using the old DNS settings.
 
 To ensure AKS nodes pick up the new VNet DNS server settings:
 
 1. Update the VNet DNS configuration using the Azure portal or APIs as needed.
-2. Trigger a node pool reimage through the AKS Resource Provider to apply and persist the DNS changes:
+2. Reimage the node pool through the AKS Resource Provider to apply and persist the DNS changes:
 
   ```azurecli-interactive
   az aks nodepool upgrade --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-image-only
