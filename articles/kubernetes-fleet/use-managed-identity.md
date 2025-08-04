@@ -11,9 +11,9 @@ ms.date: 08/04/2025
 
 # Use a managed identity in Azure Kubernetes Fleet Manager
 
-Azure Kubernetes Fleet Manager uses a Microsoft Entra identity to access Azure resources like Azure Traffic Manager or to manage long-running background activities such as multi-cluster [auto-upgrade][fleet-auto-upgrade]. Managed identities for Azure resources are the recommended way to authorize access from a Fleet Manager to other Azure services.
+Azure Kubernetes Fleet Manager uses a Microsoft Entra identity to access Azure resources like Azure virtual networks or to manage long-running background activities such as multi-cluster [auto-upgrade][fleet-auto-upgrade].
 
-You can use a managed identity to authorize access from a Fleet Manager to any service that supports Microsoft Entra authorization, without needing to manage credentials or include them in your code. You assign to the managed identity an Azure role-based access control (Azure RBAC) role to grant it permissions to a particular resource in Azure. For more information about Azure RBAC, see [What is Azure role\-based access control \(Azure RBAC\)?](/azure/role-based-access-control/overview).
+You can use a managed identity to authorize access from a Fleet Manager to any service that supports Microsoft Entra authorization, without needing to manage credentials or include them in your code. You assign an Azure role-based access control (Azure RBAC) role to the managed identity to grant it permissions to a particular resource in Azure. For more information about Azure RBAC, see [What is Azure role\-based access control \(Azure RBAC\)?](/azure/role-based-access-control/overview).
 
 This article shows how to enable the following types of managed identity on a new or existing Azure Kubernetes Fleet Manager:
 
@@ -22,21 +22,9 @@ This article shows how to enable the following types of managed identity on a ne
 
 To learn more about managed identities, see [Managed identities for Azure resources](/entra/identity/managed-identities-azure-resources/overview).
 
-## Overview
-
-Fleet Manager uses a managed identity to request tokens from Microsoft Entra. These tokens are used to authorize access to other resources running in Azure. You can assign an Azure RBAC role to a managed identity to grant your Fleet Manager permissions to access specific resources. 
-
-A managed identity can be either system-assigned or user-assigned. These two types of managed identities are similar in that you can use either type to authorize access to Azure resources from your Fleet Manager. The key difference is a system-assigned managed identity is associated with a single Azure resource like a Fleet Manager, while a user-assigned managed identity is a standalone Azure resource and can be shared across multiple Azure resources. For more information on the differences between types of managed identities, see **Managed identity types** in [Managed identities for Azure resources][managed-identity-resources-overview].
-
-Both types of managed identities are managed by the Azure platform, so that you can authorize access from your applications without needing to provision or rotate any secrets. Azure manages the identity's credentials for you.
-
-When you deploy a Fleet Manager you can choose to use a system-assigned or a user-assigned managed identity.
-
-You can update an existing Fleet Manager to use a managed identity from an application service principal. You can also update an existing Fleet Manager to a different type of managed identity. If your Fleet Manager is already using a managed identity and the identity was changed, for example if you updated the Fleet Manager identity type from system-assigned to user-assigned, then there's a delay while control plane components switch to the new identity. Control plane components continue to use the old identity until its token expires. After the token is refreshed, they switch to the new identity. This process can take several hours.
-
 ## Before you begin
 
-Make sure you have Azure CLI version 2.75.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+If you intend to use the Azure CLI, make sure you have Azure CLI version 2.75.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 Before running the Azure CLI examples in this article, set your subscription as the current active subscription by calling the [az account set][az-account-set] command and passing in your subscription ID.
 
