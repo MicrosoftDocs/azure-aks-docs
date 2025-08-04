@@ -417,9 +417,9 @@
         - name: Managed Namespaces
           items:
             - name: Overview
-              href: managed-namespaces.md
+              href: concepts-managed-namespaces.md
             - name: Use managed namespaces
-              href: use-managed-namespaces.md  
+              href: managed-namespaces.md  
     - name: Configure backup
       items:
         - name: Prerequisites
