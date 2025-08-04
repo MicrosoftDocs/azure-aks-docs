@@ -1,0 +1,305 @@
+---
+title: Use a managed identity in Azure Kubernetes Fleet Manager
+description: Learn how to use a system-assigned or user-assigned managed identity in Azure Kubernetes Fleet Manager
+author: sjwaight
+ms.author: simonwaight
+ms.service: azure-kubernetes-fleet-manager
+ms.date: 08/04/2025
+# Customer intent: "As a DevOps engineer, I want to implement managed identities in Azure Kubernetes Service (AKS) so that I can securely authorize access to Azure resources without managing credentials manually."
+---
+
+# Use a managed identity in Azure Kubernetes Fleet Manager
+
+Azure Kubernetes Fleet Manager uses a Microsoft Entra identity to access Azure resources like Azure Traffic Manager or to manage long-running background activities such as multi-cluster [auto-upgrades][fleet-auto-upgrade]. Managed identities for Azure resources are the recommended way to authorize access from a Fleet Manager to other Azure services.
+
+You can use a managed identity to authorize access from a Fleet Manager to any service that supports Microsoft Entra authorization, without needing to manage credentials or include them in your code. You assign to the managed identity an Azure role-based access control (Azure RBAC) role to grant it permissions to a particular resource in Azure. For more information about Azure RBAC, see [What is Azure role\-based access control \(Azure RBAC\)?](/azure/role-based-access-control/overview).
+
+This article shows how to enable the following types of managed identity on a new or existing Azure Kubernetes Fleet Manager:
+
+* **System-assigned managed identity.** A system-assigned managed identity is associated with a single Azure resource, such as a Fleet Manager. It exists for the lifecycle of the Fleet Manager only.
+* **User-assigned managed identity.** A user-assigned managed identity is a standalone Azure resource that a Fleet Manager can use to authorize access to other Azure services. It persists separately from the Fleet Manager and can be used by multiple Azure resources.
+
+To learn more about managed identities, see [Managed identities for Azure resources](/entra/identity/managed-identities-azure-resources/overview).
+
+## Overview
+
+Fleet Manager uses a managed identity to request tokens from Microsoft Entra. These tokens are used to authorize access to other resources running in Azure. You can assign an Azure RBAC role to a managed identity to grant your Fleet Manager permissions to access specific resources. 
+
+A managed identity can be either system-assigned or user-assigned. These two types of managed identities are similar in that you can use either type to authorize access to Azure resources from your Fleet Manager. The key difference between them is that a system-assigned managed identity is associated with a single Azure resource like a Fleet Manager, while a user-assigned managed identity is itself a standalone Azure resource. For more details on the differences between types of managed identities, see **Managed identity types** in [Managed identities for Azure resources][managed-identity-resources-overview].
+
+Both types of managed identities are managed by the Azure platform, so that you can authorize access from your applications without needing to provision or rotate any secrets. Azure manages the identity's credentials for you.
+
+When you deploy a Fleet Manager you can choose to use a system-assigned or a user-assigned managed identity.
+
+You can update an existing Fleet Manager to use a managed identity from an application service principal. You can also update an existing Fleet Manager to a different type of managed identity. If your Fleet Manager is already using a managed identity and the identity was changed, for example if you updated the Fleet Manager identity type from system-assigned to user-assigned, then there is a delay while control plane components switch to the new identity. Control plane components continue to use the old identity until its token expires. After the token is refreshed, they switch to the new identity. This process can take several hours.
+
+## Before you begin
+
+* Make sure you have Azure CLI version 2.75.0 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+
+Before running the examples in this article, set your subscription as the current active subscription by calling the [az account set][az-account-set] command and passing in your subscription ID.
+
+```azurecli-interactive
+az account set --subscription <subscription-id>
+```
+
+Also create an Azure resource group if you don't already have one by calling the [`az group create`][az-group-create] command.
+
+```azurecli-interactive
+az group create \
+    --name myResourceGroup \
+    --location westus2
+```
+
+## Enable a system-assigned managed identity
+
+A system-assigned managed identity is an identity that is associated with a Fleet Manager or another Azure resource. The system-assigned managed identity is tied to the lifecycle of the Fleet Manager. When the Fleet Manager is deleted, the system-assigned managed identity is also deleted.
+
+The Fleet Manager can use the system-assigned managed identity to authorize access to other resources running in Azure. You can assign an Azure RBAC role to the system-assigned managed identity to grant the Fleet Manager permissions to access specific resources. For example, if your  needs to access secrets in an Azure key vault, you can assign to the system-assigned managed identity an Azure RBAC role that grants those permissions.
+
+### Enable a system-assigned managed identity on a new Fleet Manager
+
+Create a Fleet Manager using the [`az fleet create`][az-fleet-create] command, passing the `--enable-managed-identity` parameter to enable the system-assigned managed identity.
+
+```azurecli-interactive
+az fleet create \
+    --resource-group myResourceGroup \
+    --name myFleetName \
+    --location westus2 \
+    --enable-managed-identity
+```
+
+The command output indicates the identity type is **SystemAssigned** and includes the principal ID and tenant.
+
+```output
+{
+  "eTag": "\"13003f4b-0000-1b00-0000-68900c3c0000\"",
+  "hubProfile": null,
+  "id": "/subscriptions/<subscription-id>/resourceGroups/myResourceGroup/providers/Microsoft.ContainerService/fleets/myFleetName",
+  "identity": {
+    "principalId": "<principal-id>",
+    "tenantId": "<tenant-id>",
+    "type": "SystemAssigned",
+    "userAssignedIdentities": null
+  },
+  "location": "westus2",
+  "name": "flt-mgr-02",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myResourceGroup",
+  "status": {
+    "lastOperationError": null,
+    "lastOperationId": "d31e866c-a3d3-46ab-8a97-094bc4672d35"
+  },
+  "systemData": {
+    "createdAt": "2025-08-04T01:26:17.588030+00:00",
+    "createdBy": "",
+    "createdByType": "User",
+    "lastModifiedAt": "2025-08-04T01:26:17.588030+00:00",
+    "lastModifiedBy": "",
+    "lastModifiedByType": "User"
+  },
+  "tags": null,
+  "type": "Microsoft.ContainerService/fleets"
+}
+```
+
+### Update an existing Fleet Manager to use a system-assigned managed identity
+
+To update an existing Fleet Manager to use a system-assigned managed identity, run the [az fleet update][az-fleet-update] command with the `--enable-managed-identity` parameter set to `true`.
+
+```azurecli-interactive
+az fleet update \
+    --resource-group myResourceGroup \
+    --name myFleetName \
+    --enable-managed-identity true
+```
+
+### Add a role assignment for a system-assigned managed identity
+
+You can assign an Azure RBAC role to the system-assigned managed identity to grant the Fleet Manager permissions on another Azure resource. Azure RBAC supports both built-in and custom role definitions that specify levels of permissions. For more information about assigning Azure RBAC roles, see [Steps to assign an Azure role](/azure/role-based-access-control/role-assignments-steps).
+
+When you assign an Azure RBAC role to a managed identity, you must define the scope for the role. In general, it's a best practice to limit the scope of a role to the minimum privileges required by the managed identity. For more information on scoping Azure RBAC roles, see [Understand scope for Azure RBAC](/azure/role-based-access-control/scope-overview).
+
+#### Get the principal ID of the system-assigned managed identity
+
+To assign an Azure RBAC role to a Fleet Manager's system-assigned managed identity, you first need the principal ID for the managed identity. Get the principal ID for the Fleet Manager's system-assigned managed identity by calling the [`az fleet show`][az-fleet-show] command.
+
+```azurecli-interactive
+# Get the principal ID for a system-assigned managed identity.
+CLIENT_ID=$(az fleet show \
+    --name myFleetName \
+    --resource-group myResourceGroup \
+    --query identity.principalId \
+    --output tsv)
+```
+
+#### Assign an Azure RBAC role to the system-assigned managed identity
+
+To grant a system-assigned managed identity permissions to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
+
+For example, assign the `Network Contributor` role on the custom resource group using the [`az role assignment create`][az-role-assignment-create] command. For the `--scope` parameter, provide the resource ID for the resource group for the Fleet Manager.
+
+```azurecli-interactive
+az role assignment create \
+    --assignee $CLIENT_ID \
+    --role "Network Contributor" \
+    --scope "<fleet-manager-resource-group-id>"
+```
+
+> [!NOTE]
+> It can take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
+
+## Enable a user-assigned managed identity
+
+A user-assigned managed identity is a standalone Azure resource. When you create a Fleet Manager with a user-assigned managed identity, the user-assigned managed identity resource must exist prior to Fleet Manager creation.
+
+### Create a user-assigned managed identity
+
+If you don't yet have a user-assigned managed identity resource, create one using the [`az identity create`][az-identity-create] command.
+
+```azurecli-interactive
+az identity create \
+    --name myIdentity \
+    --resource-group myResourceGroup
+```
+
+Your output should resemble the following example output:
+
+```output
+{                                  
+  "clientId": "<client-id>",
+  "clientSecretUrl": "<clientSecretUrl>",
+  "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
+  "location": "westus2",
+  "name": "myIdentity",
+  "principalId": "<principal-id>",
+  "resourceGroup": "myResourceGroup",                       
+  "tags": {},
+  "tenantId": "<tenant-id>",
+  "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+}
+```
+
+#### Get the principal ID of the user-assigned managed identity
+
+To get the principal ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `principalId` property:
+
+```azurecli-interactive
+CLIENT_ID=$(az identity show \
+    --name myIdentity \
+    --resource-group myResourceGroup \
+    --query principalId \
+    --output tsv)
+```
+
+#### Get the resource ID of the user-assigned managed identity
+
+To create a Fleet Manager with a user-assigned managed identity, you will need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
+
+```azurecli-interactive
+RESOURCE_ID=$(az identity show \
+    --name myIdentity \
+    --resource-group myResourceGroup \
+    --query id \
+    --output tsv)
+```
+
+### Assign an Azure RBAC role to the user-assigned managed identity
+
+Before you create the Fleet Manager, add a role assignment for the managed identity by calling the [`az role assignment create`][az-role-assignment-create] command.
+
+The following example assigns the **Key Vault Secrets User** role to the user-assigned managed identity to grant it permissions to access secrets in a key vault. The role assignment is scoped to the key vault resource:
+
+```azurecli-interactive
+az role assignment create \
+    --assignee $CLIENT_ID \
+    --role "Key Vault Secrets User" \
+    --scope "<keyvault-resource-id>"
+```
+
+> [!NOTE]
+>
+> It may take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
+
+### Create a Fleet Manager with the user-assigned managed identity
+
+To create a Fleet Manager with the user-assigned managed identity, call the [`az fleet create`][az-fleet-create] command. Include the `--assign-identity` parameter and pass in the resource ID for the user-assigned managed identity:
+
+```azurecli-interactive
+az fleet create \
+    --resource-group myResourceGroup \
+    --name myFleetName \
+    --assign-identity $RESOURCE_ID
+```
+
+> [!NOTE]
+>
+> The USDOD Central, USDOD East, and USGov Iowa regions in Azure US Government cloud don't support creating a Fleet Manager with a user-assigned managed identity.
+
+### Update an existing Fleet Manager to use a user-assigned managed identity
+
+To update an existing Fleet Manager to use a user-assigned managed identity, call the [`az fleet update`][az-fleet-update] command. Include the `--assign-identity` parameter and pass in the resource ID for the user-assigned managed identity:
+
+```azurecli-interactive
+az fleet update \
+    --resource-group myResourceGroup \
+    --name myFleetName \
+    --enable-managed-identity \
+    --assign-identity $RESOURCE_ID
+```
+
+The output for a successful Fleet Manager update to use a user-assigned managed identity should resemble the following example output:
+
+```json
+  "identity": {
+    "principalId": null,
+    "tenantId": null,
+    "type": "UserAssigned",
+    "userAssignedIdentities": {
+      "/subscriptions/<subscriptionid>/resourcegroups/resourcegroups/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity": {
+        "clientId": "<client-id>",
+        "principalId": "<principal-id>"
+      }
+    }
+  },
+```
+
+## Determine which type of managed identity a Fleet Manager is using
+
+To determine which type of managed identity your existing Fleet Manager is using, call the [az fleet show][az-fleet-show] command and query for the identity's *type* property.
+
+```azurecli
+az fleet show \
+    --name myFleetName \
+    --resource-group myResourceGroup \
+    --query identity.type \
+    --output tsv       
+```
+
+The response will be either **SystemAssigned** or **UserAssigned**.
+
+## Limitations
+
+* Moving or migrating a managed identity-enabled Fleet Manager to a different tenant isn't supported.
+
+* Fleet Manager doesn't support the use of a system-assigned managed identity when using a custom private DNS zone.
+
+## Next steps
+
+* Use [Azure Resource Manager templates][aks-arm-template] to create a managed identity-enabled Fleet Manager.
+
+<!-- LINKS - external -->
+[aks-arm-template]: /azure/templates/microsoft.containerservice/fleets
+
+<!-- LINKS - internal -->
+[install-azure-cli]: /cli/azure/install-azure-cli
+[az-identity-create]: /cli/azure/identity#az_identity_create
+[az-identity-show]: /cli/azure/identity#az_identity_show
+[fleet-auto-upgrade]: ./update-automation.md
+[managed-identity-resources-overview]: /azure/active-directory/managed-identities-azure-resources/overview#managed-identity-types
+[az-account-set]: /cli/azure/account#az-account-set
+[az-group-create]: /cli/azure/group#az_group_create
+[az-fleet-create]: /cli/azure/fleet#az_fleet_create
+[az-fleet-show]: /cli/azure/fleet#az_fleet_show
+[az-fleet-update]: /cli/azure/fleet#az_fleet_update
+[az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create

@@ -29,6 +29,10 @@ If you would like Fleet Manager to support more than 100 clusters, [add feedback
 
 Fleet Manager allows appropriately authorized users to add any AKS cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
 
+### Does Fleet Manager support managed identities?
+
+Yes, Fleet Manager supports both system-assigned and user-assigned managed identities. For more information, see the documentation on [using managed identities with Fleet Manager](./use-managed-identity.md).
+
 ### What happens when the cluster identity of a joined cluster is changed?
 
 Changing the identity of a member cluster breaks the communication between Fleet Manager and that member cluster. While the member agent uses the new identity to communicate with the Fleet Manager, Fleet Manager still needs to be made aware of the new identity. Run this command to resolve:
