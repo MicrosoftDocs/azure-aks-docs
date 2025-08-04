@@ -177,6 +177,7 @@ The command output indicates the identity type is **SystemAssigned** and include
 ```
 
 ---
+
 ### Add a role assignment for a system-assigned managed identity
 
 You can assign an Azure RBAC role to the system-assigned managed identity to grant the Fleet Manager permissions on another Azure resource. Azure RBAC supports both built-in and custom role definitions that specify levels of permissions. For more information about assigning Azure RBAC roles, see [Steps to assign an Azure role](/azure/role-based-access-control/role-assignments-steps).
@@ -374,7 +375,26 @@ az fleet create \
 
 ### [Azure portal](#tab/azure-portal)
 
-You can't create a Fleet Manager with a user-assigned managed identity in the Azure portal. You can change the identity type to user-assigned after the Fleet Manager is created, or use the Azure CLI.
+You can manage the Fleet Manager managed identity using the **Identity** blade in the Fleet Manager's **Settings** section. 
+
+1. Switch to the user-assigned managed identity tab by selecting **User assigned**. 
+
+    :::image type="content" source="./media/managed-identity/managed-identity-enable-user-assigned-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing system assigned identity disabled." lightbox="./media/managed-identity/managed-identity-enable-user-assigned-01.png":::
+
+2. Select **+ Add** to open the **Add user assigned managed identity** pane.
+
+    * **Subscription** - choose the Azure subscription containing the user-assigned managed identity you want to use.
+    * **User assigned managed identities** - search for the user-assigned managed identity you want to use.
+
+    :::image type="content" source="./media/managed-identity/managed-identity-enable-user-assigned-02.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing system assigned identity disabled." lightbox="./media/managed-identity/managed-identity-enable-user-assigned-02.png":::
+
+
+3. Select **Add** to add the user-assigned managed identity to the Fleet Manager.
+
+4. After a few moments the **User assigned** list changes and the user-assigned managed identity is listed.
+
+    :::image type="content" source="./media/managed-identity/managed-identity-enable-user-assigned-03.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the system assigned identity configuration." lightbox="./media/managed-identity/managed-identity-enable-user-assigned-03.png":::
+
 
 ### [Azure CLI](#tab/cli)
 
