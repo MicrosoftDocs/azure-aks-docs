@@ -412,7 +412,7 @@ The output for a successful Fleet Manager update to use a user-assigned managed 
 ```
 ---
 
-## Determine which type of managed identity a Fleet Manager is using
+## Determine type of managed identity in use
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -420,7 +420,7 @@ You can check the Fleet Manager managed identity settings using the **Identity**
 
 Check both the **System assigned** and **User assigned** sections to determine which type of managed identity is enabled.
 
-:::image type="content" source="./media/managed-identity/managed-identity-enable-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing a populated system assigned identity." lightbox="./media/managed-identity/managed-identity-enable-system-assigned.png":::
+:::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing a populated system assigned identity." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
 
 ### [Azure CLI](#tab/cli)
 
@@ -450,7 +450,6 @@ The response is either **SystemAssigned** or **UserAssigned**.
 [az-identity-create]: /cli/azure/identity#az_identity_create
 [az-identity-show]: /cli/azure/identity#az_identity_show
 [fleet-auto-upgrade]: ./update-automation.md
-[managed-identity-resources-overview]: /azure/active-directory/managed-identities-azure-resources/overview#managed-identity-types
 [az-account-set]: /cli/azure/account#az-account-set
 [az-group-create]: /cli/azure/group#az_group_create
 [az-fleet-create]: /cli/azure/fleet#az_fleet_create
