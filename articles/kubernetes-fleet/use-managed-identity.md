@@ -36,7 +36,7 @@ You can update an existing Fleet Manager to use a managed identity from an appli
 
 ## Before you begin
 
-* Make sure you have Azure CLI version 2.75.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+Make sure you have Azure CLI version 2.75.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 Before running the Azure CLI examples in this article, set your subscription as the current active subscription by calling the [az account set][az-account-set] command and passing in your subscription ID.
 
@@ -115,7 +115,6 @@ The command output indicates the identity type is **SystemAssigned** and include
 ```
 
 ---
-
 ### Update an existing Fleet Manager to use a system-assigned managed identity
 
 ### [Azure portal](#tab/azure-portal)
@@ -178,7 +177,6 @@ The command output indicates the identity type is **SystemAssigned** and include
 ```
 
 ---
-
 ### Add a role assignment for a system-assigned managed identity
 
 You can assign an Azure RBAC role to the system-assigned managed identity to grant the Fleet Manager permissions on another Azure resource. Azure RBAC supports both built-in and custom role definitions that specify levels of permissions. For more information about assigning Azure RBAC roles, see [Steps to assign an Azure role](/azure/role-based-access-control/role-assignments-steps).
@@ -210,7 +208,7 @@ When you assign an Azure RBAC role to a managed identity, you must define the sc
 
 ### [Azure CLI](#tab/cli)
 
-#### Get the principal ID of the system-assigned managed identity
+1. Get the principal ID of the system-assigned managed identity
 
 To assign an Azure RBAC role to a Fleet Manager's system-assigned managed identity, you first need the principal ID for the managed identity. Get the principal ID for the Fleet Manager's system-assigned managed identity by calling the [`az fleet show`][az-fleet-show] command.
 
@@ -223,7 +221,7 @@ CLIENT_ID=$(az fleet show \
     --output tsv)
 ```
 
-#### Assign an Azure RBAC role to the system-assigned managed identity
+1. Assign an Azure RBAC role to the system-assigned managed identity
 
 To grant a system-assigned managed identity permission to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
 
@@ -242,7 +240,13 @@ az role assignment create \
 
 A user-assigned managed identity is a standalone Azure resource. When you create a Fleet Manager with a user-assigned managed identity, the user-assigned managed identity resource must exist before Fleet Manager creation.
 
-### Create a user-assigned managed identity
+### [Azure portal](#tab/azure-portal)
+
+Content
+
+### [Azure CLI](#tab/cli)
+
+1. Create a user-assigned managed identity
 
 If you don't yet have a user-assigned managed identity resource, create one using the [`az identity create`][az-identity-create] command.
 
@@ -269,7 +273,7 @@ Your output should resemble the following example output:
 }
 ```
 
-#### Get the principal ID of the user-assigned managed identity
+1. Get the principal ID of the user-assigned managed identity
 
 To get the principal ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `principalId` property:
 
@@ -281,7 +285,7 @@ CLIENT_ID=$(az identity show \
     --output tsv)
 ```
 
-#### Get the resource ID of the user-assigned managed identity
+1. Get the resource ID of the user-assigned managed identity
 
 To create a Fleet Manager with a user-assigned managed identity, you need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
 
@@ -297,18 +301,18 @@ RESOURCE_ID=$(az identity show \
 
 Before you create the Fleet Manager, add a role assignment for the managed identity by calling the [`az role assignment create`][az-role-assignment-create] command.
 
-The following example assigns the **Key Vault Secrets User** role to the user-assigned managed identity to grant it permissions to access secrets in a key vault. The role assignment is scoped to the key vault resource:
+> [!NOTE]
+>
+> It may take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
+
+The following example assigns the **Network Contributor** role to the user-assigned managed identity to grant it permissions to access secrets in a key vault. The role assignment is scoped to the key vault resource:
 
 ```azurecli-interactive
 az role assignment create \
     --assignee $CLIENT_ID \
-    --role "Key Vault Secrets User" \
+    --role "Network Contributor" \
     --scope "<keyvault-resource-id>"
 ```
-
-> [!NOTE]
->
-> It may take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
 
 ### Create a Fleet Manager with the user-assigned managed identity
 
@@ -355,6 +359,16 @@ The output for a successful Fleet Manager update to use a user-assigned managed 
 
 ## Determine which type of managed identity a Fleet Manager is using
 
+### [Azure portal](#tab/azure-portal)
+
+You can manage the Fleet Manager managed identity using the **Identity** blade in the Fleet Manager's **Settings** section.
+
+Check both the **System assigned** and **User assigned** sections to determine which type of managed identity is enabled.
+
+:::image type="content" source="./media/managed-identity/managed-identity-enable-system-assigned-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing system assigned identity disabled." lightbox="./media/managed-identity/managed-identity-enable-system-assigned-01.png":::
+
+### [Azure CLI](#tab/cli)
+
 To determine which type of managed identity your existing Fleet Manager is using, call the [az fleet show][az-fleet-show] command and query for the identity's *type* property.
 
 ```azurecli
@@ -366,6 +380,8 @@ az fleet show \
 ```
 
 The response is either **SystemAssigned** or **UserAssigned**.
+
+---
 
 ## Limitations
 
