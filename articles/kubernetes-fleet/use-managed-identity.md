@@ -251,7 +251,7 @@ az fleet update \
 
 The output for a successful Fleet Manager update to use a user-assigned managed identity should resemble the following example output:
 
-```json
+```output
   "identity": {
     "principalId": null,
     "tenantId": null,
