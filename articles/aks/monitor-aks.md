@@ -286,6 +286,28 @@ Starting with Kubernetes version 1.29, node network metrics are enabled by defau
 
 The following node network metrics are enabled by default and are aggregated per node. All metrics include the labels cluster and instance (node name). These metrics can be easily visualized using the Managed Grafana dashboard, accessible under Azure Managed Prometheus > Kubernetes > Networking > Clusters.
 
+### Disabling Node Network Metrics Collection
+
+You can disable network metrics collection on specific nodes by adding the label `networking.azure.com/node-network-metrics=disabled` to those nodes.
+
+> [!NOTE]
+> Retina has an `operator: "Exists"` `effect: NoSchedule` toleration, so it will bypass NoSchedule taints. Therefore, labels are used instead of taints to control scheduling.
+
+> [!IMPORTANT]
+> This feature is not applicable if Advanced Container Networking Services (ACNS) is enabled on your cluster.
+
+To disable metrics collection on a node:
+
+```bash
+kubectl label node <node-name> networking.azure.com/node-network-metrics=disabled
+```
+
+To re-enable metrics collection, remove the label:
+
+```bash
+kubectl label node <node-name> networking.azure.com/node-network-metrics-
+```
+
 ### Node-Level Metrics
 
 The following metrics are aggregated per node. All metrics include labels:
