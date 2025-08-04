@@ -97,17 +97,17 @@ Recommendations can have one of the following attestation statuses:
 | 1.2.24 | Ensure that the `--tls-cert-file` and `--tls-private-key-file` arguments are set as appropriate | Automated | L1 | Pass | |
 | 1.2.25 | Ensure that the `--client-ca-file` argument is set as appropriate | Automated | L1 | Pass | |
 | 1.2.26 | Ensure that the `--etcd-cafile` argument is set as appropriate | Automated | L1 | Pass | |
-| 1.2.27 | Ensure that the `--encryption-provider-config` argument is set as appropriate | Manual | L1 | Depends on Environment | Argument is set when [Azure KMS](azure-kms) is enabled|
-| 1.2.28 | Ensure that encryption providers are appropriately configured | Manual | L1 | Depends on Environment | Argument is set when [Azure KMS](azure-kms) is enabled |
+| 1.2.27 | Ensure that the `--encryption-provider-config` argument is set as appropriate | Manual | L1 | Depends on Environment | Argument is set when [Azure KMS][azure-kms] is enabled|
+| 1.2.28 | Ensure that encryption providers are appropriately configured | Manual | L1 | Depends on Environment | Argument is set when [Azure KMS][azure-kms] is enabled |
 | 1.2.29 | Ensure that the API Server only makes use of Strong Cryptographic Ciphers | Manual | L1 | Pass | AKS supports a subset of 4 Strong Ciphersuites out of 21 recommended ones from CIS |
-| 1.2.30 | Ensure that the `--service-account-extend-token-expiration` parameter is set to false | Automated | L1 | Depends on Environment | This parameter is set to false when [OIDC](OIDC) is enabled on the cluster |
+| 1.2.30 | Ensure that the `--service-account-extend-token-expiration` parameter is set to false | Automated | L1 | Depends on Environment | This parameter is set to false when [OIDC][oidc] is enabled on the cluster |
 | 1.3 | Controller Manager | | | | |
 | 1.3.1 | Ensure that the `--terminated-pod-gc-threshold` argument is set as appropriate | Manual | L1 | Pass | AKS sets the default value to 6000 instead of 12500|
 | 1.3.2 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
 | 1.3.3 | Ensure that the `--use-service-account-credentials` argument is set to true | Automated | L1 | Pass| |
 | 1.3.4 | Ensure that the `--service-account-private-key-file` argument is set as appropriate | Automated | L1 | Pass |  |
 | 1.3.5 | Ensure that the `--root-ca-file` argument is set as appropriate | Automated | L1 | Pass |  |
-| 1.3.6 | Ensure that the RotateKubeletServerCertificate argument is set to true | Automated | L2 | Pass | Parameter is set to true, see [Kubelet Serving Certificate Rotation](kscr) |
+| 1.3.6 | Ensure that the RotateKubeletServerCertificate argument is set to true | Automated | L2 | Pass | Parameter is set to true, see [Kubelet Serving Certificate Rotation][kscr] |
 | 1.3.7 | Ensure that the `--bind-address` argument is set to 127.0.0.1 | Automated | L1 | Equivalent Control | Pod's IP is used|
 | 1.4 | Scheduler | | | | |
 | 1.4.1 | Ensure that the `--profiling` argument is set to false | Automated | L1 | Pass | |
@@ -159,9 +159,9 @@ Recommendations can have one of the following attestation statuses:
 | 4.3.1 | Ensure that the kube-proxy metrics service is bound to localhost | Automated | L1 | Fail | AKS has central Prometheus scraping for kube-proxy and applies alert and auto-remediation when `KubeProxyStale` is detected. The `metrics-bind-address` is set for that purpose. |
 | 5 | Policies | | | | |
 | 5.1 | RBAC and Service Accounts| | | | |
-| 5.1.1 | Ensure that the cluster-admin role is only used where required | Automated | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service  |
+| 5.1.1 | Ensure that the cluster-admin role is only used where required | Automated | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service  |
 | 5.1.2 | Minimize access to secrets | Automated | L1 | Depends on Environment | |
-| 5.1.3 | Minimize wildcard use in Roles and ClusterRoles | Automated | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service |
+| 5.1.3 | Minimize wildcard use in Roles and ClusterRoles | Automated | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service |
 | 5.1.4 | Minimize access to create pods | Automated | L1| Depends on Environment | |
 | 5.1.5 | Ensure that default service accounts aren't actively used | Automated | L1 | Depends on Environment | |
 | 5.1.6 | Ensure that Service Account Tokens are only mounted where necessary | Automated | L1 | Depends on Environment | |
@@ -173,18 +173,18 @@ Recommendations can have one of the following attestation statuses:
 | 5.1.12 | Minimize access to webhook configuration objects | Manual | L1 | Depends on Environment | |
 | 5.1.13 | Minimize access to the service account token creation | Manual | L1 | Depends on Environment | |
 | 5.2 | Pod Security Standards | | | | |
-| 5.2.1 | Ensure that the cluster has at least one active policy control mechanism in place | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service  |
-| 5.2.2 | Minimize the admission of privileged containers | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service |
-| 5.2.3 | Minimize the admission of containers wishing to share the host process ID namespace | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service |
-| 5.2.4 | Minimize the admission of containers wishing to share the host IPC namespace | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service  |
-| 5.2.5 | Minimize the admission of containers wishing to share the host network namespace | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service  |
-| 5.2.6 | Minimize the admission of containers with allowPrivilegeEscalation | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service |
+| 5.2.1 | Ensure that the cluster has at least one active policy control mechanism in place | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service  |
+| 5.2.2 | Minimize the admission of privileged containers | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service |
+| 5.2.3 | Minimize the admission of containers wishing to share the host process ID namespace | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service |
+| 5.2.4 | Minimize the admission of containers wishing to share the host IPC namespace | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service  |
+| 5.2.5 | Minimize the admission of containers wishing to share the host network namespace | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service  |
+| 5.2.6 | Minimize the admission of containers with allowPrivilegeEscalation | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service |
 | 5.2.7 | Minimize the admission of root containers | Manual | L2 | Depends on Environment | |
-| 5.2.8 | Minimize the admission of containers with the NET_RAW capability | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service |
-| 5.2.9 | Minimize the admission of containers with added capabilities | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service|
+| 5.2.8 | Minimize the admission of containers with the NET_RAW capability | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service |
+| 5.2.9 | Minimize the admission of containers with added capabilities | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service|
 | 5.2.10 | Minimize the admission of containers with capabilities assigned | Manual | L2 | Depends on Environment | |
 | 5.2.11 | Minimize the admission of Windows HostProcess Containers | Manual | L1 | Depends on Environment | |
-| 5.2.12 | Minimize the admission of HostPath volumes | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions](azure-policies) for Azure Kubernetes Service  |
+| 5.2.12 | Minimize the admission of HostPath volumes | Manual | L1 | Depends on Environment | Use [Azure Policy built-in policy definitions][azure-policies] for Azure Kubernetes Service  |
 | 5.2.13 | Minimize the admission of containers which use HostPorts | Manual | L1 | Depends on Environment | |
 | 5.3 | Network Policies and CNI | | | | |
 | 5.3.1 | Ensure that the CNI in use supports Network Policies | Manual | L1 | Pass | |
