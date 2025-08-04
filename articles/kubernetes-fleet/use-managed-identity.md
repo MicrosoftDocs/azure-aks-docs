@@ -301,9 +301,9 @@ Before you create the Fleet Manager, add a role assignment for the managed ident
 
 ### [Azure portal](#tab/azure-portal)
 
-1. Open the managed identity in the Azure portal.
+1. Navigate to the managed identity resource.
 
-1. Select **Azure role assignments** tab in the left navigation. This opens the **Azure role assignments** pane.
+1. Select **Azure role assignments** tab in the managed identity resource's left navigation. This opens the **Azure role assignments** pane.
 
       :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-01.png" alt-text="Screenshot of the Azure Role assignments pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-01.png":::
 
@@ -420,7 +420,7 @@ You can check the Fleet Manager managed identity settings using the **Identity**
 
 Check both the **System assigned** and **User assigned** sections to determine which type of managed identity is enabled.
 
-:::image type="content" source="./media/managed-identity/managed-identity-enable-system-assigned-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing system assigned identity disabled." lightbox="./media/managed-identity/managed-identity-enable-system-assigned-01.png":::
+:::image type="content" source="./media/managed-identity/managed-identity-enable-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing a populated system assigned identity." lightbox="./media/managed-identity/managed-identity-enable-system-assigned.png":::
 
 ### [Azure CLI](#tab/cli)
 
@@ -437,12 +437,6 @@ az fleet show \
 The response is either **SystemAssigned** or **UserAssigned**.
 
 ---
-
-## Limitations
-
-* Moving or migrating a managed identity-enabled Fleet Manager to a different tenant isn't supported.
-
-* Fleet Manager doesn't support the use of a system-assigned managed identity when using a custom private DNS zone.
 
 ## Next steps
 
