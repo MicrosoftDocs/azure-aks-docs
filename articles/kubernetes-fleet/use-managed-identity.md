@@ -242,7 +242,7 @@ A user-assigned managed identity is a standalone Azure resource. When you create
 
 ### [Azure portal](#tab/azure-portal)
 
-Content
+Follow the creation steps in the [manage user-assigned managed identities documentation][user-assigned-docs].
 
 ### [Azure CLI](#tab/cli)
 
@@ -408,3 +408,4 @@ The response is either **SystemAssigned** or **UserAssigned**.
 [az-fleet-show]: /cli/azure/fleet#az_fleet_show
 [az-fleet-update]: /cli/azure/fleet#az_fleet_update
 [az-role-assignment-create]: /cli/azure/role/assignment#az_role_assignment_create
+[user-assigned-docs]: /entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities?pivots=identity-mi-methods-azp#create-a-user-assigned-managed-identity
