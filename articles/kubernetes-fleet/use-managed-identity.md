@@ -38,7 +38,7 @@ You can update an existing Fleet Manager to use a managed identity from an appli
 
 * Make sure you have Azure CLI version 2.75.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
-Before running the examples in this article, set your subscription as the current active subscription by calling the [az account set][az-account-set] command and passing in your subscription ID.
+Before running the Azure CLI examples in this article, set your subscription as the current active subscription by calling the [az account set][az-account-set] command and passing in your subscription ID.
 
 ```azurecli-interactive
 az account set --subscription <subscription-id>
@@ -56,7 +56,7 @@ az group create \
 
 A system-assigned managed identity is an identity that is associated with a Fleet Manager or another Azure resource. The system-assigned managed identity is tied to the lifecycle of the Fleet Manager. When the Fleet Manager is deleted, the system-assigned managed identity is also deleted.
 
-The Fleet Manager can use the system-assigned managed identity to authorize access to other resources running in Azure. You can assign an Azure RBAC role to the system-assigned managed identity to grant the Fleet Manager permissions to access specific resources. For example, if your  needs to access secrets in an Azure key vault, you can assign to the system-assigned managed identity an Azure RBAC role that grants those permissions.
+Fleet Manager can use the system-assigned managed identity to authorize access to other resources running in Azure and execute long-running background processes. You can assign an Azure RBAC role to the system-assigned managed identity to grant the Fleet Manager permissions to access specific resources. For example, if your Fleet Manager needs to manage network resources, you can assign to the system-assigned managed identity an Azure RBAC role that grants those permissions.
 
 ### Enable a system-assigned managed identity on a new Fleet Manager
 
@@ -64,7 +64,7 @@ The Fleet Manager can use the system-assigned managed identity to authorize acce
 
 When you create a new Fleet Manager in the Azure portal, a system-assigned managed identity is automatically created.
 
-You can verify that the system-assigned managed identity is enabled by checking the **Identity** tab in the Fleet Manager's **Settings** section. The **System assigned** option should be set to **On** and the **Principal ID** should be populated.
+You can verify that the system-assigned managed identity is enabled by checking the **Identity** blade in the Fleet Manager's **Settings** section. The **System assigned** status should be **On** and the **Object (principal) ID** should be populated.
 
 :::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the System assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
 
@@ -118,6 +118,22 @@ The command output indicates the identity type is **SystemAssigned** and include
 
 ### Update an existing Fleet Manager to use a system-assigned managed identity
 
+### [Azure portal](#tab/azure-portal)
+
+You can manage the Fleet Manager managed identity using the **Identity** blade in the Fleet Manager's **Settings** section. 
+
+1. Enable the system-assigned managed identity by setting the **System assigned** status to **On** and selecting **Save**. 
+
+:::image type="content" source="./media/managed-identity/managed-identity-enable-system-assigned-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing system assigned identity disabled." lightbox="./media/managed-identity/managed-identity-enable-system-assigned-01.png":::
+
+1. Select **Yes** on the confirmation dialog.
+
+1. After a few moments the **System assigned** status should change to **On** and the **Object (principal) ID** should be populated.
+
+:::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the system assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
+
+### [Azure CLI](#tab/cli)
+
 To update an existing Fleet Manager to use a system-assigned managed identity, run the [az fleet update][az-fleet-update] command with the `--enable-managed-identity` parameter set to `true`.
 
 ```azurecli-interactive
@@ -126,6 +142,42 @@ az fleet update \
     --name myFleetName \
     --enable-managed-identity true
 ```
+
+The command output indicates the identity type is **SystemAssigned** and includes the principal ID and tenant.
+
+```output
+{
+  "eTag": "\"13003f4b-0000-1b00-0000-68900c3c0000\"",
+  "hubProfile": null,
+  "id": "/subscriptions/<subscription-id>/resourceGroups/myResourceGroup/providers/Microsoft.ContainerService/fleets/myFleetName",
+  "identity": {
+    "principalId": "<principal-id>",
+    "tenantId": "<tenant-id>",
+    "type": "SystemAssigned",
+    "userAssignedIdentities": null
+  },
+  "location": "westus2",
+  "name": "flt-mgr-02",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myResourceGroup",
+  "status": {
+    "lastOperationError": null,
+    "lastOperationId": "d31e866c-a3d3-46ab-8a97-094bc4672d35"
+  },
+  "systemData": {
+    "createdAt": "2025-08-04T01:26:17.588030+00:00",
+    "createdBy": "",
+    "createdByType": "User",
+    "lastModifiedAt": "2025-08-04T01:26:17.588030+00:00",
+    "lastModifiedBy": "",
+    "lastModifiedByType": "User"
+  },
+  "tags": null,
+  "type": "Microsoft.ContainerService/fleets"
+}
+```
+
+---
 
 ### Add a role assignment for a system-assigned managed identity
 
