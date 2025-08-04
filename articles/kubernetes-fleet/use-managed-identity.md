@@ -128,7 +128,7 @@ You can manage the Fleet Manager managed identity using the **Identity** blade i
 
 1. Select **Yes** on the confirmation dialog.
 
-1. After a few moments the **System assigned** status should change to **On** and the **Object (principal) ID** should be populated.
+1. After a few moments the **System assigned** status changes to **On** and the **Object (principal) ID** should be populated.
 
 :::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the system assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
 
@@ -185,6 +185,31 @@ You can assign an Azure RBAC role to the system-assigned managed identity to gra
 
 When you assign an Azure RBAC role to a managed identity, you must define the scope for the role. In general, it's a best practice to limit the scope of a role to the minimum privileges required by the managed identity. For more information on scoping Azure RBAC roles, see [Understand scope for Azure RBAC](/azure/role-based-access-control/scope-overview).
 
+> [!NOTE]
+> It can take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
+
+### [Azure portal](#tab/azure-portal)
+
+1. Select **Azure role assignments** tab in the Fleet Manager's **Identity** blade. This opens the **Azure role assignments** pane.
+
+    :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-01.png" alt-text="Screenshot of the Azure Role assignments pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-01.png":::
+
+1. Select **Add role assignment** to open the **Add role assignment** pane and enter:
+
+    * **Scope** - select **Resource group**.
+
+    * **Subscription** - choose the Azure subscription containing the resource group you want to use.
+
+    * **Resource group** - select the resource group.
+
+    * **Role** - choose the role you want to assign to the Fleet Manager's system-assigned managed identity (for example, **Network Contributor**).
+
+    :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-02.png" alt-text="Screenshot of Add Role Assignment pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-02.png":::
+
+1. Select **Save** to assign the role to the Fleet Manager's system-assigned managed identity.
+
+### [Azure CLI](#tab/cli)
+
 #### Get the principal ID of the system-assigned managed identity
 
 To assign an Azure RBAC role to a Fleet Manager's system-assigned managed identity, you first need the principal ID for the managed identity. Get the principal ID for the Fleet Manager's system-assigned managed identity by calling the [`az fleet show`][az-fleet-show] command.
@@ -211,8 +236,7 @@ az role assignment create \
     --scope "<fleet-manager-resource-group-id>"
 ```
 
-> [!NOTE]
-> It can take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
+---
 
 ## Enable a user-assigned managed identity
 
