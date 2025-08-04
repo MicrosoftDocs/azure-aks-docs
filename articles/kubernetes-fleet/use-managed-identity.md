@@ -25,17 +25,17 @@ To learn more about managed identities, see [Managed identities for Azure resour
 
 Fleet Manager uses a managed identity to request tokens from Microsoft Entra. These tokens are used to authorize access to other resources running in Azure. You can assign an Azure RBAC role to a managed identity to grant your Fleet Manager permissions to access specific resources. 
 
-A managed identity can be either system-assigned or user-assigned. These two types of managed identities are similar in that you can use either type to authorize access to Azure resources from your Fleet Manager. The key difference between them is that a system-assigned managed identity is associated with a single Azure resource like a Fleet Manager, while a user-assigned managed identity is itself a standalone Azure resource. For more details on the differences between types of managed identities, see **Managed identity types** in [Managed identities for Azure resources][managed-identity-resources-overview].
+A managed identity can be either system-assigned or user-assigned. These two types of managed identities are similar in that you can use either type to authorize access to Azure resources from your Fleet Manager. The key difference is a system-assigned managed identity is associated with a single Azure resource like a Fleet Manager, while a user-assigned managed identity is a standalone Azure resource and can be shared across multiple Azure resources. For more information on the differences between types of managed identities, see **Managed identity types** in [Managed identities for Azure resources][managed-identity-resources-overview].
 
 Both types of managed identities are managed by the Azure platform, so that you can authorize access from your applications without needing to provision or rotate any secrets. Azure manages the identity's credentials for you.
 
 When you deploy a Fleet Manager you can choose to use a system-assigned or a user-assigned managed identity.
 
-You can update an existing Fleet Manager to use a managed identity from an application service principal. You can also update an existing Fleet Manager to a different type of managed identity. If your Fleet Manager is already using a managed identity and the identity was changed, for example if you updated the Fleet Manager identity type from system-assigned to user-assigned, then there is a delay while control plane components switch to the new identity. Control plane components continue to use the old identity until its token expires. After the token is refreshed, they switch to the new identity. This process can take several hours.
+You can update an existing Fleet Manager to use a managed identity from an application service principal. You can also update an existing Fleet Manager to a different type of managed identity. If your Fleet Manager is already using a managed identity and the identity was changed, for example if you updated the Fleet Manager identity type from system-assigned to user-assigned, then there's a delay while control plane components switch to the new identity. Control plane components continue to use the old identity until its token expires. After the token is refreshed, they switch to the new identity. This process can take several hours.
 
 ## Before you begin
 
-* Make sure you have Azure CLI version 2.75.0 or later installed. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
+* Make sure you have Azure CLI version 2.75.0 or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
 Before running the examples in this article, set your subscription as the current active subscription by calling the [az account set][az-account-set] command and passing in your subscription ID.
 
@@ -135,7 +135,7 @@ CLIENT_ID=$(az fleet show \
 
 #### Assign an Azure RBAC role to the system-assigned managed identity
 
-To grant a system-assigned managed identity permissions to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
+To grant a system-assigned managed identity permission to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
 
 For example, assign the `Network Contributor` role on the custom resource group using the [`az role assignment create`][az-role-assignment-create] command. For the `--scope` parameter, provide the resource ID for the resource group for the Fleet Manager.
 
@@ -151,7 +151,7 @@ az role assignment create \
 
 ## Enable a user-assigned managed identity
 
-A user-assigned managed identity is a standalone Azure resource. When you create a Fleet Manager with a user-assigned managed identity, the user-assigned managed identity resource must exist prior to Fleet Manager creation.
+A user-assigned managed identity is a standalone Azure resource. When you create a Fleet Manager with a user-assigned managed identity, the user-assigned managed identity resource must exist before Fleet Manager creation.
 
 ### Create a user-assigned managed identity
 
@@ -194,7 +194,7 @@ CLIENT_ID=$(az identity show \
 
 #### Get the resource ID of the user-assigned managed identity
 
-To create a Fleet Manager with a user-assigned managed identity, you will need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
+To create a Fleet Manager with a user-assigned managed identity, you need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
 
 ```azurecli-interactive
 RESOURCE_ID=$(az identity show \
@@ -276,7 +276,7 @@ az fleet show \
     --output tsv       
 ```
 
-The response will be either **SystemAssigned** or **UserAssigned**.
+The response is either **SystemAssigned** or **UserAssigned**.
 
 ## Limitations
 
