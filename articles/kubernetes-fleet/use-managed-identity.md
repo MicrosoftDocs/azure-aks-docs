@@ -257,7 +257,7 @@ The output for a successful Fleet Manager update to use a user-assigned managed 
     "tenantId": null,
     "type": "UserAssigned",
     "userAssignedIdentities": {
-      "/subscriptions/<subscriptionid>/resourcegroups/resourcegroups/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity": {
+      "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity": {
         "clientId": "<client-id>",
         "principalId": "<principal-id>"
       }
