@@ -45,8 +45,8 @@ Recommendations can have one of the following attestation statuses:
 
 ### Benchmark details
 
-| CIS ID | Recommendation description|Assessment status|Level|Status|Reason|
-| --- | --- | --- | --- | --- | --- |
+| CIS ID | Recommendation description | Assessment status | Level | Status | Reason |
+|--|--|--|--|--|--|
 | 1 | Control Plane Components| | | | |
 | 1.1 | Control Plane Node Configuration Files| | | | |
 | 1.1.1 | Ensure that the API server pod specification file permissions are set to 600 or more restrictive | Automated | L1 | N/A |N/A because AKS is a managed solution |
