@@ -11,7 +11,7 @@ ms.date: 08/04/2025
 
 # Use a managed identity in Azure Kubernetes Fleet Manager
 
-Azure Kubernetes Fleet Manager uses a Microsoft Entra identity to access Azure resources like Azure Traffic Manager or to manage long-running background activities such as multi-cluster [auto-upgrades][fleet-auto-upgrade]. Managed identities for Azure resources are the recommended way to authorize access from a Fleet Manager to other Azure services.
+Azure Kubernetes Fleet Manager uses a Microsoft Entra identity to access Azure resources like Azure Traffic Manager or to manage long-running background activities such as multi-cluster [auto-upgrade][fleet-auto-upgrade]. Managed identities for Azure resources are the recommended way to authorize access from a Fleet Manager to other Azure services.
 
 You can use a managed identity to authorize access from a Fleet Manager to any service that supports Microsoft Entra authorization, without needing to manage credentials or include them in your code. You assign to the managed identity an Azure role-based access control (Azure RBAC) role to grant it permissions to a particular resource in Azure. For more information about Azure RBAC, see [What is Azure role\-based access control \(Azure RBAC\)?](/azure/role-based-access-control/overview).
 
@@ -60,6 +60,16 @@ The Fleet Manager can use the system-assigned managed identity to authorize acce
 
 ### Enable a system-assigned managed identity on a new Fleet Manager
 
+### [Azure portal](#tab/azure-portal)
+
+When you create a new Fleet Manager in the Azure portal, a system-assigned managed identity is automatically created.
+
+You can verify that the system-assigned managed identity is enabled by checking the **Identity** tab in the Fleet Manager's **Settings** section. The **System assigned** option should be set to **On** and the **Principal ID** should be populated.
+
+:::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the System assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
+
+### [Azure CLI](#tab/cli)
+
 Create a Fleet Manager using the [`az fleet create`][az-fleet-create] command, passing the `--enable-managed-identity` parameter to enable the system-assigned managed identity.
 
 ```azurecli-interactive
@@ -103,6 +113,8 @@ The command output indicates the identity type is **SystemAssigned** and include
   "type": "Microsoft.ContainerService/fleets"
 }
 ```
+
+---
 
 ### Update an existing Fleet Manager to use a system-assigned managed identity
 
