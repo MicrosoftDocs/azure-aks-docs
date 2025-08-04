@@ -246,7 +246,7 @@ If you don't yet have a user-assigned managed identity resource, create one usin
 
 ### [Azure portal](#tab/azure-portal)
 
-Follow the steps in the [manage user-assigned managed identities documentation][user-assigned-docs].
+Follow the steps in the [create a user-assigned managed identity documentation][user-assigned-docs].
 
 ### [Azure CLI](#tab/cli)
 
@@ -305,7 +305,7 @@ Follow the steps in the [manage user-assigned managed identities documentation][
 
 ### Assign an Azure RBAC role to the user-assigned managed identity
 
-Before you create the Fleet Manager, add a role assignment for the managed identity by calling the [`az role assignment create`][az-role-assignment-create] command.
+Before you create the Fleet Manager, add a role assignment for the managed identity.
 
 > [!NOTE]
 >
@@ -335,7 +335,9 @@ Before you create the Fleet Manager, add a role assignment for the managed ident
 
 ### [Azure CLI](#tab/cli)
 
-The following example assigns the **Network Contributor** role to the user-assigned managed identity to grant it permissions to access networking resources. The role assignment is scoped to the Fleet Manager resource group.
+Use the [`az role assignment create`][az-role-assignment-create] command to assign a role to the user-assigned managed identity.
+
+The following example assigns the **Network Contributor** role to grant the identity permissions to access networking resources. The role assignment is scoped to the Fleet Manager resource group.
 
 ```azurecli-interactive
 az role assignment create \
@@ -372,7 +374,7 @@ az fleet create \
 
 ### [Azure portal](#tab/azure-portal)
 
-You can't create a Fleet Manager with a user-assigned managed identity in the Azure portal. You can change the Fleet Manager identity type to user-assigned after the Fleet Manager is created, or use the Azure CLI.
+You can't create a Fleet Manager with a user-assigned managed identity in the Azure portal. You can change the identity type to user-assigned after the Fleet Manager is created, or use the Azure CLI.
 
 ### [Azure CLI](#tab/cli)
 
@@ -407,7 +409,7 @@ The output for a successful Fleet Manager update to use a user-assigned managed 
 
 ### [Azure portal](#tab/azure-portal)
 
-You can manage the Fleet Manager managed identity using the **Identity** blade in the Fleet Manager's **Settings** section.
+You can check the Fleet Manager managed identity settings using the **Identity** blade in the Fleet Manager's **Settings** section.
 
 Check both the **System assigned** and **User assigned** sections to determine which type of managed identity is enabled.
 
