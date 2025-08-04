@@ -4,6 +4,7 @@ description: Learn how to use a system-assigned or user-assigned managed identit
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+ms.topic: how-to
 ms.date: 08/04/2025
 # Customer intent: "As a DevOps engineer, I want to implement managed identities in Azure Kubernetes Service (AKS) so that I can securely authorize access to Azure resources without managing credentials manually."
 ---
