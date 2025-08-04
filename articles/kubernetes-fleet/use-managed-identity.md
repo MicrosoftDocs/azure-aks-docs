@@ -190,19 +190,19 @@ When you assign an Azure RBAC role to a managed identity, you must define the sc
 
 1. Select **Azure role assignments** tab in the Fleet Manager's **Identity** blade. This opens the **Azure role assignments** pane.
 
-  :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-01.png" alt-text="Screenshot of the Azure Role assignments pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-01.png":::
+      :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-01.png" alt-text="Screenshot of the Azure Role assignments pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-01.png":::
 
 2. Select **Add role assignment** to open the **Add role assignment** pane and enter:
 
-  * **Scope** - select **Resource group**.
+    * **Scope** - select **Resource group**.
+    
+    * **Subscription** - choose the Azure subscription containing the resource group you want to use.
+    
+    * **Resource group** - select the resource group.
+    
+    * **Role** - choose the role you want to assign to the Fleet Manager's system-assigned managed identity (for example, **Network Contributor**).
 
-  * **Subscription** - choose the Azure subscription containing the resource group you want to use.
-
-  * **Resource group** - select the resource group.
-
-  * **Role** - choose the role you want to assign to the Fleet Manager's system-assigned managed identity (for example, **Network Contributor**).
-
-  :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-02.png" alt-text="Screenshot of Add Role Assignment pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-02.png":::
+      :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-02.png" alt-text="Screenshot of Add Role Assignment pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-02.png":::
 
 3. Select **Save** to assign the role to the Fleet Manager's system-assigned managed identity.
 
@@ -219,7 +219,7 @@ When you assign an Azure RBAC role to a managed identity, you must define the sc
       --resource-group myResourceGroup \
       --query identity.principalId \
       --output tsv)
-    ```
+  ```
     
 2. Assign an Azure RBAC role to the system-assigned managed identity
 
@@ -240,62 +240,68 @@ When you assign an Azure RBAC role to a managed identity, you must define the sc
 
 A user-assigned managed identity is a standalone Azure resource. When you create a Fleet Manager with a user-assigned managed identity, the user-assigned managed identity resource must exist before Fleet Manager creation.
 
+### Create a user-assigned managed identity
+
+If you don't yet have a user-assigned managed identity resource, create one using the Azure portal or Azure CLI.
+
 ### [Azure portal](#tab/azure-portal)
 
-Follow the creation steps in the [manage user-assigned managed identities documentation][user-assigned-docs].
+Follow the steps in the [manage user-assigned managed identities documentation][user-assigned-docs].
 
 ### [Azure CLI](#tab/cli)
 
-1. Create a user-assigned managed identity
+1. Create a user-assigned managed identity.
 
-If you don't yet have a user-assigned managed identity resource, create one using the [`az identity create`][az-identity-create] command.
+  If you don't yet have a user-assigned managed identity resource, create one using the [`az identity create`][az-identity-create] command.
+  
+  ```azurecli-interactive
+  az identity create \
+      --name myIdentity \
+      --resource-group myResourceGroup
+  ```
 
-```azurecli-interactive
-az identity create \
-    --name myIdentity \
-    --resource-group myResourceGroup
+  Your output should resemble the following example output:
+  
+  ```output
+  {                                  
+    "clientId": "<client-id>",
+    "clientSecretUrl": "<clientSecretUrl>",
+    "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
+    "location": "westus2",
+    "name": "myIdentity",
+    "principalId": "<principal-id>",
+    "resourceGroup": "myResourceGroup",                       
+    "tags": {},
+    "tenantId": "<tenant-id>",
+    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+  }
 ```
 
-Your output should resemble the following example output:
+2. Get the principal ID of the user-assigned managed identity
 
-```output
-{                                  
-  "clientId": "<client-id>",
-  "clientSecretUrl": "<clientSecretUrl>",
-  "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
-  "location": "westus2",
-  "name": "myIdentity",
-  "principalId": "<principal-id>",
-  "resourceGroup": "myResourceGroup",                       
-  "tags": {},
-  "tenantId": "<tenant-id>",
-  "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
-}
-```
+  To get the principal ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `principalId` property:
+  
+  ```azurecli-interactive
+  CLIENT_ID=$(az identity show \
+      --name myIdentity \
+      --resource-group myResourceGroup \
+      --query principalId \
+      --output tsv)
+  ```
 
-1. Get the principal ID of the user-assigned managed identity
+3. Get the resource ID of the user-assigned managed identity
 
-To get the principal ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `principalId` property:
-
-```azurecli-interactive
-CLIENT_ID=$(az identity show \
-    --name myIdentity \
-    --resource-group myResourceGroup \
-    --query principalId \
-    --output tsv)
-```
-
-1. Get the resource ID of the user-assigned managed identity
-
-To create a Fleet Manager with a user-assigned managed identity, you need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
-
-```azurecli-interactive
-RESOURCE_ID=$(az identity show \
-    --name myIdentity \
-    --resource-group myResourceGroup \
-    --query id \
-    --output tsv)
-```
+  To create a Fleet Manager with a user-assigned managed identity, you need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
+  
+  ```azurecli-interactive
+  RESOURCE_ID=$(az identity show \
+      --name myIdentity \
+      --resource-group myResourceGroup \
+      --query id \
+      --output tsv)
+  ```
+  
+---
 
 ### Assign an Azure RBAC role to the user-assigned managed identity
 
@@ -305,6 +311,13 @@ Before you create the Fleet Manager, add a role assignment for the managed ident
 >
 > It may take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
 
+
+### [Azure portal](#tab/azure-portal)
+
+Follow the steps in the [manage user-assigned managed identities documentation][user-assigned-docs].
+
+### [Azure CLI](#tab/cli)
+
 The following example assigns the **Network Contributor** role to the user-assigned managed identity to grant it permissions to access secrets in a key vault. The role assignment is scoped to the key vault resource:
 
 ```azurecli-interactive
@@ -313,6 +326,8 @@ az role assignment create \
     --role "Network Contributor" \
     --scope "<keyvault-resource-id>"
 ```
+
+---
 
 ### Create a Fleet Manager with the user-assigned managed identity
 
