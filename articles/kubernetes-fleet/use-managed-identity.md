@@ -210,29 +210,29 @@ When you assign an Azure RBAC role to a managed identity, you must define the sc
 
 1. Get the principal ID of the system-assigned managed identity
 
-  To assign an Azure RBAC role to a Fleet Manager's system-assigned managed identity, you first need the principal ID for the managed identity. Get the principal ID for the Fleet Manager's system-assigned managed identity by calling the [`az fleet show`][az-fleet-show] command.
-  
-  ```azurecli-interactive
-  # Get the principal ID for a system-assigned managed identity.
-  CLIENT_ID=$(az fleet show \
-      --name myFleetName \
-      --resource-group myResourceGroup \
-      --query identity.principalId \
-      --output tsv)
-  ```
+    To assign an Azure RBAC role to a Fleet Manager's system-assigned managed identity, you first need the principal ID for the managed identity. Get the principal ID for the Fleet Manager's system-assigned managed identity by calling the [`az fleet show`][az-fleet-show] command.
+    
+    ```azurecli-interactive
+    # Get the principal ID for a system-assigned managed identity.
+    CLIENT_ID=$(az fleet show \
+        --name myFleetName \
+        --resource-group myResourceGroup \
+        --query identity.principalId \
+        --output tsv)
+    ```
     
 2. Assign an Azure RBAC role to the system-assigned managed identity
 
-  To grant a system-assigned managed identity permission to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
-  
-  For example, assign the `Network Contributor` role on the custom resource group using the [`az role assignment create`][az-role-assignment-create] command. For the `--scope` parameter, provide the resource ID for the resource group for the Fleet Manager.
-  
-  ```azurecli-interactive
-  az role assignment create \
-      --assignee $CLIENT_ID \
-      --role "Network Contributor" \
-      --scope "<fleet-manager-resource-group-id>"
-  ```
+    To grant a system-assigned managed identity permission to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
+    
+    For example, assign the `Network Contributor` role on the custom resource group using the [`az role assignment create`][az-role-assignment-create] command. For the `--scope` parameter, provide the resource ID for the resource group for the Fleet Manager.
+    
+    ```azurecli-interactive
+    az role assignment create \
+        --assignee $CLIENT_ID \
+        --role "Network Contributor" \
+        --scope "<fleet-manager-resource-group-id>"
+    ```
 
 ---
 
@@ -311,27 +311,53 @@ Before you create the Fleet Manager, add a role assignment for the managed ident
 >
 > It may take up to 60 minutes for the permissions granted to your Fleet Manager's managed identity to propagate.
 
-
 ### [Azure portal](#tab/azure-portal)
 
-Follow the steps in the [manage user-assigned managed identities documentation][user-assigned-docs].
+1. Open the managed identity in the Azure portal.
+
+1. Select **Azure role assignments** tab in the left navigation. This opens the **Azure role assignments** pane.
+
+      :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-01.png" alt-text="Screenshot of the Azure Role assignments pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-01.png":::
+
+2. Select **Add role assignment** to open the **Add role assignment** pane and enter:
+
+    * **Scope** - select **Resource group**.
+    
+    * **Subscription** - choose the Azure subscription containing the resource group you want to use.
+    
+    * **Resource group** - select the resource group.
+    
+    * **Role** - choose the role you want to assign to the managed identity (for example, **Network Contributor**).
+
+      :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-02.png" alt-text="Screenshot of Add Role Assignment pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-02.png":::
+
+3. Select **Save** to assign the role to the managed identity.
 
 ### [Azure CLI](#tab/cli)
 
-The following example assigns the **Network Contributor** role to the user-assigned managed identity to grant it permissions to access secrets in a key vault. The role assignment is scoped to the key vault resource:
+The following example assigns the **Network Contributor** role to the user-assigned managed identity to grant it permissions to access networking resources. The role assignment is scoped to the Fleet Manager resource group.
 
 ```azurecli-interactive
 az role assignment create \
     --assignee $CLIENT_ID \
     --role "Network Contributor" \
-    --scope "<keyvault-resource-id>"
+    --scope "<fleet-manager-resource-group-id>"
 ```
 
 ---
 
 ### Create a Fleet Manager with the user-assigned managed identity
 
-To create a Fleet Manager with the user-assigned managed identity, call the [`az fleet create`][az-fleet-create] command. Include the `--assign-identity` parameter and pass in the resource ID for the user-assigned managed identity:
+> [!NOTE]
+> The USDOD Central, USDOD East, and USGov Iowa regions in Azure US Government cloud don't support creating a Fleet Manager with a user-assigned managed identity.
+
+### [Azure portal](#tab/azure-portal)
+
+You can't create a Fleet Manager with a user-assigned managed identity in the Azure portal. You can change the Fleet Manager identity type to user-assigned after the Fleet Manager is created, or use the Azure CLI.
+
+### [Azure CLI](#tab/cli)
+
+Create a Fleet Manager with the user-assigned managed identity by using the [`az fleet create`][az-fleet-create] command with the `--assign-identity` parameter. Pass in the resource ID for the user-assigned managed identity:
 
 ```azurecli-interactive
 az fleet create \
@@ -340,11 +366,15 @@ az fleet create \
     --assign-identity $RESOURCE_ID
 ```
 
-> [!NOTE]
->
-> The USDOD Central, USDOD East, and USGov Iowa regions in Azure US Government cloud don't support creating a Fleet Manager with a user-assigned managed identity.
+---
 
 ### Update an existing Fleet Manager to use a user-assigned managed identity
+
+### [Azure portal](#tab/azure-portal)
+
+You can't create a Fleet Manager with a user-assigned managed identity in the Azure portal. You can change the Fleet Manager identity type to user-assigned after the Fleet Manager is created, or use the Azure CLI.
+
+### [Azure CLI](#tab/cli)
 
 To update an existing Fleet Manager to use a user-assigned managed identity, call the [`az fleet update`][az-fleet-update] command. Include the `--assign-identity` parameter and pass in the resource ID for the user-assigned managed identity:
 
@@ -371,6 +401,7 @@ The output for a successful Fleet Manager update to use a user-assigned managed 
     }
   },
 ```
+---
 
 ## Determine which type of managed identity a Fleet Manager is using
 
