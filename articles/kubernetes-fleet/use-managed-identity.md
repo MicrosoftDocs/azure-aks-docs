@@ -241,55 +241,54 @@ Follow the steps in the [create a user-assigned managed identity documentation][
 
 1. Create a user-assigned managed identity.
 
-  If you don't yet have a user-assigned managed identity resource, create one using the [`az identity create`][az-identity-create] command.
-  
-  ```azurecli-interactive
-  az identity create \
-      --name myIdentity \
-      --resource-group myResourceGroup
-  ```
-
-  Your output should resemble the following example output:
-  
-  ```output
-  {                                  
-    "clientId": "<client-id>",
-    "clientSecretUrl": "<clientSecretUrl>",
-    "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
-    "location": "westus2",
-    "name": "myIdentity",
-    "principalId": "<principal-id>",
-    "resourceGroup": "myResourceGroup",                       
-    "tags": {},
-    "tenantId": "<tenant-id>",
-    "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
-  }
-```
+    If you don't yet have a user-assigned managed identity resource, create one using the [`az identity create`][az-identity-create] command.
+    
+    ```azurecli-interactive
+    az identity create \
+        --name myIdentity \
+        --resource-group myResourceGroup
+    ```
+    
+    Your output should resemble the following example output:
+    
+    ```output
+    {                                  
+      "clientId": "<client-id>",
+      "clientSecretUrl": "<clientSecretUrl>",
+      "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
+      "location": "westus2",
+      "name": "myIdentity",
+      "principalId": "<principal-id>",
+      "resourceGroup": "myResourceGroup",                       
+      "tags": {},
+      "tenantId": "<tenant-id>",
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
+    }
+    ```
 
 2. Get the principal ID of the user-assigned managed identity
 
-  To get the principal ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `principalId` property:
-  
-  ```azurecli-interactive
-  CLIENT_ID=$(az identity show \
-      --name myIdentity \
-      --resource-group myResourceGroup \
-      --query principalId \
-      --output tsv)
-  ```
+    To get the principal ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `principalId` property:
+    
+    ```azurecli-interactive
+    CLIENT_ID=$(az identity show \
+        --name myIdentity \
+        --resource-group myResourceGroup \
+        --query principalId \
+        --output tsv)
+    ```
 
 3. Get the resource ID of the user-assigned managed identity
-
-  To create a Fleet Manager with a user-assigned managed identity, you need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
-  
-  ```azurecli-interactive
-  RESOURCE_ID=$(az identity show \
-      --name myIdentity \
-      --resource-group myResourceGroup \
-      --query id \
-      --output tsv)
-  ```
-  
+    
+    To create a Fleet Manager with a user-assigned managed identity, you need the resource ID for the new managed identity. To get the resource ID of the user-assigned managed identity, call [az identity show][az-identity-show] and query on the `id` property:
+    
+    ```azurecli-interactive
+    RESOURCE_ID=$(az identity show \
+        --name myIdentity \
+        --resource-group myResourceGroup \
+        --query id \
+        --output tsv)
+    ```
 ---
 
 ### Assign an Azure RBAC role to the user-assigned managed identity
