@@ -123,13 +123,13 @@ You can manage the Fleet Manager managed identity using the **Identity** blade i
 
 1. Enable the system-assigned managed identity by setting the **System assigned** status to **On** and selecting **Save**. 
 
-:::image type="content" source="./media/managed-identity/managed-identity-enable-system-assigned-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing system assigned identity disabled." lightbox="./media/managed-identity/managed-identity-enable-system-assigned-01.png":::
+    :::image type="content" source="./media/managed-identity/managed-identity-enable-system-assigned-01.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing system assigned identity disabled." lightbox="./media/managed-identity/managed-identity-enable-system-assigned-01.png":::
 
-1. Select **Yes** on the confirmation dialog.
+2. Select **Yes** on the confirmation dialog.
 
-1. After a few moments the **System assigned** status changes to **On** and the **Object (principal) ID** should be populated.
+3. After a few moments the **System assigned** status changes to **On** and the **Object (principal) ID** should be populated.
 
-:::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the system assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
+    :::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the system assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
 
 ### [Azure CLI](#tab/cli)
 
@@ -190,49 +190,49 @@ When you assign an Azure RBAC role to a managed identity, you must define the sc
 
 1. Select **Azure role assignments** tab in the Fleet Manager's **Identity** blade. This opens the **Azure role assignments** pane.
 
-    :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-01.png" alt-text="Screenshot of the Azure Role assignments pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-01.png":::
+  :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-01.png" alt-text="Screenshot of the Azure Role assignments pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-01.png":::
 
-1. Select **Add role assignment** to open the **Add role assignment** pane and enter:
+2. Select **Add role assignment** to open the **Add role assignment** pane and enter:
 
-    * **Scope** - select **Resource group**.
+  * **Scope** - select **Resource group**.
 
-    * **Subscription** - choose the Azure subscription containing the resource group you want to use.
+  * **Subscription** - choose the Azure subscription containing the resource group you want to use.
 
-    * **Resource group** - select the resource group.
+  * **Resource group** - select the resource group.
 
-    * **Role** - choose the role you want to assign to the Fleet Manager's system-assigned managed identity (for example, **Network Contributor**).
+  * **Role** - choose the role you want to assign to the Fleet Manager's system-assigned managed identity (for example, **Network Contributor**).
 
-    :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-02.png" alt-text="Screenshot of Add Role Assignment pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-02.png":::
+  :::image type="content" source="./media/managed-identity/managed-identity-azure-role-assignment-02.png" alt-text="Screenshot of Add Role Assignment pane." lightbox="./media/managed-identity/managed-identity-azure-role-assignment-02.png":::
 
-1. Select **Save** to assign the role to the Fleet Manager's system-assigned managed identity.
+3. Select **Save** to assign the role to the Fleet Manager's system-assigned managed identity.
 
 ### [Azure CLI](#tab/cli)
 
 1. Get the principal ID of the system-assigned managed identity
 
-To assign an Azure RBAC role to a Fleet Manager's system-assigned managed identity, you first need the principal ID for the managed identity. Get the principal ID for the Fleet Manager's system-assigned managed identity by calling the [`az fleet show`][az-fleet-show] command.
+  To assign an Azure RBAC role to a Fleet Manager's system-assigned managed identity, you first need the principal ID for the managed identity. Get the principal ID for the Fleet Manager's system-assigned managed identity by calling the [`az fleet show`][az-fleet-show] command.
+  
+  ```azurecli-interactive
+  # Get the principal ID for a system-assigned managed identity.
+  CLIENT_ID=$(az fleet show \
+      --name myFleetName \
+      --resource-group myResourceGroup \
+      --query identity.principalId \
+      --output tsv)
+    ```
+    
+2. Assign an Azure RBAC role to the system-assigned managed identity
 
-```azurecli-interactive
-# Get the principal ID for a system-assigned managed identity.
-CLIENT_ID=$(az fleet show \
-    --name myFleetName \
-    --resource-group myResourceGroup \
-    --query identity.principalId \
-    --output tsv)
-```
-
-1. Assign an Azure RBAC role to the system-assigned managed identity
-
-To grant a system-assigned managed identity permission to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
-
-For example, assign the `Network Contributor` role on the custom resource group using the [`az role assignment create`][az-role-assignment-create] command. For the `--scope` parameter, provide the resource ID for the resource group for the Fleet Manager.
-
-```azurecli-interactive
-az role assignment create \
-    --assignee $CLIENT_ID \
-    --role "Network Contributor" \
-    --scope "<fleet-manager-resource-group-id>"
-```
+  To grant a system-assigned managed identity permission to a resource in Azure, call the [`az role assignment create`][az-role-assignment-create] command to assign an Azure RBAC role to the managed identity.
+  
+  For example, assign the `Network Contributor` role on the custom resource group using the [`az role assignment create`][az-role-assignment-create] command. For the `--scope` parameter, provide the resource ID for the resource group for the Fleet Manager.
+  
+  ```azurecli-interactive
+  az role assignment create \
+      --assignee $CLIENT_ID \
+      --role "Network Contributor" \
+      --scope "<fleet-manager-resource-group-id>"
+  ```
 
 ---
 
