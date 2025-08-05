@@ -84,15 +84,15 @@ When creating a cluster, enabling vTPM or Secure Boot will automatically set up 
 
 In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
-    ```json
-    "properties": {
-        ...,
-        "securityProfile": {
-            "enableVTPM": "true",
-            "enableSecureBoot": "true",
-        }
+```json
+"properties": {
+    ...,
+    "securityProfile": {
+        "enableVTPM": "true",
+        "enableSecureBoot": "true",
     }
-    ```
+}
+```
 
 2. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
@@ -128,15 +128,15 @@ az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster
 
 In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
-    ```json
-    "properties": {
-        ...,
-        "securityProfile": {
-            "enableVTPM": "true",
-            "enableSecureBoot": "true",
-        }
+```json
+"properties": {
+    ...,
+    "securityProfile": {
+        "enableVTPM": "true",
+        "enableSecureBoot": "true",
     }
-    ```
+}
+```
 
 2. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
@@ -207,15 +207,15 @@ If your node pool does not currently have a trusted launch image, you will not b
 
 In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
-    ```json
-    "properties": {
-        ...,
-        "securityProfile": {
-            "enableVTPM": "true",
-            "enableSecureBoot": "true",
-        }
+```json
+"properties": {
+    ...,
+    "securityProfile": {
+        "enableVTPM": "true",
+        "enableSecureBoot": "true",
     }
-    ```
+}
+```
 
 3. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
@@ -263,15 +263,15 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
 
 In your template, provide values for `enableVTPM` and `enableSecureBoot`. The same schema used for CLI deployment exists in the `Microsoft.ContainerService/managedClusters/agentPools` definition under `"properties"`, as shown in the following example:
 
-    ```json
-    "properties": {
-        ...,
-        "securityProfile": {
-            "enableVTPM": "false",
-            "enableSecureBoot": "false",
-        }
+```json
+"properties": {
+    ...,
+    "securityProfile": {
+        "enableVTPM": "false",
+        "enableSecureBoot": "false",
     }
-    ```
+}
+```
 
 2. Deploy your template with vTPM and secure boot disabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
