@@ -39,7 +39,7 @@ You can apply any of the built-in policies on both **ingress** and **egress** ru
 
 ## Resource quotas
 
-[Resource Quotas][aks-resource-quotas] are Kubernetes resources that are used to manage and limit the resource consumption of namespaces within a cluster. They allow administrators to define constraints on the amount of CPU, memory, storage, or other resources that are be used by workloads in a namespace. By applying resource quotas, you can ensure fair resource distribution, prevent resource overuse, and maintain cluster stability.
+[Resource Quotas][aks-resource-quotas] are Kubernetes resources that are used to manage and limit the resource consumption of namespaces within a cluster. They allow administrators to define constraints on the amount of CPU, memory, storage, or other resources that will be used by workloads in a namespace. By applying resource quotas, you can ensure fair resource distribution, prevent resource overuse, and maintain cluster stability.
 
 Managed namespaces can be created with the following resource quotas:
 
@@ -48,7 +48,7 @@ Managed namespaces can be created with the following resource quotas:
 
 ## Labels and annotations
 
-Kubernetes [Labels][labels] and [Annotations][annotations] are metadata attached to Kubernetes objects, such as namespaces, to provide additional information. Labels are key-value pairs used to organize and select resources, enabling efficient grouping and querying. Annotations, on the other hand, are used to store nonidentifying metadata, such as configuration details or operational instructions, that can be consumed by tools or systems.
+Kubernetes [Labels][labels] and [Annotations][annotations] are metadata attached to Kubernetes objects, such as namespaces, to provide additional information. Labels are key-value pairs used to organize and select resources, enabling efficient grouping and querying. Annotations, on the other hand, are used to store nonidentifying metadata, such as configuration details or operational instructions, that will be consumed by tools or systems.
 
 You can optionally set Kubernetes Labels and Annotations to be applied on the namespace. 
 
