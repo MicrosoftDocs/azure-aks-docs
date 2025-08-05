@@ -65,7 +65,7 @@ When using `Ubuntu` or `AzureLinux` as the `osSKU`, if the default OS version do
 The following limitations apply when adding a node pool with CVM to AKS:
 
 - You can't use FIPS, ARM64, Trusted Launch, or Pod Sandboxing.
-- You can't update an existing node pool to migrate to a CVM size. To migrate, you'll need to [resize your node pool](resize-your-nodepool).
+- You can't update an existing node pool to migrate to a CVM size. To migrate, you'll need to [resize your node pool][resize-your-nodepool].
 - You can't use CVM with Windows node pools.
 - CVM with Azure Linux is currently in preview.
 
@@ -189,8 +189,8 @@ If you don't specify the `osSKU` or `osType`, AKS defaults to `--os-type Linux` 
 
 In this article, you learned how to add a node pool with CVM to an AKS cluster. 
 * For more information about CVM, see [Confidential VM node pools support on AKS][cvm].
-* To migrate an existing node pool to a CVM vm size, you can [resize your node pool](resize-your-nodepool).
-* If you're only interested in enabling Trusted Launch on your node pools, see [Trusted Launch on AKS](trusted-launch).
+* To migrate an existing node pool to a CVM vm size, you can [resize your node pool][resize-your-nodepool].
+* If you're only interested in enabling Trusted Launch on your node pools, see [Trusted Launch on AKS][trusted-launch].
 
 <!-- LINKS - Internal -->
 [about-cvm]: /azure/confidential-computing/confidential-vm-overview
