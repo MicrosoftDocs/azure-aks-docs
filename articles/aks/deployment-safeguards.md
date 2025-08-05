@@ -136,7 +136,6 @@ To disable Deployment Safeguards on your cluster, use the `delete` command.
 az aks safeguards delete --resource-group <resource-group-name> --name <cluster-name>
 ```
 
---
 
 ## FAQ
 
