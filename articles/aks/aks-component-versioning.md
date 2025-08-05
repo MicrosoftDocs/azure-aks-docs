@@ -126,7 +126,7 @@ The component information is returned in the `componentsByReleases` section. Exp
 }
 ```
 
-The actual components shown will vary based on your cluster configuration, enabled add-ons, and Kubernetes version. Use the `az aks get-upgrades` command to see the complete list of components for your specific cluster.
+The actual components shown can vary based on your cluster configuration, enabled add-ons, and Kubernetes version. Use the `az aks get-upgrades` command to see the complete list of components for your specific cluster.
 
 Each component entry includes:
 
