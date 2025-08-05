@@ -76,7 +76,7 @@ az extension update --name aks-preview
 
 ### View component versions using Azure CLI
 
-Use the `az aks get-upgrades` command to view component versions:
+Use the [`az aks get-upgrades`][az-aks-get-upgrades] command to view component versions:
 
 ```azurecli-interactive
 az aks get-upgrades --resource-group myResourceGroup --name myAKSCluster
@@ -126,7 +126,7 @@ The component information is returned in the `componentsByReleases` section. Exp
 }
 ```
 
-The actual components shown can vary based on your cluster configuration, enabled add-ons, and Kubernetes version. Use the `az aks get-upgrades` command to see the complete list of components for your specific cluster.
+The actual components shown can vary based on your cluster configuration, enabled add-ons, and Kubernetes version. Use the [`az aks get-upgrades`][az-aks-get-upgrades] command to see the complete list of components for your specific cluster.
 
 Each component entry includes:
 
@@ -161,6 +161,7 @@ Each component entry includes:
 [stop-cluster-upgrade-api-breaking-changes]: stop-cluster-upgrade-api-breaking-changes.md
 [istio-upgrade]: istio-upgrade.md
 [az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
+[az-aks-get-upgrades]: /cli/azure/aks#az_aks_get-upgrades
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
 [aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
 [aks-upgrade-profile-api]: /rest/api/aks/managed-clusters/get-upgrade-profile
