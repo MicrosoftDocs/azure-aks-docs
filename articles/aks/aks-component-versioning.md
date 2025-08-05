@@ -11,7 +11,7 @@ ms.author: kaarthis
 
 Azure Kubernetes Service (AKS) manages multiple components that follow different versioning and patching strategies. Understanding how these components are versioned helps you plan upgrades, track security patches, and manage your cluster lifecycle effectively.
 
-This article explains the versioning approach for each layer of AKS components and how they're maintained over time.
+This article explains the versioning approach for different categories of AKS components and how they're maintained over time.
 
 ## AKS components overview
 
@@ -32,6 +32,10 @@ AKS consists of multiple components, each with distinct versioning patterns:
 | **Versioning model** | Follows upstream Kubernetes semantic versioning (MAJOR.MINOR.PATCH). AKS offers community and Long Term Support (LTS) models. More information on this can be found in [AKS version support policy documentation][version-support-policy] | Node image versions along with VHD notes published with [AKS releases][aks-release-notes]. | Add-on/feature/extension minor version tied 1-1 to AKS minor version | Sidecar version must be compatible with add-on control plane |
 | **Update method** | Customer has control over which `MAJOR.MINOR.PATCH` version to upgrade to. Manual ([az aks upgrade][az-aks-upgrade]) or automatic ([auto-upgrade channels][auto-upgrade]) | Customer can upgrade to latest supported node image version. Manual ([az aks nodepool upgrade][az-aks-nodepool-upgrade]) or [auto-upgrade][node-image-auto-upgrade] | - Minor version upgraded when control plane minor version is upgraded (except Istio; see [Istio upgrade documentation][istio-upgrade])<br/>- Patch version upgraded by AKS releases automatically | Customer needs to manually update (restart workloads having sidecars) to compatible sidecar versions as documented by the add-on/feature/extension. |
 
+## View AKS component versions using AKS Component Insights (Preview)
+
+[AKS Component Insights (Preview)][aks-component-insights] provides detailed visibility into the exact versions of all components running in your Azure Kubernetes Service cluster. This feature helps you understand your cluster's current state, plan upgrades, and identify potential compatibility issues.
+
 ## Version management best practices
 
 **Security consideration**: Enable automatic patch updates to ensure CVE fixes are applied as soon as possible. Choose the auto-upgrade channel that best fits your cluster's requirements and risk tolerance.
@@ -49,7 +53,7 @@ AKS consists of multiple components, each with distinct versioning patterns:
 - **Pre-upgrade validation**: Before upgrading your production clusters, test your applications, custom resources (CRDs), and third-party integrations on pre-production clusters to ensure compatibility with the new Kubernetes version and updated AKS components.
 
 ## Next steps
-
+- **View AKS component versions**: Use [AKS Component Insights (Preview)][aks-component-insights] to get version of all components in your cluster
 - **Plan upgrades**: [Configure automatic cluster upgrades][auto-upgrade] or [plan manual upgrades][upgrade-planning]
 - **Stay informed**: [Monitor AKS releases][aks-release-tracker] for updates and breaking changes
 - **Understand support**: [Review Kubernetes version support policy][support-policy]
@@ -73,3 +77,4 @@ AKS consists of multiple components, each with distinct versioning patterns:
 [istio-upgrade]: istio-upgrade.md
 [az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
+[aks-component-insights]: aks-component-insights.md

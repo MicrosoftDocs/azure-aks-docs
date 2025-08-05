@@ -1,8 +1,7 @@
 ---
-title: View AKS component versions (Preview)
+title: View AKS component versions using AKS Component Insights (Preview)
 description: Learn how to retrieve detailed version information for all Azure Kubernetes Service (AKS) cluster components using AKS Component Insights.
 ms.topic: how-to
-ms.subservice: aks-cluster-management
 ms.custom: azure-kubernetes-service, devx-track-azurecli
 ms.date: 07/31/2025
 author: kaarthis
@@ -11,7 +10,7 @@ ms.author: kaarthis
 # Customer intent: "As a cloud administrator, I want to see the exact versions of all components running in my AKS cluster, so I can plan upgrades and troubleshoot issues effectively."
 ---
 
-# View AKS component versions (Preview)
+# View AKS component versions using AKS Component Insights (Preview)
 
 AKS Component Insights (Preview) provides detailed visibility into the exact versions of all components running in your Azure Kubernetes Service cluster. This feature helps you understand your cluster's current state, plan upgrades, and identify potential compatibility issues.
 
