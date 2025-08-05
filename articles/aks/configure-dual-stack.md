@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 12/07/2023
 ms.custom: devx-track-azurecli, build-2023
+# Customer intent: As a cloud architect, I want to configure dual-stack networking in Azure Kubernetes Service so that I can enable both IPv4 and IPv6 support for my applications to ensure compatibility and improved network management.
 ---
 
 # Use dual-stack networking in Azure Kubernetes Service (AKS)
@@ -21,6 +22,7 @@ This article shows you how to use dual-stack networking with an AKS cluster. For
 * In Azure Linux node pools, service objects are only supported with `externalTrafficPolicy: Local`.
 * Dual-stack networking is required for the Azure virtual network and the pod CIDR.
   * Single stack IPv6-only isn't supported for node or pod IP addresses. Services can be provisioned on IPv4 or IPv6.
+* [Azure CNI Overlay](/azure/aks/azure-cni-overlay?tabs=kubectl#dual-stack-networking) is required  
 
 ## Prerequisites
 

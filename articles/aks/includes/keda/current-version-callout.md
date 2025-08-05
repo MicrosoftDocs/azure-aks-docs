@@ -4,6 +4,7 @@ ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 11/02/2023
 ms.author: tomkerkhove
+# Customer intent: "As an AKS user, I want to understand the KEDA version compatibility with my Kubernetes version, so that I can ensure my applications are running on a supported configuration."
 ---
 
 > [!IMPORTANT]

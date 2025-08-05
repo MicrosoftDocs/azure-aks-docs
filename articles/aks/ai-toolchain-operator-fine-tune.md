@@ -1,16 +1,17 @@
 ---
-title: Fine-tune and deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator
+title: Fine-tune and deploy an AI model on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 description: Learn how to fine-tune and deploy a language model with the AI toolchain operator add-on on your AKS cluster.
 ms.topic: how-to
 ms.author: schaffererin
 author: sachidesai
 ms.service: azure-kubernetes-service
 ms.date: 01/07/2025
+# Customer intent: "As a data scientist, I want to fine-tune and deploy a language model on a Kubernetes cluster, so that I can enhance its performance and utilize it for inferencing tasks effectively."
 ---
 
-# Fine-tune and deploy an AI model for inferencing on Azure Kubernetes Service (AKS) with the AI toolchain operator (Preview)
+# Fine-tune and deploy an AI model for inferencing on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 
-This article shows you how to fine-tune and deploy a language model inferencing workload with the AI toolchain operator add-on (preview) for AKS. You learn how to accomplish the following tasks:
+This article shows you how to fine-tune and deploy a language model inferencing workload on AKS with the AI toolchain operator add-on. You learn how to accomplish the following tasks:
 
 * [Set environment variables](#export-environmental-variables) to reference your Azure Container Registry (ACR) and repository details.
 * [Create your container registry image push/pull secret](#create-a-new-secret-for-your-private-registry) to store and retrieve private fine-tuning adapter images.
@@ -19,8 +20,6 @@ This article shows you how to fine-tune and deploy a language model inferencing 
 * [Clean up resources](#clean-up-resources).
 
 The AI toolchain operator (KAITO) is a managed add-on for AKS that simplifies the deployment and operations for AI models on your AKS clusters. Starting with [KAITO version 0.3.1](https://github.com/kaito-project/kaito/releases/tag/v0.3.1) and above, you can use the AKS managed add-on to fine-tune supported foundation models with new data and enhance the accuracy of your AI models. To learn more about parameter efficient fine-tuning methods and their use cases, see [Concepts - Fine-tuning language models for AI and machine learning workflows on AKS][fine-tuning-kaito].
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
 ## Before you begin
 
@@ -82,7 +81,7 @@ tuning:
       imagePushSecret: myregistrysecret
 ```
 
-This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/Azure/kaito/tree/main/docs/tuning) specification to adjust the input to pull an image from your ACR.
+This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/kaito-project/kaito/tree/main) specification to adjust the input to pull an image from your ACR.
 
 > [!NOTE]
 > The choice of GPU SKU is critical since model fine-tuning normally requires more GPU memory compared to model inference. To avoid GPU Out-Of-Memory errors, we recommend using NVIDIA A100 or higher tier GPUs.
@@ -207,7 +206,7 @@ kubectl delete workspace workspace-phi-3-mini-adapter
 
 ## Next steps
 
-* Learn more on how to Fine tune language models with KAITO - AKS Engineering Blog
+* Learn more about fine-tuning language models with KAITO in this [AKS Engineering Blog](https://blog.aks.azure.com/2024/08/23/fine-tuning-language-models-with-kaito)!
 * Explore [MLOps for AI and machine learning workflows][concepts-ml-ops] and best practices on AKS
 * Learn about supported families of [GPUs on Azure Kubernetes Service][gpus-on-aks]
 

@@ -6,6 +6,7 @@ ms.author: raorugan
 ms.topic: how-to
 ms.date: 09/26/2023
 ms.custom: template-how-to, devx-track-azurecli
+# Customer intent: "As a Kubernetes administrator, I want to install the KEDA add-on on my Azure Kubernetes Service cluster using the Azure CLI, so that I can enable event-driven autoscaling for my applications."
 ---
 
 # Install the Kubernetes Event-driven Autoscaling (KEDA) add-on using the Azure CLI

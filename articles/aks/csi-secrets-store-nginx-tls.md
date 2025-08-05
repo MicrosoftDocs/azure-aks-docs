@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.subservice: aks-security
 ms.date: 06/05/2023
 ms.custom: template-how-to
+# Customer intent: "As a DevOps engineer, I want to configure an NGINX Ingress Controller with TLS on Azure Kubernetes Service, so that I can secure application traffic using certificates stored in Azure Key Vault."
 ---
 
 # Set up Secrets Store CSI Driver to enable NGINX Ingress Controller with TLS

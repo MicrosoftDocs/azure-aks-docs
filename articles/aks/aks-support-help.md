@@ -7,6 +7,7 @@ author: davidsmatlak
 ms.author: davidsmatlak
 
 ms.custom: support-help-page
+# Customer intent: As a Kubernetes administrator, I want to access support and troubleshooting resources for Azure Kubernetes Service, so that I can quickly diagnose and resolve deployment issues and ensure the efficient operation of my applications.
 ---
 
 # Support and troubleshooting for Azure Kubernetes Service (AKS)

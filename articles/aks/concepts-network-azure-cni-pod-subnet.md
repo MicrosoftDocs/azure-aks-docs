@@ -6,16 +6,17 @@ ms.date: 05/21/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: references_regions, innovation-engine
+# Customer intent: "As a Kubernetes administrator, I want to understand Azure CNI Pod Subnet networking options, so that I can effectively manage IP address allocation and optimize network performance in my AKS clusters."
 ---
 
 # Azure Container Networking Interface (CNI) Pod Subnet
 
-Azure CNI Pod Subnet assigns IP addresses to pods from a separate subnet from your cluster Nodes. This feature is available in two modes: Dynamic IP Allocation and Static Block Allocation (Preview).
+Azure CNI Pod Subnet assigns IP addresses to pods from a separate subnet from your cluster Nodes. This feature is available in two modes: Dynamic IP Allocation and Static Block Allocation.
 
 ## Prerequisites
 
 > [!NOTE]
-> When using static block allocation of CIDRs, exposing an application as a Private Link Service using a Kubernetes Load Balancer Service isn't supported.
+> When using Static Block Allocation of CIDRs, exposing an application as a Private Link Service using a Kubernetes Load Balancer Service isn't supported.
 
 - Review the [prerequisites][azure-cni-prereq] for configuring basic Azure CNI networking in AKS, as the same prerequisites apply to this article.
 - Review the [deployment parameters][azure-cni-deployment-parameters] for configuring basic Azure CNI networking in AKS, as the same parameters apply.
@@ -63,7 +64,7 @@ Results:
 
 Dynamic IP allocation helps mitigate pod IP address exhaustion issues by allocating pod IPs from a subnet that's separate from the subnet hosting the AKS cluster.
 
-The dynamic IP allocation mode offers the following benefits:
+The Dynamic IP Allocation mode offers the following benefits:
 
 - **Better IP utilization**: IPs are dynamically allocated to cluster Pods from the Pod subnet. This leads to better utilization of IPs in the cluster compared to the traditional CNI solution, which does static allocation of IPs for every node.
 - **Scalable and flexible**: Node and pod subnets can be scaled independently. A single pod subnet can be shared across multiple node pools of a cluster or across multiple AKS clusters deployed in the same VNet. You can also configure a separate pod subnet for a node pool.  
@@ -73,17 +74,17 @@ The dynamic IP allocation mode offers the following benefits:
 
 ### Plan IP addressing
 
-With dynamic IP allocation, nodes and pods scale independently, so you can plan their address spaces separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
+With Dynamic IP Allocation, nodes and pods scale independently, so you can plan their address spaces separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
 
 IPs are allocated to nodes in batches of 16. Pod subnet IP allocation should be planned with a minimum of 16 IPs per node in the cluster, as the nodes request 16 IPs on startup and request another batch of 16 anytime there are <8 IPs unallocated in their allotment.
 
 IP address planning for Kubernetes services and Docker Bridge remain unchanged.
 
-## Static block allocation mode (Preview)
+## Static block allocation mode
 
 Static block allocation helps mitigate potential pod subnet sizing and Azure address mapping limitations by assigning CIDR blocks to nodes rather than individual IPs.
 
-The static block allocation mode offers the following benefits:
+The Static Block Allocation mode offers the following benefits:
 
 - **Better IP scalability**: CIDR blocks are statically allocated to the cluster nodes and are present for the lifetime of the node, as opposed to the traditional dynamic allocation of individual IPs with traditional CNI. This enables routing based on CIDR blocks and helps scale the cluster limit up to 1 million pods from the traditional 65K pods per cluster. Your Azure Virtual Network must be large enough to accommodate the scale of your cluster. 
 - **Flexibility**: Node and pod subnets can be scaled independently. A single pod subnet can be shared across multiple node pools of a cluster or across multiple AKS clusters deployed in the same VNet. You can also configure a separate pod subnet for a node pool.  
@@ -94,9 +95,9 @@ The static block allocation mode offers the following benefits:
 ### Limitations
 
 Below are some of the limitations of using Azure CNI Static Block allocation:
-- Minimum Kubernetes Version required is 1.28
-- Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs
-- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot be use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
+- Minimum Kubernetes Version required is 1.28.
+- Maximum subnet size supported is x.x.x.x/12 ~ 1 million IPs.
+- Only a single mode of operation can be used per subnet. If a subnet uses Static Block allocation mode, it cannot use Dynamic IP allocation mode in a different cluster or node pool with the same subnet and vice versa.
 - Only supported in new clusters or when adding node pools with a different subnet to existing clusters. Migrating or updating existing clusters or node pools is not supported.
 - Across all the CIDR blocks assigned to a node in the node pool, one IP will be selected as the primary IP of the node. Thus, for network administrators selecting the `--max-pods` value try to use the calculation below to best serve your needs and have optimal usage of IPs in the subnet:
 
@@ -104,7 +105,7 @@ Below are some of the limitations of using Azure CNI Static Block allocation:
 
 ### Plan IP addressing
 
-With static block allocation, nodes and pods scale independently, so you can plan their address spaces separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
+With Static Block Allocation, nodes and pods scale independently, so you can plan their address spaces separately. Since pod subnets can be configured to the granularity of a node pool, you can always add a new subnet when you add a node pool. The system pods in a cluster/node pool also receive IPs from the pod subnet, so this behavior needs to be accounted for.
 
 CIDR blocks of /28 (16 IPs) are allocated to nodes based on your `--max-pods` configuration for your node pool, which defines the maximum number of pods per node. 1 IP is reserved on each node from all the available IPs on that node for internal purposes. 
 
@@ -113,6 +114,9 @@ While planning your IPs, it's important to define your `--max-pods` configuratio
 Ideal values with no IP wastage would require the max pods value to conform to the above expression.
 
 See the following example cases: 
+
+> [!Note] 
+> The examples assume /28 CIDR blocks (16 IPs each).
 
 | Example case | `max_pods` | CIDR Blocks allocated per node | Total IP available for pods | IP wastage for node |
 | --- | --- | --- | --- | --- |

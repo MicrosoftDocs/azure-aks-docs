@@ -7,6 +7,7 @@ ms.date: 10/15/2024
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: "As a DevOps engineer, I want to validate the resiliency of the Valkey cluster on Azure Kubernetes Service using Locust, so that I can ensure it can recover and maintain performance under simulated failure conditions."
 ---
 
 # Validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS)

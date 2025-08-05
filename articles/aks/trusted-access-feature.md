@@ -6,6 +6,7 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 11/05/2024
 ms.author: schaffererin
+# Customer intent: As a cloud engineer, I want to configure Trusted Access for my Azure Kubernetes Service clusters, so that I can securely manage access for Azure resources without relying on private endpoints or elevated permissions.
 ---
 
 # Get secure access for Azure resources in Azure Kubernetes Service by using Trusted Access

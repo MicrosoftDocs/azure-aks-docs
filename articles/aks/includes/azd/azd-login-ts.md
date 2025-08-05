@@ -2,6 +2,7 @@
 ms.service: azure-kubernetes-service
 ms.topic: include
 ms.date: 03/15/2024
+# Customer intent: "As a cloud administrator, I want to log in to Azure using the CLI with a workaround, so that I can securely access my subscription and manage resources without issues."
 ---
 
 ### azd auth workaround
