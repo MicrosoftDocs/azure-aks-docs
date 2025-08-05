@@ -28,7 +28,7 @@ Node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 | Prerequisite                         | Notes                                                                                                        |
 |--------------------------------------|--------------------------------------------------------------------------------------------------------------|
 | **Azure Subscription**               | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).  |
-| **Azure CLI `aks-preview` extension**| `18.0.0b14` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions].               |                      
+| **Azure CLI**| `2.76.0` or later. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][azure cli].|                      
 
 ## Limitations
 
@@ -667,6 +667,7 @@ For feature requests, file a feature request issue through the [AKS Karpenter Pr
 <!-- LINKS - internal -->
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
 [azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
+[azure cli]: /cli/azure/get-started-with-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [planned-maintenance#schedule-configuration-types-for-planned-maintenance]: /azure/aks/planned-maintenance#schedule-configuration-types-for-planned-maintenance
