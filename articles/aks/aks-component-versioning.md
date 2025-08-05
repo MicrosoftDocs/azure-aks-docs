@@ -15,11 +15,11 @@ This article explains the versioning approach for different categories of AKS co
 
 ## AKS components overview
 
-:::image type="content" source="media/aks-component-versioning/aks-component-architecture.png" alt-text="Architecture diagram showing AKS control plane and node components across different layers including node image, AKS features and add-ons, and customer pod sidecars." lightbox="media/aks-component-versioning/aks-component-architecture.png":::
+:::image type="content" source="media/aks-component-versioning/aks-component-architecture.png" alt-text="Diagram of different AKS components - control plane, node images, and AKS features, extensions, add-ons deployed as workloads on nodes" lightbox="media/aks-component-versioning/aks-component-architecture.png":::
 
 AKS consists of multiple components, each with distinct versioning patterns:
 - **Kubernetes cluster control plane hosted by AKS**: Managed Kubernetes API server, etcd, and other cluster control plane components.
-- **Node images**: Operating system, container runtime, and core Kubernetes node components. Details about what components are packaged in the node images can be found under the [VHD notes folder under AKS GitHub repository][vhd-notes].
+- **Node images**: Operating system, container runtime, and core Kubernetes node components. Details about what components are packaged in the node images can be found under the [Virtual Hard Disk (VHD) notes folder under AKS GitHub repository][vhd-notes].
 - **Workloads**: AKS managed features/add-ons/extensions could have components in one of these two buckets:
   - **Standalone add-on/features/extension pods**: AKS feature/add-ons/extensions that are running standalone pods (from Deployments or DaemonSets) on customer hosted nodes (left side). Examples include `istiod`, `azure-cns`, and `coredns`. 
   - **AKS components inside customer workload pods**: Some AKS feature/add-ons/extensions might have sidecars running inside user's pods (right side). For example, Istio injects sidecar proxies to customer workload pods.
@@ -29,24 +29,24 @@ AKS consists of multiple components, each with distinct versioning patterns:
 |  | **Control plane** | **Node images** | **Standalone add-on/features/extension pods** | **AKS components inside customer workload pods** |
 |--|-------------------|----------------|-----------------------------------------------|-----------------------------------------------|
 | **What is versioned?** | Kubernetes API server, etcd, controllers | Operating system, container runtime, and core Kubernetes node components | AKS feature/add-ons/extensions that are running standalone pods (for example - istiod) | Sidecars or supporting containers injected by add-ons/extensions |
-| **Versioning model** | Follows upstream Kubernetes semantic versioning (MAJOR.MINOR.PATCH). AKS offers community and Long Term Support (LTS) models. More information on this can be found in [AKS version support policy documentation][version-support-policy] | Node image versions along with VHD notes published with [AKS releases][aks-release-notes]. | Add-on/feature/extension minor version tied 1-1 to AKS minor version | Sidecar version must be compatible with add-on control plane |
-| **Update method** | Customer has control over which `MAJOR.MINOR.PATCH` version to upgrade to. Manual ([az aks upgrade][az-aks-upgrade]) or automatic ([auto-upgrade channels][auto-upgrade]) | Customer can upgrade to latest supported node image version. Manual ([az aks nodepool upgrade][az-aks-nodepool-upgrade]) or [auto-upgrade][node-image-auto-upgrade] | - Minor version upgraded when control plane minor version is upgraded (except Istio; see [Istio upgrade documentation][istio-upgrade])<br/>- Patch version upgraded by AKS releases automatically | Customer needs to manually update (restart workloads having sidecars) to compatible sidecar versions as documented by the add-on/feature/extension. |
+| **Versioning model** | Follows upstream Kubernetes semantic versioning (MAJOR.MINOR.PATCH). AKS offers community and Long Term Support (LTS) models. More information can be found in [AKS version support policy documentation][version-support-policy] | Node image versions along with VHD notes published with [AKS releases][aks-release-notes]. | Add-on/feature/extension minor version tied 1-1 to AKS minor version | Sidecar version must be compatible with add-on control plane |
+| **Update method** | Customer has control over which `MAJOR.MINOR.PATCH` version to upgrade to. Manual ([`az aks upgrade`][az-aks-upgrade]) or automatic using [autoupgrade channels][auto-upgrade] | Customer can upgrade to latest supported node image version. Manual ([`az aks nodepool upgrade`][az-aks-nodepool-upgrade]) or automatic using [autoupgrade channels][node-image-auto-upgrade] | - Minor version upgraded when control plane minor version is upgraded (except Istio; see [Istio upgrade documentation][istio-upgrade])<br/>- Patch version upgraded by AKS releases automatically | Customer needs to manually update (restart workloads having sidecars) to compatible sidecar versions as documented by the add-on/feature/extension. |
 
 ## Version management best practices
 
-**Security consideration**: Enable automatic patch updates to ensure CVE fixes are applied as soon as possible. Choose the auto-upgrade channel that best fits your cluster's requirements and risk tolerance.
+**Security consideration**: Enable automatic patch updates to ensure security fixes are applied as soon as possible. Choose the autoupgrade channel that best fits your cluster's requirements and risk tolerance.
 **Manual or automatic**: Choose the update strategy that best fits your operational requirements. Automatic updates provide timely security patches and reduce operational overhead, while manual updates offer precise control over timing and change management. Use [planned maintenance windows][planned-maintenance] to control when automatic upgrades are applied, ensuring updates occur during approved timeframes for your cluster.
-**Monitor and prepare for changes**: Stay informed about upcoming updates and availability of new versions using [AKS release notes][aks-release-notes] and the [AKS release tracker][aks-release-tracker]. Validate upgrades in non-production environments before upgrading production environments.
+**Monitor and prepare for changes**: Stay informed about upcoming updates and availability of new versions using [AKS release notes][aks-release-notes] and the [AKS release tracker][aks-release-tracker]. Validate upgrades in nonproduction environments before upgrading production environments.
   - **For production clusters:**
     - Consider automatic patch updates for timely security fixes
     - Choose between automatic or manual minor version upgrades based on your operational needs
     - Test all changes in staging environments first
   - **For development clusters:**
     - Enable automatic updates for both control plane and node pools to stay current with latest features
-    - Choose appropriate channels based on your development and testing needs (see [automatic cluster upgrades][auto-upgrade] and [node image auto-upgrade][node-image-auto-upgrade] for channel options)
+    - Choose appropriate channels based on your development and testing needs (see [automatic cluster upgrades][auto-upgrade] and [node image autoupgrade][node-image-auto-upgrade] for channel options)
     - Use as a testing ground for production update strategies
 - **Breaking changes**: Monitor the [AKS release tracker][aks-release-tracker] and review [Kubernetes deprecation policies](https://kubernetes.io/docs/reference/using-api/deprecation-policy/) to stay informed about API deprecations and breaking changes in both AKS and upstream Kubernetes.
-- **Pre-upgrade validation**: Before upgrading your production clusters, test your applications, custom resources (CRDs), and third-party integrations on pre-production clusters to ensure compatibility with the new Kubernetes version and updated AKS components.
+- **Pre-upgrade validation**: Before upgrading your production clusters, test your applications, custom resources, and third-party integrations on preproduction clusters to ensure compatibility with the new Kubernetes version and updated AKS components.
 
 ## View AKS component versions using AKS Component Insights (Preview)
 
@@ -135,7 +135,7 @@ Each component entry includes:
 - **hasBreakingChanges**: Whether this component version introduces breaking changes
 
 > [!TIP]
-> In addition to using the Azure CLI to query component version information, you can also use the [GET upgradeProfiles API][aks-upgrade-profile-api] with preview AKS APIs (`2025-05-04-preview` or later) to retrieve detailed component version data programmatically.
+> In addition to using the Azure CLI to query component version information, you can also use the [`GET upgradeProfiles API`][aks-upgrade-profile-api] with preview AKS APIs (`2025-05-04-preview` or later) to retrieve detailed component version data programmatically.
 
 ## Next steps
 - **Plan upgrades**: [Configure automatic cluster upgrades][auto-upgrade] or [plan manual upgrades][upgrade-planning]
