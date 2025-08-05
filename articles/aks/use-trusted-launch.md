@@ -43,7 +43,7 @@ Trusted Launch is composed of several, coordinated infrastructure technologies t
 - To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
 - Ephemeral OS disks can be created with trusted Launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted Launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
 
-## Create an AKS cluster with trusted Launch enabled
+## Create an AKS cluster with Trusted Launch enabled
 
 When creating a cluster, enabling vTPM or Secure Boot automatically sets up your node pools to use the customized Trusted Launch image. This image is specifically configured to support the security features enabled by Trusted Launch.
 
@@ -111,14 +111,26 @@ When you create a node pool, enabling vTPM or Secure Boot automatically sets up 
    * **--enable-secure-boot**: Enables Secure Boot to authenticate image signed by a trusted publisher.
    * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-> [!NOTE]
-> Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
+    > [!NOTE]
+    > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
 
-The following example deploys a node pool with vTPM and Secure Boot enabled on a cluster named *myAKSCluster* with three nodes:
+    The following example deploys a node pool with vTPM and Secure Boot enabled on a cluster named *myAKSCluster* with three nodes:
 
-```azurecli-interactive
-az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm --enable-secure-boot
-```
+    ```azurecli-interactive
+    az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster --name mynodepool --node-count 3 --enable-vtpm --enable-secure-boot
+    ```
+2. Check that your node pool is using a Trusted Launch image.
+
+    Trusted Launch nodes have the following output:
+
+    * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
+    * `"Security-type"` should be `"Trusted Launch"`.
+
+    ```bash
+    kubectl get nodes
+    kubectl describe node {node-name} | grep -e node-image-version -e security-type
+    ```
+
 :::zone-end
 :::zone target="docs" pivot="arm"
 1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
@@ -155,7 +167,7 @@ If your node pool doesn't currently have a Trusted Launch image, you won't be ab
     Trusted Launch nodes have the following output:
 
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `Security-type` should be `"Trusted Launch"`.
+    * `"Security-type"` should be `"Trusted Launch"`.
 
     ```bash
     kubectl get nodes
@@ -166,14 +178,14 @@ If your node pool doesn't currently have a Trusted Launch image, you won't be ab
 
 2. Update a node pool with Trusted Launch enabled using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
 
-   * **--resource-group**: Enter the name of an existing resource group hosting your existing AKS cluster.
-   * **--cluster-name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
-   * **--name**: Enter the name of your node pool, such as *mynodepool*.
-   * **--enable-secure-boot**: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
-   * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
+    * **--resource-group**: Enter the name of an existing resource group hosting your existing AKS cluster.
+    * **--cluster-name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
+    * **--name**: Enter the name of your node pool, such as *mynodepool*.
+    * **--enable-secure-boot**: Enables Secure Boot to authenticate that the image was signed by a trusted publisher.
+    * **--enable-vtpm**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
 
-> [!NOTE]
-> Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
+    > [!NOTE]
+    > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
 
     The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables vTPM. In this scenario, secure boot was enabled during node pool creation:
 
@@ -194,7 +206,7 @@ If your node pool doesn't currently have a Trusted Launch image, you won't be ab
     Trusted Launch nodes have the following output:
     
     * Node image version containing `"TL"`, such as `"AKSUbuntu-2204-gen2TLcontainerd"`.
-    * `Security-type` should be `"Trusted Launch"`.
+    * `"Security-type"` should be `"Trusted Launch"`.
 
     ```bash
     kubectl get nodes
