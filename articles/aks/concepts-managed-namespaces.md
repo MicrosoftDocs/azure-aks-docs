@@ -57,7 +57,7 @@ You can optionally set Kubernetes Labels and Annotations to be applied on the na
 The adoption policy determines how an existing namespace in Kubernetes is handled when creating a managed namespace.
 
 > [!WARNING]
-> On-boarding an existing namespace to be managed can cause disruption. If the **resource quota** applied is less than what is already being requested by pods, new deployments and pods that exceed the quota will be denied. Existing deployments won't be affected, but scaling will be denied. Applying **network policies** to an existing namespace can impact existing traffic. Ensure that the policies are tested and validated to avoid unintended disruptions to communication between pods or external endpoints.
+> On-boarding an existing namespace to be managed can cause disruption. If the **resource quota** applied is less than what is already being requested by pods, new deployments and pods that exceed the quota is denied. Existing deployments won't be affected, but scaling will be denied. Applying **network policies** to an existing namespace can impact existing traffic. Ensure that the policies are tested and validated to avoid unintended disruptions to communication between pods or external endpoints.
 
 The following options are available:
 
@@ -70,7 +70,7 @@ The following options are available:
 The delete policy specifies how the Kubernetes namespace is handled when the managed namespace resource is deleted.
 
 > [!WARNING]
-> Deleting a managed namespace with the **Delete** policy will cause all resources within that namespace, such as Deployments, Services, Ingresses, and other Kubernetes objects, to be deleted. Ensure that you have backed up or migrated any critical resources before proceeding.
+> Deleting a managed namespace with the **Delete** policy causes all resources within that namespace, such as Deployments, Services, Ingresses, and other Kubernetes objects, to be deleted. Ensure that you back up or migrate any critical resources before proceeding.
 
 The following options are available:
 
