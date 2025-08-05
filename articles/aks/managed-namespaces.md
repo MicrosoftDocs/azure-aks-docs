@@ -358,7 +358,6 @@ az aks namespace get-credentials --name <namespace-name> --resource-group <rg-na
 
 ## Next steps
 
-This article focused on using the managed namespaces feature to logically isolate teams and applications.
 
 This article focused on using the managed namespaces feature to logically isolate teams and applications. You can further explore other guardrails and best practices to apply via [deployment safeguards][deployment-safeguards].
 
