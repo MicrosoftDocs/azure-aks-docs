@@ -31,14 +31,14 @@ Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically 
 | **Azure CLI `aks-preview` extension**                | `18.0.0b10` or later. To find the version, run `az --version`. If you need to install or upgrade, see [Manage Azure CLI extensions][azure-cli-extensions]. |
 | **AKS API Version**          | `2025-05-02-preview` or later. For more information, see [AKS Preview API lifecycle][aks-preview-api-lifecycle]. |
 | **Feature Flag(s)**             | `ManagedNamespacePreview` must be registered to use managed namespaces.    |
-| **Required permission(s)**      | `Microsoft.ContainerService/managedClusters/managedNamespaces/*` or `Azure Kubernetes Service Namespace Contributor` built-in role. `Microsoft.Resources/deployments/*` on the resource group containing the cluster. For more infomation, see [Managed namespaces built-in roles][aks-managed-namespaces-roles]. |
+| **Required permission(s)**      | `Microsoft.ContainerService/managedClusters/managedNamespaces/*` or `Azure Kubernetes Service Namespace Contributor` built-in role. `Microsoft.Resources/deployments/*` on the resource group containing the cluster. For more information, see [Managed namespaces built-in roles][aks-managed-namespaces-roles]. |
 
 ### Limitations
 
 - Trying to on-board system namespaces such as `kube-system`, `app-routing-system`, `istio-system`, `gatekeeper-system`, etc. to be managed namespaces isn't allowed.
 - When a namespace is a managed namespace, changes to the namespace via the Kubernetes API are blocked.
 :::zone target="docs" pivot="azure-portal"
-- Listing existing namespaces to convert in the portal does not work with private clusters. You can add new namespaces.
+- Listing existing namespaces to convert in the portal doesn't work with private clusters. You can add new namespaces.
   
 :::zone-end
 
@@ -175,7 +175,7 @@ az deployment group create --resource-group <resource-group> --template-file man
 
 ### Define variables
 
-Define the following variables that will be used in the subsequent steps.
+Define the following variables to be used in the subsequent steps.
 
 ```azurecli-interactive
 RG_NAME=cluster-rg
@@ -216,7 +216,7 @@ ASSIGNEE="user@contoso.com"
 NAMESPACE_ID=$(az aks namespace show --name ${NAMESPACE_NAME} --cluster-name ${CLUSTER_NAME} --resource-group ${RG_NAME} --query id -o tsv)
 ```
 
-Assign a control plane role to be able to view the managed namespace in the portal, Azure CLI output, and ARM. This also allows the user to retrieve the credentials to connect to this namespace.
+Assign a control plane role to be able to view the managed namespace in the portal, Azure CLI output, and ARM. This role also allows the user to retrieve the credentials to connect to this namespace.
 
 ```azurecli-interactive
 az role assignment create \
@@ -247,7 +247,7 @@ az role assignment create \
 1. Configure the **networking policy** to be applied on the namespace.
 1. Configure the **resource requests and limits** for the namespace.
 1. Select the **members (users or groups)** and their **role**.
-    1. Assign the  **Azure Kubernetes Service Namespace User** role to give them access to view the managed namespace in the portal, Azure CLI output, and ARM. This also allows the user to retrieve the credentials to connect to this namespace.
+    1. Assign the  **Azure Kubernetes Service Namespace User** role to give them access to view the managed namespace in the portal, Azure CLI output, and ARM. This role also allows the user to retrieve the credentials to connect to this namespace.
     2. Assign the  **Azure Kubernetes Service RBAC Writer** role to give them access to create resources within the namespace using the Kubernetes API.
 1. Select **Review + create** to run validation on the configuration. After validation completes, select **Create**.
 
