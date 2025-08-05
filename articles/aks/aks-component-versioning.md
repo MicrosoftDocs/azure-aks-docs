@@ -50,7 +50,7 @@ AKS consists of multiple components, each with distinct versioning patterns:
 
 ## View AKS component versions using AKS Component Insights (Preview)
 
-AKS Component Insights (Preview) provides detailed visibility into the exact versions of all components running in your Azure Kubernetes Service cluster. This feature helps you understand your cluster's current state, plan upgrades, and identify potential compatibility issues.
+`AKS Component Insights (Preview)` provides detailed visibility into the exact versions of all components running in your Azure Kubernetes Service cluster. This feature helps you understand your cluster's current state, plan upgrades, and identify potential compatibility issues.
 
 [!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
 
