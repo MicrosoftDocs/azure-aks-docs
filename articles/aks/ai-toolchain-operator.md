@@ -34,6 +34,7 @@ Built on top of the open-source KAITO project, the AI toolchain operator managed
 
 * `AzureLinux` and `Windows` OS SKU are not currently supported.
 * AMD GPU VM sizes are not supported `instanceType` in a KAITO workspace.
+* AI toolchain operator add-on is supported in **public** Azure regions.
 
 ## Prerequisites
 
