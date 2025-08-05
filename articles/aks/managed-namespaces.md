@@ -187,7 +187,7 @@ ANNOTATIONS="owner=retail"
 
 ### Create the managed namespace
 
-Create a managed namespace with various parameter options to customize its configuration. Make sure to select the appropriate value for `ingress-network-policy`, `egress-network-policy`, `adoption-policy`, and `delete-policy`. For more information about what those parameters mean, see the [managed namespaces overview][aks-managed-namespaces-overview].
+To customize its configuration, managed namespaces have various parameter options to choose from during creation. Make sure to select the appropriate value for `ingress-network-policy`, `egress-network-policy`, `adoption-policy`, and `delete-policy`. For more information about what those parameters mean, see the [managed namespaces overview][aks-managed-namespaces-overview].
 
 
 ```azurecli-interactive
