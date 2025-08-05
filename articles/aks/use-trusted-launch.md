@@ -1,6 +1,6 @@
 ---
-title: Trusted launch with Azure Kubernetes Service (AKS)
-description: Learn how trusted launch protects the Azure Kubernetes Cluster (AKS) nodes against boot kits, rootkits, and kernel-level malware. 
+title: Trusted Launch with Azure Kubernetes Service (AKS)
+description: Learn how Trusted Launch protects the Azure Kubernetes Cluster (AKS) nodes against boot kits, rootkits, and kernel-level malware. 
 ms.topic: how-to
 ms.custom: devx-track-azurecli
 ms.subservice: aks-security
@@ -8,22 +8,22 @@ ms.date: 07/15/2025
 author: allyford
 ms.author: allyford
 zone_pivot_groups: arm-azure-cli
-# Customer intent: "As a Kubernetes administrator, I want to implement trusted launch on AKS clusters, so that I can enhance the security of my nodes against malware and ensure the integrity of the boot process."
+# Customer intent: "As a Kubernetes administrator, I want to implement Trusted Launch on AKS clusters, so that I can enhance the security of my nodes against malware and ensure the integrity of the boot process."
 ---
 
-# Trusted launch for Azure Kubernetes Service (AKS)
+# Trusted Launch for Azure Kubernetes Service (AKS)
 
-[Trusted launch][trusted-launch-overview] improves the security of generation 2 virtual machines (VMs) by protecting against advanced and persistent attack techniques. It enables administrators to deploy AKS nodes, which contain the underlying virtual machines, with verified and signed bootloaders, OS kernels, and drivers. By using secure and measured boot, administrators gain insights and confidence of the entire boot chain's integrity.
+[Trusted Launch][trusted-launch-overview] improves the security of generation 2 virtual machines (VMs) by protecting against advanced and persistent attack techniques. It enables administrators to deploy AKS nodes, which contain the underlying virtual machines, with verified and signed bootloaders, OS kernels, and drivers. By using secure and measured boot, administrators gain insights and confidence of the entire boot chain's integrity.
 
 This article helps you understand this new feature, and how to implement it.
 
 ## Overview
 
-Trusted launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.
+Trusted Launch is composed of several, coordinated infrastructure technologies that can be enabled independently. Each technology provides another layer of defense against sophisticated threats.
 
-- **vTPM** - Trusted launch introduces a virtualized version of a hardware [Trusted Platform Module][trusted-platform-module-overview] (TPM), compliant with the TPM 2.0 specification. It serves as a dedicated secure vault for keys and measurements. Trusted launch provides your VM with its own dedicated TPM instance, running in a secure environment outside the reach of any VM. The vTPM enables [attestation][attestation-overview] by measuring the entire boot chain of your VM (UEFI, OS, system, and drivers). Trusted launch uses the vTPM to perform remote attestation by the cloud. It's used for platform health checks and for making trust-based decisions. As a health check, trusted launch can cryptographically certify that your VM booted correctly. If the process fails, possibly because your VM is running an unauthorized component, [Microsoft Defender for Cloud][microsoft-defender-for-cloud-overview] issues integrity alerts. The alerts include details on which components failed to pass integrity checks.
+- **vTPM** - Trusted Launch introduces a virtualized version of a hardware [Trusted Platform Module][trusted-platform-module-overview] (TPM), compliant with the TPM 2.0 specification. It serves as a dedicated secure vault for keys and measurements. Trusted Launch provides your VM with its own dedicated TPM instance, running in a secure environment outside the reach of any VM. The vTPM enables [attestation][attestation-overview] by measuring the entire boot chain of your VM (UEFI, OS, system, and drivers). Trusted Launch uses the vTPM to perform remote attestation by the cloud. It's used for platform health checks and for making trust-based decisions. As a health check, Trusted Launch can cryptographically certify that your VM booted correctly. If the process fails, possibly because your VM is running an unauthorized component, [Microsoft Defender for Cloud][microsoft-defender-for-cloud-overview] issues integrity alerts. The alerts include details on which components failed to pass integrity checks.
 
-- **Secure Boot** - At the root of trusted launch is Secure Boot for your VM. This mode, which is implemented in platform firmware, protects against the installation of malware-based rootkits and boot kits. Secure Boot works to ensure that only signed operating systems and drivers can boot. It establishes a "root of trust" for the software stack on your VM. With Secure Boot enabled, all OS boot components (boot loader, kernel, kernel drivers) must be signed by trusted publishers. Both Windows and select Linux distributions support Secure Boot. If Secure Boot fails to authenticate an image signed by a trusted publisher, the VM isn't allowed to boot. For more information, see [Secure Boot][secure-boot-overview].
+- **Secure Boot** - At the root of Trusted Launch is Secure Boot for your VM. This mode, which is implemented in platform firmware, protects against the installation of malware-based rootkits and boot kits. Secure Boot works to ensure that only signed operating systems and drivers can boot. It establishes a "root of trust" for the software stack on your VM. With Secure Boot enabled, all OS boot components (boot loader, kernel, kernel drivers) must be signed by trusted publishers. Both Windows and select Linux distributions support Secure Boot. If Secure Boot fails to authenticate an image signed by a trusted publisher, the VM isn't allowed to boot. For more information, see [Secure Boot][secure-boot-overview].
 
 ## Before you begin
 
@@ -34,16 +34,16 @@ Trusted launch is composed of several, coordinated infrastructure technologies t
 
 ## Limitations
 
-- AKS supports trusted launch on kubernetes version 1.25.2 and higher.
+- AKS supports Trusted Launch on kubernetes version 1.25.2 and higher.
 - Trusted Launch only supports [Azure Generation 2 VMs][azure-generation-two-virtual-machines].
 - Node pools with Windows Server operating system aren't supported.
-- Trusted launch can't be enabled in the same node pool as [FIPS][FIPS], [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. For more information, see [node images documentation][node-images].
+- Trusted Launch can't be enabled in the same node pool as [FIPS][FIPS], [Arm64][Arm64], [Pod Sandboxing][pod-sandboxing], or [Confidential VM][CVM]. For more information, see [node images documentation][node-images].
 - Trusted Launch doesn't support virtual node.
 - Availability sets aren't supported, only Virtual Machine Scale Sets.
 - To enable Secure Boot on GPU node pools, you need to skip installing the GPU driver. For more information, see [Skip GPU driver installation][skip-gpu-driver-install].
-- Ephemeral OS disks can be created with trusted launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
+- Ephemeral OS disks can be created with trusted Launch and all regions are supported. However, not all virtual machines sizes are supported. For more information, see [Trusted Launch ephemeral OS sizes][tusted-launch-ephemeral-os-sizes].
 
-## Create an AKS cluster with trusted launch enabled
+## Create an AKS cluster with trusted Launch enabled
 
 When creating a cluster, enabling vTPM or Secure Boot automatically sets up your node pools to use the customized Trusted Launch image. This image is specifically configured to support the security features enabled by Trusted Launch.
 
@@ -77,7 +77,7 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
     ```
 :::zone-end
 :::zone target="docs" pivot="arm"
-1. Create a template with trusted launch parameters. Before creating the template, review the following parameters:
+1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
@@ -97,12 +97,12 @@ When creating a cluster, enabling vTPM or Secure Boot automatically sets up your
 2. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
-## Add a node pool with trusted launch enabled
+## Add a node pool with Trusted Launch enabled
 
 When you create a node pool, enabling vTPM or Secure Boot automatically sets up your node pools to use the customized Trusted Launch image. This image is specifically configured to support the security features enabled by Trusted Launch.
 
 :::zone target="docs" pivot="azure-cli"
-1. Add a node pool with trusted launch enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
+1. Add a node pool with Trusted Launch enabled using the [`az aks nodepool add`][az-aks-nodepool-add] command. Before running the command, review the following parameters:
 
    * **--cluster-name**: Enter the name of the AKS cluster.
    * **--resource-group**: Enter the name of an existing resource group to host the AKS cluster resource.
@@ -121,7 +121,7 @@ az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster
 ```
 :::zone-end
 :::zone target="docs" pivot="arm"
-1. Create a template with trusted launch parameters. Before creating the template, review the following parameters:
+1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
@@ -141,16 +141,16 @@ az aks nodepool add --resource-group myResourceGroup --cluster-name myAKSCluster
 2. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
-## Enable vTPM or secure boot on an existing trusted launch node pool
+## Enable vTPM or secure boot on an existing Trusted Launch node pool
 
-You can update an existing trusted launch node pool to enable vTPM or secure boot. The following scenarios are supported:
+You can update an existing Trusted Launch node pool to enable vTPM or secure boot. The following scenarios are supported:
    * When creating a node pool, you only specify `--enable-secure-boot`, you can run the update command to `--enable-vtpm`
    * When creating a node pool, you only specify `--enable-vtpm`, you can run the update command to `--enable-secure-boot`
 
-If your node pool doesn't currently have a trusted launch image, you won't be able to update the node pool to enable secure boot or vTPM.
+If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
 
 :::zone target="docs" pivot="azure-cli"
-1. Check that your node pool is using a trusted launch image.
+1. Check that your node pool is using a Trusted Launch image.
 
     Trusted Launch nodes have the following output:
 
@@ -162,9 +162,9 @@ If your node pool doesn't currently have a trusted launch image, you won't be ab
     kubectl describe node {node-name} | grep -e node-image-version -e security-type
     ```
 
-    If your node pool doesn't currently have a trusted launch image, you won't be able to update the node pool to enable secure boot or vTPM.
+    If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
 
-2. Update a node pool with trusted launch enabled using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
+2. Update a node pool with Trusted Launch enabled using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
 
    * **--resource-group**: Enter the name of an existing resource group hosting your existing AKS cluster.
    * **--cluster-name**: Enter a unique name for the AKS cluster, such as *myAKSCluster*.
@@ -183,12 +183,13 @@ If your node pool doesn't currently have a trusted launch image, you won't be ab
 
     The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables secure boot. In this scenario, vTPM was enabled during node pool creation:
 
-```azurecli-interactive
-az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-secure-boot
-```
+    ```azurecli-interactive
+    az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-secure-boot
+    ```
+    
 :::zone-end
 :::zone target="docs" pivot="arm"
-1. Check that your node pool is using a trusted launch image.
+1. Check that your node pool is using a Trusted Launch image.
 
     Trusted Launch nodes have the following output:
     
@@ -200,9 +201,9 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
     kubectl describe node {node-name} | grep -e node-image-version -e security-type
     ```
 
-    If your node pool doesn't currently have a trusted launch image, you won't be able to update the node pool to enable secure boot or vTPM.
+    If your node pool doesn't currently have a Trusted Launch image, you won't be able to update the node pool to enable secure boot or vTPM.
 
-2. Create a template with trusted launch parameters. Before creating the template, review the following parameters:
+2. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
@@ -217,14 +218,14 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
             "enableSecureBoot": "true",
         }
     }
-```
+    ```
 
 3. Deploy your template with vTPM and secure boot enabled on your cluster. See [Deploy an AKS cluster using an ARM template][quick-ARM-deploy] for detailed instructions.
 :::zone-end
 
-## Assign pods to nodes with trusted launch enabled
+## Assign pods to nodes with Trusted Launch enabled
 
-You can constrain a pod and restrict it to run on a specific node or nodes, or preference to nodes with trusted launch enabled. You can control this using the following node pool selector in your pod manifest.
+You can constrain a pod and restrict it to run on a specific node or nodes, or preference to nodes with Trusted Launch enabled. You can control this using the following node pool selector in your pod manifest.
 
 ```yml
 spec:
@@ -232,9 +233,9 @@ spec:
         kubernetes.azure.com/security-type = "TrustedLaunch"
 ```
 
-## Disable vTPM or secure boot on an existing trusted launch node pool
+## Disable vTPM or secure boot on an existing Trusted Launch node pool
 
-You can update an existing node pool to disable vTPM or secure boot. When this occurs, you'll still remain on the trusted launch image. You can re-enable vTPM or secure boot at any time by updating your node pool.
+You can update an existing node pool to disable vTPM or secure boot. When this occurs, you'll still remain on the Trusted Launch image. You can re-enable vTPM or secure boot at any time by updating your node pool.
 
 :::zone target="docs" pivot="azure-cli"
 Update a node pool to disable secure boot or vTPM using the [`az aks nodepool update`][az-aks-nodepool-update] command. Before running the command, review the following parameters:
@@ -258,7 +259,7 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
 ```
 :::zone-end
 :::zone target="docs" pivot="arm"
-1. Create a template with trusted launch parameters. Before creating the template, review the following parameters:
+1. Create a template with Trusted Launch parameters. Before creating the template, review the following parameters:
 
    * **enableSecureBoot**: Enables Secure Boot to authenticate an image signed by a trusted publisher.
    * **enableVTPM**: Enables vTPM and performs attestation by measuring the entire boot chain of your VM.
@@ -280,7 +281,7 @@ az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup
 
 ## Next steps
 
-In this article, you learned how to enable trusted launch. Learn more about [trusted launch][trusted-launch-overview].
+In this article, you learned how to enable Trusted Launch. Learn more about [Trusted Launch][trusted-launch-overview].
 
 <!-- EXTERNAL LINKS -->
 
