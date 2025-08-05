@@ -86,13 +86,13 @@ In order to complete this step, you must create your Fleet Manager with managed 
         --scope ${TRAFFIC_MANAGER_RG_ID}
     ```
 
-* The Fleet Manager hub cluster identity also needs the Azure `Reader` role for any member cluster so Fleet Manager can read the public IP address for member clusters when they're added to a `TrafficMangerBackend` via a `ServiceExport`.
+* The Fleet Manager hub cluster identity also needs the `Azure Kubernetes Fleet Manager Hub Agent` role on the resource group that contains the public IPs of the service to be exposed as Fleet Manager needs to read the public IP addresses when they're added to a `TrafficMangerBackend` via a `ServiceExport`.
 
     ```azurecli-interactive
     az role assignment create \
         --assignee "<FLEET-PRINCIPAL-ID>" \
-        --role "Reader" \
-        --scope /full/path/to/member-cluster
+        --role "de2b316d-7a2c-4143-b4cd-c148f6a355a1" \
+        --scope "/subscriptions/mySubscriptions/resourceGroups/MyPIPResourceGroup"
     ```
 
 ## Deploy a workload across member clusters of the Fleet resource

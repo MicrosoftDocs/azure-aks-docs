@@ -71,7 +71,7 @@ az aks create \
     --resource-group ${RESOURCE_GROUP} \
     --name ${CLUSTER} \
     --enable-asm \
-    --generate-ssh-keys    
+    --generate-ssh-keys
 ```
 
 ### Install mesh for existing cluster
@@ -97,7 +97,7 @@ az aks show --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}  --query 'servi
 
 Confirm the output shows `Istio`.
 
-Use `az aks get-credentials` to the credentials for your AKS cluster:
+Use `az aks get-credentials` to get the credentials for your AKS cluster:
 
 ```azurecli-interactive
 az aks get-credentials --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
@@ -135,7 +135,7 @@ kubectl label namespace default istio.io/rev=asm-X-Y
 
 > [!IMPORTANT]
 > Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-24`) is required.
-> 
+>
 > The default `istio-injection=enabled` label will not work and will **cause the sidecar injection to skip the namespace** for the add-on.
 
 For manual injection of sidecar using `istioctl kube-inject`, you need to specify extra parameters for `istioNamespace` (`-i`) and `revision` (`-r`). For example:

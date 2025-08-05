@@ -68,10 +68,12 @@
       items:
         - name: Upgrade hub cluster types
           href: upgrade-hub-cluster-type.md
-        - name: Migrate preview instances to supported instances 
-          href: howto-migrate-preview-to-ga-fleets.md
+        - name: Use managed identities
+          href: use-managed-identity.md
         - name: View Fleet agent logs
           href: view-fleet-agent-logs.md
+        - name: Migrate preview instances to supported instances 
+          href: howto-migrate-preview-to-ga-fleets.md
     - name: Progressively upgrade Kubernetes and node images
       items:
         - name: Define reusable update strategies

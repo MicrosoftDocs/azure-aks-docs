@@ -7,8 +7,8 @@ author: schaffererin
 ms.author: schaffererin
 ms.custom: mvc, devx-track-azurecli, devx-track-azurepowershell
 
-#Customer intent: As a developer, I want to learn how to create and use a container registry so that I can deploy my own applications to Azure Kubernetes Service.
-# Customer intent: As a developer, I want to create a private container registry and upload images, so that I can securely manage and deploy my applications on Azure Kubernetes Service.
+# Customer intent: As a developer, I want to learn how to create and use a container registry so that I can deploy my own applications to Azure Kubernetes Service.
+
 ---
 
 # Tutorial - Create an Azure Container Registry (ACR) and build images

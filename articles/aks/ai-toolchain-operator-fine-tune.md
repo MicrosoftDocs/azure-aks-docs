@@ -81,7 +81,7 @@ tuning:
       imagePushSecret: myregistrysecret
 ```
 
-This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/Azure/kaito/tree/main/docs/tuning) specification to adjust the input to pull an image from your ACR.
+This example uses a public dataset specified by a URL in the input. If choosing an image as the source of your fine-tuning data, please refer to the [KAITO fine-tuning API](https://github.com/kaito-project/kaito/tree/main) specification to adjust the input to pull an image from your ACR.
 
 > [!NOTE]
 > The choice of GPU SKU is critical since model fine-tuning normally requires more GPU memory compared to model inference. To avoid GPU Out-Of-Memory errors, we recommend using NVIDIA A100 or higher tier GPUs.

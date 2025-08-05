@@ -21,15 +21,20 @@ In this article, you deploy a highly available PostgreSQL database on AKS.
 
 1. Generate a secret to validate the PostgreSQL deployment by interactive login for a bootstrap app user using the [`kubectl create secret`][kubectl-create-secret] command.
 
-    ```bash
-    PG_DATABASE_APPUSER_SECRET=$(echo -n | openssl rand -base64 16)
+> [!IMPORTANT]
+>
+> Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application, and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable. 
+>
 
-    kubectl create secret generic db-user-pass \
-        --from-literal=username=app \
-        --from-literal=password="${PG_DATABASE_APPUSER_SECRET}" \
-        --namespace $PG_NAMESPACE \
-        --context $AKS_PRIMARY_CLUSTER_NAME
-    ```
+```bash
+PG_DATABASE_APPUSER_SECRET=$(echo -n | openssl rand -base64 16)
+
+kubectl create secret generic db-user-pass \
+    --from-literal=username=app \
+     --from-literal=password="${PG_DATABASE_APPUSER_SECRET}" \
+     --namespace $PG_NAMESPACE \
+     --context $AKS_PRIMARY_CLUSTER_NAME
+```
 
 1. Validate that the secret was successfully created using the [`kubectl get`][kubectl-get] command.
 
