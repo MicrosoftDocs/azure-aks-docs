@@ -46,7 +46,7 @@ Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically 
 :::zone target="docs" pivot="azure-cli"
 ## Install the aks-preview CLI extension
 
-To install the aks-preview extension, run the [`az extension add`](/cli/azure/extension#az-extension-add) command:
+To install the aks-preview extension, run the [`az extension add`](/cli/azure/extension#az-extension-add) command.
 
 ```azurecli-interactive
 az extension add --name aks-preview
@@ -66,13 +66,13 @@ To use managed namespaces in preview, register the following flag using the [az 
 az feature register --namespace Microsoft.ContainerService --name ManagedNamespacePreview
 ```
 
-Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*:
+Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*.
 
 ```azurecli-interactive
 az feature show --namespace Microsoft.ContainerService --name ManagedNamespacePreview
 ```
 
-When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
+When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command.
 
 ```azurecli-interactive
 az provider register --namespace Microsoft.ContainerService
@@ -85,13 +85,13 @@ az provider register --namespace Microsoft.ContainerService
 
 ## Install the aks-preview CLI extension
 
-To install the aks-preview extension, run the following command:
+To install the aks-preview extension, run the following command.
 
 ```azurecli-interactive
 az extension add --name aks-preview
 ```
 
-Run the following command to update to the latest version of the extension released:
+Run the following command to update to the latest version of the extension released.
 
 ```azurecli-interactive
 az extension update --name aks-preview
@@ -105,13 +105,13 @@ To use managed namespaces in preview, register the following flag using the [az 
 az feature register --namespace Microsoft.ContainerService --name ManagedNamespacePreview
 ```
 
-Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*:
+Verify the registration status by using the [az feature show][az-feature-show] command. It takes a few minutes for the status to show *Registered*.
 
 ```azurecli-interactive
 az feature show --namespace Microsoft.ContainerService --name ManagedNamespacePreview
 ```
 
-When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
+When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command.
 
 ```azurecli-interactive
 az provider register --namespace Microsoft.ContainerService
@@ -262,7 +262,7 @@ You can list managed namespaces at different scopes using the Azure CLI.
 
 ### At a subscription level
 
-Run the following command to list all managed namespaces in a subscription:
+Run the following command to list all managed namespaces in a subscription.
 
 ```azurecli-interactive
 az aks namespace list --subscription <subscription-id>
@@ -270,7 +270,7 @@ az aks namespace list --subscription <subscription-id>
 
 ### At a resource group level
 
-Run the following command to list all managed namespaces in a specific resource group:
+Run the following command to list all managed namespaces in a specific resource group.
 
 ```azurecli-interactive
 az aks namespace list --resource-group <rg-name>
@@ -278,7 +278,7 @@ az aks namespace list --resource-group <rg-name>
 
 ### At a cluster level
 
-Run the following command to list all managed namespaces in a specific cluster:
+Run the following command to list all managed namespaces in a specific cluster.
 
 ```azurecli-interactive
 az aks namespace list --resource-group <rg-name> --cluster-name <cluster-name>
@@ -295,7 +295,7 @@ You can list managed namespaces at different scopes using the Azure CLI.
 
 ### At a subscription level
 
-Run the following command to list all managed namespaces in a subscription:
+Run the following command to list all managed namespaces in a subscription.
 
 ```azurecli-interactive
 az aks namespace list --subscription <subscription-id>
@@ -303,7 +303,7 @@ az aks namespace list --subscription <subscription-id>
 
 ### At a resource group level
 
-Run the following command to list all managed namespaces in a specific resource group:
+Run the following command to list all managed namespaces in a specific resource group.
 
 ```azurecli-interactive
 az aks namespace list --resource-group <rg-name>
@@ -311,7 +311,7 @@ az aks namespace list --resource-group <rg-name>
 
 ### At a cluster level
 
-Run the following command to list all managed namespaces in a specific cluster:
+Run the following command to list all managed namespaces in a specific cluster.
 
 ```azurecli-interactive
 az aks namespace list --resource-group <rg-name> --cluster-name <cluster-name>
