@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Requirement mapping matrix
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Requirement Mapping Matrix
 description: Requirement mapping matrix guidance for AKS clusters.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance

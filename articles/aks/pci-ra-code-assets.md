@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Risk assessment and code assets
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Risk Assessment and Code Assets
 description: Risk assessment and code assets guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -185,7 +185,7 @@ Consider including the `kube-system` and `gatekeeper-system` namespaces to polic
 
 You can enforce data encryption by setting some Azure Policy alerts. For example, you can enforce BYOK with an alert that detects clusters that don't have `diskEncryptionSetID` on the cluster resource. Another policy can detect if Host-Based Encryption is enabled on `agentPoolProfiles`. The reference implementation doesn't use any disks in the cluster, and the operating system disk is ephemeral. Both of those example policies are in place as a reminder of the security feature. The policies are set to `audit`, not `block`.
 
-## Managing images
+## Manage images
 
 Use distribution-less base images for your workloads. With these images, the security surface area is minimized because supplementary images, such as shells and package managers, are removed. A benefit is reduced CVE hit rates.
 

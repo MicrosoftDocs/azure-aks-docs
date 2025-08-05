@@ -1,11 +1,11 @@
 ---
-title: Introduction to AKS regulated cluster for PCI DSS 4.0.1
+title: Introduction to AKS Regulated Cluster for PCI DSS 4.0.1
 description: Get started on your architecture design by addressing the applicable PCI DSS 4.0.1 requirements as a tenant on the AKS environment.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -18,7 +18,7 @@ This reference architecture describes the considerations for an Azure Kubernetes
 PCI DSS 4.0.1 introduces significant changes from previous versions, including:
 
 - The option to use a "customized approach" for meeting security objectives, allowing flexibility in cloud and container environments.
-- Enhanced multi-factor authentication (MFA) requirements for all access to the cardholder data environment (CDE), including administrative and non-console access.
+- Enhanced multifactor authentication (MFA) requirements for all access to the cardholder data environment (CDE), including administrative and non-console access.
 - Stronger requirements for cryptography, encryption, and key management.
 - Expanded and automated logging, monitoring, and tamper-proofing of logs, including ephemeral workloads like containers.
 - Emphasis on continuous security, risk-based scoping, and regular validation of environment boundaries.

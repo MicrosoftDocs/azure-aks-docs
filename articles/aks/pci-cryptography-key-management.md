@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Cryptography and key management
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Cryptography and Key Management
 description: Cryptography and key management guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -27,7 +27,8 @@ This architecture and the implementation are focused on infrastructure and not t
 
 ## Protect cardholder data
 
-> **Note:** This article has been updated for PCI DSS 4.0.1. Major changes include support for the customized approach to controls, enhanced multi-factor authentication (MFA), updated cryptography requirements, expanded monitoring and logging, and a focus on continuous security and risk management. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
+> [!NOTE]
+> This article has been updated for PCI DSS 4.0.1. Major changes include support for the customized approach to controls, enhanced multifactor authentication (MFA), updated cryptography requirements, expanded monitoring and logging, and a focus on continuous security and risk management. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
 
 ### Requirement 3: Protect stored cardholder data (continued)
 

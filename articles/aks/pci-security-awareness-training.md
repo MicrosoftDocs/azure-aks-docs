@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Security awareness training
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Security Awareness Training
 description: Security awareness training guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -27,7 +27,8 @@ PCI DSS 4.0.1 requires comprehensive security awareness and training for all per
 
 ## Maintain an information security policy
 
-> **Note:** This article has been updated for PCI DSS 4.0.1. Major changes include expanded requirements for security awareness training, enhanced focus on cloud and container security, and requirements for role-based training programs. The standard now emphasizes continuous security education and incident response training. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
+> [!NOTE]
+> This article has been updated for PCI DSS 4.0.1. Major changes include expanded requirements for security awareness training, enhanced focus on cloud and container security, and requirements for role-based training programs. The standard now emphasizes continuous security education and incident response training. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
 
 ### Requirement 12: Support information security with organizational policies and programs
 

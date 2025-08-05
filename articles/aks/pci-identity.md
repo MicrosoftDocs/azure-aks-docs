@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Identity and access management
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Identity and Access Management
 description: Identity and access management guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -22,7 +22,7 @@ Kubernetes has native role-based access control (RBAC) that manages permissions 
 This architecture and the implementation aren't designed to provide controls on physical access to on-premises resources or datacenters. One benefit of hosting your CDE in Azure, as opposed to your platform at the edge or in your datacenter, is that restricting physical access is mostly already handled through Azure datacenter security. There aren't any responsibilities for the organization in management of physical hardware.
 
 > [!NOTE]
-> This article has been updated for PCI DSS 4.0.1. Major changes include support for the customized approach to controls, enhanced multi-factor authentication (MFA), updated cryptography requirements, expanded monitoring and logging, and a focus on continuous security and risk management. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
+> This article has been updated for PCI DSS 4.0.1. Major changes include support for the customized approach to controls, enhanced multifactor authentication (MFA), updated cryptography requirements, expanded monitoring and logging, and a focus on continuous security and risk management. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
 
 > [!IMPORTANT]
 >
@@ -256,7 +256,7 @@ Because of AKS and Microsoft Entra integration, you can take advantage of identi
 |---|---|
 |[Requirement 8.1](#requirement-81)|Define and implement policies and procedures to ensure proper user identification management for non-consumer users and administrators on all system components as follows:|
 |[Requirement 8.2](#requirement-82)| In addition to assigning a unique ID, ensure proper user-authentication management for non-consumer users and administrators on all system components by employing at least one of the following methods to authenticate all users:|
-|[Requirement 8.3](#requirement-83)|Secure all individual non-console administrative access and all remote access to the CDE using multi-factor authentication.|
+|[Requirement 8.3](#requirement-83)|Secure all individual non-console administrative access and all remote access to the CDE using multifactor authentication.|
 |[Requirement 8.4](#requirement-84)|Document and communicate authentication procedures and policies and procedures to all users including:|
 |[Requirement 8.5](#requirement-85)| Do not use group, shared, or generic IDs, passwords, or other authentication methods as follows:|
 |[Requirement 8.6](#requirement-86)| Where other authentication mechanisms are used (for example, physical or logical security tokens, smart cards, certificates, etc.), use of these mechanisms must be assigned as follows:|
@@ -350,9 +350,9 @@ You might have components that don't use Microsoft Entra ID, such as access to j
 
 ### Requirement 8.3
 
-PCI DSS 4.0.1 mandates multi-factor authentication (MFA) for all access into the cardholder data environment (CDE), including internal users. MFA controls must be continuously monitored and tested for effectiveness.
+PCI DSS 4.0.1 mandates multifactor authentication (MFA) for all access into the cardholder data environment (CDE), including internal users. MFA controls must be continuously monitored and tested for effectiveness.
 
-Secure all individual non-console administrative access and all remote access to the CDE using multi-factor authentication. **Note**: Multi-factor authentication requires that a minimum of two of the three authentication methods (see Requirement 8.2 for descriptions of authentication methods) be used for authentication. Using one factor twice (for example, using two separate passwords) isn't considered multi-factor authentication.
+Secure all individual non-console administrative access and all remote access to the CDE using multifactor authentication. **Note**: Multifactor authentication requires that a minimum of two of the three authentication methods (see Requirement 8.2 for descriptions of authentication methods) be used for authentication. Using one factor twice (for example, using two separate passwords) isn't considered multifactor authentication.
 
 #### Your responsibilities
 
@@ -463,7 +463,7 @@ Here are some suggestions for applying technical controls:
 
 ## Next steps
 
-Implement enhanced multi-factor authentication (MFA) requirements for secure access to the cardholder data environment.
+Implement enhanced multifactor authentication (MFA) requirements for secure access to the cardholder data environment.
 
 > [!div class="nextstepaction"]
 > [Implement enhanced MFA](pci-enhanced-mfa-implementation.md)

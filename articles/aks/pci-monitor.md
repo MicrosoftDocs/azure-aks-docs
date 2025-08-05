@@ -1,17 +1,17 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Monitoring and logging
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Monitoring and Logging
 description: Monitoring and logging guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
 ---
 
-# Monitoring and logging for an AKS regulated cluster for PCI DSS 4.0.1
+# Monitor and log an AKS regulated cluster for PCI DSS 4.0.1
 
 This article describes monitoring and logging considerations for an Azure Kubernetes Service (AKS) cluster that runs a workload in compliance with the Payment Card Industry Data Security Standard (PCI DSS 4.0.1).
 

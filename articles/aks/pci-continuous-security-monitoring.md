@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Continuous security monitoring
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Continuous Security Monitoring
 description: Continuous security monitoring guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -27,7 +27,8 @@ PCI DSS 4.0.1 significantly emphasizes continuous security, monitoring, and thre
 
 ## Regularly monitor and test networks
 
-> **Note:** This article has been updated for PCI DSS 4.0.1. Major changes include expanded requirements for continuous monitoring, automated threat detection, real-time alerting, and comprehensive logging. The standard now emphasizes proactive security monitoring and automated response capabilities. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
+> [!NOTE]
+> This article has been updated for PCI DSS 4.0.1. Major changes include expanded requirements for continuous monitoring, automated threat detection, real-time alerting, and comprehensive logging. The standard now emphasizes proactive security monitoring and automated response capabilities. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
 
 ### Requirement 10: Log and monitor all access to network resources and cardholder data
 

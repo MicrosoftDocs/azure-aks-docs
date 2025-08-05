@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Summary
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Summary
 description: Summary guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -34,7 +34,7 @@ PCI DSS 4.0.1 workloads demand the rigor of being a well-architected solution. A
 Key enhancements in PCI DSS 4.0.1 relevant to cloud and container environments include:
 
 - **Customized approach**: Flexibility to meet security objectives through alternative controls suitable for cloud-native architectures.
-- **Enhanced authentication**: Strengthened multi-factor authentication requirements for all access to the cardholder data environment.
+- **Enhanced authentication**: Strengthened multifactor authentication requirements for all access to the cardholder data environment.
 - **Continuous validation**: Ongoing monitoring and validation of security controls rather than point-in-time assessments.
 - **Automated security**: Integration of security into DevSecOps pipelines with automated vulnerability scanning and security testing.
 - **Container security**: Specific guidance for containerized workloads and ephemeral infrastructure.
@@ -93,7 +93,7 @@ Compliance must be systematically monitored and maintained. Regular compliance a
 
 Take advantage the regulatory compliance dashboard in Microsoft Defender for Cloud. By continuously monitoring the dashboard, you can keep track of the compliance status of your workload.
 
-:::image type="content" source="media/pci-dss/regulatory-compliance-pci.png" alt-text="Example compliance monitoring" border ="true":::
+:::image type="content" source="media/pci-dss/regulatory-compliance-pci.png" alt-text="Screenshot of an example compliance monitoring dashboard in the Azure portal." border ="true":::
 
 ### Network security
 
@@ -158,7 +158,7 @@ Follow these security principles when you're designing access policies:
 - Grant the least privileges - just enough to complete a task.
 - Minimize standing access.
 
-PCI DSS 4.0.1 significantly strengthens authentication requirements, mandating multi-factor authentication (MFA) for all access to the cardholder data environment, including administrative access and all non-console access.
+PCI DSS 4.0.1 significantly strengthens authentication requirements, mandating multifactor authentication (MFA) for all access to the cardholder data environment, including administrative access and all non-console access.
 
 Kubernetes role-based access control (RBAC) manages permissions to the Kubernetes API. AKS supports those Kubernetes roles. AKS is fully integrated with Microsoft Entra ID. You can assign Microsoft Entra identities to the roles and also take advantage of other capabilities.
 

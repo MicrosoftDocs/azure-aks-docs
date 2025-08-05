@@ -1,11 +1,11 @@
 ---
-title: AKS regulated cluster for PCI DSS 4.0.1 - Enhanced MFA implementation
+title: AKS Regulated Cluster for PCI DSS 4.0.1 - Enhanced MFA Implementation
 description: Enhanced multifactor authentication (MFA) implementation guidance for AKS clusters under PCI DSS 4.0.1.
 ms.date: 06/25/2025
 ms.subservice: aks-security
 ms.topic: concept-article
-author: phillipgibson
-ms.author: pgibson
+author: schaffererin
+ms.author: schaffererin
 ms.custom:
   - pci-dss
   - compliance
@@ -27,7 +27,8 @@ PCI DSS 4.0.1 significantly expands MFA requirements for all access to the cardh
 
 ## Restrict access to cardholder data by business need to know
 
-> **Note:** This article has been updated for PCI DSS 4.0.1. Major changes include expanded MFA requirements for all access to the CDE, enhanced authentication for cloud administrative access, and stronger controls for privileged access. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
+> [!NOTE]
+> This article has been updated for PCI DSS 4.0.1. Major changes include expanded MFA requirements for all access to the CDE, enhanced authentication for cloud administrative access, and stronger controls for privileged access. Ensure you review the official [PCI DSS 4.0.1 documentation](https://www.pcisecuritystandards.org/document_library) for full details and future-dated requirements.
 
 ### Requirement 8: Identify and authenticate access to system components
 
@@ -43,7 +44,7 @@ AKS provides several features to help you meet PCI DSS 4.0.1 MFA requirements:
 
 ### Requirement 8.4
 
-Multi-factor authentication (MFA) is implemented for all access into the CDE.
+Multifactor authentication (MFA) is implemented for all access into the CDE.
 
 #### Your responsibilities
 
@@ -177,7 +178,7 @@ Ensure MFA is enforced for all remote access to AKS resources:
 
 ### Requirement 8.5
 
-Multi-factor authentication (MFA) systems are configured to prevent misuse.
+Multifactor authentication (MFA) systems are configured to prevent misuse.
 
 #### Your responsibilities
 
