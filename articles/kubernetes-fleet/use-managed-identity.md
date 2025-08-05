@@ -52,9 +52,9 @@ Fleet Manager can use the system-assigned managed identity to authorize access t
 
 When you create a new Fleet Manager in the Azure portal, a system-assigned managed identity is automatically created.
 
-You can verify that the system-assigned managed identity is enabled by checking the **Identity** blade in the Fleet Manager's **Settings** section. The **System assigned** status should be **On** and the **Object (principal) ID** should be populated.
+You can verify that the system-assigned managed identity is enabled by checking the **Identity** blade in the Fleet Manager's **Settings** section. The **Status** is **On** and the **Object (principal) ID** is populated (not shown in image).
 
-:::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the System assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
+:::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the System assigned identity configuration. Object (principal) ID is blanked out." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
 
 ### [Azure CLI](#tab/cli)
 
@@ -115,7 +115,7 @@ You can manage the Fleet Manager managed identity using the **Identity** blade i
 
 2. Select **Yes** on the confirmation dialog.
 
-3. After a few moments the **System assigned** status changes to **On** and the **Object (principal) ID** should be populated.
+3. After a few moments the **Status** changes to **On** and the **Object (principal) ID** is populated (not shown in image).
 
     :::image type="content" source="./media/managed-identity/managed-identity-system-assigned.png" alt-text="Screenshot of the Azure Kubernetes Fleet Manager Azure portal Identity pane showing the system assigned identity configuration." lightbox="./media/managed-identity/managed-identity-system-assigned.png":::
 
