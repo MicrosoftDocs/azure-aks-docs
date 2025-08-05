@@ -29,6 +29,10 @@ If you would like Fleet Manager to support more than 100 clusters, [add feedback
 
 Fleet Manager allows appropriately authorized users to add any AKS cluster in any Azure subscription and region as long as the Azure subscription is associated with the same Microsoft Entra ID tenant as the Fleet Manager. 
 
+### Does Fleet Manager support managed identities?
+
+Yes, Fleet Manager supports both system-assigned and user-assigned managed identities. For more information, see the documentation on [using managed identities with Fleet Manager](./use-managed-identity.md).
+
 ### What happens when the cluster identity of a joined cluster is changed?
 
 Changing the identity of a member cluster breaks the communication between Fleet Manager and that member cluster. While the member agent uses the new identity to communicate with the Fleet Manager, Fleet Manager still needs to be made aware of the new identity. Run this command to resolve:
@@ -61,7 +65,7 @@ Creation and lifecycle management of new AKS clusters is on our roadmap. Provide
 
 No. Fleet Manager's hub cluster is a Microsoft-managed resource. Microsoft automatically updates the hub cluster to the latest version of Kubernetes or node image as they become available.
 
-If you attempt to update or modify the hub cluster (which is a single node AKS cluster named `hub`), a set of deny rules will block your changes from being applied.
+If you attempt to update or modify the hub cluster (which is a single node AKS cluster named `hub`), a set of deny rules block your changes from being applied.
 
 ## Multi-cluster updates - automated or manual FAQs
 
@@ -77,9 +81,9 @@ Currently unsupported AKS channels:
 
 * **Patch**: Updates for Kubernetes patch releases (y) for a specified AKS-supported Kubernetes minor (N) release (1.N.y).
 * **SecurityPatch**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
-* **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).
+* **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).M
 
-If you're using any of the channels that Fleet Manager doesn't support, it's recommended you leave those channels enabled on your AKS clusters.
+If you're using any of the channels that Fleet Manager doesn't support, we recommend you leave those channels enabled on your AKS clusters.
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
@@ -97,13 +101,13 @@ If you want all member clusters to use the same node image, then all member clus
 
 There's no consistency guarantee for node image versions across separate update runs.
 
-### My update run has been in a pending state for quite some time. What should I do?
+### My update run is in a pending state for quite some time. What should I do?
 
-Fleet Manager update runs can be in a pending state for a number of reasons. You can view the status of an update run either via the Azure portal, or by following our [monitoring documentation](./howto-monitor-update-runs.md).
+Fleet Manager update runs can be in a pending state for many reasons. You can view the status of an update run either via the Azure portal, or by following our [monitoring documentation](./howto-monitor-update-runs.md).
 
 The two most common reasons for long pending states are:
 
-* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it will be out of sync with the rest of the member clusters in the update run.
+* Member cluster maintenance windows: If a member cluster's maintenance window isn't open then the update run can enter a paused state. This pause can block completion of the update group or stage until the next maintenance window opens. If you wish to continue the update run, manually skip the cluster. If you skip the cluster, it is out of sync with the rest of the member clusters in the update run.
 
 * Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
 
