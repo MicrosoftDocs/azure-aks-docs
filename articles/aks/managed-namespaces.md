@@ -35,8 +35,8 @@ Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically 
 
 ### Limitations
 
-- Trying to on-board system namespaces such as `kube-system`, `app-routing-system`, `istio-system`, `gatekeeper-system`, etc. to be managed namespaces is not allowed.
-- When a namespace is a managed namespace, changes to the namespace via the Kubernetes API will be blocked.
+- Trying to on-board system namespaces such as `kube-system`, `app-routing-system`, `istio-system`, `gatekeeper-system`, etc. to be managed namespaces isn't allowed.
+- When a namespace is a managed namespace, changes to the namespace via the Kubernetes API are blocked.
 :::zone target="docs" pivot="azure-portal"
 - Listing existing namespaces to convert in the portal does not work with private clusters. You can add new namespaces.
   
@@ -46,13 +46,13 @@ Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically 
 :::zone target="docs" pivot="azure-cli"
 ## Install the aks-preview CLI extension
 
-To install the aks-preview extension, run the following command:
+To install the aks-preview extension, run the [`az extension add`](/cli/azure/extension#az-extension-add) command:
 
 ```azurecli
 az extension add --name aks-preview
 ```
 
-Run the following command to update to the latest version of the extension released:
+Run the following command to update to the latest version of the extension released.
 
 ```azurecli
 az extension update --name aks-preview
@@ -360,7 +360,7 @@ az aks namespace get-credentials --name <namespace-name> --resource-group <rg-na
 
 This article focused on using the managed namespaces feature to logically isolate teams and applications.
 
-- You can further explore other guardrails and best practices to apply via [deployment safeguards][deployment-safeguards].
+This article focused on using the managed namespaces feature to logically isolate teams and applications. You can further explore other guardrails and best practices to apply via [deployment safeguards][deployment-safeguards].
 
 <!--- External Links --->
 [create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F

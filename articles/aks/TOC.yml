@@ -414,7 +414,7 @@
           href: operator-best-practices-scheduler.md
         - name: Advanced scheduler features
           href: operator-best-practices-advanced-scheduler.md
-        - name: Managed Namespaces
+        - name: Managed namespaces
           items:
             - name: Overview
               href: concepts-managed-namespaces.md

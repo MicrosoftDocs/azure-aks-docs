@@ -1,7 +1,7 @@
 ---
 title: Overview of managed namespaces (preview)
 description: Learn how to simplify namespace management and resource isolation in Azure Kubernetes Service (AKS) with managed namespaces.
-ms.topic: how-to
+ms.topic: concept-article
 ms.date: 08/04/2025
 ms.service: azure-kubernetes-service
 ms.author: jackjiang
@@ -20,17 +20,17 @@ Logical separation of clusters usually provides a higher pod density than physic
 
 ## Network policies
 
-[Network Policies][aks-network-policies] are Kubernetes resources that are used to control the flow of traffic between pods, namespaces, and external endpoints. They allow you to define rules for ingress (incoming) and egress (outgoing) traffic, ensuring that only authorized communication is permitted. By applying network policies, you can enhance the security and isolation of workloads within your cluster.
+[Network Policies][aks-network-policies] are Kubernetes resources that are used to control the flow of traffic between pods, namespaces, and external endpoints. Network policies allow you to define rules for ingress (incoming) and egress (outgoing) traffic, ensuring that only authorized communication is permitted. By applying network policies, you can enhance the security and isolation of workloads within your cluster.
 
 > [!NOTE]
-> The default ingress network policy rule of **Allow same namespace** opts for a secure by default stance. If you need your Kubernetes Services, Ingresses, or Gateways to be accessible from outside of the namespace where they're deployed, for example from an ingress controller deployed in a separate namespace, you need to select **Allow all**. You may then apply your own network policy to restrict ingress to be from that namespace only.
+> The default ingress network policy rule of **Allow same namespace** opts for a secure by default stance. If you need your Kubernetes Services, ingresses, or gateways to be accessible from outside of the namespace where they're deployed, for example from an ingress controller deployed in a separate namespace, you need to select **Allow all**. You may then apply your own network policy to restrict ingress to be from that namespace only.
 
 Managed namespaces come with a set of built-in policies.
 - **Allow all**: Allows all network traffic.
 - **Allow same namespace**: Allows all network traffic within the same namespace.
 - **Deny all**: Denies all network traffic. 
 
-You can apply any of the above built-in policies on both **Ingress** and **Egress** rules and they have the following default values.
+You can apply any of the built-in policies on both **ingress** and **egress** rules and they have the following default values.
 
 | Policy | Default value |
 | ------- | -------------|
@@ -39,12 +39,12 @@ You can apply any of the above built-in policies on both **Ingress** and **Egres
 
 ## Resource quotas
 
-[Resource Quotas][aks-resource-quotas] are Kubernetes resources that are used to manage and limit the resource consumption of namespaces within a cluster. They allow administrators to define constraints on the amount of CPU, memory, storage, or other resources that can be used by workloads in a namespace. By applying resource quotas, you can ensure fair resource distribution, prevent resource overuse, and maintain cluster stability.
+[Resource Quotas][aks-resource-quotas] are Kubernetes resources that are used to manage and limit the resource consumption of namespaces within a cluster. They allow administrators to define constraints on the amount of CPU, memory, storage, or other resources that are be used by workloads in a namespace. By applying resource quotas, you can ensure fair resource distribution, prevent resource overuse, and maintain cluster stability.
 
-Managed namespaces can be created with the following resource quotas.
+Managed namespaces can be created with the following resource quotas:
 
 * **CPU requests and limits**: Define the minimum and maximum amount of CPU resources that workloads in the namespace can request or consume. The quota ensures that workloads have sufficient CPU resources to operate while preventing overuse that could impact other namespaces. The quota is defined in the [milliCPU form][meaning-of-cpu],
-* **Memory requests and limits**: Specify the minimum and maximum amount of memory resources that workloads in the namespace can request or consume. The quota helps maintain stability by avoiding memory overcommitment and ensuring fair resource allocation across namespaces. The quota is defined in [power-of-two equivalents form][meaning-of-memory] such as Ei, Pi, Ti, Gi, Mi, Ki.
+* **Memory requests and limits**: Specify the minimum and maximum amount of memory resources that workloads in the namespace can request or consume. The quota helps maintain stability by avoiding memory overcommitment and ensuring fair resource allocation across namespaces. The quota is defined in [power-of-two equivalents form][meaning-of-memory] such as `Ei`,`Pi`, `Ti`, `Gi`, `Mi`, `Ki`.
 
 ## Labels and annotations
 
@@ -84,7 +84,7 @@ Managed namespaces uses the following built-in roles for the control plane.
 
 | Role | Description |
 | ---- | ------------|
-| [Azure Kubernetes Service Namespace Contributor][aks-namespace-contributor] | Allws access to create, update, and delete managed namespaces on a cluster. |
+| [Azure Kubernetes Service Namespace Contributor][aks-namespace-contributor] | Allows access to create, update, and delete managed namespaces on a cluster. |
 [Azure Kubernetes Service Namespace User][aks-namespace-user] | Allows read-only access to a managed namespace on a cluster. Allows access to list credentials on the namespace.  |
 
 Managed namespaces uses the following built-in roles for the data plane.
