@@ -32,10 +32,6 @@ AKS consists of multiple components, each with distinct versioning patterns:
 | **Versioning model** | Follows upstream Kubernetes semantic versioning (MAJOR.MINOR.PATCH). AKS offers community and Long Term Support (LTS) models. More information on this can be found in [AKS version support policy documentation][version-support-policy] | Node image versions along with VHD notes published with [AKS releases][aks-release-notes]. | Add-on/feature/extension minor version tied 1-1 to AKS minor version | Sidecar version must be compatible with add-on control plane |
 | **Update method** | Customer has control over which `MAJOR.MINOR.PATCH` version to upgrade to. Manual ([az aks upgrade][az-aks-upgrade]) or automatic ([auto-upgrade channels][auto-upgrade]) | Customer can upgrade to latest supported node image version. Manual ([az aks nodepool upgrade][az-aks-nodepool-upgrade]) or [auto-upgrade][node-image-auto-upgrade] | - Minor version upgraded when control plane minor version is upgraded (except Istio; see [Istio upgrade documentation][istio-upgrade])<br/>- Patch version upgraded by AKS releases automatically | Customer needs to manually update (restart workloads having sidecars) to compatible sidecar versions as documented by the add-on/feature/extension. |
 
-## View AKS component versions using AKS Component Insights (Preview)
-
-[AKS Component Insights (Preview)][aks-component-insights] provides detailed visibility into the exact versions of all components running in your Azure Kubernetes Service cluster. This feature helps you understand your cluster's current state, plan upgrades, and identify potential compatibility issues.
-
 ## Version management best practices
 
 **Security consideration**: Enable automatic patch updates to ensure CVE fixes are applied as soon as possible. Choose the auto-upgrade channel that best fits your cluster's requirements and risk tolerance.
@@ -52,8 +48,96 @@ AKS consists of multiple components, each with distinct versioning patterns:
 - **Breaking changes**: Monitor the [AKS release tracker][aks-release-tracker] and review [Kubernetes deprecation policies](https://kubernetes.io/docs/reference/using-api/deprecation-policy/) to stay informed about API deprecations and breaking changes in both AKS and upstream Kubernetes.
 - **Pre-upgrade validation**: Before upgrading your production clusters, test your applications, custom resources (CRDs), and third-party integrations on pre-production clusters to ensure compatibility with the new Kubernetes version and updated AKS components.
 
+## View AKS component versions using AKS Component Insights (Preview)
+
+AKS Component Insights (Preview) provides detailed visibility into the exact versions of all components running in your Azure Kubernetes Service cluster. This feature helps you understand your cluster's current state, plan upgrades, and identify potential compatibility issues.
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+### Prerequisites
+
+- An Azure account with an active subscription. If you don't have one, you can [create an account for free][create-azure-subscription].
+- An [AKS cluster][aks-quickstart-cli] set up in your Azure environment
+
+| Prerequisite                     | Notes                                                                 |
+|------------------------------|------------------------------------------------------------------------|
+| **Azure CLI**                | `2.74.0` or later installed. To find the version, run `az --version`. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli]. |
+| **Azure CLI `aks-preview` extension**                | `18.0.0b19` or later. To find the version, run `az --version`. If you need to install or upgrade, see [Manage Azure CLI extensions][azure-cli-extensions]. |
+
+You can install or update to the latest available `aks-preview` Azure CLI extension using the following commands:
+
+```azurecli-interactive
+# Install the aks-preview extension
+az extension add --name aks-preview
+
+# Update to the latest version if already installed
+az extension update --name aks-preview
+```
+
+### View component versions using Azure CLI
+
+Use the `az aks get-upgrades` command to view component versions:
+
+```azurecli-interactive
+az aks get-upgrades --resource-group myResourceGroup --name myAKSCluster
+```
+
+The component information is returned in the `componentsByReleases` section. Expected output would be similar to the following (only portion of componentByReleases is shown here for brevity):
+
+```json
+{
+  "componentsByReleases": [
+      {
+        "components": [
+          {
+            "hasBreakingChanges": false,
+            "name": "cloud-provider-node-manager-linux",
+            "version": "v1.32.5"
+          },
+          {
+            "hasBreakingChanges": false,
+            "name": "cloud-provider-node-manager-windows",
+            "version": "v1.32.5"
+          },
+          {
+            "hasBreakingChanges": false,
+            "name": "health-probe-proxy",
+            "version": "v1.29.1"
+          },
+          {
+            "hasBreakingChanges": false,
+            "name": "kubelet-serving-csr-approver",
+            "version": "v0.0.7"
+          },
+          {
+            "hasBreakingChanges": false,
+            "name": "coredns",
+            "version": "v1.11.3-8"
+          },
+          {
+            "hasBreakingChanges": false,
+            "name": "metrics-server",
+            "version": "v0.7.2-7"
+          }
+        ],
+        "kubernetesVersion": "1.32"
+      }
+  ]
+}
+```
+
+The actual components shown will vary based on your cluster configuration, enabled add-ons, and Kubernetes version. Use the `az aks get-upgrades` command to see the complete list of components for your specific cluster.
+
+Each component entry includes:
+
+- **name**: The component identifier
+- **version**: The exact version of the component installed on the cluster
+- **hasBreakingChanges**: Whether this component version introduces breaking changes
+
+> [!TIP]
+> In addition to using the Azure CLI to query component version information, you can also use the [GET upgradeProfiles API][aks-upgrade-profile-api] with preview AKS APIs (`2025-05-04-preview` or later) to retrieve detailed component version data programmatically.
+
 ## Next steps
-- **View AKS component versions**: Use [AKS Component Insights (Preview)][aks-component-insights] to get version of all components in your cluster
 - **Plan upgrades**: [Configure automatic cluster upgrades][auto-upgrade] or [plan manual upgrades][upgrade-planning]
 - **Stay informed**: [Monitor AKS releases][aks-release-tracker] for updates and breaking changes
 - **Understand support**: [Review Kubernetes version support policy][support-policy]
@@ -77,4 +161,5 @@ AKS consists of multiple components, each with distinct versioning patterns:
 [istio-upgrade]: istio-upgrade.md
 [az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
-[aks-component-insights]: aks-component-insights.md
+[aks-quickstart-cli]: quick-kubernetes-deploy-cli.md
+[aks-upgrade-profile-api]: /rest/api/aks/managed-clusters/get-upgrade-profile
