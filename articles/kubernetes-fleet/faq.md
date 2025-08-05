@@ -81,11 +81,11 @@ Currently unsupported AKS channels:
 
 If you're using any of the channels that Fleet Manager doesn't support, it's recommended you leave those channels enabled on your AKS clusters.
 
-### I am using Fleet auto-upgrade with TargetKubernetesVersion channel. The target Kubernetes version is now out of community support. What can I do?
+### I am using fleet auto-upgrade with TargetKubernetesVersion channel. The target Kubernetes version is now out of community support. What can I do?
 
-In this scenario, for fleet auto-upgrade to keep working, you must enable LongTermSupport (LTS) in the auto-upgrade profile and on all managed clusters in your fleet.
+In this scenario, for fleet auto-upgrade to keep working, you must either enable Long Term Support (LTS) in both the auto-upgrade profile and all managed clusters in your fleet, or use a newer target Kubernetes version.
 
-For information on how to enable LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on how to enable LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
+For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
