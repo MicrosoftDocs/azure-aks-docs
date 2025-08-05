@@ -3,7 +3,7 @@ title: Virtual machine (VM) sizes, generations, and features for Azure Kubernete
 description: Learn about VM fundamentals on AKS, like different VM sizes, generations, and features. When provisioning, learn about how to check for available VM sizes, understand why some VM sizes might not be available, and see behind the scenes when a VM size retires.
 ms.topic: overview
 ms.service: azure-kubernetes-service
-ms.date: 06/20/2025
+ms.date: 08/05/2025
 ms.author: schaffererin
 author: schaffererin
 ---
@@ -12,7 +12,7 @@ author: schaffererin
 
 Azure Kubernetes Service (AKS) supports a variety of virtual machine (VM) sizes, generations, and features to accommodate different workloads and performance requirements. This article provides an overview of available VM sizes and generations for AKS, how to check for available VM sizes in your region, reasons why certain VM sizes might not be available, and what happens when a VM size retires.
 
-## VM generation support on AKS
+## VM support on AKS
 
 Azure supports both Generation 1 (Gen 1) and [Generation 2 (Gen 2) virtual machines (VMs)](/azure/virtual-machines/generation-2). With some [exceptions](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v), we generally recommend [migrating to Generation 2 VMs](#use-gen-2-vms-on-aks) to take advantage of the newest features and functionalities in Azure VMs.
 
@@ -22,10 +22,10 @@ The VM size and operating system (OS) you select when creating an AKS node pool 
 
 There are some limitations to take into account when choosing a VM generation and/or OS:
 
-- Trusted Launch can only be enabled on vm sizes that support Gen 2.
+- Trusted Launch can only be enabled on VM sizes that support Gen 2.
 - Confidential VM sizes always use Gen 2 on AKS.
 - Arm64 VM sizes always use Gen 2 on AKS.
-- Windows Server 2019 node pools don't support Gen 2 vm sizes.
+- Windows Server 2019 node pools don't support Gen 2 VM sizes.
 - Windows Server 2022 node pools require use of a custom header to use Gen 2.
 
 To use Gen 2 VMs on AKS, see [Use Gen 2 VMs](#use-gen-2-vms-on-aks).
@@ -68,6 +68,8 @@ There are several reasons why certain VM sizes might not be available, including
   - [Request a quota increase through an Azure support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) (for **Issue type**, select **Quota**)
 - **VM sizes in preview**: VM sizes in preview might not be available to you if you haven't registered the preview flag for the VM size.
 - **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require additional testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
+
+Make sure you understand which features your workloads need and choose a VM size that meets those requirements. Later VM versions typically have better performance and improved features. For example[Gen 2 VMs](#use-gen-2-vms-on-aks) have increased security and performance benefits over Gen 1 VMs.
 
 ## What happens when a VM size retires?
 
