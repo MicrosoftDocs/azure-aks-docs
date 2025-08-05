@@ -175,17 +175,17 @@ If your node pool doesn't currently have a Trusted Launch image, you won't be ab
 > [!NOTE]
 > Secure Boot requires signed boot loaders, OS kernels, and drivers. If after enabling Secure Boot your nodes don't start, you can verify which boot components are responsible for Secure Boot failures within an Azure Linux Virtual Machine. See [verify Secure Boot failures][verify-secure-boot-failures].
 
-    The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables vTPM. In this scenario, secure boot was enabled during node pool creation:
+The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables vTPM. In this scenario, secure boot was enabled during node pool creation:
 
-    ```azurecli-interactive
-    az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-vtpm 
-    ```
+```azurecli-interactive
+az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-vtpm 
+```
 
-    The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables secure boot. In this scenario, vTPM was enabled during node pool creation:
+The following example updates the node pool *mynodepool* on the *myAKSCluster* in the *myResourceGroup*, and enables secure boot. In this scenario, vTPM was enabled during node pool creation:
 
-    ```azurecli-interactive
-    az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-secure-boot
-    ```
+```azurecli-interactive
+az aks nodepool update --cluster-name myCluster --resource-group myResourceGroup --name mynodepool --enable-secure-boot
+```
     
 :::zone-end
 :::zone target="docs" pivot="arm"
