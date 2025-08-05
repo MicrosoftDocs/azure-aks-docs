@@ -21,7 +21,7 @@ AKS consists of multiple components, each with distinct versioning patterns:
 - **Kubernetes cluster control plane hosted by AKS**: Managed Kubernetes API server, etcd, and other cluster control plane components.
 - **Node images**: Operating system, container runtime, and core Kubernetes node components. Details about what components are packaged in the node images can be found under the [VHD notes folder under AKS GitHub repository][vhd-notes].
 - **Workloads**: AKS managed features/add-ons/extensions could have components in one of these two buckets:
-  - **Standalone add-on/features/extension pods**: AKS feature/add-ons/extensions that are running standalone pods (from Deployments or DaemonSets) on customer hosted nodes (left side). Examples include `istiod`, `azure-cns`
+  - **Standalone add-on/features/extension pods**: AKS feature/add-ons/extensions that are running standalone pods (from Deployments or DaemonSets) on customer hosted nodes (left side). Examples include `istiod`, `azure-cns`, and `coredns`. 
   - **AKS components inside customer workload pods**: Some AKS feature/add-ons/extensions might have sidecars running inside user's pods (right side). For example, Istio injects sidecar proxies to customer workload pods.
 
   The following table summarizes how versioning and updates are managed for each AKS component category:
