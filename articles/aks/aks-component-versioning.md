@@ -161,5 +161,5 @@ Each component entry includes:
 [istio-upgrade]: istio-upgrade.md
 [az-aks-upgrade]: /cli/azure/aks#az_aks_upgrade
 [az-aks-nodepool-upgrade]: /cli/azure/aks/nodepool#az_aks_nodepool_upgrade
-[aks-quickstart-cli]: quick-kubernetes-deploy-cli.md
+[aks-quickstart-cli]: learn/quick-kubernetes-deploy-cli.md
 [aks-upgrade-profile-api]: /rest/api/aks/managed-clusters/get-upgrade-profile
