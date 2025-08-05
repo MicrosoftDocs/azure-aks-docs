@@ -48,13 +48,13 @@ Managed namespaces in Azure Kubernetes Service (AKS) provide a way to logically 
 
 To install the aks-preview extension, run the [`az extension add`](/cli/azure/extension#az-extension-add) command:
 
-```azurecli
+```azurecli-interactive
 az extension add --name aks-preview
 ```
 
 Run the following command to update to the latest version of the extension released.
 
-```azurecli
+```azurecli-interactive
 az extension update --name aks-preview
 ```
 
@@ -87,13 +87,13 @@ az provider register --namespace Microsoft.ContainerService
 
 To install the aks-preview extension, run the following command:
 
-```azurecli
+```azurecli-interactive
 az extension add --name aks-preview
 ```
 
 Run the following command to update to the latest version of the extension released:
 
-```azurecli
+```azurecli-interactive
 az extension update --name aks-preview
 ```
 
@@ -164,7 +164,7 @@ Save the Bicep file **managedNamespace.bicep** to your local computer.
 
 Deploy the Bicep file using the Azure CLI.
 
-```azurecli
+```azurecli-interactive
 az deployment group create --resource-group <resource-group> --template-file managedNamespace.bicep
 ```
 
@@ -177,7 +177,7 @@ az deployment group create --resource-group <resource-group> --template-file man
 
 Define the following variables that will be used in the subsequent steps.
 
-```azurecli
+```azurecli-interactive
 RG_NAME=cluster-rg
 CLUSTER_NAME=contoso-cluster
 NAMESPACE_NAME=retail-team
@@ -190,7 +190,7 @@ ANNOTATIONS="owner=retail"
 Create a managed namespace with various parameter options to customize its configuration. Make sure to select the appropriate value for `ingress-network-policy`, `egress-network-policy`, `adoption-policy`, and `delete-policy`. For more information about what those parameters mean, see the [managed namespaces overview][aks-managed-namespaces-overview].
 
 
-```azurecli
+```azurecli-interactive
 az aks namespace add \
     --name ${NAMESPACE_NAME} \
     --cluster-name ${CLUSTER_NAME} \
@@ -211,14 +211,14 @@ az aks namespace add \
 
 After the namespace is created, you can assign [one of the built-in roles][aks-managed-namespaces-roles] for the control plane and data plane.
 
-```azurecli
+```azurecli-interactive
 ASSIGNEE="user@contoso.com"
 NAMESPACE_ID=$(az aks namespace show --name ${NAMESPACE_NAME} --cluster-name ${CLUSTER_NAME} --resource-group ${RG_NAME} --query id -o tsv)
 ```
 
 Assign a control plane role to be able to view the managed namespace in the portal, Azure CLI output, and ARM. This also allows the user to retrieve the credentials to connect to this namespace.
 
-```azurecli
+```azurecli-interactive
 az role assignment create \
   --assignee ${ASSIGNEE} \
   --role "Azure Kubernetes Service Namespace User" \
@@ -227,7 +227,7 @@ az role assignment create \
 
 Assign data plane role to be able to get access to create resources within the namespace using the Kubernetes API.
 
-```azurecli
+```azurecli-interactive
 az role assignment create \
   --assignee ${ASSIGNEE} \
   --role "Azure Kubernetes Service RBAC Writer" \
@@ -264,7 +264,7 @@ You can list managed namespaces at different scopes using the Azure CLI.
 
 Run the following command to list all managed namespaces in a subscription:
 
-```azurecli
+```azurecli-interactive
 az aks namespace list --subscription <subscription-id>
 ```
 
@@ -272,7 +272,7 @@ az aks namespace list --subscription <subscription-id>
 
 Run the following command to list all managed namespaces in a specific resource group:
 
-```azurecli
+```azurecli-interactive
 az aks namespace list --resource-group <rg-name>
 ```
 
@@ -280,7 +280,7 @@ az aks namespace list --resource-group <rg-name>
 
 Run the following command to list all managed namespaces in a specific cluster:
 
-```azurecli
+```azurecli-interactive
 az aks namespace list --resource-group <rg-name> --cluster-name <cluster-name>
 ```
 
@@ -297,7 +297,7 @@ You can list managed namespaces at different scopes using the Azure CLI.
 
 Run the following command to list all managed namespaces in a subscription:
 
-```azurecli
+```azurecli-interactive
 az aks namespace list --subscription <subscription-id>
 ```
 
@@ -305,7 +305,7 @@ az aks namespace list --subscription <subscription-id>
 
 Run the following command to list all managed namespaces in a specific resource group:
 
-```azurecli
+```azurecli-interactive
 az aks namespace list --resource-group <rg-name>
 ```
 
@@ -313,7 +313,7 @@ az aks namespace list --resource-group <rg-name>
 
 Run the following command to list all managed namespaces in a specific cluster:
 
-```azurecli
+```azurecli-interactive
 az aks namespace list --resource-group <rg-name> --cluster-name <cluster-name>
 ```
 
@@ -332,7 +332,7 @@ az aks namespace list --resource-group <rg-name> --cluster-name <cluster-name>
 
 You can retrieve the credentials to connect to a namespace via the following command.
 
-```azurecli
+```azurecli-interactive
 az aks namespace get-credentials --name <namespace-name> --resource-group <rg-name> --cluster-name <cluster-name>
 ```
 
@@ -345,7 +345,7 @@ az aks namespace get-credentials --name <namespace-name> --resource-group <rg-na
 
 You can retrieve the credentials to connect to a namespace via the following command.
 
-```azurecli
+```azurecli-interactive
 az aks namespace get-credentials --name <namespace-name> --resource-group <rg-name> --cluster-name <cluster-name>
 ```
 
