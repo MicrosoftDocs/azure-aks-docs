@@ -8,6 +8,7 @@ ms.service: azure-kubernetes-service
 ms.topic: concept-article
 ms.custom: linux-related-content
 ms.date: 12/02/2024
+# Customer intent: As a cloud engineer, I want to explore partner solutions for managing and monitoring my Azure Linux AKS environment, so that I can optimize deployment, enhance security, and improve observability of my applications.
 ---
 
 # Azure Linux AKS Container Host partner solutions

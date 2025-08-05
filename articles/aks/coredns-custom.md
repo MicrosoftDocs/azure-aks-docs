@@ -7,7 +7,8 @@ ms.topic: how-to
 ms.date: 03/03/2023
 ms.author: allensu
 
-#Customer intent: As a cluster operator or developer, I want to learn how to customize the CoreDNS configuration to add sub domains or extend to custom DNS endpoints within my network. I also want to learn how to customize the logic for CoreDNS pod scaling.
+# Customer intent: As a cluster operator or developer, I want to learn how to customize the CoreDNS configuration to add sub domains or extend to custom DNS endpoints within my network. I also want to learn how to customize the logic for CoreDNS pod scaling.
+
 ---
 
 # Customize CoreDNS with Azure Kubernetes Service

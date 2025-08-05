@@ -7,6 +7,7 @@ ms.date: 05/04/2023
 ms.author: shasb
 author: shashankbarsin
 ms.custom: devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to upgrade the Istio-based service mesh add-on for my Azure Kubernetes Service cluster, so that I can ensure my applications are running on the latest features and security patches without downtime.
 ---
 
 # Upgrade Istio-based service mesh add-on for Azure Kubernetes Service

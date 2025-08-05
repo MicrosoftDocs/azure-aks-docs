@@ -10,42 +10,52 @@ ms.author: kaarthis
 ms.custom: stateful, databases, zero-downtime
 ---
 
-# Stateful Workload Upgrade Patterns
+# Stateful workload upgrade patterns
 
-Upgrade clusters running databases and stateful applications without data loss using these proven patterns.
+Upgrade clusters that run databases and stateful applications without data loss by using these proven patterns.
 
-## 📖 What This Article Covers
+## What this article covers
 
-This guide provides **database-specific upgrade patterns** for AKS clusters with stateful workloads:
-- **PostgreSQL Ferris Wheel pattern** for ~30-second downtime
-- **Redis rolling replacement** for zero-downtime cache upgrades
-- **MongoDB step-down cascades** for replica set safety
-- **Emergency upgrade checklists** for security responses
-- **Validation and rollback procedures** for data protection
+This article provides database-specific upgrade patterns for Azure Kubernetes Service (AKS) clusters with stateful workloads, such as:
 
-**Best for:** Database administrators, applications with persistent data, mission-critical stateful services.
+- PostgreSQL Ferris wheel pattern for ~30-second downtime.
+- Redis rolling replacement for zero-downtime cache upgrades.
+- MongoDB step-down cascades for replica set safety.
+- Emergency upgrade checklists for security responses.
+- Validation and rollback procedures for data protection.
 
-**Related guides:** [Production strategies](aks-production-upgrade-strategies.md) • [Basic upgrades](upgrade-aks-cluster.md) • [Scenario hub](upgrade-scenarios-hub.md)
+These patterns are best for use by database administrators for applications with persistent data and mission-critical stateful services.
+
+For more information, see these related articles:
+
+- To upgrade your production AKS clusters, see [AKS production upgrade strategies](aks-production-upgrade-strategies.md).
+- To check for and apply basic upgrades to your AKS cluster, see [Upgrade an Azure Kubernetes Service cluster](upgrade-aks-cluster.md).
+- To use the scenario hub to help you choose the right AKS upgrade approach, see [AKS upgrade scenarios: Choose your path](upgrade-scenarios-hub.md).
 
 ---
 
-> **Quick start:** [Emergency upgrade needed?→](#-emergency-upgrade-checklist) | [PostgreSQL cluster?→](#the-ferris-wheel-pattern-postgresql) | [Redis cache?→](#redis-cluster-rolling-replace)
+For a quick start, select a link for instructions:
 
-## 🎯 Choose Your Pattern
+- [Do you need an emergency upgrade?](#emergency-upgrade-checklist)
+- [Do you need help with a PostgreSQL cluster?](#the-ferris-wheel-pattern-postgresql)
+- [Do you need a Redis cache rolling replace?](#redis-cluster-rolling-replace)
 
-| Database Type | Upgrade Pattern | Downtime | Complexity | Best For |
+## Choose your pattern
+
+| Database type | Upgrade pattern | Downtime | Complexity | Best for |
 |---------------|----------------|--------------------------|------------|----------|
-| **PostgreSQL** | [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) | ~30-second downtime | Medium | Production databases |
-| **Redis** | [Rolling Replace](#redis-cluster-rolling-replace) | None | Low | Cache layers |
-| **MongoDB** | [Step-down Cascade](#mongodb-replica-set-step-down) | ~10-second downtime | Medium | Document databases |
-| **Elasticsearch** | Shard Rebalancing *(coming soon)* | None | High | Search clusters |
-| **Any Database** | Backup-Restore *(coming soon)* | 2-minute to 5-minute downtime | Low | Simple setups |
+| PostgreSQL | [Ferris wheel](#the-ferris-wheel-pattern-postgresql) | ~30-second downtime | Medium | Production databases |
+| Redis | [Rolling replace](#redis-cluster-rolling-replace) | None | Low | Cache layers |
+| MongoDB | [Step-down cascade](#mongodb-replica-set-step-down) | ~10-second downtime | Medium | Document databases |
+| Elasticsearch | Shard rebalancing *(coming soon)* | None | High | Search clusters |
+| Any database | Backup-restore *(coming soon)* | 2-minute to 5-minute downtime | Low | Simple setups |
 
-## ⚡ Emergency Upgrade Checklist
+## Emergency upgrade checklist
 
-**Need to upgrade now due to security issues?**
+Do you need to upgrade now because of security issues?
 
-1. **Immediate Safety Check** (two minutes)
+1. Run the following commands for an immediate safety check (two minutes):
+
    ```bash
    # Verify all replicas are healthy
    kubectl get pods -l tier=database -o wide
@@ -55,23 +65,26 @@ This guide provides **database-specific upgrade patterns** for AKS clusters with
    kubectl get job backup-job -o jsonpath='{.status.completionTime}'
    ```
 
-2. **Choose Emergency Pattern** (one minute)
-   - **PostgreSQL/MySQL:** Use [Ferris Wheel](#the-ferris-wheel-pattern-postgresql) (30-second downtime)
-   - **Redis/Memcached:** Use [Rolling Replace](#redis-cluster-rolling-replace) (zero downtime)
-   - **MongoDB/CouchDB:** Use [Step-down Cascade](#mongodb-replica-set-step-down) (10-second downtime)
+1. Choose an emergency pattern (one minute):
 
-3. **Execute with Safety Net** (15-minute to 30-minute window)
+   - **PostgreSQL/MySQL:** Use [Ferris wheel](#the-ferris-wheel-pattern-postgresql) (30-second downtime).
+   - **Redis/Memcached:** Use [Rolling replace](#redis-cluster-rolling-replace) (zero downtime).
+   - **MongoDB/CouchDB:** Use [Step-down cascade](#mongodb-replica-set-step-down) (10-second downtime).
+
+1. Run with a safety net (15-minute to 30-minute window):
+
    - Always test rollback procedures in advance.
-   - Monitor application metrics during upgrade.
+   - Monitor application metrics during the upgrade.
    - Keep the database team on standby.
 
 ---
 
-## The Ferris Wheel Pattern: PostgreSQL
+## The Ferris wheel pattern: PostgreSQL
 
-> **Best for:** 3-node PostgreSQL clusters with primary/replica setup across availability zones
+This pattern is best for 3-node PostgreSQL clusters with primary/replica setup across availability zones.
 
-**Visual Pattern:**
+Visual pattern:
+
 ```
 Initial: [PRIMARY] [REPLICA-1] [REPLICA-2]
 Step 1:  [PRIMARY] [REPLICA-1] [NEW-NODE]  ← Add new node
@@ -79,7 +92,7 @@ Step 2:  [REPLICA-1] [NEW-NODE] [REPLICA-2] ← Promote & remove old primary
 Step 3:  [NEW-PRIMARY] [NEW-NODE] [REPLICA-2] ← Complete rotation
 ```
 
-### ⚡ Quick Implementation (20 minutes)
+### Quick implementation (20 minutes)
 
 ```bash
 # 1. Add new node to cluster
@@ -95,9 +108,9 @@ kubectl delete pod postgres-cluster-0
 ```
 
 <details>
-<summary><strong>📋 Detailed Step-by-Step Guide</strong></summary>
+<summary><strong>Detailed step-by-step guide</strong></summary>
 
-#### Prerequisites Validation
+#### Prerequisites validation
 
 ```bash
 #!/bin/bash
@@ -119,7 +132,7 @@ echo "Last backup: $LAST_BACKUP"
 echo "✅ Prerequisites validated"
 ```
 
-#### Step 1: Scale Up with New Node
+#### Step 1: Scale up with a new node
 
 ```bash
 # Add new node with upgraded Kubernetes version
@@ -142,7 +155,7 @@ kubectl get pods -l app=postgres-cluster -w
 kubectl exec postgres-cluster-3 -- psql -c "SELECT * FROM pg_stat_replication;"
 ```
 
-#### Step 2: Execute Controlled Failover
+#### Step 2: Run a controlled failover
 
 ```bash
 #!/bin/bash
@@ -174,7 +187,7 @@ kubectl patch configmap pgbouncer-config --patch '{"data":{"pgbouncer.ini":"[dat
 echo "✅ Failover completed"
 ```
 
-#### Step 3: Cleanup and Validation
+#### Step 3: Clean up and validate
 
 ```bash
 # Remove old primary node
@@ -189,9 +202,9 @@ kubectl run test-db-connection --image=postgres:15 --rm -it -- psql -h postgres-
 
 </details>
 
-### 🔧 Advanced Configuration
+### Advanced configuration
 
-For mission-critical databases requiring <10-second downtime:
+For mission-critical databases that require a <10-second downtime:
 
 ```yaml
 # Use synchronous replication with multiple standbys
@@ -200,19 +213,22 @@ synchronous_standby_names = 'ANY 2 (standby1, standby2, standby3)'
 synchronous_commit = 'remote_apply'
 ```
 
-### ✅ Success Validation
+### Success validation
 
-- [ ] New primary accepts reads and writes
-- [ ] All replicas show healthy replication
-- [ ] Application reconnects automatically
-- [ ] No data loss detected
-- [ ] Backup/restore tested on new primary
+To validate your progress, use the following checklist:
 
-### 🚨 Emergency Rollback
+- New primary accepts reads and writes.
+- All replicas show healthy replication.
+- Application reconnects automatically.
+- No data loss detected.
+- Backup/restore tested on new primary.
 
-**For immediate issues (< 2 minutes):**
+### Emergency rollback
 
-1. **Redirect traffic to previous primary**
+##### For immediate issues (<2 minutes)
+
+Redirect traffic to the previous primary:
+
    ```bash
    kubectl patch service postgres-primary --patch '{
      "spec": {
@@ -223,39 +239,38 @@ synchronous_commit = 'remote_apply'
    }'
    ```
 
-**For comprehensive failover recovery (5-10 minutes):**
+##### For comprehensive failover recovery (5-10 minutes)
 
-1. **Stop writes to current primary**
+1. Stop writes to the current primary:
    ```bash
    kubectl exec postgres-primary-0 -- psql -c "SELECT pg_reload_conf();"
    ```
 
-2. **Redirect service to healthy replica**
+1. Redirect service to a healthy replica:
    ```bash
    kubectl patch service postgres-primary --patch '{"spec":{"selector":{"statefulset.kubernetes.io/pod-name":"postgres-replica-1-0"}}}'
    ```
 
-3. **Promote replica to new primary**
+1. Promote a replica to the new primary:
    ```bash
    kubectl exec postgres-replica-1-0 -- pg_ctl promote -D /var/lib/postgresql/data
    kubectl wait --for=condition=ready pod postgres-replica-1-0 --timeout=60s
    ```
 
-4. **Update connection strings**
+1. Update connection strings:
    ```bash
    kubectl patch configmap postgres-config --patch '{"data":{"primary-host":"postgres-replica-1-0.postgres"}}'
    ```
 
-5. **Verify new primary accepts writes**
+1. Verify that the new primary accepts writes:
    ```bash
    kubectl exec postgres-replica-1-0 -- psql -c "CREATE TABLE upgrade_test (id serial, timestamp timestamp default now());"
    kubectl exec postgres-replica-1-0 -- psql -c "INSERT INTO upgrade_test DEFAULT VALUES;"
    ```
 
-**Expected Outcome:** ~30-second downtime, zero data loss, upgraded node running latest Kubernetes
-```
+**Expected outcome:** Approximately 30-second downtime, zero data loss, and an upgraded node that runs the current version of Kubernetes.
 
-#### Step 3: Upgrade Node1 (Former Primary)
+#### Step 3: Upgrade Node1 (former primary)
 
 ```bash
 #!/bin/bash
@@ -284,7 +299,7 @@ done
 echo "Node1 upgrade completed"
 ```
 
-#### Step 4: Rejoin Node1 as Replica
+#### Step 4: Rejoin Node1 as a replica
 
 ```bash
 #!/bin/bash
@@ -337,7 +352,7 @@ kubectl wait --for=condition=ready pod postgres-replica-2-0 --timeout=300s
 kubectl exec postgres-replica-1-0 -- psql -c "SELECT application_name, state, sync_state FROM pg_stat_replication;"
 ```
 
-#### Step 6: Final Failover (Node2 → Node3)
+#### Step 6: Final failover (Node2 → Node3)
 
 ```bash
 #!/bin/bash
@@ -366,7 +381,7 @@ kubectl wait --for=condition=ready pod postgres-replica-1-0 --timeout=300s
 echo "All nodes upgraded successfully. PostgreSQL cluster operational."
 ```
 
-### Validation and Monitoring
+### Validation and monitoring
 
 ```bash
 #!/bin/bash
@@ -391,9 +406,9 @@ echo "Upgrade validation completed successfully"
 
 ---
 
-## Redis Cluster Rolling Replace
+## Redis cluster rolling replace
 
-**Scenario:** Six-node Redis cluster (three primaries, three replicas) requiring zero downtime.
+In this scenario, a six-node Redis cluster (three primaries and three replicas) requires zero downtime.
 
 ### Implementation
 
@@ -446,9 +461,9 @@ echo "Redis cluster upgrade completed"
 
 ---
 
-## MongoDB Replica Set Step-down
+## MongoDB replica set step-down
 
-**Scenario:** Three-member MongoDB replica set requiring coordinated primary step-down.
+In this scenario, a three-member MongoDB replica set requires coordinated primary step-down.
 
 ### Implementation
 

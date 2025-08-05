@@ -6,6 +6,7 @@ ms.date: 07/26/2024
 ms.service: azure-kubernetes-service
 ms.author: schaffererin
 author: schaffererin
+# Customer intent: "As a cloud administrator, I want to access and manage Kubernetes resources in my Azure Kubernetes Service cluster through the Azure portal, so that I can effectively monitor and deploy applications within my infrastructure."
 ---
 
 # Access Kubernetes resources using the Azure portal

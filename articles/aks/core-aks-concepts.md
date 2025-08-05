@@ -5,6 +5,7 @@ ms.topic: concept-article
 ms.date: 07/10/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud architect, I want to understand the core concepts of managed Kubernetes services so that I can effectively deploy and manage containerized applications at scale in a cloud environment.
 ---
 
 # Core concepts for Azure Kubernetes Service (AKS)

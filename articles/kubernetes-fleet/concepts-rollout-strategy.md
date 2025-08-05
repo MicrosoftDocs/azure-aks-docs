@@ -83,25 +83,44 @@ If you use a percentage for the parameter, it's calculated against `N` as well.
 
 ## Staged update strategy (preview)
 
-This rollout strategy is defined externally to resource placement using a `ClusterStagedUpdateStrategy` custom resource which is applied by Fleet Manager using a `ClusterStagedUpdateRun`.
+The staged update strategy provides fine-grained control over resource rollouts by organizing clusters into sequential stages with configurable progression rules. Unlike the rolling update strategy, staged updates are defined externally using separate custom resources that work together to orchestrate deployments.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
-### Defining a staged update strategy
+### How staged updates work
 
-You can build reusable strategies that determine the order in which clusters receive placements by defining selectors used to group clusters into stages. Within a stage, cluster ordering can be controlled, and it's possible to specify optional post-placement soak time and approvals. You can name and order stages to suit your needs. 
+Staged updates use three custom resources:
 
-The following diagram shows a sample update strategy with three stages and multiple clusters in each stage. Inclusion of clusters in a stage is determined by the `environment` label on the cluster. Labels on clusters determine the ordering of clusters in the canary and production stages. A one hour wait exists between staging and canary, with an approval required to move from canary to production. 
+* **ClusterResourcePlacement** - Configured with `strategy.type: External` to indicate external strategy management
+* **ClusterStagedUpdateStrategy** - Defines the stages, cluster selection, and progression rules
+* **ClusterStagedUpdateRun** - Executes the clusterStagedUpdateStrategy against a specific CRP and resource snapshot
 
-:::image type="content" source="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png" alt-text="A placement staged update strategy containing three stages - staging, canary, and production. Each stage contains multiple clusters, with canary and production apply a sort order on cluster based on labels. There's a 1 hour wait between staging and canary, and an approval is required to transition from canary to production stages." lightbox="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png":::
+#### ClusterResourcePlacement with external strategy
 
-The staged update strategy in the diagram can be expressed using the following `ClusterStagedUpdateStrategy` definition.
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1beta1
+kind: ClusterResourcePlacement
+metadata:
+  name: my-app-placement
+spec:
+  resourceSelectors:
+    - group: ""
+      kind: Namespace
+      name: my-app
+      version: v1
+  policy:
+    placementType: PickAll
+  strategy:
+    type: External  # Rollout is controlled by ClusterStagedUpdateRun, ClusterStagedUpdateStrategy.
+```
+
+#### ClusterStagedUpdateStrategy
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateStrategy
 metadata:
-  name: example-staged-strategy
+  name: three-stage-strategy
 spec:
   stages:
     - name: staging
@@ -125,261 +144,65 @@ spec:
       sortingLabelKey: order
 ```
 
-### Using a staged update strategy
+Each stage in the strategy can specify:
 
-1. Configure the cluster resource placement to use a strategy of type `External` as shown. When you submit the CRP to your Fleet hub cluster no placement is undertaken.
+* **Label selector** to determine which clusters belong to the stage
+* **Sorting order** for clusters within the stage using `sortingLabelKey` (optional - clusters are sorted alphabetically by name if not specified)
+* **After-stage tasks** either timed wait or approval requirement (optional, up to 2 tasks per stage, maximum one of each type)
 
-    ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
-    kind: ClusterResourcePlacement
-    metadata:
-      name: crp-staged-update-sample
-    spec:
-      resourceSelectors:
-        - group: ""
-          kind: Namespace
-          name: test-namespace
-          version: v1
-      policy:
-        placementType: PickAll
-      strategy:
-        type: External
-    ```
-
-1. Create a `ClusterStagedUpdateStrategy` (as shown earlier), and apply against the Fleet Manager hub cluster.
-
-1. Next, create a `ClusterStagedUpdateRun`, ensuring to reference both the CRP and strategy to use. You will also need to supply a `ClusterResourceSnapshot` reference. Learn how to select a snapshot by reading the documentation on [placement snapshots][placement-snapshots].
-
-    ```yaml
-    apiVersion: placement.kubernetes-fleet.io/v1beta1
-    kind: ClusterStagedUpdateRun
-    metadata:
-      name: example-staged-update-run
-    spec:
-      placementName: crp-staged-update-sample
-      resourceSnapshotIndex: "0"
-      stagedRolloutStrategyName: example-staged-strategy
-    ```
-
-1. Use `kubectl` to apply the `ClusterStagedUpdateRun` on the Fleet Manager hub cluster.
- 
-### Check the status of a staged rollout
-
-Use the following steps to determine the status of a staged rollout, including time remaining on a `TimedWait` or if any approvals are pending.
-
-```bash
-kubectl get clusterStagedUpdateRun example-staged-update-run
-```
-
-We can see the staged rollout has been initialized and has been running for 44 seconds.
-
-```output
-NAME                        PLACEMENT                  RESOURCE-SNAPSHOT-INDEX   POLICY-SNAPSHOT-INDEX   INITIALIZED   SUCCEEDED   AGE
-example-staged-update-run   crp-staged-update-sample   0                         0                       True                      13s
-```
-
-Determine the detailed status by using the following command.
-
-```bash
-kubectl get clusterStagedUpdateRun example-staged-update-run -o yaml
-```
-
-This command generates a verbose response that provides context on where the rollout is. The following sample is annotated to explain.
+#### ClusterStagedUpdateRun
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1beta1
 kind: ClusterStagedUpdateRun
 metadata:
-  ...
-  name: example-staged-update-run
-  ...
+  name: my-app-rollout
 spec:
-  placementName: crp-staged-update-sample
-  resourceSnapshotIndex: "0"
-  stagedRolloutStrategyName: example-staged-strategy
-status:
-  conditions:
-  - lastTransitionTime: ...
-    message: ClusterStagedUpdateRun initialized successfully
-    observedGeneration: 1
-    reason: UpdateRunInitializedSuccessfully
-    status: "True"           # the updateRun is initialized successfully
-    type: Initialized
-  - lastTransitionTime: ...
-    message: The update run is making progress
-    observedGeneration: 1
-    reason: UpdateRunProgressing
-    status: "True"
-    type: Progressing        # the updateRun is still running
-  deletionStageStatus:
-    clusters: []             # no clusters need to be cleaned up
-    stageName: kubernetes-fleet.io/deleteStage
-  policyObservedClusterCount: 3     # number of clusters to be updated 
-  policySnapshotIndexUsed: "0"
-  stagedUpdateStrategySnapshot:     # snapshot of the strategy
-    stages:
-    - afterStageTasks:
-      - type: TimedWait
-        waitTime: 1h0m0s
-      labelSelector:
-        matchLabels:
-          environment: staging
-      name: staging
-    - afterStageTasks:
-      - type: Approval
-      labelSelector:
-        matchLabels:
-          environment: canary
-      name: canary
-      sortingLabelKey: name
-    - labelSelector:
-        matchLabels:
-          environment: production
-      name: production
-      sortingLabelKey: order
-  stagesStatus:                # detailed status for each stage
-  - afterStageTaskStatus:
-    - conditions:
-      - lastTransitionTime: ...
-        message: Wait time elapsed
-        observedGeneration: 1
-        reason: AfterStageTaskWaitTimeElapsed
-        status: "True"         # the wait after-stage task has completed
-        type: WaitTimeElapsed
-      type: TimedWait
-    clusters:
-    - clusterName: member-cluster-02    # stage staging contains member-cluster-02 cluster only
-      conditions:
-      - lastTransitionTime: ...
-        message: Cluster update started
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: ...
-        message: Cluster update completed successfully
-        observedGeneration: 1
-        reason: ClusterUpdatingSucceeded
-        status: "True"                  # member-cluster-02 is updated successfully
-        type: Succeeded
-    conditions:
-    - lastTransitionTime: ...
-      message: All clusters in the stage are updated and after-stage tasks are completed
-      observedGeneration: 1
-      reason: StageUpdatingSucceeded
-      status: "False"
-      type: Progressing
-    - lastTransitionTime: ...
-      message: Stage update completed successfully
-      observedGeneration: 1
-      reason: StageUpdatingSucceeded
-      status: "True"                    # stage staging has completed successfully
-      type: Succeeded
-    endTime: ...
-    stageName: staging
-    startTime: ...
-  - afterStageTaskStatus:
-    - approvalRequestName: example-staged-update-run-canary # ClusterApprovalRequest name for this stage
-      type: Approval
-    clusters:
-    - clusterName: member-cluster-01         # according the labelSelector and sortingLabelKey, member-cluster-01 is selected first in this stage
-      conditions:
-      - lastTransitionTime: ...
-        message: Cluster update started
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True"
-        type: Started
-      - lastTransitionTime: ...
-        message: Cluster update completed successfully
-        observedGeneration: 1
-        reason: ClusterUpdatingSucceeded
-        status: "True"                      # member-cluster-01 update is completed
-        type: Succeeded
-    - clusterName: member-cluster-03        # member-cluster-03 is selected after member-cluster-01 because of name label
-      conditions:
-      - lastTransitionTime: ...
-        message: Cluster update started
-        observedGeneration: 1
-        reason: ClusterUpdatingStarted
-        status: "True"                      # member-cluster-01 update has not finished yet
-        type: Started
-    conditions:
-    - lastTransitionTime: ...
-      message: Clusters in the stage started updating
-      observedGeneration: 1
-      reason: StageUpdatingStarted
-      status: "True"                        # stage canary is still executing
-      type: Progressing
-    stageName: canary
-    startTime: ...
-  ...
+  placementName: my-app-placement # ClusterResourcePlacement name the update run is applied to.
+  resourceSnapshotIndex: "0" # Resource snapshot index of the selected resources to be updated across clusters.
+  stagedRolloutStrategyName: three-stage-strategy # The name of the update strategy to use.
 ```
 
-### Submit approvals for staged updates
+### Stage progression
 
-When your staged update strategy includes approvals, you need to use the following approach to submit approval responses to continue the staged rollout.
+Fleet Manager processes stages sequentially:
 
-Approval payloads are a JSON object using the following format.
+1. All clusters in a stage receive updates according to their sort order
+2. After all clusters in a stage are successfully updated, any configured after-stage tasks execute
+3. The next stage begins only after all previous after stage tasks complete
 
-```json
-{
-    "status":
-    {
-        "conditions":[
-            {
-                "type":"Approved",
-                "status":"True",
-                "reason":"reason for approval",
-                "message":"longer message describing approval",
-                "lastTransitionTime":"2025-03-12T06:15:21Z",
-                "observedGeneration":1
-            }
-          ]
-    }
-}
-```
+For approval-based progression, Fleet Manager creates a `ClusterApprovalRequest` resource that must be approved before continuing to the next stage.
 
-1. Check for pending approvals.
+### Example deployment pattern
 
-    ```bash
-    kubectl get clusterapprovalrequest
-    ```
-      
-    his command returns a table displaying the name of the staged update run in `UPDATE-RUN`, along with the stage requiring approval in `STAGE`. The stage name is appended to the name of the update run to form the name of the `ClusterApprovalRequest`.
-    
-    ```output
-    NAME                                 UPDATE-RUN                      STAGE    APPROVED   APPROVALACCEPTED   AGE
-    example-staged-update-run-canary     example-staged-update-run       canary                                 2m2s
-    ```
+The following diagram illustrates a typical three-stage deployment pattern:
 
-1. Submit a patch request to approve.
+:::image type="content" source="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png" alt-text="Three-stage deployment pattern with staging, canary, and production stages with wait times and approval gates." lightbox="./media/concepts-resource-placement/conceptual-rollout-staged-update-strategy.png":::
 
-    ```bash
-    kubectl patch clusterapprovalrequests example-staged-update-run-canary --type=merge -p '{"status":{"conditions":[{"type":"Approved","status":"True","reason":"testPassed","message":"lgtm","lastTransitionTime":"'$(date --utc +%Y-%m-%dT%H:%M:%SZ)'","observedGeneration":1}]}}' --subresource=status
-    ```
-    
-    A successful submission with advice that the patch has been applied.
-    
-    ```output
-    clusterapprovalrequest.placement.kubernetes-fleet.io/example-staged-update-run-canary patched
-    ```
+This pattern allows you to:
 
-1. You can also confirm the approval was successful by resubmitting the original `clusterapprovalrequest`.
+* Deploy to staging clusters first for initial validation
+* Wait a specified time before proceeding to canary clusters
+* Require manual approval before rolling out to production
+* Control the order of updates within canary and production stages
 
-    ```bash
-    kubectl get clusterapprovalrequest
-    ```
+### When to use staged updates
 
-    You can view the approved status in the `APPROVED` column and that it's accepted in the `APPROVALACCEPTED` column.
-      
-    ```output
-    NAME                                 UPDATE-RUN                      STAGE    APPROVED   APPROVALACCEPTED   AGE
-    example-staged-update-run-canary     example-staged-update-run       canary   True       True               1m10s
-    ```
+Staged update strategies are ideal when you need:
+
+* **Environment-based rollouts** (dev → staging → production)
+* **Validation Delays** and **Approval gates** between stages
+* **Deterministic ordering** of cluster updates within stages
+* **Reusable deployment patterns** across multiple cluster resource placements
+
+For simpler scenarios where percentage-based rollouts suffice, consider using the inline rolling update strategy instead.
+
+> [!TIP]
+> To learn how to implement staged update runs step-by-step, see [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
 
 ## Next steps
 
+* [How to use ClusterStagedUpdateRun to orchestrate staged rollouts](./howto-staged-update-run.md).
 * [Controlling eviction and disruption for cluster resource placement](./concepts-eviction-disruption.md).
 * [Use cluster resource placement to deploy workloads across multiple clusters](./quickstart-resource-propagation.md).
 * [Intelligent cross-cluster Kubernetes resource placement based on member clusters properties](./intelligent-resource-placement.md).

@@ -8,6 +8,7 @@ ms.author: schaffererin
 ms.topic: concept-article
 ms.subservice: aks-storage
 ms.date: 03/13/2025
+# Customer intent: "As a Kubernetes administrator, I want to create a persistent volume using Azure Blob storage, so that multiple pods can concurrently access and persist data effectively."
 ---
 
 # Create and use a volume with Azure Blob storage in Azure Kubernetes Service (AKS)

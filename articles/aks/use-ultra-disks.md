@@ -7,6 +7,7 @@ author: schaffererin
 ms.author: schaffererin
 
 
+# Customer intent: As a Kubernetes administrator, I want to enable Azure ultra disks on an AKS cluster, so that I can improve the performance of my stateful applications with high throughput, low latency, and the ability to dynamically adjust disk performance.
 ---
 
 # Use Azure ultra disks on Azure Kubernetes Service

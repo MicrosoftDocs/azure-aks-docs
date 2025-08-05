@@ -6,9 +6,10 @@ ms.topic: how-to
 author: sachidesai
 ms.service: azure-kubernetes-service
 ms.date: 3/25/2025
+# Customer intent: "As a data engineer, I want to monitor and visualize inference service metrics on AKS, so that I can ensure optimal performance and resource utilization while managing AI workloads."
 ---
 
-# Monitor and visualize AI inference metrics in Azure Kubernetes Service by using the AI toolchain operator (Preview)
+# Monitor and visualize AI inference metrics on Azure Kubernetes Service (AKS) with the AI toolchain operator add-on
 
 Monitoring and observability play a key role in maintaining high performance and low cost of your AI workload deployments in Azure Kubernetes Service (AKS). Visibility into system and performance metrics can indicate the limits of your underlying infrastructure and motivate real-time adjustments and optimizations to reduce workload interruptions. Monitoring also provides valuable insights into resource utilization for cost-effective management of computational resources and accurate provisioning.
 
@@ -16,9 +17,8 @@ The Kubernetes AI Toolchain Operator (KAITO) is a managed add-on for AKS that si
 
 In [KAITO version 0.4.4](https://github.com/kaito-project/kaito/releases/tag/v0.4.4) and later versions, the vLLM inference runtime is enabled by default in the AKS managed add-on. [vLLM](https://docs.vllm.ai/en/latest/) is a library for language model inference and serving. It surfaces key system performance, resource usage, and request processing for [Prometheus metrics](https://docs.vllm.ai/en/latest/design/v1/metrics.html) that you can use to evaluate your KAITO inference deployments.
 
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+In this article, you'll learn how to monitor and visualize vLLM inference metrics using the AI toolchain operator add-on with Azure Managed Prometheus and Azure Managed Grafana on your AKS cluster.
 
-In this article, you learn how to monitor and visualize vLLM inference metrics by using the AI toolchain operator add-on with the managed service for Prometheus in Azure and Azure Managed Grafana in your AKS cluster.
 
 ## Before you begin
 
@@ -62,7 +62,7 @@ In this example, you collect metrics for the [Qwen-2.5-coder-7B-instruct languag
 
 ## Surface KAITO inference metrics to the managed service for Prometheus
 
-Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](https://github.com/kaito-project/kaito/blob/main/docs/inference/Monitoring.md#prometheus-metrics).
+Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](https://github.com/kaito-project/kaito/tree/main).
 
 1. Add the following label to your KAITO inference service so that a Kubernetes `ServiceMonitor` deployment can detect it:
 
@@ -113,7 +113,7 @@ Prometheus metrics are collected by default at the KAITO [`/metrics` endpoint](h
 
 ## Visualize KAITO inference metrics in Azure Managed Grafana
 
-The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) for inference workload monitoring.
+1. The vLLM project provides a Grafana dashboard configuration named [grafana.json](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) for inference workload monitoring. Navigate to the bottom of this [page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file. 
 
 1. Go to the bottom of the [examples page](https://docs.vllm.ai/en/stable/examples/online_serving/prometheus_grafana.html#example-materials) and copy the entire contents of the `grafana.json` file:
 

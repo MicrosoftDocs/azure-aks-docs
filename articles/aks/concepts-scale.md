@@ -6,6 +6,7 @@ ms.date: 06/10/2025
 author: davidsmatlak
 ms.author: davidsmatlak
 ms.custom: biannual
+# Customer intent: As a cloud architect, I want to understand the scaling options in Kubernetes, so that I can efficiently manage application performance and resource allocation in Azure Kubernetes Service (AKS).
 ---
 
 # Scaling options for applications in Azure Kubernetes Service (AKS)

@@ -7,6 +7,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.custom: references_regions, devx-track-azurecli
 ms.date: 11/26/2024
+# Customer intent: As a cloud infrastructure engineer, I want to upgrade existing Azure Kubernetes Service clusters to utilize the latest IPAM modes and dataplane technologies, so that I can access improved features and ensure optimal performance and supportability.
 ---
 
 # Upgrade Azure CNI

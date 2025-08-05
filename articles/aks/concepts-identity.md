@@ -7,6 +7,7 @@ ms.date: 03/07/2024
 author: palma21
 ms.author: jpalma
 
+# Customer intent: As a Kubernetes administrator, I want to implement role-based access control in AKS using Microsoft Entra integration, so that I can securely manage user permissions and ensure that users have access only to the resources they require.
 ---
 
 # Access and identity options for Azure Kubernetes Service (AKS)

@@ -8,6 +8,7 @@ ms.date: 01/26/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud administrator, I want to upgrade my Kubernetes clusters, so that I can ensure they have the latest features and security updates to maintain optimal performance and compliance."
 ---
 
 # Upgrade an Azure Kubernetes Service (AKS) cluster

@@ -7,7 +7,8 @@ author: davidsmatlak
 ms.author: davidsmatlak
 
 
-#Customer intent: As a cluster operator or developer, I want to understand what AKS components I need to manage, what components are managed by Microsoft (including security patches), and networking and preview features.
+# Customer intent: As a cluster operator or developer, I want to understand what AKS components I need to manage, what components are managed by Microsoft (including security patches), and networking and preview features.
+
 ---
 
 # Support policies for Azure Kubernetes Service
@@ -46,7 +47,7 @@ Because your agent nodes execute private code and store sensitive data, Microsof
 
 Any modification made directly to the agent nodes using any one of the IaaS APIs renders the cluster unsupportable. Any modification applied to the agent nodes must be done using kubernetes-native mechanisms such as `Daemon Sets`.
 
-Similarly, while you may add any metadata to the cluster and nodes, such as tags and labels, changing any of the system created metadata renders the cluster unsupported.
+Similarly, while you might add any metadata to the cluster and nodes, such as tags and labels, changing any of the system created metadata renders the cluster unsupported.
 
 ## AKS support coverage
 
@@ -56,7 +57,7 @@ Microsoft provides technical support for the following examples:
 
 * Connectivity to all Kubernetes components that the Kubernetes service provides and supports, such as the API server.
 * Management, uptime, QoS, and operations of Kubernetes control plane services (For example, Kubernetes control plane, API server, etcd, and coreDNS).
-* Etcd data store. Support includes automated, transparent backups of all etcd data every 30 minutes for disaster planning and cluster state restoration. These backups aren't directly available to you or anyone else. They ensure data reliability and consistency. On-demand rollback or restore is not supported as a feature.
+* Etcd data store. Support includes automated, transparent backups of all etcd data every 30 minutes for disaster planning and cluster state restoration. These backups aren't directly available to you or anyone else. They ensure data reliability and consistency. On-demand rollback or restore isn't supported as a feature.
 * Any integration points in the Azure cloud provider driver for Kubernetes. These include integrations into other Azure services such as load balancers, persistent volumes, or networking (Kubernetes and Azure CNI, except when [BYOCNI](use-byo-cni.md) is in use).
 * Questions or issues about customization of control plane components such as the Kubernetes API server, etcd, and coreDNS.
 * Issues about networking, such as Azure CNI, kubenet, or other network access and functionality issues, except when [BYOCNI](use-byo-cni.md) is in use. Issues could include DNS resolution, packet loss, routing, and so on. Microsoft supports various networking scenarios:
@@ -86,18 +87,18 @@ Microsoft doesn't provide technical support for the following scenarios:
 * Third-party closed-source software. This software can include security scanning tools and networking devices or software.
 * Configuring or troubleshooting application-specific code or behavior of third-party applications or tools running within the AKS cluster. This includes application deployment issues not related to the AKS platform itself.
 * Issuance, renewal, or management of certificates for applications running on AKS.
-* Network customizations other than the ones listed in the [AKS documentation](./index.yml). For example, Microsoft Support cannot configure devices or virtual appliances meant to provide [outbound traffic](outbound-rules-control-egress.md) for the AKS cluster, such as VPNs or firewalls.
+* Network customizations other than the ones listed in the [AKS documentation](./index.yml). For example, Microsoft Support can't configure devices or virtual appliances meant to provide [outbound traffic](outbound-rules-control-egress.md) for the AKS cluster, such as VPNs or firewalls.
 
   > [!NOTE]
-  > On a best-effort basis, Microsoft Support may advise on the [configuration needed](outbound-rules-control-egress.md) for Azure Firewall, but not for other third-party devices.
+  > On a best-effort basis, Microsoft Support might advise on the [configuration needed](outbound-rules-control-egress.md) for Azure Firewall, but not for other third-party devices.
 
 * Custom or third-party CNI plugins used in [BYOCNI](use-byo-cni.md) mode.
-* Configuring or troubleshooting non-Microsoft-managed network policies. While using network policies is supported, Microsoft Support cannot investigate issues stemming from custom network policy configurations.
-* Configuring or troubleshooting non-Microsoft-managed ingress controllers, such as nginx, kong, traefik, etc. This includes addressing functionality issues that arise after AKS-specific operations, like an ingress controller ceasing to work following a Kubernetes version upgrade. Such issues may stem from incompatibilities between the ingress controller version and the new Kubernetes version. For a fully supported option, consider leveraging a [Microsoft-managed ingress controller option](concepts-network-ingress.md#compare-ingress-options).
-* Configuring or troubleshooting DaemonSets (including scripts) used to customize node configurations. Although using DaemonSets is the recommended approach to tune, modify, or install third-party software on cluster agent nodes when [configuration file parameters](custom-node-configuration.md) are insufficient, Microsoft Support cannot troubleshoot issues arising from the custom scripts used in DaemonSets due to their custom nature.
-* Stand-by and proactive scenarios. Microsoft Support provides reactive support to help solve active issues in a timely and professional manner. However, standby or proactive support to help you eliminate operational risks, increase availability, and optimize performance are not covered. [Eligible customers](https://www.microsoft.com/unifiedsupport) can contact their account team to get nominated for [Azure Event Management service](https://devblogs.microsoft.com/premier-developer/proactively-plan-for-your-critical-event-in-azure-with-enhanced-support-and-engineering-services/). It's a paid service delivered by Microsoft support engineers that includes a proactive solution risk assessment and coverage during the event.
-* Vulnerabilities / CVEs with a vendor fix that is less than 30 days old. As long as you're running the updated VHD, you shouldn't be running any container image vulnerabilities / CVEs with a vendor fix that is over 30 days old. It is customer responsibility to update the VHD and provide filtered lists to Microsoft support. Once you updated your VHD, it is customer responsibility to filter the vulnerabilities / CVEs report and provide a list only with vulnerabilities/CVEs with a vendor fix that is over 30 days old.  If that will be the case, Microsoft support will make sure to work internally and address components with a vendor fix released more than 30 days ago. Additionally, Microsoft provide vulnerability / CVE-related support only for Microsoft-managed components (i.e., AKS node images, managed container images for applications that get deploy during cluster creation or via the installation of a managed add-on). For more details about vulnerability management for AKS, please visit [this page](concepts-vulnerability-management.md).
-* Custom code samples or scripts. While Microsoft Support *can* provide small code samples and reviews of small code samples within a support case to demonstrate how to use features of a Microsoft product, Microsoft Support *cannot* provide custom code samples that are specific to your environment or application.
+* Configuring or troubleshooting non-Microsoft-managed network policies. While using network policies is supported, Microsoft Support can't investigate issues stemming from custom network policy configurations.
+* Configuring or troubleshooting non-Microsoft-managed ingress controllers, such as nginx, kong, traefik, etc. This includes addressing functionality issues that arise after AKS-specific operations, like an ingress controller ceasing to work following a Kubernetes version upgrade. Such issues might stem from incompatibilities between the ingress controller version and the new Kubernetes version. For a fully supported option, consider leveraging a [Microsoft-managed ingress controller option](concepts-network-ingress.md#compare-ingress-options).
+* Configuring or troubleshooting DaemonSets (including scripts) used to customize node configurations. Although using DaemonSets is the recommended approach to tune, modify, or install third-party software on cluster agent nodes when [configuration file parameters](custom-node-configuration.md) are insufficient, Microsoft Support can't troubleshoot issues arising from the custom scripts used in DaemonSets due to their custom nature.
+* Stand-by and proactive scenarios. Microsoft Support provides reactive support to help solve active issues in a timely and professional manner. However, standby or proactive support to help you eliminate operational risks, increase availability, and optimize performance aren't covered. [Eligible customers](https://www.microsoft.com/unifiedsupport) can contact their account team to get nominated for [Azure Event Management service](https://devblogs.microsoft.com/premier-developer/proactively-plan-for-your-critical-event-in-azure-with-enhanced-support-and-engineering-services/). It's a paid service delivered by Microsoft support engineers that includes a proactive solution risk assessment and coverage during the event.
+* Vulnerabilities / CVEs with a vendor fix that is less than 30 days old. As long as you're running the updated VHD, you shouldn't be running any container image vulnerabilities / CVEs with a vendor fix that is over 30 days old. It's customer responsibility to update the VHD and provide filtered lists to Microsoft support. Once you updated your VHD, it is customer responsibility to filter the vulnerabilities / CVEs report and provide a list only with vulnerabilities/CVEs with a vendor fix that is over 30 days old.  If that will be the case, Microsoft support will make sure to work internally and address components with a vendor fix released more than 30 days ago. Additionally, Microsoft provide vulnerability / CVE-related support only for Microsoft-managed components (i.e., AKS node images, managed container images for applications that get deploy during cluster creation or via the installation of a managed add-on). For more details about vulnerability management for AKS, visit [this page](concepts-vulnerability-management.md).
+* Custom code samples or scripts. While Microsoft Support *can* provide small code samples and reviews of small code samples within a support case to demonstrate how to use features of a Microsoft product, Microsoft Support *can't* provide custom code samples that are specific to your environment or application.
 
 ## AKS support coverage for agent nodes
 
@@ -114,7 +115,7 @@ Microsoft and you share responsibility for Kubernetes agent nodes where:
   * `containerd`
 
 > [!NOTE]
-> If an agent node is not operational, AKS might restart individual components or the entire agent node. These restart operations are automated and provide auto-remediation for common issues. If you want to know more about the auto-remediation mechanisms, see [Node Auto-Repair](node-auto-repair.md)
+> If an agent node isn't operational, AKS might restart individual components or the entire agent node. These restart operations are automated and provide auto-remediation for common issues. If you want to know more about the auto-remediation mechanisms, see [Node Auto-Repair](node-auto-repair.md)
 
 ### Customer responsibilities for AKS agent nodes
 
@@ -128,7 +129,7 @@ Similarly, AKS regularly releases new Kubernetes patches and minor versions. The
 #### User customization of agent nodes
 
 > [!NOTE]
-> AKS agent nodes appear in the Azure portal as standard Azure IaaS resources. However, these virtual machines are deployed into a custom Azure resource group (prefixed with MC_\*). You cannot change the base OS image or make any direct customizations to these nodes using the IaaS APIs or resources. Any custom changes that are not performed from the AKS API won't persist through an upgrade, scale, update or reboot. Also, any change to the nodes' extensions like the **CustomScriptExtension** can lead to unexpected behavior and should be prohibited.
+> AKS agent nodes appear in the Azure portal as standard Azure IaaS resources. However, these virtual machines are deployed into a custom Azure resource group (prefixed with MC_\*). You can't change the base OS image or make any direct customizations to these nodes using the IaaS APIs or resources. Any custom changes that aren't performed from the AKS API won't persist through an upgrade, scale, update or reboot. Also, any change to the nodes' extensions like the **CustomScriptExtension** can lead to unexpected behavior and should be prohibited.
 > Avoid performing changes to the agent nodes unless Microsoft Support directs you to make changes.
 
 AKS manages the lifecycle and operations of agent nodes on your behalf and modifying the IaaS resources associated with the agent nodes is **not supported**. An example of an unsupported operation is customizing a node pool virtual machine scale set by manually changing configurations in the Azure portal or from the API.
@@ -137,7 +138,7 @@ For workload-specific configurations or packages, AKS recommends using [Kubernet
 
 Using Kubernetes privileged `daemon sets` and init containers enables you to tune/modify or install third party software on cluster agent nodes. Examples of such customizations include adding custom security scanning software or updating sysctl settings.
 
-While this path is recommended if the above requirements apply, AKS engineering and support cannot help troubleshoot or diagnose modifications that render the node unavailable due to a custom deployed `daemon set`.
+While this path is recommended if the above requirements apply, AKS engineering and support can't help troubleshoot or diagnose modifications that render the node unavailable due to a custom deployed `daemon set`.
 
 ### Security issues and patching
 
@@ -151,11 +152,11 @@ Although you can sign in to and change agent nodes, doing this operation is disc
 
 ## Network ports, access, and NSGs
 
-You may only customize the NSGs on custom subnets. You may not customize NSGs on managed subnets or at the NIC level of the agent nodes. AKS has egress requirements to specific endpoints, to control egress and ensure the necessary connectivity, see [limit egress traffic](limit-egress-traffic.md). For ingress, the requirements are based on the applications you have deployed to cluster.
+You might only customize the NSGs on custom subnets. You might not customize NSGs on managed subnets or at the NIC level of the agent nodes. AKS has egress requirements to specific endpoints, to control egress and ensure the necessary connectivity, see [limit egress traffic](limit-egress-traffic.md). For ingress, the requirements are based on the applications you have deployed to cluster.
 
 ## Stopped, deallocated, and Not Ready nodes
 
-If you do not need your AKS workloads to run continuously, you can [stop the AKS cluster](start-stop-cluster.md#stop-an-aks-cluster), which stops all nodepools and the control plane. You can start it again when needed. When you stop a cluster using the `az aks stop` command, the cluster state is preserved for up to 12 months. After 12 months, the cluster state and all of its resources are deleted.
+If you don't need your AKS workloads to run continuously, you can [stop the AKS cluster](start-stop-cluster.md#stop-an-aks-cluster), which stops all nodepools and the control plane. You can start it again when needed. When you stop a cluster using the `az aks stop` command, the cluster state is preserved for up to 12 months. After 12 months, the cluster state and all of its resources are deleted.
 
 Manually deallocating all cluster nodes from the IaaS APIs, the Azure CLI, or the Azure portal isn't supported to stop an AKS cluster or nodepool. The cluster will be considered out of support and stopped by AKS after 30 days. The clusters are then subject to the same 12 month preservation policy as a correctly stopped cluster.
 
@@ -175,7 +176,7 @@ For features and functionality that requires extended testing and user feedback,
 
 Preview features or feature-flag features aren't meant for production. Ongoing changes in APIs and behavior, bug fixes, and other changes can result in unstable clusters and downtime.
 
-Features in public preview fall under **best effort** support, as these features are in preview and are not meant for production. The AKS technical support teams provides support during business hours only. For more information, see [Azure Support FAQ](https://azure.microsoft.com/support/faq/).
+Features in public preview fall under **best effort** support, as these features are in preview and aren't meant for production. The AKS technical support teams provides support during business hours only. For more information, see [Azure Support FAQ](https://azure.microsoft.com/support/faq/).
 
 ## Upstream bugs and issues
 

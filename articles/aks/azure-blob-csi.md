@@ -8,6 +8,7 @@ ms.date: 06/24/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to implement the Azure Blob storage CSI driver on AKS, so that I can efficiently manage and access unstructured data for containerized applications without modifying core Kubernetes code.
 ---
 
 # Use Azure Blob storage Container Storage Interface (CSI) driver
