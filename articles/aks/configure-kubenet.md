@@ -146,7 +146,7 @@ For more information to help you decide which network model to use, see [Compare
         --dns-service-ip 10.0.0.10 \
         --pod-cidr 10.244.0.0/16 \
         --vnet-subnet-id $SUBNET_ID \
-        --generate-ssh-keys 
+        --generate-ssh-keys
     ```
 
   Deployment parameters:
@@ -171,14 +171,14 @@ For more information to help you decide which network model to use, see [Compare
     Your output should resemble the following example output:
 
     ```output
-    {                                  
+    {
       "clientId": "<client-id>",
       "clientSecretUrl": "<clientSecretUrl>",
-      "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
+      "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity",
       "location": "westus2",
       "name": "myIdentity",
       "principalId": "<principal-id>",
-      "resourceGroup": "myResourceGroup",                       
+      "resourceGroup": "myResourceGroup",
       "tags": {},
       "tenantId": "<tenant-id>",
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities"
