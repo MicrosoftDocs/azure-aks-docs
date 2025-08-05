@@ -167,11 +167,11 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 >
 > * If a cluster has no defined planned maintenance window it will be upgraded immediately when the update run reaches the cluster.
 >
-> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid`, `Stable`, or `TargetKubernetesVersion` (preview) channels.
+> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid`, `Stable`, or `TargetKubernetesVersion (preview)` channels.
 >
 > * If you want to have your NodeImage version upgraded, you need to create an `autoupgradeprofile` with `NodeImage` channel.
 >
-> * When using the `TargetKubernetesVersion` (preview) channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
+> * When using the `TargetKubernetesVersion (preview)` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
 >
 > * You can create multiple auto-upgrade profiles for the same Fleet.
 
