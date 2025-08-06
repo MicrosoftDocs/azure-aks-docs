@@ -146,10 +146,13 @@ Use the following command to get each IP address for the Resource ID:
 <!-- LINKS - internal -->
 
 [turn-off-kms]: /azure/aks/use-kms-etcd-encryption#turn-off-kms
-[file-support-ticket]: /azure-portal/supportability/how-to-create-azure-support-request
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [More information on Virtual Machine node pools](virtual-machines-node-pools.md)
+
+<!-- LINKS - External -->
+[file-support-ticket]: https://azure.microsoft.com/support/create-ticket
+
