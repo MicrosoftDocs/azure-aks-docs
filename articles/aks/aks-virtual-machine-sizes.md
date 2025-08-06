@@ -30,6 +30,13 @@ There are some limitations to take into account when choosing a VM generation an
 
 To use Gen 2 VMs on AKS, see [Use Gen 2 VMs](#use-gen-2-vms-on-aks).
 
+## Available VM features
+
+AKS supports a variety of VM features that enhance security, performance, and functionality. Some key features include:
+
+- [**Node autoprovisioning (NAP)**](./node-autoprovision.md) uses pending pod resource requirements to decide the optimal VM configuration to run your workloads efficiently and cost-effectively.
+- [**Virtual Machines node pools**](./virtual-machines-node-pools.md) provide a better experience for dynamic workloads and high availability requirements. Virtual Machines node pools enable you to set up multiple similar-family VMs in a single node pool. Your workloads are automatically scheduled on the available resources you configure.
+
 ## Supported VM sizes
 
 For in-depth information about VM sizes available in Azure, see [Azure VM sizes](/azure/virtual-machines/sizes/overview?tabs=breakdownseries%2Cgeneralsizelist%2Ccomputesizelist%2Cmemorysizelist%2Cstoragesizelist%2Cgpusizelist%2Cfpgasizelist%2Chpcsizelist). To view supported Gen 2 VM sizes, see [Generation 2 VM sizes](/azure/virtual-machines/generation-2).
@@ -62,10 +69,16 @@ az vm list-skus --location <your-location> --output table
 
 There are several reasons why certain VM sizes might not be available, including:
 
-- **Quota limits**: All Azure services set default limits and quotas for resources and features. To learn more, see the following resources:
+- **Quota limits**: All Azure services set default limits and quotas for resources and features. For more information, see the following resources:
+
+    > [!NOTE]
+    > - For ***user node pools***, VM sizes with *fewer than two vCPUs and two GBs of memory (RAM)* might not be used by default.
+    > - For ***system node pools***, VM sizes with *fewer than two vCPUs and four GBs of memory (RAM)* might not be used by default. To ensure that you can reliably schedule the required `kube-system` pods and your applications, we recommend that you **do not use any [B series VMs](/azure/virtual-machines/sizes/general-purpose/bv1-series) or [Av1 series VMs](/azure/virtual-machines/sizes/retirement/av1-series-retirement)**.
+
   - [Quotas and regional limits for Azure Kubernetes Service (AKS)](./quotas-skus-regions.md)
   - [Check your quota usage](/azure/virtual-machines/quotas)
   - [Request a quota increase through an Azure support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) (for **Issue type**, select **Quota**)
+
 - **VM sizes in preview**: VM sizes in preview might not be available to you if you haven't registered the preview flag for the VM size.
 - **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require additional testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
 
@@ -97,15 +110,17 @@ For more information on migrating to a new VM size, see the following resources:
 
 Gen 2 VMs are generally Azure's newer offerings and boast exclusive features over Gen 1 VMs, such as increased memory, improved CPU performance, support for NVMe disks, and support for [Trusted Launch](./use-trusted-launch.md).
 
-While we generally recommend running Gen 2 VMs, you should make sure that the generation you choose supports your requirements. Visit [this page](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v) to learn more about the differences between generations, and when one might make more sense than the other.
+While we generally recommend running Gen 2 VMs, you should make sure that the generation you choose supports your requirements. To learn more about the differences between generations, and when one might make more sense than the other, see [Should I create a Gen 1 or 2 VM in Hyper-V?](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v)
 
 ### Check available Gen 2 VM sizes
 
-Refer to [this page](/azure/virtual-machines/generation-2) for a breakdown of what VM sizes support Gen 2 or check available Gen 2 VM sizes using the [`az vm list-skus`][az-vm-list-skus] command.
+Check available Gen 2 VM sizes using the [`az vm list-skus`][az-vm-list-skus] command.
 
 ```azurecli-interactive
 az vm list-skus --location <location> --size <vm-size> --output table
 ```
+
+For a breakdown of what VM sizes support Gen 2, see [Support for Gen 2 VMs on Azure](/azure/virtual-machines/generation-2).
 
 ### Create a node pool with a Gen 2 VM
 
