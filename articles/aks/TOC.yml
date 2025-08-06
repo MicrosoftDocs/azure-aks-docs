@@ -742,14 +742,56 @@
           href: security-bulletins/overview.md
     - name: Compliance
       items:
-        - name: CIS Baseline overview
-          href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: CIS Kubernetes benchmark
-          href: cis-kubernetes.md
-        - name: CIS Azure Linux benchmark
-          href: cis-azure-linux.md
-        - name: CIS Windows Server benchmark
-          href: cis-windows.md
+        - name: Center for Internet Security (CIS) benchmarks
+          items:
+          - name: CIS Baseline overview
+            href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+          - name: CIS Kubernetes benchmark
+            href: cis-kubernetes.md
+          - name: CIS Azure Linux benchmark
+            href: cis-azure-linux.md
+          - name: CIS Windows Server benchmark
+            href: cis-windows.md
+        - name: Payment Card Industry Data Security Standard (PCI DSS)
+          items:
+            - name: PCI DSS compliance overview
+              href: /compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Introduction to PCI DSS v4.0.1 on AKS
+              href: pci-intro.md
+            - name: Risk assessment and code assets
+              href: pci-ra-code-assets.md
+            - name: Network security
+              href: pci-network.md
+            - name: Data protection
+              href: pci-data.md
+            - name: Cryptography and key management
+              href: pci-cryptography-key-management.md
+            - name: Identity and access management
+              href: pci-identity.md
+            - name: Enhanced MFA implementation
+              href: pci-enhanced-mfa-implementation.md
+            - name: Malware protection
+              href: pci-malware.md
+            - name: Monitoring and logging
+              href: pci-monitor.md
+            - name: Continuous security monitoring
+              href: pci-continuous-security-monitoring.md
+            - name: Security policies
+              href: pci-policy.md
+            - name: Targeted risk analysis
+              href: pci-targeted-risk-analysis.md
+            - name: Security awareness training
+              href: pci-security-awareness-training.md
+            - name: Anti-phishing and social engineering
+              href: pci-anti-phishing-social-engineering.md
+            - name: Third-party and supply chain security
+              href: pci-third-party-supply-chain-security.md
+            - name: Customized approach guidance
+              href: pci-customized-approach-guidance.md
+            - name: Requirement mapping matrix
+              href: pci-requirement-mapping-matrix.md
+            - name: Summary
+              href: pci-summary.md
 - name: Storage
   items:
     - name: Storage concepts
