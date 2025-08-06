@@ -84,12 +84,14 @@ Your output should resemble the following example output:
 ...
 ```
 
-3. [Upgrade your GPU node pools](./node-image-upgrade.md) to the latest recommended node OS image released by AKS. These images are:
+## Upgrade GPU node pools to latest node OS image
 
-* Pre-configured with up-to-date GPU drivers, upgraded from EOL driver branches
-* Tested against the your current Kubernetes version
-* Patched for known vulnerabilities surfaced by the GPU vendor (e.g., NVIDIA) guidance
-* Aligned with OS and container runtime updates
+Upgrade your GPU node pools to the latest recommended node OS image released by AKS. These images are:
+
+* Pre-configured with the latest GPU driver, to use the production branch upgraded from EOL driver branch(es).
+* Tested against your current Kubernetes version.
+* Patched for known vulnerabilities surfaced by the GPU vendor (e.g. NVIDIA) guidance.
+* Aligned with OS and container runtime upgrades.
 
 You can track AKS node image releases using [AKS release tracker](https://releases.aks.azure.com/).
 
