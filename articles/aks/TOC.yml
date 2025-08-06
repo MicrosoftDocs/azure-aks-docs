@@ -312,6 +312,8 @@
           href: upgrade.md
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: AKS component versioning
+          href: aks-component-versioning.md
         - name: Upgrade scenarios hub
           href: upgrade-scenarios-hub.md
         - name: Perform manual upgrades
@@ -416,6 +418,12 @@
           href: operator-best-practices-scheduler.md
         - name: Advanced scheduler features
           href: operator-best-practices-advanced-scheduler.md
+        - name: Managed namespaces
+          items:
+            - name: Overview
+              href: concepts-managed-namespaces.md
+            - name: Use managed namespaces
+              href: managed-namespaces.md  
     - name: Configure backup
       items:
         - name: Prerequisites
@@ -503,6 +511,8 @@
             href: concepts-network-azure-cni-pod-subnet.md
           - name: Upgrade Azure CNI IPAM and dataplane
             href: upgrade-azure-cni.md
+          - name: Migrate from Network Policy Manager to Cilium Networ policy
+            href: migrate-from-npm-to-cilium-network-policy.md
           - name: Use dual-stack networking
             href: configure-dual-stack.md
           - name: Azure CNI Overlay
