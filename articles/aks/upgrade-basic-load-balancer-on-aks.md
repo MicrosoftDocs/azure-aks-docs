@@ -4,7 +4,7 @@ description: Upgrade guidance for migrating Basic Load Balancer to Standard Load
 author: wdarko1
 ms.author: wilsondarko
 ms.topic: how-to
-ms.date: 06/30/2025
+ms.date: 08/5/2025
 # Customer intent: As an cloud engineer with Basic Load Balancer services, I need guidance and direction on migrating my workloads off Basic to Standard SKUs
 ---
 
