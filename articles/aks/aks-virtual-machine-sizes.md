@@ -71,13 +71,13 @@ There are several reasons why certain VM sizes might not be available, including
 
 - **Quota limits**: All Azure services set default limits and quotas for resources and features. For more information, see the following resources:
 
-    > [!NOTE]
-    > - For ***user node pools***, VM sizes with *fewer than two vCPUs and two GBs of memory (RAM)* might not be used by default.
-    > - For ***system node pools***, VM sizes with *fewer than two vCPUs and four GBs of memory (RAM)* might not be used by default. To ensure that you can reliably schedule the required `kube-system` pods and your applications, we recommend that you **do not use any [B series VMs](/azure/virtual-machines/sizes/general-purpose/bv1-series) or [Av1 series VMs](/azure/virtual-machines/sizes/retirement/av1-series-retirement)**.
-
   - [Quotas and regional limits for Azure Kubernetes Service (AKS)](./quotas-skus-regions.md)
   - [Check your quota usage](/azure/virtual-machines/quotas)
   - [Request a quota increase through an Azure support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) (for **Issue type**, select **Quota**)
+
+    > [!NOTE]
+    > - For ***user node pools***, VM sizes with *fewer than two vCPUs and two GBs of memory (RAM)* might not be used by default.
+    > - For ***system node pools***, VM sizes with *fewer than two vCPUs and four GBs of memory (RAM)* might not be used by default. To ensure that you can reliably schedule the required `kube-system` pods and your applications, we recommend that you **do not use any [B series VMs](/azure/virtual-machines/sizes/general-purpose/bv1-series) or [Av1 series VMs](/azure/virtual-machines/sizes/retirement/av1-series-retirement)**.
 
 - **VM sizes in preview**: VM sizes in preview might not be available to you if you haven't registered the preview flag for the VM size.
 - **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require extra testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
