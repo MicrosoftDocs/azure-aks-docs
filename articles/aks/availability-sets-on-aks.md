@@ -40,7 +40,10 @@ Starting September 30, 2025, we'll automatically migrate remaining Availability 
 
 ## Migrate from Availability Sets to Virtual Machines node pools (Preview)
 
-There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard. This process will also migrate your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. New public IPs will be created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
+There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard. 
+
+>[!IMPORTANT]
+>This process will also migrate your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. New public IPs will be created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
 
 ### Before You Begin
 
