@@ -1,5 +1,5 @@
 ---
-title: "Migrate from Network Policy Manager (NPM) to Cilium Network Policy " 
+title: Migrate from Network Policy Manager (NPM) to Cilium Network Policy  
 description: This article is a comprehensive guide to plan, execute, and validate the migration from Network Policy Manager (NPM) to Cilium Network Policy
 ms.topic: how-to
 ms.service: azure-kubernetes-service
@@ -15,7 +15,7 @@ In this article, we provide a comprehensive guide to plan, execute, and validate
 > [!IMPORTANT]
 > This guide applies exclusively to AKS clusters running Linux nodes. Cilium Network Policy isn't currently supported for Windows nodes in AKS.  
 
-## Key Considerations Before You Begin
+## Key considerations before you begin
 
 - Policy Compatibility: NPM and Cilium differ in enforcement models. Before migration you need to validate that existing policies are compatible or identify required changes. Refer to the Pre-Migration Validation section for guidance.
 - Downtime Expectations: Policy enforcement might be temporarily inconsistent during node reimaging.
@@ -164,7 +164,7 @@ spec:
           cidr: 10.20.30.0/24
 ```
 - With NPM: Egress traffic to 10.20.30.0/24 is allowed explicitly, and egress traffic to the local node is allowed implicitly.
-- With cilium: Only traffic to 10.20.30.0/24 is allowed; egress to the node IP is blocked unless you permit it explicitly.
+- With Cilium: Only traffic to 10.20.30.0/24 is allowed; egress to the node IP is blocked unless you permit it explicitly.
 
 **Action Required:** 
 - Review all existing egress policies for your workloads.
@@ -218,9 +218,9 @@ az aks update --name <clusterName> --resource-group <resourceGroupName> --networ
 ## Next steps
 
 
-- For more information about using cilium FQDN network policy on AKS, see [Set up FQDN filtering feature for Container Network Security in Advanced Container Networking Services](/articles/aks/how-to-apply-fqdn-filtering-policies.md).
+- For more information about using Cilium FQDN network policy on AKS, see [Set up FQDN filtering feature for Container Network Security in Advanced Container Networking Services](/articles/aks/how-to-apply-fqdn-filtering-policies.md).
 
-- For more information about using cilium L7 network policy on AKS, see [Set up Layer 7(L7) policies with Advanced Container Networking Services](/articles/aks/how-to-apply-l7-policies.md).
+- For more information about using Cilium L7 network policy on AKS, see [Set up Layer 7(L7) policies with Advanced Container Networking Services](/articles/aks/how-to-apply-l7-policies.md).
 
 - For more information about network policy best practices on aks, see [Best practices for network policies in Azure Kubernetes Service (AKS)](/articles/aks/network-policy-best-practices.md)
 
