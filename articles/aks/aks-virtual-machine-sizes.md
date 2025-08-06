@@ -1,6 +1,6 @@
 ---
 title: Virtual machine (VM) sizes, generations, and features for Azure Kubernetes Service (AKS)
-description: Learn about VM fundamentals on AKS, like different VM sizes, generations, and features. When provisioning, learn about how to check for available VM sizes, understand why some VM sizes might not be available, and see behind the scenes when a VM size retires.
+description: Learn about VM fundamentals on AKS, like different VM sizes, generations, features, how to check for available VM sizes, why some VM sizes might not be available, and what happens when a VM size retires.
 ms.topic: overview
 ms.service: azure-kubernetes-service
 ms.date: 08/05/2025
@@ -10,7 +10,7 @@ author: schaffererin
 
 # Virtual machine (VM) sizes, generations, and features for Azure Kubernetes Service (AKS)
 
-Azure Kubernetes Service (AKS) supports a variety of virtual machine (VM) sizes, generations, and features to accommodate different workloads and performance requirements. This article provides an overview of available VM sizes and generations for AKS, how to check for available VM sizes in your region, reasons why certain VM sizes might not be available, and what happens when a VM size retires.
+Azure Kubernetes Service (AKS) supports various virtual machine (VM) sizes, generations, and features to accommodate different workloads and performance requirements. This article provides an overview of available VM sizes and generations for AKS, how to check for available VM sizes in your region, reasons why certain VM sizes might not be available, and what happens when a VM size retires.
 
 ## VM support on AKS
 
@@ -32,7 +32,7 @@ To use Gen 2 VMs on AKS, see [Use Gen 2 VMs](#use-gen-2-vms-on-aks).
 
 ## Available VM features
 
-AKS supports a variety of VM features that enhance security, performance, and functionality. Some key features include:
+AKS supports various VM features that enhance security, performance, and functionality. Some key features include:
 
 - [**Node autoprovisioning (NAP)**](./node-autoprovision.md) uses pending pod resource requirements to decide the optimal VM configuration to run your workloads efficiently and cost-effectively.
 - [**Virtual Machines node pools**](./virtual-machines-node-pools.md) provide a better experience for dynamic workloads and high availability requirements. Virtual Machines node pools enable you to set up multiple similar-family VMs in a single node pool. Your workloads are automatically scheduled on the available resources you configure.
@@ -80,9 +80,9 @@ There are several reasons why certain VM sizes might not be available, including
   - [Request a quota increase through an Azure support request](https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest) (for **Issue type**, select **Quota**)
 
 - **VM sizes in preview**: VM sizes in preview might not be available to you if you haven't registered the preview flag for the VM size.
-- **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require additional testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
+- **Blocked by AKS**: Some VM sizes might not be available by default in AKS. These sizes might require extra testing or validation to ensure compatibility with AKS. If you need a specific VM size that isn't available to you, you can [submit a GitHub issue request](https://github.com/Azure/AKS/issues).
 
-Make sure you understand which features your workloads need and choose a VM size that meets those requirements. Later VM versions typically have better performance and improved features. For example[Gen 2 VMs](#use-gen-2-vms-on-aks) have increased security and performance benefits over Gen 1 VMs.
+Make sure you understand which features your workloads need and choose a VM size that meets those requirements. Later VM versions typically have better performance and improved features. For example, [Gen 2 VMs](#use-gen-2-vms-on-aks) have increased security and performance benefits over Gen 1 VMs.
 
 ## What happens when a VM size retires?
 
@@ -108,7 +108,7 @@ For more information on migrating to a new VM size, see the following resources:
 
 ## Use Gen 2 VMs on AKS
 
-Gen 2 VMs are generally Azure's newer offerings and boast exclusive features over Gen 1 VMs, such as increased memory, improved CPU performance, support for NVMe disks, and support for [Trusted Launch](./use-trusted-launch.md).
+Gen 2 VMs are generally Azure's newer offerings and have exclusive features over Gen 1 VMs like increased memory, improved CPU performance, support for NVMe disks, and support for [Trusted Launch](./use-trusted-launch.md).
 
 While we generally recommend running Gen 2 VMs, you should make sure that the generation you choose supports your requirements. To learn more about the differences between generations, and when one might make more sense than the other, see [Should I create a Gen 1 or 2 VM in Hyper-V?](/windows-server/virtualization/hyper-v/plan/should-i-create-a-generation-1-or-2-virtual-machine-in-hyper-v)
 
