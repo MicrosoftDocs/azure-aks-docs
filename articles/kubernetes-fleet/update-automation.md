@@ -154,7 +154,7 @@ Update to a specific target Kubernetes version that you define. You define the K
 >
 > * The `--long-term-support` (LTS) flag is only available when using the `TargetKubernetesVersion` channel. For other channels, this flag must be set to False.
 > * You can't set the target Kubernetes version to a future Kubernetes version that has not been released yet by AKS.
-> * You can only set the target Kubernetes version to a Kubernetes versions that is older than N-2 by using the `--long-term-support` flag.
+> * You can only select LTS Kubernetes versions (N-2) for an auto-upgrade profile by passing the --long-term-support flag. For fleet auto-upgrade to keep working in this scenario you must also enable LTS in all managed clusters in your fleet. Including non-LTS clusters will cause the update to fail.
 
 Automatically update member clusters to latest patch of Kubernetes version 1.33. 
 

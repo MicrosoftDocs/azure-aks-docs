@@ -87,6 +87,9 @@ In this scenario, for fleet auto-upgrade to keep working, you must either enable
 
 For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
 
+> [!NOTE]
+> In this scenario, to review detailed information if failures occur and understand the specific actions to take, check the auto-upgrade profile status.
+
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 
 If you leave AKS cluster auto-upgrades enabled, then the update of that cluster could be performed by Fleet Manager or AKS cluster auto-upgrade, depending on which one runs first.
