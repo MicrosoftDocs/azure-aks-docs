@@ -335,15 +335,11 @@ Ensure the integrity and confidentiality of applications and foster trust and co
 
 | Solution | Categories |
 |----------|------------|
-| Falcon   | Security   |
-
-Our solution is designed to be easy to use, with a simple and intuitive interface that makes it easy to manage your applications. Our software solution is also highly scalable, allowing you to easily add new resources as your business grows.
-
-<details> <summary> See more </summary><br>
-
-Finally, our software solution is highly secure, with built-in security features that protect your applications from unauthorized access. With Contoso's software solution, you can rest assured that your applications are always safe and secure."
+| Falcon Cloud Security   | Security   |
 
 Powered by the CrowdStrike Security Cloud and world-class AI, the CrowdStrike Falcon® platform leverages real-time indicators of attack, threat intelligence, evolving adversary tradecraft and enriched telemetry from across the enterprise to deliver hyper-accurate detections, automated protection and remediation, elite threat hunting and prioritized observability of vulnerabilities.
+
+<details> <summary> See more </summary><br>
 
 Purpose-built in the cloud with a single lightweight-agent architecture, the Falcon platform delivers rapid and scalable deployment, superior protection and performance, reduced complexity and immediate time-to-value.
 
