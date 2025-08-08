@@ -332,7 +332,7 @@ Karpenter for Azure supports bring-your-own Container Network Interface (CNI) co
 
 ### Support Policy Details
 
-- **Bring-your-own (BYO) CNI is supported** for use with Karpenter, but follows AKS BYO CNI support boundaries
+- **Bring-your-own (BYO) CNI is allowed** for use with Karpenter, but follows AKS BYO CNI support boundaries
 - **Networking issues** related to the CNI plugin itself are outside the scope of Karpenter support
 - **Karpenter-specific problems** (node provisioning, scaling, lifecycle management) are supported regardless of CNI choice
 - **CNI configuration and troubleshooting** should be directed to the respective CNI vendor or community
