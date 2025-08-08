@@ -33,8 +33,6 @@ The following networking configurations are currently *not* supported with node 
 - **Dynamic IP Allocation** - Not supported yet
 - **Static Allocation of Classless Inter-Domain Routing (CIDR) blocks** - Not supported yet
 
-PodSubnetID isn't a supported or respected field for Karpenter nodes.
-
 ## Cluster Setup with Custom VNet and Subnets
 
 Karpenter supports custom networking configurations that allow you to specify different subnets for your nodes. This approach is useful when you need to place nodes in specific subnets for compliance, security, or network segmentation requirements.
@@ -285,57 +283,13 @@ The `vnetSubnetID` field can be modified only in these scenarios:
 - Fixing an invalid subnet reference that causes configuration errors
 - Updating a subnet identifier that points to a nonexistent or inaccessible subnet
 
-### Unsupported Use Case: Subnet Migration
-
-**DO NOT** use this field to migrate nodes between valid subnets. The drift detection includes:
-- Moving nodes from one subnet to another for network reorganization
-- Changing subnet configurations for capacity or performance reasons
-- Migrating between subnets as part of infrastructure changes
+If you are an advanced networking user and know what you are doing, you can leverage the vnetSubnetID drift feature to migrate from an old subnet to a new subnet. Just know its best effort support
 
 **Support Policy**: Microsoft doesn't provide support for issues arising from subnet to subnet migrations via `vnetSubnetID` modifications. Support tickets related to such operations are declined.
-
-### What Happens When You Modify vnetSubnetID
-
-If you modify the field (even for unsupported use cases):
-
-1. **Drift Detection**: Karpenter detects the subnet mismatch and marks nodes for replacement
-2. **Node Disruption**: Existing nodes are cordoned, drained, and terminated
-3. **Potential Issues**: Network connectivity problems, workload disruptions, and unpredictable behavior
-4. **No Support**: Microsoft support doesn't assist with issues from this configuration path
-
-### Recommended Approach for Subnet Changes
-
-For legitimate subnet migration needs, follow these steps:
-1. Create a new AKSNodeClass with the desired subnet
-2. Create a new NodePool referencing the new AKSNodeClass  
-3. Gradually migrate workloads to the new NodePool
-4. Delete the old NodePool and AKSNodeClass when migration is complete
-
-This approach provides controlled migration with proper testing and rollback capabilities.
 
 ## Understanding AKS Cluster Classless Inter-Domain Routing (CIDR) Ranges
 
 When configuring custom networking with `vnetSubnetID`, you're responsible for understanding and managing your cluster's Classless Inter-Domain Routing (CIDR) ranges to avoid network conflicts. Unlike traditional AKS NodePools created through ARM templates, Karpenter applies custom resource definitions (CRDs) that provision nodes instantly without the extended validation that ARM provides.
-
-### Key CIDR Considerations
-
-**Custom Subnet Requirements**: When using `vnetSubnetID`, ensure your custom subnets:
-- Don't overlap with cluster, service, or use any of the reserved addresses
-- Have sufficient IP addresses for expected node and pod scaling
-
-### Validation Differences
-
-**ARM Template Validation**: Traditional AKS NodePools undergo comprehensive validation:
-- CIDR conflict detection
-- Subnet capacity verification  
-- Network policy validation
-- Extended provisioning time with validation checks
-
-**Karpenter CRD Application**: Custom resources apply immediately:
-- **⚠️ No automatic Classless Inter-Domain Routing (CIDR) conflict detection**
-- **⚠️ No subnet capacity pre-validation**
-- **⚠️ Instant application without extended validation**
-- Faster provisioning but requires preplanning
 
 ### Customer Responsibilities
 
