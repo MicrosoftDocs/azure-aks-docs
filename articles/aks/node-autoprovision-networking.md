@@ -353,7 +353,7 @@ Karpenter for Azure supports bring-your-own Container Network Interface (CNI) co
 
 ## Next steps
 
-- [Enable node autoprovisioning](node-autoprovision.md#enable-node-auto-provisioning)
+- [Enable node autoprovisioning](node-autoprovision.md#enable-node-autoprovisioning)
 - [Configure node pools](node-autoprovision-node-pools.md)
 - [Learn about Azure CNI Overlay](concepts-network-azure-cni-overlay.md)
 - [Learn about Cilium networking](azure-cni-powered-by-cilium.md)

@@ -120,7 +120,7 @@ The `imageFamily` field dictates the default virtual machine (VM) image and boot
 ### Supported image families
 
 - **`Ubuntu2204`** - Ubuntu 22.04 Long Term Support (LTS) is the default Linux distribution for AKS nodes
-- **`AzureLinux`** - Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more info on Azure Linux, [visit our documentation](/azure/aks/use-azure-linux.md)
+- **`AzureLinux`** - Azure Linux is Microsoft's alternative Linux distribution for AKS workloads. For more info on Azure Linux, [visit our documentation](/azure/aks/use-azure-linux)
 
 Example configuration:
 
