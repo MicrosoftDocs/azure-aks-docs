@@ -21,7 +21,7 @@ Node auto provisioning is based on the open source [Karpenter](https://karpenter
 
 ## How node auto provisioning works
 
-Node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. Node auto provisioning manages this functionality based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs can be created or updated to define how you want node auto provisioning to handle your workloads. Node auto provisioning manages NodeClaims, and you can monitor them to view current node state. Node auto provisioning uses these components to provision the most efficient nodes:
+Node auto provisioning provisions, scales, and manages virtual machines (nodes) in a cluster in response to pending pod pressure. Node auto provisioning manages this functionality based on the specifications made using three Custom Resource Definitions (CRDs): NodePool, AKSNodeClass, and NodeClaims. The NodePool and AKSNodeClass CRDs define how you want node auto provisioning to handle your workloads. Node auto provisioning manages NodeClaims, and you can monitor them to view current node state. Node auto provisioning uses these components to provision the most efficient nodes:
 - Definitions in NodePools and AKSNodeClass
 - Current NodeClaims state
 - Specifications in your workload deployment file 
