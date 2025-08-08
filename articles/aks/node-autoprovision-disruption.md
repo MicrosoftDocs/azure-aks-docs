@@ -1,5 +1,5 @@
 ---
-title: Node autoprovisioning disruption policies
+title: Node Autoprovisioning Disruption Policies
 description: Learn how to configure node disruption policies for Azure Kubernetes Service (AKS) node autoprovisioning to optimize resource utilization.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
@@ -54,9 +54,9 @@ Karpenter sets a Kubernetes [finalizer](https://kubernetes.io/docs/concepts/over
 
 NAP automatically discovers nodes eligible for disruption and spins up replacements when needed. Disruption can be triggered through:
 
-1. **Automated methods**: Expiration, Drift, and Consolidation
-2. **Manual methods**: Node deletion via kubectl
-3. **External systems**: Delete requests to the node object
+- **Automated methods**: Expiration, Drift, and Consolidation
+- **Manual methods**: Node deletion via kubectl
+- **External systems**: Delete requests to the node object
 
 ## Automated disruption methods
 
@@ -86,7 +86,7 @@ Consolidation has three mechanisms performed in order:
 
 Drift handles changes to the NodePool/AKSNodeClass. For Drift, values in the NodePool/AKSNodeClass are reflected in the NodeClaimTemplateSpec/AKSNodeClassSpec in the same way that they're set. A NodeClaim is detected as drifted if the values in its owning NodePool/AKSNodeClass don't match the values in the NodeClaim. Similar to the upstream `deployment.spec.template` relationship to pods, Karpenter annotates the owning NodePool and AKSNodeClass with a hash of the NodeClaimTemplateSpec to check for drift. Some special cases are discovered either from Karpenter or through the CloudProvider interface, triggered by NodeClaim/Instance/NodePool/AKSNodeClass changes.
 
-#### Special Cases on Drift
+#### Special cases on drift
 
 In special cases, drift can correspond to multiple values and must be handled differently. Drift on resolved fields can create cases where drift occurs without changes to Custom Resource Definitions (CRDs), or where CRD changes don't result in drift. For example, if a NodeClaim has `node.kubernetes.io/instance-type: Standard_D2s_v3`, and requirements change from `node.kubernetes.io/instance-type In [Standard_D2s_v3]` to `node.kubernetes.io/instance-type In [Standard_D2s_v3, Standard_D4s_v3]`, the NodeClaim isn't drifted because its value is still compatible with the new requirements. Conversely, if a NodeClaim is using a NodeClaim imageFamily, but the `spec.imageFamily` field is changed, Karpenter detects the NodeClaim as drifted and rotates the node to meet that specification
 
@@ -104,7 +104,7 @@ Some example cases:
 | spec.vnetSubnetID             |
 | spec.imageFamily              |
 
-###### VNet Subnet ID Drift
+###### VNet subnet ID drift
 
 >[!Important] 
 >The `spec.vnetSubnetID` field can trigger drift detection, but modifying this field from one valid subnet to another valid subnet is **NOT a supported operation**. This field is mutable solely to provide an escape hatch for correcting invalid or malformed subnet identifiers during initial configuration.
@@ -130,7 +130,7 @@ Unlike traditional AKS NodePools created through ARM templates, Karpenter applie
 
 **Support Policy**: Microsoft doesn't provide support for issues arising from subnet to subnet migrations via `vnetSubnetID` modifications.
 
-#### Behavioral Fields
+#### Behavioral fields
 
 Behavioral Fields are treated as over-arching settings on the NodePool to dictate how Karpenter behaves. These fields don't correspond to settings on the NodeClaim or instance. Users set these fields to control Karpenter's Provisioning and disruption logic. Since these fields don't map to a desired state of NodeClaims, __behavioral fields are not considered for Drift__.
 
@@ -146,8 +146,8 @@ Read the [Drift Design](https://github.com/aws/karpenter-core/blob/main/designs/
 
 
 Karpenter adds the `Drifted` status condition on NodeClaims if the NodeClaim is drifted from its owning NodePool. Karpenter also removes the `Drifted` status condition if either:
-1. The `Drift` feature gate isn't enabled but the NodeClaim is drifted, Karpenter removes the status condition.
-2. The NodeClaim isn't drifted, but has the status condition, Karpenter removes it.
+- The `Drift` feature gate isn't enabled but the NodeClaim is drifted, Karpenter removes the status condition.
+- The NodeClaim isn't drifted, but has the status condition, Karpenter removes it.
 
 ## Disruption configuration
 
@@ -197,7 +197,7 @@ spec:
     consolidateAfter: 30s
 ```
 
-## Termination Grace Period
+## Termination grace period
 Configure how long Karpenter waits for pods to terminate gracefully.
 This setting takes precedence over a pod's terminationGracePeriodSeconds and bypasses PodDisruptionBudgets and the karpenter.sh/do-not-disrupt annotation
 

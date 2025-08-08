@@ -1,5 +1,5 @@
 ---
-title: Node autoprovisioning node pools configuration
+title: Node Autoprovisioning Node Pools Configuration
 description: Learn how to configure node pools for Azure Kubernetes Service (AKS) node autoprovisioning, including SKU selectors, limits, and weights.
 ms.topic: how-to
 ms.custom: devx-track-azurecli
@@ -27,7 +27,7 @@ Node autoprovisioning uses virtual machine (VM) Stock Keeping Unit (SKU) require
 
 ## Default node pool configuration
 
-### Understanding Default NodePools
+### Understand default NodePools
 
 AKS creates a default node pool configuration that you can customize:
 
@@ -70,7 +70,7 @@ spec:
 
 A `system-surge` node pool is also created to autoscale system pool nodes.
 
-### Controlling default NodePool creation
+### Control default NodePool creation
 
 The `--node-provisioning-default-pools` flag controls the default Node Auto Provisioning NodePools that are created:
 
@@ -216,7 +216,7 @@ Kubernetes defines [Well-Known Labels](https://kubernetes.io/docs/reference/labe
 
 In addition to the well-known labels from Kubernetes, Node Auto Provisioning supports Azure-specific labels for more advanced scheduling.
 
-### SKU selectors with well known labels
+### SKU selectors with well-known labels
 
 | Selector | Description | Example |
 |--|--|--|
@@ -236,9 +236,9 @@ In addition to the well-known labels from Kubernetes, Node Auto Provisioning sup
 | kubernetes.io/os | Operating System (Linux only during preview) | linux |
 | kubernetes.io/arch | CPU architecture (AMD64 or ARM64) | [amd64, arm64] |
 
-### Well-Known Labels
+### Well-known labels
 
-#### Instance Types
+#### Instance types
 
 - **key**: `node.kubernetes.io/instance-type`
 - **key**: `karpenter.azure.com/sku-family`
@@ -249,7 +249,7 @@ Generally, instance types should be a list and not a single value. Leaving these
 
 Most Azure VM sizes are supported with the exclusion of specialized sizes that don't support AKS.
 
-##### SKU Family Examples
+##### SKU family examples
 The `karpenter.azure.com/sku-family` selector allows you to target specific VM families:
 - **D-series**: General-purpose VMs with balanced CPU-to-memory ratio
 - **F-series**: Compute-optimized VMs with high CPU-to-memory ratio
@@ -267,7 +267,7 @@ requirements:
   - F
 ```
 
-##### SKU Name Examples
+##### SKU name examples
 The `karpenter.azure.com/sku-name` selector allows you to specify the exact VM instance type:
 ```yaml
 requirements:
@@ -278,7 +278,7 @@ requirements:
   - Standard_F8s_v2
 ```
 
-##### SKU Version Examples
+##### SKU version examples
 The `karpenter.azure.com/sku-version` selector targets specific generations:
 ```yaml
 requirements:
@@ -289,7 +289,7 @@ requirements:
   - "5"  # v5 generation
 ```
 
-#### Availability Zones
+#### Availability zones
 
 - **key**: `topology.kubernetes.io/zone`
 - **value example**: `eastus-1`
@@ -306,7 +306,7 @@ Node Auto Provisioning can be configured to create nodes in a particular zone. T
 
 Node Auto Provisioning supports both `amd64` and `arm64` nodes.
 
-#### Operating System
+#### Operating system
 
 - **key**: `kubernetes.io/os`
 - **values**:
@@ -314,7 +314,7 @@ Node Auto Provisioning supports both `amd64` and `arm64` nodes.
 
 Node Auto Provisioning supports `linux` operating systems(Ubuntu + AzureLinux). Windows support is coming soon.
 
-#### Capacity Type
+#### Capacity type
 
 - **key**: `karpenter.sh/capacity-type`
 - **values**:
