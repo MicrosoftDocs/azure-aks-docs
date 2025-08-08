@@ -100,7 +100,7 @@ For GA Kubernetes versions, AKS offers full support of the corresponding KEDA mi
 <!-- LINKS - external -->
 [keda]: https://keda.sh/
 [keda-architecture]: https://keda.sh/docs/latest/concepts/
-[keda-faq]: https://keda.sh/docs/2.14/faq/
+[keda-faq]: https://keda.sh/docs/2.14/reference/faq/
 [keda-sample]: https://github.com/kedacore/sample-dotnet-worker-servicebus-queue
 [keda-scalers]: https://keda.sh/docs/scalers/
 [keda-http-add-on]: https://github.com/kedacore/http-add-on

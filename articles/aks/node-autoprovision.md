@@ -32,7 +32,7 @@ Node auto provisioning provisions, scales, and manages virtual machines (nodes) 
 | Prerequisite                         | Notes                                                                                                        |
 |--------------------------------------|--------------------------------------------------------------------------------------------------------------|
 | **Azure Subscription**               | If you don't have an Azure subscription, you can create a [free account](https://azure.microsoft.com/free).  |
-| **Azure CLI `aks-preview` extension**| `18.0.0b14` or later. To find the version, run `az --version`. To install, run `az extension add --name aks-preview` to install or to upgrade run `az extension upgrade --name aks-preview`. For more, see [Manage Azure CLI extensions][azure-cli-extensions].               |                      
+| **Azure CLI**| `2.76.0` or later. To find the version, run `az --version`. For more information about installing or upgrading the Azure CLI, see [Install Azure CLI][azure cli].|                      
 
 ## Limitations
 
@@ -337,7 +337,9 @@ AKS recommends coupling node autoprovisioning with a Kubernetes [Auto Upgrade][a
 By default node autoprovisioning node pool virtual machines are automatically updated when a new image is available. There are multiple methods to regulate when your node image updates take place, including Karpenter or Node Disruption Budgets, and Pod Disruption Budgets.
 
 >[!NOTE]
->[Node OS Upgrade Channel settings][node-os-upgrade-channel] of Auto Upgrade don't impact node autoprovisioning-managed nodes. Node auto provisioning has its own automated method for ensuring node image upgrades. 
+
+## Node auto provisioning Metrics
+You can enable [control plane metrics (Preview)](./monitor-control-plane-metrics.md) to see the logs and operations from [node auto provisioning](./control-plane-metrics-default-list.md#minimal-ingestion-for-default-off-targets) with the [Azure Monitor managed service for Prometheus add-on](/azure/azure-monitor/essentials/prometheus-metrics-overview)
 
 ## Monitoring selection events
 
@@ -456,6 +458,7 @@ Node auto provisioning can only be disabled when:
 <!-- LINKS - internal -->
 [aks-view-master-logs]: monitor-aks.md#aks-control-planeresource-logs
 [azure-cli-extensions]: /cli/azure/azure-cli-extensions-overview
+[azure cli]: /cli/azure/get-started-with-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [planned-maintenance#schedule-configuration-types-for-planned-maintenance]: /azure/aks/planned-maintenance#schedule-configuration-types-for-planned-maintenance

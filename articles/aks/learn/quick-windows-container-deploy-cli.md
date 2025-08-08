@@ -6,6 +6,7 @@ ms.custom: devx-track-azurecli, innovation-engine
 ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
+
 # Customer intent: As a cloud developer, I want to deploy a Windows Server container on an Azure Kubernetes Service (AKS) cluster using the command line, so that I can efficiently manage containerized applications in a scalable environment.
 ---
 
@@ -325,7 +326,7 @@ When the *EXTERNAL-IP* address changes from *pending* to an actual public IP add
 }
 ```
 
-See the sample app in action by opening a web browser to the external IP address of your service after a few minutes. 
+See the sample app in action by opening a web browser to the external IP address of your service after a few minutes.
 
 :::image type="content" source="media/quick-windows-container-deploy-cli/asp-net-sample-app.png" alt-text="Screenshot of browsing to ASP.NET sample application." lightbox="media/quick-windows-container-deploy-cli/asp-net-sample-app.png":::
 

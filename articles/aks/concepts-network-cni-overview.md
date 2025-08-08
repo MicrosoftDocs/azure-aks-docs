@@ -40,7 +40,7 @@ Azure Kubernetes Service provides the following CNI plugins for overlay networki
 
 Unlike an overlay network, a flat network model in AKS assigns IP addresses to pods from a subnet from the same Azure VNet as the AKS nodes. This means that traffic leaving your clusters is not SNAT'd, and the pod IP address is directly exposed to the destination. This can be useful for some scenarios, such as when you need to expose pod IP addresses to external services.
 
-:::image type="content" source="media/networking-overview/advanced-networking-diagram-01.png" alt-text="A diagram showing two nodes with three pods each running in a flat network model.":::
+:::image type="content" source="media/networking-overview/azure-cni-flat-network-architecture.png" alt-text="A diagram showing two nodes with three pods each running in a flat network model.":::
 
 Azure Kubernetes Service provides two CNI plugins for flat networking. This article doesn't go into depth for each plugin option. For more information, see the linked documentation:
 

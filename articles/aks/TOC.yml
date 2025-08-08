@@ -96,8 +96,8 @@
               href: learn/quick-windows-container-deploy-terraform.md
     - name: Plan clusters for running workloads
       items:
-        - name: Zone resiliency considerations
-          href: aks-zone-resiliency.md
+        - name: Zone resiliency recommendations
+          href: reliability-zone-resiliency-recommendations.md
         - name: AKS best practices
           href: best-practices.md
         - name: Well-architected considerations
@@ -152,6 +152,8 @@
                   href: istio-upgrade.md
                 - name: Support policy
                   href: istio-support-policy.md
+                - name: Migration from open source Istio
+                  href: migration-from-open-source-istio-to-addon.md
                 - name: Uninstall
                   href: istio-uninstall-addon.md
             - name: Traffic management
@@ -236,8 +238,6 @@
           href: create-node-pools.md
         - name: Manage node pools
           href: manage-node-pools.md
-        - name: Use availability zones
-          href: availability-zones-overview.md
         - name: Reduce image pull time with Artifact Streaming on AKS
           href: artifact-streaming.md
         - name: Use generation 2 VMs
@@ -249,7 +249,7 @@
         - name: Add a Virtual Machines node pool
           href: virtual-machines-node-pools.md
         - name: Availability Sets deprecation
-          href: availability-sets-on-aks.md  
+          href: availability-sets-on-aks.md
         - name: Use system node pools
           href: use-system-pools.md
         - name: Resize node pools
@@ -310,6 +310,8 @@
           href: upgrade.md
         - name: Upgrade options and recommendations
           href: upgrade-cluster.md
+        - name: AKS component versioning
+          href: aks-component-versioning.md
         - name: Upgrade scenarios hub
           href: upgrade-scenarios-hub.md
         - name: Perform manual upgrades
@@ -414,6 +416,12 @@
           href: operator-best-practices-scheduler.md
         - name: Advanced scheduler features
           href: operator-best-practices-advanced-scheduler.md
+        - name: Managed namespaces
+          items:
+            - name: Overview
+              href: concepts-managed-namespaces.md
+            - name: Use managed namespaces
+              href: managed-namespaces.md  
     - name: Configure backup
       items:
         - name: Prerequisites
@@ -456,10 +464,6 @@
                 href: app-routing-migration.md
               - name: Use Application Gateway Ingress Controller add-on
                 href: /azure/application-gateway/tutorial-ingress-controller-add-on-existing?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-              - name: Use Istio gateway with Istio Service Mesh add-on
-                href: istio-deploy-ingress.md
-              - name: Deploy secure Istio ingress gateway
-                href: istio-secure-gateway.md
       - name: Egress
         items:
           - name: Outbound network and FQDN rules for AKS clusters
@@ -484,6 +488,8 @@
             href: limit-egress-traffic.md
           - name: Configure Static Egress Gateway
             href: configure-static-egress-gateway.md
+          - name: Deploy Istio egress gateways (preview)
+            href: istio-deploy-egress.md
       - name: CNI
         items:
           - name: CNI networking overview
@@ -492,21 +498,24 @@
             href: configure-azure-cni.md
           - name: Bring your own CNI
             href: use-byo-cni.md
-          - name: Use Azure CNI for dynamic IP allocation
-            href: configure-azure-cni-dynamic-ip-allocation.md
-          - name: Use Azure CNI VNet - Static Block Allocation (Preview)
-            href: configure-azure-cni-static-block-allocation.md
           - name: Use Azure CNI Powered by Cilium
             href: azure-cni-powered-by-cilium.md
           - name: Use Azure CNI Pod Subnet
+            items:
+              - name: Use Azure CNI Pod Subnet -  Dynamic IP Allocation
+                href: configure-azure-cni-dynamic-ip-allocation.md
+              - name: Use Azure CNI Pod Subnet - Static Block Allocation
+                href: configure-azure-cni-static-block-allocation.md
             href: concepts-network-azure-cni-pod-subnet.md
           - name: Upgrade Azure CNI IPAM and dataplane
             href: upgrade-azure-cni.md
+          - name: Migrate from Network Policy Manager to Cilium Networ policy
+            href: migrate-from-npm-to-cilium-network-policy.md
           - name: Use dual-stack networking
             href: configure-dual-stack.md
           - name: Azure CNI Overlay
             items:
-              - name: Overview 
+              - name: Overview
                 href: concepts-network-azure-cni-overlay.md
               - name: Use Azure CNI Overlay
                 href: azure-cni-overlay.md
@@ -522,10 +531,14 @@
             href: concepts-network-legacy-cni.md
       - name: DNS
         items:
+          - name: DNS Resolution
+            href: dns-concepts.md
           - name: Use a static IP address and DNS label
             href: static-ip.md
           - name: Customize CoreDNS
             href: coredns-custom.md
+          - name: Configure LocalDNS
+            href: localdns-custom.md
       - name: Load balancing
         items:
           - name: Create an internal load balancer
@@ -729,14 +742,56 @@
           href: security-bulletins/overview.md
     - name: Compliance
       items:
-        - name: CIS Baseline overview
-          href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: CIS Kubernetes benchmark
-          href: cis-kubernetes.md
-        - name: CIS Azure Linux benchmark
-          href: cis-azure-linux.md
-        - name: CIS Windows Server benchmark
-          href: cis-windows.md
+        - name: Center for Internet Security (CIS) benchmarks
+          items:
+          - name: CIS Baseline overview
+            href: /compliance/regulatory/offering-CIS-Benchmark?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+          - name: CIS Kubernetes benchmark
+            href: cis-kubernetes.md
+          - name: CIS Azure Linux benchmark
+            href: cis-azure-linux.md
+          - name: CIS Windows Server benchmark
+            href: cis-windows.md
+        - name: Payment Card Industry Data Security Standard (PCI DSS)
+          items:
+            - name: PCI DSS compliance overview
+              href: /compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+            - name: Introduction to PCI DSS v4.0.1 on AKS
+              href: pci-intro.md
+            - name: Risk assessment and code assets
+              href: pci-ra-code-assets.md
+            - name: Network security
+              href: pci-network.md
+            - name: Data protection
+              href: pci-data.md
+            - name: Cryptography and key management
+              href: pci-cryptography-key-management.md
+            - name: Identity and access management
+              href: pci-identity.md
+            - name: Enhanced MFA implementation
+              href: pci-enhanced-mfa-implementation.md
+            - name: Malware protection
+              href: pci-malware.md
+            - name: Monitoring and logging
+              href: pci-monitor.md
+            - name: Continuous security monitoring
+              href: pci-continuous-security-monitoring.md
+            - name: Security policies
+              href: pci-policy.md
+            - name: Targeted risk analysis
+              href: pci-targeted-risk-analysis.md
+            - name: Security awareness training
+              href: pci-security-awareness-training.md
+            - name: Anti-phishing and social engineering
+              href: pci-anti-phishing-social-engineering.md
+            - name: Third-party and supply chain security
+              href: pci-third-party-supply-chain-security.md
+            - name: Customized approach guidance
+              href: pci-customized-approach-guidance.md
+            - name: Requirement mapping matrix
+              href: pci-requirement-mapping-matrix.md
+            - name: Summary
+              href: pci-summary.md
 - name: Storage
   items:
     - name: Storage concepts
@@ -809,6 +864,26 @@
           href: azure-hpc-cache.md
         - name: NFS Server - static
           href: azure-nfs-volume.md
+- name: Reliability
+  items:
+    - name: Reliability in Azure Kubernetes Service
+      href: /azure/reliability/reliability-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+    - name: Availability zones
+      items:
+      - name: Zone resiliency recommendations
+        href: reliability-zone-resiliency-recommendations.md
+      - name: Configure availability zones
+        href: reliability-availability-zones-configure.md
+    - name: Multi-region
+      items:
+      - name: Multi-region deployment models
+        href: reliability-multi-region-deployment-models.md
+      - name: Active-active
+        href: active-active-solution.md
+      - name: Active-passive
+        href: active-passive-solution.md
+      - name: Passive-cold
+        href: passive-cold-solution.md
 - name: AI and machine learning
   items:
     - name: Machine learning operations (MLOps)
@@ -1021,15 +1096,15 @@
               href: airflow-create-infrastructure.md
             - name: Configure and deploy Airflow
               href: airflow-deploy.md
-        - name: Deploy Apache Kafka using Strimzi 
+        - name: Deploy Apache Kafka using Strimzi
           items:
             - name: Overview
               href: kafka-overview.md
-            - name: Prepare Kafka infrastructure  
-              href: kafka-infrastructure.md  
-            - name: Deploy Strimzi and Kafka components  
-              href: kafka-deploy.md  
-            - name: Configure monitoring and networking for the Kafka cluster  
+            - name: Prepare Kafka infrastructure
+              href: kafka-infrastructure.md
+            - name: Deploy Strimzi and Kafka components
+              href: kafka-deploy.md
+            - name: Configure monitoring and networking for the Kafka cluster
               href: kafka-configure.md
         - name: Deploy GitHub Actions using Azure Files
           items:
@@ -1093,20 +1168,6 @@
             href: deploy-spinkube.md
           - name: Deploy wasmCloud to AKS to run distributed Wasm workloads
             href: wasmcloud.md
-    - name: High availability disaster recovery
-      items:
-        - name: Overview
-          href: ha-dr-overview.md
-          required: yes
-          limit: 1
-        - name: Solutions
-          items:
-            - name: Active-active
-              href: active-active-solution.md
-            - name: Active-passive
-              href: active-passive-solution.md
-            - name: Passive-cold
-              href: passive-cold-solution.md
     - name: DevOps
       items:
         - name: Azure DevOps Project

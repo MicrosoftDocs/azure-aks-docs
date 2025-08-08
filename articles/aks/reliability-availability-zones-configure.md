@@ -1,19 +1,19 @@
 ---
-title: Availability Zones in Azure Kubernetes Service (AKS)
-description: Learn how to use availability zones in Azure Kubernetes Service (AKS) to increase the availability of your applications.
+title: Configure availability zones in Azure Kubernetes Service (AKS)
+description: Learn how to configure availability zones in Azure Kubernetes Service (AKS) to increase the availability of your applications.
 ms.service: azure-kubernetes-service
 ms.topic: concept-article
-ms.date: 02/03/2025
+ms.date: 07/28/2025
 author: danbosscher
 ms.author: dabossch
 # Customer intent: "As a cloud architect, I want to configure Azure Kubernetes Service to utilize availability zones, so that I can enhance the reliability and availability of my applications against datacenter failures."
 ---
 
-# Availability zones in Azure Kubernetes Service (AKS)
+# Configure availability zones in Azure Kubernetes Service (AKS)
 
 [Availability zones](/azure/reliability/availability-zones-overview) help protect your applications and data from datacenter failures. Zones are unique physical locations within an Azure region. Each zone includes one or more datacenters equipped with independent power, cooling, and networking.
 
-Using Azure Kubernetes Service (AKS) with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones doesn't incur additional costs.
+Using Azure Kubernetes Service (AKS) with availability zones physically distributes resources across different availability zones within a single region, improving reliability. Deploying nodes in multiple zones doesn't incur additional costs. For more information on AKS reliability features including availability zones, multi-region configurations, reliability during service maintenance, and backup, see [Reliability in AKS](/azure/reliability/reliability-aks).
 
 This article shows you how to configure AKS resources to use availability zones.
 
@@ -225,6 +225,7 @@ The following limitations apply when you're using availability zones:
 
 ## Related content
 
+* Learn about [Reliability in AKS](/azure/reliability/reliability-aks).
 * Learn about [system node pools](/azure/aks/use-system-pools).
 * Learn about [user node pools](/azure/aks/create-node-pools).
 * Learn about [load balancers](/azure/aks/load-balancer-standard).
@@ -235,5 +236,5 @@ The following limitations apply when you're using availability zones:
 
 <!-- LINKS - internal -->
 [aks-vm-sizes]: ./quotas-skus-regions.md#supported-vm-sizes
-[zones]: /azure/reliability/availability-zones-region-support
+[zones]: /azure/reliability/regions-list
 [best-practices-multi-region]: ./operator-best-practices-storage.md
