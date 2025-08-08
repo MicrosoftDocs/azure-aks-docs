@@ -34,6 +34,9 @@ Another solution to securing outbound addresses is using a firewall device that 
 > [!IMPORTANT]
 >
 > This document covers only how to lock down the traffic leaving the AKS subnet. AKS has no ingress requirements by default. Blocking **internal subnet traffic** using network security groups (NSGs) and firewalls isn't supported. To control and block the traffic within the cluster, see [Secure traffic between pods using network policies in AKS][use-network-policies].
+>
+> AKS outbound traffic can't be restricted via NSGs because its dependencies use FQDNs without static addresses. Therefore setting all deny rules in a Network Security Group (NSG) is not recommended. FQDN-based allow rules cannot be configured in an NSG.
+
 
 ## Required outbound network rules and FQDNs for AKS clusters
 
