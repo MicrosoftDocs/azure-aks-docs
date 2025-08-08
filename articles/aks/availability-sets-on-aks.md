@@ -40,7 +40,10 @@ Starting September 30, 2025, we'll automatically migrate remaining Availability 
 
 ## Migrate from Availability Sets to Virtual Machines node pools (Preview)
 
-There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard, as well as the Basic IPs to Standard, while keeping the Public IP addresses the same.
+There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard. 
+
+>[!IMPORTANT]
+>This process will also migrate your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. New public IPs will be created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
 
 ### Before You Begin
 
@@ -123,17 +126,33 @@ A successful migration can be verified when the cluster details using the `az ak
   kubectl get svc -A \
   kubectl get pods -A
 ```
-   
+
+4. You can confirm the new IP addresses associated with outbound rules by listing the outbound IP addresses. This is done by confirming the Resource IDs for the IP addresses, then listing the IP addresses. 
+
+Use the following command to get the Resource ID for the outbound IP addresses:
+```azurecli-interactive
+  # Get the outbound IP Resource ID
+  az aks show -g <myResourceGroup> -n <myAKSCluster> --query networkProfile.loadBalancerProfile.effectiveOutboundIPs[].id
+```
+
+Use the following command to get each IP address for the Resource ID:
+```azurecli-interactive
+  # get the new IP for each IP Resource ID
+  az network public-ip show --ids <IPResourceID> --query ipAddress -o tsv
+```
 
 ### Related content
 
 <!-- LINKS - internal -->
 
 [turn-off-kms]: /azure/aks/use-kms-etcd-encryption#turn-off-kms
-[file-support-ticket]: /azure-portal/supportability/how-to-create-azure-support-request
 [az-aks-create]: /cli/azure/aks#az_aks_create
 [az-aks-update]: /cli/azure/aks#az_aks_update
 [install-azure-cli]: /cli/azure/install-azure-cli
 [az-extension-add]: /cli/azure/extension#az-extension-add
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [More information on Virtual Machine node pools](virtual-machines-node-pools.md)
+
+<!-- LINKS - External -->
+[file-support-ticket]: https://azure.microsoft.com/support/create-ticket
+

@@ -16,6 +16,9 @@ Custom Certificate Authority (CA) allows you to add up to 10 base64-encoded cert
 
 This article shows you how to create custom CAs and apply them to your AKS clusters. 
 
+> [!NOTE]
+> The Custom CA Trust feature adds your custom certificates to the AKS node's trust store. Certificates added with this feature won't be available to containers running in pods. If the certificates are also needed inside containers, you still need to add them separately, by either adding them to the image used by your pods or at run time via scripting and a secret.
+
 ## Prerequisites
 
 * An Azure subscription. If you don't have an Azure subscription, create a [free account](https://azure.microsoft.com/free).

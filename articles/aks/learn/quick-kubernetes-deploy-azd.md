@@ -6,8 +6,9 @@ author: schaffererin
 ms.topic: quickstart
 ms.date: 03/21/2024
 ms.custom: H1Hack27Feb2017, mvc, devcenter, seo-javascript-september2019, seo-javascript-october2019, seo-python-october2019, contperf-fy21q1, mode-api, devx-track-extended-azdevcli
-#Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster and deploy an application so I can see how to run applications using the managed Kubernetes service in Azure.
-# Customer intent: As a developer, I want to quickly deploy an Azure Kubernetes Service cluster and a multi-container application using the Azure Developer CLI, so that I can evaluate the service's capabilities and experiment with deploying applications on a managed Kubernetes environment.
+
+# Customer intent: As a developer or cluster operator, I want to deploy an AKS cluster and deploy an application so I can see how to run applications using the managed Kubernetes service in Azure.
+
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using the Azure Developer CLI
@@ -235,4 +236,3 @@ To learn more about AKS and walk through a complete code-to-deployment example, 
 [kubernetes-concepts]: ../concepts-clusters-workloads.md
 [aks-solution-guidance]: /azure/architecture/reference-architectures/containers/aks-start-here?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
 [baseline-reference-architecture]: /azure/architecture/reference-architectures/containers/aks/baseline-aks?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-

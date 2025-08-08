@@ -1,7 +1,7 @@
 ---
-title: Configure Azure CNI networking for dynamic allocation of IPs and enhanced subnet support
+title: Configure Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support
 titleSuffix: Azure Kubernetes Service
-description: Learn how to configure Azure CNI (advanced) networking for dynamic allocation of IPs and enhanced subnet support in Azure Kubernetes Service (AKS)
+description: Learn how to configure Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support in Azure Kubernetes Service (AKS)
 author: asudbring
 ms.author: allensu
 ms.service: azure-kubernetes-service
@@ -12,7 +12,7 @@ ms.custom: references_regions, devx-track-azurecli
 # Customer intent: As a Kubernetes administrator, I want to configure Azure CNI for dynamic IP allocation and enhanced subnet support in AKS, so that I can efficiently manage IP addresses and improve the scalability and performance of my Kubernetes clusters.
 ---
 
-# Configure Azure CNI networking for dynamic allocation of IPs and enhanced subnet support in Azure Kubernetes Service (AKS)
+# Configure Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support in Azure Kubernetes Service (AKS)
 
 A drawback with the traditional CNI is the exhaustion of pod IP addresses as the AKS cluster grows, which results in the need to rebuild your entire cluster in a bigger subnet. The new dynamic IP allocation capability in Azure CNI solves this problem by allocating pod IPs from a subnet separate from the subnet hosting the AKS cluster.
 
@@ -20,11 +20,11 @@ It offers the following benefits:
 
 * **Better IP utilization**: IPs are dynamically allocated to cluster Pods from the Pod subnet. This leads to better utilization of IPs in the cluster compared to the traditional CNI solution, which does static allocation of IPs for every node.
 * **Scalable and flexible**: Node and pod subnets can be scaled independently. A single pod subnet can be shared across multiple node pools of a cluster or across multiple AKS clusters deployed in the same VNet. You can also configure a separate pod subnet for a node pool.  
-* **High performance**: Since pod are assigned virtual network IPs, they have direct connectivity to other cluster pod and resources in the VNet. The solution supports very large clusters without any degradation in performance.
+* **High performance**: Since pods are assigned virtual network IPs, they have direct connectivity to other cluster pod and resources in the VNet. The solution supports very large clusters without any degradation in performance.
 * **Separate VNet policies for pods**: Since pods have a separate subnet, you can configure separate VNet policies for them that are different from node policies. This enables many useful scenarios such as allowing internet connectivity only for pods and not for nodes, fixing the source IP for pod in a node pool using an Azure NAT Gateway, and using NSGs to filter traffic between node pools.  
 * **Kubernetes network policies**: Both the Azure Network Policies and Calico work with this new solution.
 
-This article shows you how to use Azure CNI networking for dynamic allocation of IPs and enhanced subnet support in AKS.
+This article shows you how to use Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support in AKS.
 
 ## Prerequisites
 
@@ -52,14 +52,14 @@ To view and verify the NodeNetworkConfiguration (NNC) resources responsible for 
 kubectl get nodenetworkconfigs -n kube-system -o wide
 ```
 
-## Maximum pods per node in a cluster with dynamic allocation of IPs and enhanced subnet support
+## Maximum pods per node in a cluster with Pod Subnet - Dynamic IP Allocation and enhanced subnet support
 
-The pods per node values when using Azure CNI with dynamic allocation of IPs slightly differ from the traditional CNI behavior:
+The pods per node value when using Azure CNI Pod Subnet - Dynamic IP Allocation is slightly different from the traditional CNI behavior:
 
 |CNI|Default|Configurable at deployment|
 |--| :--: |--|
 |Traditional Azure CNI|30|Yes (up to 250)|
-|Azure CNI with dynamic allocation of IPs|250|Yes (up to 250)|
+|Azure CNI Pod Subnet - Dynamic IP Allocation|250|Yes (up to 250)|
 
 All other guidance related to configuring the maximum pods per node remains the same.
 
@@ -70,9 +70,9 @@ The [deployment parameters][azure-cni-deployment-parameters]for configuring basi
 * The **subnet** parameter now refers to the subnet related to the cluster's nodes.
 * An additional parameter **pod subnet** is used to specify the subnet whose IP addresses will be dynamically allocated to pods.
 
-## Configure networking with dynamic allocation of IPs and enhanced subnet support - Azure CLI
+## Configure Pod Subnet - Dynamic IP Allocation and enhanced subnet support - Azure CLI
 
-Using dynamic allocation of IPs and enhanced subnet support in your cluster is similar to the default method for configuring a cluster Azure CNI. The following example walks through creating a new virtual network with a subnet for nodes and a subnet for pods, and creating a cluster that uses Azure CNI with dynamic allocation of IPs and enhanced subnet support. Be sure to replace variables such as `$subscription` with your own values.
+Using Pod Subnet - Dynamic IP Allocation and enhanced subnet support in your cluster is similar to the default method for configuring a cluster Azure CNI. The following example walks through creating a new virtual network with a subnet for nodes and a subnet for pods, and creating a cluster that uses Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support. Be sure to replace variables such as `$subscription` with your own values.
 
 Create the virtual network with two subnets.
 
@@ -158,7 +158,7 @@ az aks get-credentials --name $CLUSTER_NAME --resource-group $RESOURCE_GROUP_NAM
 1. Apply the config using the `kubectl apply -f container-azm-ms-agentconfig.yaml` command. This will restart the pod and after 5-10 minutes, the metrics will be visible.
 1. View the metrics on the cluster by navigating to Workbooks on the cluster page in the Azure portal, and find the workbook named *Subnet IP Usage*.
 
-## Dynamic allocation of IP addresses and enhanced subnet support FAQs
+## Azure CNI Pod Subnet - Dynamic IP Allocation and enhanced subnet support FAQs
 
 * **Can I assign multiple pod subnets to a cluster/node pool?**
 

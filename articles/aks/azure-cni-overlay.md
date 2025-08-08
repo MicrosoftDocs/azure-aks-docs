@@ -95,7 +95,7 @@ Azure CNI Overlay has the following limitations:
 
 - Virtual Machine Availability Sets (VMAS) aren't supported for Overlay.
 - You can't use [DCsv2-series](/azure/virtual-machines/dcv2-series) virtual machines in node pools. To meet Confidential Computing requirements, consider using [DCasv5 or DCadsv5-series confidential VMs](/azure/virtual-machines/dcasv5-dcadsv5-series) instead.
-- In case you are using your own subnet to deploy the cluster, the names of the subnet, VNET and resource group which contains the VNET, must be 63 characters or less. This comes from the fact that these names will be used as labels in AKS worker nodes, and are therefore subjected to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).  
+- In case you are using your own subnet to deploy the cluster, the names of the subnet, VNET and resource group which contains the VNET, must be 63 characters or less. This comes from the fact that these names will be used as labels in AKS worker nodes, and are therefore subjected to [Kubernetes label syntax rules](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set).
 
 ## Set up Overlay clusters
 
@@ -311,7 +311,7 @@ You can deploy your dual-stack AKS clusters with Azure CNI Powered by Cilium. Th
 
 ### Prerequisites
 
-* You must have Kubernetes version 1.29 or greater. 
+* You must have Kubernetes version 1.29 or greater.
 
 ### Set up Overlay clusters with Azure CNI Powered by Cilium
 
