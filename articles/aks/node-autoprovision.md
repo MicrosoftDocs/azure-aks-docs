@@ -381,21 +381,12 @@ Node auto provisioning can only be disabled when:
              effect: NoSchedule
    ```
    
-<<<<<<< HEAD
-   This action starts the process of migrating the workloads on the node auto provisioning-managed nodes to non-node auto provisioning nodes, honoring Pod Disruption Budgets (PDBs) and disruption limits. Pods migrate to non-node auto provisioning nodes if they can fit. If there isn't enough fixed-size capacity, some node auto provisioning-managed nodes remain.
-   
-4. Scale up existing fixed-size ManagedCluster AgentPools, or create new fixed-size AgentPools, to take the load from the node auto provisioning-managed nodes.
-   As these nodes are added to the cluster the node auto provisioning-managed nodes are drained, and work is migrated to the fixed-scale nodes.
-5. Confirm that all node auto provisioning-managed nodes are deleted, using `kubectl get nodes -l karpenter.sh/nodepool`. If node auto provisioning-managed nodes still exist, the cluster likely lacks fixed-scale capacity. Add more nodes so the remaining workloads can be migrated.
-=======
    This action starts the process of migrating the workloads on the node autoprovisioning-managed nodes to non-NAP nodes, honoring Pod Disruption Budgets (PDBs) and disruption limits. Pods migrate to non-NAP nodes if they can fit. If there isn't enough fixed-size capacity, some node autoprovisioning-managed nodes remains.
 
 4. Scale up existing fixed-size ManagedCluster AgentPools, or create new fixed-size AgentPools, to take the load from the node autoprovisioning-managed nodes.
    As these nodes are added to the cluster the node autoprovisioning-managed nodes are drained, and work is migrated to the fixed-scale nodes.
 
 5. Confirm that all node autoprovisioning-managed nodes are deleted, using `kubectl get nodes -l karpenter.sh/nodepool`. If node autoprovisioning-managed nodes still exist, the cluster likely lacks fixed-scale capacity. Add more nodes so the remaining workloads can be migrated.
-
->>>>>>> 16aefe712 (fix: addressing doc comments)
 6. Update the node provisioning mode parameter of the ManagedCluster to `Manual`.
 
     #### [Azure CLI](#tab/azure-cli)
