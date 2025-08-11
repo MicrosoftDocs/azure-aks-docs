@@ -1,26 +1,27 @@
 ---
-title: "Use Azure Policy to ensure AKS clusters are managed by Azure Kubernetes Fleet Manager"
-description: Learn how to use in-built Azure Policies to enable Fleet auto-join for new AKS clusters.
+title: "Use Azure Policy to ensure AKS clusters are enrolled with a Fleet Manager"
+description: Learn how to use in-built Azure Policies to identify existing clusters that aren't managed by a Fleet Manager and to automatically add them to Fleet Manager.
 ms.topic: how-to
-ms.date: 03/19/2025
+ms.date: 08/11/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a multi-cluster Kubernetes administrator, I want to ensure I can identify clusters not in a fleet and to automatically add new clusters to a fleet, so that I can ensure my clusters are managed in a consistent, centralized fashion.
 ---
 
-# Use Azure Policy ensure AKS clusters are enrolled with and Fleet Manager
+# Use Azure Policy to ensure AKS clusters are enrolled with a Fleet Manager
 
 Platform administrators can use Azure Policy to enforce consistency of fleet management for existing and new Azure Kubernetes Service clusters.
 
-By using the built-in Azure Kubernetes Fleet Manager policies, it is possible to identify existing clusters that are not managed by a Fleet Manager, while also ensuring that newly created clusters are automatically joined to a fleet.
+By using the built-in Azure Kubernetes Fleet Manager policies, it is possible to identify existing clusters that aren't managed by a Fleet Manager, while also ensuring that newly created clusters are automatically joined to a fleet.
 
 ## Available policies
 
-Fleet Manager's policies are part of the [Kubernetes built-in policies][kubernetes-builtin-policies], with the following two policies being available.
+Fleet Manager's policies are part of the [Kubernetes built-in policy][kubernetes-builtin-policies] set, with the following two policies relating to Fleet Manager.
 
-* **Azure Kubernetes Service clusters should be a member of an Azure Kubernetes Fleet Manager**: This policy identifies any AKS clusters not currently managed by a Fleet Manager. It supports clusters that use either service principals or managed identities. 
+* **Azure Kubernetes Service clusters should be a member of an Azure Kubernetes Fleet Manager**: This policy identifies AKS clusters not managed by a Fleet Manager. It supports clusters that use either service principals or managed identities. 
 
-* **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager**: This policy ensures any new AKS clusters with managed identities are automatically enrolled for management by the designated Fleet Manager. Clusters using service principals aren't supported.
+* **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager**: This policy ensures new AKS clusters are automatically enrolled for management by a designated Fleet Manager. Only clusters using managed identities are supported.
 
 ## Prerequisites
 
@@ -39,7 +40,7 @@ Fleet Manager's policies are part of the [Kubernetes built-in policies][kubernet
   az extension update --name fleet
   ```
 
-## Assign Auto-join Fleet Manager policy
+## Assign Autojoin Fleet Manager policy
 
 You can apply a policy definition or initiative in the Azure portal using the following steps:
 
@@ -49,8 +50,8 @@ You can apply a policy definition or initiative in the Azure portal using the fo
 1. Select **Apply**.
 1. Choose the **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager fleet** Policy.
 1. Select **Assign**.
-1. Set the **Scope** to the Management Group, Subscription or Resource Group where new AKS clusters will be deployed.
-1. Select whether **Policy enforcement** is enabled. Enabling will ensure new AKS clusters join the specified Fleet Manager.
+1. Set the **Scope** to the Management Group, Subscription, or Resource Group where new AKS clusters are deployed.
+1. Select whether **Policy enforcement** is enabled. Enabling ensures new AKS clusters join the specified Fleet Manager.
 1. Select the **Parameters** page and set the Fleet Manager to use. 
 1. Select **Review + create** > **Create** to submit the policy assignment.
 
@@ -58,7 +59,7 @@ You can apply a policy definition or initiative in the Azure portal using the fo
 
 1. Follow the steps in the [Deploy an Azure Kubernetes Service (AKS) cluster using Azure CLI][aks-quickstart-cli] quickstart, selecting an Azure location covered by the previously applied policy definition.
 
-1. Once the AKS cluster has been created use the Azure CLI to verify the cluster is joined to the specified Fleet Manager fleet as a member cluster by using the [`az fleet member list`][az-fleet-member-list] command. Substitute your AKS cluster name for `aks-member-1` in the `--query`.
+1. Once the AKS cluster is created use the Azure CLI to verify it's a member cluster in the specified Fleet Manager by using the [`az fleet member list`][az-fleet-member-list] command. Substitute your AKS cluster name for `aks-member-1` in the `--query`.
 
     ```azurecli-interactive
     az fleet member list \
