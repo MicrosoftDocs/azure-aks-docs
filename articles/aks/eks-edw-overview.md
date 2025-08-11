@@ -6,9 +6,10 @@ ms.date: 06/20/2024
 author: schaffererin
 ms.author: schaffererin
 ms.service: azure-kubernetes-service
-ms.custom: 
+ms.collection: 
  - migration
  - aws-to-azure
+# Customer intent: As a cloud engineer, I want to replicate an AWS event-driven workflow in Azure Kubernetes Service using KEDA and Karpenter, so that I can take advantage of Azure's capabilities while maintaining the functionality of my existing AWS architecture.
 ---
 
 # Replicate an AWS event-driven workflow (EDW) workload with KEDA and Karpenter in Azure Kubernetes Service (AKS)

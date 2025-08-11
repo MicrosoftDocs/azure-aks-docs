@@ -1,152 +1,351 @@
 ---
-title: Upgrade options for Azure Kubernetes Service (AKS) clusters
-description: Learn the different ways to upgrade an Azure Kubernetes Service (AKS) cluster.
-ms.topic: concept-article
+title: Upgrade Options and Recommendations for Azure Kubernetes Service (AKS) Clusters
+description: Learn about upgrade options for Azure Kubernetes Service (AKS) clusters, including scenario-based recommendations for common upgrade challenges.
+ms.topic: conceptual
 ms.service: azure-kubernetes-service
 ms.subservice: aks-upgrade
-ms.date: 02/08/2024
-author: schaffererin
-ms.author: schaffererin
+ms.date: 07/09/2025
+author: kaarthis
+ms.author: kaarthis
+ms.custom: scenarios
+# Customer intent: "As a cloud administrator, I want to evaluate various upgrade options for Azure Kubernetes Service clusters so that I can implement a strategy that minimizes disruptions and ensures that my workloads remain updated and compliant with best practices."
 ---
 
-# Upgrade options for Azure Kubernetes Service (AKS) clusters
+# Upgrade options and recommendations for Azure Kubernetes Service (AKS) clusters
 
-This article covers the different upgrade options for AKS clusters. To perform a basic Kubernetes version upgrade, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md).
+This article gives you a technical foundation for Azure Kubernetes Service (AKS) cluster upgrades by covering upgrade options and common scenarios. For in-depth guidance tailored to your needs, use the scenario-based navigation paths at the end of this article.
 
-For AKS clusters that use multiple node pools or Windows Server nodes, see [Upgrade a node pool in AKS][nodepool-upgrade]. To upgrade a specific node pool without performing a Kubernetes cluster upgrade, see [Upgrade a specific node pool][specific-nodepool].
+## What this article covers
 
-## Perform manual upgrades
+This technical reference provides comprehensive AKS upgrade fundamentals on:
 
-You can perform manual upgrades to control when your cluster upgrades to a new Kubernetes version. Manual upgrades are useful when you want to test a new Kubernetes version before upgrading your production cluster. You can also use manual upgrades to upgrade your cluster to a specific Kubernetes version that isn't the latest available version.
+- Manual versus automated upgrade options and when to use each.
+- Common upgrade scenarios with specific recommendations.
+- Optimization techniques for performance and minimal disruption.
+- Troubleshooting guidance for capacity, drain failures, and timing issues.
+- Validation processes and pre-upgrade checks.
 
-To perform manual upgrades, see the following articles:
+This hub is best for helping you to understand upgrade mechanics, troubleshoot issues, optimize upgrade settings, and learn about technical implementation.
+
+For more information, see these related articles:
+
+- To upgrade your production AKS clusters, see [AKS production upgrade strategies](aks-production-upgrade-strategies.md).
+- To get upgrade patterns for AKS clusters with stateful workloads, see [Stateful workload upgrade patterns](stateful-workload-upgrades.md).
+- To use the scenario hub to help you choose the right AKS upgrade approach, see [AKS upgrade scenarios: Choose your path](upgrade-scenarios-hub.md).
+
+---
+
+If you're new to AKS upgrades, start with the [upgrade scenarios hub](upgrade-scenarios-hub.md) for guided, scenario-based assistance.
+
+## Quick navigation
+
+| Your situation | Recommended path |
+|----------------|------------------|
+| Production cluster needs an upgrade | [Production upgrade strategies](aks-production-upgrade-strategies.md) |
+| Database/stateful workloads | [Stateful workload patterns](stateful-workload-upgrades.md) |
+| First-time upgrade or basic cluster | [Basic AKS cluster upgrade](./upgrade-aks-cluster.md) |
+| Multiple environments or fleet | [Upgrade scenarios hub](upgrade-scenarios-hub.md) |
+| Node pools or Windows nodes | [Node pool upgrades][nodepool-upgrade] |
+| Specific node pool only | [Single node pool upgrade][specific-nodepool] |
+
+## Upgrade options
+
+### Perform manual upgrades
+
+Manual upgrades let you control when your cluster upgrades to a new Kubernetes version. These upgrades are useful for testing or targeting a specific version:
 
 * [Upgrade an AKS cluster](./upgrade-aks-cluster.md)
+* [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
 * [Upgrade the node image](./node-image-upgrade.md)
 * [Customize node surge upgrade](./upgrade-aks-cluster.md#customize-node-surge-upgrade)
 * [Process node OS updates](./node-updates-kured.md)
-* [Upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-orchestration)
 
-## Configure automatic upgrades
+### Configure automatic upgrades
 
-You can configure automatic upgrades to automatically upgrade your cluster to the latest available Kubernetes version. Automatic upgrades are useful when you want to ensure your cluster is always running the latest Kubernetes version. You can also use automatic upgrades to ensure your cluster is always running a supported Kubernetes version.
-
-To configure automatic upgrades, see the following articles:
+Automatic upgrades keep your cluster on a supported version and up to date. Use these upgrades when you want to automate your settings:
 
 * [Automatically upgrade an AKS cluster](./auto-upgrade-cluster.md)
-* [Use Planned Maintenance to schedule and control upgrades for your AKS cluster](./planned-maintenance.md)
-* [Stop AKS cluster upgrades automatically on API breaking changes (Preview)](./stop-cluster-upgrade-api-breaking-changes.md)
+* [Automatically upgrade multiple AKS clusters via Azure Kubernetes Fleet Manager](/azure/kubernetes-fleet/update-automation)
+* [Use planned maintenance to schedule and control upgrades](./planned-maintenance.md)
+* [Stop AKS cluster upgrades automatically on API breaking changes (preview)](./stop-cluster-upgrade-api-breaking-changes.md)
 * [Automatically upgrade AKS cluster node operating system images](./auto-upgrade-node-image.md)
-* [Apply security updates to AKS nodes automatically using GitHub Actions](./node-upgrade-github-actions.md)
+* [Apply security updates to AKS nodes automatically by using GitHub actions](./node-upgrade-github-actions.md)
 
-## Special considerations for node pools that span multiple availability zones
+### Special considerations for node pools that span multiple availability zones
 
-AKS uses best-effort zone balancing in node groups. During an upgrade surge, the zones for the surge nodes in Virtual Machine Scale Sets are unknown ahead of time, which can temporarily cause an unbalanced zone configuration during an upgrade. However, AKS deletes surge nodes once the upgrade completes and preserves the original zone balance. If you want to keep your zones balanced during upgrades, you can increase the surge to a multiple of *three nodes*, and Virtual Machine Scale Sets balances your nodes across availability zones with best-effort zone balancing. With best-effort zone balance, the scale set attempts to scale in and out while maintaining balance. However, if for some reason this isn't possible (for example, if one zone goes down, the scale set can't create a new VM in that zone), the scale set allows temporary imbalance to successfully scale in or out.
+AKS uses best-effort zone balancing in node groups. During an upgrade surge, the zones for surge nodes in virtual machine scale sets are unknown ahead of time, which can temporarily cause an unbalanced zone configuration. AKS deletes surge nodes after the upgrade and restores the original zone balance. 
 
-Persistent volume claims (PVCs) backed by Azure locally redundant storage (LRS) Disks are bound to a particular zone and might fail to recover immediately if the surge node doesn't match the zone of the PVC. If the zones don't match, it can cause downtime on your application when the upgrade operation continues to drain nodes but the PVs are bound to a zone. To handle this case and maintain high availability, configure a [Pod Disruption Budget](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) on your application to allow Kubernetes to respect your availability requirements during the drain operation.
+To keep zones balanced, set surge to a multiple of three nodes. Persistent volume claims that use Azure locally redundant storage disks are zone bound and might cause downtime if surge nodes are in a different zone. Use a [pod disruption budget (PDB)](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) to maintain high availability during drains.
 
-## Optimize for undrainable node behavior (Preview)
+### Optimize upgrades to improve performance and minimize disruptions
 
-You can configure the upgrade process behavior for drain failures. The default upgrade behavior is `Schedule`, which consists of a node drain failure causing the upgrade operation to fail, leaving the undrained nodes in a schedulable state. Alternatively, you can select the `Cordon` behavior, which skips nodes that fail to drain by placing them in a quarantined state, labels them `kubernetes.azure.com/upgrade-status:Quarantined`, and proceeds with upgrading the remaining nodes. This behavior ensures that all nodes are either upgraded or quarantined. This approach allows you to troubleshoot drain failures and gracefully manage the quarantined nodes.
+Combine [planned maintenance window][planned-maintenance], [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade), [PDB][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] to increase the likelihood of successful, low-disruption upgrades:
 
-### How do I set the new Cordon behavior?
+* [Planned maintenance window][planned-maintenance]: Schedule auto-upgrade during low-traffic periods. We recommend at least four hours.
+* [Max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade): Higher values speed upgrades but might disrupt workloads. We recommend 33% for production.
+* [Max unavailable](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade): Use when capacity is limited.
+* [Pod disruption budget][pdb-spec]: Set to limit pods down during upgrades. Validate for your service.
+* [Node drain timeout][drain-timeout]: Configure pod eviction wait duration. The default is 30 minutes.
+* [Node soak time][soak-time]: Stagger upgrades to minimize downtime. The default is 0 minutes.
 
-Use CLI preview and install `aks-preview` extension 9.0.0b3 or later.
+|Upgrade settings|How extra nodes are used|Expected behavior|
+|-|-|-|
+| `maxSurge=5`, `maxUnavailable=0` | 5 surge nodes | Five nodes are surged for upgrade. |
+| `maxSurge=5`, `maxUnavailable=0` | 0-4 surge nodes | Upgrade fails because of insufficient surge nodes. |
+| `maxSurge=0`, `maxUnavailable=5` | N/A | Five existing nodes are drained for upgrade. |
 
-You can use the following commands to update or install `aks-preview` extension:
+> [!NOTE]
+> Before you upgrade, check for API breaking changes and review the [AKS release notes](https://github.com/Azure/AKS/releases) to avoid disruptions.
 
-```azurecli-interactive
-az extension update --name aks-preview
+## Validations used in the upgrade process
+
+AKS performs pre-upgrade validations to ensure cluster health:
+
+* **API breaking changes:** Detects deprecated APIs.
+* **Kubernetes upgrade version:** Ensures a valid upgrade path.
+* **PDB configuration:** Checks for misconfigured PDBs (for example, `maxUnavailable=0`).
+* **Quota:** Confirms enough quota for surge nodes.
+* **Subnet:** Verifies sufficient IP addresses.
+* **Certificates/service principals:** Detects expired credentials.
+
+These checks help to minimize upgrade failures and provide early visibility into issues.
+
+## Common upgrade scenarios and recommendations
+
+### Scenario 1: Capacity constraints
+
+If your cluster is limited by product tier or regional capacity, upgrades might fail when surge nodes can't be provisioned. This situation is common with specialized product tiers (like GPU nodes) or in regions with limited resources. Errors such as `SKUNotAvailable`, `AllocationFailed`, or `OverconstrainedAllocationRequest` might occur if `maxSurge` is set too high for available capacity.
+
+#### Recommendations to prevent or resolve
+
+* Use `maxUnavailable` to upgrade by using existing nodes instead of surging new ones. For more information, see [Customize unavailable nodes during upgrade](./upgrade-aks-cluster.md#customize-unavailable-nodes-during-upgrade).
+* Lower `maxSurge` to reduce extra capacity needs. For more information, see [Customize node surge upgrade](./upgrade-aks-cluster.md#customize-node-surge-upgrade).
+* For security-only updates, use security patch reimages that don't require surge nodes. For more information, see [Apply security and kernel updates to Linux nodes in Azure Kubernetes Service](./node-updates-kured.md).
+
+### Scenario 2: Node drain failures and PDBs
+
+Upgrades require draining nodes (evicting pods). Drains can fail if:
+
+* Pods are slow to terminate (long shutdown hooks or persistent connections).
+* Strict [PDBs](https://kubernetes.io/docs/concepts/workloads/pods/disruptions/) block pod evictions.
+
+Example error message:
+
+```output
+Code: UpgradeFailed
+Message: Drain node ... failed when evicting pod ... failed with Too Many Requests error. This error is often caused by a restrictive PDB policy. See https://aka.ms/aks/debugdrainfailures. Original error: Cannot evict pod as it would violate the pod's disruption budget. PDB debug info: ... blocked by pdb ... with 0 unready pods.
 ```
 
-```azurecli-interactive
-az extension add --name aks-preview
-```
+#### Recommendations to prevent or resolve
 
-Update the node pool undrainable node behavior to `Cordon`:
+* Set `maxUnavailable` in PDBs to allow at least one pod to be evicted.
+* Increase pod replicas so that the disruption budget can tolerate evictions.
+* Use `undrainableNodeBehavior` to allow upgrades to proceed even if some nodes can't be drained:
+  * **Schedule (default):** Delete node and surge replacement to reduce capacity.
+  * **Cordon (recommended):** Node is cordoned and labeled as `kubernetes.azure.com/upgrade-status=Quarantined`.
+    * Example command:
 
-```azurecli-interactive
-az aks nodepool update --cluster-name $CLUSTER_NAME --name $NODE_POOL_NAME --resource-group $RESOURCE_GROUP --max-surge 1 --undrainable-node-behavior Cordon
-```
+        ```azurecli-interactive
+        az aks nodepool update \
+          --resource-group <resource-group-name> \
+          --cluster-name <cluster-name> \
+          --name <node-pool-name> \
+          --undrainable-node-behavior Cordon
+        ```
 
-The following example output shows the undrainable node behavior updated:
+        The following example output shows the undrainable node behavior updated:
 
-```output  
-"upgradeSettings": {
-    "drainTimeoutInMinutes": null,
-    "maxSurge": "1",
-    "nodeSoakDurationInMinutes": null,
-    "undrainableNodeBehavior": "Cordon"
-  }
-```
+        ```output  
+        "upgradeSettings": {
+        "drainTimeoutInMinutes": null,
+        "maxSurge": "1",
+        "nodeSoakDurationInMinutes": null,
+        "undrainableNodeBehavior": "Cordon"
+        }
+        ```
 
-Verify the label on any blocked nodes. When there's a drain node failure on upgrade using the following command:
+#### Max Blocked Nodes Allowed (preview)
+
+The Max Blocked Nodes Allowed (preview) feature lets you specify how many nodes that fail to drain (blocked nodes) are tolerated during upgrades or similar operations. This feature works only if the undrainable node behavior property is set. Otherwise, the command returns an error.
+
+> [!NOTE]
+> If you don't explicitly set Max Blocked Nodes Allowed, it defaults to the value of [max surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade). If max surge isn't set, the default is typically 10%, so Max Blocked Nodes Allowed also defaults to 10%.
+
+##### Prerequisites
+
+- The Azure CLI `aks-preview` extension version 18.0.0b9 or later is required to use this feature.
+
+  Example command:
+
+  ```azurecli-interactive
+  az aks nodepool update \
+    --cluster-name jizenMC1 \
+    --name nodepool1 \
+    --resource-group jizenTestMaxBlockedNodesRG \
+    --max-surge 1 \
+    --undrainable-node-behavior Cordon \
+    --max-blocked-nodes 2 \
+    --drain-timeout 5
+  ```
+
+* Extend drain timeout if workloads need more time. (The default is *30 minutes*.)
+* Test PDBs in staging, monitor upgrade events, and use blue-green deployments for critical workloads. For more information, see [Blue-green deployment of AKS clusters](/azure/architecture/guide/aks/blue-green-deployment-for-aks).
+
+##### Verify undrainable nodes
+
+* The blocked nodes are unscheduled for pods and marked with the label `"kubernetes.azure.com/upgrade-status: Quarantined"`.
+* Verify the label on any blocked nodes when there's a drain node failure on upgrade:
+
+    ```bash
+    kubectl get nodes --show-labels=true
+    ```
+
+##### Resolve undrainable nodes
+
+1. Remove the responsible PDB:
+
+    ```bash
+    kubectl delete pdb <pdb-name>
+    ```
+
+1. Remove the `kubernetes.azure.com/upgrade-status: Quarantined` label:
+
+    ```bash
+    kubectl label nodes <node-name> <label-name>
+    ```
+
+1. Optionally, delete the blocked node:
+
+    ```azurecli-interactive
+    az aks nodepool delete-machines --cluster-name <cluster-name> --machine-names <machine-name> --name <node-pool-name> --resource-group <resource-group-name>
+    ```
+
+1. After you finish this step, you can reconcile the cluster status by performing any update operation without the optional fields as outlined in [az aks](/cli/azure/aks#az-aks-update). Alternatively, you can scale the node pool to the same number of nodes as the count of upgraded nodes. This action ensures that the node pool gets to its intended original size. AKS prioritizes the removal of the blocked nodes. This command also restores the cluster provisioning status to `Succeeded`. In the following example, `2` is the total number of upgraded nodes.
+
+    ```azurecli-interactive
+    # Update the cluster to restore the provisioning status
+    az aks update --resource-group <resource-group-name> --name <cluster-name>
+
+    # Scale the node pool to restore the original size
+    az aks nodepool scale --resource-group <resource-group-name> --cluster-name <cluster-name> --name <node-pool-name> --node-count 2
+    ```
+
+### Scenario 3: Slow upgrades
+
+Conservative settings or node-level issues can delay upgrades, which affects your ability to stay current with patches and improvements.
+
+Common causes of slow upgrades include:
+
+* Low `maxSurge` or `maxUnavailable` values (limits parallelism).
+* High soak times (long waits between node upgrades).
+* Drain failures (see [Node drain failures](#scenario-2-node-drain-failures-and-pdbs)).
+
+#### Recommendations to prevent or resolve
+
+* Use `maxSurge=33%`, `maxUnavailable=1` for production.
+* Use `maxSurge=50%`, `maxUnavailable=2` for dev/test.
+* Use OS Security Patch for fast, targeted patching (avoids full node reimaging).
+* Enable `undrainableNodeBehavior` to avoid upgrade blockers.
+
+### Scenario 4: IP exhaustion
+
+Surge nodes require more IPs. If the subnet is near capacity, node provisioning can fail (for example, `Error: SubnetIsFull`). This scenario is common with Azure Container Networking Interface, high `maxPods`, or large node counts.
+
+#### Recommendations to prevent or resolve
+
+* Ensure that your subnet has enough IPs for all nodes, surge nodes, and pods. The formula is `Total IPs = (Number of nodes + maxSurge) * (1 + maxPods)`.
+* Reclaim unused IPs or expand the subnet (for example, from /24 to /22).
+* Lower `maxSurge` if subnet expansion isn't possible:
+
+    ```azurecli-interactive
+    az aks nodepool update \
+      --resource-group <resource-group-name> \
+      --cluster-name <cluster-name> \
+      --name <node-pool-name> \
+      --max-surge 10%
+    ```
+
+* Monitor IP usage with Azure Monitor or custom alerts.
+* Reduce `maxPods` per node, clean up orphaned load balancer IPs, and plan subnet sizing for high-scale clusters.
+
+---
+
+## Frequently asked questions
+
+### Can I use open-source tools for validation?
+
+Yes. Many open-source tools integrate well with AKS upgrade processes:
+
+- [kube-no-trouble (kubent)](https://github.com/doitintl/kube-no-trouble): Scans for deprecated APIs before upgrades.
+- [Trivy](https://aquasecurity.github.io/trivy/): Security scanning for container images and Kubernetes configurations.
+- [Sonobuoy](https://sonobuoy.io/): Kubernetes conformance testing and cluster validation.
+- [kube-bench](https://github.com/aquasecurity/kube-bench): Security benchmark checks against Center for Internet Security standards.
+- [Polaris](https://github.com/FairwindsOps/polaris): Validation of Kubernetes best practices.
+- [kubectl-neat](https://github.com/itaysk/kubectl-neat): Clean up Kubernetes manifests for validation.
+
+### How do I validate API compatibility before upgrading?
+
+Run deprecation checks by using tools like kubent:
 
 ```bash
-kubectl get nodes --show-labels=true
+# Install and run API deprecation scanner
+kubectl apply -f https://github.com/doitintl/kube-no-trouble/releases/latest/download/knt-full.yaml
+
+# Check for deprecated APIs in your cluster
+kubectl run knt --image=doitintl/knt:latest --rm -it --restart=Never -- \
+  -c /kubeconfig -o json > api-deprecation-report.json
+
+# Review findings
+cat api-deprecation-report.json | jq '.[] | select(.deprecated==true)'
 ```
 
-The blocked nodes are unscheduled for pods and marked with the label `"kubernetes.azure.com/upgrade-status: Quarantined"`. The maximum number of nodes that can be left blocked can't be more than the `Max-Surge` value.
+### What makes AKS upgrades different from other Kubernetes platforms?
 
-### What action can i do from here on?
+AKS provides several unique advantages:
 
-First resolve the underlying issue causing the drain. The following example removes the responsible PDB:
+- Native Azure integration with Azure Traffic Manager, Azure Load Balancer, and networking.
+- Azure Kubernetes Fleet Manager for coordinated multicluster upgrades.
+- Automatic node image patching without manual node management.
+- Built-in validation for quota, networking, and credentials.
+- Azure support for upgrade-related issues.
 
-```bash
-kubectl delete pdb nginx-pdb
-poddisruptionbudget.policy "nginx-pdb" deleted.
-```
-If you are confident the issue is now resolved , then you can go ahead and remove the label `"kubernetes.azure.com/upgrade-status: Quarantined"` placed on undrainable nodes. This can be done as follows:
+## Choose your upgrade path
 
-```bash
-kubectl label nodes <node-name> <label-key>-
-```
-Any subsequent 'PUT' operation will attempt to reconcile the 'failed provisioning status' on the cluster to 'success' first. The quarantined nodes shall not be considered for any subsequent put or reconcile. You have to explicitly remove the labels as mentioned previously for any blocked nodes to be considered. 
+This article provided you with a technical foundation. Now select your scenario-based path.
 
-You can also delete the blocked node using the `az aks nodepool delete-machines` command. This command is useful if you intend to reduce the node pool footprint by removing nodes left behind in older versions.
+### Ready to execute?
 
- ```azurecli-interactive
-az aks nodepool delete-machines --cluster-name MyCluster --machine-names aks-nodepool1-test123-vmss000000 --name nodepool1 --resource-group TestRG
-```
+| If you have... | Then go to... |
+|----------------|---------------|
+| Production environment | [Production upgrade strategies](aks-production-upgrade-strategies.md): Battle-tested patterns for zero-downtime upgrades |
+| Databases or stateful apps | [Stateful workload patterns](stateful-workload-upgrades.md): Safe upgrade patterns for data persistence |
+| Multiple environments | [Upgrade scenarios hub](upgrade-scenarios-hub.md): Decision tree for complex setups |
+| Basic cluster | [Upgrade an AKS cluster](./upgrade-aks-cluster.md): Step-by-step cluster upgrade |
 
-After you complete this step, you can reconcile the cluster status by performing any update operation without the optional fields as outlined [here](/cli/azure/aks?view=azure-cli-latest#az-aks-update).
+### Still deciding?
 
-Example command:
+Use the [upgrade scenarios hub](upgrade-scenarios-hub.md) for a guided decision tree that considers your:
 
-```azurecli-interactive
-az aks update --resource-group TestRG --name MyCluster
-```
+- Downtime tolerance
+- Environment complexity
+- Risk profile
+- Timeline constraints
 
-Alternatively, you can scale the node pool to the same number of nodes as the count of upgraded nodes. This action ensures the node pool gets to its intended original size. AKS prioritizes the removal of the blocked nodes. This command also restores the cluster provisioning status to `Succeeded`. In the example given, `2` is the total number of upgraded nodes.
+## Next tasks
 
-```azurecli-interactive
-az aks nodepool scale --resource-group TestRG --cluster-name MyCluster --name nodepool1 --node-count 2 
-```
-
-## Optimize upgrades to improve performance and minimize disruptions
-
-The combination of [Planned Maintenance Window][planned-maintenance], [Max Surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade), [Pod Disruption Budget][pdb-spec], [node drain timeout][drain-timeout], and [node soak time][soak-time] can significantly increase the likelihood of node upgrades completing successfully by the end of the maintenance window while also minimizing disruptions.
-
-* [Planned Maintenance Window][planned-maintenance] enables service teams to schedule auto-upgrade during a predefined window, typically a low-traffic period, to minimize workload impact. We recommend a window duration of at least *four hours*.
-* [Max Surge](./upgrade-aks-cluster.md#customize-node-surge-upgrade) on the node pool allows requesting extra quota during the upgrade process and limits the number of nodes selected for upgrade simultaneously. A higher max surge results in a faster upgrade process. We don't recommend setting it at 100%, as it upgrades all nodes simultaneously, which can cause disruptions to running applications. We recommend a max surge quota of *33%* for production node pools.
-* [Pod Disruption Budget][pdb-spec] is set for service applications and limits the number of pods that can be down during voluntary disruptions, such as AKS-controlled node upgrades. It can be configured as `minAvailable` replicas, indicating the minimum number of application pods that need to be active, or `maxUnavailable` replicas, indicating the maximum number of application pods that can be terminated, ensuring high availability for the application. Refer to the guidance provided for configuring [Pod Disruption Budgets (PDBs)][pdb-concepts]. PDB values should be validated to determine the settings that work best for your specific service.
-* [Node drain timeout][drain-timeout] on the node pool allows you to configure the wait duration for eviction of pods and graceful termination per node during an upgrade. This option is useful when dealing with long running workloads. When the node drain timeout is specified (in minutes), AKS respects waiting on pod disruption budgets. If not specified, the default timeout is 30 minutes.
-* [Node soak time][soak-time] helps stagger node upgrades in a controlled manner and can minimize application downtime during an upgrade. You can specify a wait time, preferably as reasonably close to 0 minutes as possible, to check application readiness between node upgrades. If not specified, the default value is 0 minutes. Node soak time works together with the max surge and node drain timeout properties available in the node pool to deliver the right outcomes in terms of upgrade speed and application availability.
-
-## Next steps
-
-This article listed different upgrade options for AKS clusters. For a detailed discussion of upgrade best practices and other considerations, see [AKS patch and upgrade guidance][upgrade-operators-guide].
+* Review [AKS patch and upgrade guidance][upgrade-operators-guide] for best practices and planning tips before you start any upgrade.
+* Always check for [API breaking changes](https://aka.ms/aks/breakingchanges) and validate your workload's compatibility with the target Kubernetes version.
+* Test upgrade settings (such as `maxSurge`, `maxUnavailable`, and PDBs) in a staging environment to minimize production risk.
+* Monitor upgrade events and cluster health throughout the process.
 
 <!-- LINKS - external -->
 [pdb-spec]: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
-[pdb-concepts]:https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
+[pdb-concepts]: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/#pod-disruption-budgets
 
 <!-- LINKS - internal -->
-[aks-tutorial-prepare-app]: ./tutorial-kubernetes-prepare-app.md
 [drain-timeout]: ./upgrade-aks-cluster.md#set-node-drain-timeout-value
 [soak-time]: ./upgrade-aks-cluster.md#set-node-soak-time-value
 [nodepool-upgrade]: manage-node-pools.md#upgrade-a-cluster-control-plane-with-multiple-node-pools
 [planned-maintenance]: planned-maintenance.md
 [specific-nodepool]: node-image-upgrade.md#upgrade-a-specific-node-pool
 [upgrade-operators-guide]: /azure/architecture/operator-guides/aks/aks-upgrade-practices
-

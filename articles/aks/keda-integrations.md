@@ -5,6 +5,7 @@ author: tomkerkhove
 ms.topic: concept-article
 ms.date: 09/27/2023
 ms.author: tomkerkhove
+# Customer intent: As a Kubernetes operator, I want to integrate KEDA with Azure services, so that I can efficiently manage application autoscaling based on various metrics and events.
 ---
 
 # Integrations with Kubernetes Event-driven Autoscaling (KEDA) on Azure Kubernetes Service (AKS)
@@ -36,7 +37,7 @@ KEDA leverages the following scalers for Azure services:
 - [Azure Service Bus](https://keda.sh/docs/latest/scalers/azure-service-bus/)
 - [Azure Storage Queue](https://keda.sh/docs/latest/scalers/azure-storage-queue/)
 
-As of KEDA version `2.10`, the [Prometheus scaler][prometheus-scaler] supports Azure managed service for Prometheus.
+As of KEDA version `2.10`, the [Prometheus scaler][prometheus-scaler] supports Azure managed service for Prometheus. You can also use self-hosted Prometheus but this falls outside support scope.
 
 You can also install external scalers to autoscale on other Azure services:
 - [Azure Cosmos DB (Change feed)](https://github.com/kedacore/external-scaler-azure-cosmos-db)

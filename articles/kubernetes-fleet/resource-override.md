@@ -2,35 +2,29 @@
 title: "Customize Namespace-Scoped Resources in Azure Kubernetes Fleet Manager with Resource Overrides"
 description: This article provides an overview of how to use the ResourceOverride API to override namespace-scoped resources in Azure Kubernetes Fleet Manager.
 ms.topic: how-to
-ms.date: 05/10/2024
+ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.custom:
-  - build-2024
+# Customer intent: As a Kubernetes administrator, I want to customize namespace-scoped resources using the ResourceOverride API, so that I can enforce consistent configurations across my clusters efficiently.
 ---
 
 # Customize namespace-scoped resources in Azure Kubernetes Fleet Manager with resource overrides
 
-This article provides an overview of how to use the `ResourceOverride` API to override namespace-scoped resources in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
+This article provides an overview of how to use the `ResourceOverride` API to override namespace-scoped resources in Azure Kubernetes Fleet Manager.
 
 You can modify or override specific attributes of existing resources within a namespace. With `ResourceOverride`, you can define rules based on cluster labels and specify changes to be applied to resources such as Deployments, StatefulSets, ConfigMaps, or Secrets.
 
-These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters. Such updates help ensure consistent management and enforcement of configurations across your Kubernetes clusters managed through Kubernetes Fleet.
-
-## API components
+These changes can include updates to container images, environment variables, resource limits, or any other configurable parameters. Such updates help ensure consistent management and enforcement of configurations across your Kubernetes clusters managed through Fleet Manager.
 
 The `ResourceOverride` API consists of the following components:
 
 * `resourceSelectors`: Specifies the set of resources selected for overriding.
 * `policy`: Specifies the set of rules to apply to the selected resources.
 
-### Resource selectors
+## Resource selectors
 
 A `ResourceOverride` object can include one or more resource selectors to specify which resources to override. The `ResourceSelector` object includes the following fields.
-
-> [!NOTE]
-> If you select a namespace in `ResourceSelector`, the override will apply to all resources in the namespace.
 
 * `group`: The API group of the resource.
 * `version`: The API version of the resource.
@@ -38,9 +32,6 @@ A `ResourceOverride` object can include one or more resource selectors to specif
 * `namespace`: The namespace of the resource.
 
 To add a resource selector to a `ResourceOverride` object, use the `resourceSelectors` field with the following YAML format.
-
-> [!IMPORTANT]
-> The `ResourceOverride` object needs to be in the same namespace as the resource that you want to override.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1alpha1
@@ -56,11 +47,15 @@ spec:
        name: test-nginx
 ```
 
+> [!IMPORTANT]
+> * If you select a namespace in `ResourceSelector`, the override applies to all resources in the namespace.
+> * The `ResourceOverride` object needs to be in the same namespace as the resource to override.
+
 This example selects a `Deployment` object named `test-nginx` from the `test-namespace` namespace for overriding.
 
 ## Policy
 
-A `Policy` object consists of a set of rules, `overrideRules`, that specify the changes to apply to the selected resources. Each `overrideRules` object supports the following fields:
+A `Policy` object consists of a set of `overrideRules` that specify the changes to apply to the selected resources. Each `overrideRules` object supports the following fields:
 
 * `clusterSelector`: Specifies the set of clusters to which the override rule applies.
 * `jsonPatchOverrides`: Specifies the changes to apply to the selected resources.
@@ -126,6 +121,44 @@ You can use `jsonPatchOverrides` in the `overrideRules` object to specify the ch
 
 The `jsonPatchOverrides` fields apply a JSON patch on the selected resources by following [RFC 6902](https://datatracker.ietf.org/doc/html/rfc6902).
 
+### Reserved Variables in the JSON Patch Override Value
+
+Reserved variables are replaced by value used in the `value` of the JSON patch override rule. Currently supported reserved variables:
+
+* `${MEMBER-CLUSTER-NAME}`: replaced by the name of the `memberCluster`.
+
+For example, to create an Azure DNS hostname that contains the name of the cluster, you can use a configuration similar to:
+
+```yaml
+apiVersion: placement.kubernetes-fleet.io/v1alpha1
+kind: ResourceOverride
+metadata:
+  name: ro-kuard-demo-eastus
+  namespace: kuard-demo
+spec:
+  placement:
+    name: crp-kuard-demo
+  resourceSelectors:
+    -  group: ""
+        kind: Service
+        version: v1
+        name: kuard-svc
+  policy:
+    overrideRules:
+      - clusterSelector:
+          clusterSelectorTerms:
+            - labelSelector:
+                matchLabels:
+                  fleet.azure.com/location: eastus
+        jsonPatchOverrides:
+          - op: add
+            path: /metadata/annotations
+            value:
+              {"service.beta.kubernetes.io/azure-dns-label-name":"fleet-${MEMBER-CLUSTER-NAME}-eastus"}
+```
+
+The example `ResourceOverride` object adds a value of `fleet-clustername-eastus` to the specified JSON path on clusters in the `eastus` Azure region.
+
 ### Multiple override rules
 
 You can add multiple `overrideRules` objects to a `policy` field to apply multiple changes to the selected resources. Here's an example:
@@ -168,6 +201,7 @@ This example replaces the container image in the `Deployment` object with:
 
 * The `nginx:1.20.0` image for clusters with the `env: prod` label.
 * The `nginx:latest` image for clusters with the `env: test` label.
+
 
 ## Apply the cluster resource placement
 
@@ -247,7 +281,7 @@ This example replaces the container image in the `Deployment` object with:
 
 ### [Portal](#tab/azure-portal)
 
-1. On the Azure portal overview page for your Kubernetes Fleet resource, in the **Fleet Resources** section, select **Resource placements**.
+1. On the Azure portal overview page for your Fleet Manager resource, in the **Fleet Resources** section, select **Resource placements**.
 
 1. Select **Create**.
 
@@ -286,11 +320,11 @@ This example replaces the container image in the `Deployment` object with:
 
     :::image type="content" source="./media/quickstart-resource-propagation/overview-cluster-resource-inline.png" lightbox="./media/quickstart-resource-propagation/overview-cluster-resource.png" alt-text="Screenshot of the Azure portal page for cluster resource placements, showing a successfully created placement.":::
 
-1. Verify that the cluster resource placement was applied to the selected resources by selecting the resource from the list and checking the status.
+1. Verify that the cluster resource placement is applied by selecting the CRP from the list and checking the placement status.
 
 ---
 
 ## Related content
 
-* [Open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/tree/main/docs)
+* [Open-source KubeFleet documentation](https://kubefleet.dev/docs/concepts/override/)
 * [Azure Kubernetes Fleet Manager overview](./overview.md)

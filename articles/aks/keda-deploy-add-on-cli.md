@@ -6,6 +6,7 @@ ms.author: raorugan
 ms.topic: how-to
 ms.date: 09/26/2023
 ms.custom: template-how-to, devx-track-azurecli
+# Customer intent: "As a Kubernetes administrator, I want to install the KEDA add-on on my Azure Kubernetes Service cluster using the Azure CLI, so that I can enable event-driven autoscaling for my applications."
 ---
 
 # Install the Kubernetes Event-driven Autoscaling (KEDA) add-on using the Azure CLI
@@ -17,7 +18,7 @@ This article shows you how to install the Kubernetes Event-driven Autoscaling (K
 [!INCLUDE [Current version callout](./includes/keda/current-version-callout.md)]
 
 > [!NOTE]
-> KEDA version 2.15 introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15, it will begin running it in the AKS preview version 1.31.
+> KEDA version 2.15+ introduces a breaking change that [removes pod identity support](https://github.com/kedacore/keda/issues/5035). We recommend moving over to workload identity for your authentication if you're using pod identity. While the KEDA managed add-on doesn't currently run KEDA version 2.15+, it will begin running it in the AKS preview version 1.31.
 >
 > For more information on how to securely scale your applications with workload identity, please read our [tutorial][keda-workload-identity]. To view KEDA's breaking change/deprecation policy, please read their [official documentation][keda-support-policy].
 

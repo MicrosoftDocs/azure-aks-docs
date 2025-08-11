@@ -8,7 +8,9 @@ ms.topic: how-to
 ms.date: 01/23/2024
 ms.author: allensu
 author: asudbring
-#Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an Azure Load Balancer with a Standard SKU.
+
+# Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an Azure Load Balancer with a Standard SKU.
+
 ---
 
 # Use a public standard load balancer in Azure Kubernetes Service (AKS)
@@ -294,7 +296,7 @@ The following example output shows that automatic outbound port assignment based
 ```console
 AllocatedOutboundPorts    EnableTcpReset    IdleTimeoutInMinutes    Name             Protocol    ProvisioningState    ResourceGroup
 ------------------------  ----------------  ----------------------  ---------------  ----------  -------------------  -------------
-0                         True              30                      aksOutboundRule  All         Succeeded            MC_myResourceGroup_myAKSCluster_eastus  
+0                         True              30                      aksOutboundRule  All         Succeeded            MC_myResourceGroup_myAKSCluster_eastus
 ```
 
 To configure a specific value for *AllocatedOutboundPorts* and outbound IP address when creating or updating a cluster, use `load-balancer-outbound-ports` and either `load-balancer-managed-outbound-ip-count`, `load-balancer-outbound-ips`, or `load-balancer-outbound-ip-prefixes`. Before setting a specific value or increasing an existing value for either outbound ports or outbound IP addresses, you must calculate the appropriate number of outbound ports and IP addresses. Use the following equation for this calculation rounded to the nearest integer: `64,000 ports per IP / <outbound ports per node> * <number of outbound IPs> = <maximum number of nodes in the cluster>`.
@@ -384,13 +386,16 @@ spec:
 
 This example updates the rule to allow inbound external traffic only from the `MY_EXTERNAL_IP_RANGE` range. If you replace `MY_EXTERNAL_IP_RANGE` with the internal subnet IP address, traffic is restricted to only cluster internal IPs. If traffic is restricted to cluster internal IPs, clients outside your Kubernetes cluster are unable to access the load balancer.
 
+> [!Note]
+> When you need to allow both CIDR blocks and Azure service tags, remove the `loadBalancerSourceRanges` property and add the `service.beta.kubernetes.io/azure-allowed-ip-ranges` and/or `service.beta.kubernetes.io/azure-allowed-service-tags` Load Balancer annotations. This configuration applies filtering only at the NSG layer and skips host-level kube-proxy rules. If you set the `loadBalancerSourceRanges` property together with the `azure-allowed-service-tags` annotation, AKS will report an error when you attempt to apply the specification.
+
 > [!NOTE]
 > * Inbound, external traffic flows from the load balancer to the virtual network for your AKS cluster. The virtual network has a network security group (NSG) which allows all inbound traffic from the load balancer. This NSG uses a [service tag][service-tags] of type *LoadBalancer* to allow traffic from the load balancer.
 > * Pod CIDR should be added to loadBalancerSourceRanges if there are Pods needing to access the service's LoadBalancer IP for clusters with version v1.25 or above.
 
 ## Maintain the client's IP on inbound connections
 
-By default, a service of type `LoadBalancer` [in Kubernetes](https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-type-loadbalancer) and in AKS doesn't persist the client's IP address on the connection to the pod. The source IP on the packet that's delivered to the pod becomes the private IP of the node. To maintain the client’s IP address, you must set `service.spec.externalTrafficPolicy` to `local` in the service definition. The following manifest shows an example.
+By default, a service of type `LoadBalancer` [in Kubernetes](https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-type-loadbalancer) and in AKS doesn't persist the client's IP address on the connection to the pod. The source IP on the packet that's delivered to the pod becomes the private IP of the node. To maintain the client's IP address, you must set `service.spec.externalTrafficPolicy` to `local` in the service definition. The following manifest shows an example.
 
 ```yaml
 apiVersion: v1
@@ -418,10 +423,17 @@ The following annotations are supported for Kubernetes services with type `LoadB
 | `service.beta.kubernetes.io/azure-shared-securityrule`             | `true` or `false`                   | Specify exposing the service through a potentially shared Azure security rule to increase service exposure, utilizing Azure [Augmented Security Rules][augmented-security-rules] in Network Security groups. |
 | `service.beta.kubernetes.io/azure-load-balancer-resource-group`    | Name of the resource group          | Specify the resource group of load balancer public IPs that aren't in the same resource group as the cluster infrastructure (node resource group).                                                           |
 | `service.beta.kubernetes.io/azure-allowed-service-tags`            | List of allowed service tags        | Specify a list of allowed [service tags][service-tags] separated by commas.                                                                                                                                  |
+| `service.beta.kubernetes.io/azure-allowed-ip-ranges`               | list of allowed IP ranges           | Specify a list of allowed IP ranges separated by comma.                                                                                                                                                      |
 | `service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout`  | TCP idle timeouts in minutes        | Specify the time in minutes for TCP connection idle timeouts to occur on the load balancer. The default and minimum value is 4. The maximum value is 30. The value must be an integer.                       |
 | `service.beta.kubernetes.io/azure-load-balancer-disable-tcp-reset` | `true` or `false`                   | Specify whether the load balancer should disable TCP reset on idle timeout.                                                                                                                                  |
 | `service.beta.kubernetes.io/azure-load-balancer-ipv4`              | IPv4 address                        | Specify the IPv4 address to assign to the load balancer.                                                                                                                                                     |
 | `service.beta.kubernetes.io/azure-load-balancer-ipv6`              | IPv6 address                        | Specify the IPv6 address to assign to the load balancer.                                                                                                                                                     |
+
+### Customize Allowed IP Ranges (Preview)
+
+You can use the `azure-allowed-service-tags` and `azure-allowed-ip-ranges` annotations to combine CIDR blocks and Azure Service Tags on the LoadBalancer Service. Add `service.beta.kubernetes.io/azure-allowed-ip-ranges` with a comma-separated list of IP prefixes, and add `service.beta.kubernetes.io/azure-allowed-service-tags` with one or more Azure Service Tags. The AKS cloud provider will merge both values into a single network security group (NSG) rule, so traffic is filtered centrally at the NSG giving you a single, NSG-centric control plane for both IP addresses and service tags.
+
+You can continue to use `loadBalancerSourceRanges` property for cases where you want CIDR-based restrictions enforced both in the NSG and the host. This property cannot be used together with the `azure-allowed-service-tags` annotation. If both are specified, AKS will report an error when you try to apply the Load Balancer service specification.
 
 ### Customize the load balancer health probe
 | Annotation                                                                 | Value                                                     | Description                                                                                                                                                                                                           |
@@ -605,6 +617,96 @@ Take advantage of connection reuse and connection pooling whenever possible. The
 * Never silently abandon a TCP flow and rely on TCP timers to clean up flow. If you don't let TCP explicitly close the connection, state remains allocated at intermediate systems and endpoints, and it makes SNAT ports unavailable for other connections. This pattern can trigger application failures and SNAT exhaustion.
 * Don't change OS-level TCP close related timer values without expert knowledge of impact. While the TCP stack recovers, your application performance can be negatively affected when the endpoints of a connection have mismatched expectations. Wishing to change timers is usually a sign of an underlying design problem. Review following recommendations.
 
+## Shared health probes for `externalTrafficPolicy: Cluster` Services (preview)
+
+In clusters that use `externalTrafficPolicy: Cluster`, Azure Load Balancer (SLB) currently creates a _separate probe per Service_ and targets each Service's `nodePort`.
+
+This design means SLB infers node health from whichever **application pod** answers the probe. As clusters grow, this approach leads to several issues:
+
+* **Configuration drift and blind spots**: SLB can't detect a failed or misconfigured `kube‑proxy` if iptables rules are still present.
+* **Duplicate health logic**: Readiness must be defined twice. Once in each pod's `readinessProbe`, and again through SLB annotations.
+* **Operational overhead**: Each Service on each node is probed every *five seconds*, consuming connections, SNAT ports, and SLB rule space.
+* **Feature friction**: Customers can't set `allocateLoadBalancerNodePorts=false`, and workloads like Istio or ingress‑nginx require extra annotations to keep probes working.
+* **Troubleshooting confusion**: An unhealthy app, Network Policy rule, or scale‑to‑zero event can make an *entire node* appear down.
+
+The **shared probe mode** (preview) solves these problems by moving to a *single HTTP probe* for all `externalTrafficPolicy: Cluster` Services:
+
+* SLB probes `http://<node‑ip>:10356/healthz`, the standard `kube‑proxy` health endpoint.
+* A lightweight sidecar runs next to `kube‑proxy` to relay the probe and handle PROXY protocol when Private Link Service is enabled.
+
+The following table outlines **key benefits** of using shared probe mode:
+
+| Benefit                | Why it matters                                                            |
+|------------------------|---------------------------------------------------------------------------|
+| Accurate node health   | SLB now measures `kube‑proxy` directly, not an arbitrary backend pod.     |
+| Simpler configuration  | No per‑Service probe annotations; readiness lives solely in the pod spec. |
+| Lower traffic overhead | One probe per node instead of *Services × (nodes – 1)* probes.            |
+
+> [!NOTE]
+> * Services that use `externalTrafficPolicy: Local` are **unchanged**.*
+> This feature does **not** address container‑native load balancing.
+
+### Install the aks-preview Azure CLI extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+* Install the aks-preview extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli
+    az extension add --name aks-preview
+    ```
+
+* Update to the latest version of the extension released using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli
+    az extension update --name aks-preview
+    ```
+
+### Register the `EnableSLBSharedHealthProbePreview` feature flag
+
+1. Register the `EnableSLBSharedHealthProbePreview` feature flag using the [`az feature register`][az-feature-register] command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "EnableSLBSharedHealthProbePreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the [`az feature show`][az-feature-show] command:
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "EnableSLBSharedHealthProbePreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the [`az provider register`][az-provider-register] command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+### Create a new cluster with shared probe mode\
+
+Create a new cluster with shared probe mode using the following [`az aks create`](/cli/azure/aks#az-aks-create) command:
+
+```azurecli-interactive
+az aks create \
+  --resource-group <rg> \
+  --name <cluster> \
+  --cluster-service-load-balancer-health-probe-mode shared
+```
+
+### Enable shared probe mode on an existing cluster
+
+Enable shared probe mode on an existing cluster using the following [`az aks update`](/cli/azure/aks#az-aks-update) command:
+
+```azurecli-interactive
+az aks update \
+  --resource-group <rg> \
+  --name <cluster> \
+  --cluster-service-load-balancer-health-probe-mode shared
+```
+
+
 ## Moving from a *Basic* SKU load balancer to *Standard* SKU
 
 If you have an existing cluster with the *Basic* SKU load balancer, there are important behavioral differences to note when migrating to the *Standard* SKU load balancer.
@@ -612,6 +714,9 @@ If you have an existing cluster with the *Basic* SKU load balancer, there are im
 For example, making blue/green deployments to migrate clusters is a common practice given the `load-balancer-sku` type of a cluster and can only be defined at cluster create time. However, *Basic* SKU load balancers use *Basic* SKU IP addresses, which aren't compatible with *Standard* SKU load balancers. *Standard* SKU load balancers require *Standard* SKU IP addresses. When migrating clusters to upgrade load balancer SKUs, a new IP address with a compatible IP address SKU is required.
 
 For more considerations on how to migrate clusters, visit [our documentation on migration considerations](aks-migration.md).
+
+>[!Important]
+>On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you are currently using the Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. For more information on how to upgrade your Basic load balancer on AKS, see our [documentation on Basic load balancer migration][upgrade-blb-on-aks] .
 
 ## Limitations
 
@@ -676,10 +781,10 @@ To learn more about using internal load balancer for inbound traffic, see the [A
 [az-extension-add]: /cli/azure/extension#az_extension_add
 [az-extension-update]: /cli/azure/extension#az_extension_update
 [use-multiple-node-pools]: use-multiple-node-pools.md
+[upgrade-blb-on-aks]: upgrade-basic-load-balancer-on-aks.md
 [troubleshoot-snat]: #troubleshooting-snat
 [service-tags]: /azure/virtual-network/network-security-groups-overview#service-tags
 [maxcount]: ./cluster-autoscaler.md#enable-the-cluster-autoscaler-on-an-existing-cluster
 [maxsurge]: ./upgrade-aks-cluster.md#customize-node-surge-upgrade
 [az-lb]: /azure/load-balancer/load-balancer-overview
 [alb-outbound-rules]: /azure/load-balancer/outbound-rules
-

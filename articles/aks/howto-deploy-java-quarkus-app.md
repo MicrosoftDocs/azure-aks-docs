@@ -10,6 +10,7 @@ ms.date: 12/16/2024
 ms.subservice: aks-developer
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-quarkus, devx-track-javaee-quarkus-aks, devx-track-extended-java, devx-track-azurecli
 # external contributor: danieloh30
+# Customer intent: As a developer, I want to deploy a Quarkus application on Azure Kubernetes Service, so that I can leverage cloud-native features for my Java applications.
 ---
 
 # Deploy a Java application with Quarkus on an Azure Kubernetes Service cluster
@@ -818,7 +819,7 @@ You might also want to use `docker rmi` to delete the container images `postgres
 
 ## Next steps
 
-- [Azure Kubernetes Service](https://azure.microsoft.com/free/services/kubernetes-service/)
+- [Azure Kubernetes Service](https://azure.microsoft.com/services/kubernetes-service/)
 - [Deploy serverless Java apps with Quarkus on Azure Functions](/azure/azure-functions/functions-create-first-quarkus)
 - [Quarkus](https://quarkus.io/)
 - [Kubernetes Extension](https://quarkus.io/guides/deploying-to-kubernetes)

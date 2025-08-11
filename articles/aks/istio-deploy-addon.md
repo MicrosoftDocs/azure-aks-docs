@@ -2,11 +2,12 @@
 title: Deploy Istio-based service mesh add-on for Azure Kubernetes Service
 description: Deploy Istio-based service mesh add-on for Azure Kubernetes Service
 ms.topic: how-to
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, copilot-scenario-highlight
 ms.service: azure-kubernetes-service
 ms.date: 03/28/2024
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: As a Kubernetes administrator, I want to deploy the Istio-based service mesh add-on for my Azure Kubernetes Service cluster, so that I can enhance traffic management and monitoring capabilities within my applications.
 ---
 
 # Deploy Istio-based service mesh add-on for Azure Kubernetes Service
@@ -14,6 +15,9 @@ author: shashankbarsin
 This article shows you how to install the Istio-based service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
 For more information on Istio and the service mesh add-on, see [Istio-based service mesh add-on for Azure Kubernetes Service][istio-about].
+
+> [!TIP]
+> You can use Microsoft Copilot in Azure to help deploy Istio to your AKS clusters in the Azure portal. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#install-and-work-with-istio).
 
 ## Before you begin
 
@@ -23,6 +27,13 @@ For more information on Istio and the service mesh add-on, see [Istio-based serv
     ```azurecli-interactive
     az aks mesh get-revisions --location <location> -o table
     ```
+* In some cases, Istio CRDs from previous installations may not be automatically cleaned up on uninstall. Ensure existing Istio CRDs are deleted:
+
+    ```bash
+    kubectl delete crd $(kubectl get crd -A | grep "istio.io" | awk '{print $1}')
+    ```
+    It is recommended to also clean up other resources from self-managed installations of Istio such as ClusterRoles, MutatingWebhookConfigurations and ValidatingWebhookConfigurations.
+
 * Note that if you choose to use any `istioctl` CLI commands, you will need to include a flag to point to the add-on installation of Istio: `--istioNamespace aks-istio-system`
 
 ### Set environment variables
@@ -37,6 +48,9 @@ export LOCATION=<location>
 
 This section includes steps to install the Istio add-on during cluster creation or enable for an existing cluster using the Azure CLI. If you want to install the add-on using Bicep, see the guide for [installing an AKS cluster with the Istio service mesh add-on using Bicep][install-aks-cluster-istio-bicep]. To learn more about the Bicep resource definition for an AKS cluster, see [Bicep managedCluster reference][bicep-aks-resource-definition].
 
+> [!NOTE]
+> If you need the `istiod` and ingress/egress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or the `azureservicemesh/istio.replica.preferred` node label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
+
 ### Revision selection
 
 If you enable the add-on without specifying a revision, a default supported revision is installed for you.
@@ -44,7 +58,7 @@ If you enable the add-on without specifying a revision, a default supported revi
 To specify a revision, perform the following steps.
 
 1. Use the [`az aks mesh get-revisions`][az-aks-mesh-get-revisions] command to check which revisions are available for different AKS cluster versions in a region.
-1. Based on the available revisions, you can include the `--revision asm-X-Y` (ex: `--revision asm-1-20`) flag in the enable command you use for mesh installation.
+1. Based on the available revisions, you can include the `--revision asm-X-Y` (ex: `--revision asm-1-24`) flag in the enable command you use for mesh installation.
 
 ### Install mesh during cluster creation
 
@@ -57,7 +71,7 @@ az aks create \
     --resource-group ${RESOURCE_GROUP} \
     --name ${CLUSTER} \
     --enable-asm \
-    --generate-ssh-keys    
+    --generate-ssh-keys
 ```
 
 ### Install mesh for existing cluster
@@ -83,7 +97,7 @@ az aks show --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}  --query 'servi
 
 Confirm the output shows `Istio`.
 
-Use `az aks get-credentials` to the credentials for your AKS cluster:
+Use `az aks get-credentials` to get the credentials for your AKS cluster:
 
 ```azurecli-interactive
 az aks get-credentials --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
@@ -99,8 +113,8 @@ Confirm the `istiod` pod has a status of `Running`. For example:
 
 ```
 NAME                               READY   STATUS    RESTARTS   AGE
-istiod-asm-1-18-74f7f7c46c-xfdtl   1/1     Running   0          2m
-istiod-asm-1-18-74f7f7c46c-4nt2v   1/1     Running   0          2m
+istiod-asm-1-24-74f7f7c46c-xfdtl   1/1     Running   0          2m
+istiod-asm-1-24-74f7f7c46c-4nt2v   1/1     Running   0          2m
 ```
 
 ## Enable sidecar injection
@@ -120,7 +134,9 @@ kubectl label namespace default istio.io/rev=asm-X-Y
 ```
 
 > [!IMPORTANT]
-> The default `istio-injection=enabled` labeling doesn't work. Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-18`) is required.
+> Explicit versioning matching the control plane revision (ex: `istio.io/rev=asm-1-24`) is required.
+>
+> The default `istio-injection=enabled` label will not work and will **cause the sidecar injection to skip the namespace** for the add-on.
 
 For manual injection of sidecar using `istioctl kube-inject`, you need to specify extra parameters for `istioNamespace` (`-i`) and `revision` (`-r`). For example:
 
@@ -153,10 +169,10 @@ The `istio-proxy` container is the Envoy sidecar. Your application is now part o
 Use `kubectl apply` to deploy the sample application on the cluster:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.18/samples/bookinfo/platform/kube/bookinfo.yaml
+kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.24/samples/bookinfo/platform/kube/bookinfo.yaml
 ```
 > [!NOTE]
-> Clusters using an HTTP proxy for outbound internet access will need to set up a Service Entry. For setup instructions see [HTTP proxy support in Azure Kubernetes Service](./http-proxy.md#istio-add-on-http-proxy-for-external-services)
+> Clusters using an HTTP proxy for outbound internet access will need to set up a Service Entry. For setup instructions see [HTTP proxy support in Azure Kubernetes Service](./http-proxy.md)
 
 Confirm several deployments and services are created on your cluster. For example:
 
@@ -212,40 +228,12 @@ Confirm that all the pods have status of `Running` with two containers in the `R
 
 To test this sample application against ingress, check out [next-steps](#next-steps).
 
-## Delete resources
-
-Use `kubectl delete` to delete the sample application:
-
-```bash
-kubectl delete -f https://raw.githubusercontent.com/istio/istio/release-1.18/samples/bookinfo/platform/kube/bookinfo.yaml
-```
-
-If you don't intend to enable Istio ingress on your cluster and want to disable the Istio add-on, run the following command:
-
-```azurecli-interactive
-az aks mesh disable --resource-group ${RESOURCE_GROUP} --name ${CLUSTER}
-```
-
-> [!CAUTION]
-> Disabling the service mesh addon will completely remove the Istio control plane from the cluster.
-
-Istio `CustomResourceDefintion`s (CRDs) aren't be deleted by default. To clean them up, use:
-
-```bash
-kubectl delete crd $(kubectl get crd -A | grep "istio.io" | awk '{print $1}')
-```
-
-Use `az group delete` to delete your cluster and the associated resources:
-
-```azurecli-interactive
-az group delete --name ${RESOURCE_GROUP} --yes --no-wait
-```
-
 ## Next steps
 
 * [Deploy external or internal ingresses for Istio service mesh add-on][istio-deploy-ingress]
 * [Scale istiod and ingress gateway HPA][istio-scaling-guide]
 * [Collect metrics for Istio service mesh add-on workloads in Azure Managed Prometheus][istio-metrics-managed-prometheus]
+* [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
 
 <!--- External Links --->
 [install-aks-cluster-istio-bicep]: https://github.com/Azure-Samples/aks-istio-addon-bicep
@@ -263,3 +251,5 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [bicep-aks-resource-definition]: /azure/templates/microsoft.containerservice/managedclusters
 [istio-scaling-guide]: istio-scale.md#scaling
 [istio-metrics-managed-prometheus]: istio-metrics-managed-prometheus.md
+[aks-system-nodes]: /azure/aks/use-system-pools
+[istio-egress-gateway]: istio-deploy-egress.md

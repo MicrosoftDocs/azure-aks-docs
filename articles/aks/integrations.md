@@ -4,9 +4,10 @@ description: Learn about the add-ons, extensions, and open-source integrations y
 ms.topic: overview
 ms.subservice: aks-integration
 ms.date: 05/22/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a Kubernetes administrator, I want to integrate add-ons and extensions with my Azure Kubernetes Service cluster, so that I can enhance its functionality and streamline management of resources effectively.
 ---
 
 # Add-ons, extensions, and other integrations with Azure Kubernetes Service (AKS)
@@ -33,7 +34,6 @@ AKS uses the following rules for applying updates to installed add-ons:
 
 | Name | Description | Articles | GitHub |
 |---|---|---| --- |
-| web_application_routing | Use a managed NGINX ingress controller with your AKS cluster.| [Application Routing Overview][app-routing] | [GitHub][app-routing-repo] |
 | ingress-appgw | Use Application Gateway Ingress Controller with your AKS cluster. | [What is Application Gateway Ingress Controller?][agic] | [GitHub][agic-repo] |
 | keda | Use event-driven autoscaling for the applications on your AKS cluster. | [Simplified application autoscaling with Kubernetes Event-driven Autoscaling (KEDA) add-on][keda] | [GitHub][keda-repo] |
 | monitoring | Use Container Insights and Managed Prometheus monitoring with your AKS cluster. | [Container insights overview][container-insights]<br>[Managed Prometheus overview][managed-prometheus] | [GitHub][aks-repo]<br>[GitHub][managed-prometheus-repo] |

@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 author: shashankbarsin
 ms.date: 08/07/2023
 ms.author: shasb
+# Customer intent: "As a Kubernetes administrator, I want to deploy external and internal ingress gateways for the Istio service mesh on my cluster, so that I can efficiently manage application traffic routing both inside and outside my Kubernetes environment."
 ---
 
 # Deploy ingress gateways for Istio service mesh add-on for Azure Kubernetes Service
@@ -13,13 +14,16 @@ ms.author: shasb
 This article shows you how to deploy external or internal ingresses for the Istio service mesh add-on for Azure Kubernetes Service (AKS) cluster.
 
 > [!NOTE]
-> When performing a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-the-ingress-gateway) of the Istio add-on, another deployment for the external / internal gateways will be created for the new control plane revision.
+> When you perform a [minor revision upgrade](./istio-upgrade.md#minor-revision-upgrades-with-ingress-and-egress-gateways) of the Istio add-on, another deployment for the external / internal gateways will be created for the new control plane revision.
 
 ## Prerequisites
 
 This guide assumes you followed the [documentation][istio-deploy-addon] to enable the Istio add-on on an AKS cluster, deploy a sample application, and set environment variables.
 
 ## Enable external ingress gateway
+
+> [!NOTE]
+> If you need the ingress gateway pods scheduled onto particular nodes, you can use [AKS system nodes][aks-system-nodes] or the `azureservicemesh/istio.replica.preferred` node label. The pods have node affinities with a weighted preference of `100` for AKS system nodes (labeled `kubernetes.azure.com/mode: system`), and a weighted preference of `50` for nodes labeled `azureservicemesh/istio.replica.preferred: true`.
 
 Use `az aks mesh enable-ingress-gateway` to enable an externally accessible Istio ingress on your AKS cluster:
 
@@ -234,6 +238,10 @@ The following annotations can be added to the Kubernetes service for the externa
 - `service.beta.kubernetes.io/azure-load-balancer-resource-group`: for specifying the resource group of a public IP in a different resource group from the cluster.
 - `service.beta.kubernetes.io/azure-pip-name`: for specifying the name of a public IP address.
 - `external-dns.alpha.kubernetes.io/hostname`: for specifying the domain for resource's DNS records. For more information, see [external-dns][external-dns].
+- `service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout`: for configuring the TCP idle timeout in minutes for connections through the Azure Load Balancer.
+- `service.beta.kubernetes.io/azure-allowed-ip-ranges`: for specifying a list of allowed IP ranges separated by commas.
+- `service.beta.kubernetes.io/azure-load-balancer-disable-tcp-reset`: for controlling whether Azure Load Balancer enables TCP Reset.
+- `service.beta.kubernetes.io/azure-pip-ip-tags`: for specifying a list of IpTags separated by commas.
 
 The add-on supports health probe annotations for ports 80 and 443. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
 
@@ -275,6 +283,7 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 
 * [Secure ingress gateway for Istio service mesh add-on][istio-secure-gateway]
 * [Configure ingress gateway Horizontal Pod Autoscaler (HPA)][istio-scaling-guide]
+* [Deploy egress gateways for the Istio service mesh add-on][istio-egress-gateway]
 
 [istio-deploy-addon]: istio-deploy-addon.md
 [istio-secure-gateway]: istio-secure-gateway.md
@@ -285,3 +294,5 @@ az group delete --name ${RESOURCE_GROUP} --yes --no-wait
 [external-dns]: https://kubernetes-sigs.github.io/external-dns/latest/docs/annotations/annotations/#external-dnsalphakubernetesiohostname
 [azure-load-balancer-annotations-for-ports]: /azure/aks/load-balancer-standard#customize-the-load-balancer-health-probe
 [kubernetes-docs-load-balancer]: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+[aks-system-nodes]: /azure/aks/use-system-pools
+[istio-egress-gateway]: istio-deploy-egress.md

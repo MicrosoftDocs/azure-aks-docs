@@ -1,11 +1,12 @@
 ---
 title: Automatically repair Azure Kubernetes Service (AKS) nodes 
 description: Learn about node auto-repair functionality and how AKS fixes broken worker nodes.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 01/03/2025
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a DevOps engineer, I want to understand how automatic node repair works in Azure Kubernetes Service so that I can ensure high availability and minimize downtime for my applications.
 ---
 
 # Azure Kubernetes Service (AKS) node auto-repair
@@ -50,9 +51,6 @@ There are cases where AKS doesn't perform automatic repair. Failure to automatic
 When AKS performs node auto-repair on your cluster, AKS emits Kubernetes events from the aks-auto-repair source for visibility. The following events appear on a node object when auto-repair happens. 
 
 To learn more about accessing, storing, and configuring alerts on Kubernetes events, see [Use Kubernetes events for troubleshooting in Azure Kubernetes Service](./events.md).
-
-> [!NOTE]
-> We're currently monitoring the volume of the new remediation events to ensure that there are no performance degradations. As a result, your cluster may not receive these new events as they are slowly rolling out to clusters in production regions. We estimate a full rollout by March 2025.
 
 | Reason | Event Message | Description |
 | --- | --- | --- |

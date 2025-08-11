@@ -1,11 +1,12 @@
 ---
 title: "Update Kubernetes and node images across multiple member clusters"
 description: This article describes the concept of update orchestration across multiple clusters.
-ms.date: 03/06/2025
+ms.date: 06/16/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
-ms.topic: conceptual
+ms.topic: concept-article
+# Customer intent: "As a platform administrator managing multiple Kubernetes clusters, I want to orchestrate safe and predictable updates across member clusters, so that I can maintain and upgrade the clusters without manual intervention and minimize downtime."
 ---
 
 # Update Kubernetes and node images across multiple member clusters
@@ -100,11 +101,9 @@ An update run can be in one of the following states:
 > [!NOTE]
 > You can re-run an update run at any time in order to re-apply upgrades that may have been skipped or failed.
 
-## Understanding auto-upgrade profiles (preview)
+## Understanding auto-upgrade profiles
 
 Auto-upgrade profiles are used to automatically trigger update runs when new Kubernetes or node image versions are made available for AKS. 
-
-[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 In an auto-upgrade profile you can configure:
 
@@ -118,8 +117,8 @@ The Stable channel is always the latest AKS-supported Kubernetes patch release o
 
 Examples: 
 
-- The latest supported minor Kubernetes version is *1.30*. Any patch releases in the *1.29* minor range would be considered for Stable channel updates.
-- A new minor Kubernetes version of *1.31* is published. Any patch release in the *1.30* minor range would be considered for Stable channel updates. Any cluster previously receiving updates from *1.29* would be updated to the most recent patch for *1.30*.
+* The latest supported minor Kubernetes version is *1.30*. Any patch releases in the *1.29* minor range would be considered for Stable channel updates.
+* A new minor Kubernetes version of *1.31* is published. Any patch release in the *1.30* minor range would be considered for Stable channel updates. Any cluster previously receiving updates from *1.29* would be updated to the most recent patch for *1.30*.
 
 ### Rapid channel
 
@@ -127,8 +126,8 @@ The Rapid channel is always the most recent AKS-supported Kubernetes minor relea
 
 Examples: 
 
-- The latest supported minor version is *1.30*. Any patch release in the *1.30* minor range would be considered for Rapid channel updates.
-- A new minor Kubernetes version of *1.31* is published. *1.30* shifts to the Stable channel. Any cluster previously receiving updates from *1.30* would be updated to the most recent patch for *1.31* which is now the Rapid channel.
+* The latest supported minor version is *1.30*. Any patch release in the *1.30* minor range would be considered for Rapid channel updates.
+* A new minor Kubernetes version of *1.31* is published. *1.30* shifts to the Stable channel. Any cluster previously receiving updates from *1.30* would be updated to the most recent patch for *1.31* which is now the Rapid channel.
 
 ### NodeImage channel
 
@@ -140,7 +139,7 @@ Nodes on different operating systems will be updated in accordance with the node
 
 Example:
 
-- A cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*. A new NodeImage version *20348.2582.240916* is released and the cluster nodes are automatically upgraded to version *20348.2582.240916*.
+* A cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*. A new NodeImage version *20348.2582.240916* is released and the cluster nodes are automatically upgraded to version *20348.2582.240916*.
 
 ### Minor version skipping behavior
 
@@ -150,7 +149,7 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 >
 > Keep the following information in mind when using auto upgrade:
 >
-> * Auto-upgrade requires version 1.3.0 or later of the Fleet Azure CLI extension.
+> * Auto-upgrade requires version 1.5.0 or later of the Fleet Azure CLI extension.
 >
 > * Auto-upgrade only updates to GA versions of Kubernetes and doesn't update to preview versions.
 >
@@ -169,6 +168,7 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 * [How-to: Monitor update runs for Azure Kubernetes Fleet Manager](./howto-monitor-update-runs.md).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 
 <!-- INTERNAL LINKS -->
 [supported-kubernetes-versions]: /azure/aks/supported-kubernetes-versions

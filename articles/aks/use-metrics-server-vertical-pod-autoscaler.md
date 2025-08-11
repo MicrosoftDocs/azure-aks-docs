@@ -3,9 +3,10 @@ title: Configure Metrics Server VPA in Azure Kubernetes Service (AKS)
 description: Learn how to vertically autoscale your Metrics Server pods on an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.date: 03/27/2023
-author: nickomang
-ms.author: nickoman
+author: davidsmatlak
+ms.author: davidsmatlak
 
+# Customer intent: As a Kubernetes administrator, I want to configure the Vertical Pod Autoscaler for the Metrics Server on my Azure Kubernetes Service cluster, so that I can optimize resource allocation and ensure consistent performance without manual intervention.
 ---
 
 # Configure Metrics Server VPA in Azure Kubernetes Service (AKS)

@@ -1,8 +1,8 @@
 ---
 title: Deploy an Amazon Web Services (AWS) web application to Azure
 description: Learn how to deploy an AWS web application to Azure and validate your deployment.
-author: paolosalvatori
-ms.author: paolos
+author: schaffererin
+ms.author: schaffererin
 ms.topic: how-to
 ms.date: 10/31/2024
 ms.service: azure-kubernetes-service
@@ -10,6 +10,7 @@ ms.custom:
     - migration
     - aws-to-azure
     - eks-to-aks
+# Customer intent: As a cloud engineer, I want to deploy an AWS web application to Azure Kubernetes Service so that I can leverage Azure's infrastructure and services for better scalability and management.
 ---
 
 # Deploy an Amazon Web Services (AWS) web application to Azure
@@ -130,7 +131,7 @@ In the remaining sections of this article, we guide you through the deployment p
     NAMESPACE="yelb"
     ```
 
-1. You can run the following [az aks show](/cli/azure/aks#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide?tabs=azure-cli#azure-built-in-roles-for-key-vault-data-plane-operations) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) used to expose the `yelb-ui` service via the [NGINX ingress controller](https://docs.nginx.com/nginx-ingress-controller/intro/overview/).
+1. You can run the following [az aks show](/cli/azure/aks#az-aks-show) command to retrieve the `clientId` of the [user-assigned managed identity](/entra/identity/managed-identities-azure-resources/how-manage-user-assigned-managed-identities) used by the [Azure Key Vault Provider for Secrets Store CSI Driver](/azure/aks/csi-secrets-store-identity-access). The `keyVault.bicep` module [Key Vault Administrator](/azure/key-vault/general/rbac-guide?tabs=azure-cli#azure-built-in-roles-for-key-vault-data-plane-operations) role to the user-assigned managed identity of the addon to let it retrieve the certificate used by [Kubernetes Ingress](https://kubernetes.io/docs/concepts/services-networking/ingress/) used to expose the `yelb-ui` service via the [NGINX ingress controller](https://docs.nginx.com/nginx-ingress-controller/overview/about/).
 
     ```azurecli-interactive
     az aks show \

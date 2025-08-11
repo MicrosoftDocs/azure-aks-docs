@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 04/09/2023
 ms.author: shasb
 author: shashankbarsin
+# Customer intent: As a cloud developer, I want to integrate an Istio-based service mesh with Azure Kubernetes Service, so that I can enhance my microservices architecture with capabilities like observability, traffic management, and security without modifying my application code.
 ---
 
 # Istio-based service mesh add-on for Azure Kubernetes Service
@@ -48,7 +49,6 @@ Istio-based service mesh add-on for AKS has the following limitations:
 * The add-on doesn't work on AKS clusters that are using [Open Service Mesh addon for AKS][open-service-mesh-about].
 * The add-on doesn't work on AKS clusters with self-managed installations of Istio.
 * The add-on doesn't support adding pods associated with virtual nodes to be added under the mesh.
-* The add-on doesn't yet support egress gateways for outbound traffic control.
 * The add-on doesn't yet support the sidecar-less Ambient mode. Microsoft is currently contributing to Ambient workstream under Istio open source. Product integration for Ambient mode is on the roadmap and is being continuously evaluated as the Ambient workstream evolves.
 * The add-on doesn't yet support multi-cluster deployments.
 * The add-on doesn't yet support Windows Server containers. Windows Server containers aren't yet supported in open source Istio right now. Issue tracking this feature ask can be found [here][istio-oss-windows-issue].
@@ -61,6 +61,7 @@ Istio-based service mesh add-on for AKS has the following limitations:
     > [!NOTE]
     > While these `EnvoyFilter`s are allowed, any issue arising from them (for example from the Lua script or from the compression library) are outside the support scope of the Istio add-on. See the [support policy document][istio-support-policy] for more information about the support categories for Istio add-on features and configuration options.
 * Gateway API for Istio ingress gateway or managing mesh traffic (GAMMA) is currently not yet supported with Istio add-on. However, Gateway API for Istio ingress traffic management is currently under active development for the add-on. While the add-on supports [annotation and `externalTrafficPolicy` customization for the Istio ingress gateways][istio-ingress-customization], port or protocol configuration is currently not supported.
+* The add-on supports customization of a subset of the fields in [MeshConfig][upstream-istio-meshconfig]. Other customizations may be allowed but unsupported or disallowed entirely, as detailed [here][istio-meshconfig-allowlist].
 
 ## Feedback and feature ask
 
@@ -80,6 +81,8 @@ Feedback and feature ask for the Istio add-on can be provided by creating [issue
 [istio-ingress-customization]: ./istio-deploy-ingress.md#ingress-gateway-service-customizations
 [istio-troubleshooting]: /troubleshoot/azure/azure-kubernetes/extensions/istio-add-on-general-troubleshooting
 [istio-deploy-addon]: istio-deploy-addon.md
+[istio-meshconfig-allowlist]: istio-meshconfig.md#allowed-supported-and-blocked-meshconfig-values
+[upstream-istio-meshconfig]: https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/
 
 [istio-oss-windows-issue]: https://github.com/istio/istio/issues/27893
 [aks-github-service-mesh-issues]: https://github.com/Azure/AKS/issues?q=is%3Aopen+is%3Aissue+label%3Aservice-mesh

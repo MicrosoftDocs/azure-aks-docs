@@ -5,10 +5,11 @@ description: Learn how to create a static or dynamic persistent volume with Azur
 ms.topic: concept-article
 ms.custom: devx-track-azurecli
 ms.subservice: aks-storage
-ms.date: 3/13/2025
+ms.date: 4/25/2025
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes administrator, I want to create and manage persistent volumes using Azure Files, so that I can enable concurrent access for multiple pods within an Azure Kubernetes Service cluster.
 ---
 
 # Create and use a volume with Azure Files in Azure Kubernetes Service (AKS)
@@ -42,7 +43,6 @@ The following table includes parameters you can use to define a custom storage c
 |accountQuota | Limits the quota for an account. You can specify a maximum quota in GB (102400GB by default). If the account exceeds the specified quota, the driver skips selecting the account. ||No |`102400` |
 |allowBlobPublicAccess | Allow or disallow public access to all blobs or containers for storage account created by driver. | `true` or `false` | No | `false` |
 |disableDeleteRetentionPolicy | Specify whether disable DeleteRetentionPolicy for storage account created by driver. | `true` or `false` | No | `false` |
-|enableLargeFileShares |Specify whether to use a storage account with large file shares enabled or not. If this flag is set to `true` and a storage account with large file shares enabled doesn't exist, a new storage account with large file shares enabled is created. This flag should be used with the Standard sku as the storage accounts created with Premium sku have `largeFileShares` option enabled by default. |`true` or `false` |No |false |
 |folderName | Specify folder name in Azure file share. | Existing folder name in Azure file share. | No | If folder name doesn't exist in file share, the mount fails. |
 |getLatestAccount |Determins whether to get the latest account key based on the creation time. This driver gets the first key by default. |`true` or `false` |No |`false` |
 |location | Specify the Azure region of the Azure storage account.| For example, `eastus`. | No | If empty, driver uses the same location name as current AKS cluster.|
@@ -56,7 +56,7 @@ The following table includes parameters you can use to define a custom storage c
 |shareAccessTier | [Access tier for file share][storage-tiers] | General purpose v2 account can choose between `TransactionOptimized` (default), `Hot`, and `Cool`. Premium storage account type for file shares only. | No | Empty. Use default setting for different storage account types.|
 |shareName | Specify Azure file share name. | Existing or new Azure file share name. | No | If empty, driver generates an Azure file share name. |
 |shareNamePrefix | Specify Azure file share name prefix created by driver. | Share name can only contain lowercase letters, numbers, hyphens, and length should be fewer than 21 characters. | No |
-|skuName | Azure Files storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS` | No | `StandardSSD_LRS`<br> Minimum file share size for Premium account type is 100 GB.<br> ZRS account type is supported in limited regions.<br> NFS file share only supports Premium account type.|
+|skuName | Azure Files storage account type (alias: `storageAccountType`)| `Standard_LRS`, `Standard_ZRS`, `Standard_GRS`, `Standard_RAGRS`, `Standard_RAGZRS`,`Premium_LRS`, `Premium_ZRS`, `StandardV2_LRS`, `StandardV2_ZRS`, `StandardV2_GRS`, `StandardV2_GZRS`, `PremiumV2_LRS`, `PremiumV2_ZRS` | No | `Standard_LRS`<br> Minimum file share size for Premium account type is 100 GB.<br> ZRS account type is supported in limited regions.<br> NFS file share only supports Premium account type. <br> Standard V2 SKU names are for [Azure Files provisioned v2 model](/azure/storage/files/understanding-billing#provisioned-v2-model). |
 |storageAccount | Specify an Azure storage account name.| storageAccountName | - No | When a specific storage account name is not provided, the driver will look for a suitable storage account that matches the account settings within the same resource group. If it fails to find a matching storage account, it will create a new one. However, if a storage account name is specified, the storage account must already exist. |
 |storageEndpointSuffix | Specify Azure storage endpoint suffix. | `core.windows.net`, `core.chinacloudapi.cn`, etc. | No | If empty, driver uses default storage endpoint suffix according to cloud environment. For example, `core.windows.net`. |
 |tags | [Tags][tag-resources] are created in new storage account. | Tag format: 'foo=aaa,bar=bbb' | No | "" |
@@ -75,7 +75,29 @@ The following table includes parameters you can use to define a custom storage c
 |vnetName | Virtual network name | Existing virtual network name. | No | if empty, driver will update all the subnets under the cluster virtual network. |
 |vnetResourceGroup | Specify VNet resource group where virtual network is defined. | Existing resource group name. | No | If empty, driver uses the `vnetResourceGroup` value in Azure cloud config file. |
 
-<sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account.
+<sup>1</sup> If the storage account is created by the driver, then you only need to specify `networkEndpointType: privateEndpoint` parameter in storage class. The CSI driver creates the private endpoint and private DNS zone (named `privatelink.file.core.windows.net`) together with the account. If you bring your own storage account, then you need to [create the private endpoint][storage-account-private-endpoint] for the storage account. If you are using Azure Files storage in a network isolated cluster, you must create a custom storage class with "networkEndpointType: privateEndpoint". You can follow the below sample for reference.
+```bash
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azurefile-csi
+provisioner: file.csi.azure.com
+allowVolumeExpansion: true
+parameters:
+  skuName: Premium_LRS  # available values: Premium_LRS, Premium_ZRS, Standard_LRS, Standard_GRS, Standard_ZRS, Standard_RAGRS, Standard_RAGZRS
+  networkEndpointType: privateEndpoint
+reclaimPolicy: Delete
+volumeBindingMode: Immediate
+mountOptions:
+  - dir_mode=0777  # modify this permission if you want to enhance the security
+  - file_mode=0777
+  - mfsymlinks
+  - cache=strict  # https://linux.die.net/man/8/mount.cifs
+  - nosharesock  # reduce probability of reconnect race
+  - actimeo=30  # reduce latency for metadata-heavy workload
+  - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
+  ```
 
 ### Create a storage class
 
@@ -247,6 +269,9 @@ mountOptions:
 parameters:
   skuName: Premium_LRS
 ```
+
+> [!NOTE]
+> The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 
 ### Using Azure tags
 
@@ -444,37 +469,37 @@ To mount the Azure Files file share into your pod, you configure the volume in t
 
 1. Create a new file named `azure-files-pod.yaml` and copy in the following contents. If you changed the name of the file share or secret name, update the `shareName` and `secretName`. You can also update the `mountPath`, which is the path where the Files share is mounted in the pod. For Windows Server containers, specify a `mountPath` using the Windows path convention, such as *'D:'*.
 
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: mypod
-spec:
-  nodeSelector:
-    kubernetes.io/os: linux
-  containers:
-    - image: 'mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine'
+    ```yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
       name: mypod
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 250m
-          memory: 256Mi
-      volumeMounts:
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: 'mcr.microsoft.com/oss/nginx/nginx:1.15.5-alpine'
+          name: mypod
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: azure
+              mountPath: /mnt/azure
+              readOnly: false
+      volumes:
         - name: azure
-          mountPath: /mnt/azure
-          readOnly: false
-  volumes:
-    - name: azure
-      csi:
-        driver: file.csi.azure.com
-        volumeAttributes:
-          secretName: azure-secret  # required
-          shareName: aksshare  # required
-          mountOptions: 'dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock,nobrl'  # optional
-```
+          csi:
+            driver: file.csi.azure.com
+            volumeAttributes:
+              secretName: azure-secret  # required
+              shareName: aksshare  # required
+              mountOptions: 'dir_mode=0777,file_mode=0777,cache=strict,actimeo=30,nosharesock,nobrl'  # optional
+    ```
 
 2. Create the pod using the [`kubectl apply`][kubectl-apply] command.
 
@@ -487,6 +512,69 @@ spec:
     ```bash
     kubectl describe pod mypod
     ```
+
+## Best practices
+
+To have the best experience with Azure Files, please follow these best practices:
+
+* The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
+* We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
+
+### SMB shares
+
+* Recommended mount options for SMB shares are provided in the following storage class example:
+
+     ```yaml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: azurefile-csi
+    provisioner: file.csi.azure.com
+    allowVolumeExpansion: true
+    parameters:
+      skuName: Premium_LRS  # available values: Premium_LRS, Premium_ZRS, Standard_LRS, Standard_GRS, Standard_ZRS, Standard_RAGRS, Standard_RAGZRS
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    mountOptions:
+      - dir_mode=0777  # modify this permission if you want to enhance the security
+      - file_mode=0777 # modify this permission if you want to enhance the security
+      - mfsymlinks    # support symbolic links
+      - cache=strict  # https://linux.die.net/man/8/mount.cifs
+      - nosharesock  # reduces probability of reconnect race
+      - actimeo=30  # reduces latency for metadata-heavy workload
+      - nobrl  # disable sending byte range lock requests to the server and for applications which have challenges with posix locks
+     ```
+
+* If using premium (SSD) file shares and your workload is metadata heavy, enroll to use the [metadata caching](/azure/storage/files/smb-performance?tabs=portal#metadata-caching-for-ssd-file-shares) feature to improve performance.
+
+For more information, see [Improve performance for SMB Azure file shares](/azure/storage/files/smb-performance).
+
+### NFS shares
+
+* Recommended mount options for NFS shares are provided in the following storage class example:
+
+    ```yaml
+    apiVersion: storage.k8s.io/v1
+    kind: StorageClass
+    metadata:
+      name: azurefile-csi-nfs
+    provisioner: file.csi.azure.com
+    parameters:
+      protocol: nfs
+      skuName: Premium_LRS     # available values: Premium_LRS, Premium_ZRS
+    reclaimPolicy: Delete
+    volumeBindingMode: Immediate
+    allowVolumeExpansion: true
+    mountOptions:
+      - nconnect=4  # improves performance by enabling multiple connections to share
+      - noresvport  # improves availability
+      - actimeo=30  # reduces latency for metadata-heavy workloads
+     ```
+
+* Increase [read-ahead size](/azure/storage/files/nfs-performance#increase-read-ahead-size-to-improve-read-throughput) to improve read throughput.
+* While Azure Files supports setting nconnect up to the maximum setting of 16, we recommend configuring the mount options with the optimal setting of nconnect=4. Currently, there are no gains beyond four channels for the Azure Files implementation of nconnect.
+
+For more information, see [Improve performance for NFS Azure file shares](/azure/storage/files/nfs-performance).
 
 ## Next steps
 

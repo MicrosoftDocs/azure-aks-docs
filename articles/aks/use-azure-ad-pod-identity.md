@@ -8,6 +8,7 @@ ms.date: 08/29/2024
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: "As a cloud administrator, I want to implement Microsoft Entra pod-managed identities in my Azure Kubernetes Service cluster, so that I can securely manage identities and access to Azure resources for my applications."
 ---
 
 # Use Microsoft Entra pod-managed identities in Azure Kubernetes Service (Preview)
@@ -156,6 +157,8 @@ spec:
 ```
 
 ## Create an AKS cluster with Kubenet network plugin
+
+[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
 Create an AKS cluster with Kubenet network plugin and pod-managed identity enabled.
 

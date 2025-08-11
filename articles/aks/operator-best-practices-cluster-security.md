@@ -5,6 +5,9 @@ description: Learn the cluster operator best practices for how to manage cluster
 ms.topic: best-practice
 ms.custom: linux-related-content
 ms.date: 03/02/2023
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: As a cluster operator, I want to implement best practices for securing my Kubernetes clusters and managing upgrades, so that I can minimize security risks and ensure compliance with operational standards.
 ---
 
 # Best practices for cluster security and upgrades in Azure Kubernetes Service (AKS)
@@ -41,7 +44,7 @@ Microsoft Entra ID provides an enterprise-ready identity management solution tha
 
 Using Kubernetes RBAC and Microsoft Entra ID-integration, you can secure the API server and provide the minimum permissions required to a scoped resource set, like a single namespace. You can grant different Microsoft Entra users or groups different Kubernetes roles. With granular permissions, you can restrict access to the API server and provide a clear audit trail of actions performed.
 
-The recommended best practice is to use *groups* to provide access to files and folders instead of individual identities. For example, use a Microsoft Entra ID *group* membership to bind users to Kubernetes roles rather than individual *users*. As a user's group membership changes, their access permissions on the AKS cluster change accordingly. 
+The recommended best practice is to use *groups* to provide access to files and folders instead of individual identities. For example, use a Microsoft Entra ID *group* membership to bind users to Kubernetes roles rather than individual *users*. As a user's group membership changes, their access permissions on the AKS cluster change accordingly.
 
 Meanwhile, let's say you bind the individual user directly to a role and their job function changes. While the Microsoft Entra group memberships update, their permissions on the AKS cluster would not. In this scenario, the user ends up with more permissions than they require.
 
@@ -81,9 +84,13 @@ spec:
 >
 > Limit access to actions that containers can perform. Provide the least number of permissions, and avoid the use of root access or privileged escalation.
 
-In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access. 
+In the same way that you should grant users or groups the minimum privileges required, you should also limit containers to only necessary actions and processes. To minimize the risk of attack, avoid configuring applications and containers that require escalated privileges or root access.
 
-For even more granular control of container actions, you can also use built-in Linux security features such as *AppArmor* and *seccomp*. For more information, see [Secure container access to resources][secure-container-access].
+Using user-namespaces, you improve the host isolation and limit the lateral movement in case of container breakouts. These improvements are significant whether the pod is running as root or not.
+
+For even more granular control of container actions, you can also use built-in Linux security features such as *AppArmor* and *seccomp*.
+
+For more information, see [Secure container access to resources][secure-container-access].
 
 ## Regularly update to the latest version of Kubernetes
 

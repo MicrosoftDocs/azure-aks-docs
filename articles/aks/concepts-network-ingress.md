@@ -1,10 +1,11 @@
 ---
 title: Concepts - Ingress Networking in Azure Kubernetes Service (AKS)
 description: Learn about ingress networking in Azure Kubernetes Service (AKS) including ingress controllers 
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 06/03/2024
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a cloud architect, I want to understand the ingress networking options for Azure Kubernetes Service, so that I can implement effective traffic management and load balancing strategies for my applications.
 ---
 # Ingress in Azure Kubernetes Service (AKS)
 

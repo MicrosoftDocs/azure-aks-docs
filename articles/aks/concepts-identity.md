@@ -1,12 +1,13 @@
 ---
 title: Concepts - Access and identity in Azure Kubernetes Services (AKS)
 description: Learn about access and identity in Azure Kubernetes Service (AKS), including Microsoft Entra integration, Kubernetes role-based access control (Kubernetes RBAC), and roles and bindings.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.subservice: aks-security
 ms.date: 03/07/2024
 author: palma21
 ms.author: jpalma
 
+# Customer intent: As a Kubernetes administrator, I want to implement role-based access control in AKS using Microsoft Entra integration, so that I can securely manage user permissions and ensure that users have access only to the resources they require.
 ---
 
 # Access and identity options for Azure Kubernetes Service (AKS)
@@ -157,7 +158,7 @@ As shown in the graphic above, the API server calls the AKS webhook server and p
 4. `kubectl` sends the access_token to API Server.
 5. The API Server is configured with the Auth WebHook Server to perform validation.
 6. The authentication webhook server confirms the JSON Web Token signature is valid by checking the Microsoft Entra public signing key.
-7. If the groups are bigger than 200, the server application uses user-provided credentials to query group memberships of the logged-in user from the MS Graph API. If groups do not exceedd 200, the groups claim already exists in the client token, no query will be performed.
+7. If the user is a member of more than 200 groups, the server application uses user-provided credentials to query group memberships of the logged-in user from the MS Graph API. For users with group memberships of 200 or fewer the groups claim already exists in the client token. No query will be performed.
 8. A response is sent to the API Server with user information such as the user principal name (UPN) claim of the access token, and the group membership of the user based on the object ID.
 9. The API performs an authorization decision based on the Kubernetes Role/RoleBinding.
 10. Once authorized, the API server returns a response to `kubectl`.

@@ -1,11 +1,12 @@
 ---
 title: Concepts - Storage in Azure Kubernetes Services (AKS)
 description: Learn about storage in Azure Kubernetes Service (AKS), including volumes, persistent volumes, storage classes, and claims.
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 05/02/2024
 author: schaffererin
 ms.author: schaffererin
 ms.subservice: aks-storage
+# Customer intent: As a cloud architect, I want to understand storage options in Azure Kubernetes Service so that I can effectively manage data persistence and access for my applications running in the cluster.
 ---
 
 # Storage options for applications in Azure Kubernetes Service (AKS)

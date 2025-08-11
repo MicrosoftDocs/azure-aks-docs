@@ -2,9 +2,11 @@
 title: Migrate from in-tree storage class to CSI drivers on Azure Kubernetes Service (AKS)
 description: Learn how to migrate from in-tree persistent volume to the Container Storage Interface (CSI) driver in an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
-ms.date: 07/20/2024
-author: mgoedtel
+ms.date: 04/12/2025
+author: davidsmatlak
+ms.author: davidsmatlak
 ms.subservice: aks-storage
+# Customer intent: As a Kubernetes administrator, I want to migrate my existing Persistent Volumes from in-tree storage classes to CSI drivers in an Azure Kubernetes Service cluster, so that I can leverage improved storage management and ensure a seamless transition without data loss.
 ---
 
 # Migrate from in-tree storage class to CSI drivers on Azure Kubernetes Service (AKS)
@@ -429,7 +431,7 @@ Migration from in-tree to CSI is supported by creating a static volume:
       csi:
         driver: file.csi.azure.com
         readOnly: false
-        volumeHandle: unique-volumeid  # make sure volumeid is unique for every identical share in the cluster
+        volumeHandle: "{resource-group-name}#{account-name}#{file-share-name}"  # make sure this volumeid is unique for every identical share in the cluster
         volumeAttributes:
           resourceGroup: EXISTING_RESOURCE_GROUP_NAME  # optional, only set this when storage account is not in the same resource group as the cluster nodes
           shareName: aksshare

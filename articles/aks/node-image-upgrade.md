@@ -2,15 +2,19 @@
 title: Upgrade Azure Kubernetes Service (AKS) node images
 description: Learn how to upgrade the images on AKS cluster nodes and node pools.
 ms.topic: how-to
-ms.custom: devx-track-azurecli
+ms.custom: devx-track-azurecli, innovation-engine
 ms.subservice: aks-upgrade
 ms.service: azure-kubernetes-service
-ms.date: 09/20/2024
+ms.date: 04/06/2025
 author: schaffererin
 ms.author: schaffererin
+# Customer intent: As a Kubernetes administrator, I want to upgrade node images in my AKS cluster so that I can leverage the latest features and ensure optimal performance and security for my containerized applications.
 ---
 
 # Upgrade Azure Kubernetes Service (AKS) node images
+
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2321849)
 
 Azure Kubernetes Service (AKS) regularly provides new node images, so it's beneficial to upgrade your node images frequently to use the latest AKS features. Linux node images are updated weekly, and Windows node images are updated monthly. Image upgrade announcements are included in the [AKS release notes](https://github.com/Azure/AKS/releases), and it can take up to a week for these updates to be rolled out across all regions. You can also perform node image upgrades automatically and schedule them using planned maintenance. For more information, see [Automatically upgrade node images][auto-upgrade-node-image].
 
@@ -21,15 +25,25 @@ This article shows you how to upgrade AKS cluster node images and how to update 
 >
 > It's not possible to downgrade a node image version (for example *AKSUbuntu-2204 to AKSUbuntu-1804*, or *AKSUbuntu-2204-202308.01.0 to AKSUbuntu-2204-202307.27.0*).
 
+
+## Connect to your AKS cluster
+
+1. Connect to your AKS cluster using the [`az aks get-credentials`][az-aks-get-credentials] command.
+
+    ```azurecli-interactive
+    az aks get-credentials \
+        --resource-group $AKS_RESOURCE_GROUP \
+        --name $AKS_CLUSTER
+    ```
 ## Check for available node image upgrades
 
 1. Check for available node image upgrades using the [`az aks nodepool get-upgrades`][az-aks-nodepool-get-upgrades] command.
 
     ```azurecli-interactive
     az aks nodepool get-upgrades \
-        --nodepool-name <node-pool-name> \
-        --cluster-name <cluster-name> \
-        --resource-group <resource-group>
+        --nodepool-name $AKS_NODEPOOL \
+        --cluster-name $AKS_CLUSTER \
+        --resource-group $AKS_RESOURCE_GROUP
     ```
 
 1. In the output, find and make note of the `latestNodeImageVersion` value. This value is the latest node image version available for your node pool.
@@ -37,9 +51,9 @@ This article shows you how to upgrade AKS cluster node images and how to update 
 
     ```azurecli-interactive
     az aks nodepool show \
-        --resource-group <resource-group> \
-        --cluster-name <cluster-name> \
-        --name <node-pool-name> \
+        --resource-group $AKS_RESOURCE_GROUP \
+        --cluster-name $AKS_CLUSTER \
+        --name $AKS_NODEPOOL \
         --query nodeImageVersion
     ```
 
@@ -49,11 +63,12 @@ This article shows you how to upgrade AKS cluster node images and how to update 
 
 1. Upgrade all node images in all node pools in your cluster using the [`az aks upgrade`][az-aks-upgrade] command with the `--node-image-only` flag.
 
-    ```azurecli-interactive
+    ```text
     az aks upgrade \
-        --resource-group <resource-group> \
-        --name <cluster-name> \
-        --node-image-only
+        --resource-group $AKS_RESOURCE_GROUP \
+        --name $AKS_CLUSTER \
+        --node-image-only \
+        --yes
     ```
 
 1. You can check the status of the node images using the `kubectl get nodes` command.
@@ -69,8 +84,8 @@ This article shows you how to upgrade AKS cluster node images and how to update 
 
     ```azurecli-interactive
     az aks show \
-        --resource-group <resource-group> \
-        --name <cluster-name>
+        --resource-group $AKS_RESOURCE_GROUP \
+        --name $AKS_CLUSTER
     ```
 
 ## Upgrade a specific node pool
@@ -79,9 +94,9 @@ This article shows you how to upgrade AKS cluster node images and how to update 
 
     ```azurecli-interactive
     az aks nodepool upgrade \
-        --resource-group <resource-group> \
-        --cluster-name <cluster-name> \
-        --name <node-pool-name> \
+        --resource-group $AKS_RESOURCE_GROUP \
+        --cluster-name $AKS_CLUSTER \
+        --name $AKS_NODEPOOL \
         --node-image-only
     ```
 
@@ -98,9 +113,9 @@ This article shows you how to upgrade AKS cluster node images and how to update 
 
     ```azurecli-interactive
     az aks nodepool show \
-        --resource-group <resource-group> \
-        --cluster-name <cluster-name> \
-        --name <node-pool-name>
+        --resource-group $AKS_RESOURCE_GROUP \
+        --cluster-name $AKS_CLUSTER \
+        --name $AKS_NODEPOOL
     ```
 
 ## Upgrade node images with node surge
@@ -114,9 +129,9 @@ To speed up the node image upgrade process, you can upgrade your node images usi
 
     ```azurecli-interactive
     az aks nodepool update \
-        --resource-group <resource-group> \
-        --cluster-name <cluster-name> \
-        --name <node-pool-name> \
+        --resource-group $AKS_RESOURCE_GROUP \
+        --cluster-name $AKS_CLUSTER \
+        --name $AKS_NODEPOOL \
         --max-surge 33% \
         --no-wait
     ```
@@ -127,13 +142,13 @@ To speed up the node image upgrade process, you can upgrade your node images usi
     kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.metadata.labels.kubernetes\.azure\.com\/node-image-version}{"\n"}{end}'
     ```
 
-1. Get the updated node pool details using the [`az aks nodepool show`][az-aks-nodepool-show] to get the updated node pool details. The current node image is shown in the `nodeImageVersion` property.
+1. Get the updated node pool details using the [`az aks nodepool show`][az-aks-nodepool-show] command. The current node image is shown in the `nodeImageVersion` property.
 
     ```azurecli-interactive
     az aks nodepool show \
-        --resource-group <resource-group> \
-        --cluster-name <cluster-name> \
-        --name <node-pool-name>
+        --resource-group $AKS_RESOURCE_GROUP \
+        --cluster-name $AKS_CLUSTER \
+        --name $AKS_NODEPOOL
     ```
 
 ## Next steps

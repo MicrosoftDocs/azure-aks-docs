@@ -6,7 +6,9 @@ ms.topic: how-to
 ms.custom: devx-track-azurecli, devx-track-azurepowershell
 ms.author: mattmcinnes
 ms.date: 04/26/2023
+author: schaffererin
 #Customer intent: As a cluster operator, I want to learn how to use RDP to connect to nodes in an AKS cluster to perform maintenance or troubleshoot a problem.
+# Customer intent: As an AKS cluster operator, I want to establish an RDP connection to Windows Server nodes for maintenance and troubleshooting, so that I can effectively manage and resolve issues within my Kubernetes environment.
 ---
 
 # Connect with RDP to Azure Kubernetes Service (AKS) cluster Windows Server nodes for maintenance or troubleshooting
@@ -413,5 +415,5 @@ If you need more troubleshooting data, you can [view the Kubernetes primary node
 [install-azure-cli]: /cli/azure/install-azure-cli
 [install-azure-powershell]: /powershell/azure/install-az-ps
 [ssh-steps]: ssh.md
-[view-primary-logs]: monitor-aks.md#aks-control-planeresource-logs
+[view-primary-logs]: monitor-aks.md#aks-control-plane-resource-logs
 [azure-bastion]: /azure/bastion/bastion-overview

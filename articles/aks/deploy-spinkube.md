@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 ms.date: 11/11/2024
 author: ThorstenHans
 ms.author: schaffererin
+# Customer intent: As a cloud developer, I want to deploy SpinKube on Azure Kubernetes Service, so that I can efficiently run serverless WebAssembly workloads alongside existing applications without the overhead of containerization.
 ---
 
 # Deploy SpinKube to Azure Kubernetes Service (AKS) to run serverless WebAssembly (Wasm) workloads
@@ -35,7 +36,7 @@ SpinKube consists of two top-level components:
 * Azure CLI version `2.64.0` or later. To install or upgrade, see [Install the Azure CLI][install-azure-cli].
 * [`kubectl`][kubectl] version `1.31.0` or later.
 * [`helm`][helm] version `3.15.4` or later.
-* [`spin`][spin-cli] version `2.7.0` or later.
+* [`spin`][spin-cli] version `3.0.0` or later.
 * [Node.js][node-js] version `21.6.2`.
 * An existing AKS cluster. If you don't have one, see [Create an AKS cluster](./learn/quick-kubernetes-deploy-cli.md).
 
@@ -97,7 +98,7 @@ The `runtime-class-manager` (also known as [KWasm][kwasm]) is responsible for de
       kwasm-operator kwasm/kwasm-operator \
       --namespace kwasm --create-namespace \
       --version 0.2.3 \
-      --set kwasmOperator.installerImage=ghcr.io/spinkube/containerd-shim-spin/node-installer:v0.15.1
+      --set kwasmOperator.installerImage=ghcr.io/spinframework/containerd-shim-spin/node-installer:v0.19.0
     ```
 
 #### Provision containerd-shim-spin to Kubernetes nodes
@@ -123,22 +124,22 @@ The `spin-operator` consists of two Custom Resource Definitions (CRDs) that you 
 1. Deploy the CRDs and the RuntimeClass for `spin` using the `kubectl apply` command.
 
     ```bash
-    kubectl apply -f https://github.com/spinkube/spin-operator/releases/download/v0.2.0/spin-operator.crds.yaml
-    kubectl apply -f https://github.com/spinkube/spin-operator/releases/download/v0.2.0/spin-operator.runtime-class.yaml
+    kubectl apply -f https://github.com/spinframework/spin-operator/releases/download/v0.5.0/spin-operator.crds.yaml
+    kubectl apply -f https://github.com/spinframework/spin-operator/releases/download/v0.5.0/spin-operator.runtime-class.yaml
     ```
 
 1. Deploy the `spin-operator` using the `helm install` command.
 
     ```bash
-    helm install spin-operator --version 0.2.0 \
+    helm install spin-operator --version 0.5.0 \
       --namespace spin-operator --create-namespace \
-      --wait oci://ghcr.io/spinkube/charts/spin-operator
+      --wait oci://ghcr.io/spinframework/charts/spin-operator
     ```
 
 1. Create a `SpinAppExecutor` in the default namespace using the `kubectl apply` command.
 
     ```bash
-    kubectl apply -f https://github.com/spinkube/spin-operator/releases/download/v0.2.0/spin-operator.shim-executor.yaml
+    kubectl apply -f https://github.com/spinframework/spin-operator/releases/download/v0.5.0/spin-operator.shim-executor.yaml
     ```
 
 ## Run a Spin App on AKS
@@ -345,13 +346,13 @@ To invoke the Spin App, you configure port-forwarding to the service provisioned
     helm delete spin-operator --namespace spin-operator
     
     # Remove the SpinAppExecutor
-    kubectl delete -f https://github.com/spinkube/spin-operator/releases/download/v0.2.0/spin-operator.shim-executor.yaml
+    kubectl delete -f https://github.com/spinframework/spin-operator/releases/download/v0.5.0/spin-operator.shim-executor.yaml
     
     # Remove the RuntimeClass for Spin
-    kubectl delete -f https://github.com/spinkube/spin-operator/releases/download/v0.2.0/spin-operator.runtime-class.yaml
+    kubectl delete -f https://github.com/spinframework/spin-operator/releases/download/v0.5.0/spin-operator.runtime-class.yaml
     
     # Remove the SpinKube CRDs
-    kubectl delete -f https://github.com/spinkube/spin-operator/releases/download/v0.2.0/spin-operator.crds.yaml
+    kubectl delete -f https://github.com/spinframework/spin-operator/releases/download/v0.5.0/spin-operator.crds.yaml
     
     # Remove runtime-class-manager (also known as KWasm)
     helm delete kwasm-operator --namespace kwasm
@@ -378,7 +379,7 @@ In this article, you learned how to deploy SpinKube to Azure Kubernetes Service 
 [wasm-component-model]: https://github.com/WebAssembly/component-model
 [kubectl]: https://kubernetes.io/docs/tasks/tools/
 [helm]: https://helm.sh
-[spin-cli]: https://developer.fermyon.com/spin/v2/install
+[spin-cli]: https://developer.fermyon.com/spin/v3/install
 [node-js]: https://nodejs.org/en
 [kwasm]: https://kwasm.sh
 [cert-manager]: https://cert-manager.io/

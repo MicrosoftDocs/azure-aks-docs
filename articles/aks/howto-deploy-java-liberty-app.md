@@ -10,6 +10,7 @@ ms.date: 11/14/2024
 ms.subservice: aks-developer
 keywords: java, jakartaee, javaee, microprofile, open-liberty, websphere-liberty, aks, kubernetes
 ms.custom: devx-track-java, devx-track-javaee, devx-track-javaee-liberty, devx-track-javaee-liberty-aks, devx-track-javaee-websphere, build-2023, devx-track-extended-java
+# Customer intent: As a developer, I want to deploy a Java application using Open Liberty or WebSphere Liberty on an Azure Kubernetes Service (AKS) cluster, so that I can leverage containerized environment benefits for scalable application management.
 ---
 
 # Deploy a Java application with Open Liberty or WebSphere Liberty on an Azure Kubernetes Service (AKS) cluster
@@ -630,7 +631,7 @@ az group delete --name $Env:RESOURCE_GROUP_NAME --yes --no-wait
 
 You can learn more from the following references:
 
-* [Azure Kubernetes Service](https://azure.microsoft.com/free/services/kubernetes-service/)
+* [Azure Kubernetes Service](https://azure.microsoft.com/services/kubernetes-service/)
 * [Tutorial: Connect an AKS app to Azure SQL Database](/azure/service-connector/tutorial-python-aks-sql-database-connection-string?pivots=workload-id&tabs=azure-cli)
 * [Integrate Azure SQL Database with Service Connector](/azure/service-connector/how-to-integrate-sql-database?tabs=sql-me-id-java%2Csql-secret-java)
 * [Connect using Microsoft Entra authentication](/sql/connect/jdbc/connecting-using-azure-active-directory-authentication?view=azuresqldb-current&preserve-view=true)

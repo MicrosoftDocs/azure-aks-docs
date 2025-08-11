@@ -140,8 +140,9 @@
         "articles/aks/*": true,
         "articles/kubernetes-fleet/*": true
       },
-      "author": {
-        "articles/aks/**/*.md": "schaffererin"
+      "manager": {
+        "articles/aks/**/*.md": "rayoflores",
+        "articles/aks/**/*.yml": "rayoflores"
       },
       "featureFlags": {
         "articles/**/*.md": [
@@ -152,9 +153,6 @@
         "articles/**/*.md": [
           "azure"
         ]
-      },
-      "ms.author": {
-        "articles/aks/**/*.md": "magoedte"
       },
       "ms.service": {
         "articles/aks/**/*.md": "azure-kubernetes-service"

@@ -2,19 +2,20 @@
 title: "Intelligent Cross-Cluster Kubernetes Resource Placement Using Azure Kubernetes Fleet Manager"
 description: Learn how to use Azure Kubernetes Fleet Manager to intelligently place your workloads on target member clusters based on cost and resource availability.
 ms.topic: how-to
-ms.date: 05/13/2024
+ms.date: 05/23/2025
 author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.custom:
   - build-2024
+# Customer intent: "As an application developer, I want to utilize intelligent resource placement in Kubernetes across multiple clusters, so that I can optimize workload scheduling based on cost and resource availability efficiently."
 ---
 
 # Intelligent cross-cluster Kubernetes resource placement using Azure Kubernetes Fleet Manager
 
-Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager (Kubernetes Fleet).
+Application developers often need to deploy Kubernetes resources into multiple clusters. Fleet operators often need to pick the best clusters for workloads based on heuristics (such as cost of compute) or available resources (such as memory and CPU). It's tedious to create, update, and track these Kubernetes resources across multiple clusters manually. This article covers how you can address these scenarios by using the intelligent Kubernetes resource placement capability in Azure Kubernetes Fleet Manager.
 
-The resource placement capability of Kubernetes Fleet can make scheduling decisions based on the following cluster properties:
+The resource placement capability of Fleet Manager can make scheduling decisions based on the following cluster properties:
 
 * Node count
 * Cost of compute/memory in target member clusters
@@ -26,7 +27,7 @@ For more information about the concepts in this article, see [Kubernetes resourc
 
 * You need an Azure account with an active subscription. [Create an account for free](https://azure.microsoft.com/free/?WT.mc_id=A261C142F).
 
-* You must have a Kubernetes Fleet resource with one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Kubernetes Fleet resource with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
+* You must have a Fleet Manager with a hub cluster and one or more member clusters. If you don't have one, follow the [quickstart][fleet-quickstart] to create a Fleet Manager with a hub cluster. Then, join Azure Kubernetes Service (AKS) clusters as members.
 
   > [!TIP]
   > Ensure that your AKS member clusters are configured so that you can test placement by using the cluster properties that interest you (location, node count, resources, or cost).
@@ -60,7 +61,7 @@ For more information about the concepts in this article, see [Kubernetes resourc
   az extension update --name fleet
   ```
 
-* Authorize kubectl to connect to the Kubernetes Fleet hub cluster:
+* Authorize kubectl to connect to the Fleet Manager hub cluster:
 
   ```azurecli-interactive
   az fleet get-credentials --resource-group $GROUP --name $FLEET
@@ -127,7 +128,7 @@ Next, publish a workload to the hub cluster so that it can be placed onto member
    kubectl create namespace test-app 
    ```
 
-1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources), you can deploy them without change.
+1. The sample workload can be deployed to the new namespace on the hub cluster. Because these Kubernetes resource types don't require [encapsulating](./concepts-resource-propagation.md#encapsulating-resources-using-envelope-objects), you can deploy them without change.
 
    1. Save the following YAML into a file named `sample-workload.yaml`:
 
@@ -174,18 +175,18 @@ Next, publish a workload to the hub cluster so that it can be placed onto member
       kubectl apply -f sample-workload.yaml
       ```
 
-With the workload definition deployed, it's now possible to test the intelligent placement capability of Kubernetes Fleet.
+With the workload definition deployed, it's now possible to test the intelligent placement capability of Fleet Manager.
 
 ## Test workload placement policies
 
-You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#introducing-clusterresourceplacement), as guides to writing your own `ClusterResourcePlacement` object.
+You can use the following samples, along with the [conceptual documentation](./concepts-resource-propagation.md#introduce-clusterresourceplacement-api), as guides to writing your own `ClusterResourcePlacement` object.
   
 > [!NOTE]
 > If you want to try out each sample policy, be sure to delete the previous `ClusterResourcePlacement` object.
 
 ### Placement based on cluster node count
 
-This example shows a property sorter that uses the `Descending` order. This order means that Kubernetes Fleet prefers clusters with higher node counts.
+This example shows a property sorter that uses the `Descending` order. This order means that Fleet Manager prefers clusters with higher node counts.
 
 The cluster with the highest node count receives a weight of 20, and the cluster with the lowest receives a weight of 0. Other clusters receive proportional weights calculated via the [weight calculation formula](./concepts-resource-propagation.md#how-property-ranking-works).
 
@@ -248,7 +249,7 @@ spec:
 
 ### Placement based on memory and CPU core cost
 
-Because the sorter in this example has an `Ascending` order, Kubernetes Fleet prefers clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost receives a weight of 20, and the cluster with the highest receives a weight of 0. Other clusters receive proportional weights calculated via the weight calculation formula.
+Because the sorter in this example has an `Ascending` order, Fleet Manager prefers clusters with lower memory and CPU core costs. The cluster with the lowest memory and CPU core cost receives a weight of 20, and the cluster with the highest receives a weight of 0. Other clusters receive proportional weights calculated via the weight calculation formula.
 
 ```yaml
 apiVersion: placement.kubernetes-fleet.io/v1
@@ -283,7 +284,7 @@ spec:
 
 If you want to view the status of a placement, you can use either the Azure portal or the kubectl command.
 
-You can find details on how to view a placement's progress in [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-the-clusterresourceplacement-api-to-propagate-resources-to-member-clusters).
+You can find details on how to view a placement's progress in [Use the ClusterResourcePlacement API to propagate resources to member clusters](./quickstart-resource-propagation.md#use-clusterresourceplacement-to-place-resources-onto-member-clusters).
 
 ## Clean up resources
 
@@ -291,9 +292,9 @@ For details on how to remove a cluster resource placement via the Azure portal o
 
 ## Related content
 
-* To learn more about resource propagation, see the [open-source Kubernetes Fleet documentation](https://github.com/Azure/fleet/blob/main/docs/concepts/ClusterResourcePlacement/README.md).
+* To learn more about resource placement, see the open-source [KubeFleet documentation](https://kubefleet.dev/docs/concepts/crp/).
 
 <!-- LINKS -->
-[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-resource
+[fleet-quickstart]: ./quickstart-create-fleet-and-members.md#create-a-fleet-manager-resource
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update

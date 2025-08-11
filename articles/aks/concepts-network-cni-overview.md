@@ -1,12 +1,13 @@
 ---
 title: Concepts - CNI networking in AKS
 description: Learn about CNI networking options in Azure Kubernetes Service (AKS)
-ms.topic: conceptual
+ms.topic: concept-article
 ms.date: 05/28/2024
 author: schaffererin
 ms.author: schaffererin
 
 ms.custom: fasttrack-edit
+# Customer intent: As a cloud architect, I want to evaluate CNI networking options in Azure Kubernetes Service, so that I can choose the most suitable networking model for my cluster's scaling, connectivity, and resource management needs.
 ---
 
 # Azure Kubernetes Service (AKS) CNI networking overview
@@ -34,13 +35,12 @@ In overlay networks, pods can communicate with each other directly. Traffic leav
 Azure Kubernetes Service provides the following CNI plugins for overlay networking:
 
 - [Azure CNI Overlay][azure-cni-overlay], the recommended CNI plugin for most scenarios.
-- [kubenet][kubenet], the legacy overlay model CNI.
 
 ### Flat networks
 
 Unlike an overlay network, a flat network model in AKS assigns IP addresses to pods from a subnet from the same Azure VNet as the AKS nodes. This means that traffic leaving your clusters is not SNAT'd, and the pod IP address is directly exposed to the destination. This can be useful for some scenarios, such as when you need to expose pod IP addresses to external services.
 
-:::image type="content" source="media/networking-overview/advanced-networking-diagram-01.png" alt-text="A diagram showing two nodes with three pods each running in a flat network model.":::
+:::image type="content" source="media/networking-overview/azure-cni-flat-network-architecture.png" alt-text="A diagram showing two nodes with three pods each running in a flat network model.":::
 
 Azure Kubernetes Service provides two CNI plugins for flat networking. This article doesn't go into depth for each plugin option. For more information, see the linked documentation:
 
@@ -86,8 +86,8 @@ You might also want to compare the features of each CNI plugin. The following ta
 | On-premises access via VPN/Express Route | Pod initiated | Both ways | Both ways | Pod initiated |
 | Access to service endpoints | Supported | Supported | Supported | Supported |
 | Expose services using load balancer | Supported | Supported | Supported | Supported |
-| Expose services using App Gateway | Currently not supported | Supported | Supported | Supported |
-| Expose services using ingress controller | Supported | Supported | Supported | Supported |
+| Expose services using App Gateway Ingress Controller | Supported | Supported | Supported | Supported |
+| Expose services using App Gateway for Containers | Supported | Supported | Supported | Not Supported |
 | Windows node pools | Supported | Supported | Supported | Not supported |
 | Default Azure DNS and Private Zones | Supported | Supported | Supported | Supported |
 | VNet Subnet sharing across multiple clusters | Supported | Supported | Supported | Not supported |

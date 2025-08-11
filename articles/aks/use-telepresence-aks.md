@@ -5,6 +5,9 @@ ms.topic: tutorial
 ms.custom: devx-track-azurecli
 ms.subservice: aks-developer
 ms.date: 01/16/2025
+author: davidsmatlak
+ms.author: davidsmatlak
+# Customer intent: As a developer, I want to use Telepresence to debug and test microservices locally while connected to a remote Kubernetes cluster, so that I can make real-time updates and see changes without needing to redeploy the entire application.
 ---
 
 # Tutorial: Use Telepresence to develop and test microservices locally
@@ -185,16 +188,18 @@ With Telepresence configured, you can seamlessly modify your local code and see 
     <template>
       <nav>
         <div class="logo">
-          <a href="/">
-            <img src="/contoso-pet-store-logo.png" alt="Contoso Pet Store Logo">
-          </a>
+          <router-link to="/">
+            <img src="/contoso-pet-store-logo.png" alt="Contoso Pet Store Logo" />
+          </router-link>
         </div>
         <button class="hamburger" @click="toggleNav">
-      <span class="hamburger-icon"></span>
+          <span class="hamburger-icon"></span>
         </button>
         <ul class="nav-links" :class="{ 'nav-links--open': isNavOpen }">
-          <li><router-link to="/" @click="closeNav">New Products</router-link></li>
-          <li><router-link to="/cart" @click="closeNav">Cart ({{ cartItemCount }})</router-link></li>
+          <li><router-link to="/" @click="closeNav">Products</router-link></li>
+          <li>
+            <router-link to="/cart" @click="closeNav">Cart ({{ cartItemCount }})</router-link>
+          </li>
         </ul>
       </nav>
     </template>

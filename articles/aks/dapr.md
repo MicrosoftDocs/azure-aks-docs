@@ -8,6 +8,7 @@ ms.topic: how-to
 ms.date: 01/16/2025
 ms.subservice: aks-developer
 ms.custom: devx-track-azurecli, references_regions
+# Customer intent: As a developer, I want to install the Dapr extension on my Azure Kubernetes Service (AKS) cluster, so that I can efficiently build and manage resilient microservices using Dapr's capabilities for communication and state management.
 ---
 
 # Install the Dapr extension for Azure Kubernetes Service (AKS) and Arc-enabled Kubernetes
@@ -189,7 +190,7 @@ az k8s-extension extension-types list-versions-by-location --location westus --e
 > [!NOTE]
 > Dapr is supported with a rolling window, including only the current and previous versions. It is your operational responsibility to remain up to date with these supported versions. If you have an older version of Dapr, you may have to do intermediate upgrades to get to a supported version.
 
-The same command-line argument is used for installing a specific version of Dapr or rolling back to a previous version. Set `--auto-upgrade-minor-version` to `false` and `--version` to the version of Dapr you wish to install. If the `version` parameter is omitted, the extension installs the latest version of Dapr. For example, to use Dapr 1.13.5:
+The same command-line argument is used for installing a specific version of Dapr or rolling back to a previous version. Set `--auto-upgrade-minor-version` to `false` and `--version` to the version of Dapr you wish to install. If the `version` parameter is omitted, the extension installs the latest version of Dapr. The following example command installs Dapr version `1.14.4-msft.10` on your AKS cluster:
 
 ```azurecli
 az k8s-extension create --cluster-type managedClusters \
@@ -198,7 +199,7 @@ az k8s-extension create --cluster-type managedClusters \
 --name dapr \
 --extension-type Microsoft.Dapr \
 --auto-upgrade-minor-version false \
---version 1.13.5
+--version 1.14.4-msft.10
 ```
 
 # [Bicep](#tab/bicep)

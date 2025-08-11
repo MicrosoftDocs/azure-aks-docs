@@ -2,11 +2,12 @@
 title: "Grant access to Azure Kubernetes Fleet Manager resources with Azure role-based access control"
 description: This article provides an overview of the Azure role-based access control roles that can be used to access Azure Kubernetes Fleet Manager resources.
 ms.date: 04/29/2024
-author: nickomang
-ms.author: nickoman
+author: schaffererin
+ms.author: schaffererin
 ms.service: azure-kubernetes-fleet-manager
 ms.custom: build-2024, devx-track-azurecli
-ms.topic: conceptual
+ms.topic: concept-article
+# Customer intent: "As a cloud administrator, I want to understand how to assign Azure RBAC roles for Kubernetes Fleet Manager, so that I can manage access to Kubernetes resources within my organization's cloud infrastructure."
 ---
 
 # Grant access to Azure Kubernetes Fleet Manager resources with Azure role-based access control

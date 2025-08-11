@@ -2,12 +2,13 @@
 title: Migrate to Azure Kubernetes Service (AKS)
 description: This article shows you how to migrate to Azure Kubernetes Service (AKS).
 ms.topic: concept-article
-ms.date: 10/30/2024
-ms.custom:
-  - mvc
-  - devx-track-azurecli 
-  - migration
-  - aws-to-azure
+ms.date: 06/12/2024
+author: your-github-username
+ms.author: your-alias
+ms.custom: mvc, devx-track-azurecli, innovation-engine
+ms.collection: 
+ - migration
+# Customer intent: As a DevOps engineer, I want to migrate my applications to Azure Kubernetes Service (AKS) so that I can leverage managed services for improved scalability and reduced management overhead while ensuring high availability and business continuity during the transition.
 ---
 
 # Migrate to Azure Kubernetes Service (AKS)
@@ -70,23 +71,81 @@ The following example creates an AKS cluster with single node pool backed by a V
 
 1. Create a resource group using the [`az group create`][az-group-create] command.
 
+    First, export variables and add a random suffix to ensure resource names are unique. A reliable VM size is also specified for broad subscription compatibility.
+
     ```azurecli-interactive
-    az group create --name myResourceGroup --location eastus
+    export RANDOM_SUFFIX=$(head -c 3 /dev/urandom | xxd -p)
+    export RESOURCE_GROUP="myResourceGroup$RANDOM_SUFFIX"
+    export REGION="eastus2"
+    az group create --name $RESOURCE_GROUP --location $REGION
+    ```
+
+    Results:
+
+    <!-- expected_similarity=0.3 -->
+
+    ```output
+    {
+      "id": "/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myResourceGroupxxx",
+      "location": "eastus2",
+      "managedBy": null,
+      "name": "myResourceGroupxxx",
+      "properties": {
+        "provisioningState": "Succeeded"
+      },
+      "tags": null,
+      "type": "Microsoft.Resources/resourceGroups"
+    }
     ```
 
 2. Create an AKS cluster using the [`az aks create`][az-aks-create] command.
 
+    Set the cluster name and create an AKS cluster with autoscaler and standard load balancer. The VM size is set to Standard_DS2_v2 for reliability in most subscriptions.
+
     ```azurecli-interactive
+    export CLUSTER_NAME="myAKSCluster$RANDOM_SUFFIX"
     az aks create \
-        --resource-group myResourceGroup \
-        --name myAKSCluster \
+        --resource-group $RESOURCE_GROUP \
+        --name $CLUSTER_NAME \
         --node-count 1 \
+        --node-vm-size Standard_DS2_v2 \
         --vm-set-type VirtualMachineScaleSets \
         --load-balancer-sku standard \
         --enable-cluster-autoscaler \
         --min-count 1 \
         --max-count 3 \
         --generate-ssh-keys
+    ```
+
+    Results:
+
+    <!-- expected_similarity=0.3 -->
+
+    ```output
+    {
+      "aadProfile": null,
+      "addonProfiles": {},
+      "agentPoolProfiles": [
+        {
+          "count": 1,
+          "enableAutoScaling": true,
+          "maxCount": 3,
+          "minCount": 1,
+          "name": "nodepool1",
+          "orchestratorVersion": "x.xx.x",
+          "osType": "Linux",
+          "provisioningState": "Succeeded",
+          "vmSize": "Standard_DS2_v2",
+          "type": "VirtualMachineScaleSets"
+        }
+      ],
+      "dnsPrefix": "myaksclusterxxx-dns-xxxxxxxx",
+      "enableRBAC": true,
+      "fqdn": "myaksclusterxxx-dns-xxxxxxxx.eastus2.cloudapp.azure.com",
+      ...
+      "provisioningState": "Succeeded",
+      ...
+    }
     ```
 
 ### [Terraform](#tab/terraform)

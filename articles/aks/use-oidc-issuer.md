@@ -1,13 +1,14 @@
 ---
 title: Create an OpenID Connect provider for your AKS cluster
 description: Learn how to configure the OpenID Connect (OIDC) provider for a cluster in Azure Kubernetes Service (AKS).
-author: nickomang
+author: davidsmatlak
 
-ms.author: nickoman
+ms.author: davidsmatlak
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli
 ms.date: 05/13/2024
+# Customer intent: "As a Kubernetes administrator, I want to configure an OpenID Connect provider for my AKS cluster, so that I can implement secure authentication and enable single sign-on for applications running within the cluster."
 ---
 
 # Create an OpenID Connect provider on Azure Kubernetes Service (AKS)

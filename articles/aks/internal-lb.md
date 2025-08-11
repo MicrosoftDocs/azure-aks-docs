@@ -6,10 +6,11 @@ author: asudbring
 ms.author: allensu
 ms.subservice: aks-networking
 ms.topic: how-to
-ms.date: 12/11/2024
+ms.date: 03/25/2025
 
 
-#Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an internal Azure load balancer for enhanced security and without an external endpoint.
+# Customer intent: As a cluster operator or developer, I want to learn how to create a service in AKS that uses an internal Azure load balancer for enhanced security and without an external endpoint.
+
 ---
 
 # Use an internal load balancer with Azure Kubernetes Service (AKS)
@@ -17,13 +18,13 @@ ms.date: 12/11/2024
 You can create and use an internal load balancer to restrict access to your applications in Azure Kubernetes Service (AKS). An internal load balancer doesn't have a public IP and makes a Kubernetes service accessible only to applications that can reach the private IP. These applications can be within the same VNET or in another VNET through VNET peering. This article shows you how to create and use an internal load balancer with AKS.
 
 > [!IMPORTANT]
-> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). If you're currently using Basic Load Balancer, make sure to upgrade to Standard Load Balancer prior to the retirement date. For guidance on upgrading, visit [Upgrading from Basic Load Balancer - Guidance](/azure/load-balancer/load-balancer-basic-upgrade-guidance).
+> On September 30, 2025, Basic Load Balancer will be retired. For more information, see the [official announcement](https://azure.microsoft.com/updates/azure-basic-load-balancer-will-be-retired-on-30-september-2025-upgrade-to-standard-load-balancer/). At this moment there is no integrated option to use the Azure AKS API operation to migrate the Load Balancer SKU. The Load Balancer SKU decision must be done at cluster creation time. Therefore, if you're currently using Basic Load Balancer, take the necessary steps to migrate your workloads to a new created cluster with the new default Standard Load Balancer SKU prior to the retirement date.
 
 ## Before you begin
 
 * This article assumes that you have an existing AKS cluster. If you need an AKS cluster, you can create one using [Azure CLI][aks-quickstart-cli], [Azure PowerShell][aks-quickstart-powershell], or the [Azure portal][aks-quickstart-portal].
 * You need the Azure CLI version 2.0.59 or later. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-* If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Use kubenet networking with your own IP address ranges in AKS][use-kubenet] or [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has read access to that subnet.
+* If you want to use an existing subnet or resource group, the AKS cluster identity needs permission to manage network resources. For information, see [Configure Azure CNI networking in AKS][advanced-networking]. If you're configuring your load balancer to use an [IP address in a different subnet][different-subnet], ensure the AKS cluster identity also has read access to that subnet.
   * For more information on permissions, see [Delegate AKS access to other Azure resources][aks-sp].
 
 ## Create an internal load balancer
@@ -80,7 +81,7 @@ If you want to use a specific IP address with the load balancer, you have two op
 ### [Set service annotations](#tab/set-service-annotations)
 
 1. Set service annotations using `service.beta.kubernetes.io/azure-load-balancer-ipv4` for an IPv4 address and `service.beta.kubernetes.io/azure-load-balancer-ipv6` for an IPv6 address.
-  
+
     ```yaml
     apiVersion: v1
     kind: Service
@@ -184,11 +185,11 @@ For more information on configuring your load balancer in a different subnet, se
 
     ```azurecli-interactive
     # Create a variable for the node resource group
-    
+
     AKS_MC_RG=$(az aks show -g myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv)
-    
+
     # View the details of the Private Link Service object
-    
+
     az network private-link-service list -g $AKS_MC_RG --query "[].{Name:name,Alias:alias}" -o table
     ```
 
@@ -208,11 +209,11 @@ A Private Endpoint allows you to privately connect to your Kubernetes service ob
 
     ```azurecli-interactive
     # Create a variable for the private link service
-    
+
     AKS_PLS_ID=$(az network private-link-service list -g $AKS_MC_RG --query "[].id" -o tsv)
-    
+
     # Create the private endpoint
-    
+
     $ az network private-endpoint create \
         -g myOtherResourceGroup \
         --name myAKSServicePE \
@@ -317,4 +318,3 @@ To learn more about Kubernetes services, see the [Kubernetes services documentat
 [get-azvirtualnetworksubnetconfig]: /powershell/module/az.network/get-azvirtualnetworksubnetconfig
 [az-network-private-link-service-list]: /cli/azure/network/private-link-service#az_network_private_link_service_list
 [az-network-private-endpoint-create]: /cli/azure/network/private-endpoint#az_network_private_endpoint_create
-

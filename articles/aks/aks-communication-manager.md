@@ -1,139 +1,254 @@
 ---
-title: AKS Communication Manager (Preview)
-description: Start here to learn how to set up and receive notices in Azure Resource Notification for AKS Maintenance events. 
-ms.date: 10/16/2024
+title: AKS Communication Manager
+description: Learn how to set up and receive notices in Azure Resource Notifications for Azure Kubernetes Service maintenance events.
+ms.date: 07/30/2025
 ms.custom: aks communication manager
-ms.topic: conceptual
+ms.topic: concept-article
 author: kaarthis
 ms.author: kaarthis
 ms.subservice: aks-upgrade
+# Customer intent: As a Kubernetes administrator, I want to set up notifications for AKS maintenance events so that I can receive timely alerts and reduce operational issues related to monitoring upgrades and failures.
 ---
 
-# Azure Kubernetes Service Communication Manager(Preview)
-The AKS Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notification and Azure Resource Graph frameworks. This tool enables you to monitor your upgrades closely by providing timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. Currently in preview, you can set up notifications for all types of auto upgrades that utilize maintenance windows by following these steps.
+# Azure Kubernetes Service Communication Manager
+
+The Azure Kubernetes Service (AKS) Communication Manager streamlines notifications for all your AKS maintenance tasks by using Azure Resource Notifications and Azure Resource Graph frameworks. This tool enables you to closely monitor your upgrades because it provides you with timely alerts on event triggers and outcomes. If maintenance fails, it notifies you with the reasons for the failure, reducing operational hassles related to observability and follow-ups. You can set up notifications for all types of autoupgrades that utilize maintenance windows by following these steps.
 
 ## Prerequisites
 
-- Configure your cluster for either [Auto upgrade channel][aks-auto-upgrade] or [Node Auto upgrade channel][aks-node-auto-upgrade].
+- Configure your cluster for either [Autoupgrade channel][aks-auto-upgrade] or [Node autoupgrade channel][aks-node-auto-upgrade].
 
-- Create [Planned maintenance window][planned-maintenance] as mentioned here for your auto upgrade configuration. 
+- Create a [planned maintenance window][planned-maintenance] for your autoupgrade configuration.
+
+> [!NOTE]  
+> Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation.
 
 ## How to set up communication manager
 
-1. Create an Azure "Logic App" resource. It's used to send auto upgrade event notices to your email.
+1. Go to the resource, then choose Monitoring and select Alerts and then click into Alert Rules.
 
- :::image type="content" source="./media/auto-upgrade-cluster/logic-apps.jpg" alt-text="The screenshot of the created blade for an Azure Logic Apps in the Azure portal. The plan type field shows 'Consumption' selected.":::
+2. The Condition for the alert should be a Custom log search.
 
-2. Open the created Logic App and click "Logic app designer," then click "Add a trigger" button.
+   :::image type="content" source="./media/auto-upgrade-cluster/custom-log-search.jpg" alt-text="The screenshot of the custom log search in the alert rule blade.":::
 
- :::image type="content" source="./media/auto-upgrade-cluster/logic-app-1.jpeg" alt-text="The screenshot shows how to add a trigger.":::
- 
-3. In the opened "Add a trigger" box, type "http" in the search box, and then select "When an HTTP request is received" trigger.
+3. In the opened "Search query" box, paste one of the following custom queries and click "Review+Create" button.
 
-  :::image type="content" source="./media/auto-upgrade-cluster/trigger-1.jpeg" alt-text="The screenshot shows HTTP request is received.":::
+### Query for cluster auto upgrade notifications
 
-4. In the opened "When an HTTP request is received," click "Use sample payload to generate schema".
-
-  :::image type="content" source="./media/auto-upgrade-cluster/trigger-2.jpeg" alt-text="The screenshot shows Sample Payload is used.":::
-
-5. In the opened "Enter or paste a sample JSON payload" box, paste the following JSON data and click "Done" button.
-
- ```[
-  {
-    "id": "11112222-bbbb-3333-cccc-4444dddd5555",
-    "topic": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000",
-    "subject": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/55556666-ffff-7777-aaaa-8888bbbb9999",
-    "data": {
-      "resourceInfo": {
-        "id": "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp/scheduledEvents/55556666-ffff-7777-aaaa-8888bbbb9999",
-        "name": "55556666-ffff-7777-aaaa-8888bbbb9999",
-        "type": "Microsoft.ContainerService/managedClusters/scheduledEvents",
-        "location": "westus2",
-        "properties": {
-          "description": "ScheduledEvents",
-          "eventId": "22223333-cccc-4444-dddd-5555eeee6666",
-          "eventSource": "AutoUprader",
-          "eventStatus": "Started",
-          "eventDetails": "Start to upgrade security vhd",
-          "scheduledTime": "2024-04-16T22:17:12.103268606Z",
-          "startTime": "0001-01-01T00:00:00.0000000Z",
-          "lastUpdateTime": "0001-01-01T00:00:00.0000000Z",
-          "resources": [
-            "/subscriptions/66667777-aaaa-8888-bbbb-9999cccc0000/resourcegroups/comms-test/providers/Microsoft.ContainerService/managedClusters/comms-sp"
-          ],
-          "resourceType": "ManagedCluster"
-        }
-      },
-      "operationalInfo": {
-        "resourceEventTime": "2024-04-16T22:17:12.1032748"
-      },
-      "apiVersion": "2023-11-02-preview"
-    },
-    "eventType": "Microsoft.ResourceNotifications.MaintenanceResources.ScheduledEventEmitted",
-    "dataVersion": "1",
-    "metadataVersion": "1",
-    "eventTime": "2024-04-16T22:17:12.1032748Z",
-    "EventProcessedUtcTime": "2024-04-16T22:36:09.9073134Z",
-    "PartitionId": 0,
-    "EventEnqueuedUtcTime": "2024-04-16T22:17:13.1700000Z"
-  }
- ]
- ```
-6. Click the "+" button and "Add an action". Then sign into your preferred email account in outlook.com with password.
-
-   :::image type="content" source="./media/auto-upgrade-cluster/add-action.jpeg" alt-text="The screenshot shows how to add an action.":::
-
-7. In the opened "Add an action" box, type "outlook" in the search box, and then select "Send an email (V2)" action.
-
- :::image type="content" source="./media/auto-upgrade-cluster/add-action-2.jpg" alt-text="The screenshot shows how to send an email.":::
-
-8. Customize by providing recipient email. Click the Subject and Body fields, and there's a tiny lighting icon which provides encapsulated data fields from the message, to facilitate orchestration of the email content.
-
- :::image type="content" source="./media/auto-upgrade-cluster/customize-email.jpg" alt-text="The screenshot shows how to customize email.":::
-
-9. Click the "Save" button.
-
- :::image type="content" source="./media/auto-upgrade-cluster/save.png" alt-text="The screenshot shows how to save.":::
-
-10. Click the "When a HTTP request is received" button and copy the URL in the "HTTP POST URL" field. This URL is used shortly to configure event subscription web hook.
-
- :::image type="content" source="./media/auto-upgrade-cluster/http-post.png" alt-text="The screenshot shows how to copy Http post URL.":::
-
-## Create ARN system topic and event subscription.
-
-Click "Event Subscription" to create an event subscription of the system topic.
-
-:::image type="content" source="./media/auto-upgrade-cluster/event-sub-1.jpg" alt-text="The screenshot shows how to create an event subscription.":::
-
-Then fill in the event subscription information, in the "EndPoint Type," choose "Web hook," and configure it using the URL when configure "When a HTTP request is received" trigger.
-
-:::image type="content" source="./media/auto-upgrade-cluster/event-sub-2.jpg" alt-text="The screenshot shows how to configure endpoint.":::
-
-You can also do it via CLI as shown here
-
-```azurecli-interactive
-    az eventgrid system-topic create --name arnSystemTopic --resource-group testrg --source /subscriptions/TestSub --topic-type microsoft.resourcenotifications.containerserviceeventresources --location global 
+```kusto
+containerserviceeventresources
+| where type == "microsoft.containerservice/managedclusters/scheduledevents"
+| where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+| where properties has "eventStatus"
+| extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+| extend status = substring(status, 0, indexof(status, ",") - 1)
+| where status != ""
+| where properties has "eventDetails"
+| extend upgradeType = case(
+                           properties has "K8sVersionUpgrade",
+                           "K8sVersionUpgrade",
+                           properties has "NodeOSUpgrade",
+                           "NodeOSUpgrade",
+                           ""
+                       )
+| extend details = parse_json(tostring(properties.eventDetails))
+| where properties has "lastUpdateTime"
+| extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+| extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+| extend eventTime = todatetime(tostring(eventTime))
+| where eventTime >= ago(2h)
+| where upgradeType == "K8sVersionUpgrade"
+| project
+    eventTime,
+    upgradeType,
+    status,
+    properties,
+    name,
+    details
+| order by eventTime asc
 ```
 
-Configure receive notifications for resources in a resource group, enable subject filtering with the resource group URI.
+### Query for Node OS auto upgrade notifications
 
-:::image type="content" source="./media/auto-upgrade-cluster/endpoint-type.jpg" alt-text="The screenshot shows how to configure endpoint type.":::
+```kusto
+containerserviceeventresources
+| where type == "microsoft.containerservice/managedclusters/scheduledevents"
+| where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+| where properties has "eventStatus"
+| extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+| extend status = substring(status, 0, indexof(status, ",") - 1)
+| where status != ""
+| where properties has "eventDetails"
+| extend upgradeType = case(
+                           properties has "K8sVersionUpgrade",
+                           "K8sVersionUpgrade",
+                           properties has "NodeOSUpgrade",
+                           "NodeOSUpgrade",
+                           ""
+                       )
+| extend details = parse_json(tostring(properties.eventDetails))
+| where properties has "lastUpdateTime"
+| extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+| extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+| extend eventTime = todatetime(tostring(eventTime))
+| where eventTime >= ago(2h)
+| where upgradeType == "NodeOSUpgrade"
+| project
+    eventTime,
+    upgradeType,
+    status,
+    properties,
+    name,
+    details
+| order by eventTime asc
+```
+
+4. Configure the alert conditions with the following settings:
+   - **Measurement**: Select "Table rows"
+   - **Aggregation**: Select "Count"
+   - **Aggregation granularity**: Select "30 minutes"
+   - **Threshold value**: Keep at 0
+   - **Split by dimensions**: Select "status" and choose "Include all future values"
+
+:::image type="content" source="./media/auto-upgrade-cluster/edit-alert-rule.jpg" alt-text="The screenshot of the configuration options for alert conditions.":::
+
+5. When selecting "status" in the **Split by dimensions** dropdown, the available values are: Scheduled, Started, Completed, Canceled, and Failed.
+
+   > [!NOTE]
+   > These status values will only appear if your cluster has previously executed auto upgrade operations. For new clusters or clusters that haven't undergone auto upgrades yet, the dropdown may appear empty or show no available dimensions. Once your cluster performs its first auto upgrade, these status values will become available for selection.
+
+:::image type="content" source="./media/auto-upgrade-cluster/by-dimension.jpg" alt-text="The screenshot of the split by dimensions drop down.":::
+
+6. Check an action group with the correct email address exists, to receive the notifications.
+
+:::image type="content" source="./media/auto-upgrade-cluster/action-group.png" alt-text="The screenshot of entering appropriate email or SMS into an action group.":::
+
+7.  Assign Managed System Identity: After you create the alert rule, assign a managed identity so it can access the necessary resources. This step is performed after the alert rule is created, not during initial setup. To assign a managed identity:
+    - In the Azure portal, go to **Monitor** > **Alerts** > **Alert rules**, then select your alert rule.
+    - In the alert rule pane, under **Settings**, select **Identity**.
+    - Set **System assigned managed identity** to **On**.
+    - Click **Save** to enable the managed identity for the alert rule.
+
+    :::image type="content" source="./media/auto-upgrade-cluster/system-assigned-identity.jpg" alt-text="The screenshot of where to assign Managed System Identity.":::
+
+    > [!TIP]
+    > If you don't see the Identity option, make sure your alert rule has been created and you have the necessary permissions. Assigning the managed identity is always a separate step after alert rule creation.
+
+8.  Make sure to assign the appropriate Reader roles.
+
+    In the alert rule, go to **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+
+    Choose the **Reader** role and assign it to the resource group. Repeat "Add role assignment" for the subscription if needed.
+
+    > [!NOTE]
+    > After Communication Manager is set up, it sends advance notices one week before maintenance starts and one day before maintenance starts. It also sends you timely alerts during the maintenance operation.
+
+## Set up Communication Manager
+
+1. Go to the resource, select **Monitoring**, select **Alerts**, and then select **Alert Rules**.
+
+1. On the **Condition** tab, for **Signal name**, select **Custom log search**.
+
+   :::image type="content" source="./media/auto-upgrade-cluster/custom-log-search.jpg" alt-text="Screenshot that shows the custom log search in the alert rule pane.":::
+
+1. In the **Search query** box, paste one of the following custom queries and then select the **Review+Create** button.
+
+   The following query is for cluster autoupgrade notifications:
+
+   ```console
+    arg("").containerserviceeventresources
+    | where type == "microsoft.containerservice/managedclusters/scheduledevents"
+    | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+    | where properties has "eventStatus"
+    | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+    | extend status = substring(status, 0, indexof(status, ",") - 1)
+    | where status != ""
+    | where properties has "eventDetails"
+    | extend upgradeType = case(
+                               properties has "K8sVersionUpgrade",
+                               "K8sVersionUpgrade",
+                               properties has "NodeOSUpgrade",
+                               "NodeOSUpgrade",
+                               ""
+                           )
+    | extend details = parse_json(tostring(properties.eventDetails))
+    | where properties has "lastUpdateTime"
+    | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+    | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+    | extend eventTime = todatetime(tostring(eventTime))
+    | where eventTime >= ago(2h)
+    | where upgradeType == "K8sVersionUpgrade"
+    | project
+        eventTime,
+        upgradeType,
+        status,
+        properties,
+        name,
+        details
+    | order by eventTime asc
+   ```
+
+   The following query is for Node OS autoupgrade notifications:
+
+   ```console
+    arg("").containerserviceeventresources
+    | where type == "microsoft.containerservice/managedclusters/scheduledevents"
+    | where id contains "/subscriptions/<subid>/resourcegroups/<rgname>/providers/Microsoft.ContainerService/managedClusters/<clustername>"
+    | where properties has "eventStatus"
+    | extend status = substring(properties, indexof(properties, "eventStatus") + strlen("eventStatus") + 3, 50)
+    | extend status = substring(status, 0, indexof(status, ",") - 1)
+    | where status != ""
+    | where properties has "eventDetails"
+    | extend upgradeType = case(
+                               properties has "K8sVersionUpgrade",
+                               "K8sVersionUpgrade",
+                               properties has "NodeOSUpgrade",
+                               "NodeOSUpgrade",
+                               ""
+                           )
+    | extend details = parse_json(tostring(properties.eventDetails))
+    | where properties has "lastUpdateTime"
+    | extend eventTime = substring(properties, indexof(properties, "lastUpdateTime") + strlen("lastUpdateTime") + 3, 50)
+    | extend eventTime = substring(eventTime, 0, indexof(eventTime, ",") - 1)
+    | extend eventTime = todatetime(tostring(eventTime))
+    | where eventTime >= ago(2h)
+    | where upgradeType == "NodeOSUpgrade"
+    | project
+        eventTime,
+        upgradeType,
+        status,
+        properties,
+        name,
+        details
+    | order by eventTime asc
+   ```
+
+1. The interval should be 30 minutes, and the threshold should be 1.
+
+1. Make sure that an action group with the correct email address exists, so that you can receive the notifications.
+
+1. Make sure to give the **Read** role to the resource group and to the subscription to the managed identity of the log search alert rule.
+
+1. Go to the alert rule: **Settings** > **Identity** > **System assigned managed identity** > **Azure role assignments** > **Add role assignment**.
+
+1. Select the **Reader** role and assign it to the resource group. Repeat **Add role assignment** for the subscription.
 
 ### Verification
 
-Wait for the auto upgrader to start to upgrade the cluster. Then verify if you receive notices promptly on the email configured to receive these notices.
+To upgrade the cluster, wait for the autoupgrader to start. Then verify that you promptly receive notices on the email configured to receive notices.
 
-Check Azure Resource Graph database for the scheduled notification record. Each scheduled event notification should be listed as one record in the "containerserviceeventresources" table.
-!
+Check the Azure Resource Graph database for the scheduled notification record. Each scheduled event notification should be listed as one record in the `containerserviceeventresources` table.
 
-:::image type="content" source="./media/auto-upgrade-cluster/azure-resource-graph.jpeg" alt-text="Screenshot of how to look up Azure resource graph.":::
+:::image type="content" source="./media/auto-upgrade-cluster/azure-resource-graph.jpeg" alt-text="Screenshot that shows how to look up Azure Resource Graph.":::
 
-### Next Steps
-See how you can set up a [planned maintenance][planned-maintenance] window for your upgrades.
-See how you can optimize your [upgrades][upgrade-cluster].
+## Related content
+
+- See how you can set up a [planned maintenance][planned-maintenance] window for your upgrades.
+- See how you can optimize your [upgrades][upgrade-cluster].
 
 <!-- LINKS - internal -->
+
 [aks-auto-upgrade]: auto-upgrade-cluster.md
 [aks-node-auto-upgrade]: auto-upgrade-node-os-image.md
 [planned-maintenance]: planned-maintenance.md
-[upgrade-cluster]:upgrade-cluster.md
+[upgrade-cluster]: upgrade-cluster.md

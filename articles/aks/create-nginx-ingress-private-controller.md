@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.date: 10/08/2024
 author: asudbring
 ms.author: allensu
+# Customer intent: "As a DevOps engineer, I want to configure an NGINX ingress controller with an Azure private DNS zone, so that I can ensure secure and efficient DNS resolution for internal applications running on my Kubernetes cluster."
 ---
 
 # Configure NGINX ingress controller to support Azure private DNS zone with application routing add-on

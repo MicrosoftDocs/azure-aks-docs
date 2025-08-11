@@ -8,9 +8,12 @@ ms.subservice: aks-networking
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 05/22/2024
+# Customer intent: As a cloud architect, I want to configure kubenet networking for my AKS cluster within an existing virtual network, so that I can optimize IP address management and support my application demands efficiently.
 ---
 
 # Use kubenet networking with your own IP address ranges in Azure Kubernetes Service (AKS)
+
+[!INCLUDE [kubenet retirement](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/retirement/kubenet-retirement-callout.md)]
 
 AKS clusters use kubenet and create an Azure virtual network and subnet for you by default. With kubenet, nodes get an IP address from the Azure virtual network subnet. Pods receive an IP address from a logically different address space to the Azure virtual network subnet of the nodes. Network address translation (NAT) is then configured so the pods can reach resources on the Azure virtual network. The source IP address of the traffic is NAT'd to the node's primary IP address. This approach greatly reduces the number of IP addresses you need to reserve in your network space for pods to use.
 
@@ -143,7 +146,7 @@ For more information to help you decide which network model to use, see [Compare
         --dns-service-ip 10.0.0.10 \
         --pod-cidr 10.244.0.0/16 \
         --vnet-subnet-id $SUBNET_ID \
-        --generate-ssh-keys 
+        --generate-ssh-keys
     ```
 
   Deployment parameters:
@@ -168,14 +171,14 @@ For more information to help you decide which network model to use, see [Compare
     Your output should resemble the following example output:
 
     ```output
-    {                                  
+    {
       "clientId": "<client-id>",
       "clientSecretUrl": "<clientSecretUrl>",
-      "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity", 
+      "id": "/subscriptions/<subscriptionid>/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity",
       "location": "westus2",
       "name": "myIdentity",
       "principalId": "<principal-id>",
-      "resourceGroup": "myResourceGroup",                       
+      "resourceGroup": "myResourceGroup",
       "tags": {},
       "tenantId": "<tenant-id>",
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities"

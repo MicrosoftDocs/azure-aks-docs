@@ -2,9 +2,13 @@
 title: Set up a custom domain name and SSL certificate with the application routing add-on for Azure Kubernetes Service (AKS)
 description: Understand the advanced configuration options that are supported with the application routing add-on for Azure Kubernetes Service (AKS). 
 ms.subservice: aks-networking
+ms.author: allensu
+author: asudbring
+ms.service: azure-kubernetes-service
 ms.custom: devx-track-azurecli
 ms.topic: how-to
 ms.date: 12/04/2023
+# Customer intent: As a Kubernetes administrator, I want to set up a custom domain and SSL certificate using the application routing add-on, so that I can securely manage external access to services in my Azure Kubernetes Service cluster.
 ---
 
 # Set up a custom domain name and SSL certificate with the application routing add-on

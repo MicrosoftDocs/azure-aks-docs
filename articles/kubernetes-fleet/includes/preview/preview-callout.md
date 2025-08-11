@@ -1,9 +1,10 @@
 ---
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: include
-ms.date: 09/22/2022
+ms.date: 04/14/2025
 author: shashankbarsin
 ms.author: shasb
+# Customer intent: "As a cloud architect, I want to explore the preview features of Azure Kubernetes Fleet Manager, so that I can assess their capabilities for potential production use in my organization's Kubernetes deployments."
 ---
 
 > [!IMPORTANT]

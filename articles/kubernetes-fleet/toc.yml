@@ -1,0 +1,144 @@
+- name: Azure Kubernetes Fleet Manager
+  href: index.yml
+- name: Overview
+  items:
+  - name: About Azure Kubernetes Fleet Manager
+    href: overview.md
+- name: Quickstarts
+  items:
+  - name: Create a fleet and join member clusters
+    items:
+    - name: Use the Azure portal
+      href: quickstart-create-fleet-and-members-portal.md
+    - name: Use the Azure CLI
+      href: quickstart-create-fleet-and-members.md
+    - name: Use an ARM template
+      href: quickstart-create-fleet-resources-arm-template.md
+    - name: Use Bicep
+      href: quickstart-create-fleet-resources-bicep.md
+    - name: Use Terraform
+      href: quickstart-create-fleet-resources-terraform.md
+- name: Concepts
+  items:
+    - name: Kubernetes Fleet Manager fundamentals
+      items:
+        - name: Fleets and member clusters
+          href: concepts-fleet.md
+        - name: Choosing a fleet type
+          href: concepts-choosing-fleet.md
+        - name: Fleet hub cluster overview
+          href: concepts-lifecycle.md
+        - name: Use Azure RBAC to control resource access
+          href: concepts-rbac.md
+        - name: Scheduler and scheduling framework
+          href: concepts-scheduler-scheduling-framework.md
+        - name: Preview API lifecycle
+          href: concepts-preview-api-lifecycle.md
+    - name: Multi-cluster Kubernetes and node images upgrades
+      href: concepts-update-orchestration.md
+    - name: Multi-cluster workload management
+      items:
+        - name: Multi-cluster workload management overview
+          href: concepts-multi-cluster-workload-management.md
+        - name: Managing workloads using cluster resource placement
+          items:
+          - name: Introduction to cluster resource placement API
+            href: concepts-resource-propagation.md
+          - name: Defining a placement rollout strategy
+            href: concepts-rollout-strategy.md
+          - name: Automated deployments overview
+            href: concepts-automated-deployments.md        
+          - name: Controlling eviction and disruption
+            href: concepts-eviction-disruption.md
+          - name: Placement strategy and resource snapshots
+            href: concepts-placement-snapshots.md
+          - name: Taking over existing workloads
+            href: concepts-placement-takeover.md
+          - name: Detecting and managing workload drift
+            href: concepts-placement-drift.md        
+    - name: Multi-cluster networking 
+      items:
+        - name: DNS-based load balancing across multiple clusters
+          href: concepts-dns-load-balancing.md
+        - name: Layer 4 load balancing across multiple clusters
+          href: concepts-l4-load-balancing.md
+- name: How-to guides
+  items:
+    - name: Configure Kubernetes Fleet Manager
+      items:
+        - name: Upgrade hub cluster types
+          href: upgrade-hub-cluster-type.md
+        - name: Use managed identities
+          href: use-managed-identity.md
+        - name: View Fleet agent logs
+          href: view-fleet-agent-logs.md
+        - name: Migrate preview instances to supported instances 
+          href: howto-migrate-preview-to-ga-fleets.md
+    - name: Progressively upgrade Kubernetes and node images
+      items:
+        - name: Define reusable update strategies
+          href: update-create-update-strategy.md
+        - name: Update Kubernetes and node images
+          href: update-orchestration.md
+        - name: Automate updates of Kubernetes and node images
+          href: update-automation.md
+        - name: Configure monitoring and alerting of update runs
+          href: howto-monitor-update-runs.md       
+    - name: Migrate Kubernetes updates to Fleet Manager from Terragrunt and Terraform
+      href: howto-migrate-updates-from-terraform.md
+    - name: Place and manage workloads on multiple clusters
+      items:
+        - name: Access Fleet hub cluster API
+          href: access-fleet-hub-cluster-kubernetes-api.md
+        - name: Multi-cluster resource placement using cluster resource placement
+          href: quickstart-resource-propagation.md
+        - name: Understand the placement status
+          href: howto-understand-placement.md
+        - name: Intelligent multi-cluster resource placement using cluster properties
+          href: intelligent-resource-placement.md
+        - name: Use Automated Deployments to drive multi-cluster resource placement
+          href: howto-automated-deployments.md
+        - name: Use envelope objects to place resources
+          href: quickstart-envelope-reserved-resources.md
+        - name: Use taints and tolerations for workload scheduling
+          href: use-taints-tolerations.md
+        - name: Use overrides to customize cluster-scoped resources
+          href: cluster-resource-override.md
+        - name: Use overrides to customize namespace-scope resources
+          href: resource-override.md
+    - name: Load balance multi-cluster services
+      items:
+        - name: Use DNS-based load balancing across multiple clusters
+          href: howto-dns-load-balancing.md
+        - name: Multi-cluster Layer 4 Load Balancing
+          href: l4-load-balancing.md
+- name: Resources
+  items:
+  - name: Pricing
+    href: https://azure.microsoft.com/pricing/details/kubernetes-fleet-manager/#pricing
+  - name: Fleet Manager roadmap
+    href: https://aka.ms/kubernetes-fleet/roadmap
+- name: Reference
+  items:
+  - name: Azure CLI
+    href: /cli/azure/fleet
+  - name: REST
+    href: /rest/api/fleet
+  - name: Terraform
+    href: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/kubernetes_fleet_manager
+  - name: PowerShell
+    href: /powershell/module/az.fleet
+  - name: .NET
+    href: /dotnet/api/overview/azure/container-service-fleet
+  - name: Python
+    href: /python/api/overview/azure/container-service-fleet
+  - name: Java
+    href: /java/api/overview/azure/container-service-fleet
+  - name: Node.js
+    href: /javascript/api/overview/azure/container-service-fleet
+  - name: Resource Manager template
+    href: /azure/templates/microsoft.containerservice/fleets
+- name: FAQ
+  href: faq.md
+- name: Troubleshooting
+  href: /troubleshoot/azure/kubernetes-fleet/welcome-azure-kubernetes-fleet
