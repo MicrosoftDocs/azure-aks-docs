@@ -80,7 +80,7 @@ You can apply a policy definition or initiative in the Azure portal using the fo
 
 ## Related content
 
-* [Azure Policy built-in definitions for Azure Kubernetes Fleet Manager][kubernetes-builtin-policies].
+* [Azure Policy built-in definitions for Azure Kubernetes Services][kubernetes-builtin-policies].
 
 <!-- LINKS -->
 [aks-quickstart-cli]: /azure/aks/learn/quick-kubernetes-deploy-cli
