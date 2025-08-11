@@ -19,11 +19,11 @@ By using the built-in Azure Kubernetes Fleet Manager policies, it is possible to
 
 Fleet Manager's policies are part of the [Kubernetes built-in policy][kubernetes-builtin-policies] set, with the following two policies relating to Fleet Manager.
 
-It is recommended to use both policies to firstly identify existing clusters not managed by a Fleet Manager, and then ensure that new clusters are automatically enrolled.
-
 * **Azure Kubernetes Service clusters should be a member of an Azure Kubernetes Fleet Manager**: Use this policy to identify any AKS clusters not managed by a Fleet Manager. It supports clusters that use either service principals or managed identities.
 
 * **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager**: Use this policy to ensure new AKS clusters automatically join a designated Fleet Manager. Only clusters using managed identities are supported.
+
+It is recommended to use both policies, firstly to identify existing clusters not managed by a Fleet Manager, and then to ensure that new clusters are automatically enrolled.
 
 ## Prerequisites
 
