@@ -292,5 +292,5 @@ All traffic within the VNet is allowed by default. But if you have added NSG rul
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [ref-support-levels]: /cli/azure/reference-types-and-status
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
-[private-apiserver]: private-apiserver-vnet-integration-cluster
+[private-apiserver]: private-apiserver-vnet-integration-cluster.md
 
