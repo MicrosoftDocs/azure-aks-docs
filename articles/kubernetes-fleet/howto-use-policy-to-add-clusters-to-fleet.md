@@ -50,7 +50,7 @@ You can apply a policy definition or initiative in the Azure portal using the fo
 1. In the left pane of the Azure Policy page, select **Authoring**, then **Definitions**.
 1. From **Category** filter, select **Kubernetes**.
 1. Select **Apply**.
-1. Choose the **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager fleet** Policy.
+1. Choose the **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager** Policy.
 1. Select **Assign**.
 1. Set the **Scope** to the Management Group, Subscription, or Resource Group where new AKS clusters are deployed.
 1. Select whether **Policy enforcement** is enabled. Enabling ensures new AKS clusters join the specified Fleet Manager.
