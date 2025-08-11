@@ -19,9 +19,11 @@ By using the built-in Azure Kubernetes Fleet Manager policies, it is possible to
 
 Fleet Manager's policies are part of the [Kubernetes built-in policy][kubernetes-builtin-policies] set, with the following two policies relating to Fleet Manager.
 
-* **Azure Kubernetes Service clusters should be a member of an Azure Kubernetes Fleet Manager**: This policy identifies AKS clusters not managed by a Fleet Manager. It supports clusters that use either service principals or managed identities. 
+It is recommended to use both policies to firstly identify existing clusters not managed by a Fleet Manager, and then ensure that new clusters are automatically enrolled.
 
-* **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager**: This policy ensures new AKS clusters are automatically enrolled for management by a designated Fleet Manager. Only clusters using managed identities are supported.
+* **Azure Kubernetes Service clusters should be a member of an Azure Kubernetes Fleet Manager**: Use this policy to identify any AKS clusters not managed by a Fleet Manager. It supports clusters that use either service principals or managed identities.
+
+* **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager**: Use this policy to ensure new AKS clusters automatically join a designated Fleet Manager. Only clusters using managed identities are supported.
 
 ## Prerequisites
 
@@ -79,11 +81,11 @@ You can apply a policy definition or initiative in the Azure portal using the fo
 
 ## Related content
 
-* [Azure Policy built-in definitions for Azure Kubernetes Fleet Manager](./policy-reference.md).
+* [Azure Policy built-in definitions for Azure Kubernetes Fleet Manager][kubernetes-builtin-policies].
 
 <!-- LINKS -->
 [aks-quickstart-cli]: /azure/aks/learn/quick-kubernetes-deploy-cli
 [azure-cli-install]: /cli/azure/install-azure-cli
 [az-extension-update]: /cli/azure/extension#az-extension-update
 [az-fleet-member-list]: /cli/azure/fleet/member#az-fleet-member-list
-[kubernetes-builtin-policies]: /azure/governance/policy/concepts/built-in-policies#kubernetes
+[kubernetes-builtin-policies]: ../aks/policy-reference.md
