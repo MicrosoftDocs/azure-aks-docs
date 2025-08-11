@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Define reusable update strategies using Azure Kubernetes Fleet Manager
 
-Administrators can control the sequence of updates to Fleet-managed clusters by defining stages, groups, and optional inter-stage pauses. These sequences can be saved as update strategies which can be managed independently of update runs or auto-upgrades, allowing strategies to be reused as required.
+Administrators can control the sequence of updates to Fleet-managed clusters by defining a series of stages and groups. They can configure when approvals and pauses should occur within those stages and groups. The entire configuration can be saved as an update strategy which can be managed independently of update runs or auto-upgrades, allowing strategies to be reused as required.
 
 This article covers how to define update strategies using groups and stages. 
 
@@ -34,7 +34,7 @@ This article covers how to define update strategies using groups and stages.
 
 * If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.70.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
 
-* You also need the `fleet` Azure CLI extension version 1.5.0 or later, which you can install by running the following command:
+* You also need the `fleet` Azure CLI extension version 1.6.1 or later, which you can install by running the following command:
 
   ```azurecli-interactive
   az extension add --name fleet
@@ -131,13 +131,16 @@ An update strategy consists of one or more stages, where a stage can contain one
     :::image type="content" source="./media/create-update-strategy/create-strategy-inline.png" alt-text="A screenshot of the Azure portal showing creation of update strategy." lightbox="./media/create-update-strategy/create-strategy-lightbox.png":::
 
 1. Select **Create Stage** and enter:
-    * **Stage name** - name the stage - it must be unique across all stage names in the fleet.
+    * **Stage name** - name the stage - it must be unique across all stage names in the strategy.
+    * **(Optional) Stage approvals** - select this option if you would like to wait for an approval before this stage starts or after it completes. For more information, see [Add approvals to update groups and stages](./update-strategies-gates-approvals.md).
     * **(Optional) Pause after stage** - select this option if you would like to define a pause before moving to the next stage.
     * **(Optional) Pause duration** - select a predefined duration, or enter a custom value in seconds.
 
     :::image type="content" source="./media/create-update-strategy/create-stage-basics-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage." lightbox="./media/create-update-strategy/create-stage-basics.png":::
 
 1. Assign one or more **Update Group** to the stage, and then select **Create**.
+
+TODO: update image showing <Set group approvals> button.
 
     :::image type="content" source="./media/create-update-strategy/create-stage-choose-groups-inline.png" alt-text="A screenshot of the Azure portal showing creation of Azure Kubernetes Fleet Manager update strategy stage, selecting update groups to include." lightbox="./media/create-update-strategy/create-stage-choose-groups.png":::
 
