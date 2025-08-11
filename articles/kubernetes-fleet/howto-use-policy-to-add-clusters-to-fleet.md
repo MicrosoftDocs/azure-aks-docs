@@ -77,7 +77,7 @@ You can apply a policy definition or initiative in the Azure portal using the fo
     -------------------------------------------------------------------------------------------------------------------------  ------------  -------------------  ---------------
     /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<GROUP>/providers/Microsoft.ContainerService/managedClusters/aks-member-1  aks-member-1  Succeeded            <GROUP>
     ```
-W
+
 ## Related content
 
 * [Azure Policy built-in definitions for Azure Kubernetes Fleet Manager][kubernetes-builtin-policies].
