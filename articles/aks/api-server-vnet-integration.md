@@ -264,7 +264,7 @@ You can expose the API server endpoint of a private cluster with API Server VNet
         --enable-apiserver-vnet-integration
     ```
 
-
+For more guidance on how to set up Private Link with API Server VNet Integration, see [Private Link with API Server VNet Integration][private-apiserver].
 
 ## NSG security rules
 
@@ -277,7 +277,9 @@ All traffic within the VNet is allowed by default. But if you have added NSG rul
 
 ## Next steps
 
-For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
+- For associated best practices, see [Best practices for network connectivity and security in AKS][operator-best-practices-network].
+- For guidance on how to set up private link with API Server VNet Integration, see [Private Link with API Server VNet Integration][private-apiserver].
+
 
 <!-- LINKS - internal -->
 [operator-best-practices-network]: operator-best-practices-network.md
@@ -290,4 +292,5 @@ For associated best practices, see [Best practices for network connectivity and 
 [az-role-assignment-create]: /cli/azure/role/assignment#az-role-assignment-create
 [ref-support-levels]: /cli/azure/reference-types-and-status
 [az-aks-get-credentials]: /cli/azure/aks#az-aks-get-credentials
+[private-apiserver]: private-apiserver-vnet-integration-cluster
 
