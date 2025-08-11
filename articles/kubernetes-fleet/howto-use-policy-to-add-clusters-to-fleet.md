@@ -47,13 +47,13 @@ It is recommended to use both policies, firstly to identify existing clusters no
 You can apply a policy definition or initiative in the Azure portal using the following steps:
 
 1. Navigate to the [Azure Policy](https://portal.azure.com/#view/Microsoft_Azure_Policy/PolicyMenuBlade/~/Overview) service in Azure portal.
-1. In the left pane of the Azure Policy page, select **Authoring**, then **Definitions**.
+1. In the left panes of the Azure Policy page, select **Authoring**, then **Definitions**.
 1. From **Category** filter, select **Kubernetes**.
 1. Select **Apply**.
 1. Choose the **Configure AKS clusters to automatically join the specified Azure Kubernetes Fleet Manager** Policy.
 1. Select **Assign**.
 1. Set the **Scope** to the Management Group, Subscription, or Resource Group where new AKS clusters are deployed.
-1. Select whether **Policy enforcement** is enabled. Enabling ensures new AKS clusters join the specified Fleet Manager.
+1. Select whether **Policy enforcement** is enabled. EnablSing ensures new AKS clusters join the specified Fleet Manager.
 1. Select the **Parameters** page and set the Fleet Manager to use. 
 1. Select **Review + create** > **Create** to submit the policy assignment.
 
@@ -73,12 +73,11 @@ You can apply a policy definition or initiative in the Azure portal using the fo
     If successful, your output should look similar to the following example output:
 
     ```output
-    ClusterResourceId                                                                                                                                Name          ProvisioningState    ResourceGroup
-    -----------------------------------------------------------------------------------------------------------------------------------------------  ------------  -------------------  ---------------
+    ClusterResourceId                                                                                                          Name          ProvisioningState    ResourceGroup
+    -------------------------------------------------------------------------------------------------------------------------  ------------  -------------------  ---------------
     /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<GROUP>/providers/Microsoft.ContainerService/managedClusters/aks-member-1  aks-member-1  Succeeded            <GROUP>
     ```
-
-
+W
 ## Related content
 
 * [Azure Policy built-in definitions for Azure Kubernetes Fleet Manager][kubernetes-builtin-policies].
