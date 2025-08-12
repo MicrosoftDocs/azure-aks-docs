@@ -15,7 +15,7 @@ ms.custom: 'stateful-workloads'
 This article shows how to validate the resiliency of the Valkey cluster on Azure Kubernetes Service (AKS).
 
 > [!NOTE]
-> This article contains references to the term *master*, which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we’ll remove it from this article.
+> This article contains references to the term *master*, which is a term that Microsoft no longer uses. When the term is removed from the Valkey software, we'll remove it from this article.
 
 ## Build and run a sample client application for Valkey
 
@@ -137,6 +137,8 @@ The sample client application uses the [Locust load testing framework](https://d
     ```
 
     This python code implements a Locust User class that connects to the Valkey cluster and performs a *set and get* operation. You can [expand this class to implement more complex operations][writing-a-locustfile].
+
+    Microsoft recommends that you use the most secure authentication flow available. The authentication flow described in this procedure requires a very high degree of trust in the application, and carries risks that are not present in other flows. You should only use this flow when other more secure flows, such as managed identities, aren't viable.
 
 3. Build the Docker image and upload it to ACR using the [`az acr build`](/cli/azure/acr#az-acr-build) command.
 
