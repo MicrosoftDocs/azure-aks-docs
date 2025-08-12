@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Add approvals to Azure Kubernetes Fleet Manager Update Strategies
 
-Platform administrators often perform pre- and post-update checks when updating multiple clusters in an update run. These checks are to ensure that the clusters are ready to be updated, or that cluster operations aren't adversely affected by the update.
+Platform administrators often perform pre- and post-update checks when updating multiple clusters in an update run. These checks are to ensure that the clusters are ready to be updated, or that the update didn't adversely affect cluster operations.
 
 Fleet Manager provides approval gates that allow platform administrators to either manually, or via automation, perform any checks required to allow the update run to proceed. For example, an approval gate between the test and production stages of an update run means health checks can be run on test clusters to make sure it's safe to proceed to production.
 
@@ -84,7 +84,7 @@ TODO replace image with generic cluster names, etc
 
 1. Approvals can also be configured on individual groups. To do so, under **Update groups** select **Set group approvals** for the group you want to add approvals for. 
 
-1. As previously described for stages, use the approvals sidebar on the right to configure a before and/or after approval and its name. 
+1. As previously described for stages, use the approvals sidebar to configure a before and/or after approval and its name. 
 
 1. Select **Save** in the approvals sidebar. 
 
@@ -153,8 +153,8 @@ Approvals can also be configured [when defining groups and stages within an upda
 
 Approvals are represented as **gates** that control the flow of the update run. The gate’s state indicates whether or not it's approved. The update run itself also maintains the status of the gate. Here's a list of all the gate states that can be seen in the update run: 
 
-* **Not Started**: Until the update run reaches a gate, it's shown as `NotStarted`. 
-* **Pending**: While a gate is waiting to be approved, it's in state `Pending`. 
+* **Not Started**: Until the update run reaches a gate, it's shown as `NotStarted`.
+* **Pending**: While a gate is waiting to be approved, it's in state `Pending`.
 * **Skipped**: If a group or stage is skipped, then all gates within that group or stage automatically move to `Skipped` state.
 * **Completed**: Once a gate is approved, it's shown as `Completed`. 
 

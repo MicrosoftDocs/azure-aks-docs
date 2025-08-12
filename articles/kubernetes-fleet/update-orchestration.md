@@ -140,7 +140,7 @@ az fleet updaterun start \
 
 ## Update clusters using groups and stages
 
-You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify what approvals are required before or after each stage, as well as a wait time between the update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md).
+You can define an update run using update stages to sequentially order the application of updates to different update groups. For example, a first update stage might update test environment member clusters, and a second update stage would then update production environment member clusters. You can also specify what approvals are required before or after each stage, and a wait time between the update stages. You can store this sequence as a template in the form of an [update strategy](./update-create-update-strategy.md).
 
 #### [Azure portal](#tab/azure-portal)
 
