@@ -11,9 +11,9 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Add approvals to Azure Kubernetes Fleet Manager Update Strategies
 
-When updating multiple clusters in an update run, platform administrators often perform pre- and post-update checks for clusters to ensure they are ready to be updated, or that an update has not adversely affected the cluster operation.
+Platform administrators often perform pre- and post-update checks when updating multiple clusters in an update run. These checks are to ensure that the clusters are ready to be updated, or that an update hasn't adversely affected the cluster operation.
 
-Fleet Manager provides approval gates that allow platform administrators to either manually, or via automation, perform any checks required to allow the update run to proceed. For example, an approval gate between the test and production stages of an update run means health checks can be run on test clusters to make sure it is safe to proceed to production.
+Fleet Manager provides approval gates that allow platform administrators to either manually, or via automation, perform any checks required to allow the update run to proceed. For example, an approval gate between the test and production stages of an update run means health checks can be run on test clusters to make sure it's safe to proceed to production.
 
 This article covers how to define approvals in update run and strategies, and how to approve them during update run execution.
 
@@ -55,8 +55,8 @@ Approvals can be configured when creating an update strategy, or when creating a
 
 Approvals can be placed on any update stage or update group in an update strategy and can either be **before** or **after** the stage or group is executed. Here are some examples of how this functionality can be used: 
 
-* An approval before your production stage means that production stage updates will not begin until approval has been granted. The approval confirmation can be manual, or via automation. 
-* An approval after each group means you can run health checks over the clusters in each of those groups. The approval waits until a user has confirmed that applications are running correctly on the updated clusters. 
+* An approval before your production stage means that production stage updates don't start until approval is granted. The approval confirmation can be manual, or via automation. 
+* An approval after each group means you can run health checks over the clusters in each of those groups. The approval waits until a user confirms that applications are running correctly on the updated clusters. 
 
 ## Configure stage and group approvals in an update strategy 
 
@@ -76,7 +76,7 @@ TODO replace image with generic cluster names, etc
 
 1. In the sidebar on the right, select whether you want **before stage** and/or **after stage** approvals. 
 
-1. Enter a **Name** for the approval. This will be shown when the update run is executing and can help provide context to the approver. 
+1. Enter a **Name** for the approval. This name is shown when the update run is executing and can help provide context to the approver. 
 
 1. Select **Save** in the approvals sidebar. 
 
@@ -84,7 +84,7 @@ TODO replace image with generic cluster names, etc
 
 1. Approvals can also be configured on individual groups. To do so, under **Update groups** select **Set group approvals** for the group you want to add approvals for. 
 
-1. As above for stages, use the sidebar on the right to configure a before and/or after approval and its name. 
+1. As previously described for stages, use the approvals sidebar on the right to configure a before and/or after approval and its name. 
 
 1. Select **Save** in the approvals sidebar. 
 
@@ -145,25 +145,25 @@ TODO replace image with generic cluster names, etc
 
 ---
 
-For more information, read [the guide to creating update strategies](update-create-update-strategy)
+For more information, read [the guide to creating update strategies](./update-create-update-strategy.md)
 
-Approvals can also be configured [when defining groups and stages within an update run](update-orchestration#update-clusters-using-groups-and-stages).
+Approvals can also be configured [when defining groups and stages within an update run](./update-orchestration.md#update-clusters-using-groups-and-stages).
 
 ## Understanding approval states 
 
-Approvals are represented as **gates** that control the flow of the update run. The gate’s state indicates whether it has been approved. The update run itself also maintains the status of the gate. Below is a list of all the gate states that can be seen in the update run: 
+Approvals are represented as **gates** that control the flow of the update run. The gate’s state indicates whether or not it is approved. The update run itself also maintains the status of the gate. Here is a list of all the gate states that can be seen in the update run: 
 
-* **Not Started**: Until the update run reaches a gate, it will be shown as `NotStarted`. 
-* **Pending**: While a gate is waiting to be approved it will be in state `Pending`. 
-* **Skipped**: If a group or stage is skipped then all gates within that group or stage will automatically move to `Skipped` state. 
-* **Completed**: Once a gate has been approved it will be shown as `Completed`. 
+* **Not Started**: Until the update run reaches a gate, it is shown as `NotStarted`. 
+* **Pending**: While a gate is waiting to be approved, it is in state `Pending`. 
+* **Skipped**: If a group or stage is skipped, then all gates within that group or stage automatically move to `Skipped` state.
+* **Completed**: Once a gate has been approved, it is shown as `Completed`. 
 
 ## Granting approvals during an update run 
 
-Once an update run with a strategy containing approvals is started, the update run will continue to execute until it reaches one of the configured approvals. At that point, the update run will not proceed further until you grant approval for it to do so. 
+Once an update run with a strategy containing approvals is started, the update run continues to execute until it reaches one of the configured approvals. At that point, the update run doesn't proceed further until you grant approval for it to do so. 
 
 > [!NOTE]
-> Update groups execute in parallel. As such, an approval for one group affects that group only and not any others. If you want to block multiple groups then use a single stage approval or one group approval for each of them. 
+> Update groups execute in parallel. As such, an approval for one group affects that group only and not any others. If you want to block multiple groups, then use a single stage approval or one group approval for each of them. 
 
 ### [Azure portal](#tab/azure-portal)
 
@@ -196,7 +196,7 @@ Once an update run with a strategy containing approvals is started, the update r
      --name <run-name> 
     ```
 
-1. Under the `status` JSON object in the response, look for the stage or group where the approval was configured. There will be a matching `beforeGates` or `afterGates` JSON object. For example: 
+1. Under the `status` JSON object in the response, look for the stage or group where the approval was configured. Find the matching `beforeGates` or `afterGates` JSON object. For example: 
 
     ```json
     { 
@@ -235,10 +235,10 @@ Once an update run with a strategy containing approvals is started, the update r
     }
     ```
 
-  In the example above: 
+  In the example: 
 
-  * The beforeGate with displayName `Do not start during business hours!` is in state **Pending**. It is waiting for approval. 
-  * The afterGate with displayName `Run health checks` is in state **NotStarted**. Because the update run has not yet reached this gate, there is no linked `gateId`. 
+  * The beforeGate with displayName `Do not start during business hours!` is in state **Pending**. It's waiting for approval. 
+  * The afterGate with displayName `Run health checks` is in state **NotStarted**. Because the update run isn't up to this gate yet, there's no linked `gateId`. 
  
 1. The output can be large, making it difficult to find the approval you want to grant. Using a tool like **jq** can make it easier to find the **beforeGate** or **afterGate** in the update run response. For example, to retrieve all stage gates that are awaiting approval use the following command: 
 
@@ -250,7 +250,7 @@ Once an update run with a strategy containing approvals is started, the update r
     | jq '.status.stages[] | .beforeGates + .afterGates | .[] | select(.status.state == "Pending")'
     ```
 
-1. Once you’ve found the gate that you want to approve, identify its `gateId`. Note down the last part of the gateId (after the final slash). For example, for the Pending approval above use **9ed627b7-f939-45f7-87ec-4e98a728b356**.
+1. Once you find the gate that you want to approve, identify its `gateId`. Note down the last part of the gateId (after the final slash). For example, for the Pending approval in the example response above use **9ed627b7-f939-45f7-87ec-4e98a728b356**.
 
 1. Grant the approval by using the [`az fleet gate approve`][az-fleet-gate-approve] command. Use the identifier that you retrieved in the previous step as the argument to –name.
 
@@ -275,7 +275,7 @@ Alternatively, you can list all gates across all update runs in a fleet.
      --state Pending 
     ```
 
-1. As above in step 5, grant the approval by using the [`az fleet gate approve`][az-fleet-gate-approve] command. This time, use the name returned from the list command as the argument to –name. 
+1. As described previously in step 5, grant the approval by using the [`az fleet gate approve`][az-fleet-gate-approve] command. This time, use the name returned from the list command as the argument to –name. 
 
     ```azurecli-interactive
     az fleet gate approve \ 
