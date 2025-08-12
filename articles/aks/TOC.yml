@@ -1008,7 +1008,7 @@
               href: keda-integrations.md
             - name: Troubleshoot Kubernetes Event-driven Autoscaler (KEDA)
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-kubernetes-event-driven-autoscaling-add-on?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-       - name: Node auto provisioning (NAP)
+       - name: Node auto provisioning
          items: 
             - name: Node auto provisioning overview
               href: node-autoprovision.md
