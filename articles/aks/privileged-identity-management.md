@@ -147,11 +147,11 @@ You *can* use just the **default** and **admin** groups instead of creating a se
 
 In this section, we create two users in Microsoft Entra ID: a **normal** user with only the default role, and a **privileged** user who can approve or deny just-in-time requests from the *normal* user.
 
-1. Create the **normal** user using the [`az ad user create`][az-ad-user-create] command.
+1. Create the **normal** user using the [`az ad user create`][az-ad-user-create] command. For the `PASSWORD` variable, replace the `<placeholder>` with a strong password. 
 
     ```azurecli-interactive
     DOMAIN=contoso.com
-    PASSWORD=Password1
+    PASSWORD=<placeholder>
 
     NUSER_ID=$(az ad user create \
         --display-name n01 \
