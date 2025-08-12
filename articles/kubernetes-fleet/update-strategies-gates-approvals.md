@@ -11,7 +11,7 @@ ms.service: azure-kubernetes-fleet-manager
 
 # Add approvals to Azure Kubernetes Fleet Manager Update Strategies
 
-Platform administrators often perform pre- and post-update checks when updating multiple clusters in an update run. These checks are to ensure that the clusters are ready to be updated, or that an update hasn't adversely affected the cluster operation.
+Platform administrators often perform pre- and post-update checks when updating multiple clusters in an update run. These checks are to ensure that the clusters are ready to be updated, or that cluster operations aren't adversely affected by the update.
 
 Fleet Manager provides approval gates that allow platform administrators to either manually, or via automation, perform any checks required to allow the update run to proceed. For example, an approval gate between the test and production stages of an update run means health checks can be run on test clusters to make sure it's safe to proceed to production.
 
@@ -151,12 +151,12 @@ Approvals can also be configured [when defining groups and stages within an upda
 
 ## Understanding approval states 
 
-Approvals are represented as **gates** that control the flow of the update run. The gate’s state indicates whether or not it is approved. The update run itself also maintains the status of the gate. Here is a list of all the gate states that can be seen in the update run: 
+Approvals are represented as **gates** that control the flow of the update run. The gate’s state indicates whether or not it's approved. The update run itself also maintains the status of the gate. Here's a list of all the gate states that can be seen in the update run: 
 
-* **Not Started**: Until the update run reaches a gate, it is shown as `NotStarted`. 
-* **Pending**: While a gate is waiting to be approved, it is in state `Pending`. 
+* **Not Started**: Until the update run reaches a gate, it's shown as `NotStarted`. 
+* **Pending**: While a gate is waiting to be approved, it's in state `Pending`. 
 * **Skipped**: If a group or stage is skipped, then all gates within that group or stage automatically move to `Skipped` state.
-* **Completed**: Once a gate has been approved, it is shown as `Completed`. 
+* **Completed**: Once a gate is approved, it's shown as `Completed`. 
 
 ## Granting approvals during an update run 
 
@@ -250,7 +250,7 @@ Once an update run with a strategy containing approvals is started, the update r
     | jq '.status.stages[] | .beforeGates + .afterGates | .[] | select(.status.state == "Pending")'
     ```
 
-1. Once you find the gate that you want to approve, identify its `gateId`. Note down the last part of the gateId (after the final slash). For example, for the Pending approval in the example response above use **9ed627b7-f939-45f7-87ec-4e98a728b356**.
+1. Once you find the gate that you want to approve, identify its `gateId`. Note down the last part of the gateId (after the final slash). For example, for the Pending approval in the prior example response use **9ed627b7-f939-45f7-87ec-4e98a728b356**.
 
 1. Grant the approval by using the [`az fleet gate approve`][az-fleet-gate-approve] command. Use the identifier that you retrieved in the previous step as the argument to –name.
 
