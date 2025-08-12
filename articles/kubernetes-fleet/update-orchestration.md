@@ -156,7 +156,7 @@ You can define an update run using update stages to sequentially order the appli
 
 1. Select the update groups that you want to include in this stage. You can also specify the order of the update groups if you want to update them in a specific sequence. When you're done, select **Create**.
 
-TODO: update image showing <Set group approvals> button.
+TODO: update image showing "Set group approvals" button.
 
     :::image type="content" source="./media/update-orchestration/create-stage-choose-groups-inline.png" alt-text="Screenshot of the Azure portal page for stage creation that shows the selection of upgrade groups." lightbox="./media/update-orchestration/create-stage-choose-groups.png":::
 
