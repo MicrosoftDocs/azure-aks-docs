@@ -194,6 +194,7 @@ For this scenario, we create stages and groups to match the details used for the
 You can use an update strategy as part of a manual update run or an auto-upgrade profile. See:
 
 * [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
+* [How-to: Add approvals to Azure Kubernetes Fleet Manager Update Strategies](./update-strategies-gates-approvals.md).
 * [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
 * [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
 

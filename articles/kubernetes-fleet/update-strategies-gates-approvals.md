@@ -288,3 +288,16 @@ Alternatively, you can list all gates across all update runs in a fleet.
 
 ## Next steps
 
+* [How-to: Upgrade multiple clusters using Azure Kubernetes Fleet Manager update runs](./update-orchestration.md).
+* [How-to: Automatically upgrade multiple clusters using Azure Kubernetes Fleet Manager](./update-automation.md).
+* [Multi-cluster updates FAQs](./faq.md#multi-cluster-updates---automated-or-manual-faqs).
+
+<!-- LINKS -->
+[fleet-quickstart]: quickstart-create-fleet-and-members.md
+[azure-cli-install]: /cli/azure/install-azure-cli
+[az-extension-update]: /cli/azure/extension#az-extension-update
+[az-fleet-updatestrategy-create]: /cli/azure/fleet/updatestrategy#az-fleet-updatestrategy-create
+[az-fleet-updaterun-show]: /cli/azure/fleet/updaterun#az-fleet-updaterun-show
+[az-fleet-gate-approve]: /cli/azure/fleet/gate#az-fleet-gate-approve
+[az-fleet-gate-list]: /cli/azure/fleet/gate#az-fleet-gate-list
+

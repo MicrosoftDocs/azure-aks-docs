@@ -111,9 +111,34 @@ The two most common reasons for long pending states are:
 
 * Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
 
+### Editing my update strategy did not change the update run I created using it. Why not?
+
+Once an update run is created it is not affected by any changes to the update strategy. At creation time, a copy of the strategy is made and stored on the update run itself. This makes the update run immutable to strategy changes, so you can be sure that it will not change halfway through a run.
+
 ### My auto-upgrade run started, then immediately entered a pending state. Why?
 
 See the previous question.
+
+### Can I pre-approve an approval?
+
+No. Approvals are only available once the update run is up to the point where you can verify that the member clusters are ready for upgrade or that the upgrade has completed successfully. If you want to pre-approve, consider not configuring an approval in your strategy at all.
+
+### Do approvals expire?
+
+No, you cannot configure a limited time window for approvals. Approvals will wait until they are approved. 
+
+### Can I skip an approval?
+
+If you want to skip the member cluster upgrades together with the gating approval, then you can do so by skipping the encompassing group or stage. If you want to proceed with the upgrades, then the only way to do so is to grant the approval.
+
+### Can I configure an after stage approval together with an after stage wait?
+
+Yes. The after stage wait will begin at the same time as the approval. Both must be completed before the stage will move on. That is, the after stage wait needs to have run for the configured time period **and** the approval must be granted.
+
+### Can approvals be added to existing update strategies?
+
+Yes. You can edit the existing strategy to include approvals. However, existing update runs that have been created using that strategy will not be updated.
+
 
 ## Cluster resource placement FAQs
 
