@@ -6,6 +6,7 @@ author: sjwaight
 ms.author: simonwaight
 ms.service: azure-kubernetes-fleet-manager
 ms.topic: concept-article
+# Customer intent: As a platform admin, I want to propagate Kubernetes resources from a hub cluster to multiple member clusters, so that I can manage workloads and access control across diverse environments.
 ---
 
 # Introduce ClusterResourcePlacement API
@@ -499,6 +500,7 @@ Events:
   Normal  PlacementSyncSuccess       3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Successfully synchronized the placement
   Normal  PlacementRolloutCompleted  3m28s (x7 over 3d22h)  cluster-resource-placement-controller  Resources have been applied to the selected clusters
 ```
+For more information, see the [documentation on how to understand the placement result][fleet-status].
 
 ## Placement change triggers
 
@@ -529,3 +531,5 @@ Resource-only changes (updating the resources or updating the `ResourceSelector`
 [fleet-staged-rollout]: ./concepts-rollout-strategy.md#staged-update-strategy-preview
 [fleet-tolerations]: ./use-taints-tolerations.md
 [fleet-snapshots]: ./concepts-placement-snapshots.md
+[fleet-status]: ./howto-understand-placement.md
+

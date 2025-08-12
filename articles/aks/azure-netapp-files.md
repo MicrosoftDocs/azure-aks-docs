@@ -8,6 +8,7 @@ ms.date: 05/08/2023
 author: schaffererin
 ms.author: schaffererin
 
+# Customer intent: As a Kubernetes developer, I want to configure Azure NetApp Files for my AKS cluster, so that I can effectively provision and manage persistent storage for my applications.
 ---
 
 # Configure Azure NetApp Files for Azure Kubernetes Service

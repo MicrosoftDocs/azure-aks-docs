@@ -2,29 +2,40 @@
 title: Configure Metrics Server VPA in Azure Kubernetes Service (AKS)
 description: Learn how to vertically autoscale your Metrics Server pods on an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
-ms.date: 03/27/2023
+ms.date: 08/12/2025
 author: davidsmatlak
 ms.author: davidsmatlak
 
+# Customer intent: As a Kubernetes administrator, I want to configure the Vertical Pod Autoscaler for the Metrics Server on my Azure Kubernetes Service cluster, so that I can optimize resource allocation and ensure consistent performance without manual intervention.
 ---
 
 # Configure Metrics Server VPA in Azure Kubernetes Service (AKS)
 
-[Metrics Server][metrics-server-overview] is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. With Azure Kubernetes Service (AKS), vertical pod autoscaling is enabled for the Metrics Server. The Metrics Server is commonly used by other Kubernetes add ons, such as the [Horizontal Pod Autoscaler][horizontal-pod-autoscaler].
+[Metrics Server][metrics-server-overview] is a scalable, efficient source of container resource metrics for Kubernetes built-in autoscaling pipelines. With Azure Kubernetes Service (AKS), vertical pod autoscaling is enabled for the Metrics Server. The Metrics Server is commonly used by other Kubernetes add-ons, like the [Horizontal Pod Autoscaler][horizontal-pod-autoscaler].
 
 Vertical Pod Autoscaler (VPA) enables you to adjust the resource limit when the Metrics Server is experiencing consistent CPU and memory resource constraints.
 
-## Before you begin
+## Prerequisites
 
-AKS cluster is running Kubernetes version 1.24 and higher.
+- An AKS cluster with Kubernetes version 1.24 or higher.
+- The Kubernetes command-line tool `kubectl` installed on your computer or use Azure Cloud Shell to run `kubectl` commands.
+
+
+## Get credentials
+
+To run the `kubectl` commands, you need your AKS credentials merged into your profile's `.kube/config` file. Replace `<resourceGroupName>` and `<clusterName>` with your cluster's values.
+
+   ```azurecli
+   az aks get-credentials --resource-group <resourceGroupName> --name <clusterName>
+   ``` 
 
 ## Metrics server throttling
 
-If the Metrics Server throttling rate is high, and the memory usage of its two pods is unbalanced, this indicates the Metrics Server requires more resources than the default values specified.
+If the Metrics Server throttling rate is high, and the memory usage of its two pods is unbalanced, it's an indication that the Metrics Server needs more resources than the default values.
 
-To update the coefficient values, create a ConfigMap in the overlay *kube-system* namespace to override the values in the Metrics Server specification. Perform the following steps to update the metrics server.
+To update the coefficient values, create a `ConfigMap` in the overlay `kube-system` namespace to override the values in the Metrics Server specification. Perform the following steps to update the metrics server.
 
-1. Create a ConfigMap file named *metrics-server-config.yaml* and copy in the following manifest.
+1. Create a `ConfigMap` file named _metrics-server-config.yaml_ and copy the manifest code into the file.
 
     ```yml
     apiVersion: v1
@@ -45,43 +56,59 @@ To update the coefficient values, create a ConfigMap in the overlay *kube-system
         memoryPerNode: 8Mi
     ```
 
-    In the ConfigMap example, the resource limit and request are changed to the following:
+    In the `ConfigMap` example, the resource limit and request are changed to the following values where `n` is the number of nodes:
 
-    * cpu: (100+1n) millicore
-    * memory: (100+8n) mebibyte
+    - cpu: (100+1n) millicores
+    - memory: (100+8n) mebibytes
 
-    Where *n* is the number of nodes.
+    If you're using Cloud Shell, use **Manage files** and select **Upload** so the file is available in your Bash session. 
 
-2. Create the ConfigMap using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest:
+1. Create the `ConfigMap` using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest:
 
-    ```bash
-    kubectl apply -f metrics-server-config.yaml
-    ```
+   ```bash
+   kubectl apply -f metrics-server-config.yaml
+   ```
 
-3. Restart the Metrics Server pods. There are two Metrics server pods, and the following command deletes all of them.
+1. Restart the two Metrics Server pods using [kubectl rollout restart][kubectl-rollout]. The following command deletes both pods and new pods are created.
 
-    ```bash
-    kubectl -n kube-system delete po -l k8s-app=metrics-server
-    ```
+   ```bash
+   kubectl rollout restart -n kube-system deployment metrics-server
+   ```
 
-4. To verify the updated resources took effect, run the following command to review the Metrics Server VPA log.
+   The new Metrics Server pods are created before the old pods are terminated so there isn't downtime.
 
-    ```bash
-    kubectl -n kube-system logs metrics-server-pod-name -c metrics-server-vpa
-    ```
+1. List the pods using [kubectl get][kubectl-get] to get the new Metrics Server pod names that are used in the next command.
+
+   ```bash
+   kubectl get pods --namespace kube-system
+   ```
+
+   ```output
+   NAME                              READY   STATUS   RESTARTS       AGE
+   metrics-server-1a2b333c44-wxyz5   2/2     Running  0              15s
+   metrics-server-1a2b333c44-abcd6   2/2     Running  0              15s
+   ```
+
+   If you notice a third Metrics Server pod with a longer age value, it's because the termination occurs after the new pods are available. 
+
+1. To verify the updated resources took effect for each pod, run the following command to review the Metrics Server VPA log. Replace `<metrics-server-pod-name>` with the name of each of your metrics server pods.
+
+   ```bash
+   kubectl -n kube-system logs <metrics-server-pod-name> -c metrics-server-vpa
+   ```
 
    The following example output resembles the results showing the updated throttling settings were applied.
 
-    ```output
-    ERROR: logging before flag.Parse: I0315 23:12:33.956112       1 pod_nanny.go:68] Invoked by [/pod_nanny --config-dir=/etc/config --cpu=44m --extra-cpu=0.5m --memory=51Mi --extra-memory=4Mi --poll-period=180000 --threshold=5 --deployment=metrics-server --container=metrics-server]
-    ERROR: logging before flag.Parse: I0315 23:12:33.956159       1 pod_nanny.go:69] Version: 1.8.14
-    ERROR: logging before flag.Parse: I0315 23:12:33.956171       1 pod_nanny.go:85] Watching namespace: kube-system, pod: metrics-server-545d8b77b7-5nqq9, container: metrics-server.
-    ERROR: logging before flag.Parse: I0315 23:12:33.956175       1 pod_nanny.go:86] storage: MISSING, extra_storage: 0Gi
-    ERROR: logging before flag.Parse: I0315 23:12:33.957441       1 pod_nanny.go:116] cpu: 100m, extra_cpu: 1m, memory: 100Mi, extra_memory: 8Mi
-    ERROR: logging before flag.Parse: I0315 23:12:33.957456       1 pod_nanny.go:145] Resources: [{Base:{i:{value:100 scale:-3} d:{Dec:<nil>} s:100m Format:DecimalSI} ExtraPerNode:{i:{value:0 scale:-3} d:{Dec:<nil>} s: Format:DecimalSI} Name:cpu} {Base:{i:{value:104857600 scale:0} d:{Dec:<nil>} s:100Mi Format:BinarySI} ExtraPerNode:{i:{value:0 scale:0} d:{Dec:<nil>} s: Format:BinarySI} Name:memory
-    ```
+   ```output
+   I0811 19:08:34.930865       1 pod_nanny.go:86] Invoked by [/pod_nanny --config-dir=/etc/config --cpu=150m --extra-cpu=0.5m --memory=100Mi --extra-memory=4Mi --poll-period=180000 --threshold=5 --deployment=metrics-server --container=metrics-server]
+   I0811 19:08:34.931128       1 pod_nanny.go:87] Version: 1.8.23
+   I0811 19:08:34.931200       1 pod_nanny.go:109] Watching namespace: kube-system, pod: <metrics-server-pod-name>, container: metrics-server.
+   I0811 19:08:34.931249       1 pod_nanny.go:110] storage: MISSING, extra_storage: 0Gi
+   I0811 19:08:34.932085       1 pod_nanny.go:144] cpu: 100m, extra_cpu: 1m, memory: 100Mi, extra_memory: 8Mi
+   I0811 19:08:34.932177       1 pod_nanny.go:278] Resources: [{Base:{i:{value:100 scale:-3} d:{Dec:<nil>} s:100m Format:DecimalSI} ExtraPerResource:{i:{value:1 scale:-3} d:{Dec:<nil>} s:1m Format:DecimalSI} Name:cpu} {Base:{i:{value:104857600 scale:0} d:{Dec:<nil>} s:100Mi Format:BinarySI} ExtraPerResource:{i:{value:8388608 scale:0} d:{Dec:<nil>} s: Format:BinarySI} Name:memory}]
+   ```
 
-Be cautious of the *baseCPU*, *cpuPerNode*, *baseMemory*, and the *memoryPerNode*, because the ConfigMap isn't validated by AKS. As a recommended practice, increase the value gradually to avoid unnecessary resource consumption. Proactively monitor resource usage when updating or creating the ConfigMap. A large number of resource requests could negatively impact the node.
+Be cautious of the `baseCPU`, `cpuPerNode`, `baseMemory`, and the `memoryPerNode`, because AKS doesn't validate the `ConfigMap`. As a recommended practice, increase the value gradually to avoid unnecessary resource consumption. Proactively monitor resource usage when updating or creating the `ConfigMap`. A large number of resource requests could negatively affect the node.
 
 ## Manually configure Metrics Server resource usage
 
@@ -89,7 +116,7 @@ The Metrics Server VPA adjusts resource usage by the number of nodes. If the clu
 
 If you would like to bypass VPA for Metrics Server and manually control its resource usage, perform the following steps.
 
-1. Create a ConfigMap file named *metrics-server-config.yaml* and copy in the following manifest.
+1. Create a `ConfigMap` file named _metrics-server-config.yaml_ and copy in the following manifest.
 
     ```yml
     apiVersion: v1
@@ -110,98 +137,118 @@ If you would like to bypass VPA for Metrics Server and manually control its reso
         memoryPerNode: 0Mi
     ```
 
-   In this ConfigMap example, it changes the resource limit and request to the following:
+   In this `ConfigMap` example, the resource limit and request are changed to the following values that don't trigger autoscaling:
 
-   * cpu: 100 millicore
-   * memory: 100 mebibyte
+   - cpu: 100 millicores
+   - memory: 100 mebibytes
 
-   Changing the number of nodes doesn't trigger autoscaling.
+   If you're using Cloud Shell, use **Manage files** and select **Upload** so the file is available in your Bash session. 
 
-2. Create the ConfigMap using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest:
+1. Create the `ConfigMap` using the [kubectl apply][kubectl-apply] command and specify the name of your YAML manifest:
 
-   ```yml
+   ```bash
    kubectl apply -f metrics-server-config.yaml
    ```
 
-3. Restart the Metrics Server pods. There are two Metrics server pods, and the following command deletes all of them.
+1. Restart the two Metrics Server pods using [kubectl rollout restart][kubectl-rollout]. The following command deletes both pods and new pods are created. 
 
-    ```bash
-    kubectl -n kube-system delete po -l k8s-app=metrics-server
-    ```
+   ```bash
+   kubectl rollout restart -n kube-system deployment metrics-server
+   ```
 
-4. To verify the updated resources took effect, run the following command to review the Metrics Server VPA log.
+   The new Metrics Server pods are created before the old pods are terminated so there isn't downtime.
 
-    ```bash
-    kubectl -n kube-system logs metrics-server-pod-name -c metrics-server-vpa
-    ```
+1. List the pods using [kubectl get][kubectl-get] to get the new Metrics Server pod names that are used in the next command.
+
+   ```bash
+   kubectl get pods --namespace kube-system
+   ```
+
+   ```output
+   NAME                              READY   STATUS   RESTARTS       AGE
+   metrics-server-1a2b333c44-wxyz5   2/2     Running  0              15s
+   metrics-server-1a2b333c44-abcd6   2/2     Running  0              15s
+   ```
+
+   If you notice a third Metrics Server pod with a longer age value, it's because the termination occurs after the new pods are available. 
+
+1. To verify the updated resources took effect for each pod, run the following command to review the Metrics Server VPA log. Replace `<metrics-server-pod-name>` with the name of each of your metrics server pods.
+
+   ```bash
+   kubectl -n kube-system logs <metrics-server-pod-name> -c metrics-server-vpa
+   ```
 
    The following example output resembles the results showing the updated throttling settings were applied.
 
-    ```output
-    ERROR: logging before flag.Parse: I0315 23:12:33.956112       1 pod_nanny.go:68] Invoked by [/pod_nanny --config-dir=/etc/config --cpu=44m 
-    --extra-cpu=0.5m --memory=51Mi --extra-memory=4Mi --poll-period=180000 --threshold=5 --deployment=metrics-server --container=metrics-server]
-    ERROR: logging before flag.Parse: I0315 23:12:33.956159       1 pod_nanny.go:69] Version: 1.8.14
-    ERROR: logging before flag.Parse: I0315 23:12:33.956171       1 pod_nanny.go:85] Watching namespace: kube-system, pod: metrics-server-545d8b77b7-5nqq9, container: metrics-server.
-    ERROR: logging before flag.Parse: I0315 23:12:33.956175       1 pod_nanny.go:86] storage: MISSING, extra_storage: 0Gi
-    ERROR: logging before flag.Parse: I0315 23:12:33.957441       1 pod_nanny.go:116] cpu: 100m, extra_cpu: 0m, memory: 100Mi, extra_memory: 0Mi
-    ERROR: logging before flag.Parse: I0315 23:12:33.957456       1 pod_nanny.go:145] Resources: [{Base:{i:{value:100 scale:-3} d:{Dec:<nil>} s:100m Format:DecimalSI} ExtraPerNode:{i:{value:0 scale:-3} d:{Dec:<nil>} s: Format:DecimalSI} Name:cpu} {Base:{i:{value:104857600 scale:0} d:{Dec:<nil>} s:100Mi Format:BinarySI} 
-    ExtraPerNode:{i:{value:0 scale:0} d:{Dec:<nil>} s: Format:BinarySI} Name:memory}]
-    ```
+   ```output
+   I0811 19:19:06.235018       1 pod_nanny.go:86] Invoked by [/pod_nanny --config-dir=/etc/config --cpu=150m --extra-cpu=0.5m --memory=100Mi --extra-memory=4Mi --poll-period=180000 --threshold=5 --deployment=metrics-server --container=metrics-server]
+   I0811 19:19:06.235105       1 pod_nanny.go:87] Version: 1.8.23
+   I0811 19:19:06.235136       1 pod_nanny.go:109] Watching namespace: kube-system, pod: <metrics-server-pod-name>, container: metrics-server.
+   I0811 19:19:06.235171       1 pod_nanny.go:110] storage: MISSING, extra_storage: 0Gi
+   I0811 19:19:06.235899       1 pod_nanny.go:144] cpu: 100m, extra_cpu: 0m, memory: 100Mi, extra_memory: 0Mi
+   I0811 19:19:06.235917       1 pod_nanny.go:278] Resources: [{Base:{i:{value:100 scale:-3} d:{Dec:<nil>} s:100m Format:DecimalSI} ExtraPerResource:{i:{value:0 scale:-3} d:{Dec:<nil>} s: Format:DecimalSI} Name:cpu} {Base:{i:{value:104857600 scale:0} d:{Dec:<nil>} s:100Mi Format:BinarySI} ExtraPerResource:{i:{value:0 scale:0} d:{Dec:<nil>} s: Format:BinarySI} Name:memory}]
+   ```
 
 ## Troubleshooting
 
-1. If you use the following configmap, the Metrics Server VPA customizations aren't applied. You need add a unit for `baseCPU`.
+### ConfigMap error
 
-    ```yml
-    apiVersion: v1
-    kind: ConfigMap
-    metadata:
-      name: metrics-server-config
-      namespace: kube-system
-      labels:
-        kubernetes.io/cluster-service: "true"
-        addonmanager.kubernetes.io/mode: EnsureExists
-    data:
-      NannyConfiguration: |-
-        apiVersion: nannyconfig/v1alpha1
-        kind: NannyConfiguration
-        baseCPU: 100
-        cpuPerNode: 1m
-        baseMemory: 100Mi
-        memoryPerNode: 8Mi
-    ```
-    
-   The following example output resembles the results showing the updated throttling settings aren't applied.
-    
-    ```output
-    ERROR: logging before flag.Parse: I0316 23:32:08.383389       1 pod_nanny.go:68] Invoked by [/pod_nanny --config-dir=/etc/config --cpu=44m 
-    --extra-cpu=0.5m --memory=51Mi --extra-memory=4Mi --poll-period=180000 --threshold=5 --deployment=metrics-server --container=metrics-server]
-    ERROR: logging before flag.Parse: I0316 23:32:08.383430       1 pod_nanny.go:69] Version: 1.8.14
-    ERROR: logging before flag.Parse: I0316 23:32:08.383441       1 pod_nanny.go:85] Watching namespace: kube-system, pod: metrics-server-7d78876589-hcrff, container: metrics-server.
-    ERROR: logging before flag.Parse: I0316 23:32:08.383446       1 pod_nanny.go:86] storage: MISSING, extra_storage: 0Gi
-    ERROR: logging before flag.Parse: I0316 23:32:08.384554       1 pod_nanny.go:192] Unable to decode Nanny Configuration from config map, using default parameters
-    ERROR: logging before flag.Parse: I0316 23:32:08.384565       1 pod_nanny.go:116] cpu: 44m, extra_cpu: 0.5m, memory: 51Mi, extra_memory: 4Mi
-    ERROR: logging before flag.Parse: I0316 23:32:08.384589       1 pod_nanny.go:145] Resources: [{Base:{i:{value:44 scale:-3} d:{Dec:<nil>} s:44m Format:DecimalSI} ExtraPerNode:{i:{value:5 scale:-4} d:{Dec:<nil>} s: Format:DecimalSI} Name:cpu} {Base:{i:{value:53477376 scale:0} d:{Dec:<nil>} s:51Mi Format:BinarySI} ExtraPerNode:{i:{value:4194304 scale:0} 
-    d:{Dec:<nil>} s:4Mi Format:BinarySI} Name:memory}]
-    ```
+If you apply the following `ConfigMap`, the Metrics Server VPA customizations aren't applied. You need add a unit for `baseCPU` like `baseCPU: 100m` that includes the `m` unit.
 
-2. For Kubernetes version 1.23 and higher clusters, Metrics Server has a *PodDisruptionBudget*. It ensures the number of available Metrics Server pods is at least one. If you get something like this after running `kubectl -n kube-system get po`, it's possible that the customized resource usage is small. Increase the coefficient values to resolve it.
+```yml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: metrics-server-config
+  namespace: kube-system
+  labels:
+    kubernetes.io/cluster-service: "true"
+    addonmanager.kubernetes.io/mode: EnsureExists
+data:
+  NannyConfiguration: |-
+    apiVersion: nannyconfig/v1alpha1
+    kind: NannyConfiguration
+    baseCPU: 100
+    cpuPerNode: 1m
+    baseMemory: 100Mi
+    memoryPerNode: 8Mi
+```
 
-    ```output
-    metrics-server-679b886d4-pxwdf        1/2     CrashLoopBackOff   6 (36s ago)   6m33s
-    metrics-server-679b886d4-svxxx        1/2     CrashLoopBackOff   6 (54s ago)   6m33s
-    metrics-server-7d78876589-hcrff       2/2     Running            0             37m
-    ```
+The following example output resembles the results showing the updated throttling settings aren't applied.
+
+   ```output
+   I0811 19:25:33.992691       1 pod_nanny.go:86] Invoked by [/pod_nanny --config-dir=/etc/config --cpu=150m --extra-cpu=0.5m --memory=100Mi --extra-memory=4Mi --poll-period=180000 --threshold=5 --deployment=metrics-server --container=metrics-server]
+   I0811 19:25:33.992890       1 pod_nanny.go:87] Version: 1.8.23
+   I0811 19:25:33.992918       1 pod_nanny.go:109] Watching namespace: kube-system, pod: <metrics-server-pod-name>, container: metrics-server.
+   I0811 19:25:33.992937       1 pod_nanny.go:110] storage: MISSING, extra_storage: 0Gi
+   I0811 19:25:33.993586       1 pod_nanny.go:217] Unable to decode Nanny Configuration from config map, using default parameters
+   I0811 19:25:33.993602       1 pod_nanny.go:144] cpu: 150m, extra_cpu: 0.5m, memory: 100Mi, extra_memory: 4Mi
+   I0811 19:25:33.993610       1 pod_nanny.go:278] Resources: [{Base:{i:{value:150 scale:-3} d:{Dec:<nil>} s:150m Format:DecimalSI} ExtraPerResource:{i:{value:5 scale:-4} d:{Dec:<nil>} s: Format:DecimalSI} Name:cpu} {Base:{i:{value:104857600 scale:0} d:{Dec:<nil>} s:100Mi Format:BinarySI} ExtraPerResource:{i:{value:4194304 scale:0} d:{Dec:<nil>} s:4Mi Format:BinarySI} Name:memory}]
+   ```
+
+### PodDisruptionBudget
+
+For Kubernetes version 1.23 and higher clusters, Metrics Server has a `PodDisruptionBudget`. It ensures the number of available Metrics Server pods is at least one. If you get something like this after running `kubectl get pods --namespace kube-system`, it's possible that the customized resource usage is small. Increase the coefficient values to resolve it.
+
+```output
+metrics-server-1a2b333c44-wxyz5       1/2     CrashLoopBackOff   6 (36s ago)   6m33s
+metrics-server-1a2b333c44-abcd6       1/2     CrashLoopBackOff   6 (54s ago)   6m33s
+metrics-server-5d69966543-hcrff       2/2     Running            0             37m
+```
 
 ## Next steps
 
-Metrics Server is a component in the core metrics pipeline. For more information see, [Metrics Server API design][metrics-server-api-design]. 
+Metrics Server is a component in the core metrics pipeline. For more information, see [Metrics Server API design][metrics-server-api-design].
 
 <!-- EXTERNAL LINKS -->
 [kubectl-apply]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply
+[kubectl-get]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#get
+[kubectl-rollout]: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#rollout
 [metrics-server-overview]: https://kubernetes-sigs.github.io/metrics-server/
 [metrics-server-api-design]: https://kubernetes.io/docs/tasks/debug/debug-cluster/resource-metrics-pipeline/
 
 <!--- INTERNAL LINKS --->
 [horizontal-pod-autoscaler]: concepts-scale.md#horizontal-pod-autoscaler
+
+
 

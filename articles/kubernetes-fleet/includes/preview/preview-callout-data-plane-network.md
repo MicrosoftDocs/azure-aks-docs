@@ -4,6 +4,7 @@ ms.topic: include
 ms.date: 05/05/2025
 author: sjwaight
 ms.author: simonwaight
+# Customer intent: As a Kubernetes administrator, I want to access preview features of Azure Kubernetes Fleet Manager, so that I can explore new capabilities for managing cluster fleets in a testing environment before considering production deployment.
 ---
 
 > [!IMPORTANT]

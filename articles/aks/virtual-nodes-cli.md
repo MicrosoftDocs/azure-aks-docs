@@ -10,6 +10,7 @@ ms.author: davidsmatlak
 
 ms.custom: references_regions, devx-track-azurecli
 ms.subservice: aks-nodes
+# Customer intent: "As a cloud engineer, I want to configure an Azure Kubernetes Service cluster with virtual nodes using Azure CLI, so that I can enable seamless communication between active pods in Azure Container Instances and AKS for improved resource scaling and efficient workload management."
 ---
 
 # Create and configure an Azure Kubernetes Services (AKS) cluster to use virtual nodes using Azure CLI
@@ -174,7 +175,7 @@ For more information on managed identities, see [Use managed identities](use-man
             - containerPort: 80
           nodeSelector:
             kubernetes.io/role: agent
-            beta.kubernetes.io/os: linux
+            kubernetes.io/os: linux
             type: virtual-kubelet
           tolerations:
           - key: virtual-kubelet.io/provider

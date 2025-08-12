@@ -8,6 +8,7 @@ author: sabbour
 ms.topic: how-to
 ms.date: 07/12/2023
 ms.author: asabbour
+# Customer intent: As a Kubernetes operator, I want to configure Prometheus to scrape ingress-nginx controller metrics, so that I can monitor and analyze the performance and usage of my applications effectively.
 ---
 
 # Monitor the ingress-nginx controller metrics in the application routing add-on with Prometheus in Grafana (preview)

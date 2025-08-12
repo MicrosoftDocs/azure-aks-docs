@@ -1,17 +1,18 @@
 ---
-title: Create the infrastructure for deploying Apache Airflow on Azure Kubernetes Service (AKS)
-description: In this article, you create the infrastructure needed to deploy Apache Airflow on Azure Kubernetes Service (AKS) using Helm.
+title: Create infrastructure for deploying Apache Airflow on AKS
+description: Step-by-step guide to set up Apache Airflow on Azure Kubernetes Service (AKS) using Helm and configure identity and storage for production-ready deployments.
 ms.topic: how-to
 ms.service: azure-kubernetes-service
-ms.date: 12/19/2024
+ms.date: 07/14/2025
 author: schaffererin
 ms.author: schaffererin
 ms.custom: 'stateful-workloads'
+# Customer intent: As a cloud developer, I want to set up the necessary infrastructure for deploying Apache Airflow on Kubernetes, so that I can efficiently manage and orchestrate workflows within my applications.
 ---
 
-# Create the infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)
+# Create infrastructure for running Apache Airflow on Azure Kubernetes Service (AKS)
 
-In this article, you create the infrastructure required to run Apache Airflow on Azure Kubernetes Service (AKS).
+In this article, you create the infrastructure resources needed to run Apache Airflow on Azure Kubernetes Service (AKS).
 
 ## Prerequisites
 
@@ -99,9 +100,9 @@ In this step, we create a user-assigned managed identity that the External Secre
     $MY_LOCATION   $MY_KEYVAULT_NAME     $MY_RESOURCE_GROUP_NAME
     ```
 
-## Create an Azure Container Registry
+## Create an Azure container registry
 
-* Create an Azure Container Registry to store and manage your container images using the [`az acr create`](/cli/azure/acr#az-acr-create) command.
+* Create an Azure container registry to store and manage your container images using the [`az acr create`](/cli/azure/acr#az-acr-create) command.
 
     ```azurecli-interactive
     az acr create \
@@ -147,7 +148,7 @@ In this step, we create a user-assigned managed identity that the External Secre
 
 ## Create an AKS cluster
 
-In this step, we create an AKS cluster with workload identity and OIDC issuer enabled. The workload identity gives the External Secrets Operator service account permission to access the Airflow passwords stored in your key vault.
+In this step, we create an AKS cluster with workload identity and OIDC issuer enabled. This configuration creates a high-availability AKS cluster optimized for running production workloads like Apache Airflow. It provisions a *three* node cluster using `Standard_DS4_v2` VMs across three availability zones for resilience. The cluster is integrated with ACR for secure image pulls and includes OIDC issuer and workload identity support for secure, identity-based access to Azure resources. It also enables the Azure CNI network plugin, Blob CSI driver, and automatic node OS and Kubernetes version upgrades for enhanced performance and security.
 
 1. Create an AKS cluster using the [`az aks create`](/cli/azure/aks#az-aks-create) command.
 

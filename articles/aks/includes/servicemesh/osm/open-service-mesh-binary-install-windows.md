@@ -4,6 +4,7 @@ author: phillipgibson
 ms.topic: include
 ms.date: 03/15/2021
 ms.author: pgibson
+# Customer intent: As a developer, I want to download and install the Open Service Mesh client binary, so that I can manage the OSM controller in my AKS cluster efficiently.
 ---
 
 ## Download and install the Open Service Mesh (OSM) client binary

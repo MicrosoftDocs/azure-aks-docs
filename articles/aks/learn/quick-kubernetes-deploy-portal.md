@@ -7,7 +7,9 @@ ms.date: 05/13/2024
 ms.custom: mvc, mode-ui
 ms.author: schaffererin
 author: schaffererin
-#Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run and monitor applications using the managed Kubernetes service in Azure.
+
+# Customer intent: As a developer or cluster operator, I want to quickly deploy an AKS cluster and deploy an application so that I can see how to run and monitor applications using the managed Kubernetes service in Azure.
+
 ---
 
 # Quickstart: Deploy an Azure Kubernetes Service (AKS) cluster using Azure portal
@@ -193,7 +195,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
         [rabbitmq_management,rabbitmq_prometheus,rabbitmq_amqp1_0].
     kind: ConfigMap
     metadata:
-      name: rabbitmq-enabled-plugins            
+      name: rabbitmq-enabled-plugins
     ---
     apiVersion: v1
     kind: Service
@@ -283,7 +285,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
                 memory: 50Mi
               limits:
                 cpu: 75m
-                memory: 128Mi    
+                memory: 128Mi
     ---
     apiVersion: v1
     kind: Service
@@ -319,7 +321,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
             image: ghcr.io/azure-samples/aks-store-demo/product-service:latest
             ports:
             - containerPort: 3002
-            env: 
+            env:
             - name: AI_SERVICE_URL
               value: "http://ai-service:5001/"
             resources:
@@ -379,7 +381,7 @@ You use a manifest file to create all the objects required to run the [AKS Store
             ports:
             - containerPort: 8080
               name: store-front
-            env: 
+            env:
             - name: VUE_APP_ORDER_SERVICE_URL
               value: "http://order-service:3000/"
             - name: VUE_APP_PRODUCT_SERVICE_URL

@@ -11,7 +11,7 @@ zone_pivot_groups: network-isolated-acr-type
 # Customer intent: As a cluster operator, I want to create a network isolated Kubernetes cluster, so that I can ensure compliance with strict security requirements by eliminating outbound dependencies during bootstrapping and reducing the risk of data exfiltration.
 ---
 
-# Create a network isolated Azure Kubernetes Service (AKS) cluster 
+# Create a network isolated Azure Kubernetes Service (AKS) cluster
 
 Organizations typically have strict security and compliance requirements to regulate egress (outbound) network traffic from a cluster to eliminate risks of data exfiltration. By default, standard SKU Azure Kubernetes Service (AKS) clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. The conceptual document on [outbound network and FQDN rules for AKS clusters][outbound-rules] provides a list of required endpoints for the AKS cluster and its optional add-ons and features.
 
@@ -88,7 +88,7 @@ If you'd rather enable network isolation on an existing AKS cluster instead of c
 To enable the network isolated feature on an existing AKS cluster, first run the following command to update `bootstrap-artifact-source`:
 
 ```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache  
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache
 ```
 Then you need to manually reimage all the exisiting nodepools:
 
@@ -150,7 +150,7 @@ az group create --name ${RESOURCE_GROUP} --location ${LOCATION}
 
 az network vnet create  --resource-group ${RESOURCE_GROUP} --name ${VNET_NAME} --address-prefixes 192.168.0.0/16
 
-az network vnet subnet create --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.1.0/24 
+az network vnet subnet create --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --address-prefixes 192.168.1.0/24
 
 SUBNET_ID=$(az network vnet subnet show --name ${AKS_SUBNET_NAME} --vnet-name ${VNET_NAME} --resource-group ${RESOURCE_GROUP} --query 'id' --output tsv)
 
@@ -178,7 +178,7 @@ There are multiple ways to [disable the virtual network outbound connectivity][v
     ```
 > [!NOTE]
 > With BYO ACR, it is your responsibility to ensure the ACR cache rule is created and maintained correctly as above. This step is critical to cluster creation, functioning and upgrading. This cache rule should NOT be modified.
-    
+
 
 ### Step 4: Create a private endpoint for the ACR
 
@@ -287,7 +287,7 @@ When creating the private endpoint and private DNS zone for the BYO ACR, use the
 To enable the network isolated feature on an existing AKS cluster, first run the following command to update `bootstrap-artifact-source`:
 
 ```azurecli-interactive
-az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID} 
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --bootstrap-artifact-source Cache --bootstrap-container-registry-resource-id ${REGISTRY_ID}
 ```
 Then you need to manually reimage all the exisiting nodepools:
 
@@ -315,6 +315,12 @@ az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-imag
 >```
 
 Wait and ensure the reimage completes, then run the following command to update `outbound-type`:
+
+```azurecli-interactive
+az aks update --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --outbound-type none
+```
+
+Keep in mind that you need to manually reimage all existing node pools again:
 
 ```azurecli-interactive
 az aks upgrade --resource-group ${RESOURCE_GROUP} --name ${AKS_NAME} --node-image-only

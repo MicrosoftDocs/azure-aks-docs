@@ -2,11 +2,10 @@
 title: Outbound network and FQDN rules for Azure Kubernetes Service (AKS) clusters
 description: Learn what ports and addresses are required to control egress traffic in Azure Kubernetes Service (AKS)
 ms.subservice: aks-networking
-ms.custom:
-  - build-2024
+ms.custom: build-2024, quarterly
 ms.topic: how-to
 ms.author: allensu
-ms.date: 12/11/2024
+ms.date: 06/10/2025
 author: asudbring
 
 # Customer intent: "As a Kubernetes cluster operator, I want to understand the outbound network and FQDN rules necessary to control egress traffic, so that I can enhance security and ensure proper functionality within my Azure Kubernetes Service deployment."
@@ -26,7 +25,7 @@ For management and operational purposes, nodes in an AKS cluster need to access 
 
 The AKS outbound dependencies are almost entirely defined with FQDNs, which don't have static addresses behind them. The lack of static addresses means you can't use network security groups (NSGs) to lock down the outbound traffic from an AKS cluster.
 
-By default, AKS clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks. 
+By default, AKS clusters have unrestricted outbound internet access. This level of network access allows nodes and services you run to access external resources as needed. If you wish to restrict egress traffic, a limited number of ports and addresses must be accessible to maintain healthy cluster maintenance tasks.
 
 A [network isolated AKS cluster][network-isolated-cluster], provides the simplest and most secure solution for setting up outbound restrictions for a cluster out of the box. A network isolated cluster pulls the images for cluster components and add-ons from a private Azure Container Registry (ACR) instance connected to the cluster instead of pulling from MAR. If the images aren't present, the private ACR pulls them from MAR and serves them via its private endpoint, eliminating the need to enable egress from the cluster to the public MAR endpoint. The cluster operator can then incrementally set up allowed outbound traffic securely over a private network for each scenario they want to enable. This way the cluster operators have complete control over designing the allowed outbound traffic from their clusters right from the start, thus allowing them to reduce the risk of data exfiltration.
 
@@ -170,6 +169,7 @@ If you choose to block/not allow these FQDNs, the nodes will only receive OS upd
 | **`login.microsoftonline.com`** <br/> **`login.microsoftonline.us`** (Azure Government) <br/> **`login.microsoftonline.cn`** (Azure operated by 21Vianet) | **`HTTPS:443`** | Required for Microsoft Entra Authentication. |
 | **`*.ods.opinsights.azure.com`** <br/> **`*.ods.opinsights.azure.us`** (Azure Government) <br/> **`*.ods.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required for Microsoft Defender to upload security events to the cloud.|
 | **`*.oms.opinsights.azure.com`** <br/> **`*.oms.opinsights.azure.us`** (Azure Government) <br/> **`*.oms.opinsights.azure.cn`** (Azure operated by 21Vianet)| **`HTTPS:443`** | Required to authenticate with Log Analytics workspaces.|
+|**`*.cloud.defender.microsoft.com`**|**`HTTPS:443`**|NEW: Required for Microsoft Defender to upload security events to the cloud.|
 
 ### Azure Key Vault provider for Secrets Store CSI Driver
 

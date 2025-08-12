@@ -7,6 +7,7 @@ ms.service: microsoft-linux
 ms.custom: linux-related-content
 ms.topic: concept-article
 ms.date: 12/07/2023
+# Customer intent: As a cloud security engineer, I want to understand the CIS benchmark compliance for the Azure Linux Container Host in AKS, so that I can ensure our deployment meets essential security standards and minimizes vulnerabilities.
 ---
 
 # Center for Internet Security (CIS) Azure Linux benchmark

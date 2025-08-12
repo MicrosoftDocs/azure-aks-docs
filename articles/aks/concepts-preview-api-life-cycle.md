@@ -1,12 +1,13 @@
 ---
 title: AKS Preview API life cycle
 description: Learn about the AKS preview API life cycle.
-ms.custom: azure-kubernetes-service
+ms.custom: azure-kubernetes-service,innovation-engine
 ms.topic: concept-article
-ms.date: 05/29/2024
+ms.date: 06/06/2024
 author: matthchr
 ms.author: matthchr
 
+# Customer intent: As a cloud developer, I want to stay informed about the lifecycle and deprecation schedule of AKS preview APIs, so that I can ensure my applications are using up-to-date versions and avoid disruptions in service.
 ---
 
 # AKS Preview API life cycle
@@ -30,9 +31,11 @@ API version as deprecation approaches.
 If you're unsure what client or tool is using this API version, check the [activity logs](/azure/azure-monitor/essentials/activity-log)
 using the following command:
 
+Set the API version you want to inspect for recent usage in the activity log. In this example, we are checking for the `2022-04-01-preview` API version.
+
 ```bash
-API_VERSION=<impacted API version, such as 2022-04-01-preview>
-az monitor activity-log list --offset 30d --max-events 10000 --namespace microsoft.containerservice --query "[?eventName.value == 'EndRequest' && contains(not_null(httpRequest.uri,''), '${API_VERSION}')]"
+export API_VERSION="2022-04-01-preview"
+az monitor activity-log list --offset 30d --max-events 10000 --namespace microsoft.containerservice --query "[?eventName.value == 'EndRequest' && contains(not_null(httpRequest.uri,''), '$API_VERSION')]"
 ```
 
 ## How to update to a newer version of the API

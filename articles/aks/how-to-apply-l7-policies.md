@@ -8,6 +8,7 @@ ms.subservice: aks-networking
 ms.topic: how-to
 ms.date: 03/14/2024
 ms.custom: template-how-to-pattern, devx-track-azurecli
+# Customer intent: As a Kubernetes administrator, I want to configure Layer 7 policies using Advanced Container Networking Services for my AKS cluster, so that I can enhance security and traffic management for my containerized applications.
 ---
 
 # Set up Layer 7(L7) policies with Advanced Container Networking Services (Preview)

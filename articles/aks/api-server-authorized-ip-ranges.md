@@ -2,11 +2,13 @@
 title: API server authorized IP ranges in Azure Kubernetes Service (AKS)
 description: Learn how to secure your cluster using an IP address range for access to the API server in Azure Kubernetes Service (AKS)
 ms.topic: concept-article
-ms.custom: devx-track-azurecli, devx-track-azurepowershell
+ms.custom: devx-track-azurecli, devx-track-azurepowershell, copilot-scenario-highlight
 ms.date: 05/19/2024
 ms.author: schaffererin
 author: schaffererin
-#Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
+
+# Customer intent: As a cluster operator, I want to increase the security of my cluster by limiting access to the API server to only the IP addresses that I specify.
+
 ---
 
 # Secure access to the API server using authorized IP address ranges in Azure Kubernetes Service (AKS)
@@ -18,7 +20,10 @@ The Kubernetes API server is the core of the Kubernetes control plane and is the
 ## Before you begin
 
 - You need the Azure CLI version 2.0.76 or later installed and configured. Run `az --version` to find the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
-- To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see the Azure DevOps [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg] article.  
+- To learn what IP addresses to include when integrating your AKS cluster with Azure DevOps, see the Azure DevOps [Allowed IP addresses and domain URLs][azure-devops-allowed-network-cfg] article.
+
+> [!TIP]
+> From the Azure portal, you can use Microsoft Copilot in Azure to make changes to the IP addresses that can access your cluster. For more information, see [Work with AKS clusters efficiently using Microsoft Copilot in Azure](/azure/copilot/work-aks-clusters#enable-ip-address-authorization).
 
 ### Limitations
 

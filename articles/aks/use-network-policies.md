@@ -4,11 +4,13 @@ titleSuffix: Azure Kubernetes Service
 description: Learn how to secure traffic that flows in and out of pods by using Kubernetes network policies in Azure Kubernetes Service (AKS).
 author: schaffererin
 ms.author: schaffererin
-ms.date: 03/28/2024
+ms.date: 06/10/2025
 ms.topic: how-to
 ms.custom:
   - devx-track-azurecli
   - build-2025
+  - biannual
+# Customer intent: As a DevOps engineer, I want to implement network policies in Azure Kubernetes Service, so that I can control and secure pod traffic by restricting communication according to the principle of least privilege.
 ---
 
 # Secure traffic between pods by using network policies in AKS
@@ -45,7 +47,7 @@ To enforce the specified policies, Azure Network Policy Manager for Linux uses L
 | Supported platforms                      | Linux, Windows Server 2022 (Preview).                     | Linux, Windows Server 2019 and 2022.  | Linux.
 | Supported networking options             | Azure Container Networking Interface (CNI).                  | Azure CNI (Linux, Windows Server 2019 and 2022) and kubenet (Linux). | Azure CNI.
 | Compliance with Kubernetes specification | All policy types supported | All policy types are supported. | All policy types are supported.
-| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md) and [L7](./container-network-security-l7-policy-concepts.md)
+| Other features                           | None.                       | While Calico has many features that AKS doesn't block, AKS does not test or Support them. [History](https://github.com/Azure/AKS/issues/4038) | [FQDN](./container-network-security-fqdn-filtering-concepts.md), L3/4, [L7](./container-network-security-l7-policy-concepts.md)
 | Support                                  | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team. | Supported by Azure Support and Engineering team.
 
 ## Limitations of Azure Network Policy Manager

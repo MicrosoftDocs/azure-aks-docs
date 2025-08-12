@@ -6,6 +6,7 @@ ms.service: azure-kubernetes-service
 author: shashankbarsin
 ms.date: 08/07/2023
 ms.author: shasb
+# Customer intent: "As a Kubernetes administrator, I want to deploy external and internal ingress gateways for the Istio service mesh on my cluster, so that I can efficiently manage application traffic routing both inside and outside my Kubernetes environment."
 ---
 
 # Deploy ingress gateways for Istio service mesh add-on for Azure Kubernetes Service
@@ -237,6 +238,10 @@ The following annotations can be added to the Kubernetes service for the externa
 - `service.beta.kubernetes.io/azure-load-balancer-resource-group`: for specifying the resource group of a public IP in a different resource group from the cluster.
 - `service.beta.kubernetes.io/azure-pip-name`: for specifying the name of a public IP address.
 - `external-dns.alpha.kubernetes.io/hostname`: for specifying the domain for resource's DNS records. For more information, see [external-dns][external-dns].
+- `service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout`: for configuring the TCP idle timeout in minutes for connections through the Azure Load Balancer.
+- `service.beta.kubernetes.io/azure-allowed-ip-ranges`: for specifying a list of allowed IP ranges separated by commas.
+- `service.beta.kubernetes.io/azure-load-balancer-disable-tcp-reset`: for controlling whether Azure Load Balancer enables TCP Reset.
+- `service.beta.kubernetes.io/azure-pip-ip-tags`: for specifying a list of IpTags separated by commas.
 
 The add-on supports health probe annotations for ports 80 and 443. Learn more about the usage of ports [here][azure-load-balancer-annotations-for-ports].
 

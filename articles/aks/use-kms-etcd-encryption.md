@@ -9,6 +9,7 @@ ms.custom:
   - build-2025
 author: davidsmatlak
 ms.author: davidsmatlak
+# Customer intent: As a Kubernetes administrator, I want to enable Key Management Service etcd encryption in my Azure Kubernetes Service cluster, so that I can ensure the security of sensitive data stored in etcd while maintaining control over key management and access policies.
 ---
 
 # Add Key Management Service etcd encryption to an Azure Kubernetes Service cluster
@@ -31,9 +32,9 @@ For more information on using KMS, see [Using a KMS provider for data encryption
 >
 > Starting on September 15, 2024, Konnectivity is no longer supported for private key vaults for new subscriptions or subscriptions that haven't previously used this configuration. For subscriptions that are currently using this configuration or have used it in the past 60 days, support will continue until AKS version 1.30 reaches end of life for community support.
 >
-> KMS supports Konnectivity or [API Server VNet Integration (preview)][api-server-vnet-integration] for public key vaults.
+> KMS supports Konnectivity or [API Server VNet Integration][api-server-vnet-integration] for public key vaults.
 >
-> KMS supports [API Server VNet Integration (preview)][api-server-vnet-integration] for both private and public key vaults.
+> KMS supports [API Server VNet Integration][api-server-vnet-integration] for both private and public key vaults.
 >
 > You can use `kubectl get po -n kube-system` to verify the results and show that a konnectivity-agent pod is running. If a pod is running, the AKS cluster is using Konnectivity. When you use API Server VNet Integration, you can run the `az aks show -g -n` command to verify that the `enableVnetIntegration` setting is set to `true`.
 
@@ -47,7 +48,7 @@ The following limitations apply when you integrate KMS etcd encryption with AKS:
 * The maximum number of secrets that are supported by a cluster that has KMS turned on is 2,000. However, it's important to note that [KMS v2][kms-v2-support] isn't limited by this restriction and can handle a higher number of secrets.
 * Bring your own (BYO) Azure key vault from another tenant isn't supported.
 * With KMS turned on, you can't change the associated key vault mode (public versus private). To [update a key vault mode][update-a-key-vault-mode], you must first turn off KMS, and then turn it on again.
-* If a cluster has KMS turned on and has a private key vault, it must use the [API Server VNet Integration (preview)][api-server-vnet-integration] tunnel. Konnectivity isn't supported.
+* If a cluster has KMS turned on and has a private key vault, it must use the [API Server VNet Integration][api-server-vnet-integration] tunnel. Konnectivity isn't supported.
 * Using the Virtual Machine Scale Sets API to scale the nodes in the cluster down to zero deallocates the nodes. The cluster then goes down and becomes unrecoverable.
 * After you turn off KMS, you can't delete or expire the keys. Such behaviors would cause the API server to stop working.
 
@@ -217,7 +218,7 @@ kubectl get secrets --all-namespaces -o json | kubectl replace -f -
 If you turn on KMS for a private key vault, AKS automatically creates a private endpoint and a private link in the node resource group. The key vault is added a private endpoint connection with the AKS cluster.
 
 > [!WARNING]
-> KMS only supports [API Server VNet Integration (preview)][api-server-vnet-integration] for private key vault.
+> KMS only supports [API Server VNet Integration][api-server-vnet-integration] for private key vault.
 
 ### Create a private key vault and key
 

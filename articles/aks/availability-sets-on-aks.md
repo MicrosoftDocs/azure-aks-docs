@@ -2,12 +2,13 @@
 title: About the Availability Sets deprecation in Azure Kubernetes Services (AKS)
 description: Learn about the deprecation of Availability Sets in Azure Kubernetes Service (AKS).
 ms.topic: overview
-ms.date: 04/04/2025
+ms.date: 06/30/2025
 ms.author: wilsondarko
 author: wdarko1
+# Customer intent: As a Kubernetes administrator, I want to migrate my workloads from Virtual Machine Availability Sets to Virtual Machine Node Pools, so that I can ensure ongoing support and take advantage of enhanced management features before the deprecation deadline.
 ---
 
-# Availability Sets deprecation in Azure Kubernetes Service (AKS)
+#  Migrate from Availability Sets in Azure Kubernetes Service (AKS)
 
 This article details how Azure Kubernetes Service (AKS) is phasing out support for Virtual Machine Availability Sets (VMAS) in favor of Virtual Machines (VMs).
 
@@ -35,8 +36,123 @@ Availability Sets support will be **fully deprecated by September 30, 2025**. We
 
 ### Automatic migration
 
-Starting September 30, 2025, we'll automatically migrate remaining Availability Sets node pools to Virtual Machines node pools. 
+Starting September 30, 2025, we'll automatically migrate remaining Availability Sets node pools to Virtual Machines node pools. We recommend a planned migration using the Azure CLI command to minimize downtime for your workloads.
+
+## Migrate from Availability Sets to Virtual Machines node pools (Preview)
+
+There is now a way to use a script to migrate your AKS cluster from using Availability Sets to Virtual Machines node pools. This script will also automatically upgrade the Basic-tier load balancers in your cluster to Standard. 
+
+>[!IMPORTANT]
+>This process will also migrate your Basic IP to a Standard IP, while keeping the inbound IP addresses associated with the load balancer the same. New public IPs will be created and associated to the Standard Load Balancer outbound rules to serve cluster egress traffic.
+
+### Before You Begin
+
+**Requirements**
+- The minimum Kubernetes version for this script is 1.27. If you need to upgrade your AKS cluster, see [Upgrade an AKS cluster](./upgrade-aks-cluster.md#upgrade-an-aks-cluster).
+- You need the [Azure CLI installed](/cli/azure/install-azure-cli).
+- [Install the `aks-preview` Azure CLI extension.  Minimum version 0.5.170](#install-the-aks-preview-cli-extension).
+- If the cluster is running Key Management Service with private key vault, this must be [disabled][turn-off-kms] for the duration of the migration.
+- If the cluster is using any ValidatingAdmissionWebhooks or MutatingAdmissionWebhooks, these must be disabled for the duration of the migration.
+
+**Preparing for Migration**
+- Create a migration plan for planned downtime.
+- Once the migration is started, roll back is not allowed.
+- While in preview, we recommend you start using this migration CLI command on your test environments. Should any issues arise, [file a support ticket][file-support-ticket].
+
+### Install the `aks-preview` CLI extension
+
+[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
+
+1. Install the `aks-preview` CLI extension using the [`az extension add`][az-extension-add] command.
+
+    ```azurecli-interactive
+    az extension add --name aks-preview
+    ```
+
+2. Update the extension to ensure you have the latest version installed using the [`az extension update`][az-extension-update] command.
+
+    ```azurecli-interactive
+    az extension update --name aks-preview
+    ```
+
+### Register the `BasicLBMigrationToStandardLBPreview` feature flag
+
+1. Register the `BasicLBMigrationToStandardLBPreview` feature flag using the `az feature register` command.
+
+    ```azurecli-interactive
+    az feature register --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
+    ```
+
+    It takes a few minutes for the status to show *Registered*.
+
+2. Verify the registration status using the `az feature show` command.
+
+    ```azurecli-interactive
+    az feature show --namespace "Microsoft.ContainerService" --name "BasicLBMigrationToStandardLBPreview"
+    ```
+
+3. When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider using the `az provider register` command.
+
+    ```azurecli-interactive
+    az provider register --namespace Microsoft.ContainerService
+    ```
+
+### Run Migration Script for Availability Set Migration
+
+1. The following command initiates a script to migrate a cluster from using Availability Sets to Virtual Machines node pools using the `az aks update` command, and setting `--migrate-vmas-to-vms`and enabling the preview feature flag `BasicLBMigrationToStandardPreview`.
+
+```azurecli-interactive
+az aks update \
+    --name $clusterName \
+    --resource-group $resourceGroup \
+    --migrate-vmas-to-vms \
+```
+
+2. Verify that the migration was successful using the `az aks show` command, which will show the cluster details.
+```azurecli-interactive
+az aks show \
+    --name $clusterName \
+    --resource-group $resourceGroup
+```
+
+A successful migration can be verified when the cluster details using the `az aks show` command include a `type` set to `VirtualMachines`, and `loadbalancerSku` set to `Standard`. 
+```azurecli-interactive
+    "type": "VirtualMachines"
+    "loadBalancerSku": "standard",
+```
+
+3. Verify that all pods and services are running successfully using the `kubectl get pods` and `kubectl get svc` commands:
+```azurecli-interactive
+  kubectl get svc -A \
+  kubectl get pods -A
+```
+
+4. You can confirm the new IP addresses associated with outbound rules by listing the outbound IP addresses. This is done by confirming the Resource IDs for the IP addresses, then listing the IP addresses. 
+
+Use the following command to get the Resource ID for the outbound IP addresses:
+```azurecli-interactive
+  # Get the outbound IP Resource ID
+  az aks show -g <myResourceGroup> -n <myAKSCluster> --query networkProfile.loadBalancerProfile.effectiveOutboundIPs[].id
+```
+
+Use the following command to get each IP address for the Resource ID:
+```azurecli-interactive
+  # get the new IP for each IP Resource ID
+  az network public-ip show --ids <IPResourceID> --query ipAddress -o tsv
+```
 
 ### Related content
 
+<!-- LINKS - internal -->
+
+[turn-off-kms]: /azure/aks/use-kms-etcd-encryption#turn-off-kms
+[az-aks-create]: /cli/azure/aks#az_aks_create
+[az-aks-update]: /cli/azure/aks#az_aks_update
+[install-azure-cli]: /cli/azure/install-azure-cli
+[az-extension-add]: /cli/azure/extension#az-extension-add
+[az-extension-update]: /cli/azure/extension#az-extension-update
 [More information on Virtual Machine node pools](virtual-machines-node-pools.md)
+
+<!-- LINKS - External -->
+[file-support-ticket]: https://azure.microsoft.com/support/create-ticket
+

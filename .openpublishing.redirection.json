@@ -1,6 +1,11 @@
 {
   "redirections": [
     {
+      "source_path": "articles/aks/use-wasi-node-pools.md",
+      "redirect_url": "/previous-versions/azure/aks/use-wasi-node-pools",
+      "redirect_document_id": false
+    },
+    {
       "source_path": "articles/aks/http-application-routing.md",
       "redirect_url": "/previous-versions/azure/aks/http-application-routing",
       "redirect_document_id": false
@@ -41,10 +46,28 @@
       "redirect_document_id": false
      },
     {
+      "source_path_from_root": "/articles/aks/availability-zones-overview.md",
+      "redirect_url": "/azure/aks/reliability-availability-zones-configure",
+      "redirect_document_id": false
+     },
+    {
       "source_path_from_root": "/azure/aks/container-network-observability-concepts.md",
       "redirect_url": "/azure/aks/advanced-container-networking-services-overview.md",
       "redirect_document_id": false
-    }
+    },
+    {
+      "source_path_from_root": "/articles/aks/ha-dr-overview.md",
+      "redirect_url": "/azure/aks/reliability-multi-region-deployment-models",
+      "redirect_document_id": false
+     },
+    {
+      "source_path_from_root": "/articles/aks/aks-zone-resiliency.md",
+      "redirect_url": "/azure/aks/reliability-zone-resiliency-recommendations",
+      "redirect_document_id": false
+     }
 
+
+
+    
   ]
 }

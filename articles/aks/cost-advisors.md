@@ -6,6 +6,7 @@ ms.author: kaysieyu
 ms.service: azure-kubernetes-service
 ms.topic: how-to
 ms.date: 03/28/2025
+# Customer intent: "As a cloud architect, I want to receive proactive cost recommendations for my Azure Kubernetes Service deployments, so that I can optimize resource usage and reduce expenses while maintaining reliability."
 ---
 
 # Get Azure Kubernetes Service (AKS) cost recommendations in Azure Advisor

@@ -7,6 +7,7 @@ ms.custom: devx-track-azurecli
 author: deveshdama
 ms.date: 04/30/2024
 ms.author: ddama
+# Customer intent: As a Kubernetes administrator, I want to configure a secure ingress gateway with mutual TLS for my Istio service mesh, so that I can securely expose my applications to external traffic while ensuring strict authentication.
 ---
 
 # Secure ingress gateway for Istio service mesh add-on for Azure Kubernetes Service

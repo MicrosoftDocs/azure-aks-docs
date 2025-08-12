@@ -7,6 +7,7 @@ ms.topic: how-to
 ms.custom: build-2025
 ms.date: 06/16/2025
 ms.service: azure-kubernetes-fleet-manager
+# Customer intent: As a DevOps engineer, I want to configure automated deployments using a multi-cluster strategy, so that I can build and deploy applications across multiple Kubernetes clusters while maintaining security and resource optimization.
 ---
 
 # Use Azure Kubernetes Fleet Manager Automated Deployments to drive multi-cluster resource placement (Preview)
