@@ -13,7 +13,7 @@ ms.author: allyford
 
 [Confidential Virtual Machines (CVM)][about-cvm] offer strong security and confidentiality for tenants. CVMs offer VM based Hardware Trusted Execution Environment (TEE) that leverage SEV-SNP security features to deny the hypervisor and other host management code access to VM memory and state, providing defense in depth protections against operator access. These features enable node pools with CVM to target the migration of highly sensitive container workloads to AKS without any code refactoring while benefiting from the features of AKS. For example, you may require CVM if you have the following:
 * Workloads that handle security critical data and/or sensitive customer data
-* Services that are required to meet various compliance requirements, especially for gov contracts. Without a scalable solution for securing data, this could potentially lead to the loss of accreditations and contracts.
+* Services that are required to meet various compliance requirements, especially for government contracts. Without a scalable solution for securing data, this could potentially lead to the loss of accreditations and contracts.
 
 In this article, you learn how to create AKS node pools using Confidential VM sizes.
 
