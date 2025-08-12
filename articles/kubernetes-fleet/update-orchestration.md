@@ -32,7 +32,6 @@ This guide covers how to configure and manually execute update runs.
     ```bash
     export GROUP=<resource-group>
     export FLEET=<fleet-name>
-    export AKS_CLUSTER_ID=<aks-cluster-resource-id>
     ```
 
 * If you're following the Azure CLI instructions in this article, you need Azure CLI version 2.58.0 or later installed. To install or upgrade, see [Install the Azure CLI][azure-cli-install].
