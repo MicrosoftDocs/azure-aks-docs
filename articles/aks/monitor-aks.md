@@ -354,6 +354,8 @@ You can disable network metrics collection on specific nodes by adding the label
 
 > [!NOTE]
 > Retina has an `operator: "Exists"` `effect: NoSchedule` toleration, so it will bypass NoSchedule taints. Therefore, labels are used instead of taints to control scheduling.
+>
+> If the cluster is autoprovisioning/autoscaling nodes, user will have to manually enable the flag on each node.
 
 > [!IMPORTANT]
 > This feature is not applicable if Advanced Container Networking Services (ACNS) is enabled on your cluster.
