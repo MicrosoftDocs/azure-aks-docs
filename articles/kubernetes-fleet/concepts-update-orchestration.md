@@ -44,10 +44,6 @@ The target node image versions are automatically selected for you based on your 
 
 You should choose `Latest` to use fresher image versions and minimize security risks, and choose `Consistent` to improve reliability by using and verifying those images in clusters in earlier stages before using them in later clusters.
 
-## Update run approvals
-
-TBC. High level summary with link to how-to article.
-
 ## Update run states
 
 An update run can be in one of the following states:
