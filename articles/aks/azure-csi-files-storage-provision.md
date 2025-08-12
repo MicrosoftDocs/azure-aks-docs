@@ -271,7 +271,7 @@ parameters:
 ```
 
 > [!NOTE]
-> The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
+> The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you're [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you're [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 
 ### Using Azure tags
 
@@ -333,6 +333,10 @@ Before you can use an Azure Files file share as a Kubernetes volume, you must cr
     ```azurecli-interactive
     export AZURE_STORAGE_CONNECTION_STRING=$(az storage account show-connection-string -n storageAccountName -g resourceGroupName -o tsv)
     ```
+
+    Connection strings must be protected using key rotation or storage in an Azure Key Vault. For more information about connection strings, see [Configure Azure Storage connection strings](/azure/storage/common/storage-configure-connection-string) and [Manage storage account access keys](/azure/storage/common/storage-account-keys-manage). 
+
+    For production environments, Microsoft recommends using Microsoft Entra ID authentication. For more information, see [Authorize access to data in Azure Storage](/azure/storage/blobs/authorize-access-azure-active-directory).
 
 4. Create the file share using the [`az storage share create`][az-storage-share-create] command. Make sure to replace `shareName` with your share name.
 
@@ -517,7 +521,7 @@ To mount the Azure Files file share into your pod, you configure the volume in t
 
 To have the best experience with Azure Files, please follow these best practices:
 
-* The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you’re [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you’re [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
+* The location to configure mount options (mountOptions) depends on whether you're provisioning dynamic or static persistent volumes. If you're [dynamically provisioning a volume](#dynamically-provision-a-volume) with a storage class, specify the mount options on the storage class object (kind: StorageClass). If you're [statically provisioning a volume](#statically-provision-a-volume), specify the mount options on the PersistentVolume object (kind: PersistentVolume). If you're [mounting the file share as an inline volume](#mount-file-share-as-an-inline-volume), specify the mount options on the Pod object (kind: Pod).
 * We recommend FIO when running benchmarking tests. For more information, see [benchmarking tools and tests](/azure/storage/files/nfs-performance#benchmarking-tools-and-tests).
 
 ### SMB shares
