@@ -1008,8 +1008,18 @@
               href: keda-integrations.md
             - name: Troubleshoot Kubernetes Event-driven Autoscaler (KEDA)
               href: /troubleshoot/azure/azure-kubernetes/troubleshoot-kubernetes-event-driven-autoscaling-add-on?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
-        - name: Node autoprovisioning
-          href: node-autoprovision.md
+      - name: Node auto provisioning (NAP)
+        items: 
+          - name: Node auto provisioning overview
+            href: node-autoprovision.md
+          - name: Configure NodePool custom resource in node auto provisioning
+            href: node-autoprovision-node-pools.md
+          - name: Configure AKSNodeClass custom resource in node auto provisioning
+            href: node-autoprovision-aksnodeclass.md
+          - name: Configure networking in node auto provisioning
+            href: node-autoprovision-networking.md      
+          - name: Configure disruption settings in node auto provisioning
+            href: node-autoprovision-disruption.md            
 - name: Monitoring
   items:
     - name: Monitoring concepts and resources
