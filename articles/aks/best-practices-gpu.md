@@ -48,32 +48,10 @@ Before deploying production GPU workloads, always validate that your GPU node po
 * Hosting a healthy Kubernetes Device Plugin DaemonSet.
 * Exposing `[gpu-vendor].com/gpu` as a schedulable resource.
 
-You can confirm the current driver version running on your GPU node pools by deploying a simple diagnostic pod that uses a system management interface associated with the GPU vendor. The following example manifest runs the `nvidia-smi` command once to verify driver installation and runtime readiness on an NVIDIA GPU-enabled node pool:
-
-
-```yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nvidia-smi-test
-spec:
-  restartPolicy: Never
-  containers:
-  - name: nvidia-smi
-    image: nvidia/cuda:12.2.0-base
-    command: ["nvidia-smi"]
-    resources:
-      limits:
-        nvidia.com/gpu: 1
-```
-
-Apply the manifest above using the `kubectl apply` command:
+You can confirm the current driver version running on your GPU node pools with the system management interface (SMI) associated with the GPU vendor. The following command executes `nvidia-smi` from inside your GPU device plugin deployment pod, to verify driver installation and runtime readiness on an NVIDIA GPU-enabled node pool:
 
 ```bash
-kubectl apply -f nvidia-smi-test.yaml
-kubectl get pods
-kubectl logs nvidia-smi-test
-```
+kubectl exec -it $"{GPU_DEVICE_PLUGIN_POD}" -n {GPU_NAMESPACE} -- nvidia-smi
 
 Your output should resemble the following example output:
 
@@ -83,6 +61,10 @@ Your output should resemble the following example output:
 ...
 ...
 ```
+
+Repeat the step above for each GPU node pool to confirm the driver version installed on your nodes. 
+
+On your AMD GPU-enabled node pools, alternatively [deploy the AMD GPU components](./use-amd-gpus.md) and execute the `amd-smi` command in the ROCm device plugin pod to confirm the driver version that is installed.
 
 ## Upgrade GPU node pools to latest node OS image
 
