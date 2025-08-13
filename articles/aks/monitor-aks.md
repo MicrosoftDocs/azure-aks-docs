@@ -303,6 +303,8 @@ The following node network metrics are enabled by default and are aggregated per
 
 The following metrics are aggregated per node.
 
+### Node-Level Metrics
+
 All metrics include these labels:
 
 - `cluster`
@@ -344,8 +346,31 @@ The following table outlines the generated metrics.
 | **networkobservability_udp_connection_stats**  | UDP connection statistics | `statistic` | ✅ | ❌ |
 | **networkobservability_udp_active_sockets**    | UDP currently active socket count |  | ✅ | ❌ |
 | **networkobservability_interface_stats**       | Interface statistics | InterfaceName, `statistic` | ✅ | ✅ |
-
 ---
+
+### Disabling Node Network Metrics Collection
+
+You can disable network metrics collection on specific nodes by adding the label `networking.azure.com/node-network-metrics=disabled` to those nodes.
+
+> [!NOTE]
+> Retina has an `operator: "Exists"` `effect: NoSchedule` toleration, so it will bypass NoSchedule taints. Therefore, labels are used instead of taints to control scheduling.
+>
+> If the cluster is autoprovisioning/autoscaling nodes, user will have to manually enable the flag on each node.
+
+> [!IMPORTANT]
+> This feature is not applicable if Advanced Container Networking Services (ACNS) is enabled on your cluster.
+
+To disable metrics collection on a node:
+
+```bash
+kubectl label node <node-name> networking.azure.com/node-network-metrics=disabled
+```
+
+To re-enable metrics collection, remove the label:
+
+```bash
+kubectl label node <node-name> networking.azure.com/node-network-metrics-
+```
 
 For detailed pod-level and DNS metrics, see [Advanced Container Networking Services](advanced-container-networking-services-overview.md).
 
