@@ -757,7 +757,7 @@
         - name: Payment Card Industry Data Security Standard (PCI DSS)
           items:
             - name: PCI DSS compliance overview
-              href: /compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+              href: /azure/compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
             - name: Introduction to PCI DSS v4.0.1 on AKS
               href: pci-intro.md
             - name: Risk assessment and code assets
