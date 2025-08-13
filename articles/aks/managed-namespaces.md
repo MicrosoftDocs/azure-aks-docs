@@ -239,48 +239,49 @@ az role assignment create \
 <!-- Portal -->
 :::zone target="docs" pivot="azure-portal"
 1. Sign in to the [Azure portal][azure-portal].
-1. On the Azure portal home page, hit the search bar at the top, search for **Managed Kubernetes Namespaces**, and hit the corresponding blade.
+2. On the Azure portal home page, hit the search bar at the top, search for **Managed Kubernetes Namespaces**, and hit the corresponding blade.
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-1.png" alt-text="Search bar at the top of the Azure Portal.":::
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-2.png" alt-text="Search result with Managed Kubernetes Namespaces highlighted.":::
 
-1. On the page for Managed Namespaces, hit the **Create** button on the top left.
+3. On the page for Managed Namespaces, hit the **Create** button on the top left.
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-3.png" alt-text="Create button highlighted in the Managed Namespaces page.":::
 
-1. On the **Basics** tab,  under **Project details** configure the following settings:
-    1. Select the target **cluster** to create the namespace on.
+4. On the **Basics** tab,  under **Project details** configure the following settings:
+
+    - Select the target **cluster** to create the namespace on.
        
      :::image type="content" source="./media/managed-namespaces/mns-portal-4.png" alt-text="Highlighting the cluster selection option in the Managed Namespaces menu.":::
    
-    1. If you're creating a new namespace, leave the default **New** option, otherwise choose **Convert to Managed** to convert an existing namespace.
+    - If you're creating a new namespace, leave the default **New** option, otherwise choose **Convert to Managed** to convert an existing namespace.
 
      :::image type="content" source="./media/managed-namespaces/mns-portal-5.png" alt-text="Showcasing the default create new option for Managed Namespaces.":::
 
      :::image type="content" source="./media/managed-namespaces/mns-portal-6.png" alt-text="Showcasing the default convert an existing for Managed Namespaces.":::
    
-1. Configure the **Networking policy** to be applied on the namespace. Users can select from 3 default options for their ingress/egress policies.
+6. Configure the **Networking policy** to be applied on the namespace. Users can select from 3 default options for their ingress/egress policies.
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-7.png" alt-text="Showcasing the networking policies for managed namespaces.":::
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-8.png" alt-text="Showcasing the default options for ingress and egress policies.":::
 
-1. Configure the **resource requests and limits** for the namespace.
+6. Configure the **resource requests and limits** for the namespace.
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-9.png" alt-text="Showcasing CPU and memory limits and requests section.":::
 
-1. Select the **members (users or groups)** and their **role**.
-    1. Assign the  **Azure Kubernetes Service Namespace User** role to give them access to view the managed namespace in the portal, Azure CLI output, and ARM. This role also allows the user to retrieve the credentials to connect to this namespace.
-    2. Assign the  **Azure Kubernetes Service RBAC Writer** role to give them access to create resources within the namespace using the Kubernetes API.
+7. Select the **members (users or groups)** and their **role**.
+    - Assign the  **Azure Kubernetes Service Namespace User** role to give them access to view the managed namespace in the portal, Azure CLI output, and ARM. This role also allows the user to retrieve the credentials to connect to this namespace.
+    - Assign the  **Azure Kubernetes Service RBAC Writer** role to give them access to create resources within the namespace using the Kubernetes API.
   
 :::image type="content" source="./media/managed-namespaces/mns-portal-10.png" alt-text="Showcasing the Access permissions section.":::
 
-1. In the **Metadata** tab, configure **Labels**, **Annotations**, and/or **Tags** for your managed namespace.
+8. In the **Metadata** tab, configure **Labels**, **Annotations**, and/or **Tags** for your managed namespace.
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-11.png" alt-text="Showcasing the options for Labels, Annotations, and Tags in the Metadata section.":::
 
-1. Select **Review + create** to run validation on the configuration. After validation completes, select **Create**.
+9. Select **Review + create** to run validation on the configuration. After validation completes, select **Create**.
 
 :::image type="content" source="./media/managed-namespaces/mns-portal-12.png" alt-text="Showcasing the review + create tab.":::
 
