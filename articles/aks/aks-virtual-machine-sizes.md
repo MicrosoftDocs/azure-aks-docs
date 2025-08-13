@@ -1,5 +1,5 @@
 ---
-title: Virtual machine (VM) sizes, generations, and features for Azure Kubernetes Service (AKS)
+title: Virtual Machine (VM) Sizes, Generations, and Features for Azure Kubernetes Service (AKS)
 description: Learn about VM fundamentals on AKS, like different VM sizes, generations, features, how to check for available VM sizes, why some VM sizes might not be available, and what happens when a VM size retires.
 ms.topic: overview
 ms.service: azure-kubernetes-service
@@ -53,9 +53,9 @@ AKS also supports the following VM types and features:
 
 There are three scenarios when creating a node pool with a supported VM size:
 
-1. If the VM size supports only Gen 1, the default behavior for both Linux and Windows node pools is to use the Gen 1 node image.
-2. If the VM size supports only Gen 2, the default behavior for both Linux and Windows node pools is to use the Gen 2 node image. Windows Server 2022 node pools require a custom header to use a VM size that only supports Gen 2. For more information, see [Create a Windows node pool with a Gen 2 VM](#create-a-node-pool-with-a-gen-2-vm).
-3. If the VM size supports both Gen 1 and Gen 2, the default behavior for both Linux and Windows (in Windows Server 2025+) nodes pools is to use the Gen 2 node image. To use the Gen 2 node image for Windows Server 2022, see [Create a Windows node pool with a Gen 2 VM](#create-a-node-pool-with-a-gen-2-vm).
+- If the VM size supports only Gen 1, the default behavior for both Linux and Windows node pools is to use the Gen 1 node image.
+- If the VM size supports only Gen 2, the default behavior for both Linux and Windows node pools is to use the Gen 2 node image. Windows Server 2022 node pools require a custom header to use a VM size that only supports Gen 2. For more information, see [Create a Windows node pool with a Gen 2 VM](#create-a-node-pool-with-a-gen-2-vm).
+- If the VM size supports both Gen 1 and Gen 2, the default behavior for both Linux and Windows (in Windows Server 2025+) nodes pools is to use the Gen 2 node image. To use the Gen 2 node image for Windows Server 2022, see [Create a Windows node pool with a Gen 2 VM](#create-a-node-pool-with-a-gen-2-vm).
 
 ## Check available VM sizes
 
