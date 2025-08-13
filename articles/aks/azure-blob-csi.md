@@ -145,7 +145,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
             "kubernetes.io/os": linux
           containers:
             - name: statefulset-blob-nfs
-              image: mcr.microsoft.com/oss/nginx/nginx:1.22
+              image: mcr.microsoft.com/azurelinux/base/nginx:1.25
               volumeMounts:
                 - name: persistent-storage
                   mountPath: /mnt/blob
@@ -194,7 +194,7 @@ To have a storage volume persist for your workload, you can use a StatefulSet. T
             "kubernetes.io/os": linux
           containers:
             - name: statefulset-blob
-              image: mcr.microsoft.com/oss/nginx/nginx:1.22
+              image: mcr.microsoft.com/azurelinux/base/nginx:1.25
               volumeMounts:
                 - name: persistent-storage
                   mountPath: /mnt/blob
