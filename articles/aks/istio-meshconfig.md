@@ -162,6 +162,7 @@ Fields present in [open source MeshConfig reference documentation](https://istio
 | holdApplicationUntilProxyStarts | Supported | - |
 | caCertificatesPem | Allowed | - |
 | privateKeyProvider | Allowed | - |
+| proxyHeaders | Allowed | - |
 
 > [!CAUTION]
 > **Support scope of configurations:** Mesh configuration allows for extension providers such as self-managed instances of Zipkin or Apache Skywalking to be configured with the Istio add-on. However, these extension providers are outside the support scope of the Istio add-on. Any issues associated with extension tools are outside the support boundary of the Istio add-on.
