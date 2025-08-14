@@ -134,7 +134,7 @@ KAITO offers a range of small to large language models hosted as public containe
     ```azurecli-interactive
     kubectl run -it --rm --restart=Never curl --image=curlimages/curl -- curl -X POST http://$SERVICE_IP/v1/completions -H "Content-Type: application/json" \
       -d '{
-            "model": "Phi-4-mini-instruct",
+            "model": "phi-4-mini-instruct",
             "prompt": "How should I dress for the weather today?",
             "max_tokens": 10
            }'
