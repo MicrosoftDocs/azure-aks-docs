@@ -111,7 +111,7 @@ The two most common reasons for long pending states are:
 
 * Kubernetes or node image version not in Azure region: If the new Kubernetes or node image version isn't published to the Azure region in which a member clusters exists, then the update run can enter a pending state. You can check the [AKS release tracker](https://releases.aks.azure.com/) to see the regional status of the version. While you can skip the member cluster, if there are other clusters in the same Azure region they'll also be unable to update.
 
-### Editing my update strategy didn't change the update run I created using it. Why not?
+### Editing my update strategy didn't change the existing update runs that used it. Why not?
 
 Changes to an update strategy do not affect any update run that has already been created. At creation time, a copy of the strategy is made and stored on the update run itself. As such, the update run is immutable to strategy changes, so you can be sure that it doesn't change halfway through a run.
 
