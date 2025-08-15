@@ -143,11 +143,11 @@ Example:
 
 ### TargetKubernetesVersion channel (preview)
 
-The TargetKubernetesVersion channel allows you to control when to move your fleet to the next kubernetes minor version by specifying it in the auto-upgrade profile. The target Kubernetes version must be specified in the format "{major}.{minor}" (for example, "1.33"). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target Kubernetes version when the patch is available. Fleet will not upgrade to the next minor version until you update the auto-upgrade profile's target Kubernetes version.
+The TargetKubernetesVersion channel allows you to control when to move your fleet to the next Kubernetes minor version by specifying it in the auto-upgrade profile. The target Kubernetes version must be specified in the format "{major}.{minor}" (for example, "1.33"). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target Kubernetes version when the patch is available. Fleet will not upgrade to the next minor version until you update the auto-upgrade profile's target Kubernetes version.
 
 Examples:
 * You create an auto upgrade profile with TargetKubernetesVersion channel and specify a target Kubernetes version of "1.30". A new patch version 1.30.5 is published. Update run is automatically created with the target of 1.30.5.
-* You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable LongTermSupport (LTS) in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. **Note**: if your update run target includes managed clusters that don't support LTS, it will fail.
+* You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable LongTermSupport (LTS) in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. **Note**: if the generated update run includes clusters without LTS enabled, it will fail.
 
 [!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 

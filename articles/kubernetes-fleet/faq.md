@@ -72,7 +72,7 @@ Supported AKS update channels:
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
-* **TargetKubernetesVersion (preview)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available.
+* **TargetKubernetesVersion (preview)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that have moved to Long-Term Support (LTS).
 
 Currently unsupported AKS channels:
 
