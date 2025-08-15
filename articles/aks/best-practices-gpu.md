@@ -40,8 +40,6 @@ resources:
   limits:
     [gpu-vendor].com/gpu: 1
 
-## Verify readiness of GPU node pools before deploying production workloads
-
 Before deploying production GPU workloads, always validate that your GPU node pools are:
 
 * Equipped with compatible GPU drivers.
