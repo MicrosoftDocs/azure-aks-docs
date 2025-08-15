@@ -325,6 +325,20 @@ A common pattern in this situation is to carry out a blue / green deployment of 
     ...
     ```
 
+## Client-Server version compatibility for kubectl
+
+Ensure your `kubectl` client is within ±1 minor version of the AKS control plane (API server) to maintain compatibility. Exceeding this supported version skew can lead to command failures or unexpected behavior. The following command displays both the Client Version and Server Version and warns if they're out of sync:
+
+```shell
+kubectl version
+```
+
+If there is a version mismatch:
+
+- Update or downgrade your kubectl to align with the server’s version.
+- Alternatively, if you're restricted from changing your local kubectl, consider using the [`az aks command invoke` command](/cli/azure/aks/command) in Azure CLI to run your kubectl commands remotely on your cluster.
+
+
 ## Next steps
 
 To learn how to configure automatic upgrades, see [Configure automatic upgrades for an AKS cluster][configure-automatic-aks-upgrades]. 
