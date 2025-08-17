@@ -76,14 +76,23 @@ Supported AKS update channels:
 * **Rapid**: Updates for the most recent AKS-supported Kubernetes release (N).
 * **Stable**: Updates for Kubernetes stable channel (N-1) where 'N' is the most recent AKS-supported Kubernetes release.
 * **NodeImage**: node image VHD patched (bug and security) with a weekly release schedule.
+* **TargetKubernetesVersion (preview)**: Upgrades clusters to the latest patch release of the specified target version when the patch is available. Supports Kubernetes minor versions that have moved to Long-Term Support (LTS).
 
 Currently unsupported AKS channels:
 
-* **Patch**: Updates for Kubernetes patch releases (y) for a specified AKS-supported Kubernetes minor (N) release (1.N.y).
 * **SecurityPatch**: node image OS updates that provide AKS-managed security patches applied to the existing VHD running on the node.
 * **Unmanaged**: node image OS updates applied directly through OS in-built patching (Linux nodes only).M
 
 If you're using any of the channels that Fleet Manager doesn't support, we recommend you leave those channels enabled on your AKS clusters.
+
+### I am using fleet auto-upgrade with TargetKubernetesVersion channel. The target Kubernetes version is now out of community support. What can I do?
+
+In this scenario, for fleet auto-upgrade to keep working, you must either enable Long Term Support (LTS) in both the auto-upgrade profile and all managed clusters in your fleet, or use a newer target Kubernetes version.
+
+For information on enabling LTS in auto-upgrade profiles, see [Target Kubernetes version updates](./update-automation.md#target-kubernetes-version-updates-preview). For information on enabling LTS on managed clusters, see [Long Term Support](../aks/long-term-support.md).
+
+> [!NOTE]
+> In this scenario, to review detailed information if failures occur and understand the specific actions to take, check the auto-upgrade profile status.
 
 ### What happens if I leave AKS cluster auto-upgrades enabled?
 

@@ -69,8 +69,9 @@ This article covers how to use auto-upgrade profiles to automatically trigger up
     * **Stable** - update clusters with patches for N-1 Kubernetes generally available minor version. 
     * **Rapid** - update clusters with patches for the latest (N) Kubernetes generally available minor version.
     * **Node image** - update node image version only.
+    * **Target Kubernetes version (preview)** - update clusters to the latest patch release of the specified target Kubernetes minor version when the patch is available.
 
-1. If you select either the **Stable** or **Rapid** channel, you can choose how node image updates are applied:
+1. If you select either the **Stable**, **Rapid**, or **Target Kubernetes version (preview)** channel, you can choose how node image updates are applied:
 
     * **Latest image**: Updates every AKS cluster in the auto-upgrade profile to the latest image available for that cluster in its Azure region.
     * **Consistent image**: It's possible for an auto-upgrade to have AKS clusters across multiple Azure regions where the latest available node images can be different (check [release tracker](/azure/aks/release-tracker) for more information). Selecting this option ensures the auto-upgrade picks the **latest common** image across all Azure regions to achieve consistency.
@@ -143,6 +144,42 @@ az fleet autoupgradeprofile create \
   --channel Stable \
   --node-image-selection Latest
 ```
+
+#### Target Kubernetes version updates (preview)
+
+Update to a specific target Kubernetes version that you define. You define the Kubernetes minor version by using `--target-kubernetes-version` parameter and supplying the version in the format {major version}.{minor version} (for example, 1.33). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target version when the patch is available.
+
+> [!NOTE]
+> * When using the `TargetKubernetesVersion` channel, you must specify the `--target-kubernetes-version` parameter. For other channels (Rapid, Stable, NodeImage), this parameter is not supported.
+>
+> * The `--long-term-support` (LTS) flag is only available when using the `TargetKubernetesVersion` channel. For other channels, this flag must be set to False.
+> * You can't set the target Kubernetes version to a future Kubernetes version that has not been released yet by AKS.
+> * You can only select LTS Kubernetes versions (N-2) for an auto-upgrade profile by passing the --long-term-support flag. For fleet auto-upgrade to keep working in this scenario you must also enable LTS in all managed clusters in your fleet. Including non-LTS clusters will cause the update to fail.
+
+Automatically update member clusters to latest patch of Kubernetes version 1.33. 
+
+```azurecli-interactive
+az fleet autoupgradeprofile create \
+  --resource-group $GROUP \
+  --fleet-name $FLEET \
+  --name $AUTOUPGRADEPROFILE \
+  --channel TargetKubernetesVersion \
+  --target-kubernetes-version "1.33"
+```
+
+Automatically update member clusters with LTS enabled to the latest patch of Kubernetes minor version 1.29 which is currently available only via LTS.
+
+```azurecli-interactive
+az fleet autoupgradeprofile create \
+  --resource-group $GROUP \
+  --fleet-name $FLEET \
+  --name $AUTOUPGRADEPROFILE \
+  --channel TargetKubernetesVersion \
+  --target-kubernetes-version "1.29" \
+  --long-term-support
+```
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
 
 #### Node image updates
 
