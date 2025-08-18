@@ -107,7 +107,7 @@ Auto-upgrade profiles are used to automatically trigger update runs when new Kub
 
 In an auto-upgrade profile you can configure:
 
-- a `Channel` (Stable, Rapid, NodeImage) which determines the type of auto-upgrade that is applied to the clusters.
+- a `Channel` (Stable, Rapid, NodeImage, TargetKubernetesVersion (preview)) which determines the type of auto-upgrade that is applied to the clusters.
 - an `UpdateStrategy` which configures the sequence in which the clusters are upgraded. If a strategy isn't supplied, clusters are updated one by one sequentially.
 - the `NodeImageSelectionType` (Latest, Consistent) to specify how the node image is selected when upgrading the Kubernetes version.
 
@@ -141,6 +141,16 @@ Example:
 
 * A cluster has nodes with a NodeImage of *AKSWindows-2022-containerd* of version *20348.2582.240716*. A new NodeImage version *20348.2582.240916* is released and the cluster nodes are automatically upgraded to version *20348.2582.240916*.
 
+### TargetKubernetesVersion channel (preview)
+
+The TargetKubernetesVersion channel allows you to control when to move your fleet to the next Kubernetes minor version by specifying it in the auto-upgrade profile. The target Kubernetes version must be specified in the format "{major}.{minor}" (for example, "1.33"). Fleet auto-upgrade automatically upgrades member clusters to the latest patch release of the specified target Kubernetes version when the patch is available. Fleet will not upgrade to the next minor version until you update the auto-upgrade profile's target Kubernetes version.
+
+Examples:
+* You create an auto upgrade profile with TargetKubernetesVersion channel and specify a target Kubernetes version of "1.30". A new patch version 1.30.5 is published. Update run is automatically created with the target of 1.30.5.
+* You create an auto-upgrade profile with TargetKubernetesVersion channel, specify a target Kubernetes version of "1.29" and enable LongTermSupport (LTS) in the auto-upgrade profile. The latest community supported minor version is "1.33". A new patch version 1.29.5 is published. Update run is automatically created with the target of 1.29.5. **Note**: if the generated update run includes clusters without LTS enabled, it will fail.
+
+[!INCLUDE [preview features note](./includes/preview/preview-callout.md)]
+
 ### Minor version skipping behavior
 
 Auto-upgrade does not move clusters between minor Kubernetes versions when there's more than one minor Kubernetes version difference (for example: 1.28 to 1.30). Where administrators have a diverse set of Kubernetes versions it's recommended to first use one or more [update run](#understanding-update-runs) to bring member clusters into a set of consistently versioned releases so that configured `Stable` or `Rapid` channel updates ensure consistency is maintained in future.
@@ -157,9 +167,11 @@ Auto-upgrade does not move clusters between minor Kubernetes versions when there
 >
 > * If a cluster has no defined planned maintenance window it will be upgraded immediately when the update run reaches the cluster.
 >
-> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid` or `Stable` channels.
+> * If you want to have your Kubernetes version upgraded, you need to create an `autoupgradeprofile` with `Rapid`, `Stable`, or `TargetKubernetesVersion (preview)` channels.
 >
 > * If you want to have your NodeImage version upgraded, you need to create an `autoupgradeprofile` with `NodeImage` channel.
+>
+> * When using the `TargetKubernetesVersion (preview)` channel, you must specify the target Kubernetes version using the `--target-kubernetes-version` parameter.
 >
 > * You can create multiple auto-upgrade profiles for the same Fleet.
 
