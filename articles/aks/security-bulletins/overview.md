@@ -48,7 +48,7 @@ This issue arises because node users are authorized to perform create and patch 
 **Resolutions**
 
 - A security patch is currently being rolled out in 20250720 and 20250808 release and is expected to be applied across all regions within the next 4–5 days. You can check the release status from [AKS release tracker][aks-release-tracker].
-- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](https://learn.microsoft.com/en-us/azure/aks/planned-maintenance?tabs=azure-cli).
+- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
 
 ---
 ## AKS-2025-009 Important Security Update for Calico Users
