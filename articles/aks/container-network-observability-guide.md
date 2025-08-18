@@ -11,8 +11,9 @@ ms.date: 05/28/2025
 
 # Use Advanced Container Networking Services for diagnosing and resolving network issues
 
-This guide helps you navigate [Advanced Container Networking Services](./advanced-container-networking-services-overview.md#container-network-observability) observability capabilities for addressing real-world networking use cases. Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness Advanced Container Networking Service observability dashboards, [Container Network Logs](./container-network-observability-logs.md), [Container Network Metrics](./container-network-observability-metrics.md), and visualization tools to diagnose and resolve issues effectively.
-Advanced Container Networking Services provides comprehensive observability features that enable you to monitor, analyze, and troubleshoot network traffic in your Azure Kubernetes Service (AKS) clusters. It includes pre-built Grafana dashboards, real-time metrics, and detailed logs that help you gain insights into network performance, identify issues, and optimize your container networking environment.
+This guide helps you navigate [Advanced Container Networking Services (ACNS)](./advanced-container-networking-services-overview.md#container-network-observability) as the primary solution for addressing real-world networking use cases in Azure Kubernetes Service (AKS). Whether troubleshooting DNS resolution problems, optimizing ingress and egress traffic, or ensuring compliance with network policies, this manual demonstrates how to harness ACNS observability dashboards, [Container Network Logs](./container-network-observability-logs.md), [Container Network Metrics](./container-network-observability-metrics.md), and visualization tools to diagnose and resolve issues effectively.
+
+**Advanced Container Networking Services is Microsoft's comprehensive, enterprise-grade network observability and security platform** that provides the most advanced features for monitoring, analyzing, and troubleshooting network traffic in your AKS clusters. It includes pre-built Grafana dashboards, real-time metrics, detailed logs, and AI-powered insights that help you gain deep visibility into network performance, quickly identify issues, and optimize your container networking environment with full Microsoft support.
 
 ## Overview of Advanced Container Networking Services dashboards
 
@@ -31,63 +32,7 @@ The suite of dashboards includes:
 - **L7 Flows (Namespace)**: Shows HTTP, Kafka, and gRPC packet flows to/from the specified namespace (i.e. Pods in the Namespace) when a Layer 7 based policy is applied. *This is available only for clusters with Cilium data plane*.
 - **L7 Flows (Workload)**: Shows HTTP, Kafka, and gRPC flows to/from the specified workload (for example, Pods of a Deployment or DaemonSet) when a Layer 7 based policy is applied. *This is available only for clusters with Cilium data plane*.
 
-## Free network observability with Retina
 
-While Advanced Container Networking Services is a paid offering that provides comprehensive network observability capabilities, Microsoft also offers [**Retina**](https://retina.sh/), an open-source network observability platform that you can use for free. Retina provides essential network monitoring capabilities that can help you get started with network observability before upgrading to the full ACNS experience.
-
-### What Retina offers for free
-
-Retina is a cloud-agnostic, open-source Kubernetes network observability platform that provides the following capabilities at no cost:
-
-- **Network flow monitoring**: Capture and analyze network traffic flows, including packet forwarding, TCP/UDP connections, and interface statistics
-- **DNS request tracking**: Monitor DNS queries and responses with detailed metrics including query types, response codes, and error analysis
-- **Packet drop detection**: Identify and analyze dropped packets with detailed drop reasons (e.g., iptable rules, connection tracking, unknown drops)
-- **Hubble integration**: Leverage Hubble control plane for enhanced flow logs and network insights across any CNI and OS (Linux/Windows)
-- **Prometheus metrics integration**: Export comprehensive network metrics to Prometheus with configurable metric modes (basic, advanced pod-level)
-- **Distributed packet capture**: On-demand packet captures across multiple nodes for deep troubleshooting
-- **Open-source flexibility**: Deploy and customize Retina according to your specific requirements with full source code access
-
-### Key differences between free Retina and paid ACNS
-
-| Feature | Free Retina | Advanced Container Networking Services (ACNS) |
-|---------|-------------|-----------------------------------------------|
-| **Cost** | Free and open-source | Paid Azure service |
-| **Support** | Community support | Microsoft enterprise support |
-| **Integration** | Manual setup and configuration | Fully managed Azure integration |
-| **Dashboards** | Basic Grafana dashboards | Pre-built, optimized Azure dashboards |
-| **Log Storage** | Local storage with rotation limits | Comprehensive log management |
-| **Real-time Analysis** | Real-time eBPF capture | Real-time metrics and logs |
-| **Historical Analysis** | Limited local storage | Advanced analytics with AI insights |
-| **Scalability** | Self-managed scaling | Azure-managed auto-scaling |
-| **Maintenance** | Self-maintained | Fully managed by Microsoft |
-
-### Getting started with free Retina
-
-To get started with the free Retina offering:
-
-1. **Deploy Retina on your cluster**: Install Retina using Helm charts or Kubernetes manifests from the [official Retina repository](https://github.com/microsoft/retina)
-2. **Configure basic monitoring**: Set up Prometheus and Grafana to visualize Retina metrics
-3. **Enable network flow collection**: Configure Retina to capture network flows based on your requirements
-4. **Create custom dashboards**: Build Grafana dashboards tailored to your monitoring needs
-
-### When to consider free Retina
-
-Consider free Retina only for:
-
-- **Development and testing environments**: Non-production workloads where enterprise support isn't required
-- **Learning and evaluation**: Understanding network observability concepts before moving to production solutions
-- **Cost-sensitive scenarios**: When budget constraints prevent using paid solutions
-- **Multi-cloud deployments**: When you need consistent tooling across different cloud providers
-
-### When to upgrade to full ACNS
-
-Consider upgrading from Container Network Logs to the complete Advanced Container Networking Services when you need:
-
-- **Enhanced security features**: Additional network security capabilities beyond observability
-- **Advanced network policies**: Layer 7 policies and advanced traffic management
-- **Comprehensive platform**: Complete container networking solution with security and observability
-- **Production-grade support**: Enterprise-grade support for mission-critical workloads
-- **AI-powered insights**: Advanced analytics and recommendations for network optimization (upcoming fetaure)
 
 ## Use case 1: Interpret domain name server (DNS) issues for root cause analysis (RCA)
 
@@ -144,11 +89,15 @@ We've already created two DNS dashboards to investigate DNS metrics, requests, a
 
     ```kusto
     RetinaNetworkFlowLogs
-    | where FlowType == "DNS" 
-    | where SourcePodName == "<pod-name>"
-    | project TimeGenerated, SourcePodName, DestinationPodName, FlowType, SourceNamespace, DestinationNamespace
+    | where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
+    | where Layer4.UDP.destination_port == 53
+    | where Layer7.type == "REQUEST" 
+    | where Reply == false or isnull(Reply)
+    | project TimeGenerated, SourcePodName, DestinationPodName, Layer7.dns.query, Layer7.dns.qtypes, Verdict, TrafficDirection, AdditionalFlowData.Summary, NodeName, SourceNamespace, DestinationNamespace
     | order by TimeGenerated desc
     ```
+
+    Replace `<start-time>` and `<end-time>` with your desired time range in the format `2025-08-12T00:00:00Z`.
 
     Container Network Logs provide comprehensive insights into DNS queries and their responses, which can help diagnosing and troubleshooting DNS-related issues. Each log entry includes information such as the query type (for example, *A* or *AAAA*), the queried domain name, the DNS response code (for example, *Query Refused*, *Non-Existent Domain*, or *Server Failure*), and the source and destination of the DNS request.
 
@@ -220,6 +169,7 @@ Use the following KQL query in your Log Analytics workspace to identify packet d
 
 ```kusto
 RetinaNetworkFlowLogs
+| where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
 | where Verdict == "DROPPED" 
 | summarize DropCount = count() by SourcePodName, DestinationPodName, SourceNamespace, bin(TimeGenerated, 5m)
 | order by TimeGenerated desc, DropCount desc
@@ -229,11 +179,14 @@ For real-time analysis of dropped packets, you can also filter by specific pods 
 
 ```kusto
 RetinaNetworkFlowLogs
+| where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
 | where Verdict == "DROPPED" 
 | where SourceNamespace == "<namespace-name>"
-| project TimeGenerated, SourcePodName, DestinationPodName, SourceNamespace, DestinationNamespace
+| project TimeGenerated, SourcePodName, DestinationPodName, SourceNamespace, DestinationNamespace, Verdict, TrafficDirection
 | order by TimeGenerated desc
 ```
+
+Replace `<start-time>` and `<end-time>` with your desired time range in the format `2025-08-12T00:00:00Z`.
 
 Container Network Logs provides granular insights into dropped packets, helping you identify misconfigured network policies and validate fixes. The logs include detailed information about drop reasons, affected pods, and traffic patterns that can guide your troubleshooting efforts.
 
@@ -300,7 +253,7 @@ In addition to using Grafana dashboards, you can use Container Network Logs to a
 ```kusto
 // Identify pods with high traffic volume (potential imbalances)
 RetinaNetworkFlowLogs
-| where TimeGenerated > ago(1h)
+| where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
 | extend TCP = parse_json(Layer4).TCP
 | extend SourcePort = TCP.source_port, DestinationPort = TCP.destination_port
 | summarize TotalConnections = count() by SourcePodName, SourceNamespace
@@ -310,13 +263,15 @@ RetinaNetworkFlowLogs
 ```kusto
 // Analyze TCP reset patterns to identify connection issues
 RetinaNetworkFlowLogs
-| where TimeGenerated > ago(1h)
+| where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
 | extend TCP = parse_json(Layer4).TCP
 | extend Flags = TCP.flags
 | where Flags contains "RST"
 | summarize ResetCount = count() by SourcePodName, DestinationPodName, bin(TimeGenerated, 5m)
 | order by TimeGenerated desc, ResetCount desc
 ```
+
+Replace `<start-time>` and `<end-time>` with your desired time range in the format `2025-08-12T00:00:00Z`.
 
 These queries help identify traffic imbalances and connection issues that might not be immediately visible in the dashboard visualizations.
 
@@ -395,7 +350,7 @@ Container Network Logs provides comprehensive L7 traffic analysis capabilities t
 ```kusto
 // Analyze HTTP response codes and error rates
 RetinaNetworkFlowLogs
-| where TimeGenerated > ago(1h)
+| where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
 | where FlowType == "L7_HTTP"
 | extend HTTP = parse_json(Layer4).HTTP
 | extend StatusCode = HTTP.status_code
@@ -406,7 +361,7 @@ RetinaNetworkFlowLogs
 ```kusto
 // Identify pods with high HTTP 4xx or 5xx error rates
 RetinaNetworkFlowLogs
-| where TimeGenerated > ago(1h)
+| where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
 | where FlowType == "L7_HTTP"
 | extend HTTP = parse_json(Layer4).HTTP
 | extend StatusCode = tostring(HTTP.status_code)
@@ -418,7 +373,7 @@ RetinaNetworkFlowLogs
 ```kusto
 // Monitor gRPC traffic and response times
 RetinaNetworkFlowLogs
-| where TimeGenerated > ago(1h)
+| where TimeGenerated between (datetime(<start-time>) .. datetime(<end-time>))
 | where FlowType == "L7_GRPC"
 | extend GRPC = parse_json(Layer4).GRPC
 | extend Method = GRPC.method
@@ -426,13 +381,68 @@ RetinaNetworkFlowLogs
 | order by RequestCount desc
 ```
 
+Replace `<start-time>` and `<end-time>` with your desired time range in the format `2025-08-12T00:00:00Z`.
+
 These queries complement the visual dashboards by providing detailed insights into application-layer performance, error patterns, and traffic distribution across your microservices architecture.
 
-## Next steps
+## Network observability with Retina OSS
+
+While Advanced Container Networking Services (ACNS) is a paid offering that provides comprehensive network observability capabilities, Microsoft also offers **Retina OSS**, an open-source network observability platform that provides essential network monitoring capabilities.
+
+### Default Network Observability in AKS
+
+When you enable Azure Monitor managed service for Prometheus on an AKS cluster, basic network monitoring metrics are collected by default through the `networkobservabilityRetina` target. This provides:
+
+- **Basic node-level network metrics**: Essential network traffic visibility at the node level
+- **Default Prometheus targets**: Network observability metrics automatically scraped by Azure Monitor
+- **Azure Monitor integration**: Seamless integration with Azure Monitor; metrics are automatically collected and can be visualized in Grafana
+- **No additional setup required**: Automatically enabled when Azure Monitor managed Prometheus is configured
+- **Microsoft support**: Supported as part of Azure Monitor and AKS
+
+**Note**: This requires Azure Monitor managed service for Prometheus to be enabled on your AKS cluster, which may have associated costs.
+
+**Getting started**: Enable Azure Monitor managed service for Prometheus on your AKS cluster through Azure portal or CLI. Network observability metrics will be automatically collected and available for visualization in Azure Managed Grafana.
+
+### Retina OSS
+
+**Retina OSS** is the open-source observability platform available at [retina.sh](https://retina.sh/) and [GitHub](https://github.com/microsoft/retina). It provides:
+
+- **eBPF-based network observability**: Leverages eBPF technologies to collect insights with minimal overhead
+- **Deep traffic analysis with Kubernetes context**: Comprehensive capture and analysis of network traffic flows with full Kubernetes integration
+- **Advanced metrics collection**: Layer 4 metrics, DNS metrics, and distributed packet capture capabilities
+- **Plugin-based extensibility**: Customize and extend functionality through a plugin architecture
+- **Prometheus-compatible metrics**: Export comprehensive network metrics in Prometheus format with configurable metric modes
+- **Distributed packet capture**: On-demand packet captures across multiple nodes for deep troubleshooting
+- **Platform and CNI agnostic**: Works with any Kubernetes cluster (AKS, Arc-enabled, on-premises), any OS (Linux/Windows), and any CNI
+- **Community support**: Open-source with community-driven support and contributions
+- **Self-managed**: Complete control over deployment and configuration
+- **Hubble integration**: Integrates with Cilium's Hubble for additional network insights
+
+**Getting started**: Deploy Retina OSS using Helm charts or Kubernetes manifests from the [official Retina repository](https://github.com/microsoft/retina). Set up Prometheus and Grafana to visualize metrics, configure deep traffic analysis with Kubernetes context, enable distributed packet capture for advanced troubleshooting, and customize functionality using the plugin-based architecture for specific use cases.
+
+### Comparison of network observability offerings
+
+| Offering | Support | Cost | Management | Deployment | Use Cases |
+|----------|---------|------|------------|------------|-----------|
+| **Advanced Container Networking Services (ACNS)** | Microsoft enterprise support | Paid Azure service | Fully managed by Microsoft | One-click Azure integration | Production workloads, enterprise security, compliance requirements, advanced analytics |
+| **Default Network Observability (Azure Monitor)** | Microsoft support as part of Azure Monitor | Included with Azure Monitor managed Prometheus (Azure Monitor costs apply) | Fully managed by Microsoft | Automatic when Azure Monitor managed Prometheus is enabled | Basic network monitoring for AKS workloads, users who want observability without managing infrastructure |
+| **Retina OSS** | Community support | Free and open-source | Self-managed | Manual setup via Helm/manifests on any Kubernetes cluster | Advanced diagnostics and debugging, custom observability setups, integration with third-party tools, multicloud deployments |
+
+## Learn More
 
 To get started with network observability in AKS:
 
+### Advanced Container Networking Services (ACNS)
 - **Set up Container Network Logs**: Learn how to configure [Container Network Logs for comprehensive network observability](./how-to-configure-container-network-logs.md)
 - **Explore Advanced Container Networking Services**: For more information about the complete platform, see [What is Advanced Container Networking Services for Azure Kubernetes Service (AKS)?](advanced-container-networking-services-overview.md)
 - **Configure monitoring**: Set up [Azure Managed Grafana integration](./how-to-configure-container-network-logs.md#visualization-by-using-azure-managed-grafana) for advanced visualizations
 - **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
+
+### Default Network Observability (Azure Monitor)
+- **Azure Monitor integration**: Set up [Azure Monitor for containers](/azure/azure-monitor/containers/container-insights-overview) to view basic network metrics
+
+
+### Retina OSS
+- **Official documentation**: Visit [retina.sh](https://retina.sh/) for comprehensive documentation and guides
+- **GitHub repository**: Access the [Microsoft Retina GitHub repository](https://github.com/microsoft/retina) for installation guides, examples, and community support
+- **Community support**: Join the [Retina community discussions](https://github.com/microsoft/retina/discussions) for help and best practices

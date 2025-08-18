@@ -46,7 +46,7 @@ As a result, CVEs affecting Calico and Tigera Operator will remain unpatched in 
 
 **Resolutions**
 - No immediate action is required. Customers are encouraged to monitor upstream Calico releases and the [AKS CVE Status Tracker](https://releases.aks.azure.com/webpage/index.html) for updates.
-- If this creates an unreasonable security burden, you may [remove calico](https://learn.microsoft.com/azure/aks/use-network-policies#uninstall-azure-network-policy-manager-or-calico) by setting network-policy to none.  
+- If this creates an unreasonable security burden, you may [remove calico](/azure/aks/use-network-policies#uninstall-azure-network-policy-manager-or-calico) by setting network-policy to none.  
 
 ---
 

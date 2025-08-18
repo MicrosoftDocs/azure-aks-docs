@@ -28,7 +28,7 @@ AKS quota will represent a limit of the maximum number of managed clusters (AKS 
 
 **Existing AKS customer subscriptions** will be given a default limit at or above their current usage depending on the available regional capacity. **Existing subscriptions using AKS for the first time and new subscriptions** will be given a default limit.
 
-Customers can [view quota limits and usage](https://learn.microsoft.com/azure/quotas/view-quotas) and [request additional quota](https://learn.microsoft.com/azure/quotas/quickstart-increase-quota-portal) via the Azure portal Quotas page or via the [Quotas REST API](https://learn.microsoft.com/rest/api/reserved-vm-instances/quotaapi). Prior to rollout completion, quota limits and usage *may* be visible in the Portal Quotas blade and customers will be able to request quota —however, the limits will not be enforced until rollout is complete. 
+Customers can [view quota limits and usage](/azure/quotas/view-quotas) and [request additional quota](/azure/quotas/quickstart-increase-quota-portal) via the Azure portal Quotas page or via the [Quotas REST API](/rest/api/reserved-vm-instances/quotaapi). Prior to rollout completion, quota limits and usage *may* be visible in the Portal Quotas blade and customers will be able to request quota —however, the limits will not be enforced until rollout is complete. 
 
 :::image type="complex" source="./media/quotas-skus-regions/portal-quotas-page-inline.png" alt-text="Screenshot of the Azure portal Quotas page.":::
 Screenshot of the Azure portal Quotas page. On the Quotas page, the customer has selected the view for a particular subscription and the Provider Azure Kubernetes Service. The Quotas page shows the number of managed clusters that the customer is using against their quota limit for each region within a subscription.
@@ -41,7 +41,7 @@ When Managed Clusters Quota is rolled out, customers will receive the following 
 ManagedClusterCountExceedsQuotaLimit: Operation results in exceeding quota limits for managed clusters. Maximum allowed: %d, Current usage: %d, Additional requested: %d. Consider deleting unused clusters or requesting a quota increase. To request a quota increase, follow the instructions here: https://learn.microsoft.com/azure/quotas/quickstart-increase-quota-portal.
 ```
 
-To remedy this, customers can [request additional quota in the Azure portal Quotas page](https://learn.microsoft.com/azure/quotas/view-quotas) or via the [Quotas REST API](https://learn.microsoft.com/rest/api/reserved-vm-instances/quotaapi).
+To remedy this, customers can [request additional quota in the Azure portal Quotas page](/azure/quotas/view-quotas) or via the [Quotas REST API](/rest/api/reserved-vm-instances/quotaapi).
 
 #### AKS Managed Clusters Quota Limits
 [!INCLUDE [container-quota-limits](~/reusable-content/ce-skilling/azure/includes/container-quota-limits.md)]
