@@ -24,6 +24,33 @@ These updates cover security information related to the following AKS components
 - Azure Kubernetes Service Addons (AKS add-ons)
 
 ---
+
+## AKS-2025-0010  Nodes can delete themselves by adding an OwnerReference
+
+**Published Date**: August 15, 2025
+
+### Description
+A security issue has been identified in the Kubernetes NodeRestriction admission controller that could allow node users to delete their own node object by patching it with an OwnerReference to a cluster-scoped resource. If the referenced resource or the node object is deleted, Kubernetes garbage collection may remove the node object.
+This issue arises because node users are authorized to perform create and patch operations, but not delete. A compromised node could exploit this to recreate its node object with modified taints or labels, potentially influencing pod scheduling and gaining control over workloads
+
+### References
+
+- [CVE-2025-5187](https://github.com/kubernetes/kubernetes/issues/133471)
+
+### Affected Components
+
+#### [**AKS Cluster**](#tab/aks-cluster)
+
+**Affected Versions**
+
+- [All supported Kubernetes versions](../supported-kubernetes-versions.md)
+
+**Resolutions**
+
+- A security patch is currently being rolled out in 20250720 and 20250808 release and is expected to be applied across all regions within the next 4–5 days. You can check the release status from [AKS release tracker][aks-release-tracker].
+- **No action is required**. The patch will be automatically applied to your cluster during your configured or default [maintenance window](../planned-maintenance.md).
+
+---
 ## AKS-2025-009 Important Security Update for Calico Users
 
 **Published Date**: July 21, 2025
