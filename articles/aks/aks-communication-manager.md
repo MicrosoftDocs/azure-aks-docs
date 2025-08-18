@@ -23,6 +23,9 @@ The Azure Kubernetes Service (AKS) Communication Manager streamlines notificatio
 > [!NOTE]  
 > Once set up, the communication manager sends advance notices - one week before maintenance starts and one day before maintenance starts. This is in addition to the timely alerts during the maintenance operation.
 
+> [!NOTE]
+> For each query, be sure to update the `where id contains` path to reference your resources for subscription ID, resource group name, and cluster name.
+
 ## How to set up communication manager
 
 1. Go to the resource, then choose Monitoring and select Alerts and then click into Alert Rules.
