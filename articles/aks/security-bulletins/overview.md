@@ -43,7 +43,7 @@ This issue arises because node users are authorized to perform create and patch 
 
 **Affected Versions**
 
-- [All supported Kubernetes versions](https://docs.azure.cn/en-us/aks/supported-kubernetes-versions?tabs=azure-cli)
+- [All supported Kubernetes versions](../supported-kubernetes-versions.md)
 
 **Resolutions**
 
