@@ -426,7 +426,7 @@ When you enable Azure Monitor managed service for Prometheus on an AKS cluster, 
 |----------|---------|------|------------|------------|-----------|
 | **Advanced Container Networking Services (ACNS)** | Microsoft enterprise support | Paid Azure service | Fully managed by Microsoft | One-click Azure integration | Production workloads, enterprise security, compliance requirements, advanced analytics |
 | **Default Network Observability (Azure Monitor)** | Microsoft support as part of Azure Monitor | Included with Azure Monitor managed Prometheus (Azure Monitor costs apply) | Fully managed by Microsoft | Automatic when Azure Monitor managed Prometheus is enabled | Basic network monitoring for AKS workloads, users who want observability without managing infrastructure |
-| **Retina OSS** | Community support | Free and open-source | Self-managed | Manual setup via Helm/manifests on any Kubernetes cluster | Advanced diagnostics and debugging, custom observability setups, integration with third-party tools, multi-cloud deployments |
+| **Retina OSS** | Community support | Free and open-source | Self-managed | Manual setup via Helm/manifests on any Kubernetes cluster | Advanced diagnostics and debugging, custom observability setups, integration with third-party tools, multicloud deployments |
 
 ## Learn More
 
@@ -439,7 +439,7 @@ To get started with network observability in AKS:
 - **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
 
 ### Default Network Observability (Azure Monitor)
-- **Azure Monitor integration**: Set up [Azure Monitor for containers](https://docs.microsoft.com/azure/azure-monitor/containers/container-insights-overview) to view basic network metrics
+- **Azure Monitor integration**: Set up [Azure Monitor for containers](/azure/azure-monitor/containers/container-insights-overview) to view basic network metrics
 
 
 ### Retina OSS
