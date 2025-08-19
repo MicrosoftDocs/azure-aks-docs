@@ -47,9 +47,11 @@ A touted benefit of Kata is the ease of integration. An operator can simply take
 
 Kata pods are also extremely flexible, in the sense they can be plugged into most workloads and placed on cluster alongside normal, non-Kata workloads. A user can opt to mix Kata and non-Kata workloads on the same cluster with relatively little impact to either type of workloads.  
 
-> [!NOTE]
-> Kata is not and should not be treated as a silver bullet for multi-tenant workload concerns. While useful, Kata does come with some requirements and considerations that should be taken into account.
-> Please take note of these requirements/considerations called out in the linked pages below.
+## How does it work?
+
+Pod Sandboxing utilizes the open-source [Kata Containers](https://katacontainers.io/) project. Kata Containers are spun up on top of a security-hardened Azure hypervisor, and Kata components for the shim/runtime. 
+
+The isolation per pod is achieved by spinning up workloads in their own lightweight nested Kata VM that carves out resources from a parent VM node. Each Kata VM gets its own kernel, isolating the workload from the host and other workloads.
 
 # Next Steps
 
