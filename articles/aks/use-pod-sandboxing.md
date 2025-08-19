@@ -53,7 +53,7 @@ To use this feature with a pod, the only difference is to add **runtimeClassName
 
 ### Memory management
 
-There are memory related considerations that come with utilizing Pod Sandboxing.
+For larger scale or memory sensitive workloads, there are memory related considerations that come with utilizing Pod Sandboxing which should be accounted for. 
 
 #### Host Components 
 
