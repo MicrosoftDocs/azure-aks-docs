@@ -1,19 +1,19 @@
 ---
-title: Pod Sandboxing (preview) with Azure Kubernetes Service (AKS)
-description: Learn about and deploy Pod Sandboxing (preview), also referred to as Kernel Isolation, on an Azure Kubernetes Service (AKS) cluster.
+title: Pod Sandboxing with Azure Kubernetes Service (AKS)
+description: Learn about and deploy Pod Sandboxing on an Azure Kubernetes Service (AKS) cluster.
 ms.topic: how-to
 ms.subservice: aks-security
 ms.custom: devx-track-azurecli, build-2023
-ms.date: 06/07/2023
-author: davidsmatlak
-ms.author: davidsmatlak
+ms.date: 11/17/2025
+author: jackjiang
+ms.author: jackjiang
 
-# Customer intent: As a cloud administrator, I want to implement Pod Sandboxing on an Azure Kubernetes Service cluster, so that I can enhance the security of container workloads by isolating them from untrusted or potentially malicious code.
+# Customer intent: As a cloud administrator, I want to implement Pod Sandboxing on an Azure Kubernetes Service cluster, so that I can enhance the security of container workloads by isolating them from untrusted or potentially malicious code/workloads.
 ---
 
-# Pod Sandboxing (preview) with Azure Kubernetes Service (AKS)
+# Pod Sandboxing with Azure Kubernetes Service (AKS)
 
-To help secure and protect your container workloads from untrusted or potentially malicious code, AKS now includes a mechanism called Pod Sandboxing (preview). Pod Sandboxing provides an isolation boundary between the container application and the shared kernel and compute resources of the container host such as CPU, memory, and networking. Pod Sandboxing complements other security measures or data protection controls with your overall architecture to help you meet regulatory, industry, or governance compliance requirements for securing sensitive information.
+To help secure and protect your container workloads from untrusted or potentially malicious code, AKS now includes a mechanism called Pod Sandboxing. Pod Sandboxing provides an isolation boundary between the container application and the shared kernel and compute resources of the container host such as CPU, memory, and networking. Pod Sandboxing complements other security measures or data protection controls with your overall architecture to help you meet regulatory, industry, or governance compliance requirements for securing sensitive information.
 
 This article helps you understand this new feature, and how to implement it.
 
@@ -21,53 +21,13 @@ This article helps you understand this new feature, and how to implement it.
 
 - The Azure CLI version 2.44.1 or later. Run `az --version` to find the version, and run `az upgrade` to upgrade the version. If you need to install or upgrade, see [Install Azure CLI][install-azure-cli].
 
-- The `aks-preview` Azure CLI extension version 0.5.123 or later.
-
-- Register the `KataVMIsolationPreview` feature in your Azure subscription.
-
 - AKS supports Pod Sandboxing (preview) on version 1.24.0 and higher with all AKS network plugins.
 
 - To manage a Kubernetes cluster, use the Kubernetes command-line client [kubectl][kubectl]. Azure Cloud Shell comes with `kubectl`. You can install kubectl locally using the [az aks install-cli][az-aks-install-cmd] command.
 
-### Install the aks-preview Azure CLI extension
-
-[!INCLUDE [preview features callout](~/reusable-content/ce-skilling/azure/includes/aks/includes/preview/preview-callout.md)]
-
-To install the aks-preview extension, run the following command:
-
-```azurecli-interactive
-az extension add --name aks-preview
-```
-
-Run the following command to update to the latest version of the extension released:
-
-```azurecli-interactive
-az extension update --name aks-preview
-```
-
-### Register the KataVMIsolationPreview feature flag
-
-Register the `KataVMIsolationPreview` feature flag by using the [az feature register][az-feature-register] command, as shown in the following example:
-
-```azurecli-interactive
-az feature register --namespace "Microsoft.ContainerService" --name "KataVMIsolationPreview"
-```
-
-It takes a few minutes for the status to show *Registered*. Verify the registration status by using the [az feature show][az-feature-show] command:
-
-```azurecli-interactive
-az feature show --namespace "Microsoft.ContainerService" --name "KataVMIsolationPreview"
-```
-
-When the status reflects *Registered*, refresh the registration of the *Microsoft.ContainerService* resource provider by using the [az provider register][az-provider-register] command:
-
-```azurecli-interactive
-az provider register --namespace "Microsoft.ContainerService"
-```
-
 ## Limitations
 
-The following are constraints with this preview of Pod Sandboxing (preview):
+The following are constraints with this of Pod Sandboxing:
 
 * Kata containers may not reach the IOPS performance limits that traditional containers can reach on Azure Files and high performance local SSD.
 
@@ -89,9 +49,11 @@ The solution architecture is based on the following components:
 
 Deploying Pod Sandboxing using Kata Containers is similar to the standard containerd workflow to deploy containers. The deployment includes kata-runtime options that you can define in the pod template.
 
-To use this feature with a pod, the only difference is to add **runtimeClassName** *kata-mshv-vm-isolation* to the pod spec.
+To use this feature with a pod, the only difference is to add **runtimeClassName** *kata-mshv-vm-isolation* to the pod spec. When a pod uses the *kata-mshv-vm-isolation* runtimeClass, it creates a VM to serve as the pod sandbox to host the containers. 
 
-When a pod uses the *kata-mshv-vm-isolation* runtimeClass, it creates a VM to serve as the pod sandbox to host the containers. The VM's default memory is 2 GB and the default CPU is one core if the [Container resource manifest][container-resource-manifest] (`containers[].resources.limits`) doesn't specify a limit for CPU and memory. When you specify a limit for CPU or memory in the container resource manifest, the VM has `containers[].resources.limits.cpu` with the `1` argument to use *one + xCPU*, and `containers[].resources.limits.memory` with the `2` argument to specify *2 GB + yMemory*. Containers can only use CPU and memory to the limits of the containers. The `containers[].resources.requests` are ignored in this preview while we work to reduce the CPU and memory overhead.
+### Memory management
+
+The VM's default memory is 2 GB and the default CPU is one core if the [Container resource manifest][container-resource-manifest] (`containers[].resources.limits`) doesn't specify a limit for CPU and memory. When you specify a limit for CPU or memory in the container resource manifest, the VM has `containers[].resources.limits.cpu` with the `1` argument to use *one + xCPU*, and `containers[].resources.limits.memory` with the `2` argument to specify *2 GB + yMemory*. Containers can only use CPU and memory to the limits of the containers. The `containers[].resources.requests` are ignored in this preview while we work to reduce the CPU and memory overhead.
 
 ## Deploy new cluster
 
