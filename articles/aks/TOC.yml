@@ -42,12 +42,14 @@
       href: supported-kubernetes-versions.md
     - name: Long-term support
       href: long-term-support.md
+    - name: VM sizes, generations, and features
+      href: aks-virtual-machine-sizes.md
     - name: AKS preview API lifecycle
       href: concepts-preview-api-life-cycle.md
-    - name: Compare AKS Standard and AKS Automatic
-      href: intro-aks-automatic.md
 - name: Set up clusters
   items:
+    - name: Compare AKS Standard and AKS Automatic
+      href: intro-aks-automatic.md
     - name: Create an AKS cluster
       items:
         - name: Create a Linux-based AKS cluster
@@ -344,6 +346,8 @@
               href: node-upgrade-github-actions.md
             - name: Stop cluster upgrades automatically on API breaking changes
               href: stop-cluster-upgrade-api-breaking-changes.md
+        - name: Upgrade FAQ
+          href: upgrade-aks-faq.yml
     - name: Add-ons, extensions, and integrations
       items:
         - name: Overview of add-ons, extensions, and integrations
@@ -755,7 +759,7 @@
         - name: Payment Card Industry Data Security Standard (PCI DSS)
           items:
             - name: PCI DSS compliance overview
-              href: /compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
+              href: /azure/compliance/offerings/offering-pci-dss?toc=/azure/aks/toc.json&bc=/azure/aks/breadcrumb/toc.json
             - name: Introduction to PCI DSS v4.0.1 on AKS
               href: pci-intro.md
             - name: Risk assessment and code assets
