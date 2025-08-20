@@ -513,7 +513,7 @@
             href: concepts-network-azure-cni-pod-subnet.md
           - name: Upgrade Azure CNI IPAM and dataplane
             href: upgrade-azure-cni.md
-          - name: Migrate from Network Policy Manager to Cilium Networ policy
+          - name: Migrate from Network Policy Manager to Cilium Network policy
             href: migrate-from-npm-to-cilium-network-policy.md
           - name: Use dual-stack networking
             href: configure-dual-stack.md
