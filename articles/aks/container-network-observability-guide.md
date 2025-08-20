@@ -436,9 +436,8 @@ To get started with network observability in AKS:
 - **Configure monitoring**: Set up [Azure Managed Grafana integration](./how-to-configure-container-network-logs.md#visualization-by-using-azure-managed-grafana) for advanced visualizations
 - **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
 
-### Default Network Observability (Azure Monitor)
+### Network Observability (Azure Monitor)
 - **Azure Monitor integration**: Set up [Azure Monitor for containers](/azure/azure-monitor/containers/container-insights-overview) to view basic network metrics
-
 
 ### Retina OSS
 - **Official documentation**: Visit [retina.sh](https://retina.sh/) for comprehensive documentation and guides
