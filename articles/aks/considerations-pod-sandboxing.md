@@ -65,3 +65,20 @@ It is recommended that users:
 - Specify memory limits for every Kata pod they spin up.
 - Declare a runtime class memory overhead that is appropriate for each pod memory limit.
 
+## Privileged Pods
+
+There are scenarios in which privileged pods may be required. On base Kata, a user would have to [edit their containerd config](https://github.com/kata-containers/kata-containers/blob/main/docs/how-to/privileged.md#containerd) to allow privileged pods to be able to be spun up successfully. Pod Sandboxing on AKS has the option configured by default for customers.
+
+Using privileged pods come with factors that should be taken into account by the user.
+
+- Privileged containers lead to elevated capabilities which can allow a privileged container to potentially affect the host kernel or other containers.
+- Attackers who gain access to a privileged Kata container may exploit kernel vulnerabilities or misconfigured host resources to escape the container and compromise the host system.
+
+Privileged pods, even on Pod Sandboxing, should only be used when necessary. Privileged pods should continue to be [managed by trusted users](https://kubernetes.io/docs/concepts/security/pod-security-standards/#privileged)
+
+## Host Path Storage Volumes
+
+hostPath volumes can be mounted into Kata pods. In Pod Sandboxing, using hostPath volumes can potentially undermine the isolation that Kata provides; since part of the host filesystem is exposed directly to the container, this creates a potential attack vector. The warnings posed by [upstream](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) should be considered as relevant for Pod Sandboxing as well. 
+
+> [!WARNING]
+> Unless necessary, it is recommended to _avoid_ using hostPath storage volumes. 
