@@ -23,7 +23,7 @@ The main host components of a Kata deployment are the _Kata Shim_, _Cloud Hyperv
 
 In a Kata deployment, the main guest components that are expected to use memory are the _user's workloads_, _pod VM kernel_, and the _kata agent_. 
 - Together, the memory size used by all these Guest components must be smaller than the pod VM memory size, which is fixed when a pod starts. The pod VM memory size is also limited by the same memory cgroup field that limits the host components memory usage.
-- The pod VM memory size is equivalent to the [Kubernetes pod memory limit](https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/#specify-a-memory-request-and-a-memory-limit) the user specifies. A user can change the VM memory size by changing the value of their pod memory limit.
+- The pod VM memory size is equivalent to the [Kubernetes pod memory limit](pod-limit) the user specifies. A user can change the VM memory size by changing the value of their pod memory limit.
    - Pods without a memory limit get a default Pod VM memory size of 512Mi.
 
 ### Pod memory cgroup
@@ -42,7 +42,7 @@ For a Pod having a memory limit specified by its user:
 
 ### Runtime class memory
 
-Users configure AKS-Kata and AKS-CC Pods to use a particular Runtime Class. Users must [specify a memory overhead](https://kubernetes.io/docs/concepts/containers/runtime-class/#pod-overhead) for each Runtime Class they use. Without specifying an appropriate overhead value, the Pods using that Runtime Class might fail to start, or might be prematurely killed, etc.
+Users configure AKS-Kata and AKS-CC Pods to use a particular Runtime Class. Users must [specify a memory overhead](memory-overhead) for each Runtime Class they use. Without specifying an appropriate overhead value, the Pods using that Runtime Class might fail to start, or might be prematurely killed, etc.
 
 The memory overhead value of the Runtime Class used by a Pod must be large enough to cover the largest expected Host memory usage corresponding to that Pod. The memory overhead value of the Runtime Class is not expected to cover the Pod VM memory size. Typical Runtime Class overhead values corresponding to typical Pod memory limit values are provided at the end of this paper.
 
@@ -67,18 +67,34 @@ It is recommended that users:
 
 ## Privileged Pods
 
-There are scenarios in which privileged pods may be required. On base Kata, a user would have to [edit their containerd config](https://github.com/kata-containers/kata-containers/blob/main/docs/how-to/privileged.md#containerd) to allow privileged pods to be able to be spun up successfully. Pod Sandboxing on AKS has the option configured by default for customers.
+There are scenarios in which privileged pods may be required. On base Kata, a user would have to [edit their containerd config](privileged-containerd) to allow privileged pods to be able to be spun up successfully. Pod Sandboxing on AKS has the option configured by default for customers.
 
 Using privileged pods come with factors that should be taken into account by the user.
 
 - Privileged containers lead to elevated capabilities which can allow a privileged container to potentially affect the host kernel or other containers.
 - Attackers who gain access to a privileged Kata container may exploit kernel vulnerabilities or misconfigured host resources to escape the container and compromise the host system.
 
-Privileged pods, even on Pod Sandboxing, should only be used when necessary. Privileged pods should continue to be [managed by trusted users](https://kubernetes.io/docs/concepts/security/pod-security-standards/#privileged)
+Privileged pods, even on Pod Sandboxing, should only be used when necessary. Privileged pods should continue to be [managed by trusted users](privileged-users)
 
 ## Host Path Storage Volumes
 
-hostPath volumes can be mounted into Kata pods. In Pod Sandboxing, using hostPath volumes can potentially undermine the isolation that Kata provides; since part of the host filesystem is exposed directly to the container, this creates a potential attack vector. The warnings posed by [upstream](https://kubernetes.io/docs/concepts/storage/volumes/#hostpath) should be considered as relevant for Pod Sandboxing as well. 
+hostPath volumes can be mounted into Kata pods. In Pod Sandboxing, using hostPath volumes can potentially undermine the isolation that Kata provides; since part of the host filesystem is exposed directly to the container, this creates a potential attack vector. The warnings posed by [upstream](upstream-hostpath) should be considered as relevant for Pod Sandboxing as well. 
 
 > [!WARNING]
-> Unless necessary, it is recommended to _avoid_ using hostPath storage volumes. 
+> Unless necessary, it is recommended to _avoid_ using hostPath storage volumes.
+
+# Next Steps
+
+Once you are ready, learn how to [deploy pod sandboxing on AKS](deploy-pod-sandboxing).
+
+<!--- External Links --->
+[upstream-hostpath]: https://kubernetes.io/docs/concepts/storage/volumes/#hostpath
+[kata-containers]: https://katacontainers.io/
+[privileged-users]: https://kubernetes.io/docs/concepts/security/pod-security-standards/#privileged
+[privileged-containerd]: https://github.com/kata-containers/kata-containers/blob/main/docs/how-to/privileged.md#containerd
+[memory-overhead]: https://kubernetes.io/docs/concepts/containers/runtime-class/#pod-overhead
+[pod-limit]: https://kubernetes.io/docs/tasks/configure-pod-container/assign-memory-resource/#specify-a-memory-request-and-a-memory-limit
+
+
+<!--- Internal Links --->
+[deploy-pod-sandboxing]: use-pod-sandboxing.md
