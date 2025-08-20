@@ -115,7 +115,7 @@ Container Network Logs provides rich visualization capabilities through Azure po
 - **Flow logs dashboards**: Monitor DNS request patterns, error rates, and response times in real-time
 - **Traffic flow analysis**: Identify dropped DNS packets and communication paths to CoreDNS or external DNS services
 
- :::image type="content" source="./media/advanced-container-networking-services/flow-log-snapshot.png" alt-text="Screenshot of flow logs and error logs." lightbox="./media/advanced-container-networking-services/flow-log-snapshot.png":::
+ :::image type="content" source="./media/advanced-container-networking-services/dns-flow-log-snapshot.png" alt-text="Screenshot of flow logs and error logs." lightbox="./media/advanced-container-networking-services/dns-flow-log-snapshot.png":::
 
 
 You can access these visualizations through:
@@ -385,13 +385,9 @@ Replace `<start-time>` and `<end-time>` with your desired time range in the form
 
 These queries complement the visual dashboards by providing detailed insights into application-layer performance, error patterns, and traffic distribution across your microservices architecture.
 
-## Network observability with Retina OSS
+## Network Observability included with Azure Monitoring
 
-While Advanced Container Networking Services (ACNS) is a paid offering that provides comprehensive network observability capabilities, Microsoft also offers **Retina OSS**, an open-source network observability platform that provides essential network monitoring capabilities.
-
-### Default Network Observability in AKS
-
-When you enable Azure Monitor managed service for Prometheus on an AKS cluster, basic network monitoring metrics are collected by default through the `networkobservabilityRetina` target. This provides:
+When you enable Azure Monitor managed service for Prometheus on an AKS cluster, basic node network monitoring metrics are collected by default through the `networkobservabilityRetina` target. This provides:
 
 - **Basic node-level network metrics**: Essential network traffic visibility at the node level
 - **Default Prometheus targets**: Network observability metrics automatically scraped by Azure Monitor
@@ -403,7 +399,9 @@ When you enable Azure Monitor managed service for Prometheus on an AKS cluster, 
 
 **Getting started**: Enable Azure Monitor managed service for Prometheus on your AKS cluster through Azure portal or CLI. Network observability metrics will be automatically collected and available for visualization in Azure Managed Grafana.
 
-### Retina OSS
+## Network observability with Retina OSS
+
+While Advanced Container Networking Services (ACNS) is a paid offering that provides comprehensive network observability capabilities, Microsoft also supports **Network observability with Retina OSS**, an open-source network observability platform that provides essential network monitoring capabilities.
 
 **Retina OSS** is the open-source observability platform available at [retina.sh](https://retina.sh/) and [GitHub](https://github.com/microsoft/retina). It provides:
 
@@ -424,9 +422,9 @@ When you enable Azure Monitor managed service for Prometheus on an AKS cluster, 
 
 | Offering | Support | Cost | Management | Deployment | Use Cases |
 |----------|---------|------|------------|------------|-----------|
-| **Advanced Container Networking Services (ACNS)** | Microsoft enterprise support | Paid Azure service | Fully managed by Microsoft | One-click Azure integration | Production workloads, enterprise security, compliance requirements, advanced analytics |
-| **Default Network Observability (Azure Monitor)** | Microsoft support as part of Azure Monitor | Included with Azure Monitor managed Prometheus (Azure Monitor costs apply) | Fully managed by Microsoft | Automatic when Azure Monitor managed Prometheus is enabled | Basic network monitoring for AKS workloads, users who want observability without managing infrastructure |
-| **Retina OSS** | Community support | Free and open-source | Self-managed | Manual setup via Helm/manifests on any Kubernetes cluster | Advanced diagnostics and debugging, custom observability setups, integration with third-party tools, multi-cloud deployments |
+| **Advanced Container Networking Services (ACNS)** | Microsoft enterprise support | Paid Azure service | Fully managed by Microsoft | One-click Azure integration | **Managed enterprise observability**: Pod-level network flows, pod-level metrics, DNS metrics , persistent stored logs, Layer 7 traffic analysis, network security policy enforcement, compliance reporting, advanced Grafana dashboards, AI-powered insights |
+| **Network Observability (Azure Monitor)** | Microsoft support as part of Azure Monitor | Included with Azure Monitor managed Prometheus (Azure Monitor costs apply) | Fully managed by Microsoft | Automatic when Azure Monitor managed Prometheus is enabled | **Node network monitoring**: Cluster and node-level network metrics only, no pod-level visibility, no stored logs, no DNS analysis - suitable for basic infrastructure monitoring and users who want minimal network observability without additional configuration |
+| **Retina OSS** | Community support | Free and open-source | Self-managed | Manual setup via Helm/manifests on any Kubernetes cluster | **Unmanaged advanced observability**: Real-time packet captures, custom metrics collection, eBPF-based deep network analysis, Hubble integration, multi-cloud deployments, custom observability pipelines, advanced debugging with tcpdump/Wireshark integration, and development/testing environments |
 
 ## Learn More
 
