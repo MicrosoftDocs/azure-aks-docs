@@ -333,9 +333,9 @@ Ensure your `kubectl` client is within ±1 minor version of the AKS control plan
 kubectl version
 ```
 
-If there is a version mismatch:
+If there's a version mismatch:
 
-- Update or downgrade your kubectl to align with the server’s version.
+- Update or downgrade your kubectl to align with the server's version.
 - Alternatively, if you're restricted from changing your local kubectl, consider using the [`az aks command invoke` command](/cli/azure/aks/command) in Azure CLI to run your kubectl commands remotely on your cluster.
 
 
