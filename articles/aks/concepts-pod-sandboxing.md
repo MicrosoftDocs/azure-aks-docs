@@ -49,7 +49,8 @@ Kata pods are also extremely flexible, in the sense they can be plugged into mos
 
 # Next Steps
 
-- Pod Sandboxing has unique memory management considerations and techniques. Learn more about how Kata consumes resources, how to config resource consumption for Kata workloads, and how to deploy Pod Sandboxing [here](deploy-pod-sandboxing).
+- Learn about some considerations that should be taken into account before you deploy your pods on Pod Sandboxing [here](considerations-pod-sandboxing).
+- Once you are ready, [deploy Pod Sandboxing on AKS](deploy-pod-sandboxing).
 
 <!--- External Links --->
 [create-azure-subscription]: https://azure.microsoft.com/free/?WT.mc_id=A261C142F
@@ -59,3 +60,4 @@ Kata pods are also extremely flexible, in the sense they can be plugged into mos
 <!--- Internal Links --->
 [deploy-pod-sandboxing]: use-pod-sandboxing.md
 [multi-tenant-guidance]: azure/architecture/guide/multitenant/service/aks
+[considerations-pod-sandboxing]: considerations-pod-sandboxing.md
