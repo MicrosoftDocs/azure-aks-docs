@@ -437,7 +437,7 @@ To get started with network observability in AKS:
 - **Learn about network security**: Explore [Container Network Security features](./advanced-container-networking-services-overview.md#container-network-security) for policy enforcement and threat detection
 
 ### Default Network Observability (Azure Monitor)
-- **Azure Monitor integration**: Set up [Azure Monitor for containers](https://docs.microsoft.com/azure/azure-monitor/containers/container-insights-overview) to view basic network metrics
+- **Azure Monitor integration**: Set up [Azure Monitor for containers](/azure/azure-monitor/containers/container-insights-overview) to view basic network metrics
 
 
 ### Retina OSS
