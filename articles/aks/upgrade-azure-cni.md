@@ -32,7 +32,7 @@ There are always new IP assignment management (IPAM) modes and dataplane technol
 
 > [!WARNING]
 >
-> - If using a custom `azure-ip-masq-agent` config to include additional IP ranges that shouldn't SNAT packets from pods, upgrading to Azure CNI Overlay can break connectivity to these ranges. Pod IPs from the overlay space is unreachable by anything outside the cluster nodes.
+> - If using a custom `azure-ip-masq-agent` config to include additional IP ranges that shouldn't SNAT packets from pods, upgrading to Azure CNI Overlay can break connectivity to these ranges. Pod IPs from the overlay space are unreachable by anything outside the cluster nodes.
 > - For old clusters, there might be a ConfigMap left over from a previous version of `azure-ip-masq-agent`. If this ConfigMap, named `azure-ip-masq-agent-config`, exists, and isn't intentionally in place, you should delete it before upgrading.
 > - If not using a custom `ip-masq-agent` config, only the `azure-ip-masq-agent-config-reconciled` ConfigMap should exist with respect to Azure `ip-masq-agent` ConfigMaps and is updated automatically during the upgrade process.
 
