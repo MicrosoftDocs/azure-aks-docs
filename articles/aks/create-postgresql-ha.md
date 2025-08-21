@@ -380,7 +380,7 @@ To use Premium SSD v2, you can create a custom storage class.
 ### [Local NVMe](#tab/acstor)
 
 > [!IMPORTANT]  
-> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms].
+> Ensure that your cluster is using VM SKUs that support local NVMe drives, for example, [Storage optimized VM SKUs][storage-optimized-vms] or [GPU accelerated VM SKUs][gpu-vms]. The below instructions requires Azure Container Storage v2.0.0 or later.
 
 1. Update AKS cluster to install Azure Container Storage on user node pool.
 
@@ -402,14 +402,7 @@ To use Premium SSD v2, you can create a custom storage class.
     kind: StorageClass
     metadata:
         name: acstor-ephemeraldisk-nvme-db
-    parameters:
-        acstor.azure.com/storagepool: ephemeraldisk-nvme
-        hyperconverged: "true"
-        ioTimeout: "60"
-        proto: nvmf
-        repl: "1"
-        enableDBProfile: "true"
-    provisioner: containerstorage.csi.azure.com
+    provisioner: localdisk.csi.acstor.io
     reclaimPolicy: Delete
     volumeBindingMode: WaitForFirstConsumer
     EOF
