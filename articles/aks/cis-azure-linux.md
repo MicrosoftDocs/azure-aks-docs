@@ -185,7 +185,9 @@ The following are the results from the [CIS Azure Linux 2.0 Benchmark v1.0][cis-
 
 ### [Azure Linux 3.0](#tab/azurelinux-3.0)
 
-The following are the results from the CIS AKS Optimized Azure Linux 3 Benchmark (Level 1 - Server) recommendations based on the CIS rules:
+The following are the results from the [CIS Azure Linux 3.0 Benchmark v1.0][cis-benchmark-azure-linux]  recommendations based on the CIS rules:
+
+> [!NOTE] These are point in time results using the Azure Linux 3.0 image released on July 2 2025. Benchmarks can audited using the CIS-CAT tool available on: [CIS Azure Linux 3.0 Benchmark v1.0][cis-benchmark-azure-linux]. 
 
 | CIS ID | Recommendation description | Status | Reason |
 |---|---|---|---|
@@ -205,7 +207,7 @@ The following are the results from the CIS AKS Optimized Azure Linux 3 Benchmark
 |1.2.1.2|Ensure gpgcheck is configured|Pass||
 |1.2.1.3|Ensure TDNF gpgcheck is globally activated|Pass||
 |1.2.1.4|Ensure package manager repositories are configured|N/A||
-|1.3.1|Ensure address space layout randomization (ASLR) is enabled|Fail||
+|1.3.1|Ensure address space layout randomization is enabled|Fail| CIS ID 1.3.1 requires the OS to explicitly set a configuration to enable ASLR. In Azure Linux 3.0, this is the default behavior. However, to meet this benchmark and ensure the OS is resilient against upstream default changes, this configuration will be explicitly set in an upcoming release.  |
 |1.3.2|Ensure ptrace_scope is restricted|Pass||
 |1.3.3|Ensure core dump backtraces are disabled|Pass||
 |1.3.4|Ensure core dump storage is disabled|Pass||
@@ -233,7 +235,7 @@ The following are the results from the CIS AKS Optimized Azure Linux 3 Benchmark
 |2.2.15|Ensure NIS server is not installed|Pass||
 |2.2.16|Ensure telnet-server is not installed|Pass||
 |2.2.17|Ensure mail transfer agent is configured for local-only mode|Pass||
-|2.2.18|Ensure nfs-utils is not installed or the nfs-server service is masked|Pass||
+|2.2.18|Ensure nfs-utils is not installed or the  nfs-server service is masked|Pass||
 |2.2.19|Ensure rsync-daemon is not installed or the rsyncd service is masked|Pass||
 |2.3.1|Ensure NIS Client is not installed|Pass||
 |2.3.2|Ensure rsh client is not installed|Pass||
@@ -242,15 +244,15 @@ The following are the results from the CIS AKS Optimized Azure Linux 3 Benchmark
 |2.3.5|Ensure LDAP client is not installed|Pass||
 |2.3.6|Ensure TFTP client is not installed|Pass||
 |3.1.1|Ensure packet redirect sending is disabled|Pass||
-|3.1.2|Ensure bogus ICMP responses are ignored|Pass||
-|3.1.3|Ensure broadcast ICMP requests are ignored|Pass||
-|3.1.4|Ensure ICMP redirects are not accepted|Pass||
-|3.1.5|Ensure secure ICMP redirects are not accepted|Pass||
+|3.1.2|Ensure bogus icmp responses are ignored|Pass||
+|3.1.3|Ensure broadcast icmp requests are ignored|Pass||
+|3.1.4|Ensure icmp redirects are not accepted|Pass||
+|3.1.5|Ensure secure icmp redirects are not accepted|Pass||
 |3.1.6|Ensure reverse path filtering is enabled|Pass||
 |3.1.7|Ensure source routed packets are not accepted|Pass||
 |3.1.8|Ensure suspicious packets are logged|Pass||
-|3.1.9|Ensure TCP SYN Cookies is enabled|Pass||
-|3.1.10|Ensure IPv6 router advertisements are not accepted|Pass||
+|3.1.9|Ensure tcp syn cookies is enabled|Pass||
+|3.1.10|Ensure ipv6 router advertisements are not accepted|Pass||
 |4.1.1|Ensure iptables is installed|Pass||
 |4.1.2|Ensure nftables is not in use|Pass||
 |4.1.3|Ensure firewalld is not in use|Pass||
@@ -303,6 +305,34 @@ The following are the results from the CIS AKS Optimized Azure Linux 3 Benchmark
 |6.1.1.1.3|Ensure journald ForwardToSyslog is configured|Pass||
 |6.1.1.1.4|Ensure systemd-journal-remote service is not in use|Pass||
 |6.1.1.1.5|Ensure journald Storage is configured|Pass||
+|6.1.1.1.6|Ensure journald Compress is configured|Pass||
+|6.1.2.1|Ensure rsyslog service is enabled and active|Pass||
+|6.1.2.2|Ensure rsyslog log file creation mode is configured|Pass||
+|6.1.2.3|Ensure rsyslog is not configured to receive logs from a remote client|Pass||
+|6.1.3.1|Ensure access to all logfiles has been configured|Pass||
+|6.2|Ensure logrotate is configured|N/A||
+|7.1.1|Ensure access to /etc/passwd is configured|Pass||
+|7.1.2|Ensure access to /etc/passwd- is configured|Pass||
+|7.1.3|Ensure access to /etc/group is configured|Pass||
+|7.1.4|Ensure access to /etc/group- is configured|Pass||
+|7.1.5|Ensure access to /etc/shadow is configured|Pass||
+|7.1.6|Ensure access to /etc/shadow- is configured|Pass||
+|7.1.7|Ensure access to /etc/gshadow is configured|Pass||
+|7.1.8|Ensure access to /etc/gshadow- is configured|Pass||
+|7.1.9|Ensure access to /etc/shells is configured|Pass||
+|7.1.10|Ensure access to /etc/security/opasswd is configured|Pass||
+|7.1.11|Ensure world writable files and directories are secured|Pass||
+|7.1.12|Ensure no files or directories without an owner and a group exist|Pass||
+|7.2.1|Ensure accounts in /etc/passwd use shadowed passwords|Pass||
+|7.2.2|Ensure /etc/shadow password fields are not empty|Pass||
+|7.2.3|Ensure all groups in /etc/passwd exist in /etc/group|Pass||
+|7.2.4|Ensure no duplicate UIDs exist|Pass||
+|7.2.5|Ensure no duplicate GIDs exist|Pass||
+|7.2.6|Ensure no duplicate user names exist|Pass||
+|7.2.7|Ensure no duplicate group names exist|Pass||
+|7.2.8|Ensure local interactive user home directories are configured|Pass||
+|7.2.9|Ensure local interactive user dot files access is configured|Pass||
+
 
 ## Next steps
 
