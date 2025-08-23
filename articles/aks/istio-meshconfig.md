@@ -12,6 +12,9 @@ author: shashankbarsin
 
 # Configure Istio-based service mesh add-on for Azure Kubernetes Service
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2331829)
+
 Open-source Istio uses [MeshConfig][istio-meshconfig] to define mesh-wide settings for the Istio service mesh. Istio-based service mesh add-on for AKS builds on top of MeshConfig and classifies different properties as supported, allowed, and blocked.
 
 This article walks through how to configure Istio-based service mesh add-on for Azure Kubernetes Service and the support policy applicable for such configuration.
