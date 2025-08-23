@@ -13,6 +13,9 @@ ms.collection:
 
 # Migrate to Azure Kubernetes Service (AKS)
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333349)
+
 To help you plan and execute a successful migration to Azure Kubernetes Service (AKS), this guide provides details for the current recommended AKS configuration. While this article doesn't cover every scenario, it contains links to more detailed information for planning a successful migration.
 
 In this article, we summarize migration details for:
