@@ -11,6 +11,9 @@ ms.custom: innovation-engine
 
 # Use Kubernetes events for troubleshooting in Azure Kubernetes Service (AKS)
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2330228)
+
 This article shows you how to use Kubernetes events to monitor and troubleshoot issues in your Azure Kubernetes Service (AKS) clusters.
 
 ## What are Kubernetes events?
