@@ -10,6 +10,9 @@ ms.custom: references_regions, devx-track-azurecli, innovation-engine
 
 # Free, Standard, and Premium pricing tiers for Azure Kubernetes Service (AKS) cluster management
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2331826)
+
 Azure Kubernetes Service (AKS) offers three pricing tiers for cluster management: the **Free tier**, the **Standard tier**, and the **Premium tier**. All tiers are in the **Base** SKU.
 
 |                  |Free tier|Standard tier|Premium tier|
