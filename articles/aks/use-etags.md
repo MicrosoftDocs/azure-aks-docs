@@ -12,6 +12,9 @@ ms.subservice: aks-nodes
 
 # Enhance concurrency control with entity tags (eTags) in Azure Kubernetes Service 
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333258)
+
 To prevent conflicting requests in Azure Kubernetes Service (AKS), eTags (Entity Tags) serve as unique identifiers that enable concurrency control. When a request to the cluster is made, the system checks whether the provided eTag matches the latest version stored in the database. If there is a mismatch, the request fails early, ensuring that no unintended overwrites occur.
 
 ## Utilizing eTag Headers
