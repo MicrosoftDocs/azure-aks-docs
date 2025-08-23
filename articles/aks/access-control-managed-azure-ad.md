@@ -12,6 +12,9 @@ ms.custom: devx-track-azurecli, innovation-engine
 
 # Control cluster access using Conditional Access with AKS-managed Microsoft Entra integration
 
+> [!div class="nextstepaction"]
+> [Deploy and Explore](https://go.microsoft.com/fwlink/?linkid=2333348)
+
 When you integrate Microsoft Entra ID with your AKS cluster, you can use [Conditional Access][aad-conditional-access] for just-in-time requests to control access to your cluster. This article shows you how to enable Conditional Access on your AKS clusters.
 
 > [!NOTE]
