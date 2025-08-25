@@ -3,7 +3,7 @@ title: GPU best practices for Azure Kubernetes Service (AKS)
 description: Learn the best practices for managing your GPU-enabled node pools on Azure Kubernetes Service (AKS)
 ms.topic: best-practice
 ms.service: azure-kubernetes-service
-ms.date: 8/18/2025
+ms.date: 8/26/2025
 author: sachidesai
 ms.author: sachidesai
 # Customer intent: "As a cloud operations engineer managing GPU workloads on AKS, I want to enforce strong security practices and maintain consistent lifecycle management of GPU node pools, so I can ensure compliance, reduce risk, and keep the GPU infrastructure reliable and maintainable."
@@ -40,6 +40,10 @@ resources:
     [gpu-vendor].com/gpu: 1
 ```
 
+* Use validation policies or admission controllers to enforce that GPU workloads include the required tolerations and resource limits.
+
+This approach guarantees that only GPU-ready workloads land on GPU nodes and have access to the specialized compute resources they require.
+
 Before deploying production GPU workloads, always validate that your GPU node pools are:
 
 * Equipped with compatible GPU drivers.
@@ -67,44 +71,44 @@ Repeat the step above for each GPU node pool to confirm the driver version insta
 
 On your AMD GPU-enabled node pools, alternatively [deploy the AMD GPU components](./use-amd-gpus.md) and execute the `amd-smi` command in the ROCm device plugin pod to confirm the driver version that is installed.
 
-## Upgrade GPU node pools to latest node OS image
+## Keep GPU-enabled nodes updated to the latest node OS image
 
-Upgrade your GPU node pools to the latest recommended node OS image released by AKS. These images are:
+To ensure the performance, security, and compatibility of your GPU workloads on AKS, it's essential to keep your GPU node pools up to date with the latest recommended node OS images. These updates are critical because they:
 
-* Pre-configured with the latest GPU driver, to use the production branch upgraded from EOL driver branch(es).
-* Tested against your current Kubernetes version.
-* Patched for known vulnerabilities surfaced by the GPU vendor (e.g. NVIDIA) guidance.
-* Aligned with OS and container runtime upgrades.
+* Include the latest production-grade GPU drivers, replacing any deprecated or end-of-life (EOL) versions.
+* Are fully tested for compatibility with your current Kubernetes version.
+* Address known vulnerabilities identified by GPU vendors.
+* Incorporate the latest OS and container runtime improvements for enhanced stability and efficiency.
 
-You can track AKS node image releases using [AKS release tracker](https://releases.aks.azure.com/).
+Upgrade your GPU node pool(s) to the latest recommended node OS image released by AKS, either by setting the [autoupgrade channel](./auto-upgrade-node-os-image) or through [manual upgrade](./node-image-upgrade). You can monitor and track the latest node image releases using the [AKS release tracker](https://releases.aks.azure.com/).
 
 ## Separate GPU workloads when using shared clusters
 
-If multiple teams share access to an AKS cluster with GPU node pools, their workloads (ranging from data science jobs to audio/visual processing) should be separated to:
+If a single AKS cluster with GPU node pools is running multiple types of GPU workloads, such as model training, real-time inference, or batch processing, it's important to separate these workloads to:
 
-* Avoid accidental access to or block the usage of each other’s resources.
-* Improve security and compliance.
-* Make it easier to manage and monitor the GPU resource consumption from each team.
+* Avoid accidental interference or resource contention between different workload types.
+* Improve security and maintain compliance boundaries.
+* Simplify management and monitoring of GPU resource usage per workload category.
 
-You can separate GPU workloads on a single AKS cluster using namespaces and network policies. This separation makes it easier to apply usage limits, quotas, and logging per namespace.
+You can isolate GPU workloads within a single AKS cluster by using namespaces and network policies. This enables clearer governance through workload-specific quotas, limits, and logging configurations.
 
 ### Example scenario
 
-For example, the following two teams are deploying GPU workloads that don't require cross-node communication with each other:
+Consider an AKS cluster hosting two different GPU workload types that don’t need to communicate with each other:
 
-* Team A: ML research team running training jobs.
-* Team B: Computer vision team running real-time inference.
+* Training Workloads: Resource-intensive AI model training jobs.
+* Inference Workloads: Latency-sensitive real-time inference services.
 
 You can use the following steps to separate the two workloads:
 
-1. Create dedicated namespaces per team using the `kubectl create namespace` command.
+1. Create dedicated namespaces per workload type using the `kubectl create namespace` command.
 
     ```bash
-    kubectl create namespace team-a-gpu
-    kubectl create namespace team-b-gpu
+    kubectl create namespace gpu-training
+    kubectl create namespace gpu-inference
     ```
 
-2. Label GPU workload deployment pods by team, as shown in the following pod spec:
+2. Label GPU workload pods by type, as shown in the following example:
 
     ```yaml
     metadata:
