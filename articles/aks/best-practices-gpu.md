@@ -21,7 +21,7 @@ GPU workloads, like AI model training, real-time inference, simulations, and vid
 
 Misconfigurations can lead to high costs, unexpected job failures, or GPU underutilization.
 
-## Apply specific rules and limits to GPU nodes
+## Enforce GPU workload placement
 
 Apply a taint, such as `[gpu-vendor].com/gpu: NoSchedule` (where `gpu-vendor` might be `nvidia`, `amd`, etc.), to your GPU nodes. This taint prevents any pod from running on the node, unless it is a GPU workload pod that has a matching toleration.
 
