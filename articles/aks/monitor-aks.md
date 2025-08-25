@@ -333,7 +333,6 @@ For non-Cilium data plane scenarios, Container Network Observability provides me
 
 The following table outlines the generated metrics.
 
-
 | Metric name                                    | Description | Extra labels | Linux | Windows |
 |------------------------------------------------|-------------|--------------|-------|---------|
 | **networkobservability_forward_count**         | Total forwarded packet count | `direction` | ✅ | ✅ |
@@ -369,11 +368,6 @@ To disable metrics collection on a node:
 kubectl label node <node-name> networking.azure.com/node-network-metrics=disabled
 ```
 
-To re-enable metrics collection, remove the label:
-
-```bash
-kubectl label node <node-name> networking.azure.com/node-network-metrics-
-```
 
 For detailed pod-level and DNS metrics, see [Advanced Container Networking Services](advanced-container-networking-services-overview.md).
 
