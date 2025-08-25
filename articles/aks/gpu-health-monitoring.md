@@ -25,12 +25,17 @@ These health signals are vital for ensuring optimal performance and reliability 
 * High-performance computing (HPC).
 * Graphics rendering and data-intensive simulations.
 
+## Limitations
+
+AKS Node Problem Detector ***does not*** run GPU health checks on node pools with `--gpu-driver none`, where **self-managed** or custom GPU driver was installed on the nodes.
+
 ## Supported GPU health checks
 
 NPD regularly monitors GPU-enabled node pools and sets conditions when anomalies are detected. The following GPU health checks are currently supported:
 
 * **GPUMissing**: NPD verifies that the number of GPUs detected by the `nvidia-smi` utility matches the expected GPU count for the VM SKU assigned to the node.
   * A mismatch might indicate a hardware fault, driver issue, or misconfiguration. Accurate GPU enumeration is critical for ensuring scheduling accuracy and workload availability on GPU nodes.
+
 * **GPUXIDErrors**: Checks for XID (eXecution ID) errors emitted by the GPU driver in the kernel logs. XID errors are low-level GPU faults that typically occur when:
   * The driver misprograms the GPU.
   * There's a corruption in the command stream sent to the GPU.
