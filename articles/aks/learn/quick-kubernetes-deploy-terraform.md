@@ -35,8 +35,8 @@ Azure Kubernetes Service (AKS) is a managed Kubernetes service that lets you qui
 
 * To learn more about creating a Windows Server node pool, see [Create an AKS cluster that supports Windows Server containers](quick-windows-container-deploy-cli.md).
 
-> [!NOTE]
-> The Azure Linux node pool is now in general availablility (GA). To learn about the benefits and deployment steps, see the [Introduction to the Azure Linux Container Host for AKS][intro-azure-linux].
+> [!IMPORTANT]
+> Starting on **30 November 2025**, AKS will no longer support or provide security updates for Azure Linux 2.0. Starting on **31 March 2026**, existing node images will be deleted, and you'll be unable to scale your node pools. Migrate to a supported Azure Linux version by [**upgrading your node pools**](/azure/aks/upgrade-aks-cluster) to a supported Kubernetes version or migrating to [`osSku AzureLinux3`](/azure/aks/upgrade-os-version). For more information, see [[Retirement] Azure Linux 2.0 node pools on AKS](https://github.com/Azure/AKS/issues/4988).
 
 * [Install and configure Terraform](/azure/developer/terraform/quickstart-configure).
 * [Download kubectl](https://kubernetes.io/releases/download/).
